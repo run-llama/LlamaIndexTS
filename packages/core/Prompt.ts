@@ -50,7 +50,7 @@ export const defaultSummaryPrompt: Prompt = (input: {
   return `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
 
 
-${input.context}
+${context}
 
 
 SUMMARY:"""
