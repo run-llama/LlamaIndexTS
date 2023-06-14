@@ -1,16 +1,19 @@
 import { Document } from "./Document";
 import { Node } from "./Node";
+import { BaseQueryEngine } from "./QueryEngine";
 
 export class BaseIndex {
   constructor(nodes?: Node[]) {}
 
-  fromDocuments(documents: Document[]) {
-    console.log("fromDocuments");
-  }
-
-  asQueryEngine() {
+  asQueryEngine(): BaseQueryEngine {
     console.log("asQueryEngine");
+    return new BaseQueryEngine();
   }
 }
 
-export class VectorStoreIndex extends BaseIndex {}
+export class VectorStoreIndex extends BaseIndex {
+  static fromDocuments(documents: Document[]): VectorStoreIndex {
+    console.log("fromDocuments");
+    return new VectorStoreIndex();
+  }
+}

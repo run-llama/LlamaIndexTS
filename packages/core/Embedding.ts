@@ -21,3 +21,9 @@ export class BaseEmbedding {
     return 0;
   }
 }
+
+enum OpenAIEmbeddingModelType {
+  TEXT_EMBED_ADA_002 = "text-embedding-ada-002",
+}
+
+export class OpenAIEmbedding extends BaseEmbedding {}
