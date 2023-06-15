@@ -1,7 +1,8 @@
 {
   "name": "@llamaindex/core",
   "dependencies": {
-    "openai": "latest"
+    "js-tiktoken": "^1.0.7",
+    "openai": "^3.3.0"
   },
   "main": "src/index.ts",
   "types": "src/index.ts"
