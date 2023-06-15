@@ -1,6 +1,6 @@
 interface ServiceContext {
   llmPredictor?: any;
-  promptHelper: any;
+  // promptHelper: any;
   embedModel: any;
   nodeParser: any;
   // llamaLogger: any;

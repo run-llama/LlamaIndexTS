@@ -33,9 +33,14 @@ interface FunctionMessage {
 
 export type Message = ChatMessage | FunctionMessage;
 
+interface Function {
+  name: string;
+}
+
 export const getChatCompletions = async (
   messages: Message[],
-  model = "gpt-3.5-turbo"
+  model = "gpt-3.5-turbo",
+  functions: Function[] | null = null
 ) => {
   return await fetch(OPENAI_CHAT_COMPLETIONS_URL, {
     method: "POST",
