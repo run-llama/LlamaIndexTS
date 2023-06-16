@@ -4,14 +4,18 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
+    "@types/jest": "^29.5.2",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
+    "jest": "^29.5.0",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.3.0",
+    "ts-jest": "^29.1.0",
     "turbo": "latest"
   },
   "packageManager": "pnpm@7.15.0",

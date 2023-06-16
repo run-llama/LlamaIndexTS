@@ -8,8 +8,8 @@ export interface BaseDocument {
 export class Document implements BaseDocument {
   docId: string;
   text: string;
-  embedding: number[];
-  docHash: string;
+  // embedding: number[];
+  // docHash: string;
 
   constructor(docId: string, text: string) {
     this.docId = docId;
