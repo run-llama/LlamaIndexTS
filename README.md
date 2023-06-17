@@ -29,6 +29,10 @@ Note: we use pnpm in this repo, which has a lot of the same functionality and CL
 
 PNPM's has documentation on its [workspace feature](https://pnpm.io/workspaces) and Turborepo had some [useful documentation also](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks).
 
+### Running Typescript
+
+When we publish to NPM we will have a tsc compiled version of the library in JS. For now, the easiest thing to do is use ts-node.
+
 ### Test cases
 
 To run them, run
