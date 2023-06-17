@@ -1,8 +1,8 @@
 /**
- * A prompt is a function that takes a dictionary of inputs and returns a string.
+ * A SimplePrompt is a function that takes a dictionary of inputs and returns a string.
  * NOTE this is a different interface compared to LlamaIndex Python
  */
-export type Prompt = (input: { [key: string]: string }) => string;
+export type SimplePrompt = (input: { [key: string]: string }) => string;
 
 /*
 DEFAULT_TEXT_QA_PROMPT_TMPL = (
@@ -15,9 +15,7 @@ DEFAULT_TEXT_QA_PROMPT_TMPL = (
 )
 */
 
-export const defaultTextQaPrompt: Prompt = (input: {
-  [key: string]: string;
-}) => {
+export const defaultTextQaPrompt: SimplePrompt = (input) => {
   const { context, query } = input;
 
   return `Context information is below.
@@ -42,9 +40,7 @@ DEFAULT_SUMMARY_PROMPT_TMPL = (
 )
 */
 
-export const defaultSummaryPrompt: Prompt = (input: {
-  [key: string]: string;
-}) => {
+export const defaultSummaryPrompt: SimplePrompt = (input) => {
   const { context } = input;
 
   return `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
