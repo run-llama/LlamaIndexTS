@@ -9,6 +9,9 @@ class SentenceSplitter {
   private _chunk_overlap: number;
   private tokenizer: any;
   private _backup_separators: string[];
+  private _paragraph_separator: string | undefined;
+  private _chunking_tokenizer_fn: any;
+  private _secondary_chunking_regex: string;
   // private _callback_manager: any;
 
   constructor(
@@ -35,24 +38,37 @@ class SentenceSplitter {
     // this._callback_manager = callback_manager || new CallbackManager([]);
 
     if (chunking_tokenizer_fn == undefined) {
-      // use default tokenizer that splits by sentences
-      const winkNLP = require("wink-nlp");
-      // Load "its" helper to extract item properties.
-      const its = require( 'wink-nlp/src/its.js' );
-      // Load english language model — light version.
-      const model = require( 'wink-eng-lite-model' );
-      // Instantiate winkNLP.
-      const nlp = winkNLP( model );
 
-      // Input text
-      const text = 'AI Inc. is focussing on AI. It is based in the U.S.A. It was started on 06.12.2007.';
-      // Read text
-      const doc = nlp.readDoc( text );
-      // Extract sentences from the data
-      const sentences = doc.sentences().out();
+      // define a callable mapping a string to a list of strings
+      const default_chunking_tokenizer_fn = (text: string) => {
+        var result = text.match(/[^.?!]+[.!?]+[\])'"`’”]*|.+/g);
+        return result
+      };
+      
+      chunking_tokenizer_fn = default_chunking_tokenizer_fn;
     }
 
+    if (tokenizer == undefined) {
+      const tiktoken = require('tiktoken-node')
+      let enc = new tiktoken.getEncoding("gpt-2")
+      const default_tokenizer = (text: string) => {
+        return enc.encode(text)
+      }
+      tokenizer = default_tokenizer
+    }
+    
+    this._paragraph_separator = paragraph_separator;
+    this._chunking_tokenizer_fn = chunking_tokenizer_fn;
+    this._secondary_chunking_regex = secondary_chunking_regex;
+
   }
+
+  splitText(text: string, extra_info_str?: string): string[] {
+    const text_splits = this.splitTextWithOverlaps(text);
+    const chunks = text_splits.map((text_split) => text_split.text_chunk);
+    return chunks;
+  }
+
 
 }
 
