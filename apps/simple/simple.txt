@@ -1,0 +1,9 @@
+Simple flow:
+
+Get document list, in this case one document.
+Split each document into nodes, in this case sentences or lines.
+Embed each of the nodes and get vectors. Store them in memory for now.
+Embed query.
+Compare query with nodes and get the top n
+Put the top n nodes into the prompt.
+Execute prompt, get result.

@@ -14,8 +14,29 @@ export enum NodeType {
   INDEX,
 }
 
-export class Node implements BaseDocument {
-  relationships: { [key in DocumentRelationship]: string | string[] };
+export class Node extends BaseDocument {
+  relationships: { [key in DocumentRelationship]: string | string[] | null };
+
+  constructor(
+    text: string, // Text is required
+    docId?: string,
+    embedding?: number[],
+    docHash?: string
+  ) {
+    if (!text) {
+      throw new Error("Text is required");
+    }
+
+    super(docId, text, embedding, docHash);
+
+    this.relationships = {
+      source: null,
+      previous: null,
+      next: null,
+      parent: null,
+      child: [],
+    };
+  }
 
   getText(): string {
     throw new Error("Method not implemented.");

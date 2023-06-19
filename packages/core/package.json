@@ -3,10 +3,12 @@
   "dependencies": {
     "axios": "^0.26.1",
     "js-tiktoken": "^1.0.7",
-    "openai": "^3.3.0"
+    "openai": "^3.3.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@types/node": "^18"
+    "@types/node": "^18",
+    "@types/uuid": "^9.0.2"
   },
   "main": "src/index.ts",
   "types": "src/index.ts",

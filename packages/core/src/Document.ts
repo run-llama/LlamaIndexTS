@@ -1,38 +1,58 @@
-export interface BaseDocument {
-  getText(): string;
-  getDocId(): string;
-  getDocHash(): string;
-  getEmbedding(): number[];
-}
+import { v4 as uuidv4 } from "uuid";
+export abstract class BaseDocument {
+  text?: string;
+  docId?: string;
+  embedding?: number[];
+  docHash?: string;
 
-export class Document implements BaseDocument {
-  docId: string;
-  text: string;
-  // embedding: number[];
-  // docHash: string;
-
-  constructor(docId: string, text: string) {
+  constructor(
+    text?: string,
+    docId?: string,
+    embedding?: number[],
+    docHash?: string
+  ) {
     this.docId = docId;
     this.text = text;
+    this.embedding = embedding;
+    this.docHash = docHash;
+
+    if (!docId) {
+      this.docId = uuidv4();
+    }
   }
 
   getText() {
-    console.log("getText");
-    return "";
+    if (this.text === undefined) {
+      throw new Error("Text not set");
+    }
+    return this.text;
   }
 
   getDocId() {
-    console.log("getDocId");
-    return "";
-  }
-
-  getDocHash() {
-    console.log("getDocHash");
-    return "";
+    if (this.docId === undefined) {
+      throw new Error("doc id not set");
+    }
+    return this.docId;
   }
 
   getEmbedding() {
-    console.log("getEmbedding");
-    return [];
+    if (this.embedding === undefined) {
+      throw new Error("Embedding not set");
+    }
+    return this.embedding;
   }
+
+  getDocHash() {
+    return this.docHash;
+  }
+}
+
+export class Document extends BaseDocument {
+  static getType() {
+    return "Document";
+  }
+}
+
+export class ImageDocuemnt extends Document {
+  image?: string;
 }

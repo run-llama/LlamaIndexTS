@@ -66,4 +66,6 @@ export class OpenAIWrapper extends OpenAIApi {
   }
 }
 
+// TODO we need to create an openAI singleton
+
 export * from "openai";
