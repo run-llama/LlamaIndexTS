@@ -6,15 +6,16 @@ class TextSplit {
   textChunk: string;
   numCharOverlap: number | undefined;
 
-  constructor(textChunk: string, numCharOverlap: number | undefined = undefined) {
+  constructor(
+    textChunk: string,
+    numCharOverlap: number | undefined = undefined
+  ) {
     this.textChunk = textChunk;
     this.numCharOverlap = numCharOverlap;
   }
 }
 
-type SplitRep = [text: string, numTokens: number]
-
-
+type SplitRep = [text: string, numTokens: number];
 
 export class SentenceSplitter {
   private chunkSize: number;
@@ -31,7 +32,7 @@ export class SentenceSplitter {
     tokenizer: any = null,
     tokenizerDecoder: any = null,
     paragraphSeparator: string = "\n\n\n",
-    chunkingTokenizerFn: any = undefined,
+    chunkingTokenizerFn: any = undefined
     // callback_manager: any = undefined
   ) {
     if (chunkOverlap > chunkSize) {
@@ -44,34 +45,32 @@ export class SentenceSplitter {
     // this._callback_manager = callback_manager || new CallbackManager([]);
 
     if (chunkingTokenizerFn == undefined) {
-
       // define a callable mapping a string to a list of strings
       const defaultChunkingTokenizerFn = (text: string) => {
         var result = text.match(/[^.?!]+[.!?]+[\])'"`’”]*|.+/g);
-        return result
+        return result;
       };
-      
+
       chunkingTokenizerFn = defaultChunkingTokenizerFn;
     }
 
     if (tokenizer == undefined || tokenizerDecoder == undefined) {
-      const tiktoken = require('tiktoken-node')
-      let enc = new tiktoken.getEncoding("gpt2")
+      const tiktoken = require("tiktoken-node");
+      let enc = new tiktoken.getEncoding("gpt2");
       const default_tokenizer = (text: string) => {
-        return enc.encode(text)
-      }
+        return enc.encode(text);
+      };
       const defaultTokenizerDecoder = (text: string) => {
-        return enc.decode(text)
-      }
-      tokenizer = default_tokenizer
-      tokenizerDecoder = defaultTokenizerDecoder
+        return enc.decode(text);
+      };
+      tokenizer = default_tokenizer;
+      tokenizerDecoder = defaultTokenizerDecoder;
     }
     this.tokenizer = tokenizer;
     this.tokenizerDecoder = tokenizerDecoder;
-    
+
     this.paragraphSeparator = paragraphSeparator;
     this.chunkingTokenizerFn = chunkingTokenizerFn;
-
   }
 
   private getEffectiveChunkSize(extraInfoStr?: string): number {
@@ -89,7 +88,6 @@ export class SentenceSplitter {
       effectiveChunkSize = this.chunkSize;
     }
     return effectiveChunkSize;
-    
   }
 
   getParagraphSplits(text: string, effectiveChunkSize?: number): string[] {
@@ -97,20 +95,25 @@ export class SentenceSplitter {
     let paragraphSplits: string[] = text.split(this.paragraphSeparator);
     let idx = 0;
     if (effectiveChunkSize == undefined) {
-      return paragraphSplits
+      return paragraphSplits;
     }
 
     // merge paragraphs that are too small
     while (idx < paragraphSplits.length) {
-      if (idx < paragraphSplits.length - 1 && paragraphSplits[idx].length < effectiveChunkSize) {
-        paragraphSplits[idx] = [paragraphSplits[idx], paragraphSplits[idx + 1]].join(this.paragraphSeparator);
+      if (
+        idx < paragraphSplits.length - 1 &&
+        paragraphSplits[idx].length < effectiveChunkSize
+      ) {
+        paragraphSplits[idx] = [
+          paragraphSplits[idx],
+          paragraphSplits[idx + 1],
+        ].join(this.paragraphSeparator);
         paragraphSplits.splice(idx + 1, 1);
       } else {
         idx += 1;
       }
     }
-    return paragraphSplits
-    
+    return paragraphSplits;
   }
 
   getSentenceSplits(text: string, effectiveChunkSize?: number): string[] {
@@ -123,10 +126,13 @@ export class SentenceSplitter {
         splits.push(sentence_split.trim());
       }
     }
-    return splits
+    return splits;
   }
 
-  private processSentenceSplits(sentenceSplits: string[], effectiveChunkSize: number): SplitRep[] {
+  private processSentenceSplits(
+    sentenceSplits: string[],
+    effectiveChunkSize: number
+  ): SplitRep[] {
     // Process entence splits
     // Primarily check if any sentences exceed the chunk size. If they don't,
     // force split by tokenizer
@@ -138,15 +144,20 @@ export class SentenceSplitter {
         newSplits.push([split, split_len]);
       } else {
         for (let i = 0; i < split_len; i += effectiveChunkSize) {
-          const cur_split = this.tokenizerDecoder(splitTokens.slice(i, i + effectiveChunkSize));
+          const cur_split = this.tokenizerDecoder(
+            splitTokens.slice(i, i + effectiveChunkSize)
+          );
           newSplits.push([cur_split, effectiveChunkSize]);
         }
       }
     }
-    return newSplits
+    return newSplits;
   }
 
-  combineTextSplits(newSentenceSplits: SplitRep[], effectiveChunkSize: number): TextSplit[] {
+  combineTextSplits(
+    newSentenceSplits: SplitRep[],
+    effectiveChunkSize: number
+  ): TextSplit[] {
     // go through sentence splits, combien to chunks that are within the chunk size
 
     // docs represents final list of text chunks
@@ -160,7 +171,6 @@ export class SentenceSplitter {
     let curDocBuffer: SplitRep[] = [];
 
     for (let i = 0; i < newSentenceSplits.length; i++) {
-
       // update buffer
       curDocBuffer.push(newSentenceSplits[i]);
       bufferTokens += newSentenceSplits[i][1] + 1;
@@ -187,16 +197,13 @@ export class SentenceSplitter {
           curDocList.push(curDocBuffer[j][0]);
           curDocTokens += curDocBuffer[j][1] + 1;
         }
-        
       }
 
       curDocList.push(newSentenceSplits[i][0]);
       curDocTokens += newSentenceSplits[i][1] + 1;
-      
     }
     docs.push(new TextSplit(curDocList.join(" ").trim()));
-    return docs
-    
+    return docs;
   }
 
   splitTextWithOverlaps(text: string, extraInfoStr?: string): TextSplit[] {
@@ -213,23 +220,23 @@ export class SentenceSplitter {
 
     // Check if any sentences exceed the chunk size. If they don't,
     // force split by tokenizer
-    let newSentenceSplits = this.processSentenceSplits(sentenceSplits, effectiveChunkSize);
-
+    let newSentenceSplits = this.processSentenceSplits(
+      sentenceSplits,
+      effectiveChunkSize
+    );
 
     // combine sentence splits into chunks of text that can then be returned
-    let combinedTextSplits = this.combineTextSplits(newSentenceSplits, effectiveChunkSize);
+    let combinedTextSplits = this.combineTextSplits(
+      newSentenceSplits,
+      effectiveChunkSize
+    );
 
-    return combinedTextSplits
-
+    return combinedTextSplits;
   }
-
 
   splitText(text: string, extraInfoStr?: string): string[] {
     const text_splits = this.splitTextWithOverlaps(text);
     const chunks = text_splits.map((text_split) => text_split.textChunk);
     return chunks;
   }
-
-
 }
-
