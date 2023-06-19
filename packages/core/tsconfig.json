@@ -7,7 +7,8 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "strict": true
+    "strict": true,
+    "lib": ["es2015", "dom"]
   },
   "exclude": ["node_modules"]
 }
