@@ -29,12 +29,18 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.3.0
         version: 0.3.0(prettier@2.8.8)
+      tiktoken-node:
+        specifier: latest
+        version: 0.0.6
       ts-jest:
         specifier: ^29.1.0
         version: 29.1.0(@babel/core@7.22.5)(jest@29.5.0)(typescript@4.9.5)
       turbo:
         specifier: latest
         version: 1.10.3
+      wink-nlp:
+        specifier: latest
+        version: 1.14.1
 
   apps/docs:
     dependencies:
@@ -116,9 +122,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@vespaiach/axios-fetch-adapter':
-        specifier: ^0.3.1
-        version: 0.3.1(axios@0.26.1)
       axios:
         specifier: ^0.26.1
         version: 0.26.1
@@ -128,6 +131,10 @@ importers:
       openai:
         specifier: ^3.3.0
         version: 3.3.0
+    devDependencies:
+      '@types/node':
+        specifier: ^18
+        version: 18.6.0
 
   packages/eslint-config-custom:
     dependencies:
@@ -1205,14 +1212,6 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.59.2
       eslint-visitor-keys: 3.4.0
-    dev: false
-
-  /@vespaiach/axios-fetch-adapter@0.3.1(axios@0.26.1):
-    resolution: {integrity: sha512-+1F52VWXmQHSRFSv4/H0wtnxfvjRMPK5531e880MIjypPdUSX6QZuoDgEVeCE1vjhzDdxCVX7rOqkub7StEUwQ==}
-    peerDependencies:
-      axios: '>=0.26.0'
-    dependencies:
-      axios: 0.26.1
     dev: false
 
   /acorn-jsx@5.3.2(acorn@7.4.1):
@@ -4763,6 +4762,11 @@ packages:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
     dev: true
 
+  /tiktoken-node@0.0.6:
+    resolution: {integrity: sha512-MiprfzPhoKhCflzl0Jyds0VKibAgUGHfJLvBCAXPpum6Lru6ZoKQGsl8lJP0B94LPpby2B2WveOB2tZVfEZQOQ==}
+    engines: {node: '>= 14'}
+    dev: true
+
   /title-case@2.1.1:
     resolution: {integrity: sha512-EkJoZ2O3zdCz3zJsYCsxyq2OC5hrxR9mfdd5I+w8h/tmFfeOxJ+vvkxsKxdmN0WtS9zLdHEgfgVOiMVgv+Po4Q==}
     dependencies:
@@ -5113,6 +5117,10 @@ packages:
     engines: {node: '>= 8'}
     dependencies:
       isexe: 2.0.0
+
+  /wink-nlp@1.14.1:
+    resolution: {integrity: sha512-RIdUZI3ei3OB6OY5f3jNo74fmsfPV7cfwiJ2fvBM1xzGnnl2CjRJmwGwsO04n0xl28vDTtxj6AlhIb74XQLoqQ==}
+    dev: true
 
   /word-wrap@1.2.3:
     resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}
