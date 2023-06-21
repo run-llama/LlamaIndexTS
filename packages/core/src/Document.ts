@@ -1,8 +1,16 @@
+export enum NodeType {
+  DOCUMENT,
+  TEXT,
+  IMAGE,
+  INDEX,
+}
+
 export interface BaseDocument {
   getText(): string;
   getDocId(): string;
   getDocHash(): string;
   getEmbedding(): number[];
+  getType(): NodeType;
 }
 
 export class Document implements BaseDocument {
@@ -34,5 +42,9 @@ export class Document implements BaseDocument {
   getEmbedding() {
     console.log("getEmbedding");
     return [];
+  }
+
+  getType() {
+    return NodeType.DOCUMENT;
   }
 }

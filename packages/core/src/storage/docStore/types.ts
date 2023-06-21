@@ -22,41 +22,41 @@ export abstract class BaseDocumentStore {
 
     abstract addDocuments(docs: BaseDocument[], allowUpdate: boolean): void;
 
-    abstract getDocument(docId: string, raiseError: boolean): BaseDocument | null;
+    abstract getDocument(docId: string, raiseError: boolean): Promise<BaseDocument | undefined>;
 
     abstract deleteDocument(docId: string, raiseError: boolean): void;
 
-    abstract documentExists(docId: string): boolean;
+    abstract documentExists(docId: string): Promise<boolean>;
 
     // Hash
     abstract setDocumentHash(docId: string, docHash: string): void;
 
-    abstract getDocumentHash(docId: string): string | null;
+    abstract getDocumentHash(docId: string): Promise<string | undefined>;
 
     // Ref Docs
-    abstract getAllRefDocInfo(): {[key: string]: RefDocInfo} | null;
+    abstract getAllRefDocInfo(): Promise<{[key: string]: RefDocInfo} | undefined>;
 
-    abstract getRefDocInfo(refDocId: string): RefDocInfo | null;
+    abstract getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined>;
 
-    abstract deleteRefDoc(refDocId: string, raiseError: boolean): void;
+    abstract deleteRefDoc(refDocId: string, raiseError: boolean): Promise<void>;
 
     // Nodes
-    getNodes(nodeIds: string[], raiseError: boolean = true): Node[] {
-        return nodeIds.map(nodeId => this.getNode(nodeId, raiseError));
+    getNodes(nodeIds: string[], raiseError: boolean = true): Promise<Node[]> {
+        return Promise.all(nodeIds.map(nodeId => this.getNode(nodeId, raiseError)));
     }
 
-    getNode(nodeId: string, raiseError: boolean = true): Node {
-        let doc = this.getDocument(nodeId, raiseError);
+    async getNode(nodeId: string, raiseError: boolean = true): Promise<Node> {
+        let doc = await this.getDocument(nodeId, raiseError);
         if (!(doc instanceof Node)) {
             throw new Error(`Document ${nodeId} is not a Node.`);
         }
         return doc;
     }
 
-    getNodeDict(nodeIdDict: {[key: number]: string}): {[key: number]: Node} {
-        let result: {[key: number]: Node} = {};
+    async getNodeDict(nodeIdDict: {[index: number]: string}): Promise<{[index: number]: Node}> {
+        let result: {[index: number]: Node} = {};
         for (let index in nodeIdDict) {
-            result[index] = this.getNode(nodeIdDict[index]);
+            result[index] = await this.getNode(nodeIdDict[index]);
         }
         return result;
     }

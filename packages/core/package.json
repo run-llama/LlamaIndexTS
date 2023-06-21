@@ -3,11 +3,16 @@
   "dependencies": {
     "axios": "^0.26.1",
     "js-tiktoken": "^1.0.7",
+    "lodash": "^4.17.21",
     "openai": "^3.3.0"
   },
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
     "test": "jest"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.195",
+    "node-stdlib-browser": "^1.2.0"
   }
 }

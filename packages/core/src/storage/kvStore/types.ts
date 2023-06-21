@@ -1,11 +1,13 @@
 import { GenericFileSystem } from "../FileSystem";
 const defaultCollection = "data";
 
+type StoredValue = {[key: string]: any} | null;
+
 export abstract class BaseKVStore {
-    abstract put(key: string, val: {[key: string]: any}, collection?: string): void;
-    abstract get(key: string, collection?: string): {[key: string]: any} | null;
-    abstract getAll(collection?: string): {[key: string]: {[key: string]: any}};
-    abstract delete(key: string, collection?: string): boolean;
+    abstract put(key: string, val: {[key: string]: any}, collection?: string): Promise<void>;
+    abstract get(key: string, collection?: string): Promise<StoredValue>;
+    abstract getAll(collection?: string): Promise<{[key: string]: StoredValue}>;
+    abstract delete(key: string, collection?: string): Promise<boolean>;
 }
 
 export abstract class BaseInMemoryKVStore extends BaseKVStore {
