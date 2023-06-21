@@ -1,7 +1,7 @@
 import { BaseKVStore } from '../kvStore/types';
 import { IndexStruct, indexStructToJson, jsonToIndexStruct } from '../../dataStructs';
 import _ from 'lodash';
-import { DEFAULT_NAMESPACE } from './constants';
+import { DEFAULT_NAMESPACE } from '../constants';
 import { BaseIndexStore } from './types';
 
 export class KVIndexStore extends BaseIndexStore {

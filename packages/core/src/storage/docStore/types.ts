@@ -18,7 +18,7 @@ export abstract class BaseDocumentStore {
     }
 
     // Main interface
-    abstract get docs(): {[key: string]: BaseDocument};
+    abstract docs(): Promise<Record<string, BaseDocument>>;
 
     abstract addDocuments(docs: BaseDocument[], allowUpdate: boolean): void;
 

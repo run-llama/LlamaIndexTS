@@ -11,7 +11,7 @@ import {
   DEFAULT_FS
 } from '../constants';
 
-type SaveDict = {[key: string]: any}; // Replace `any` with the appropriate type if possible.
+type SaveDict = {[key: string]: any};
 
 export class SimpleDocumentStore extends KVDocumentStore {
   private kvStore: SimpleKVStore;
@@ -23,13 +23,13 @@ export class SimpleDocumentStore extends KVDocumentStore {
     this.kvStore = kvStore;
   }
 
-  static fromPersistDir(
+  static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR, 
     namespace?: string, 
     fsModule?: GenericFileSystem
-  ): SimpleDocumentStore {
+  ): Promise<SimpleDocumentStore> {
     const persistPath = path.join(persistDir, DEFAULT_DOC_STORE_PERSIST_FILENAME);
-    return SimpleDocumentStore.fromPersistPath(persistPath, namespace, fsModule);
+    return await SimpleDocumentStore.fromPersistPath(persistPath, namespace, fsModule);
   }
 
   static async fromPersistPath(

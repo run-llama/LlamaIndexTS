@@ -3,7 +3,7 @@ import { BaseDocument } from '../../Document';
 import { BaseDocumentStore, RefDocInfo } from './types';
 import { BaseKVStore } from '../kvStore/types';
 import _, * as lodash from 'lodash';
-import { docToJson, jsonToDoc } from './docstore-utils';
+import { docToJson, jsonToDoc } from './utils';
 import { DEFAULT_NAMESPACE } from '../constants';
 
 type DocMetaData = { docHash: string, refDocId?: string };
@@ -22,11 +22,11 @@ export class KVDocumentStore extends BaseDocumentStore {
         this.metadataCollection = `${namespace}/metadata`;
     }
 
-    get docs(): Record<string, BaseDocument> {
-        let jsonDict = this.kvstore.getAll(this.nodeCollection);
+    async docs(): Promise<Record<string, BaseDocument>> {
+        let jsonDict = await this.kvstore.getAll(this.nodeCollection);
         let docs: Record<string, BaseDocument> = {};
         for (let key in jsonDict) {
-            docs[key] = jsonToDoc(jsonDict[key]);
+            docs[key] = jsonToDoc(jsonDict[key] as Record<string, any>);
         }
         return docs;
     }

@@ -18,6 +18,7 @@ class SimpleVectorStoreData {
 }
 
 export class SimpleVectorStore implements VectorStore {
+  storesText: boolean = false;
   private data: SimpleVectorStoreData = new SimpleVectorStoreData();
   private fs: GenericFileSystem = DEFAULT_FS;
 
