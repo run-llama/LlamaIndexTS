@@ -1,27 +1,40 @@
+import { ChatOpenAI } from "./LanguageModel";
+
 export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
-  predict(prompt: string, options: any): Promise<any>;
-  stream(prompt: string, options: any): Promise<any>;
+  predict(prompt: string, options: any): Promise<string>;
+  // stream(prompt: string, options: any): Promise<any>;
 }
 
-export class LLMPredictor implements BaseLLMPredictor {
+export class ChatOpenAILLMPredictor implements BaseLLMPredictor {
   llm: string;
   retryOnThrottling: boolean;
+  languageModel: ChatOpenAI;
 
-  constructor(llm: string, retryOnThrottling: boolean = true) {
+  constructor(
+    llm: string = "gpt-3.5-turbo",
+    retryOnThrottling: boolean = true
+  ) {
     this.llm = llm;
     this.retryOnThrottling = retryOnThrottling;
+
+    this.languageModel = new ChatOpenAI(this.llm);
   }
 
   async getLlmMetadata() {
-    console.log("getLlmMetadata");
+    throw new Error("Not implemented yet");
   }
 
   async predict(prompt: string, options: any) {
-    console.log("predict");
+    return this.languageModel.agenerate([
+      {
+        content: prompt,
+        type: "human",
+      },
+    ]);
   }
 
-  async stream(prompt: string, options: any) {
-    console.log("stream");
-  }
+  // async stream(prompt: string, options: any) {
+  //   console.log("stream");
+  // }
 }

@@ -23,11 +23,11 @@ export class Node extends BaseDocument {
     embedding?: number[],
     docHash?: string
   ) {
-    if (!text) {
+    if (text === undefined) {
       throw new Error("Text is required");
     }
 
-    super(docId, text, embedding, docHash);
+    super(text, docId, embedding, docHash);
 
     this.relationships = {
       source: null,
@@ -36,19 +36,6 @@ export class Node extends BaseDocument {
       parent: null,
       child: [],
     };
-  }
-
-  getText(): string {
-    throw new Error("Method not implemented.");
-  }
-  getDocId(): string {
-    throw new Error("Method not implemented.");
-  }
-  getDocHash(): string {
-    throw new Error("Method not implemented.");
-  }
-  getEmbedding(): number[] {
-    throw new Error("Method not implemented.");
   }
 
   getNodeInfo(): { [key: string]: any } {
@@ -74,4 +61,14 @@ export class Node extends BaseDocument {
   childNodeIds(): string[] {
     return [];
   }
+}
+
+export interface NodeWithEmbedding {
+  node: Node;
+  embedding: number[];
+}
+
+export interface NodeWithScore {
+  node: Node;
+  score: number;
 }

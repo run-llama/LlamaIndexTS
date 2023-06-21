@@ -10,6 +10,7 @@ import {
   CreateModerationResponse,
   CreateEditRequest,
   CreateEditResponse,
+  Configuration,
 } from "openai";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import fetchAdapter from "./fetchAdapter";
@@ -66,6 +67,35 @@ export class OpenAIWrapper extends OpenAIApi {
   }
 }
 
-// TODO we need to create an openAI singleton
+export class OpenAISession {
+  openAIKey: string | null = null;
+  openai: OpenAIWrapper;
+
+  constructor(openAIKey: string | null = null) {
+    if (openAIKey) {
+      this.openAIKey = openAIKey;
+    } else if (process.env.OPENAI_API_KEY) {
+      this.openAIKey = process.env.OPENAI_API_KEY;
+    } else {
+      throw new Error("Set OpenAI Key in OPENAI_API_KEY env variable");
+    }
+
+    const configuration = new Configuration({
+      apiKey: this.openAIKey,
+    });
+
+    this.openai = new OpenAIWrapper(configuration);
+  }
+}
+
+let defaultOpenAISession: OpenAISession | null = null;
+
+export function getOpenAISession(openAIKey: string | null = null) {
+  if (!defaultOpenAISession) {
+    defaultOpenAISession = new OpenAISession(openAIKey);
+  }
+
+  return defaultOpenAISession;
+}
 
 export * from "openai";

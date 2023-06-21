@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
 export abstract class BaseDocument {
-  text?: string;
+  text: string;
   docId?: string;
   embedding?: number[];
   docHash?: string;
 
   constructor(
-    text?: string,
+    text: string,
     docId?: string,
     embedding?: number[],
     docHash?: string
   ) {
-    this.docId = docId;
     this.text = text;
+    this.docId = docId;
     this.embedding = embedding;
     this.docHash = docHash;
 

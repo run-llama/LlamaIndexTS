@@ -1,8 +1,16 @@
+import {
+  ChatCompletionRequestMessageRoleEnum,
+  Configuration,
+  OpenAISession,
+  OpenAIWrapper,
+  getOpenAISession,
+} from "./openai";
+
 interface LLMResult {}
 
 interface BaseLanguageModel {}
 
-type MessageType = "human" | "ai" | "system" | "chat";
+type MessageType = "human" | "ai" | "system" | "generic" | "function";
 
 interface BaseMessage {
   content: string;
@@ -20,8 +28,8 @@ interface LLMResult {
 
 class BaseChatModel implements BaseLanguageModel {}
 
-class ChatOpenAI extends BaseChatModel {
-  model: string = "gpt-3.5-turbo";
+export class ChatOpenAI extends BaseChatModel {
+  model: string;
   temperature: number = 0.7;
   openAIKey: string | null = null;
   requestTimeout: number | null = null;
@@ -29,7 +37,44 @@ class ChatOpenAI extends BaseChatModel {
   n: number = 1;
   maxTokens?: number;
 
-  async agenerate(messages: BaseMessage[], stop: string[] | null = null) {
-    return;
+  session: OpenAISession;
+
+  constructor(model: string = "gpt-3.5-turbo") {
+    super();
+    this.model = model;
+    this.session = getOpenAISession();
+  }
+
+  static mapMessageType(
+    type: MessageType
+  ): ChatCompletionRequestMessageRoleEnum {
+    switch (type) {
+      case "human":
+        return "user";
+      case "ai":
+        return "assistant";
+      case "system":
+        return "system";
+      case "function":
+        return "function";
+      default:
+        return "user";
+    }
+  }
+
+  async agenerate(messages: BaseMessage[]) {
+    const { data } = await this.session.openai.createChatCompletion({
+      model: this.model,
+      temperature: this.temperature,
+      max_tokens: this.maxTokens,
+      n: this.n,
+      messages: messages.map((message) => ({
+        role: ChatOpenAI.mapMessageType(message.type),
+        content: message.content,
+      })),
+    });
+
+    const content = data.choices[0].message?.content ?? "";
+    return content;
   }
 }

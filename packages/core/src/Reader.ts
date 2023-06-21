@@ -5,13 +5,13 @@ export interface BaseReader {
 }
 
 export class SimpleDirectoryReader implements BaseReader {
-  async loadData(options) {
+  async loadData(_options: any) {
     return new Document("1", "");
   }
 }
 
 export class PDFReader implements BaseReader {
-  async loadData(options) {
+  async loadData(_options: any) {
     return new Document("1", "");
   }
 }
