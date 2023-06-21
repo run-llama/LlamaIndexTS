@@ -1,3 +1,4 @@
+import _ from "lodash";
 /**
  * A filesystem interface that is meant to be compatible with
  * the 'fs' module from Node.js.
@@ -16,17 +17,17 @@ export interface GenericFileSystem {
  * A filesystem implementation that stores files in memory.
  */
 export class InMemoryFileSystem implements GenericFileSystem {
-  private files: {[filepath: string]: string} = {};
+  private files: {[filepath: string]: any} = {};
 
   async writeFile(path: string, content: string, options?: any): Promise<void> {
-    this.files[path] = content;
+    this.files[path] = _.cloneDeep(content);
   }
 
   async readFile(path: string, options?: any): Promise<string> {
     if (!(path in this.files)) {
       throw new Error(`File ${path} does not exist`);
     }
-    return this.files[path];
+    return _.cloneDeep(this.files[path]);
   }
 
   async exists(path: string): Promise<boolean> {
@@ -34,6 +35,14 @@ export class InMemoryFileSystem implements GenericFileSystem {
   }
 
   async mkdir(path: string, options?: any): Promise<void> {
-    // noop
+    this.files[path] = _.get(this.files, path, null);
   }
 }
+
+let fs = null;
+try {
+  fs = require("fs");
+} catch (e) {
+  fs = new InMemoryFileSystem();
+}
+export const DEFAULT_FS = fs as GenericFileSystem;

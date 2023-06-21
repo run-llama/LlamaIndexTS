@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.195",
+    "@types/node": "^20.3.1",
     "node-stdlib-browser": "^1.2.0"
   }
 }

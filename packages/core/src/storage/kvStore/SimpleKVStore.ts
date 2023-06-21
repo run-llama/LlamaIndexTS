@@ -1,10 +1,10 @@
 import * as path from 'path';
 import { GenericFileSystem } from '../FileSystem';
-import { DEFAULT_COLLECTION } from '../constants';
+import { DEFAULT_COLLECTION, DEFAULT_FS } from '../constants';
 import * as _ from "lodash";
 import { BaseKVStore } from "./types";
 
-interface DataType {
+export interface DataType {
   [key: string]: { [key: string]: any };
 }
 
@@ -17,14 +17,14 @@ export class SimpleKVStore extends BaseKVStore {
     this.data = data || {};
   }
 
-  put(key: string, val: any, collection: string = DEFAULT_COLLECTION): void {
+  async put(key: string, val: any, collection: string = DEFAULT_COLLECTION): Promise<void> {
     if (!(collection in this.data)) {
       this.data[collection] = {};
     }
     this.data[collection][key] = _.clone(val); // Creating a shallow copy of the object
   }
 
-  get(key: string, collection: string = DEFAULT_COLLECTION): any {
+  async get(key: string, collection: string = DEFAULT_COLLECTION): Promise<any> {
     let collectionData = this.data[collection];
     if (_.isNil(collectionData)) {
       return null;
@@ -35,11 +35,11 @@ export class SimpleKVStore extends BaseKVStore {
     return _.clone(collectionData[key]); // Creating a shallow copy of the object
   }
 
-  getAll(collection: string = DEFAULT_COLLECTION): DataType {
+  async getAll(collection: string = DEFAULT_COLLECTION): Promise<DataType> {
     return _.clone(this.data[collection]); // Creating a shallow copy of the object
   }
 
-  delete(key: string, collection: string = DEFAULT_COLLECTION): boolean {
+  async delete(key: string, collection: string = DEFAULT_COLLECTION): Promise<boolean> {
     if (key in this.data[collection]) {
       delete this.data[collection][key];
       return true;
@@ -47,17 +47,19 @@ export class SimpleKVStore extends BaseKVStore {
     return false;
   }
 
-  async persist(persistPath: string, fsSystem: GenericFileSystem): Promise<void> {
+  async persist(persistPath: string, fs?: GenericFileSystem): Promise<void> {
+    fs = fs || DEFAULT_FS;
     // TODO: decide on a way to polyfill path
     let dirPath = path.dirname(persistPath);
-    if (!(await fsSystem.exists(dirPath))) {
-      await fsSystem.mkdir(dirPath);
+    if (!(await fs.exists(dirPath))) {
+      await fs.mkdir(dirPath);
     }
-    await fsSystem.writeFile(persistPath, JSON.stringify(this.data));
+    await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath(persistPath: string, fsSystem: GenericFileSystem ): Promise<SimpleKVStore> {
-    let data = JSON.parse(await fsSystem.readFile(persistPath, { encoding: 'utf-8' }));
+  static async fromPersistPath(persistPath: string, fs?: GenericFileSystem ): Promise<SimpleKVStore> {
+    fs = fs || DEFAULT_FS;
+    let data = JSON.parse(await fs.readFile(persistPath, { encoding: 'utf-8' }));
     return new SimpleKVStore(data);
   }
 

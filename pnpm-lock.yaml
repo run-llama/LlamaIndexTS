@@ -132,6 +132,9 @@ importers:
       '@types/lodash':
         specifier: ^4.14.195
         version: 4.14.195
+      '@types/node':
+        specifier: ^20.3.1
+        version: 20.3.1
       node-stdlib-browser:
         specifier: ^1.2.0
         version: 1.2.0
@@ -1108,6 +1111,10 @@ packages:
 
   /@types/node@18.6.0:
     resolution: {integrity: sha512-WZ/6I1GL0DNAo4bb01lGGKTHH8BHJyECepf11kWONg3OJoHq2WYOm16Es1V54Er7NTUXsbDCpKRKdmBc4X2xhA==}
+    dev: true
+
+  /@types/node@20.3.1:
+    resolution: {integrity: sha512-EhcH/wvidPy1WeML3TtYFGR83UzjxeWRen9V402T8aUGYsCHOmfoisV3ZSg03gAFIbLq8TnWOJ0f4cALtnSEUg==}
     dev: true
 
   /@types/prettier@2.7.3:
