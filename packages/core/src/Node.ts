@@ -1,4 +1,4 @@
-import { BaseDocument } from "./Document";
+import { BaseDocument, NodeType } from "./Document";
 
 export enum DocumentRelationship {
   SOURCE = "source",
@@ -6,12 +6,6 @@ export enum DocumentRelationship {
   NEXT = "next",
   PARENT = "parent",
   CHILD = "child",
-}
-
-export enum NodeType {
-  TEXT,
-  IMAGE,
-  INDEX,
 }
 
 export class Node extends BaseDocument {
@@ -60,6 +54,10 @@ export class Node extends BaseDocument {
 
   childNodeIds(): string[] {
     return [];
+  }
+
+  getType() {
+    return NodeType.TEXT;
   }
 }
 
