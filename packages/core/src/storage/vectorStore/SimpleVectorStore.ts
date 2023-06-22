@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { GenericFileSystem } from "../FileSystem";
 import { NodeWithEmbedding, VectorStore, VectorStoreQuery, VectorStoreQueryMode, VectorStoreQueryResult } from "./types";
-import { getTopKEmbeddings, getTopKEmbeddingsLearner, getTopKMMREmbeddings } from './your-utils-file';
+import { getTopKEmbeddings, getTopKEmbeddingsLearner, getTopKMMREmbeddings } from '../../Embedding';
 import { DEFAULT_PERSIST_DIR, DEFAULT_FS } from '../constants';
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
