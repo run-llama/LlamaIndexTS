@@ -1,4 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
+
+export enum NodeType {
+  DOCUMENT,
+  TEXT,
+  IMAGE,
+  INDEX,
+}
+
 export abstract class BaseDocument {
   text: string;
   docId?: string;
@@ -45,14 +53,20 @@ export abstract class BaseDocument {
   getDocHash() {
     return this.docHash;
   }
+
+  abstract getType(): NodeType;
 }
 
 export class Document extends BaseDocument {
-  static getType() {
-    return "Document";
+  getType() {
+    return NodeType.DOCUMENT;
   }
 }
 
-export class ImageDocuemnt extends Document {
+export class ImageDocument extends Document {
   image?: string;
+
+  getType() {
+    return NodeType.IMAGE;
+  }
 }
