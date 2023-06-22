@@ -39,9 +39,24 @@ export class InMemoryFileSystem implements GenericFileSystem {
   }
 }
 
+export function getNodeFS(): GenericFileSystem {
+  const fs = require('fs/promises');
+  return {
+    exists: async (path: string) => {
+      try {
+        await fs.access(path);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    ...fs
+  }
+}
+
 let fs = null;
 try {
-  fs = require("fs");
+  fs = getNodeFS();
 } catch (e) {
   fs = new InMemoryFileSystem();
 }
