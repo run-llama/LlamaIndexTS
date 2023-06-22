@@ -1,38 +1,42 @@
-import { GenericFileSystem, getNodeFS, InMemoryFileSystem } from "../storage/FileSystem";
-import os from 'os';
-import path from 'path';
+import {
+  GenericFileSystem,
+  getNodeFS,
+  InMemoryFileSystem,
+} from "../storage/FileSystem";
+import os from "os";
+import path from "path";
 
 type FileSystemUnderTest = {
-  name: string,
-  prepare: () => Promise<any>,
-  cleanup: () => Promise<any>,
-  implementation: GenericFileSystem,
-  tempDir: string
+  name: string;
+  prepare: () => Promise<any>;
+  cleanup: () => Promise<any>;
+  implementation: GenericFileSystem;
+  tempDir: string;
 };
 
 const nodeFS = getNodeFS() as GenericFileSystem & any;
 
 describe.each<FileSystemUnderTest>([
   {
-    name: 'InMemoryFileSystem',
+    name: "InMemoryFileSystem",
     prepare: async () => {},
-    cleanup: async function() {
+    cleanup: async function () {
       this.implementation = new InMemoryFileSystem();
     },
     implementation: new InMemoryFileSystem(),
-    tempDir: './'
+    tempDir: "./",
   },
   {
-    name: 'Node.js fs',
-    prepare: async function() {
-      this.tempDir = await nodeFS.mkdtemp(path.join(os.tmpdir(), 'jest-'));
+    name: "Node.js fs",
+    prepare: async function () {
+      this.tempDir = await nodeFS.mkdtemp(path.join(os.tmpdir(), "jest-"));
     },
-    cleanup: async function() {
+    cleanup: async function () {
       await nodeFS.rm(this.tempDir, { recursive: true });
     },
     implementation: nodeFS,
-    tempDir: './'
-  }
+    tempDir: "./",
+  },
 ])("Test %s", (testParams) => {
   let testFS: GenericFileSystem;
   let tempDir: string;
@@ -54,19 +58,25 @@ describe.each<FileSystemUnderTest>([
   describe("writeFile", () => {
     it("writes file to memory", async () => {
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
-      expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe("Hello, world!");
+      expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe(
+        "Hello, world!"
+      );
     });
 
     it("overwrites existing file", async () => {
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, again!");
-      expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe("Hello, again!");
+      expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe(
+        "Hello, again!"
+      );
     });
   });
 
   describe("readFile", () => {
     it("throws error for non-existing file", async () => {
-      await expect(testFS.readFile(`${tempDir}/not_exist.txt`, "utf-8")).rejects.toThrow();
+      await expect(
+        testFS.readFile(`${tempDir}/not_exist.txt`, "utf-8")
+      ).rejects.toThrow();
     });
   });
 

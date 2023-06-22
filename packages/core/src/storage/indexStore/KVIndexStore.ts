@@ -1,8 +1,12 @@
-import { BaseKVStore } from '../kvStore/types';
-import { IndexStruct, indexStructToJson, jsonToIndexStruct } from '../../dataStructs';
-import _ from 'lodash';
-import { DEFAULT_NAMESPACE } from '../constants';
-import { BaseIndexStore } from './types';
+import { BaseKVStore } from "../kvStore/types";
+import {
+  IndexStruct,
+  indexStructToJson,
+  jsonToIndexStruct,
+} from "../../dataStructs";
+import _ from "lodash";
+import { DEFAULT_NAMESPACE } from "../constants";
+import { BaseIndexStore } from "./types";
 
 export class KVIndexStore extends BaseIndexStore {
   private _kvStore: BaseKVStore;
@@ -28,7 +32,7 @@ export class KVIndexStore extends BaseIndexStore {
     if (_.isNil(structId)) {
       let structs = await this.getIndexStructs();
       if (structs.length !== 1) {
-        throw new Error('More than one index struct found');
+        throw new Error("More than one index struct found");
       }
       return structs[0];
     } else {
@@ -41,7 +45,9 @@ export class KVIndexStore extends BaseIndexStore {
   }
 
   async getIndexStructs(): Promise<IndexStruct[]> {
-    let jsons = await this._kvStore.getAll(this._collection) as {[key: string]: any};
-    return _.values(jsons).map(json => jsonToIndexStruct(json));
+    let jsons = (await this._kvStore.getAll(this._collection)) as {
+      [key: string]: any;
+    };
+    return _.values(jsons).map((json) => jsonToIndexStruct(json));
   }
 }

@@ -17,7 +17,7 @@ export interface GenericFileSystem {
  * A filesystem implementation that stores files in memory.
  */
 export class InMemoryFileSystem implements GenericFileSystem {
-  private files: {[filepath: string]: any} = {};
+  private files: { [filepath: string]: any } = {};
 
   async writeFile(path: string, content: string, options?: any): Promise<void> {
     this.files[path] = _.cloneDeep(content);
@@ -40,7 +40,7 @@ export class InMemoryFileSystem implements GenericFileSystem {
 }
 
 export function getNodeFS(): GenericFileSystem {
-  const fs = require('fs/promises');
+  const fs = require("fs/promises");
   return {
     exists: async (path: string) => {
       try {
@@ -50,8 +50,8 @@ export function getNodeFS(): GenericFileSystem {
         return false;
       }
     },
-    ...fs
-  }
+    ...fs,
+  };
 }
 
 let fs = null;

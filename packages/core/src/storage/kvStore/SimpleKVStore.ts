@@ -1,13 +1,12 @@
-import * as path from 'path';
-import { GenericFileSystem } from '../FileSystem';
-import { DEFAULT_COLLECTION, DEFAULT_FS } from '../constants';
+import * as path from "path";
+import { GenericFileSystem } from "../FileSystem";
+import { DEFAULT_COLLECTION, DEFAULT_FS } from "../constants";
 import * as _ from "lodash";
 import { BaseKVStore } from "./types";
 
 export interface DataType {
   [key: string]: { [key: string]: any };
 }
-
 
 export class SimpleKVStore extends BaseKVStore {
   private data: DataType;
@@ -17,14 +16,21 @@ export class SimpleKVStore extends BaseKVStore {
     this.data = data || {};
   }
 
-  async put(key: string, val: any, collection: string = DEFAULT_COLLECTION): Promise<void> {
+  async put(
+    key: string,
+    val: any,
+    collection: string = DEFAULT_COLLECTION
+  ): Promise<void> {
     if (!(collection in this.data)) {
       this.data[collection] = {};
     }
     this.data[collection][key] = _.clone(val); // Creating a shallow copy of the object
   }
 
-  async get(key: string, collection: string = DEFAULT_COLLECTION): Promise<any> {
+  async get(
+    key: string,
+    collection: string = DEFAULT_COLLECTION
+  ): Promise<any> {
     let collectionData = this.data[collection];
     if (_.isNil(collectionData)) {
       return null;
@@ -39,7 +45,10 @@ export class SimpleKVStore extends BaseKVStore {
     return _.clone(this.data[collection]); // Creating a shallow copy of the object
   }
 
-  async delete(key: string, collection: string = DEFAULT_COLLECTION): Promise<boolean> {
+  async delete(
+    key: string,
+    collection: string = DEFAULT_COLLECTION
+  ): Promise<boolean> {
     if (key in this.data[collection]) {
       delete this.data[collection][key];
       return true;
@@ -57,9 +66,14 @@ export class SimpleKVStore extends BaseKVStore {
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath(persistPath: string, fs?: GenericFileSystem ): Promise<SimpleKVStore> {
+  static async fromPersistPath(
+    persistPath: string,
+    fs?: GenericFileSystem
+  ): Promise<SimpleKVStore> {
     fs = fs || DEFAULT_FS;
-    let data = JSON.parse(await fs.readFile(persistPath, { encoding: 'utf-8' }));
+    let data = JSON.parse(
+      await fs.readFile(persistPath, { encoding: "utf-8" })
+    );
     return new SimpleKVStore(data);
   }
 
