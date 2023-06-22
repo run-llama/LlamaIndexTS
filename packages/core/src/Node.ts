@@ -1,4 +1,4 @@
-import { BaseDocument, NodeType } from "./Document";
+import { BaseDocument } from "./Document";
 
 export enum DocumentRelationship {
   SOURCE = "source",
@@ -8,25 +8,34 @@ export enum DocumentRelationship {
   CHILD = "child",
 }
 
+export enum NodeType {
+  TEXT,
+  IMAGE,
+  INDEX,
+}
 
-export class Node implements BaseDocument {
-  relationships: { [key in DocumentRelationship]: string | string[] };
+export class Node extends BaseDocument {
+  relationships: { [key in DocumentRelationship]: string | string[] | null };
 
-  constructor(relationships: { [key in DocumentRelationship]: string | string[] }) {
-    this.relationships = relationships;
-  }
+  constructor(
+    text: string, // Text is required
+    docId?: string,
+    embedding?: number[],
+    docHash?: string
+  ) {
+    if (text === undefined) {
+      throw new Error("Text is required");
+    }
 
-  getText(): string {
-    throw new Error("Method not implemented.");
-  }
-  getDocId(): string {
-    throw new Error("Method not implemented.");
-  }
-  getDocHash(): string {
-    throw new Error("Method not implemented.");
-  }
-  getEmbedding(): number[] {
-    throw new Error("Method not implemented.");
+    super(text, docId, embedding, docHash);
+
+    this.relationships = {
+      source: null,
+      previous: null,
+      next: null,
+      parent: null,
+      child: [],
+    };
   }
 
   getNodeInfo(): { [key: string]: any } {
@@ -52,8 +61,14 @@ export class Node implements BaseDocument {
   childNodeIds(): string[] {
     return [];
   }
+}
 
-  getType(): NodeType {
-    return NodeType.NODE;
-  }
+export interface NodeWithEmbedding {
+  node: Node;
+  embedding: number[];
+}
+
+export interface NodeWithScore {
+  node: Node;
+  score: number;
 }

@@ -10,6 +10,10 @@ export class Response {
   }
 
   getFormattedSources() {
-    console.log("getFormattedSources");
+    throw new Error("Not implemented yet");
+  }
+
+  toString() {
+    return this.response ?? "";
   }
 }

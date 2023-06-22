@@ -1,50 +1,58 @@
-export enum NodeType {
-  DOCUMENT,
-  TEXT,
-  IMAGE,
-  INDEX,
-}
-
-export interface BaseDocument {
-  getText(): string;
-  getDocId(): string;
-  getDocHash(): string;
-  getEmbedding(): number[];
-  getType(): NodeType;
-}
-
-export class Document implements BaseDocument {
-  docId: string;
+import { v4 as uuidv4 } from "uuid";
+export abstract class BaseDocument {
   text: string;
-  // embedding: number[];
-  // docHash: string;
+  docId?: string;
+  embedding?: number[];
+  docHash?: string;
 
-  constructor(docId: string, text: string) {
-    this.docId = docId;
+  constructor(
+    text: string,
+    docId?: string,
+    embedding?: number[],
+    docHash?: string
+  ) {
     this.text = text;
+    this.docId = docId;
+    this.embedding = embedding;
+    this.docHash = docHash;
+
+    if (!docId) {
+      this.docId = uuidv4();
+    }
   }
 
   getText() {
-    console.log("getText");
-    return "";
+    if (this.text === undefined) {
+      throw new Error("Text not set");
+    }
+    return this.text;
   }
 
   getDocId() {
-    console.log("getDocId");
-    return "";
-  }
-
-  getDocHash() {
-    console.log("getDocHash");
-    return "";
+    if (this.docId === undefined) {
+      throw new Error("doc id not set");
+    }
+    return this.docId;
   }
 
   getEmbedding() {
-    console.log("getEmbedding");
-    return [];
+    if (this.embedding === undefined) {
+      throw new Error("Embedding not set");
+    }
+    return this.embedding;
   }
 
-  getType() {
-    return NodeType.DOCUMENT;
+  getDocHash() {
+    return this.docHash;
   }
+}
+
+export class Document extends BaseDocument {
+  static getType() {
+    return "Document";
+  }
+}
+
+export class ImageDocument extends Document {
+  image?: string;
 }
