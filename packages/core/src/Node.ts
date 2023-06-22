@@ -12,6 +12,10 @@ export enum DocumentRelationship {
 export class Node implements BaseDocument {
   relationships: { [key in DocumentRelationship]: string | string[] };
 
+  constructor(relationships: { [key in DocumentRelationship]: string | string[] }) {
+    this.relationships = relationships;
+  }
+
   getText(): string {
     throw new Error("Method not implemented.");
   }

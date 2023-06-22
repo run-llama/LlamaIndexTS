@@ -1,5 +1,5 @@
 import { Node } from "../../Node";
-import { BaseDocument, NodeType } from '../../Document';
+import { BaseDocument, NodeType, Document } from '../../Document';
 import { DATA_KEY, TYPE_KEY } from '../constants';
 
 
@@ -16,9 +16,9 @@ export function jsonToDoc(docDict: Record<string, any>): BaseDocument {
   let doc: BaseDocument;
 
   if (docType === NodeType.DOCUMENT) {
-      doc = Document.fromDict(dataDict);
+      doc = new Document(dataDict.docId, dataDict.text);
   } else if (docType === NodeType.TEXT) {
-      doc = Node.fromDict(dataDict);
+      doc = new Node(dataDict.relationships);
   } else {
       throw new Error(`Unknown doc type: ${docType}`);
   }
