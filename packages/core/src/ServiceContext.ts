@@ -31,3 +31,20 @@ export function serviceContextFromDefaults(options: ServiceContextOptions) {
 
   return serviceContext;
 }
+
+export function serviceContextFromServiceContext(
+  serviceContext: ServiceContext,
+  options: ServiceContextOptions
+) {
+  const newServiceContext = { ...serviceContext };
+  if (options.llmPredictor) {
+    newServiceContext.llmPredictor = options.llmPredictor;
+  }
+  if (options.embedModel) {
+    newServiceContext.embedModel = options.embedModel;
+  }
+  if (options.nodeParser) {
+    newServiceContext.nodeParser = options.nodeParser;
+  }
+  return newServiceContext;
+}
