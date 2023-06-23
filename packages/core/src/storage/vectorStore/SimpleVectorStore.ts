@@ -107,6 +107,7 @@ export class SimpleVectorStore implements VectorStore {
       [topSimilarities, topIds] = getTopKMMREmbeddings(
         queryEmbedding,
         embeddings,
+        null,
         query.similarityTopK,
         nodeIds,
         mmrThreshold

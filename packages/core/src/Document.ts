@@ -51,6 +51,9 @@ export abstract class BaseDocument {
   }
 
   getDocHash() {
+    if (this.docHash === undefined) {
+      throw new Error("Doc hash not set");
+    }
     return this.docHash;
   }
 

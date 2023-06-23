@@ -31,7 +31,7 @@ export async function storageContextFromDefaults({
   vectorStore,
   persistDir,
   fs,
-}: BuilderParams): StorageContext {
+}: BuilderParams): Promise<StorageContext> {
   persistDir = persistDir || DEFAULT_PERSIST_DIR;
 
   fs = fs || DEFAULT_FS;

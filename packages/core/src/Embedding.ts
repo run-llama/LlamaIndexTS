@@ -1,5 +1,6 @@
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
 import { OpenAISession, getOpenAISession } from "./openai";
+import { VectorStoreQueryMode } from "./storage/vectorStore/types";
 
 export enum SimilarityType {
   DEFAULT = "cosine",
@@ -7,8 +8,54 @@ export enum SimilarityType {
   EUCLIDEAN = "euclidean",
 }
 
+export function similarity(
+  embedding1: number[],
+  embedding2: number[],
+  mode: SimilarityType = SimilarityType.DEFAULT
+): number {
+  if (embedding1.length !== embedding2.length) {
+    throw new Error("Embedding length mismatch");
+  }
+
+  // NOTE I've taken enough Kahan to know that we should probably leave the
+  // numeric programming to numeric programmers. The naive approach here
+  // will probably cause some avoidable loss of floating point precision
+  // ml-distance is worth watching although they currently also use the naive
+  // formulas
+
+  function norm(x: number[]): number {
+    let result = 0;
+    for (let i = 0; i < x.length; i++) {
+      result += x[i] * x[i];
+    }
+    return Math.sqrt(result);
+  }
+
+  switch (mode) {
+    case SimilarityType.EUCLIDEAN: {
+      let difference = embedding1.map((x, i) => x - embedding2[i]);
+      return -norm(difference);
+    }
+    case SimilarityType.DOT_PRODUCT: {
+      let result = 0;
+      for (let i = 0; i < embedding1.length; i++) {
+        result += embedding1[i] * embedding2[i];
+      }
+      return result;
+    }
+    case SimilarityType.DEFAULT: {
+      return (
+        similarity(embedding1, embedding2, SimilarityType.DOT_PRODUCT) /
+        (norm(embedding1) * norm(embedding2))
+      );
+    }
+    default:
+      throw new Error("Not implemented yet");
+  }
+}
+
 export function getTopKEmbeddings(
-  query_embedding: number[],
+  queryEmbedding: number[],
   embeddings: number[][],
   similarityTopK: number = DEFAULT_SIMILARITY_TOP_K,
   embeddingIds: any[] | null = null,
@@ -27,9 +74,9 @@ export function getTopKEmbeddings(
   let similarities: { similarity: number; id: number }[] = [];
 
   for (let i = 0; i < embeddings.length; i++) {
-    let similarity = BaseEmbedding.similarity(query_embedding, embeddings[i]);
-    if (similarityCutoff == null || similarity > similarityCutoff) {
-      similarities.push({ similarity: similarity, id: embeddingIds[i] });
+    const sim = similarity(queryEmbedding, embeddings[i]);
+    if (similarityCutoff == null || sim > similarityCutoff) {
+      similarities.push({ similarity: sim, id: embeddingIds[i] });
     }
   }
 
@@ -45,6 +92,83 @@ export function getTopKEmbeddings(
     resultSimilarities.push(similarities[i].similarity);
     resultIds.push(similarities[i].id);
   }
+
+  return [resultSimilarities, resultIds];
+}
+
+export function getTopKEmbeddingsLearner(
+  queryEmbedding: number[],
+  embeddings: number[][],
+  similarityTopK?: number,
+  embeddingsIds?: any[],
+  queryMode: VectorStoreQueryMode = VectorStoreQueryMode.SVM
+): [number[], any[]] {
+  throw new Error("Not implemented yet");
+  // To support SVM properly we're probably going to have to use something like
+  // https://github.com/mljs/libsvm which itself hasn't been updated in a while
+}
+
+export function getTopKMMREmbeddings(
+  queryEmbedding: number[],
+  embeddings: number[][],
+  similarityFn: ((...args: any[]) => number) | null = null,
+  similarityTopK: number | null = null,
+  embeddingIds: any[] | null = null,
+  _similarityCutoff: number | null = null,
+  mmrThreshold: number | null = null
+): [number[], any[]] {
+  let threshold = mmrThreshold || 0.5;
+  similarityFn = similarityFn || similarity;
+
+  if (embeddingIds === null || embeddingIds.length === 0) {
+    embeddingIds = Array.from({ length: embeddings.length }, (_, i) => i);
+  }
+  let fullEmbedMap = new Map(embeddingIds.map((value, i) => [value, i]));
+  let embedMap = new Map(fullEmbedMap);
+  let embedSimilarity: Map<any, number> = new Map();
+  let score: number = Number.NEGATIVE_INFINITY;
+  let highScoreId: any | null = null;
+
+  for (let i = 0; i < embeddings.length; i++) {
+    let emb = embeddings[i];
+    let similarity = similarityFn(queryEmbedding, emb);
+    embedSimilarity.set(embeddingIds[i], similarity);
+    if (similarity * threshold > score) {
+      highScoreId = embeddingIds[i];
+      score = similarity * threshold;
+    }
+  }
+
+  let results: [number, any][] = [];
+
+  let embeddingLength = embeddings.length;
+  let similarityTopKCount = similarityTopK || embeddingLength;
+
+  while (results.length < Math.min(similarityTopKCount, embeddingLength)) {
+    results.push([score, highScoreId]);
+    embedMap.delete(highScoreId!);
+    let recentEmbeddingId = highScoreId;
+    score = Number.NEGATIVE_INFINITY;
+    for (let embedId of Array.from(embedMap.keys())) {
+      let overlapWithRecent = similarityFn(
+        embeddings[embedMap.get(embedId)!],
+        embeddings[fullEmbedMap.get(recentEmbeddingId!)!]
+      );
+      if (
+        threshold * embedSimilarity.get(embedId)! -
+          (1 - threshold) * overlapWithRecent >
+        score
+      ) {
+        score =
+          threshold * embedSimilarity.get(embedId)! -
+          (1 - threshold) * overlapWithRecent;
+        highScoreId = embedId;
+      }
+    }
+  }
+
+  let resultSimilarities = results.map(([s, _]) => s);
+  let resultIds = results.map(([_, n]) => n);
 
   return [resultSimilarities, resultIds];
 }

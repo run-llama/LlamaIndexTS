@@ -1,4 +1,4 @@
-import { IndexStruct } from "llama_index/data_structs/data_structs";
+import { IndexStruct } from "../../dataStructs";
 import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_PERSIST_DIR,
