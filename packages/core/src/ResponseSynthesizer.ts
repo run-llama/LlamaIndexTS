@@ -1,4 +1,4 @@
-import { ChatOpenAILLMPredictor } from "./LLMPredictor";
+import { ChatGPTLLMPredictor } from "./LLMPredictor";
 import { NodeWithScore } from "./Node";
 import { SimplePrompt, defaultTextQaPrompt } from "./Prompt";
 import { Response } from "./Response";
@@ -8,11 +8,11 @@ interface BaseResponseBuilder {
 }
 
 export class SimpleResponseBuilder {
-  llmPredictor: ChatOpenAILLMPredictor;
+  llmPredictor: ChatGPTLLMPredictor;
   textQATemplate: SimplePrompt;
 
   constructor() {
-    this.llmPredictor = new ChatOpenAILLMPredictor();
+    this.llmPredictor = new ChatGPTLLMPredictor();
     this.textQATemplate = defaultTextQaPrompt;
   }
 
@@ -23,7 +23,7 @@ export class SimpleResponseBuilder {
     };
 
     const prompt = this.textQATemplate(input);
-    return this.llmPredictor.predict(prompt, {});
+    return this.llmPredictor.apredict(prompt, {});
   }
 }
 

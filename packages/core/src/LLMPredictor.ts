@@ -2,11 +2,11 @@ import { ChatOpenAI } from "./LanguageModel";
 
 export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
-  predict(prompt: string, options: any): Promise<string>;
+  apredict(prompt: string, options: any): Promise<string>;
   // stream(prompt: string, options: any): Promise<any>;
 }
 
-export class ChatOpenAILLMPredictor implements BaseLLMPredictor {
+export class ChatGPTLLMPredictor implements BaseLLMPredictor {
   llm: string;
   retryOnThrottling: boolean;
   languageModel: ChatOpenAI;
@@ -25,7 +25,7 @@ export class ChatOpenAILLMPredictor implements BaseLLMPredictor {
     throw new Error("Not implemented yet");
   }
 
-  async predict(prompt: string, options: any) {
+  async apredict(prompt: string, options: any) {
     return this.languageModel.agenerate([
       {
         content: prompt,

@@ -29,7 +29,9 @@ export function getNodesFromDocument(
   return nodes;
 }
 
-interface NodeParser {}
+export interface NodeParser {
+  getNodesFromDocuments(documents: Document[]): Node[];
+}
 export class SimpleNodeParser implements NodeParser {
   textSplitter: SentenceSplitter;
 

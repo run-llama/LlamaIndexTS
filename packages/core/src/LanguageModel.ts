@@ -8,7 +8,7 @@ import {
 
 interface LLMResult {}
 
-interface BaseLanguageModel {}
+export interface BaseLanguageModel {}
 
 type MessageType = "human" | "ai" | "system" | "generic" | "function";
 
@@ -26,7 +26,7 @@ interface LLMResult {
   generations: Generation[][]; // Each input can have more than one generations
 }
 
-class BaseChatModel implements BaseLanguageModel {}
+export class BaseChatModel implements BaseLanguageModel {}
 
 export class ChatOpenAI extends BaseChatModel {
   model: string;
