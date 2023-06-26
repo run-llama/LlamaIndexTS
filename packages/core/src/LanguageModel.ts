@@ -6,8 +6,6 @@ import {
   getOpenAISession,
 } from "./openai";
 
-interface LLMResult {}
-
 export interface BaseLanguageModel {}
 
 type MessageType = "human" | "ai" | "system" | "generic" | "function";
@@ -22,7 +20,7 @@ interface Generation {
   generationInfo?: { [key: string]: any };
 }
 
-interface LLMResult {
+export interface LLMResult {
   generations: Generation[][]; // Each input can have more than one generations
 }
 
@@ -62,7 +60,7 @@ export class ChatOpenAI extends BaseChatModel {
     }
   }
 
-  async agenerate(messages: BaseMessage[]) {
+  async agenerate(messages: BaseMessage[]): Promise<LLMResult> {
     const { data } = await this.session.openai.createChatCompletion({
       model: this.model,
       temperature: this.temperature,
@@ -75,6 +73,6 @@ export class ChatOpenAI extends BaseChatModel {
     });
 
     const content = data.choices[0].message?.content ?? "";
-    return content;
+    return { generations: [[{ text: content }]] };
   }
 }
