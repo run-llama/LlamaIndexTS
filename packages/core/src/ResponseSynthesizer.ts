@@ -1,6 +1,11 @@
 import { ChatGPTLLMPredictor } from "./LLMPredictor";
 import { NodeWithScore } from "./Node";
-import { SimplePrompt, defaultTextQaPrompt } from "./Prompt";
+import {
+  SimplePrompt,
+  defaultRefinePrompt,
+  defaultTextQaPrompt,
+} from "./Prompt";
+import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
 import { ServiceContext } from "./ServiceContext";
 
@@ -29,24 +34,89 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
 }
 
 export class Refine implements BaseResponseBuilder {
+  serviceContext: ServiceContext;
+  textQATemplate: SimplePrompt;
+  refineTemplate: SimplePrompt;
+
+  constructor(
+    serviceContext: ServiceContext,
+    textQATemplate?: SimplePrompt,
+    refineTemplate?: SimplePrompt
+  ) {
+    this.serviceContext = serviceContext;
+    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
+    this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
+  }
+
   async agetResponse(
     query: string,
     textChunks: string[],
     prevResponse?: any
   ): Promise<string> {
-    throw new Error("Not implemented yet");
+    let response: string | undefined = undefined;
+
+    for (const chunk of textChunks) {
+      if (!prevResponse) {
+        response = await this.giveResponseSingle(query, chunk);
+      } else {
+        response = await this.refineResponseSingle(prevResponse, query, chunk);
+      }
+      prevResponse = response;
+    }
+
+    return response ?? "Empty Response";
   }
 
-  private giveResponseSingle(queryStr: string, textChunk: string) {
-    const textQATemplate = defaultTextQaPrompt;
+  private async giveResponseSingle(
+    queryStr: string,
+    textChunk: string
+  ): Promise<string> {
+    const textQATemplate: SimplePrompt = (input) =>
+      this.textQATemplate({ ...input, query: queryStr });
+    const textChunks = this.serviceContext.promptHelper.repack(textQATemplate, [
+      textChunk,
+    ]);
+
+    let response: string | undefined = undefined;
+
+    for (const chunk of textChunks) {
+      if (!response) {
+        response = await this.serviceContext.llmPredictor.apredict(
+          textQATemplate,
+          {
+            context: chunk,
+          }
+        );
+      } else {
+        response = await this.refineResponseSingle(response, queryStr, chunk);
+      }
+    }
+
+    return response ?? "Empty Response";
   }
 
-  private refineResponseSingle(
+  private async refineResponseSingle(
     response: string,
     queryStr: string,
     textChunk: string
   ) {
-    throw new Error("Not implemented yet");
+    const refineTemplate: SimplePrompt = (input) =>
+      this.refineTemplate({ ...input, query: queryStr });
+
+    const textChunks = this.serviceContext.promptHelper.repack(refineTemplate, [
+      textChunk,
+    ]);
+
+    for (const chunk of textChunks) {
+      response = await this.serviceContext.llmPredictor.apredict(
+        refineTemplate,
+        {
+          context: chunk,
+          existingAnswer: response,
+        }
+      );
+    }
+    return response;
   }
 }
 export class CompactAndRefine extends Refine {
@@ -55,7 +125,18 @@ export class CompactAndRefine extends Refine {
     textChunks: string[],
     prevResponse?: any
   ): Promise<string> {
-    throw new Error("Not implemented yet");
+    const textQATemplate: SimplePrompt = (input) =>
+      this.textQATemplate({ ...input, query: query });
+    const refineTemplate: SimplePrompt = (input) =>
+      this.refineTemplate({ ...input, query: query });
+
+    const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
+    const newTexts = this.serviceContext.promptHelper.repack(
+      maxPrompt,
+      textChunks
+    );
+    const response = super.agetResponse(query, newTexts, prevResponse);
+    return response;
   }
 }
 
@@ -74,16 +155,10 @@ export class TreeSummarize implements BaseResponseBuilder {
       throw new Error("Must have at least one text chunk");
     }
 
-    // TODO repack more intelligently
-    // Combine text chunks in pairs into packedTextChunks
-    let packedTextChunks: string[] = [];
-    for (let i = 0; i < textChunks.length; i += 2) {
-      if (i + 1 < textChunks.length) {
-        packedTextChunks.push(textChunks[i] + "\n\n" + textChunks[i + 1]);
-      } else {
-        packedTextChunks.push(textChunks[i]);
-      }
-    }
+    const packedTextChunks = this.serviceContext.promptHelper.repack(
+      summaryTemplate,
+      textChunks
+    );
 
     if (packedTextChunks.length === 1) {
       return this.serviceContext.llmPredictor.apredict(summaryTemplate, {

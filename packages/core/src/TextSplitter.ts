@@ -1,5 +1,6 @@
 // GitHub translated
 
+import { globalsHelper } from "./GlobalsHelper";
 import { DEFAULT_CHUNK_SIZE, DEFAULT_CHUNK_OVERLAP } from "./constants";
 
 class TextSplit {
@@ -55,16 +56,8 @@ export class SentenceSplitter {
     }
 
     if (tokenizer == undefined || tokenizerDecoder == undefined) {
-      const tiktoken = require("tiktoken-node");
-      let enc = new tiktoken.getEncoding("gpt2");
-      const default_tokenizer = (text: string) => {
-        return enc.encode(text);
-      };
-      const defaultTokenizerDecoder = (text: string) => {
-        return enc.decode(text);
-      };
-      tokenizer = default_tokenizer;
-      tokenizerDecoder = defaultTokenizerDecoder;
+      tokenizer = globalsHelper.tokenizer();
+      tokenizerDecoder = globalsHelper.tokenizer;
     }
     this.tokenizer = tokenizer;
     this.tokenizerDecoder = tokenizerDecoder;
