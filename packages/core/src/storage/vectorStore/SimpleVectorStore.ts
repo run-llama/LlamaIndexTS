@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { GenericFileSystem } from "../FileSystem";
+import { GenericFileSystem, exists } from "../FileSystem";
 import {
   NodeWithEmbedding,
   VectorStore,
@@ -134,7 +134,7 @@ export class SimpleVectorStore implements VectorStore {
     fs?: GenericFileSystem
   ): Promise<void> {
     fs = fs || this.fs;
-    if (!(await fs.exists(persistPath))) {
+    if (!(await exists(fs, persistPath))) {
       await fs.mkdir(persistPath);
     }
 
@@ -146,7 +146,7 @@ export class SimpleVectorStore implements VectorStore {
     fs?: GenericFileSystem
   ): Promise<SimpleVectorStore> {
     fs = fs || DEFAULT_FS;
-    if (!(await fs.exists(persistPath))) {
+    if (!(await exists(fs, persistPath))) {
       throw new Error(
         `No existing SimpleVectorStore found at ${persistPath}, skipping load.`
       );

@@ -2,6 +2,8 @@ import {
   GenericFileSystem,
   getNodeFS,
   InMemoryFileSystem,
+  exists,
+  walk,
 } from "../storage/FileSystem";
 import os from "os";
 import path from "path";
@@ -83,18 +85,49 @@ describe.each<FileSystemUnderTest>([
   describe("exists", () => {
     it("returns true for existing file", async () => {
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
-      expect(await testFS.exists(`${tempDir}/test.txt`)).toBe(true);
+      expect(await exists(testFS, `${tempDir}/test.txt`)).toBe(true);
     });
 
     it("returns false for non-existing file", async () => {
-      expect(await testFS.exists(`${tempDir}/not_exist.txt`)).toBe(false);
+      expect(await exists(testFS, `${tempDir}/not_exist.txt`)).toBe(false);
     });
   });
 
   describe("mkdir", () => {
     it("creates directory if it doesn't exist", async () => {
       await testFS.mkdir(`${tempDir}/testDir`);
-      expect(await testFS.exists(`${tempDir}/testDir`)).toBe(true);
+      expect(await exists(testFS, `${tempDir}/testDir`)).toBe(true);
     });
+  });
+});
+
+describe("Test walk for Node.js fs", () => {
+  const fs = getNodeFS();
+  let tempDir: string;
+
+  beforeAll(async () => {
+    tempDir = await nodeFS.mkdtemp(path.join(os.tmpdir(), "jest-"));
+    await fs.writeFile(`${tempDir}/test.txt`, "Hello, world!");
+    await fs.mkdir(`${tempDir}/subDir`);
+    await fs.writeFile(`${tempDir}/subDir/test2.txt`, "Hello, again!");
+  });
+
+  it("walks directory", async () => {
+    const expectedFiles = new Set([
+      `${tempDir}/subDir/test2.txt`,
+      `${tempDir}/test.txt`,
+    ]);
+
+    const actualFiles = new Set<string>();
+    for await (let file of walk(fs, tempDir)) {
+      expect(file).toBeTruthy();
+      actualFiles.add(file);
+    }
+
+    expect(expectedFiles).toEqual(actualFiles);
+  });
+
+  afterAll(async () => {
+    await nodeFS.rm(tempDir, { recursive: true });
   });
 });

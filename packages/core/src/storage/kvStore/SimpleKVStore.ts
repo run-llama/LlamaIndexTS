@@ -1,5 +1,5 @@
 import * as path from "path";
-import { GenericFileSystem } from "../FileSystem";
+import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_COLLECTION, DEFAULT_FS } from "../constants";
 import * as _ from "lodash";
 import { BaseKVStore } from "./types";
@@ -60,7 +60,7 @@ export class SimpleKVStore extends BaseKVStore {
     fs = fs || DEFAULT_FS;
     // TODO: decide on a way to polyfill path
     let dirPath = path.dirname(persistPath);
-    if (!(await fs.exists(dirPath))) {
+    if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
     await fs.writeFile(persistPath, JSON.stringify(this.data));
