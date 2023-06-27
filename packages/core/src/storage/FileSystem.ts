@@ -9,7 +9,7 @@ import _ from "lodash";
 export interface GenericFileSystem {
   writeFile(path: string, content: string, options?: any): Promise<void>;
   readFile(path: string, options?: any): Promise<string>;
-  access(path: string): Promise<boolean>;
+  access(path: string): Promise<void>;
   mkdir(path: string, options?: any): Promise<void>;
 }
 
@@ -35,8 +35,10 @@ export class InMemoryFileSystem implements GenericFileSystem {
     return _.cloneDeep(this.files[path]);
   }
 
-  async access(path: string): Promise<boolean> {
-    return path in this.files;
+  async access(path: string): Promise<void> {
+    if (!(path in this.files)) {
+      throw new Error(`File ${path} does not exist`);
+    }
   }
 
   async mkdir(path: string, options?: any): Promise<void> {
