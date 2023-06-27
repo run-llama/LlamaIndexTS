@@ -2,6 +2,7 @@ import {
   GenericFileSystem,
   getNodeFS,
   InMemoryFileSystem,
+  exists,
 } from "../storage/FileSystem";
 import os from "os";
 import path from "path";
@@ -83,18 +84,18 @@ describe.each<FileSystemUnderTest>([
   describe("exists", () => {
     it("returns true for existing file", async () => {
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
-      expect(await testFS.exists(`${tempDir}/test.txt`)).toBe(true);
+      expect(await exists(testFS, `${tempDir}/test.txt`)).toBe(true);
     });
 
     it("returns false for non-existing file", async () => {
-      expect(await testFS.exists(`${tempDir}/not_exist.txt`)).toBe(false);
+      expect(await exists(testFS, `${tempDir}/not_exist.txt`)).toBe(false);
     });
   });
 
   describe("mkdir", () => {
     it("creates directory if it doesn't exist", async () => {
       await testFS.mkdir(`${tempDir}/testDir`);
-      expect(await testFS.exists(`${tempDir}/testDir`)).toBe(true);
+      expect(await exists(testFS, `${tempDir}/testDir`)).toBe(true);
     });
   });
 });
