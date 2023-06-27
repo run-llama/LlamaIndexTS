@@ -83,6 +83,11 @@ export async function exists(
   }
 }
 
+/**
+ * Recursively traverses a directory and yields all the paths to the files in it.
+ * @param fs The filesystem to use.
+ * @param dirPath The path to the directory to traverse.
+ */
 export async function* walk(
   fs: WalkableFileSystem,
   dirPath: string
