@@ -3,6 +3,7 @@ import {
   getNodeFS,
   InMemoryFileSystem,
   exists,
+  walk,
 } from "../storage/FileSystem";
 import os from "os";
 import path from "path";
@@ -97,5 +98,36 @@ describe.each<FileSystemUnderTest>([
       await testFS.mkdir(`${tempDir}/testDir`);
       expect(await exists(testFS, `${tempDir}/testDir`)).toBe(true);
     });
+  });
+});
+
+describe("Test walk for Node.js fs", () => {
+  const fs = getNodeFS();
+  let tempDir: string;
+
+  beforeAll(async () => {
+    tempDir = await nodeFS.mkdtemp(path.join(os.tmpdir(), "jest-"));
+    await fs.writeFile(`${tempDir}/test.txt`, "Hello, world!");
+    await fs.mkdir(`${tempDir}/subDir`);
+    await fs.writeFile(`${tempDir}/subDir/test2.txt`, "Hello, again!");
+  });
+
+  it("walks directory", async () => {
+    const expectedFiles = new Set([
+      `${tempDir}/subDir/test2.txt`,
+      `${tempDir}/test.txt`,
+    ]);
+
+    const actualFiles = new Set<string>();
+    for await (let file of walk(fs, tempDir)) {
+      expect(file).toBeTruthy();
+      actualFiles.add(file);
+    }
+
+    expect(expectedFiles).toEqual(actualFiles);
+  });
+
+  afterAll(async () => {
+    await nodeFS.rm(tempDir, { recursive: true });
   });
 });
