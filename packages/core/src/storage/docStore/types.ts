@@ -1,5 +1,4 @@
-import { Node } from "../../Node";
-import { BaseDocument } from "../../Document";
+import { BaseNode } from "../../Node";
 import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_PERSIST_DIR,
@@ -23,14 +22,14 @@ export abstract class BaseDocumentStore {
   }
 
   // Main interface
-  abstract docs(): Promise<Record<string, BaseDocument>>;
+  abstract docs(): Promise<Record<string, BaseNode>>;
 
-  abstract addDocuments(docs: BaseDocument[], allowUpdate: boolean): void;
+  abstract addDocuments(docs: BaseNode[], allowUpdate: boolean): void;
 
   abstract getDocument(
     docId: string,
     raiseError: boolean
-  ): Promise<BaseDocument | undefined>;
+  ): Promise<BaseNode | undefined>;
 
   abstract deleteDocument(docId: string, raiseError: boolean): void;
 
@@ -51,15 +50,15 @@ export abstract class BaseDocumentStore {
   abstract deleteRefDoc(refDocId: string, raiseError: boolean): Promise<void>;
 
   // Nodes
-  getNodes(nodeIds: string[], raiseError: boolean = true): Promise<Node[]> {
+  getNodes(nodeIds: string[], raiseError: boolean = true): Promise<BaseNode[]> {
     return Promise.all(
       nodeIds.map((nodeId) => this.getNode(nodeId, raiseError))
     );
   }
 
-  async getNode(nodeId: string, raiseError: boolean = true): Promise<Node> {
+  async getNode(nodeId: string, raiseError: boolean = true): Promise<BaseNode> {
     let doc = await this.getDocument(nodeId, raiseError);
-    if (!(doc instanceof Node)) {
+    if (!(doc instanceof BaseNode)) {
       throw new Error(`Document ${nodeId} is not a Node.`);
     }
     return doc;
@@ -67,8 +66,8 @@ export abstract class BaseDocumentStore {
 
   async getNodeDict(nodeIdDict: {
     [index: number]: string;
-  }): Promise<{ [index: number]: Node }> {
-    let result: { [index: number]: Node } = {};
+  }): Promise<{ [index: number]: BaseNode }> {
+    let result: { [index: number]: BaseNode } = {};
     for (let index in nodeIdDict) {
       result[index] = await this.getNode(nodeIdDict[index]);
     }

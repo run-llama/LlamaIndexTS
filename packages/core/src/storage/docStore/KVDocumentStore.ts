@@ -1,5 +1,4 @@
-import { Node } from "../../Node";
-import { BaseDocument } from "../../Document";
+import { BaseNode } from "../../Node";
 import { BaseDocumentStore, RefDocInfo } from "./types";
 import { BaseKVStore } from "../kvStore/types";
 import _, * as lodash from "lodash";
@@ -22,9 +21,9 @@ export class KVDocumentStore extends BaseDocumentStore {
     this.metadataCollection = `${namespace}/metadata`;
   }
 
-  async docs(): Promise<Record<string, BaseDocument>> {
+  async docs(): Promise<Record<string, BaseNode>> {
     let jsonDict = await this.kvstore.getAll(this.nodeCollection);
-    let docs: Record<string, BaseDocument> = {};
+    let docs: Record<string, BaseNode> = {};
     for (let key in jsonDict) {
       docs[key] = jsonToDoc(jsonDict[key] as Record<string, any>);
     }
@@ -32,7 +31,7 @@ export class KVDocumentStore extends BaseDocumentStore {
   }
 
   async addDocuments(
-    docs: BaseDocument[],
+    docs: BaseNode[],
     allowUpdate: boolean = true
   ): Promise<void> {
     for (var idx = 0; idx < docs.length; idx++) {

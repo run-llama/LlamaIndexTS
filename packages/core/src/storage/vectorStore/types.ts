@@ -1,8 +1,8 @@
-import { Node } from "../../Node";
+import { TextNode } from "../../Node";
 import { GenericFileSystem } from "../FileSystem";
 
 export interface NodeWithEmbedding {
-  node: Node;
+  node: TextNode;
   embedding: number[];
 
   id(): string;
@@ -10,7 +10,7 @@ export interface NodeWithEmbedding {
 }
 
 export interface VectorStoreQueryResult {
-  nodes?: Node[];
+  nodes?: TextNode[];
   similarities?: number[];
   ids?: string[];
 }

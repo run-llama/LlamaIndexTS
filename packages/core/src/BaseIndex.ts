@@ -1,14 +1,13 @@
-import { Document } from "./Document";
-import { Node, NodeWithEmbedding } from "./Node";
+import { Document, TextNode } from "./Node";
 import { SimpleNodeParser } from "./NodeParser";
 import { BaseQueryEngine, RetrieverQueryEngine } from "./QueryEngine";
 import { v4 as uuidv4 } from "uuid";
 import { VectorIndexRetriever } from "./Retriever";
 import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
 export class BaseIndex {
-  nodes: Node[] = [];
+  nodes: TextNode[] = [];
 
-  constructor(nodes?: Node[]) {
+  constructor(nodes?: TextNode[]) {
     this.nodes = nodes ?? [];
   }
 }
@@ -16,7 +15,7 @@ export class BaseIndex {
 export class IndexDict {
   indexId: string;
   summary?: string;
-  nodesDict: Record<string, Node> = {};
+  nodesDict: Record<string, TextNode> = {};
   docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
 
   constructor(indexId = uuidv4(), summary = undefined) {
@@ -31,8 +30,8 @@ export class IndexDict {
     return this.summary;
   }
 
-  addNode(node: Node, textId?: string) {
-    const vectorId = textId ?? node.getDocId();
+  addNode(node: TextNode, textId?: string) {
+    const vectorId = textId ?? node.id_;
     this.nodesDict[vectorId] = node;
   }
 }
