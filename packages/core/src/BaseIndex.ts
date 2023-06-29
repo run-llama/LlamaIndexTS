@@ -38,10 +38,9 @@ export class IndexDict {
 
 export class VectorStoreIndex extends BaseIndex {
   indexStruct: IndexDict;
-  nodesWithEmbeddings: NodeWithEmbedding[] = []; // FIXME replace with storage context
   embeddingService: BaseEmbedding; // FIXME replace with service context
 
-  constructor(nodes: Node[]) {
+  constructor(nodes: TextNode[]) {
     super(nodes);
     this.indexStruct = new IndexDict();
 
@@ -61,7 +60,7 @@ export class VectorStoreIndex extends BaseIndex {
       const embedding = await this.embeddingService.aGetTextEmbedding(
         node.getText()
       );
-      this.nodesWithEmbeddings.push({ node: node, embedding: embedding });
+      node.embedding = embedding;
     }
   }
 

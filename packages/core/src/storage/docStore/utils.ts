@@ -3,17 +3,17 @@ import { BaseNode, Document, TextNode, ObjectType } from "../../Node";
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
 
-export function docToJson(doc: Document): Record<string, any> {
+export function docToJson(doc: BaseNode): Record<string, any> {
   return {
     [DATA_KEY]: JSON.stringify(doc),
-    [TYPE_KEY]: Document.getType(),
+    [TYPE_KEY]: doc.getType(),
   };
 }
 
-export function jsonToDoc(docDict: Record<string, any>): Document {
+export function jsonToDoc(docDict: Record<string, any>): BaseNode {
   let docType = docDict[TYPE_KEY];
   let dataDict = docDict[DATA_KEY];
-  let doc: Document;
+  let doc: BaseNode;
 
   if (docType === ObjectType.DOCUMENT) {
     doc = new Document({

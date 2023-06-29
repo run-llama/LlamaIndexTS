@@ -1,4 +1,4 @@
-import { BaseNode } from "../../Node";
+import { BaseNode, Document, ObjectType, TextNode } from "../../Node";
 import { BaseDocumentStore, RefDocInfo } from "./types";
 import { BaseKVStore } from "../kvStore/types";
 import _, * as lodash from "lodash";
@@ -36,35 +36,34 @@ export class KVDocumentStore extends BaseDocumentStore {
   ): Promise<void> {
     for (var idx = 0; idx < docs.length; idx++) {
       const doc = docs[idx];
-      if (doc.getDocId() === null) {
+      if (doc.id_ === null) {
         throw new Error("doc_id not set");
       }
-      if (!allowUpdate && (await this.documentExists(doc.getDocId()))) {
+      if (!allowUpdate && (await this.documentExists(doc.id_))) {
         throw new Error(
-          `doc_id ${doc.getDocId()} already exists. Set allow_update to True to overwrite.`
+          `doc_id ${doc.id_} already exists. Set allow_update to True to overwrite.`
         );
       }
-      let nodeKey = doc.getDocId();
+      let nodeKey = doc.id_;
       let data = docToJson(doc);
       await this.kvstore.put(nodeKey, data, this.nodeCollection);
-      let metadata: DocMetaData = { docHash: doc.getDocHash() };
+      let metadata: DocMetaData = { docHash: doc.hash };
 
-      if (doc instanceof Node && doc.refDocId() !== null) {
-        const nodeDoc = doc as Node;
-        let refDocInfo = (await this.getRefDocInfo(nodeDoc.refDocId()!)) || {
+      if (doc.getType() === ObjectType.TEXT && doc.sourceNode !== undefined) {
+        let refDocInfo = (await this.getRefDocInfo(doc.sourceNode.nodeId)) || {
           docIds: [],
           extraInfo: {},
         };
-        refDocInfo.docIds.push(nodeDoc.getDocId());
+        refDocInfo.docIds.push(doc.id_);
         if (_.isEmpty(refDocInfo.extraInfo)) {
-          refDocInfo.extraInfo = nodeDoc.getNodeInfo() || {};
+          refDocInfo.extraInfo = {};
         }
         await this.kvstore.put(
-          nodeDoc.refDocId()!,
+          doc.sourceNode.nodeId,
           refDocInfo,
           this.refDocCollection
         );
-        metadata.refDocId = nodeDoc.refDocId()!;
+        metadata.refDocId = doc.sourceNode.nodeId!;
       }
 
       this.kvstore.put(nodeKey, metadata, this.metadataCollection);
@@ -74,7 +73,7 @@ export class KVDocumentStore extends BaseDocumentStore {
   async getDocument(
     docId: string,
     raiseError: boolean = true
-  ): Promise<BaseDocument | undefined> {
+  ): Promise<BaseNode | undefined> {
     let json = await this.kvstore.get(docId, this.nodeCollection);
     if (_.isNil(json)) {
       if (raiseError) {

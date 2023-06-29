@@ -1,5 +1,5 @@
 import { VectorStoreIndex } from "./BaseIndex";
-import { BaseEmbedding, OpenAIEmbedding, getTopKEmbeddings } from "./Embedding";
+import { BaseEmbedding, getTopKEmbeddings } from "./Embedding";
 import { NodeWithScore } from "./Node";
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
 
@@ -23,9 +23,9 @@ export class VectorIndexRetriever implements BaseRetriever {
     );
     const [similarities, ids] = getTopKEmbeddings(
       queryEmbedding,
-      this.index.nodesWithEmbeddings.map((node) => node.embedding),
+      this.index.nodes.map((node) => node.getEmbedding()),
       undefined,
-      this.index.nodesWithEmbeddings.map((node) => node.node.docId)
+      this.index.nodes.map((node) => node.id_)
     );
 
     let nodesWithScores: NodeWithScore[] = [];

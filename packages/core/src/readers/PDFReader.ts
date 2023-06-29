@@ -1,4 +1,4 @@
-import { Document } from "../Document";
+import { Document } from "../Node";
 import { BaseReader } from "./base";
 import { GenericFileSystem } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
@@ -12,6 +12,6 @@ export default class PDFReader implements BaseReader {
   ): Promise<Document[]> {
     let dataBuffer = (await fs.readFile(file)) as any;
     const data = await pdfParse(dataBuffer);
-    return [new Document(data.text, file)];
+    return [new Document({ text: data.text, id_: file })];
   }
 }

@@ -68,7 +68,7 @@ export interface VectorStore {
   storesText: boolean;
   isEmbeddingQuery?: boolean;
   client(): any;
-  add(embeddingResults: NodeWithEmbedding[]): string[];
+  add(embeddingResults: TextNode[]): string[];
   delete(refDocId: string, deleteKwargs?: any): void;
   query(query: VectorStoreQuery, kwargs?: any): VectorStoreQueryResult;
   persist(persistPath: string, fs?: GenericFileSystem): void;

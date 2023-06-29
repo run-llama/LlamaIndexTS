@@ -49,9 +49,7 @@ export abstract class BaseNode {
     Object.assign(this, init);
   }
 
-  static getType(): ObjectType {
-    throw new Error("Not implemented");
-  }
+  abstract getType(): ObjectType;
 
   abstract getContent(metadataMode: MetadataMode): string;
   abstract getMetadataStr(metadataMode: MetadataMode): string;
@@ -149,7 +147,7 @@ export class TextNode extends BaseNode {
     throw new Error("Not implemented");
   }
 
-  static getType(): ObjectType {
+  getType(): ObjectType {
     return ObjectType.TEXT;
   }
 
@@ -195,7 +193,7 @@ export class TextNode extends BaseNode {
 export class ImageNode extends TextNode {
   image: string = "";
 
-  static getType(): ObjectType {
+  getType(): ObjectType {
     return ObjectType.IMAGE;
   }
 }
@@ -203,7 +201,7 @@ export class ImageNode extends TextNode {
 export class IndexNode extends TextNode {
   indexId: string = "";
 
-  static getType(): ObjectType {
+  getType(): ObjectType {
     return ObjectType.INDEX;
   }
 }
@@ -219,7 +217,7 @@ export class Document extends TextNode {
     Object.assign(this, init);
   }
 
-  static getType() {
+  getType() {
     return ObjectType.DOCUMENT;
   }
 

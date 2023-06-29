@@ -11,7 +11,7 @@ export class TextFileReader implements BaseReader {
     fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file, "utf-8");
-    return [new Document(dataBuffer, file)];
+    return [new Document({ text: dataBuffer, id_: file })];
   }
 }
 
