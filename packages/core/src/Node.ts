@@ -25,7 +25,7 @@ export enum MetadataMode {
 export interface RelatedNodeInfo {
   nodeId: string;
   nodeType?: ObjectType;
-  metadata: { [key: string]: any };
+  metadata: Record<string, any>;
   hash?: string;
 }
 
@@ -39,7 +39,7 @@ export abstract class BaseNode {
   embedding?: number[];
 
   // Metadata fields
-  metadata: { [key: string]: any } = {};
+  metadata: Record<string, any> = {};
   excludedEmbedMetadataKeys: string[] = [];
   excludedLlmMetadataKeys: string[] = [];
   relationships: Partial<Record<NodeRelationship, RelatedNodeType>> = {};

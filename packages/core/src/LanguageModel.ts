@@ -17,7 +17,7 @@ interface BaseMessage {
 
 interface Generation {
   text: string;
-  generationInfo?: { [key: string]: any };
+  generationInfo?: Record<string, any>;
 }
 
 export interface LLMResult {

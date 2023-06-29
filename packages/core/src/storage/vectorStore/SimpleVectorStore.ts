@@ -23,8 +23,8 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
 class SimpleVectorStoreData {
-  embeddingDict: { [key: string]: number[] } = {};
-  textIdToRefDocId: { [key: string]: string } = {};
+  embeddingDict: Record<string, number> = {};
+  textIdToRefDocId: Record<string, string> = {};
 }
 
 export class SimpleVectorStore implements VectorStore {

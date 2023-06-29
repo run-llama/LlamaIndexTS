@@ -4,9 +4,7 @@ import { DEFAULT_COLLECTION, DEFAULT_FS } from "../constants";
 import * as _ from "lodash";
 import { BaseKVStore } from "./types";
 
-export interface DataType {
-  [key: string]: { [key: string]: any };
-}
+export type DataType = Record<string, Record<string, any>>;
 
 export class SimpleKVStore extends BaseKVStore {
   private data: DataType;

@@ -1,16 +1,16 @@
 import { GenericFileSystem } from "../FileSystem";
 const defaultCollection = "data";
 
-type StoredValue = { [key: string]: any } | null;
+type StoredValue = Record<string, any> | null;
 
 export abstract class BaseKVStore {
   abstract put(
     key: string,
-    val: { [key: string]: any },
+    val: Record<string, any>,
     collection?: string
   ): Promise<void>;
   abstract get(key: string, collection?: string): Promise<StoredValue>;
-  abstract getAll(collection?: string): Promise<{ [key: string]: StoredValue }>;
+  abstract getAll(collection?: string): Promise<Record<string, StoredValue>>;
   abstract delete(key: string, collection?: string): Promise<boolean>;
 }
 

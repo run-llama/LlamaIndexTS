@@ -9,7 +9,7 @@ const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_DOC_STORE_PERSIST_F
 
 export interface RefDocInfo {
   docIds: string[];
-  extraInfo: { [key: string]: any };
+  extraInfo: Record<string, any>;
 }
 
 export abstract class BaseDocumentStore {
@@ -41,9 +41,7 @@ export abstract class BaseDocumentStore {
   abstract getDocumentHash(docId: string): Promise<string | undefined>;
 
   // Ref Docs
-  abstract getAllRefDocInfo(): Promise<
-    { [key: string]: RefDocInfo } | undefined
-  >;
+  abstract getAllRefDocInfo(): Promise<Record<string, RefDocInfo> | undefined>;
 
   abstract getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined>;
 
@@ -66,8 +64,8 @@ export abstract class BaseDocumentStore {
 
   async getNodeDict(nodeIdDict: {
     [index: number]: string;
-  }): Promise<{ [index: number]: BaseNode }> {
-    let result: { [index: number]: BaseNode } = {};
+  }): Promise<Record<number, BaseNode>> {
+    let result: Record<number, BaseNode> = {};
     for (let index in nodeIdDict) {
       result[index] = await this.getNode(nodeIdDict[index]);
     }
