@@ -71,6 +71,14 @@ export abstract class BaseNode {
     return relationship;
   }
 
+  get refDocId(): string | undefined {
+    const sourceNode = this.sourceNode;
+    if (sourceNode === undefined) {
+      return undefined;
+    }
+    return sourceNode.nodeId;
+  }
+
   get prevNode(): RelatedNodeInfo | undefined {
     const relationship = this.relationships[NodeRelationship.PREVIOUS];
 
