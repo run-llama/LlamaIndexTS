@@ -12,9 +12,9 @@ import {
 } from "./constants";
 
 export interface StorageContext {
-  docStore?: BaseDocumentStore;
-  indexStore?: BaseIndexStore;
-  vectorStore?: VectorStore;
+  docStore: BaseDocumentStore;
+  indexStore: BaseIndexStore;
+  vectorStore: VectorStore;
 }
 
 type BuilderParams = {

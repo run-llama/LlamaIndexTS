@@ -1,10 +1,10 @@
-import { TextNode } from "./Node";
+import { BaseNode } from "./Node";
 
 export class Response {
   response?: string;
-  sourceNodes: TextNode[];
+  sourceNodes: BaseNode[];
 
-  constructor(response?: string, sourceNodes?: TextNode[]) {
+  constructor(response?: string, sourceNodes?: BaseNode[]) {
     this.response = response;
     this.sourceNodes = sourceNodes || [];
   }

@@ -136,7 +136,7 @@ export class TextNode extends BaseNode {
   endCharIdx?: number;
   // textTemplate: NOTE write your own formatter if needed
   // metadataTemplate: NOTE write your own formatter if needed
-  metadataSeperator: string = "\n";
+  metadataSeparator: string = "\n";
 
   constructor(init?: Partial<TextNode>) {
     super(init);
@@ -174,7 +174,7 @@ export class TextNode extends BaseNode {
 
     return [...usableMetadataKeys]
       .map((key) => `${key}: ${this.metadata[key]}`)
-      .join(this.metadataSeperator);
+      .join(this.metadataSeparator);
   }
 
   setContent(value: string) {
@@ -206,11 +206,6 @@ export class IndexNode extends TextNode {
   }
 }
 
-export interface NodeWithScore {
-  node: TextNode;
-  score: number;
-}
-
 export class Document extends TextNode {
   constructor(init?: Partial<Document>) {
     super(init);
@@ -228,4 +223,14 @@ export class Document extends TextNode {
 
 export class ImageDocument extends Document {
   image?: string;
+}
+
+export interface NodeWithScore {
+  node: BaseNode;
+  score: number;
+}
+
+export interface NodeWithEmbedding {
+  node: BaseNode;
+  embedding: number[];
 }

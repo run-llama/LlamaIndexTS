@@ -1,21 +1,18 @@
-import { Document, TextNode } from "./Node";
-import { SimpleNodeParser } from "./NodeParser";
+import { Document, BaseNode, MetadataMode, NodeWithEmbedding } from "./Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "./QueryEngine";
 import { v4 as uuidv4 } from "uuid";
-import { VectorIndexRetriever } from "./Retriever";
-import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
-export class BaseIndex {
-  nodes: TextNode[] = [];
-
-  constructor(nodes?: TextNode[]) {
-    this.nodes = nodes ?? [];
-  }
-}
-
+import { BaseRetriever, VectorIndexRetriever } from "./Retriever";
+import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
+import {
+  StorageContext,
+  storageContextFromDefaults,
+} from "./storage/StorageContext";
+import { BaseDocumentStore } from "./storage/docStore/types";
+import { VectorStore } from "./storage/vectorStore/types";
 export class IndexDict {
   indexId: string;
   summary?: string;
-  nodesDict: Record<string, TextNode> = {};
+  nodesDict: Record<string, BaseNode> = {};
   docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
 
   constructor(indexId = uuidv4(), summary = undefined) {
@@ -30,56 +27,147 @@ export class IndexDict {
     return this.summary;
   }
 
-  addNode(node: TextNode, textId?: string) {
+  addNode(node: BaseNode, textId?: string) {
     const vectorId = textId ?? node.id_;
     this.nodesDict[vectorId] = node;
   }
 }
 
-export class VectorStoreIndex extends BaseIndex {
-  indexStruct: IndexDict;
-  embeddingService: BaseEmbedding; // FIXME replace with service context
+export interface BaseIndexInit<T> {
+  serviceContext: ServiceContext;
+  storageContext: StorageContext;
+  docStore: BaseDocumentStore;
+  vectorStore: VectorStore;
+  indexStruct: T;
+}
+export abstract class BaseIndex<T> {
+  serviceContext: ServiceContext;
+  storageContext: StorageContext;
+  docStore: BaseDocumentStore;
+  vectorStore: VectorStore;
+  indexStruct: T;
 
-  constructor(nodes: TextNode[]) {
-    super(nodes);
-    this.indexStruct = new IndexDict();
-
-    if (nodes !== undefined) {
-      this.buildIndexFromNodes();
-    }
-
-    this.embeddingService = new OpenAIEmbedding();
+  constructor(init: BaseIndexInit<T>) {
+    this.serviceContext = init.serviceContext;
+    this.storageContext = init.storageContext;
+    this.docStore = init.docStore;
+    this.vectorStore = init.vectorStore;
+    this.indexStruct = init.indexStruct;
   }
 
-  async getNodeEmbeddingResults(logProgress = false) {
-    for (let i = 0; i < this.nodes.length; ++i) {
-      const node = this.nodes[i];
-      if (logProgress) {
-        console.log(`getting embedding for node ${i}/${this.nodes.length}`);
+  abstract asRetriever(): BaseRetriever;
+}
+
+export interface VectorIndexOptions {
+  nodes?: BaseNode[];
+  indexStruct?: IndexDict;
+  serviceContext?: ServiceContext;
+  storageContext?: StorageContext;
+}
+
+export class VectorStoreIndex extends BaseIndex<IndexDict> {
+  private constructor(init: BaseIndexInit<IndexDict>) {
+    super(init);
+  }
+
+  static async init(options: VectorIndexOptions): Promise<VectorStoreIndex> {
+    const storageContext =
+      options.storageContext ?? (await storageContextFromDefaults({}));
+    const serviceContext =
+      options.serviceContext ?? serviceContextFromDefaults({});
+    const docStore = storageContext.docStore;
+    const vectorStore = storageContext.vectorStore;
+
+    let indexStruct: IndexDict;
+    if (options.indexStruct) {
+      if (options.nodes) {
+        throw new Error(
+          "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
+        );
       }
-      const embedding = await this.embeddingService.aGetTextEmbedding(
-        node.getText()
+      indexStruct = options.indexStruct;
+    } else {
+      if (!options.nodes) {
+        throw new Error(
+          "Cannot initialize VectorStoreIndex without nodes or indexStruct"
+        );
+      }
+      indexStruct = await VectorStoreIndex.buildIndexFromNodes(
+        options.nodes,
+        serviceContext,
+        vectorStore
       );
-      node.embedding = embedding;
     }
+
+    return new VectorStoreIndex({
+      storageContext,
+      serviceContext,
+      docStore,
+      vectorStore,
+      indexStruct,
+    });
   }
 
-  buildIndexFromNodes() {
-    for (const node of this.nodes) {
-      this.indexStruct.addNode(node);
+  static async agetNodeEmbeddingResults(
+    nodes: BaseNode[],
+    serviceContext: ServiceContext,
+    logProgress = false
+  ) {
+    const nodesWithEmbeddings: NodeWithEmbedding[] = [];
+
+    for (let i = 0; i < nodes.length; ++i) {
+      const node = nodes[i];
+      if (logProgress) {
+        console.log(`getting embedding for node ${i}/${nodes.length}`);
+      }
+      const embedding = await serviceContext.embedModel.aGetTextEmbedding(
+        node.getContent(MetadataMode.EMBED)
+      );
+      nodesWithEmbeddings.push({ node, embedding });
     }
+
+    return nodesWithEmbeddings;
   }
 
-  static async fromDocuments(documents: Document[]): Promise<VectorStoreIndex> {
-    const nodeParser = new SimpleNodeParser(); // FIXME use service context
-    const nodes = nodeParser.getNodesFromDocuments(documents);
-    const index = new VectorStoreIndex(nodes);
-    await index.getNodeEmbeddingResults();
+  static async buildIndexFromNodes(
+    nodes: BaseNode[],
+    serviceContext: ServiceContext,
+    vectorStore: VectorStore
+  ): Promise<IndexDict> {
+    const embeddingResults = await this.agetNodeEmbeddingResults(
+      nodes,
+      serviceContext
+    );
+
+    vectorStore.add(embeddingResults);
+
+    throw new Error("not implemented");
+  }
+
+  static async fromDocuments(
+    documents: Document[],
+    storageContext?: StorageContext,
+    serviceContext?: ServiceContext
+  ): Promise<VectorStoreIndex> {
+    storageContext = storageContext ?? (await storageContextFromDefaults({}));
+    serviceContext = serviceContext ?? serviceContextFromDefaults({});
+    const docStore = storageContext.docStore;
+
+    for (const doc of documents) {
+      docStore.setDocumentHash(doc.id_, doc.hash);
+    }
+
+    const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+    const index = await VectorStoreIndex.init({
+      nodes,
+      storageContext,
+      serviceContext,
+    });
     return index;
   }
 
   asRetriever(): VectorIndexRetriever {
-    return new VectorIndexRetriever(this, this.embeddingService);
+    return new VectorIndexRetriever(this);
   }
 
   asQueryEngine(): BaseQueryEngine {

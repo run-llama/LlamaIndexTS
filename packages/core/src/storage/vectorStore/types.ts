@@ -1,18 +1,11 @@
-import { TextNode } from "../../Node";
+import { BaseNode } from "../../Node";
 import { GenericFileSystem } from "../FileSystem";
-
-export interface NodeWithEmbedding {
-  node: TextNode;
-  embedding: number[];
-
-  id(): string;
-  refDocId(): string;
-}
+import { NodeWithEmbedding } from "../../Node";
 
 export interface VectorStoreQueryResult {
-  nodes?: TextNode[];
-  similarities?: number[];
-  ids?: string[];
+  nodes?: BaseNode[];
+  similarities: number[];
+  ids: string[];
 }
 
 export enum VectorStoreQueryMode {
@@ -68,7 +61,7 @@ export interface VectorStore {
   storesText: boolean;
   isEmbeddingQuery?: boolean;
   client(): any;
-  add(embeddingResults: TextNode[]): string[];
+  add(embeddingResults: NodeWithEmbedding[]): string[];
   delete(refDocId: string, deleteKwargs?: any): void;
   query(query: VectorStoreQuery, kwargs?: any): VectorStoreQueryResult;
   persist(persistPath: string, fs?: GenericFileSystem): void;

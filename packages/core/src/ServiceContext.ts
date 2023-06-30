@@ -21,7 +21,7 @@ export interface ServiceContextOptions {
   nodeParser?: NodeParser;
   // NodeParser arguments
   chunkSize?: number;
-  chunkOverlap: number;
+  chunkOverlap?: number;
 }
 
 export function serviceContextFromDefaults(options: ServiceContextOptions) {

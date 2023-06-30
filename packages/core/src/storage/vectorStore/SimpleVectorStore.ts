@@ -12,7 +12,7 @@ import {
   getTopKMMREmbeddings,
 } from "../../Embedding";
 import { DEFAULT_PERSIST_DIR, DEFAULT_FS } from "../constants";
-import { TextNode } from "../../Node";
+import { NodeWithEmbedding } from "../../Node";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -53,18 +53,19 @@ export class SimpleVectorStore implements VectorStore {
     return this.data.embeddingDict[textId];
   }
 
-  add(embeddingResults: TextNode[]): string[] {
+  add(embeddingResults: NodeWithEmbedding[]): string[] {
     for (let result of embeddingResults) {
-      this.data.embeddingDict[result.id_] = result.getEmbedding();
+      this.data.embeddingDict[result.node.id_] = result.embedding;
 
-      if (!result.sourceNode) {
+      if (!result.node.sourceNode) {
         console.error("Missing source node from TextNode.");
         continue;
       }
 
-      this.data.textIdToRefDocId[result.id_] = result.sourceNode?.nodeId;
+      this.data.textIdToRefDocId[result.node.id_] =
+        result.node.sourceNode?.nodeId;
     }
-    return embeddingResults.map((result) => result.id_);
+    return embeddingResults.map((result) => result.node.id_);
   }
 
   delete(refDocId: string): void {

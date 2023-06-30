@@ -1,5 +1,5 @@
 import { ChatGPTLLMPredictor } from "./LLMPredictor";
-import { NodeWithScore } from "./Node";
+import { MetadataMode, NodeWithScore } from "./Node";
 import {
   SimplePrompt,
   defaultRefinePrompt,
@@ -190,7 +190,9 @@ export class ResponseSynthesizer {
   }
 
   async asynthesize(query: string, nodes: NodeWithScore[]) {
-    let textChunks: string[] = nodes.map((node) => node.node.text);
+    let textChunks: string[] = nodes.map((node) =>
+      node.node.getContent(MetadataMode.NONE)
+    );
     const response = await this.responseBuilder.agetResponse(query, textChunks);
     return new Response(
       response,
