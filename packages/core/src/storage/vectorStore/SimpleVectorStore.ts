@@ -1,7 +1,6 @@
 import _ from "lodash";
 import { GenericFileSystem, exists } from "../FileSystem";
 import {
-  NodeWithEmbedding,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
@@ -13,6 +12,7 @@ import {
   getTopKMMREmbeddings,
 } from "../../Embedding";
 import { DEFAULT_PERSIST_DIR, DEFAULT_FS } from "../constants";
+import { TextNode } from "../../Node";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -23,8 +23,8 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
 class SimpleVectorStoreData {
-  embeddingDict: { [key: string]: number[] } = {};
-  textIdToRefDocId: { [key: string]: string } = {};
+  embeddingDict: Record<string, number[]> = {};
+  textIdToRefDocId: Record<string, string> = {};
 }
 
 export class SimpleVectorStore implements VectorStore {
@@ -53,12 +53,18 @@ export class SimpleVectorStore implements VectorStore {
     return this.data.embeddingDict[textId];
   }
 
-  add(embeddingResults: NodeWithEmbedding[]): string[] {
+  add(embeddingResults: TextNode[]): string[] {
     for (let result of embeddingResults) {
-      this.data.embeddingDict[result.id()] = result.embedding;
-      this.data.textIdToRefDocId[result.id()] = result.refDocId();
+      this.data.embeddingDict[result.id_] = result.getEmbedding();
+
+      if (!result.sourceNode) {
+        console.error("Missing source node from TextNode.");
+        continue;
+      }
+
+      this.data.textIdToRefDocId[result.id_] = result.sourceNode?.nodeId;
     }
-    return embeddingResults.map((result) => result.id());
+    return embeddingResults.map((result) => result.id_);
   }
 
   delete(refDocId: string): void {

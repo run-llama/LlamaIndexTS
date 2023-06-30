@@ -5,7 +5,7 @@ export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
   apredict(
     prompt: string | SimplePrompt,
-    input?: { [key: string]: string }
+    input?: Record<string, string>
   ): Promise<string>;
   // stream(prompt: string, options: any): Promise<any>;
 }
@@ -31,7 +31,7 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
 
   async apredict(
     prompt: string | SimplePrompt,
-    input?: { [key: string]: string }
+    input?: Record<string, string>
   ): Promise<string> {
     if (typeof prompt === "string") {
       const result = await this.languageModel.agenerate([

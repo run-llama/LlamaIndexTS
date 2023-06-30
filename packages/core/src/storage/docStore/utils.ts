@@ -1,36 +1,35 @@
-import { Node } from "../../Node";
-import { BaseDocument, Document, NodeType } from "../../Document";
+import { BaseNode, Document, TextNode, ObjectType } from "../../Node";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
 
-export function docToJson(doc: BaseDocument): Record<string, any> {
+export function docToJson(doc: BaseNode): Record<string, any> {
   return {
     [DATA_KEY]: JSON.stringify(doc),
     [TYPE_KEY]: doc.getType(),
   };
 }
 
-export function jsonToDoc(docDict: Record<string, any>): BaseDocument {
+export function jsonToDoc(docDict: Record<string, any>): BaseNode {
   let docType = docDict[TYPE_KEY];
   let dataDict = docDict[DATA_KEY];
-  let doc: BaseDocument;
+  let doc: BaseNode;
 
-  if (docType === NodeType.DOCUMENT) {
-    doc = new Document(
-      dataDict.text,
-      dataDict.docId,
-      dataDict.embedding,
-      dataDict.docHash
-    );
-  } else if (docType === NodeType.TEXT) {
-    const reslationships = dataDict.relationships;
-    doc = new Node(
-      reslationships.text,
-      reslationships.docId,
-      reslationships.embedding,
-      reslationships.docHash
-    );
+  if (docType === ObjectType.DOCUMENT) {
+    doc = new Document({
+      text: dataDict.text,
+      id_: dataDict.id_,
+      embedding: dataDict.embedding,
+      hash: dataDict.hash,
+    });
+  } else if (docType === ObjectType.TEXT) {
+    const relationships = dataDict.relationships;
+    doc = new TextNode({
+      text: relationships.text,
+      id_: relationships.id_,
+      embedding: relationships.embedding,
+      hash: relationships.hash,
+    });
   } else {
     throw new Error(`Unknown doc type: ${docType}`);
   }

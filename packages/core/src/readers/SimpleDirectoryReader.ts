@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Document } from "../Document";
+import { Document } from "../Node";
 import { BaseReader } from "./base";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
@@ -11,11 +11,11 @@ export class TextFileReader implements BaseReader {
     fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file, "utf-8");
-    return [new Document(dataBuffer, file)];
+    return [new Document({ text: dataBuffer, id_: file })];
   }
 }
 
-const FILE_EXT_TO_READER: { [key: string]: BaseReader } = {
+const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   txt: new TextFileReader(),
   pdf: new PDFReader(),
 };
@@ -24,7 +24,7 @@ export type SimpleDirectoryReaderLoadDataProps = {
   directoryPath: string;
   fs?: CompleteFileSystem;
   defaultReader?: BaseReader | null;
-  fileExtToReader?: { [key: string]: BaseReader };
+  fileExtToReader?: Record<string, BaseReader>;
 };
 
 export default class SimpleDirectoryReader implements BaseReader {

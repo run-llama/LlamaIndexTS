@@ -22,7 +22,7 @@ export interface WalkableFileSystem {
  * A filesystem implementation that stores files in memory.
  */
 export class InMemoryFileSystem implements GenericFileSystem {
-  private files: { [filepath: string]: any } = {};
+  private files: Record<string, any> = {};
 
   async writeFile(path: string, content: string, options?: any): Promise<void> {
     this.files[path] = _.cloneDeep(content);

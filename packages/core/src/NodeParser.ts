@@ -1,5 +1,4 @@
-import { Document } from "./Document";
-import { Node } from "./Node";
+import { Document, NodeRelationship, TextNode } from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 
 export function getTextSplitsFromDocument(
@@ -16,13 +15,13 @@ export function getNodesFromDocument(
   document: Document,
   textSplitter: SentenceSplitter
 ) {
-  let nodes: Node[] = [];
+  let nodes: TextNode[] = [];
 
   const textSplits = getTextSplitsFromDocument(document, textSplitter);
 
   textSplits.forEach((textSplit, index) => {
-    const node = new Node(textSplit);
-    node.relationships.source = document.getDocId();
+    const node = new TextNode({ text: textSplit });
+    node.relationships[NodeRelationship.SOURCE] = document.asRelatedNodeInfo();
     nodes.push(node);
   });
 
@@ -30,7 +29,7 @@ export function getNodesFromDocument(
 }
 
 export interface NodeParser {
-  getNodesFromDocuments(documents: Document[]): Node[];
+  getNodesFromDocuments(documents: Document[]): TextNode[];
 }
 export class SimpleNodeParser implements NodeParser {
   textSplitter: SentenceSplitter;

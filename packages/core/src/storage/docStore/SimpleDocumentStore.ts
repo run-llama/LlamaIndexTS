@@ -11,7 +11,7 @@ import {
   DEFAULT_FS,
 } from "../constants";
 
-type SaveDict = { [key: string]: any };
+type SaveDict = Record<string, any>;
 
 export class SimpleDocumentStore extends KVDocumentStore {
   private kvStore: SimpleKVStore;
