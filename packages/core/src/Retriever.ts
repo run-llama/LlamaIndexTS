@@ -1,5 +1,4 @@
 import { VectorStoreIndex } from "./BaseIndex";
-import { BaseEmbedding, getTopKEmbeddings } from "./Embedding";
 import { NodeWithScore } from "./Node";
 import { ServiceContext } from "./ServiceContext";
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";

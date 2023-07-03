@@ -1,22 +1,21 @@
 import { BaseNode } from "./Node";
-import { BaseIndex, BaseIndexInit } from "./BaseIndex";
-import { IndexList } from "./dataStructs/IndexList";
+import { BaseIndex, BaseIndexInit, IndexList } from "./BaseIndex";
 import { BaseRetriever } from "./Retriever";
-import { ListIndexRetriever } from "./retrievers/ListIndexRetriever";
-import { ListIndexEmbeddingRetriever } from "./retrievers/ListIndexEmbeddingRetriever";
-import { ListIndexLLMRetriever } from "./retrievers/ListIndexLLMRetriever";
+import { ListIndexRetriever } from "./ListIndexRetriever";
 import { ServiceContext } from "./ServiceContext";
+import { RefDocInfo } from "./storage/docStore/types";
+import _ from "lodash";
 
 export enum ListRetrieverMode {
   DEFAULT = "default",
-  EMBEDDING = "embedding",
+  // EMBEDDING = "embedding",
   LLM = "llm",
 }
 
 export interface ListIndexInit extends BaseIndexInit<IndexList> {
   nodes?: BaseNode[];
-  indexStruct?: IndexList;
-  serviceContext?: ServiceContext;
+  indexStruct: IndexList;
+  serviceContext: ServiceContext;
 }
 
 export class ListIndex extends BaseIndex<IndexList> {
@@ -30,10 +29,6 @@ export class ListIndex extends BaseIndex<IndexList> {
     switch (mode) {
       case ListRetrieverMode.DEFAULT:
         return new ListIndexRetriever(this);
-      case ListRetrieverMode.EMBEDDING:
-        throw new Error(
-          `Support for Embedding retriever mode is not implemented`
-        );
       case ListRetrieverMode.LLM:
         throw new Error(`Support for LLM retriever mode is not implemented`);
       default:
@@ -71,11 +66,15 @@ export class ListIndex extends BaseIndex<IndexList> {
 
     for (const node of nodes) {
       const refNode = node.sourceNode;
-      if (!refNode) continue;
+      if (_.isNil(refNode)) {
+        continue;
+      }
 
-      const refDocInfo = this.docStore.getRefDocInfo(refNode.nodeId);
+      const refDocInfo = await this.docStore.getRefDocInfo(refNode.nodeId);
 
-      if (!refDocInfo) continue;
+      if (_.isNil(refDocInfo)) {
+        continue;
+      }
 
       refDocInfoMap[refNode.nodeId] = refDocInfo;
     }

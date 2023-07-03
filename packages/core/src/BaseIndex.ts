@@ -10,11 +10,9 @@ import {
 import { BaseDocumentStore } from "./storage/docStore/types";
 import { VectorStore } from "./storage/vectorStore/types";
 
-export class IndexDict {
+export abstract class IndexStruct {
   indexId: string;
   summary?: string;
-  nodesDict: Record<string, BaseNode> = {};
-  docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
 
   constructor(indexId = uuidv4(), summary = undefined) {
     this.indexId = indexId;
@@ -27,10 +25,30 @@ export class IndexDict {
     }
     return this.summary;
   }
+}
+
+export class IndexDict extends IndexStruct {
+  nodesDict: Record<string, BaseNode> = {};
+  docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
+
+  getSummary(): string {
+    if (this.summary === undefined) {
+      throw new Error("summary field of the index dict is not set");
+    }
+    return this.summary;
+  }
 
   addNode(node: BaseNode, textId?: string) {
     const vectorId = textId ?? node.id_;
     this.nodesDict[vectorId] = node;
+  }
+}
+
+export class IndexList extends IndexStruct {
+  nodes: string[] = [];
+
+  addNode(node: BaseNode) {
+    this.nodes.push(node.id_);
   }
 }
 
