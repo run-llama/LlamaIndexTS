@@ -9,6 +9,7 @@ import {
 } from "./storage/StorageContext";
 import { BaseDocumentStore } from "./storage/docStore/types";
 import { VectorStore } from "./storage/vectorStore/types";
+
 export class IndexDict {
   indexId: string;
   summary?: string;
