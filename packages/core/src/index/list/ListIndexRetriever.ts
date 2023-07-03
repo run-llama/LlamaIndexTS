@@ -3,10 +3,13 @@ import { NodeWithScore } from "../../Node";
 import { ListIndex } from "./ListIndex";
 import { ServiceContext } from "../../ServiceContext";
 import {
+  NodeFormatterFunction,
+  ChoiceSelectParserFunction,
   defaultFormatNodeBatchFn,
   defaultParseChoiceSelectAnswerFn,
 } from "./utils";
 import { SimplePrompt, defaultChoiceSelectPrompt } from "../../Prompt";
+import _ from "lodash";
 
 /**
  * Simple retriever for ListIndex that returns all nodes
@@ -34,16 +37,16 @@ export class ListIndexLLMRetriever implements BaseRetriever {
   index: ListIndex;
   choiceSelectPrompt: SimplePrompt;
   choiceBatchSize: number;
-  formatNodeBatchFn: Function;
-  parseChoiceSelectAnswerFn: Function;
+  formatNodeBatchFn: NodeFormatterFunction;
+  parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
   serviceContext: ServiceContext;
 
   constructor(
     index: ListIndex,
     choiceSelectPrompt?: SimplePrompt,
     choiceBatchSize: number = 10,
-    formatNodeBatchFn?: Function,
-    parseChoiceSelectAnswerFn?: Function,
+    formatNodeBatchFn?: NodeFormatterFunction,
+    parseChoiceSelectAnswerFn?: ChoiceSelectParserFunction,
     serviceContext?: ServiceContext
   ) {
     this.index = index;
@@ -70,23 +73,19 @@ export class ListIndexLLMRetriever implements BaseRetriever {
         input
       );
 
-      const [rawChoices, relevances] = this.parseChoiceSelectAnswerFn(
+      // parseResult is a map from doc number to relevance score
+      const parseResult = this.parseChoiceSelectAnswerFn(
         rawResponse,
         nodesBatch.length
       );
-      const choiceIndexes = rawChoices.map(
-        (choice: string) => parseInt(choice) - 1
-      );
-      const choiceNodeIds = choiceIndexes.map(
-        (idx: number) => nodeIdsBatch[idx]
-      );
+      const choiceNodeIds = nodeIdsBatch.filter((nodeId, idx) => {
+        return `${idx}` in parseResult;
+      });
 
       const choiceNodes = await this.index.docStore.getNodes(choiceNodeIds);
-      const relevancesFilled =
-        relevances || new Array(choiceNodes.length).fill(1.0);
       const nodeWithScores = choiceNodes.map((node, i) => ({
         node: node,
-        score: relevancesFilled[i],
+        score: _.get(parseResult, `${i + 1}`, 1),
       }));
 
       results.push(...nodeWithScores);
