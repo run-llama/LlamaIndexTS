@@ -9,6 +9,7 @@ import {
 } from "./storage/StorageContext";
 import { BaseDocumentStore } from "./storage/docStore/types";
 import { VectorStore } from "./storage/vectorStore/types";
+import { BaseIndexStore } from "./storage/indexStore/types";
 
 export abstract class IndexStruct {
   indexId: string;
@@ -56,14 +57,16 @@ export interface BaseIndexInit<T> {
   serviceContext: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  vectorStore: VectorStore;
+  vectorStore?: VectorStore;
+  indexStore?: BaseIndexStore;
   indexStruct: T;
 }
 export abstract class BaseIndex<T> {
   serviceContext: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  vectorStore: VectorStore;
+  vectorStore?: VectorStore;
+  indexStore?: BaseIndexStore;
   indexStruct: T;
 
   constructor(init: BaseIndexInit<T>) {
@@ -71,6 +74,7 @@ export abstract class BaseIndex<T> {
     this.storageContext = init.storageContext;
     this.docStore = init.docStore;
     this.vectorStore = init.vectorStore;
+    this.indexStore = init.indexStore;
     this.indexStruct = init.indexStruct;
   }
 

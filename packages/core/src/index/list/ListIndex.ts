@@ -1,8 +1,16 @@
-import { BaseNode } from "../../Node";
+import { BaseNode, Document } from "../../Node";
 import { BaseIndex, BaseIndexInit, IndexList } from "../../BaseIndex";
+import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
+import {
+  StorageContext,
+  storageContextFromDefaults,
+} from "../../storage/StorageContext";
 import { BaseRetriever } from "../../Retriever";
 import { ListIndexRetriever } from "./ListIndexRetriever";
-import { ServiceContext } from "../../ServiceContext";
+import {
+  ServiceContext,
+  serviceContextFromDefaults,
+} from "../../ServiceContext";
 import { RefDocInfo } from "../../storage/docStore/types";
 import _ from "lodash";
 
@@ -12,15 +20,71 @@ export enum ListRetrieverMode {
   LLM = "llm",
 }
 
-export interface ListIndexInit extends BaseIndexInit<IndexList> {
+export interface ListIndexOptions {
   nodes?: BaseNode[];
-  indexStruct: IndexList;
-  serviceContext: ServiceContext;
+  indexStruct?: IndexList;
+  serviceContext?: ServiceContext;
+  storageContext?: StorageContext;
 }
 
 export class ListIndex extends BaseIndex<IndexList> {
-  constructor(init: ListIndexInit) {
+  constructor(init: BaseIndexInit<IndexList>) {
     super(init);
+  }
+
+  static async init(options: ListIndexOptions): Promise<ListIndex> {
+    const storageContext =
+      options.storageContext ?? (await storageContextFromDefaults({}));
+    const serviceContext =
+      options.serviceContext ?? serviceContextFromDefaults({});
+    const { docStore, indexStore } = storageContext;
+
+    let indexStruct: IndexList;
+    if (options.indexStruct) {
+      if (options.nodes) {
+        throw new Error(
+          "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
+        );
+      }
+      indexStruct = options.indexStruct;
+    } else {
+      if (!options.nodes) {
+        throw new Error(
+          "Cannot initialize VectorStoreIndex without nodes or indexStruct"
+        );
+      }
+      indexStruct = ListIndex._buildIndexFromNodes(options.nodes);
+    }
+
+    return new ListIndex({
+      storageContext,
+      serviceContext,
+      docStore,
+      indexStore,
+      indexStruct,
+    });
+  }
+
+  static async fromDocuments(
+    documents: Document[],
+    storageContext?: StorageContext,
+    serviceContext?: ServiceContext
+  ): Promise<ListIndex> {
+    storageContext = storageContext ?? (await storageContextFromDefaults({}));
+    serviceContext = serviceContext ?? serviceContextFromDefaults({});
+    const docStore = storageContext.docStore;
+
+    for (const doc of documents) {
+      docStore.setDocumentHash(doc.id_, doc.hash);
+    }
+
+    const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+    const index = await ListIndex.init({
+      nodes,
+      storageContext,
+      serviceContext,
+    });
+    return index;
   }
 
   asRetriever(
@@ -36,8 +100,17 @@ export class ListIndex extends BaseIndex<IndexList> {
     }
   }
 
-  protected _buildIndexFromNodes(nodes: BaseNode[]): IndexList {
-    const indexStruct = new IndexList();
+  asQueryEngine(
+    mode: ListRetrieverMode = ListRetrieverMode.DEFAULT
+  ): BaseQueryEngine {
+    return new RetrieverQueryEngine(this.asRetriever());
+  }
+
+  static _buildIndexFromNodes(
+    nodes: BaseNode[],
+    indexStruct?: IndexList
+  ): IndexList {
+    indexStruct = indexStruct || new IndexList();
 
     for (const node of nodes) {
       indexStruct.addNode(node);
