@@ -1,15 +1,12 @@
-import { BaseRetriever } from "./Retriever";
-import { NodeWithScore } from "./Node";
+import { BaseRetriever } from "../../Retriever";
+import { NodeWithScore } from "../../Node";
 import { ListIndex } from "./ListIndex";
-import { ServiceContext } from "./ServiceContext";
-import {
-  ChoiceSelectPrompt,
-  DEFAULT_CHOICE_SELECT_PROMPT,
-} from "./ChoiceSelectPrompt";
+import { ServiceContext } from "../../ServiceContext";
 import {
   defaultFormatNodeBatchFn,
   defaultParseChoiceSelectAnswerFn,
-} from "./Utils";
+} from "./utils";
+import { SimplePrompt, defaultChoiceSelectPrompt } from "../../Prompt";
 
 /**
  * Simple retriever for ListIndex that returns all nodes
@@ -35,7 +32,7 @@ export class ListIndexRetriever implements BaseRetriever {
  */
 export class ListIndexLLMRetriever implements BaseRetriever {
   index: ListIndex;
-  choiceSelectPrompt: ChoiceSelectPrompt;
+  choiceSelectPrompt: SimplePrompt;
   choiceBatchSize: number;
   formatNodeBatchFn: Function;
   parseChoiceSelectAnswerFn: Function;
@@ -43,15 +40,14 @@ export class ListIndexLLMRetriever implements BaseRetriever {
 
   constructor(
     index: ListIndex,
-    choiceSelectPrompt?: ChoiceSelectPrompt,
+    choiceSelectPrompt?: SimplePrompt,
     choiceBatchSize: number = 10,
     formatNodeBatchFn?: Function,
     parseChoiceSelectAnswerFn?: Function,
     serviceContext?: ServiceContext
   ) {
     this.index = index;
-    this.choiceSelectPrompt =
-      choiceSelectPrompt || DEFAULT_CHOICE_SELECT_PROMPT;
+    this.choiceSelectPrompt = choiceSelectPrompt || defaultChoiceSelectPrompt;
     this.choiceBatchSize = choiceBatchSize;
     this.formatNodeBatchFn = formatNodeBatchFn || defaultFormatNodeBatchFn;
     this.parseChoiceSelectAnswerFn =
@@ -68,10 +64,10 @@ export class ListIndexLLMRetriever implements BaseRetriever {
       const nodesBatch = await this.index.docStore.getNodes(nodeIdsBatch);
 
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
+      const input = { context: fmtBatchStr, query: query };
       const rawResponse = await this.serviceContext.llmPredictor.apredict(
         this.choiceSelectPrompt,
-        fmtBatchStr,
-        query
+        input
       );
 
       const [rawChoices, relevances] = this.parseChoiceSelectAnswerFn(

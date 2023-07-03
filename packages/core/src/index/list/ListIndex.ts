@@ -1,9 +1,9 @@
-import { BaseNode } from "./Node";
-import { BaseIndex, BaseIndexInit, IndexList } from "./BaseIndex";
-import { BaseRetriever } from "./Retriever";
+import { BaseNode } from "../../Node";
+import { BaseIndex, BaseIndexInit, IndexList } from "../../BaseIndex";
+import { BaseRetriever } from "../../Retriever";
 import { ListIndexRetriever } from "./ListIndexRetriever";
-import { ServiceContext } from "./ServiceContext";
-import { RefDocInfo } from "./storage/docStore/types";
+import { ServiceContext } from "../../ServiceContext";
+import { RefDocInfo } from "../../storage/docStore/types";
 import _ from "lodash";
 
 export enum ListRetrieverMode {
