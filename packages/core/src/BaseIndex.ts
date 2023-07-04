@@ -141,7 +141,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     vectorStore.add(embeddingResults);
 
-    throw new Error("not implemented");
+    const indexDict = new IndexDict();
+    for (const { node } of embeddingResults) {
+      indexDict.addNode(node);
+    }
+
+    return indexDict;
   }
 
   static async fromDocuments(
