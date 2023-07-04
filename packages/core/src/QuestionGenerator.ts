@@ -1,5 +1,5 @@
-import { BaseLLMPredictor } from "./LLMPredictor";
-import { SimplePrompt } from "./Prompt";
+import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./LLMPredictor";
+import { SimplePrompt, defaultSubQuestionPrompt } from "./Prompt";
 import { ToolMetadata } from "./Tool";
 
 export interface BaseQuestionGenerator {
@@ -11,8 +11,8 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
   prompt: SimplePrompt;
 
   constructor(init?: Partial<LLMQuestionGenerator>) {
-    this.llmPredictor = init?.llmPredictor ?? new BaseLLMPredictor();
-    this.prompt = init?.prompt ?? new SimplePrompt();
+    this.llmPredictor = init?.llmPredictor ?? new ChatGPTLLMPredictor();
+    this.prompt = init?.prompt ?? defaultSubQuestionPrompt;
   }
 
   async agenerate(
