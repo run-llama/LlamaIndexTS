@@ -182,6 +182,7 @@ export function getResponseBuilder(): BaseResponseBuilder {
   return new SimpleResponseBuilder();
 }
 
+// TODO replace with Logan's new response_sythesizers/factory.py
 export class ResponseSynthesizer {
   responseBuilder: BaseResponseBuilder;
 

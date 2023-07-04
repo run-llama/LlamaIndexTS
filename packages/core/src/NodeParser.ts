@@ -19,7 +19,7 @@ export function getNodesFromDocument(
 
   const textSplits = getTextSplitsFromDocument(document, textSplitter);
 
-  textSplits.forEach((textSplit, index) => {
+  textSplits.forEach((textSplit) => {
     const node = new TextNode({ text: textSplit });
     node.relationships[NodeRelationship.SOURCE] = document.asRelatedNodeInfo();
     nodes.push(node);
