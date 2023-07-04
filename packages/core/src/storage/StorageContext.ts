@@ -32,21 +32,24 @@ export async function storageContextFromDefaults({
   persistDir,
   fs,
 }: BuilderParams): Promise<StorageContext> {
-  persistDir = persistDir || DEFAULT_PERSIST_DIR;
-
-  fs = fs || DEFAULT_FS;
-
-  docStore =
-    docStore ||
-    (await SimpleDocumentStore.fromPersistDir(
-      persistDir,
-      DEFAULT_NAMESPACE,
-      fs
-    ));
-  indexStore =
-    indexStore || (await SimpleIndexStore.fromPersistDir(persistDir, fs));
-  vectorStore =
-    vectorStore || (await SimpleVectorStore.fromPersistDir(persistDir, fs));
+  if (!persistDir) {
+    docStore = docStore || new SimpleDocumentStore();
+    indexStore = indexStore || new SimpleIndexStore();
+    vectorStore = vectorStore || new SimpleVectorStore();
+  } else {
+    fs = fs || DEFAULT_FS;
+    docStore =
+      docStore ||
+      (await SimpleDocumentStore.fromPersistDir(
+        persistDir,
+        DEFAULT_NAMESPACE,
+        fs
+      ));
+    indexStore =
+      indexStore || (await SimpleIndexStore.fromPersistDir(persistDir, fs));
+    vectorStore =
+      vectorStore || (await SimpleVectorStore.fromPersistDir(persistDir, fs));
+  }
 
   return {
     docStore,
