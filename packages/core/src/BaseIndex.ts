@@ -88,9 +88,16 @@ export interface VectorIndexOptions {
   storageContext?: StorageContext;
 }
 
+interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
+  vectorStore: VectorStore;
+}
+
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
-  private constructor(init: BaseIndexInit<IndexDict>) {
+  vectorStore: VectorStore;
+
+  private constructor(init: VectorIndexConstructorProps) {
     super(init);
+    this.vectorStore = init.vectorStore;
   }
 
   static async init(options: VectorIndexOptions): Promise<VectorStoreIndex> {

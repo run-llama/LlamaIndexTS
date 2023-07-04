@@ -12,4 +12,6 @@ async function main() {
   console.log(response.toString());
 }
 
-main().catch(console.error);
+main().catch((e: Error) => {
+  console.error(e, e.stack);
+});
