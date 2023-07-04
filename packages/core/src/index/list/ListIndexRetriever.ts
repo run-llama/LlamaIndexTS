@@ -26,6 +26,7 @@ export class ListIndexRetriever implements BaseRetriever {
     const nodes = await this.index.docStore.getNodes(nodeIds);
     return nodes.map((node) => ({
       node: node,
+      score: 1,
     }));
   }
 }

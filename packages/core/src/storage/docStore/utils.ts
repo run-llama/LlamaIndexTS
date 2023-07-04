@@ -23,12 +23,11 @@ export function jsonToDoc(docDict: Record<string, any>): BaseNode {
       hash: dataDict.hash,
     });
   } else if (docType === ObjectType.TEXT) {
-    const relationships = dataDict.relationships;
+    console.log({ dataDict });
     doc = new TextNode({
-      text: relationships.text,
-      id_: relationships.id_,
-      embedding: relationships.embedding,
-      hash: relationships.hash,
+      text: dataDict.text,
+      id_: dataDict.id_,
+      hash: dataDict.hash,
     });
   } else {
     throw new Error(`Unknown doc type: ${docType}`);

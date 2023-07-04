@@ -11,7 +11,7 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
-import { RefDocInfo } from "../../storage/docStore/types";
+import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import _ from "lodash";
 
 export enum ListRetrieverMode {
@@ -53,7 +53,10 @@ export class ListIndex extends BaseIndex<IndexList> {
           "Cannot initialize VectorStoreIndex without nodes or indexStruct"
         );
       }
-      indexStruct = ListIndex._buildIndexFromNodes(options.nodes);
+      indexStruct = ListIndex._buildIndexFromNodes(
+        options.nodes,
+        storageContext.docStore
+      );
     }
 
     return new ListIndex({
@@ -74,6 +77,7 @@ export class ListIndex extends BaseIndex<IndexList> {
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
 
+    docStore.addDocuments(documents, true);
     for (const doc of documents) {
       docStore.setDocumentHash(doc.id_, doc.hash);
     }
@@ -108,10 +112,12 @@ export class ListIndex extends BaseIndex<IndexList> {
 
   static _buildIndexFromNodes(
     nodes: BaseNode[],
+    docStore: BaseDocumentStore,
     indexStruct?: IndexList
   ): IndexList {
     indexStruct = indexStruct || new IndexList();
 
+    docStore.addDocuments(nodes, true);
     for (const node of nodes) {
       indexStruct.addNode(node);
     }

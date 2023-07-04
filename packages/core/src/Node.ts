@@ -227,7 +227,7 @@ export class ImageDocument extends Document {
 
 export interface NodeWithScore {
   node: BaseNode;
-  score?: number;
+  score: number;
 }
 
 export interface NodeWithEmbedding {
