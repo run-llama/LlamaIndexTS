@@ -77,7 +77,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     let json = await this.kvstore.get(docId, this.nodeCollection);
     if (_.isNil(json)) {
       if (raiseError) {
-        throw new Error(`doc_id ${docId} not found.`);
+        throw new Error(`docId ${docId} not found.`);
       } else {
         return;
       }

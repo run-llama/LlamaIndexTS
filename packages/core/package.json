@@ -10,6 +10,9 @@
     "uuid": "^9.0.0",
     "wink-nlp": "^1.14.1"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {

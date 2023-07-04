@@ -9,16 +9,28 @@ import {
 } from "./storage/StorageContext";
 import { BaseDocumentStore } from "./storage/docStore/types";
 import { VectorStore } from "./storage/vectorStore/types";
-export class IndexDict {
+import { BaseIndexStore } from "./storage/indexStore/types";
+
+export abstract class IndexStruct {
   indexId: string;
   summary?: string;
-  nodesDict: Record<string, BaseNode> = {};
-  docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
 
   constructor(indexId = uuidv4(), summary = undefined) {
     this.indexId = indexId;
     this.summary = summary;
   }
+
+  getSummary(): string {
+    if (this.summary === undefined) {
+      throw new Error("summary field of the index dict is not set");
+    }
+    return this.summary;
+  }
+}
+
+export class IndexDict extends IndexStruct {
+  nodesDict: Record<string, BaseNode> = {};
+  docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
 
   getSummary(): string {
     if (this.summary === undefined) {
@@ -33,18 +45,28 @@ export class IndexDict {
   }
 }
 
+export class IndexList extends IndexStruct {
+  nodes: string[] = [];
+
+  addNode(node: BaseNode) {
+    this.nodes.push(node.id_);
+  }
+}
+
 export interface BaseIndexInit<T> {
   serviceContext: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  vectorStore: VectorStore;
+  vectorStore?: VectorStore;
+  indexStore?: BaseIndexStore;
   indexStruct: T;
 }
 export abstract class BaseIndex<T> {
   serviceContext: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  vectorStore: VectorStore;
+  vectorStore?: VectorStore;
+  indexStore?: BaseIndexStore;
   indexStruct: T;
 
   constructor(init: BaseIndexInit<T>) {
@@ -52,6 +74,7 @@ export abstract class BaseIndex<T> {
     this.storageContext = init.storageContext;
     this.docStore = init.docStore;
     this.vectorStore = init.vectorStore;
+    this.indexStore = init.indexStore;
     this.indexStruct = init.indexStruct;
   }
 
@@ -65,9 +88,16 @@ export interface VectorIndexOptions {
   storageContext?: StorageContext;
 }
 
+interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
+  vectorStore: VectorStore;
+}
+
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
-  private constructor(init: BaseIndexInit<IndexDict>) {
+  vectorStore: VectorStore;
+
+  private constructor(init: VectorIndexConstructorProps) {
     super(init);
+    this.vectorStore = init.vectorStore;
   }
 
   static async init(options: VectorIndexOptions): Promise<VectorStoreIndex> {
