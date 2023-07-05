@@ -1,7 +1,8 @@
 import { VectorStoreIndex } from "./BaseIndex";
-import { BaseEmbedding, getTopKEmbeddings } from "./Embedding";
+import { globalsHelper } from "./GlobalsHelper";
 import { NodeWithScore } from "./Node";
 import { ServiceContext } from "./ServiceContext";
+import { Trace } from "./callbacks/CallbackManager";
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
 import {
   VectorStoreQuery,
@@ -9,7 +10,8 @@ import {
 } from "./storage/vectorStore/types";
 
 export interface BaseRetriever {
-  aretrieve(query: string): Promise<any>;
+  aretrieve(query: string, parentTrace?: Trace): Promise<any>;
+  getServiceContext(): ServiceContext;
 }
 
 export class VectorIndexRetriever implements BaseRetriever {
@@ -22,7 +24,10 @@ export class VectorIndexRetriever implements BaseRetriever {
     this.serviceContext = this.index.serviceContext;
   }
 
-  async aretrieve(query: string): Promise<NodeWithScore[]> {
+  async aretrieve(
+    query: string,
+    parentTrace?: Trace
+  ): Promise<NodeWithScore[]> {
     const queryEmbedding =
       await this.serviceContext.embedModel.aGetQueryEmbedding(query);
 
@@ -42,6 +47,18 @@ export class VectorIndexRetriever implements BaseRetriever {
       });
     }
 
+    if (this.serviceContext.callbackManager.onRetrieve) {
+      this.serviceContext.callbackManager.onRetrieve({
+        query,
+        nodes: nodesWithScores,
+        trace: globalsHelper.createTrace({ parentTrace }),
+      });
+    }
+
     return nodesWithScores;
+  }
+
+  getServiceContext(): ServiceContext {
+    return this.serviceContext;
   }
 }

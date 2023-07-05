@@ -1,4 +1,4 @@
-import { ChatGPTLLMPredictor } from "./LLMPredictor";
+import { ChatGPTLLMPredictor, BaseLLMPredictor } from "./LLMPredictor";
 import { MetadataMode, NodeWithScore } from "./Node";
 import {
   SimplePrompt,
@@ -8,28 +8,34 @@ import {
 import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
 import { ServiceContext } from "./ServiceContext";
+import { Trace } from "./callbacks/CallbackManager";
 
 interface BaseResponseBuilder {
   agetResponse(query: string, textChunks: string[]): Promise<string>;
 }
 
 export class SimpleResponseBuilder implements BaseResponseBuilder {
-  llmPredictor: ChatGPTLLMPredictor;
+  llmPredictor: BaseLLMPredictor;
   textQATemplate: SimplePrompt;
 
-  constructor() {
-    this.llmPredictor = new ChatGPTLLMPredictor();
+  constructor(serviceContext?: ServiceContext) {
+    this.llmPredictor =
+      serviceContext?.llmPredictor ?? new ChatGPTLLMPredictor();
     this.textQATemplate = defaultTextQaPrompt;
   }
 
-  async agetResponse(query: string, textChunks: string[]): Promise<string> {
+  async agetResponse(
+    query: string,
+    textChunks: string[],
+    parentTrace?: Trace
+  ): Promise<string> {
     const input = {
       query,
       context: textChunks.join("\n\n"),
     };
 
     const prompt = this.textQATemplate(input);
-    return this.llmPredictor.apredict(prompt, {});
+    return this.llmPredictor.apredict(prompt, {}, parentTrace);
   }
 }
 
@@ -178,22 +184,34 @@ export class TreeSummarize implements BaseResponseBuilder {
   }
 }
 
-export function getResponseBuilder(): BaseResponseBuilder {
-  return new SimpleResponseBuilder();
+export function getResponseBuilder(
+  serviceContext?: ServiceContext
+): SimpleResponseBuilder {
+  return new SimpleResponseBuilder(serviceContext);
 }
 
 export class ResponseSynthesizer {
-  responseBuilder: BaseResponseBuilder;
+  responseBuilder: SimpleResponseBuilder;
+  serviceContext?: ServiceContext;
 
-  constructor() {
-    this.responseBuilder = getResponseBuilder();
+  constructor(serviceContext?: ServiceContext) {
+    this.serviceContext = serviceContext;
+    this.responseBuilder = getResponseBuilder(this.serviceContext);
   }
 
-  async asynthesize(query: string, nodes: NodeWithScore[]) {
+  async asynthesize(
+    query: string,
+    nodes: NodeWithScore[],
+    parentTrace?: Trace
+  ) {
     let textChunks: string[] = nodes.map((node) =>
       node.node.getContent(MetadataMode.NONE)
     );
-    const response = await this.responseBuilder.agetResponse(query, textChunks);
+    const response = await this.responseBuilder.agetResponse(
+      query,
+      textChunks,
+      parentTrace
+    );
     return new Response(
       response,
       nodes.map((node) => node.node)

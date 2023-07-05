@@ -1,3 +1,6 @@
+import { Trace } from "./callbacks/CallbackManager";
+import { v4 as uuidv4 } from "uuid";
+
 class GlobalsHelper {
   defaultTokenizer: ((text: string) => string[]) | null = null;
 
@@ -12,6 +15,13 @@ class GlobalsHelper {
       return enc.encode(text);
     };
     return this.defaultTokenizer;
+  }
+
+  createTrace({ parentTrace }: { parentTrace?: Trace }): Trace {
+    return {
+      id: uuidv4(),
+      parentId: parentTrace?.id,
+    };
   }
 }
 

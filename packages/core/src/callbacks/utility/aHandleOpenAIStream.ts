@@ -1,0 +1,60 @@
+import { globalsHelper } from "../../GlobalsHelper";
+import { StreamCallbackResponse, Trace } from "../CallbackManager";
+import { StreamToken } from "../CallbackManager";
+
+export async function aHandleOpenAIStream({
+  response,
+  onLLMStream,
+  parentTrace,
+}: {
+  response: any;
+  onLLMStream: (data: StreamCallbackResponse) => void;
+  parentTrace?: Trace;
+}): Promise<string> {
+  const trace = globalsHelper.createTrace({ parentTrace });
+  const stream = __astreamCompletion(response.data as any);
+  let index = 0;
+  let cumulativeText = "";
+  for await (const message of stream) {
+    const token: StreamToken = JSON.parse(message);
+    const { content = "", role = "assistant" } = token?.choices[0]?.delta ?? {};
+    // ignore the first token
+    if (!content && role === "assistant" && index === 0) {
+      continue;
+    }
+    cumulativeText += content;
+    onLLMStream?.({ trace, index, token });
+    index++;
+  }
+  onLLMStream?.({ trace, index, isDone: true });
+  return cumulativeText;
+}
+
+/*
+  TODO: upgrade to latest version of openai-node and use the native streaming support (https://github.com/openai/openai-node/issues/18#issuecomment-1595805163)
+  source: https://github.com/openai/openai-node/issues/18#issuecomment-1372047643
+*/
+async function* __astreamCompletion(data: string[]) {
+  yield* __alinesToText(__achunksToLines(data));
+}
+
+async function* __alinesToText(linesAsync: string | void | any) {
+  for await (const line of linesAsync) {
+    yield line.substring("data :".length);
+  }
+}
+
+async function* __achunksToLines(chunksAsync: string[]) {
+  let previous = "";
+  for await (const chunk of chunksAsync) {
+    const bufferChunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    previous += bufferChunk;
+    let eolIndex;
+    while ((eolIndex = previous.indexOf("\n")) >= 0) {
+      const line = previous.slice(0, eolIndex + 1).trimEnd();
+      if (line === "data: [DONE]") break;
+      if (line.startsWith("data: ")) yield line;
+      previous = previous.slice(eolIndex + 1);
+    }
+  }
+}
