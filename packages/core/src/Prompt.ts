@@ -1,3 +1,6 @@
+import { SubQuestion } from "./QuestionGenerator";
+import { ToolMetadata } from "./Tool";
+
 /**
  * A SimplePrompt is a function that takes a dictionary of inputs and returns a string.
  * NOTE this is a different interface compared to LlamaIndex Python
@@ -190,6 +193,76 @@ SUFFIX = """\
 
 DEFAULT_SUB_QUESTION_PROMPT_TMPL = PREFIX + EXAMPLES + SUFFIX
 */
+
+export function buildToolsText(tools: ToolMetadata[]) {
+  const toolsObj = tools.reduce<Record<string, string>>((acc, tool) => {
+    acc[tool.name] = tool.description;
+    return acc;
+  }, {});
+
+  return JSON.stringify(toolsObj, null, 4);
+}
+
+const exampleTools: ToolMetadata[] = [
+  {
+    name: "uber_10k",
+    description: "Provides information about Uber financials for year 2021",
+  },
+  {
+    name: "lyft_10k",
+    description: "Provides information about Lyft financials for year 2021",
+  },
+];
+
+const exampleQueryStr = `Compare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021`;
+
+const exampleOutput: SubQuestion[] = [
+  {
+    subQuestion: "What is the revenue growth of Uber",
+    toolName: "uber_10k",
+  },
+  {
+    subQuestion: "What is the EBITDA of Uber",
+    toolName: "uber_10k",
+  },
+  {
+    subQuestion: "What is the revenue growth of Lyft",
+    toolName: "lyft_10k",
+  },
+  {
+    subQuestion: "What is the EBITDA of Lyft",
+    toolName: "lyft_10k",
+  },
+];
+
 export const defaultSubQuestionPrompt: SimplePrompt = (input) => {
-  return "";
+  const { toolsStr, queryStr } = input;
+
+  return `Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:
+
+# Example 1
+<Tools>
+\`\`\`json
+${buildToolsText(exampleTools)}
+\`\`\`
+
+<User Question>
+${exampleQueryStr}
+
+<Output>
+\`\`\`json
+${JSON.stringify(exampleOutput, null, 4)}
+\`\`\`
+
+# Example 2
+<Tools>
+\`\`\`json
+${toolsStr}}
+\`\`\`
+
+<User Question>
+${queryStr}
+
+<Output>
+`;
 };

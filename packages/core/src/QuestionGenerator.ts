@@ -2,6 +2,11 @@ import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./LLMPredictor";
 import { SimplePrompt, defaultSubQuestionPrompt } from "./Prompt";
 import { ToolMetadata } from "./Tool";
 
+export interface SubQuestion {
+  subQuestion: string;
+  toolName: string;
+}
+
 export interface BaseQuestionGenerator {
   agenerate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]>;
 }
@@ -21,9 +26,4 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
   ): Promise<SubQuestion[]> {
     throw new Error("Method not implemented.");
   }
-}
-
-interface SubQuestion {
-  subQuestion: string;
-  toolName: string;
 }

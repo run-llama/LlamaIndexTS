@@ -24,12 +24,12 @@ export interface ServiceContextOptions {
   chunkOverlap?: number;
 }
 
-export function serviceContextFromDefaults(options: ServiceContextOptions) {
+export function serviceContextFromDefaults(options?: ServiceContextOptions) {
   const serviceContext: ServiceContext = {
-    llmPredictor: options.llmPredictor ?? new ChatGPTLLMPredictor(),
-    embedModel: options.embedModel ?? new OpenAIEmbedding(),
-    nodeParser: options.nodeParser ?? new SimpleNodeParser(),
-    promptHelper: options.promptHelper ?? new PromptHelper(),
+    llmPredictor: options?.llmPredictor ?? new ChatGPTLLMPredictor(),
+    embedModel: options?.embedModel ?? new OpenAIEmbedding(),
+    nodeParser: options?.nodeParser ?? new SimpleNodeParser(),
+    promptHelper: options?.promptHelper ?? new PromptHelper(),
   };
 
   return serviceContext;
