@@ -1,12 +1,13 @@
 import { SubQuestion } from "./QuestionGenerator";
 
-interface BaseOutputParser {
-  parse(output: string): any;
+export interface BaseOutputParser<T> {
+  parse(output: string): T;
   format(output: string): string;
 }
 
-interface StructuredOutput {
+export interface StructuredOutput<T> {
   rawOutput: string;
+  parsedOutput: T;
 }
 
 class OutputParserError extends Error {
@@ -62,10 +63,15 @@ function parseJsonMarkdown(text: string) {
   }
 }
 
-class SubQuestionOutputParser implements BaseOutputParser {
-  parse(output: string): SubQuestion[] {
-    const subQuestions = JSON.parse(output);
-    return subQuestions;
+export class SubQuestionOutputParser
+  implements BaseOutputParser<StructuredOutput<SubQuestion[]>>
+{
+  parse(output: string): StructuredOutput<SubQuestion[]> {
+    const parsed = parseJsonMarkdown(output);
+
+    // TODO add zod validation
+
+    return { rawOutput: output, parsedOutput: parsed };
   }
 
   format(output: string): string {
