@@ -31,8 +31,9 @@ export async function aHandleOpenAIStream({
 }
 
 /*
-  TODO: upgrade to latest version of openai-node and use the native streaming support (https://github.com/openai/openai-node/issues/18#issuecomment-1595805163)
-  source: https://github.com/openai/openai-node/issues/18#issuecomment-1372047643
+  sources:
+  - https://github.com/openai/openai-node/issues/18#issuecomment-1372047643
+  - https://github.com/openai/openai-node/issues/18#issuecomment-1595805163
 */
 async function* __astreamCompletion(data: string[]) {
   yield* __alinesToText(__achunksToLines(data));
