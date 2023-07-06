@@ -10,7 +10,7 @@ export interface BaseLanguageModel {}
 
 type MessageType = "human" | "ai" | "system" | "generic" | "function";
 
-interface BaseMessage {
+export interface BaseMessage {
   content: string;
   type: MessageType;
 }
@@ -24,9 +24,11 @@ export interface LLMResult {
   generations: Generation[][]; // Each input can have more than one generations
 }
 
-export class BaseChatModel implements BaseLanguageModel {}
+export interface BaseChatModel extends BaseLanguageModel {
+  agenerate(messages: BaseMessage[]): Promise<LLMResult>;
+}
 
-export class ChatOpenAI extends BaseChatModel {
+export class ChatOpenAI implements BaseChatModel {
   model: string;
   temperature: number = 0.7;
   openAIKey: string | null = null;
@@ -38,7 +40,6 @@ export class ChatOpenAI extends BaseChatModel {
   session: OpenAISession;
 
   constructor(model: string = "gpt-3.5-turbo") {
-    super();
     this.model = model;
     this.session = getOpenAISession();
   }

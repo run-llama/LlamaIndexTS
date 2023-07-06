@@ -1,3 +1,4 @@
+import { BaseMessage } from "./LanguageModel";
 import { SubQuestion } from "./QuestionGenerator";
 import { ToolMetadata } from "./Tool";
 
@@ -266,3 +267,44 @@ ${queryStr}
 <Output>
 `;
 };
+
+// DEFAULT_TEMPLATE = """\
+// Given a conversation (between Human and Assistant) and a follow up message from Human, \
+// rewrite the message to be a standalone question that captures all relevant context \
+// from the conversation.
+
+// <Chat History>
+// {chat_history}
+
+// <Follow Up Message>
+// {question}
+
+// <Standalone question>
+// """
+
+export const defaultCondenseQuestionPrompt: SimplePrompt = (input) => {
+  const { chatHistory, question } = input;
+
+  return `Given a conversation (between Human and Assistant) and a follow up message from Human, rewrite the message to be a standalone question that captures all relevant context from the conversation.
+
+<Chat History>
+${chatHistory}
+
+<Follow Up Message>
+${question}
+
+<Standalone question>
+`;
+};
+
+export function messagesToHistoryStr(messages: BaseMessage[]) {
+  return messages.reduce((acc, message) => {
+    acc += acc ? "\n" : "";
+    if (message.type === "human") {
+      acc += `Human: ${message.content}`;
+    } else {
+      acc += `Assistant: ${message.content}`;
+    }
+    return acc;
+  }, "");
+}
