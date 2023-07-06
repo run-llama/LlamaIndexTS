@@ -186,8 +186,8 @@ export function getResponseBuilder(): BaseResponseBuilder {
 export class ResponseSynthesizer {
   responseBuilder: BaseResponseBuilder;
 
-  constructor() {
-    this.responseBuilder = getResponseBuilder();
+  constructor(responseBuilder?: BaseResponseBuilder) {
+    this.responseBuilder = responseBuilder ?? getResponseBuilder();
   }
 
   async asynthesize(query: string, nodes: NodeWithScore[]) {
