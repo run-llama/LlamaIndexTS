@@ -8,7 +8,7 @@ import {
 } from "./storage/vectorStore/types";
 
 export interface BaseRetriever {
-  aretrieve(query: string): Promise<any>;
+  aretrieve(query: string): Promise<NodeWithScore[]>;
 }
 
 export class VectorIndexRetriever implements BaseRetriever {

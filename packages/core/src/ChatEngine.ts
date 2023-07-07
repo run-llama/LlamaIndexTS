@@ -4,19 +4,24 @@ import {
   ChatOpenAI,
   LLMResult,
 } from "./LanguageModel";
+import { TextNode } from "./Node";
 import {
   SimplePrompt,
+  contextSystemPrompt,
   defaultCondenseQuestionPrompt,
   messagesToHistoryStr,
 } from "./Prompt";
 import { BaseQueryEngine } from "./QueryEngine";
 import { Response } from "./Response";
+import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 
 interface ChatEngine {
   chatRepl(): void;
 
   achat(message: string, chatHistory?: BaseMessage[]): Promise<Response>;
+
+  reset(): void;
 }
 
 export class SimpleChatEngine implements ChatEngine {
@@ -102,6 +107,62 @@ export class CondenseQuestionChatEngine implements ChatEngine {
 
   chatRepl() {
     throw new Error("Method not implemented.");
+  }
+
+  reset() {
+    this.chatHistory = [];
+  }
+}
+
+export class ContextChatEngine implements ChatEngine {
+  retriever: BaseRetriever;
+  chatModel: BaseChatModel;
+  chatHistory: BaseMessage[];
+
+  constructor(init: {
+    retriever: BaseRetriever;
+    chatModel?: BaseChatModel;
+    chatHistory?: BaseMessage[];
+  }) {
+    this.retriever = init.retriever;
+    this.chatModel = init.chatModel ?? new ChatOpenAI("gpt-3.5-turbo-16k");
+    this.chatHistory = init?.chatHistory ?? [];
+  }
+
+  chatRepl() {
+    throw new Error("Method not implemented.");
+  }
+
+  async achat(message: string, chatHistory?: BaseMessage[] | undefined) {
+    chatHistory = chatHistory ?? this.chatHistory;
+
+    const sourceNodesWithScore = await this.retriever.aretrieve(message);
+
+    const systemMessage: BaseMessage = {
+      content: contextSystemPrompt({
+        context: sourceNodesWithScore
+          .map((r) => (r.node as TextNode).text)
+          .join("\n\n"),
+      }),
+      type: "system",
+    };
+
+    chatHistory.push({ content: message, type: "human" });
+
+    const response = await this.chatModel.agenerate([
+      systemMessage,
+      ...chatHistory,
+    ]);
+    const text = response.generations[0][0].text;
+
+    chatHistory.push({ content: text, type: "ai" });
+
+    this.chatHistory = chatHistory;
+
+    return new Response(
+      text,
+      sourceNodesWithScore.map((r) => r.node)
+    );
   }
 
   reset() {

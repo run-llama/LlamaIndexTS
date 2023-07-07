@@ -308,3 +308,12 @@ export function messagesToHistoryStr(messages: BaseMessage[]) {
     return acc;
   }, "");
 }
+
+export const contextSystemPrompt: SimplePrompt = (input) => {
+  const { context } = input;
+
+  return `Context information is below.
+---------------------
+${context}
+---------------------`;
+};

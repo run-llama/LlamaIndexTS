@@ -1,6 +1,7 @@
 import { ChatOpenAI } from "./LanguageModel";
 import { SimplePrompt } from "./Prompt";
 
+// TODO change this to LLM class
 export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
   apredict(
@@ -10,6 +11,7 @@ export interface BaseLLMPredictor {
   // stream(prompt: string, options: any): Promise<any>;
 }
 
+// TODO change this to LLM class
 export class ChatGPTLLMPredictor implements BaseLLMPredictor {
   llm: string;
   retryOnThrottling: boolean;
