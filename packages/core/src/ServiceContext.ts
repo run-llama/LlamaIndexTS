@@ -28,7 +28,12 @@ export function serviceContextFromDefaults(options?: ServiceContextOptions) {
   const serviceContext: ServiceContext = {
     llmPredictor: options?.llmPredictor ?? new ChatGPTLLMPredictor(),
     embedModel: options?.embedModel ?? new OpenAIEmbedding(),
-    nodeParser: options?.nodeParser ?? new SimpleNodeParser(),
+    nodeParser:
+      options?.nodeParser ??
+      new SimpleNodeParser({
+        chunkSize: options?.chunkSize,
+        chunkOverlap: options?.chunkOverlap,
+      }),
     promptHelper: options?.promptHelper ?? new PromptHelper(),
   };
 
