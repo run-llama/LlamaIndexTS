@@ -21,5 +21,8 @@
     "turbo": "^1.10.5"
   },
   "packageManager": "pnpm@7.15.0",
-  "name": "llamascript"
+  "name": "llamascript",
+  "optionalDependencies": {
+    "@pinecone-database/pinecone": "^0.1.6"
+  }
 }

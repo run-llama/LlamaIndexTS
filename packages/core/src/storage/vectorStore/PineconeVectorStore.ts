@@ -17,7 +17,8 @@ import {
 import { DEFAULT_PERSIST_DIR, DEFAULT_FS } from "../constants";
 import { DEFAULT_TEXT_KEY, nodeToMetadataDict, metadataDictToNode } from "./utils";
 import {
-  TextNode
+  TextNode,
+  MetadataMode
 } from "../../Node"; 
 
 const DEFAULT_BATCH_SIZE = 100
@@ -73,9 +74,30 @@ function toPineconeFilter(filters: MetadataFilters): Record<string, any> {
 }
 
 
+const getDefaultTokenizer = (): CallableFunction => {
+  const BertTokenizerFast = require('@xenova/transformers').BertTokenizerFast;
+  const origTokenizer = BertTokenizerFast.fromPretrained("bert-base-uncased");
+  
+  // Set some default arguments, so input is just a list of strings
+  const tokenizer = (...args: any[]): any => {
+    return origTokenizer(
+      ...args,
+      {
+        padding: true,
+        truncation: true,
+        maxLength: 512
+      }
+    );
+  };
+
+  return tokenizer;
+};
+
+
 
 export class PineconeVectorStore implements VectorStore {
   storesText: boolean = true;
+  flatMetadata: boolean = true;
 
   pineconeIndex?: any;
   indexName?: string;
@@ -113,7 +135,7 @@ export class PineconeVectorStore implements VectorStore {
     this.environment = environment;
     this.namespace = namespace;
     if (pineconeIndex !== null) {
-      this.pineconeIndex = pineconeIndex as VectorOperationsApi;
+      // this.pineconeIndex = pineconeIndex as VectorOperationsApi;
     } else {
       if (process.env.PINECONE_API_KEY === undefined) {
         throw new Error('Must specify PINECONE_API_KEY via env variable if not directly passing in client.');
@@ -130,7 +152,7 @@ export class PineconeVectorStore implements VectorStore {
 
     this.addSparseVector = addSparseVector;
     if (tokenizer === null) {
-      tokenizer = get_default_tokenizer(); // Implement get_default_tokenizer function
+      tokenizer = getDefaultTokenizer(); // Implement get_default_tokenizer function
     }
     this.tokenizer = tokenizer;
     this.textKey = textKey;
@@ -146,11 +168,12 @@ export class PineconeVectorStore implements VectorStore {
     const entries: any[] = []; // Replace `any` with the actual type for `entries`
 
     for (const result of embeddingResults) {
-      const nodeId = result.id;
+      const nodeId = result.id();
       const node = result.node;
       const metadata = nodeToMetadataDict(
         node,
         false, // Replace `false` with the actual boolean value
+        undefined,
         this.flatMetadata
       );
 
@@ -162,7 +185,7 @@ export class PineconeVectorStore implements VectorStore {
 
       if (this.addSparseVector) {
         const sparseVector = generateSparseVectors(
-          [node.getContent(metadataMode = MetadataMode.EMBED)],
+          [node.getContent(MetadataMode.EMBED)],
           this.tokenizer
         )[0];
         entry.sparseVectorKey = sparseVector;
@@ -278,6 +301,11 @@ export class PineconeVectorStore implements VectorStore {
       ids: topKIds,
     }
   }
+  
+  persist(persistPath: string, fs?: GenericFileSystem): void {
+
+  }
+
   
 
 

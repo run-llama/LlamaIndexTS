@@ -239,3 +239,5 @@ export class Document extends TextNode {
 export class ImageDocument extends Document {
   image?: string;
 }
+
+

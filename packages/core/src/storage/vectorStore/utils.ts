@@ -36,8 +36,8 @@ export function nodeToMetadataDict(
   }
 
   // Store entire node as a JSON string - some minor text duplication
-  // TODO: figure out how to do this part
-  let nodeDict = node.dict();
+  // TODO: move off JSON.stringify to ensure compatibility with python
+  let nodeDict = JSON.parse(JSON.stringify(node));
   if (removeText) {
     nodeDict[textField] = "";
   }
