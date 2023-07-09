@@ -23,7 +23,6 @@ export function jsonToDoc(docDict: Record<string, any>): BaseNode {
       hash: dataDict.hash,
     });
   } else if (docType === ObjectType.TEXT) {
-    console.log({ dataDict });
     doc = new TextNode({
       text: dataDict.text,
       id_: dataDict.id_,
