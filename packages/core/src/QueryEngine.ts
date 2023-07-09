@@ -34,7 +34,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
       tags: ["final"],
     };
     const nodes = await this.retriever.aretrieve(query, _parentEvent);
-    return this.responseSynthesizer.asynthesize(query, nodes, parentEvent);
+    return this.responseSynthesizer.asynthesize(query, nodes, _parentEvent);
   }
 }
 

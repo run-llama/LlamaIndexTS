@@ -76,6 +76,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "llmPredict",
+          tags: ["final"],
         },
         index: 0,
         token: {
@@ -91,6 +92,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "llmPredict",
+          tags: ["final"],
         },
         index: 1,
         token: {
@@ -106,6 +108,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "llmPredict",
+          tags: ["final"],
         },
         index: 2,
         isDone: true,
@@ -119,6 +122,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "retrieve",
+          tags: ["final"],
         },
       },
     ]);
@@ -145,6 +149,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "llmPredict",
+          tags: ["final"],
         },
         index: 0,
         token: {
@@ -160,6 +165,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "llmPredict",
+          tags: ["final"],
         },
         index: 1,
         token: {
@@ -175,6 +181,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "llmPredict",
+          tags: ["final"],
         },
         index: 2,
         isDone: true,
@@ -188,6 +195,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
           id: expect.any(String),
           parentId: expect.any(String),
           type: "retrieve",
+          tags: ["final"],
         },
       },
     ]);
