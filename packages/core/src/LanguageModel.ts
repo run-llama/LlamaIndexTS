@@ -1,4 +1,4 @@
-import { CallbackManager, Trace } from "./callbacks/CallbackManager";
+import { CallbackManager, Event } from "./callbacks/CallbackManager";
 import { aHandleOpenAIStream } from "./callbacks/utility/aHandleOpenAIStream";
 import {
   ChatCompletionRequestMessageRoleEnum,
@@ -25,9 +25,11 @@ export interface LLMResult {
   generations: Generation[][]; // Each input can have more than one generations
 }
 
-export class BaseChatModel implements BaseLanguageModel {}
+export interface BaseChatModel extends BaseLanguageModel {
+  agenerate(messages: BaseMessage[], parentEvent?: Event): Promise<LLMResult>;
+}
 
-export class ChatOpenAI extends BaseChatModel {
+export class ChatOpenAI implements BaseChatModel {
   model: string;
   temperature: number = 0.7;
   openAIKey: string | null = null;
@@ -45,7 +47,6 @@ export class ChatOpenAI extends BaseChatModel {
     model: string;
     callbackManager?: CallbackManager;
   }) {
-    super();
     this.model = model;
     this.callbackManager = callbackManager;
     this.session = getOpenAISession();
@@ -70,7 +71,7 @@ export class ChatOpenAI extends BaseChatModel {
 
   async agenerate(
     messages: BaseMessage[],
-    parentTrace?: Trace
+    parentEvent?: Event
   ): Promise<LLMResult> {
     const baseRequestParams: CreateChatCompletionRequest = {
       model: this.model,
@@ -94,7 +95,7 @@ export class ChatOpenAI extends BaseChatModel {
       const fullResponse = await aHandleOpenAIStream({
         response,
         onLLMStream: this.callbackManager.onLLMStream,
-        parentTrace,
+        parentEvent,
       });
       return { generations: [[{ text: fullResponse }]] };
     }

@@ -26,15 +26,20 @@ export interface ServiceContextOptions {
   chunkOverlap?: number;
 }
 
-export function serviceContextFromDefaults(options: ServiceContextOptions) {
-  const callbackManager = options.callbackManager ?? new CallbackManager();
+export function serviceContextFromDefaults(options?: ServiceContextOptions) {
+  const callbackManager = options?.callbackManager ?? new CallbackManager();
   const serviceContext: ServiceContext = {
     llmPredictor:
-      options.llmPredictor ??
-      new ChatGPTLLMPredictor({ callbackManager, languageModel: options.llm }),
-    embedModel: options.embedModel ?? new OpenAIEmbedding(),
-    nodeParser: options.nodeParser ?? new SimpleNodeParser(),
-    promptHelper: options.promptHelper ?? new PromptHelper(),
+      options?.llmPredictor ??
+      new ChatGPTLLMPredictor({ callbackManager, languageModel: options?.llm }),
+    embedModel: options?.embedModel ?? new OpenAIEmbedding(),
+    nodeParser:
+      options?.nodeParser ??
+      new SimpleNodeParser({
+        chunkSize: options?.chunkSize,
+        chunkOverlap: options?.chunkOverlap,
+      }),
+    promptHelper: options?.promptHelper ?? new PromptHelper(),
     callbackManager,
   };
 

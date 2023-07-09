@@ -8,10 +8,14 @@ import {
 import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
 import { ServiceContext } from "./ServiceContext";
-import { Trace } from "./callbacks/CallbackManager";
+import { Event } from "./callbacks/CallbackManager";
 
 interface BaseResponseBuilder {
-  agetResponse(query: string, textChunks: string[]): Promise<string>;
+  agetResponse(
+    query: string,
+    textChunks: string[],
+    parentEvent?: Event
+  ): Promise<string>;
 }
 
 export class SimpleResponseBuilder implements BaseResponseBuilder {
@@ -27,7 +31,7 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
   async agetResponse(
     query: string,
     textChunks: string[],
-    parentTrace?: Trace
+    parentEvent?: Event
   ): Promise<string> {
     const input = {
       query,
@@ -35,7 +39,7 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
     };
 
     const prompt = this.textQATemplate(input);
-    return this.llmPredictor.apredict(prompt, {}, parentTrace);
+    return this.llmPredictor.apredict(prompt, {}, parentEvent);
   }
 }
 
@@ -190,19 +194,27 @@ export function getResponseBuilder(
   return new SimpleResponseBuilder(serviceContext);
 }
 
+// TODO replace with Logan's new response_sythesizers/factory.py
 export class ResponseSynthesizer {
-  responseBuilder: SimpleResponseBuilder;
+  responseBuilder: BaseResponseBuilder;
   serviceContext?: ServiceContext;
 
-  constructor(serviceContext?: ServiceContext) {
+  constructor({
+    responseBuilder,
+    serviceContext,
+  }: {
+    responseBuilder?: BaseResponseBuilder;
+    serviceContext?: ServiceContext;
+  } = {}) {
     this.serviceContext = serviceContext;
-    this.responseBuilder = getResponseBuilder(this.serviceContext);
+    this.responseBuilder =
+      responseBuilder ?? getResponseBuilder(this.serviceContext);
   }
 
   async asynthesize(
     query: string,
     nodes: NodeWithScore[],
-    parentTrace?: Trace
+    parentEvent?: Event
   ) {
     let textChunks: string[] = nodes.map((node) =>
       node.node.getContent(MetadataMode.NONE)
@@ -210,7 +222,7 @@ export class ResponseSynthesizer {
     const response = await this.responseBuilder.agetResponse(
       query,
       textChunks,
-      parentTrace
+      parentEvent
     );
     return new Response(
       response,

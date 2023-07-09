@@ -1,7 +1,7 @@
 import { OpenAIEmbedding } from "../../Embedding";
 import { globalsHelper } from "../../GlobalsHelper";
 import { BaseMessage, ChatOpenAI } from "../../LanguageModel";
-import { CallbackManager, Trace } from "../../callbacks/CallbackManager";
+import { CallbackManager, Event } from "../../callbacks/CallbackManager";
 
 export function mockLlmGeneration({
   languageModel,
@@ -13,15 +13,18 @@ export function mockLlmGeneration({
   jest
     .spyOn(languageModel, "agenerate")
     .mockImplementation(
-      async (messages: BaseMessage[], parentTrace?: Trace) => {
+      async (messages: BaseMessage[], parentEvent?: Event) => {
         const text = "MOCK_TOKEN_1-MOCK_TOKEN_2";
-        const trace = globalsHelper.createTrace({ parentTrace });
+        const event = globalsHelper.createEvent({
+          parentEvent,
+          type: "llmPredict",
+        });
         if (callbackManager?.onLLMStream) {
           const chunks = text.split("-");
           for (let i = 0; i < chunks.length; i++) {
             const chunk = chunks[i];
             callbackManager?.onLLMStream({
-              trace,
+              event,
               index: i,
               token: {
                 id: "id",
@@ -41,7 +44,7 @@ export function mockLlmGeneration({
             });
           }
           callbackManager?.onLLMStream({
-            trace,
+            event,
             index: chunks.length,
             isDone: true,
           });

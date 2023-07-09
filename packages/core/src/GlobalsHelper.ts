@@ -1,4 +1,4 @@
-import { Trace } from "./callbacks/CallbackManager";
+import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
 import { v4 as uuidv4 } from "uuid";
 
 class GlobalsHelper {
@@ -17,10 +17,21 @@ class GlobalsHelper {
     return this.defaultTokenizer;
   }
 
-  createTrace({ parentTrace }: { parentTrace?: Trace }): Trace {
+  createEvent({
+    parentEvent,
+    type,
+    tags,
+  }: {
+    parentEvent?: Event;
+    type: EventType;
+    tags?: EventTag[];
+  }): Event {
     return {
       id: uuidv4(),
-      parentId: parentTrace?.id,
+      type,
+      // inherit parent tags if tags not set
+      tags: tags || parentEvent?.tags,
+      parentId: parentEvent?.id,
     };
   }
 }

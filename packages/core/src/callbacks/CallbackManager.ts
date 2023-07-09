@@ -2,18 +2,23 @@ import { ChatCompletionResponseMessageRoleEnum } from "openai";
 import { NodeWithScore } from "../Node";
 
 /*
-  A trace is a wrapper that allows grouping
-  related operations. For example, during retrieve and synthesize,
-  a parent trace wraps both operations, and each operation has it's own
-  trace. In this case, both operations  will share a parentId.
+  An event is a wrapper that groups related operations.
+  For example, during retrieve and synthesize,
+  a parent event wraps both operations, and each operation has it's own
+  event. In this case, both sub-events will share a parentId.
 */
-export interface Trace {
+
+export type EventTag = "intermediate" | "final";
+export type EventType = "retrieve" | "llmPredict" | "wrapper";
+export interface Event {
   id: string;
+  type: EventType;
+  tags?: EventTag[];
   parentId?: string;
 }
 
 interface BaseCallbackResponse {
-  trace: Trace;
+  event: Event;
 }
 
 export interface StreamToken {

@@ -1,16 +1,18 @@
 import { ChatOpenAI } from "./LanguageModel";
 import { SimplePrompt } from "./Prompt";
-import { CallbackManager, Trace } from "./callbacks/CallbackManager";
+import { CallbackManager, Event } from "./callbacks/CallbackManager";
 
+// TODO change this to LLM class
 export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
   apredict(
     prompt: string | SimplePrompt,
     input?: Record<string, string>,
-    parentTrace?: Trace
+    parentEvent?: Event
   ): Promise<string>;
 }
 
+// TODO change this to LLM class
 export class ChatGPTLLMPredictor implements BaseLLMPredictor {
   model: string;
   retryOnThrottling: boolean;
@@ -52,7 +54,7 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
   async apredict(
     prompt: string | SimplePrompt,
     input?: Record<string, string>,
-    parentTrace?: Trace
+    parentEvent?: Event
   ): Promise<string> {
     if (typeof prompt === "string") {
       const result = await this.languageModel.agenerate(
@@ -62,7 +64,7 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
             type: "human",
           },
         ],
-        parentTrace
+        parentEvent
       );
       return result.generations[0][0].text;
     } else {

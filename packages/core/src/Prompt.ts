@@ -1,3 +1,7 @@
+import { BaseMessage } from "./LanguageModel";
+import { SubQuestion } from "./QuestionGenerator";
+import { ToolMetadata } from "./Tool";
+
 /**
  * A SimplePrompt is a function that takes a dictionary of inputs and returns a string.
  * NOTE this is a different interface compared to LlamaIndex Python
@@ -79,4 +83,237 @@ We have the opportunity to refine the existing answer (only if needed) with some
 ${context}
 ------------
 Given the new context, refine the original answer to better answer the question. If the context isn't useful, return the original answer.`;
+};
+
+export const defaultChoiceSelectPrompt: SimplePrompt = (input) => {
+  const { context = "", query = "" } = input;
+
+  return `A list of documents is shown below. Each document has a number next to it along 
+with a summary of the document. A question is also provided.
+Respond with the numbers of the documents
+you should consult to answer the question, in order of relevance, as well
+as the relevance score. The relevance score is a number from 1-10 based on
+how relevant you think the document is to the question.
+Do not include any documents that are not relevant to the question.
+Example format:
+Document 1:
+<summary of document 1>
+
+Document 2:
+<summary of document 2>
+
+...
+
+Document 10:\n<summary of document 10>
+
+Question: <question>
+Answer:
+Doc: 9, Relevance: 7
+Doc: 3, Relevance: 4
+Doc: 7, Relevance: 3
+
+Let's try this now:
+
+${context}
+Question: ${query}
+Answer:`;
+};
+
+/*
+PREFIX = """\
+Given a user question, and a list of tools, output a list of relevant sub-questions \
+that when composed can help answer the full user question:
+
+"""
+
+
+example_query_str = (
+    "Compare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021"
+)
+example_tools = [
+    ToolMetadata(
+        name="uber_10k",
+        description="Provides information about Uber financials for year 2021",
+    ),
+    ToolMetadata(
+        name="lyft_10k",
+        description="Provides information about Lyft financials for year 2021",
+    ),
+]
+example_tools_str = build_tools_text(example_tools)
+example_output = [
+    SubQuestion(
+        sub_question="What is the revenue growth of Uber", tool_name="uber_10k"
+    ),
+    SubQuestion(sub_question="What is the EBITDA of Uber", tool_name="uber_10k"),
+    SubQuestion(
+        sub_question="What is the revenue growth of Lyft", tool_name="lyft_10k"
+    ),
+    SubQuestion(sub_question="What is the EBITDA of Lyft", tool_name="lyft_10k"),
+]
+example_output_str = json.dumps([x.dict() for x in example_output], indent=4)
+
+EXAMPLES = (
+    """\
+# Example 1
+<Tools>
+```json
+{tools_str}
+```
+
+<User Question>
+{query_str}
+
+
+<Output>
+```json
+{output_str}
+```
+
+""".format(
+        query_str=example_query_str,
+        tools_str=example_tools_str,
+        output_str=example_output_str,
+    )
+    .replace("{", "{{")
+    .replace("}", "}}")
+)
+
+SUFFIX = """\
+# Example 2
+<Tools>
+```json
+{tools_str}
+```
+
+<User Question>
+{query_str}
+
+<Output>
+"""
+
+DEFAULT_SUB_QUESTION_PROMPT_TMPL = PREFIX + EXAMPLES + SUFFIX
+*/
+
+export function buildToolsText(tools: ToolMetadata[]) {
+  const toolsObj = tools.reduce<Record<string, string>>((acc, tool) => {
+    acc[tool.name] = tool.description;
+    return acc;
+  }, {});
+
+  return JSON.stringify(toolsObj, null, 4);
+}
+
+const exampleTools: ToolMetadata[] = [
+  {
+    name: "uber_10k",
+    description: "Provides information about Uber financials for year 2021",
+  },
+  {
+    name: "lyft_10k",
+    description: "Provides information about Lyft financials for year 2021",
+  },
+];
+
+const exampleQueryStr = `Compare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021`;
+
+const exampleOutput: SubQuestion[] = [
+  {
+    subQuestion: "What is the revenue growth of Uber",
+    toolName: "uber_10k",
+  },
+  {
+    subQuestion: "What is the EBITDA of Uber",
+    toolName: "uber_10k",
+  },
+  {
+    subQuestion: "What is the revenue growth of Lyft",
+    toolName: "lyft_10k",
+  },
+  {
+    subQuestion: "What is the EBITDA of Lyft",
+    toolName: "lyft_10k",
+  },
+];
+
+export const defaultSubQuestionPrompt: SimplePrompt = (input) => {
+  const { toolsStr, queryStr } = input;
+
+  return `Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:
+
+# Example 1
+<Tools>
+\`\`\`json
+${buildToolsText(exampleTools)}
+\`\`\`
+
+<User Question>
+${exampleQueryStr}
+
+<Output>
+\`\`\`json
+${JSON.stringify(exampleOutput, null, 4)}
+\`\`\`
+
+# Example 2
+<Tools>
+\`\`\`json
+${toolsStr}}
+\`\`\`
+
+<User Question>
+${queryStr}
+
+<Output>
+`;
+};
+
+// DEFAULT_TEMPLATE = """\
+// Given a conversation (between Human and Assistant) and a follow up message from Human, \
+// rewrite the message to be a standalone question that captures all relevant context \
+// from the conversation.
+
+// <Chat History>
+// {chat_history}
+
+// <Follow Up Message>
+// {question}
+
+// <Standalone question>
+// """
+
+export const defaultCondenseQuestionPrompt: SimplePrompt = (input) => {
+  const { chatHistory, question } = input;
+
+  return `Given a conversation (between Human and Assistant) and a follow up message from Human, rewrite the message to be a standalone question that captures all relevant context from the conversation.
+
+<Chat History>
+${chatHistory}
+
+<Follow Up Message>
+${question}
+
+<Standalone question>
+`;
+};
+
+export function messagesToHistoryStr(messages: BaseMessage[]) {
+  return messages.reduce((acc, message) => {
+    acc += acc ? "\n" : "";
+    if (message.type === "human") {
+      acc += `Human: ${message.content}`;
+    } else {
+      acc += `Assistant: ${message.content}`;
+    }
+    return acc;
+  }, "");
+}
+
+export const contextSystemPrompt: SimplePrompt = (input) => {
+  const { context } = input;
+
+  return `Context information is below.
+---------------------
+${context}
+---------------------`;
 };

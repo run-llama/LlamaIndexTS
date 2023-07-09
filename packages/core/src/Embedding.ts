@@ -174,24 +174,12 @@ export function getTopKMMREmbeddings(
 }
 
 export abstract class BaseEmbedding {
-  static similarity(
+  similarity(
     embedding1: number[],
     embedding2: number[],
-    mode: SimilarityType = SimilarityType.DOT_PRODUCT
+    mode: SimilarityType = SimilarityType.DEFAULT
   ): number {
-    if (embedding1.length !== embedding2.length) {
-      throw new Error("Embedding length mismatch");
-    }
-
-    if (mode === SimilarityType.DOT_PRODUCT) {
-      let result = 0;
-      for (let i = 0; i < embedding1.length; i++) {
-        result += embedding1[i] * embedding2[i];
-      }
-      return result;
-    } else {
-      throw new Error("Not implemented yet");
-    }
+    return similarity(embedding1, embedding2, mode);
   }
 
   abstract aGetTextEmbedding(text: string): Promise<number[]>;

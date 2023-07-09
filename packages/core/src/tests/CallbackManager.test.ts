@@ -8,6 +8,7 @@ import {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
+import { ListIndex } from "../index/list";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
 // Mock the OpenAI getOpenAISession function during testing
@@ -18,7 +19,6 @@ jest.mock("../openai", () => {
 });
 
 describe("CallbackManager: onLLMStream and onRetrieve", () => {
-  let vectorStoreIndex: VectorStoreIndex;
   let serviceContext: ServiceContext;
   let streamCallbackData: StreamCallbackResponse[] = [];
   let retrieveCallbackData: RetrievalCallbackResponse[] = [];
@@ -49,12 +49,6 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       llm: languageModel,
       embedModel,
     });
-
-    vectorStoreIndex = await VectorStoreIndex.fromDocuments(
-      [document],
-      undefined,
-      serviceContext
-    );
   });
 
   beforeEach(() => {
@@ -67,15 +61,21 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   });
 
   test("For VectorStoreIndex w/ a SimpleResponseBuilder", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.fromDocuments(
+      [document],
+      undefined,
+      serviceContext
+    );
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
     const response = await queryEngine.aquery(query);
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
     expect(streamCallbackData).toEqual([
       {
-        trace: {
+        event: {
           id: expect.any(String),
           parentId: expect.any(String),
+          type: "llmPredict",
         },
         index: 0,
         token: {
@@ -87,9 +87,10 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
         },
       },
       {
-        trace: {
+        event: {
           id: expect.any(String),
           parentId: expect.any(String),
+          type: "llmPredict",
         },
         index: 1,
         token: {
@@ -101,9 +102,10 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
         },
       },
       {
-        trace: {
+        event: {
           id: expect.any(String),
           parentId: expect.any(String),
+          type: "llmPredict",
         },
         index: 2,
         isDone: true,
@@ -113,16 +115,86 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       {
         query: query,
         nodes: expect.any(Array),
-        trace: {
+        event: {
           id: expect.any(String),
           parentId: expect.any(String),
+          type: "retrieve",
         },
       },
     ]);
     // both retrieval and streaming should have
-    // the same parent trace
-    expect(streamCallbackData[0].trace.parentId).toBe(
-      retrieveCallbackData[0].trace.parentId
+    // the same parent event
+    expect(streamCallbackData[0].event.parentId).toBe(
+      retrieveCallbackData[0].event.parentId
+    );
+  });
+
+  test("For ListIndex w/ a ListIndexRetriever", async () => {
+    const listIndex = await ListIndex.fromDocuments(
+      [document],
+      undefined,
+      serviceContext
+    );
+    const queryEngine = listIndex.asQueryEngine();
+    const query = "What is the author's name?";
+    const response = await queryEngine.aquery(query);
+    expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
+    expect(streamCallbackData).toEqual([
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+        },
+        index: 0,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+        },
+        index: 1,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+        },
+        index: 2,
+        isDone: true,
+      },
+    ]);
+    expect(retrieveCallbackData).toEqual([
+      {
+        query: query,
+        nodes: expect.any(Array),
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "retrieve",
+        },
+      },
+    ]);
+    // both retrieval and streaming should have
+    // the same parent event
+    expect(streamCallbackData[0].event.parentId).toBe(
+      retrieveCallbackData[0].event.parentId
     );
   });
 });

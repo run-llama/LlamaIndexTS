@@ -1,3 +1,4 @@
+// @ts-ignore
 import process from "node:process";
 import { Configuration, OpenAIWrapper } from "@llamaindex/core/src/openai";
 

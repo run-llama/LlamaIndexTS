@@ -1,17 +1,20 @@
 import { globalsHelper } from "../../GlobalsHelper";
-import { StreamCallbackResponse, Trace } from "../CallbackManager";
+import { StreamCallbackResponse, Event } from "../CallbackManager";
 import { StreamToken } from "../CallbackManager";
 
 export async function aHandleOpenAIStream({
   response,
   onLLMStream,
-  parentTrace,
+  parentEvent,
 }: {
   response: any;
   onLLMStream: (data: StreamCallbackResponse) => void;
-  parentTrace?: Trace;
+  parentEvent?: Event;
 }): Promise<string> {
-  const trace = globalsHelper.createTrace({ parentTrace });
+  const event = globalsHelper.createEvent({
+    parentEvent,
+    type: "llmPredict",
+  });
   const stream = __astreamCompletion(response.data as any);
   let index = 0;
   let cumulativeText = "";
@@ -23,10 +26,10 @@ export async function aHandleOpenAIStream({
       continue;
     }
     cumulativeText += content;
-    onLLMStream?.({ trace, index, token });
+    onLLMStream?.({ event, index, token });
     index++;
   }
-  onLLMStream?.({ trace, index, isDone: true });
+  onLLMStream?.({ event, index, isDone: true });
   return cumulativeText;
 }
 
