@@ -53,7 +53,7 @@ export class ListIndex extends BaseIndex<IndexList> {
           "Cannot initialize VectorStoreIndex without nodes or indexStruct"
         );
       }
-      indexStruct = ListIndex._buildIndexFromNodes(
+      indexStruct = await ListIndex._buildIndexFromNodes(
         options.nodes,
         storageContext.docStore
       );
@@ -110,14 +110,14 @@ export class ListIndex extends BaseIndex<IndexList> {
     return new RetrieverQueryEngine(this.asRetriever());
   }
 
-  static _buildIndexFromNodes(
+  static async _buildIndexFromNodes(
     nodes: BaseNode[],
     docStore: BaseDocumentStore,
     indexStruct?: IndexList
-  ): IndexList {
+  ): Promise<IndexList> {
     indexStruct = indexStruct || new IndexList();
 
-    docStore.addDocuments(nodes, true);
+    await docStore.addDocuments(nodes, true);
     for (const node of nodes) {
       indexStruct.addNode(node);
     }
