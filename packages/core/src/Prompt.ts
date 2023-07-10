@@ -1,4 +1,4 @@
-import { BaseMessage } from "./LanguageModel";
+import { ChatMessage } from "./LLM";
 import { SubQuestion } from "./QuestionGenerator";
 import { ToolMetadata } from "./Tool";
 
@@ -297,10 +297,10 @@ ${question}
 `;
 };
 
-export function messagesToHistoryStr(messages: BaseMessage[]) {
+export function messagesToHistoryStr(messages: ChatMessage[]) {
   return messages.reduce((acc, message) => {
     acc += acc ? "\n" : "";
-    if (message.type === "human") {
+    if (message.role === "user") {
       acc += `Human: ${message.content}`;
     } else {
       acc += `Assistant: ${message.content}`;

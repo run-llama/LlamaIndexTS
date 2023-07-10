@@ -1,6 +1,6 @@
 import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
 import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./LLMPredictor";
-import { BaseLanguageModel } from "./LanguageModel";
+import { BaseLanguageModel } from "./LLM";
 import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
 

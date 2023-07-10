@@ -1,9 +1,4 @@
-import {
-  BaseChatModel,
-  BaseMessage,
-  ChatOpenAI,
-  LLMResult,
-} from "./LanguageModel";
+import { BaseChatModel, ChatMessage, OpenAI, ChatResponse } from "./LLM";
 import { TextNode } from "./Node";
 import {
   SimplePrompt,
@@ -19,29 +14,32 @@ import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 interface ChatEngine {
   chatRepl(): void;
 
-  achat(message: string, chatHistory?: BaseMessage[]): Promise<Response>;
+  achat(message: string, chatHistory?: ChatMessage[]): Promise<Response>;
 
   reset(): void;
 }
 
 export class SimpleChatEngine implements ChatEngine {
-  chatHistory: BaseMessage[];
+  chatHistory: ChatMessage[];
   llm: BaseChatModel;
 
   constructor(init?: Partial<SimpleChatEngine>) {
     this.chatHistory = init?.chatHistory ?? [];
-    this.llm = init?.llm ?? new ChatOpenAI();
+    this.llm = init?.llm ?? new OpenAI();
   }
 
   chatRepl() {
     throw new Error("Method not implemented.");
   }
 
-  async achat(message: string, chatHistory?: BaseMessage[]): Promise<Response> {
+  async achat(message: string, chatHistory?: ChatMessage[]): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
-    chatHistory.push({ content: message, type: "human" });
+    chatHistory.push({ content: message, role: "user" });
     const response = await this.llm.agenerate(chatHistory);
-    chatHistory.push({ content: response.generations[0][0].text, type: "ai" });
+    chatHistory.push({
+      content: response.generations[0][0].text,
+      role: "assistant",
+    });
     this.chatHistory = chatHistory;
     return new Response(response.generations[0][0].text);
   }
@@ -53,13 +51,13 @@ export class SimpleChatEngine implements ChatEngine {
 
 export class CondenseQuestionChatEngine implements ChatEngine {
   queryEngine: BaseQueryEngine;
-  chatHistory: BaseMessage[];
+  chatHistory: ChatMessage[];
   serviceContext: ServiceContext;
   condenseMessagePrompt: SimplePrompt;
 
   constructor(init: {
     queryEngine: BaseQueryEngine;
-    chatHistory: BaseMessage[];
+    chatHistory: ChatMessage[];
     serviceContext?: ServiceContext;
     condenseMessagePrompt?: SimplePrompt;
   }) {
@@ -72,7 +70,7 @@ export class CondenseQuestionChatEngine implements ChatEngine {
   }
 
   private async acondenseQuestion(
-    chatHistory: BaseMessage[],
+    chatHistory: ChatMessage[],
     question: string
   ) {
     const chatHistoryStr = messagesToHistoryStr(chatHistory);
@@ -88,7 +86,7 @@ export class CondenseQuestionChatEngine implements ChatEngine {
 
   async achat(
     message: string,
-    chatHistory?: BaseMessage[] | undefined
+    chatHistory?: ChatMessage[] | undefined
   ): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
 
@@ -99,8 +97,8 @@ export class CondenseQuestionChatEngine implements ChatEngine {
 
     const response = await this.queryEngine.aquery(condensedQuestion);
 
-    chatHistory.push({ content: message, type: "human" });
-    chatHistory.push({ content: response.response, type: "ai" });
+    chatHistory.push({ content: message, role: "user" });
+    chatHistory.push({ content: response.response, role: "assistant" });
 
     return response;
   }
@@ -117,15 +115,15 @@ export class CondenseQuestionChatEngine implements ChatEngine {
 export class ContextChatEngine implements ChatEngine {
   retriever: BaseRetriever;
   chatModel: BaseChatModel;
-  chatHistory: BaseMessage[];
+  chatHistory: ChatMessage[];
 
   constructor(init: {
     retriever: BaseRetriever;
     chatModel?: BaseChatModel;
-    chatHistory?: BaseMessage[];
+    chatHistory?: ChatMessage[];
   }) {
     this.retriever = init.retriever;
-    this.chatModel = init.chatModel ?? new ChatOpenAI("gpt-3.5-turbo-16k");
+    this.chatModel = init.chatModel ?? new OpenAI("gpt-3.5-turbo-16k");
     this.chatHistory = init?.chatHistory ?? [];
   }
 
@@ -133,21 +131,21 @@ export class ContextChatEngine implements ChatEngine {
     throw new Error("Method not implemented.");
   }
 
-  async achat(message: string, chatHistory?: BaseMessage[] | undefined) {
+  async achat(message: string, chatHistory?: ChatMessage[] | undefined) {
     chatHistory = chatHistory ?? this.chatHistory;
 
     const sourceNodesWithScore = await this.retriever.aretrieve(message);
 
-    const systemMessage: BaseMessage = {
+    const systemMessage: ChatMessage = {
       content: contextSystemPrompt({
         context: sourceNodesWithScore
           .map((r) => (r.node as TextNode).text)
           .join("\n\n"),
       }),
-      type: "system",
+      role: "system",
     };
 
-    chatHistory.push({ content: message, type: "human" });
+    chatHistory.push({ content: message, role: "user" });
 
     const response = await this.chatModel.agenerate([
       systemMessage,
@@ -155,7 +153,7 @@ export class ContextChatEngine implements ChatEngine {
     ]);
     const text = response.generations[0][0].text;
 
-    chatHistory.push({ content: text, type: "ai" });
+    chatHistory.push({ content: text, role: "assistant" });
 
     this.chatHistory = chatHistory;
 

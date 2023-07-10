@@ -1,4 +1,4 @@
-import { ChatOpenAI } from "./LanguageModel";
+import { OpenAI } from "./LLM";
 import { SimplePrompt } from "./Prompt";
 
 // TODO change this to LLM class
@@ -15,7 +15,7 @@ export interface BaseLLMPredictor {
 export class ChatGPTLLMPredictor implements BaseLLMPredictor {
   llm: string;
   retryOnThrottling: boolean;
-  languageModel: ChatOpenAI;
+  languageModel: OpenAI;
 
   constructor(
     llm: string = "gpt-3.5-turbo",
@@ -24,7 +24,7 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
     this.llm = llm;
     this.retryOnThrottling = retryOnThrottling;
 
-    this.languageModel = new ChatOpenAI(this.llm);
+    this.languageModel = new OpenAI(this.llm);
   }
 
   async getLlmMetadata() {
@@ -36,10 +36,10 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
     input?: Record<string, string>
   ): Promise<string> {
     if (typeof prompt === "string") {
-      const result = await this.languageModel.agenerate([
+      const result = await this.languageModel.acomplete([
         {
           content: prompt,
-          type: "human",
+          role: "user",
         },
       ]);
       return result.generations[0][0].text;
