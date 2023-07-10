@@ -57,9 +57,9 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
             throw new Error(
               `Invalid answer number: ${docNum}. Answer number must be between 1 and ${numChoices}`
             );
-          } else {
-            parseResult[docNum] = answerRelevance;
           }
+        } else {
+          parseResult[docNum] = answerRelevance;
         }
       } catch (e) {
         if (raiseErr) {
