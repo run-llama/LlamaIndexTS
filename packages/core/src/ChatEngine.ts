@@ -10,6 +10,8 @@ import { BaseQueryEngine } from "./QueryEngine";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
+import { v4 as uuidv4 } from "uuid";
+import { Event } from "./callbacks/CallbackManager";
 
 interface ChatEngine {
   chatRepl(): void;
@@ -134,7 +136,15 @@ export class ContextChatEngine implements ChatEngine {
   async achat(message: string, chatHistory?: ChatMessage[] | undefined) {
     chatHistory = chatHistory ?? this.chatHistory;
 
-    const sourceNodesWithScore = await this.retriever.aretrieve(message);
+    const parentEvent: Event = {
+      id: uuidv4(),
+      type: "wrapper",
+      tags: ["final"],
+    };
+    const sourceNodesWithScore = await this.retriever.aretrieve(
+      message,
+      parentEvent
+    );
 
     const systemMessage: ChatMessage = {
       content: contextSystemPrompt({
@@ -147,10 +157,10 @@ export class ContextChatEngine implements ChatEngine {
 
     chatHistory.push({ content: message, role: "user" });
 
-    const response = await this.chatModel.agenerate([
-      systemMessage,
-      ...chatHistory,
-    ]);
+    const response = await this.chatModel.agenerate(
+      [systemMessage, ...chatHistory],
+      parentEvent
+    );
     const text = response.generations[0][0].text;
 
     chatHistory.push({ content: text, role: "assistant" });

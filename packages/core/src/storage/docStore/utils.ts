@@ -12,7 +12,7 @@ export function docToJson(doc: BaseNode): Record<string, any> {
 
 export function jsonToDoc(docDict: Record<string, any>): BaseNode {
   let docType = docDict[TYPE_KEY];
-  let dataDict = docDict[DATA_KEY];
+  let dataDict = JSON.parse(docDict[DATA_KEY]);
   let doc: BaseNode;
 
   if (docType === ObjectType.DOCUMENT) {
@@ -23,7 +23,6 @@ export function jsonToDoc(docDict: Record<string, any>): BaseNode {
       hash: dataDict.hash,
     });
   } else if (docType === ObjectType.TEXT) {
-    console.log({ dataDict });
     doc = new TextNode({
       text: dataDict.text,
       id_: dataDict.id_,

@@ -3,14 +3,15 @@ import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./LLMPredictor";
 import { BaseLanguageModel } from "./LLM";
 import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
+import { CallbackManager } from "./callbacks/CallbackManager";
 
 export interface ServiceContext {
   llmPredictor: BaseLLMPredictor;
   promptHelper: PromptHelper;
   embedModel: BaseEmbedding;
   nodeParser: NodeParser;
+  callbackManager: CallbackManager;
   // llamaLogger: any;
-  // callbackManager: any;
 }
 
 export interface ServiceContextOptions {
@@ -19,14 +20,18 @@ export interface ServiceContextOptions {
   promptHelper?: PromptHelper;
   embedModel?: BaseEmbedding;
   nodeParser?: NodeParser;
+  callbackManager?: CallbackManager;
   // NodeParser arguments
   chunkSize?: number;
   chunkOverlap?: number;
 }
 
 export function serviceContextFromDefaults(options?: ServiceContextOptions) {
+  const callbackManager = options?.callbackManager ?? new CallbackManager();
   const serviceContext: ServiceContext = {
-    llmPredictor: options?.llmPredictor ?? new ChatGPTLLMPredictor(),
+    llmPredictor:
+      options?.llmPredictor ??
+      new ChatGPTLLMPredictor({ callbackManager, languageModel: options?.llm }),
     embedModel: options?.embedModel ?? new OpenAIEmbedding(),
     nodeParser:
       options?.nodeParser ??
@@ -35,6 +40,7 @@ export function serviceContextFromDefaults(options?: ServiceContextOptions) {
         chunkOverlap: options?.chunkOverlap,
       }),
     promptHelper: options?.promptHelper ?? new PromptHelper(),
+    callbackManager,
   };
 
   return serviceContext;
@@ -56,6 +62,9 @@ export function serviceContextFromServiceContext(
   }
   if (options.nodeParser) {
     newServiceContext.nodeParser = options.nodeParser;
+  }
+  if (options.callbackManager) {
+    newServiceContext.callbackManager = options.callbackManager;
   }
   return newServiceContext;
 }

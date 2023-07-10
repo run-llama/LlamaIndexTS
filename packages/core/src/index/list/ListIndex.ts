@@ -6,7 +6,10 @@ import {
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
 import { BaseRetriever } from "../../Retriever";
-import { ListIndexRetriever } from "./ListIndexRetriever";
+import {
+  ListIndexRetriever,
+  ListIndexLLMRetriever,
+} from "./ListIndexRetriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
@@ -53,7 +56,7 @@ export class ListIndex extends BaseIndex<IndexList> {
           "Cannot initialize VectorStoreIndex without nodes or indexStruct"
         );
       }
-      indexStruct = ListIndex._buildIndexFromNodes(
+      indexStruct = await ListIndex._buildIndexFromNodes(
         options.nodes,
         storageContext.docStore
       );
@@ -98,7 +101,7 @@ export class ListIndex extends BaseIndex<IndexList> {
       case ListRetrieverMode.DEFAULT:
         return new ListIndexRetriever(this);
       case ListRetrieverMode.LLM:
-        throw new Error(`Support for LLM retriever mode is not implemented`);
+        return new ListIndexLLMRetriever(this);
       default:
         throw new Error(`Unknown retriever mode: ${mode}`);
     }
@@ -107,17 +110,17 @@ export class ListIndex extends BaseIndex<IndexList> {
   asQueryEngine(
     mode: ListRetrieverMode = ListRetrieverMode.DEFAULT
   ): BaseQueryEngine {
-    return new RetrieverQueryEngine(this.asRetriever());
+    return new RetrieverQueryEngine(this.asRetriever(mode));
   }
 
-  static _buildIndexFromNodes(
+  static async _buildIndexFromNodes(
     nodes: BaseNode[],
     docStore: BaseDocumentStore,
     indexStruct?: IndexList
-  ): IndexList {
+  ): Promise<IndexList> {
     indexStruct = indexStruct || new IndexList();
 
-    docStore.addDocuments(nodes, true);
+    await docStore.addDocuments(nodes, true);
     for (const node of nodes) {
       indexStruct.addNode(node);
     }

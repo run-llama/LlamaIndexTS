@@ -1,3 +1,6 @@
+import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
+import { v4 as uuidv4 } from "uuid";
+
 class GlobalsHelper {
   defaultTokenizer: ((text: string) => string[]) | null = null;
 
@@ -12,6 +15,24 @@ class GlobalsHelper {
       return enc.encode(text);
     };
     return this.defaultTokenizer;
+  }
+
+  createEvent({
+    parentEvent,
+    type,
+    tags,
+  }: {
+    parentEvent?: Event;
+    type: EventType;
+    tags?: EventTag[];
+  }): Event {
+    return {
+      id: uuidv4(),
+      type,
+      // inherit parent tags if tags not set
+      tags: tags || parentEvent?.tags,
+      parentId: parentEvent?.id,
+    };
   }
 }
 

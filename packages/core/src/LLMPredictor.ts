@@ -1,30 +1,50 @@
 import { OpenAI } from "./LLM";
 import { SimplePrompt } from "./Prompt";
+import { CallbackManager, Event } from "./callbacks/CallbackManager";
 
 // TODO change this to LLM class
 export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
   apredict(
     prompt: string | SimplePrompt,
-    input?: Record<string, string>
+    input?: Record<string, string>,
+    parentEvent?: Event
   ): Promise<string>;
-  // stream(prompt: string, options: any): Promise<any>;
 }
 
 // TODO change this to LLM class
 export class ChatGPTLLMPredictor implements BaseLLMPredictor {
-  llm: string;
+  model: string;
   retryOnThrottling: boolean;
   languageModel: OpenAI;
+  callbackManager?: CallbackManager;
 
   constructor(
-    llm: string = "gpt-3.5-turbo",
-    retryOnThrottling: boolean = true
+    props:
+      | {
+          model?: string;
+          retryOnThrottling?: boolean;
+          callbackManager?: CallbackManager;
+          languageModel?: OpenAI;
+        }
+      | undefined = undefined
   ) {
-    this.llm = llm;
+    const {
+      model = "gpt-3.5-turbo",
+      retryOnThrottling = true,
+      callbackManager,
+      languageModel,
+    } = props || {};
+    this.model = model;
+    this.callbackManager = callbackManager;
     this.retryOnThrottling = retryOnThrottling;
 
-    this.languageModel = new OpenAI(this.llm);
+    this.languageModel =
+      languageModel ??
+      new OpenAI({
+        model: this.model,
+        callbackManager: this.callbackManager,
+      });
   }
 
   async getLlmMetadata() {
@@ -33,7 +53,8 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
 
   async apredict(
     prompt: string | SimplePrompt,
-    input?: Record<string, string>
+    input?: Record<string, string>,
+    parentEvent?: Event
   ): Promise<string> {
     if (typeof prompt === "string") {
       const result = await this.languageModel.acomplete([
@@ -41,14 +62,11 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
           content: prompt,
           role: "user",
         },
+        parentEvent,
       ]);
       return result.generations[0][0].text;
     } else {
       return this.apredict(prompt(input ?? {}));
     }
   }
-
-  // async stream(prompt: string, options: any) {
-  //   console.log("stream");
-  // }
 }
