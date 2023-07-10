@@ -10,6 +10,8 @@ import {
 } from "./utils";
 import { SimplePrompt, defaultChoiceSelectPrompt } from "../../Prompt";
 import _ from "lodash";
+import { globalsHelper } from "../../GlobalsHelper";
+import { Event } from "../../callbacks/CallbackManager";
 
 /**
  * Simple retriever for ListIndex that returns all nodes
@@ -21,13 +23,33 @@ export class ListIndexRetriever implements BaseRetriever {
     this.index = index;
   }
 
-  async aretrieve(query: string): Promise<NodeWithScore[]> {
+  async aretrieve(
+    query: string,
+    parentEvent?: Event
+  ): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const nodes = await this.index.docStore.getNodes(nodeIds);
-    return nodes.map((node) => ({
+    const result = nodes.map((node) => ({
       node: node,
       score: 1,
     }));
+
+    if (this.index.serviceContext.callbackManager.onRetrieve) {
+      this.index.serviceContext.callbackManager.onRetrieve({
+        query,
+        nodes: result,
+        event: globalsHelper.createEvent({
+          parentEvent,
+          type: "retrieve",
+        }),
+      });
+    }
+
+    return result;
+  }
+
+  getServiceContext(): ServiceContext {
+    return this.index.serviceContext;
   }
 }
 
@@ -59,7 +81,10 @@ export class ListIndexLLMRetriever implements BaseRetriever {
     this.serviceContext = serviceContext || index.serviceContext;
   }
 
-  async aretrieve(query: string): Promise<NodeWithScore[]> {
+  async aretrieve(
+    query: string,
+    parentEvent?: Event
+  ): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const results: NodeWithScore[] = [];
 
@@ -91,6 +116,22 @@ export class ListIndexLLMRetriever implements BaseRetriever {
 
       results.push(...nodeWithScores);
     }
+
+    if (this.serviceContext.callbackManager.onRetrieve) {
+      this.serviceContext.callbackManager.onRetrieve({
+        query,
+        nodes: results,
+        event: globalsHelper.createEvent({
+          parentEvent,
+          type: "retrieve",
+        }),
+      });
+    }
+
     return results;
+  }
+
+  getServiceContext(): ServiceContext {
+    return this.serviceContext;
   }
 }

@@ -1,4 +1,4 @@
-import { ChatGPTLLMPredictor } from "./LLMPredictor";
+import { ChatGPTLLMPredictor, BaseLLMPredictor } from "./LLMPredictor";
 import { MetadataMode, NodeWithScore } from "./Node";
 import {
   SimplePrompt,
@@ -8,28 +8,38 @@ import {
 import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
 import { ServiceContext } from "./ServiceContext";
+import { Event } from "./callbacks/CallbackManager";
 
 interface BaseResponseBuilder {
-  agetResponse(query: string, textChunks: string[]): Promise<string>;
+  agetResponse(
+    query: string,
+    textChunks: string[],
+    parentEvent?: Event
+  ): Promise<string>;
 }
 
 export class SimpleResponseBuilder implements BaseResponseBuilder {
-  llmPredictor: ChatGPTLLMPredictor;
+  llmPredictor: BaseLLMPredictor;
   textQATemplate: SimplePrompt;
 
-  constructor() {
-    this.llmPredictor = new ChatGPTLLMPredictor();
+  constructor(serviceContext?: ServiceContext) {
+    this.llmPredictor =
+      serviceContext?.llmPredictor ?? new ChatGPTLLMPredictor();
     this.textQATemplate = defaultTextQaPrompt;
   }
 
-  async agetResponse(query: string, textChunks: string[]): Promise<string> {
+  async agetResponse(
+    query: string,
+    textChunks: string[],
+    parentEvent?: Event
+  ): Promise<string> {
     const input = {
       query,
       context: textChunks.join("\n\n"),
     };
 
     const prompt = this.textQATemplate(input);
-    return this.llmPredictor.apredict(prompt, {});
+    return this.llmPredictor.apredict(prompt, {}, parentEvent);
   }
 }
 
@@ -178,23 +188,42 @@ export class TreeSummarize implements BaseResponseBuilder {
   }
 }
 
-export function getResponseBuilder(): BaseResponseBuilder {
-  return new SimpleResponseBuilder();
+export function getResponseBuilder(
+  serviceContext?: ServiceContext
+): SimpleResponseBuilder {
+  return new SimpleResponseBuilder(serviceContext);
 }
 
 // TODO replace with Logan's new response_sythesizers/factory.py
 export class ResponseSynthesizer {
   responseBuilder: BaseResponseBuilder;
+  serviceContext?: ServiceContext;
 
-  constructor(responseBuilder?: BaseResponseBuilder) {
-    this.responseBuilder = responseBuilder ?? getResponseBuilder();
+  constructor({
+    responseBuilder,
+    serviceContext,
+  }: {
+    responseBuilder?: BaseResponseBuilder;
+    serviceContext?: ServiceContext;
+  } = {}) {
+    this.serviceContext = serviceContext;
+    this.responseBuilder =
+      responseBuilder ?? getResponseBuilder(this.serviceContext);
   }
 
-  async asynthesize(query: string, nodes: NodeWithScore[]) {
+  async asynthesize(
+    query: string,
+    nodes: NodeWithScore[],
+    parentEvent?: Event
+  ) {
     let textChunks: string[] = nodes.map((node) =>
       node.node.getContent(MetadataMode.NONE)
     );
-    const response = await this.responseBuilder.agetResponse(query, textChunks);
+    const response = await this.responseBuilder.agetResponse(
+      query,
+      textChunks,
+      parentEvent
+    );
     return new Response(
       response,
       nodes.map((node) => node.node)

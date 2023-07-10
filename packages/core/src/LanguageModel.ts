@@ -1,8 +1,9 @@
+import { CallbackManager, Event } from "./callbacks/CallbackManager";
+import { aHandleOpenAIStream } from "./callbacks/utility/aHandleOpenAIStream";
 import {
   ChatCompletionRequestMessageRoleEnum,
-  Configuration,
+  CreateChatCompletionRequest,
   OpenAISession,
-  OpenAIWrapper,
   getOpenAISession,
 } from "./openai";
 
@@ -25,7 +26,7 @@ export interface LLMResult {
 }
 
 export interface BaseChatModel extends BaseLanguageModel {
-  agenerate(messages: BaseMessage[]): Promise<LLMResult>;
+  agenerate(messages: BaseMessage[], parentEvent?: Event): Promise<LLMResult>;
 }
 
 export class ChatOpenAI implements BaseChatModel {
@@ -36,11 +37,18 @@ export class ChatOpenAI implements BaseChatModel {
   maxRetries: number = 6;
   n: number = 1;
   maxTokens?: number;
-
   session: OpenAISession;
+  callbackManager?: CallbackManager;
 
-  constructor(model: string = "gpt-3.5-turbo") {
+  constructor({
+    model = "gpt-3.5-turbo",
+    callbackManager,
+  }: {
+    model: string;
+    callbackManager?: CallbackManager;
+  }) {
     this.model = model;
+    this.callbackManager = callbackManager;
     this.session = getOpenAISession();
   }
 
@@ -61,8 +69,11 @@ export class ChatOpenAI implements BaseChatModel {
     }
   }
 
-  async agenerate(messages: BaseMessage[]): Promise<LLMResult> {
-    const { data } = await this.session.openai.createChatCompletion({
+  async agenerate(
+    messages: BaseMessage[],
+    parentEvent?: Event
+  ): Promise<LLMResult> {
+    const baseRequestParams: CreateChatCompletionRequest = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
@@ -71,8 +82,29 @@ export class ChatOpenAI implements BaseChatModel {
         role: ChatOpenAI.mapMessageType(message.type),
         content: message.content,
       })),
-    });
+    };
 
+    if (this.callbackManager?.onLLMStream) {
+      const response = await this.session.openai.createChatCompletion(
+        {
+          ...baseRequestParams,
+          stream: true,
+        },
+        { responseType: "stream" }
+      );
+      const fullResponse = await aHandleOpenAIStream({
+        response,
+        onLLMStream: this.callbackManager.onLLMStream,
+        parentEvent,
+      });
+      return { generations: [[{ text: fullResponse }]] };
+    }
+
+    const response = await this.session.openai.createChatCompletion(
+      baseRequestParams
+    );
+
+    const { data } = response;
     const content = data.choices[0].message?.content ?? "";
     return { generations: [[{ text: content }]] };
   }

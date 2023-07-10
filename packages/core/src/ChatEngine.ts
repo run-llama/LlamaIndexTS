@@ -1,9 +1,4 @@
-import {
-  BaseChatModel,
-  BaseMessage,
-  ChatOpenAI,
-  LLMResult,
-} from "./LanguageModel";
+import { BaseChatModel, BaseMessage, ChatOpenAI } from "./LanguageModel";
 import { TextNode } from "./Node";
 import {
   SimplePrompt,
@@ -15,6 +10,8 @@ import { BaseQueryEngine } from "./QueryEngine";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
+import { v4 as uuidv4 } from "uuid";
+import { Event } from "./callbacks/CallbackManager";
 
 interface ChatEngine {
   chatRepl(): void;
@@ -30,7 +27,7 @@ export class SimpleChatEngine implements ChatEngine {
 
   constructor(init?: Partial<SimpleChatEngine>) {
     this.chatHistory = init?.chatHistory ?? [];
-    this.llm = init?.llm ?? new ChatOpenAI();
+    this.llm = init?.llm ?? new ChatOpenAI({ model: "gpt-3.5-turbo" });
   }
 
   chatRepl() {
@@ -125,7 +122,8 @@ export class ContextChatEngine implements ChatEngine {
     chatHistory?: BaseMessage[];
   }) {
     this.retriever = init.retriever;
-    this.chatModel = init.chatModel ?? new ChatOpenAI("gpt-3.5-turbo-16k");
+    this.chatModel =
+      init.chatModel ?? new ChatOpenAI({ model: "gpt-3.5-turbo-16k" });
     this.chatHistory = init?.chatHistory ?? [];
   }
 
@@ -136,7 +134,15 @@ export class ContextChatEngine implements ChatEngine {
   async achat(message: string, chatHistory?: BaseMessage[] | undefined) {
     chatHistory = chatHistory ?? this.chatHistory;
 
-    const sourceNodesWithScore = await this.retriever.aretrieve(message);
+    const parentEvent: Event = {
+      id: uuidv4(),
+      type: "wrapper",
+      tags: ["final"],
+    };
+    const sourceNodesWithScore = await this.retriever.aretrieve(
+      message,
+      parentEvent
+    );
 
     const systemMessage: BaseMessage = {
       content: contextSystemPrompt({
@@ -149,10 +155,10 @@ export class ContextChatEngine implements ChatEngine {
 
     chatHistory.push({ content: message, type: "human" });
 
-    const response = await this.chatModel.agenerate([
-      systemMessage,
-      ...chatHistory,
-    ]);
+    const response = await this.chatModel.agenerate(
+      [systemMessage, ...chatHistory],
+      parentEvent
+    );
     const text = response.generations[0][0].text;
 
     chatHistory.push({ content: text, type: "ai" });
