@@ -1,19 +1,19 @@
 import { OpenAIEmbedding } from "../../Embedding";
 import { globalsHelper } from "../../GlobalsHelper";
-import { BaseMessage, ChatOpenAI } from "../../LanguageModel";
+import { ChatMessage, OpenAI } from "../../LLM";
 import { CallbackManager, Event } from "../../callbacks/CallbackManager";
 
 export function mockLlmGeneration({
   languageModel,
   callbackManager,
 }: {
-  languageModel: ChatOpenAI;
+  languageModel: OpenAI;
   callbackManager: CallbackManager;
 }) {
   jest
-    .spyOn(languageModel, "agenerate")
+    .spyOn(languageModel, "achat")
     .mockImplementation(
-      async (messages: BaseMessage[], parentEvent?: Event) => {
+      async (messages: ChatMessage[], parentEvent?: Event) => {
         const text = "MOCK_TOKEN_1-MOCK_TOKEN_2";
         const event = globalsHelper.createEvent({
           parentEvent,
@@ -51,7 +51,10 @@ export function mockLlmGeneration({
         }
         return new Promise((resolve) => {
           resolve({
-            generations: [[{ text }]],
+            message: {
+              content: text,
+              role: "assistant",
+            },
           });
         });
       }

@@ -1,6 +1,6 @@
 import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
+import { OpenAI } from "./LLM";
 import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./LLMPredictor";
-import { BaseLanguageModel } from "./LLM";
 import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
 import { CallbackManager } from "./callbacks/CallbackManager";
@@ -16,7 +16,7 @@ export interface ServiceContext {
 
 export interface ServiceContextOptions {
   llmPredictor?: BaseLLMPredictor;
-  llm?: BaseLanguageModel;
+  llm?: OpenAI;
   promptHelper?: PromptHelper;
   embedModel?: BaseEmbedding;
   nodeParser?: NodeParser;

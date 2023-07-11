@@ -1,6 +1,6 @@
 import { VectorStoreIndex } from "../BaseIndex";
 import { OpenAIEmbedding } from "../Embedding";
-import { ChatOpenAI } from "../LanguageModel";
+import { OpenAI } from "../LLM";
 import { Document } from "../Node";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import {
@@ -35,7 +35,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       },
     });
 
-    const languageModel = new ChatOpenAI({
+    const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
       callbackManager,
     });

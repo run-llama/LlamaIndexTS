@@ -1,4 +1,4 @@
-import { OpenAI } from "./LLM";
+import { ALL_AVAILABLE_MODELS, OpenAI } from "./LLM";
 import { SimplePrompt } from "./Prompt";
 import { CallbackManager, Event } from "./callbacks/CallbackManager";
 
@@ -14,21 +14,12 @@ export interface BaseLLMPredictor {
 
 // TODO change this to LLM class
 export class ChatGPTLLMPredictor implements BaseLLMPredictor {
-  model: string;
+  model: keyof typeof ALL_AVAILABLE_MODELS;
   retryOnThrottling: boolean;
   languageModel: OpenAI;
   callbackManager?: CallbackManager;
 
-  constructor(
-    props:
-      | {
-          model?: string;
-          retryOnThrottling?: boolean;
-          callbackManager?: CallbackManager;
-          languageModel?: OpenAI;
-        }
-      | undefined = undefined
-  ) {
+  constructor(props?: Partial<ChatGPTLLMPredictor>) {
     const {
       model = "gpt-3.5-turbo",
       retryOnThrottling = true,
@@ -57,14 +48,8 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
     parentEvent?: Event
   ): Promise<string> {
     if (typeof prompt === "string") {
-      const result = await this.languageModel.acomplete([
-        {
-          content: prompt,
-          role: "user",
-        },
-        parentEvent,
-      ]);
-      return result.generations[0][0].text;
+      const result = await this.languageModel.acomplete(prompt, parentEvent);
+      return result.message.content;
     } else {
       return this.apredict(prompt(input ?? {}));
     }

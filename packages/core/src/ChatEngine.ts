@@ -1,4 +1,4 @@
-import { BaseChatModel, ChatMessage, OpenAI, ChatResponse } from "./LLM";
+import { ChatMessage, OpenAI, ChatResponse, LLM } from "./LLM";
 import { TextNode } from "./Node";
 import {
   SimplePrompt,
@@ -23,7 +23,7 @@ interface ChatEngine {
 
 export class SimpleChatEngine implements ChatEngine {
   chatHistory: ChatMessage[];
-  llm: BaseChatModel;
+  llm: LLM;
 
   constructor(init?: Partial<SimpleChatEngine>) {
     this.chatHistory = init?.chatHistory ?? [];
@@ -37,13 +37,10 @@ export class SimpleChatEngine implements ChatEngine {
   async achat(message: string, chatHistory?: ChatMessage[]): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
     chatHistory.push({ content: message, role: "user" });
-    const response = await this.llm.agenerate(chatHistory);
-    chatHistory.push({
-      content: response.generations[0][0].text,
-      role: "assistant",
-    });
+    const response = await this.llm.achat(chatHistory);
+    chatHistory.push(response.message);
     this.chatHistory = chatHistory;
-    return new Response(response.generations[0][0].text);
+    return new Response(response.message.content);
   }
 
   reset() {
@@ -116,16 +113,17 @@ export class CondenseQuestionChatEngine implements ChatEngine {
 
 export class ContextChatEngine implements ChatEngine {
   retriever: BaseRetriever;
-  chatModel: BaseChatModel;
+  chatModel: OpenAI;
   chatHistory: ChatMessage[];
 
   constructor(init: {
     retriever: BaseRetriever;
-    chatModel?: BaseChatModel;
+    chatModel?: OpenAI;
     chatHistory?: ChatMessage[];
   }) {
     this.retriever = init.retriever;
-    this.chatModel = init.chatModel ?? new OpenAI("gpt-3.5-turbo-16k");
+    this.chatModel =
+      init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
     this.chatHistory = init?.chatHistory ?? [];
   }
 
@@ -157,18 +155,16 @@ export class ContextChatEngine implements ChatEngine {
 
     chatHistory.push({ content: message, role: "user" });
 
-    const response = await this.chatModel.agenerate(
+    const response = await this.chatModel.achat(
       [systemMessage, ...chatHistory],
       parentEvent
     );
-    const text = response.generations[0][0].text;
-
-    chatHistory.push({ content: text, role: "assistant" });
+    chatHistory.push(response.message);
 
     this.chatHistory = chatHistory;
 
     return new Response(
-      text,
+      response.message.content,
       sourceNodesWithScore.map((r) => r.node)
     );
   }
