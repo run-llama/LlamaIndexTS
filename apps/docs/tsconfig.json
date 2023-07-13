@@ -1,8 +1,7 @@
 {
-  "extends": "tsconfig/nextjs.json",
+  // This file is not used in compilation. It is here just for a nice editor experience.
+  "extends": "@tsconfig/docusaurus/tsconfig.json",
   "compilerOptions": {
-    "plugins": [{ "name": "next" }]
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+    "baseUrl": "."
+  }
 }
