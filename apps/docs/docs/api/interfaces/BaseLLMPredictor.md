@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+LLM Predictors are an abstraction to predict the response to a prompt.
+
 ## Implemented by
 
 - [`ChatGPTLLMPredictor`](../classes/ChatGPTLLMPredictor.md)
@@ -30,7 +32,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[LLMPredictor.ts:8](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L8)
+[LLMPredictor.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L10)
 
 ___
 
@@ -44,4 +46,4 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:7](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L7)
+[LLMPredictor.ts:9](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L9)

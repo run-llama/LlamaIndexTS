@@ -6,6 +6,10 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+ContextChatEngine uses the Index to get the appropriate context for each query.
+The context is stored in the system prompt, and the chat history is preserved,
+ideally allowing the appropriate context to be surfaced for each query.
+
 ## Implements
 
 - `ChatEngine`
@@ -27,7 +31,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ChatEngine.ts:119](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L119)
+[ChatEngine.ts:138](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L138)
 
 ## Properties
 
@@ -37,7 +41,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ChatEngine.ts:117](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L117)
+[ChatEngine.ts:136](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L136)
 
 ___
 
@@ -47,7 +51,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:116](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L116)
+[ChatEngine.ts:135](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L135)
 
 ___
 
@@ -57,7 +61,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:115](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L115)
+[ChatEngine.ts:134](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L134)
 
 ## Methods
 
@@ -82,7 +86,7 @@ ChatEngine.achat
 
 #### Defined in
 
-[ChatEngine.ts:134](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L134)
+[ChatEngine.ts:153](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L153)
 
 ___
 
@@ -94,13 +98,9 @@ ___
 
 `void`
 
-#### Implementation of
-
-ChatEngine.chatRepl
-
 #### Defined in
 
-[ChatEngine.ts:130](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L130)
+[ChatEngine.ts:149](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L149)
 
 ___
 
@@ -118,4 +118,4 @@ ChatEngine.reset
 
 #### Defined in
 
-[ChatEngine.ts:172](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L172)
+[ChatEngine.ts:191](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L191)

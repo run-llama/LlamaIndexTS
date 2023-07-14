@@ -6,6 +6,15 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorIndex).
+It does two steps on taking a user's chat message: first, it condenses the chat message
+with the previous chat history into a question with more context.
+Then, it queries the underlying Index using the new question with context and returns
+the response.
+CondenseQuestionChatEngine performs well when the input is primarily questions about the
+underlying data. It performs less well when the chat messages are not questions about the
+data, or are very referential to previous context.
+
 ## Implements
 
 - `ChatEngine`
@@ -23,12 +32,12 @@ custom_edit_url: null
 | `init` | `Object` |
 | `init.chatHistory` | [`ChatMessage`](../interfaces/ChatMessage.md)[] |
 | `init.condenseMessagePrompt?` | [`SimplePrompt`](../modules.md#simpleprompt) |
-| `init.queryEngine` | `BaseQueryEngine` |
+| `init.queryEngine` | [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md) |
 | `init.serviceContext?` | [`ServiceContext`](../interfaces/ServiceContext.md) |
 
 #### Defined in
 
-[ChatEngine.ts:57](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L57)
+[ChatEngine.ts:75](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L75)
 
 ## Properties
 
@@ -38,7 +47,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ChatEngine.ts:53](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L53)
+[ChatEngine.ts:71](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L71)
 
 ___
 
@@ -48,17 +57,17 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:55](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L55)
+[ChatEngine.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L73)
 
 ___
 
 ### queryEngine
 
-• **queryEngine**: `BaseQueryEngine`
+• **queryEngine**: [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
 #### Defined in
 
-[ChatEngine.ts:52](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L52)
+[ChatEngine.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L70)
 
 ___
 
@@ -68,7 +77,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:54](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L54)
+[ChatEngine.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L72)
 
 ## Methods
 
@@ -93,7 +102,7 @@ ChatEngine.achat
 
 #### Defined in
 
-[ChatEngine.ts:86](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L86)
+[ChatEngine.ts:104](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L104)
 
 ___
 
@@ -114,25 +123,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:71](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L71)
-
-___
-
-### chatRepl
-
-▸ **chatRepl**(): `void`
-
-#### Returns
-
-`void`
-
-#### Implementation of
-
-ChatEngine.chatRepl
-
-#### Defined in
-
-[ChatEngine.ts:105](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L105)
+[ChatEngine.ts:89](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L89)
 
 ___
 
@@ -150,4 +141,4 @@ ChatEngine.reset
 
 #### Defined in
 
-[ChatEngine.ts:109](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L109)
+[ChatEngine.ts:123](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L123)

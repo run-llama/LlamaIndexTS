@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+Simple Tool interface. Likely to change.
+
 ## Hierarchy
 
 - **`BaseTool`**
@@ -20,4 +22,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[Tool.ts:9](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Tool.ts#L9)
+[Tool.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Tool.ts#L12)

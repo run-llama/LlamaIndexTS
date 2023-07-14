@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+Respone is the output of a LLM
+
 ## Constructors
 
 ### constructor
@@ -21,7 +23,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Response.ts:7](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Response.ts#L7)
+[Response.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Response.ts#L10)
 
 ## Properties
 
@@ -31,7 +33,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Response.ts:4](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Response.ts#L4)
+[Response.ts:7](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Response.ts#L7)
 
 ___
 
@@ -41,7 +43,7 @@ ___
 
 #### Defined in
 
-[Response.ts:5](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Response.ts#L5)
+[Response.ts:8](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Response.ts#L8)
 
 ## Methods
 
@@ -55,7 +57,7 @@ ___
 
 #### Defined in
 
-[Response.ts:12](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Response.ts#L12)
+[Response.ts:15](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Response.ts#L15)
 
 ___
 
@@ -69,4 +71,4 @@ ___
 
 #### Defined in
 
-[Response.ts:16](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Response.ts#L16)
+[Response.ts:19](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Response.ts#L19)

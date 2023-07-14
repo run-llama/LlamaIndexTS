@@ -10,7 +10,16 @@ import { Response } from "./Response";
 import { ServiceContext } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
 
+/**
+ * A ResponseBuilder is used in a response synthesizer to generate a response from multiple response chunks.
+ */
 interface BaseResponseBuilder {
+  /**
+   * Get the response from a query and a list of text chunks.
+   * @param query
+   * @param textChunks
+   * @param parentEvent
+   */
   agetResponse(
     query: string,
     textChunks: string[],
@@ -18,6 +27,9 @@ interface BaseResponseBuilder {
   ): Promise<string>;
 }
 
+/**
+ * A response builder that just concatenates responses.
+ */
 export class SimpleResponseBuilder implements BaseResponseBuilder {
   llmPredictor: BaseLLMPredictor;
   textQATemplate: SimplePrompt;
@@ -43,6 +55,9 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
   }
 }
 
+/**
+ * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
+ */
 export class Refine implements BaseResponseBuilder {
   serviceContext: ServiceContext;
   textQATemplate: SimplePrompt;
@@ -129,6 +144,10 @@ export class Refine implements BaseResponseBuilder {
     return response;
   }
 }
+
+/**
+ * CompactAndRefine is a slight variation of Refine that first compacts the text chunks into the smallest possible number of chunks.
+ */
 export class CompactAndRefine extends Refine {
   async agetResponse(
     query: string,
@@ -149,7 +168,9 @@ export class CompactAndRefine extends Refine {
     return response;
   }
 }
-
+/**
+ * TreeSummarize repacks the text chunks into the smallest possible number of chunks and then summarizes them, then recursively does so until there's one chunk left.
+ */
 export class TreeSummarize implements BaseResponseBuilder {
   serviceContext: ServiceContext;
 
@@ -194,7 +215,9 @@ export function getResponseBuilder(
   return new SimpleResponseBuilder(serviceContext);
 }
 
-// TODO replace with Logan's new response_sythesizers/factory.py
+/**
+ * A ResponseSynthesizer is used to generate a response from a query and a list of nodes.
+ */
 export class ResponseSynthesizer {
   responseBuilder: BaseResponseBuilder;
   serviceContext?: ServiceContext;

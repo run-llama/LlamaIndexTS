@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A node with a similarity score
+
 ## Properties
 
 ### node
@@ -14,7 +16,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Node.ts:229](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L229)
+[Node.ts:238](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L238)
 
 ___
 
@@ -24,4 +26,4 @@ ___
 
 #### Defined in
 
-[Node.ts:230](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L230)
+[Node.ts:239](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L239)

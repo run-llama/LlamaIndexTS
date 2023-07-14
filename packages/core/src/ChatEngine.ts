@@ -13,14 +13,26 @@ import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { v4 as uuidv4 } from "uuid";
 import { Event } from "./callbacks/CallbackManager";
 
+/**
+ * A ChatEngine is used to handle back and forth chats between the application and the LLM.
+ */
 interface ChatEngine {
-  chatRepl(): void;
-
+  /**
+   * Send message along with the class's current chat history to the LLM.
+   * @param message
+   * @param chatHistory optional chat history if you want to customize the chat history
+   */
   achat(message: string, chatHistory?: ChatMessage[]): Promise<Response>;
 
+  /**
+   * Resets the chat history so that it's empty.
+   */
   reset(): void;
 }
 
+/**
+ * SimpleChatEngine is the simplest possible chat engine. Useful for using your own custom prompts.
+ */
 export class SimpleChatEngine implements ChatEngine {
   chatHistory: ChatMessage[];
   llm: LLM;
@@ -28,10 +40,6 @@ export class SimpleChatEngine implements ChatEngine {
   constructor(init?: Partial<SimpleChatEngine>) {
     this.chatHistory = init?.chatHistory ?? [];
     this.llm = init?.llm ?? new OpenAI();
-  }
-
-  chatRepl() {
-    throw new Error("Method not implemented.");
   }
 
   async achat(message: string, chatHistory?: ChatMessage[]): Promise<Response> {
@@ -48,6 +56,16 @@ export class SimpleChatEngine implements ChatEngine {
   }
 }
 
+/**
+ * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorIndex).
+ * It does two steps on taking a user's chat message: first, it condenses the chat message
+ * with the previous chat history into a question with more context.
+ * Then, it queries the underlying Index using the new question with context and returns
+ * the response.
+ * CondenseQuestionChatEngine performs well when the input is primarily questions about the
+ * underlying data. It performs less well when the chat messages are not questions about the
+ * data, or are very referential to previous context.
+ */
 export class CondenseQuestionChatEngine implements ChatEngine {
   queryEngine: BaseQueryEngine;
   chatHistory: ChatMessage[];
@@ -102,15 +120,16 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     return response;
   }
 
-  chatRepl() {
-    throw new Error("Method not implemented.");
-  }
-
   reset() {
     this.chatHistory = [];
   }
 }
 
+/**
+ * ContextChatEngine uses the Index to get the appropriate context for each query.
+ * The context is stored in the system prompt, and the chat history is preserved,
+ * ideally allowing the appropriate context to be surfaced for each query.
+ */
 export class ContextChatEngine implements ChatEngine {
   retriever: BaseRetriever;
   chatModel: OpenAI;

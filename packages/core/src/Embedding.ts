@@ -2,12 +2,23 @@ import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
 import { OpenAISession, getOpenAISession } from "./openai";
 import { VectorStoreQueryMode } from "./storage/vectorStore/types";
 
+/**
+ * Similarity type
+ * Default is cosine similarity. Dot product and negative Euclidean distance are also supported.
+ */
 export enum SimilarityType {
   DEFAULT = "cosine",
   DOT_PRODUCT = "dot_product",
   EUCLIDEAN = "euclidean",
 }
 
+/**
+ * The similarity between two embeddings.
+ * @param embedding1
+ * @param embedding2
+ * @param mode
+ * @returns similartiy score with higher numbers meaning the two embeddings are more similar
+ */
 export function similarity(
   embedding1: number[],
   embedding2: number[],
@@ -54,6 +65,15 @@ export function similarity(
   }
 }
 
+/**
+ * Get the top K embeddings from a list of embeddings ordered by similarity to the query.
+ * @param queryEmbedding
+ * @param embeddings list of embeddings to consider
+ * @param similarityTopK max number of embeddings to return, default 2
+ * @param embeddingIds ids of embeddings in the embeddings list
+ * @param similarityCutoff minimum similarity score
+ * @returns
+ */
 export function getTopKEmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],

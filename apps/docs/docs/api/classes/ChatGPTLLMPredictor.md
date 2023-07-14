@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+ChatGPTLLMPredictor is a predictor that uses GPT.
+
 ## Implements
 
 - [`BaseLLMPredictor`](../interfaces/BaseLLMPredictor.md)
@@ -24,7 +26,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[LLMPredictor.ts:22](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L22)
+[LLMPredictor.ts:26](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L26)
 
 ## Properties
 
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[LLMPredictor.ts:20](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L20)
+[LLMPredictor.ts:24](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L24)
 
 ___
 
@@ -44,7 +46,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:19](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L19)
+[LLMPredictor.ts:23](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L23)
 
 ___
 
@@ -54,7 +56,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:17](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L17)
+[LLMPredictor.ts:21](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L21)
 
 ___
 
@@ -64,7 +66,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:18](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L18)
+[LLMPredictor.ts:22](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L22)
 
 ## Methods
 
@@ -90,7 +92,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:45](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L45)
+[LLMPredictor.ts:49](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L49)
 
 ___
 
@@ -108,4 +110,4 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:41](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLMPredictor.ts#L41)
+[LLMPredictor.ts:45](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLMPredictor.ts#L45)

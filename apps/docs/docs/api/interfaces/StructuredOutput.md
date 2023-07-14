@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+StructuredOutput is just a combo of the raw output and the parsed output.
+
 ## Type parameters
 
 | Name |
@@ -20,7 +22,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[OutputParser.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/OutputParser.ts#L10)
+[OutputParser.ts:16](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/OutputParser.ts#L16)
 
 ___
 
@@ -30,4 +32,4 @@ ___
 
 #### Defined in
 
-[OutputParser.ts:9](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/OutputParser.ts#L9)
+[OutputParser.ts:15](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/OutputParser.ts#L15)

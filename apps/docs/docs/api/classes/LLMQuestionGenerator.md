@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.
+
 ## Implements
 
 - [`BaseQuestionGenerator`](../interfaces/BaseQuestionGenerator.md)
@@ -24,7 +26,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[QuestionGenerator.ts:28](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/QuestionGenerator.ts#L28)
+[QuestionGenerator.ts:34](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/QuestionGenerator.ts#L34)
 
 ## Properties
 
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[QuestionGenerator.ts:24](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/QuestionGenerator.ts#L24)
+[QuestionGenerator.ts:30](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/QuestionGenerator.ts#L30)
 
 ___
 
@@ -44,7 +46,7 @@ ___
 
 #### Defined in
 
-[QuestionGenerator.ts:26](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/QuestionGenerator.ts#L26)
+[QuestionGenerator.ts:32](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/QuestionGenerator.ts#L32)
 
 ___
 
@@ -54,7 +56,7 @@ ___
 
 #### Defined in
 
-[QuestionGenerator.ts:25](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/QuestionGenerator.ts#L25)
+[QuestionGenerator.ts:31](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/QuestionGenerator.ts#L31)
 
 ## Methods
 
@@ -79,4 +81,4 @@ ___
 
 #### Defined in
 
-[QuestionGenerator.ts:34](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/QuestionGenerator.ts#L34)
+[QuestionGenerator.ts:40](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/QuestionGenerator.ts#L40)

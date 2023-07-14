@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A response builder that just concatenates responses.
+
 ## Implements
 
 - `BaseResponseBuilder`
@@ -24,7 +26,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:25](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L25)
+[ResponseSynthesizer.ts:37](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L37)
 
 ## Properties
 
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:22](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L22)
+[ResponseSynthesizer.ts:34](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L34)
 
 ___
 
@@ -44,7 +46,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:23](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L23)
+[ResponseSynthesizer.ts:35](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L35)
 
 ## Methods
 
@@ -70,4 +72,4 @@ BaseResponseBuilder.agetResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:31](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L31)
+[ResponseSynthesizer.ts:43](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L43)

@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+TreeSummarize repacks the text chunks into the smallest possible number of chunks and then summarizes them, then recursively does so until there's one chunk left.
+
 ## Implements
 
 - `BaseResponseBuilder`
@@ -24,7 +26,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:156](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L156)
+[ResponseSynthesizer.ts:177](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L177)
 
 ## Properties
 
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:154](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L154)
+[ResponseSynthesizer.ts:175](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L175)
 
 ## Methods
 
@@ -59,4 +61,4 @@ BaseResponseBuilder.agetResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:160](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L160)
+[ResponseSynthesizer.ts:181](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L181)

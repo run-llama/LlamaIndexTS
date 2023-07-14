@@ -2,7 +2,9 @@ import { ALL_AVAILABLE_MODELS, OpenAI } from "./LLM";
 import { SimplePrompt } from "./Prompt";
 import { CallbackManager, Event } from "./callbacks/CallbackManager";
 
-// TODO change this to LLM class
+/**
+ * LLM Predictors are an abstraction to predict the response to a prompt.
+ */
 export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
   apredict(
@@ -12,7 +14,9 @@ export interface BaseLLMPredictor {
   ): Promise<string>;
 }
 
-// TODO change this to LLM class
+/**
+ * ChatGPTLLMPredictor is a predictor that uses GPT.
+ */
 export class ChatGPTLLMPredictor implements BaseLLMPredictor {
   model: keyof typeof ALL_AVAILABLE_MODELS;
   retryOnThrottling: boolean;

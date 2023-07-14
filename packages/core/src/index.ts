@@ -11,6 +11,7 @@ export * from "./NodeParser";
 export * from "./OutputParser";
 export * from "./Prompt";
 export * from "./QuestionGenerator";
+export * from "./QueryEngine";
 export * from "./Response";
 export * from "./ResponseSynthesizer";
 export * from "./Retriever";

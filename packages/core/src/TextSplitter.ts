@@ -18,6 +18,9 @@ class TextSplit {
 
 type SplitRep = [text: string, numTokens: number];
 
+/**
+ * SentenceSplitter is our default text splitter that supports splitting into sentences, paragraphs, or fixed length chunks with overlap.
+ */
 export class SentenceSplitter {
   private chunkSize: number;
   private chunkOverlap: number;

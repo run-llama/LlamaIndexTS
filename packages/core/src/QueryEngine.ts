@@ -12,10 +12,16 @@ import { Event } from "./callbacks/CallbackManager";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
 
+/**
+ * A query engine is a question answerer that can use one or more steps.
+ */
 export interface BaseQueryEngine {
   aquery(query: string, parentEvent?: Event): Promise<Response>;
 }
 
+/**
+ * A query engine that uses a retriever to query an index and then synthesizes the response.
+ */
 export class RetrieverQueryEngine implements BaseQueryEngine {
   retriever: BaseRetriever;
   responseSynthesizer: ResponseSynthesizer;
@@ -38,6 +44,9 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
   }
 }
 
+/**
+ * SubQuestionQueryEngine decomposes a question into subquestions and then
+ */
 export class SubQuestionQueryEngine implements BaseQueryEngine {
   responseSynthesizer: ResponseSynthesizer;
   questionGen: BaseQuestionGenerator;

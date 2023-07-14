@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+OpenAI LLM implementation
+
 ## Implements
 
 - [`LLM`](../interfaces/LLM.md)
@@ -24,7 +26,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[LLM.ts:58](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L58)
+[LLM.ts:76](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L76)
 
 ## Properties
 
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[LLM.ts:56](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L56)
+[LLM.ts:74](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L74)
 
 ___
 
@@ -44,7 +46,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:51](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L51)
+[LLM.ts:69](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L69)
 
 ___
 
@@ -54,7 +56,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:53](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L53)
+[LLM.ts:71](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L71)
 
 ___
 
@@ -64,7 +66,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:48](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L48)
+[LLM.ts:66](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L66)
 
 ___
 
@@ -74,7 +76,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:52](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L52)
+[LLM.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L70)
 
 ___
 
@@ -84,7 +86,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:54](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L54)
+[LLM.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L72)
 
 ___
 
@@ -94,7 +96,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:50](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L50)
+[LLM.ts:68](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L68)
 
 ___
 
@@ -104,7 +106,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:55](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L55)
+[LLM.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L73)
 
 ___
 
@@ -114,13 +116,15 @@ ___
 
 #### Defined in
 
-[LLM.ts:49](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L49)
+[LLM.ts:67](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L67)
 
 ## Methods
 
 ### achat
 
 ▸ **achat**(`messages`, `parentEvent?`): `Promise`<[`ChatResponse`](../interfaces/ChatResponse.md)\>
+
+Get a chat response from the LLM
 
 #### Parameters
 
@@ -139,7 +143,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:85](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L85)
+[LLM.ts:103](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L103)
 
 ___
 
@@ -147,12 +151,14 @@ ___
 
 ▸ **acomplete**(`prompt`, `parentEvent?`): `Promise`<[`ChatResponse`](../interfaces/ChatResponse.md)\>
 
+Get a prompt completion from the LLM
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `prompt` | `string` |
-| `parentEvent?` | [`Event`](../interfaces/Event.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `prompt` | `string` | the prompt to complete |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) | - |
 
 #### Returns
 
@@ -164,7 +170,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:127](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L127)
+[LLM.ts:145](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L145)
 
 ___
 
@@ -184,4 +190,4 @@ ___
 
 #### Defined in
 
-[LLM.ts:70](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L70)
+[LLM.ts:88](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L88)

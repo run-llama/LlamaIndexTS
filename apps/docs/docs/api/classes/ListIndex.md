@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A ListIndex keeps nodes in a sequential list structure
+
 ## Hierarchy
 
 - [`BaseIndex`](BaseIndex.md)<[`IndexList`](IndexList.md)\>
@@ -30,7 +32,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[index/list/ListIndex.ts:34](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L34)
+[index/list/ListIndex.ts:37](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L37)
 
 ## Properties
 
@@ -44,7 +46,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:67](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L67)
+[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L70)
 
 ___
 
@@ -58,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L69)
+[BaseIndex.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L72)
 
 ___
 
@@ -72,7 +74,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L70)
+[BaseIndex.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L73)
 
 ___
 
@@ -86,7 +88,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:65](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L65)
+[BaseIndex.ts:68](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L68)
 
 ___
 
@@ -100,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:66](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L66)
+[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L69)
 
 ___
 
@@ -114,7 +116,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:68](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L68)
+[BaseIndex.ts:71](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L71)
 
 ## Methods
 
@@ -134,7 +136,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:137](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L137)
+[index/list/ListIndex.ts:140](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L140)
 
 ___
 
@@ -154,13 +156,13 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:131](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L131)
+[index/list/ListIndex.ts:134](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L134)
 
 ___
 
 ### asQueryEngine
 
-▸ **asQueryEngine**(`mode?`): `BaseQueryEngine`
+▸ **asQueryEngine**(`mode?`): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
 #### Parameters
 
@@ -170,11 +172,11 @@ ___
 
 #### Returns
 
-`BaseQueryEngine`
+[`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
 #### Defined in
 
-[index/list/ListIndex.ts:110](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L110)
+[index/list/ListIndex.ts:113](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L113)
 
 ___
 
@@ -198,7 +200,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:97](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L97)
+[index/list/ListIndex.ts:100](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L100)
 
 ___
 
@@ -212,7 +214,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:143](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L143)
+[index/list/ListIndex.ts:146](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L146)
 
 ___
 
@@ -234,7 +236,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:116](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L116)
+[index/list/ListIndex.ts:119](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L119)
 
 ___
 
@@ -256,7 +258,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:74](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L74)
+[index/list/ListIndex.ts:77](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L77)
 
 ___
 
@@ -276,4 +278,4 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:38](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/index/list/ListIndex.ts#L38)
+[index/list/ListIndex.ts:41](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/index/list/ListIndex.ts#L41)

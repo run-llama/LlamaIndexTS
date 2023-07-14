@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A node with an embedding
+
 ## Properties
 
 ### embedding
@@ -14,7 +16,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Node.ts:235](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L235)
+[Node.ts:247](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L247)
 
 ___
 
@@ -24,4 +26,4 @@ ___
 
 #### Defined in
 
-[Node.ts:234](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L234)
+[Node.ts:246](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L246)

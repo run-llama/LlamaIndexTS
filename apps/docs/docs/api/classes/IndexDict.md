@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+The underlying structure of each index.
+
 ## Hierarchy
 
 - [`IndexStruct`](IndexStruct.md)
@@ -31,7 +33,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:18](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L18)
+[BaseIndex.ts:21](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L21)
 
 ## Properties
 
@@ -41,7 +43,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:33](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L33)
+[BaseIndex.ts:36](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L36)
 
 ___
 
@@ -55,7 +57,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:15](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L15)
+[BaseIndex.ts:18](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L18)
 
 ___
 
@@ -65,7 +67,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:32](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L32)
+[BaseIndex.ts:35](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L35)
 
 ___
 
@@ -79,7 +81,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:16](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L16)
+[BaseIndex.ts:19](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L19)
 
 ## Methods
 
@@ -100,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:42](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L42)
+[BaseIndex.ts:45](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L45)
 
 ___
 
@@ -118,4 +120,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:35](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L35)
+[BaseIndex.ts:38](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L38)

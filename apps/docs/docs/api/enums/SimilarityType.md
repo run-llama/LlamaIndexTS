@@ -6,6 +6,9 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+Similarity type
+Default is cosine similarity. Dot product and negative Euclidean distance are also supported.
+
 ## Enumeration Members
 
 ### DEFAULT
@@ -14,7 +17,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:6](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L6)
+[Embedding.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L10)
 
 ___
 
@@ -24,7 +27,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:7](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L7)
+[Embedding.ts:11](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L11)
 
 ___
 
@@ -34,4 +37,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:8](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L8)
+[Embedding.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L12)

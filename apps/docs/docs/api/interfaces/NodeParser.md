@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A node parser generates TextNodes from Documents
+
 ## Implemented by
 
 - [`SimpleNodeParser`](../classes/SimpleNodeParser.md)
@@ -28,4 +30,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[NodeParser.ts:51](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L51)
+[NodeParser.ts:53](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L53)

@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A ResponseSynthesizer is used to generate a response from a query and a list of nodes.
+
 ## Constructors
 
 ### constructor
@@ -22,7 +24,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:202](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L202)
+[ResponseSynthesizer.ts:225](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L225)
 
 ## Properties
 
@@ -32,7 +34,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:199](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L199)
+[ResponseSynthesizer.ts:222](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L222)
 
 ___
 
@@ -42,7 +44,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:200](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L200)
+[ResponseSynthesizer.ts:223](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L223)
 
 ## Methods
 
@@ -64,4 +66,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:214](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L214)
+[ResponseSynthesizer.ts:237](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L237)

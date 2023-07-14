@@ -9,11 +9,17 @@ import {
   VectorStoreQueryMode,
 } from "./storage/vectorStore/types";
 
+/**
+ * Retrievers retrieve the nodes that most closely match our query in similarity.
+ */
 export interface BaseRetriever {
   aretrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]>;
   getServiceContext(): ServiceContext;
 }
 
+/**
+ * VectorIndexRetriever retrieves nodes from a VectorIndex.
+ */
 export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
   similarityTopK = DEFAULT_SIMILARITY_TOP_K;

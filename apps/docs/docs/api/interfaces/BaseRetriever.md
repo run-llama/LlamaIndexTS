@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+Retrievers retrieve the nodes that most closely match our query in similarity.
+
 ## Implemented by
 
 - [`ListIndexLLMRetriever`](../classes/ListIndexLLMRetriever.md)
@@ -31,7 +33,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Retriever.ts:13](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L13)
+[Retriever.ts:16](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L16)
 
 ___
 
@@ -45,4 +47,4 @@ ___
 
 #### Defined in
 
-[Retriever.ts:14](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L14)
+[Retriever.ts:17](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L17)

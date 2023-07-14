@@ -6,7 +6,7 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
-Generic abstract class for retrievable nodes
+TextNode is the default node type for text. Most common node type in LlamaIndex.TS
 
 ## Hierarchy
 
@@ -32,7 +32,7 @@ Generic abstract class for retrievable nodes
 
 #### Defined in
 
-[Node.ts:141](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L141)
+[Node.ts:144](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L144)
 
 ## Properties
 
@@ -46,7 +46,7 @@ Generic abstract class for retrievable nodes
 
 #### Defined in
 
-[Node.ts:39](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L39)
+[Node.ts:39](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L39)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[Node.ts:136](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L136)
+[Node.ts:139](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L139)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[Node.ts:43](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L43)
+[Node.ts:43](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L43)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[Node.ts:44](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L44)
+[Node.ts:44](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L44)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[Node.ts:46](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L46)
+[Node.ts:46](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L46)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[Node.ts:38](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L38)
+[Node.ts:38](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L38)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[Node.ts:202](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L202)
+[Node.ts:205](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L205)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-[Node.ts:42](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L42)
+[Node.ts:42](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L42)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[Node.ts:139](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L139)
+[Node.ts:142](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L142)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[Node.ts:45](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L45)
+[Node.ts:45](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L45)
 
 ___
 
@@ -182,7 +182,7 @@ ___
 
 #### Defined in
 
-[Node.ts:135](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L135)
+[Node.ts:138](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L138)
 
 ___
 
@@ -196,7 +196,7 @@ ___
 
 #### Defined in
 
-[Node.ts:134](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L134)
+[Node.ts:137](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L137)
 
 ## Accessors
 
@@ -214,7 +214,7 @@ TextNode.childNodes
 
 #### Defined in
 
-[Node.ts:104](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L104)
+[Node.ts:104](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L104)
 
 ___
 
@@ -232,7 +232,7 @@ TextNode.nextNode
 
 #### Defined in
 
-[Node.ts:84](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L84)
+[Node.ts:84](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L84)
 
 ___
 
@@ -250,7 +250,7 @@ TextNode.nodeId
 
 #### Defined in
 
-[Node.ts:58](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L58)
+[Node.ts:58](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L58)
 
 ___
 
@@ -268,7 +268,7 @@ TextNode.parentNode
 
 #### Defined in
 
-[Node.ts:94](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L94)
+[Node.ts:94](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L94)
 
 ___
 
@@ -286,7 +286,7 @@ TextNode.prevNode
 
 #### Defined in
 
-[Node.ts:72](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L72)
+[Node.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L72)
 
 ___
 
@@ -304,7 +304,7 @@ TextNode.sourceNode
 
 #### Defined in
 
-[Node.ts:62](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L62)
+[Node.ts:62](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L62)
 
 ## Methods
 
@@ -322,7 +322,7 @@ TextNode.sourceNode
 
 #### Defined in
 
-[Node.ts:124](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L124)
+[Node.ts:124](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L124)
 
 ___
 
@@ -340,7 +340,7 @@ ___
 
 #### Defined in
 
-[Node.ts:146](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L146)
+[Node.ts:149](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L149)
 
 ___
 
@@ -364,7 +364,7 @@ ___
 
 #### Defined in
 
-[Node.ts:154](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L154)
+[Node.ts:157](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L157)
 
 ___
 
@@ -382,7 +382,7 @@ ___
 
 #### Defined in
 
-[Node.ts:116](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L116)
+[Node.ts:116](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L116)
 
 ___
 
@@ -406,7 +406,7 @@ ___
 
 #### Defined in
 
-[Node.ts:159](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L159)
+[Node.ts:162](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L162)
 
 ___
 
@@ -429,7 +429,7 @@ ___
 
 #### Defined in
 
-[Node.ts:184](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L184)
+[Node.ts:187](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L187)
 
 ___
 
@@ -447,7 +447,7 @@ ___
 
 #### Defined in
 
-[Node.ts:188](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L188)
+[Node.ts:191](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L191)
 
 ___
 
@@ -465,7 +465,7 @@ ___
 
 #### Defined in
 
-[Node.ts:204](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L204)
+[Node.ts:207](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L207)
 
 ___
 
@@ -489,4 +489,4 @@ ___
 
 #### Defined in
 
-[Node.ts:180](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L180)
+[Node.ts:183](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L183)

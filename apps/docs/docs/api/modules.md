@@ -25,8 +25,6 @@ custom_edit_url: null
 - [CondenseQuestionChatEngine](classes/CondenseQuestionChatEngine.md)
 - [ContextChatEngine](classes/ContextChatEngine.md)
 - [Document](classes/Document.md)
-- [ImageDocument](classes/ImageDocument.md)
-- [ImageNode](classes/ImageNode.md)
 - [InMemoryFileSystem](classes/InMemoryFileSystem.md)
 - [IndexDict](classes/IndexDict.md)
 - [IndexList](classes/IndexList.md)
@@ -41,11 +39,13 @@ custom_edit_url: null
 - [Refine](classes/Refine.md)
 - [Response](classes/Response.md)
 - [ResponseSynthesizer](classes/ResponseSynthesizer.md)
+- [RetrieverQueryEngine](classes/RetrieverQueryEngine.md)
 - [SentenceSplitter](classes/SentenceSplitter.md)
 - [SimpleChatEngine](classes/SimpleChatEngine.md)
 - [SimpleNodeParser](classes/SimpleNodeParser.md)
 - [SimpleResponseBuilder](classes/SimpleResponseBuilder.md)
 - [SubQuestionOutputParser](classes/SubQuestionOutputParser.md)
+- [SubQuestionQueryEngine](classes/SubQuestionQueryEngine.md)
 - [TextFileReader](classes/TextFileReader.md)
 - [TextNode](classes/TextNode.md)
 - [TreeSummarize](classes/TreeSummarize.md)
@@ -57,6 +57,7 @@ custom_edit_url: null
 - [BaseIndexInit](interfaces/BaseIndexInit.md)
 - [BaseLLMPredictor](interfaces/BaseLLMPredictor.md)
 - [BaseOutputParser](interfaces/BaseOutputParser.md)
+- [BaseQueryEngine](interfaces/BaseQueryEngine.md)
 - [BaseQuestionGenerator](interfaces/BaseQuestionGenerator.md)
 - [BaseReader](interfaces/BaseReader.md)
 - [BaseRetriever](interfaces/BaseRetriever.md)
@@ -91,7 +92,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[storage/FileSystem.ts:49](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/FileSystem.ts#L49)
+[storage/FileSystem.ts:49](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/FileSystem.ts#L49)
 
 ___
 
@@ -101,7 +102,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:25](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L25)
+[LLM.ts:25](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L25)
 
 ___
 
@@ -111,7 +112,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:11](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/callbacks/CallbackManager.ts#L11)
+[callbacks/CallbackManager.ts:11](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/callbacks/CallbackManager.ts#L11)
 
 ___
 
@@ -121,7 +122,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:12](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/callbacks/CallbackManager.ts#L12)
+[callbacks/CallbackManager.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/callbacks/CallbackManager.ts#L12)
 
 ___
 
@@ -131,7 +132,7 @@ ___
 
 #### Defined in
 
-[Node.ts:32](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Node.ts#L32)
+[Node.ts:32](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L32)
 
 ___
 
@@ -150,7 +151,7 @@ ___
 
 #### Defined in
 
-[readers/SimpleDirectoryReader.ts:23](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/readers/SimpleDirectoryReader.ts#L23)
+[readers/SimpleDirectoryReader.ts:26](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/readers/SimpleDirectoryReader.ts#L26)
 
 ___
 
@@ -178,13 +179,15 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ## Variables
 
 ### ALL\_AVAILABLE\_MODELS
 
 • `Const` **ALL\_AVAILABLE\_MODELS**: `Object`
+
+We currently support GPT-3.5 and GPT-4 models
 
 #### Type declaration
 
@@ -197,7 +200,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[LLM.ts:42](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L42)
+[LLM.ts:57](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L57)
 
 ___
 
@@ -207,7 +210,7 @@ ___
 
 #### Defined in
 
-[constants.ts:5](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L5)
+[constants.ts:5](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L5)
 
 ___
 
@@ -217,7 +220,7 @@ ___
 
 #### Defined in
 
-[constants.ts:6](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L6)
+[constants.ts:6](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L6)
 
 ___
 
@@ -227,7 +230,7 @@ ___
 
 #### Defined in
 
-[constants.ts:4](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L4)
+[constants.ts:4](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L4)
 
 ___
 
@@ -237,7 +240,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:1](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/constants.ts#L1)
+[storage/constants.ts:1](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/constants.ts#L1)
 
 ___
 
@@ -247,7 +250,7 @@ ___
 
 #### Defined in
 
-[constants.ts:1](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L1)
+[constants.ts:1](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L1)
 
 ___
 
@@ -257,7 +260,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:4](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/constants.ts#L4)
+[storage/constants.ts:4](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/constants.ts#L4)
 
 ___
 
@@ -267,7 +270,7 @@ ___
 
 #### Defined in
 
-[constants.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L10)
+[constants.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L10)
 
 ___
 
@@ -277,7 +280,7 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:62](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/FileSystem.ts#L62)
+[storage/FileSystem.ts:62](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/FileSystem.ts#L62)
 
 ___
 
@@ -287,7 +290,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:6](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/constants.ts#L6)
+[storage/constants.ts:6](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/constants.ts#L6)
 
 ___
 
@@ -297,7 +300,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:3](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/constants.ts#L3)
+[storage/constants.ts:3](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/constants.ts#L3)
 
 ___
 
@@ -307,7 +310,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:7](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/constants.ts#L7)
+[storage/constants.ts:7](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/constants.ts#L7)
 
 ___
 
@@ -317,7 +320,7 @@ ___
 
 #### Defined in
 
-[constants.ts:2](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L2)
+[constants.ts:2](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L2)
 
 ___
 
@@ -327,7 +330,7 @@ ___
 
 #### Defined in
 
-[constants.ts:11](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L11)
+[constants.ts:11](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L11)
 
 ___
 
@@ -337,7 +340,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:2](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/constants.ts#L2)
+[storage/constants.ts:2](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/constants.ts#L2)
 
 ___
 
@@ -347,7 +350,7 @@ ___
 
 #### Defined in
 
-[constants.ts:7](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/constants.ts#L7)
+[constants.ts:7](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/constants.ts#L7)
 
 ___
 
@@ -357,7 +360,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:5](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/constants.ts#L5)
+[storage/constants.ts:5](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/constants.ts#L5)
 
 ___
 
@@ -374,7 +377,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:32](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L32)
+[LLM.ts:44](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L44)
 
 ___
 
@@ -391,7 +394,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:37](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L37)
+[LLM.ts:49](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L49)
 
 ___
 
@@ -401,7 +404,7 @@ ___
 
 #### Defined in
 
-[GlobalsHelper.ts:39](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/GlobalsHelper.ts#L39)
+[GlobalsHelper.ts:42](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/GlobalsHelper.ts#L42)
 
 ## Functions
 
@@ -421,7 +424,7 @@ ___
 
 #### Defined in
 
-[Prompt.ts:198](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L198)
+[Prompt.ts:198](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L198)
 
 ___
 
@@ -445,7 +448,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -469,7 +472,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -493,7 +496,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -517,7 +520,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -541,7 +544,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -565,7 +568,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -589,7 +592,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -615,7 +618,7 @@ A promise that resolves to true if the file exists, false otherwise.
 
 #### Defined in
 
-[storage/FileSystem.ts:74](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/FileSystem.ts#L74)
+[storage/FileSystem.ts:74](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/FileSystem.ts#L74)
 
 ___
 
@@ -629,7 +632,7 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:51](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/FileSystem.ts#L51)
+[storage/FileSystem.ts:51](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/FileSystem.ts#L51)
 
 ___
 
@@ -652,7 +655,7 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:15](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L15)
+[NodeParser.ts:15](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L15)
 
 ___
 
@@ -672,7 +675,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:191](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L191)
+[ResponseSynthesizer.ts:212](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L212)
 
 ___
 
@@ -693,7 +696,7 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:5](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L5)
+[NodeParser.ts:5](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L5)
 
 ___
 
@@ -701,15 +704,17 @@ ___
 
 ▸ **getTopKEmbeddings**(`queryEmbedding`, `embeddings`, `similarityTopK?`, `embeddingIds?`, `similarityCutoff?`): [`number`[], `any`[]]
 
+Get the top K embeddings from a list of embeddings ordered by similarity to the query.
+
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `queryEmbedding` | `number`[] | `undefined` |
-| `embeddings` | `number`[][] | `undefined` |
-| `similarityTopK` | `number` | `DEFAULT_SIMILARITY_TOP_K` |
-| `embeddingIds` | ``null`` \| `any`[] | `null` |
-| `similarityCutoff` | ``null`` \| `number` | `null` |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `queryEmbedding` | `number`[] | `undefined` |  |
+| `embeddings` | `number`[][] | `undefined` | list of embeddings to consider |
+| `similarityTopK` | `number` | `DEFAULT_SIMILARITY_TOP_K` | max number of embeddings to return, default 2 |
+| `embeddingIds` | ``null`` \| `any`[] | `null` | ids of embeddings in the embeddings list |
+| `similarityCutoff` | ``null`` \| `number` | `null` | minimum similarity score |
 
 #### Returns
 
@@ -717,7 +722,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:57](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L57)
+[Embedding.ts:77](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L77)
 
 ___
 
@@ -741,7 +746,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:99](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L99)
+[Embedding.ts:119](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L119)
 
 ___
 
@@ -767,7 +772,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:111](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L111)
+[Embedding.ts:131](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L131)
 
 ___
 
@@ -787,7 +792,7 @@ ___
 
 #### Defined in
 
-[Prompt.ts:300](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Prompt.ts#L300)
+[Prompt.ts:300](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Prompt.ts#L300)
 
 ___
 
@@ -807,7 +812,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:29](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ServiceContext.ts#L29)
+[ServiceContext.ts:32](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ServiceContext.ts#L32)
 
 ___
 
@@ -836,13 +841,15 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:49](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ServiceContext.ts#L49)
+[ServiceContext.ts:52](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ServiceContext.ts#L52)
 
 ___
 
 ### similarity
 
 ▸ **similarity**(`embedding1`, `embedding2`, `mode?`): `number`
+
+The similarity between two embeddings.
 
 #### Parameters
 
@@ -856,9 +863,11 @@ ___
 
 `number`
 
+similartiy score with higher numbers meaning the two embeddings are more similar
+
 #### Defined in
 
-[Embedding.ts:11](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L11)
+[Embedding.ts:22](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L22)
 
 ___
 
@@ -878,7 +887,7 @@ ___
 
 #### Defined in
 
-[storage/StorageContext.ts:28](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/StorageContext.ts#L28)
+[storage/StorageContext.ts:28](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/StorageContext.ts#L28)
 
 ___
 
@@ -901,4 +910,4 @@ Recursively traverses a directory and yields all the paths to the files in it.
 
 #### Defined in
 
-[storage/FileSystem.ts:91](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/storage/FileSystem.ts#L91)
+[storage/FileSystem.ts:91](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/storage/FileSystem.ts#L91)

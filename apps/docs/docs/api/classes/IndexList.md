@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+The underlying structure of each index.
+
 ## Hierarchy
 
 - [`IndexStruct`](IndexStruct.md)
@@ -31,7 +33,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:18](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L18)
+[BaseIndex.ts:21](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L21)
 
 ## Properties
 
@@ -45,7 +47,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:15](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L15)
+[BaseIndex.ts:18](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L18)
 
 ___
 
@@ -55,7 +57,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:49](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L49)
+[BaseIndex.ts:52](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L52)
 
 ___
 
@@ -69,7 +71,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:16](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L16)
+[BaseIndex.ts:19](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L19)
 
 ## Methods
 
@@ -89,7 +91,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:51](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L51)
+[BaseIndex.ts:54](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L54)
 
 ___
 
@@ -107,4 +109,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:23](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L23)
+[BaseIndex.ts:26](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L26)

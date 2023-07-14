@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+Unified language model interface
+
 ## Implemented by
 
 - [`OpenAI`](../classes/OpenAI.md)
@@ -15,6 +17,8 @@ custom_edit_url: null
 ### achat
 
 ▸ **achat**(`messages`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
+
+Get a chat response from the LLM
 
 #### Parameters
 
@@ -28,7 +32,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[LLM.ts:28](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L28)
+[LLM.ts:35](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L35)
 
 ___
 
@@ -36,11 +40,13 @@ ___
 
 ▸ **acomplete**(`prompt`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
 
+Get a prompt completion from the LLM
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `prompt` | `string` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `prompt` | `string` | the prompt to complete |
 
 #### Returns
 
@@ -48,4 +54,4 @@ ___
 
 #### Defined in
 
-[LLM.ts:29](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/LLM.ts#L29)
+[LLM.ts:41](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/LLM.ts#L41)

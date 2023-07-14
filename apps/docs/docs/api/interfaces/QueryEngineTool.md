@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A Tool that uses a QueryEngine.
+
 ## Hierarchy
 
 - [`BaseTool`](BaseTool.md)
@@ -24,14 +26,14 @@ custom_edit_url: null
 
 #### Defined in
 
-[Tool.ts:9](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Tool.ts#L9)
+[Tool.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Tool.ts#L12)
 
 ___
 
 ### queryEngine
 
-• **queryEngine**: `BaseQueryEngine`
+• **queryEngine**: [`BaseQueryEngine`](BaseQueryEngine.md)
 
 #### Defined in
 
-[Tool.ts:13](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Tool.ts#L13)
+[Tool.ts:19](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Tool.ts#L19)

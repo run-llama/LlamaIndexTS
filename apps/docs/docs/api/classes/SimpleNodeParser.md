@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
+
 ## Implements
 
 - [`NodeParser`](../interfaces/NodeParser.md)
@@ -29,7 +31,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[NodeParser.ts:58](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L58)
+[NodeParser.ts:64](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L64)
 
 ## Properties
 
@@ -39,7 +41,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[NodeParser.ts:55](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L55)
+[NodeParser.ts:61](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L61)
 
 ___
 
@@ -49,7 +51,7 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:56](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L56)
+[NodeParser.ts:62](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L62)
 
 ___
 
@@ -59,7 +61,7 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:54](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L54)
+[NodeParser.ts:60](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L60)
 
 ## Methods
 
@@ -85,7 +87,7 @@ Generate Node objects from documents
 
 #### Defined in
 
-[NodeParser.ts:89](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L89)
+[NodeParser.ts:95](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L95)
 
 ___
 
@@ -109,4 +111,4 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:76](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/NodeParser.ts#L76)
+[NodeParser.ts:82](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/NodeParser.ts#L82)

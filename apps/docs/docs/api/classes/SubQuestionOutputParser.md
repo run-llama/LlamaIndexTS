@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+SubQuestionOutputParser is used to parse the output of the SubQuestionGenerator.
+
 ## Implements
 
 - [`BaseOutputParser`](../interfaces/BaseOutputParser.md)<[`StructuredOutput`](../interfaces/StructuredOutput.md)<[`SubQuestion`](../interfaces/SubQuestion.md)[]\>\>
@@ -38,7 +40,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[OutputParser.ts:77](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/OutputParser.ts#L77)
+[OutputParser.ts:97](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/OutputParser.ts#L97)
 
 ___
 
@@ -62,4 +64,4 @@ ___
 
 #### Defined in
 
-[OutputParser.ts:69](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/OutputParser.ts#L69)
+[OutputParser.ts:89](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/OutputParser.ts#L89)

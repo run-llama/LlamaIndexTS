@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+QuestionGenerators generate new questions for the LLM using tools and a user query.
+
 ## Implemented by
 
 - [`LLMQuestionGenerator`](../classes/LLMQuestionGenerator.md)
@@ -29,4 +31,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[QuestionGenerator.ts:20](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/QuestionGenerator.ts#L20)
+[QuestionGenerator.ts:23](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/QuestionGenerator.ts#L23)

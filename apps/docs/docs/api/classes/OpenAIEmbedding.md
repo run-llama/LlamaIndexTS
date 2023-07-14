@@ -24,7 +24,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:197](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L197)
+[Embedding.ts:217](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L217)
 
 ## Properties
 
@@ -34,7 +34,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:195](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L195)
+[Embedding.ts:215](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L215)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:194](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L194)
+[Embedding.ts:214](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L214)
 
 ## Methods
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:204](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L204)
+[Embedding.ts:224](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L224)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:220](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L220)
+[Embedding.ts:240](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L240)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:216](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L216)
+[Embedding.ts:236](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L236)
 
 ___
 
@@ -138,4 +138,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:177](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Embedding.ts#L177)
+[Embedding.ts:197](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L197)

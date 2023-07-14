@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+An OutputParser is used to extract structured data from the raw output of the LLM.
+
 ## Type parameters
 
 | Name |
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[OutputParser.ts:5](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/OutputParser.ts#L5)
+[OutputParser.ts:8](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/OutputParser.ts#L8)
 
 ___
 
@@ -54,4 +56,4 @@ ___
 
 #### Defined in
 
-[OutputParser.ts:4](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/OutputParser.ts#L4)
+[OutputParser.ts:7](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/OutputParser.ts#L7)

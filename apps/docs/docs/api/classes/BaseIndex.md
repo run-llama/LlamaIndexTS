@@ -40,7 +40,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:72](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L72)
+[BaseIndex.ts:75](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L75)
 
 ## Properties
 
@@ -50,7 +50,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:67](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L67)
+[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L70)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L69)
+[BaseIndex.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L72)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L70)
+[BaseIndex.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L73)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:65](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L65)
+[BaseIndex.ts:68](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L68)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:66](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L66)
+[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L69)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:68](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L68)
+[BaseIndex.ts:71](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L71)
 
 ## Methods
 
@@ -114,4 +114,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:81](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L81)
+[BaseIndex.ts:84](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L84)

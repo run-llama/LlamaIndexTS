@@ -15,6 +15,9 @@ import {
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import fetchAdapter from "./fetchAdapter";
 
+/**
+ * OpenAIWrapper is a wrapper around the OpenAI API that uses fetch instead of axios
+ */
 export class OpenAIWrapper extends OpenAIApi {
   createCompletion(
     createCompletionRequest: CreateCompletionRequest,

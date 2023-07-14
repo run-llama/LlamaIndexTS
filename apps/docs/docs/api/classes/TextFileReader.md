@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+Read a .txt file
+
 ## Implements
 
 - [`BaseReader`](../interfaces/BaseReader.md)
@@ -39,4 +41,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[readers/SimpleDirectoryReader.ts:9](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/readers/SimpleDirectoryReader.ts#L9)
+[readers/SimpleDirectoryReader.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/readers/SimpleDirectoryReader.ts#L12)

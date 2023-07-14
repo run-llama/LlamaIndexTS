@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
+
 ## Hierarchy
 
 - **`Refine`**
@@ -32,7 +34,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:51](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L51)
+[ResponseSynthesizer.ts:66](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L66)
 
 ## Properties
 
@@ -42,7 +44,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:49](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L49)
+[ResponseSynthesizer.ts:64](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L64)
 
 ___
 
@@ -52,7 +54,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:47](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L47)
+[ResponseSynthesizer.ts:62](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L62)
 
 ___
 
@@ -62,7 +64,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:48](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L48)
+[ResponseSynthesizer.ts:63](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L63)
 
 ## Methods
 
@@ -88,7 +90,7 @@ BaseResponseBuilder.agetResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:61](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L61)
+[ResponseSynthesizer.ts:76](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L76)
 
 ___
 
@@ -109,7 +111,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:80](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L80)
+[ResponseSynthesizer.ts:95](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L95)
 
 ___
 
@@ -131,4 +133,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:108](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L108)
+[ResponseSynthesizer.ts:123](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L123)

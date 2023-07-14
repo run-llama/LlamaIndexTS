@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+SimpleChatEngine is the simplest possible chat engine. Useful for using your own custom prompts.
+
 ## Implements
 
 - `ChatEngine`
@@ -24,7 +26,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ChatEngine.ts:28](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L28)
+[ChatEngine.ts:40](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L40)
 
 ## Properties
 
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ChatEngine.ts:25](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L25)
+[ChatEngine.ts:37](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L37)
 
 ___
 
@@ -44,7 +46,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:26](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L26)
+[ChatEngine.ts:38](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L38)
 
 ## Methods
 
@@ -69,25 +71,7 @@ ChatEngine.achat
 
 #### Defined in
 
-[ChatEngine.ts:37](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L37)
-
-___
-
-### chatRepl
-
-▸ **chatRepl**(): `void`
-
-#### Returns
-
-`void`
-
-#### Implementation of
-
-ChatEngine.chatRepl
-
-#### Defined in
-
-[ChatEngine.ts:33](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L33)
+[ChatEngine.ts:45](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L45)
 
 ___
 
@@ -105,4 +89,4 @@ ChatEngine.reset
 
 #### Defined in
 
-[ChatEngine.ts:46](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ChatEngine.ts#L46)
+[ChatEngine.ts:54](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L54)

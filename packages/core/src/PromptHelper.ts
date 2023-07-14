@@ -13,6 +13,12 @@ export function getEmptyPromptTxt(prompt: SimplePrompt) {
   return prompt({});
 }
 
+/**
+ * Get biggest empty prompt size from a list of prompts.
+ * Used to calculate the maximum size of inputs to the LLM.
+ * @param prompts
+ * @returns
+ */
 export function getBiggestPrompt(prompts: SimplePrompt[]) {
   const emptyPromptTexts = prompts.map(getEmptyPromptTxt);
   const emptyPromptLengths = emptyPromptTexts.map((text) => text.length);
@@ -21,6 +27,9 @@ export function getBiggestPrompt(prompts: SimplePrompt[]) {
   return prompts[maxEmptyPromptIndex];
 }
 
+/**
+ * A collection of helper functions for working with prompts.
+ */
 export class PromptHelper {
   contextWindow = DEFAULT_CONTEXT_WINDOW;
   numOutput = DEFAULT_NUM_OUTPUTS;
@@ -45,6 +54,11 @@ export class PromptHelper {
     this.separator = separator;
   }
 
+  /**
+   * Given a prompt, return the maximum size of the inputs to the prompt.
+   * @param prompt
+   * @returns
+   */
   private getAvailableContextSize(prompt: SimplePrompt) {
     const emptyPromptText = getEmptyPromptTxt(prompt);
     const promptTokens = this.tokenizer(emptyPromptText);
@@ -53,6 +67,13 @@ export class PromptHelper {
     return this.contextWindow - numPromptTokens - this.numOutput;
   }
 
+  /**
+   * Find the maximum size of each chunk given a prompt.
+   * @param prompt
+   * @param numChunks
+   * @param padding
+   * @returns
+   */
   private getAvailableChunkSize(
     prompt: SimplePrompt,
     numChunks = 1,
@@ -69,6 +90,13 @@ export class PromptHelper {
     }
   }
 
+  /**
+   * Creates a text splitter with the correct chunk sizes and overlaps given a prompt.
+   * @param prompt
+   * @param numChunks
+   * @param padding
+   * @returns
+   */
   getTextSplitterGivenPrompt(
     prompt: SimplePrompt,
     numChunks = 1,
@@ -83,14 +111,13 @@ export class PromptHelper {
     return textSplitter;
   }
 
-  truncate(
-    prompt: SimplePrompt,
-    textChunks: string[],
-    padding = DEFAULT_PADDING
-  ) {
-    throw new Error("Not implemented yet");
-  }
-
+  /**
+   * Repack resplits the strings based on the optimal text splitter.
+   * @param prompt
+   * @param textChunks
+   * @param padding
+   * @returns
+   */
   repack(
     prompt: SimplePrompt,
     textChunks: string[],

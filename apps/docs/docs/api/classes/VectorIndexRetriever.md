@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+VectorIndexRetriever retrieves nodes from a VectorIndex.
+
 ## Implements
 
 - [`BaseRetriever`](../interfaces/BaseRetriever.md)
@@ -24,7 +26,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Retriever.ts:22](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L22)
+[Retriever.ts:28](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L28)
 
 ## Properties
 
@@ -34,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Retriever.ts:18](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L18)
+[Retriever.ts:24](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L24)
 
 ___
 
@@ -44,7 +46,7 @@ ___
 
 #### Defined in
 
-[Retriever.ts:20](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L20)
+[Retriever.ts:26](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L26)
 
 ___
 
@@ -54,7 +56,7 @@ ___
 
 #### Defined in
 
-[Retriever.ts:19](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L19)
+[Retriever.ts:25](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L25)
 
 ## Methods
 
@@ -79,7 +81,7 @@ ___
 
 #### Defined in
 
-[Retriever.ts:27](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L27)
+[Retriever.ts:33](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L33)
 
 ___
 
@@ -97,4 +99,4 @@ ___
 
 #### Defined in
 
-[Retriever.ts:64](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/Retriever.ts#L64)
+[Retriever.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Retriever.ts#L70)

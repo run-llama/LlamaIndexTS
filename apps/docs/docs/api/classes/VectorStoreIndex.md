@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
+
 ## Hierarchy
 
 - [`BaseIndex`](BaseIndex.md)<[`IndexDict`](IndexDict.md)\>
@@ -30,7 +32,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:98](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L98)
+[BaseIndex.ts:104](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L104)
 
 ## Properties
 
@@ -44,7 +46,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:67](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L67)
+[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L70)
 
 ___
 
@@ -58,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L69)
+[BaseIndex.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L72)
 
 ___
 
@@ -72,7 +74,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L70)
+[BaseIndex.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L73)
 
 ___
 
@@ -86,7 +88,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:65](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L65)
+[BaseIndex.ts:68](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L68)
 
 ___
 
@@ -100,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:66](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L66)
+[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L69)
 
 ___
 
@@ -114,21 +116,21 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:96](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L96)
+[BaseIndex.ts:102](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L102)
 
 ## Methods
 
 ### asQueryEngine
 
-▸ **asQueryEngine**(): `BaseQueryEngine`
+▸ **asQueryEngine**(): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
 #### Returns
 
-`BaseQueryEngine`
+[`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
 #### Defined in
 
-[BaseIndex.ts:208](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L208)
+[BaseIndex.ts:214](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L214)
 
 ___
 
@@ -146,7 +148,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:204](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L204)
+[BaseIndex.ts:210](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L210)
 
 ___
 
@@ -168,7 +170,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:141](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L141)
+[BaseIndex.ts:147](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L147)
 
 ___
 
@@ -190,7 +192,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:162](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L162)
+[BaseIndex.ts:168](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L168)
 
 ___
 
@@ -212,7 +214,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:182](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L182)
+[BaseIndex.ts:188](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L188)
 
 ___
 
@@ -232,4 +234,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:103](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/BaseIndex.ts#L103)
+[BaseIndex.ts:109](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L109)

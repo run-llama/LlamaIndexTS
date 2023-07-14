@@ -11,6 +11,9 @@ import { BaseDocumentStore } from "./storage/docStore/types";
 import { VectorStore } from "./storage/vectorStore/types";
 import { BaseIndexStore } from "./storage/indexStore/types";
 
+/**
+ * The underlying structure of each index.
+ */
 export abstract class IndexStruct {
   indexId: string;
   summary?: string;
@@ -92,6 +95,9 @@ interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
   vectorStore: VectorStore;
 }
 
+/**
+ * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
+ */
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
   vectorStore: VectorStore;
 

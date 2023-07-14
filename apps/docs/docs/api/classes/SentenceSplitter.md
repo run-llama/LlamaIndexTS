@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+SentenceSplitter is our default text splitter that supports splitting into sentences, paragraphs, or fixed length chunks with overlap.
+
 ## Constructors
 
 ### constructor
@@ -25,7 +27,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[TextSplitter.ts:30](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L30)
+[TextSplitter.ts:33](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L33)
 
 ## Properties
 
@@ -35,7 +37,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[TextSplitter.ts:23](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L23)
+[TextSplitter.ts:26](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L26)
 
 ___
 
@@ -45,7 +47,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:22](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L22)
+[TextSplitter.ts:25](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L25)
 
 ___
 
@@ -55,7 +57,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:27](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L27)
+[TextSplitter.ts:30](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L30)
 
 ___
 
@@ -65,7 +67,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:26](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L26)
+[TextSplitter.ts:29](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L29)
 
 ___
 
@@ -75,7 +77,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:24](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L24)
+[TextSplitter.ts:27](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L27)
 
 ___
 
@@ -85,7 +87,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:25](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L25)
+[TextSplitter.ts:28](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L28)
 
 ## Methods
 
@@ -106,7 +108,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:150](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L150)
+[TextSplitter.ts:153](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L153)
 
 ___
 
@@ -126,7 +128,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:69](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L69)
+[TextSplitter.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L72)
 
 ___
 
@@ -147,7 +149,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:86](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L86)
+[TextSplitter.ts:89](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L89)
 
 ___
 
@@ -168,7 +170,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:112](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L112)
+[TextSplitter.ts:115](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L115)
 
 ___
 
@@ -189,7 +191,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:125](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L125)
+[TextSplitter.ts:128](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L128)
 
 ___
 
@@ -210,7 +212,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:230](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L230)
+[TextSplitter.ts:233](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L233)
 
 ___
 
@@ -231,4 +233,4 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:202](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/TextSplitter.ts#L202)
+[TextSplitter.ts:205](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/TextSplitter.ts#L205)

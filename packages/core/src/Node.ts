@@ -130,6 +130,9 @@ export abstract class BaseNode {
   }
 }
 
+/**
+ * TextNode is the default node type for text. Most common node type in LlamaIndex.TS
+ */
 export class TextNode extends BaseNode {
   text: string = "";
   startCharIdx?: number;
@@ -190,13 +193,13 @@ export class TextNode extends BaseNode {
   }
 }
 
-export class ImageNode extends TextNode {
-  image: string = "";
+// export class ImageNode extends TextNode {
+//   image: string = "";
 
-  getType(): ObjectType {
-    return ObjectType.IMAGE;
-  }
-}
+//   getType(): ObjectType {
+//     return ObjectType.IMAGE;
+//   }
+// }
 
 export class IndexNode extends TextNode {
   indexId: string = "";
@@ -206,6 +209,9 @@ export class IndexNode extends TextNode {
   }
 }
 
+/**
+ * A document is just a special text node with a docId.
+ */
 export class Document extends TextNode {
   constructor(init?: Partial<Document>) {
     super(init);
@@ -221,15 +227,21 @@ export class Document extends TextNode {
   }
 }
 
-export class ImageDocument extends Document {
-  image?: string;
-}
+// export class ImageDocument extends Document {
+//   image?: string;
+// }
 
+/**
+ * A node with a similarity score
+ */
 export interface NodeWithScore {
   node: BaseNode;
   score: number;
 }
 
+/**
+ * A node with an embedding
+ */
 export interface NodeWithEmbedding {
   node: BaseNode;
   embedding: number[];

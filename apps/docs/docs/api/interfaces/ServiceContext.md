@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+The ServiceContext is a collection of components that are used in different parts of the application.
+
 ## Properties
 
 ### callbackManager
@@ -14,7 +16,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ServiceContext.ts:13](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ServiceContext.ts#L13)
+[ServiceContext.ts:16](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ServiceContext.ts#L16)
 
 ___
 
@@ -24,7 +26,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:11](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ServiceContext.ts#L11)
+[ServiceContext.ts:14](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ServiceContext.ts#L14)
 
 ___
 
@@ -34,7 +36,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:9](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ServiceContext.ts#L9)
+[ServiceContext.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ServiceContext.ts#L12)
 
 ___
 
@@ -44,7 +46,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:12](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ServiceContext.ts#L12)
+[ServiceContext.ts:15](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ServiceContext.ts#L15)
 
 ___
 
@@ -54,4 +56,4 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:10](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ServiceContext.ts#L10)
+[ServiceContext.ts:13](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ServiceContext.ts#L13)

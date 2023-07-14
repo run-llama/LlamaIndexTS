@@ -6,6 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+CompactAndRefine is a slight variation of Refine that first compacts the text chunks into the smallest possible number of chunks.
+
 ## Hierarchy
 
 - [`Refine`](Refine.md)
@@ -32,7 +34,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:51](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L51)
+[ResponseSynthesizer.ts:66](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L66)
 
 ## Properties
 
@@ -46,7 +48,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ResponseSynthesizer.ts:49](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L49)
+[ResponseSynthesizer.ts:64](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L64)
 
 ___
 
@@ -60,7 +62,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:47](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L47)
+[ResponseSynthesizer.ts:62](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L62)
 
 ___
 
@@ -74,7 +76,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:48](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L48)
+[ResponseSynthesizer.ts:63](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L63)
 
 ## Methods
 
@@ -100,4 +102,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:133](https://github.com/run-llama/llamascript/blob/df4b1ad/packages/core/src/ResponseSynthesizer.ts#L133)
+[ResponseSynthesizer.ts:152](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L152)
