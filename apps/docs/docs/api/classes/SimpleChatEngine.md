@@ -10,7 +10,7 @@ SimpleChatEngine is the simplest possible chat engine. Useful for using your own
 
 ## Implements
 
-- `ChatEngine`
+- [`ChatEngine`](../interfaces/ChatEngine.md)
 
 ## Constructors
 
@@ -26,7 +26,7 @@ SimpleChatEngine is the simplest possible chat engine. Useful for using your own
 
 #### Defined in
 
-[ChatEngine.ts:40](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L40)
+[ChatEngine.ts:40](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L40)
 
 ## Properties
 
@@ -36,7 +36,7 @@ SimpleChatEngine is the simplest possible chat engine. Useful for using your own
 
 #### Defined in
 
-[ChatEngine.ts:37](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L37)
+[ChatEngine.ts:37](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L37)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:38](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L38)
+[ChatEngine.ts:38](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L38)
 
 ## Methods
 
@@ -54,12 +54,14 @@ ___
 
 ▸ **achat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
 
+Send message along with the class's current chat history to the LLM.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `message` | `string` |
-| `chatHistory?` | [`ChatMessage`](../interfaces/ChatMessage.md)[] |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `message` | `string` |  |
+| `chatHistory?` | [`ChatMessage`](../interfaces/ChatMessage.md)[] | optional chat history if you want to customize the chat history |
 
 #### Returns
 
@@ -67,11 +69,11 @@ ___
 
 #### Implementation of
 
-ChatEngine.achat
+[ChatEngine](../interfaces/ChatEngine.md).[achat](../interfaces/ChatEngine.md#achat)
 
 #### Defined in
 
-[ChatEngine.ts:45](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L45)
+[ChatEngine.ts:45](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L45)
 
 ___
 
@@ -79,14 +81,16 @@ ___
 
 ▸ **reset**(): `void`
 
+Resets the chat history so that it's empty.
+
 #### Returns
 
 `void`
 
 #### Implementation of
 
-ChatEngine.reset
+[ChatEngine](../interfaces/ChatEngine.md).[reset](../interfaces/ChatEngine.md#reset)
 
 #### Defined in
 
-[ChatEngine.ts:54](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L54)
+[ChatEngine.ts:54](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L54)

@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Node.ts:29](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L29)
+[Node.ts:29](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Node.ts#L29)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[Node.ts:28](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L28)
+[Node.ts:28](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Node.ts#L28)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[Node.ts:26](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L26)
+[Node.ts:26](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Node.ts#L26)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[Node.ts:27](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Node.ts#L27)
+[Node.ts:27](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Node.ts#L27)

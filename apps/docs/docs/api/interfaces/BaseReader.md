@@ -30,4 +30,4 @@ A reader takes imports data into Document objects.
 
 #### Defined in
 
-[readers/base.ts:7](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/readers/base.ts#L7)
+[readers/base.ts:7](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/readers/base.ts#L7)

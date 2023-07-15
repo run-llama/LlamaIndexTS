@@ -17,7 +17,7 @@ Default is cosine similarity. Dot product and negative Euclidean distance are al
 
 #### Defined in
 
-[Embedding.ts:10](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L10)
+[Embedding.ts:10](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Embedding.ts#L10)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:11](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L11)
+[Embedding.ts:11](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Embedding.ts#L11)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Embedding.ts#L12)
+[Embedding.ts:12](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Embedding.ts#L12)

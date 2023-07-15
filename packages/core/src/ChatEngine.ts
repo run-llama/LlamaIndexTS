@@ -16,7 +16,7 @@ import { Event } from "./callbacks/CallbackManager";
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
  */
-interface ChatEngine {
+export interface ChatEngine {
   /**
    * Send message along with the class's current chat history to the LLM.
    * @param message

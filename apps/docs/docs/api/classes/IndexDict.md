@@ -33,7 +33,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[BaseIndex.ts:21](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L21)
+[BaseIndex.ts:21](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L21)
 
 ## Properties
 
@@ -43,7 +43,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[BaseIndex.ts:36](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L36)
+[BaseIndex.ts:36](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L36)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:18](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L18)
+[BaseIndex.ts:18](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L18)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:35](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L35)
+[BaseIndex.ts:35](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L35)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:19](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L19)
+[BaseIndex.ts:19](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L19)
 
 ## Methods
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:45](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L45)
+[BaseIndex.ts:45](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L45)
 
 ___
 
@@ -120,4 +120,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:38](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L38)
+[BaseIndex.ts:38](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L38)

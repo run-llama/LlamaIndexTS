@@ -1,6 +1,10 @@
-import { Document, TextNode, NodeWithScore } from "@llamaindex/core/src/Node";
-import { ResponseSynthesizer } from "@llamaindex/core/src/ResponseSynthesizer";
-import { SimpleNodeParser } from "@llamaindex/core/src/NodeParser";
+import {
+  Document,
+  TextNode,
+  NodeWithScore,
+  ResponseSynthesizer,
+  SimpleNodeParser,
+} from "llamaindex";
 
 (async () => {
   const nodeParser = new SimpleNodeParser();

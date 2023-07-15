@@ -17,6 +17,7 @@
   "dependencies": {
     "@docusaurus/core": "2.4.1",
     "@docusaurus/preset-classic": "2.4.1",
+    "@docusaurus/remark-plugin-npm2yarn": "^2.4.1",
     "@mdx-js/react": "^1.6.22",
     "clsx": "^1.2.1",
     "postcss": "^8.4.25",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.4.1",
+    "@docusaurus/types": "^2.4.1",
     "@tsconfig/docusaurus": "^1.0.5",
     "docusaurus-plugin-typedoc": "^0.19.2",
     "typedoc": "^0.24.8",

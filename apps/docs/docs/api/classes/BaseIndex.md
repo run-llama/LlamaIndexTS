@@ -6,6 +6,9 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+Indexes are the data structure that we store our nodes and embeddings in so
+they can be retrieved for our queries.
+
 ## Type parameters
 
 | Name |
@@ -40,7 +43,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:75](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L75)
+[BaseIndex.ts:80](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L80)
 
 ## Properties
 
@@ -50,7 +53,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L70)
+[BaseIndex.ts:75](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L75)
 
 ___
 
@@ -60,7 +63,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L72)
+[BaseIndex.ts:77](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L77)
 
 ___
 
@@ -70,7 +73,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L73)
+[BaseIndex.ts:78](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L78)
 
 ___
 
@@ -80,7 +83,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:68](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L68)
+[BaseIndex.ts:73](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L73)
 
 ___
 
@@ -90,7 +93,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L69)
+[BaseIndex.ts:74](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L74)
 
 ___
 
@@ -100,7 +103,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:71](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L71)
+[BaseIndex.ts:76](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L76)
 
 ## Methods
 
@@ -114,4 +117,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:84](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L84)
+[BaseIndex.ts:89](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L89)

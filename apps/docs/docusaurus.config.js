@@ -43,16 +43,9 @@ const config = {
           // Remove this to remove the "edit this page" links.
           // editUrl:
           //   "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        },
-        theme: {
-          customCss: require.resolve("./src/css/custom.css"),
+          remarkPlugins: [
+            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
+          ],
         },
       }),
     ],
@@ -72,7 +65,7 @@ const config = {
         items: [
           {
             type: "docSidebar",
-            sidebarId: "tutorialSidebar",
+            sidebarId: "mySidebar",
             position: "left",
             label: "Docs",
           },
@@ -90,8 +83,8 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Learn",
-                to: "/docs/learn",
+                label: "API",
+                to: "/docs/api",
               },
             ],
           },
@@ -128,10 +121,12 @@ const config = {
   plugins: [
     [
       "docusaurus-plugin-typedoc",
-
       {
         entryPoints: ["../../packages/core/src/index.ts"],
         tsconfig: "../../packages/core/tsconfig.json",
+        sidebar: {
+          position: 4,
+        },
       },
     ],
   ],

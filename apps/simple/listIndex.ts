@@ -1,5 +1,4 @@
-import { Document } from "@llamaindex/core/src/Node";
-import { ListIndex, ListRetrieverMode } from "@llamaindex/core/src/index/list";
+import { Document, ListIndex, ListRetrieverMode } from "llamaindex";
 import essay from "./essay";
 
 async function main() {

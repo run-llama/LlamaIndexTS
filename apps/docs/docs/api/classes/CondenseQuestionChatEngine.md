@@ -17,7 +17,7 @@ data, or are very referential to previous context.
 
 ## Implements
 
-- `ChatEngine`
+- [`ChatEngine`](../interfaces/ChatEngine.md)
 
 ## Constructors
 
@@ -37,7 +37,7 @@ data, or are very referential to previous context.
 
 #### Defined in
 
-[ChatEngine.ts:75](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L75)
+[ChatEngine.ts:75](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L75)
 
 ## Properties
 
@@ -47,7 +47,7 @@ data, or are very referential to previous context.
 
 #### Defined in
 
-[ChatEngine.ts:71](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L71)
+[ChatEngine.ts:71](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L71)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L73)
+[ChatEngine.ts:73](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L73)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L70)
+[ChatEngine.ts:70](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L70)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L72)
+[ChatEngine.ts:72](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L72)
 
 ## Methods
 
@@ -85,12 +85,14 @@ ___
 
 ▸ **achat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
 
+Send message along with the class's current chat history to the LLM.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `message` | `string` |
-| `chatHistory?` | [`ChatMessage`](../interfaces/ChatMessage.md)[] |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `message` | `string` |  |
+| `chatHistory?` | [`ChatMessage`](../interfaces/ChatMessage.md)[] | optional chat history if you want to customize the chat history |
 
 #### Returns
 
@@ -98,11 +100,11 @@ ___
 
 #### Implementation of
 
-ChatEngine.achat
+[ChatEngine](../interfaces/ChatEngine.md).[achat](../interfaces/ChatEngine.md#achat)
 
 #### Defined in
 
-[ChatEngine.ts:104](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L104)
+[ChatEngine.ts:104](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L104)
 
 ___
 
@@ -123,7 +125,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:89](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L89)
+[ChatEngine.ts:89](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L89)
 
 ___
 
@@ -131,14 +133,16 @@ ___
 
 ▸ **reset**(): `void`
 
+Resets the chat history so that it's empty.
+
 #### Returns
 
 `void`
 
 #### Implementation of
 
-ChatEngine.reset
+[ChatEngine](../interfaces/ChatEngine.md).[reset](../interfaces/ChatEngine.md#reset)
 
 #### Defined in
 
-[ChatEngine.ts:123](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ChatEngine.ts#L123)
+[ChatEngine.ts:123](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L123)

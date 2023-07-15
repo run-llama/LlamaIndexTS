@@ -26,7 +26,7 @@ A response builder that just concatenates responses.
 
 #### Defined in
 
-[ResponseSynthesizer.ts:37](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L37)
+[ResponseSynthesizer.ts:37](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ResponseSynthesizer.ts#L37)
 
 ## Properties
 
@@ -36,7 +36,7 @@ A response builder that just concatenates responses.
 
 #### Defined in
 
-[ResponseSynthesizer.ts:34](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L34)
+[ResponseSynthesizer.ts:34](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ResponseSynthesizer.ts#L34)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:35](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L35)
+[ResponseSynthesizer.ts:35](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ResponseSynthesizer.ts#L35)
 
 ## Methods
 
@@ -72,4 +72,4 @@ BaseResponseBuilder.agetResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:43](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/ResponseSynthesizer.ts#L43)
+[ResponseSynthesizer.ts:43](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ResponseSynthesizer.ts#L43)

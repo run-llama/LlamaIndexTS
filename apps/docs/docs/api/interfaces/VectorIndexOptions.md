@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:89](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L89)
+[BaseIndex.ts:94](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L94)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:88](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L88)
+[BaseIndex.ts:93](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L93)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:90](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L90)
+[BaseIndex.ts:95](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L95)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:91](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L91)
+[BaseIndex.ts:96](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L96)

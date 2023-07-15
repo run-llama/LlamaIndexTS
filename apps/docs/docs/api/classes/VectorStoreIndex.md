@@ -32,7 +32,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[BaseIndex.ts:104](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L104)
+[BaseIndex.ts:109](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L109)
 
 ## Properties
 
@@ -46,7 +46,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[BaseIndex.ts:70](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L70)
+[BaseIndex.ts:75](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L75)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:72](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L72)
+[BaseIndex.ts:77](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L77)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:73](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L73)
+[BaseIndex.ts:78](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L78)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:68](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L68)
+[BaseIndex.ts:73](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L73)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:69](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L69)
+[BaseIndex.ts:74](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L74)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:102](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L102)
+[BaseIndex.ts:107](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L107)
 
 ## Methods
 
@@ -124,13 +124,17 @@ ___
 
 ▸ **asQueryEngine**(): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
+Get a retriever query engine for this index.
+
+NOTE: if you are using a custom query engine you don't have to use this method.
+
 #### Returns
 
 [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
 #### Defined in
 
-[BaseIndex.ts:214](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L214)
+[BaseIndex.ts:252](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L252)
 
 ___
 
@@ -138,9 +142,15 @@ ___
 
 ▸ **asRetriever**(): [`VectorIndexRetriever`](VectorIndexRetriever.md)
 
+Get a VectorIndexRetriever for this index.
+
+NOTE: if you want to use a custom retriever you don't have to use this method.
+
 #### Returns
 
 [`VectorIndexRetriever`](VectorIndexRetriever.md)
+
+retriever for the index
 
 #### Overrides
 
@@ -148,7 +158,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:210](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L210)
+[BaseIndex.ts:242](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L242)
 
 ___
 
@@ -156,13 +166,15 @@ ___
 
 ▸ `Static` **agetNodeEmbeddingResults**(`nodes`, `serviceContext`, `logProgress?`): `Promise`<[`NodeWithEmbedding`](../interfaces/NodeWithEmbedding.md)[]\>
 
+Get the embeddings for nodes.
+
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `nodes` | [`BaseNode`](BaseNode.md)[] | `undefined` |
-| `serviceContext` | [`ServiceContext`](../interfaces/ServiceContext.md) | `undefined` |
-| `logProgress` | `boolean` | `false` |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `nodes` | [`BaseNode`](BaseNode.md)[] | `undefined` |  |
+| `serviceContext` | [`ServiceContext`](../interfaces/ServiceContext.md) | `undefined` |  |
+| `logProgress` | `boolean` | `false` | log progress to console (useful for debugging) |
 
 #### Returns
 
@@ -170,13 +182,15 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:147](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L147)
+[BaseIndex.ts:159](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L159)
 
 ___
 
 ### buildIndexFromNodes
 
 ▸ `Static` **buildIndexFromNodes**(`nodes`, `serviceContext`, `vectorStore`): `Promise`<[`IndexDict`](IndexDict.md)\>
+
+Get embeddings for nodes and place them into the index.
 
 #### Parameters
 
@@ -192,13 +206,15 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:168](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L168)
+[BaseIndex.ts:187](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L187)
 
 ___
 
 ### fromDocuments
 
 ▸ `Static` **fromDocuments**(`documents`, `storageContext?`, `serviceContext?`): `Promise`<[`VectorStoreIndex`](VectorStoreIndex.md)\>
+
+High level API: split documents, get embeddings, and build index.
 
 #### Parameters
 
@@ -214,7 +230,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:188](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L188)
+[BaseIndex.ts:214](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L214)
 
 ___
 
@@ -234,4 +250,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:109](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/BaseIndex.ts#L109)
+[BaseIndex.ts:114](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L114)

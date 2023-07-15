@@ -26,7 +26,7 @@ A Tool that uses a QueryEngine.
 
 #### Defined in
 
-[Tool.ts:12](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Tool.ts#L12)
+[Tool.ts:12](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Tool.ts#L12)
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 #### Defined in
 
-[Tool.ts:19](https://github.com/run-llama/llamascript/blob/4649536/packages/core/src/Tool.ts#L19)
+[Tool.ts:19](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Tool.ts#L19)
