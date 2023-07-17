@@ -1,6 +1,9 @@
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
 import { v4 as uuidv4 } from "uuid";
 
+/**
+ * Helper class singleton
+ */
 class GlobalsHelper {
   defaultTokenizer: ((text: string) => string[]) | null = null;
 

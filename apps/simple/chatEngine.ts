@@ -2,11 +2,13 @@
 import * as readline from "node:readline/promises";
 // @ts-ignore
 import { stdin as input, stdout as output } from "node:process";
-import { Document } from "@llamaindex/core/src/Node";
-import { VectorStoreIndex } from "@llamaindex/core/src/BaseIndex";
-import { ContextChatEngine } from "@llamaindex/core/src/ChatEngine";
+import {
+  Document,
+  VectorStoreIndex,
+  ContextChatEngine,
+  serviceContextFromDefaults,
+} from "llamaindex";
 import essay from "./essay";
-import { serviceContextFromDefaults } from "@llamaindex/core/src/ServiceContext";
 
 async function main() {
   const document = new Document({ text: essay });

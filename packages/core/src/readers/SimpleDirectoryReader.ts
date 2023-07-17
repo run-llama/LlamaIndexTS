@@ -5,6 +5,9 @@ import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
 import PDFReader from "./PDFReader";
 
+/**
+ * Read a .txt file
+ */
 export class TextFileReader implements BaseReader {
   async loadData(
     file: string,
@@ -27,6 +30,9 @@ export type SimpleDirectoryReaderLoadDataProps = {
   fileExtToReader?: Record<string, BaseReader>;
 };
 
+/**
+ * Read all of the documents in a directory. Currently supports PDF and TXT files.
+ */
 export default class SimpleDirectoryReader implements BaseReader {
   async loadData({
     directoryPath,

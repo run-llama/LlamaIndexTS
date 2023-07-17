@@ -1,64 +1,78 @@
-# LlamaScript: LlamaIndex for TS/JS
+# LlamaIndex.TS
 
-## Structure
+Use your own data with large language models (LLMs, OpenAI ChatGPT and others) in Typescript and Javascript.
 
-This is a monorepo built with Turborepo
+## What is LlamaIndex.TS?
 
-Right now there are two packages of importance:
+LlamaIndex.TS aims to be a lightweight, easy to use set of libraries to help you integrate large language models into your applications with your own data.
 
-packages/core which is the main NPM library @llamaindex/core
+## Getting started with an example:
 
-apps/simple is where the demo code lives
+LlamaIndex.TS requries Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
 
-### Turborepo docs
+In a new folder:
 
-You can checkout how Turborepo works using the built in [README-turborepo.md](README-turborepo.md)
-
-## Getting Started
-
-Install NodeJS. Preferably v18 using nvm or n.
-
-Inside the llamascript directory:
-
-```
-npm i -g pnpm ts-node
-pnpm install
+```bash
+export OPEN_AI_KEY="sk-......" # Replace with your key from https://platform.openai.com/account/api-keys
+npx tsc –-init # if needed
+pnpm install llamaindex
 ```
 
-Note: we use pnpm in this repo, which has a lot of the same functionality and CLI options as npm but it does do some things better in a monorepo, like centralizing dependencies and caching.
+Create the file example.ts
 
-PNPM's has documentation on its [workspace feature](https://pnpm.io/workspaces) and Turborepo had some [useful documentation also](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks).
+```ts
+// example.ts
+import fs from "fs/promises";
+import { Document, VectorStoreIndex } from "llamaindex";
 
-### Running Typescript
+async function main() {
+  // Load essay from abramov.txt in Node
+  const essay = await fs.readFile(
+    "node_modules/llamaindex/examples/abramov.txt",
+    "utf-8"
+  );
 
-When we publish to NPM we will have a tsc compiled version of the library in JS. For now, the easiest thing to do is use ts-node.
+  // Create Document object with essay
+  const document = new Document({ text: essay });
 
-### Test cases
+  // Split text and create embeddings. Store them in a VectorStoreIndex
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
-To run them, run
+  // Query the index
+  const queryEngine = index.asQueryEngine();
+  const response = await queryEngine.aquery(
+    "What did the author do in college?"
+  );
 
+  // Output response
+  console.log(response.toString());
+}
 ```
-pnpm run test
+
+Then you can run it using
+
+```bash
+npx ts-node example.ts
 ```
 
-To write new test cases write them in packages/core/src/tests
+## Core concepts:
 
-We use Jest https://jestjs.io/ to write our test cases. Jest comes with a bunch of built in assertions using the expect function: https://jestjs.io/docs/expect
+- [Document](packages/core/src/Node.ts): A document represents a text file, PDF file or other contiguous piece of data.
 
-### Demo applications
+- [Node](packages/core/src/Node.ts): The basic data building block. Most commonly, these are parts of the document split into manageable pieces that are small enough to be fed into an embedding model and LLM.
 
-You can create new demo applications in the apps folder. Just run pnpm init in the folder after you create it to create its own package.json
+- Indexes: indexes store the Nodes and the embeddings of those nodes.
 
-### Installing packages
+- [QueryEngine](packages/core/src/QueryEngine.ts): Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected nodes from your Index to give the LLM the context it needs to answer your query.
 
-To install packages for a specific package or demo application, run
+- [ChatEngine](packages/core/src/ChatEngine.ts): A ChatEngine helps you build a chatbot that will interact with your Indexes.
 
-```
-pnpm add [NPM Package] --filter [package or application i.e. core or simple]
-```
+- [SimplePrompt](packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and puts them in a prebuilt template.
 
-To install packages for every package or application run
+## Contributing:
 
-```
-pnpm add -w [NPM Package]
-```
+We are in the very early days of LlamaIndex.TS. If you’re interested in hacking on it with us check out our [contributing guide](CONTRIBUTING.md)
+
+## Bugs? Questions?
+
+Please join our Discord! https://discord.com/invite/eN6D2HQ4aX

@@ -5,6 +5,9 @@ import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
 import { CallbackManager } from "./callbacks/CallbackManager";
 
+/**
+ * The ServiceContext is a collection of components that are used in different parts of the application.
+ */
 export interface ServiceContext {
   llmPredictor: BaseLLMPredictor;
   promptHelper: PromptHelper;

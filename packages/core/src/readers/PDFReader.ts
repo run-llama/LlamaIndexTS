@@ -5,6 +5,9 @@ import { DEFAULT_FS } from "../storage/constants";
 import { default as pdfParse } from "pdf-parse";
 import _ from "lodash";
 
+/**
+ * Read the text of a PDF
+ */
 export default class PDFReader implements BaseReader {
   async loadData(
     file: string,

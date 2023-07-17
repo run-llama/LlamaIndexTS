@@ -11,6 +11,9 @@ import { BaseDocumentStore } from "./storage/docStore/types";
 import { VectorStore } from "./storage/vectorStore/types";
 import { BaseIndexStore } from "./storage/indexStore/types";
 
+/**
+ * The underlying structure of each index.
+ */
 export abstract class IndexStruct {
   indexId: string;
   summary?: string;
@@ -61,6 +64,11 @@ export interface BaseIndexInit<T> {
   indexStore?: BaseIndexStore;
   indexStruct: T;
 }
+
+/**
+ * Indexes are the data structure that we store our nodes and embeddings in so
+ * they can be retrieved for our queries.
+ */
 export abstract class BaseIndex<T> {
   serviceContext: ServiceContext;
   storageContext: StorageContext;
@@ -92,6 +100,9 @@ interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
   vectorStore: VectorStore;
 }
 
+/**
+ * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
+ */
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
   vectorStore: VectorStore;
 
@@ -138,6 +149,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     });
   }
 
+  /**
+   * Get the embeddings for nodes.
+   * @param nodes
+   * @param serviceContext
+   * @param logProgress log progress to console (useful for debugging)
+   * @returns
+   */
   static async agetNodeEmbeddingResults(
     nodes: BaseNode[],
     serviceContext: ServiceContext,
@@ -159,6 +177,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return nodesWithEmbeddings;
   }
 
+  /**
+   * Get embeddings for nodes and place them into the index.
+   * @param nodes
+   * @param serviceContext
+   * @param vectorStore
+   * @returns
+   */
   static async buildIndexFromNodes(
     nodes: BaseNode[],
     serviceContext: ServiceContext,
@@ -179,6 +204,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return indexDict;
   }
 
+  /**
+   * High level API: split documents, get embeddings, and build index.
+   * @param documents
+   * @param storageContext
+   * @param serviceContext
+   * @returns
+   */
   static async fromDocuments(
     documents: Document[],
     storageContext?: StorageContext,
@@ -201,10 +233,22 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return index;
   }
 
+  /**
+   * Get a VectorIndexRetriever for this index.
+   *
+   * NOTE: if you want to use a custom retriever you don't have to use this method.
+   * @returns retriever for the index
+   */
   asRetriever(): VectorIndexRetriever {
     return new VectorIndexRetriever(this);
   }
 
+  /**
+   * Get a retriever query engine for this index.
+   *
+   * NOTE: if you are using a custom query engine you don't have to use this method.
+   * @returns
+   */
   asQueryEngine(): BaseQueryEngine {
     return new RetrieverQueryEngine(this.asRetriever());
   }

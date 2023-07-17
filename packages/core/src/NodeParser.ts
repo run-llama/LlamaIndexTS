@@ -46,10 +46,16 @@ export function getNodesFromDocument(
 
   return nodes;
 }
-
+/**
+ * A node parser generates TextNodes from Documents
+ */
 export interface NodeParser {
   getNodesFromDocuments(documents: Document[]): TextNode[];
 }
+
+/**
+ * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
+ */
 export class SimpleNodeParser implements NodeParser {
   textSplitter: SentenceSplitter;
   includeMetadata: boolean;

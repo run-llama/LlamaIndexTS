@@ -24,8 +24,20 @@ export interface ChatResponse {
 // NOTE in case we need CompletionResponse to diverge from ChatResponse in the future
 export type CompletionResponse = ChatResponse;
 
+/**
+ * Unified language model interface
+ */
 export interface LLM {
+  /**
+   * Get a chat response from the LLM
+   * @param messages
+   */
   achat(messages: ChatMessage[]): Promise<ChatResponse>;
+
+  /**
+   * Get a prompt completion from the LLM
+   * @param prompt the prompt to complete
+   */
   acomplete(prompt: string): Promise<CompletionResponse>;
 }
 
@@ -39,11 +51,17 @@ export const TURBO_MODELS = {
   "gpt-3.5-turbo-16k": 16384,
 };
 
+/**
+ * We currently support GPT-3.5 and GPT-4 models
+ */
 export const ALL_AVAILABLE_MODELS = {
   ...GPT4_MODELS,
   ...TURBO_MODELS,
 };
 
+/**
+ * OpenAI LLM implementation
+ */
 export class OpenAI implements LLM {
   model: keyof typeof ALL_AVAILABLE_MODELS;
   temperature: number;

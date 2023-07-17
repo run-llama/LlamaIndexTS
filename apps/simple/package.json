@@ -1,7 +1,7 @@
 {
   "name": "simple",
   "dependencies": {
-    "@llamaindex/core": "workspace:*"
+    "llamaindex": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^18"

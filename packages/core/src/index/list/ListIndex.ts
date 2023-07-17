@@ -30,6 +30,9 @@ export interface ListIndexOptions {
   storageContext?: StorageContext;
 }
 
+/**
+ * A ListIndex keeps nodes in a sequential list structure
+ */
 export class ListIndex extends BaseIndex<IndexList> {
   constructor(init: BaseIndexInit<IndexList>) {
     super(init);
