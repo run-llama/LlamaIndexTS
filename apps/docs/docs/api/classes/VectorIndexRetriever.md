@@ -26,7 +26,7 @@ VectorIndexRetriever retrieves nodes from a VectorIndex.
 
 #### Defined in
 
-[Retriever.ts:28](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Retriever.ts#L28)
+[Retriever.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/Retriever.ts#L28)
 
 ## Properties
 
@@ -36,7 +36,7 @@ VectorIndexRetriever retrieves nodes from a VectorIndex.
 
 #### Defined in
 
-[Retriever.ts:24](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Retriever.ts#L24)
+[Retriever.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/Retriever.ts#L24)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[Retriever.ts:26](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Retriever.ts#L26)
+[Retriever.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/Retriever.ts#L26)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[Retriever.ts:25](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Retriever.ts#L25)
+[Retriever.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/Retriever.ts#L25)
 
 ## Methods
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[Retriever.ts:33](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Retriever.ts#L33)
+[Retriever.ts:33](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/Retriever.ts#L33)
 
 ___
 
@@ -99,4 +99,4 @@ ___
 
 #### Defined in
 
-[Retriever.ts:70](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Retriever.ts#L70)
+[Retriever.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/Retriever.ts#L70)

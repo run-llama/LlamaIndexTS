@@ -29,7 +29,7 @@ SubQuestionQueryEngine decomposes a question into subquestions and then
 
 #### Defined in
 
-[QueryEngine.ts:56](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L56)
+[QueryEngine.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L56)
 
 ## Properties
 
@@ -39,7 +39,7 @@ SubQuestionQueryEngine decomposes a question into subquestions and then
 
 #### Defined in
 
-[QueryEngine.ts:54](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L54)
+[QueryEngine.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L54)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:53](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L53)
+[QueryEngine.ts:53](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L53)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:52](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L52)
+[QueryEngine.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L52)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:51](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L51)
+[QueryEngine.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L51)
 
 ## Methods
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:97](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L97)
+[QueryEngine.ts:97](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L97)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:128](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L128)
+[QueryEngine.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L128)
 
 ___
 
@@ -138,4 +138,4 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:73](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/QueryEngine.ts#L73)
+[QueryEngine.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/QueryEngine.ts#L73)

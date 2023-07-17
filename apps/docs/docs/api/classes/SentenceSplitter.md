@@ -27,7 +27,7 @@ SentenceSplitter is our default text splitter that supports splitting into sente
 
 #### Defined in
 
-[TextSplitter.ts:33](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L33)
+[TextSplitter.ts:33](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L33)
 
 ## Properties
 
@@ -37,7 +37,7 @@ SentenceSplitter is our default text splitter that supports splitting into sente
 
 #### Defined in
 
-[TextSplitter.ts:26](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L26)
+[TextSplitter.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L26)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:25](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L25)
+[TextSplitter.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L25)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:30](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L30)
+[TextSplitter.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L30)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:29](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L29)
+[TextSplitter.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L29)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:27](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L27)
+[TextSplitter.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L27)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:28](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L28)
+[TextSplitter.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L28)
 
 ## Methods
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:153](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L153)
+[TextSplitter.ts:153](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L153)
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:72](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L72)
+[TextSplitter.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L72)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:89](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L89)
+[TextSplitter.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L89)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:115](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L115)
+[TextSplitter.ts:115](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L115)
 
 ___
 
@@ -191,7 +191,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:128](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L128)
+[TextSplitter.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L128)
 
 ___
 
@@ -212,7 +212,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:233](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L233)
+[TextSplitter.ts:233](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L233)
 
 ___
 
@@ -233,4 +233,4 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:205](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/TextSplitter.ts#L205)
+[TextSplitter.ts:205](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/TextSplitter.ts#L205)
