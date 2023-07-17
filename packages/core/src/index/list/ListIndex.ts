@@ -71,11 +71,12 @@ export class ListIndex extends BaseIndex<IndexList> {
     });
   }
 
-  static async fromDocuments(
-    documents: Document[],
-    storageContext?: StorageContext,
-    serviceContext?: ServiceContext
-  ): Promise<ListIndex> {
+  static async fromDocuments(args: {
+    documents: Document[];
+    storageContext?: StorageContext;
+    serviceContext?: ServiceContext;
+  }): Promise<ListIndex> {
+    let { documents, storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
