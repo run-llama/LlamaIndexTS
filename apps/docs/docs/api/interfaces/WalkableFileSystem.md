@@ -24,7 +24,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[storage/FileSystem.ts:17](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/storage/FileSystem.ts#L17)
+[storage/FileSystem.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/storage/FileSystem.ts#L17)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:18](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/storage/FileSystem.ts#L18)
+[storage/FileSystem.ts:18](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/storage/FileSystem.ts#L18)
