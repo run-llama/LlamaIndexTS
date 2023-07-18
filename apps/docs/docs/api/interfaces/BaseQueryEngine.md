@@ -32,4 +32,4 @@ A query engine is a question answerer that can use one or more steps.
 
 #### Defined in
 
-[QueryEngine.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/QueryEngine.ts#L19)
+[QueryEngine.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/QueryEngine.ts#L19)

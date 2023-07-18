@@ -24,7 +24,7 @@ A ResponseSynthesizer is used to generate a response from a query and a list of 
 
 #### Defined in
 
-[ResponseSynthesizer.ts:225](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/ResponseSynthesizer.ts#L225)
+[ResponseSynthesizer.ts:225](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ResponseSynthesizer.ts#L225)
 
 ## Properties
 
@@ -34,7 +34,7 @@ A ResponseSynthesizer is used to generate a response from a query and a list of 
 
 #### Defined in
 
-[ResponseSynthesizer.ts:222](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/ResponseSynthesizer.ts#L222)
+[ResponseSynthesizer.ts:222](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ResponseSynthesizer.ts#L222)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:223](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/ResponseSynthesizer.ts#L223)
+[ResponseSynthesizer.ts:223](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ResponseSynthesizer.ts#L223)
 
 ## Methods
 
@@ -66,4 +66,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:237](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/ResponseSynthesizer.ts#L237)
+[ResponseSynthesizer.ts:237](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ResponseSynthesizer.ts#L237)
