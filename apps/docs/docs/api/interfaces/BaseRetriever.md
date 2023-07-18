@@ -33,7 +33,7 @@ Retrievers retrieve the nodes that most closely match our query in similarity.
 
 #### Defined in
 
-[Retriever.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/Retriever.ts#L16)
+[Retriever.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/Retriever.ts#L16)
 
 ___
 
@@ -47,4 +47,4 @@ ___
 
 #### Defined in
 
-[Retriever.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/Retriever.ts#L17)
+[Retriever.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/Retriever.ts#L17)

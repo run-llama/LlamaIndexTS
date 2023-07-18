@@ -32,7 +32,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[BaseIndex.ts:109](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L109)
+[BaseIndex.ts:109](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L109)
 
 ## Properties
 
@@ -46,7 +46,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L75)
+[BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L75)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L77)
+[BaseIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L77)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L78)
+[BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L78)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L73)
+[BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L73)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L74)
+[BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L74)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:107](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L107)
+[BaseIndex.ts:107](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L107)
 
 ## Methods
 
@@ -134,7 +134,7 @@ NOTE: if you are using a custom query engine you don't have to use this method.
 
 #### Defined in
 
-[BaseIndex.ts:252](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L252)
+[BaseIndex.ts:252](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L252)
 
 ___
 
@@ -158,7 +158,7 @@ retriever for the index
 
 #### Defined in
 
-[BaseIndex.ts:242](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L242)
+[BaseIndex.ts:242](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L242)
 
 ___
 
@@ -182,7 +182,7 @@ Get the embeddings for nodes.
 
 #### Defined in
 
-[BaseIndex.ts:159](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L159)
+[BaseIndex.ts:159](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L159)
 
 ___
 
@@ -206,7 +206,7 @@ Get embeddings for nodes and place them into the index.
 
 #### Defined in
 
-[BaseIndex.ts:187](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L187)
+[BaseIndex.ts:187](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L187)
 
 ___
 
@@ -230,7 +230,7 @@ High level API: split documents, get embeddings, and build index.
 
 #### Defined in
 
-[BaseIndex.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L214)
+[BaseIndex.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L214)
 
 ___
 
@@ -250,4 +250,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:114](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/BaseIndex.ts#L114)
+[BaseIndex.ts:114](https://github.com/run-llama/LlamaIndexTS/blob/f9f6dc6/packages/core/src/BaseIndex.ts#L114)
