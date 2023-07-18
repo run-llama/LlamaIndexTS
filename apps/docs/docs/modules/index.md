@@ -1,8 +1,8 @@
 # Core Modules
 
-LlamaIndex.TS offers several core modules, seperated into high-level APIs for quickly getting started, and low-level APIs for customizing key components as you need.
+LlamaIndex.TS offers several core modules, seperated into high-level modules for quickly getting started, and low-level modules for customizing key components as you need.
 
-## High Level API
+## High-Level Modules
 
 - **Document**: A document represents a text file, PDF file or other contiguous piece of data.
 
@@ -14,7 +14,7 @@ LlamaIndex.TS offers several core modules, seperated into high-level APIs for qu
 
 - **ChatEngine**: A ChatEngine helps you build a chatbot that will interact with your Indexes.
 
-## Low Level API
+## Low Level Module
 
 - **SimplePrompt**: A simple standardized function call definition that takes in inputs and puts them in a prebuilt template.
 

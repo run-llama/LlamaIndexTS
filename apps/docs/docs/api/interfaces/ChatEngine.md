@@ -35,7 +35,7 @@ Send message along with the class's current chat history to the LLM.
 
 #### Defined in
 
-[ChatEngine.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L25)
+[ChatEngine.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/e108757/packages/core/src/ChatEngine.ts#L25)
 
 ___
 
@@ -51,4 +51,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L30)
+[ChatEngine.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/e108757/packages/core/src/ChatEngine.ts#L30)
