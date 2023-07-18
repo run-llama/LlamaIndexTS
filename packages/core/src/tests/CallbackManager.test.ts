@@ -154,7 +154,6 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     const query = "What is the author's name?";
     const response = await queryEngine.aquery(query);
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
-    console.log(JSON.stringify(streamCallbackData, null, 2));
     expect(streamCallbackData).toEqual([
       {
         event: {
