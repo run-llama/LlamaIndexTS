@@ -1,6 +1,5 @@
 ---
 sidebar_position: 0
-sidebar_label: Getting Started
 ---
 
 # What is LlamaIndex.TS?

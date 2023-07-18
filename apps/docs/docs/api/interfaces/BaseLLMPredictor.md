@@ -32,7 +32,7 @@ LLM Predictors are an abstraction to predict the response to a prompt.
 
 #### Defined in
 
-[LLMPredictor.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/e108757/packages/core/src/LLMPredictor.ts#L10)
+[LLMPredictor.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/LLMPredictor.ts#L10)
 
 ___
 
@@ -46,4 +46,4 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:9](https://github.com/run-llama/LlamaIndexTS/blob/e108757/packages/core/src/LLMPredictor.ts#L9)
+[LLMPredictor.ts:9](https://github.com/run-llama/LlamaIndexTS/blob/b6b2598/packages/core/src/LLMPredictor.ts#L9)
