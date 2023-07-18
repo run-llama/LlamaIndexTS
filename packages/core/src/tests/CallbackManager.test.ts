@@ -134,11 +134,10 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   });
 
   test("For ListIndex w/ a ListIndexRetriever", async () => {
-    const listIndex = await ListIndex.fromDocuments(
-      [document],
-      undefined,
-      serviceContext
-    );
+    const listIndex = await ListIndex.fromDocuments({
+      documents: [document],
+      serviceContext,
+    });
     const queryEngine = listIndex.asQueryEngine();
     const query = "What is the author's name?";
     const response = await queryEngine.aquery(query);
