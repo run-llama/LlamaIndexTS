@@ -20,7 +20,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[BaseIndex.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/BaseIndex.ts#L62)
+[BaseIndex.ts:62](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L62)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/BaseIndex.ts#L64)
+[BaseIndex.ts:64](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L64)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/BaseIndex.ts#L65)
+[BaseIndex.ts:65](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L65)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/BaseIndex.ts#L60)
+[BaseIndex.ts:60](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L60)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/BaseIndex.ts#L61)
+[BaseIndex.ts:61](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L61)
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/BaseIndex.ts#L63)
+[BaseIndex.ts:63](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/BaseIndex.ts#L63)

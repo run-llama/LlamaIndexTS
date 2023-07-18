@@ -26,7 +26,7 @@ ChatGPTLLMPredictor is a predictor that uses GPT.
 
 #### Defined in
 
-[LLMPredictor.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/LLMPredictor.ts#L26)
+[LLMPredictor.ts:26](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/LLMPredictor.ts#L26)
 
 ## Properties
 
@@ -36,7 +36,7 @@ ChatGPTLLMPredictor is a predictor that uses GPT.
 
 #### Defined in
 
-[LLMPredictor.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/LLMPredictor.ts#L24)
+[LLMPredictor.ts:24](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/LLMPredictor.ts#L24)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/LLMPredictor.ts#L23)
+[LLMPredictor.ts:23](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/LLMPredictor.ts#L23)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/LLMPredictor.ts#L21)
+[LLMPredictor.ts:21](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/LLMPredictor.ts#L21)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/LLMPredictor.ts#L22)
+[LLMPredictor.ts:22](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/LLMPredictor.ts#L22)
 
 ## Methods
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/LLMPredictor.ts#L49)
+[LLMPredictor.ts:49](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/LLMPredictor.ts#L49)
 
 ___
 
@@ -110,4 +110,4 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/LLMPredictor.ts#L45)
+[LLMPredictor.ts:45](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/LLMPredictor.ts#L45)

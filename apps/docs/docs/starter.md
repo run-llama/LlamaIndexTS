@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # Starter Tutorial
@@ -12,7 +12,7 @@ In a new folder:
 npx tsc –-init # if needed
 ```
 
-Create the file `example.ts`. This code will load some example data, create a document, index it (which creates embeddings using OpenAI), and then creates query engine to answer questions about the data.
+Create the file example.ts
 
 ```ts
 // example.ts

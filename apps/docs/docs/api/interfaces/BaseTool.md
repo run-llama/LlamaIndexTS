@@ -22,4 +22,4 @@ Simple Tool interface. Likely to change.
 
 #### Defined in
 
-[Tool.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/Tool.ts#L12)
+[Tool.ts:12](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/Tool.ts#L12)

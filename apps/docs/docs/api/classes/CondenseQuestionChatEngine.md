@@ -37,7 +37,7 @@ data, or are very referential to previous context.
 
 #### Defined in
 
-[ChatEngine.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L75)
+[ChatEngine.ts:75](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L75)
 
 ## Properties
 
@@ -47,7 +47,7 @@ data, or are very referential to previous context.
 
 #### Defined in
 
-[ChatEngine.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L71)
+[ChatEngine.ts:71](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L71)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L73)
+[ChatEngine.ts:73](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L73)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L70)
+[ChatEngine.ts:70](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L70)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L72)
+[ChatEngine.ts:72](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L72)
 
 ## Methods
 
@@ -104,7 +104,7 @@ Send message along with the class's current chat history to the LLM.
 
 #### Defined in
 
-[ChatEngine.ts:104](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L104)
+[ChatEngine.ts:104](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L104)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L89)
+[ChatEngine.ts:89](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L89)
 
 ___
 
@@ -145,4 +145,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:123](https://github.com/run-llama/LlamaIndexTS/blob/1a39403/packages/core/src/ChatEngine.ts#L123)
+[ChatEngine.ts:123](https://github.com/run-llama/llamascript/blob/6ea89db/packages/core/src/ChatEngine.ts#L123)
