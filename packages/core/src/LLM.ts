@@ -32,13 +32,13 @@ export interface LLM {
    * Get a chat response from the LLM
    * @param messages
    */
-  achat(messages: ChatMessage[]): Promise<ChatResponse>;
+  chat(messages: ChatMessage[]): Promise<ChatResponse>;
 
   /**
    * Get a prompt completion from the LLM
    * @param prompt the prompt to complete
    */
-  acomplete(prompt: string): Promise<CompletionResponse>;
+  complete(prompt: string): Promise<CompletionResponse>;
 }
 
 export const GPT4_MODELS = {
@@ -100,7 +100,7 @@ export class OpenAI implements LLM {
     }
   }
 
-  async achat(
+  async chat(
     messages: ChatMessage[],
     parentEvent?: Event
   ): Promise<ChatResponse> {
@@ -142,10 +142,10 @@ export class OpenAI implements LLM {
     }
   }
 
-  async acomplete(
+  async complete(
     prompt: string,
     parentEvent?: Event
   ): Promise<CompletionResponse> {
-    return this.achat([{ content: prompt, role: "user" }], parentEvent);
+    return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
 }

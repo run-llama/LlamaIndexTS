@@ -11,7 +11,7 @@ export function mockLlmGeneration({
   callbackManager: CallbackManager;
 }) {
   jest
-    .spyOn(languageModel, "achat")
+    .spyOn(languageModel, "chat")
     .mockImplementation(
       async (messages: ChatMessage[], parentEvent?: Event) => {
         const text = "MOCK_TOKEN_1-MOCK_TOKEN_2";

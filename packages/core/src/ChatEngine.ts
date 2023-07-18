@@ -22,7 +22,7 @@ export interface ChatEngine {
    * @param message
    * @param chatHistory optional chat history if you want to customize the chat history
    */
-  achat(message: string, chatHistory?: ChatMessage[]): Promise<Response>;
+  chat(message: string, chatHistory?: ChatMessage[]): Promise<Response>;
 
   /**
    * Resets the chat history so that it's empty.
@@ -42,10 +42,10 @@ export class SimpleChatEngine implements ChatEngine {
     this.llm = init?.llm ?? new OpenAI();
   }
 
-  async achat(message: string, chatHistory?: ChatMessage[]): Promise<Response> {
+  async chat(message: string, chatHistory?: ChatMessage[]): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
     chatHistory.push({ content: message, role: "user" });
-    const response = await this.llm.achat(chatHistory);
+    const response = await this.llm.chat(chatHistory);
     chatHistory.push(response.message);
     this.chatHistory = chatHistory;
     return new Response(response.message.content);
@@ -57,7 +57,7 @@ export class SimpleChatEngine implements ChatEngine {
 }
 
 /**
- * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorIndex).
+ * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorStoreIndex).
  * It does two steps on taking a user's chat message: first, it condenses the chat message
  * with the previous chat history into a question with more context.
  * Then, it queries the underlying Index using the new question with context and returns
@@ -86,13 +86,10 @@ export class CondenseQuestionChatEngine implements ChatEngine {
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
   }
 
-  private async acondenseQuestion(
-    chatHistory: ChatMessage[],
-    question: string
-  ) {
+  private async condenseQuestion(chatHistory: ChatMessage[], question: string) {
     const chatHistoryStr = messagesToHistoryStr(chatHistory);
 
-    return this.serviceContext.llmPredictor.apredict(
+    return this.serviceContext.llmPredictor.predict(
       defaultCondenseQuestionPrompt,
       {
         question: question,
@@ -101,18 +98,15 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     );
   }
 
-  async achat(
+  async chat(
     message: string,
     chatHistory?: ChatMessage[] | undefined
   ): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
 
-    const condensedQuestion = await this.acondenseQuestion(
-      chatHistory,
-      message
-    );
+    const condensedQuestion = await this.condenseQuestion(chatHistory, message);
 
-    const response = await this.queryEngine.aquery(condensedQuestion);
+    const response = await this.queryEngine.query(condensedQuestion);
 
     chatHistory.push({ content: message, role: "user" });
     chatHistory.push({ content: response.response, role: "assistant" });
@@ -150,7 +144,7 @@ export class ContextChatEngine implements ChatEngine {
     throw new Error("Method not implemented.");
   }
 
-  async achat(message: string, chatHistory?: ChatMessage[] | undefined) {
+  async chat(message: string, chatHistory?: ChatMessage[] | undefined) {
     chatHistory = chatHistory ?? this.chatHistory;
 
     const parentEvent: Event = {
@@ -158,7 +152,7 @@ export class ContextChatEngine implements ChatEngine {
       type: "wrapper",
       tags: ["final"],
     };
-    const sourceNodesWithScore = await this.retriever.aretrieve(
+    const sourceNodesWithScore = await this.retriever.retrieve(
       message,
       parentEvent
     );
@@ -174,7 +168,7 @@ export class ContextChatEngine implements ChatEngine {
 
     chatHistory.push({ content: message, role: "user" });
 
-    const response = await this.chatModel.achat(
+    const response = await this.chatModel.chat(
       [systemMessage, ...chatHistory],
       parentEvent
     );

@@ -202,8 +202,8 @@ export abstract class BaseEmbedding {
     return similarity(embedding1, embedding2, mode);
   }
 
-  abstract aGetTextEmbedding(text: string): Promise<number[]>;
-  abstract aGetQueryEmbedding(query: string): Promise<number[]>;
+  abstract getTextEmbedding(text: string): Promise<number[]>;
+  abstract getQueryEmbedding(query: string): Promise<number[]>;
 }
 
 enum OpenAIEmbeddingModelType {
@@ -221,7 +221,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
     this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
   }
 
-  private async _aGetOpenAIEmbedding(input: string) {
+  private async getOpenAIEmbedding(input: string) {
     input = input.replace(/\n/g, " ");
     //^ NOTE this performance helper is in the OpenAI python library but may not be in the JS library
 
@@ -233,11 +233,11 @@ export class OpenAIEmbedding extends BaseEmbedding {
     return data.data[0].embedding;
   }
 
-  async aGetTextEmbedding(text: string): Promise<number[]> {
-    return this._aGetOpenAIEmbedding(text);
+  async getTextEmbedding(text: string): Promise<number[]> {
+    return this.getOpenAIEmbedding(text);
   }
 
-  async aGetQueryEmbedding(query: string): Promise<number[]> {
-    return this._aGetOpenAIEmbedding(query);
+  async getQueryEmbedding(query: string): Promise<number[]> {
+    return this.getOpenAIEmbedding(query);
   }
 }

@@ -16,7 +16,12 @@ import { QueryEngineTool, ToolMetadata } from "./Tool";
  * A query engine is a question answerer that can use one or more steps.
  */
 export interface BaseQueryEngine {
-  aquery(query: string, parentEvent?: Event): Promise<Response>;
+  /**
+   * Query the query engine and get a response.
+   * @param query
+   * @param parentEvent
+   */
+  query(query: string, parentEvent?: Event): Promise<Response>;
 }
 
 /**
@@ -37,14 +42,14 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
       responseSynthesizer || new ResponseSynthesizer({ serviceContext });
   }
 
-  async aquery(query: string, parentEvent?: Event) {
+  async query(query: string, parentEvent?: Event) {
     const _parentEvent: Event = parentEvent || {
       id: uuidv4(),
       type: "wrapper",
       tags: ["final"],
     };
-    const nodes = await this.retriever.aretrieve(query, _parentEvent);
-    return this.responseSynthesizer.asynthesize(query, nodes, _parentEvent);
+    const nodes = await this.retriever.retrieve(query, _parentEvent);
+    return this.responseSynthesizer.synthesize(query, nodes, _parentEvent);
   }
 }
 
@@ -98,11 +103,8 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     });
   }
 
-  async aquery(query: string): Promise<Response> {
-    const subQuestions = await this.questionGen.agenerate(
-      this.metadatas,
-      query
-    );
+  async query(query: string): Promise<Response> {
+    const subQuestions = await this.questionGen.generate(this.metadatas, query);
 
     // groups final retrieval+synthesis operation
     const parentEvent: Event = {
@@ -120,16 +122,16 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     };
 
     const subQNodes = await Promise.all(
-      subQuestions.map((subQ) => this.aquerySubQ(subQ, subQueryParentEvent))
+      subQuestions.map((subQ) => this.querySubQ(subQ, subQueryParentEvent))
     );
 
     const nodes = subQNodes
       .filter((node) => node !== null)
       .map((node) => node as NodeWithScore);
-    return this.responseSynthesizer.asynthesize(query, nodes, parentEvent);
+    return this.responseSynthesizer.synthesize(query, nodes, parentEvent);
   }
 
-  private async aquerySubQ(
+  private async querySubQ(
     subQ: SubQuestion,
     parentEvent?: Event
   ): Promise<NodeWithScore | null> {
@@ -137,7 +139,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
       const question = subQ.subQuestion;
       const queryEngine = this.queryEngines[subQ.toolName];
 
-      const response = await queryEngine.aquery(question, parentEvent);
+      const response = await queryEngine.query(question, parentEvent);
       const responseText = response.response;
       const nodeText = `Sub question: ${question}\nResponse: ${responseText}}`;
       const node = new TextNode({ text: nodeText });

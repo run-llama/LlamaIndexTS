@@ -79,7 +79,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    * @param logProgress log progress to console (useful for debugging)
    * @returns
    */
-  static async agetNodeEmbeddingResults(
+  static async getNodeEmbeddingResults(
     nodes: BaseNode[],
     serviceContext: ServiceContext,
     logProgress = false
@@ -91,7 +91,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       if (logProgress) {
         console.log(`getting embedding for node ${i}/${nodes.length}`);
       }
-      const embedding = await serviceContext.embedModel.aGetTextEmbedding(
+      const embedding = await serviceContext.embedModel.getTextEmbedding(
         node.getContent(MetadataMode.EMBED)
       );
       nodesWithEmbeddings.push({ node, embedding });
@@ -112,7 +112,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     serviceContext: ServiceContext,
     vectorStore: VectorStore
   ): Promise<IndexDict> {
-    const embeddingResults = await this.agetNodeEmbeddingResults(
+    const embeddingResults = await this.getNodeEmbeddingResults(
       nodes,
       serviceContext
     );

@@ -7,7 +7,7 @@ import { CallbackManager, Event } from "./callbacks/CallbackManager";
  */
 export interface BaseLLMPredictor {
   getLlmMetadata(): Promise<any>;
-  apredict(
+  predict(
     prompt: string | SimplePrompt,
     input?: Record<string, string>,
     parentEvent?: Event
@@ -46,16 +46,16 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
     throw new Error("Not implemented yet");
   }
 
-  async apredict(
+  async predict(
     prompt: string | SimplePrompt,
     input?: Record<string, string>,
     parentEvent?: Event
   ): Promise<string> {
     if (typeof prompt === "string") {
-      const result = await this.languageModel.acomplete(prompt, parentEvent);
+      const result = await this.languageModel.complete(prompt, parentEvent);
       return result.message.content;
     } else {
-      return this.apredict(prompt(input ?? {}));
+      return this.predict(prompt(input ?? {}));
     }
   }
 }

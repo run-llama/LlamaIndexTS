@@ -20,7 +20,7 @@ export interface SubQuestion {
  * QuestionGenerators generate new questions for the LLM using tools and a user query.
  */
 export interface BaseQuestionGenerator {
-  agenerate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]>;
+  generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]>;
 }
 
 /**
@@ -37,13 +37,10 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
     this.outputParser = init?.outputParser ?? new SubQuestionOutputParser();
   }
 
-  async agenerate(
-    tools: ToolMetadata[],
-    query: string
-  ): Promise<SubQuestion[]> {
+  async generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]> {
     const toolsStr = buildToolsText(tools);
     const queryStr = query;
-    const prediction = await this.llmPredictor.apredict(this.prompt, {
+    const prediction = await this.llmPredictor.predict(this.prompt, {
       toolsStr,
       queryStr,
     });

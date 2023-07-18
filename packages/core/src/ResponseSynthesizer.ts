@@ -20,7 +20,7 @@ interface BaseResponseBuilder {
    * @param textChunks
    * @param parentEvent
    */
-  agetResponse(
+  getResponse(
     query: string,
     textChunks: string[],
     parentEvent?: Event
@@ -40,7 +40,7 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
     this.textQATemplate = defaultTextQaPrompt;
   }
 
-  async agetResponse(
+  async getResponse(
     query: string,
     textChunks: string[],
     parentEvent?: Event
@@ -51,7 +51,7 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
     };
 
     const prompt = this.textQATemplate(input);
-    return this.llmPredictor.apredict(prompt, {}, parentEvent);
+    return this.llmPredictor.predict(prompt, {}, parentEvent);
   }
 }
 
@@ -73,7 +73,7 @@ export class Refine implements BaseResponseBuilder {
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
 
-  async agetResponse(
+  async getResponse(
     query: string,
     textChunks: string[],
     prevResponse?: any
@@ -106,7 +106,7 @@ export class Refine implements BaseResponseBuilder {
 
     for (const chunk of textChunks) {
       if (!response) {
-        response = await this.serviceContext.llmPredictor.apredict(
+        response = await this.serviceContext.llmPredictor.predict(
           textQATemplate,
           {
             context: chunk,
@@ -133,7 +133,7 @@ export class Refine implements BaseResponseBuilder {
     ]);
 
     for (const chunk of textChunks) {
-      response = await this.serviceContext.llmPredictor.apredict(
+      response = await this.serviceContext.llmPredictor.predict(
         refineTemplate,
         {
           context: chunk,
@@ -149,7 +149,7 @@ export class Refine implements BaseResponseBuilder {
  * CompactAndRefine is a slight variation of Refine that first compacts the text chunks into the smallest possible number of chunks.
  */
 export class CompactAndRefine extends Refine {
-  async agetResponse(
+  async getResponse(
     query: string,
     textChunks: string[],
     prevResponse?: any
@@ -164,7 +164,7 @@ export class CompactAndRefine extends Refine {
       maxPrompt,
       textChunks
     );
-    const response = super.agetResponse(query, newTexts, prevResponse);
+    const response = super.getResponse(query, newTexts, prevResponse);
     return response;
   }
 }
@@ -178,7 +178,7 @@ export class TreeSummarize implements BaseResponseBuilder {
     this.serviceContext = serviceContext;
   }
 
-  async agetResponse(query: string, textChunks: string[]): Promise<string> {
+  async getResponse(query: string, textChunks: string[]): Promise<string> {
     const summaryTemplate: SimplePrompt = (input) =>
       defaultTextQaPrompt({ ...input, query: query });
 
@@ -192,19 +192,19 @@ export class TreeSummarize implements BaseResponseBuilder {
     );
 
     if (packedTextChunks.length === 1) {
-      return this.serviceContext.llmPredictor.apredict(summaryTemplate, {
+      return this.serviceContext.llmPredictor.predict(summaryTemplate, {
         context: packedTextChunks[0],
       });
     } else {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
-          this.serviceContext.llmPredictor.apredict(summaryTemplate, {
+          this.serviceContext.llmPredictor.predict(summaryTemplate, {
             context: chunk,
           })
         )
       );
 
-      return this.agetResponse(query, summaries);
+      return this.getResponse(query, summaries);
     }
   }
 }
@@ -234,15 +234,11 @@ export class ResponseSynthesizer {
       responseBuilder ?? getResponseBuilder(this.serviceContext);
   }
 
-  async asynthesize(
-    query: string,
-    nodes: NodeWithScore[],
-    parentEvent?: Event
-  ) {
+  async synthesize(query: string, nodes: NodeWithScore[], parentEvent?: Event) {
     let textChunks: string[] = nodes.map((node) =>
       node.node.getContent(MetadataMode.NONE)
     );
-    const response = await this.responseBuilder.agetResponse(
+    const response = await this.responseBuilder.getResponse(
       query,
       textChunks,
       parentEvent

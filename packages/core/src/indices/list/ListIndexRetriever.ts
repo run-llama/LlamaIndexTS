@@ -23,10 +23,7 @@ export class ListIndexRetriever implements BaseRetriever {
     this.index = index;
   }
 
-  async aretrieve(
-    query: string,
-    parentEvent?: Event
-  ): Promise<NodeWithScore[]> {
+  async retrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const nodes = await this.index.docStore.getNodes(nodeIds);
     const result = nodes.map((node) => ({
@@ -81,10 +78,7 @@ export class ListIndexLLMRetriever implements BaseRetriever {
     this.serviceContext = serviceContext || index.serviceContext;
   }
 
-  async aretrieve(
-    query: string,
-    parentEvent?: Event
-  ): Promise<NodeWithScore[]> {
+  async retrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const results: NodeWithScore[] = [];
 
@@ -94,7 +88,7 @@ export class ListIndexLLMRetriever implements BaseRetriever {
 
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
       const input = { context: fmtBatchStr, query: query };
-      const rawResponse = await this.serviceContext.llmPredictor.apredict(
+      const rawResponse = await this.serviceContext.llmPredictor.predict(
         this.choiceSelectPrompt,
         input
       );
