@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # End to End Examples
 
 We include several end-to-end examples using LlamaIndex.TS in the repository

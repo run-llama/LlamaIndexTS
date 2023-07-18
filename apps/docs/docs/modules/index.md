@@ -8,6 +8,8 @@ LlamaIndex.TS offers several core modules, seperated into high-level modules for
 
 - **Node**: The basic data building block. Most commonly, these are parts of the document split into manageable pieces that are small enough to be fed into an embedding model and LLM.
 
+- **Reader/Loader**: A reader or loader is something that takes in a document in the real world and transforms into a Document class that can then be used in your Index and queries. We currently support plain text files and PDFs with many many more to come.
+
 - **Indexes**: indexes store the Nodes and the embeddings of those nodes.
 
 - **QueryEngine**: Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected nodes from your Index to give the LLM the context it needs to answer your query.
@@ -21,8 +23,6 @@ LlamaIndex.TS offers several core modules, seperated into high-level modules for
 - **LLM**: The LLM class is a unified interface over a large language model provider such as OpenAI GPT-4, Anthropic Claude, or Meta LLaMA. You can subclass it to write a connector to your own large language model.
 
 - **Embedding**: An embedding is represented as a vector of floating point numbers. OpenAI's text-embedding-ada-002 is our default embedding model and each embedding it generates consists of 1,536 floating point numbers. Another popular embedding model is BERT which uses 768 floating point numbers to represent each Node. We provide a number of utilities to work with embeddings including 3 similarity calculation options and Maximum Marginal Relevance
-
-- **Reader/Loader**: A reader or loader is something that takes in a document in the real world and transforms into a Document class that can then be used in your Index and queries. We currently support plain text files and PDFs with many many more to come.
 
 - **TextSplitter**: Text splitting strategies are incredibly important to the overall efficacy of the embedding search. Currently, while we do have a default, there's no one size fits all solution. Depending on the source documents, you may want to use different splitting sizes and strategies. Currently we support spliltting by fixed size, splitting by fixed size with overlapping sections, splitting by sentence, and splitting by paragraph.
 
