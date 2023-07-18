@@ -1,5 +1,5 @@
 import { BaseNode, Document } from "../../Node";
-import { BaseIndex, BaseIndexInit, IndexList } from "../../BaseIndex";
+import { BaseIndex, BaseIndexInit, IndexList } from "../BaseIndex";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import {
   StorageContext,

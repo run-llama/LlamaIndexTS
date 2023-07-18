@@ -18,7 +18,7 @@ You can checkout how Turborepo works using the built in [README-turborepo.md](RE
 
 Install NodeJS. Preferably v18 using nvm or n.
 
-Inside the llamascript directory:
+Inside the LlamaIndexTS directory:
 
 ```
 npm i -g pnpm ts-node

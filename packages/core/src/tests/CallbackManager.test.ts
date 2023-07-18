@@ -1,4 +1,4 @@
-import { VectorStoreIndex } from "../BaseIndex";
+import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 import { OpenAIEmbedding } from "../Embedding";
 import { OpenAI } from "../LLM";
 import { Document } from "../Node";
@@ -8,7 +8,7 @@ import {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
-import { ListIndex, ListRetrieverMode } from "../index/list";
+import { ListIndex, ListRetrieverMode } from "../indices/list";
 import {
   ResponseSynthesizer,
   SimpleResponseBuilder,
