@@ -62,12 +62,12 @@ export function mockLlmGeneration({
 }
 
 export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {
-  jest.spyOn(embedModel, "aGetTextEmbedding").mockImplementation(async (x) => {
+  jest.spyOn(embedModel, "getTextEmbedding").mockImplementation(async (x) => {
     return new Promise((resolve) => {
       resolve([1, 0, 0, 0, 0, 0]);
     });
   });
-  jest.spyOn(embedModel, "aGetQueryEmbedding").mockImplementation(async (x) => {
+  jest.spyOn(embedModel, "getQueryEmbedding").mockImplementation(async (x) => {
     return new Promise((resolve) => {
       resolve([0, 1, 0, 0, 0, 0]);
     });
