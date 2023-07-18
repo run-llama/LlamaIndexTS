@@ -26,11 +26,15 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
   retriever: BaseRetriever;
   responseSynthesizer: ResponseSynthesizer;
 
-  constructor(retriever: BaseRetriever) {
+  constructor(
+    retriever: BaseRetriever,
+    responseSynthesizer?: ResponseSynthesizer
+  ) {
     this.retriever = retriever;
     const serviceContext: ServiceContext | undefined =
       this.retriever.getServiceContext();
-    this.responseSynthesizer = new ResponseSynthesizer({ serviceContext });
+    this.responseSynthesizer =
+      responseSynthesizer || new ResponseSynthesizer({ serviceContext });
   }
 
   async aquery(query: string, parentEvent?: Event) {

@@ -8,7 +8,11 @@ import {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
-import { ListIndex } from "../index/list";
+import { ListIndex, ListRetrieverMode } from "../index/list";
+import {
+  ResponseSynthesizer,
+  SimpleResponseBuilder,
+} from "../ResponseSynthesizer";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
 // Mock the OpenAI getOpenAISession function during testing
@@ -134,12 +138,19 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   });
 
   test("For ListIndex w/ a ListIndexRetriever", async () => {
-    const listIndex = await ListIndex.fromDocuments(
-      [document],
-      undefined,
-      serviceContext
+    const listIndex = await ListIndex.fromDocuments({
+      documents: [document],
+      serviceContext,
+    });
+    const responseBuilder = new SimpleResponseBuilder(serviceContext);
+    const responseSynthesizer = new ResponseSynthesizer({
+      serviceContext: serviceContext,
+      responseBuilder,
+    });
+    const queryEngine = listIndex.asQueryEngine(
+      ListRetrieverMode.DEFAULT,
+      responseSynthesizer
     );
-    const queryEngine = listIndex.asQueryEngine();
     const query = "What is the author's name?";
     const response = await queryEngine.aquery(query);
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");

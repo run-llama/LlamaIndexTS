@@ -16,6 +16,10 @@ import {
 } from "../../ServiceContext";
 import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import _ from "lodash";
+import {
+  ResponseSynthesizer,
+  CompactAndRefine,
+} from "../../ResponseSynthesizer";
 
 export enum ListRetrieverMode {
   DEFAULT = "default",
@@ -74,11 +78,12 @@ export class ListIndex extends BaseIndex<IndexList> {
     });
   }
 
-  static async fromDocuments(
-    documents: Document[],
-    storageContext?: StorageContext,
-    serviceContext?: ServiceContext
-  ): Promise<ListIndex> {
+  static async fromDocuments(args: {
+    documents: Document[];
+    storageContext?: StorageContext;
+    serviceContext?: ServiceContext;
+  }): Promise<ListIndex> {
+    let { documents, storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
@@ -111,9 +116,20 @@ export class ListIndex extends BaseIndex<IndexList> {
   }
 
   asQueryEngine(
-    mode: ListRetrieverMode = ListRetrieverMode.DEFAULT
+    mode: ListRetrieverMode = ListRetrieverMode.DEFAULT,
+    responseSynthesizer?: ResponseSynthesizer
   ): BaseQueryEngine {
-    return new RetrieverQueryEngine(this.asRetriever(mode));
+    if (_.isNil(responseSynthesizer)) {
+      let responseBuilder = new CompactAndRefine(this.serviceContext);
+      responseSynthesizer = new ResponseSynthesizer({
+        serviceContext: this.serviceContext,
+        responseBuilder,
+      });
+    }
+    return new RetrieverQueryEngine(
+      this.asRetriever(mode),
+      responseSynthesizer
+    );
   }
 
   static async _buildIndexFromNodes(
