@@ -1,4 +1,3 @@
-export * from "./indices/BaseIndex";
 export * from "./ChatEngine";
 export * from "./constants";
 export * from "./Embedding";
@@ -19,7 +18,7 @@ export * from "./ServiceContext";
 export * from "./TextSplitter";
 export * from "./Tool";
 
-export * from "./indices/list";
+export * from "./indices";
 
 export * from "./callbacks/CallbackManager";
 

@@ -27,7 +27,7 @@ import {
     },
   ];
 
-  const response = await responseSynthesizer.asynthesize(
+  const response = await responseSynthesizer.synthesize(
     "What age am I?",
     nodesWithScore
   );

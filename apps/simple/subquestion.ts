@@ -18,7 +18,7 @@ import essay from "./essay";
     ],
   });
 
-  const response = await queryEngine.aquery(
+  const response = await queryEngine.query(
     "How was Paul Grahams life different before and after YC?"
   );
 

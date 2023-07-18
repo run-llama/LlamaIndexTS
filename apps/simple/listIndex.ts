@@ -19,7 +19,7 @@ async function main() {
     serviceContext,
   });
   const queryEngine = index.asQueryEngine(ListRetrieverMode.LLM);
-  const response = await queryEngine.aquery(
+  const response = await queryEngine.query(
     "What did the author do growing up?"
   );
   console.log(response.toString());

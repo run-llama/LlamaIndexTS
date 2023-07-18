@@ -18,13 +18,15 @@
   "types": "src/index.ts",
   "scripts": {
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsup src/index.ts --format cjs --dts"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.195",
     "@types/node": "^18",
     "@types/pdf-parse": "^1.1.1",
     "@types/uuid": "^9.0.2",
-    "node-stdlib-browser": "^1.2.0"
+    "node-stdlib-browser": "^1.2.0",
+    "tsup": "^7.1.0"
   }
 }
