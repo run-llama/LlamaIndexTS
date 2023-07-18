@@ -48,3 +48,5 @@ Then you can run it using
 ```bash
 npx ts-node example.ts
 ```
+
+You can find other end-to-end examples [here](/apps/simple/)!
