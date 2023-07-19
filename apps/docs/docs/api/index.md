@@ -75,7 +75,6 @@ npx ts-node example.ts
 
 - [ChatEngine](packages/core/src/ChatEngine.ts): A ChatEngine helps you build a chatbot that will interact with your Indexes.
 
-- [SimplePrompt](packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and puts them in a prebuilt template.
 
 ## Contributing:
 

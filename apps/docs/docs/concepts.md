@@ -1,33 +1,76 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
-# Concepts
+# High-Level Concepts
 
-## High Level API
+LlamaIndex.TS helps you build LLM-powered applications (e.g. Q&A, chatbot) over custom data.
 
-- Document: A document represents a text file, PDF file or other contiguous piece of data.
+In this high-level concepts guide, you will learn:
 
-- Node: The basic data building block. Most commonly, these are parts of the document split into manageable pieces that are small enough to be fed into an embedding model and LLM.
+* how an LLM can answer questions using your own data.
+* key concepts and modules in LlamaIndex.TS for composing your own query pipeline.
 
-- Indexes: indexes store the Nodes and the embeddings of those nodes.
+## Answering Questions Across Your Data
 
-- QueryEngine: Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected nodes from your Index to give the LLM the context it needs to answer your query.
+LlamaIndex uses a two stage method when using an LLM with your data:
 
-- ChatEngine: A ChatEngine helps you build a chatbot that will interact with your Indexes.
+1) **indexing stage**: preparing a knowledge base, and
+2) **querying stage**: retrieving relevant context from the knowledge to assist the LLM in responding to a question
 
-## Low Level API
+![](./_static/concepts/rag.jpg)
 
-- SimplePrompt: A simple standardized function call definition that takes in inputs and puts them in a prebuilt template.
+This process is also known as Retrieval Augmented Generation (RAG).
 
-- LLM: The LLM class is a unified interface over a large language model provider such as OpenAI GPT-4, Anthropic Claude, or Meta LLaMA. You can subclass it to write a connector to your own large language model.
+LlamaIndex.TS provides the essential toolkit for making both steps super easy. 
 
-- Embedding: An embedding is represented as a vector of floating point numbers. OpenAI's text-embedding-ada-002 is our default embedding model and each embedding it generates consists of 1,536 floating point numbers. Another popular embedding model is BERT which uses 768 floating point numbers to represent each Node. We provide a number of utilities to work with embeddings including 3 similarity calculation options and Maximum Marginal Relevance
+Let's explore each stage in detail.
 
-- Reader/Loader: A reader or loader is something that takes in a document in the real world and transforms into a Document class that can then be used in your Index and queries. We currently support plain text files and PDFs with many many more to come.
+### Indexing Stage
+LlamaIndex.TS help you prepare the knowledge base with a suite of data connectors and indexes.
 
-- TextSplitter: Text splitting strategies are incredibly important to the overall efficacy of the embedding search. Currently, while we do have a default, there's no one size fits all solution. Depending on the source documents, you may want to use different splitting sizes and strategies. Currently we support spliltting by fixed size, splitting by fixed size with overlapping sections, splitting by sentence, and splitting by paragraph.
+![](./_static/concepts/indexing.jpg) 
 
-- Retriever: The Retriever is what actually chooses the Nodes to retrieve from the index. Here, you may wish to try retrieving more or fewer Nodes per query, changing your similarity function, or creating your own retriever for each individual use case in your application. For example, you may wish to have a separate retriever for code content vs. text content.
+[**Data Loaders**](./modules/high_level/data_loader.md):
+A data connector (i.e. `Reader`) ingest data from different data sources and data formats into a simple `Document` representation (text and simple metadata).
 
-- Storage: At some point you're going to want to store your indexes, data and vectors instead of re-running the embedding models every time. IndexStore, DocStore, VectorStore, and KVStore are abstractions that let you do that. Combined, they form the StorageContext. Currently, we allow you to persist your embeddings in files on the filesystem (or a virtual in memory file system), but we are also actively adding integrations to Vector Databases.
+[**Documents / Nodes**](./modules/high_level/documents_and_nodes.md): A `Document` is a generic container around any data source - for instance, a PDF, an API output, or retrieved data from a database. A `Node` is the atomic unit of data in LlamaIndex and represents a "chunk" of a source `Document`. It's a rich representation that includes metadata and relationships (to other nodes) to enable accurate and expressive retrieval operations.
+
+[**Data Indexes**](./modules/high_level/data_index.md): 
+Once you've ingested your data, LlamaIndex helps you index data into a format that's easy to retrieve.
+
+Under the hood, LlamaIndex parses the raw documents into intermediate representations, calculates vector embeddings, and stores your data in-memory or to disk.
+
+### Querying Stage
+In the querying stage, the query pipeline retrieves the most relevant context given a user query,
+and pass that to the LLM (along with the query) to synthesize a response.
+
+This gives the LLM up-to-date knowledge that is not in its original training data,
+(also reducing hallucination).
+
+The key challenge in the querying stage is retrieval, orchestration, and reasoning over (potentially many) knowledge bases.
+
+LlamaIndex provides composable modules that help you build and integrate RAG pipelines for Q&A (query engine), chatbot (chat engine), or as part of an agent.
+
+These building blocks can be customized to reflect ranking preferences, as well as composed to reason over multiple knowledge bases in a structured way.
+
+![](./_static/concepts/querying.jpg)
+
+#### Building Blocks
+[**Retrievers**](./modules/low_level/retriever.md): 
+A retriever defines how to efficiently retrieve relevant context from a knowledge base (i.e. index) when given a query.
+The specific retrieval logic differs for difference indices, the most popular being dense retrieval against a vector index.
+
+[**Response Synthesizers**](./modules/low_level/response_synthesizer.md):
+A response synthesizer generates a response from an LLM, using a user query and a given set of retrieved text chunks.  
+
+#### Pipelines
+
+[**Query Engines**](./modules/high_level/query_engine.md):
+A query engine is an end-to-end pipeline that allow you to ask question over your data.
+It takes in a natural language query, and returns a response, along with reference context retrieved and passed to the LLM.
+
+
+[**Chat Engines**](./modules/high_level/chat_engine.md): 
+A chat engine is an end-to-end pipeline for having a conversation with your data
+(multiple back-and-forth instead of a single question & answer).
