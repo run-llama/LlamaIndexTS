@@ -1,6 +1,6 @@
 import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
-import { OpenAI } from "./LLM";
-import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./LLMPredictor";
+import { OpenAI } from "./llm/LLM";
+import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./llm/LLMPredictor";
 import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
 import { CallbackManager } from "./callbacks/CallbackManager";

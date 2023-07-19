@@ -1,5 +1,5 @@
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
-import { OpenAISession, getOpenAISession } from "./openai";
+import { OpenAISession, getOpenAISession } from "./llm/openai";
 import { VectorStoreQueryMode } from "./storage/vectorStore/types";
 
 /**

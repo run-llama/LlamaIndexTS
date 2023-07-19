@@ -1,6 +1,6 @@
-import { ALL_AVAILABLE_MODELS, OpenAI } from "./LLM";
-import { SimplePrompt } from "./Prompt";
-import { CallbackManager, Event } from "./callbacks/CallbackManager";
+import { ALL_AVAILABLE_OPENAI_MODELS, OpenAI } from "./LLM";
+import { SimplePrompt } from "../Prompt";
+import { CallbackManager, Event } from "../callbacks/CallbackManager";
 
 /**
  * LLM Predictors are an abstraction to predict the response to a prompt.
@@ -18,7 +18,7 @@ export interface BaseLLMPredictor {
  * ChatGPTLLMPredictor is a predictor that uses GPT.
  */
 export class ChatGPTLLMPredictor implements BaseLLMPredictor {
-  model: keyof typeof ALL_AVAILABLE_MODELS;
+  model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
   retryOnThrottling: boolean;
   languageModel: OpenAI;
   callbackManager?: CallbackManager;

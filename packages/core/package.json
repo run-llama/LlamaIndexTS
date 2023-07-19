@@ -7,6 +7,7 @@
     "lodash": "^4.17.21",
     "openai": "^3.3.0",
     "pdf-parse": "^1.1.1",
+    "replicate": "^0.12.3",
     "tiktoken-node": "^0.0.6",
     "uuid": "^9.0.0",
     "wink-nlp": "^1.14.1"

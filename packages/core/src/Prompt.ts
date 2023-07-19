@@ -1,4 +1,4 @@
-import { ChatMessage } from "./LLM";
+import { ChatMessage } from "./llm/LLM";
 import { SubQuestion } from "./QuestionGenerator";
 import { ToolMetadata } from "./Tool";
 

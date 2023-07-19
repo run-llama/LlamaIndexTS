@@ -1,4 +1,4 @@
-import { ChatMessage, OpenAI, ChatResponse, LLM } from "./LLM";
+import { ChatMessage, OpenAI, ChatResponse, LLM } from "./llm/LLM";
 import { TextNode } from "./Node";
 import {
   SimplePrompt,

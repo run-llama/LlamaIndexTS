@@ -1,12 +1,12 @@
-import { Key } from "readline";
-import { CallbackManager, Event } from "./callbacks/CallbackManager";
-import { aHandleOpenAIStream } from "./callbacks/utility/aHandleOpenAIStream";
+import { CallbackManager, Event } from "../callbacks/CallbackManager";
+import { aHandleOpenAIStream } from "../callbacks/utility/aHandleOpenAIStream";
 import {
   ChatCompletionRequestMessageRoleEnum,
   CreateChatCompletionRequest,
   OpenAISession,
   getOpenAISession,
 } from "./openai";
+import { ReplicateSession } from "./replicate";
 
 type MessageType = "user" | "assistant" | "system" | "generic" | "function";
 
@@ -42,19 +42,19 @@ export interface LLM {
 }
 
 export const GPT4_MODELS = {
-  "gpt-4": 8192,
-  "gpt-4-32k": 32768,
+  "gpt-4": { contextWindow: 8192 },
+  "gpt-4-32k": { contextWindow: 32768 },
 };
 
 export const TURBO_MODELS = {
-  "gpt-3.5-turbo": 4096,
-  "gpt-3.5-turbo-16k": 16384,
+  "gpt-3.5-turbo": { contextWindow: 4097 },
+  "gpt-3.5-turbo-16k": { contextWindow: 16384 },
 };
 
 /**
  * We currently support GPT-3.5 and GPT-4 models
  */
-export const ALL_AVAILABLE_MODELS = {
+export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...TURBO_MODELS,
 };
@@ -63,14 +63,13 @@ export const ALL_AVAILABLE_MODELS = {
  * OpenAI LLM implementation
  */
 export class OpenAI implements LLM {
-  model: keyof typeof ALL_AVAILABLE_MODELS;
+  model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
   temperature: number;
-  requestTimeout: number | null;
-  maxRetries: number;
   n: number = 1;
   maxTokens?: number;
-  openAIKey: string | null = null;
   session: OpenAISession;
+  maxRetries: number;
+  requestTimeout: number | null;
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<OpenAI>) {
@@ -79,13 +78,14 @@ export class OpenAI implements LLM {
     this.requestTimeout = init?.requestTimeout ?? null;
     this.maxRetries = init?.maxRetries ?? 10;
     this.maxTokens = init?.maxTokens ?? undefined;
-    this.openAIKey = init?.openAIKey ?? null;
     this.session = init?.session ?? getOpenAISession();
     this.callbackManager = init?.callbackManager;
   }
 
-  mapMessageType(type: MessageType): ChatCompletionRequestMessageRoleEnum {
-    switch (type) {
+  mapMessageType(
+    messageType: MessageType
+  ): ChatCompletionRequestMessageRoleEnum {
+    switch (messageType) {
       case "user":
         return "user";
       case "assistant":
@@ -146,5 +146,85 @@ export class OpenAI implements LLM {
     parentEvent?: Event
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
+  }
+}
+
+export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
+  "Llama-2-70b-chat": {
+    contextWindow: 4000,
+    replicateApi:
+      "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48",
+  },
+  "Llama-2-13b-chat": {
+    contextWindow: 4000,
+    replicateApi:
+      "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
+  },
+  "Llama-2-7b-chat": {
+    contextWindow: 4000,
+    replicateApi:
+      "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
+  },
+};
+
+/**
+ * Llama2 LLM implementation
+ */
+export class LlamaDeuce implements LLM {
+  model: keyof typeof ALL_AVAILABLE_LLAMADEUCE_MODELS;
+  temperature: number;
+  maxTokens?: number;
+  session: ReplicateSession;
+
+  constructor(init?: Partial<LlamaDeuce>) {
+    this.model = init?.model ?? "Llama-2-70b-chat";
+    this.temperature = init?.temperature ?? 0;
+    this.maxTokens = init?.maxTokens ?? undefined;
+    this.session = init?.session ?? new ReplicateSession();
+  }
+
+  mapMessageType(messageType: MessageType): string {
+    switch (messageType) {
+      case "user":
+        return "User: ";
+      case "assistant":
+        return "Assistant: ";
+      case "system":
+        return "";
+      default:
+        throw new Error("Unsupported LlamaDeuce message type");
+    }
+  }
+
+  async chat(
+    messages: ChatMessage[],
+    _parentEvent?: Event
+  ): Promise<ChatResponse> {
+    const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
+      .replicateApi as `${string}/${string}:${string}`;
+    const response = await this.session.replicate.run(api, {
+      input: {
+        prompt:
+          messages.reduce((acc, message) => {
+            return (
+              (acc && `${acc}\n\n`) +
+              `${this.mapMessageType(message.role)}${message.content}`
+            );
+          }, "") + "\n\nAssistant:", // Here we're differing from A16Z by omitting the space. Generally spaces at the end of prompts decrease performance due to tokenization
+      },
+    });
+    return {
+      message: {
+        content: (response as Array<string>).join(""),
+        role: "assistant",
+      },
+    };
+  }
+
+  async complete(
+    prompt: string,
+    parentEvent?: Event
+  ): Promise<CompletionResponse> {
+    return this.chat([{ content: prompt, role: "system" }], parentEvent); // Using system prompt here to avoid giving it a previx
   }
 }

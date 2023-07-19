@@ -1,6 +1,6 @@
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 import { OpenAIEmbedding } from "../Embedding";
-import { OpenAI } from "../LLM";
+import { OpenAI } from "../llm/LLM";
 import { Document } from "../Node";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import {
@@ -16,7 +16,7 @@ import {
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
 // Mock the OpenAI getOpenAISession function during testing
-jest.mock("../openai", () => {
+jest.mock("../llm/openai", () => {
   return {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };

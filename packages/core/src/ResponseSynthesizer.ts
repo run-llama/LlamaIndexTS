@@ -1,4 +1,4 @@
-import { ChatGPTLLMPredictor, BaseLLMPredictor } from "./LLMPredictor";
+import { ChatGPTLLMPredictor, BaseLLMPredictor } from "./llm/LLMPredictor";
 import { MetadataMode, NodeWithScore } from "./Node";
 import {
   SimplePrompt,

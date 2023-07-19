@@ -1,4 +1,4 @@
-import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./LLMPredictor";
+import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./llm/LLMPredictor";
 import {
   BaseOutputParser,
   StructuredOutput,

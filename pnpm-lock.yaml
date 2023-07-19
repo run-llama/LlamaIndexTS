@@ -121,6 +121,9 @@ importers:
       pdf-parse:
         specifier: ^1.1.1
         version: 1.1.1
+      replicate:
+        specifier: ^0.12.3
+        version: 0.12.3
       tiktoken-node:
         specifier: ^0.0.6
         version: 0.0.6
@@ -11039,6 +11042,11 @@ packages:
   /repeat-string@1.6.1:
     resolution: {integrity: sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==}
     engines: {node: '>=0.10'}
+    dev: false
+
+  /replicate@0.12.3:
+    resolution: {integrity: sha512-HVWKPoVhWVTONlWk+lUXmq9Vy2J8MxBJMtDBQq3dA5uq71ZzKTh0xvJfvzW4+VLBjhBeL7tkdua6hZJmKfzAPQ==}
+    engines: {git: '>=2.11.0', node: '>=16.6.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
     dev: false
 
   /require-directory@2.1.1:

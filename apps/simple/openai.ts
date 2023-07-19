@@ -1,6 +1,6 @@
 // @ts-ignore
 import process from "node:process";
-import { Configuration, OpenAIWrapper } from "llamaindex/src/openai";
+import { Configuration, OpenAIWrapper } from "llamaindex/src/llm/openai";
 
 (async () => {
   const configuration = new Configuration({
