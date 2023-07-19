@@ -1,4 +1,4 @@
-export default `I started this decade as a first-year college student fresh out of high school. I was 17, didn’t have a job, didn’t have any industry connections, and really didn’t know shit. And now you’re reading my blog! I would have been proud.
+I started this decade as a first-year college student fresh out of high school. I was 17, didn’t have a job, didn’t have any industry connections, and really didn’t know shit. And now you’re reading my blog! I would have been proud.
 I’ve told bits and pieces of my story on different podcasts. Now feels like an appropriate time to write down the parts that were most memorable to me.
 Every person’s story is unique and not directly reproducible. I’ve benefited immensely from the privilege of being born in an upper middle class family and looking like a typical coder stereotype. People took chances on me. Still, I hope that sharing my story can be helpful to compare our experiences. Even if our circumstances are too different, at least you might find some of it entertaining.
 2010
@@ -117,4 +117,4 @@ I got promoted. I started this blog as a side project. I have another side proje
 I always knew that I liked building UIs. I got hooked on Visual Basic. I spent this decade building UIs, and then building a way to build UIs. And then talking about it and explaining it. But I realize now that my drive to explain things is just as important to me as my drive to build. Perhaps, even more important.
 I look forward to doing more of that in the next decade.
 Or, should I say, this decade?
-Welcome to the twenties.`
+Welcome to the twenties.

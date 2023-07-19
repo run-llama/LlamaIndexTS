@@ -7,8 +7,18 @@ import {
 } from "./Prompt";
 import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
-import { ServiceContext } from "./ServiceContext";
+import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
+
+/**
+ * Response modes of the response synthesizer
+ */
+enum ResponseMode {
+  REFINE = "refine",
+  COMPACT = "compact",
+  TREE_SUMMARIZE = "tree_summarize",
+  SIMPLE = "simple",
+}
 
 /**
  * A ResponseBuilder is used in a response synthesizer to generate a response from multiple response chunks.
@@ -19,11 +29,13 @@ interface BaseResponseBuilder {
    * @param query
    * @param textChunks
    * @param parentEvent
+   * @param prevResponse
    */
   getResponse(
     query: string,
     textChunks: string[],
-    parentEvent?: Event
+    parentEvent?: Event,
+    prevResponse?: string
   ): Promise<string>;
 }
 
@@ -34,9 +46,8 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
   llmPredictor: BaseLLMPredictor;
   textQATemplate: SimplePrompt;
 
-  constructor(serviceContext?: ServiceContext) {
-    this.llmPredictor =
-      serviceContext?.llmPredictor ?? new ChatGPTLLMPredictor();
+  constructor(serviceContext: ServiceContext) {
+    this.llmPredictor = serviceContext.llmPredictor;
     this.textQATemplate = defaultTextQaPrompt;
   }
 
@@ -76,15 +87,21 @@ export class Refine implements BaseResponseBuilder {
   async getResponse(
     query: string,
     textChunks: string[],
-    prevResponse?: any
+    parentEvent?: Event,
+    prevResponse?: string
   ): Promise<string> {
     let response: string | undefined = undefined;
 
     for (const chunk of textChunks) {
       if (!prevResponse) {
-        response = await this.giveResponseSingle(query, chunk);
+        response = await this.giveResponseSingle(query, chunk, parentEvent);
       } else {
-        response = await this.refineResponseSingle(prevResponse, query, chunk);
+        response = await this.refineResponseSingle(
+          prevResponse,
+          query,
+          chunk,
+          parentEvent
+        );
       }
       prevResponse = response;
     }
@@ -94,7 +111,8 @@ export class Refine implements BaseResponseBuilder {
 
   private async giveResponseSingle(
     queryStr: string,
-    textChunk: string
+    textChunk: string,
+    parentEvent?: Event
   ): Promise<string> {
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: queryStr });
@@ -110,10 +128,16 @@ export class Refine implements BaseResponseBuilder {
           textQATemplate,
           {
             context: chunk,
-          }
+          },
+          parentEvent
         );
       } else {
-        response = await this.refineResponseSingle(response, queryStr, chunk);
+        response = await this.refineResponseSingle(
+          response,
+          queryStr,
+          chunk,
+          parentEvent
+        );
       }
     }
 
@@ -123,7 +147,8 @@ export class Refine implements BaseResponseBuilder {
   private async refineResponseSingle(
     response: string,
     queryStr: string,
-    textChunk: string
+    textChunk: string,
+    parentEvent?: Event
   ) {
     const refineTemplate: SimplePrompt = (input) =>
       this.refineTemplate({ ...input, query: queryStr });
@@ -138,7 +163,8 @@ export class Refine implements BaseResponseBuilder {
         {
           context: chunk,
           existingAnswer: response,
-        }
+        },
+        parentEvent
       );
     }
     return response;
@@ -152,7 +178,8 @@ export class CompactAndRefine extends Refine {
   async getResponse(
     query: string,
     textChunks: string[],
-    prevResponse?: any
+    parentEvent?: Event,
+    prevResponse?: string
   ): Promise<string> {
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: query });
@@ -164,7 +191,12 @@ export class CompactAndRefine extends Refine {
       maxPrompt,
       textChunks
     );
-    const response = super.getResponse(query, newTexts, prevResponse);
+    const response = super.getResponse(
+      query,
+      newTexts,
+      parentEvent,
+      prevResponse
+    );
     return response;
   }
 }
@@ -178,7 +210,11 @@ export class TreeSummarize implements BaseResponseBuilder {
     this.serviceContext = serviceContext;
   }
 
-  async getResponse(query: string, textChunks: string[]): Promise<string> {
+  async getResponse(
+    query: string,
+    textChunks: string[],
+    parentEvent?: Event
+  ): Promise<string> {
     const summaryTemplate: SimplePrompt = (input) =>
       defaultTextQaPrompt({ ...input, query: query });
 
@@ -192,15 +228,23 @@ export class TreeSummarize implements BaseResponseBuilder {
     );
 
     if (packedTextChunks.length === 1) {
-      return this.serviceContext.llmPredictor.predict(summaryTemplate, {
-        context: packedTextChunks[0],
-      });
+      return this.serviceContext.llmPredictor.predict(
+        summaryTemplate,
+        {
+          context: packedTextChunks[0],
+        },
+        parentEvent
+      );
     } else {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
-          this.serviceContext.llmPredictor.predict(summaryTemplate, {
-            context: chunk,
-          })
+          this.serviceContext.llmPredictor.predict(
+            summaryTemplate,
+            {
+              context: chunk,
+            },
+            parentEvent
+          )
         )
       );
 
@@ -210,9 +254,19 @@ export class TreeSummarize implements BaseResponseBuilder {
 }
 
 export function getResponseBuilder(
-  serviceContext?: ServiceContext
-): SimpleResponseBuilder {
-  return new SimpleResponseBuilder(serviceContext);
+  serviceContext: ServiceContext,
+  responseMode?: ResponseMode
+): BaseResponseBuilder {
+  switch (responseMode) {
+    case ResponseMode.SIMPLE:
+      return new SimpleResponseBuilder(serviceContext);
+    case ResponseMode.REFINE:
+      return new Refine(serviceContext);
+    case ResponseMode.TREE_SUMMARIZE:
+      return new TreeSummarize(serviceContext);
+    default:
+      return new CompactAndRefine(serviceContext);
+  }
 }
 
 /**
@@ -220,7 +274,7 @@ export function getResponseBuilder(
  */
 export class ResponseSynthesizer {
   responseBuilder: BaseResponseBuilder;
-  serviceContext?: ServiceContext;
+  serviceContext: ServiceContext;
 
   constructor({
     responseBuilder,
@@ -229,7 +283,7 @@ export class ResponseSynthesizer {
     responseBuilder?: BaseResponseBuilder;
     serviceContext?: ServiceContext;
   } = {}) {
-    this.serviceContext = serviceContext;
+    this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.responseBuilder =
       responseBuilder ?? getResponseBuilder(this.serviceContext);
   }

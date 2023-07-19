@@ -49,13 +49,17 @@ export class ChatGPTLLMPredictor implements BaseLLMPredictor {
   async predict(
     prompt: string | SimplePrompt,
     input?: Record<string, string>,
-    parentEvent?: Event
+    parentEvent?: Event,
+    logProgress: boolean = false
   ): Promise<string> {
     if (typeof prompt === "string") {
+      if (logProgress) {
+        console.log("PROMPT", prompt);
+      }
       const result = await this.languageModel.complete(prompt, parentEvent);
       return result.message.content;
     } else {
-      return this.predict(prompt(input ?? {}));
+      return this.predict(prompt(input ?? {}), undefined, parentEvent);
     }
   }
 }

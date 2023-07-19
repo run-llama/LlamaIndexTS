@@ -258,7 +258,7 @@ ${JSON.stringify(exampleOutput, null, 4)}
 # Example 2
 <Tools>
 \`\`\`json
-${toolsStr}}
+${toolsStr}
 \`\`\`
 
 <User Question>
