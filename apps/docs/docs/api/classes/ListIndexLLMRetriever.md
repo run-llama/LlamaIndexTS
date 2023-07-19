@@ -31,7 +31,7 @@ LLM retriever for ListIndex.
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:67](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L67)
+[indices/list/ListIndexRetriever.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L64)
 
 ## Properties
 
@@ -41,7 +41,7 @@ LLM retriever for ListIndex.
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L62)
+[indices/list/ListIndexRetriever.ts:59](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L59)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L61)
+[indices/list/ListIndexRetriever.ts:58](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L58)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L63)
+[indices/list/ListIndexRetriever.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L60)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L60)
+[indices/list/ListIndexRetriever.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L57)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L64)
+[indices/list/ListIndexRetriever.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L61)
 
 ___
 
@@ -91,34 +91,9 @@ ___
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L65)
+[indices/list/ListIndexRetriever.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L62)
 
 ## Methods
-
-### aretrieve
-
-▸ **aretrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `query` | `string` |
-| `parentEvent?` | [`Event`](../interfaces/Event.md) |
-
-#### Returns
-
-`Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
-
-#### Implementation of
-
-[BaseRetriever](../interfaces/BaseRetriever.md).[aretrieve](../interfaces/BaseRetriever.md#aretrieve)
-
-#### Defined in
-
-[index/list/ListIndexRetriever.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L84)
-
-___
 
 ### getServiceContext
 
@@ -134,4 +109,29 @@ ___
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:134](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L134)
+[indices/list/ListIndexRetriever.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L128)
+
+___
+
+### retrieve
+
+▸ **retrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `query` | `string` |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) |
+
+#### Returns
+
+`Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
+
+#### Implementation of
+
+[BaseRetriever](../interfaces/BaseRetriever.md).[retrieve](../interfaces/BaseRetriever.md#retrieve)
+
+#### Defined in
+
+[indices/list/ListIndexRetriever.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L81)

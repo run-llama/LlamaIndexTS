@@ -16,9 +16,23 @@ Retrievers retrieve the nodes that most closely match our query in similarity.
 
 ## Methods
 
-### aretrieve
+### getServiceContext
 
-▸ **aretrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](NodeWithScore.md)[]\>
+▸ **getServiceContext**(): [`ServiceContext`](ServiceContext.md)
+
+#### Returns
+
+[`ServiceContext`](ServiceContext.md)
+
+#### Defined in
+
+[Retriever.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Retriever.ts#L10)
+
+___
+
+### retrieve
+
+▸ **retrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](NodeWithScore.md)[]\>
 
 #### Parameters
 
@@ -33,18 +47,4 @@ Retrievers retrieve the nodes that most closely match our query in similarity.
 
 #### Defined in
 
-[Retriever.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L16)
-
-___
-
-### getServiceContext
-
-▸ **getServiceContext**(): [`ServiceContext`](ServiceContext.md)
-
-#### Returns
-
-[`ServiceContext`](ServiceContext.md)
-
-#### Defined in
-
-[Retriever.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L17)
+[Retriever.ts:9](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Retriever.ts#L9)

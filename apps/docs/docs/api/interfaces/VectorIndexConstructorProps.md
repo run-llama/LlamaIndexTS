@@ -1,28 +1,26 @@
 ---
-id: "BaseIndexInit"
-title: "Interface: BaseIndexInit<T>"
-sidebar_label: "BaseIndexInit"
+id: "VectorIndexConstructorProps"
+title: "Interface: VectorIndexConstructorProps"
+sidebar_label: "VectorIndexConstructorProps"
 sidebar_position: 0
 custom_edit_url: null
 ---
 
-## Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
 ## Hierarchy
 
-- **`BaseIndexInit`**
+- [`BaseIndexInit`](BaseIndexInit.md)<[`IndexDict`](../classes/IndexDict.md)\>
 
-  ↳ [`VectorIndexConstructorProps`](VectorIndexConstructorProps.md)
+  ↳ **`VectorIndexConstructorProps`**
 
 ## Properties
 
 ### docStore
 
 • **docStore**: `BaseDocumentStore`
+
+#### Inherited from
+
+[BaseIndexInit](BaseIndexInit.md).[docStore](BaseIndexInit.md#docstore)
 
 #### Defined in
 
@@ -34,6 +32,10 @@ ___
 
 • `Optional` **indexStore**: `BaseIndexStore`
 
+#### Inherited from
+
+[BaseIndexInit](BaseIndexInit.md).[indexStore](BaseIndexInit.md#indexstore)
+
 #### Defined in
 
 [indices/BaseIndex.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L60)
@@ -42,7 +44,11 @@ ___
 
 ### indexStruct
 
-• **indexStruct**: `T`
+• **indexStruct**: [`IndexDict`](../classes/IndexDict.md)
+
+#### Inherited from
+
+[BaseIndexInit](BaseIndexInit.md).[indexStruct](BaseIndexInit.md#indexstruct)
 
 #### Defined in
 
@@ -54,6 +60,10 @@ ___
 
 • **serviceContext**: [`ServiceContext`](ServiceContext.md)
 
+#### Inherited from
+
+[BaseIndexInit](BaseIndexInit.md).[serviceContext](BaseIndexInit.md#servicecontext)
+
 #### Defined in
 
 [indices/BaseIndex.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L56)
@@ -64,6 +74,10 @@ ___
 
 • **storageContext**: [`StorageContext`](StorageContext.md)
 
+#### Inherited from
+
+[BaseIndexInit](BaseIndexInit.md).[storageContext](BaseIndexInit.md#storagecontext)
+
 #### Defined in
 
 [indices/BaseIndex.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L57)
@@ -72,8 +86,12 @@ ___
 
 ### vectorStore
 
-• `Optional` **vectorStore**: `VectorStore`
+• **vectorStore**: `VectorStore`
+
+#### Overrides
+
+[BaseIndexInit](BaseIndexInit.md).[vectorStore](BaseIndexInit.md#vectorstore)
 
 #### Defined in
 
-[indices/BaseIndex.ts:59](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L59)
+[indices/BaseIndex.ts:96](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L96)

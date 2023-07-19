@@ -16,17 +16,17 @@ A response builder that just concatenates responses.
 
 ### constructor
 
-• **new SimpleResponseBuilder**(`serviceContext?`)
+• **new SimpleResponseBuilder**(`serviceContext`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `serviceContext?` | [`ServiceContext`](../interfaces/ServiceContext.md) |
+| `serviceContext` | [`ServiceContext`](../interfaces/ServiceContext.md) |
 
 #### Defined in
 
-[ResponseSynthesizer.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L37)
+[ResponseSynthesizer.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L49)
 
 ## Properties
 
@@ -36,7 +36,7 @@ A response builder that just concatenates responses.
 
 #### Defined in
 
-[ResponseSynthesizer.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L34)
+[ResponseSynthesizer.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L46)
 
 ___
 
@@ -46,13 +46,13 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L35)
+[ResponseSynthesizer.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L47)
 
 ## Methods
 
-### agetResponse
+### getResponse
 
-▸ **agetResponse**(`query`, `textChunks`, `parentEvent?`): `Promise`<`string`\>
+▸ **getResponse**(`query`, `textChunks`, `parentEvent?`): `Promise`<`string`\>
 
 #### Parameters
 
@@ -68,8 +68,8 @@ ___
 
 #### Implementation of
 
-BaseResponseBuilder.agetResponse
+BaseResponseBuilder.getResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:43](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L43)
+[ResponseSynthesizer.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L54)

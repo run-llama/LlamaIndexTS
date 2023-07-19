@@ -26,7 +26,7 @@ SimpleChatEngine is the simplest possible chat engine. Useful for using your own
 
 #### Defined in
 
-[ChatEngine.ts:40](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L40)
+[ChatEngine.ts:40](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L40)
 
 ## Properties
 
@@ -36,7 +36,7 @@ SimpleChatEngine is the simplest possible chat engine. Useful for using your own
 
 #### Defined in
 
-[ChatEngine.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L37)
+[ChatEngine.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L37)
 
 ___
 
@@ -46,13 +46,13 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:38](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L38)
+[ChatEngine.ts:38](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L38)
 
 ## Methods
 
-### achat
+### chat
 
-▸ **achat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
+▸ **chat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
 
 Send message along with the class's current chat history to the LLM.
 
@@ -69,11 +69,11 @@ Send message along with the class's current chat history to the LLM.
 
 #### Implementation of
 
-[ChatEngine](../interfaces/ChatEngine.md).[achat](../interfaces/ChatEngine.md#achat)
+[ChatEngine](../interfaces/ChatEngine.md).[chat](../interfaces/ChatEngine.md#chat)
 
 #### Defined in
 
-[ChatEngine.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L45)
+[ChatEngine.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L45)
 
 ___
 
@@ -93,4 +93,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L54)
+[ChatEngine.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L54)

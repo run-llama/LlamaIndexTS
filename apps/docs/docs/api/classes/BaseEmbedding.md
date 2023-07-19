@@ -20,9 +20,9 @@ custom_edit_url: null
 
 ## Methods
 
-### aGetQueryEmbedding
+### getQueryEmbedding
 
-▸ `Abstract` **aGetQueryEmbedding**(`query`): `Promise`<`number`[]\>
+▸ `Abstract` **getQueryEmbedding**(`query`): `Promise`<`number`[]\>
 
 #### Parameters
 
@@ -36,13 +36,13 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:206](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L206)
+[Embedding.ts:206](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L206)
 
 ___
 
-### aGetTextEmbedding
+### getTextEmbedding
 
-▸ `Abstract` **aGetTextEmbedding**(`text`): `Promise`<`number`[]\>
+▸ `Abstract` **getTextEmbedding**(`text`): `Promise`<`number`[]\>
 
 #### Parameters
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:205](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L205)
+[Embedding.ts:205](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L205)
 
 ___
 
@@ -78,4 +78,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L197)
+[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L197)

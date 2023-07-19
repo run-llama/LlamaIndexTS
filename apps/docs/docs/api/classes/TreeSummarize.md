@@ -26,7 +26,7 @@ TreeSummarize repacks the text chunks into the smallest possible number of chunk
 
 #### Defined in
 
-[ResponseSynthesizer.ts:177](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L177)
+[ResponseSynthesizer.ts:209](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L209)
 
 ## Properties
 
@@ -36,13 +36,13 @@ TreeSummarize repacks the text chunks into the smallest possible number of chunk
 
 #### Defined in
 
-[ResponseSynthesizer.ts:175](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L175)
+[ResponseSynthesizer.ts:207](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L207)
 
 ## Methods
 
-### agetResponse
+### getResponse
 
-▸ **agetResponse**(`query`, `textChunks`): `Promise`<`string`\>
+▸ **getResponse**(`query`, `textChunks`, `parentEvent?`): `Promise`<`string`\>
 
 #### Parameters
 
@@ -50,6 +50,7 @@ TreeSummarize repacks the text chunks into the smallest possible number of chunk
 | :------ | :------ |
 | `query` | `string` |
 | `textChunks` | `string`[] |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) |
 
 #### Returns
 
@@ -57,8 +58,8 @@ TreeSummarize repacks the text chunks into the smallest possible number of chunk
 
 #### Implementation of
 
-BaseResponseBuilder.agetResponse
+BaseResponseBuilder.getResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:181](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L181)
+[ResponseSynthesizer.ts:213](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L213)

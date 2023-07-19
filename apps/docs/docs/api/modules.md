@@ -82,6 +82,7 @@ custom_edit_url: null
 - [StructuredOutput](interfaces/StructuredOutput.md)
 - [SubQuestion](interfaces/SubQuestion.md)
 - [ToolMetadata](interfaces/ToolMetadata.md)
+- [VectorIndexConstructorProps](interfaces/VectorIndexConstructorProps.md)
 - [VectorIndexOptions](interfaces/VectorIndexOptions.md)
 - [WalkableFileSystem](interfaces/WalkableFileSystem.md)
 
@@ -93,7 +94,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[storage/FileSystem.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/FileSystem.ts#L49)
+[storage/FileSystem.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/FileSystem.ts#L49)
 
 ___
 
@@ -103,7 +104,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLM.ts#L25)
+[LLM.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L25)
 
 ___
 
@@ -113,7 +114,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:11](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/callbacks/CallbackManager.ts#L11)
+[callbacks/CallbackManager.ts:11](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/callbacks/CallbackManager.ts#L11)
 
 ___
 
@@ -123,7 +124,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/callbacks/CallbackManager.ts#L12)
+[callbacks/CallbackManager.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/callbacks/CallbackManager.ts#L12)
 
 ___
 
@@ -133,7 +134,7 @@ ___
 
 #### Defined in
 
-[Node.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Node.ts#L32)
+[Node.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Node.ts#L32)
 
 ___
 
@@ -152,7 +153,7 @@ ___
 
 #### Defined in
 
-[readers/SimpleDirectoryReader.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/readers/SimpleDirectoryReader.ts#L26)
+[readers/SimpleDirectoryReader.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/readers/SimpleDirectoryReader.ts#L26)
 
 ___
 
@@ -180,7 +181,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ## Variables
 
@@ -201,7 +202,7 @@ We currently support GPT-3.5 and GPT-4 models
 
 #### Defined in
 
-[LLM.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLM.ts#L57)
+[LLM.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L57)
 
 ___
 
@@ -211,7 +212,7 @@ ___
 
 #### Defined in
 
-[constants.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L5)
+[constants.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L5)
 
 ___
 
@@ -221,7 +222,7 @@ ___
 
 #### Defined in
 
-[constants.ts:6](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L6)
+[constants.ts:6](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L6)
 
 ___
 
@@ -231,7 +232,7 @@ ___
 
 #### Defined in
 
-[constants.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L4)
+[constants.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L4)
 
 ___
 
@@ -241,7 +242,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:1](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/constants.ts#L1)
+[storage/constants.ts:1](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/constants.ts#L1)
 
 ___
 
@@ -251,7 +252,7 @@ ___
 
 #### Defined in
 
-[constants.ts:1](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L1)
+[constants.ts:1](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L1)
 
 ___
 
@@ -261,7 +262,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/constants.ts#L4)
+[storage/constants.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/constants.ts#L4)
 
 ___
 
@@ -271,7 +272,7 @@ ___
 
 #### Defined in
 
-[constants.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L10)
+[constants.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L10)
 
 ___
 
@@ -281,7 +282,7 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/FileSystem.ts#L62)
+[storage/FileSystem.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/FileSystem.ts#L62)
 
 ___
 
@@ -291,7 +292,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:6](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/constants.ts#L6)
+[storage/constants.ts:6](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/constants.ts#L6)
 
 ___
 
@@ -301,7 +302,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:3](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/constants.ts#L3)
+[storage/constants.ts:3](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/constants.ts#L3)
 
 ___
 
@@ -311,7 +312,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/constants.ts#L7)
+[storage/constants.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/constants.ts#L7)
 
 ___
 
@@ -321,7 +322,7 @@ ___
 
 #### Defined in
 
-[constants.ts:2](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L2)
+[constants.ts:2](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L2)
 
 ___
 
@@ -331,7 +332,7 @@ ___
 
 #### Defined in
 
-[constants.ts:11](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L11)
+[constants.ts:11](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L11)
 
 ___
 
@@ -341,7 +342,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:2](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/constants.ts#L2)
+[storage/constants.ts:2](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/constants.ts#L2)
 
 ___
 
@@ -351,7 +352,7 @@ ___
 
 #### Defined in
 
-[constants.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/constants.ts#L7)
+[constants.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/constants.ts#L7)
 
 ___
 
@@ -361,7 +362,7 @@ ___
 
 #### Defined in
 
-[storage/constants.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/constants.ts#L5)
+[storage/constants.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/constants.ts#L5)
 
 ___
 
@@ -378,7 +379,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:44](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLM.ts#L44)
+[LLM.ts:44](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L44)
 
 ___
 
@@ -395,7 +396,7 @@ ___
 
 #### Defined in
 
-[LLM.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLM.ts#L49)
+[LLM.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L49)
 
 ___
 
@@ -405,7 +406,7 @@ ___
 
 #### Defined in
 
-[GlobalsHelper.ts:42](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/GlobalsHelper.ts#L42)
+[GlobalsHelper.ts:42](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/GlobalsHelper.ts#L42)
 
 ## Functions
 
@@ -425,7 +426,7 @@ ___
 
 #### Defined in
 
-[Prompt.ts:198](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L198)
+[Prompt.ts:198](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L198)
 
 ___
 
@@ -449,7 +450,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -473,7 +474,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -497,7 +498,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -521,7 +522,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -545,7 +546,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -569,7 +570,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -593,7 +594,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L10)
+[Prompt.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L10)
 
 ___
 
@@ -619,7 +620,7 @@ A promise that resolves to true if the file exists, false otherwise.
 
 #### Defined in
 
-[storage/FileSystem.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/FileSystem.ts#L74)
+[storage/FileSystem.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/FileSystem.ts#L74)
 
 ___
 
@@ -633,7 +634,7 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/FileSystem.ts#L51)
+[storage/FileSystem.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/FileSystem.ts#L51)
 
 ___
 
@@ -656,27 +657,28 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/NodeParser.ts#L15)
+[NodeParser.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/NodeParser.ts#L15)
 
 ___
 
 ### getResponseBuilder
 
-▸ **getResponseBuilder**(`serviceContext?`): [`SimpleResponseBuilder`](classes/SimpleResponseBuilder.md)
+▸ **getResponseBuilder**(`serviceContext`, `responseMode?`): `BaseResponseBuilder`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `serviceContext?` | [`ServiceContext`](interfaces/ServiceContext.md) |
+| `serviceContext` | [`ServiceContext`](interfaces/ServiceContext.md) |
+| `responseMode?` | `ResponseMode` |
 
 #### Returns
 
-[`SimpleResponseBuilder`](classes/SimpleResponseBuilder.md)
+`BaseResponseBuilder`
 
 #### Defined in
 
-[ResponseSynthesizer.ts:212](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L212)
+[ResponseSynthesizer.ts:256](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L256)
 
 ___
 
@@ -697,7 +699,7 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/NodeParser.ts#L5)
+[NodeParser.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/NodeParser.ts#L5)
 
 ___
 
@@ -723,7 +725,7 @@ Get the top K embeddings from a list of embeddings ordered by similarity to the 
 
 #### Defined in
 
-[Embedding.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L77)
+[Embedding.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L77)
 
 ___
 
@@ -747,7 +749,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:119](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L119)
+[Embedding.ts:119](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L119)
 
 ___
 
@@ -773,7 +775,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:131](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L131)
+[Embedding.ts:131](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L131)
 
 ___
 
@@ -793,7 +795,7 @@ ___
 
 #### Defined in
 
-[Prompt.ts:300](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Prompt.ts#L300)
+[Prompt.ts:300](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Prompt.ts#L300)
 
 ___
 
@@ -813,7 +815,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L32)
+[ServiceContext.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ServiceContext.ts#L32)
 
 ___
 
@@ -842,7 +844,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L52)
+[ServiceContext.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ServiceContext.ts#L52)
 
 ___
 
@@ -868,7 +870,7 @@ similartiy score with higher numbers meaning the two embeddings are more similar
 
 #### Defined in
 
-[Embedding.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L22)
+[Embedding.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L22)
 
 ___
 
@@ -888,7 +890,7 @@ ___
 
 #### Defined in
 
-[storage/StorageContext.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/StorageContext.ts#L28)
+[storage/StorageContext.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/StorageContext.ts#L28)
 
 ___
 
@@ -911,4 +913,4 @@ Recursively traverses a directory and yields all the paths to the files in it.
 
 #### Defined in
 
-[storage/FileSystem.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/storage/FileSystem.ts#L91)
+[storage/FileSystem.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/storage/FileSystem.ts#L91)

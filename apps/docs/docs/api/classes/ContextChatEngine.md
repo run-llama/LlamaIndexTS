@@ -31,7 +31,7 @@ ideally allowing the appropriate context to be surfaced for each query.
 
 #### Defined in
 
-[ChatEngine.ts:138](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L138)
+[ChatEngine.ts:132](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L132)
 
 ## Properties
 
@@ -41,7 +41,7 @@ ideally allowing the appropriate context to be surfaced for each query.
 
 #### Defined in
 
-[ChatEngine.ts:136](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L136)
+[ChatEngine.ts:130](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L130)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:135](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L135)
+[ChatEngine.ts:129](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L129)
 
 ___
 
@@ -61,13 +61,13 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:134](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L134)
+[ChatEngine.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L128)
 
 ## Methods
 
-### achat
+### chat
 
-▸ **achat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
+▸ **chat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
 
 Send message along with the class's current chat history to the LLM.
 
@@ -84,11 +84,11 @@ Send message along with the class's current chat history to the LLM.
 
 #### Implementation of
 
-[ChatEngine](../interfaces/ChatEngine.md).[achat](../interfaces/ChatEngine.md#achat)
+[ChatEngine](../interfaces/ChatEngine.md).[chat](../interfaces/ChatEngine.md#chat)
 
 #### Defined in
 
-[ChatEngine.ts:153](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L153)
+[ChatEngine.ts:147](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L147)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:149](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L149)
+[ChatEngine.ts:143](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L143)
 
 ___
 
@@ -122,4 +122,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:191](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L191)
+[ChatEngine.ts:185](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L185)

@@ -19,9 +19,9 @@ they can be retrieved for our queries.
 
 - **`BaseIndex`**
 
-  ↳ [`VectorStoreIndex`](VectorStoreIndex.md)
-
   ↳ [`ListIndex`](ListIndex.md)
+
+  ↳ [`VectorStoreIndex`](VectorStoreIndex.md)
 
 ## Constructors
 
@@ -43,7 +43,7 @@ they can be retrieved for our queries.
 
 #### Defined in
 
-[BaseIndex.ts:80](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L80)
+[indices/BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L76)
 
 ## Properties
 
@@ -53,7 +53,7 @@ they can be retrieved for our queries.
 
 #### Defined in
 
-[BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L75)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L77)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L78)
+[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L74)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L69)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L74)
+[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L70)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L76)
+[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L72)
 
 ## Methods
 
@@ -117,4 +117,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L89)
+[indices/BaseIndex.ts:85](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L85)

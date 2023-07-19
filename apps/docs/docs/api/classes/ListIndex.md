@@ -32,7 +32,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[index/list/ListIndex.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L37)
+[indices/list/ListIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L41)
 
 ## Properties
 
@@ -46,7 +46,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L75)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L77)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L78)
+[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L74)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L69)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L74)
+[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L70)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L76)
+[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L72)
 
 ## Methods
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:140](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L140)
+[indices/list/ListIndex.ts:156](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L156)
 
 ___
 
@@ -156,19 +156,20 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:134](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L134)
+[indices/list/ListIndex.ts:150](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L150)
 
 ___
 
 ### asQueryEngine
 
-▸ **asQueryEngine**(`mode?`): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
+▸ **asQueryEngine**(`mode?`, `responseSynthesizer?`): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
 #### Parameters
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
 | `mode` | [`ListRetrieverMode`](../enums/ListRetrieverMode.md) | `ListRetrieverMode.DEFAULT` |
+| `responseSynthesizer?` | [`ResponseSynthesizer`](ResponseSynthesizer.md) | `undefined` |
 
 #### Returns
 
@@ -176,7 +177,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:113](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L113)
+[indices/list/ListIndex.ts:118](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L118)
 
 ___
 
@@ -200,7 +201,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:100](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L100)
+[indices/list/ListIndex.ts:105](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L105)
 
 ___
 
@@ -214,7 +215,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:146](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L146)
+[indices/list/ListIndex.ts:162](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L162)
 
 ___
 
@@ -236,21 +237,22 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:119](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L119)
+[indices/list/ListIndex.ts:135](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L135)
 
 ___
 
 ### fromDocuments
 
-▸ `Static` **fromDocuments**(`documents`, `storageContext?`, `serviceContext?`): `Promise`<[`ListIndex`](ListIndex.md)\>
+▸ `Static` **fromDocuments**(`args`): `Promise`<[`ListIndex`](ListIndex.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `documents` | [`Document`](Document.md)[] |
-| `storageContext?` | [`StorageContext`](../interfaces/StorageContext.md) |
-| `serviceContext?` | [`ServiceContext`](../interfaces/ServiceContext.md) |
+| `args` | `Object` |
+| `args.documents` | [`Document`](Document.md)[] |
+| `args.serviceContext?` | [`ServiceContext`](../interfaces/ServiceContext.md) |
+| `args.storageContext?` | [`StorageContext`](../interfaces/StorageContext.md) |
 
 #### Returns
 
@@ -258,7 +260,7 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L77)
+[indices/list/ListIndex.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L81)
 
 ___
 
@@ -278,4 +280,4 @@ ___
 
 #### Defined in
 
-[index/list/ListIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndex.ts#L41)
+[indices/list/ListIndex.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L45)

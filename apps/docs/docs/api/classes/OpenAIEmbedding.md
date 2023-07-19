@@ -24,7 +24,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:217](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L217)
+[Embedding.ts:217](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L217)
 
 ## Properties
 
@@ -34,7 +34,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:215](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L215)
+[Embedding.ts:215](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L215)
 
 ___
 
@@ -44,13 +44,13 @@ ___
 
 #### Defined in
 
-[Embedding.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L214)
+[Embedding.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L214)
 
 ## Methods
 
-### \_aGetOpenAIEmbedding
+### getOpenAIEmbedding
 
-▸ `Private` **_aGetOpenAIEmbedding**(`input`): `Promise`<`number`[]\>
+▸ `Private` **getOpenAIEmbedding**(`input`): `Promise`<`number`[]\>
 
 #### Parameters
 
@@ -64,13 +64,13 @@ ___
 
 #### Defined in
 
-[Embedding.ts:224](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L224)
+[Embedding.ts:224](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L224)
 
 ___
 
-### aGetQueryEmbedding
+### getQueryEmbedding
 
-▸ **aGetQueryEmbedding**(`query`): `Promise`<`number`[]\>
+▸ **getQueryEmbedding**(`query`): `Promise`<`number`[]\>
 
 #### Parameters
 
@@ -84,17 +84,17 @@ ___
 
 #### Overrides
 
-[BaseEmbedding](BaseEmbedding.md).[aGetQueryEmbedding](BaseEmbedding.md#agetqueryembedding)
+[BaseEmbedding](BaseEmbedding.md).[getQueryEmbedding](BaseEmbedding.md#getqueryembedding)
 
 #### Defined in
 
-[Embedding.ts:240](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L240)
+[Embedding.ts:240](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L240)
 
 ___
 
-### aGetTextEmbedding
+### getTextEmbedding
 
-▸ **aGetTextEmbedding**(`text`): `Promise`<`number`[]\>
+▸ **getTextEmbedding**(`text`): `Promise`<`number`[]\>
 
 #### Parameters
 
@@ -108,11 +108,11 @@ ___
 
 #### Overrides
 
-[BaseEmbedding](BaseEmbedding.md).[aGetTextEmbedding](BaseEmbedding.md#agettextembedding)
+[BaseEmbedding](BaseEmbedding.md).[getTextEmbedding](BaseEmbedding.md#gettextembedding)
 
 #### Defined in
 
-[Embedding.ts:236](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L236)
+[Embedding.ts:236](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L236)
 
 ___
 
@@ -138,4 +138,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Embedding.ts#L197)
+[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/Embedding.ts#L197)

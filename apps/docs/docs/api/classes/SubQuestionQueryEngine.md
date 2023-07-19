@@ -29,7 +29,7 @@ SubQuestionQueryEngine decomposes a question into subquestions and then
 
 #### Defined in
 
-[QueryEngine.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L56)
+[QueryEngine.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L65)
 
 ## Properties
 
@@ -39,7 +39,7 @@ SubQuestionQueryEngine decomposes a question into subquestions and then
 
 #### Defined in
 
-[QueryEngine.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L54)
+[QueryEngine.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L63)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:53](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L53)
+[QueryEngine.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L62)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L52)
+[QueryEngine.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L61)
 
 ___
 
@@ -69,13 +69,15 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L51)
+[QueryEngine.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L60)
 
 ## Methods
 
-### aquery
+### query
 
-▸ **aquery**(`query`): `Promise`<[`Response`](Response.md)\>
+▸ **query**(`query`): `Promise`<[`Response`](Response.md)\>
+
+Query the query engine and get a response.
 
 #### Parameters
 
@@ -89,17 +91,17 @@ ___
 
 #### Implementation of
 
-[BaseQueryEngine](../interfaces/BaseQueryEngine.md).[aquery](../interfaces/BaseQueryEngine.md#aquery)
+[BaseQueryEngine](../interfaces/BaseQueryEngine.md).[query](../interfaces/BaseQueryEngine.md#query)
 
 #### Defined in
 
-[QueryEngine.ts:97](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L97)
+[QueryEngine.ts:106](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L106)
 
 ___
 
-### aquerySubQ
+### querySubQ
 
-▸ `Private` **aquerySubQ**(`subQ`, `parentEvent?`): `Promise`<``null`` \| [`NodeWithScore`](../interfaces/NodeWithScore.md)\>
+▸ `Private` **querySubQ**(`subQ`, `parentEvent?`): `Promise`<``null`` \| [`NodeWithScore`](../interfaces/NodeWithScore.md)\>
 
 #### Parameters
 
@@ -114,7 +116,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L128)
+[QueryEngine.ts:134](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L134)
 
 ___
 
@@ -138,4 +140,4 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L73)
+[QueryEngine.ts:82](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L82)

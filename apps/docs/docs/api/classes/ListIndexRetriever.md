@@ -26,7 +26,7 @@ Simple retriever for ListIndex that returns all nodes
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L22)
+[indices/list/ListIndexRetriever.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L22)
 
 ## Properties
 
@@ -36,34 +36,9 @@ Simple retriever for ListIndex that returns all nodes
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L20)
+[indices/list/ListIndexRetriever.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L20)
 
 ## Methods
-
-### aretrieve
-
-▸ **aretrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `query` | `string` |
-| `parentEvent?` | [`Event`](../interfaces/Event.md) |
-
-#### Returns
-
-`Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
-
-#### Implementation of
-
-[BaseRetriever](../interfaces/BaseRetriever.md).[aretrieve](../interfaces/BaseRetriever.md#aretrieve)
-
-#### Defined in
-
-[index/list/ListIndexRetriever.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L26)
-
-___
 
 ### getServiceContext
 
@@ -79,4 +54,29 @@ ___
 
 #### Defined in
 
-[index/list/ListIndexRetriever.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/index/list/ListIndexRetriever.ts#L51)
+[indices/list/ListIndexRetriever.ts:48](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L48)
+
+___
+
+### retrieve
+
+▸ **retrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `query` | `string` |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) |
+
+#### Returns
+
+`Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
+
+#### Implementation of
+
+[BaseRetriever](../interfaces/BaseRetriever.md).[retrieve](../interfaces/BaseRetriever.md#retrieve)
+
+#### Defined in
+
+[indices/list/ListIndexRetriever.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndexRetriever.ts#L26)

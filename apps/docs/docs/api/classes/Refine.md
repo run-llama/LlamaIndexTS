@@ -34,7 +34,7 @@ A response builder that uses the query to ask the LLM generate a better response
 
 #### Defined in
 
-[ResponseSynthesizer.ts:66](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L66)
+[ResponseSynthesizer.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L77)
 
 ## Properties
 
@@ -44,7 +44,7 @@ A response builder that uses the query to ask the LLM generate a better response
 
 #### Defined in
 
-[ResponseSynthesizer.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L64)
+[ResponseSynthesizer.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L75)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L62)
+[ResponseSynthesizer.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L73)
 
 ___
 
@@ -64,13 +64,13 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L63)
+[ResponseSynthesizer.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L74)
 
 ## Methods
 
-### agetResponse
+### getResponse
 
-▸ **agetResponse**(`query`, `textChunks`, `prevResponse?`): `Promise`<`string`\>
+▸ **getResponse**(`query`, `textChunks`, `parentEvent?`, `prevResponse?`): `Promise`<`string`\>
 
 #### Parameters
 
@@ -78,7 +78,8 @@ ___
 | :------ | :------ |
 | `query` | `string` |
 | `textChunks` | `string`[] |
-| `prevResponse?` | `any` |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) |
+| `prevResponse?` | `string` |
 
 #### Returns
 
@@ -86,17 +87,17 @@ ___
 
 #### Implementation of
 
-BaseResponseBuilder.agetResponse
+BaseResponseBuilder.getResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L76)
+[ResponseSynthesizer.ts:87](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L87)
 
 ___
 
 ### giveResponseSingle
 
-▸ `Private` **giveResponseSingle**(`queryStr`, `textChunk`): `Promise`<`string`\>
+▸ `Private` **giveResponseSingle**(`queryStr`, `textChunk`, `parentEvent?`): `Promise`<`string`\>
 
 #### Parameters
 
@@ -104,6 +105,7 @@ ___
 | :------ | :------ |
 | `queryStr` | `string` |
 | `textChunk` | `string` |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) |
 
 #### Returns
 
@@ -111,13 +113,13 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:95](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L95)
+[ResponseSynthesizer.ts:112](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L112)
 
 ___
 
 ### refineResponseSingle
 
-▸ `Private` **refineResponseSingle**(`response`, `queryStr`, `textChunk`): `Promise`<`string`\>
+▸ `Private` **refineResponseSingle**(`response`, `queryStr`, `textChunk`, `parentEvent?`): `Promise`<`string`\>
 
 #### Parameters
 
@@ -126,6 +128,7 @@ ___
 | `response` | `string` |
 | `queryStr` | `string` |
 | `textChunk` | `string` |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) |
 
 #### Returns
 
@@ -133,4 +136,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:123](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L123)
+[ResponseSynthesizer.ts:147](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L147)

@@ -14,9 +14,9 @@ QuestionGenerators generate new questions for the LLM using tools and a user que
 
 ## Methods
 
-### agenerate
+### generate
 
-▸ **agenerate**(`tools`, `query`): `Promise`<[`SubQuestion`](SubQuestion.md)[]\>
+▸ **generate**(`tools`, `query`): `Promise`<[`SubQuestion`](SubQuestion.md)[]\>
 
 #### Parameters
 
@@ -31,4 +31,4 @@ QuestionGenerators generate new questions for the LLM using tools and a user que
 
 #### Defined in
 
-[QuestionGenerator.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QuestionGenerator.ts#L23)
+[QuestionGenerator.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QuestionGenerator.ts#L23)

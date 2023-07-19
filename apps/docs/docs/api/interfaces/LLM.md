@@ -14,9 +14,9 @@ Unified language model interface
 
 ## Methods
 
-### achat
+### chat
 
-▸ **achat**(`messages`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
+▸ **chat**(`messages`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
 
 Get a chat response from the LLM
 
@@ -32,13 +32,13 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[LLM.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLM.ts#L35)
+[LLM.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L35)
 
 ___
 
-### acomplete
+### complete
 
-▸ **acomplete**(`prompt`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
+▸ **complete**(`prompt`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
 
 Get a prompt completion from the LLM
 
@@ -54,4 +54,4 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[LLM.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLM.ts#L41)
+[LLM.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L41)

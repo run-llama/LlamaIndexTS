@@ -26,7 +26,7 @@ ChatGPTLLMPredictor is a predictor that uses GPT.
 
 #### Defined in
 
-[LLMPredictor.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L26)
+[LLMPredictor.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L26)
 
 ## Properties
 
@@ -36,7 +36,7 @@ ChatGPTLLMPredictor is a predictor that uses GPT.
 
 #### Defined in
 
-[LLMPredictor.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L24)
+[LLMPredictor.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L24)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L23)
+[LLMPredictor.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L23)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L21)
+[LLMPredictor.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L21)
 
 ___
 
@@ -66,35 +66,9 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L22)
+[LLMPredictor.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L22)
 
 ## Methods
-
-### apredict
-
-▸ **apredict**(`prompt`, `input?`, `parentEvent?`): `Promise`<`string`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `prompt` | `string` \| [`SimplePrompt`](../modules.md#simpleprompt) |
-| `input?` | `Record`<`string`, `string`\> |
-| `parentEvent?` | [`Event`](../interfaces/Event.md) |
-
-#### Returns
-
-`Promise`<`string`\>
-
-#### Implementation of
-
-[BaseLLMPredictor](../interfaces/BaseLLMPredictor.md).[apredict](../interfaces/BaseLLMPredictor.md#apredict)
-
-#### Defined in
-
-[LLMPredictor.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L49)
-
-___
 
 ### getLlmMetadata
 
@@ -110,4 +84,31 @@ ___
 
 #### Defined in
 
-[LLMPredictor.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L45)
+[LLMPredictor.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L45)
+
+___
+
+### predict
+
+▸ **predict**(`prompt`, `input?`, `parentEvent?`, `logProgress?`): `Promise`<`string`\>
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `prompt` | `string` \| [`SimplePrompt`](../modules.md#simpleprompt) | `undefined` |
+| `input?` | `Record`<`string`, `string`\> | `undefined` |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) | `undefined` |
+| `logProgress` | `boolean` | `false` |
+
+#### Returns
+
+`Promise`<`string`\>
+
+#### Implementation of
+
+[BaseLLMPredictor](../interfaces/BaseLLMPredictor.md).[predict](../interfaces/BaseLLMPredictor.md#predict)
+
+#### Defined in
+
+[LLMPredictor.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L49)

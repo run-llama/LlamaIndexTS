@@ -6,7 +6,7 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
-CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorIndex).
+CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorStoreIndex).
 It does two steps on taking a user's chat message: first, it condenses the chat message
 with the previous chat history into a question with more context.
 Then, it queries the underlying Index using the new question with context and returns
@@ -37,7 +37,7 @@ data, or are very referential to previous context.
 
 #### Defined in
 
-[ChatEngine.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L75)
+[ChatEngine.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L75)
 
 ## Properties
 
@@ -47,7 +47,7 @@ data, or are very referential to previous context.
 
 #### Defined in
 
-[ChatEngine.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L71)
+[ChatEngine.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L71)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L73)
+[ChatEngine.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L73)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L70)
+[ChatEngine.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L70)
 
 ___
 
@@ -77,13 +77,13 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L72)
+[ChatEngine.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L72)
 
 ## Methods
 
-### achat
+### chat
 
-▸ **achat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
+▸ **chat**(`message`, `chatHistory?`): `Promise`<[`Response`](Response.md)\>
 
 Send message along with the class's current chat history to the LLM.
 
@@ -100,17 +100,17 @@ Send message along with the class's current chat history to the LLM.
 
 #### Implementation of
 
-[ChatEngine](../interfaces/ChatEngine.md).[achat](../interfaces/ChatEngine.md#achat)
+[ChatEngine](../interfaces/ChatEngine.md).[chat](../interfaces/ChatEngine.md#chat)
 
 #### Defined in
 
-[ChatEngine.ts:104](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L104)
+[ChatEngine.ts:101](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L101)
 
 ___
 
-### acondenseQuestion
+### condenseQuestion
 
-▸ `Private` **acondenseQuestion**(`chatHistory`, `question`): `Promise`<`string`\>
+▸ `Private` **condenseQuestion**(`chatHistory`, `question`): `Promise`<`string`\>
 
 #### Parameters
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L89)
+[ChatEngine.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L89)
 
 ___
 
@@ -145,4 +145,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:123](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L123)
+[ChatEngine.ts:117](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L117)

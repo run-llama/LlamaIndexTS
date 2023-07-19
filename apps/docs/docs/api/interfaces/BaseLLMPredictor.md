@@ -14,9 +14,23 @@ LLM Predictors are an abstraction to predict the response to a prompt.
 
 ## Methods
 
-### apredict
+### getLlmMetadata
 
-▸ **apredict**(`prompt`, `input?`, `parentEvent?`): `Promise`<`string`\>
+▸ **getLlmMetadata**(): `Promise`<`any`\>
+
+#### Returns
+
+`Promise`<`any`\>
+
+#### Defined in
+
+[LLMPredictor.ts:9](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L9)
+
+___
+
+### predict
+
+▸ **predict**(`prompt`, `input?`, `parentEvent?`): `Promise`<`string`\>
 
 #### Parameters
 
@@ -32,18 +46,4 @@ LLM Predictors are an abstraction to predict the response to a prompt.
 
 #### Defined in
 
-[LLMPredictor.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L10)
-
-___
-
-### getLlmMetadata
-
-▸ **getLlmMetadata**(): `Promise`<`any`\>
-
-#### Returns
-
-`Promise`<`any`\>
-
-#### Defined in
-
-[LLMPredictor.ts:9](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/LLMPredictor.ts#L9)
+[LLMPredictor.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLMPredictor.ts#L10)

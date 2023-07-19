@@ -26,7 +26,7 @@ VectorIndexRetriever retrieves nodes from a VectorIndex.
 
 #### Defined in
 
-[Retriever.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L28)
+[indices/vectorStore/VectorIndexRetriever.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L22)
 
 ## Properties
 
@@ -36,7 +36,7 @@ VectorIndexRetriever retrieves nodes from a VectorIndex.
 
 #### Defined in
 
-[Retriever.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L24)
+[indices/vectorStore/VectorIndexRetriever.ts:18](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L18)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[Retriever.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L26)
+[indices/vectorStore/VectorIndexRetriever.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L20)
 
 ___
 
@@ -56,34 +56,9 @@ ___
 
 #### Defined in
 
-[Retriever.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L25)
+[indices/vectorStore/VectorIndexRetriever.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L19)
 
 ## Methods
-
-### aretrieve
-
-▸ **aretrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `query` | `string` |
-| `parentEvent?` | [`Event`](../interfaces/Event.md) |
-
-#### Returns
-
-`Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
-
-#### Implementation of
-
-[BaseRetriever](../interfaces/BaseRetriever.md).[aretrieve](../interfaces/BaseRetriever.md#aretrieve)
-
-#### Defined in
-
-[Retriever.ts:33](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L33)
-
-___
 
 ### getServiceContext
 
@@ -99,4 +74,29 @@ ___
 
 #### Defined in
 
-[Retriever.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Retriever.ts#L70)
+[indices/vectorStore/VectorIndexRetriever.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L61)
+
+___
+
+### retrieve
+
+▸ **retrieve**(`query`, `parentEvent?`): `Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `query` | `string` |
+| `parentEvent?` | [`Event`](../interfaces/Event.md) |
+
+#### Returns
+
+`Promise`<[`NodeWithScore`](../interfaces/NodeWithScore.md)[]\>
+
+#### Implementation of
+
+[BaseRetriever](../interfaces/BaseRetriever.md).[retrieve](../interfaces/BaseRetriever.md#retrieve)
+
+#### Defined in
+
+[indices/vectorStore/VectorIndexRetriever.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L27)

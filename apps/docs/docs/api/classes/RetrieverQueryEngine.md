@@ -16,17 +16,18 @@ A query engine that uses a retriever to query an index and then synthesizes the 
 
 ### constructor
 
-• **new RetrieverQueryEngine**(`retriever`)
+• **new RetrieverQueryEngine**(`retriever`, `responseSynthesizer?`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `retriever` | [`BaseRetriever`](../interfaces/BaseRetriever.md) |
+| `responseSynthesizer?` | [`ResponseSynthesizer`](ResponseSynthesizer.md) |
 
 #### Defined in
 
-[QueryEngine.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L29)
+[QueryEngine.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L34)
 
 ## Properties
 
@@ -36,7 +37,7 @@ A query engine that uses a retriever to query an index and then synthesizes the 
 
 #### Defined in
 
-[QueryEngine.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L27)
+[QueryEngine.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L32)
 
 ___
 
@@ -46,13 +47,15 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L26)
+[QueryEngine.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L31)
 
 ## Methods
 
-### aquery
+### query
 
-▸ **aquery**(`query`, `parentEvent?`): `Promise`<[`Response`](Response.md)\>
+▸ **query**(`query`, `parentEvent?`): `Promise`<[`Response`](Response.md)\>
+
+Query the query engine and get a response.
 
 #### Parameters
 
@@ -67,8 +70,8 @@ ___
 
 #### Implementation of
 
-[BaseQueryEngine](../interfaces/BaseQueryEngine.md).[aquery](../interfaces/BaseQueryEngine.md#aquery)
+[BaseQueryEngine](../interfaces/BaseQueryEngine.md).[query](../interfaces/BaseQueryEngine.md#query)
 
 #### Defined in
 
-[QueryEngine.ts:36](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L36)
+[QueryEngine.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L45)

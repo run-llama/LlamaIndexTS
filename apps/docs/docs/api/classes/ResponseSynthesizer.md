@@ -24,7 +24,7 @@ A ResponseSynthesizer is used to generate a response from a query and a list of 
 
 #### Defined in
 
-[ResponseSynthesizer.ts:225](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L225)
+[ResponseSynthesizer.ts:279](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L279)
 
 ## Properties
 
@@ -34,23 +34,23 @@ A ResponseSynthesizer is used to generate a response from a query and a list of 
 
 #### Defined in
 
-[ResponseSynthesizer.ts:222](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L222)
+[ResponseSynthesizer.ts:276](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L276)
 
 ___
 
 ### serviceContext
 
-• `Optional` **serviceContext**: [`ServiceContext`](../interfaces/ServiceContext.md)
+• **serviceContext**: [`ServiceContext`](../interfaces/ServiceContext.md)
 
 #### Defined in
 
-[ResponseSynthesizer.ts:223](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L223)
+[ResponseSynthesizer.ts:277](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L277)
 
 ## Methods
 
-### asynthesize
+### synthesize
 
-▸ **asynthesize**(`query`, `nodes`, `parentEvent?`): `Promise`<[`Response`](Response.md)\>
+▸ **synthesize**(`query`, `nodes`, `parentEvent?`): `Promise`<[`Response`](Response.md)\>
 
 #### Parameters
 
@@ -66,4 +66,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:237](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ResponseSynthesizer.ts#L237)
+[ResponseSynthesizer.ts:291](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L291)

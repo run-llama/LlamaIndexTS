@@ -15,9 +15,11 @@ A query engine is a question answerer that can use one or more steps.
 
 ## Methods
 
-### aquery
+### query
 
-▸ **aquery**(`query`, `parentEvent?`): `Promise`<[`Response`](../classes/Response.md)\>
+▸ **query**(`query`, `parentEvent?`): `Promise`<[`Response`](../classes/Response.md)\>
+
+Query the query engine and get a response.
 
 #### Parameters
 
@@ -32,4 +34,4 @@ A query engine is a question answerer that can use one or more steps.
 
 #### Defined in
 
-[QueryEngine.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QueryEngine.ts#L19)
+[QueryEngine.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QueryEngine.ts#L24)

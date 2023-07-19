@@ -16,9 +16,9 @@ A ChatEngine is used to handle back and forth chats between the application and 
 
 ## Methods
 
-### achat
+### chat
 
-▸ **achat**(`message`, `chatHistory?`): `Promise`<[`Response`](../classes/Response.md)\>
+▸ **chat**(`message`, `chatHistory?`): `Promise`<[`Response`](../classes/Response.md)\>
 
 Send message along with the class's current chat history to the LLM.
 
@@ -35,7 +35,7 @@ Send message along with the class's current chat history to the LLM.
 
 #### Defined in
 
-[ChatEngine.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L25)
+[ChatEngine.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L25)
 
 ___
 
@@ -51,4 +51,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ChatEngine.ts#L30)
+[ChatEngine.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L30)

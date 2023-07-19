@@ -24,7 +24,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 | Name | Type |
 | :------ | :------ |
-| `init` | `VectorIndexConstructorProps` |
+| `init` | [`VectorIndexConstructorProps`](../interfaces/VectorIndexConstructorProps.md) |
 
 #### Overrides
 
@@ -32,7 +32,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[BaseIndex.ts:109](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L109)
+[indices/vectorStore/VectorStoreIndex.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L32)
 
 ## Properties
 
@@ -46,7 +46,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L75)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L77)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L78)
+[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L74)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L69)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L74)
+[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L70)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:107](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L107)
+[indices/vectorStore/VectorStoreIndex.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L30)
 
 ## Methods
 
@@ -134,7 +134,7 @@ NOTE: if you are using a custom query engine you don't have to use this method.
 
 #### Defined in
 
-[BaseIndex.ts:252](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L252)
+[indices/vectorStore/VectorStoreIndex.ts:175](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L175)
 
 ___
 
@@ -158,31 +158,7 @@ retriever for the index
 
 #### Defined in
 
-[BaseIndex.ts:242](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L242)
-
-___
-
-### agetNodeEmbeddingResults
-
-▸ `Static` **agetNodeEmbeddingResults**(`nodes`, `serviceContext`, `logProgress?`): `Promise`<[`NodeWithEmbedding`](../interfaces/NodeWithEmbedding.md)[]\>
-
-Get the embeddings for nodes.
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `nodes` | [`BaseNode`](BaseNode.md)[] | `undefined` |  |
-| `serviceContext` | [`ServiceContext`](../interfaces/ServiceContext.md) | `undefined` |  |
-| `logProgress` | `boolean` | `false` | log progress to console (useful for debugging) |
-
-#### Returns
-
-`Promise`<[`NodeWithEmbedding`](../interfaces/NodeWithEmbedding.md)[]\>
-
-#### Defined in
-
-[BaseIndex.ts:159](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L159)
+[indices/vectorStore/VectorStoreIndex.ts:165](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L165)
 
 ___
 
@@ -206,7 +182,7 @@ Get embeddings for nodes and place them into the index.
 
 #### Defined in
 
-[BaseIndex.ts:187](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L187)
+[indices/vectorStore/VectorStoreIndex.ts:110](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L110)
 
 ___
 
@@ -230,7 +206,31 @@ High level API: split documents, get embeddings, and build index.
 
 #### Defined in
 
-[BaseIndex.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L214)
+[indices/vectorStore/VectorStoreIndex.ts:137](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L137)
+
+___
+
+### getNodeEmbeddingResults
+
+▸ `Static` **getNodeEmbeddingResults**(`nodes`, `serviceContext`, `logProgress?`): `Promise`<[`NodeWithEmbedding`](../interfaces/NodeWithEmbedding.md)[]\>
+
+Get the embeddings for nodes.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `nodes` | [`BaseNode`](BaseNode.md)[] | `undefined` |  |
+| `serviceContext` | [`ServiceContext`](../interfaces/ServiceContext.md) | `undefined` |  |
+| `logProgress` | `boolean` | `false` | log progress to console (useful for debugging) |
+
+#### Returns
+
+`Promise`<[`NodeWithEmbedding`](../interfaces/NodeWithEmbedding.md)[]\>
+
+#### Defined in
+
+[indices/vectorStore/VectorStoreIndex.ts:82](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L82)
 
 ___
 
@@ -250,4 +250,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:114](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L114)
+[indices/vectorStore/VectorStoreIndex.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L37)
