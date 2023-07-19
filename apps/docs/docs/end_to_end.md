@@ -12,7 +12,7 @@ Read a file and chat about it with the LLM.
 
 ## [List Index](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/listIndex.ts)
 
-Create a list index and query it. The list index will read every piece of text within the index in order to find the answer and generate a response.
+Create a list index and query it. This example also use the `LLMRetriever`, which will use the LLM to select the best nodes to use when generating answer.
 
 ## [Vector Index](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/vectorIndex.ts)
 

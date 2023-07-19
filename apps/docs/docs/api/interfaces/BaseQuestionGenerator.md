@@ -31,4 +31,4 @@ QuestionGenerators generate new questions for the LLM using tools and a user que
 
 #### Defined in
 
-[QuestionGenerator.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/QuestionGenerator.ts#L23)
+[QuestionGenerator.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/QuestionGenerator.ts#L23)

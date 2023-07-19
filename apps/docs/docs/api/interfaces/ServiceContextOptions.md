@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ServiceContext.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L26)
+[ServiceContext.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L26)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L29)
+[ServiceContext.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L29)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L28)
+[ServiceContext.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L28)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L24)
+[ServiceContext.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L24)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L22)
+[ServiceContext.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L22)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L21)
+[ServiceContext.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L21)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L25)
+[ServiceContext.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L25)
 
 ___
 
@@ -84,4 +84,4 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/ServiceContext.ts#L23)
+[ServiceContext.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/ServiceContext.ts#L23)

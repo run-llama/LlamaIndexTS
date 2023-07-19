@@ -29,3 +29,8 @@ const splitter = new SentenceSplitter({ chunkSize: 1, });
 
 const textSplits = splitter.splitText("Hello World");
 ```
+
+## API Reference
+
+- [SimpleNodeParser](../../api/classes/SimpleNodeParser.md)
+- [SentenceSplitter](../../api/classes/SentenceSplitter.md)

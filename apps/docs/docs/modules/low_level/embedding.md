@@ -15,3 +15,8 @@ const openaiEmbeds = new OpenAIEmbedding();
 
 const serviceContext = new ServiceContext({ embedModel: openaiEmbeds });
 ```
+
+## API Reference
+
+- [OpenAIEmbedding](../../api/classes/OpenAIEmbedding.md)
+- [ServiceContext](../../api/interfaces/ServiceContext.md)

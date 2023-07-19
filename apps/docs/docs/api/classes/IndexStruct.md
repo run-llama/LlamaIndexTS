@@ -31,7 +31,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[BaseIndex.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L21)
+[BaseIndex.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L21)
 
 ## Properties
 
@@ -41,7 +41,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[BaseIndex.ts:18](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L18)
+[BaseIndex.ts:18](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L18)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L19)
+[BaseIndex.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L19)
 
 ## Methods
 
@@ -65,4 +65,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L26)
+[BaseIndex.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L26)

@@ -46,3 +46,11 @@ const response = await responseSynthesizer.asynthesize(
 );
 console.log(response.response);
 ```
+
+## API Reference
+
+- [ResponseSynthesizer](../../api/classes/ResponseSynthesizer.md)
+- [Refine](../../api/classes/Refine.md)
+- [CompactAndRefine](../../api/classes/CompactAndRefine.md)
+- [TreeSummarize](../../api/classes/TreeSummarize.md)
+- [SimpleResponseBuilder](../../api/classes/SimpleResponseBuilder.md)

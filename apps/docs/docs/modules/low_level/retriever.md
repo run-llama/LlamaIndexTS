@@ -13,3 +13,9 @@ retriever.similarityTopK = 3;
 // Fetch nodes!
 const nodesWithScore = await retriever.aretrieve("query string");
 ```
+
+## API Reference
+
+- [ListIndexRetriever](../../api/classes/ListIndexRetriever.md)
+- [ListIndexLLMRetriever](../../api/classes/ListIndexLLMRetriever.md)
+- [VectorIndexRetriever](../../api/classes/VectorIndexRetriever.md)

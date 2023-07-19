@@ -15,3 +15,8 @@ const openaiLLM = new ChatGPTLLMPredictor({ model: "gpt-3.5-turbo" });
 
 const serviceContext = new ServiceContext({ llmPredictor: openaiLLM });
 ```
+
+## API Reference
+
+- [ChatGPTLLMPredictor](../../api/classes/ChatGPTLLMPredictor.md)
+- [ServiceContext](../../api/interfaces/ServiceContext.md)

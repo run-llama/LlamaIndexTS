@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Tool.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/Tool.ts#L4)
+[Tool.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Tool.ts#L4)
 
 ___
 
@@ -24,4 +24,4 @@ ___
 
 #### Defined in
 
-[Tool.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/Tool.ts#L5)
+[Tool.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/Tool.ts#L5)

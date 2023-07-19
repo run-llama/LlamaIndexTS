@@ -43,7 +43,7 @@ they can be retrieved for our queries.
 
 #### Defined in
 
-[BaseIndex.ts:80](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L80)
+[BaseIndex.ts:80](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L80)
 
 ## Properties
 
@@ -53,7 +53,7 @@ they can be retrieved for our queries.
 
 #### Defined in
 
-[BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L75)
+[BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L75)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L77)
+[BaseIndex.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L77)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L78)
+[BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L78)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L73)
+[BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L73)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L74)
+[BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L74)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L76)
+[BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L76)
 
 ## Methods
 
@@ -117,4 +117,4 @@ ___
 
 #### Defined in
 
-[BaseIndex.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/f1d609d/packages/core/src/BaseIndex.ts#L89)
+[BaseIndex.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/d73ac8e/packages/core/src/BaseIndex.ts#L89)

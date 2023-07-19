@@ -11,3 +11,7 @@ import { SimpleDirectoryReader } from "llamaindex";
 
 documents = new SimpleDirectoryReader().loadData("./data");
 ```
+
+## API Reference
+
+- [SimpleDirectoryReader](../../api/classes/SimpleDirectoryReader.md)

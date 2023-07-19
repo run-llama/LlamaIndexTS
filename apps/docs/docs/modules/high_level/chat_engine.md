@@ -13,3 +13,8 @@ const chatEngine = new ContextChatEngine({ retriever });
 // start chatting
 const response = await chatEngine.chat(query);
 ```
+
+## Api References
+
+- [ContextChatEngine](../../api/classes/ContextChatEngine.md)
+- [CondenseQuestionChatEngine](../../api/classes/ContextChatEngine.md)

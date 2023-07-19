@@ -11,3 +11,8 @@ import { Document } from "llamaindex";
 
 document = new Document({ text: "text", metadata: { "key": "val" }});
 ```
+
+## API Reference
+
+- [Document](../../api/classes/Document.md)
+- [TextNode](../../api/classes/TextNode.md)

@@ -21,3 +21,8 @@ const index = await VectorStoreIndex.fromDocuments(
   [document]
 );
 ```
+
+## API Reference
+
+- [ListIndex](../../api/classes/ListIndex.md)
+- [VectorStoreIndex](../../api/classes/VectorStoreIndex.md)
