@@ -78,8 +78,7 @@ export class OpenAI implements LLM {
     this.temperature = init?.temperature ?? 0;
     this.requestTimeout = init?.requestTimeout ?? null;
     this.maxRetries = init?.maxRetries ?? 10;
-    this.maxTokens =
-      init?.maxTokens ?? Math.floor(ALL_AVAILABLE_MODELS[this.model] / 2);
+    this.maxTokens = init?.maxTokens ?? undefined;
     this.openAIKey = init?.openAIKey ?? null;
     this.session = init?.session ?? getOpenAISession();
     this.callbackManager = init?.callbackManager;
