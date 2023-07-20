@@ -33,7 +33,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[indices/BaseIndex.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L17)
+[indices/BaseIndex.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L17)
 
 ## Properties
 
@@ -43,7 +43,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[indices/BaseIndex.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L32)
+[indices/BaseIndex.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L32)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:14](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L14)
+[indices/BaseIndex.ts:14](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L14)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L31)
+[indices/BaseIndex.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L31)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L15)
+[indices/BaseIndex.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L15)
 
 ## Methods
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L41)
+[indices/BaseIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L41)
 
 ___
 
@@ -120,4 +120,4 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L34)
+[indices/BaseIndex.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L34)

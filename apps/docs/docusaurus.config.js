@@ -21,7 +21,7 @@ const config = {
   organizationName: "run-llama", // Usually your GitHub org/user name.
   projectName: "LlamaIndex.TS", // Usually your repo name.
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -119,6 +119,7 @@ const config = {
       },
     }),
   plugins: [
+    ["docusaurus-lunr-search", {}],
     [
       "docusaurus-plugin-typedoc",
       {

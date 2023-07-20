@@ -14,7 +14,13 @@ $ yarn
 $ yarn start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server. 
+
+However, the searchbar may not function with `yarn start`. Instead, run `yarn build` and launch a server:
+
+```
+$ npx http-server ./build
+```
 
 ### Build
 

@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[llm/LLM.ts:14](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/llm/LLM.ts#L14)
+[llm/LLM.ts:14](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/llm/LLM.ts#L14)
 
 ___
 
@@ -24,4 +24,4 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/llm/LLM.ts#L15)
+[llm/LLM.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/llm/LLM.ts#L15)
