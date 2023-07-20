@@ -32,7 +32,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[indices/list/ListIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L41)
+[indices/list/ListIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L41)
 
 ## Properties
 
@@ -46,7 +46,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L71)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L74)
+[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L74)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L69)
+[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L69)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L70)
+[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L70)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/BaseIndex.ts#L72)
+[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/BaseIndex.ts#L72)
 
 ## Methods
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:156](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L156)
+[indices/list/ListIndex.ts:156](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L156)
 
 ___
 
@@ -156,7 +156,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:150](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L150)
+[indices/list/ListIndex.ts:150](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L150)
 
 ___
 
@@ -177,7 +177,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:118](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L118)
+[indices/list/ListIndex.ts:118](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L118)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:105](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L105)
+[indices/list/ListIndex.ts:105](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L105)
 
 ___
 
@@ -215,7 +215,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:162](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L162)
+[indices/list/ListIndex.ts:162](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L162)
 
 ___
 
@@ -237,7 +237,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:135](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L135)
+[indices/list/ListIndex.ts:135](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L135)
 
 ___
 
@@ -260,7 +260,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L81)
+[indices/list/ListIndex.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L81)
 
 ___
 
@@ -280,4 +280,4 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/indices/list/ListIndex.ts#L45)
+[indices/list/ListIndex.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/indices/list/ListIndex.ts#L45)

@@ -31,7 +31,7 @@ ideally allowing the appropriate context to be surfaced for each query.
 
 #### Defined in
 
-[ChatEngine.ts:132](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L132)
+[ChatEngine.ts:133](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ChatEngine.ts#L133)
 
 ## Properties
 
@@ -41,7 +41,7 @@ ideally allowing the appropriate context to be surfaced for each query.
 
 #### Defined in
 
-[ChatEngine.ts:130](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L130)
+[ChatEngine.ts:131](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ChatEngine.ts#L131)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:129](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L129)
+[ChatEngine.ts:130](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ChatEngine.ts#L130)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L128)
+[ChatEngine.ts:129](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ChatEngine.ts#L129)
 
 ## Methods
 
@@ -88,7 +88,7 @@ Send message along with the class's current chat history to the LLM.
 
 #### Defined in
 
-[ChatEngine.ts:147](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L147)
+[ChatEngine.ts:148](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ChatEngine.ts#L148)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:143](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L143)
+[ChatEngine.ts:144](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ChatEngine.ts#L144)
 
 ___
 
@@ -122,4 +122,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:185](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ChatEngine.ts#L185)
+[ChatEngine.ts:186](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ChatEngine.ts#L186)

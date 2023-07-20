@@ -125,7 +125,7 @@ const config = {
         entryPoints: ["../../packages/core/src/index.ts"],
         tsconfig: "../../packages/core/tsconfig.json",
         sidebar: {
-          position: 4,
+          position: 6,
         },
       },
     ],

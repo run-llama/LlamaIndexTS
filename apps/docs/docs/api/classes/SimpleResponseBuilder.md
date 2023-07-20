@@ -26,17 +26,17 @@ A response builder that just concatenates responses.
 
 #### Defined in
 
-[ResponseSynthesizer.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L49)
+[ResponseSynthesizer.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ResponseSynthesizer.ts#L49)
 
 ## Properties
 
-### llmPredictor
+### llm
 
-• **llmPredictor**: [`BaseLLMPredictor`](../interfaces/BaseLLMPredictor.md)
+• **llm**: [`LLM`](../interfaces/LLM.md)
 
 #### Defined in
 
-[ResponseSynthesizer.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L46)
+[ResponseSynthesizer.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ResponseSynthesizer.ts#L46)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L47)
+[ResponseSynthesizer.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ResponseSynthesizer.ts#L47)
 
 ## Methods
 
@@ -72,4 +72,4 @@ BaseResponseBuilder.getResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L54)
+[ResponseSynthesizer.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ResponseSynthesizer.ts#L54)

@@ -16,7 +16,7 @@ The ServiceContext is a collection of components that are used in different part
 
 #### Defined in
 
-[ServiceContext.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ServiceContext.ts#L16)
+[ServiceContext.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ServiceContext.ts#L15)
 
 ___
 
@@ -26,17 +26,17 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:14](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ServiceContext.ts#L14)
+[ServiceContext.ts:13](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ServiceContext.ts#L13)
 
 ___
 
-### llmPredictor
+### llm
 
-• **llmPredictor**: [`BaseLLMPredictor`](BaseLLMPredictor.md)
+• **llm**: [`LLM`](LLM.md)
 
 #### Defined in
 
-[ServiceContext.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ServiceContext.ts#L12)
+[ServiceContext.ts:11](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ServiceContext.ts#L11)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ServiceContext.ts#L15)
+[ServiceContext.ts:14](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ServiceContext.ts#L14)
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 #### Defined in
 
-[ServiceContext.ts:13](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ServiceContext.ts#L13)
+[ServiceContext.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/08c2d46/packages/core/src/ServiceContext.ts#L12)
