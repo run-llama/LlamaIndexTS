@@ -22,6 +22,10 @@ Create a vector index and query it. The vector index will use embeddings to fetc
 
 Create an OpenAI LLM and directly use it for chat. 
 
+## [Llama2 DeuceLLM](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/llamadeuce.ts)
+
+Create a Llama-2 LLM and directly use it for chat.
+
 ## [SubQuestionQueryEngine](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/subquestion.ts)
 
 Uses the `SubQuestionQueryEngine`, which breaks complex queries into multiple questions, and then aggreates a response across the answers to all sub-questions.
