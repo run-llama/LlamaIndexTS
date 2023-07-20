@@ -8,7 +8,7 @@ import _ from "lodash";
 /**
  * Read the text of a PDF
  */
-export default class PDFReader implements BaseReader {
+export class PDFReader implements BaseReader {
   async loadData(
     file: string,
     fs: GenericFileSystem = DEFAULT_FS

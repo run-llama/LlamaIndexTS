@@ -3,7 +3,7 @@ import { Document } from "../Node";
 import { BaseReader } from "./base";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
-import PDFReader from "./PDFReader";
+import { PDFReader } from "./PDFReader";
 
 /**
  * Read a .txt file
@@ -33,7 +33,7 @@ export type SimpleDirectoryReaderLoadDataProps = {
 /**
  * Read all of the documents in a directory. Currently supports PDF and TXT files.
  */
-export default class SimpleDirectoryReader implements BaseReader {
+export class SimpleDirectoryReader implements BaseReader {
   async loadData({
     directoryPath,
     fs = DEFAULT_FS as CompleteFileSystem,

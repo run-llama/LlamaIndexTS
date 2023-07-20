@@ -89,12 +89,11 @@ export class CondenseQuestionChatEngine implements ChatEngine {
   private async condenseQuestion(chatHistory: ChatMessage[], question: string) {
     const chatHistoryStr = messagesToHistoryStr(chatHistory);
 
-    return this.serviceContext.llmPredictor.predict(
-      defaultCondenseQuestionPrompt,
-      {
+    return this.serviceContext.llm.complete(
+      defaultCondenseQuestionPrompt({
         question: question,
         chat_history: chatHistoryStr,
-      }
+      })
     );
   }
 
@@ -104,7 +103,9 @@ export class CondenseQuestionChatEngine implements ChatEngine {
   ): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
 
-    const condensedQuestion = await this.condenseQuestion(chatHistory, message);
+    const condensedQuestion = (
+      await this.condenseQuestion(chatHistory, message)
+    ).message.content;
 
     const response = await this.queryEngine.query(condensedQuestion);
 

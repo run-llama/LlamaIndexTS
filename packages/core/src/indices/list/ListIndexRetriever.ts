@@ -88,10 +88,9 @@ export class ListIndexLLMRetriever implements BaseRetriever {
 
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
       const input = { context: fmtBatchStr, query: query };
-      const rawResponse = await this.serviceContext.llmPredictor.predict(
-        this.choiceSelectPrompt,
-        input
-      );
+      const rawResponse = (
+        await this.serviceContext.llm.complete(this.choiceSelectPrompt(input))
+      ).message.content;
 
       // parseResult is a map from doc number to relevance score
       const parseResult = this.parseChoiceSelectAnswerFn(

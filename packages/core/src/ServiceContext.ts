@@ -1,6 +1,5 @@
 import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
-import { OpenAI } from "./llm/LLM";
-import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./llm/LLMPredictor";
+import { LLM, OpenAI } from "./llm/LLM";
 import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
 import { CallbackManager } from "./callbacks/CallbackManager";
@@ -9,7 +8,7 @@ import { CallbackManager } from "./callbacks/CallbackManager";
  * The ServiceContext is a collection of components that are used in different parts of the application.
  */
 export interface ServiceContext {
-  llmPredictor: BaseLLMPredictor;
+  llm: LLM;
   promptHelper: PromptHelper;
   embedModel: BaseEmbedding;
   nodeParser: NodeParser;
@@ -18,7 +17,6 @@ export interface ServiceContext {
 }
 
 export interface ServiceContextOptions {
-  llmPredictor?: BaseLLMPredictor;
   llm?: OpenAI;
   promptHelper?: PromptHelper;
   embedModel?: BaseEmbedding;
@@ -32,9 +30,7 @@ export interface ServiceContextOptions {
 export function serviceContextFromDefaults(options?: ServiceContextOptions) {
   const callbackManager = options?.callbackManager ?? new CallbackManager();
   const serviceContext: ServiceContext = {
-    llmPredictor:
-      options?.llmPredictor ??
-      new ChatGPTLLMPredictor({ callbackManager, languageModel: options?.llm }),
+    llm: options?.llm ?? new OpenAI(),
     embedModel: options?.embedModel ?? new OpenAIEmbedding(),
     nodeParser:
       options?.nodeParser ??
@@ -54,8 +50,8 @@ export function serviceContextFromServiceContext(
   options: ServiceContextOptions
 ) {
   const newServiceContext = { ...serviceContext };
-  if (options.llmPredictor) {
-    newServiceContext.llmPredictor = options.llmPredictor;
+  if (options.llm) {
+    newServiceContext.llm = options.llm;
   }
   if (options.promptHelper) {
     newServiceContext.promptHelper = options.promptHelper;

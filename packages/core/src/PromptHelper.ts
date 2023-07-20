@@ -1,4 +1,3 @@
-import { chunk } from "lodash";
 import { globalsHelper } from "./GlobalsHelper";
 import { SimplePrompt } from "./Prompt";
 import { SentenceSplitter } from "./TextSplitter";

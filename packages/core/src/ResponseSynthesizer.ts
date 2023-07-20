@@ -1,4 +1,3 @@
-import { ChatGPTLLMPredictor, BaseLLMPredictor } from "./llm/LLMPredictor";
 import { MetadataMode, NodeWithScore } from "./Node";
 import {
   SimplePrompt,
@@ -9,6 +8,7 @@ import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
+import { LLM } from "./llm/LLM";
 
 /**
  * Response modes of the response synthesizer
@@ -43,11 +43,11 @@ interface BaseResponseBuilder {
  * A response builder that just concatenates responses.
  */
 export class SimpleResponseBuilder implements BaseResponseBuilder {
-  llmPredictor: BaseLLMPredictor;
+  llm: LLM;
   textQATemplate: SimplePrompt;
 
   constructor(serviceContext: ServiceContext) {
-    this.llmPredictor = serviceContext.llmPredictor;
+    this.llm = serviceContext.llm;
     this.textQATemplate = defaultTextQaPrompt;
   }
 
@@ -62,7 +62,8 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
     };
 
     const prompt = this.textQATemplate(input);
-    return this.llmPredictor.predict(prompt, {}, parentEvent);
+    const response = await this.llm.complete(prompt, parentEvent);
+    return response.message.content;
   }
 }
 
@@ -124,13 +125,14 @@ export class Refine implements BaseResponseBuilder {
 
     for (const chunk of textChunks) {
       if (!response) {
-        response = await this.serviceContext.llmPredictor.predict(
-          textQATemplate,
-          {
-            context: chunk,
-          },
-          parentEvent
-        );
+        response = (
+          await this.serviceContext.llm.complete(
+            textQATemplate({
+              context: chunk,
+            }),
+            parentEvent
+          )
+        ).message.content;
       } else {
         response = await this.refineResponseSingle(
           response,
@@ -158,14 +160,15 @@ export class Refine implements BaseResponseBuilder {
     ]);
 
     for (const chunk of textChunks) {
-      response = await this.serviceContext.llmPredictor.predict(
-        refineTemplate,
-        {
-          context: chunk,
-          existingAnswer: response,
-        },
-        parentEvent
-      );
+      response = (
+        await this.serviceContext.llm.complete(
+          refineTemplate({
+            context: chunk,
+            existingAnswer: response,
+          }),
+          parentEvent
+        )
+      ).message.content;
     }
     return response;
   }
@@ -228,27 +231,30 @@ export class TreeSummarize implements BaseResponseBuilder {
     );
 
     if (packedTextChunks.length === 1) {
-      return this.serviceContext.llmPredictor.predict(
-        summaryTemplate,
-        {
-          context: packedTextChunks[0],
-        },
-        parentEvent
-      );
+      return (
+        await this.serviceContext.llm.complete(
+          summaryTemplate({
+            context: packedTextChunks[0],
+          }),
+          parentEvent
+        )
+      ).message.content;
     } else {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
-          this.serviceContext.llmPredictor.predict(
-            summaryTemplate,
-            {
+          this.serviceContext.llm.complete(
+            summaryTemplate({
               context: chunk,
-            },
+            }),
             parentEvent
           )
         )
       );
 
-      return this.getResponse(query, summaries);
+      return this.getResponse(
+        query,
+        summaries.map((s) => s.message.content)
+      );
     }
   }
 }

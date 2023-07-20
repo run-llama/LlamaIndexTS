@@ -1,4 +1,3 @@
-import { BaseLLMPredictor, ChatGPTLLMPredictor } from "./llm/LLMPredictor";
 import {
   BaseOutputParser,
   StructuredOutput,
@@ -10,6 +9,7 @@ import {
   defaultSubQuestionPrompt,
 } from "./Prompt";
 import { ToolMetadata } from "./Tool";
+import { LLM, OpenAI } from "./llm/LLM";
 
 export interface SubQuestion {
   subQuestion: string;
@@ -27,12 +27,12 @@ export interface BaseQuestionGenerator {
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.
  */
 export class LLMQuestionGenerator implements BaseQuestionGenerator {
-  llmPredictor: BaseLLMPredictor;
+  llm: LLM;
   prompt: SimplePrompt;
   outputParser: BaseOutputParser<StructuredOutput<SubQuestion[]>>;
 
   constructor(init?: Partial<LLMQuestionGenerator>) {
-    this.llmPredictor = init?.llmPredictor ?? new ChatGPTLLMPredictor();
+    this.llm = init?.llm ?? new OpenAI();
     this.prompt = init?.prompt ?? defaultSubQuestionPrompt;
     this.outputParser = init?.outputParser ?? new SubQuestionOutputParser();
   }
@@ -40,10 +40,14 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
   async generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]> {
     const toolsStr = buildToolsText(tools);
     const queryStr = query;
-    const prediction = await this.llmPredictor.predict(this.prompt, {
-      toolsStr,
-      queryStr,
-    });
+    const prediction = (
+      await this.llm.complete(
+        this.prompt({
+          toolsStr,
+          queryStr,
+        })
+      )
+    ).message.content;
 
     const structuredOutput = this.outputParser.parse(prediction);
 

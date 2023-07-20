@@ -3,7 +3,6 @@ export * from "./constants";
 export * from "./Embedding";
 export * from "./GlobalsHelper";
 export * from "./llm/LLM";
-export * from "./llm/LLMPredictor";
 export * from "./Node";
 export * from "./NodeParser";
 // export * from "./openai"; Don't export OpenAIWrapper
