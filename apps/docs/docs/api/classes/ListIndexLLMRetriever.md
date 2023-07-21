@@ -31,7 +31,7 @@ LLM retriever for ListIndex.
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L64)
+[indices/list/ListIndexRetriever.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L64)
 
 ## Properties
 
@@ -41,7 +41,7 @@ LLM retriever for ListIndex.
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:59](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L59)
+[indices/list/ListIndexRetriever.ts:59](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L59)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:58](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L58)
+[indices/list/ListIndexRetriever.ts:58](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L58)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L60)
+[indices/list/ListIndexRetriever.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L60)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L57)
+[indices/list/ListIndexRetriever.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L57)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L61)
+[indices/list/ListIndexRetriever.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L61)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L62)
+[indices/list/ListIndexRetriever.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L62)
 
 ## Methods
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:127](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L127)
+[indices/list/ListIndexRetriever.ts:127](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L127)
 
 ___
 
@@ -134,4 +134,4 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/indices/list/ListIndexRetriever.ts#L81)
+[indices/list/ListIndexRetriever.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/c65d671/packages/core/src/indices/list/ListIndexRetriever.ts#L81)

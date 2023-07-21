@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.4
+
+### Patch Changes
+
+- c65d671: Added README and CONTRIBUTING
+
 ## 0.0.3
 
 ### Patch Changes
