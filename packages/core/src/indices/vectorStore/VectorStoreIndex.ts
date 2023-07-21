@@ -23,6 +23,7 @@ import {
 } from "../BaseIndex";
 import { BaseRetriever } from "../../Retriever";
 import { ResponseSynthesizer } from "../../ResponseSynthesizer";
+import { BaseDocumentStore } from "../../storage/docStore/types";
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
@@ -61,7 +62,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       indexStruct = await VectorStoreIndex.buildIndexFromNodes(
         options.nodes,
         serviceContext,
-        vectorStore
+        vectorStore,
+        docStore
       );
     }
 
@@ -112,7 +114,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   static async buildIndexFromNodes(
     nodes: BaseNode[],
     serviceContext: ServiceContext,
-    vectorStore: VectorStore
+    vectorStore: VectorStore,
+    docStore: BaseDocumentStore
   ): Promise<IndexDict> {
     const embeddingResults = await this.getNodeEmbeddingResults(
       nodes,
@@ -120,6 +123,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     );
 
     vectorStore.add(embeddingResults);
+
+    if (!vectorStore.storesText) {
+      await docStore.addDocuments(
+        embeddingResults.map((result) => result.node),
+        true
+      );
+    }
 
     const indexDict = new IndexDict();
     for (const { node } of embeddingResults) {
