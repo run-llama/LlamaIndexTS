@@ -32,7 +32,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L34)
+[indices/vectorStore/VectorStoreIndex.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L34)
 
 ## Properties
 
@@ -46,7 +46,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L75)
+[indices/BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/BaseIndex.ts#L75)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L76)
+[indices/BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/BaseIndex.ts#L76)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L71)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L72)
+[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/BaseIndex.ts#L72)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L32)
+[indices/vectorStore/VectorStoreIndex.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L32)
 
 ## Methods
 
@@ -145,7 +145,7 @@ and response synthezier if they are not provided.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:165](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L165)
+[indices/vectorStore/VectorStoreIndex.ts:165](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L165)
 
 ___
 
@@ -171,7 +171,7 @@ Create a new retriever from the index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:161](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L161)
+[indices/vectorStore/VectorStoreIndex.ts:161](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L161)
 
 ___
 
@@ -195,7 +195,7 @@ Get embeddings for nodes and place them into the index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:112](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L112)
+[indices/vectorStore/VectorStoreIndex.ts:112](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L112)
 
 ___
 
@@ -219,7 +219,7 @@ High level API: split documents, get embeddings, and build index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:139](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L139)
+[indices/vectorStore/VectorStoreIndex.ts:139](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L139)
 
 ___
 
@@ -243,7 +243,7 @@ Get the embeddings for nodes.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L84)
+[indices/vectorStore/VectorStoreIndex.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L84)
 
 ___
 
@@ -263,4 +263,4 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:39](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L39)
+[indices/vectorStore/VectorStoreIndex.ts:39](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L39)

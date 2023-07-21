@@ -14,12 +14,22 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    "import": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "require": {
+      "default": "./dist/index.cjs",
+      "types": "./dist/index.d.cts"
+    }
+  },
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "build": "tsup src/index.ts --format cjs --dts"
+    "build": "tsup src/index.ts --format esm,cjs --dts"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.195",

@@ -24,7 +24,7 @@ BaseCallbackResponse.event
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/callbacks/CallbackManager.ts#L21)
+[callbacks/CallbackManager.ts:21](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/callbacks/CallbackManager.ts#L21)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/callbacks/CallbackManager.ts#L47)
+[callbacks/CallbackManager.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/callbacks/CallbackManager.ts#L47)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/callbacks/CallbackManager.ts#L46)
+[callbacks/CallbackManager.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/callbacks/CallbackManager.ts#L46)
