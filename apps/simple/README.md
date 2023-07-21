@@ -1,5 +1,9 @@
 # Simple Examples
 
-Due to packaging, you will need to run `pnpm --filter llamaindex build` before running these examples.
+Due to packaging, you will need to run these commands to get started.
+```bash
+pnpm --filter llamaindex build
+pnpm install
+```
 
-Run them with ts-node, for example `npx ts-node vectorIndex.ts`
+Then run the examples with `ts-node`, for example `npx ts-node vectorIndex.ts`
