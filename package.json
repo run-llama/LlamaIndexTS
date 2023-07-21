@@ -3,10 +3,10 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prepare": "husky install"
+    "lint": "turbo run lint",
+    "prepare": "husky install",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "@turbo/gen": "^1.10.9",

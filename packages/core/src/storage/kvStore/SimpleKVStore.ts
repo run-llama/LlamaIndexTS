@@ -8,6 +8,8 @@ export type DataType = Record<string, Record<string, any>>;
 
 export class SimpleKVStore extends BaseKVStore {
   private data: DataType;
+  private persistPath: string | undefined;
+  private fs: GenericFileSystem | undefined;
 
   constructor(data?: DataType) {
     super();
@@ -23,6 +25,10 @@ export class SimpleKVStore extends BaseKVStore {
       this.data[collection] = {};
     }
     this.data[collection][key] = _.clone(val); // Creating a shallow copy of the object
+
+    if (this.persistPath) {
+      await this.persist(this.persistPath, this.fs);
+    }
   }
 
   async get(
@@ -69,10 +75,25 @@ export class SimpleKVStore extends BaseKVStore {
     fs?: GenericFileSystem
   ): Promise<SimpleKVStore> {
     fs = fs || DEFAULT_FS;
-    let data = JSON.parse(
-      await fs.readFile(persistPath, { encoding: "utf-8" })
-    );
-    return new SimpleKVStore(data);
+    let dirPath = path.dirname(persistPath);
+    if (!(await exists(fs, dirPath))) {
+      await fs.mkdir(dirPath);
+    }
+
+    let data: DataType = {};
+    try {
+      let fileData = await fs.readFile(persistPath);
+      data = JSON.parse(fileData.toString());
+    } catch (e) {
+      console.error(
+        `No valid data found at path: ${persistPath} starting new store.`
+      );
+    }
+
+    const store = new SimpleKVStore(data);
+    store.persistPath = persistPath;
+    store.fs = fs;
+    return store;
   }
 
   toDict(): DataType {

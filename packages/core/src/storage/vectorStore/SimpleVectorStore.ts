@@ -1,3 +1,4 @@
+import * as path from "path";
 import _ from "lodash";
 import { GenericFileSystem, exists } from "../FileSystem";
 import {
@@ -31,6 +32,7 @@ export class SimpleVectorStore implements VectorStore {
   storesText: boolean = false;
   private data: SimpleVectorStoreData = new SimpleVectorStoreData();
   private fs: GenericFileSystem = DEFAULT_FS;
+  private persistPath: string | undefined;
 
   constructor(data?: SimpleVectorStoreData, fs?: GenericFileSystem) {
     this.data = data || new SimpleVectorStoreData();
@@ -65,6 +67,11 @@ export class SimpleVectorStore implements VectorStore {
       this.data.textIdToRefDocId[result.node.id_] =
         result.node.sourceNode?.nodeId;
     }
+
+    if (this.persistPath) {
+      this.persist(this.persistPath, this.fs);
+    }
+
     return embeddingResults.map((result) => result.node.id_);
   }
 
@@ -141,8 +148,9 @@ export class SimpleVectorStore implements VectorStore {
     fs?: GenericFileSystem
   ): Promise<void> {
     fs = fs || this.fs;
-    if (!(await exists(fs, persistPath))) {
-      await fs.mkdir(persistPath);
+    let dirPath = path.dirname(persistPath);
+    if (!(await exists(fs, dirPath))) {
+      await fs.mkdir(dirPath);
     }
 
     await fs.writeFile(persistPath, JSON.stringify(this.data));
@@ -153,18 +161,29 @@ export class SimpleVectorStore implements VectorStore {
     fs?: GenericFileSystem
   ): Promise<SimpleVectorStore> {
     fs = fs || DEFAULT_FS;
-    if (!(await exists(fs, persistPath))) {
-      throw new Error(
-        `No existing SimpleVectorStore found at ${persistPath}, skipping load.`
+
+    let dirPath = path.dirname(persistPath);
+    if (!(await exists(fs, dirPath))) {
+      await fs.mkdir(dirPath);
+    }
+
+    let dataDict: any = {};
+    try {
+      let fileData = await fs.readFile(persistPath);
+      dataDict = JSON.parse(fileData.toString());
+    } catch (e) {
+      console.error(
+        `No valid data found at path: ${persistPath} starting new store.`
       );
     }
 
-    console.debug(`Loading SimpleVectorStore from ${persistPath}.`);
-    let dataDict = JSON.parse(await fs.readFile(persistPath, "utf-8"));
     let data = new SimpleVectorStoreData();
-    data.embeddingDict = dataDict.embeddingDict;
-    data.textIdToRefDocId = dataDict.textIdToRefDocId;
-    return new SimpleVectorStore(data);
+    data.embeddingDict = dataDict.embeddingDict ?? {};
+    data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
+    const store = new SimpleVectorStore(data);
+    store.persistPath = persistPath;
+    store.fs = fs;
+    return store;
   }
 
   static fromDict(saveDict: SimpleVectorStoreData): SimpleVectorStore {
