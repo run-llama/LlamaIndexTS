@@ -9,11 +9,11 @@ The embedding model in LlamaIndex is responsible for creating numerical represen
 This can be explicitly set in the `ServiceContext` object.
 
 ```typescript
-import { OpenAIEmbedding, ServiceContext } from "llamaindex";
+import { OpenAIEmbedding, serviceContextFromDefaults } from "llamaindex";
 
 const openaiEmbeds = new OpenAIEmbedding();
 
-const serviceContext = new ServiceContext({ embedModel: openaiEmbeds });
+const serviceContext = serviceContextFromDefaults({ embedModel: openaiEmbeds });
 ```
 
 ## API Reference

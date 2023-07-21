@@ -9,14 +9,14 @@ The LLM is responsible for reading text and generating natural language response
 The LLM can be explicitly set in the `ServiceContext` object.
 
 ```typescript
-import { ChatGPTLLMPredictor, ServiceContext } from "llamaindex";
+import { OpenAI, serviceContextFromDefaults } from "llamaindex";
 
-const openaiLLM = new ChatGPTLLMPredictor({ model: "gpt-3.5-turbo" });
+const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 
-const serviceContext = new ServiceContext({ llmPredictor: openaiLLM });
+const serviceContext = serviceContextFromDefaults({ llm: openaiLLM });
 ```
 
 ## API Reference
 
-- [ChatGPTLLMPredictor](../../api/classes/ChatGPTLLMPredictor.md)
+- [OpenAI](../../api/classes/OpenAI.md)
 - [ServiceContext](../../api/interfaces/ServiceContext.md)

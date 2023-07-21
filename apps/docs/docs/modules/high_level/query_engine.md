@@ -8,7 +8,7 @@ A query engine wraps a `Retriever` and a `ResponseSynthesizer` into a pipeline, 
 
 ```typescript
 const queryEngine = index.asQueryEngine();
-const response = queryEngine.query("query string");
+const response = await queryEngine.query("query string");
 ```
 
 ## Sub Question Query Engine
