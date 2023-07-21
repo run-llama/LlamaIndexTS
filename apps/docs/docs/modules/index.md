@@ -12,7 +12,7 @@ LlamaIndex.TS offers several core modules, seperated into high-level modules for
 
 - [**Indexes**](./high_level/data_index.md): indexes store the Nodes and the embeddings of those nodes.
 
--[**QueryEngine**](./high_level/query_engine.md): Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected nodes from your Index to give the LLM the context it needs to answer your query.
+- [**QueryEngine**](./high_level/query_engine.md): Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected nodes from your Index to give the LLM the context it needs to answer your query.
 
 - [**ChatEngine**](./high_level/chat_engine.md): A ChatEngine helps you build a chatbot that will interact with your Indexes.
 

@@ -37,15 +37,14 @@ For more complex applications, our lower-level APIs allow advanced users to cust
 
 Our documentation includes [Installation Instructions](./installation.md) and a [Starter Tutorial](./starter.md) to build your first application.
 
-Once you're up and running, [High-Level Concepts](./concepts.md) has an overview of LlamaIndex's modular architecture. For more hands-on practical examples, look through our [End-to-End Tutorials](LINK TO EXAMPLES FOLDER).
+Once you're up and running, [High-Level Concepts](./concepts.md) has an overview of LlamaIndex's modular architecture. For more hands-on practical examples, look through our [End-to-End Tutorials](./end_to_end.md).
 
 ## 🗺️ Ecosystem
 
 To download or contribute, find LlamaIndex on:
 
-- Github: https://github.com/jerryjliu/llama_index
-- LlamaIndex (NPM): LINK TO NPM PACKAGE
-- LlamaIndex (Python): https://pypi.org/project/llama-index/.
+- Github: https://github.com/run-llama/LlamaIndexTS
+- NPM: https://www.npmjs.com/package/llamaindex
 
 ## Community
 

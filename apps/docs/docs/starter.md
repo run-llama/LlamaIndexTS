@@ -11,7 +11,7 @@ In a new folder:
 ```bash npm2yarn
 npm install typescript
 npm install @types/node
-npx tsc –-init # if needed
+npx tsc --init # if needed
 ```
 
 Create the file `example.ts`. This code will load some example data, create a document, index it (which creates embeddings using OpenAI), and then creates query engine to answer questions about the data.
