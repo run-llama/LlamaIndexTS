@@ -5,7 +5,13 @@ module.exports = {
     "turbo/no-undeclared-env-vars": [
       "error",
       {
-        allowList: ["OPENAI_API_KEY", "REPLICATE_API_TOKEN"],
+        allowList: [
+          "OPENAI_API_KEY",
+          "REPLICATE_API_TOKEN",
+          "DEBUG",
+          "no_proxy",
+          "NO_PROXY",
+        ],
       },
     ],
   },

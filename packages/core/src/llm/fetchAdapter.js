@@ -38,7 +38,7 @@ const {
  * - Get response body
  * - Check if timeout
  */
-export default async function fetchAdapter(config) {
+module.exports = async function fetchAdapter(config) {
   const request = createRequest(config);
   const promiseChain = [getResponse(request, config)];
 
@@ -65,7 +65,7 @@ export default async function fetchAdapter(config) {
         : settle(resolve, reject, data);
     }
   });
-}
+};
 
 /**
  * Fetch API stage two is to get response body. This funtion tries to retrieve

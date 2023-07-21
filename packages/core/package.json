@@ -14,16 +14,14 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "types": "./dist/index.d.ts",
-  "type": "module",
   "exports": {
     "import": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "default": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
     },
     "require": {
-      "default": "./dist/index.cjs",
-      "types": "./dist/index.d.cts"
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
