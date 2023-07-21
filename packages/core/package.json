@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {
     "js-tiktoken": "^1.0.7",
     "lodash": "^4.17.21",

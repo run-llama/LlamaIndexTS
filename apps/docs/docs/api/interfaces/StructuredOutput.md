@@ -22,7 +22,7 @@ StructuredOutput is just a combo of the raw output and the parsed output.
 
 #### Defined in
 
-[OutputParser.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/50c0b04/packages/core/src/OutputParser.ts#L16)
+[OutputParser.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/OutputParser.ts#L16)
 
 ___
 
@@ -32,4 +32,4 @@ ___
 
 #### Defined in
 
-[OutputParser.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/50c0b04/packages/core/src/OutputParser.ts#L15)
+[OutputParser.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/ca9410f/packages/core/src/OutputParser.ts#L15)
