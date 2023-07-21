@@ -8,7 +8,9 @@ Once you have installed LlamaIndex.TS using NPM and set up your OpenAI key, you'
 
 In a new folder:
 
-```bash
+```bash npm2yarn
+npm install typescript
+npm install @types/node
 npx tsc –-init # if needed
 ```
 
@@ -34,13 +36,15 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.aquery(
+  const response = await queryEngine.query(
     "What did the author do in college?"
   );
 
   // Output response
   console.log(response.toString());
 }
+
+main();
 ```
 
 Then you can run it using

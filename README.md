@@ -14,8 +14,11 @@ In a new folder:
 
 ```bash
 export OPEN_AI_KEY="sk-......" # Replace with your key from https://platform.openai.com/account/api-keys
-npx tsc –-init # if needed
+pnpm init
+pnpm install typescript
+pnpm exec tsc –-init # if needed
 pnpm install llamaindex
+pnpm install @types/node
 ```
 
 Create the file example.ts
@@ -40,19 +43,21 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.aquery(
+  const response = await queryEngine.query(
     "What did the author do in college?"
   );
 
   // Output response
   console.log(response.toString());
 }
+
+main();
 ```
 
 Then you can run it using
 
 ```bash
-npx ts-node example.ts
+pnpm dlx ts-node example.ts
 ```
 
 ## Core concepts for getting started:
