@@ -119,7 +119,7 @@ const config = {
       },
     }),
   plugins: [
-    ["docusaurus-lunr-search", {}],
+    [require.resolve('docusaurus-lunr-search'), {}],
     [
       "docusaurus-plugin-typedoc",
       {
