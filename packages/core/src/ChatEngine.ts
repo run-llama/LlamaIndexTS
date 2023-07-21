@@ -141,10 +141,6 @@ export class ContextChatEngine implements ChatEngine {
     this.chatHistory = init?.chatHistory ?? [];
   }
 
-  chatRepl() {
-    throw new Error("Method not implemented.");
-  }
-
   async chat(message: string, chatHistory?: ChatMessage[] | undefined) {
     chatHistory = chatHistory ?? this.chatHistory;
 
