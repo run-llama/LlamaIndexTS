@@ -37,6 +37,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     this.vectorStore = init.vectorStore;
   }
 
+  /**
+   * The async init function should be called after the constructor.
+   * This is needed to handle persistence.
+   * @param options
+   * @returns
+   */
   static async init(options: VectorIndexOptions): Promise<VectorStoreIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
