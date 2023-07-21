@@ -26,7 +26,7 @@ TreeSummarize repacks the text chunks into the smallest possible number of chunk
 
 #### Defined in
 
-[ResponseSynthesizer.ts:212](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/ResponseSynthesizer.ts#L212)
+[ResponseSynthesizer.ts:212](https://github.com/run-llama/LlamaIndexTS/blob/a07a941/packages/core/src/ResponseSynthesizer.ts#L212)
 
 ## Properties
 
@@ -36,7 +36,7 @@ TreeSummarize repacks the text chunks into the smallest possible number of chunk
 
 #### Defined in
 
-[ResponseSynthesizer.ts:210](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/ResponseSynthesizer.ts#L210)
+[ResponseSynthesizer.ts:210](https://github.com/run-llama/LlamaIndexTS/blob/a07a941/packages/core/src/ResponseSynthesizer.ts#L210)
 
 ## Methods
 
@@ -62,4 +62,4 @@ BaseResponseBuilder.getResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:216](https://github.com/run-llama/LlamaIndexTS/blob/2db8a8c/packages/core/src/ResponseSynthesizer.ts#L216)
+[ResponseSynthesizer.ts:216](https://github.com/run-llama/LlamaIndexTS/blob/a07a941/packages/core/src/ResponseSynthesizer.ts#L216)

@@ -1,4 +1,6 @@
 {
+  "version": "0.0.0",
+  "private": true,
   "name": "simple",
   "dependencies": {
     "llamaindex": "workspace:*"
