@@ -26,7 +26,7 @@ async function main() {
   while (true) {
     const query = await rl.question("Query: ");
     const response = await chatEngine.chat(query);
-    console.log(response);
+    console.log(response.toString());
   }
 }
 

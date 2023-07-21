@@ -22,5 +22,5 @@ import essay from "./essay";
     "How was Paul Grahams life different before and after YC?"
   );
 
-  console.log(response);
+  console.log(response.toString());
 })();
