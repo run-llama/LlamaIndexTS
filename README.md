@@ -55,19 +55,21 @@ Then you can run it using
 npx ts-node example.ts
 ```
 
-## Core concepts:
+## Core concepts for getting started:
 
 - [Document](packages/core/src/Node.ts): A document represents a text file, PDF file or other contiguous piece of data.
 
 - [Node](packages/core/src/Node.ts): The basic data building block. Most commonly, these are parts of the document split into manageable pieces that are small enough to be fed into an embedding model and LLM.
 
-- Indexes: indexes store the Nodes and the embeddings of those nodes.
+- [Embedding](packages/core/src/Embedding.ts): Embeddings are sets of floating point numbers which represent the data in a Node. By comparing the similarity of embeddings, we can derive an understanding of the similarity of two pieces of data. One use case is to compare the embedding of a question with the embeddings of our Nodes to see which Nodes may contain the data needed to answer that quesiton.
 
-- [QueryEngine](packages/core/src/QueryEngine.ts): Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected nodes from your Index to give the LLM the context it needs to answer your query.
+- [Indices](packages/core/src/indices/): Indices store the Nodes and the embeddings of those nodes. QueryEngines retrieve Nodes from these Indices using embedding similarity.
 
-- [ChatEngine](packages/core/src/ChatEngine.ts): A ChatEngine helps you build a chatbot that will interact with your Indexes.
+- [QueryEngine](packages/core/src/QueryEngine.ts): Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected Nodes from your Index to give the LLM the context it needs to answer your query.
 
-- [SimplePrompt](packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and puts them in a prebuilt template.
+- [ChatEngine](packages/core/src/ChatEngine.ts): A ChatEngine helps you build a chatbot that will interact with your Indices.
+
+- [SimplePrompt](packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
 ## Contributing:
 
