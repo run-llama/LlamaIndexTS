@@ -43,7 +43,7 @@ they can be retrieved for our queries.
 
 #### Defined in
 
-[indices/BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L76)
+[indices/BaseIndex.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L78)
 
 ## Properties
 
@@ -53,7 +53,7 @@ they can be retrieved for our queries.
 
 #### Defined in
 
-[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L71)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L75)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L74)
+[indices/BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L76)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L69)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L70)
+[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L72)
 
 ___
 
@@ -103,13 +103,46 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L72)
+[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L74)
 
 ## Methods
 
+### asQueryEngine
+
+▸ `Abstract` **asQueryEngine**(`options?`): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
+
+Create a new query engine from the index. It will also create a retriever
+and response synthezier if they are not provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options?` | `Object` | you can supply your own custom Retriever and ResponseSynthesizer |
+| `options.responseSynthesizer?` | [`ResponseSynthesizer`](ResponseSynthesizer.md) | - |
+| `options.retriever?` | [`BaseRetriever`](../interfaces/BaseRetriever.md) | - |
+
+#### Returns
+
+[`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
+
+#### Defined in
+
+[indices/BaseIndex.ts:98](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L98)
+
+___
+
 ### asRetriever
 
-▸ `Abstract` **asRetriever**(): [`BaseRetriever`](../interfaces/BaseRetriever.md)
+▸ `Abstract` **asRetriever**(`options?`): [`BaseRetriever`](../interfaces/BaseRetriever.md)
+
+Create a new retriever from the index.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `options?` | `any` |
 
 #### Returns
 
@@ -117,4 +150,4 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:85](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L85)
+[indices/BaseIndex.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L91)

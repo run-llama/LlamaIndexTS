@@ -27,7 +27,7 @@ A query engine that uses a retriever to query an index and then synthesizes the 
 
 #### Defined in
 
-[QueryEngine.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QueryEngine.ts#L34)
+[QueryEngine.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/QueryEngine.ts#L34)
 
 ## Properties
 
@@ -37,7 +37,7 @@ A query engine that uses a retriever to query an index and then synthesizes the 
 
 #### Defined in
 
-[QueryEngine.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QueryEngine.ts#L32)
+[QueryEngine.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/QueryEngine.ts#L32)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[QueryEngine.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QueryEngine.ts#L31)
+[QueryEngine.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/QueryEngine.ts#L31)
 
 ## Methods
 
@@ -74,4 +74,4 @@ Query the query engine and get a response.
 
 #### Defined in
 
-[QueryEngine.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QueryEngine.ts#L45)
+[QueryEngine.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/QueryEngine.ts#L45)

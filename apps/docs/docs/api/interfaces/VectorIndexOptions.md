@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[indices/BaseIndex.ts:90](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L90)
+[indices/BaseIndex.ts:106](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L106)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L89)
+[indices/BaseIndex.ts:105](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L105)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L91)
+[indices/BaseIndex.ts:107](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L107)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:92](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L92)
+[indices/BaseIndex.ts:108](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L108)

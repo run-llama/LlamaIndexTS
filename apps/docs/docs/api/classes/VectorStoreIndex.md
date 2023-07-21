@@ -32,7 +32,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L32)
+[indices/vectorStore/VectorStoreIndex.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L34)
 
 ## Properties
 
@@ -46,7 +46,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L71)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L75)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L74)
+[indices/BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L76)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L69)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L70)
+[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L72)
 
 ___
 
@@ -116,41 +116,54 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L30)
+[indices/vectorStore/VectorStoreIndex.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L32)
 
 ## Methods
 
 ### asQueryEngine
 
-▸ **asQueryEngine**(): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
+▸ **asQueryEngine**(`options?`): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
-Get a retriever query engine for this index.
+Create a new query engine from the index. It will also create a retriever
+and response synthezier if they are not provided.
 
-NOTE: if you are using a custom query engine you don't have to use this method.
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options?` | `Object` | you can supply your own custom Retriever and ResponseSynthesizer |
+| `options.responseSynthesizer?` | [`ResponseSynthesizer`](ResponseSynthesizer.md) | - |
+| `options.retriever?` | [`BaseRetriever`](../interfaces/BaseRetriever.md) | - |
 
 #### Returns
 
 [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
+#### Overrides
+
+[BaseIndex](BaseIndex.md).[asQueryEngine](BaseIndex.md#asqueryengine)
+
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:175](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L175)
+[indices/vectorStore/VectorStoreIndex.ts:165](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L165)
 
 ___
 
 ### asRetriever
 
-▸ **asRetriever**(): [`VectorIndexRetriever`](VectorIndexRetriever.md)
+▸ **asRetriever**(`options?`): [`VectorIndexRetriever`](VectorIndexRetriever.md)
 
-Get a VectorIndexRetriever for this index.
+Create a new retriever from the index.
 
-NOTE: if you want to use a custom retriever you don't have to use this method.
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `options?` | `any` |
 
 #### Returns
 
 [`VectorIndexRetriever`](VectorIndexRetriever.md)
-
-retriever for the index
 
 #### Overrides
 
@@ -158,7 +171,7 @@ retriever for the index
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:165](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L165)
+[indices/vectorStore/VectorStoreIndex.ts:161](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L161)
 
 ___
 
@@ -182,7 +195,7 @@ Get embeddings for nodes and place them into the index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:110](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L110)
+[indices/vectorStore/VectorStoreIndex.ts:112](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L112)
 
 ___
 
@@ -206,7 +219,7 @@ High level API: split documents, get embeddings, and build index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:137](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L137)
+[indices/vectorStore/VectorStoreIndex.ts:139](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L139)
 
 ___
 
@@ -230,7 +243,7 @@ Get the embeddings for nodes.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:82](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L82)
+[indices/vectorStore/VectorStoreIndex.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L84)
 
 ___
 
@@ -250,4 +263,4 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L37)
+[indices/vectorStore/VectorStoreIndex.ts:39](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L39)

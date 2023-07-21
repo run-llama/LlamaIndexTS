@@ -32,7 +32,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[indices/list/ListIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L41)
+[indices/list/ListIndex.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L41)
 
 ## Properties
 
@@ -46,7 +46,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L71)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L73)
+[indices/BaseIndex.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L75)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L74)
+[indices/BaseIndex.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L76)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L69)
+[indices/BaseIndex.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L71)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L70)
+[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L72)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/BaseIndex.ts#L72)
+[indices/BaseIndex.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/BaseIndex.ts#L74)
 
 ## Methods
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:156](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L156)
+[indices/list/ListIndex.ts:160](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L160)
 
 ___
 
@@ -156,40 +156,51 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:150](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L150)
+[indices/list/ListIndex.ts:154](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L154)
 
 ___
 
 ### asQueryEngine
 
-▸ **asQueryEngine**(`mode?`, `responseSynthesizer?`): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
+▸ **asQueryEngine**(`options?`): [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
+
+Create a new query engine from the index. It will also create a retriever
+and response synthezier if they are not provided.
 
 #### Parameters
 
-| Name | Type | Default value |
+| Name | Type | Description |
 | :------ | :------ | :------ |
-| `mode` | [`ListRetrieverMode`](../enums/ListRetrieverMode.md) | `ListRetrieverMode.DEFAULT` |
-| `responseSynthesizer?` | [`ResponseSynthesizer`](ResponseSynthesizer.md) | `undefined` |
+| `options?` | `Object` | you can supply your own custom Retriever and ResponseSynthesizer |
+| `options.responseSynthesizer?` | [`ResponseSynthesizer`](ResponseSynthesizer.md) | - |
+| `options.retriever?` | [`BaseRetriever`](../interfaces/BaseRetriever.md) | - |
 
 #### Returns
 
 [`BaseQueryEngine`](../interfaces/BaseQueryEngine.md)
 
+#### Overrides
+
+[BaseIndex](BaseIndex.md).[asQueryEngine](BaseIndex.md#asqueryengine)
+
 #### Defined in
 
-[indices/list/ListIndex.ts:118](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L118)
+[indices/list/ListIndex.ts:118](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L118)
 
 ___
 
 ### asRetriever
 
-▸ **asRetriever**(`mode?`): [`BaseRetriever`](../interfaces/BaseRetriever.md)
+▸ **asRetriever**(`options?`): [`BaseRetriever`](../interfaces/BaseRetriever.md)
+
+Create a new retriever from the index.
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `mode` | [`ListRetrieverMode`](../enums/ListRetrieverMode.md) | `ListRetrieverMode.DEFAULT` |
+| Name | Type |
+| :------ | :------ |
+| `options?` | `Object` |
+| `options.mode` | [`ListRetrieverMode`](../enums/ListRetrieverMode.md) |
 
 #### Returns
 
@@ -201,7 +212,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:105](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L105)
+[indices/list/ListIndex.ts:105](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L105)
 
 ___
 
@@ -215,7 +226,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:162](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L162)
+[indices/list/ListIndex.ts:166](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L166)
 
 ___
 
@@ -237,7 +248,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:135](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L135)
+[indices/list/ListIndex.ts:139](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L139)
 
 ___
 
@@ -260,7 +271,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L81)
+[indices/list/ListIndex.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L81)
 
 ___
 
@@ -280,4 +291,4 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/indices/list/ListIndex.ts#L45)
+[indices/list/ListIndex.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/87925a3/packages/core/src/indices/list/ListIndex.ts#L45)

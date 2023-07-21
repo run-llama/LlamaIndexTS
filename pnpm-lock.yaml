@@ -53,12 +53,24 @@ importers:
       '@mdx-js/react':
         specifier: ^1.6.22
         version: 1.6.22(react@17.0.2)
+      autocomplete.js:
+        specifier: ^0.38.1
+        version: 0.38.1
+      classnames:
+        specifier: ^2.3.2
+        version: 2.3.2
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
       docusaurus-lunr-search:
         specifier: ^2.3.2
         version: 2.3.2(@docusaurus/core@2.4.1)(react-dom@17.0.2)(react@17.0.2)
+      hogan.js:
+        specifier: ^3.0.2
+        version: 3.0.2
+      lunr:
+        specifier: ^2.3.9
+        version: 2.3.9
       postcss:
         specifier: ^8.4.25
         version: 8.4.25
@@ -4538,6 +4550,12 @@ packages:
 
   /autocomplete.js@0.37.1:
     resolution: {integrity: sha512-PgSe9fHYhZEsm/9jggbjtVsGXJkPLvd+9mC7gZJ662vVL5CRWEtm/mIrrzCx0MrNxHVwxD5d00UOn6NsmL2LUQ==}
+    dependencies:
+      immediate: 3.3.0
+    dev: false
+
+  /autocomplete.js@0.38.1:
+    resolution: {integrity: sha512-6pSJzuRMY3pqpozt+SXThl2DmJfma8Bi3SVFbZHS0PW/N72bOUv+Db0jAh2cWOhTsA4X+GNmKvIl8wExJTnN9w==}
     dependencies:
       immediate: 3.3.0
     dev: false
