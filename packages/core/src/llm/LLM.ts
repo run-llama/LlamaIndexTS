@@ -1,5 +1,5 @@
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
-import { aHandleOpenAIStream } from "../callbacks/utility/aHandleOpenAIStream";
+import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 import {
   ChatCompletionRequestMessageRoleEnum,
   CreateChatCompletionRequest,
@@ -124,7 +124,7 @@ export class OpenAI implements LLM {
         { responseType: "stream" }
       );
 
-      const fullResponse = await aHandleOpenAIStream({
+      const fullResponse = await handleOpenAIStream({
         response,
         onLLMStream: this.callbackManager.onLLMStream,
         parentEvent,

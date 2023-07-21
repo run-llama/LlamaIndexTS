@@ -147,10 +147,9 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       serviceContext: serviceContext,
       responseBuilder,
     });
-    const queryEngine = listIndex.asQueryEngine(
-      ListRetrieverMode.DEFAULT,
-      responseSynthesizer
-    );
+    const queryEngine = listIndex.asQueryEngine({
+      responseSynthesizer,
+    });
     const query = "What is the author's name?";
     const response = await queryEngine.query(query);
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");

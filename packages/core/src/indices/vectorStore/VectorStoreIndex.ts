@@ -21,6 +21,8 @@ import {
   VectorIndexConstructorProps,
   VectorIndexOptions,
 } from "../BaseIndex";
+import { BaseRetriever } from "../../Retriever";
+import { ResponseSynthesizer } from "../../ResponseSynthesizer";
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
@@ -156,23 +158,17 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return index;
   }
 
-  /**
-   * Get a VectorIndexRetriever for this index.
-   *
-   * NOTE: if you want to use a custom retriever you don't have to use this method.
-   * @returns retriever for the index
-   */
-  asRetriever(): VectorIndexRetriever {
-    return new VectorIndexRetriever(this);
+  asRetriever(options?: any): VectorIndexRetriever {
+    return new VectorIndexRetriever({ index: this, ...options });
   }
 
-  /**
-   * Get a retriever query engine for this index.
-   *
-   * NOTE: if you are using a custom query engine you don't have to use this method.
-   * @returns
-   */
-  asQueryEngine(): BaseQueryEngine {
-    return new RetrieverQueryEngine(this.asRetriever());
+  asQueryEngine(options?: {
+    retriever?: BaseRetriever;
+    responseSynthesizer?: ResponseSynthesizer;
+  }): BaseQueryEngine {
+    let { retriever, responseSynthesizer } = options ?? {};
+
+    retriever = retriever ?? this.asRetriever();
+    return new RetrieverQueryEngine(this.asRetriever(), responseSynthesizer);
   }
 }

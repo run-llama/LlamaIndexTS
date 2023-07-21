@@ -16,12 +16,20 @@ import { BaseRetriever } from "../../Retriever";
 
 export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
-  similarityTopK = DEFAULT_SIMILARITY_TOP_K;
+  similarityTopK;
   private serviceContext: ServiceContext;
 
-  constructor(index: VectorStoreIndex) {
+  constructor({
+    index,
+    similarityTopK,
+  }: {
+    index: VectorStoreIndex;
+    similarityTopK?: number;
+  }) {
     this.index = index;
     this.serviceContext = this.index.serviceContext;
+
+    this.similarityTopK = similarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
   }
 
   async retrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]> {

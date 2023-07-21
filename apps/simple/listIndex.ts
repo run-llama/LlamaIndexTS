@@ -18,7 +18,9 @@ async function main() {
     documents: [document],
     serviceContext,
   });
-  const queryEngine = index.asQueryEngine(ListRetrieverMode.LLM);
+  const queryEngine = index.asQueryEngine({
+    retriever: index.asRetriever({ mode: ListRetrieverMode.LLM }),
+  });
   const response = await queryEngine.query(
     "What did the author do growing up?"
   );

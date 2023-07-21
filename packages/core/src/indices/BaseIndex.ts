@@ -6,6 +6,8 @@ import { StorageContext } from "../storage/StorageContext";
 import { BaseDocumentStore } from "../storage/docStore/types";
 import { VectorStore } from "../storage/vectorStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
+import { BaseQueryEngine } from "../QueryEngine";
+import { ResponseSynthesizer } from "../ResponseSynthesizer";
 
 /**
  * The underlying structure of each index.
@@ -82,7 +84,21 @@ export abstract class BaseIndex<T> {
     this.indexStruct = init.indexStruct;
   }
 
-  abstract asRetriever(): BaseRetriever;
+  /**
+   * Create a new retriever from the index.
+   * @param retrieverOptions
+   */
+  abstract asRetriever(options?: any): BaseRetriever;
+
+  /**
+   * Create a new query engine from the index. It will also create a retriever
+   * and response synthezier if they are not provided.
+   * @param options you can supply your own custom Retriever and ResponseSynthesizer
+   */
+  abstract asQueryEngine(options?: {
+    retriever?: BaseRetriever;
+    responseSynthesizer?: ResponseSynthesizer;
+  }): BaseQueryEngine;
 }
 
 export interface VectorIndexOptions {

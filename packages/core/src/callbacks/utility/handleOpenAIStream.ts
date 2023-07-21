@@ -2,7 +2,7 @@ import { globalsHelper } from "../../GlobalsHelper";
 import { StreamCallbackResponse, Event } from "../CallbackManager";
 import { StreamToken } from "../CallbackManager";
 
-export async function aHandleOpenAIStream({
+export async function handleOpenAIStream({
   response,
   onLLMStream,
   parentEvent,

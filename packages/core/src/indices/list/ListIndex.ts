@@ -102,9 +102,9 @@ export class ListIndex extends BaseIndex<IndexList> {
     return index;
   }
 
-  asRetriever(
-    mode: ListRetrieverMode = ListRetrieverMode.DEFAULT
-  ): BaseRetriever {
+  asRetriever(options?: { mode: ListRetrieverMode }): BaseRetriever {
+    const { mode = ListRetrieverMode.DEFAULT } = options ?? {};
+
     switch (mode) {
       case ListRetrieverMode.DEFAULT:
         return new ListIndexRetriever(this);
@@ -115,21 +115,25 @@ export class ListIndex extends BaseIndex<IndexList> {
     }
   }
 
-  asQueryEngine(
-    mode: ListRetrieverMode = ListRetrieverMode.DEFAULT,
-    responseSynthesizer?: ResponseSynthesizer
-  ): BaseQueryEngine {
-    if (_.isNil(responseSynthesizer)) {
+  asQueryEngine(options?: {
+    retriever?: BaseRetriever;
+    responseSynthesizer?: ResponseSynthesizer;
+  }): BaseQueryEngine {
+    let { retriever, responseSynthesizer } = options ?? {};
+
+    if (!retriever) {
+      retriever = this.asRetriever();
+    }
+
+    if (!responseSynthesizer) {
       let responseBuilder = new CompactAndRefine(this.serviceContext);
       responseSynthesizer = new ResponseSynthesizer({
         serviceContext: this.serviceContext,
         responseBuilder,
       });
     }
-    return new RetrieverQueryEngine(
-      this.asRetriever(mode),
-      responseSynthesizer
-    );
+
+    return new RetrieverQueryEngine(retriever, responseSynthesizer);
   }
 
   static async _buildIndexFromNodes(
