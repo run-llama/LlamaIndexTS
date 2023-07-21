@@ -1,5 +1,7 @@
 # LlamaIndex.TS
 
+LlamaIndex is a data framework for your LLM application.
+
 Use your own data with large language models (LLMs, OpenAI ChatGPT and others) in Typescript and Javascript.
 
 ## What is LlamaIndex.TS?
