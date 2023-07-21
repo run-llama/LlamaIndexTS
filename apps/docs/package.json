@@ -25,7 +25,7 @@
     "docusaurus-lunr-search": "^2.3.2",
     "hogan.js": "^3.0.2",
     "lunr": "^2.3.9",
-    "postcss": "^8.4.25",
+    "postcss": "^8.4.26",
     "prism-react-renderer": "^1.3.5",
     "raw-loader": "^4.0.2",
     "react": "^17.0.2",
@@ -34,11 +34,11 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.4.1",
     "@docusaurus/types": "^2.4.1",
-    "@tsconfig/docusaurus": "^1.0.5",
+    "@tsconfig/docusaurus": "^1.0.7",
     "docusaurus-plugin-typedoc": "^0.19.2",
     "typedoc": "^0.24.8",
     "typedoc-plugin-markdown": "^3.15.3",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.5"
   },
   "browserslist": {
     "production": [
