@@ -10,13 +10,14 @@ Unified language model interface
 
 ## Implemented by
 
+- [`LlamaDeuce`](../classes/LlamaDeuce.md)
 - [`OpenAI`](../classes/OpenAI.md)
 
 ## Methods
 
 ### chat
 
-▸ **chat**(`messages`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
+▸ **chat**(`messages`, `parentEvent?`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
 
 Get a chat response from the LLM
 
@@ -25,6 +26,7 @@ Get a chat response from the LLM
 | Name | Type |
 | :------ | :------ |
 | `messages` | [`ChatMessage`](ChatMessage.md)[] |
+| `parentEvent?` | [`Event`](Event.md) |
 
 #### Returns
 
@@ -32,13 +34,13 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[LLM.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L35)
+[llm/LLM.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/llm/LLM.ts#L35)
 
 ___
 
 ### complete
 
-▸ **complete**(`prompt`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
+▸ **complete**(`prompt`, `parentEvent?`): `Promise`<[`ChatResponse`](ChatResponse.md)\>
 
 Get a prompt completion from the LLM
 
@@ -47,6 +49,7 @@ Get a prompt completion from the LLM
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `prompt` | `string` | the prompt to complete |
+| `parentEvent?` | [`Event`](Event.md) | - |
 
 #### Returns
 
@@ -54,4 +57,4 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[LLM.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/LLM.ts#L41)
+[llm/LLM.ts:41](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/llm/LLM.ts#L41)

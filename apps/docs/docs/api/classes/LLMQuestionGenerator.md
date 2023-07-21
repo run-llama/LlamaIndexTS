@@ -26,17 +26,17 @@ LLMQuestionGenerator uses the LLM to generate new questions for the LLM using to
 
 #### Defined in
 
-[QuestionGenerator.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QuestionGenerator.ts#L34)
+[QuestionGenerator.ts:34](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QuestionGenerator.ts#L34)
 
 ## Properties
 
-### llmPredictor
+### llm
 
-• **llmPredictor**: [`BaseLLMPredictor`](../interfaces/BaseLLMPredictor.md)
+• **llm**: [`LLM`](../interfaces/LLM.md)
 
 #### Defined in
 
-[QuestionGenerator.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QuestionGenerator.ts#L30)
+[QuestionGenerator.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QuestionGenerator.ts#L30)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[QuestionGenerator.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QuestionGenerator.ts#L32)
+[QuestionGenerator.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QuestionGenerator.ts#L32)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[QuestionGenerator.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QuestionGenerator.ts#L31)
+[QuestionGenerator.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QuestionGenerator.ts#L31)
 
 ## Methods
 
@@ -81,4 +81,4 @@ ___
 
 #### Defined in
 
-[QuestionGenerator.ts:40](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/QuestionGenerator.ts#L40)
+[QuestionGenerator.ts:40](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/QuestionGenerator.ts#L40)

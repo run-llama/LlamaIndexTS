@@ -34,7 +34,7 @@ A response builder that uses the query to ask the LLM generate a better response
 
 #### Defined in
 
-[ResponseSynthesizer.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L77)
+[ResponseSynthesizer.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/ResponseSynthesizer.ts#L78)
 
 ## Properties
 
@@ -44,7 +44,7 @@ A response builder that uses the query to ask the LLM generate a better response
 
 #### Defined in
 
-[ResponseSynthesizer.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L75)
+[ResponseSynthesizer.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/ResponseSynthesizer.ts#L76)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L73)
+[ResponseSynthesizer.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/ResponseSynthesizer.ts#L74)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L74)
+[ResponseSynthesizer.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/ResponseSynthesizer.ts#L75)
 
 ## Methods
 
@@ -91,7 +91,7 @@ BaseResponseBuilder.getResponse
 
 #### Defined in
 
-[ResponseSynthesizer.ts:87](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L87)
+[ResponseSynthesizer.ts:88](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/ResponseSynthesizer.ts#L88)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:112](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L112)
+[ResponseSynthesizer.ts:113](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/ResponseSynthesizer.ts#L113)
 
 ___
 
@@ -136,4 +136,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:147](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/ResponseSynthesizer.ts#L147)
+[ResponseSynthesizer.ts:149](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/ResponseSynthesizer.ts#L149)

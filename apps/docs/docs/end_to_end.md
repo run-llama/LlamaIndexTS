@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # End to End Examples
@@ -21,6 +21,10 @@ Create a vector index and query it. The vector index will use embeddings to fetc
 ## [OpenAI LLM](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/openai.ts)
 
 Create an OpenAI LLM and directly use it for chat. 
+
+## [Llama2 DeuceLLM](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/llamadeuce.ts)
+
+Create a Llama-2 LLM and directly use it for chat.
 
 ## [SubQuestionQueryEngine](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/subquestion.ts)
 

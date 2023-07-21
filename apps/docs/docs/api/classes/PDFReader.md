@@ -1,12 +1,12 @@
 ---
-id: "TextFileReader"
-title: "Class: TextFileReader"
-sidebar_label: "TextFileReader"
+id: "PDFReader"
+title: "Class: PDFReader"
+sidebar_label: "PDFReader"
 sidebar_position: 0
 custom_edit_url: null
 ---
 
-Read a .txt file
+Read the text of a PDF
 
 ## Implements
 
@@ -16,7 +16,7 @@ Read a .txt file
 
 ### constructor
 
-• **new TextFileReader**()
+• **new PDFReader**()
 
 ## Methods
 
@@ -26,10 +26,10 @@ Read a .txt file
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `file` | `string` |
-| `fs` | [`CompleteFileSystem`](../modules.md#completefilesystem) |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `file` | `string` | `undefined` |
+| `fs` | [`GenericFileSystem`](../interfaces/GenericFileSystem.md) | `DEFAULT_FS` |
 
 #### Returns
 
@@ -41,4 +41,4 @@ Read a .txt file
 
 #### Defined in
 
-[readers/SimpleDirectoryReader.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/readers/SimpleDirectoryReader.ts#L12)
+[readers/PDFReader.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/readers/PDFReader.ts#L12)

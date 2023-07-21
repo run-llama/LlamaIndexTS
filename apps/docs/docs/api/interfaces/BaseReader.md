@@ -10,6 +10,8 @@ A reader takes imports data into Document objects.
 
 ## Implemented by
 
+- [`PDFReader`](../classes/PDFReader.md)
+- [`SimpleDirectoryReader`](../classes/SimpleDirectoryReader.md)
 - [`TextFileReader`](../classes/TextFileReader.md)
 
 ## Methods
@@ -30,4 +32,4 @@ A reader takes imports data into Document objects.
 
 #### Defined in
 
-[readers/base.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/9d0cadf/packages/core/src/readers/base.ts#L7)
+[readers/base.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/f264211/packages/core/src/readers/base.ts#L7)
