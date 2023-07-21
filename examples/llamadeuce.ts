@@ -1,4 +1,4 @@
-import { LlamaDeuce } from "llamaindex/src/llm/LLM";
+import { LlamaDeuce } from "llamaindex";
 
 (async () => {
   const deuce = new LlamaDeuce();
