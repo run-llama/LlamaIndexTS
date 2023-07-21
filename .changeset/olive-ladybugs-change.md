@@ -1,5 +1,0 @@
----
-"llamaindex": patch
----
-
-Updated README

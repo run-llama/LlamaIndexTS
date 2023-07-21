@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.5
+
+### Patch Changes
+
+- 5a765aa: Updated README
+
 ## 0.0.4
 
 ### Patch Changes

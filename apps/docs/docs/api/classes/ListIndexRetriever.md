@@ -26,7 +26,7 @@ Simple retriever for ListIndex that returns all nodes
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/3cab956/packages/core/src/indices/list/ListIndexRetriever.ts#L22)
+[indices/list/ListIndexRetriever.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/5a765aa/packages/core/src/indices/list/ListIndexRetriever.ts#L22)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Simple retriever for ListIndex that returns all nodes
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/3cab956/packages/core/src/indices/list/ListIndexRetriever.ts#L20)
+[indices/list/ListIndexRetriever.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/5a765aa/packages/core/src/indices/list/ListIndexRetriever.ts#L20)
 
 ## Methods
 
@@ -54,7 +54,7 @@ Simple retriever for ListIndex that returns all nodes
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:48](https://github.com/run-llama/LlamaIndexTS/blob/3cab956/packages/core/src/indices/list/ListIndexRetriever.ts#L48)
+[indices/list/ListIndexRetriever.ts:48](https://github.com/run-llama/LlamaIndexTS/blob/5a765aa/packages/core/src/indices/list/ListIndexRetriever.ts#L48)
 
 ___
 
@@ -79,4 +79,4 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndexRetriever.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/3cab956/packages/core/src/indices/list/ListIndexRetriever.ts#L26)
+[indices/list/ListIndexRetriever.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/5a765aa/packages/core/src/indices/list/ListIndexRetriever.ts#L26)
