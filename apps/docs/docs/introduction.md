@@ -43,9 +43,8 @@ Once you're up and running, [High-Level Concepts](./concepts.md) has an overview
 
 To download or contribute, find LlamaIndex on:
 
-- Github: https://github.com/jerryjliu/llama_index
-- LlamaIndex (NPM): https://www.npmjs.com/package/llamaindex
-- LlamaIndex (Python): https://pypi.org/project/llama-index/.
+- Github: https://github.com/run-llama/LlamaIndexTS
+- NPM: https://www.npmjs.com/package/llamaindex
 
 ## Community
 
