@@ -18,6 +18,10 @@ Create a list index and query it. This example also use the `LLMRetriever`, whic
 
 Create a vector index and query it. The vector index will use embeddings to fetch the top k most relevant nodes. By default, the top k is 2.
 
+## [Customized Vector Index](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/vectorIndexCustomize.ts)
+
+Create a vector index and query it, while also configuring the the `LLM`, the `ServiceContext`, and the `similarity_top_k`.
+
 ## [OpenAI LLM](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/openai.ts)
 
 Create an OpenAI LLM and directly use it for chat. 

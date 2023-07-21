@@ -1,19 +1,13 @@
-// @ts-ignore
-import process from "node:process";
-import { Configuration, OpenAIWrapper } from "llamaindex/src/llm/openai";
+import { OpenAI } from "llamaindex";
 
 (async () => {
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.0 });
+  
+  // complete api
+  const response1 = await llm.complete("How are you?");
+  console.log(response1.message.content);
 
-  const openai = new OpenAIWrapper(configuration);
-
-  const { data } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo-0613",
-    messages: [{ role: "user", content: "Hello, world!" }],
-  });
-
-  console.log(data);
-  console.log(data.choices[0].message);
+  // chat api
+  const response2 = await llm.chat([{ content: "Tell me a joke!", role: "user" }]);
+  console.log(response2.message.content);
 })();
