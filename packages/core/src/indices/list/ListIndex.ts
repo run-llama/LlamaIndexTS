@@ -30,6 +30,7 @@ export enum ListRetrieverMode {
 export interface ListIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: IndexList;
+  indexID?: string;
   serviceContext?: ServiceContext;
   storageContext?: StorageContext;
 }
@@ -49,14 +50,25 @@ export class ListIndex extends BaseIndex<IndexList> {
       options.serviceContext ?? serviceContextFromDefaults({});
     const { docStore, indexStore } = storageContext;
 
-    let indexStruct: IndexList;
-    if (options.indexStruct) {
+    // Setup IndexStruct from storage
+    let indexStructs = await indexStore.getIndexStructs() as IndexList[];
+    let indexStruct: IndexList | null;
+    if (indexStructs.length == 1) {
+      indexStruct = indexStructs[0];
+    } else if (indexStructs.length > 1 && options.indexID) {
+      indexStruct = await indexStore.getIndexStruct(options.indexID) as IndexList;
+    } else if (options.indexStruct) {
+      indexStruct = options.indexStruct;
+    } else {
+      indexStruct = null;
+    }
+
+    if (indexStruct) {
       if (options.nodes) {
         throw new Error(
           "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
         );
       }
-      indexStruct = options.indexStruct;
     } else {
       if (!options.nodes) {
         throw new Error(
@@ -67,6 +79,8 @@ export class ListIndex extends BaseIndex<IndexList> {
         options.nodes,
         storageContext.docStore
       );
+      
+      await indexStore.addIndexStruct(indexStruct);
     }
 
     return new ListIndex({
@@ -78,12 +92,13 @@ export class ListIndex extends BaseIndex<IndexList> {
     });
   }
 
-  static async fromDocuments(args: {
-    documents: Document[];
-    storageContext?: StorageContext;
-    serviceContext?: ServiceContext;
+  static async fromDocuments(
+    documents: Document[],
+    args: {
+      storageContext?: StorageContext;
+      serviceContext?: ServiceContext;
   }): Promise<ListIndex> {
-    let { documents, storageContext, serviceContext } = args;
+    let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;

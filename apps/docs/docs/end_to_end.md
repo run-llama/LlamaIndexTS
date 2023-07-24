@@ -18,6 +18,10 @@ Create a list index and query it. This example also use the `LLMRetriever`, whic
 
 Create a vector index and query it. The vector index will use embeddings to fetch the top k most relevant nodes. By default, the top k is 2.
 
+## [Save / Load an Index](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/storageContext.ts)
+
+Create and load a vector index. Persistance to disk in LlamaIndex.TS happens automatically once a storage context object is created.
+
 ## [Customized Vector Index](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/vectorIndexCustomize.ts)
 
 Create a vector index and query it, while also configuring the the `LLM`, the `ServiceContext`, and the `similarity_top_k`.

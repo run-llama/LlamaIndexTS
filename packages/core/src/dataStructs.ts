@@ -1,27 +1,26 @@
+import { IndexList, IndexDict } from "./indices";
+
 export enum IndexStructType {
   SIMPLE_DICT = "simple_dict",
+  LIST = "list",
 }
 
 export interface IndexStruct {
   readonly indexId: string;
   readonly summary?: string;
-  readonly type: IndexStructType;
-}
-
-export function indexStructToJson(indexStruct: IndexStruct): {
-  [key: string]: any;
-} {
-  return {
-    indexId: indexStruct.indexId,
-    summary: indexStruct.summary,
-    type: indexStruct.type,
-  };
+  readonly toJson: () => Record<string, unknown>;
 }
 
 export function jsonToIndexStruct(json: any): IndexStruct {
-  return {
-    indexId: json.indexId,
-    summary: json.summary,
-    type: json.type,
-  };
+  if (json.type === IndexStructType.LIST) {
+    const indexList = new IndexList(json.indexId, json.summary);
+    indexList.nodes = json.nodes;
+    return indexList;
+  } else if (json.type === IndexStructType.SIMPLE_DICT) {
+    const indexDict = new IndexDict(json.indexId, json.summary);
+    indexDict.nodesDict = json.nodesDict;
+    return indexDict;
+  } else {
+    throw new Error(`Unknown index struct type: ${json.type}`);
+  }
 }

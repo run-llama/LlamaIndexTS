@@ -50,15 +50,27 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       options.serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
     const vectorStore = storageContext.vectorStore;
+    const indexStore = storageContext.indexStore;
+    
+    // Setup IndexStruct from storage
+    let indexStructs = await indexStore.getIndexStructs() as IndexDict[];
+    let indexStruct: IndexDict | null;
+    if (indexStructs.length == 1) {
+      indexStruct = indexStructs[0];
+    } else if (indexStructs.length > 1 && options.indexID) {
+      indexStruct = await indexStore.getIndexStruct(options.indexID) as IndexDict;
+    } else if (options.indexStruct) {
+      indexStruct = options.indexStruct;
+    } else {
+      indexStruct = null;
+    }
 
-    let indexStruct: IndexDict;
-    if (options.indexStruct) {
+    if (indexStruct) {
       if (options.nodes) {
         throw new Error(
           "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
         );
       }
-      indexStruct = options.indexStruct;
     } else {
       if (!options.nodes) {
         throw new Error(
@@ -71,6 +83,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         vectorStore,
         docStore
       );
+      
+      await indexStore.addIndexStruct(indexStruct);
     }
 
     return new VectorStoreIndex({
@@ -154,9 +168,11 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    */
   static async fromDocuments(
     documents: Document[],
-    storageContext?: StorageContext,
-    serviceContext?: ServiceContext
-  ): Promise<VectorStoreIndex> {
+    args: {
+      storageContext?: StorageContext;
+      serviceContext?: ServiceContext;
+  }): Promise<VectorStoreIndex> {
+    let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
