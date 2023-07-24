@@ -31,7 +31,7 @@ SimpleNodeParser is the default NodeParser. It splits documents into TextNodes u
 
 #### Defined in
 
-[NodeParser.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/6f2cb31/packages/core/src/NodeParser.ts#L64)
+[NodeParser.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/3e85a90/packages/core/src/NodeParser.ts#L64)
 
 ## Properties
 
@@ -41,7 +41,7 @@ SimpleNodeParser is the default NodeParser. It splits documents into TextNodes u
 
 #### Defined in
 
-[NodeParser.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/6f2cb31/packages/core/src/NodeParser.ts#L61)
+[NodeParser.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/3e85a90/packages/core/src/NodeParser.ts#L61)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/6f2cb31/packages/core/src/NodeParser.ts#L62)
+[NodeParser.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/3e85a90/packages/core/src/NodeParser.ts#L62)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/6f2cb31/packages/core/src/NodeParser.ts#L60)
+[NodeParser.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/3e85a90/packages/core/src/NodeParser.ts#L60)
 
 ## Methods
 
@@ -87,7 +87,7 @@ Generate Node objects from documents
 
 #### Defined in
 
-[NodeParser.ts:95](https://github.com/run-llama/LlamaIndexTS/blob/6f2cb31/packages/core/src/NodeParser.ts#L95)
+[NodeParser.ts:95](https://github.com/run-llama/LlamaIndexTS/blob/3e85a90/packages/core/src/NodeParser.ts#L95)
 
 ___
 
@@ -111,4 +111,4 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:82](https://github.com/run-llama/LlamaIndexTS/blob/6f2cb31/packages/core/src/NodeParser.ts#L82)
+[NodeParser.ts:82](https://github.com/run-llama/LlamaIndexTS/blob/3e85a90/packages/core/src/NodeParser.ts#L82)
