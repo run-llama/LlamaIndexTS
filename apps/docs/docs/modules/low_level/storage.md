@@ -14,7 +14,7 @@ import { Document, VectorStoreIndex, storageContextFromDefaults } from "./src";
 const storageContext = await storageContextFromDefaults({ persistDir: "./storage" });
 
 const document = new Document({ text: "Test Text" });
-const index = await VectorStoreIndex.fromDocuments([document], storageContext);
+const index = await VectorStoreIndex.fromDocuments([document], { storageContext });
 ```
 
 ## API Reference
