@@ -1,5 +1,6 @@
 ---
 sidebar_position: 0
+slug: /
 ---
 
 # What is LlamaIndex.TS?
@@ -33,6 +34,7 @@ Our high-level API allows beginner users to use LlamaIndex.TS to ingest and quer
 For more complex applications, our lower-level APIs allow advanced users to customize and extend any module—data connectors, indices, retrievers, and query engines, to fit their needs.
 
 ## Getting Started
+
 `npm install llamaindex`
 
 Our documentation includes [Installation Instructions](./installation.md) and a [Starter Tutorial](./starter.md) to build your first application.
