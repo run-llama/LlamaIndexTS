@@ -67,8 +67,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   test("For VectorStoreIndex w/ a SimpleResponseBuilder", async () => {
     const vectorStoreIndex = await VectorStoreIndex.fromDocuments(
       [document],
-      undefined,
-      serviceContext
+      { serviceContext }
     );
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
@@ -138,10 +137,10 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   });
 
   test("For ListIndex w/ a ListIndexRetriever", async () => {
-    const listIndex = await ListIndex.fromDocuments({
-      documents: [document],
-      serviceContext,
-    });
+    const listIndex = await ListIndex.fromDocuments(
+      [document],
+      { serviceContext },
+    );
     const responseBuilder = new SimpleResponseBuilder(serviceContext);
     const responseSynthesizer = new ResponseSynthesizer({
       serviceContext: serviceContext,

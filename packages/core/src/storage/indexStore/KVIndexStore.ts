@@ -1,7 +1,6 @@
 import { BaseKVStore } from "../kvStore/types";
 import {
   IndexStruct,
-  indexStructToJson,
   jsonToIndexStruct,
 } from "../../dataStructs";
 import _ from "lodash";
@@ -20,7 +19,7 @@ export class KVIndexStore extends BaseIndexStore {
 
   async addIndexStruct(indexStruct: IndexStruct): Promise<void> {
     let key = indexStruct.indexId;
-    let data = indexStructToJson(indexStruct);
+    let data = indexStruct.toJson();
     await this._kvStore.put(key, data, this._collection);
   }
 

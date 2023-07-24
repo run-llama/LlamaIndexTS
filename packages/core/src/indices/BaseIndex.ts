@@ -8,6 +8,7 @@ import { VectorStore } from "../storage/vectorStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
 import { BaseQueryEngine } from "../QueryEngine";
 import { ResponseSynthesizer } from "../ResponseSynthesizer";
+import { IndexStructType } from "../dataStructs";
 
 /**
  * The underlying structure of each index.
@@ -21,6 +22,13 @@ export abstract class IndexStruct {
     this.summary = summary;
   }
 
+  toJson(): Record<string, unknown> {
+    return {
+      indexId: this.indexId,
+      summary: this.summary,
+    };
+  }
+
   getSummary(): string {
     if (this.summary === undefined) {
       throw new Error("summary field of the index dict is not set");
@@ -32,6 +40,7 @@ export abstract class IndexStruct {
 export class IndexDict extends IndexStruct {
   nodesDict: Record<string, BaseNode> = {};
   docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
+  type: IndexStructType = IndexStructType.SIMPLE_DICT;
 
   getSummary(): string {
     if (this.summary === undefined) {
@@ -44,13 +53,30 @@ export class IndexDict extends IndexStruct {
     const vectorId = textId ?? node.id_;
     this.nodesDict[vectorId] = node;
   }
+
+  toJson(): Record<string, unknown> {
+    return {
+      ...super.toJson(),
+      nodesDict: this.nodesDict,
+      type: this.type,
+    };
+  }
 }
 
 export class IndexList extends IndexStruct {
   nodes: string[] = [];
+  type: IndexStructType = IndexStructType.LIST;
 
   addNode(node: BaseNode) {
     this.nodes.push(node.id_);
+  }
+
+  toJson(): Record<string, unknown> {
+    return {
+      ...super.toJson(),
+      nodes: this.nodes,
+      type: this.type,
+    };
   }
 }
 
@@ -104,6 +130,7 @@ export abstract class BaseIndex<T> {
 export interface VectorIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: IndexDict;
+  indexId?: string;
   serviceContext?: ServiceContext;
   storageContext?: StorageContext;
 }

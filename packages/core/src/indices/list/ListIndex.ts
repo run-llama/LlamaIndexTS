@@ -20,6 +20,7 @@ import {
   ResponseSynthesizer,
   CompactAndRefine,
 } from "../../ResponseSynthesizer";
+import { IndexStructType } from "../../dataStructs";
 
 export enum ListRetrieverMode {
   DEFAULT = "default",
@@ -30,6 +31,7 @@ export enum ListRetrieverMode {
 export interface ListIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: IndexList;
+  indexId?: string;
   serviceContext?: ServiceContext;
   storageContext?: StorageContext;
 }
@@ -49,14 +51,35 @@ export class ListIndex extends BaseIndex<IndexList> {
       options.serviceContext ?? serviceContextFromDefaults({});
     const { docStore, indexStore } = storageContext;
 
-    let indexStruct: IndexList;
+    // Setup IndexStruct from storage
+    let indexStructs = await indexStore.getIndexStructs() as IndexList[];
+    let indexStruct: IndexList | null;
+
+    if (options.indexStruct && indexStructs.length > 0) {
+      throw new Error("Cannot initialize index with both indexStruct and indexStore");
+    }
+
     if (options.indexStruct) {
+      indexStruct = options.indexStruct;
+    } else if (indexStructs.length == 1) {
+      indexStruct = indexStructs[0];
+    } else if (indexStructs.length > 1 && options.indexId) {
+      indexStruct = await indexStore.getIndexStruct(options.indexId) as IndexList;
+    } else {
+      indexStruct = null;
+    }
+
+    // check indexStruct type
+    if (indexStruct && indexStruct.type !== IndexStructType.LIST) {
+      throw new Error("Attempting to initialize ListIndex with non-list indexStruct");
+    }
+
+    if (indexStruct) {
       if (options.nodes) {
         throw new Error(
           "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
         );
       }
-      indexStruct = options.indexStruct;
     } else {
       if (!options.nodes) {
         throw new Error(
@@ -67,6 +90,8 @@ export class ListIndex extends BaseIndex<IndexList> {
         options.nodes,
         storageContext.docStore
       );
+      
+      await indexStore.addIndexStruct(indexStruct);
     }
 
     return new ListIndex({
@@ -78,12 +103,13 @@ export class ListIndex extends BaseIndex<IndexList> {
     });
   }
 
-  static async fromDocuments(args: {
-    documents: Document[];
-    storageContext?: StorageContext;
-    serviceContext?: ServiceContext;
+  static async fromDocuments(
+    documents: Document[],
+    args: {
+      storageContext?: StorageContext;
+      serviceContext?: ServiceContext;
   }): Promise<ListIndex> {
-    let { documents, storageContext, serviceContext } = args;
+    let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;

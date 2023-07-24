@@ -14,10 +14,10 @@ async function main() {
     }),
   });
   const document = new Document({ text: essay });
-  const index = await ListIndex.fromDocuments({
-    documents: [document],
-    serviceContext,
-  });
+  const index = await ListIndex.fromDocuments(
+    [document],
+    { serviceContext }
+  );
   const queryEngine = index.asQueryEngine({
     retriever: index.asRetriever({ mode: ListRetrieverMode.LLM }),
   });

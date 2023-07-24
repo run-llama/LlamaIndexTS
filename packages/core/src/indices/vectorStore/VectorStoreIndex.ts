@@ -24,6 +24,7 @@ import {
 import { BaseRetriever } from "../../Retriever";
 import { ResponseSynthesizer } from "../../ResponseSynthesizer";
 import { BaseDocumentStore } from "../../storage/docStore/types";
+import { IndexStructType } from "../../dataStructs";
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
@@ -50,15 +51,37 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       options.serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
     const vectorStore = storageContext.vectorStore;
+    const indexStore = storageContext.indexStore;
 
-    let indexStruct: IndexDict;
+    // Setup IndexStruct from storage
+    let indexStructs = await indexStore.getIndexStructs() as IndexDict[];
+    let indexStruct: IndexDict | null;
+
+    if (options.indexStruct && indexStructs.length > 0) {
+      throw new Error("Cannot initialize index with both indexStruct and indexStore");
+    }
+
     if (options.indexStruct) {
+      indexStruct = options.indexStruct;
+    } else if (indexStructs.length == 1) {
+      indexStruct = indexStructs[0];
+    } else if (indexStructs.length > 1 && options.indexId) {
+      indexStruct = await indexStore.getIndexStruct(options.indexId) as IndexDict;
+    } else {
+      indexStruct = null;
+    }
+
+    // check indexStruct type
+    if (indexStruct && indexStruct.type !== IndexStructType.SIMPLE_DICT) {
+      throw new Error("Attempting to initialize VectorStoreIndex with non-vector indexStruct");
+    }
+
+    if (indexStruct) {
       if (options.nodes) {
         throw new Error(
           "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
         );
       }
-      indexStruct = options.indexStruct;
     } else {
       if (!options.nodes) {
         throw new Error(
@@ -71,6 +94,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         vectorStore,
         docStore
       );
+      
+      await indexStore.addIndexStruct(indexStruct);
     }
 
     return new VectorStoreIndex({
@@ -154,9 +179,11 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    */
   static async fromDocuments(
     documents: Document[],
-    storageContext?: StorageContext,
-    serviceContext?: ServiceContext
-  ): Promise<VectorStoreIndex> {
+    args: {
+      storageContext?: StorageContext;
+      serviceContext?: ServiceContext;
+  }): Promise<VectorStoreIndex> {
+    let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
