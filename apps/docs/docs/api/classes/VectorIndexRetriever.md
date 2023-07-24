@@ -28,7 +28,7 @@ VectorIndexRetriever retrieves nodes from a VectorIndex.
 
 #### Defined in
 
-[indices/vectorStore/VectorIndexRetriever.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L22)
+[indices/vectorStore/VectorIndexRetriever.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L22)
 
 ## Properties
 
@@ -38,7 +38,7 @@ VectorIndexRetriever retrieves nodes from a VectorIndex.
 
 #### Defined in
 
-[indices/vectorStore/VectorIndexRetriever.ts:18](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L18)
+[indices/vectorStore/VectorIndexRetriever.ts:18](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L18)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorIndexRetriever.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L20)
+[indices/vectorStore/VectorIndexRetriever.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L20)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorIndexRetriever.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L19)
+[indices/vectorStore/VectorIndexRetriever.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L19)
 
 ## Methods
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorIndexRetriever.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L69)
+[indices/vectorStore/VectorIndexRetriever.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L69)
 
 ___
 
@@ -101,4 +101,4 @@ ___
 
 #### Defined in
 
-[indices/vectorStore/VectorIndexRetriever.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L35)
+[indices/vectorStore/VectorIndexRetriever.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/vectorStore/VectorIndexRetriever.ts#L35)

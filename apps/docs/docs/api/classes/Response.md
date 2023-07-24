@@ -23,7 +23,7 @@ Respone is the output of a LLM
 
 #### Defined in
 
-[Response.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/Response.ts#L10)
+[Response.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/Response.ts#L10)
 
 ## Properties
 
@@ -33,7 +33,7 @@ Respone is the output of a LLM
 
 #### Defined in
 
-[Response.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/Response.ts#L7)
+[Response.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/Response.ts#L7)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[Response.ts:8](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/Response.ts#L8)
+[Response.ts:8](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/Response.ts#L8)
 
 ## Methods
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[Response.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/Response.ts#L15)
+[Response.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/Response.ts#L15)
 
 ___
 
@@ -71,4 +71,4 @@ ___
 
 #### Defined in
 
-[Response.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/Response.ts#L19)
+[Response.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/Response.ts#L19)

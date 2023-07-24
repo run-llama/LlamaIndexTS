@@ -3,7 +3,7 @@
   "private": true,
   "name": "simple",
   "dependencies": {
-    "llamaindex": "0.0.6"
+    "llamaindex": "latest"
   },
   "devDependencies": {
     "@types/node": "^18"

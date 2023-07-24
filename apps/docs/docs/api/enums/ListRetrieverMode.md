@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[indices/list/ListIndex.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/list/ListIndex.ts#L26)
+[indices/list/ListIndex.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/list/ListIndex.ts#L26)
 
 ___
 
@@ -24,4 +24,4 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/80d3fc9/packages/core/src/indices/list/ListIndex.ts#L28)
+[indices/list/ListIndex.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/indices/list/ListIndex.ts#L28)

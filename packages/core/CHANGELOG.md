@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.7
+
+### Patch Changes
+
+- 9fa6d4a: Make second argument of fromDocuments optional again
+
 ## 0.0.6
 
 ### Patch Changes
