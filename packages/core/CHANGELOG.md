@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.8
+
+### Patch Changes
+
+- ea5038e: Disabling PDF loader for now to fix module import
+
 ## 0.0.7
 
 ### Patch Changes

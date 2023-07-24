@@ -40,4 +40,4 @@ Read all of the documents in a directory. Currently supports PDF and TXT files.
 
 #### Defined in
 
-[readers/SimpleDirectoryReader.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/9fa6d4a/packages/core/src/readers/SimpleDirectoryReader.ts#L37)
+[readers/SimpleDirectoryReader.ts:37](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/readers/SimpleDirectoryReader.ts#L37)

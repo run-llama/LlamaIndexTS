@@ -1,5 +1,12 @@
 # simple
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [ea5038e]
+  - llamaindex@0.0.8
+
 ## 0.0.5
 
 ### Patch Changes
