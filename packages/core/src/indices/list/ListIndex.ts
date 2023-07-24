@@ -52,11 +52,13 @@ export class ListIndex extends BaseIndex<IndexList> {
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
-    let indexStructs = await indexStore.getIndexStructs() as IndexList[];
+    let indexStructs = (await indexStore.getIndexStructs()) as IndexList[];
     let indexStruct: IndexList | null;
 
     if (options.indexStruct && indexStructs.length > 0) {
-      throw new Error("Cannot initialize index with both indexStruct and indexStore");
+      throw new Error(
+        "Cannot initialize index with both indexStruct and indexStore"
+      );
     }
 
     if (options.indexStruct) {
@@ -64,14 +66,18 @@ export class ListIndex extends BaseIndex<IndexList> {
     } else if (indexStructs.length == 1) {
       indexStruct = indexStructs[0];
     } else if (indexStructs.length > 1 && options.indexId) {
-      indexStruct = await indexStore.getIndexStruct(options.indexId) as IndexList;
+      indexStruct = (await indexStore.getIndexStruct(
+        options.indexId
+      )) as IndexList;
     } else {
       indexStruct = null;
     }
 
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.LIST) {
-      throw new Error("Attempting to initialize ListIndex with non-list indexStruct");
+      throw new Error(
+        "Attempting to initialize ListIndex with non-list indexStruct"
+      );
     }
 
     if (indexStruct) {
@@ -90,7 +96,7 @@ export class ListIndex extends BaseIndex<IndexList> {
         options.nodes,
         storageContext.docStore
       );
-      
+
       await indexStore.addIndexStruct(indexStruct);
     }
 
@@ -108,7 +114,8 @@ export class ListIndex extends BaseIndex<IndexList> {
     args: {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
-  }): Promise<ListIndex> {
+    } = {}
+  ): Promise<ListIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});

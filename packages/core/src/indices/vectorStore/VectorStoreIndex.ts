@@ -54,11 +54,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     const indexStore = storageContext.indexStore;
 
     // Setup IndexStruct from storage
-    let indexStructs = await indexStore.getIndexStructs() as IndexDict[];
+    let indexStructs = (await indexStore.getIndexStructs()) as IndexDict[];
     let indexStruct: IndexDict | null;
 
     if (options.indexStruct && indexStructs.length > 0) {
-      throw new Error("Cannot initialize index with both indexStruct and indexStore");
+      throw new Error(
+        "Cannot initialize index with both indexStruct and indexStore"
+      );
     }
 
     if (options.indexStruct) {
@@ -66,14 +68,18 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     } else if (indexStructs.length == 1) {
       indexStruct = indexStructs[0];
     } else if (indexStructs.length > 1 && options.indexId) {
-      indexStruct = await indexStore.getIndexStruct(options.indexId) as IndexDict;
+      indexStruct = (await indexStore.getIndexStruct(
+        options.indexId
+      )) as IndexDict;
     } else {
       indexStruct = null;
     }
 
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.SIMPLE_DICT) {
-      throw new Error("Attempting to initialize VectorStoreIndex with non-vector indexStruct");
+      throw new Error(
+        "Attempting to initialize VectorStoreIndex with non-vector indexStruct"
+      );
     }
 
     if (indexStruct) {
@@ -94,7 +100,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         vectorStore,
         docStore
       );
-      
+
       await indexStore.addIndexStruct(indexStruct);
     }
 
@@ -182,7 +188,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     args: {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
-  }): Promise<VectorStoreIndex> {
+    } = {}
+  ): Promise<VectorStoreIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
