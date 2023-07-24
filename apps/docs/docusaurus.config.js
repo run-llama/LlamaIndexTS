@@ -11,7 +11,7 @@ const config = {
   favicon: "img/favicon.png",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-test-site.com",
+  url: "https://ts.llamaindex.ai",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
@@ -38,6 +38,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -47,6 +48,7 @@ const config = {
             [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
           ],
         },
+        blog: false,
       }),
     ],
   ],
@@ -119,12 +121,12 @@ const config = {
       },
       algolia: {
         // The application ID provided by Algolia
-        appId: 'DYKPM6G4CX',
+        appId: "DYKPM6G4CX",
 
         // Public API key: it is safe to commit it
-        apiKey: 'c4ff3789f20bb72a5d735082aef17719',
+        apiKey: "c4ff3789f20bb72a5d735082aef17719",
 
-        indexName: 'ts-llamaindex',
+        indexName: "ts-llamaindex",
 
         // Optional: see doc section below
         contextualSearch: true,
