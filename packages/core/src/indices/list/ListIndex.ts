@@ -31,7 +31,7 @@ export enum ListRetrieverMode {
 export interface ListIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: IndexList;
-  indexID?: string;
+  indexId?: string;
   serviceContext?: ServiceContext;
   storageContext?: StorageContext;
 }
@@ -63,8 +63,8 @@ export class ListIndex extends BaseIndex<IndexList> {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
       indexStruct = indexStructs[0];
-    } else if (indexStructs.length > 1 && options.indexID) {
-      indexStruct = await indexStore.getIndexStruct(options.indexID) as IndexList;
+    } else if (indexStructs.length > 1 && options.indexId) {
+      indexStruct = await indexStore.getIndexStruct(options.indexId) as IndexList;
     } else {
       indexStruct = null;
     }

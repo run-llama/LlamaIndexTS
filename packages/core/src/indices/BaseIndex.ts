@@ -130,7 +130,7 @@ export abstract class BaseIndex<T> {
 export interface VectorIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: IndexDict;
-  indexID?: string;
+  indexId?: string;
   serviceContext?: ServiceContext;
   storageContext?: StorageContext;
 }
