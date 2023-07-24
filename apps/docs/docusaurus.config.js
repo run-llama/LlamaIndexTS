@@ -117,9 +117,20 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      algolia: {
+        // The application ID provided by Algolia
+        appId: 'DYKPM6G4CX',
+
+        // Public API key: it is safe to commit it
+        apiKey: 'c4ff3789f20bb72a5d735082aef17719',
+
+        indexName: 'ts-llamaindex',
+
+        // Optional: see doc section below
+        contextualSearch: true,
+      },
     }),
   plugins: [
-    [require.resolve('docusaurus-lunr-search'), {}],
     [
       "docusaurus-plugin-typedoc",
       {
