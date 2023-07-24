@@ -80,6 +80,10 @@ pnpm dlx ts-node example.ts
 
 - [SimplePrompt](packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
+## Playground
+
+Check out our NextJS playground at https://llama-playground.vercel.app/. The source is available at https://github.com/run-llama/ts-playground
+
 ## Contributing:
 
 We are in the very early days of LlamaIndex.TS. If you’re interested in hacking on it with us check out our [contributing guide](CONTRIBUTING.md)
