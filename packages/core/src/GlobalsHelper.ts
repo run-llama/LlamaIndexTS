@@ -5,19 +5,27 @@ import { v4 as uuidv4 } from "uuid";
  * Helper class singleton
  */
 class GlobalsHelper {
-  defaultTokenizer: ((text: string) => string[]) | null = null;
+  defaultTokenizer: {
+    encode: (text: string) => number[];
+    decode: (tokens: number[]) => string;
+  } | null = null;
 
   tokenizer() {
-    if (this.defaultTokenizer) {
-      return this.defaultTokenizer;
+    if (!this.defaultTokenizer) {
+      const tiktoken = require("tiktoken-node");
+      this.defaultTokenizer = tiktoken.getEncoding("gpt2");
     }
 
-    const tiktoken = require("tiktoken-node");
-    let enc = new tiktoken.getEncoding("gpt2");
-    this.defaultTokenizer = (text: string) => {
-      return enc.encode(text);
-    };
-    return this.defaultTokenizer;
+    return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
+  }
+
+  tokenizerDecoder() {
+    if (!this.defaultTokenizer) {
+      const tiktoken = require("tiktoken-node");
+      this.defaultTokenizer = tiktoken.getEncoding("gpt2");
+    }
+
+    return this.defaultTokenizer!.decode.bind(this.defaultTokenizer);
   }
 
   createEvent({

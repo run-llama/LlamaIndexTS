@@ -60,7 +60,7 @@ export class SentenceSplitter {
 
     if (tokenizer == undefined || tokenizerDecoder == undefined) {
       tokenizer = globalsHelper.tokenizer();
-      tokenizerDecoder = globalsHelper.tokenizer;
+      tokenizerDecoder = globalsHelper.tokenizerDecoder();
     }
     this.tokenizer = tokenizer;
     this.tokenizerDecoder = tokenizerDecoder;
