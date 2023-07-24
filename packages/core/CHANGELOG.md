@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.9
+
+### Patch Changes
+
+- 02d9bb0: Remove ESM export for now (causing issues with edge functions)
+
 ## 0.0.8
 
 ### Patch Changes

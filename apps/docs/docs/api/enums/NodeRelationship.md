@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Node.ts:8](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/Node.ts#L8)
+[Node.ts:8](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/Node.ts#L8)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[Node.ts:6](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/Node.ts#L6)
+[Node.ts:6](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/Node.ts#L6)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[Node.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/Node.ts#L7)
+[Node.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/Node.ts#L7)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[Node.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/Node.ts#L5)
+[Node.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/Node.ts#L5)
 
 ___
 
@@ -54,4 +54,4 @@ ___
 
 #### Defined in
 
-[Node.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/Node.ts#L4)
+[Node.ts:4](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/Node.ts#L4)

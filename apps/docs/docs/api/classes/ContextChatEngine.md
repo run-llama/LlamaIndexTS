@@ -31,7 +31,7 @@ ideally allowing the appropriate context to be surfaced for each query.
 
 #### Defined in
 
-[ChatEngine.ts:133](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/ChatEngine.ts#L133)
+[ChatEngine.ts:133](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/ChatEngine.ts#L133)
 
 ## Properties
 
@@ -41,7 +41,7 @@ ideally allowing the appropriate context to be surfaced for each query.
 
 #### Defined in
 
-[ChatEngine.ts:131](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/ChatEngine.ts#L131)
+[ChatEngine.ts:131](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/ChatEngine.ts#L131)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:130](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/ChatEngine.ts#L130)
+[ChatEngine.ts:130](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/ChatEngine.ts#L130)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[ChatEngine.ts:129](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/ChatEngine.ts#L129)
+[ChatEngine.ts:129](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/ChatEngine.ts#L129)
 
 ## Methods
 
@@ -88,7 +88,7 @@ Send message along with the class's current chat history to the LLM.
 
 #### Defined in
 
-[ChatEngine.ts:144](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/ChatEngine.ts#L144)
+[ChatEngine.ts:144](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/ChatEngine.ts#L144)
 
 ___
 
@@ -108,4 +108,4 @@ Resets the chat history so that it's empty.
 
 #### Defined in
 
-[ChatEngine.ts:182](https://github.com/run-llama/LlamaIndexTS/blob/ea5038e/packages/core/src/ChatEngine.ts#L182)
+[ChatEngine.ts:182](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/ChatEngine.ts#L182)
