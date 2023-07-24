@@ -40,6 +40,7 @@ export abstract class IndexStruct {
 export class IndexDict extends IndexStruct {
   nodesDict: Record<string, BaseNode> = {};
   docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
+  type: IndexStructType = IndexStructType.SIMPLE_DICT;
 
   getSummary(): string {
     if (this.summary === undefined) {
@@ -57,7 +58,7 @@ export class IndexDict extends IndexStruct {
     return {
       ...super.toJson(),
       nodesDict: this.nodesDict,
-      type: IndexStructType.SIMPLE_DICT,
+      type: this.type,
     };
   }
 }
@@ -74,7 +75,7 @@ export class IndexList extends IndexStruct {
     return {
       ...super.toJson(),
       nodes: this.nodes,
-      type: IndexStructType.LIST,
+      type: this.type,
     };
   }
 }
