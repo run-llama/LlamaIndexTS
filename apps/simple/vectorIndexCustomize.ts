@@ -9,7 +9,7 @@ async function main() {
     { llm: new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.0 }) }
   );
 
-  const index = await VectorStoreIndex.fromDocuments([document], undefined, serviceContext);
+  const index = await VectorStoreIndex.fromDocuments([document], { serviceContext });
   
   const retriever = index.asRetriever();
   retriever.similarityTopK = 5;

@@ -41,4 +41,4 @@ Read a .txt file
 
 #### Defined in
 
-[readers/SimpleDirectoryReader.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/5a765aa/packages/core/src/readers/SimpleDirectoryReader.ts#L12)
+[readers/SimpleDirectoryReader.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/79a7212/packages/core/src/readers/SimpleDirectoryReader.ts#L12)

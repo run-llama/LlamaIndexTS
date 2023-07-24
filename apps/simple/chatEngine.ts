@@ -15,8 +15,7 @@ async function main() {
   const serviceContext = serviceContextFromDefaults({ chunkSize: 512 });
   const index = await VectorStoreIndex.fromDocuments(
     [document],
-    undefined,
-    serviceContext
+    { serviceContext }
   );
   const retriever = index.asRetriever();
   retriever.similarityTopK = 5;
