@@ -1,6 +1,5 @@
-import fs from "fs/promises";
-import { Document, VectorStoreIndex, storageContextFromDefaults } from "./src";
-import essay from "../../examples/essay";
+import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import essay from "./essay";
 
 
 async function main() {
