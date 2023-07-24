@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.11
+
+### Patch Changes
+
+- fb7fb76: Added back PDF loader
+
 ## 0.0.10
 
 ### Patch Changes
