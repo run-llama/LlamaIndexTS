@@ -52,3 +52,5 @@ Then you can run it using
 ```bash
 npx ts-node example.ts
 ```
+
+Ready to learn more? Check out our NextJS playground at https://llama-playground.vercel.app/. The source is available at https://github.com/run-llama/ts-playground
