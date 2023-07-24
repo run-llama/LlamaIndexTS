@@ -34,4 +34,4 @@ Query the query engine and get a response.
 
 #### Defined in
 
-[QueryEngine.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/02d9bb0/packages/core/src/QueryEngine.ts#L24)
+[QueryEngine.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/6f2cb31/packages/core/src/QueryEngine.ts#L24)

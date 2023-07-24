@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.10
+
+### Patch Changes
+
+- 6f2cb31: Fixed tokenizer decoder
+
 ## 0.0.9
 
 ### Patch Changes
