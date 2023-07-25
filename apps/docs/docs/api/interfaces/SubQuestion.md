@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[QuestionGenerator.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/QuestionGenerator.ts#L15)
+[QuestionGenerator.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/QuestionGenerator.ts#L15)
 
 ___
 
@@ -24,4 +24,4 @@ ___
 
 #### Defined in
 
-[QuestionGenerator.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/QuestionGenerator.ts#L16)
+[QuestionGenerator.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/QuestionGenerator.ts#L16)

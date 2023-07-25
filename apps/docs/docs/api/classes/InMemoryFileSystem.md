@@ -26,7 +26,7 @@ A filesystem implementation that stores files in memory.
 
 #### Defined in
 
-[storage/FileSystem.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/storage/FileSystem.ts#L25)
+[storage/FileSystem.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/storage/FileSystem.ts#L25)
 
 ## Methods
 
@@ -50,7 +50,7 @@ A filesystem implementation that stores files in memory.
 
 #### Defined in
 
-[storage/FileSystem.ts:38](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/storage/FileSystem.ts#L38)
+[storage/FileSystem.ts:38](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/storage/FileSystem.ts#L38)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:44](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/storage/FileSystem.ts#L44)
+[storage/FileSystem.ts:44](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/storage/FileSystem.ts#L44)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/storage/FileSystem.ts#L31)
+[storage/FileSystem.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/storage/FileSystem.ts#L31)
 
 ___
 
@@ -126,4 +126,4 @@ ___
 
 #### Defined in
 
-[storage/FileSystem.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/storage/FileSystem.ts#L27)
+[storage/FileSystem.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/storage/FileSystem.ts#L27)

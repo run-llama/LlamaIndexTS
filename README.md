@@ -17,7 +17,7 @@ LlamaIndex.TS requries Node v18 or higher. You can download it from https://node
 In a new folder:
 
 ```bash
-export OPEN_AI_KEY="sk-......" # Replace with your key from https://platform.openai.com/account/api-keys
+export OPENAI_API_KEY="sk-......" # Replace with your key from https://platform.openai.com/account/api-keys
 pnpm init
 pnpm install typescript
 pnpm exec tsc –-init # if needed

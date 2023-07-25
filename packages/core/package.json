@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "dependencies": {
     "js-tiktoken": "^1.0.7",
     "lodash": "^4.17.21",
@@ -9,11 +9,11 @@
     "replicate": "^0.12.3",
     "tiktoken-node": "^0.0.6",
     "uuid": "^9.0.0",
-    "wink-nlp": "^1.14.2"
+    "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.195",
-    "@types/node": "^18.16.19",
+    "@types/node": "^18.17.0",
     "@types/pdf-parse": "^1.1.1",
     "@types/uuid": "^9.0.2",
     "axios": "^0.26.1",
