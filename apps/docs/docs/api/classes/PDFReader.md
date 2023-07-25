@@ -41,4 +41,4 @@ Read the text of a PDF
 
 #### Defined in
 
-[readers/PDFReader.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/3fda1de/packages/core/src/readers/PDFReader.ts#L12)
+[readers/PDFReader.ts:12](https://github.com/run-llama/LlamaIndexTS/blob/8028600/packages/core/src/readers/PDFReader.ts#L12)
