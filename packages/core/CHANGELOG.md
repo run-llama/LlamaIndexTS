@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.12
+
+### Patch Changes
+
+- 68bdaaa: Updated dependencies and README
+
 ## 0.0.11
 
 ### Patch Changes
