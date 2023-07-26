@@ -1,78 +1,8 @@
-import {
-  CreateCompletionRequest,
-  OpenAIApi,
-  CreateCompletionResponse,
-  CreateChatCompletionRequest,
-  CreateChatCompletionResponse,
-  CreateEmbeddingRequest,
-  CreateEmbeddingResponse,
-  CreateModerationRequest,
-  CreateModerationResponse,
-  CreateEditRequest,
-  CreateEditResponse,
-  Configuration,
-} from "openai";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
-import fetchAdapter from "./fetchAdapter";
-
-/**
- * OpenAIWrapper is a wrapper around the OpenAI API that uses fetch instead of axios
- */
-export class OpenAIWrapper extends OpenAIApi {
-  createCompletion(
-    createCompletionRequest: CreateCompletionRequest,
-    options?: AxiosRequestConfig
-  ): Promise<AxiosResponse<CreateCompletionResponse, any>> {
-    return super.createCompletion(createCompletionRequest, {
-      adapter: fetchAdapter,
-      ...options,
-    });
-  }
-
-  createChatCompletion(
-    createChatCompletionRequest: CreateChatCompletionRequest,
-    options?: AxiosRequestConfig<any> | undefined
-  ): Promise<AxiosResponse<CreateChatCompletionResponse, any>> {
-    return super.createChatCompletion(createChatCompletionRequest, {
-      adapter: fetchAdapter,
-      ...options,
-    });
-  }
-
-  createEmbedding(
-    createEmbeddingRequest: CreateEmbeddingRequest,
-    options?: AxiosRequestConfig<any> | undefined
-  ): Promise<AxiosResponse<CreateEmbeddingResponse, any>> {
-    return super.createEmbedding(createEmbeddingRequest, {
-      adapter: fetchAdapter,
-      ...options,
-    });
-  }
-
-  createModeration(
-    createModerationRequest: CreateModerationRequest,
-    options?: AxiosRequestConfig<any> | undefined
-  ): Promise<AxiosResponse<CreateModerationResponse, any>> {
-    return super.createModeration(createModerationRequest, {
-      adapter: fetchAdapter,
-      ...options,
-    });
-  }
-
-  createEdit(
-    createEditRequest: CreateEditRequest,
-    options?: AxiosRequestConfig<any> | undefined
-  ): Promise<AxiosResponse<CreateEditResponse, any>> {
-    return super.createEdit(createEditRequest, {
-      adapter: fetchAdapter,
-      ...options,
-    });
-  }
-}
+import OpenAI, { ClientOptions } from "openai";
 
 export class OpenAISession {
   openAIKey: string | null = null;
-  openai: OpenAIWrapper;
+  openai: OpenAI;
 
   constructor(openAIKey: string | null = null) {
     if (openAIKey) {
@@ -83,11 +13,11 @@ export class OpenAISession {
       throw new Error("Set OpenAI Key in OPENAI_API_KEY env variable");
     }
 
-    const configuration = new Configuration({
+    const configuration: ClientOptions = {
       apiKey: this.openAIKey,
-    });
+    };
 
-    this.openai = new OpenAIWrapper(configuration);
+    this.openai = new OpenAI(configuration);
   }
 }
 
@@ -100,5 +30,3 @@ export function getOpenAISession(openAIKey: string | null = null) {
 
   return defaultOpenAISession;
 }
-
-export * from "openai";

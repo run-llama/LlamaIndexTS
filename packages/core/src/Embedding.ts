@@ -225,12 +225,12 @@ export class OpenAIEmbedding extends BaseEmbedding {
     input = input.replace(/\n/g, " ");
     //^ NOTE this performance helper is in the OpenAI python library but may not be in the JS library
 
-    const { data } = await this.session.openai.createEmbedding({
+    const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       input,
     });
 
-    return data.data[0].embedding;
+    return data[0].embedding;
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {

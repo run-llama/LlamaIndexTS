@@ -1,11 +1,7 @@
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
-import {
-  ChatCompletionRequestMessageRoleEnum,
-  CreateChatCompletionRequest,
-  OpenAISession,
-  getOpenAISession,
-} from "./openai";
+import { OpenAISession, getOpenAISession } from "./openai";
+import OpenAILLM from "openai";
 import { ReplicateSession } from "./replicate";
 
 type MessageType = "user" | "assistant" | "system" | "generic" | "function";
@@ -84,7 +80,7 @@ export class OpenAI implements LLM {
 
   mapMessageType(
     messageType: MessageType
-  ): ChatCompletionRequestMessageRoleEnum {
+  ): "user" | "assistant" | "system" | "function" {
     switch (messageType) {
       case "user":
         return "user";
@@ -103,7 +99,7 @@ export class OpenAI implements LLM {
     messages: ChatMessage[],
     parentEvent?: Event
   ): Promise<ChatResponse> {
-    const baseRequestParams: CreateChatCompletionRequest = {
+    const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
@@ -116,13 +112,12 @@ export class OpenAI implements LLM {
 
     if (this.callbackManager?.onLLMStream) {
       // Streaming
-      const response = await this.session.openai.createChatCompletion(
-        {
-          ...baseRequestParams,
-          stream: true,
-        },
-        { responseType: "stream" }
-      );
+      const response = await this.session.openai.chat.completions.create({
+        ...baseRequestParams,
+        stream: true,
+      });
+
+      response.controller;
 
       const fullResponse = await handleOpenAIStream({
         response,
@@ -132,11 +127,11 @@ export class OpenAI implements LLM {
       return { message: { content: fullResponse, role: "assistant" } };
     } else {
       // Non-streaming
-      const response = await this.session.openai.createChatCompletion(
+      const response = await this.session.openai.chat.completions.create(
         baseRequestParams
       );
 
-      const content = response.data.choices[0].message?.content ?? "";
+      const content = response.choices[0].message?.content ?? "";
       return { message: { content, role: "assistant" } };
     }
   }
