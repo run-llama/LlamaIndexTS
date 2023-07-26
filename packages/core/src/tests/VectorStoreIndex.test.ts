@@ -47,6 +47,30 @@ describe('VectorStoreIndex', () => {
   });
 
   // Add similar test blocks for the other methods: buildIndexFromNodes, fromDocuments, asRetriever, asQueryEngine
+  
+  test('buildIndexFromNodes', async () => {
+    // Prepare inputs
+    // Call the method
+    // Assert the result
+  });
+
+  test('fromDocuments', async () => {
+    // Prepare inputs
+    // Call the method
+    // Assert the result
+  });
+
+  test('asRetriever', async () => {
+    // Prepare inputs
+    // Call the method
+    // Assert the result
+  });
+
+  test('asQueryEngine', async () => {
+    // Prepare inputs
+    // Call the method
+    // Assert the result
+  });
 
   // Remember to handle edge cases and errors in the test cases
 }
