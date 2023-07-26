@@ -4,7 +4,12 @@ import { OpenAISession, getOpenAISession } from "./openai";
 import OpenAILLM from "openai";
 import { ReplicateSession } from "./replicate";
 
-type MessageType = "user" | "assistant" | "system" | "generic" | "function";
+export type MessageType =
+  | "user"
+  | "assistant"
+  | "system"
+  | "generic"
+  | "function";
 
 export interface ChatMessage {
   content: string;
@@ -129,12 +134,12 @@ export class OpenAI implements LLM {
         stream: true,
       });
 
-      const fullResponse = await handleOpenAIStream({
+      const { message, role } = await handleOpenAIStream({
         response,
         onLLMStream: this.callbackManager.onLLMStream,
         parentEvent,
       });
-      return { message: { content: fullResponse, role: "assistant" } };
+      return { message: { content: message, role } };
     } else {
       // Non-streaming
       const response = await this.session.openai.chat.completions.create(
@@ -142,7 +147,7 @@ export class OpenAI implements LLM {
       );
 
       const content = response.choices[0].message?.content ?? "";
-      return { message: { content, role: "assistant" } };
+      return { message: { content, role: response.choices[0].message.role } };
     }
   }
 
