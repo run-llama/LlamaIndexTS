@@ -1,5 +1,5 @@
 import { VectorStoreIndex } from '../indices/vectorStore/VectorStoreIndex';
-import { TextNode, ServiceContext, VectorStore, BaseDocumentStore, Document, StorageContext, BaseRetriever, ResponseSynthesizer, BaseQueryEngine } from '...'; // import other necessary dependencies
+import { TextNode, ServiceContext, VectorStore, BaseDocumentStore, Document, StorageContext, BaseRetriever, ResponseSynthesizer, BaseQueryEngine } from '../indices/vectorStore/VectorStoreIndex'; // corrected import statement
 
 describe('VectorStoreIndex', () => {
   test('init', async () => {
@@ -18,6 +18,9 @@ describe('VectorStoreIndex', () => {
     // Assert the result
     expect(result).toBeInstanceOf(VectorStoreIndex);
     // Add more assertions as necessary
+
+    // Handle edge cases and errors
+    // Add code to handle edge cases and errors
   });
 
   // Write similar test blocks for the other methods: getNodeEmbeddingResults, buildIndexFromNodes, fromDocuments, asRetriever, asQueryEngine
