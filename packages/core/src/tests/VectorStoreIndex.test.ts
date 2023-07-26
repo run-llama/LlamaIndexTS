@@ -25,16 +25,16 @@ describe('VectorStoreIndex', () => {
   test('getNodeEmbeddingResults', async () => {
     // Prepare inputs
     const nodes = [
-      new TextNode('Apple'),
-      new TextNode('Banana'),
-      new TextNode('Cherry'),
-      new TextNode('Date'),
-      new TextNode('Elderberry'),
-      new TextNode('Fig'),
-      new TextNode('Grape'),
-      new TextNode('Honeydew'),
-      new TextNode('Iced Apple'),
-      new TextNode('Jackfruit')
+      new TextNode({text: 'Apple'}),
+      new TextNode({text: 'Banana'}),
+      new TextNode({text: 'Cherry'}),
+      new TextNode({text: 'Date'}),
+      new TextNode({text: 'Elderberry'}),
+      new TextNode({text: 'Fig'}),
+      new TextNode({text: 'Grape'}),
+      new TextNode({text: 'Honeydew'}),
+      new TextNode({text: 'Iced Apple'}),
+      new TextNode({text: 'Jackfruit'})
     ];
     const serviceContext = new ServiceContext();
 
