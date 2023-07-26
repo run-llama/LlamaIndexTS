@@ -12,11 +12,10 @@
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.195",
-    "@types/node": "^18.17.0",
+    "@types/lodash": "^4.14.196",
+    "@types/node": "^18.17.1",
     "@types/pdf-parse": "^1.1.1",
     "@types/uuid": "^9.0.2",
-    "axios": "^0.26.1",
     "node-stdlib-browser": "^1.2.0",
     "tsup": "^7.1.0"
   },

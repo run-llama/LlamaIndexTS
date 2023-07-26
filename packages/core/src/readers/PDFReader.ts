@@ -3,7 +3,6 @@ import { BaseReader } from "./base";
 import { GenericFileSystem } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
 import pdfParse from "pdf-parse";
-import _ from "lodash";
 
 /**
  * Read the text of a PDF

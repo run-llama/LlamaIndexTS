@@ -117,8 +117,6 @@ export class OpenAI implements LLM {
         stream: true,
       });
 
-      response.controller;
-
       const fullResponse = await handleOpenAIStream({
         response,
         onLLMStream: this.callbackManager.onLLMStream,
