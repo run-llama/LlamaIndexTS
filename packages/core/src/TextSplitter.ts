@@ -154,7 +154,7 @@ export class SentenceSplitter {
     newSentenceSplits: SplitRep[],
     effectiveChunkSize: number
   ): TextSplit[] {
-    // go through sentence splits, combien to chunks that are within the chunk size
+    // go through sentence splits, combine to chunks that are within the chunk size
 
     // docs represents final list of text chunks
     let docs: TextSplit[] = [];

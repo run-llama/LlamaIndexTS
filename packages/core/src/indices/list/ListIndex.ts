@@ -20,7 +20,7 @@ import {
   ResponseSynthesizer,
   CompactAndRefine,
 } from "../../ResponseSynthesizer";
-import { IndexStructType } from "../../dataStructs";
+import { IndexStructType } from "../BaseIndex";
 
 export enum ListRetrieverMode {
   DEFAULT = "default",

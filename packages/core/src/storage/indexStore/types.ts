@@ -1,4 +1,4 @@
-import { IndexStruct } from "../../dataStructs";
+import { IndexStruct } from "../../indices/BaseIndex";
 import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_PERSIST_DIR,

@@ -8,7 +8,6 @@ import { VectorStore } from "../storage/vectorStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
 import { BaseQueryEngine } from "../QueryEngine";
 import { ResponseSynthesizer } from "../ResponseSynthesizer";
-import { IndexStructType } from "../dataStructs";
 
 /**
  * The underlying structure of each index.
@@ -37,6 +36,11 @@ export abstract class IndexStruct {
   }
 }
 
+export enum IndexStructType {
+  SIMPLE_DICT = "simple_dict",
+  LIST = "list",
+}
+
 export class IndexDict extends IndexStruct {
   nodesDict: Record<string, BaseNode> = {};
   docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
@@ -60,6 +64,20 @@ export class IndexDict extends IndexStruct {
       nodesDict: this.nodesDict,
       type: this.type,
     };
+  }
+}
+
+export function jsonToIndexStruct(json: any): IndexStruct {
+  if (json.type === IndexStructType.LIST) {
+    const indexList = new IndexList(json.indexId, json.summary);
+    indexList.nodes = json.nodes;
+    return indexList;
+  } else if (json.type === IndexStructType.SIMPLE_DICT) {
+    const indexDict = new IndexDict(json.indexId, json.summary);
+    indexDict.nodesDict = json.nodesDict;
+    return indexDict;
+  } else {
+    throw new Error(`Unknown index struct type: ${json.type}`);
   }
 }
 
