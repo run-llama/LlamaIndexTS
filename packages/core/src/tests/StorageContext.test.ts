@@ -4,11 +4,11 @@ import {
   StorageContext,
 } from "../storage/StorageContext";
 
-jest.spyOn(console, "error").mockImplementation(() => {});
+jest.spyOn(console, "error");
 
 describe("StorageContext", () => {
   test("initializes", async () => {
-    jest.mocked(console.error).mockImplementation(() => {});
+    jest.mocked(console.error).mockImplementation(() => {}); // silence console.error
 
     const storageContext = await storageContextFromDefaults({
       persistDir: "/tmp/test_dir",

@@ -43,7 +43,7 @@ export const GPT4_MODELS = {
 };
 
 export const TURBO_MODELS = {
-  "gpt-3.5-turbo": { contextWindow: 4097 },
+  "gpt-3.5-turbo": { contextWindow: 4096 },
   "gpt-3.5-turbo-16k": { contextWindow: 16384 },
 };
 
@@ -59,22 +59,35 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
  * OpenAI LLM implementation
  */
 export class OpenAI implements LLM {
+  // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
   temperature: number;
-  n: number = 1;
   maxTokens?: number;
-  session: OpenAISession;
+
+  // OpenAI session params
+  apiKey?: string = undefined;
   maxRetries: number;
-  requestTimeout: number | null;
+  timeout?: number;
+  session: OpenAISession;
+
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<OpenAI>) {
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0;
-    this.requestTimeout = init?.requestTimeout ?? null;
-    this.maxRetries = init?.maxRetries ?? 10;
     this.maxTokens = init?.maxTokens ?? undefined;
-    this.session = init?.session ?? getOpenAISession();
+
+    this.apiKey = init?.apiKey ?? undefined;
+    this.maxRetries = init?.maxRetries ?? 10;
+    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.session =
+      init?.session ??
+      getOpenAISession({
+        apiKey: this.apiKey,
+        maxRetries: this.maxRetries,
+        timeout: this.timeout,
+      });
+
     this.callbackManager = init?.callbackManager;
   }
 
@@ -103,7 +116,6 @@ export class OpenAI implements LLM {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
-      n: this.n,
       messages: messages.map((message) => ({
         role: this.mapMessageType(message.role),
         content: message.content,
