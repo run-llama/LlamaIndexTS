@@ -30,4 +30,4 @@ A node parser generates TextNodes from Documents
 
 #### Defined in
 
-[NodeParser.ts:53](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/NodeParser.ts#L53)
+[NodeParser.ts:53](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/NodeParser.ts#L53)

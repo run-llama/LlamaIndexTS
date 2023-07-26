@@ -34,7 +34,7 @@ CompactAndRefine is a slight variation of Refine that first compacts the text ch
 
 #### Defined in
 
-[ResponseSynthesizer.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/ResponseSynthesizer.ts#L78)
+[ResponseSynthesizer.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/ResponseSynthesizer.ts#L78)
 
 ## Properties
 
@@ -48,7 +48,7 @@ CompactAndRefine is a slight variation of Refine that first compacts the text ch
 
 #### Defined in
 
-[ResponseSynthesizer.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/ResponseSynthesizer.ts#L76)
+[ResponseSynthesizer.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/ResponseSynthesizer.ts#L76)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/ResponseSynthesizer.ts#L74)
+[ResponseSynthesizer.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/ResponseSynthesizer.ts#L74)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/ResponseSynthesizer.ts#L75)
+[ResponseSynthesizer.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/ResponseSynthesizer.ts#L75)
 
 ## Methods
 
@@ -103,4 +103,4 @@ ___
 
 #### Defined in
 
-[ResponseSynthesizer.ts:181](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/ResponseSynthesizer.ts#L181)
+[ResponseSynthesizer.ts:181](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/ResponseSynthesizer.ts#L181)

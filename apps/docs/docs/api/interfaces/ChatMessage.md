@@ -14,14 +14,14 @@ custom_edit_url: null
 
 #### Defined in
 
-[llm/LLM.ts:10](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L10)
+[llm/LLM.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L15)
 
 ___
 
 ### role
 
-• **role**: `MessageType`
+• **role**: [`MessageType`](../modules.md#messagetype)
 
 #### Defined in
 
-[llm/LLM.ts:11](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L11)
+[llm/LLM.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L16)

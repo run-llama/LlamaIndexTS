@@ -26,7 +26,7 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:184](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L184)
+[llm/LLM.ts:189](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L189)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:181](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L181)
+[llm/LLM.ts:186](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L186)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:179](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L179)
+[llm/LLM.ts:184](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L184)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:182](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L182)
+[llm/LLM.ts:187](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L187)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:180](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L180)
+[llm/LLM.ts:185](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L185)
 
 ## Methods
 
@@ -93,7 +93,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:204](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L204)
+[llm/LLM.ts:209](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L209)
 
 ___
 
@@ -120,7 +120,7 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:229](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L229)
+[llm/LLM.ts:234](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L234)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `messageType` | `MessageType` |
+| `messageType` | [`MessageType`](../modules.md#messagetype) |
 
 #### Returns
 
@@ -140,4 +140,4 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:191](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/llm/LLM.ts#L191)
+[llm/LLM.ts:196](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L196)
