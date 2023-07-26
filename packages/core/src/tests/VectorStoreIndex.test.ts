@@ -1,5 +1,5 @@
 import { VectorStoreIndex } from '../indices/vectorStore/VectorStoreIndex';
-import { BaseNode, ServiceContext, VectorStore, BaseDocumentStore, Document, StorageContext, BaseRetriever, ResponseSynthesizer, BaseQueryEngine } from '...'; // import other necessary dependencies
+import { TextNode, ServiceContext, VectorStore, BaseDocumentStore, Document, StorageContext, BaseRetriever, ResponseSynthesizer, BaseQueryEngine } from '...'; // import other necessary dependencies
 
 describe('VectorStoreIndex', () => {
   test('init', async () => {
@@ -24,7 +24,7 @@ describe('VectorStoreIndex', () => {
 
   test('getNodeEmbeddingResults', async () => {
     // Prepare inputs
-    const nodes = [new BaseNode()];
+    const nodes = [new TextNode('Test text')];
     const serviceContext = new ServiceContext();
 
     // Call the method
@@ -38,4 +38,4 @@ describe('VectorStoreIndex', () => {
   // Add similar test blocks for the other methods: buildIndexFromNodes, fromDocuments, asRetriever, asQueryEngine
 
   // Remember to handle edge cases and errors in the test cases
-});
+}
