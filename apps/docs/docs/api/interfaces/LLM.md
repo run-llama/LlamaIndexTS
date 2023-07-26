@@ -34,7 +34,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:36](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L36)
+[llm/LLM.ts:36](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/llm/LLM.ts#L36)
 
 ___
 
@@ -57,4 +57,4 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:42](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L42)
+[llm/LLM.ts:42](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/llm/LLM.ts#L42)

@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.13
+
+### Patch Changes
+
+- 4f6f245: Moved to OpenAI NPM v4
+
 ## 0.0.12
 
 ### Patch Changes
