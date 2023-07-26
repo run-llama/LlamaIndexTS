@@ -1,4 +1,3 @@
-import { ChatCompletionResponseMessageRoleEnum } from "openai";
 import { NodeWithScore } from "../Node";
 
 /*
@@ -29,8 +28,8 @@ export interface StreamToken {
   choices: {
     index: number;
     delta: {
-      content?: string;
-      role?: ChatCompletionResponseMessageRoleEnum;
+      content?: string | null;
+      role?: "user" | "assistant" | "system" | "function";
     };
     finish_reason: string | null;
   }[];

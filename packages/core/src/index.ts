@@ -5,7 +5,6 @@ export * from "./GlobalsHelper";
 export * from "./llm/LLM";
 export * from "./Node";
 export * from "./NodeParser";
-// export * from "./openai"; Don't export OpenAIWrapper
 export * from "./OutputParser";
 export * from "./Prompt";
 export * from "./QuestionGenerator";

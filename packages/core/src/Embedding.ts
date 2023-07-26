@@ -211,26 +211,39 @@ enum OpenAIEmbeddingModelType {
 }
 
 export class OpenAIEmbedding extends BaseEmbedding {
-  session: OpenAISession;
   model: OpenAIEmbeddingModelType;
 
-  constructor() {
+  // OpenAI session params
+  apiKey?: string = undefined;
+  maxRetries: number;
+  timeout?: number;
+  session: OpenAISession;
+
+  constructor(init?: Partial<OpenAIEmbedding>) {
     super();
 
-    this.session = getOpenAISession();
     this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
+
+    this.apiKey = init?.apiKey ?? undefined;
+    this.maxRetries = init?.maxRetries ?? 10;
+    this.timeout = init?.timeout ?? undefined;
+    this.session = getOpenAISession({
+      apiKey: this.apiKey,
+      maxRetries: this.maxRetries,
+      timeout: this.timeout,
+    });
   }
 
   private async getOpenAIEmbedding(input: string) {
     input = input.replace(/\n/g, " ");
     //^ NOTE this performance helper is in the OpenAI python library but may not be in the JS library
 
-    const { data } = await this.session.openai.createEmbedding({
+    const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       input,
     });
 
-    return data.data[0].embedding;
+    return data[0].embedding;
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {

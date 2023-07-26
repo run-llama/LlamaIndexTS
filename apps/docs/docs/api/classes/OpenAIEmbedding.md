@@ -16,7 +16,13 @@ custom_edit_url: null
 
 ### constructor
 
-• **new OpenAIEmbedding**()
+• **new OpenAIEmbedding**(`init?`)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `init?` | `Partial`<[`OpenAIEmbedding`](OpenAIEmbedding.md)\> |
 
 #### Overrides
 
@@ -24,9 +30,29 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:217](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/Embedding.ts#L217)
+[Embedding.ts:222](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L222)
 
 ## Properties
+
+### apiKey
+
+• `Optional` **apiKey**: `string` = `undefined`
+
+#### Defined in
+
+[Embedding.ts:217](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L217)
+
+___
+
+### maxRetries
+
+• **maxRetries**: `number`
+
+#### Defined in
+
+[Embedding.ts:218](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L218)
+
+___
 
 ### model
 
@@ -34,7 +60,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:215](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/Embedding.ts#L215)
+[Embedding.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L214)
 
 ___
 
@@ -44,7 +70,17 @@ ___
 
 #### Defined in
 
-[Embedding.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/Embedding.ts#L214)
+[Embedding.ts:220](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L220)
+
+___
+
+### timeout
+
+• `Optional` **timeout**: `number`
+
+#### Defined in
+
+[Embedding.ts:219](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L219)
 
 ## Methods
 
@@ -64,7 +100,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:224](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/Embedding.ts#L224)
+[Embedding.ts:237](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L237)
 
 ___
 
@@ -88,7 +124,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:240](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/Embedding.ts#L240)
+[Embedding.ts:253](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L253)
 
 ___
 
@@ -112,7 +148,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:236](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/Embedding.ts#L236)
+[Embedding.ts:249](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L249)
 
 ___
 
@@ -138,4 +174,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/Embedding.ts#L197)
+[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/Embedding.ts#L197)

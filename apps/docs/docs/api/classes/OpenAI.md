@@ -26,9 +26,19 @@ OpenAI LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L75)
+[llm/LLM.ts:80](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L80)
 
 ## Properties
+
+### apiKey
+
+• `Optional` **apiKey**: `string` = `undefined`
+
+#### Defined in
+
+[llm/LLM.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L73)
+
+___
 
 ### callbackManager
 
@@ -36,7 +46,7 @@ OpenAI LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L73)
+[llm/LLM.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L78)
 
 ___
 
@@ -46,7 +56,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L71)
+[llm/LLM.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L74)
 
 ___
 
@@ -56,7 +66,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L69)
+[llm/LLM.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L70)
 
 ___
 
@@ -66,27 +76,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:66](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L66)
-
-___
-
-### n
-
-• **n**: `number` = `1`
-
-#### Defined in
-
-[llm/LLM.ts:68](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L68)
-
-___
-
-### requestTimeout
-
-• **requestTimeout**: ``null`` \| `number`
-
-#### Defined in
-
-[llm/LLM.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L72)
+[llm/LLM.ts:68](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L68)
 
 ___
 
@@ -96,7 +86,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L70)
+[llm/LLM.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L76)
 
 ___
 
@@ -106,7 +96,17 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:67](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L67)
+[llm/LLM.ts:69](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L69)
+
+___
+
+### timeout
+
+• `Optional` **timeout**: `number`
+
+#### Defined in
+
+[llm/LLM.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L75)
 
 ## Methods
 
@@ -133,7 +133,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:102](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L102)
+[llm/LLM.ts:116](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L116)
 
 ___
 
@@ -160,24 +160,24 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:144](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L144)
+[llm/LLM.ts:154](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L154)
 
 ___
 
 ### mapMessageType
 
-▸ **mapMessageType**(`messageType`): `ChatCompletionRequestMessageRoleEnum`
+▸ **mapMessageType**(`messageType`): ``"function"`` \| ``"user"`` \| ``"assistant"`` \| ``"system"``
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `messageType` | `MessageType` |
+| `messageType` | [`MessageType`](../modules.md#messagetype) |
 
 #### Returns
 
-`ChatCompletionRequestMessageRoleEnum`
+``"function"`` \| ``"user"`` \| ``"assistant"`` \| ``"system"``
 
 #### Defined in
 
-[llm/LLM.ts:85](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/llm/LLM.ts#L85)
+[llm/LLM.ts:99](https://github.com/run-llama/LlamaIndexTS/blob/0f654ae/packages/core/src/llm/LLM.ts#L99)

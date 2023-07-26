@@ -1,14 +1,15 @@
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
-import {
-  ChatCompletionRequestMessageRoleEnum,
-  CreateChatCompletionRequest,
-  OpenAISession,
-  getOpenAISession,
-} from "./openai";
+import { OpenAISession, getOpenAISession } from "./openai";
+import OpenAILLM from "openai";
 import { ReplicateSession } from "./replicate";
 
-type MessageType = "user" | "assistant" | "system" | "generic" | "function";
+export type MessageType =
+  | "user"
+  | "assistant"
+  | "system"
+  | "generic"
+  | "function";
 
 export interface ChatMessage {
   content: string;
@@ -47,7 +48,7 @@ export const GPT4_MODELS = {
 };
 
 export const TURBO_MODELS = {
-  "gpt-3.5-turbo": { contextWindow: 4097 },
+  "gpt-3.5-turbo": { contextWindow: 4096 },
   "gpt-3.5-turbo-16k": { contextWindow: 16384 },
 };
 
@@ -63,28 +64,41 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
  * OpenAI LLM implementation
  */
 export class OpenAI implements LLM {
+  // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
   temperature: number;
-  n: number = 1;
   maxTokens?: number;
-  session: OpenAISession;
+
+  // OpenAI session params
+  apiKey?: string = undefined;
   maxRetries: number;
-  requestTimeout: number | null;
+  timeout?: number;
+  session: OpenAISession;
+
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<OpenAI>) {
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0;
-    this.requestTimeout = init?.requestTimeout ?? null;
-    this.maxRetries = init?.maxRetries ?? 10;
     this.maxTokens = init?.maxTokens ?? undefined;
-    this.session = init?.session ?? getOpenAISession();
+
+    this.apiKey = init?.apiKey ?? undefined;
+    this.maxRetries = init?.maxRetries ?? 10;
+    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.session =
+      init?.session ??
+      getOpenAISession({
+        apiKey: this.apiKey,
+        maxRetries: this.maxRetries,
+        timeout: this.timeout,
+      });
+
     this.callbackManager = init?.callbackManager;
   }
 
   mapMessageType(
     messageType: MessageType
-  ): ChatCompletionRequestMessageRoleEnum {
+  ): "user" | "assistant" | "system" | "function" {
     switch (messageType) {
       case "user":
         return "user";
@@ -103,11 +117,10 @@ export class OpenAI implements LLM {
     messages: ChatMessage[],
     parentEvent?: Event
   ): Promise<ChatResponse> {
-    const baseRequestParams: CreateChatCompletionRequest = {
+    const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
-      n: this.n,
       messages: messages.map((message) => ({
         role: this.mapMessageType(message.role),
         content: message.content,
@@ -116,28 +129,25 @@ export class OpenAI implements LLM {
 
     if (this.callbackManager?.onLLMStream) {
       // Streaming
-      const response = await this.session.openai.createChatCompletion(
-        {
-          ...baseRequestParams,
-          stream: true,
-        },
-        { responseType: "stream" }
-      );
+      const response = await this.session.openai.chat.completions.create({
+        ...baseRequestParams,
+        stream: true,
+      });
 
-      const fullResponse = await handleOpenAIStream({
+      const { message, role } = await handleOpenAIStream({
         response,
         onLLMStream: this.callbackManager.onLLMStream,
         parentEvent,
       });
-      return { message: { content: fullResponse, role: "assistant" } };
+      return { message: { content: message, role } };
     } else {
       // Non-streaming
-      const response = await this.session.openai.createChatCompletion(
+      const response = await this.session.openai.chat.completions.create(
         baseRequestParams
       );
 
-      const content = response.data.choices[0].message?.content ?? "";
-      return { message: { content, role: "assistant" } };
+      const content = response.choices[0].message?.content ?? "";
+      return { message: { content, role: response.choices[0].message.role } };
     }
   }
 

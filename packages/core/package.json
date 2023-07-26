@@ -4,7 +4,7 @@
   "dependencies": {
     "js-tiktoken": "^1.0.7",
     "lodash": "^4.17.21",
-    "openai": "^3.3.0",
+    "openai": "4.0.0-beta.6",
     "pdf-parse": "^1.1.1",
     "replicate": "^0.12.3",
     "tiktoken-node": "^0.0.6",
@@ -12,11 +12,10 @@
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.195",
-    "@types/node": "^18.17.0",
+    "@types/lodash": "^4.14.196",
+    "@types/node": "^18.17.1",
     "@types/pdf-parse": "^1.1.1",
     "@types/uuid": "^9.0.2",
-    "axios": "^0.26.1",
     "node-stdlib-browser": "^1.2.0",
     "tsup": "^7.1.0"
   },

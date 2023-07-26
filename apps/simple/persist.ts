@@ -1,5 +1,9 @@
 import fs from "fs/promises";
-import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import {
+  Document,
+  VectorStoreIndex,
+  storageContextFromDefaults,
+} from "llamaindex";
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -12,8 +16,12 @@ async function main() {
   const document = new Document({ text: essay });
 
   // Split text and create embeddings. Store them in a VectorStoreIndex with persistence
-  const storageContext = await storageContextFromDefaults({ persistDir: "./storage" });
-  const index = await VectorStoreIndex.fromDocuments([document], storageContext);
+  const storageContext = await storageContextFromDefaults({
+    persistDir: "./storage",
+  });
+  const index = await VectorStoreIndex.fromDocuments([document], {
+    storageContext,
+  });
 
   // Query the index
   const queryEngine = index.asQueryEngine();
