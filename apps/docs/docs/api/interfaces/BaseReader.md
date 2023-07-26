@@ -32,4 +32,4 @@ A reader takes imports data into Document objects.
 
 #### Defined in
 
-[readers/base.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/readers/base.ts#L7)
+[readers/base.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/readers/base.ts#L7)

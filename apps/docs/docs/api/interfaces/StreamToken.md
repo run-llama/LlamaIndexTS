@@ -10,11 +10,11 @@ custom_edit_url: null
 
 ### choices
 
-• **choices**: { `delta`: { `content?`: `string` ; `role?`: `ChatCompletionResponseMessageRoleEnum`  } ; `finish_reason`: ``null`` \| `string` ; `index`: `number`  }[]
+• **choices**: { `delta`: { `content?`: ``null`` \| `string` ; `role?`: ``"function"`` \| ``"user"`` \| ``"assistant"`` \| ``"system"``  } ; `finish_reason`: ``null`` \| `string` ; `index`: `number`  }[]
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L29)
+[callbacks/CallbackManager.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L28)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L27)
+[callbacks/CallbackManager.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L26)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L25)
+[callbacks/CallbackManager.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L24)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L28)
+[callbacks/CallbackManager.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L27)
 
 ___
 
@@ -54,4 +54,4 @@ ___
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L26)
+[callbacks/CallbackManager.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L25)

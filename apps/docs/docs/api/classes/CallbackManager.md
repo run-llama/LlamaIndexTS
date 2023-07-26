@@ -24,7 +24,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:68](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L68)
+[callbacks/CallbackManager.ts:67](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L67)
 
 ## Properties
 
@@ -52,7 +52,7 @@ CallbackManagerMethods.onLLMStream
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L65)
+[callbacks/CallbackManager.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L64)
 
 ___
 
@@ -80,4 +80,4 @@ CallbackManagerMethods.onRetrieve
 
 #### Defined in
 
-[callbacks/CallbackManager.ts:66](https://github.com/run-llama/LlamaIndexTS/blob/68bdaaa/packages/core/src/callbacks/CallbackManager.ts#L66)
+[callbacks/CallbackManager.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/dc91f5f/packages/core/src/callbacks/CallbackManager.ts#L65)
