@@ -46,6 +46,11 @@ describe('VectorStoreIndex', () => {
 
     // Assert the result
     expect(result).toBeInstanceOf(Array);
+    // Assuming the getNodeEmbeddingResults method returns an array of embeddings for the input nodes
+    expect(result).toHaveLength(nodes.length);
+    result.forEach(embedding => {
+      expect(embedding).toBeInstanceOf(Float32Array); // Assuming each embedding is a Float32Array
+    });
     // Add more assertions as necessary
   });
 
