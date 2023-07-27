@@ -30,7 +30,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:222](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L222)
+[Embedding.ts:222](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L222)
 
 ## Properties
 
@@ -40,7 +40,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:217](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L217)
+[Embedding.ts:217](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L217)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:218](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L218)
+[Embedding.ts:218](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L218)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L214)
+[Embedding.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L214)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:220](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L220)
+[Embedding.ts:220](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L220)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:219](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L219)
+[Embedding.ts:219](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L219)
 
 ## Methods
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:237](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L237)
+[Embedding.ts:237](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L237)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:253](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L253)
+[Embedding.ts:253](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L253)
 
 ___
 
@@ -148,7 +148,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:249](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L249)
+[Embedding.ts:249](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L249)
 
 ___
 
@@ -174,4 +174,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/Embedding.ts#L197)
+[Embedding.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L197)
