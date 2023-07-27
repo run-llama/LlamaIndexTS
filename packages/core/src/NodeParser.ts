@@ -2,13 +2,6 @@ import { Document, NodeRelationship, TextNode } from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
-/**
- * Splits the text of a document into smaller parts.
- * 
- * @param document - The document to split.
- * @param textSplitter - The text splitter to use.
- * @returns An array of text splits.
- */
 export function getTextSplitsFromDocument(
   document: Document,
   textSplitter: SentenceSplitter
@@ -19,15 +12,6 @@ export function getTextSplitsFromDocument(
   return splits;
 }
 
-/**
- * Creates text nodes from a document.
- * 
- * @param document - The document to create nodes from.
- * @param textSplitter - The text splitter to use.
- * @param includeMetadata - Whether to include metadata in the nodes.
- * @param includePrevNextRel - Whether to include previous and next relationships in the nodes.
- * @returns An array of text nodes.
- */
 export function getNodesFromDocument(
   document: Document,
   textSplitter: SentenceSplitter,
@@ -63,16 +47,10 @@ export function getNodesFromDocument(
   return nodes;
 }
 
-/**
- * A node parser generates TextNodes from Documents
- */
 export interface NodeParser {
   getNodesFromDocuments(documents: Document[]): TextNode[];
 }
 
-/**
- * Class that creates text nodes from documents using a simple splitting strategy.
- */
 export class SimpleNodeParser implements NodeParser {
   textSplitter: SentenceSplitter;
   includeMetadata: boolean;
@@ -105,10 +83,6 @@ export class SimpleNodeParser implements NodeParser {
     return new SimpleNodeParser(init);
   }
 
-  /**
-   * Generate Node objects from documents
-   * @param documents
-   */
   getNodesFromDocuments(documents: Document[]) {
     return documents
       .map((document) => getNodesFromDocument(document, this.textSplitter))
