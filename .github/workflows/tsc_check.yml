@@ -26,5 +26,8 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    - name: Run tsc
-      run: pnpm tsc
+    - name: Run build
+      run: pnpm run build
+
+    - name: Run lint
+      run: pnpm run lint
