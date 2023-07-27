@@ -8,6 +8,8 @@ custom_edit_url: null
 
 SentenceSplitter is our default text splitter that supports splitting into sentences, paragraphs, or fixed length chunks with overlap.
 
+One of the advantages of SentenceSplitter is that even in the fixed length chunks it will try to keep sentences together.
+
 ## Constructors
 
 ### constructor
@@ -27,7 +29,7 @@ SentenceSplitter is our default text splitter that supports splitting into sente
 
 #### Defined in
 
-[TextSplitter.ts:33](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L33)
+[TextSplitter.ts:35](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L35)
 
 ## Properties
 
@@ -37,7 +39,7 @@ SentenceSplitter is our default text splitter that supports splitting into sente
 
 #### Defined in
 
-[TextSplitter.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L26)
+[TextSplitter.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L28)
 
 ___
 
@@ -47,7 +49,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L25)
+[TextSplitter.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L27)
 
 ___
 
@@ -57,7 +59,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L30)
+[TextSplitter.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L32)
 
 ___
 
@@ -67,7 +69,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L29)
+[TextSplitter.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L31)
 
 ___
 
@@ -77,7 +79,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:27](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L27)
+[TextSplitter.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L29)
 
 ___
 
@@ -87,7 +89,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L28)
+[TextSplitter.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L30)
 
 ## Methods
 
@@ -108,7 +110,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:153](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L153)
+[TextSplitter.ts:155](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L155)
 
 ___
 
@@ -128,7 +130,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L72)
+[TextSplitter.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L74)
 
 ___
 
@@ -149,7 +151,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L89)
+[TextSplitter.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L91)
 
 ___
 
@@ -170,7 +172,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:115](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L115)
+[TextSplitter.ts:117](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L117)
 
 ___
 
@@ -191,7 +193,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L128)
+[TextSplitter.ts:130](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L130)
 
 ___
 
@@ -212,7 +214,7 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:233](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L233)
+[TextSplitter.ts:247](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L247)
 
 ___
 
@@ -233,4 +235,4 @@ ___
 
 #### Defined in
 
-[TextSplitter.ts:205](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L205)
+[TextSplitter.ts:219](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/TextSplitter.ts#L219)

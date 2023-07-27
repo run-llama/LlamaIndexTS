@@ -16,10 +16,12 @@ class TextSplit {
   }
 }
 
-type SplitRep = [text: string, numTokens: number];
+type SplitRep = { text: string; numTokens: number };
 
 /**
  * SentenceSplitter is our default text splitter that supports splitting into sentences, paragraphs, or fixed length chunks with overlap.
+ *
+ * One of the advantages of SentenceSplitter is that even in the fixed length chunks it will try to keep sentences together.
  */
 export class SentenceSplitter {
   private chunkSize: number;
@@ -129,21 +131,21 @@ export class SentenceSplitter {
     sentenceSplits: string[],
     effectiveChunkSize: number
   ): SplitRep[] {
-    // Process entence splits
+    // Process sentence splits
     // Primarily check if any sentences exceed the chunk size. If they don't,
     // force split by tokenizer
     let newSplits: SplitRep[] = [];
     for (const split of sentenceSplits) {
       let splitTokens = this.tokenizer(split);
-      const split_len = splitTokens.length;
-      if (split_len <= effectiveChunkSize) {
-        newSplits.push([split, split_len]);
+      const splitLen = splitTokens.length;
+      if (splitLen <= effectiveChunkSize) {
+        newSplits.push({ text: split, numTokens: splitLen });
       } else {
-        for (let i = 0; i < split_len; i += effectiveChunkSize) {
+        for (let i = 0; i < splitLen; i += effectiveChunkSize) {
           const cur_split = this.tokenizerDecoder(
             splitTokens.slice(i, i + effectiveChunkSize)
           );
-          newSplits.push([cur_split, effectiveChunkSize]);
+          newSplits.push({ text: cur_split, numTokens: effectiveChunkSize });
         }
       }
     }
@@ -158,47 +160,59 @@ export class SentenceSplitter {
 
     // docs represents final list of text chunks
     let docs: TextSplit[] = [];
-    // curDocList represents the current list of sentence splits (that)
+    // curChunkSentences represents the current list of sentence splits (that)
     // will be merged into a chunk
-    let curDocList: string[] = [];
-    let bufferTokens = 0;
-    let curDocTokens = 0;
-    // curDocBuffer represents the current document buffer
-    let curDocBuffer: SplitRep[] = [];
+    let curChunkSentences: SplitRep[] = [];
+    let curChunkTokens = 0;
 
     for (let i = 0; i < newSentenceSplits.length; i++) {
-      // update buffer
-      curDocBuffer.push(newSentenceSplits[i]);
-      bufferTokens += newSentenceSplits[i][1] + 1;
-
-      while (bufferTokens > this.chunkOverlap) {
-        // remove first element from curDocBuffer
-        let first_element = curDocBuffer.shift();
-        if (first_element == undefined) {
-          throw new Error("first_element is undefined");
-        }
-        bufferTokens -= first_element[1];
-        bufferTokens -= 1;
-      }
-
       // if adding newSentenceSplits[i] to curDocBuffer would exceed effectiveChunkSize,
       // then we need to add the current curDocBuffer to docs
-      if (curDocTokens + newSentenceSplits[i][1] > effectiveChunkSize) {
+      if (
+        curChunkTokens + newSentenceSplits[i].numTokens >
+        effectiveChunkSize
+      ) {
         // push curent doc list to docs
-        docs.push(new TextSplit(curDocList.join(" ").trim()));
-        // reset docs list with buffer
-        curDocTokens = 0;
-        curDocList = [];
-        for (let j = 0; j < curDocBuffer.length; j++) {
-          curDocList.push(curDocBuffer[j][0]);
-          curDocTokens += curDocBuffer[j][1] + 1;
+        docs.push(
+          new TextSplit(
+            curChunkSentences
+              .map((sentence) => sentence.text)
+              .join(" ")
+              .trim()
+          )
+        );
+
+        const lastChunkSentences = curChunkSentences;
+
+        // reset docs list
+        curChunkTokens = 0;
+        curChunkSentences = [];
+
+        // add the last sentences from the last chunk until we've hit the overlap
+        // do it in reverse order
+        for (let j = lastChunkSentences.length - 1; j >= 0; j--) {
+          if (
+            curChunkTokens + lastChunkSentences[j].numTokens >
+            this.chunkOverlap
+          ) {
+            break;
+          }
+          curChunkSentences.unshift(lastChunkSentences[j]);
+          curChunkTokens += lastChunkSentences[j].numTokens + 1;
         }
       }
 
-      curDocList.push(newSentenceSplits[i][0]);
-      curDocTokens += newSentenceSplits[i][1] + 1;
+      curChunkSentences.push(newSentenceSplits[i]);
+      curChunkTokens += newSentenceSplits[i].numTokens + 1;
     }
-    docs.push(new TextSplit(curDocList.join(" ").trim()));
+    docs.push(
+      new TextSplit(
+        curChunkSentences
+          .map((sentence) => sentence.text)
+          .join(" ")
+          .trim()
+      )
+    );
     return docs;
   }
 
