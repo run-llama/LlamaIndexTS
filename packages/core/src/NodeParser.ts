@@ -2,6 +2,12 @@ import { Document, NodeRelationship, TextNode } from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
+/**
+ * Splits the text of a document into smaller parts.
+ * @param document - The document to split.
+ * @param textSplitter - The text splitter to use.
+ * @returns An array of text splits.
+ */
 export function getTextSplitsFromDocument(
   document: Document,
   textSplitter: SentenceSplitter
@@ -12,6 +18,14 @@ export function getTextSplitsFromDocument(
   return splits;
 }
 
+/**
+ * Generates an array of nodes from a document.
+ * @param document - The document to generate nodes from.
+ * @param textSplitter - The text splitter to use.
+ * @param includeMetadata - Whether to include metadata in the nodes.
+ * @param includePrevNextRel - Whether to include previous and next relationships in the nodes.
+ * @returns An array of nodes.
+ */
 export function getNodesFromDocument(
   document: Document,
   textSplitter: SentenceSplitter,
@@ -46,19 +60,34 @@ export function getNodesFromDocument(
 
   return nodes;
 }
+
 /**
- * A node parser generates TextNodes from Documents
+ * Interface for classes that can generate nodes from documents.
  */
 export interface NodeParser {
+  /**
+   * Generates an array of nodes from an array of documents.
+   * @param documents - The documents to generate nodes from.
+   * @returns An array of nodes.
+   */
   getNodesFromDocuments(documents: Document[]): TextNode[];
 }
 
 /**
- * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
+ * A simple implementation of the NodeParser interface.
  */
 export class SimpleNodeParser implements NodeParser {
+  /**
+   * The text splitter to use.
+   */
   textSplitter: SentenceSplitter;
+  /**
+   * Whether to include metadata in the nodes.
+   */
   includeMetadata: boolean;
+  /**
+   * Whether to include previous and next relationships in the nodes.
+   */
   includePrevNextRel: boolean;
 
   constructor(init?: {
