@@ -64,15 +64,9 @@ export function getNodesFromDocument(
 }
 
 /**
- * Interface for classes that can create text nodes from documents.
+ * A node parser generates TextNodes from Documents
  */
 export interface NodeParser {
-  /**
-   * Creates text nodes from an array of documents.
-   * 
-   * @param documents - The documents to create nodes from.
-   * @returns An array of text nodes.
-   */
   getNodesFromDocuments(documents: Document[]): TextNode[];
 }
 
