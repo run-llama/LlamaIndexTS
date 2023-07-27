@@ -24,7 +24,7 @@ jobs:
       run: npm install -g pnpm@7.15.0
 
     - name: Install dependencies
-      run: pnpm ci
+      run: pnpm install
 
     - name: Run tsc
       run: pnpm tsc
