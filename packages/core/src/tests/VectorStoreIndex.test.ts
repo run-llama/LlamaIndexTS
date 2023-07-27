@@ -1,5 +1,5 @@
 import { VectorStoreIndex } from '../indices/vectorStore/VectorStoreIndex';
-import { TextNode, ServiceContext, VectorStore, BaseDocumentStore, Document, StorageContext, BaseRetriever, ResponseSynthesizer, BaseQueryEngine } from '../indices/vectorStore/VectorStoreIndex'; // corrected import statement
+import { TextNode, ServiceContext, Document, BaseRetriever, BaseQueryEngine } from '../indices/vectorStore/VectorStoreIndex'; // corrected import statement
 
 describe('VectorStoreIndex', () => {
   test('init', async () => {
@@ -58,26 +58,70 @@ describe('VectorStoreIndex', () => {
   
   test('buildIndexFromNodes', async () => {
     // Prepare inputs
+    const nodes = [
+      new TextNode({text: 'Apple'}),
+      new TextNode({text: 'Banana'}),
+      new TextNode({text: 'Cherry'}),
+      new TextNode({text: 'Date'}),
+      new TextNode({text: 'Elderberry'}),
+      new TextNode({text: 'Fig'}),
+      new TextNode({text: 'Grape'}),
+      new TextNode({text: 'Honeydew'}),
+      new TextNode({text: 'Iced Apple'}),
+      new TextNode({text: 'Jackfruit'})
+    ];
+    const serviceContext = new ServiceContext();
+
     // Call the method
+    const result = await VectorStoreIndex.buildIndexFromNodes(nodes, serviceContext);
+
     // Assert the result
+    expect(result).toBeInstanceOf(VectorStoreIndex);
   });
 
   test('fromDocuments', async () => {
     // Prepare inputs
+    const documents = [
+      new Document({text: 'Apple'}),
+      new Document({text: 'Banana'}),
+      new Document({text: 'Cherry'}),
+      new Document({text: 'Date'}),
+      new Document({text: 'Elderberry'}),
+      new Document({text: 'Fig'}),
+      new Document({text: 'Grape'}),
+      new Document({text: 'Honeydew'}),
+      new Document({text: 'Iced Apple'}),
+      new Document({text: 'Jackfruit'})
+    ];
+    const serviceContext = new ServiceContext();
+
     // Call the method
+    const result = await VectorStoreIndex.fromDocuments(documents, serviceContext);
+
     // Assert the result
+    expect(result).toBeInstanceOf(VectorStoreIndex);
   });
 
   test('asRetriever', async () => {
     // Prepare inputs
+    const vectorStoreIndex = new VectorStoreIndex();
+
     // Call the method
+    const result = vectorStoreIndex.asRetriever();
+
     // Assert the result
+    expect(result).toBeInstanceOf(BaseRetriever);
   });
 
   test('asQueryEngine', async () => {
     // Prepare inputs
+    const vectorStoreIndex = new VectorStoreIndex();
+
     // Call the method
+    const result = vectorStoreIndex.asQueryEngine();
+
     // Assert the result
+    expect(result).toBeInstanceOf(BaseQueryEngine);
   });
 
   // Remember to handle edge cases and errors in the test cases
