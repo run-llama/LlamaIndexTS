@@ -41,7 +41,8 @@ describe('VectorStoreIndex', () => {
       new TextNode({text: 'Jackfruit'})
     ];
     // Use the mockEmbeddingModel instead of the ServiceContext
-    const serviceContext = mockEmbeddingModel;
+    const serviceContext = new ServiceContext();
+    serviceContext.embeddingModel = mockEmbeddingModel;
 
     // Call the method
     const result = await VectorStoreIndex.getNodeEmbeddingResults(nodes, serviceContext);
