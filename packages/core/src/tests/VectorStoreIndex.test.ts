@@ -129,4 +129,4 @@ describe('VectorStoreIndex', () => {
   });
 
   // Remember to handle edge cases and errors in the test cases
-}
+}) // Add a closing parenthesis at the end of the file to correctly close the `describe` function call.
