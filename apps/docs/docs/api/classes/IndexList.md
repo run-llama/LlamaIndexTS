@@ -33,7 +33,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[indices/BaseIndex.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L19)
+[indices/BaseIndex.ts:19](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L19)
 
 ## Properties
 
@@ -47,7 +47,7 @@ The underlying structure of each index.
 
 #### Defined in
 
-[indices/BaseIndex.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L16)
+[indices/BaseIndex.ts:16](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L16)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:85](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L85)
+[indices/BaseIndex.ts:85](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L85)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L17)
+[indices/BaseIndex.ts:17](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L17)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:86](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L86)
+[indices/BaseIndex.ts:86](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L86)
 
 ## Methods
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:88](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L88)
+[indices/BaseIndex.ts:88](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L88)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L31)
+[indices/BaseIndex.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L31)
 
 ___
 
@@ -137,4 +137,4 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:92](https://github.com/run-llama/LlamaIndexTS/blob/35f3030/packages/core/src/indices/BaseIndex.ts#L92)
+[indices/BaseIndex.ts:92](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L92)
