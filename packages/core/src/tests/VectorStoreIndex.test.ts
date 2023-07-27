@@ -1,6 +1,6 @@
 import { VectorStoreIndex } from '../indices/vectorStore/VectorStoreIndex';
 import { TextNode, Document, BaseRetriever, BaseQueryEngine } from '../indices/vectorStore/VectorStoreIndex'; // corrected import statement
-import { mockEmbeddingModel } from '../mocks/mockOpenAI'; // import the mockEmbeddingModel
+import { mockEmbeddingModel } from './utility/mockOpenAI'; // import the mockEmbeddingModel
 
 describe('VectorStoreIndex', () => {
   test('init', async () => {
@@ -42,7 +42,7 @@ describe('VectorStoreIndex', () => {
     ];
     // Use the mockEmbeddingModel instead of the ServiceContext
     const serviceContext = new ServiceContext();
-    serviceContext.embeddingModel = mockEmbeddingModel;
+    serviceContext.embedModel = mockEmbeddingModel;
 
     // Call the method
     const result = await VectorStoreIndex.getNodeEmbeddingResults(nodes, serviceContext);
@@ -74,6 +74,7 @@ describe('VectorStoreIndex', () => {
       new TextNode({text: 'Jackfruit'})
     ];
     const serviceContext = new ServiceContext();
+    serviceContext.embedModel = mockEmbeddingModel;
 
     // Call the method
     const result = await VectorStoreIndex.buildIndexFromNodes(nodes, serviceContext);
