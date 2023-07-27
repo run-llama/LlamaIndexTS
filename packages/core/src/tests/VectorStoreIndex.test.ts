@@ -1,5 +1,7 @@
 import { VectorStoreIndex } from '../indices/vectorStore/VectorStoreIndex';
-import { TextNode, Document, BaseRetriever, BaseQueryEngine } from '../indices/vectorStore/VectorStoreIndex'; // corrected import statement
+import { TextNode, Document } from '../Node';
+import { BaseRetriever } from '../Retriever';
+import { BaseQueryEngine } from '../QueryEngine';
 import { mockEmbeddingModel } from './utility/mockOpenAI'; // import the mockEmbeddingModel
 
 describe('VectorStoreIndex', () => {
