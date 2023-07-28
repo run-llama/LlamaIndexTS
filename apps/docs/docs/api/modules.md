@@ -8,6 +8,7 @@ custom_edit_url: null
 
 ## Enumerations
 
+- [DeuceChatStrategy](enums/DeuceChatStrategy.md)
 - [IndexStructType](enums/IndexStructType.md)
 - [ListRetrieverMode](enums/ListRetrieverMode.md)
 - [MetadataMode](enums/MetadataMode.md)
@@ -686,22 +687,26 @@ ___
 
 ▸ **getNodesFromDocument**(`document`, `textSplitter`, `includeMetadata?`, `includePrevNextRel?`): [`TextNode`](classes/TextNode.md)[]
 
+Generates an array of nodes from a document.
+
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `document` | [`Document`](classes/Document.md) | `undefined` |
-| `textSplitter` | [`SentenceSplitter`](classes/SentenceSplitter.md) | `undefined` |
-| `includeMetadata` | `boolean` | `true` |
-| `includePrevNextRel` | `boolean` | `true` |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `document` | [`Document`](classes/Document.md) | `undefined` | The document to generate nodes from. |
+| `textSplitter` | [`SentenceSplitter`](classes/SentenceSplitter.md) | `undefined` | The text splitter to use. |
+| `includeMetadata` | `boolean` | `true` | Whether to include metadata in the nodes. |
+| `includePrevNextRel` | `boolean` | `true` | Whether to include previous and next relationships in the nodes. |
 
 #### Returns
 
 [`TextNode`](classes/TextNode.md)[]
 
+An array of nodes.
+
 #### Defined in
 
-[NodeParser.ts:15](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L15)
+[NodeParser.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L29)
 
 ___
 
@@ -730,20 +735,24 @@ ___
 
 ▸ **getTextSplitsFromDocument**(`document`, `textSplitter`): `string`[]
 
+Splits the text of a document into smaller parts.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `document` | [`Document`](classes/Document.md) |
-| `textSplitter` | [`SentenceSplitter`](classes/SentenceSplitter.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `document` | [`Document`](classes/Document.md) | The document to split. |
+| `textSplitter` | [`SentenceSplitter`](classes/SentenceSplitter.md) | The text splitter to use. |
 
 #### Returns
 
 `string`[]
 
+An array of text splits.
+
 #### Defined in
 
-[NodeParser.ts:5](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L5)
+[NodeParser.ts:11](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L11)
 
 ___
 

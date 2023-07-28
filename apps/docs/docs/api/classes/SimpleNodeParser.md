@@ -31,7 +31,7 @@ SimpleNodeParser is the default NodeParser. It splits documents into TextNodes u
 
 #### Defined in
 
-[NodeParser.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L64)
+[NodeParser.ts:93](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L93)
 
 ## Properties
 
@@ -39,9 +39,11 @@ SimpleNodeParser is the default NodeParser. It splits documents into TextNodes u
 
 • **includeMetadata**: `boolean`
 
+Whether to include metadata in the nodes.
+
 #### Defined in
 
-[NodeParser.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L61)
+[NodeParser.ts:87](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L87)
 
 ___
 
@@ -49,9 +51,11 @@ ___
 
 • **includePrevNextRel**: `boolean`
 
+Whether to include previous and next relationships in the nodes.
+
 #### Defined in
 
-[NodeParser.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L62)
+[NodeParser.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L91)
 
 ___
 
@@ -59,9 +63,11 @@ ___
 
 • **textSplitter**: [`SentenceSplitter`](SentenceSplitter.md)
 
+The text splitter to use.
+
 #### Defined in
 
-[NodeParser.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L60)
+[NodeParser.ts:83](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L83)
 
 ## Methods
 
@@ -87,7 +93,7 @@ Generate Node objects from documents
 
 #### Defined in
 
-[NodeParser.ts:95](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L95)
+[NodeParser.ts:124](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L124)
 
 ___
 
@@ -111,4 +117,4 @@ ___
 
 #### Defined in
 
-[NodeParser.ts:82](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L82)
+[NodeParser.ts:111](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/NodeParser.ts#L111)

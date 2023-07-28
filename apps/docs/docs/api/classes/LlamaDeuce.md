@@ -26,9 +26,19 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:189](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L189)
+[llm/LLM.ts:198](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L198)
 
 ## Properties
+
+### chatStrategy
+
+• **chatStrategy**: [`DeuceChatStrategy`](../enums/DeuceChatStrategy.md)
+
+#### Defined in
+
+[llm/LLM.ts:193](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L193)
+
+___
 
 ### maxTokens
 
@@ -36,7 +46,7 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:186](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L186)
+[llm/LLM.ts:195](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L195)
 
 ___
 
@@ -46,7 +56,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:184](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L184)
+[llm/LLM.ts:192](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L192)
 
 ___
 
@@ -56,7 +66,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:187](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L187)
+[llm/LLM.ts:196](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L196)
 
 ___
 
@@ -66,7 +76,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:185](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L185)
+[llm/LLM.ts:194](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L194)
 
 ## Methods
 
@@ -93,7 +103,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:209](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L209)
+[llm/LLM.ts:288](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L288)
 
 ___
 
@@ -120,13 +130,13 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:234](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L234)
+[llm/LLM.ts:311](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L311)
 
 ___
 
-### mapMessageType
+### mapMessageTypeA16Z
 
-▸ **mapMessageType**(`messageType`): `string`
+▸ **mapMessageTypeA16Z**(`messageType`): `string`
 
 #### Parameters
 
@@ -140,4 +150,65 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:196](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L196)
+[llm/LLM.ts:229](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L229)
+
+___
+
+### mapMessagesToPrompt
+
+▸ **mapMessagesToPrompt**(`messages`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `messages` | [`ChatMessage`](../interfaces/ChatMessage.md)[] |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[llm/LLM.ts:206](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L206)
+
+___
+
+### mapMessagesToPromptA16Z
+
+▸ **mapMessagesToPromptA16Z**(`messages`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `messages` | [`ChatMessage`](../interfaces/ChatMessage.md)[] |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[llm/LLM.ts:218](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L218)
+
+___
+
+### mapMessagesToPromptMeta
+
+▸ **mapMessagesToPromptMeta**(`messages`, `withBos?`): `string`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `messages` | [`ChatMessage`](../interfaces/ChatMessage.md)[] | `undefined` |
+| `withBos` | `boolean` | `false` |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[llm/LLM.ts:242](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L242)

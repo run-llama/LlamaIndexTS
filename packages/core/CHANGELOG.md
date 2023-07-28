@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.0.14
+
+### Patch Changes
+
+- 4ef334a: JSDoc and Github Actions thanks to @kevinlu1248, @sweep-ai
+- 0af7773: Added Meta strategy for Llama2
+- bea4af9: Fixed sentence splitter overlap logic
+- 4ef334a: asQueryEngine bug fix from @ysak-y
+
 ## 0.0.13
 
 ### Patch Changes
