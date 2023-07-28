@@ -12,9 +12,32 @@ export type MessageType =
   | "function";
 
 export interface ChatMessage {
-  content: string;
-  role: MessageType;
-}
+  export class LlamaDeuce implements LLM {
+  ...
+  }
+  
+  /**
+   * Custom LLM implementation
+   */
+  export class CustomLLM implements LLM {
+    constructor() {
+      // Initialize any necessary parameters for the custom LLM
+    }
+  
+    async chat(
+      messages: ChatMessage[],
+      parentEvent?: Event
+    ): Promise<ChatResponse> {
+      // Implement the chat method for the custom LLM
+    }
+  
+    async complete(
+      prompt: string,
+      parentEvent?: Event
+    ): Promise<CompletionResponse> {
+      // Implement the complete method for the custom LLM
+    }
+  }
 
 export interface ChatResponse {
   message: ChatMessage;
