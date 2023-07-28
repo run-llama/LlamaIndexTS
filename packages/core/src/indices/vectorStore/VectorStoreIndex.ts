@@ -216,9 +216,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     retriever?: BaseRetriever;
     responseSynthesizer?: ResponseSynthesizer;
   }): BaseQueryEngine {
-    let { retriever, responseSynthesizer } = options ?? {};
-
-    retriever = retriever ?? this.asRetriever();
-    return new RetrieverQueryEngine(this.asRetriever(), responseSynthesizer);
+    const { retriever, responseSynthesizer } = options ?? {};
+    return new RetrieverQueryEngine(retriever ?? this.asRetriever(), responseSynthesizer);
   }
 }
