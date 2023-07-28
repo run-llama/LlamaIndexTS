@@ -14,16 +14,16 @@ import { QueryEngineTool, ToolMetadata } from "./Tool";
 
 /**
  * A query engine is a question answerer that can use one or more steps.
- */
-export interface BaseQueryEngine {
-  /**
-   * Query the query engine and get a response.
-   * @param query
-   * @param parentEvent
-   */
-  query(query: string, parentEvent?: Event): Promise<Response>;
-}
-
+ export class SubQuestionQueryEngine implements BaseQueryEngine {
+   ...
+   static fromDefaults(init: {
+     ...
+     const responseSynthesizer = init.responseSynthesizer ?? new ResponseSynthesizer({ responseBuilder: new CompactAndRefine(serviceContext), serviceContext, llm: new CustomLLM() });
+     ...
+   }) {
+     ...
+   }
+ }
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.
  */
