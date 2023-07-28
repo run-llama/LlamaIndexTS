@@ -62,7 +62,7 @@ export function getNodesFromDocument(
 }
 
 /**
- * Interface for classes that can generate nodes from documents.
+ * A node parser generates TextNodes from Documents
  */
 export interface NodeParser {
   /**
@@ -74,7 +74,7 @@ export interface NodeParser {
 }
 
 /**
- * A simple implementation of the NodeParser interface.
+ * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
  */
 export class SimpleNodeParser implements NodeParser {
   /**

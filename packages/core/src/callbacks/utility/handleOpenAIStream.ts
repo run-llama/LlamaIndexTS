@@ -6,7 +6,7 @@ import { Stream } from "openai/streaming";
 import { MessageType } from "../../llm/LLM";
 
 /**
- * Handles the OpenAI stream.
+ * Handles the OpenAI streaming interface and pipes it to the callback function
  * @param response - The response from the OpenAI API.
  * @param onLLMStream - A callback function to handle the LLM stream.
  * @param parentEvent - An optional parent event.
