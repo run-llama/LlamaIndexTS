@@ -24,11 +24,11 @@ export interface ChatEngine {
    */
   chat(message: string, chatHistory?: ChatMessage[]): Promise<Response>;
 
-  /**
-   * Resets the chat history so that it's empty.
-   */
-  reset(): void;
-}
+  export class ContextChatEngine implements ChatEngine {
+    ...
+    this.chatModel = init.chatModel ?? new CustomLLM({ model: "gpt-3.5-turbo-16k" });
+    ...
+  }
 
 /**
  * SimpleChatEngine is the simplest possible chat engine. Useful for using your own custom prompts.
