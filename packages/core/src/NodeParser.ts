@@ -62,7 +62,7 @@ export function getNodesFromDocument(
 }
 
 /**
- * A node parser generates TextNodes from Documents
+ * A NodeParser generates TextNodes from Documents
  */
 export interface NodeParser {
   /**
