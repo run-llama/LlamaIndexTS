@@ -20,11 +20,11 @@ import {
   IndexDict,
   VectorIndexConstructorProps,
   VectorIndexOptions,
+  IndexStructType
 } from "../BaseIndex";
 import { BaseRetriever } from "../../Retriever";
 import { ResponseSynthesizer } from "../../ResponseSynthesizer";
 import { BaseDocumentStore } from "../../storage/docStore/types";
-import { IndexStructType } from "../BaseIndex";
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
