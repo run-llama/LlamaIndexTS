@@ -18,6 +18,7 @@ custom_edit_url: null
 
 ## Classes
 
+- [Anthropic](classes/Anthropic.md)
 - [BaseEmbedding](classes/BaseEmbedding.md)
 - [BaseIndex](classes/BaseIndex.md)
 - [BaseNode](classes/BaseNode.md)
@@ -107,7 +108,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L26)
+[llm/LLM.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L32)
 
 ___
 
@@ -137,7 +138,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:7](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L7)
+[llm/LLM.ts:13](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L13)
 
 ___
 
@@ -218,7 +219,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[llm/LLM.ts:162](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L162)
+[llm/LLM.ts:168](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L168)
 
 ___
 
@@ -243,7 +244,7 @@ We currently support GPT-3.5 and GPT-4 models
 
 #### Defined in
 
-[llm/LLM.ts:58](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L58)
+[llm/LLM.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L64)
 
 ___
 
@@ -422,7 +423,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L45)
+[llm/LLM.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L51)
 
 ___
 
@@ -441,7 +442,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:50](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L50)
+[llm/LLM.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L56)
 
 ___
 

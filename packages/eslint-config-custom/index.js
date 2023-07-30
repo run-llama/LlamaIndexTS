@@ -8,6 +8,7 @@ module.exports = {
         allowList: [
           "OPENAI_API_KEY",
           "REPLICATE_API_TOKEN",
+          "ANTHROPIC_API_KEY",
           "DEBUG",
           "no_proxy",
           "NO_PROXY",

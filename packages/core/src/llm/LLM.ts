@@ -3,6 +3,12 @@ import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 import { OpenAISession, getOpenAISession } from "./openai";
 import OpenAILLM from "openai";
 import { ReplicateSession } from "./replicate";
+import {
+  ANTHROPIC_AI_PROMPT,
+  ANTHROPIC_HUMAN_PROMPT,
+  AnthropicSession,
+  getAnthropicSession,
+} from "./anthropic";
 
 export type MessageType =
   | "user"
@@ -311,6 +317,83 @@ If a question does not make any sense, or is not factually coherent, explain why
   async complete(
     prompt: string,
     parentEvent?: Event
+  ): Promise<CompletionResponse> {
+    return this.chat([{ content: prompt, role: "user" }], parentEvent);
+  }
+}
+
+/**
+ * Anthropic LLM implementation
+ */
+
+export class Anthropic implements LLM {
+  // Per completion Anthropic params
+  model: string;
+  temperature: number;
+  maxTokens?: number;
+
+  // Anthropic session params
+  apiKey?: string = undefined;
+  maxRetries: number;
+  timeout?: number;
+  session: AnthropicSession;
+
+  callbackManager?: CallbackManager;
+
+  constructor(init?: Partial<Anthropic>) {
+    this.model = init?.model ?? "claude-2";
+    this.temperature = init?.temperature ?? 0;
+    this.maxTokens = init?.maxTokens ?? undefined;
+
+    this.apiKey = init?.apiKey ?? undefined;
+    this.maxRetries = init?.maxRetries ?? 10;
+    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.session =
+      init?.session ??
+      getAnthropicSession({
+        apiKey: this.apiKey,
+        maxRetries: this.maxRetries,
+        timeout: this.timeout,
+      });
+
+    this.callbackManager = init?.callbackManager;
+  }
+
+  mapMessagesToPrompt(messages: ChatMessage[]) {
+    return (
+      messages.reduce((acc, message) => {
+        return (
+          acc +
+          `${
+            message.role === "assistant"
+              ? ANTHROPIC_AI_PROMPT
+              : ANTHROPIC_HUMAN_PROMPT
+          } ${message.content} `
+        );
+      }, "") + ANTHROPIC_AI_PROMPT
+    );
+  }
+
+  async chat(
+    messages: ChatMessage[],
+    parentEvent?: Event | undefined
+  ): Promise<ChatResponse> {
+    const response = await this.session.anthropic.completions.create({
+      model: this.model,
+      prompt: this.mapMessagesToPrompt(messages),
+      max_tokens_to_sample: this.maxTokens ?? 100000,
+      temperature: this.temperature,
+    });
+
+    return {
+      message: { content: response.completion.trimStart(), role: "assistant" },
+      //^ We're trimming the start because Anthropic often starts with a space in the response
+      // That space will be re-added when we generate the next prompt.
+    };
+  }
+  async complete(
+    prompt: string,
+    parentEvent?: Event | undefined
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
