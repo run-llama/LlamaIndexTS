@@ -1,4 +1,5 @@
 import { NodeWithScore, TextNode } from "./Node";
+import { BardAI } from "./llm/BardAI";
 import {
   BaseQuestionGenerator,
   LLMQuestionGenerator,
@@ -56,7 +57,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
-export class SubQuestionQueryEngine implements BaseQueryEngine {
+export class BardAIQueryEngine implements BaseQueryEngine {
   responseSynthesizer: ResponseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: Record<string, BaseQueryEngine>;
