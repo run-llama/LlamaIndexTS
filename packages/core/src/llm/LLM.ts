@@ -73,6 +73,7 @@ export class OpenAI implements LLM {
   // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
   temperature: number;
+  topP: number;
   maxTokens?: number;
 
   // OpenAI session params
@@ -86,6 +87,7 @@ export class OpenAI implements LLM {
   constructor(init?: Partial<OpenAI>) {
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0;
+    this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
     this.apiKey = init?.apiKey ?? undefined;
@@ -131,6 +133,7 @@ export class OpenAI implements LLM {
         role: this.mapMessageType(message.role),
         content: message.content,
       })),
+      top_p: this.topP,
     };
 
     if (this.callbackManager?.onLLMStream) {
@@ -198,14 +201,16 @@ export class LlamaDeuce implements LLM {
   model: keyof typeof ALL_AVAILABLE_LLAMADEUCE_MODELS;
   chatStrategy: DeuceChatStrategy;
   temperature: number;
+  topP: number;
   maxTokens?: number;
   replicateSession: ReplicateSession;
 
   constructor(init?: Partial<LlamaDeuce>) {
     this.model = init?.model ?? "Llama-2-70b-chat";
     this.chatStrategy = init?.chatStrategy ?? DeuceChatStrategy.META;
-    this.temperature = init?.temperature ?? 0;
-    this.maxTokens = init?.maxTokens ?? undefined;
+    this.temperature = init?.temperature ?? 0.01; // minimum temperature is 0.01 for Replicate endpoint
+    this.topP = init?.topP ?? 1;
+    this.maxTokens = init?.maxTokens ?? undefined; // By default this means it's 500 tokens according to Replicate docs
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
   }
 
@@ -303,6 +308,10 @@ If a question does not make any sense, or is not factually coherent, explain why
     const response = await this.replicateSession.replicate.run(api, {
       input: {
         prompt,
+        system_prompt: "", // We are already sending the system prompt so set system prompt to empty.
+        max_new_tokens: this.maxTokens,
+        temperature: this.temperature,
+        top_p: this.topP,
       },
     });
     return {
@@ -330,6 +339,7 @@ export class Anthropic implements LLM {
   // Per completion Anthropic params
   model: string;
   temperature: number;
+  topP: number;
   maxTokens?: number;
 
   // Anthropic session params
@@ -343,6 +353,7 @@ export class Anthropic implements LLM {
   constructor(init?: Partial<Anthropic>) {
     this.model = init?.model ?? "claude-2";
     this.temperature = init?.temperature ?? 0;
+    this.topP = init?.topP ?? 0.999; // Per Ben Mann
     this.maxTokens = init?.maxTokens ?? undefined;
 
     this.apiKey = init?.apiKey ?? undefined;
@@ -383,6 +394,7 @@ export class Anthropic implements LLM {
       prompt: this.mapMessagesToPrompt(messages),
       max_tokens_to_sample: this.maxTokens ?? 100000,
       temperature: this.temperature,
+      top_p: this.topP,
     });
 
     return {
