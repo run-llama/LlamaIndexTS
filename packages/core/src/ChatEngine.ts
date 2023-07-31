@@ -1,4 +1,4 @@
-import { ChatMessage, OpenAI, ChatResponse, LLM } from "./llm/LLM";
+import { ChatMessage, OpenAI, BardAI, ChatResponse, LLM } from "./llm/LLM";
 import { TextNode } from "./Node";
 import {
   SimplePrompt,
@@ -125,19 +125,19 @@ export class CondenseQuestionChatEngine implements ChatEngine {
  * The context is stored in the system prompt, and the chat history is preserved,
  * ideally allowing the appropriate context to be surfaced for each query.
  */
-export class ContextChatEngine implements ChatEngine {
+export class BardAIChatEngine implements ChatEngine {
   retriever: BaseRetriever;
-  chatModel: OpenAI;
+  chatModel: BardAI;
   chatHistory: ChatMessage[];
 
   constructor(init: {
     retriever: BaseRetriever;
-    chatModel?: OpenAI;
+    chatModel?: BardAI;
     chatHistory?: ChatMessage[];
   }) {
     this.retriever = init.retriever;
     this.chatModel =
-      init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
+      init.chatModel ?? new BardAI({ model: "bard-ai-default" });
     this.chatHistory = init?.chatHistory ?? [];
   }
 
