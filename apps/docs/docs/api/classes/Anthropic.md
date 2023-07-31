@@ -1,12 +1,12 @@
 ---
-id: "OpenAI"
-title: "Class: OpenAI"
-sidebar_label: "OpenAI"
+id: "Anthropic"
+title: "Class: Anthropic"
+sidebar_label: "Anthropic"
 sidebar_position: 0
 custom_edit_url: null
 ---
 
-OpenAI LLM implementation
+Anthropic LLM implementation
 
 ## Implements
 
@@ -16,17 +16,17 @@ OpenAI LLM implementation
 
 ### constructor
 
-• **new OpenAI**(`init?`)
+• **new Anthropic**(`init?`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `init?` | `Partial`<[`OpenAI`](OpenAI.md)\> |
+| `init?` | `Partial`<[`Anthropic`](Anthropic.md)\> |
 
 #### Defined in
 
-[llm/LLM.ts:86](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L86)
+[llm/LLM.ts:343](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L343)
 
 ## Properties
 
@@ -36,7 +36,7 @@ OpenAI LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:79](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L79)
+[llm/LLM.ts:336](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L336)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L84)
+[llm/LLM.ts:341](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L341)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:80](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L80)
+[llm/LLM.ts:337](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L337)
 
 ___
 
@@ -66,27 +66,27 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:76](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L76)
+[llm/LLM.ts:333](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L333)
 
 ___
 
 ### model
 
-• **model**: ``"gpt-3.5-turbo"`` \| ``"gpt-3.5-turbo-16k"`` \| ``"gpt-4"`` \| ``"gpt-4-32k"``
+• **model**: `string`
 
 #### Defined in
 
-[llm/LLM.ts:74](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L74)
+[llm/LLM.ts:331](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L331)
 
 ___
 
 ### session
 
-• **session**: `OpenAISession`
+• **session**: `AnthropicSession`
 
 #### Defined in
 
-[llm/LLM.ts:82](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L82)
+[llm/LLM.ts:339](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L339)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L75)
+[llm/LLM.ts:332](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L332)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:81](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L81)
+[llm/LLM.ts:338](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L338)
 
 ## Methods
 
@@ -133,7 +133,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:122](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L122)
+[llm/LLM.ts:377](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L377)
 
 ___
 
@@ -160,24 +160,24 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:160](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L160)
+[llm/LLM.ts:394](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L394)
 
 ___
 
-### mapMessageType
+### mapMessagesToPrompt
 
-▸ **mapMessageType**(`messageType`): ``"function"`` \| ``"user"`` \| ``"assistant"`` \| ``"system"``
+▸ **mapMessagesToPrompt**(`messages`): `string`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `messageType` | [`MessageType`](../modules.md#messagetype) |
+| `messages` | [`ChatMessage`](../interfaces/ChatMessage.md)[] |
 
 #### Returns
 
-``"function"`` \| ``"user"`` \| ``"assistant"`` \| ``"system"``
+`string`
 
 #### Defined in
 
-[llm/LLM.ts:105](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L105)
+[llm/LLM.ts:362](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L362)

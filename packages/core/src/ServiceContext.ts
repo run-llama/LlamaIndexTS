@@ -17,7 +17,7 @@ export interface ServiceContext {
 }
 
 export interface ServiceContextOptions {
-  llm?: OpenAI;
+  llm?: LLM;
   promptHelper?: PromptHelper;
   embedModel?: BaseEmbedding;
   nodeParser?: NodeParser;
