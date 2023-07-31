@@ -30,7 +30,7 @@ ___
 
 ### vectorStore
 
-• **vectorStore**: `VectorStore`
+• **vectorStore**: [`VectorStore`](VectorStore.md)
 
 #### Defined in
 

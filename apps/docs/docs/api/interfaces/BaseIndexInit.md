@@ -72,7 +72,7 @@ ___
 
 ### vectorStore
 
-• `Optional` **vectorStore**: `VectorStore`
+• `Optional` **vectorStore**: [`VectorStore`](VectorStore.md)
 
 #### Defined in
 

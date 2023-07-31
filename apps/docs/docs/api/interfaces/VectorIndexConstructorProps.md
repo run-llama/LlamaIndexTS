@@ -86,7 +86,7 @@ ___
 
 ### vectorStore
 
-• **vectorStore**: `VectorStore`
+• **vectorStore**: [`VectorStore`](VectorStore.md)
 
 #### Overrides
 
