@@ -41,7 +41,7 @@ export class VectorIndexRetriever implements BaseRetriever {
       mode: VectorStoreQueryMode.DEFAULT,
       similarityTopK: this.similarityTopK,
     };
-    const result = this.index.vectorStore.query(q);
+    const result = await this.index.vectorStore.query(q);
 
     let nodesWithScores: NodeWithScore[] = [];
     for (let i = 0; i < result.ids.length; i++) {
