@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.0.15
+
+### Patch Changes
+
+- b501eb5: Added Anthropic Claude support
+- f9d1a6e: Add Top P
+
 ## 0.0.14
 
 ### Patch Changes

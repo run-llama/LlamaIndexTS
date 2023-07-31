@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.5.8",
     "js-tiktoken": "^1.0.7",
