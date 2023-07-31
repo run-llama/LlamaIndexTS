@@ -51,11 +51,11 @@ export class SimpleVectorStore implements VectorStore {
     return null;
   }
 
-  get(textId: string): number[] {
+  async get(textId: string): Promise<number[]> {
     return this.data.embeddingDict[textId];
   }
 
-  add(embeddingResults: NodeWithEmbedding[]): string[] {
+  async add(embeddingResults: NodeWithEmbedding[]): Promise<string[]> {
     for (let result of embeddingResults) {
       this.data.embeddingDict[result.node.id_] = result.embedding;
 
@@ -69,13 +69,13 @@ export class SimpleVectorStore implements VectorStore {
     }
 
     if (this.persistPath) {
-      this.persist(this.persistPath, this.fs);
+      await this.persist(this.persistPath, this.fs);
     }
 
     return embeddingResults.map((result) => result.node.id_);
   }
 
-  delete(refDocId: string): void {
+  async delete(refDocId: string): Promise<void> {
     let textIdsToDelete = Object.keys(this.data.textIdToRefDocId).filter(
       (textId) => this.data.textIdToRefDocId[textId] === refDocId
     );
@@ -83,9 +83,10 @@ export class SimpleVectorStore implements VectorStore {
       delete this.data.embeddingDict[textId];
       delete this.data.textIdToRefDocId[textId];
     }
+    return Promise.resolve();
   }
 
-  query(query: VectorStoreQuery): VectorStoreQueryResult {
+  async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
     if (!_.isNil(query.filters)) {
       throw new Error(
         "Metadata filters not implemented for SimpleVectorStore yet."
@@ -137,10 +138,10 @@ export class SimpleVectorStore implements VectorStore {
       throw new Error(`Invalid query mode: ${query.mode}`);
     }
 
-    return {
+    return Promise.resolve({
       similarities: topSimilarities,
       ids: topIds,
-    };
+    });
   }
 
   async persist(
