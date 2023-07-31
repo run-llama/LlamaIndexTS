@@ -3,6 +3,12 @@ import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 import { OpenAISession, getOpenAISession } from "./openai";
 import OpenAILLM from "openai";
 import { ReplicateSession } from "./replicate";
+import {
+  ANTHROPIC_AI_PROMPT,
+  ANTHROPIC_HUMAN_PROMPT,
+  AnthropicSession,
+  getAnthropicSession,
+} from "./anthropic";
 
 export type MessageType =
   | "user"
@@ -67,6 +73,7 @@ export class OpenAI implements LLM {
   // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
   temperature: number;
+  topP: number;
   maxTokens?: number;
 
   // OpenAI session params
@@ -80,6 +87,7 @@ export class OpenAI implements LLM {
   constructor(init?: Partial<OpenAI>) {
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0;
+    this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
     this.apiKey = init?.apiKey ?? undefined;
@@ -125,6 +133,7 @@ export class OpenAI implements LLM {
         role: this.mapMessageType(message.role),
         content: message.content,
       })),
+      top_p: this.topP,
     };
 
     if (this.callbackManager?.onLLMStream) {
@@ -192,14 +201,16 @@ export class LlamaDeuce implements LLM {
   model: keyof typeof ALL_AVAILABLE_LLAMADEUCE_MODELS;
   chatStrategy: DeuceChatStrategy;
   temperature: number;
+  topP: number;
   maxTokens?: number;
   replicateSession: ReplicateSession;
 
   constructor(init?: Partial<LlamaDeuce>) {
     this.model = init?.model ?? "Llama-2-70b-chat";
     this.chatStrategy = init?.chatStrategy ?? DeuceChatStrategy.META;
-    this.temperature = init?.temperature ?? 0;
-    this.maxTokens = init?.maxTokens ?? undefined;
+    this.temperature = init?.temperature ?? 0.01; // minimum temperature is 0.01 for Replicate endpoint
+    this.topP = init?.topP ?? 1;
+    this.maxTokens = init?.maxTokens ?? undefined; // By default this means it's 500 tokens according to Replicate docs
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
   }
 
@@ -297,6 +308,10 @@ If a question does not make any sense, or is not factually coherent, explain why
     const response = await this.replicateSession.replicate.run(api, {
       input: {
         prompt,
+        system_prompt: "", // We are already sending the system prompt so set system prompt to empty.
+        max_new_tokens: this.maxTokens,
+        temperature: this.temperature,
+        top_p: this.topP,
       },
     });
     return {
@@ -311,6 +326,86 @@ If a question does not make any sense, or is not factually coherent, explain why
   async complete(
     prompt: string,
     parentEvent?: Event
+  ): Promise<CompletionResponse> {
+    return this.chat([{ content: prompt, role: "user" }], parentEvent);
+  }
+}
+
+/**
+ * Anthropic LLM implementation
+ */
+
+export class Anthropic implements LLM {
+  // Per completion Anthropic params
+  model: string;
+  temperature: number;
+  topP: number;
+  maxTokens?: number;
+
+  // Anthropic session params
+  apiKey?: string = undefined;
+  maxRetries: number;
+  timeout?: number;
+  session: AnthropicSession;
+
+  callbackManager?: CallbackManager;
+
+  constructor(init?: Partial<Anthropic>) {
+    this.model = init?.model ?? "claude-2";
+    this.temperature = init?.temperature ?? 0;
+    this.topP = init?.topP ?? 0.999; // Per Ben Mann
+    this.maxTokens = init?.maxTokens ?? undefined;
+
+    this.apiKey = init?.apiKey ?? undefined;
+    this.maxRetries = init?.maxRetries ?? 10;
+    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.session =
+      init?.session ??
+      getAnthropicSession({
+        apiKey: this.apiKey,
+        maxRetries: this.maxRetries,
+        timeout: this.timeout,
+      });
+
+    this.callbackManager = init?.callbackManager;
+  }
+
+  mapMessagesToPrompt(messages: ChatMessage[]) {
+    return (
+      messages.reduce((acc, message) => {
+        return (
+          acc +
+          `${
+            message.role === "assistant"
+              ? ANTHROPIC_AI_PROMPT
+              : ANTHROPIC_HUMAN_PROMPT
+          } ${message.content} `
+        );
+      }, "") + ANTHROPIC_AI_PROMPT
+    );
+  }
+
+  async chat(
+    messages: ChatMessage[],
+    parentEvent?: Event | undefined
+  ): Promise<ChatResponse> {
+    const response = await this.session.anthropic.completions.create({
+      model: this.model,
+      prompt: this.mapMessagesToPrompt(messages),
+      max_tokens_to_sample: this.maxTokens ?? 100000,
+      temperature: this.temperature,
+      top_p: this.topP,
+    });
+
+    return {
+      message: { content: response.completion.trimStart(), role: "assistant" },
+      //^ We're trimming the start because Anthropic often starts with a space in the response
+      // That space will be re-added when we generate the next prompt.
+    };
+  }
+  async complete(
+    prompt: string,
+    parentEvent?: Event | undefined
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }

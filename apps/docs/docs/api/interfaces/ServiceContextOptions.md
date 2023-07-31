@@ -50,7 +50,7 @@ ___
 
 ### llm
 
-• `Optional` **llm**: [`OpenAI`](../classes/OpenAI.md)
+• `Optional` **llm**: [`LLM`](LLM.md)
 
 #### Defined in
 
