@@ -1,6 +1,7 @@
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 import { OpenAISession, getOpenAISession } from "./openai";
+import BardAI from "bard-ai";
 import OpenAILLM from "openai";
 import { ReplicateSession } from "./replicate";
 import {
@@ -334,6 +335,31 @@ If a question does not make any sense, or is not factually coherent, explain why
 /**
  * Anthropic LLM implementation
  */
+
+export class BardAIModel implements LLM {
+  bardAI: BardAI;
+
+  constructor() {
+    this.bardAI = new BardAI();
+  }
+
+  async chat(
+    messages: ChatMessage[],
+    parentEvent?: Event
+  ): Promise<ChatResponse> {
+    const message = messages.map((message) => message.content).join("\n");
+    const response = await this.bardAI.generate(message);
+    return { message: { content: response, role: "assistant" } };
+  }
+
+  async complete(
+    prompt: string,
+    parentEvent?: Event
+  ): Promise<CompletionResponse> {
+    const response = await this.bardAI.complete(prompt);
+    return { message: { content: response, role: "assistant" } };
+  }
+}
 
 export class Anthropic implements LLM {
   // Per completion Anthropic params
