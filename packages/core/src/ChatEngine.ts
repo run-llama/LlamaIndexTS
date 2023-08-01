@@ -1,4 +1,4 @@
-import { ChatMessage, OpenAI, ChatResponse, LLM } from "./llm/LLM";
+import { ChatMessage, OpenAI, BardAIModel, ChatResponse, LLM } from "./llm/LLM";
 import { TextNode } from "./Node";
 import {
   SimplePrompt,
@@ -39,7 +39,7 @@ export class SimpleChatEngine implements ChatEngine {
 
   constructor(init?: Partial<SimpleChatEngine>) {
     this.chatHistory = init?.chatHistory ?? [];
-    this.llm = init?.llm ?? new OpenAI();
+    this.llm = init?.llm ?? (init?.localLLM ? new BardAIModel() : new OpenAI());
   }
 
   async chat(message: string, chatHistory?: ChatMessage[]): Promise<Response> {
@@ -77,6 +77,7 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     chatHistory: ChatMessage[];
     serviceContext?: ServiceContext;
     condenseMessagePrompt?: SimplePrompt;
+    localLLM?: boolean;
   }) {
     this.queryEngine = init.queryEngine;
     this.chatHistory = init?.chatHistory ?? [];
@@ -84,6 +85,7 @@ export class CondenseQuestionChatEngine implements ChatEngine {
       init?.serviceContext ?? serviceContextFromDefaults({});
     this.condenseMessagePrompt =
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
+    this.serviceContext.llm = init?.localLLM ? new BardAIModel() : new OpenAI();
   }
 
   private async condenseQuestion(chatHistory: ChatMessage[], question: string) {
@@ -134,10 +136,11 @@ export class ContextChatEngine implements ChatEngine {
     retriever: BaseRetriever;
     chatModel?: OpenAI;
     chatHistory?: ChatMessage[];
+    localLLM?: boolean;
   }) {
     this.retriever = init.retriever;
     this.chatModel =
-      init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
+      init.localLLM ? new BardAIModel() : (init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" }));
     this.chatHistory = init?.chatHistory ?? [];
   }
 
