@@ -108,7 +108,7 @@ ___
 
 ### vectorStore
 
-• **vectorStore**: `VectorStore`
+• **vectorStore**: [`VectorStore`](../interfaces/VectorStore.md)
 
 #### Overrides
 
@@ -187,7 +187,7 @@ Get embeddings for nodes and place them into the index.
 | :------ | :------ |
 | `nodes` | [`BaseNode`](BaseNode.md)[] |
 | `serviceContext` | [`ServiceContext`](../interfaces/ServiceContext.md) |
-| `vectorStore` | `VectorStore` |
+| `vectorStore` | [`VectorStore`](../interfaces/VectorStore.md) |
 | `docStore` | `BaseDocumentStore` |
 
 #### Returns

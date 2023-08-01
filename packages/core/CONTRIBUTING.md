@@ -12,7 +12,7 @@ apps/simple is where the demo code lives
 
 ### Turborepo docs
 
-You can checkout how Turborepo works using the built in [README-turborepo.md](README-turborepo.md)
+You can checkout how Turborepo works using the default [README-turborepo.md](/README-turborepo.md)
 
 ## Getting Started
 
@@ -41,11 +41,13 @@ To run them, run
 pnpm run test
 ```
 
-To write new test cases write them in packages/core/src/tests
+To write new test cases write them in [packages/core/src/tests](/packages/core/src/tests)
 
 We use Jest https://jestjs.io/ to write our test cases. Jest comes with a bunch of built in assertions using the expect function: https://jestjs.io/docs/expect
 
 ### Demo applications
+
+There is an existing ["simple"](/apps/simple/README.md) demos folder with mainly NodeJS scripts. Feel free to add additional demos to that folder. If you would like to try out your changes in the core package with a new demo, you need to run the build command in the README.
 
 You can create new demo applications in the apps folder. Just run pnpm init in the folder after you create it to create its own package.json
 

@@ -108,7 +108,7 @@ ___
 
 ### vectorStore
 
-• `Optional` **vectorStore**: `VectorStore`
+• `Optional` **vectorStore**: [`VectorStore`](../interfaces/VectorStore.md)
 
 #### Inherited from
 

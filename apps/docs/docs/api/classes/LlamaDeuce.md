@@ -26,7 +26,7 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:204](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L204)
+[llm/LLM.ts:208](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L208)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:199](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L199)
+[llm/LLM.ts:202](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L202)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:201](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L201)
+[llm/LLM.ts:205](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L205)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:198](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L198)
+[llm/LLM.ts:201](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L201)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:202](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L202)
+[llm/LLM.ts:206](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L206)
 
 ___
 
@@ -76,7 +76,17 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:200](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L200)
+[llm/LLM.ts:203](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L203)
+
+___
+
+### topP
+
+• **topP**: `number`
+
+#### Defined in
+
+[llm/LLM.ts:204](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L204)
 
 ## Methods
 
@@ -103,7 +113,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:294](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L294)
+[llm/LLM.ts:299](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L299)
 
 ___
 
@@ -130,7 +140,7 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:317](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L317)
+[llm/LLM.ts:326](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L326)
 
 ___
 
@@ -150,7 +160,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:235](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L235)
+[llm/LLM.ts:240](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L240)
 
 ___
 
@@ -170,7 +180,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:212](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L212)
+[llm/LLM.ts:217](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L217)
 
 ___
 
@@ -190,7 +200,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:224](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L224)
+[llm/LLM.ts:229](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L229)
 
 ___
 
@@ -211,4 +221,4 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:248](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L248)
+[llm/LLM.ts:253](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L253)

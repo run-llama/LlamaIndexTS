@@ -15,6 +15,7 @@ custom_edit_url: null
 - [NodeRelationship](enums/NodeRelationship.md)
 - [ObjectType](enums/ObjectType.md)
 - [SimilarityType](enums/SimilarityType.md)
+- [VectorStoreQueryMode](enums/VectorStoreQueryMode.md)
 
 ## Classes
 
@@ -70,8 +71,11 @@ custom_edit_url: null
 - [ChatMessage](interfaces/ChatMessage.md)
 - [ChatResponse](interfaces/ChatResponse.md)
 - [Event](interfaces/Event.md)
+- [ExactMatchFilter](interfaces/ExactMatchFilter.md)
 - [GenericFileSystem](interfaces/GenericFileSystem.md)
 - [LLM](interfaces/LLM.md)
+- [MetadataFilters](interfaces/MetadataFilters.md)
+- [MetadataInfo](interfaces/MetadataInfo.md)
 - [NodeParser](interfaces/NodeParser.md)
 - [NodeWithEmbedding](interfaces/NodeWithEmbedding.md)
 - [NodeWithScore](interfaces/NodeWithScore.md)
@@ -88,6 +92,11 @@ custom_edit_url: null
 - [ToolMetadata](interfaces/ToolMetadata.md)
 - [VectorIndexConstructorProps](interfaces/VectorIndexConstructorProps.md)
 - [VectorIndexOptions](interfaces/VectorIndexOptions.md)
+- [VectorStore](interfaces/VectorStore.md)
+- [VectorStoreInfo](interfaces/VectorStoreInfo.md)
+- [VectorStoreQuery](interfaces/VectorStoreQuery.md)
+- [VectorStoreQueryResult](interfaces/VectorStoreQueryResult.md)
+- [VectorStoreQuerySpec](interfaces/VectorStoreQuerySpec.md)
 - [WalkableFileSystem](interfaces/WalkableFileSystem.md)
 
 ## Type Aliases
@@ -219,7 +228,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[llm/LLM.ts:168](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L168)
+[llm/LLM.ts:171](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L171)
 
 ___
 
@@ -795,7 +804,7 @@ ___
 | `embeddings` | `number`[][] | `undefined` |
 | `similarityTopK?` | `number` | `undefined` |
 | `embeddingsIds?` | `any`[] | `undefined` |
-| `queryMode` | `VectorStoreQueryMode` | `VectorStoreQueryMode.SVM` |
+| `queryMode` | [`VectorStoreQueryMode`](enums/VectorStoreQueryMode.md) | `VectorStoreQueryMode.SVM` |
 
 #### Returns
 
