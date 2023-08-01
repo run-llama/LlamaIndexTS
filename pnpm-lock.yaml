@@ -114,8 +114,8 @@ importers:
   packages/core:
     dependencies:
       '@anthropic-ai/sdk':
-        specifier: ^0.5.8
-        version: 0.5.8
+        specifier: ^0.5.9
+        version: 0.5.9
       js-tiktoken:
         specifier: ^1.0.7
         version: 1.0.7
@@ -129,8 +129,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       replicate:
-        specifier: ^0.12.3
-        version: 0.12.3
+        specifier: ^0.14.1
+        version: 0.14.1
       tiktoken-node:
         specifier: ^0.0.6
         version: 0.0.6
@@ -332,8 +332,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
 
-  /@anthropic-ai/sdk@0.5.8:
-    resolution: {integrity: sha512-iHenjcE2Q/az6VZiP1DueOSvKNRmxsly6Rx2yjJBoy7OBYVFGVjEdgs2mPQHtTX0ibKAR7tPq6F6MQbKDPWcKg==}
+  /@anthropic-ai/sdk@0.5.9:
+    resolution: {integrity: sha512-9/TYca4qSe0xG40LLNf5vemybw5JAKF5OE6Eiyc+O+h3+VGGPeOKo+1SHaWBP5zS7bGX2o3Ne6EonPWyh9oNqA==}
     dependencies:
       '@types/node': 18.17.1
       '@types/node-fetch': 2.6.4
@@ -11551,8 +11551,8 @@ packages:
     engines: {node: '>=0.10'}
     dev: false
 
-  /replicate@0.12.3:
-    resolution: {integrity: sha512-HVWKPoVhWVTONlWk+lUXmq9Vy2J8MxBJMtDBQq3dA5uq71ZzKTh0xvJfvzW4+VLBjhBeL7tkdua6hZJmKfzAPQ==}
+  /replicate@0.14.1:
+    resolution: {integrity: sha512-3NpuNRbvXoEjY+n/ra24VfQyIRCdLub9GCrU51fFTrMaa6OjRvMC9jGDJSpGRXOLvID75mFgN577HEhA3XEFtg==}
     engines: {git: '>=2.11.0', node: '>=16.6.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
     dev: false
 
@@ -11653,8 +11653,8 @@ packages:
       inherits: 2.0.4
     dev: true
 
-  /rollup@3.26.3:
-    resolution: {integrity: sha512-7Tin0C8l86TkpcMtXvQu6saWH93nhG3dGQ1/+l5V2TDMceTxO7kDiK6GzbfLWNNxqJXm591PcEZUozZm51ogwQ==}
+  /rollup@3.27.0:
+    resolution: {integrity: sha512-aOltLCrYZ0FhJDm7fCqwTjIUEVjWjcydKBV/Zeid6Mn8BWgDCUBBWT5beM5ieForYNo/1ZHuGJdka26kvQ3Gzg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -12780,7 +12780,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 4.0.1
       resolve-from: 5.0.0
-      rollup: 3.26.3
+      rollup: 3.27.0
       source-map: 0.8.0-beta.0
       sucrase: 3.34.0
       tree-kill: 1.2.2
