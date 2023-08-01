@@ -21,6 +21,7 @@ export enum VectorStoreQueryMode {
 }
 
 export interface ExactMatchFilter {
+  filterType: "ExactMatch";
   key: string;
   value: string | number;
 }
