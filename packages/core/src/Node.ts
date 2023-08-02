@@ -204,6 +204,11 @@ export class TextNode extends BaseNode {
 export class IndexNode extends TextNode {
   indexId: string = "";
 
+  constructor(init?: Partial<IndexNode>) {
+    super(init);
+    Object.assign(this, init);
+  }
+
   getType(): ObjectType {
     return ObjectType.INDEX;
   }
