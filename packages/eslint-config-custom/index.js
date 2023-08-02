@@ -9,6 +9,20 @@ module.exports = {
           "OPENAI_API_KEY",
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",
+
+          "AZURE_OPENAI_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_API_VERSION",
+          "AZURE_OPENAI_DEPLOYMENT",
+
+          "OPENAI_API_BASE",
+          "OPENAI_API_VERSION",
+          "OPENAI_API_TYPE",
+
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_API_INSTANCE_NAME",
+          "AZURE_OPENAI_API_DEPLOYMENT_NAME",
+
           "DEBUG",
           "no_proxy",
           "NO_PROXY",

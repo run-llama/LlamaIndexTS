@@ -9,6 +9,13 @@ import {
   AnthropicSession,
   getAnthropicSession,
 } from "./anthropic";
+import {
+  AzureOpenAIConfig,
+  getAzureConfigFromEnv,
+  getAzureModel,
+  getAzureBaseUrl,
+  shouldUseAzure,
+} from "./azure";
 
 export type MessageType =
   | "user"
@@ -84,22 +91,48 @@ export class OpenAI implements LLM {
 
   callbackManager?: CallbackManager;
 
-  constructor(init?: Partial<OpenAI>) {
+  constructor(init?: Partial<OpenAI> & { azure?: AzureOpenAIConfig }) {
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
-    this.apiKey = init?.apiKey ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
     this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
-    this.session =
-      init?.session ??
-      getOpenAISession({
-        apiKey: this.apiKey,
-        maxRetries: this.maxRetries,
-        timeout: this.timeout,
+
+    if (init?.azure || shouldUseAzure()) {
+      const azureConfig = getAzureConfigFromEnv({
+        ...init?.azure,
+        model: getAzureModel(this.model),
       });
+
+      if (!azureConfig.apiKey) {
+        throw new Error(
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable."
+        );
+      }
+
+      this.apiKey = azureConfig.apiKey;
+      this.session =
+        init?.session ??
+        getOpenAISession({
+          azure: true,
+          apiKey: this.apiKey,
+          baseURL: getAzureBaseUrl(azureConfig),
+          maxRetries: this.maxRetries,
+          timeout: this.timeout,
+          defaultQuery: { "api-version": azureConfig.apiVersion },
+        });
+    } else {
+      this.apiKey = init?.apiKey ?? undefined;
+      this.session =
+        init?.session ??
+        getOpenAISession({
+          apiKey: this.apiKey,
+          maxRetries: this.maxRetries,
+          timeout: this.timeout,
+        });
+    }
 
     this.callbackManager = init?.callbackManager;
   }
@@ -151,9 +184,10 @@ export class OpenAI implements LLM {
       return { message: { content: message, role } };
     } else {
       // Non-streaming
-      const response = await this.session.openai.chat.completions.create(
-        baseRequestParams
-      );
+      const response = await this.session.openai.chat.completions.create({
+        ...baseRequestParams,
+        stream: false,
+      });
 
       const content = response.choices[0].message?.content ?? "";
       return { message: { content, role: response.choices[0].message.role } };

@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L32)
+[llm/LLM.ts:39](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L39)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:13](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L13)
+[llm/LLM.ts:20](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L20)
 
 ___
 
@@ -228,7 +228,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[llm/LLM.ts:171](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L171)
+[llm/LLM.ts:205](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L205)
 
 ___
 
@@ -253,7 +253,7 @@ We currently support GPT-3.5 and GPT-4 models
 
 #### Defined in
 
-[llm/LLM.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L64)
+[llm/LLM.ts:71](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L71)
 
 ___
 
@@ -309,7 +309,7 @@ ___
 
 ### DEFAULT\_DOC\_STORE\_PERSIST\_FILENAME
 
-• `Const` **DEFAULT\_DOC\_STORE\_PERSIST\_FILENAME**: ``"docstore.json"``
+• `Const` **DEFAULT\_DOC\_STORE\_PERSIST\_FILENAME**: ``"doc_store.json"``
 
 #### Defined in
 
@@ -432,7 +432,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L51)
+[llm/LLM.ts:58](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L58)
 
 ___
 
@@ -451,7 +451,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L56)
+[llm/LLM.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L63)
 
 ___
 
@@ -788,7 +788,7 @@ Get the top K embeddings from a list of embeddings ordered by similarity to the 
 
 #### Defined in
 
-[Embedding.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L77)
+[Embedding.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L84)
 
 ___
 
@@ -812,7 +812,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:119](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L119)
+[Embedding.ts:126](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L126)
 
 ___
 
@@ -838,7 +838,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:131](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L131)
+[Embedding.ts:138](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L138)
 
 ___
 
@@ -859,6 +859,26 @@ ___
 #### Defined in
 
 [indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L70)
+
+___
+
+### jsonToNode
+
+▸ **jsonToNode**(`json`): [`TextNode`](classes/TextNode.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `json` | `any` |
+
+#### Returns
+
+[`TextNode`](classes/TextNode.md)
+
+#### Defined in
+
+[Node.ts:243](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L243)
 
 ___
 
@@ -953,7 +973,7 @@ similartiy score with higher numbers meaning the two embeddings are more similar
 
 #### Defined in
 
-[Embedding.ts:22](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L22)
+[Embedding.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L29)
 
 ___
 

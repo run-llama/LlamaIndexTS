@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[storage/vectorStore/types.ts:55](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L55)
+[storage/vectorStore/types.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L56)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L52)
+[storage/vectorStore/types.ts:53](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L53)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L56)
+[storage/vectorStore/types.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L57)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:57](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L57)
+[storage/vectorStore/types.ts:58](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L58)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L54)
+[storage/vectorStore/types.ts:55](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L55)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:50](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L50)
+[storage/vectorStore/types.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L51)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:53](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L53)
+[storage/vectorStore/types.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L54)
 
 ___
 
@@ -84,4 +84,4 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L51)
+[storage/vectorStore/types.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L52)
