@@ -128,6 +128,14 @@ export abstract class BaseNode {
       hash: this.hash,
     };
   }
+
+  /**
+   * Used with built in JSON.stringify
+   * @returns
+   */
+  toJSON(): Record<string, any> {
+    return { ...this, type: this.getType() };
+  }
 }
 
 /**
@@ -229,6 +237,23 @@ export class Document extends TextNode {
 
   get docId() {
     return this.id_;
+  }
+}
+
+export function jsonToNode(json: any) {
+  if (!json.type) {
+    throw new Error("Node type not found");
+  }
+
+  switch (json.type) {
+    case ObjectType.TEXT:
+      return new TextNode(json);
+    case ObjectType.INDEX:
+      return new IndexNode(json);
+    case ObjectType.DOCUMENT:
+      return new Document(json);
+    default:
+      throw new Error(`Invalid node type: ${json.type}`);
   }
 }
 

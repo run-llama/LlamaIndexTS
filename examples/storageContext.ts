@@ -1,6 +1,9 @@
-import { Document, VectorStoreIndex, storageContextFromDefaults } from "llamaindex";
+import {
+  Document,
+  VectorStoreIndex,
+  storageContextFromDefaults,
+} from "llamaindex";
 import essay from "./essay";
-
 
 async function main() {
   // Create Document object with essay
@@ -8,8 +11,12 @@ async function main() {
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   // persist the vector store automatically with the storage context
-  const storageContext = await storageContextFromDefaults({ persistDir: "./storage" });
-  const index = await VectorStoreIndex.fromDocuments([document], { storageContext });
+  const storageContext = await storageContextFromDefaults({
+    persistDir: "./storage",
+  });
+  const index = await VectorStoreIndex.fromDocuments([document], {
+    storageContext,
+  });
 
   // Query the index
   const queryEngine = index.asQueryEngine();
@@ -21,9 +28,14 @@ async function main() {
   console.log(response.toString());
 
   // load the index
-  const loadedIndex = await VectorStoreIndex.init({ storageContext });
-  const laodedQueryEngine = loadedIndex.asQueryEngine();
-  const loadedResponse = await laodedQueryEngine.query(
+  const secondStorageContext = await storageContextFromDefaults({
+    persistDir: "./storage",
+  });
+  const loadedIndex = await VectorStoreIndex.init({
+    storageContext: secondStorageContext,
+  });
+  const loadedQueryEngine = loadedIndex.asQueryEngine();
+  const loadedResponse = await loadedQueryEngine.query(
     "What did the author do growing up?"
   );
   console.log(loadedResponse.toString());

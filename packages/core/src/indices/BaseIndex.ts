@@ -1,4 +1,4 @@
-import { Document, BaseNode } from "../Node";
+import { Document, BaseNode, jsonToNode } from "../Node";
 import { v4 as uuidv4 } from "uuid";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext } from "../ServiceContext";
@@ -74,7 +74,12 @@ export function jsonToIndexStruct(json: any): IndexStruct {
     return indexList;
   } else if (json.type === IndexStructType.SIMPLE_DICT) {
     const indexDict = new IndexDict(json.indexId, json.summary);
-    indexDict.nodesDict = json.nodesDict;
+    indexDict.nodesDict = Object.entries(json.nodesDict).reduce<
+      Record<string, BaseNode>
+    >((acc, [key, value]) => {
+      acc[key] = jsonToNode(value);
+      return acc;
+    }, {});
     return indexDict;
   } else {
     throw new Error(`Unknown index struct type: ${json.type}`);
