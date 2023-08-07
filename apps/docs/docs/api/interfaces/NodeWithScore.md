@@ -16,7 +16,7 @@ A node with a similarity score
 
 #### Defined in
 
-[Node.ts:238](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L238)
+[Node.ts:268](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L268)
 
 ___
 
@@ -26,4 +26,4 @@ ___
 
 #### Defined in
 
-[Node.ts:239](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L239)
+[Node.ts:269](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L269)

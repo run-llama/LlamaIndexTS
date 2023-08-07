@@ -8,13 +8,23 @@ custom_edit_url: null
 
 ## Properties
 
+### filterType
+
+• **filterType**: ``"ExactMatch"``
+
+#### Defined in
+
+[storage/vectorStore/types.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L24)
+
+___
+
 ### key
 
 • **key**: `string`
 
 #### Defined in
 
-[storage/vectorStore/types.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L24)
+[storage/vectorStore/types.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L25)
 
 ___
 
@@ -24,4 +34,4 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L25)
+[storage/vectorStore/types.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L26)

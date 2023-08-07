@@ -32,7 +32,7 @@ A document is just a special text node with a docId.
 
 #### Defined in
 
-[Node.ts:216](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L216)
+[Node.ts:229](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L229)
 
 ## Properties
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[Node.ts:139](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L139)
+[Node.ts:147](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L147)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[Node.ts:142](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L142)
+[Node.ts:150](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L150)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[Node.ts:138](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L138)
+[Node.ts:146](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L146)
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[Node.ts:137](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L137)
+[Node.ts:145](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L145)
 
 ## Accessors
 
@@ -218,7 +218,7 @@ ___
 
 #### Defined in
 
-[Node.ts:225](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L225)
+[Node.ts:238](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L238)
 
 ___
 
@@ -344,7 +344,7 @@ ___
 
 #### Defined in
 
-[Node.ts:149](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L149)
+[Node.ts:157](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L157)
 
 ___
 
@@ -368,7 +368,7 @@ ___
 
 #### Defined in
 
-[Node.ts:157](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L157)
+[Node.ts:165](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L165)
 
 ___
 
@@ -410,7 +410,7 @@ ___
 
 #### Defined in
 
-[Node.ts:162](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L162)
+[Node.ts:170](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L170)
 
 ___
 
@@ -433,7 +433,7 @@ ___
 
 #### Defined in
 
-[Node.ts:187](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L187)
+[Node.ts:195](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L195)
 
 ___
 
@@ -451,7 +451,7 @@ ___
 
 #### Defined in
 
-[Node.ts:191](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L191)
+[Node.ts:199](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L199)
 
 ___
 
@@ -469,7 +469,7 @@ ___
 
 #### Defined in
 
-[Node.ts:221](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L221)
+[Node.ts:234](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L234)
 
 ___
 
@@ -493,4 +493,24 @@ ___
 
 #### Defined in
 
-[Node.ts:183](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L183)
+[Node.ts:191](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L191)
+
+___
+
+### toJSON
+
+▸ **toJSON**(): `Record`<`string`, `any`\>
+
+Used with built in JSON.stringify
+
+#### Returns
+
+`Record`<`string`, `any`\>
+
+#### Inherited from
+
+[TextNode](TextNode.md).[toJSON](TextNode.md#tojson)
+
+#### Defined in
+
+[Node.ts:136](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L136)

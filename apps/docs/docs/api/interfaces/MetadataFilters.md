@@ -14,4 +14,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[storage/vectorStore/types.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L29)
+[storage/vectorStore/types.ts:30](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L30)

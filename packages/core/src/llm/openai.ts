@@ -1,10 +1,16 @@
 import OpenAI, { ClientOptions } from "openai";
 import _ from "lodash";
 
+export class AzureOpenAI extends OpenAI {
+  protected override authHeaders() {
+    return { "api-key": this.apiKey };
+  }
+}
+
 export class OpenAISession {
   openai: OpenAI;
 
-  constructor(options: ClientOptions = {}) {
+  constructor(options: ClientOptions & { azure?: boolean } = {}) {
     if (!options.apiKey) {
       if (typeof process !== undefined) {
         options.apiKey = process.env.OPENAI_API_KEY;
@@ -15,7 +21,11 @@ export class OpenAISession {
       throw new Error("Set OpenAI Key in OPENAI_API_KEY env variable"); // Overriding OpenAI package's error message
     }
 
-    this.openai = new OpenAI(options);
+    if (options.azure) {
+      this.openai = new AzureOpenAI(options);
+    } else {
+      this.openai = new OpenAI(options);
+    }
   }
 }
 
@@ -31,7 +41,9 @@ let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
  * @param options
  * @returns
  */
-export function getOpenAISession(options: ClientOptions = {}) {
+export function getOpenAISession(
+  options: ClientOptions & { azure?: boolean } = {}
+) {
   let session = defaultOpenAISession.find((session) => {
     return _.isEqual(session.options, options);
   })?.session;

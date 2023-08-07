@@ -3,9 +3,8 @@
   "version": "0.0.15",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.5.9",
-    "js-tiktoken": "^1.0.7",
     "lodash": "^4.17.21",
-    "openai": "4.0.0-beta.6",
+    "openai": "4.0.0-beta.8",
     "pdf-parse": "^1.1.1",
     "replicate": "^0.14.1",
     "tiktoken-node": "^0.0.6",

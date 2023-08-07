@@ -285,3 +285,19 @@ ___
 #### Defined in
 
 [Node.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L56)
+
+___
+
+### toJSON
+
+▸ **toJSON**(): `Record`<`string`, `any`\>
+
+Used with built in JSON.stringify
+
+#### Returns
+
+`Record`<`string`, `any`\>
+
+#### Defined in
+
+[Node.ts:136](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L136)

@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:85](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L85)
+[indices/BaseIndex.ts:90](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L90)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:86](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L86)
+[indices/BaseIndex.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L91)
 
 ## Methods
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:88](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L88)
+[indices/BaseIndex.ts:93](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L93)
 
 ___
 
@@ -137,4 +137,4 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:92](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L92)
+[indices/BaseIndex.ts:97](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L97)

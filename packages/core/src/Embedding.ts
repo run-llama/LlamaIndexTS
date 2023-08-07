@@ -1,4 +1,11 @@
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
+import {
+  AzureOpenAIConfig,
+  getAzureConfigFromEnv,
+  getAzureModel,
+  getAzureBaseUrl,
+  shouldUseAzure,
+} from "./llm/azure";
 import { OpenAISession, getOpenAISession } from "./llm/openai";
 import { VectorStoreQueryMode } from "./storage/vectorStore/types";
 
@@ -219,19 +226,45 @@ export class OpenAIEmbedding extends BaseEmbedding {
   timeout?: number;
   session: OpenAISession;
 
-  constructor(init?: Partial<OpenAIEmbedding>) {
+  constructor(init?: Partial<OpenAIEmbedding> & { azure?: AzureOpenAIConfig }) {
     super();
 
     this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
 
-    this.apiKey = init?.apiKey ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
     this.timeout = init?.timeout ?? undefined;
-    this.session = getOpenAISession({
-      apiKey: this.apiKey,
-      maxRetries: this.maxRetries,
-      timeout: this.timeout,
-    });
+
+    if (init?.azure || shouldUseAzure()) {
+      const azureConfig = getAzureConfigFromEnv({
+        ...init?.azure,
+        model: getAzureModel(this.model),
+      });
+
+      if (!azureConfig.apiKey) {
+        throw new Error(
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable."
+        );
+      }
+
+      this.apiKey = azureConfig.apiKey;
+      this.session =
+        init?.session ??
+        getOpenAISession({
+          azure: true,
+          apiKey: this.apiKey,
+          baseURL: getAzureBaseUrl(azureConfig),
+          maxRetries: this.maxRetries,
+          timeout: this.timeout,
+          defaultQuery: { "api-version": azureConfig.apiVersion },
+        });
+    } else {
+      this.apiKey = init?.apiKey ?? undefined;
+      this.session = getOpenAISession({
+        apiKey: this.apiKey,
+        maxRetries: this.maxRetries,
+        timeout: this.timeout,
+      });
+    }
   }
 
   private async getOpenAIEmbedding(input: string) {
