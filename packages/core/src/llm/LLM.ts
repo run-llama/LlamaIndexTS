@@ -203,20 +203,42 @@ export class OpenAI implements LLM {
 }
 
 export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
-  "Llama-2-70b-chat": {
+  "Llama-2-70b-chat-old": {
     contextWindow: 4096,
     replicateApi:
       "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48",
+    //^ Previous 70b model. This is also actually 4 bit, although not exllama.
+  },
+  "Llama-2-70b-chat-4bit": {
+    contextWindow: 4096,
+    replicateApi:
+      "replicate/llama70b-v2-chat:2c1608e18606fad2812020dc541930f2d0495ce32eee50074220b87300bc16e1",
+    //^ Model is based off of exllama 4bit.
   },
   "Llama-2-13b-chat": {
     contextWindow: 4096,
     replicateApi:
       "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
   },
+  //^ Last known good 13b non-quantized model. In future versions they add the SYS and INST tags themselves
+  "Llama-2-13b-chat-4bit": {
+    contextWindow: 4096,
+    replicateApi:
+      "a16z-infra/llama13b-v2-chat:2a7f981751ec7fdf87b5b91ad4db53683a98082e9ff7bfd12c8cd5ea85980a52",
+  },
   "Llama-2-7b-chat": {
     contextWindow: 4096,
     replicateApi:
       "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
+    //^ Last (somewhat) known good 7b non-quantized model. In future versions they add the SYS and INST
+    // tags themselves
+    // https://github.com/replicate/cog-llama-template/commit/fa5ce83912cf82fc2b9c01a4e9dc9bff6f2ef137
+    // Problem is that they fix the max_new_tokens issue in the same commit. :-(
+  },
+  "Llama-2-7b-chat-4bit": {
+    contextWindow: 4096,
+    replicateApi:
+      "a16z-infra/llama7b-v2-chat:4f0b260b6a13eb53a6b1891f089d57c08f41003ae79458be5011303d81a394dc",
   },
 };
 
@@ -226,6 +248,8 @@ export enum DeuceChatStrategy {
   METAWBOS = "metawbos",
   //^ This is not exactly right because SentencePiece puts the BOS and EOS token IDs in after tokenization
   // Unfortunately any string only API won't support these properly.
+  REPLICATE4BIT = "replicate4bit",
+  //^ To satisfy Replicate's 4 bit models' requirements where they also insert some INST tags
 }
 
 /**
@@ -240,35 +264,46 @@ export class LlamaDeuce implements LLM {
   replicateSession: ReplicateSession;
 
   constructor(init?: Partial<LlamaDeuce>) {
-    this.model = init?.model ?? "Llama-2-70b-chat";
-    this.chatStrategy = init?.chatStrategy ?? DeuceChatStrategy.META;
+    this.model = init?.model ?? "Llama-2-70b-chat-4bit";
+    this.chatStrategy =
+      init?.chatStrategy ??
+      (this.model.endsWith("4bit")
+        ? DeuceChatStrategy.REPLICATE4BIT
+        : DeuceChatStrategy.METAWBOS); // With BOS and EOS seems to work best
     this.temperature = init?.temperature ?? 0.01; // minimum temperature is 0.01 for Replicate endpoint
     this.topP = init?.topP ?? 1;
-    this.maxTokens = init?.maxTokens ?? undefined; // By default this means it's 500 tokens according to Replicate docs
+    this.maxTokens =
+      init?.maxTokens ??
+      ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].contextWindow; // For Replicate, the default is 500 tokens which is too low.
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
   }
 
-  mapMessagesToPrompt(messages: ChatMessage[]): string {
+  mapMessagesToPrompt(messages: ChatMessage[]) {
     if (this.chatStrategy === DeuceChatStrategy.A16Z) {
       return this.mapMessagesToPromptA16Z(messages);
     } else if (this.chatStrategy === DeuceChatStrategy.META) {
       return this.mapMessagesToPromptMeta(messages);
     } else if (this.chatStrategy === DeuceChatStrategy.METAWBOS) {
-      return this.mapMessagesToPromptMeta(messages, true);
+      return this.mapMessagesToPromptMeta(messages, { withBos: true });
+    } else if (this.chatStrategy === DeuceChatStrategy.REPLICATE4BIT) {
+      return this.mapMessagesToPromptMeta(messages, { replicate4Bit: true });
     } else {
       return this.mapMessagesToPromptMeta(messages);
     }
   }
 
-  mapMessagesToPromptA16Z(messages: ChatMessage[]): string {
-    return (
-      messages.reduce((acc, message) => {
-        return (
-          (acc && `${acc}\n\n`) +
-          `${this.mapMessageTypeA16Z(message.role)}${message.content}`
-        );
-      }, "") + "\n\nAssistant:"
-    ); // Here we're differing from A16Z by omitting the space. Generally spaces at the end of prompts decrease performance due to tokenization
+  mapMessagesToPromptA16Z(messages: ChatMessage[]) {
+    return {
+      prompt:
+        messages.reduce((acc, message) => {
+          return (
+            (acc && `${acc}\n\n`) +
+            `${this.mapMessageTypeA16Z(message.role)}${message.content}`
+          );
+        }, "") + "\n\nAssistant:",
+      //^ Here we're differing from A16Z by omitting the space. Generally spaces at the end of prompts decrease performance due to tokenization
+      systemPrompt: undefined,
+    };
   }
 
   mapMessageTypeA16Z(messageType: MessageType): string {
@@ -284,7 +319,11 @@ export class LlamaDeuce implements LLM {
     }
   }
 
-  mapMessagesToPromptMeta(messages: ChatMessage[], withBos = false): string {
+  mapMessagesToPromptMeta(
+    messages: ChatMessage[],
+    opts?: { withBos?: boolean; replicate4Bit?: boolean }
+  ) {
+    const { withBos = false, replicate4Bit = false } = opts ?? {};
     const DEFAULT_SYSTEM_PROMPT = `You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
 
 If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.`;
@@ -297,37 +336,50 @@ If a question does not make any sense, or is not factually coherent, explain why
     const EOS = "</s>";
 
     if (messages.length === 0) {
-      return "";
+      return { prompt: "", systemPrompt: undefined };
     }
 
+    messages = [...messages]; // so we can use shift without mutating the original array
+
+    let systemPrompt = undefined;
     if (messages[0].role === "system") {
       const systemMessage = messages.shift()!;
 
-      const systemStr = `${B_SYS}${systemMessage.content}${E_SYS}`;
+      if (replicate4Bit) {
+        systemPrompt = systemMessage.content;
+      } else {
+        const systemStr = `${B_SYS}${systemMessage.content}${E_SYS}`;
 
-      if (messages[1].role !== "user") {
-        throw new Error(
-          "LlamaDeuce: if there is a system message, the second message must be a user message."
-        );
+        // TS Bug: https://github.com/microsoft/TypeScript/issues/9998
+        // @ts-ignore
+        if (messages[0].role !== "user") {
+          throw new Error(
+            "LlamaDeuce: if there is a system message, the second message must be a user message."
+          );
+        }
+
+        const userContent = messages[0].content;
+
+        messages[0].content = `${systemStr}${userContent}`;
       }
-
-      const userContent = messages[0].content;
-
-      messages[0].content = `${systemStr}${userContent}`;
     } else {
-      messages[0].content = `${B_SYS}${DEFAULT_SYSTEM_PROMPT}${E_SYS}${messages[0].content}`;
+      if (!replicate4Bit) {
+        messages[0].content = `${B_SYS}${DEFAULT_SYSTEM_PROMPT}${E_SYS}${messages[0].content}`;
+      }
     }
 
-    return messages.reduce((acc, message, index) => {
-      if (index % 2 === 0) {
-        return (
-          (withBos ? BOS : "") +
-          `${acc}${B_INST} ${message.content.trim()} ${E_INST}`
-        );
-      } else {
-        return `${acc} ${message.content.trim()} ` + (withBos ? EOS : ""); // Yes, the EOS comes after the space. This is not a mistake.
-      }
-    }, "");
+    return {
+      prompt: messages.reduce((acc, message, index) => {
+        if (index % 2 === 0) {
+          return `${acc}${
+            withBos ? BOS : ""
+          }${B_INST} ${message.content.trim()} ${E_INST}`;
+        } else {
+          return `${acc} ${message.content.trim()} ` + (withBos ? EOS : ""); // Yes, the EOS comes after the space. This is not a mistake.
+        }
+      }, ""),
+      systemPrompt,
+    };
   }
 
   async chat(
@@ -337,21 +389,31 @@ If a question does not make any sense, or is not factually coherent, explain why
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
       .replicateApi as `${string}/${string}:${string}`;
 
-    const prompt = this.mapMessagesToPrompt(messages);
+    const { prompt, systemPrompt } = this.mapMessagesToPrompt(messages);
 
-    const response = await this.replicateSession.replicate.run(api, {
+    const replicateOptions: any = {
       input: {
         prompt,
-        system_prompt: "", // We are already sending the system prompt so set system prompt to empty.
-        max_new_tokens: this.maxTokens,
+        system_prompt: systemPrompt,
         temperature: this.temperature,
         top_p: this.topP,
       },
-    });
+    };
+
+    if (this.model.endsWith("4bit")) {
+      replicateOptions.input.max_new_tokens = this.maxTokens;
+    } else {
+      replicateOptions.input.max_length = this.maxTokens;
+    }
+
+    const response = await this.replicateSession.replicate.run(
+      api,
+      replicateOptions
+    );
     return {
       message: {
-        content: (response as Array<string>).join(""),
-        // We need to do this because Replicate returns a list of strings (for streaming functionality which is not exposed by the run function)
+        content: (response as Array<string>).join("").trimStart(),
+        //^ We need to do this because Replicate returns a list of strings (for streaming functionality which is not exposed by the run function)
         role: "assistant",
       },
     };
