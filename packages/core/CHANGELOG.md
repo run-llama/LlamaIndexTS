@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.0.16
+
+### Patch Changes
+
+- ec12633: Breaking: make vector store abstraction async (thank you @tyre for the PR)
+- 9214b06: Fix persistence bug (thanks @HenryHengZJ)
+- 3316c6b: Add Azure OpenAI support
+- 3316c6b: OpenAI Node v4-beta.8
+
 ## 0.0.15
 
 ### Patch Changes
