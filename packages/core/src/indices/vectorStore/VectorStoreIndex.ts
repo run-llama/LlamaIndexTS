@@ -58,7 +58,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     let indexStruct: IndexDict | null;
 
     if (options.indexStruct && indexStructs.length > 0) {
-      indexStruct = options.indexStruct;
+      throw new Error(
+        "Cannot initialize index with both indexStruct and indexStore"
+      );
     }
 
     if (options.indexStruct) {
@@ -82,16 +84,15 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     if (indexStruct) {
       if (options.nodes) {
-        indexStruct = await VectorStoreIndex.buildIndexFromNodes(
-          options.nodes,
-          serviceContext,
-          vectorStore,
-          docStore
+        throw new Error(
+          "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
         );
       }
     } else {
       if (!options.nodes) {
-        indexStruct = new IndexDict(); // Create a default IndexDict
+        throw new Error(
+          "Cannot initialize VectorStoreIndex without nodes or indexStruct"
+        );
       } else {
         indexStruct = await VectorStoreIndex.buildIndexFromNodes(
           options.nodes,
