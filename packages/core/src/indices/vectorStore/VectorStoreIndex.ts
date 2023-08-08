@@ -104,6 +104,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       await indexStore.addIndexStruct(indexStruct);
     }
 
+    // Using the singleton pattern to ensure that only one instance of VectorStoreIndex is created.
     if (VectorStoreIndex.instance) {
         throw new Error('VectorStoreIndex has already been initialized');
     }
@@ -134,7 +135,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     for (let i = 0; i < nodes.length; ++i) {
     const node = nodes[i];
     if (typeof node.getContent !== 'function') {
-        throw new Error('Node object does not have getContent function');
+        throw new Error('Expected node object of type BaseNode with getContent function');
     }
     if (logProgress) {
         console.log(`getting embedding for node ${i}/${nodes.length}`);
