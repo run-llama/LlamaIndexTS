@@ -104,13 +104,17 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       await indexStore.addIndexStruct(indexStruct);
     }
 
-    return new VectorStoreIndex({
+    if (VectorStoreIndex.instance) {
+        throw new Error('VectorStoreIndex has already been initialized');
+    }
+    VectorStoreIndex.instance = new VectorStoreIndex({
       storageContext,
       serviceContext,
       docStore,
       vectorStore,
       indexStruct,
     });
+    return VectorStoreIndex.instance;
   }
 
   /**
@@ -128,13 +132,16 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     const nodesWithEmbeddings: NodeWithEmbedding[] = [];
 
     for (let i = 0; i < nodes.length; ++i) {
-      const node = nodes[i];
-      if (logProgress) {
+    const node = nodes[i];
+    if (typeof node.getContent !== 'function') {
+        throw new Error('Node object does not have getContent function');
+    }
+    if (logProgress) {
         console.log(`getting embedding for node ${i}/${nodes.length}`);
-      }
-      const embedding = await serviceContext.embedModel.getTextEmbedding(
+    }
+    const embedding = await serviceContext.embedModel.getTextEmbedding(
         node.getContent(MetadataMode.EMBED)
-      );
+    );
       nodesWithEmbeddings.push({ node, embedding });
     }
 
