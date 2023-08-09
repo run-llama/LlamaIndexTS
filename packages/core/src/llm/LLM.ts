@@ -93,7 +93,7 @@ export class OpenAI implements LLM {
 
   constructor(init?: Partial<OpenAI> & { azure?: AzureOpenAIConfig }) {
     this.model = init?.model ?? "gpt-3.5-turbo";
-    this.temperature = init?.temperature ?? 0;
+    this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
@@ -268,9 +268,9 @@ export class LlamaDeuce implements LLM {
     this.chatStrategy =
       init?.chatStrategy ??
       (this.model.endsWith("4bit")
-        ? DeuceChatStrategy.REPLICATE4BIT
-        : DeuceChatStrategy.METAWBOS); // With BOS and EOS seems to work best
-    this.temperature = init?.temperature ?? 0.01; // minimum temperature is 0.01 for Replicate endpoint
+        ? DeuceChatStrategy.REPLICATE4BIT // With the newer A16Z/Replicate models they do the system message themselves.
+        : DeuceChatStrategy.METAWBOS); // With BOS and EOS seems to work best, although they all have problems past a certain point
+    this.temperature = init?.temperature ?? 0.1; // minimum temperature is 0.01 for Replicate endpoint
     this.topP = init?.topP ?? 1;
     this.maxTokens =
       init?.maxTokens ??
@@ -448,7 +448,7 @@ export class Anthropic implements LLM {
 
   constructor(init?: Partial<Anthropic>) {
     this.model = init?.model ?? "claude-2";
-    this.temperature = init?.temperature ?? 0;
+    this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 0.999; // Per Ben Mann
     this.maxTokens = init?.maxTokens ?? undefined;
 
