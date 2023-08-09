@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.17
+
+### Patch Changes
+
+- f80b062: Breaking: changed default temp to 0.1 matching new Python change by @logan-markewich
+- b3fec86: Add support for new Replicate 4 bit Llama2 models
+- b3fec86: Bug fixes for Llama2 Replicate
+
 ## 0.0.16
 
 ### Patch Changes
