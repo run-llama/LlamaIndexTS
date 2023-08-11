@@ -29,5 +29,49 @@ describe("VectorStoreIndex", () => {
     expect(retriever).toBeDefined();
   });
 
-  // Add more tests for other methods of VectorStoreIndex
+  test("fromDocuments", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.fromDocuments(
+      [document],
+      { serviceContext }
+    );
+    expect(vectorStoreIndex).toBeDefined();
+  });
+  
+  test("init", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.init({
+      serviceContext,
+      vectorStore: {},
+      docStore: {},
+      indexStore: {},
+      indexStruct: {},
+    });
+    expect(vectorStoreIndex).toBeDefined();
+  });
+  
+  test("getNodeEmbeddingResults", async () => {
+    const nodeEmbeddingResults = await VectorStoreIndex.getNodeEmbeddingResults(
+      [document],
+      serviceContext
+    );
+    expect(nodeEmbeddingResults).toBeDefined();
+  });
+  
+  test("buildIndexFromNodes", async () => {
+    const indexDict = await VectorStoreIndex.buildIndexFromNodes(
+      [document],
+      serviceContext,
+      {},
+      {}
+    );
+    expect(indexDict).toBeDefined();
+  });
+  
+  test("asQueryEngine", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.fromDocuments(
+      [document],
+      { serviceContext }
+    );
+    const queryEngine = vectorStoreIndex.asQueryEngine();
+    expect(queryEngine).toBeDefined();
+  });
 });
