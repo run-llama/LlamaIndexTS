@@ -32,7 +32,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[indices/list/ListIndex.ts:43](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L43)
+[indices/list/ListIndex.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L47)
 
 ## Properties
 
@@ -46,7 +46,7 @@ A ListIndex keeps nodes in a sequential list structure
 
 #### Defined in
 
-[indices/BaseIndex.ts:122](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L122)
+[indices/BaseIndex.ts:125](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L125)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:124](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L124)
+[indices/BaseIndex.ts:127](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L127)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:125](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L125)
+[indices/BaseIndex.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L128)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:120](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L120)
+[indices/BaseIndex.ts:123](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L123)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:121](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L121)
+[indices/BaseIndex.ts:124](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L124)
 
 ___
 
@@ -116,49 +116,9 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:123](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L123)
+[indices/BaseIndex.ts:126](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L126)
 
 ## Methods
-
-### \_deleteNode
-
-▸ `Protected` **_deleteNode**(`nodeId`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `nodeId` | `string` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[indices/list/ListIndex.ts:193](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L193)
-
-___
-
-### \_insert
-
-▸ `Protected` **_insert**(`nodes`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `nodes` | [`BaseNode`](BaseNode.md)[] |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[indices/list/ListIndex.ts:187](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L187)
-
-___
 
 ### asQueryEngine
 
@@ -185,7 +145,7 @@ and response synthezier if they are not provided.
 
 #### Defined in
 
-[indices/list/ListIndex.ts:151](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L151)
+[indices/list/ListIndex.ts:155](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L155)
 
 ___
 
@@ -212,7 +172,53 @@ Create a new retriever from the index.
 
 #### Defined in
 
-[indices/list/ListIndex.ts:138](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L138)
+[indices/list/ListIndex.ts:142](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L142)
+
+___
+
+### deleteNodes
+
+▸ **deleteNodes**(`nodeIds`, `deleteFromDocStore`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `nodeIds` | `string`[] |
+| `deleteFromDocStore` | `boolean` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Defined in
+
+[indices/list/ListIndex.ts:216](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L216)
+
+___
+
+### deleteRefDoc
+
+▸ **deleteRefDoc**(`refDocId`, `deleteFromDocStore?`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `refDocId` | `string` |
+| `deleteFromDocStore?` | `boolean` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Overrides
+
+[BaseIndex](BaseIndex.md).[deleteRefDoc](BaseIndex.md#deleterefdoc)
+
+#### Defined in
+
+[indices/list/ListIndex.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L197)
 
 ___
 
@@ -226,13 +232,63 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:199](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L199)
+[indices/list/ListIndex.ts:230](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L230)
 
 ___
 
-### \_buildIndexFromNodes
+### insert
 
-▸ `Static` **_buildIndexFromNodes**(`nodes`, `docStore`, `indexStruct?`): `Promise`<[`IndexList`](IndexList.md)\>
+▸ **insert**(`document`): `Promise`<`void`\>
+
+Insert a document into the index.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `document` | [`Document`](Document.md) |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Inherited from
+
+[BaseIndex](BaseIndex.md).[insert](BaseIndex.md#insert)
+
+#### Defined in
+
+[indices/BaseIndex.ts:159](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L159)
+
+___
+
+### insertNodes
+
+▸ **insertNodes**(`nodes`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `nodes` | [`BaseNode`](BaseNode.md)[] |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Overrides
+
+[BaseIndex](BaseIndex.md).[insertNodes](BaseIndex.md#insertnodes)
+
+#### Defined in
+
+[indices/list/ListIndex.ts:191](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L191)
+
+___
+
+### buildIndexFromNodes
+
+▸ `Static` **buildIndexFromNodes**(`nodes`, `docStore`, `indexStruct?`): `Promise`<[`IndexList`](IndexList.md)\>
 
 #### Parameters
 
@@ -248,7 +304,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:172](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L172)
+[indices/list/ListIndex.ts:176](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L176)
 
 ___
 
@@ -271,7 +327,7 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:112](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L112)
+[indices/list/ListIndex.ts:116](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L116)
 
 ___
 
@@ -291,4 +347,4 @@ ___
 
 #### Defined in
 
-[indices/list/ListIndex.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L47)
+[indices/list/ListIndex.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/list/ListIndex.ts#L51)

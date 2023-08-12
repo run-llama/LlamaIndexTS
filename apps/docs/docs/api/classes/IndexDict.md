@@ -37,16 +37,6 @@ The underlying structure of each index.
 
 ## Properties
 
-### docStore
-
-• **docStore**: `Record`<`string`, [`Document`](Document.md)\> = `{}`
-
-#### Defined in
-
-[indices/BaseIndex.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L46)
-
-___
-
 ### indexId
 
 • **indexId**: `string`
@@ -91,7 +81,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:47](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L47)
+[indices/BaseIndex.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L46)
 
 ## Methods
 
@@ -112,7 +102,27 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L56)
+[indices/BaseIndex.ts:55](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L55)
+
+___
+
+### delete
+
+▸ **delete**(`nodeId`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `nodeId` | `string` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[indices/BaseIndex.ts:68](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L68)
 
 ___
 
@@ -130,7 +140,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L49)
+[indices/BaseIndex.ts:48](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L48)
 
 ___
 
@@ -148,4 +158,4 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L61)
+[indices/BaseIndex.ts:60](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L60)

@@ -46,7 +46,7 @@ The VectorStoreIndex, an index that stores the nodes only according to their vec
 
 #### Defined in
 
-[indices/BaseIndex.ts:122](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L122)
+[indices/BaseIndex.ts:125](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L125)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:124](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L124)
+[indices/BaseIndex.ts:127](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L127)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:125](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L125)
+[indices/BaseIndex.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L128)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:120](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L120)
+[indices/BaseIndex.ts:123](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L123)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:121](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L121)
+[indices/BaseIndex.ts:124](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L124)
 
 ___
 
@@ -145,7 +145,7 @@ and response synthezier if they are not provided.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:215](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L215)
+[indices/vectorStore/VectorStoreIndex.ts:223](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L223)
 
 ___
 
@@ -171,13 +171,88 @@ Create a new retriever from the index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:211](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L211)
+[indices/vectorStore/VectorStoreIndex.ts:219](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L219)
+
+___
+
+### deleteRefDoc
+
+▸ **deleteRefDoc**(`refDocId`, `deleteFromDocStore?`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `refDocId` | `string` | `undefined` |
+| `deleteFromDocStore` | `boolean` | `true` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Overrides
+
+[BaseIndex](BaseIndex.md).[deleteRefDoc](BaseIndex.md#deleterefdoc)
+
+#### Defined in
+
+[indices/vectorStore/VectorStoreIndex.ts:259](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L259)
+
+___
+
+### insert
+
+▸ **insert**(`document`): `Promise`<`void`\>
+
+Insert a document into the index.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `document` | [`Document`](Document.md) |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Inherited from
+
+[BaseIndex](BaseIndex.md).[insert](BaseIndex.md#insert)
+
+#### Defined in
+
+[indices/BaseIndex.ts:159](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L159)
+
+___
+
+### insertNodes
+
+▸ **insertNodes**(`nodes`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `nodes` | [`BaseNode`](BaseNode.md)[] |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Overrides
+
+[BaseIndex](BaseIndex.md).[insertNodes](BaseIndex.md#insertnodes)
+
+#### Defined in
+
+[indices/vectorStore/VectorStoreIndex.ts:234](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L234)
 
 ___
 
 ### buildIndexFromNodes
 
-▸ `Static` **buildIndexFromNodes**(`nodes`, `serviceContext`, `vectorStore`, `docStore`): `Promise`<[`IndexDict`](IndexDict.md)\>
+▸ `Static` **buildIndexFromNodes**(`nodes`, `serviceContext`, `vectorStore`, `docStore`, `indexDict?`): `Promise`<[`IndexDict`](IndexDict.md)\>
 
 Get embeddings for nodes and place them into the index.
 
@@ -189,6 +264,7 @@ Get embeddings for nodes and place them into the index.
 | `serviceContext` | [`ServiceContext`](../interfaces/ServiceContext.md) |
 | `vectorStore` | [`VectorStore`](../interfaces/VectorStore.md) |
 | `docStore` | `BaseDocumentStore` |
+| `indexDict?` | [`IndexDict`](IndexDict.md) |
 
 #### Returns
 
@@ -196,7 +272,7 @@ Get embeddings for nodes and place them into the index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:151](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L151)
+[indices/vectorStore/VectorStoreIndex.ts:147](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L147)
 
 ___
 
@@ -221,7 +297,7 @@ High level API: split documents, get embeddings, and build index.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:186](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L186)
+[indices/vectorStore/VectorStoreIndex.ts:194](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L194)
 
 ___
 
@@ -245,7 +321,7 @@ Get the embeddings for nodes.
 
 #### Defined in
 
-[indices/vectorStore/VectorStoreIndex.ts:123](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L123)
+[indices/vectorStore/VectorStoreIndex.ts:119](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/vectorStore/VectorStoreIndex.ts#L119)
 
 ___
 

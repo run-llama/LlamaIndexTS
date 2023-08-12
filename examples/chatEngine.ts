@@ -1,22 +1,23 @@
-// @ts-ignore
-import * as readline from "node:readline/promises";
-// @ts-ignore
 import { stdin as input, stdout as output } from "node:process";
+// readline/promises is still experimental so not in @types/node yet
+// @ts-ignore
+import readline from "node:readline/promises";
+
 import {
-  Document,
-  VectorStoreIndex,
   ContextChatEngine,
+  Document,
   serviceContextFromDefaults,
+  VectorStoreIndex,
 } from "llamaindex";
+
 import essay from "./essay";
 
 async function main() {
   const document = new Document({ text: essay });
   const serviceContext = serviceContextFromDefaults({ chunkSize: 512 });
-  const index = await VectorStoreIndex.fromDocuments(
-    [document],
-    { serviceContext }
-  );
+  const index = await VectorStoreIndex.fromDocuments([document], {
+    serviceContext,
+  });
   const retriever = index.asRetriever();
   retriever.similarityTopK = 5;
   const chatEngine = new ContextChatEngine({ retriever });

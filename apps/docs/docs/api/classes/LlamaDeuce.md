@@ -26,7 +26,7 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:242](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L242)
+[llm/LLM.ts:266](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L266)
 
 ## Properties
 
@@ -36,7 +36,7 @@ Llama2 LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:236](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L236)
+[llm/LLM.ts:260](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L260)
 
 ___
 
@@ -46,17 +46,17 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:239](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L239)
+[llm/LLM.ts:263](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L263)
 
 ___
 
 ### model
 
-• **model**: ``"Llama-2-70b-chat"`` \| ``"Llama-2-13b-chat"`` \| ``"Llama-2-7b-chat"``
+• **model**: ``"Llama-2-70b-chat-old"`` \| ``"Llama-2-70b-chat-4bit"`` \| ``"Llama-2-13b-chat"`` \| ``"Llama-2-13b-chat-4bit"`` \| ``"Llama-2-7b-chat"`` \| ``"Llama-2-7b-chat-4bit"``
 
 #### Defined in
 
-[llm/LLM.ts:235](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L235)
+[llm/LLM.ts:259](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L259)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:240](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L240)
+[llm/LLM.ts:264](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L264)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:237](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L237)
+[llm/LLM.ts:261](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L261)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:238](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L238)
+[llm/LLM.ts:262](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L262)
 
 ## Methods
 
@@ -113,7 +113,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:333](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L333)
+[llm/LLM.ts:385](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L385)
 
 ___
 
@@ -140,7 +140,7 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:360](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L360)
+[llm/LLM.ts:422](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L422)
 
 ___
 
@@ -160,13 +160,13 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:274](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L274)
+[llm/LLM.ts:309](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L309)
 
 ___
 
 ### mapMessagesToPrompt
 
-▸ **mapMessagesToPrompt**(`messages`): `string`
+▸ **mapMessagesToPrompt**(`messages`): `Object`
 
 #### Parameters
 
@@ -176,17 +176,22 @@ ___
 
 #### Returns
 
-`string`
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `prompt` | `string` |
+| `systemPrompt` | `undefined` \| `string` |
 
 #### Defined in
 
-[llm/LLM.ts:251](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L251)
+[llm/LLM.ts:281](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L281)
 
 ___
 
 ### mapMessagesToPromptA16Z
 
-▸ **mapMessagesToPromptA16Z**(`messages`): `string`
+▸ **mapMessagesToPromptA16Z**(`messages`): `Object`
 
 #### Parameters
 
@@ -196,29 +201,41 @@ ___
 
 #### Returns
 
-`string`
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `prompt` | `string` |
+| `systemPrompt` | `undefined` |
 
 #### Defined in
 
-[llm/LLM.ts:263](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L263)
+[llm/LLM.ts:295](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L295)
 
 ___
 
 ### mapMessagesToPromptMeta
 
-▸ **mapMessagesToPromptMeta**(`messages`, `withBos?`): `string`
+▸ **mapMessagesToPromptMeta**(`messages`, `opts?`): `Object`
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `messages` | [`ChatMessage`](../interfaces/ChatMessage.md)[] | `undefined` |
-| `withBos` | `boolean` | `false` |
+| Name | Type |
+| :------ | :------ |
+| `messages` | [`ChatMessage`](../interfaces/ChatMessage.md)[] |
+| `opts?` | `Object` |
+| `opts.replicate4Bit?` | `boolean` |
+| `opts.withBos?` | `boolean` |
 
 #### Returns
 
-`string`
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `prompt` | `string` |
+| `systemPrompt` | `undefined` \| `string` |
 
 #### Defined in
 
-[llm/LLM.ts:287](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L287)
+[llm/LLM.ts:322](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L322)

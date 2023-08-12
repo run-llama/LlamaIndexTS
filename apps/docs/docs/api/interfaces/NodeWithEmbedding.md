@@ -16,7 +16,7 @@ A node with an embedding
 
 #### Defined in
 
-[Node.ts:277](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L277)
+[Node.ts:305](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L305)
 
 ___
 
@@ -26,4 +26,4 @@ ___
 
 #### Defined in
 
-[Node.ts:276](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L276)
+[Node.ts:304](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L304)
