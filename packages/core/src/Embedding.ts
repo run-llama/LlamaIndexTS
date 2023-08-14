@@ -235,7 +235,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
     this.timeout = init?.timeout ?? undefined;
 
     if (init?.azure || shouldUseAzure()) {
-      const azureConfig = getOpenConfigFromEnv({
+      const azureConfig = getAzureConfigFromEnv({
         ...init?.azure,
         model: getAzureModel(this.model),
       });
@@ -259,11 +259,19 @@ export class OpenAIEmbedding extends BaseEmbedding {
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
-      this.session = init?.session ?? getOpenAISession({
-        apiKey: this.apiKey,
-        maxRetries: this.maxRetries,
-        timeout: this.timeout,
-      });
+      if (init?.session && typeof init?.session === 'object') {
+        this.session = init?.session;
+      } else {
+      if (init?.session && typeof init?.session === 'object') {
+        this.session = init?.session;
+      } else {
+        this.session = getOpenAISession({
+          apiKey: this.apiKey,
+          maxRetries: this.maxRetries,
+          timeout: this.timeout,
+        });
+      }
+      }
     }
   }
 
