@@ -227,6 +227,12 @@ export class IndexNode extends TextNode {
  */
 export class Document extends TextNode {
   constructor(init?: Partial<Document>, type: string = 'text') {
+    if (!init) {
+      throw new Error("init parameter is null or undefined");
+    }
+    if (type !== 'text' && type !== 'json') {
+      throw new Error("type must be either 'text' or 'json'");
+    }
     super(init);
     if (type === 'json') {
       this.text = this.jsonToText(init.text);
@@ -235,10 +241,17 @@ export class Document extends TextNode {
     }
   }
 
-  jsonToText(jsonData: any): string {
+  private jsonToText(jsonData: any): string {
+    if (typeof jsonData !== 'object' || jsonData === null) {
+      throw new Error("jsonData must be an object");
+    }
     let text = '';
     for (let key in jsonData) {
-      text += `${key}: ${jsonData[key]}\n`;
+      if (typeof jsonData[key] === 'object' && jsonData[key] !== null) {
+        text += `${key}: ${this.jsonToText(jsonData[key])}\n`;
+      } else {
+        text += `${key}: ${jsonData[key]}\n`;
+      }
     }
     return text;
   }
