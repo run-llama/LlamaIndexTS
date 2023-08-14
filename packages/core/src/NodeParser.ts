@@ -1,4 +1,4 @@
-import { Document, NodeRelationship, TextNode, jsonToText } from "./Node";
+import { Document, NodeRelationship, TextNode } from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
@@ -34,8 +34,11 @@ export function getNodesFromDocument(
 ) {
   let nodes: TextNode[] = [];
 
+  if (document.type !== 'text' && document.type !== 'json') {
+    throw new Error("document.type must be either 'text' or 'json'");
+  }
   if (document.type === 'json') {
-    document.text = document.jsonToText(document.text);
+    document.text = document.jsonToText(JSON.parse(document.text));
   }
 
   const textSplits = getTextSplitsFromDocument(document, textSplitter);
