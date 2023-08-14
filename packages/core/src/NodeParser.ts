@@ -1,5 +1,6 @@
 import { Document, NodeRelationship, TextNode } from "./Node";
 import { JsonDocument } from "./JsonDocument";
+import { JsonNode } from "./JsonNode";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
