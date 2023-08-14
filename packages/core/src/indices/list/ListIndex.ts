@@ -126,18 +126,24 @@ export class ListIndex extends BaseIndex<IndexList> {
       docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    let nodes;
-    if (documents[0] instanceof JsonDocument) {
-      // Handle JsonDocument instances
-      nodes = documents.map((doc) => JSON.parse(doc.getText()));
-    } else {
-      nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+    let nodes = [];
+    for (const doc of documents) {
+      if (doc instanceof JsonDocument) {
+        // Handle JsonDocument instances
+        const jsonData = JSON.parse(doc.getText());
+        nodes = nodes.concat(Array.isArray(jsonData) ? jsonData : [jsonData]);
+      } else {
+        nodes = nodes.concat(serviceContext.nodeParser.getNodesFromDocuments([doc]));
+      }
     }
 
     const index = await ListIndex.init({
       nodes,
       storageContext,
       serviceContext,
+    });
+    return index;
+  }
     });
     return index;
   }
