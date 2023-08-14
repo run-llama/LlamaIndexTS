@@ -110,7 +110,7 @@ export class ListIndex extends BaseIndex<IndexList> {
   }
 
   static async fromDocuments(
-    documents: Document[],
+    documents: (Document | JsonDocument)[],
     args: {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
@@ -126,7 +126,14 @@ export class ListIndex extends BaseIndex<IndexList> {
       docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+    let nodes;
+    if (documents[0] instanceof JsonDocument) {
+      // Handle JsonDocument instances
+      nodes = documents.map((doc) => JSON.parse(doc.getText()));
+    } else {
+      nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+    }
+
     const index = await ListIndex.init({
       nodes,
       storageContext,
