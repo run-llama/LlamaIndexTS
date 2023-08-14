@@ -3,6 +3,8 @@ import {
   BaseNode,
   MetadataMode,
   NodeWithEmbedding,
+  JsonNode,
+} from "../../Node";
 } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { VectorIndexRetriever } from "./VectorIndexRetriever";
