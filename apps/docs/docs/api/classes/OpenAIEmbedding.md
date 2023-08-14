@@ -18,6 +18,8 @@ custom_edit_url: null
 
 • **new OpenAIEmbedding**(`init?`)
 
+The constructor now retrieves the session from the parameters even when not using Azure. If a session is not provided in the parameters, a new session will be created.
+
 #### Parameters
 
 | Name | Type |
