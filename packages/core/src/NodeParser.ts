@@ -1,4 +1,5 @@
 import { Document, NodeRelationship, TextNode } from "./Node";
+import { JsonDocument } from "./JsonDocument";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
@@ -37,10 +38,18 @@ export function getNodesFromDocument(
   const textSplits = getTextSplitsFromDocument(document, textSplitter);
 
   textSplits.forEach((textSplit) => {
-    const node = new TextNode({
-      text: textSplit,
-      metadata: includeMetadata ? document.metadata : {},
-    });
+    let node;
+    if (document instanceof JsonDocument) {
+      node = new JsonNode({
+        jsonData: textSplit,
+        metadata: includeMetadata ? document.metadata : {},
+      });
+    } else {
+      node = new TextNode({
+        text: textSplit,
+        metadata: includeMetadata ? document.metadata : {},
+      });
+    }
     node.relationships[NodeRelationship.SOURCE] = document.asRelatedNodeInfo();
     nodes.push(node);
   });
