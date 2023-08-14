@@ -38,14 +38,15 @@ export function getNodesFromDocument(
   let textSplits;
   if (document instanceof JsonDocument) {
     // Parse the JSON data and generate text splits
-    textSplits = JSON.parse(document.getText());
+    const jsonData = JSON.parse(document.getText());
+    textSplits = Array.isArray(jsonData) ? jsonData : [jsonData];
   } else {
     textSplits = getTextSplitsFromDocument(document, textSplitter);
   }
 
   textSplits.forEach((textSplit) => {
     const node = new TextNode({
-      text: textSplit,
+      text: typeof textSplit === 'object' ? JSON.stringify(textSplit) : textSplit,
       metadata: includeMetadata ? document.metadata : {},
     });
     node.relationships[NodeRelationship.SOURCE] = document.asRelatedNodeInfo();
