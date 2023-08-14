@@ -226,9 +226,21 @@ export class IndexNode extends TextNode {
  * A document is just a special text node with a docId.
  */
 export class Document extends TextNode {
-  constructor(init?: Partial<Document>) {
+  constructor(init?: Partial<Document>, type: string = 'text') {
     super(init);
-    Object.assign(this, init);
+    if (type === 'json') {
+      this.text = this.jsonToText(init.text);
+    } else {
+      Object.assign(this, init);
+    }
+  }
+
+  jsonToText(jsonData: any): string {
+    let text = '';
+    for (let key in jsonData) {
+      text += `${key}: ${jsonData[key]}\n`;
+    }
+    return text;
   }
 
   getType() {
