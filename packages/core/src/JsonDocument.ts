@@ -4,7 +4,7 @@ import { Document } from './Document';
  * JsonDocument is a class that extends the Document class to handle JSON data.
  */
 export class JsonDocument extends Document {
-  jsonData: string;
+  jsonData: Object;
 
   /**
    * Constructor for the JsonDocument class.
@@ -12,7 +12,7 @@ export class JsonDocument extends Document {
    */
   constructor(jsonData: Object) {
     super();
-    this.jsonData = JSON.stringify(jsonData);
+    this.jsonData = jsonData;
   }
 
   /**
@@ -20,7 +20,7 @@ export class JsonDocument extends Document {
    * @returns {string} The JSON data of the document.
    */
   getText(): string {
-    return this.jsonData;
+    return JSON.stringify(this.jsonData);
   }
 }
 
