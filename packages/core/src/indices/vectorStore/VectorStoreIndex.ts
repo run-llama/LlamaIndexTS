@@ -132,9 +132,16 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       if (logProgress) {
         console.log(`getting embedding for node ${i}/${nodes.length}`);
       }
-      const embedding = await serviceContext.embedModel.getTextEmbedding(
+    let embedding;
+    if (node instanceof JsonNode) {
+      embedding = await serviceContext.embedModel.getJsonEmbedding(
         node.getContent(MetadataMode.EMBED)
       );
+    } else {
+      embedding = await serviceContext.embedModel.getTextEmbedding(
+        node.getContent(MetadataMode.EMBED)
+      );
+    }
       nodesWithEmbeddings.push({ node, embedding });
     }
 
