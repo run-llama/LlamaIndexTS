@@ -235,7 +235,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
     this.timeout = init?.timeout ?? undefined;
 
     if (init?.azure || shouldUseAzure()) {
-      const azureConfig = getAzureConfigFromEnv({
+      const azureConfig = getOpenConfigFromEnv({
         ...init?.azure,
         model: getAzureModel(this.model),
       });
@@ -259,7 +259,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
-      this.session = getOpenAISession({
+      this.session = init?.session ?? getOpenAISession({
         apiKey: this.apiKey,
         maxRetries: this.maxRetries,
         timeout: this.timeout,
