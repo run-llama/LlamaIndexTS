@@ -295,9 +295,14 @@ export class ResponseSynthesizer {
   }
 
   async synthesize(query: string, nodes: NodeWithScore[], parentEvent?: Event) {
-    let textChunks: string[] = nodes.map((node) =>
-      node.node.getContent(MetadataMode.NONE)
-    );
+    let textChunks: string[] = nodes.map((node) => {
+      if (node.node instanceof JsonDocument) {
+        // Parse the JSON data and generate text chunks
+        return JSON.parse(node.node.getContent(MetadataMode.NONE));
+      } else {
+        return node.node.getContent(MetadataMode.NONE);
+      }
+    });
     const response = await this.responseBuilder.getResponse(
       query,
       textChunks,
