@@ -33,7 +33,7 @@ interface BaseResponseBuilder {
    */
   getResponse(
     query: string,
-    textChunks: string[],
+    textChunks: (string | Object)[],
     parentEvent?: Event,
     prevResponse?: string
   ): Promise<string>;
@@ -298,7 +298,8 @@ export class ResponseSynthesizer {
     let textChunks: string[] = nodes.map((node) => {
       if (node.node instanceof JsonDocument) {
         // Parse the JSON data and generate text chunks
-        return JSON.parse(node.node.getContent(MetadataMode.NONE));
+        const jsonData = node.node.getContent(MetadataMode.NONE);
+        return typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
       } else {
         return node.node.getContent(MetadataMode.NONE);
       }
