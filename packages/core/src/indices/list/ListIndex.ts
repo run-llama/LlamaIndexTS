@@ -1,26 +1,30 @@
+import _ from "lodash";
 import { BaseNode, Document } from "../../Node";
-import { BaseIndex, BaseIndexInit, IndexList } from "../BaseIndex";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import {
-  StorageContext,
-  storageContextFromDefaults,
-} from "../../storage/StorageContext";
+  CompactAndRefine,
+  ResponseSynthesizer,
+} from "../../ResponseSynthesizer";
 import { BaseRetriever } from "../../Retriever";
-import {
-  ListIndexRetriever,
-  ListIndexLLMRetriever,
-} from "./ListIndexRetriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
 import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
-import _ from "lodash";
 import {
-  ResponseSynthesizer,
-  CompactAndRefine,
-} from "../../ResponseSynthesizer";
-import { IndexStructType } from "../BaseIndex";
+  StorageContext,
+  storageContextFromDefaults,
+} from "../../storage/StorageContext";
+import {
+  BaseIndex,
+  BaseIndexInit,
+  IndexList,
+  IndexStructType,
+} from "../BaseIndex";
+import {
+  ListIndexLLMRetriever,
+  ListIndexRetriever,
+} from "./ListIndexRetriever";
 
 export enum ListRetrieverMode {
   DEFAULT = "default",
@@ -57,7 +61,7 @@ export class ListIndex extends BaseIndex<IndexList> {
 
     if (options.indexStruct && indexStructs.length > 0) {
       throw new Error(
-        "Cannot initialize index with both indexStruct and indexStore"
+        "Cannot initialize index with both indexStruct and indexStore",
       );
     }
 
@@ -67,7 +71,7 @@ export class ListIndex extends BaseIndex<IndexList> {
       indexStruct = indexStructs[0];
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
-        options.indexId
+        options.indexId,
       )) as IndexList;
     } else {
       indexStruct = null;
@@ -76,25 +80,25 @@ export class ListIndex extends BaseIndex<IndexList> {
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.LIST) {
       throw new Error(
-        "Attempting to initialize ListIndex with non-list indexStruct"
+        "Attempting to initialize ListIndex with non-list indexStruct",
       );
     }
 
     if (indexStruct) {
       if (options.nodes) {
         throw new Error(
-          "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
+          "Cannot initialize VectorStoreIndex with both nodes and indexStruct",
         );
       }
     } else {
       if (!options.nodes) {
         throw new Error(
-          "Cannot initialize VectorStoreIndex without nodes or indexStruct"
+          "Cannot initialize VectorStoreIndex without nodes or indexStruct",
         );
       }
-      indexStruct = await ListIndex._buildIndexFromNodes(
+      indexStruct = await ListIndex.buildIndexFromNodes(
         options.nodes,
-        storageContext.docStore
+        storageContext.docStore,
       );
 
       await indexStore.addIndexStruct(indexStruct);
@@ -114,7 +118,7 @@ export class ListIndex extends BaseIndex<IndexList> {
     args: {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
-    } = {}
+    } = {},
   ): Promise<ListIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
@@ -169,10 +173,10 @@ export class ListIndex extends BaseIndex<IndexList> {
     return new RetrieverQueryEngine(retriever, responseSynthesizer);
   }
 
-  static async _buildIndexFromNodes(
+  static async buildIndexFromNodes(
     nodes: BaseNode[],
     docStore: BaseDocumentStore,
-    indexStruct?: IndexList
+    indexStruct?: IndexList,
   ): Promise<IndexList> {
     indexStruct = indexStruct || new IndexList();
 
@@ -184,16 +188,43 @@ export class ListIndex extends BaseIndex<IndexList> {
     return indexStruct;
   }
 
-  protected _insert(nodes: BaseNode[]): void {
+  async insertNodes(nodes: BaseNode[]): Promise<void> {
     for (const node of nodes) {
       this.indexStruct.addNode(node);
     }
   }
 
-  protected _deleteNode(nodeId: string): void {
+  async deleteRefDoc(
+    refDocId: string,
+    deleteFromDocStore?: boolean,
+  ): Promise<void> {
+    const refDocInfo = await this.docStore.getRefDocInfo(refDocId);
+
+    if (!refDocInfo) {
+      return;
+    }
+
+    await this.deleteNodes(refDocInfo.nodeIds, false);
+
+    if (deleteFromDocStore) {
+      await this.docStore.deleteRefDoc(refDocId, false);
+    }
+
+    return;
+  }
+
+  async deleteNodes(nodeIds: string[], deleteFromDocStore: boolean) {
     this.indexStruct.nodes = this.indexStruct.nodes.filter(
-      (existingNodeId: string) => existingNodeId !== nodeId
+      (existingNodeId: string) => !nodeIds.includes(existingNodeId),
     );
+
+    if (deleteFromDocStore) {
+      for (const nodeId of nodeIds) {
+        await this.docStore.deleteDocument(nodeId, false);
+      }
+    }
+
+    await this.storageContext.indexStore.addIndexStruct(this.indexStruct);
   }
 
   async getRefDocInfo(): Promise<Record<string, RefDocInfo>> {

@@ -48,8 +48,11 @@ custom_edit_url: null
 - [SentenceSplitter](classes/SentenceSplitter.md)
 - [SimpleChatEngine](classes/SimpleChatEngine.md)
 - [SimpleDirectoryReader](classes/SimpleDirectoryReader.md)
+- [SimpleDocumentStore](classes/SimpleDocumentStore.md)
+- [SimpleIndexStore](classes/SimpleIndexStore.md)
 - [SimpleNodeParser](classes/SimpleNodeParser.md)
 - [SimpleResponseBuilder](classes/SimpleResponseBuilder.md)
+- [SimpleVectorStore](classes/SimpleVectorStore.md)
 - [SubQuestionOutputParser](classes/SubQuestionOutputParser.md)
 - [SubQuestionQueryEngine](classes/SubQuestionQueryEngine.md)
 - [TextFileReader](classes/TextFileReader.md)
@@ -157,7 +160,7 @@ ___
 
 #### Defined in
 
-[Node.ts:32](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L32)
+[Node.ts:33](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L33)
 
 ___
 
@@ -219,12 +222,21 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 | `Llama-2-13b-chat` | { `contextWindow`: `number` = 4096; `replicateApi`: `string` = "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5" } |
 | `Llama-2-13b-chat.contextWindow` | `number` |
 | `Llama-2-13b-chat.replicateApi` | `string` |
-| `Llama-2-70b-chat` | { `contextWindow`: `number` = 4096; `replicateApi`: `string` = "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48" } |
-| `Llama-2-70b-chat.contextWindow` | `number` |
-| `Llama-2-70b-chat.replicateApi` | `string` |
+| `Llama-2-13b-chat-4bit` | { `contextWindow`: `number` = 4096; `replicateApi`: `string` = "a16z-infra/llama13b-v2-chat:2a7f981751ec7fdf87b5b91ad4db53683a98082e9ff7bfd12c8cd5ea85980a52" } |
+| `Llama-2-13b-chat-4bit.contextWindow` | `number` |
+| `Llama-2-13b-chat-4bit.replicateApi` | `string` |
+| `Llama-2-70b-chat-4bit` | { `contextWindow`: `number` = 4096; `replicateApi`: `string` = "replicate/llama70b-v2-chat:2c1608e18606fad2812020dc541930f2d0495ce32eee50074220b87300bc16e1" } |
+| `Llama-2-70b-chat-4bit.contextWindow` | `number` |
+| `Llama-2-70b-chat-4bit.replicateApi` | `string` |
+| `Llama-2-70b-chat-old` | { `contextWindow`: `number` = 4096; `replicateApi`: `string` = "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48" } |
+| `Llama-2-70b-chat-old.contextWindow` | `number` |
+| `Llama-2-70b-chat-old.replicateApi` | `string` |
 | `Llama-2-7b-chat` | { `contextWindow`: `number` = 4096; `replicateApi`: `string` = "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea" } |
 | `Llama-2-7b-chat.contextWindow` | `number` |
 | `Llama-2-7b-chat.replicateApi` | `string` |
+| `Llama-2-7b-chat-4bit` | { `contextWindow`: `number` = 4096; `replicateApi`: `string` = "a16z-infra/llama7b-v2-chat:4f0b260b6a13eb53a6b1891f089d57c08f41003ae79458be5011303d81a394dc" } |
+| `Llama-2-7b-chat-4bit.contextWindow` | `number` |
+| `Llama-2-7b-chat-4bit.replicateApi` | `string` |
 
 #### Defined in
 
@@ -858,7 +870,7 @@ ___
 
 #### Defined in
 
-[indices/BaseIndex.ts:70](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L70)
+[indices/BaseIndex.ts:73](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/indices/BaseIndex.ts#L73)
 
 ___
 
@@ -878,7 +890,7 @@ ___
 
 #### Defined in
 
-[Node.ts:243](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L243)
+[Node.ts:271](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L271)
 
 ___
 

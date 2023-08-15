@@ -28,7 +28,7 @@ Generic abstract class for retrievable nodes
 
 #### Defined in
 
-[Node.ts:48](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L48)
+[Node.ts:55](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L55)
 
 ## Properties
 
@@ -38,7 +38,7 @@ Generic abstract class for retrievable nodes
 
 #### Defined in
 
-[Node.ts:39](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L39)
+[Node.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L46)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[Node.ts:43](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L43)
+[Node.ts:50](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L50)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[Node.ts:44](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L44)
+[Node.ts:51](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L51)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[Node.ts:46](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L46)
+[Node.ts:53](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L53)
 
 ___
 
@@ -76,9 +76,14 @@ ___
 
 • **id\_**: `string`
 
+The unique ID of the Node/Document. The trailing underscore is here
+to avoid collisions with the id keyword in Python.
+
+Set to a UUID by default.
+
 #### Defined in
 
-[Node.ts:38](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L38)
+[Node.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L45)
 
 ___
 
@@ -88,7 +93,7 @@ ___
 
 #### Defined in
 
-[Node.ts:42](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L42)
+[Node.ts:49](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L49)
 
 ___
 
@@ -98,7 +103,7 @@ ___
 
 #### Defined in
 
-[Node.ts:45](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L45)
+[Node.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L52)
 
 ## Accessors
 
@@ -112,7 +117,7 @@ ___
 
 #### Defined in
 
-[Node.ts:104](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L104)
+[Node.ts:107](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L107)
 
 ___
 
@@ -126,21 +131,7 @@ ___
 
 #### Defined in
 
-[Node.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L84)
-
-___
-
-### nodeId
-
-• `get` **nodeId**(): `string`
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[Node.ts:58](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L58)
+[Node.ts:87](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L87)
 
 ___
 
@@ -154,7 +145,7 @@ ___
 
 #### Defined in
 
-[Node.ts:94](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L94)
+[Node.ts:97](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L97)
 
 ___
 
@@ -168,7 +159,7 @@ ___
 
 #### Defined in
 
-[Node.ts:72](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L72)
+[Node.ts:75](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L75)
 
 ___
 
@@ -182,7 +173,7 @@ ___
 
 #### Defined in
 
-[Node.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L62)
+[Node.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L65)
 
 ## Methods
 
@@ -196,7 +187,21 @@ ___
 
 #### Defined in
 
-[Node.ts:124](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L124)
+[Node.ts:129](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L129)
+
+___
+
+### generateHash
+
+▸ `Abstract` **generateHash**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[Node.ts:119](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L119)
 
 ___
 
@@ -216,7 +221,7 @@ ___
 
 #### Defined in
 
-[Node.ts:54](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L54)
+[Node.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L61)
 
 ___
 
@@ -230,7 +235,7 @@ ___
 
 #### Defined in
 
-[Node.ts:116](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L116)
+[Node.ts:121](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L121)
 
 ___
 
@@ -250,7 +255,7 @@ ___
 
 #### Defined in
 
-[Node.ts:55](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L55)
+[Node.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L62)
 
 ___
 
@@ -264,7 +269,7 @@ ___
 
 #### Defined in
 
-[Node.ts:52](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L52)
+[Node.ts:59](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L59)
 
 ___
 
@@ -284,7 +289,7 @@ ___
 
 #### Defined in
 
-[Node.ts:56](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L56)
+[Node.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L63)
 
 ___
 
@@ -300,4 +305,4 @@ Used with built in JSON.stringify
 
 #### Defined in
 
-[Node.ts:136](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L136)
+[Node.ts:141](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Node.ts#L141)

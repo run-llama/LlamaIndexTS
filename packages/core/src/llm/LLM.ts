@@ -1,21 +1,21 @@
+import OpenAILLM from "openai";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
-import { OpenAISession, getOpenAISession } from "./openai";
-import OpenAILLM from "openai";
-import { ReplicateSession } from "./replicate";
 import {
+  AnthropicSession,
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
-  AnthropicSession,
   getAnthropicSession,
 } from "./anthropic";
 import {
   AzureOpenAIConfig,
+  getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
-  getAzureBaseUrl,
   shouldUseAzure,
 } from "./azure";
+import { getOpenAISession, OpenAISession } from "./openai";
+import { ReplicateSession } from "./replicate";
 
 export type MessageType =
   | "user"
@@ -108,7 +108,7 @@ export class OpenAI implements LLM {
 
       if (!azureConfig.apiKey) {
         throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable."
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
         );
       }
 
@@ -138,7 +138,7 @@ export class OpenAI implements LLM {
   }
 
   mapMessageType(
-    messageType: MessageType
+    messageType: MessageType,
   ): "user" | "assistant" | "system" | "function" {
     switch (messageType) {
       case "user":
@@ -156,7 +156,7 @@ export class OpenAI implements LLM {
 
   async chat(
     messages: ChatMessage[],
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<ChatResponse> {
     const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
       model: this.model,
@@ -196,7 +196,7 @@ export class OpenAI implements LLM {
 
   async complete(
     prompt: string,
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
@@ -321,7 +321,7 @@ export class LlamaDeuce implements LLM {
 
   mapMessagesToPromptMeta(
     messages: ChatMessage[],
-    opts?: { withBos?: boolean; replicate4Bit?: boolean }
+    opts?: { withBos?: boolean; replicate4Bit?: boolean },
   ) {
     const { withBos = false, replicate4Bit = false } = opts ?? {};
     const DEFAULT_SYSTEM_PROMPT = `You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
@@ -354,7 +354,7 @@ If a question does not make any sense, or is not factually coherent, explain why
         // @ts-ignore
         if (messages[0].role !== "user") {
           throw new Error(
-            "LlamaDeuce: if there is a system message, the second message must be a user message."
+            "LlamaDeuce: if there is a system message, the second message must be a user message.",
           );
         }
 
@@ -384,7 +384,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 
   async chat(
     messages: ChatMessage[],
-    _parentEvent?: Event
+    _parentEvent?: Event,
   ): Promise<ChatResponse> {
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
       .replicateApi as `${string}/${string}:${string}`;
@@ -408,7 +408,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 
     const response = await this.replicateSession.replicate.run(
       api,
-      replicateOptions
+      replicateOptions,
     );
     return {
       message: {
@@ -421,7 +421,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 
   async complete(
     prompt: string,
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
@@ -483,7 +483,7 @@ export class Anthropic implements LLM {
 
   async chat(
     messages: ChatMessage[],
-    parentEvent?: Event | undefined
+    parentEvent?: Event | undefined,
   ): Promise<ChatResponse> {
     const response = await this.session.anthropic.completions.create({
       model: this.model,
@@ -501,7 +501,7 @@ export class Anthropic implements LLM {
   }
   async complete(
     prompt: string,
-    parentEvent?: Event | undefined
+    parentEvent?: Event | undefined,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }

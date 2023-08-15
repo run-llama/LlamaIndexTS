@@ -1,7 +1,9 @@
-import { OpenAI, LlamaDeuce, ChatMessage, DeuceChatStrategy } from "llamaindex";
-// @ts-ignore
-import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
+// readline/promises is still experimental so not in @types/node yet
+// @ts-ignore
+import readline from "node:readline/promises";
+
+import { ChatMessage, LlamaDeuce, OpenAI } from "llamaindex";
 
 (async () => {
   const gpt4 = new OpenAI({ model: "gpt-4", temperature: 0.9 });
@@ -27,7 +29,7 @@ import { stdin as input, stdout as output } from "node:process";
       history.map(({ content, role }) => ({
         content,
         role: next === l2 ? role : role === "user" ? "assistant" : "user",
-      }))
+      })),
     );
     history.push({
       content: r.message.content,

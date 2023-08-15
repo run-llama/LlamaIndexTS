@@ -1,9 +1,9 @@
-import { BaseNode, Document, ObjectType, TextNode } from "../../Node";
-import { BaseDocumentStore, RefDocInfo } from "./types";
-import { BaseKVStore } from "../kvStore/types";
 import _, * as lodash from "lodash";
-import { docToJson, jsonToDoc } from "./utils";
+import { BaseNode, ObjectType } from "../../Node";
 import { DEFAULT_NAMESPACE } from "../constants";
+import { BaseKVStore } from "../kvStore/types";
+import { BaseDocumentStore, RefDocInfo } from "./types";
+import { docToJson, jsonToDoc } from "./utils";
 
 type DocMetaData = { docHash: string; refDocId?: string };
 
@@ -32,7 +32,7 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async addDocuments(
     docs: BaseNode[],
-    allowUpdate: boolean = true
+    allowUpdate: boolean = true,
   ): Promise<void> {
     for (var idx = 0; idx < docs.length; idx++) {
       const doc = docs[idx];
@@ -41,7 +41,7 @@ export class KVDocumentStore extends BaseDocumentStore {
       }
       if (!allowUpdate && (await this.documentExists(doc.id_))) {
         throw new Error(
-          `doc_id ${doc.id_} already exists. Set allow_update to True to overwrite.`
+          `doc_id ${doc.id_} already exists. Set allow_update to True to overwrite.`,
         );
       }
       let nodeKey = doc.id_;
@@ -51,17 +51,17 @@ export class KVDocumentStore extends BaseDocumentStore {
 
       if (doc.getType() === ObjectType.TEXT && doc.sourceNode !== undefined) {
         let refDocInfo = (await this.getRefDocInfo(doc.sourceNode.nodeId)) || {
-          docIds: [],
+          nodeIds: [],
           extraInfo: {},
         };
-        refDocInfo.docIds.push(doc.id_);
+        refDocInfo.nodeIds.push(doc.id_);
         if (_.isEmpty(refDocInfo.extraInfo)) {
           refDocInfo.extraInfo = {};
         }
         await this.kvstore.put(
           doc.sourceNode.nodeId,
           refDocInfo,
-          this.refDocCollection
+          this.refDocCollection,
         );
         metadata.refDocId = doc.sourceNode.nodeId!;
       }
@@ -72,7 +72,7 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getDocument(
     docId: string,
-    raiseError: boolean = true
+    raiseError: boolean = true,
   ): Promise<BaseNode | undefined> {
     let json = await this.kvstore.get(docId, this.nodeCollection);
     if (_.isNil(json)) {
@@ -131,7 +131,7 @@ export class KVDocumentStore extends BaseDocumentStore {
   async deleteDocument(
     docId: string,
     raiseError: boolean = true,
-    removeRefDocNode: boolean = true
+    removeRefDocNode: boolean = true,
   ): Promise<void> {
     if (removeRefDocNode) {
       await this.removeRefDocNode(docId);
@@ -147,7 +147,7 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async deleteRefDoc(
     refDocId: string,
-    raiseError: boolean = true
+    raiseError: boolean = true,
   ): Promise<void> {
     let refDocInfo = await this.getRefDocInfo(refDocId);
     if (_.isNil(refDocInfo)) {
@@ -158,7 +158,7 @@ export class KVDocumentStore extends BaseDocumentStore {
       }
     }
 
-    for (let docId of refDocInfo.docIds) {
+    for (let docId of refDocInfo.nodeIds) {
       await this.deleteDocument(docId, false, false);
     }
 
