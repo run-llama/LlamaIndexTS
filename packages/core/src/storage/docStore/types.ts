@@ -1,14 +1,14 @@
 import { BaseNode } from "../../Node";
-import { GenericFileSystem } from "../FileSystem";
 import {
-  DEFAULT_PERSIST_DIR,
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
+  DEFAULT_PERSIST_DIR,
 } from "../constants";
+import { GenericFileSystem } from "../FileSystem";
 
 const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_DOC_STORE_PERSIST_FILENAME}`;
 
 export interface RefDocInfo {
-  docIds: string[];
+  nodeIds: string[];
   extraInfo: Record<string, any>;
 }
 
@@ -16,7 +16,7 @@ export abstract class BaseDocumentStore {
   // Save/load
   persist(
     persistPath: string = defaultPersistPath,
-    fs?: GenericFileSystem
+    fs?: GenericFileSystem,
   ): void {
     // Persist the docstore to a file.
   }
@@ -24,14 +24,14 @@ export abstract class BaseDocumentStore {
   // Main interface
   abstract docs(): Promise<Record<string, BaseNode>>;
 
-  abstract addDocuments(docs: BaseNode[], allowUpdate: boolean): void;
+  abstract addDocuments(docs: BaseNode[], allowUpdate: boolean): Promise<void>;
 
   abstract getDocument(
     docId: string,
-    raiseError: boolean
+    raiseError: boolean,
   ): Promise<BaseNode | undefined>;
 
-  abstract deleteDocument(docId: string, raiseError: boolean): void;
+  abstract deleteDocument(docId: string, raiseError: boolean): Promise<void>;
 
   abstract documentExists(docId: string): Promise<boolean>;
 
@@ -50,7 +50,7 @@ export abstract class BaseDocumentStore {
   // Nodes
   getNodes(nodeIds: string[], raiseError: boolean = true): Promise<BaseNode[]> {
     return Promise.all(
-      nodeIds.map((nodeId) => this.getNode(nodeId, raiseError))
+      nodeIds.map((nodeId) => this.getNode(nodeId, raiseError)),
     );
   }
 

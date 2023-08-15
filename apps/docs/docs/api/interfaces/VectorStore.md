@@ -6,6 +6,10 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
+## Implemented by
+
+- [`SimpleVectorStore`](../classes/SimpleVectorStore.md)
+
 ## Properties
 
 ### isEmbeddingQuery
