@@ -145,13 +145,15 @@ export class TextNode extends BaseNode {
   text: string = "";
   startCharIdx?: number;
   endCharIdx?: number;
+  sourceNode?: BaseNode;
   // textTemplate: NOTE write your own formatter if needed
   // metadataTemplate: NOTE write your own formatter if needed
   metadataSeparator: string = "\n";
 
-  constructor(init?: Partial<TextNode>) {
+  constructor(init?: Partial<TextNode>, sourceNode?: BaseNode) {
     super(init);
     Object.assign(this, init);
+    this.sourceNode = sourceNode;
   }
 
   generateHash() {
