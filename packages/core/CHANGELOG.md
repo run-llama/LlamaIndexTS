@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.0.18
+
+### Patch Changes
+
+- 824c13c: Breaking: allow documents to be reimported with hash checking.
+- 18b8915: Update storage exports (thanks @TomPenguin)
+- ade9d8f: Bug fix: use session in OpenAI Embeddings (thanks @swk777)
+- 824c13c: Breaking: removed nodeId and docId. Just use id\_
+
 ## 0.0.17
 
 ### Patch Changes
