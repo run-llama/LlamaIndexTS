@@ -5,6 +5,7 @@
     "@anthropic-ai/sdk": "^0.6.0",
     "lodash": "^4.17.21",
     "openai": "^4.0.0",
+    "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
     "replicate": "^0.16.1",
     "tiktoken-node": "^0.0.6",
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.197",
     "@types/node": "^18.17.5",
+    "@types/papaparse": "^5.3.7",
     "@types/pdf-parse": "^1.1.1",
     "@types/uuid": "^9.0.2",
     "node-stdlib-browser": "^1.2.0",

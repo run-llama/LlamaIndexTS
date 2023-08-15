@@ -4,6 +4,7 @@ import { BaseReader } from "./base";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
 import { PDFReader } from "./PDFReader";
+import { PapaCSVReader } from "./CSVReader";
 
 /**
  * Read a .txt file
@@ -21,6 +22,7 @@ export class TextFileReader implements BaseReader {
 const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   txt: new TextFileReader(),
   pdf: new PDFReader(),
+  csv: new PapaCSVReader(),
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {
