@@ -1,4 +1,3 @@
-import fs from "fs/promises";
 import { PDFReader, VectorStoreIndex } from "llamaindex";
 
 async function main() {

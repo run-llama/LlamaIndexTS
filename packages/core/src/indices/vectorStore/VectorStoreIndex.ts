@@ -1,15 +1,17 @@
 import {
-  Document,
   BaseNode,
+  Document,
   MetadataMode,
   NodeWithEmbedding,
 } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
-import { VectorIndexRetriever } from "./VectorIndexRetriever";
+import { ResponseSynthesizer } from "../../ResponseSynthesizer";
+import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { BaseDocumentStore } from "../../storage/docStore/types";
 import {
   StorageContext,
   storageContextFromDefaults,
@@ -18,13 +20,11 @@ import { VectorStore } from "../../storage/vectorStore/types";
 import {
   BaseIndex,
   IndexDict,
+  IndexStructType,
   VectorIndexConstructorProps,
   VectorIndexOptions,
-  IndexStructType
 } from "../BaseIndex";
-import { BaseRetriever } from "../../Retriever";
-import { ResponseSynthesizer } from "../../ResponseSynthesizer";
-import { BaseDocumentStore } from "../../storage/docStore/types";
+import { VectorIndexRetriever } from "./VectorIndexRetriever";
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
@@ -55,11 +55,11 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     // Setup IndexStruct from storage
     let indexStructs = (await indexStore.getIndexStructs()) as IndexDict[];
-    let indexStruct: IndexDict | null;
+    let indexStruct: IndexDict | undefined;
 
     if (options.indexStruct && indexStructs.length > 0) {
       throw new Error(
-        "Cannot initialize index with both indexStruct and indexStore"
+        "Cannot initialize index with both indexStruct and indexStore",
       );
     }
 
@@ -69,40 +69,36 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       indexStruct = indexStructs[0];
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
-        options.indexId
+        options.indexId,
       )) as IndexDict;
     } else {
-      indexStruct = null;
+      indexStruct = undefined;
     }
 
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.SIMPLE_DICT) {
       throw new Error(
-        "Attempting to initialize VectorStoreIndex with non-vector indexStruct"
+        "Attempting to initialize VectorStoreIndex with non-vector indexStruct",
       );
     }
 
-    if (indexStruct) {
-      if (options.nodes) {
-        throw new Error(
-          "Cannot initialize VectorStoreIndex with both nodes and indexStruct"
-        );
-      }
-    } else {
-      if (!options.nodes) {
-        throw new Error(
-          "Cannot initialize VectorStoreIndex without nodes or indexStruct"
-        );
-      }
-      indexStruct = await VectorStoreIndex.buildIndexFromNodes(
-        options.nodes,
-        serviceContext,
-        vectorStore,
-        docStore
+    if (!indexStruct && !options.nodes) {
+      throw new Error(
+        "Cannot initialize VectorStoreIndex without nodes or indexStruct",
       );
-
-      await indexStore.addIndexStruct(indexStruct);
     }
+
+    const nodes = options.nodes ?? [];
+
+    indexStruct = await VectorStoreIndex.buildIndexFromNodes(
+      nodes,
+      serviceContext,
+      vectorStore,
+      docStore,
+      indexStruct,
+    );
+
+    await indexStore.addIndexStruct(indexStruct);
 
     return new VectorStoreIndex({
       storageContext,
@@ -123,7 +119,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   static async getNodeEmbeddingResults(
     nodes: BaseNode[],
     serviceContext: ServiceContext,
-    logProgress = false
+    logProgress = false,
   ) {
     const nodesWithEmbeddings: NodeWithEmbedding[] = [];
 
@@ -133,7 +129,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         console.log(`getting embedding for node ${i}/${nodes.length}`);
       }
       const embedding = await serviceContext.embedModel.getTextEmbedding(
-        node.getContent(MetadataMode.EMBED)
+        node.getContent(MetadataMode.EMBED),
       );
       nodesWithEmbeddings.push({ node, embedding });
     }
@@ -152,23 +148,35 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     nodes: BaseNode[],
     serviceContext: ServiceContext,
     vectorStore: VectorStore,
-    docStore: BaseDocumentStore
+    docStore: BaseDocumentStore,
+    indexDict?: IndexDict,
   ): Promise<IndexDict> {
-    const embeddingResults = await this.getNodeEmbeddingResults(
-      nodes,
-      serviceContext
+    indexDict = indexDict ?? new IndexDict();
+
+    // Check if the index already has nodes with the same hash
+    const newNodes = nodes.filter((node) =>
+      Object.entries(indexDict!.nodesDict).reduce((acc, [key, value]) => {
+        if (value.hash === node.hash) {
+          acc = false;
+        }
+        return acc;
+      }, true),
     );
 
-    vectorStore.add(embeddingResults);
+    const embeddingResults = await this.getNodeEmbeddingResults(
+      newNodes,
+      serviceContext,
+    );
+
+    await vectorStore.add(embeddingResults);
 
     if (!vectorStore.storesText) {
       await docStore.addDocuments(
         embeddingResults.map((result) => result.node),
-        true
+        true,
       );
     }
 
-    const indexDict = new IndexDict();
     for (const { node } of embeddingResults) {
       indexDict.addNode(node);
     }
@@ -188,7 +196,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     args: {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
-    } = {}
+    } = {},
   ): Promise<VectorStoreIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
@@ -217,6 +225,57 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     responseSynthesizer?: ResponseSynthesizer;
   }): BaseQueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
-    return new RetrieverQueryEngine(retriever ?? this.asRetriever(), responseSynthesizer);
+    return new RetrieverQueryEngine(
+      retriever ?? this.asRetriever(),
+      responseSynthesizer,
+    );
+  }
+
+  async insertNodes(nodes: BaseNode[]): Promise<void> {
+    const embeddingResults = await VectorStoreIndex.getNodeEmbeddingResults(
+      nodes,
+      this.serviceContext,
+    );
+
+    const newIds = await this.vectorStore.add(embeddingResults);
+
+    if (!this.vectorStore.storesText) {
+      for (let i = 0; i < nodes.length; ++i) {
+        this.indexStruct.addNode(nodes[i], newIds[i]);
+        this.docStore.addDocuments([nodes[i]], true);
+      }
+    } else {
+      for (let i = 0; i < nodes.length; ++i) {
+        if (nodes[i].getType() === "INDEX") {
+          this.indexStruct.addNode(nodes[i], newIds[i]);
+          this.docStore.addDocuments([nodes[i]], true);
+        }
+      }
+    }
+
+    await this.storageContext.indexStore.addIndexStruct(this.indexStruct);
+  }
+
+  async deleteRefDoc(
+    refDocId: string,
+    deleteFromDocStore: boolean = true,
+  ): Promise<void> {
+    this.vectorStore.delete(refDocId);
+
+    if (!this.vectorStore.storesText) {
+      const refDocInfo = await this.docStore.getRefDocInfo(refDocId);
+
+      if (refDocInfo) {
+        for (const nodeId of refDocInfo.nodeIds) {
+          this.indexStruct.delete(nodeId);
+        }
+      }
+
+      await this.storageContext.indexStore.addIndexStruct(this.indexStruct);
+    }
+
+    if (deleteFromDocStore) {
+      await this.docStore.deleteDocument(refDocId, false);
+    }
   }
 }

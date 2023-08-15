@@ -1,13 +1,13 @@
 import {
   Document,
-  VectorStoreIndex,
   storageContextFromDefaults,
+  VectorStoreIndex,
 } from "llamaindex";
 import essay from "./essay";
 
 async function main() {
   // Create Document object with essay
-  const document = new Document({ text: essay });
+  const document = new Document({ text: essay, id_: "essay" });
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   // persist the vector store automatically with the storage context
@@ -21,7 +21,7 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query(
-    "What did the author do in college?"
+    "What did the author do in college?",
   );
 
   // Output response
@@ -36,7 +36,7 @@ async function main() {
   });
   const loadedQueryEngine = loadedIndex.asQueryEngine();
   const loadedResponse = await loadedQueryEngine.query(
-    "What did the author do growing up?"
+    "What did the author do growing up?",
   );
   console.log(loadedResponse.toString());
 }
