@@ -259,11 +259,13 @@ export class OpenAIEmbedding extends BaseEmbedding {
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
-      this.session = getOpenAISession({
-        apiKey: this.apiKey,
-        maxRetries: this.maxRetries,
-        timeout: this.timeout,
-      });
+      this.session =
+        init?.session ??
+        getOpenAISession({
+          apiKey: this.apiKey,
+          maxRetries: this.maxRetries,
+          timeout: this.timeout,
+        });
     }
   }
 
