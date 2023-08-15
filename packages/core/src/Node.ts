@@ -296,11 +296,3 @@ export interface NodeWithScore {
   node: BaseNode;
   score: number;
 }
-
-/**
- * A node with an embedding
- */
-export interface NodeWithEmbedding {
-  node: BaseNode;
-  embedding: number[];
-}

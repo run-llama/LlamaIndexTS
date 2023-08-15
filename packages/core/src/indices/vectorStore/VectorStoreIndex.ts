@@ -1,9 +1,4 @@
-import {
-  BaseNode,
-  Document,
-  MetadataMode,
-  NodeWithEmbedding,
-} from "../../Node";
+import { BaseNode, Document, MetadataMode } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { ResponseSynthesizer } from "../../ResponseSynthesizer";
 import { BaseRetriever } from "../../Retriever";
@@ -121,7 +116,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     serviceContext: ServiceContext,
     logProgress = false,
   ) {
-    const nodesWithEmbeddings: NodeWithEmbedding[] = [];
+    const nodesWithEmbeddings: BaseNode[] = [];
 
     for (let i = 0; i < nodes.length; ++i) {
       const node = nodes[i];
@@ -131,7 +126,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       const embedding = await serviceContext.embedModel.getTextEmbedding(
         node.getContent(MetadataMode.EMBED),
       );
-      nodesWithEmbeddings.push({ node, embedding });
+      node.embedding = embedding;
+      nodesWithEmbeddings.push(node);
     }
 
     return nodesWithEmbeddings;
@@ -171,13 +167,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     await vectorStore.add(embeddingResults);
 
     if (!vectorStore.storesText) {
-      await docStore.addDocuments(
-        embeddingResults.map((result) => result.node),
-        true,
-      );
+      await docStore.addDocuments(embeddingResults, true);
     }
 
-    for (const { node } of embeddingResults) {
+    for (const node of embeddingResults) {
       indexDict.addNode(node);
     }
 
