@@ -22,6 +22,7 @@ export * from "./callbacks/CallbackManager";
 
 export * from "./readers/base";
 export * from "./readers/PDFReader";
+export * from "./readers/CSVReader";
 export * from "./readers/SimpleDirectoryReader";
 
 export * from "./storage";

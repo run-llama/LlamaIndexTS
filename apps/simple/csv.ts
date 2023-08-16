@@ -1,5 +1,4 @@
-import { PapaCSVReader } from "../../packages/core/src/readers/CSVReader";
-import { VectorStoreIndex } from "llamaindex";
+import { VectorStoreIndex, PapaCSVReader } from "llamaindex";
 
 async function main() {
   // Load CSV
