@@ -41,6 +41,7 @@ custom_edit_url: null
 - [OpenAI](classes/OpenAI.md)
 - [OpenAIEmbedding](classes/OpenAIEmbedding.md)
 - [PDFReader](classes/PDFReader.md)
+- [PapaCSVReader](classes/PapaCSVReader.md)
 - [Refine](classes/Refine.md)
 - [Response](classes/Response.md)
 - [ResponseSynthesizer](classes/ResponseSynthesizer.md)
@@ -92,8 +93,6 @@ custom_edit_url: null
 - [StructuredOutput](interfaces/StructuredOutput.md)
 - [SubQuestion](interfaces/SubQuestion.md)
 - [ToolMetadata](interfaces/ToolMetadata.md)
-- [VectorIndexConstructorProps](interfaces/VectorIndexConstructorProps.md)
-- [VectorIndexOptions](interfaces/VectorIndexOptions.md)
 - [VectorStore](interfaces/VectorStore.md)
 - [VectorStoreInfo](interfaces/VectorStoreInfo.md)
 - [VectorStoreQuery](interfaces/VectorStoreQuery.md)
@@ -178,7 +177,7 @@ ___
 
 #### Defined in
 
-[readers/SimpleDirectoryReader.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/readers/SimpleDirectoryReader.ts#L26)
+[readers/SimpleDirectoryReader.ts:28](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/readers/SimpleDirectoryReader.ts#L28)
 
 ___
 

@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:270](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L270)
+[Embedding.ts:272](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L272)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:286](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L286)
+[Embedding.ts:288](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L288)
 
 ___
 
@@ -148,7 +148,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:282](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L282)
+[Embedding.ts:284](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L284)
 
 ___
 
