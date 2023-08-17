@@ -12,12 +12,6 @@ custom_edit_url: null
 | :------ |
 | `T` |
 
-## Hierarchy
-
-- **`BaseIndexInit`**
-
-  ↳ [`VectorIndexConstructorProps`](VectorIndexConstructorProps.md)
-
 ## Properties
 
 ### docStore

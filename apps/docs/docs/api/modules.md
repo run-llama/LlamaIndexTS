@@ -93,8 +93,6 @@ custom_edit_url: null
 - [StructuredOutput](interfaces/StructuredOutput.md)
 - [SubQuestion](interfaces/SubQuestion.md)
 - [ToolMetadata](interfaces/ToolMetadata.md)
-- [VectorIndexConstructorProps](interfaces/VectorIndexConstructorProps.md)
-- [VectorIndexOptions](interfaces/VectorIndexOptions.md)
 - [VectorStore](interfaces/VectorStore.md)
 - [VectorStoreInfo](interfaces/VectorStoreInfo.md)
 - [VectorStoreQuery](interfaces/VectorStoreQuery.md)
