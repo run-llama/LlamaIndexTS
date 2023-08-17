@@ -11,6 +11,7 @@ A reader takes imports data into Document objects.
 ## Implemented by
 
 - [`PDFReader`](../classes/PDFReader.md)
+- [`PapaCSVReader`](../classes/PapaCSVReader.md)
 - [`SimpleDirectoryReader`](../classes/SimpleDirectoryReader.md)
 - [`TextFileReader`](../classes/TextFileReader.md)
 
