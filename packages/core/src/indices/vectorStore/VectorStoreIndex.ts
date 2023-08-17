@@ -14,17 +14,27 @@ import {
 import { VectorStore } from "../../storage/vectorStore/types";
 import {
   BaseIndex,
+  BaseIndexInit,
   IndexDict,
   IndexStructType,
-  VectorIndexConstructorProps,
-  VectorIndexOptions,
 } from "../BaseIndex";
 import { VectorIndexRetriever } from "./VectorIndexRetriever";
+
+export interface VectorIndexOptions {
+  nodes?: BaseNode[];
+  indexStruct?: IndexDict;
+  indexId?: string;
+  serviceContext?: ServiceContext;
+  storageContext?: StorageContext;
+}
+
+export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
+  vectorStore: VectorStore;
+}
 
 /**
  * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
  */
-
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
   vectorStore: VectorStore;
 

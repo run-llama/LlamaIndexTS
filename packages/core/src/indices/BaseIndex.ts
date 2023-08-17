@@ -170,15 +170,3 @@ export abstract class BaseIndex<T> {
     deleteFromDocStore?: boolean,
   ): Promise<void>;
 }
-
-export interface VectorIndexOptions {
-  nodes?: BaseNode[];
-  indexStruct?: IndexDict;
-  indexId?: string;
-  serviceContext?: ServiceContext;
-  storageContext?: StorageContext;
-}
-
-export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
-  vectorStore: VectorStore;
-}
