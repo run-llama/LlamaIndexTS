@@ -99,7 +99,7 @@ VectorStore.client
 
 | Name | Type |
 | :------ | :------ |
-| `embeddingResults` | [`NodeWithEmbedding`](../interfaces/NodeWithEmbedding.md)[] |
+| `embeddingResults` | [`BaseNode`](BaseNode.md)[] |
 
 #### Returns
 
@@ -135,7 +135,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/SimpleVectorStore.ts:78](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L78)
+[storage/vectorStore/SimpleVectorStore.ts:77](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L77)
 
 ___
 
@@ -180,7 +180,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/SimpleVectorStore.ts:147](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L147)
+[storage/vectorStore/SimpleVectorStore.ts:146](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L146)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/SimpleVectorStore.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L89)
+[storage/vectorStore/SimpleVectorStore.ts:88](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L88)
 
 ___
 
@@ -218,7 +218,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/SimpleVectorStore.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L197)
+[storage/vectorStore/SimpleVectorStore.ts:196](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L196)
 
 ___
 
@@ -238,7 +238,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/SimpleVectorStore.ts:190](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L190)
+[storage/vectorStore/SimpleVectorStore.ts:189](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L189)
 
 ___
 
@@ -280,4 +280,4 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/SimpleVectorStore.ts:160](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L160)
+[storage/vectorStore/SimpleVectorStore.ts:159](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/SimpleVectorStore.ts#L159)

@@ -80,7 +80,6 @@ custom_edit_url: null
 - [MetadataFilters](interfaces/MetadataFilters.md)
 - [MetadataInfo](interfaces/MetadataInfo.md)
 - [NodeParser](interfaces/NodeParser.md)
-- [NodeWithEmbedding](interfaces/NodeWithEmbedding.md)
 - [NodeWithScore](interfaces/NodeWithScore.md)
 - [QueryEngineTool](interfaces/QueryEngineTool.md)
 - [RelatedNodeInfo](interfaces/RelatedNodeInfo.md)

@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[storage/vectorStore/types.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L24)
+[storage/vectorStore/types.ts:23](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L23)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L25)
+[storage/vectorStore/types.ts:24](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L24)
 
 ___
 
@@ -34,4 +34,4 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:26](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L26)
+[storage/vectorStore/types.ts:25](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L25)

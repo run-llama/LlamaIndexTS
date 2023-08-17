@@ -18,7 +18,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[storage/vectorStore/types.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L63)
+[storage/vectorStore/types.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L62)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:62](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L62)
+[storage/vectorStore/types.ts:61](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L61)
 
 ## Methods
 
@@ -40,7 +40,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `embeddingResults` | [`NodeWithEmbedding`](NodeWithEmbedding.md)[] |
+| `embeddingResults` | [`BaseNode`](../classes/BaseNode.md)[] |
 
 #### Returns
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L65)
+[storage/vectorStore/types.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L64)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:64](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L64)
+[storage/vectorStore/types.ts:63](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L63)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:66](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L66)
+[storage/vectorStore/types.ts:65](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L65)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:68](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L68)
+[storage/vectorStore/types.ts:67](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L67)
 
 ___
 
@@ -125,4 +125,4 @@ ___
 
 #### Defined in
 
-[storage/vectorStore/types.ts:67](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L67)
+[storage/vectorStore/types.ts:66](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/storage/vectorStore/types.ts#L66)
