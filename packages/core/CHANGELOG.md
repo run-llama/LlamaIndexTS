@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.19
+
+### Patch Changes
+
+- a747f28: Add PapaCSVReader (thank you @swk777)
+- 355910b: OpenAI v4 (final), Anthropic 0.6, Replicate 0.16.1
+- 355910b: Breaking: Removed NodeWithEmbeddings (just use BaseNode)
+
 ## 0.0.18
 
 ### Patch Changes
