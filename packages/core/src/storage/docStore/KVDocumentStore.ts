@@ -48,6 +48,7 @@ export class KVDocumentStore extends BaseDocumentStore {
       let data = docToJson(doc);
       await this.kvstore.put(nodeKey, data, this.nodeCollection);
       let metadata: DocMetaData = { docHash: doc.hash };
+      metadata = {...metadata, ...doc.metadata};
 
       if (doc.getType() === ObjectType.TEXT && doc.sourceNode !== undefined) {
         let refDocInfo = (await this.getRefDocInfo(doc.sourceNode.nodeId)) || {
@@ -82,7 +83,10 @@ export class KVDocumentStore extends BaseDocumentStore {
         return;
       }
     }
-    return jsonToDoc(json);
+    let doc = jsonToDoc(json);
+    let metadata = await this.kvstore.get(docId, this.metadataCollection);
+    doc.metadata = metadata;
+    return doc;
   }
 
   async getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined> {
