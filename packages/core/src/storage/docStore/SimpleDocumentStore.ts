@@ -16,6 +16,14 @@ type SaveDict = Record<string, any>;
 export class SimpleDocumentStore extends KVDocumentStore {
   private kvStore: SimpleKVStore;
 
+  async load(key: string, metadata: Record<string, any>): Promise<Document | null> {
+    const document = await super.load(key);
+    if (document) {
+      document.metadata = metadata;
+    }
+    return document;
+  }
+
   constructor(kvStore?: SimpleKVStore, namespace?: string) {
     kvStore = kvStore || new SimpleKVStore();
     namespace = namespace || DEFAULT_NAMESPACE;
