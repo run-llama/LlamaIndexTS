@@ -24,6 +24,14 @@ export class SimpleDocumentStore extends KVDocumentStore {
     return document;
   }
 
+  async save(key: string, document: Document): Promise<void> {
+    const data = {
+      ...document,
+      metadata: document.metadata,
+    };
+    await super.save(key, data);
+  }
+
   constructor(kvStore?: SimpleKVStore, namespace?: string) {
     kvStore = kvStore || new SimpleKVStore();
     namespace = namespace || DEFAULT_NAMESPACE;
