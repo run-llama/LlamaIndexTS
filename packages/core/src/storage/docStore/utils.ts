@@ -22,6 +22,7 @@ export function jsonToDoc(docDict: Record<string, any>): BaseNode {
       embedding: dataDict.embedding,
       hash: dataDict.hash,
     });
+    doc.metadata = dataDict.metadata;
   } else if (docType === ObjectType.TEXT) {
     doc = new TextNode({
       text: dataDict.text,
