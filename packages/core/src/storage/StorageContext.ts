@@ -15,6 +15,22 @@ export interface StorageContext {
   docStore: BaseDocumentStore;
   indexStore: BaseIndexStore;
   vectorStore: VectorStore;
+
+  async getDocuments(key: string): Promise<Document[]> {
+    const documents = await this.docStore.getDocuments(key);
+    return documents.map((document) => ({
+      ...document,
+      metadata: document.metadata,
+    }));
+  }
+
+  async getNodes(key: string): Promise<Node[]> {
+    const nodes = await this.docStore.getNodes(key);
+    return nodes.map((node) => ({
+      ...node,
+      metadata: node.metadata,
+    }));
+  }
 }
 
 type BuilderParams = {
