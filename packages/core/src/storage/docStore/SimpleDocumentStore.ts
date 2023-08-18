@@ -17,10 +17,7 @@ export class SimpleDocumentStore extends KVDocumentStore {
   private kvStore: SimpleKVStore;
 
   async load(key: string, metadata: Record<string, any>): Promise<Document | null> {
-    const document = await super.load(key);
-    if (document) {
-      document.metadata = metadata;
-    }
+    const document = await super.load(key, metadata);
     return document;
   }
 
