@@ -26,9 +26,29 @@ OpenAI LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:94](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L94)
+[llm/LLM.ts:102](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L102)
 
 ## Properties
+
+### additionalChatOptions
+
+• `Optional` **additionalChatOptions**: `Omit`<`Partial`<`CompletionCreateParams`\>, ``"model"`` \| ``"temperature"`` \| ``"max_tokens"`` \| ``"messages"`` \| ``"top_p"`` \| ``"streaming"``\>
+
+#### Defined in
+
+[llm/LLM.ts:85](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L85)
+
+___
+
+### additionalSessionOptions
+
+• `Optional` **additionalSessionOptions**: `Omit`<`Partial`<`ClientOptions`\>, ``"apiKey"`` \| ``"timeout"`` \| ``"maxRetries"``\>
+
+#### Defined in
+
+[llm/LLM.ts:95](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L95)
+
+___
 
 ### apiKey
 
@@ -36,7 +56,7 @@ OpenAI LLM implementation
 
 #### Defined in
 
-[llm/LLM.ts:87](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L87)
+[llm/LLM.ts:91](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L91)
 
 ___
 
@@ -46,7 +66,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:92](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L92)
+[llm/LLM.ts:100](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L100)
 
 ___
 
@@ -56,7 +76,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:88](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L88)
+[llm/LLM.ts:92](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L92)
 
 ___
 
@@ -86,7 +106,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:90](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L90)
+[llm/LLM.ts:94](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L94)
 
 ___
 
@@ -106,7 +126,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:89](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L89)
+[llm/LLM.ts:93](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L93)
 
 ___
 
@@ -143,7 +163,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:157](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L157)
+[llm/LLM.ts:171](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L171)
 
 ___
 
@@ -170,7 +190,7 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:197](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L197)
+[llm/LLM.ts:212](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L212)
 
 ___
 
@@ -190,4 +210,4 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:140](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L140)
+[llm/LLM.ts:154](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L154)
