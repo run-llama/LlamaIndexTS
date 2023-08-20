@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.20
+
+### Patch Changes
+
+- b526a2d: added additionalSessionOptions and additionalChatOptions
+- b526a2d: OpenAI v4.0.1
+- b526a2d: OpenAI moved timeout back to 60 seconds
+
 ## 0.0.19
 
 ### Patch Changes

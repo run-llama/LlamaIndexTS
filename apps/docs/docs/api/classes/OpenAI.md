@@ -163,7 +163,7 @@ Get a chat response from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:171](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L171)
+[llm/LLM.ts:173](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L173)
 
 ___
 
@@ -190,7 +190,7 @@ Get a prompt completion from the LLM
 
 #### Defined in
 
-[llm/LLM.ts:212](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L212)
+[llm/LLM.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L214)
 
 ___
 
@@ -210,4 +210,4 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:154](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L154)
+[llm/LLM.ts:156](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L156)
