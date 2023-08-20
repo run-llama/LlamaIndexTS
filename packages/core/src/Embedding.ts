@@ -1,12 +1,14 @@
+import { ClientOptions as OpenAIClientOptions } from "openai";
+
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
 import {
   AzureOpenAIConfig,
+  getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
-  getAzureBaseUrl,
   shouldUseAzure,
 } from "./llm/azure";
-import { OpenAISession, getOpenAISession } from "./llm/openai";
+import { getOpenAISession, OpenAISession } from "./llm/openai";
 import { VectorStoreQueryMode } from "./storage/vectorStore/types";
 
 /**
@@ -29,7 +31,7 @@ export enum SimilarityType {
 export function similarity(
   embedding1: number[],
   embedding2: number[],
-  mode: SimilarityType = SimilarityType.DEFAULT
+  mode: SimilarityType = SimilarityType.DEFAULT,
 ): number {
   if (embedding1.length !== embedding2.length) {
     throw new Error("Embedding length mismatch");
@@ -86,7 +88,7 @@ export function getTopKEmbeddings(
   embeddings: number[][],
   similarityTopK: number = DEFAULT_SIMILARITY_TOP_K,
   embeddingIds: any[] | null = null,
-  similarityCutoff: number | null = null
+  similarityCutoff: number | null = null,
 ): [number[], any[]] {
   if (embeddingIds == null) {
     embeddingIds = Array(embeddings.length).map((_, i) => i);
@@ -94,7 +96,7 @@ export function getTopKEmbeddings(
 
   if (embeddingIds.length !== embeddings.length) {
     throw new Error(
-      "getTopKEmbeddings: embeddings and embeddingIds length mismatch"
+      "getTopKEmbeddings: embeddings and embeddingIds length mismatch",
     );
   }
 
@@ -128,7 +130,7 @@ export function getTopKEmbeddingsLearner(
   embeddings: number[][],
   similarityTopK?: number,
   embeddingsIds?: any[],
-  queryMode: VectorStoreQueryMode = VectorStoreQueryMode.SVM
+  queryMode: VectorStoreQueryMode = VectorStoreQueryMode.SVM,
 ): [number[], any[]] {
   throw new Error("Not implemented yet");
   // To support SVM properly we're probably going to have to use something like
@@ -142,7 +144,7 @@ export function getTopKMMREmbeddings(
   similarityTopK: number | null = null,
   embeddingIds: any[] | null = null,
   _similarityCutoff: number | null = null,
-  mmrThreshold: number | null = null
+  mmrThreshold: number | null = null,
 ): [number[], any[]] {
   let threshold = mmrThreshold || 0.5;
   similarityFn = similarityFn || similarity;
@@ -179,7 +181,7 @@ export function getTopKMMREmbeddings(
     for (let embedId of Array.from(embedMap.keys())) {
       let overlapWithRecent = similarityFn(
         embeddings[embedMap.get(embedId)!],
-        embeddings[fullEmbedMap.get(recentEmbeddingId!)!]
+        embeddings[fullEmbedMap.get(recentEmbeddingId!)!],
       );
       if (
         threshold * embedSimilarity.get(embedId)! -
@@ -204,7 +206,7 @@ export abstract class BaseEmbedding {
   similarity(
     embedding1: number[],
     embedding2: number[],
-    mode: SimilarityType = SimilarityType.DEFAULT
+    mode: SimilarityType = SimilarityType.DEFAULT,
   ): number {
     return similarity(embedding1, embedding2, mode);
   }
@@ -224,6 +226,11 @@ export class OpenAIEmbedding extends BaseEmbedding {
   apiKey?: string = undefined;
   maxRetries: number;
   timeout?: number;
+  additionalSessionOptions?: Omit<
+    Partial<OpenAIClientOptions>,
+    "apiKey" | "maxRetries" | "timeout"
+  >;
+
   session: OpenAISession;
 
   constructor(init?: Partial<OpenAIEmbedding> & { azure?: AzureOpenAIConfig }) {
@@ -232,7 +239,8 @@ export class OpenAIEmbedding extends BaseEmbedding {
     this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
 
     this.maxRetries = init?.maxRetries ?? 10;
-    this.timeout = init?.timeout ?? undefined;
+    this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
+    this.additionalSessionOptions = init?.additionalSessionOptions;
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
@@ -242,7 +250,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
 
       if (!azureConfig.apiKey) {
         throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable."
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
         );
       }
 
@@ -256,6 +264,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
           maxRetries: this.maxRetries,
           timeout: this.timeout,
           defaultQuery: { "api-version": azureConfig.apiVersion },
+          ...this.additionalSessionOptions,
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
@@ -265,6 +274,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
           apiKey: this.apiKey,
           maxRetries: this.maxRetries,
           timeout: this.timeout,
+          ...this.additionalSessionOptions,
         });
     }
   }

@@ -1,4 +1,4 @@
-import OpenAILLM from "openai";
+import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 import {
@@ -82,23 +82,37 @@ export class OpenAI implements LLM {
   temperature: number;
   topP: number;
   maxTokens?: number;
+  additionalChatOptions?: Omit<
+    Partial<OpenAILLM.Chat.CompletionCreateParams>,
+    "max_tokens" | "messages" | "model" | "temperature" | "top_p" | "streaming"
+  >;
 
   // OpenAI session params
   apiKey?: string = undefined;
   maxRetries: number;
   timeout?: number;
   session: OpenAISession;
+  additionalSessionOptions?: Omit<
+    Partial<OpenAIClientOptions>,
+    "apiKey" | "maxRetries" | "timeout"
+  >;
 
   callbackManager?: CallbackManager;
 
-  constructor(init?: Partial<OpenAI> & { azure?: AzureOpenAIConfig }) {
+  constructor(
+    init?: Partial<OpenAI> & {
+      azure?: AzureOpenAIConfig;
+    },
+  ) {
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
     this.maxRetries = init?.maxRetries ?? 10;
-    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
+    this.additionalChatOptions = init?.additionalChatOptions;
+    this.additionalSessionOptions = init?.additionalSessionOptions;
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
@@ -122,6 +136,7 @@ export class OpenAI implements LLM {
           maxRetries: this.maxRetries,
           timeout: this.timeout,
           defaultQuery: { "api-version": azureConfig.apiVersion },
+          ...this.additionalSessionOptions,
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
@@ -131,6 +146,7 @@ export class OpenAI implements LLM {
           apiKey: this.apiKey,
           maxRetries: this.maxRetries,
           timeout: this.timeout,
+          ...this.additionalSessionOptions,
         });
     }
 
@@ -167,6 +183,7 @@ export class OpenAI implements LLM {
         content: message.content,
       })),
       top_p: this.topP,
+      ...this.additionalChatOptions,
     };
 
     if (this.callbackManager?.onLLMStream) {
