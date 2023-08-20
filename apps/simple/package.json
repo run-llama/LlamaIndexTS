@@ -6,7 +6,7 @@
     "llamaindex": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^18"
+    "@types/node": "^18.17.6"
   },
   "scripts": {
     "lint": "eslint ."

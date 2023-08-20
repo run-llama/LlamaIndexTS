@@ -14,7 +14,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[llm/LLM.ts:246](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L246)
+[llm/LLM.ts:261](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L261)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:247](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L247)
+[llm/LLM.ts:262](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L262)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:248](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L248)
+[llm/LLM.ts:263](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L263)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[llm/LLM.ts:251](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L251)
+[llm/LLM.ts:266](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L266)

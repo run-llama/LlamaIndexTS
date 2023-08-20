@@ -238,7 +238,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[llm/LLM.ts:205](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L205)
+[llm/LLM.ts:220](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L220)
 
 ___
 
