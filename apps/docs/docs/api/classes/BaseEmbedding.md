@@ -36,7 +36,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Embedding.ts:213](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L213)
+[Embedding.ts:215](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L215)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:212](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L212)
+[Embedding.ts:214](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L214)
 
 ___
 
@@ -78,4 +78,4 @@ ___
 
 #### Defined in
 
-[Embedding.ts:204](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L204)
+[Embedding.ts:206](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L206)

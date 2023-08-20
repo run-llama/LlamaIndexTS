@@ -238,7 +238,7 @@ NOTE 2: we default to empty string to make it easy to calculate prompt sizes
 
 #### Defined in
 
-[llm/LLM.ts:220](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L220)
+[llm/LLM.ts:222](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/llm/LLM.ts#L222)
 
 ___
 
@@ -798,7 +798,7 @@ Get the top K embeddings from a list of embeddings ordered by similarity to the 
 
 #### Defined in
 
-[Embedding.ts:84](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L84)
+[Embedding.ts:86](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L86)
 
 ___
 
@@ -822,7 +822,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:126](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L126)
+[Embedding.ts:128](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L128)
 
 ___
 
@@ -848,7 +848,7 @@ ___
 
 #### Defined in
 
-[Embedding.ts:138](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L138)
+[Embedding.ts:140](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L140)
 
 ___
 
@@ -983,7 +983,7 @@ similartiy score with higher numbers meaning the two embeddings are more similar
 
 #### Defined in
 
-[Embedding.ts:29](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L29)
+[Embedding.ts:31](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/Embedding.ts#L31)
 
 ___
 
