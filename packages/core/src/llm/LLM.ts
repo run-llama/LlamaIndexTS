@@ -171,45 +171,34 @@ export class OpenAI implements LLM {
   }
 
   async chat(
-    messages: ChatMessage[],
-    parentEvent?: Event,
-  ): Promise<ChatResponse> {
-    const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
-      model: this.model,
-      temperature: this.temperature,
-      max_tokens: this.maxTokens,
-      messages: messages.map((message) => ({
-        role: this.mapMessageType(message.role),
-        content: message.content,
-      })),
-      top_p: this.topP,
-      ...this.additionalChatOptions,
-    };
-
-    if (this.callbackManager?.onLLMStream) {
+      messages: ChatMessage[],
+      parentEvent?: Event,
+    ): Promise<ChatResponse> {
+      const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
+        model: this.model,
+        temperature: this.temperature,
+        max_tokens: this.maxTokens,
+        messages: messages.map((message) => ({
+          role: this.mapMessageType(message.role),
+          content: message.content,
+        })),
+        top_p: this.topP,
+        ...this.additionalChatOptions,
+      };
+  
       // Streaming
       const response = await this.session.openai.chat.completions.create({
         ...baseRequestParams,
         stream: true,
       });
-
+  
       const { message, role } = await handleOpenAIStream({
         response,
-        onLLMStream: this.callbackManager.onLLMStream,
+        onLLMStream: this.callbackManager?.onLLMStream,
         parentEvent,
       });
       return { message: { content: message, role } };
-    } else {
-      // Non-streaming
-      const response = await this.session.openai.chat.completions.create({
-        ...baseRequestParams,
-        stream: false,
-      });
-
-      const content = response.choices[0].message?.content ?? "";
-      return { message: { content, role: response.choices[0].message.role } };
     }
-  }
 
   async complete(
     prompt: string,
