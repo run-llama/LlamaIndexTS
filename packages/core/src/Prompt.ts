@@ -11,12 +11,14 @@ export type SimplePrompt = (input: Record<string, string>) => string;
 
 /*
 DEFAULT_TEXT_QA_PROMPT_TMPL = (
-    "Context information is below. \n"
+    "Context information is below.\n"
     "---------------------\n"
-    "{context_str}"
-    "\n---------------------\n"
+    "{context_str}\n"
+    "---------------------\n"
     "Given the context information and not prior knowledge, "
-    "answer the question: {query_str}\n"
+    "answer the query.\n"
+    "Query: {query_str}\n"
+    "Answer: "
 )
 */
 
@@ -27,8 +29,9 @@ export const defaultTextQaPrompt: SimplePrompt = (input) => {
 ---------------------
 ${context}
 ---------------------
-Given the context information and not prior knowledge, answer the question: ${query}
-`;
+Given the context information and not prior knowledge, answer the query.
+Query: ${query}
+Answer:`;
 };
 
 /*
@@ -60,7 +63,7 @@ SUMMARY:"""
 
 /*
 DEFAULT_REFINE_PROMPT_TMPL = (
-    "The original question is as follows: {query_str}\n"
+    "The original query is as follows: {query_str}\n"
     "We have provided an existing answer: {existing_answer}\n"
     "We have the opportunity to refine the existing answer "
     "(only if needed) with some more context below.\n"
@@ -68,21 +71,48 @@ DEFAULT_REFINE_PROMPT_TMPL = (
     "{context_msg}\n"
     "------------\n"
     "Given the new context, refine the original answer to better "
-    "answer the question. "
-    "If the context isn't useful, return the original answer."
+    "answer the query. "
+    "If the context isn't useful, return the original answer.\n"
+    "Refined Answer: "
 )
 */
 
 export const defaultRefinePrompt: SimplePrompt = (input) => {
   const { query = "", existingAnswer = "", context = "" } = input;
 
-  return `The original question is as follows: ${query}
+  return `The original query is as follows: ${query}
 We have provided an existing answer: ${existingAnswer}
 We have the opportunity to refine the existing answer (only if needed) with some more context below.
 ------------
 ${context}
 ------------
-Given the new context, refine the original answer to better answer the question. If the context isn't useful, return the original answer.`;
+Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
+Refined Answer:`;
+};
+
+/*
+DEFAULT_TREE_SUMMARIZE_TMPL = (
+  "Context information from multiple sources is below.\n"
+  "---------------------\n"
+  "{context_str}\n"
+  "---------------------\n"
+  "Given the information from multiple sources and not prior knowledge, "
+  "answer the query.\n"
+  "Query: {query_str}\n"
+  "Answer: "
+)
+*/
+
+export const defaultTreeSummarizePrompt: SimplePrompt = (input) => {
+  const { context = "", query = "" } = input;
+
+  return `Context information from multiple sources is below.
+---------------------
+${context}
+---------------------
+Given the information from multiple sources and not prior knowledge, answer the query.
+Query: ${query}
+Answer:`;
 };
 
 export const defaultChoiceSelectPrompt: SimplePrompt = (input) => {
