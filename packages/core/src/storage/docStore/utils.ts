@@ -21,6 +21,7 @@ export function jsonToDoc(docDict: Record<string, any>): BaseNode {
       id_: dataDict.id_,
       embedding: dataDict.embedding,
       hash: dataDict.hash,
+      metadata: dataDict.metadata,
     });
     doc.metadata = dataDict.metadata;
   } else if (docType === ObjectType.TEXT) {
@@ -28,6 +29,7 @@ export function jsonToDoc(docDict: Record<string, any>): BaseNode {
       text: dataDict.text,
       id_: dataDict.id_,
       hash: dataDict.hash,
+      metadata: dataDict.metadata,
     });
   } else {
     throw new Error(`Unknown doc type: ${docType}`);
