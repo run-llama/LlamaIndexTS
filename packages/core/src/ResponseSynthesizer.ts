@@ -3,6 +3,7 @@ import {
   SimplePrompt,
   defaultRefinePrompt,
   defaultTextQaPrompt,
+  defaultTreeSummarizePrompt,
 } from "./Prompt";
 import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
@@ -35,7 +36,7 @@ interface BaseResponseBuilder {
     query: string,
     textChunks: string[],
     parentEvent?: Event,
-    prevResponse?: string
+    prevResponse?: string,
   ): Promise<string>;
 }
 
@@ -54,7 +55,7 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
   async getResponse(
     query: string,
     textChunks: string[],
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<string> {
     const input = {
       query,
@@ -78,7 +79,7 @@ export class Refine implements BaseResponseBuilder {
   constructor(
     serviceContext: ServiceContext,
     textQATemplate?: SimplePrompt,
-    refineTemplate?: SimplePrompt
+    refineTemplate?: SimplePrompt,
   ) {
     this.serviceContext = serviceContext;
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
@@ -89,7 +90,7 @@ export class Refine implements BaseResponseBuilder {
     query: string,
     textChunks: string[],
     parentEvent?: Event,
-    prevResponse?: string
+    prevResponse?: string,
   ): Promise<string> {
     let response: string | undefined = undefined;
 
@@ -101,7 +102,7 @@ export class Refine implements BaseResponseBuilder {
           prevResponse,
           query,
           chunk,
-          parentEvent
+          parentEvent,
         );
       }
       prevResponse = response;
@@ -113,7 +114,7 @@ export class Refine implements BaseResponseBuilder {
   private async giveResponseSingle(
     queryStr: string,
     textChunk: string,
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<string> {
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: queryStr });
@@ -130,7 +131,7 @@ export class Refine implements BaseResponseBuilder {
             textQATemplate({
               context: chunk,
             }),
-            parentEvent
+            parentEvent,
           )
         ).message.content;
       } else {
@@ -138,7 +139,7 @@ export class Refine implements BaseResponseBuilder {
           response,
           queryStr,
           chunk,
-          parentEvent
+          parentEvent,
         );
       }
     }
@@ -150,7 +151,7 @@ export class Refine implements BaseResponseBuilder {
     response: string,
     queryStr: string,
     textChunk: string,
-    parentEvent?: Event
+    parentEvent?: Event,
   ) {
     const refineTemplate: SimplePrompt = (input) =>
       this.refineTemplate({ ...input, query: queryStr });
@@ -166,7 +167,7 @@ export class Refine implements BaseResponseBuilder {
             context: chunk,
             existingAnswer: response,
           }),
-          parentEvent
+          parentEvent,
         )
       ).message.content;
     }
@@ -182,7 +183,7 @@ export class CompactAndRefine extends Refine {
     query: string,
     textChunks: string[],
     parentEvent?: Event,
-    prevResponse?: string
+    prevResponse?: string,
   ): Promise<string> {
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: query });
@@ -192,13 +193,13 @@ export class CompactAndRefine extends Refine {
     const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
     const newTexts = this.serviceContext.promptHelper.repack(
       maxPrompt,
-      textChunks
+      textChunks,
     );
     const response = super.getResponse(
       query,
       newTexts,
       parentEvent,
-      prevResponse
+      prevResponse,
     );
     return response;
   }
@@ -216,10 +217,9 @@ export class TreeSummarize implements BaseResponseBuilder {
   async getResponse(
     query: string,
     textChunks: string[],
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<string> {
-    const summaryTemplate: SimplePrompt = (input) =>
-      defaultTextQaPrompt({ ...input, query: query });
+    const summaryTemplate: SimplePrompt = defaultTreeSummarizePrompt;
 
     if (!textChunks || textChunks.length === 0) {
       throw new Error("Must have at least one text chunk");
@@ -227,7 +227,7 @@ export class TreeSummarize implements BaseResponseBuilder {
 
     const packedTextChunks = this.serviceContext.promptHelper.repack(
       summaryTemplate,
-      textChunks
+      textChunks,
     );
 
     if (packedTextChunks.length === 1) {
@@ -236,7 +236,7 @@ export class TreeSummarize implements BaseResponseBuilder {
           summaryTemplate({
             context: packedTextChunks[0],
           }),
-          parentEvent
+          parentEvent,
         )
       ).message.content;
     } else {
@@ -246,14 +246,14 @@ export class TreeSummarize implements BaseResponseBuilder {
             summaryTemplate({
               context: chunk,
             }),
-            parentEvent
-          )
-        )
+            parentEvent,
+          ),
+        ),
       );
 
       return this.getResponse(
         query,
-        summaries.map((s) => s.message.content)
+        summaries.map((s) => s.message.content),
       );
     }
   }
@@ -261,7 +261,7 @@ export class TreeSummarize implements BaseResponseBuilder {
 
 export function getResponseBuilder(
   serviceContext: ServiceContext,
-  responseMode?: ResponseMode
+  responseMode?: ResponseMode,
 ): BaseResponseBuilder {
   switch (responseMode) {
     case ResponseMode.SIMPLE:
@@ -296,16 +296,16 @@ export class ResponseSynthesizer {
 
   async synthesize(query: string, nodes: NodeWithScore[], parentEvent?: Event) {
     let textChunks: string[] = nodes.map((node) =>
-      node.node.getContent(MetadataMode.NONE)
+      node.node.getContent(MetadataMode.NONE),
     );
     const response = await this.responseBuilder.getResponse(
       query,
       textChunks,
-      parentEvent
+      parentEvent,
     );
     return new Response(
       response,
-      nodes.map((node) => node.node)
+      nodes.map((node) => node.node),
     );
   }
 }
