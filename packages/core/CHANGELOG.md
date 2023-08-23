@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.21
+
+### Patch Changes
+
+- f7a57ca: Fixed metadata deserialization (thanks @marcagve)
+- 0a09de2: Update to OpenAI 4.1.0
+- f7a57ca: ChatGPT optimized prompts (thanks @LoganMarkewich)
+
 ## 0.0.20
 
 ### Patch Changes
