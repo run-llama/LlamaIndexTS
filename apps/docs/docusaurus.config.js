@@ -138,7 +138,7 @@ const config = {
       {
         entryPoints: ["../../packages/core/src/index.ts"],
         tsconfig: "../../packages/core/tsconfig.json",
-        gitRevision: "main",
+        readme: "none",
         sidebar: {
           position: 6,
         },
