@@ -6,3 +6,4 @@ export const DEFAULT_VECTOR_STORE_PERSIST_FILENAME = "vector_store.json";
 export const DEFAULT_GRAPH_STORE_PERSIST_FILENAME = "graph_store.json";
 export const DEFAULT_NAMESPACE = "docstore";
 export { DEFAULT_FS } from "./FileSystem";
+export const DEFAULT_DB = "global";

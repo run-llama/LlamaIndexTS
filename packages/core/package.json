@@ -1,9 +1,10 @@
 {
   "name": "@regie/llamaindex",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.6.1",
     "lodash": "^4.17.21",
+    "mongodb": "^5.8.1",
     "openai": "^4.2.0",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
