@@ -62,7 +62,7 @@ export class SentenceSplitter {
   private tokenizerDecoder: any;
   private paragraphSeparator: string;
   private chunkingTokenizerFn: (text: string) => RegExpMatchArray | null;
-  // private _callback_manager: any;
+  private splitLongSentences: boolean;
 
   constructor(options?: {
     chunkSize?: number;
@@ -71,6 +71,7 @@ export class SentenceSplitter {
     tokenizerDecoder?: any;
     paragraphSeparator?: string;
     chunkingTokenizerFn?: (text: string) => RegExpMatchArray | null;
+    splitLongSentences?: boolean;
   }) {
     const {
       chunkSize = DEFAULT_CHUNK_SIZE,
@@ -79,6 +80,7 @@ export class SentenceSplitter {
       tokenizerDecoder = null,
       paragraphSeparator = unixParagraphSeparator,
       chunkingTokenizerFn = undefined,
+      splitLongSentences = false,
     } = options ?? {};
 
     if (chunkOverlap > chunkSize) {
@@ -96,6 +98,7 @@ export class SentenceSplitter {
 
     this.paragraphSeparator = paragraphSeparator;
     this.chunkingTokenizerFn = chunkingTokenizerFn ?? englishSentenceTokenizer;
+    this.splitLongSentences = splitLongSentences;
   }
 
   private getEffectiveChunkSize(extraInfoStr?: string): number {
@@ -159,13 +162,28 @@ export class SentenceSplitter {
     return splits;
   }
 
+  /**
+   * Splits sentences into chunks if necessary.
+   *
+   * This isn't great behavior because it can split down the middle of a
+   * word or in non-English split down the middle of a Unicode codepoint
+   * so the splitting is turned off by default. If you need it, please
+   * set the splitLongSentences option to true.
+   * @param sentenceSplits
+   * @param effectiveChunkSize
+   * @returns
+   */
   private processSentenceSplits(
     sentenceSplits: string[],
     effectiveChunkSize: number,
   ): SplitRep[] {
-    // Process sentence splits
-    // Primarily check if any sentences exceed the chunk size. If they do,
-    // force split by tokenizer
+    if (!this.splitLongSentences) {
+      return sentenceSplits.map((split) => ({
+        text: split,
+        numTokens: this.tokenizer(split).length,
+      }));
+    }
+
     let newSplits: SplitRep[] = [];
     for (const split of sentenceSplits) {
       let splitTokens = this.tokenizer(split);
