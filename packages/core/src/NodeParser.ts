@@ -10,7 +10,7 @@ import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
  */
 export function getTextSplitsFromDocument(
   document: Document,
-  textSplitter: SentenceSplitter
+  textSplitter: SentenceSplitter,
 ) {
   const text = document.getText();
   const splits = textSplitter.splitText(text);
@@ -30,7 +30,7 @@ export function getNodesFromDocument(
   document: Document,
   textSplitter: SentenceSplitter,
   includeMetadata: boolean = true,
-  includePrevNextRel: boolean = true
+  includePrevNextRel: boolean = true,
 ) {
   let nodes: TextNode[] = [];
 
@@ -100,10 +100,10 @@ export class SimpleNodeParser implements NodeParser {
   }) {
     this.textSplitter =
       init?.textSplitter ??
-      new SentenceSplitter(
-        init?.chunkSize ?? DEFAULT_CHUNK_SIZE,
-        init?.chunkOverlap ?? DEFAULT_CHUNK_OVERLAP
-      );
+      new SentenceSplitter({
+        chunkSize: init?.chunkSize ?? DEFAULT_CHUNK_SIZE,
+        chunkOverlap: init?.chunkOverlap ?? DEFAULT_CHUNK_OVERLAP,
+      });
     this.includeMetadata = init?.includeMetadata ?? true;
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
   }

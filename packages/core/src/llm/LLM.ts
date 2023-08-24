@@ -2,9 +2,9 @@ import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 import {
-  AnthropicSession,
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
+  AnthropicSession,
   getAnthropicSession,
 } from "./anthropic";
 import {
@@ -14,7 +14,7 @@ import {
   getAzureModel,
   shouldUseAzure,
 } from "./azure";
-import { getOpenAISession, OpenAISession } from "./openai";
+import { OpenAISession, getOpenAISession } from "./openai";
 import { ReplicateSession } from "./replicate";
 
 export type MessageType =
@@ -471,7 +471,7 @@ export class Anthropic implements LLM {
 
     this.apiKey = init?.apiKey ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
-    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.session =
       init?.session ??
       getAnthropicSession({

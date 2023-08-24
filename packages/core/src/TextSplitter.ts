@@ -1,7 +1,7 @@
 // GitHub translated
 
 import { globalsHelper } from "./GlobalsHelper";
-import { DEFAULT_CHUNK_SIZE, DEFAULT_CHUNK_OVERLAP } from "./constants";
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
 class TextSplit {
   textChunk: string;
@@ -9,7 +9,7 @@ class TextSplit {
 
   constructor(
     textChunk: string,
-    numCharOverlap: number | undefined = undefined
+    numCharOverlap: number | undefined = undefined,
   ) {
     this.textChunk = textChunk;
     this.numCharOverlap = numCharOverlap;
@@ -17,6 +17,38 @@ class TextSplit {
 }
 
 type SplitRep = { text: string; numTokens: number };
+
+/**
+ * Tokenizes sentences. Suitable for English and most European languages.
+ * @param text
+ * @returns
+ */
+export const englishSentenceTokenizer = (text: string) => {
+  // The first part is a lazy match for any character.
+  return text.match(/.+?[.?!]+[\])'"`’”]*(?:\s|$)|.+/g);
+};
+
+/**
+ * Tokenizes sentences. Suitable for Chinese, Japanese, and Korean.
+ * @param text
+ * @returns
+ */
+export const cjkSentenceTokenizer = (text: string) => {
+  // Accepts english style sentence endings with space and
+  // CJK style sentence endings with no space.
+  return text.match(
+    /.+?[.?!]+[\])'"`’”]*(?:\s|$)|.+?[。？！]+[\])'"`’”]*(?:\s|$)?|.+/g,
+  );
+};
+
+export const unixLineSeparator = "\n";
+export const windowsLineSeparator = "\r\n";
+export const unixParagraphSeparator = unixLineSeparator + unixLineSeparator;
+export const windowsParagraphSeparator =
+  windowsLineSeparator + windowsLineSeparator;
+
+// In theory there's also Mac style \r only, but it's pre-OSX and I don't think
+// many documents will use it.
 
 /**
  * SentenceSplitter is our default text splitter that supports splitting into sentences, paragraphs, or fixed length chunks with overlap.
@@ -29,46 +61,44 @@ export class SentenceSplitter {
   private tokenizer: any;
   private tokenizerDecoder: any;
   private paragraphSeparator: string;
-  private chunkingTokenizerFn: any;
-  // private _callback_manager: any;
+  private chunkingTokenizerFn: (text: string) => RegExpMatchArray | null;
+  private splitLongSentences: boolean;
 
-  constructor(
-    chunkSize: number = DEFAULT_CHUNK_SIZE,
-    chunkOverlap: number = DEFAULT_CHUNK_OVERLAP,
-    tokenizer: any = null,
-    tokenizerDecoder: any = null,
-    paragraphSeparator: string = "\n\n\n",
-    chunkingTokenizerFn: any = undefined
-    // callback_manager: any = undefined
-  ) {
+  constructor(options?: {
+    chunkSize?: number;
+    chunkOverlap?: number;
+    tokenizer?: any;
+    tokenizerDecoder?: any;
+    paragraphSeparator?: string;
+    chunkingTokenizerFn?: (text: string) => RegExpMatchArray | null;
+    splitLongSentences?: boolean;
+  }) {
+    const {
+      chunkSize = DEFAULT_CHUNK_SIZE,
+      chunkOverlap = DEFAULT_CHUNK_OVERLAP,
+      tokenizer = null,
+      tokenizerDecoder = null,
+      paragraphSeparator = unixParagraphSeparator,
+      chunkingTokenizerFn = undefined,
+      splitLongSentences = false,
+    } = options ?? {};
+
     if (chunkOverlap > chunkSize) {
       throw new Error(
-        `Got a larger chunk overlap (${chunkOverlap}) than chunk size (${chunkSize}), should be smaller.`
+        `Got a larger chunk overlap (${chunkOverlap}) than chunk size (${chunkSize}), should be smaller.`,
       );
     }
     this.chunkSize = chunkSize;
     this.chunkOverlap = chunkOverlap;
     // this._callback_manager = callback_manager || new CallbackManager([]);
 
-    if (chunkingTokenizerFn == undefined) {
-      // define a callable mapping a string to a list of strings
-      const defaultChunkingTokenizerFn = (text: string) => {
-        var result = text.match(/[^.?!]+[.!?]+[\])'"`’”]*|.+/g);
-        return result;
-      };
-
-      chunkingTokenizerFn = defaultChunkingTokenizerFn;
-    }
-
-    if (tokenizer == undefined || tokenizerDecoder == undefined) {
-      tokenizer = globalsHelper.tokenizer();
-      tokenizerDecoder = globalsHelper.tokenizerDecoder();
-    }
-    this.tokenizer = tokenizer;
-    this.tokenizerDecoder = tokenizerDecoder;
+    this.tokenizer = tokenizer ?? globalsHelper.tokenizer();
+    this.tokenizerDecoder =
+      tokenizerDecoder ?? globalsHelper.tokenizerDecoder();
 
     this.paragraphSeparator = paragraphSeparator;
-    this.chunkingTokenizerFn = chunkingTokenizerFn;
+    this.chunkingTokenizerFn = chunkingTokenizerFn ?? englishSentenceTokenizer;
+    this.splitLongSentences = splitLongSentences;
   }
 
   private getEffectiveChunkSize(extraInfoStr?: string): number {
@@ -79,7 +109,7 @@ export class SentenceSplitter {
       effectiveChunkSize = this.chunkSize - numExtraTokens;
       if (effectiveChunkSize <= 0) {
         throw new Error(
-          "Effective chunk size is non positive after considering extra_info"
+          "Effective chunk size is non positive after considering extra_info",
         );
       }
     } else {
@@ -119,7 +149,12 @@ export class SentenceSplitter {
     // Next we split the text using the chunk tokenizer fn/
     let splits = [];
     for (const parText of paragraphSplits) {
-      let sentenceSplits = this.chunkingTokenizerFn(parText);
+      const sentenceSplits = this.chunkingTokenizerFn(parText);
+
+      if (!sentenceSplits) {
+        continue;
+      }
+
       for (const sentence_split of sentenceSplits) {
         splits.push(sentence_split.trim());
       }
@@ -127,13 +162,28 @@ export class SentenceSplitter {
     return splits;
   }
 
+  /**
+   * Splits sentences into chunks if necessary.
+   *
+   * This isn't great behavior because it can split down the middle of a
+   * word or in non-English split down the middle of a Unicode codepoint
+   * so the splitting is turned off by default. If you need it, please
+   * set the splitLongSentences option to true.
+   * @param sentenceSplits
+   * @param effectiveChunkSize
+   * @returns
+   */
   private processSentenceSplits(
     sentenceSplits: string[],
-    effectiveChunkSize: number
+    effectiveChunkSize: number,
   ): SplitRep[] {
-    // Process sentence splits
-    // Primarily check if any sentences exceed the chunk size. If they don't,
-    // force split by tokenizer
+    if (!this.splitLongSentences) {
+      return sentenceSplits.map((split) => ({
+        text: split,
+        numTokens: this.tokenizer(split).length,
+      }));
+    }
+
     let newSplits: SplitRep[] = [];
     for (const split of sentenceSplits) {
       let splitTokens = this.tokenizer(split);
@@ -143,7 +193,7 @@ export class SentenceSplitter {
       } else {
         for (let i = 0; i < splitLen; i += effectiveChunkSize) {
           const cur_split = this.tokenizerDecoder(
-            splitTokens.slice(i, i + effectiveChunkSize)
+            splitTokens.slice(i, i + effectiveChunkSize),
           );
           newSplits.push({ text: cur_split, numTokens: effectiveChunkSize });
         }
@@ -154,7 +204,7 @@ export class SentenceSplitter {
 
   combineTextSplits(
     newSentenceSplits: SplitRep[],
-    effectiveChunkSize: number
+    effectiveChunkSize: number,
   ): TextSplit[] {
     // go through sentence splits, combine to chunks that are within the chunk size
 
@@ -178,8 +228,8 @@ export class SentenceSplitter {
             curChunkSentences
               .map((sentence) => sentence.text)
               .join(" ")
-              .trim()
-          )
+              .trim(),
+          ),
         );
 
         const lastChunkSentences = curChunkSentences;
@@ -210,8 +260,8 @@ export class SentenceSplitter {
         curChunkSentences
           .map((sentence) => sentence.text)
           .join(" ")
-          .trim()
-      )
+          .trim(),
+      ),
     );
     return docs;
   }
@@ -232,13 +282,13 @@ export class SentenceSplitter {
     // force split by tokenizer
     let newSentenceSplits = this.processSentenceSplits(
       sentenceSplits,
-      effectiveChunkSize
+      effectiveChunkSize,
     );
 
     // combine sentence splits into chunks of text that can then be returned
     let combinedTextSplits = this.combineTextSplits(
       newSentenceSplits,
-      effectiveChunkSize
+      effectiveChunkSize,
     );
 
     return combinedTextSplits;
