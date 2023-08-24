@@ -2,9 +2,9 @@ import { globalsHelper } from "./GlobalsHelper";
 import { SimplePrompt } from "./Prompt";
 import { SentenceSplitter } from "./TextSplitter";
 import {
+  DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
-  DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_PADDING,
 } from "./constants";
 
@@ -43,7 +43,7 @@ export class PromptHelper {
     chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
     chunkSizeLimit?: number,
     tokenizer?: (text: string) => number[],
-    separator = " "
+    separator = " ",
   ) {
     this.contextWindow = contextWindow;
     this.numOutput = numOutput;
@@ -76,7 +76,7 @@ export class PromptHelper {
   private getAvailableChunkSize(
     prompt: SimplePrompt,
     numChunks = 1,
-    padding = 5
+    padding = 5,
   ) {
     const availableContextSize = this.getAvailableContextSize(prompt);
 
@@ -99,14 +99,14 @@ export class PromptHelper {
   getTextSplitterGivenPrompt(
     prompt: SimplePrompt,
     numChunks = 1,
-    padding = DEFAULT_PADDING
+    padding = DEFAULT_PADDING,
   ) {
     const chunkSize = this.getAvailableChunkSize(prompt, numChunks, padding);
     if (chunkSize === 0) {
       throw new Error("Got 0 as available chunk size");
     }
     const chunkOverlap = this.chunkOverlapRatio * chunkSize;
-    const textSplitter = new SentenceSplitter(chunkSize, chunkOverlap);
+    const textSplitter = new SentenceSplitter({ chunkSize, chunkOverlap });
     return textSplitter;
   }
 
@@ -120,7 +120,7 @@ export class PromptHelper {
   repack(
     prompt: SimplePrompt,
     textChunks: string[],
-    padding = DEFAULT_PADDING
+    padding = DEFAULT_PADDING,
   ) {
     const textSplitter = this.getTextSplitterGivenPrompt(prompt, 1, padding);
     const combinedStr = textChunks.join("\n\n");
