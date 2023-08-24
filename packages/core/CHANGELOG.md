@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.0.22
+
+### Patch Changes
+
+- 454f3f8: CJK sentence splitting (thanks @TomPenguin)
+- 454f3f8: Export options for Windows formatted text files
+- 454f3f8: Disable long sentence splitting by default
+- 454f3f8: Make sentence splitter not split on decimals.
+- 99df58f: Anthropic 0.6.1 and OpenAI 4.2.0. Changed Anthropic timeout back to 60s
+
 ## 0.0.21
 
 ### Patch Changes
