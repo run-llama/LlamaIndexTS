@@ -1,5 +1,5 @@
 {
-  "name": "docs",
+  "name": "@regie/llama-index-docs",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -46,6 +46,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "publishConfig": {
+    "registry": "http://npmdev.regie.ai"
   },
   "engines": {
     "node": ">=16.14"
