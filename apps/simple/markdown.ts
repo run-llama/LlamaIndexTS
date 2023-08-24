@@ -1,7 +1,7 @@
 import { MarkdownReader, VectorStoreIndex } from "llamaindex";
 
 async function main() {
-  // Load PDF
+  // Load Markdown file
   const reader = new MarkdownReader();
   const documents = await reader.loadData("node_modules/llamaindex/README.md");
 
