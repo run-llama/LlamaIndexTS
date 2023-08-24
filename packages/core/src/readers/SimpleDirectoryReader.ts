@@ -5,6 +5,7 @@ import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
 import { PDFReader } from "./PDFReader";
 import { PapaCSVReader } from "./CSVReader";
+import { MarkdownReader } from "./MarkdownReader";
 
 /**
  * Read a .txt file
@@ -23,6 +24,7 @@ const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   txt: new TextFileReader(),
   pdf: new PDFReader(),
   csv: new PapaCSVReader(),
+  md: new MarkdownReader(),
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {
