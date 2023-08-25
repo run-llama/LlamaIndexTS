@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.0.23
+
+### Patch Changes
+
+- Added MetadataMode to ResponseSynthesizer (thanks @TomPenguin)
+- 9d6b2ed: Added Markdown Reader (huge shoutout to @swk777)
+
 ## 0.0.22
 
 ### Patch Changes
