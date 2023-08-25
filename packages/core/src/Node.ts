@@ -1,3 +1,4 @@
+import crypto from "crypto"; // TODO Node dependency
 import { v4 as uuidv4 } from "uuid";
 
 export enum NodeRelationship {
@@ -35,6 +36,12 @@ export type RelatedNodeType = RelatedNodeInfo | RelatedNodeInfo[];
  * Generic abstract class for retrievable nodes
  */
 export abstract class BaseNode {
+  /**
+   * The unique ID of the Node/Document. The trailing underscore is here
+   * to avoid collisions with the id keyword in Python.
+   *
+   * Set to a UUID by default.
+   */
   id_: string = uuidv4();
   embedding?: number[];
 
@@ -55,10 +62,6 @@ export abstract class BaseNode {
   abstract getMetadataStr(metadataMode: MetadataMode): string;
   abstract setContent(value: any): void;
 
-  get nodeId(): string {
-    return this.id_;
-  }
-
   get sourceNode(): RelatedNodeInfo | undefined {
     const relationship = this.relationships[NodeRelationship.SOURCE];
 
@@ -74,7 +77,7 @@ export abstract class BaseNode {
 
     if (Array.isArray(relationship)) {
       throw new Error(
-        "Previous object must be a single RelatedNodeInfo object"
+        "Previous object must be a single RelatedNodeInfo object",
       );
     }
 
@@ -106,12 +109,14 @@ export abstract class BaseNode {
 
     if (!Array.isArray(relationship)) {
       throw new Error(
-        "Child object must be a an array of RelatedNodeInfo objects"
+        "Child object must be a an array of RelatedNodeInfo objects",
       );
     }
 
     return relationship;
   }
+
+  abstract generateHash(): string;
 
   getEmbedding(): number[] {
     if (this.embedding === undefined) {
@@ -123,7 +128,7 @@ export abstract class BaseNode {
 
   asRelatedNodeInfo(): RelatedNodeInfo {
     return {
-      nodeId: this.nodeId,
+      nodeId: this.id_,
       metadata: this.metadata,
       hash: this.hash,
     };
@@ -152,10 +157,27 @@ export class TextNode extends BaseNode {
   constructor(init?: Partial<TextNode>) {
     super(init);
     Object.assign(this, init);
+
+    if (new.target === TextNode) {
+      // Don't generate the hash repeatedly so only do it if this is
+      // constructing the derived class
+      this.hash = this.generateHash();
+    }
   }
 
+  /**
+   * Generate a hash of the text node.
+   * The ID is not part of the hash as it can change independent of content.
+   * @returns
+   */
   generateHash() {
-    throw new Error("Not implemented");
+    const hashFunction = crypto.createHash("sha256");
+    hashFunction.update(`type=${this.getType()}`);
+    hashFunction.update(
+      `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
+    );
+    hashFunction.update(this.getContent(MetadataMode.ALL));
+    return hashFunction.digest("base64");
   }
 
   getType(): ObjectType {
@@ -190,6 +212,8 @@ export class TextNode extends BaseNode {
 
   setContent(value: string) {
     this.text = value;
+
+    this.hash = this.generateHash();
   }
 
   getNodeInfo() {
@@ -215,6 +239,10 @@ export class IndexNode extends TextNode {
   constructor(init?: Partial<IndexNode>) {
     super(init);
     Object.assign(this, init);
+
+    if (new.target === IndexNode) {
+      this.hash = this.generateHash();
+    }
   }
 
   getType(): ObjectType {
@@ -229,14 +257,14 @@ export class Document extends TextNode {
   constructor(init?: Partial<Document>) {
     super(init);
     Object.assign(this, init);
+
+    if (new.target === Document) {
+      this.hash = this.generateHash();
+    }
   }
 
   getType() {
     return ObjectType.DOCUMENT;
-  }
-
-  get docId() {
-    return this.id_;
   }
 }
 
@@ -267,12 +295,4 @@ export function jsonToNode(json: any) {
 export interface NodeWithScore {
   node: BaseNode;
   score: number;
-}
-
-/**
- * A node with an embedding
- */
-export interface NodeWithEmbedding {
-  node: BaseNode;
-  embedding: number[];
 }

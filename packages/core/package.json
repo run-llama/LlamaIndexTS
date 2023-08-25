@@ -1,23 +1,25 @@
 {
   "name": "llamaindex",
-  "version": "0.0.17",
+  "version": "0.0.22",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.5.9",
+    "@anthropic-ai/sdk": "^0.6.1",
     "lodash": "^4.17.21",
-    "openai": "4.0.0-beta.8",
+    "openai": "^4.2.0",
+    "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
-    "replicate": "^0.14.1",
+    "replicate": "^0.16.1",
     "tiktoken-node": "^0.0.6",
     "uuid": "^9.0.0",
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.196",
-    "@types/node": "^18.17.1",
+    "@types/lodash": "^4.14.197",
+    "@types/node": "^18.17.9",
+    "@types/papaparse": "^5.3.8",
     "@types/pdf-parse": "^1.1.1",
     "@types/uuid": "^9.0.2",
     "node-stdlib-browser": "^1.2.0",
-    "tsup": "^7.1.0"
+    "tsup": "^7.2.0"
   },
   "engines": {
     "node": ">=18.0.0"

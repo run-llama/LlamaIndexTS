@@ -1,8 +1,6 @@
+import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
-import { OpenAISession, getOpenAISession } from "./openai";
-import OpenAILLM from "openai";
-import { ReplicateSession } from "./replicate";
 import {
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
@@ -11,11 +9,13 @@ import {
 } from "./anthropic";
 import {
   AzureOpenAIConfig,
+  getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
-  getAzureBaseUrl,
   shouldUseAzure,
 } from "./azure";
+import { OpenAISession, getOpenAISession } from "./openai";
+import { ReplicateSession } from "./replicate";
 
 export type MessageType =
   | "user"
@@ -82,23 +82,37 @@ export class OpenAI implements LLM {
   temperature: number;
   topP: number;
   maxTokens?: number;
+  additionalChatOptions?: Omit<
+    Partial<OpenAILLM.Chat.CompletionCreateParams>,
+    "max_tokens" | "messages" | "model" | "temperature" | "top_p" | "streaming"
+  >;
 
   // OpenAI session params
   apiKey?: string = undefined;
   maxRetries: number;
   timeout?: number;
   session: OpenAISession;
+  additionalSessionOptions?: Omit<
+    Partial<OpenAIClientOptions>,
+    "apiKey" | "maxRetries" | "timeout"
+  >;
 
   callbackManager?: CallbackManager;
 
-  constructor(init?: Partial<OpenAI> & { azure?: AzureOpenAIConfig }) {
+  constructor(
+    init?: Partial<OpenAI> & {
+      azure?: AzureOpenAIConfig;
+    },
+  ) {
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
 
     this.maxRetries = init?.maxRetries ?? 10;
-    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
+    this.additionalChatOptions = init?.additionalChatOptions;
+    this.additionalSessionOptions = init?.additionalSessionOptions;
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
@@ -108,7 +122,7 @@ export class OpenAI implements LLM {
 
       if (!azureConfig.apiKey) {
         throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable."
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
         );
       }
 
@@ -122,6 +136,7 @@ export class OpenAI implements LLM {
           maxRetries: this.maxRetries,
           timeout: this.timeout,
           defaultQuery: { "api-version": azureConfig.apiVersion },
+          ...this.additionalSessionOptions,
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
@@ -131,6 +146,7 @@ export class OpenAI implements LLM {
           apiKey: this.apiKey,
           maxRetries: this.maxRetries,
           timeout: this.timeout,
+          ...this.additionalSessionOptions,
         });
     }
 
@@ -138,7 +154,7 @@ export class OpenAI implements LLM {
   }
 
   mapMessageType(
-    messageType: MessageType
+    messageType: MessageType,
   ): "user" | "assistant" | "system" | "function" {
     switch (messageType) {
       case "user":
@@ -156,7 +172,7 @@ export class OpenAI implements LLM {
 
   async chat(
     messages: ChatMessage[],
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<ChatResponse> {
     const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
       model: this.model,
@@ -167,6 +183,7 @@ export class OpenAI implements LLM {
         content: message.content,
       })),
       top_p: this.topP,
+      ...this.additionalChatOptions,
     };
 
     if (this.callbackManager?.onLLMStream) {
@@ -196,7 +213,7 @@ export class OpenAI implements LLM {
 
   async complete(
     prompt: string,
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
@@ -321,7 +338,7 @@ export class LlamaDeuce implements LLM {
 
   mapMessagesToPromptMeta(
     messages: ChatMessage[],
-    opts?: { withBos?: boolean; replicate4Bit?: boolean }
+    opts?: { withBos?: boolean; replicate4Bit?: boolean },
   ) {
     const { withBos = false, replicate4Bit = false } = opts ?? {};
     const DEFAULT_SYSTEM_PROMPT = `You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
@@ -354,7 +371,7 @@ If a question does not make any sense, or is not factually coherent, explain why
         // @ts-ignore
         if (messages[0].role !== "user") {
           throw new Error(
-            "LlamaDeuce: if there is a system message, the second message must be a user message."
+            "LlamaDeuce: if there is a system message, the second message must be a user message.",
           );
         }
 
@@ -384,7 +401,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 
   async chat(
     messages: ChatMessage[],
-    _parentEvent?: Event
+    _parentEvent?: Event,
   ): Promise<ChatResponse> {
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
       .replicateApi as `${string}/${string}:${string}`;
@@ -408,7 +425,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 
     const response = await this.replicateSession.replicate.run(
       api,
-      replicateOptions
+      replicateOptions,
     );
     return {
       message: {
@@ -421,7 +438,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 
   async complete(
     prompt: string,
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
@@ -454,7 +471,7 @@ export class Anthropic implements LLM {
 
     this.apiKey = init?.apiKey ?? undefined;
     this.maxRetries = init?.maxRetries ?? 10;
-    this.timeout = init?.timeout ?? undefined; // Default is 60 seconds
+    this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.session =
       init?.session ??
       getAnthropicSession({
@@ -483,7 +500,7 @@ export class Anthropic implements LLM {
 
   async chat(
     messages: ChatMessage[],
-    parentEvent?: Event | undefined
+    parentEvent?: Event | undefined,
   ): Promise<ChatResponse> {
     const response = await this.session.anthropic.completions.create({
       model: this.model,
@@ -501,7 +518,7 @@ export class Anthropic implements LLM {
   }
   async complete(
     prompt: string,
-    parentEvent?: Event | undefined
+    parentEvent?: Event | undefined,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }

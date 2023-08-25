@@ -1,5 +1,48 @@
 # llamaindex
 
+## 0.0.22
+
+### Patch Changes
+
+- 454f3f8: CJK sentence splitting (thanks @TomPenguin)
+- 454f3f8: Export options for Windows formatted text files
+- 454f3f8: Disable long sentence splitting by default
+- 454f3f8: Make sentence splitter not split on decimals.
+- 99df58f: Anthropic 0.6.1 and OpenAI 4.2.0. Changed Anthropic timeout back to 60s
+
+## 0.0.21
+
+### Patch Changes
+
+- f7a57ca: Fixed metadata deserialization (thanks @marcagve)
+- 0a09de2: Update to OpenAI 4.1.0
+- f7a57ca: ChatGPT optimized prompts (thanks @LoganMarkewich)
+
+## 0.0.20
+
+### Patch Changes
+
+- b526a2d: added additionalSessionOptions and additionalChatOptions
+- b526a2d: OpenAI v4.0.1
+- b526a2d: OpenAI moved timeout back to 60 seconds
+
+## 0.0.19
+
+### Patch Changes
+
+- a747f28: Add PapaCSVReader (thank you @swk777)
+- 355910b: OpenAI v4 (final), Anthropic 0.6, Replicate 0.16.1
+- 355910b: Breaking: Removed NodeWithEmbeddings (just use BaseNode)
+
+## 0.0.18
+
+### Patch Changes
+
+- 824c13c: Breaking: allow documents to be reimported with hash checking.
+- 18b8915: Update storage exports (thanks @TomPenguin)
+- ade9d8f: Bug fix: use session in OpenAI Embeddings (thanks @swk777)
+- 824c13c: Breaking: removed nodeId and docId. Just use id\_
+
 ## 0.0.17
 
 ### Patch Changes

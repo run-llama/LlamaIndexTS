@@ -1,13 +1,13 @@
-import { Document, BaseNode, jsonToNode } from "../Node";
 import { v4 as uuidv4 } from "uuid";
-import { BaseRetriever } from "../Retriever";
-import { ServiceContext } from "../ServiceContext";
-import { StorageContext } from "../storage/StorageContext";
-import { BaseDocumentStore } from "../storage/docStore/types";
-import { VectorStore } from "../storage/vectorStore/types";
-import { BaseIndexStore } from "../storage/indexStore/types";
+import { BaseNode, Document, jsonToNode } from "../Node";
 import { BaseQueryEngine } from "../QueryEngine";
 import { ResponseSynthesizer } from "../ResponseSynthesizer";
+import { BaseRetriever } from "../Retriever";
+import { ServiceContext } from "../ServiceContext";
+import { BaseDocumentStore } from "../storage/docStore/types";
+import { BaseIndexStore } from "../storage/indexStore/types";
+import { StorageContext } from "../storage/StorageContext";
+import { VectorStore } from "../storage/vectorStore/types";
 
 /**
  * The underlying structure of each index.
@@ -43,7 +43,6 @@ export enum IndexStructType {
 
 export class IndexDict extends IndexStruct {
   nodesDict: Record<string, BaseNode> = {};
-  docStore: Record<string, Document> = {}; // FIXME: this should be implemented in storageContext
   type: IndexStructType = IndexStructType.SIMPLE_DICT;
 
   getSummary(): string {
@@ -64,6 +63,10 @@ export class IndexDict extends IndexStruct {
       nodesDict: this.nodesDict,
       type: this.type,
     };
+  }
+
+  delete(nodeId: string) {
+    delete this.nodesDict[nodeId];
   }
 }
 
@@ -148,16 +151,22 @@ export abstract class BaseIndex<T> {
     retriever?: BaseRetriever;
     responseSynthesizer?: ResponseSynthesizer;
   }): BaseQueryEngine;
-}
 
-export interface VectorIndexOptions {
-  nodes?: BaseNode[];
-  indexStruct?: IndexDict;
-  indexId?: string;
-  serviceContext?: ServiceContext;
-  storageContext?: StorageContext;
-}
+  /**
+   * Insert a document into the index.
+   * @param document
+   */
+  async insert(document: Document) {
+    const nodes = this.serviceContext.nodeParser.getNodesFromDocuments([
+      document,
+    ]);
+    await this.insertNodes(nodes);
+    this.docStore.setDocumentHash(document.id_, document.hash);
+  }
 
-export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
-  vectorStore: VectorStore;
+  abstract insertNodes(nodes: BaseNode[]): Promise<void>;
+  abstract deleteRefDoc(
+    refDocId: string,
+    deleteFromDocStore?: boolean,
+  ): Promise<void>;
 }

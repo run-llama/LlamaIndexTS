@@ -1,10 +1,9 @@
-import fs from "fs/promises";
 import { PDFReader, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   // Load PDF
   const reader = new PDFReader();
-  const documents = await reader.loadData("examples/brk-2022.pdf");
+  const documents = await reader.loadData("data/brk-2022.pdf");
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments(documents);

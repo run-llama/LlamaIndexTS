@@ -22,9 +22,8 @@ export * from "./callbacks/CallbackManager";
 
 export * from "./readers/base";
 export * from "./readers/PDFReader";
+export * from "./readers/CSVReader";
+export * from "./readers/MarkdownReader";
 export * from "./readers/SimpleDirectoryReader";
 
-export * from "./storage/constants";
-export * from "./storage/FileSystem";
-export * from "./storage/StorageContext";
-export * from "./storage/vectorStore/types";
+export * from "./storage";

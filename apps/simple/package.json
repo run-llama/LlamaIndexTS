@@ -1,12 +1,12 @@
 {
-  "version": "0.0.15",
+  "version": "0.0.20",
   "private": true,
   "name": "simple",
   "dependencies": {
     "llamaindex": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^18"
+    "@types/node": "^18.17.6"
   },
   "scripts": {
     "lint": "eslint ."

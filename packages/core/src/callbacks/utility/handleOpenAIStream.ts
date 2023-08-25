@@ -1,9 +1,8 @@
 import { ChatCompletionChunk } from "openai/resources/chat";
-import { globalsHelper } from "../../GlobalsHelper";
-import { StreamCallbackResponse, Event } from "../CallbackManager";
-import { APIResponse } from "openai/core";
 import { Stream } from "openai/streaming";
+import { globalsHelper } from "../../GlobalsHelper";
 import { MessageType } from "../../llm/LLM";
+import { Event, StreamCallbackResponse } from "../CallbackManager";
 
 /**
  * Handles the OpenAI streaming interface and pipes it to the callback function
@@ -17,7 +16,7 @@ export async function handleOpenAIStream({
   onLLMStream,
   parentEvent,
 }: {
-  response: APIResponse<Stream<ChatCompletionChunk>>;
+  response: Stream<ChatCompletionChunk>;
   onLLMStream: (data: StreamCallbackResponse) => void;
   parentEvent?: Event;
 }): Promise<{ message: string; role: MessageType }> {

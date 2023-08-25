@@ -138,7 +138,9 @@ const config = {
       {
         entryPoints: ["../../packages/core/src/index.ts"],
         tsconfig: "../../packages/core/tsconfig.json",
-        gitRevision: "main",
+        readme: "none",
+        sourceLinkTemplate:
+          "https://github.com/run-llama/LlamaIndexTS/blob/{gitRevision}/{path}#L{line}",
         sidebar: {
           position: 6,
         },

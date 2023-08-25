@@ -1,19 +1,19 @@
-import * as path from "path";
 import _ from "lodash";
-import { GenericFileSystem, exists } from "../FileSystem";
+import * as path from "path";
+import {
+  getTopKEmbeddings,
+  getTopKEmbeddingsLearner,
+  getTopKMMREmbeddings,
+} from "../../Embedding";
+import { BaseNode } from "../../Node";
+import { DEFAULT_FS, DEFAULT_PERSIST_DIR } from "../constants";
+import { exists, GenericFileSystem } from "../FileSystem";
 import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
 } from "./types";
-import {
-  getTopKEmbeddings,
-  getTopKEmbeddingsLearner,
-  getTopKMMREmbeddings,
-} from "../../Embedding";
-import { DEFAULT_PERSIST_DIR, DEFAULT_FS } from "../constants";
-import { NodeWithEmbedding } from "../../Node";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -41,7 +41,7 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = DEFAULT_FS
+    fs: GenericFileSystem = DEFAULT_FS,
   ): Promise<SimpleVectorStore> {
     let persistPath = `${persistDir}/vector_store.json`;
     return await SimpleVectorStore.fromPersistPath(persistPath, fs);
@@ -55,29 +55,28 @@ export class SimpleVectorStore implements VectorStore {
     return this.data.embeddingDict[textId];
   }
 
-  async add(embeddingResults: NodeWithEmbedding[]): Promise<string[]> {
-    for (let result of embeddingResults) {
-      this.data.embeddingDict[result.node.id_] = result.embedding;
+  async add(embeddingResults: BaseNode[]): Promise<string[]> {
+    for (let node of embeddingResults) {
+      this.data.embeddingDict[node.id_] = node.getEmbedding();
 
-      if (!result.node.sourceNode) {
+      if (!node.sourceNode) {
         console.error("Missing source node from TextNode.");
         continue;
       }
 
-      this.data.textIdToRefDocId[result.node.id_] =
-        result.node.sourceNode?.nodeId;
+      this.data.textIdToRefDocId[node.id_] = node.sourceNode?.nodeId;
     }
 
     if (this.persistPath) {
       await this.persist(this.persistPath, this.fs);
     }
 
-    return embeddingResults.map((result) => result.node.id_);
+    return embeddingResults.map((result) => result.id_);
   }
 
   async delete(refDocId: string): Promise<void> {
     let textIdsToDelete = Object.keys(this.data.textIdToRefDocId).filter(
-      (textId) => this.data.textIdToRefDocId[textId] === refDocId
+      (textId) => this.data.textIdToRefDocId[textId] === refDocId,
     );
     for (let textId of textIdsToDelete) {
       delete this.data.embeddingDict[textId];
@@ -89,7 +88,7 @@ export class SimpleVectorStore implements VectorStore {
   async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
     if (!_.isNil(query.filters)) {
       throw new Error(
-        "Metadata filters not implemented for SimpleVectorStore yet."
+        "Metadata filters not implemented for SimpleVectorStore yet.",
       );
     }
 
@@ -115,7 +114,7 @@ export class SimpleVectorStore implements VectorStore {
         queryEmbedding,
         embeddings,
         query.similarityTopK,
-        nodeIds
+        nodeIds,
       );
     } else if (query.mode === MMR_MODE) {
       let mmrThreshold = query.mmrThreshold;
@@ -125,14 +124,14 @@ export class SimpleVectorStore implements VectorStore {
         null,
         query.similarityTopK,
         nodeIds,
-        mmrThreshold
+        mmrThreshold,
       );
     } else if (query.mode === VectorStoreQueryMode.DEFAULT) {
       [topSimilarities, topIds] = getTopKEmbeddings(
         queryEmbedding,
         embeddings,
         query.similarityTopK,
-        nodeIds
+        nodeIds,
       );
     } else {
       throw new Error(`Invalid query mode: ${query.mode}`);
@@ -146,7 +145,7 @@ export class SimpleVectorStore implements VectorStore {
 
   async persist(
     persistPath: string = `${DEFAULT_PERSIST_DIR}/vector_store.json`,
-    fs?: GenericFileSystem
+    fs?: GenericFileSystem,
   ): Promise<void> {
     fs = fs || this.fs;
     let dirPath = path.dirname(persistPath);
@@ -159,7 +158,7 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs?: GenericFileSystem
+    fs?: GenericFileSystem,
   ): Promise<SimpleVectorStore> {
     fs = fs || DEFAULT_FS;
 
@@ -174,7 +173,7 @@ export class SimpleVectorStore implements VectorStore {
       dataDict = JSON.parse(fileData.toString());
     } catch (e) {
       console.error(
-        `No valid data found at path: ${persistPath} starting new store.`
+        `No valid data found at path: ${persistPath} starting new store.`,
       );
     }
 
