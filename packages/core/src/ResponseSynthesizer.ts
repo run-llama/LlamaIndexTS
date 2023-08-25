@@ -281,22 +281,26 @@ export function getResponseBuilder(
 export class ResponseSynthesizer {
   responseBuilder: BaseResponseBuilder;
   serviceContext: ServiceContext;
+  metadataMode: MetadataMode;
 
   constructor({
     responseBuilder,
     serviceContext,
+    metadataMode = MetadataMode.NONE,
   }: {
     responseBuilder?: BaseResponseBuilder;
     serviceContext?: ServiceContext;
+    metadataMode?: MetadataMode;
   } = {}) {
     this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.responseBuilder =
       responseBuilder ?? getResponseBuilder(this.serviceContext);
+    this.metadataMode = metadataMode;
   }
 
   async synthesize(query: string, nodes: NodeWithScore[], parentEvent?: Event) {
     let textChunks: string[] = nodes.map((node) =>
-      node.node.getContent(MetadataMode.NONE),
+      node.node.getContent(this.metadataMode)
     );
     const response = await this.responseBuilder.getResponse(
       query,
