@@ -39,6 +39,7 @@ export abstract class IndexStruct {
 export enum IndexStructType {
   SIMPLE_DICT = "simple_dict",
   LIST = "list",
+  KEYWORD_TABLE = "keyword_table",
 }
 
 export class IndexDict extends IndexStruct {
@@ -101,6 +102,36 @@ export class IndexList extends IndexStruct {
     return {
       ...super.toJson(),
       nodes: this.nodes,
+      type: this.type,
+    };
+  }
+}
+
+// A table of keywords mapping keywords to text chunks.
+export class KeywordTable extends IndexStruct {
+  table: Map<string, Set<string>> = new Map();
+  type: IndexStructType = IndexStructType.KEYWORD_TABLE;
+  addNode(keywords: string[], nodeId: string): void {
+    keywords.forEach((keyword) => {
+      if (!this.table.has(keyword)) {
+        this.table.set(keyword, new Set());
+      }
+      this.table.get(keyword)!.add(nodeId);
+    });
+  }
+
+  deleteNode(keywords: string[], nodeId: string) {
+    keywords.forEach((keyword) => {
+      if (this.table.has(keyword)) {
+        this.table.get(keyword)!.delete(nodeId);
+      }
+    });
+  }
+
+  toJson(): Record<string, unknown> {
+    return {
+      ...super.toJson(),
+      table: this.table,
       type: this.type,
     };
   }
