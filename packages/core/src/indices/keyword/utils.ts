@@ -1,4 +1,3 @@
-// @ts-ignore
 import rake from "rake-js";
 
 // Get subtokens from a list of tokens., filtering for stopwords.

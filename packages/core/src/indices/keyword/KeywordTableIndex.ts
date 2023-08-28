@@ -42,7 +42,7 @@ const KeywordTableRetrieverMap = {
 };
 
 export interface KeywordIndexInit extends BaseIndexInit<KeywordTable> {
-  retrieverMode?: KeywordTableRetrieverMode;
+  mode?: KeywordTableRetrieverMode;
 }
 
 /**
@@ -120,16 +120,14 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   }
 
   asRetriever(options?: any): BaseRetriever {
-    const {
-      retrieverMode = KeywordTableRetrieverMode.DEFAULT,
-      ...otherOptions
-    } = options ?? {};
+    const { mode = KeywordTableRetrieverMode.DEFAULT, ...otherOptions } =
+      options ?? {};
     const KeywordTableRetriever =
-      KeywordTableRetrieverMap[retrieverMode as KeywordTableRetrieverMode];
+      KeywordTableRetrieverMap[mode as KeywordTableRetrieverMode];
     if (KeywordTableRetriever) {
       return new KeywordTableRetriever({ index: this, ...otherOptions });
     }
-    throw new Error(`Unknown retriever mode: ${retrieverMode}`);
+    throw new Error(`Unknown retriever mode: ${mode}`);
   }
 
   asQueryEngine(options?: {
