@@ -1,6 +1,9 @@
 import { MetadataMode, NodeWithScore } from "./Node";
 import {
+  RefinePrompt,
   SimplePrompt,
+  TextQaPrompt,
+  TreeSummarizePrompt,
   defaultRefinePrompt,
   defaultTextQaPrompt,
   defaultTreeSummarizePrompt,
@@ -73,13 +76,13 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
  */
 export class Refine implements BaseResponseBuilder {
   serviceContext: ServiceContext;
-  textQATemplate: SimplePrompt;
-  refineTemplate: SimplePrompt;
+  textQATemplate: TextQaPrompt;
+  refineTemplate: RefinePrompt;
 
   constructor(
     serviceContext: ServiceContext,
-    textQATemplate?: SimplePrompt,
-    refineTemplate?: SimplePrompt,
+    textQATemplate?: TextQaPrompt,
+    refineTemplate?: RefinePrompt,
   ) {
     this.serviceContext = serviceContext;
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
@@ -209,9 +212,14 @@ export class CompactAndRefine extends Refine {
  */
 export class TreeSummarize implements BaseResponseBuilder {
   serviceContext: ServiceContext;
+  summaryTemplate: TreeSummarizePrompt;
 
-  constructor(serviceContext: ServiceContext) {
+  constructor(
+    serviceContext: ServiceContext,
+    summaryTemplate?: TreeSummarizePrompt,
+  ) {
     this.serviceContext = serviceContext;
+    this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
   async getResponse(
@@ -219,21 +227,19 @@ export class TreeSummarize implements BaseResponseBuilder {
     textChunks: string[],
     parentEvent?: Event,
   ): Promise<string> {
-    const summaryTemplate: SimplePrompt = defaultTreeSummarizePrompt;
-
     if (!textChunks || textChunks.length === 0) {
       throw new Error("Must have at least one text chunk");
     }
 
     const packedTextChunks = this.serviceContext.promptHelper.repack(
-      summaryTemplate,
+      this.summaryTemplate,
       textChunks,
     );
 
     if (packedTextChunks.length === 1) {
       return (
         await this.serviceContext.llm.complete(
-          summaryTemplate({
+          this.summaryTemplate({
             context: packedTextChunks[0],
           }),
           parentEvent,
@@ -243,7 +249,7 @@ export class TreeSummarize implements BaseResponseBuilder {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
           this.serviceContext.llm.complete(
-            summaryTemplate({
+            this.summaryTemplate({
               context: chunk,
             }),
             parentEvent,
@@ -298,9 +304,13 @@ export class ResponseSynthesizer {
     this.metadataMode = metadataMode;
   }
 
-  async synthesize(query: string, nodes: NodeWithScore[], parentEvent?: Event) {
-    let textChunks: string[] = nodes.map((node) =>
-      node.node.getContent(this.metadataMode)
+  async synthesize(
+    query: string,
+    nodesWithScore: NodeWithScore[],
+    parentEvent?: Event,
+  ) {
+    let textChunks: string[] = nodesWithScore.map(({ node }) =>
+      node.getContent(this.metadataMode),
     );
     const response = await this.responseBuilder.getResponse(
       query,
@@ -309,7 +319,7 @@ export class ResponseSynthesizer {
     );
     return new Response(
       response,
-      nodes.map((node) => node.node),
+      nodesWithScore.map(({ node }) => node),
     );
   }
 }

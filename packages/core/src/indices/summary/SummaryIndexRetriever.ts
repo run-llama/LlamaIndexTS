@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { globalsHelper } from "../../GlobalsHelper";
 import { NodeWithScore } from "../../Node";
-import { SimplePrompt, defaultChoiceSelectPrompt } from "../../Prompt";
+import { ChoiceSelectPrompt, defaultChoiceSelectPrompt } from "../../Prompt";
 import { BaseRetriever } from "../../Retriever";
 import { ServiceContext } from "../../ServiceContext";
 import { Event } from "../../callbacks/CallbackManager";
@@ -55,7 +55,7 @@ export class SummaryIndexRetriever implements BaseRetriever {
  */
 export class SummaryIndexLLMRetriever implements BaseRetriever {
   index: SummaryIndex;
-  choiceSelectPrompt: SimplePrompt;
+  choiceSelectPrompt: ChoiceSelectPrompt;
   choiceBatchSize: number;
   formatNodeBatchFn: NodeFormatterFunction;
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
@@ -63,7 +63,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
 
   constructor(
     index: SummaryIndex,
-    choiceSelectPrompt?: SimplePrompt,
+    choiceSelectPrompt?: ChoiceSelectPrompt,
     choiceBatchSize: number = 10,
     formatNodeBatchFn?: NodeFormatterFunction,
     parseChoiceSelectAnswerFn?: ChoiceSelectParserFunction,

@@ -1,17 +1,18 @@
-import { ChatMessage, OpenAI, ChatResponse, LLM } from "./llm/LLM";
+import { v4 as uuidv4 } from "uuid";
 import { TextNode } from "./Node";
 import {
-  SimplePrompt,
-  contextSystemPrompt,
+  CondenseQuestionPrompt,
+  ContextSystemPrompt,
   defaultCondenseQuestionPrompt,
+  defaultContextSystemPrompt,
   messagesToHistoryStr,
 } from "./Prompt";
 import { BaseQueryEngine } from "./QueryEngine";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
-import { v4 as uuidv4 } from "uuid";
 import { Event } from "./callbacks/CallbackManager";
+import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
@@ -70,13 +71,13 @@ export class CondenseQuestionChatEngine implements ChatEngine {
   queryEngine: BaseQueryEngine;
   chatHistory: ChatMessage[];
   serviceContext: ServiceContext;
-  condenseMessagePrompt: SimplePrompt;
+  condenseMessagePrompt: CondenseQuestionPrompt;
 
   constructor(init: {
     queryEngine: BaseQueryEngine;
     chatHistory: ChatMessage[];
     serviceContext?: ServiceContext;
-    condenseMessagePrompt?: SimplePrompt;
+    condenseMessagePrompt?: CondenseQuestionPrompt;
   }) {
     this.queryEngine = init.queryEngine;
     this.chatHistory = init?.chatHistory ?? [];
@@ -92,14 +93,14 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     return this.serviceContext.llm.complete(
       defaultCondenseQuestionPrompt({
         question: question,
-        chat_history: chatHistoryStr,
-      })
+        chatHistory: chatHistoryStr,
+      }),
     );
   }
 
   async chat(
     message: string,
-    chatHistory?: ChatMessage[] | undefined
+    chatHistory?: ChatMessage[] | undefined,
   ): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
 
@@ -129,16 +130,20 @@ export class ContextChatEngine implements ChatEngine {
   retriever: BaseRetriever;
   chatModel: OpenAI;
   chatHistory: ChatMessage[];
+  contextSystemPrompt: ContextSystemPrompt;
 
   constructor(init: {
     retriever: BaseRetriever;
     chatModel?: OpenAI;
     chatHistory?: ChatMessage[];
+    contextSystemPrompt?: ContextSystemPrompt;
   }) {
     this.retriever = init.retriever;
     this.chatModel =
       init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
     this.chatHistory = init?.chatHistory ?? [];
+    this.contextSystemPrompt =
+      init?.contextSystemPrompt ?? defaultContextSystemPrompt;
   }
 
   async chat(message: string, chatHistory?: ChatMessage[] | undefined) {
@@ -151,11 +156,11 @@ export class ContextChatEngine implements ChatEngine {
     };
     const sourceNodesWithScore = await this.retriever.retrieve(
       message,
-      parentEvent
+      parentEvent,
     );
 
     const systemMessage: ChatMessage = {
-      content: contextSystemPrompt({
+      content: this.contextSystemPrompt({
         context: sourceNodesWithScore
           .map((r) => (r.node as TextNode).text)
           .join("\n\n"),
@@ -167,7 +172,7 @@ export class ContextChatEngine implements ChatEngine {
 
     const response = await this.chatModel.chat(
       [systemMessage, ...chatHistory],
-      parentEvent
+      parentEvent,
     );
     chatHistory.push(response.message);
 
@@ -175,7 +180,7 @@ export class ContextChatEngine implements ChatEngine {
 
     return new Response(
       response.message.content,
-      sourceNodesWithScore.map((r) => r.node)
+      sourceNodesWithScore.map((r) => r.node),
     );
   }
 
