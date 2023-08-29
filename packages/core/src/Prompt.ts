@@ -7,7 +7,9 @@ import { ToolMetadata } from "./Tool";
  * NOTE this is a different interface compared to LlamaIndex Python
  * NOTE 2: we default to empty string to make it easy to calculate prompt sizes
  */
-export type SimplePrompt = (input: Record<string, string>) => string;
+export type SimplePrompt = (
+  input: Record<string, string | undefined>,
+) => string;
 
 /*
 DEFAULT_TEXT_QA_PROMPT_TMPL = (
