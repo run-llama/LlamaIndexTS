@@ -1,9 +1,9 @@
 import {
   Document,
-  ListIndex,
   ListRetrieverMode,
-  serviceContextFromDefaults,
   SimpleNodeParser,
+  SummaryIndex,
+  serviceContextFromDefaults,
 } from "llamaindex";
 import essay from "./essay";
 
@@ -14,7 +14,9 @@ async function main() {
     }),
   });
   const document = new Document({ text: essay, id_: "essay" });
-  const index = await ListIndex.fromDocuments([document], { serviceContext });
+  const index = await SummaryIndex.fromDocuments([document], {
+    serviceContext,
+  });
   const queryEngine = index.asQueryEngine({
     retriever: index.asRetriever({ mode: ListRetrieverMode.LLM }),
   });

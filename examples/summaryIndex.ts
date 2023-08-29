@@ -1,9 +1,8 @@
 import {
   Document,
-  ListIndex,
   ListRetrieverMode,
-  serviceContextFromDefaults,
   SimpleNodeParser,
+  serviceContextFromDefaults,
 } from "llamaindex";
 import essay from "./essay";
 

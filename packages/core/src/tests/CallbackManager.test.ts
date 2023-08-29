@@ -1,18 +1,18 @@
-import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 import { OpenAIEmbedding } from "../Embedding";
-import { OpenAI } from "../llm/LLM";
 import { Document } from "../Node";
+import {
+  ResponseSynthesizer,
+  SimpleResponseBuilder,
+} from "../ResponseSynthesizer";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import {
   CallbackManager,
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
-import { ListIndex, ListRetrieverMode } from "../indices/list";
-import {
-  ResponseSynthesizer,
-  SimpleResponseBuilder,
-} from "../ResponseSynthesizer";
+import { SummaryIndex } from "../indices/summary";
+import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
+import { OpenAI } from "../llm/LLM";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
 // Mock the OpenAI getOpenAISession function during testing
@@ -65,10 +65,9 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   });
 
   test("For VectorStoreIndex w/ a SimpleResponseBuilder", async () => {
-    const vectorStoreIndex = await VectorStoreIndex.fromDocuments(
-      [document],
-      { serviceContext }
-    );
+    const vectorStoreIndex = await VectorStoreIndex.fromDocuments([document], {
+      serviceContext,
+    });
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
     const response = await queryEngine.query(query);
@@ -132,21 +131,20 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     // both retrieval and streaming should have
     // the same parent event
     expect(streamCallbackData[0].event.parentId).toBe(
-      retrieveCallbackData[0].event.parentId
+      retrieveCallbackData[0].event.parentId,
     );
   });
 
-  test("For ListIndex w/ a ListIndexRetriever", async () => {
-    const listIndex = await ListIndex.fromDocuments(
-      [document],
-      { serviceContext },
-    );
+  test("For SummaryIndex w/ a SummaryIndexRetriever", async () => {
+    const summaryIndex = await SummaryIndex.fromDocuments([document], {
+      serviceContext,
+    });
     const responseBuilder = new SimpleResponseBuilder(serviceContext);
     const responseSynthesizer = new ResponseSynthesizer({
       serviceContext: serviceContext,
       responseBuilder,
     });
-    const queryEngine = listIndex.asQueryEngine({
+    const queryEngine = summaryIndex.asQueryEngine({
       responseSynthesizer,
     });
     const query = "What is the author's name?";
@@ -211,7 +209,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     // both retrieval and streaming should have
     // the same parent event
     expect(streamCallbackData[0].event.parentId).toBe(
-      retrieveCallbackData[0].event.parentId
+      retrieveCallbackData[0].event.parentId,
     );
   });
 });

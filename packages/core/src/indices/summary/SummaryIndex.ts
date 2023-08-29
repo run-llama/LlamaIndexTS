@@ -10,11 +10,11 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
-import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   StorageContext,
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
+import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   BaseIndex,
   BaseIndexInit,
@@ -22,17 +22,17 @@ import {
   IndexStructType,
 } from "../BaseIndex";
 import {
-  ListIndexLLMRetriever,
-  ListIndexRetriever,
-} from "./ListIndexRetriever";
+  SummaryIndexLLMRetriever,
+  SummaryIndexRetriever,
+} from "./SummaryIndexRetriever";
 
-export enum ListRetrieverMode {
+export enum SummaryRetrieverMode {
   DEFAULT = "default",
   // EMBEDDING = "embedding",
   LLM = "llm",
 }
 
-export interface ListIndexOptions {
+export interface SummaryIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: IndexList;
   indexId?: string;
@@ -41,14 +41,14 @@ export interface ListIndexOptions {
 }
 
 /**
- * A ListIndex keeps nodes in a sequential list structure
+ * A SummaryIndex keeps nodes in a sequential order for use with summarization.
  */
-export class ListIndex extends BaseIndex<IndexList> {
+export class SummaryIndex extends BaseIndex<IndexList> {
   constructor(init: BaseIndexInit<IndexList>) {
     super(init);
   }
 
-  static async init(options: ListIndexOptions): Promise<ListIndex> {
+  static async init(options: SummaryIndexOptions): Promise<SummaryIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
     const serviceContext =
@@ -80,23 +80,23 @@ export class ListIndex extends BaseIndex<IndexList> {
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.LIST) {
       throw new Error(
-        "Attempting to initialize ListIndex with non-list indexStruct",
+        "Attempting to initialize SummaryIndex with non-list indexStruct",
       );
     }
 
     if (indexStruct) {
       if (options.nodes) {
         throw new Error(
-          "Cannot initialize VectorStoreIndex with both nodes and indexStruct",
+          "Cannot initialize SummaryIndex with both nodes and indexStruct",
         );
       }
     } else {
       if (!options.nodes) {
         throw new Error(
-          "Cannot initialize VectorStoreIndex without nodes or indexStruct",
+          "Cannot initialize SummaryIndex without nodes or indexStruct",
         );
       }
-      indexStruct = await ListIndex.buildIndexFromNodes(
+      indexStruct = await SummaryIndex.buildIndexFromNodes(
         options.nodes,
         storageContext.docStore,
       );
@@ -104,7 +104,7 @@ export class ListIndex extends BaseIndex<IndexList> {
       await indexStore.addIndexStruct(indexStruct);
     }
 
-    return new ListIndex({
+    return new SummaryIndex({
       storageContext,
       serviceContext,
       docStore,
@@ -119,7 +119,7 @@ export class ListIndex extends BaseIndex<IndexList> {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
     } = {},
-  ): Promise<ListIndex> {
+  ): Promise<SummaryIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
     serviceContext = serviceContext ?? serviceContextFromDefaults({});
@@ -131,7 +131,7 @@ export class ListIndex extends BaseIndex<IndexList> {
     }
 
     const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
-    const index = await ListIndex.init({
+    const index = await SummaryIndex.init({
       nodes,
       storageContext,
       serviceContext,
@@ -139,14 +139,14 @@ export class ListIndex extends BaseIndex<IndexList> {
     return index;
   }
 
-  asRetriever(options?: { mode: ListRetrieverMode }): BaseRetriever {
-    const { mode = ListRetrieverMode.DEFAULT } = options ?? {};
+  asRetriever(options?: { mode: SummaryRetrieverMode }): BaseRetriever {
+    const { mode = SummaryRetrieverMode.DEFAULT } = options ?? {};
 
     switch (mode) {
-      case ListRetrieverMode.DEFAULT:
-        return new ListIndexRetriever(this);
-      case ListRetrieverMode.LLM:
-        return new ListIndexLLMRetriever(this);
+      case SummaryRetrieverMode.DEFAULT:
+        return new SummaryIndexRetriever(this);
+      case SummaryRetrieverMode.LLM:
+        return new SummaryIndexLLMRetriever(this);
       default:
         throw new Error(`Unknown retriever mode: ${mode}`);
     }
@@ -253,4 +253,4 @@ export class ListIndex extends BaseIndex<IndexList> {
 }
 
 // Legacy
-export type GPTListIndex = ListIndex;
+export type ListIndex = SummaryIndex;

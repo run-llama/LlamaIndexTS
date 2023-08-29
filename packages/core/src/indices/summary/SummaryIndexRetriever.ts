@@ -1,25 +1,25 @@
-import { BaseRetriever } from "../../Retriever";
+import _ from "lodash";
+import { globalsHelper } from "../../GlobalsHelper";
 import { NodeWithScore } from "../../Node";
-import { ListIndex } from "./ListIndex";
+import { SimplePrompt, defaultChoiceSelectPrompt } from "../../Prompt";
+import { BaseRetriever } from "../../Retriever";
 import { ServiceContext } from "../../ServiceContext";
+import { Event } from "../../callbacks/CallbackManager";
+import { SummaryIndex } from "./SummaryIndex";
 import {
-  NodeFormatterFunction,
   ChoiceSelectParserFunction,
+  NodeFormatterFunction,
   defaultFormatNodeBatchFn,
   defaultParseChoiceSelectAnswerFn,
 } from "./utils";
-import { SimplePrompt, defaultChoiceSelectPrompt } from "../../Prompt";
-import _ from "lodash";
-import { globalsHelper } from "../../GlobalsHelper";
-import { Event } from "../../callbacks/CallbackManager";
 
 /**
- * Simple retriever for ListIndex that returns all nodes
+ * Simple retriever for SummaryIndex that returns all nodes
  */
-export class ListIndexRetriever implements BaseRetriever {
-  index: ListIndex;
+export class SummaryIndexRetriever implements BaseRetriever {
+  index: SummaryIndex;
 
-  constructor(index: ListIndex) {
+  constructor(index: SummaryIndex) {
     this.index = index;
   }
 
@@ -51,10 +51,10 @@ export class ListIndexRetriever implements BaseRetriever {
 }
 
 /**
- * LLM retriever for ListIndex.
+ * LLM retriever for SummaryIndex which lets you select the most relevant chunks.
  */
-export class ListIndexLLMRetriever implements BaseRetriever {
-  index: ListIndex;
+export class SummaryIndexLLMRetriever implements BaseRetriever {
+  index: SummaryIndex;
   choiceSelectPrompt: SimplePrompt;
   choiceBatchSize: number;
   formatNodeBatchFn: NodeFormatterFunction;
@@ -62,12 +62,12 @@ export class ListIndexLLMRetriever implements BaseRetriever {
   serviceContext: ServiceContext;
 
   constructor(
-    index: ListIndex,
+    index: SummaryIndex,
     choiceSelectPrompt?: SimplePrompt,
     choiceBatchSize: number = 10,
     formatNodeBatchFn?: NodeFormatterFunction,
     parseChoiceSelectAnswerFn?: ChoiceSelectParserFunction,
-    serviceContext?: ServiceContext
+    serviceContext?: ServiceContext,
   ) {
     this.index = index;
     this.choiceSelectPrompt = choiceSelectPrompt || defaultChoiceSelectPrompt;
@@ -95,7 +95,7 @@ export class ListIndexLLMRetriever implements BaseRetriever {
       // parseResult is a map from doc number to relevance score
       const parseResult = this.parseChoiceSelectAnswerFn(
         rawResponse,
-        nodesBatch.length
+        nodesBatch.length,
       );
       const choiceNodeIds = nodeIdsBatch.filter((nodeId, idx) => {
         return `${idx}` in parseResult;
@@ -128,3 +128,7 @@ export class ListIndexLLMRetriever implements BaseRetriever {
     return this.serviceContext;
   }
 }
+
+// Legacy
+export type ListIndexRetriever = SummaryIndexRetriever;
+export type ListIndexLLMRetriever = SummaryIndexLLMRetriever;
