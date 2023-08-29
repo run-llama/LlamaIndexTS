@@ -4,7 +4,7 @@ import {
   SubQuestionOutputParser,
 } from "./OutputParser";
 import {
-  SimplePrompt,
+  SubQuestionPrompt,
   buildToolsText,
   defaultSubQuestionPrompt,
 } from "./Prompt";
@@ -28,7 +28,7 @@ export interface BaseQuestionGenerator {
  */
 export class LLMQuestionGenerator implements BaseQuestionGenerator {
   llm: LLM;
-  prompt: SimplePrompt;
+  prompt: SubQuestionPrompt;
   outputParser: BaseOutputParser<StructuredOutput<SubQuestion[]>>;
 
   constructor(init?: Partial<LLMQuestionGenerator>) {
@@ -45,7 +45,7 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
         this.prompt({
           toolsStr,
           queryStr,
-        })
+        }),
       )
     ).message.content;
 

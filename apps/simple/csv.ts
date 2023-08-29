@@ -4,7 +4,6 @@ import {
   PapaCSVReader,
   ResponseSynthesizer,
   serviceContextFromDefaults,
-  SimplePrompt,
   VectorStoreIndex,
 } from "llamaindex";
 
@@ -23,9 +22,7 @@ async function main() {
     serviceContext,
   });
 
-  const csvPrompt: SimplePrompt = (input) => {
-    const { context = "", query = "" } = input;
-
+  const csvPrompt = ({ context = "", query = "" }) => {
     return `The following CSV file is loaded from ${path}
 \`\`\`csv
 ${context}

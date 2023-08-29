@@ -22,9 +22,7 @@ DEFAULT_TEXT_QA_PROMPT_TMPL = (
 )
 */
 
-export const defaultTextQaPrompt: SimplePrompt = (input) => {
-  const { context = "", query = "" } = input;
-
+export const defaultTextQaPrompt = ({ context = "", query = "" }) => {
   return `Context information is below.
 ---------------------
 ${context}
@@ -33,6 +31,8 @@ Given the context information and not prior knowledge, answer the query.
 Query: ${query}
 Answer:`;
 };
+
+export type TextQaPrompt = typeof defaultTextQaPrompt;
 
 /*
 DEFAULT_SUMMARY_PROMPT_TMPL = (
@@ -48,9 +48,7 @@ DEFAULT_SUMMARY_PROMPT_TMPL = (
 )
 */
 
-export const defaultSummaryPrompt: SimplePrompt = (input) => {
-  const { context = "" } = input;
-
+export const defaultSummaryPrompt = ({ context = "" }) => {
   return `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
 
 
@@ -60,6 +58,8 @@ ${context}
 SUMMARY:"""
 `;
 };
+
+export type SummaryPrompt = typeof defaultSummaryPrompt;
 
 /*
 DEFAULT_REFINE_PROMPT_TMPL = (
@@ -77,9 +77,11 @@ DEFAULT_REFINE_PROMPT_TMPL = (
 )
 */
 
-export const defaultRefinePrompt: SimplePrompt = (input) => {
-  const { query = "", existingAnswer = "", context = "" } = input;
-
+export const defaultRefinePrompt = ({
+  query = "",
+  existingAnswer = "",
+  context = "",
+}) => {
   return `The original query is as follows: ${query}
 We have provided an existing answer: ${existingAnswer}
 We have the opportunity to refine the existing answer (only if needed) with some more context below.
@@ -89,6 +91,8 @@ ${context}
 Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
 Refined Answer:`;
 };
+
+export type RefinePrompt = typeof defaultRefinePrompt;
 
 /*
 DEFAULT_TREE_SUMMARIZE_TMPL = (
@@ -103,9 +107,7 @@ DEFAULT_TREE_SUMMARIZE_TMPL = (
 )
 */
 
-export const defaultTreeSummarizePrompt: SimplePrompt = (input) => {
-  const { context = "", query = "" } = input;
-
+export const defaultTreeSummarizePrompt = ({ context = "", query = "" }) => {
   return `Context information from multiple sources is below.
 ---------------------
 ${context}
@@ -115,9 +117,9 @@ Query: ${query}
 Answer:`;
 };
 
-export const defaultChoiceSelectPrompt: SimplePrompt = (input) => {
-  const { context = "", query = "" } = input;
+export type TreeSummarizePrompt = typeof defaultTreeSummarizePrompt;
 
+export const defaultChoiceSelectPrompt = ({ context = "", query = "" }) => {
   return `A list of documents is shown below. Each document has a number next to it along 
 with a summary of the document. A question is also provided.
 Respond with the numbers of the documents
@@ -148,6 +150,8 @@ ${context}
 Question: ${query}
 Answer:`;
 };
+
+export type ChoiceSelectPrompt = typeof defaultChoiceSelectPrompt;
 
 /*
 PREFIX = """\
@@ -266,9 +270,7 @@ const exampleOutput: SubQuestion[] = [
   },
 ];
 
-export const defaultSubQuestionPrompt: SimplePrompt = (input) => {
-  const { toolsStr, queryStr } = input;
-
+export const defaultSubQuestionPrompt = ({ toolsStr = "", queryStr = "" }) => {
   return `Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:
 
 # Example 1
@@ -298,6 +300,8 @@ ${queryStr}
 `;
 };
 
+export type SubQuestionPrompt = typeof defaultSubQuestionPrompt;
+
 // DEFAULT_TEMPLATE = """\
 // Given a conversation (between Human and Assistant) and a follow up message from Human, \
 // rewrite the message to be a standalone question that captures all relevant context \
@@ -312,9 +316,10 @@ ${queryStr}
 // <Standalone question>
 // """
 
-export const defaultCondenseQuestionPrompt: SimplePrompt = (input) => {
-  const { chatHistory, question } = input;
-
+export const defaultCondenseQuestionPrompt = ({
+  chatHistory = "",
+  question = "",
+}) => {
   return `Given a conversation (between Human and Assistant) and a follow up message from Human, rewrite the message to be a standalone question that captures all relevant context from the conversation.
 
 <Chat History>
@@ -326,6 +331,8 @@ ${question}
 <Standalone question>
 `;
 };
+
+export type CondenseQuestionPrompt = typeof defaultCondenseQuestionPrompt;
 
 export function messagesToHistoryStr(messages: ChatMessage[]) {
   return messages.reduce((acc, message) => {
@@ -339,11 +346,11 @@ export function messagesToHistoryStr(messages: ChatMessage[]) {
   }, "");
 }
 
-export const contextSystemPrompt: SimplePrompt = (input) => {
-  const { context } = input;
-
+export const defaultContextSystemPrompt = ({ context = "" }) => {
   return `Context information is below.
 ---------------------
 ${context}
 ---------------------`;
 };
+
+export type ContextSystemPrompt = typeof defaultContextSystemPrompt;

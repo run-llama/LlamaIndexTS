@@ -1,14 +1,7 @@
 import { OpenAI } from "llamaindex";
 
 (async () => {
-  const llm = new OpenAI({
-    model: "gpt-3.5-turbo",
-    temperature: 0.1,
-    additionalChatOptions: { frequency_penalty: 0.1 },
-    additionalSessionOptions: {
-      defaultHeaders: { "X-Test-Header-Please-Ignore": "true" },
-    },
-  });
+  const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.0 });
 
   // complete api
   const response1 = await llm.complete("How are you?");
