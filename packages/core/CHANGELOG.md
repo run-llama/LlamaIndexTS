@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.0.24
+
+### Patch Changes
+
+- e4af7b3: Renamed ListIndex to SummaryIndex to better indicate its use.
+- 259fe63: Strong types for prompts.
+
 ## 0.0.23
 
 ### Patch Changes
