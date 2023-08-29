@@ -254,3 +254,4 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
 // Legacy
 export type ListIndex = SummaryIndex;
+export type ListRetrieverMode = SummaryRetrieverMode;

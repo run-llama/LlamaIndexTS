@@ -1,8 +1,8 @@
 import {
   Document,
-  ListRetrieverMode,
   SimpleNodeParser,
   SummaryIndex,
+  SummaryRetrieverMode,
   serviceContextFromDefaults,
 } from "llamaindex";
 import essay from "./essay";
@@ -18,7 +18,7 @@ async function main() {
     serviceContext,
   });
   const queryEngine = index.asQueryEngine({
-    retriever: index.asRetriever({ mode: ListRetrieverMode.LLM }),
+    retriever: index.asRetriever({ mode: SummaryRetrieverMode.LLM }),
   });
   const response = await queryEngine.query(
     "What did the author do growing up?",

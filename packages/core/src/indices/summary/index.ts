@@ -1,8 +1,5 @@
-export {
-  SummaryRetrieverMode as ListRetrieverMode,
-  SummaryIndex,
-} from "./SummaryIndex";
-export type { ListIndex } from "./SummaryIndex";
+export { SummaryIndex, SummaryRetrieverMode } from "./SummaryIndex";
+export type { ListIndex, ListRetrieverMode } from "./SummaryIndex";
 export {
   SummaryIndexLLMRetriever,
   SummaryIndexRetriever,
