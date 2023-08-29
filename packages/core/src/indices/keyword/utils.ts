@@ -1,3 +1,4 @@
+// @ts-ignore
 import rake from "rake-js";
 
 // Get subtokens from a list of tokens., filtering for stopwords.
@@ -40,6 +41,7 @@ export function extractKeywordsGivenResponse(
 
   return expandTokensWithSubtokens(new Set(results));
 }
+
 export function simpleExtractKeywords(
   textChunk: string,
   maxKeywords?: number,
@@ -50,23 +52,26 @@ export function simpleExtractKeywords(
   );
 
   // Creating a frequency map
-  const valueCounts: Map<string, number> = new Map();
+  const valueCounts: { [key: string]: number } = {};
   for (let token of tokens) {
-    valueCounts.set(token, (valueCounts.get(token) || 0) + 1);
+    valueCounts[token] = (valueCounts[token] || 0) + 1;
   }
 
-  // Sorting by frequency and taking the top 'maxKeywords' tokens
-  const keywords: string[] = [...valueCounts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map((entry) => entry[0])
-    .slice(0, maxKeywords);
+  // Sorting tokens by frequency
+  const sortedTokens: string[] = Object.keys(valueCounts).sort(
+    (a, b) => valueCounts[b] - valueCounts[a],
+  );
+
+  const keywords: string[] = maxKeywords
+    ? sortedTokens.slice(0, maxKeywords)
+    : sortedTokens;
 
   return new Set(keywords);
 }
 
 export function rakeExtractKeywords(
   textChunk: string,
-  maxKeywords: number | null = null,
+  maxKeywords?: number,
 ): Set<string> {
   const keywords = rake(textChunk);
   const limitedKeywords = maxKeywords

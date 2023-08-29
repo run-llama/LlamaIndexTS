@@ -2,54 +2,29 @@ import {
   Document,
   KeywordTableIndex,
   KeywordTableRetrieverMode,
-  serviceContextFromDefaults,
-  SimpleNodeParser,
 } from "llamaindex";
 import essay from "./essay";
 
 async function main() {
-  const serviceContext = serviceContextFromDefaults({
-    nodeParser: new SimpleNodeParser({
-      chunkSize: 40,
-    }),
-  });
   const document = new Document({ text: essay, id_: "essay" });
-  const index = await KeywordTableIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await KeywordTableIndex.fromDocuments([document]);
 
-  // llm retriever
-  const llmQueryEngine = index.asQueryEngine({
-    retriever: index.asRetriever({
-      mode: KeywordTableRetrieverMode.LLM,
-    }),
+  const allModes: KeywordTableRetrieverMode[] = [
+    KeywordTableRetrieverMode.DEFAULT,
+    KeywordTableRetrieverMode.SIMPLE,
+    KeywordTableRetrieverMode.RAKE,
+  ];
+  allModes.forEach(async (mode) => {
+    const queryEngine = index.asQueryEngine({
+      retriever: index.asRetriever({
+        mode,
+      }),
+    });
+    const response = await queryEngine.query(
+      "What did the author do growing up?",
+    );
+    console.log(response.toString());
   });
-  const llmResponse = await llmQueryEngine.query(
-    "What did the author do growing up?",
-  );
-  console.log(llmResponse.toString());
-
-  // simple retriever
-  const simpleQueryEngine = index.asQueryEngine({
-    retriever: index.asRetriever({
-      mode: KeywordTableRetrieverMode.SIMPLE,
-    }),
-  });
-  const simpleResponse = await simpleQueryEngine.query(
-    "What did the author do growing up?",
-  );
-  console.log(simpleResponse.toString());
-
-  // rake retriever
-  const rakeQueryEngine = index.asQueryEngine({
-    retriever: index.asRetriever({
-      mode: KeywordTableRetrieverMode.RAKE,
-    }),
-  });
-  const rakeResponse = await rakeQueryEngine.query(
-    "What did the author do growing up?",
-  );
-  console.log(rakeResponse.toString());
 }
 
 main().catch((e: Error) => {
