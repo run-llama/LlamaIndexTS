@@ -1,6 +1,7 @@
 # Simple Examples
 
 Due to packaging, you will need to run these commands to get started.
+
 ```bash
 pnpm --filter llamaindex build
 pnpm install

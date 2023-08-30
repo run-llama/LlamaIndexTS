@@ -1,9 +1,9 @@
 import {
   Document,
-  TextNode,
   NodeWithScore,
   ResponseSynthesizer,
   SimpleNodeParser,
+  TextNode,
 } from "llamaindex";
 
 (async () => {
@@ -29,7 +29,7 @@ import {
 
   const response = await responseSynthesizer.synthesize(
     "What age am I?",
-    nodesWithScore
+    nodesWithScore,
   );
   console.log(response.response);
 })();

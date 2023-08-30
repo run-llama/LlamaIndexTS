@@ -1,9 +1,9 @@
-import { BaseNode, MetadataMode } from "../../Node";
 import _ from "lodash";
+import { BaseNode, MetadataMode } from "../../Node";
 
 export type NodeFormatterFunction = (summaryNodes: BaseNode[]) => string;
 export const defaultFormatNodeBatchFn: NodeFormatterFunction = (
-  summaryNodes: BaseNode[]
+  summaryNodes: BaseNode[],
 ): string => {
   return summaryNodes
     .map((node, idx) => {
@@ -20,13 +20,13 @@ export type ChoiceSelectParseResult = { [docNumber: number]: number };
 export type ChoiceSelectParserFunction = (
   answer: string,
   numChoices: number,
-  raiseErr?: boolean
+  raiseErr?: boolean,
 ) => ChoiceSelectParseResult;
 
 export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
   answer: string,
   numChoices: number,
-  raiseErr: boolean = false
+  raiseErr: boolean = false,
 ): ChoiceSelectParseResult => {
   // split the line into the answer number and relevance score portions
   const lineTokens: string[][] = answer
@@ -36,7 +36,7 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
       if (lineTokens.length !== 2) {
         if (raiseErr) {
           throw new Error(
-            `Invalid answer line: ${line}. Answer line must be of the form: answer_num: <int>, answer_relevance: <float>`
+            `Invalid answer line: ${line}. Answer line must be of the form: answer_num: <int>, answer_relevance: <float>`,
           );
         } else {
           return null;
@@ -55,7 +55,7 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
         if (docNum < 1 || docNum > numChoices) {
           if (raiseErr) {
             throw new Error(
-              `Invalid answer number: ${docNum}. Answer number must be between 1 and ${numChoices}`
+              `Invalid answer number: ${docNum}. Answer number must be between 1 and ${numChoices}`,
             );
           }
         } else {
@@ -68,6 +68,6 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
       }
       return parseResult;
     },
-    {}
+    {},
   );
 };

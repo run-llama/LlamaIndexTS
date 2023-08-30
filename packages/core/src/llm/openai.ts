@@ -1,5 +1,5 @@
-import OpenAI, { ClientOptions } from "openai";
 import _ from "lodash";
+import OpenAI, { ClientOptions } from "openai";
 
 export class AzureOpenAI extends OpenAI {
   protected override authHeaders() {
@@ -42,7 +42,7 @@ let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
  * @returns
  */
 export function getOpenAISession(
-  options: ClientOptions & { azure?: boolean } = {}
+  options: ClientOptions & { azure?: boolean } = {},
 ) {
   let session = defaultOpenAISession.find((session) => {
     return _.isEqual(session.options, options);

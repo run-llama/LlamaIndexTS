@@ -4,9 +4,9 @@ import { BaseQueryEngine } from "../QueryEngine";
 import { ResponseSynthesizer } from "../ResponseSynthesizer";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext } from "../ServiceContext";
+import { StorageContext } from "../storage/StorageContext";
 import { BaseDocumentStore } from "../storage/docStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
-import { StorageContext } from "../storage/StorageContext";
 import { VectorStore } from "../storage/vectorStore/types";
 
 /**

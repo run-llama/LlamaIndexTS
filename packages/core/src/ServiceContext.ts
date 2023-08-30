@@ -1,8 +1,8 @@
 import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
-import { LLM, OpenAI } from "./llm/LLM";
 import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
 import { CallbackManager } from "./callbacks/CallbackManager";
+import { LLM, OpenAI } from "./llm/LLM";
 
 /**
  * The ServiceContext is a collection of components that are used in different parts of the application.
@@ -47,7 +47,7 @@ export function serviceContextFromDefaults(options?: ServiceContextOptions) {
 
 export function serviceContextFromServiceContext(
   serviceContext: ServiceContext,
-  options: ServiceContextOptions
+  options: ServiceContextOptions,
 ) {
   const newServiceContext = { ...serviceContext };
   if (options.llm) {

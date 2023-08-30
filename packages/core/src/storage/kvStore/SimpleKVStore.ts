@@ -1,7 +1,7 @@
+import * as _ from "lodash";
 import * as path from "path";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_COLLECTION, DEFAULT_FS } from "../constants";
-import * as _ from "lodash";
 import { BaseKVStore } from "./types";
 
 export type DataType = Record<string, Record<string, any>>;
@@ -19,7 +19,7 @@ export class SimpleKVStore extends BaseKVStore {
   async put(
     key: string,
     val: any,
-    collection: string = DEFAULT_COLLECTION
+    collection: string = DEFAULT_COLLECTION,
   ): Promise<void> {
     if (!(collection in this.data)) {
       this.data[collection] = {};
@@ -33,7 +33,7 @@ export class SimpleKVStore extends BaseKVStore {
 
   async get(
     key: string,
-    collection: string = DEFAULT_COLLECTION
+    collection: string = DEFAULT_COLLECTION,
   ): Promise<any> {
     let collectionData = this.data[collection];
     if (_.isNil(collectionData)) {
@@ -51,7 +51,7 @@ export class SimpleKVStore extends BaseKVStore {
 
   async delete(
     key: string,
-    collection: string = DEFAULT_COLLECTION
+    collection: string = DEFAULT_COLLECTION,
   ): Promise<boolean> {
     if (key in this.data[collection]) {
       delete this.data[collection][key];
@@ -72,7 +72,7 @@ export class SimpleKVStore extends BaseKVStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs?: GenericFileSystem
+    fs?: GenericFileSystem,
   ): Promise<SimpleKVStore> {
     fs = fs || DEFAULT_FS;
     let dirPath = path.dirname(persistPath);
@@ -86,7 +86,7 @@ export class SimpleKVStore extends BaseKVStore {
       data = JSON.parse(fileData.toString());
     } catch (e) {
       console.error(
-        `No valid data found at path: ${persistPath} starting new store.`
+        `No valid data found at path: ${persistPath} starting new store.`,
       );
     }
 

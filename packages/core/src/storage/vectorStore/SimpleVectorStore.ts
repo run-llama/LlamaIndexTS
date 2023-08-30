@@ -6,8 +6,8 @@ import {
   getTopKMMREmbeddings,
 } from "../../Embedding";
 import { BaseNode } from "../../Node";
+import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_FS, DEFAULT_PERSIST_DIR } from "../constants";
-import { exists, GenericFileSystem } from "../FileSystem";
 import {
   VectorStore,
   VectorStoreQuery,

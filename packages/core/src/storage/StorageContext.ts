@@ -1,15 +1,11 @@
-import { BaseDocumentStore } from "./docStore/types";
-import { BaseIndexStore } from "./indexStore/types";
-import { VectorStore } from "./vectorStore/types";
-import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
-import { SimpleIndexStore } from "./indexStore/SimpleIndexStore";
-import { SimpleVectorStore } from "./vectorStore/SimpleVectorStore";
 import { GenericFileSystem } from "./FileSystem";
-import {
-  DEFAULT_PERSIST_DIR,
-  DEFAULT_FS,
-  DEFAULT_NAMESPACE,
-} from "./constants";
+import { DEFAULT_FS, DEFAULT_NAMESPACE } from "./constants";
+import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
+import { BaseDocumentStore } from "./docStore/types";
+import { SimpleIndexStore } from "./indexStore/SimpleIndexStore";
+import { BaseIndexStore } from "./indexStore/types";
+import { SimpleVectorStore } from "./vectorStore/SimpleVectorStore";
+import { VectorStore } from "./vectorStore/types";
 
 export interface StorageContext {
   docStore: BaseDocumentStore;
@@ -43,7 +39,7 @@ export async function storageContextFromDefaults({
       (await SimpleDocumentStore.fromPersistDir(
         persistDir,
         DEFAULT_NAMESPACE,
-        fs
+        fs,
       ));
     indexStore =
       indexStore || (await SimpleIndexStore.fromPersistDir(persistDir, fs));

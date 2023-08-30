@@ -1,12 +1,12 @@
-import {
-  GenericFileSystem,
-  getNodeFS,
-  InMemoryFileSystem,
-  exists,
-  walk,
-} from "../storage/FileSystem";
 import os from "os";
 import path from "path";
+import {
+  GenericFileSystem,
+  InMemoryFileSystem,
+  exists,
+  getNodeFS,
+  walk,
+} from "../storage/FileSystem";
 
 type FileSystemUnderTest = {
   name: string;
@@ -61,7 +61,7 @@ describe.each<FileSystemUnderTest>([
     it("writes file to memory", async () => {
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
       expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe(
-        "Hello, world!"
+        "Hello, world!",
       );
     });
 
@@ -69,7 +69,7 @@ describe.each<FileSystemUnderTest>([
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, again!");
       expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe(
-        "Hello, again!"
+        "Hello, again!",
       );
     });
   });
@@ -77,7 +77,7 @@ describe.each<FileSystemUnderTest>([
   describe("readFile", () => {
     it("throws error for non-existing file", async () => {
       await expect(
-        testFS.readFile(`${tempDir}/not_exist.txt`, "utf-8")
+        testFS.readFile(`${tempDir}/not_exist.txt`, "utf-8"),
       ).rejects.toThrow();
     });
   });

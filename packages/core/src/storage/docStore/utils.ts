@@ -1,4 +1,4 @@
-import { BaseNode, Document, TextNode, ObjectType } from "../../Node";
+import { BaseNode, Document, ObjectType, TextNode } from "../../Node";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";

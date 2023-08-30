@@ -11,7 +11,7 @@ export class ReplicateSession {
       this.replicateKey = process.env.REPLICATE_API_TOKEN;
     } else {
       throw new Error(
-        "Set Replicate token in REPLICATE_API_TOKEN env variable"
+        "Set Replicate token in REPLICATE_API_TOKEN env variable",
       );
     }
 
