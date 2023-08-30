@@ -8,7 +8,7 @@ import {
   getAzureModel,
   shouldUseAzure,
 } from "./llm/azure";
-import { getOpenAISession, OpenAISession } from "./llm/openai";
+import { OpenAISession, getOpenAISession } from "./llm/openai";
 import { VectorStoreQueryMode } from "./storage/vectorStore/types";
 
 /**
@@ -280,9 +280,6 @@ export class OpenAIEmbedding extends BaseEmbedding {
   }
 
   private async getOpenAIEmbedding(input: string) {
-    input = input.replace(/\n/g, " ");
-    //^ NOTE this performance helper is in the OpenAI python library but may not be in the JS library
-
     const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       input,

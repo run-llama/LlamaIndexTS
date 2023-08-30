@@ -1,5 +1,5 @@
-import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
 import { v4 as uuidv4 } from "uuid";
+import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
 
 /**
  * Helper class singleton

@@ -7,10 +7,7 @@ sidebar_position: 3
 The `NodeParser` in LlamaIndex is responbile for splitting `Document` objects into more manageable `Node` objects. When you call `.fromDocuments()`, the `NodeParser` from the `ServiceContext` is used to do this automatically for you. Alternatively, you can use it to split documents ahead of time.
 
 ```typescript
-import {
-  Document,
-  SimpleNodeParser,
-} from "llamaindex";
+import { Document, SimpleNodeParser } from "llamaindex";
 
 const nodeParser = new SimpleNodeParser();
 const nodes = nodeParser.getNodesFromDocuments([
@@ -25,7 +22,7 @@ The underlying text splitter will split text by sentences. It can also be used a
 ```typescript
 import { SentenceSplitter } from "llamaindex";
 
-const splitter = new SentenceSplitter({ chunkSize: 1, });
+const splitter = new SentenceSplitter({ chunkSize: 1 });
 
 const textSplits = splitter.splitText("Hello World");
 ```

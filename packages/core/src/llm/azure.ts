@@ -38,7 +38,7 @@ const DEFAULT_API_VERSION = "2023-05-15";
 //^ NOTE: this will change over time, if you want to pin it, use a specific version
 
 export function getAzureConfigFromEnv(
-  init?: Partial<AzureOpenAIConfig> & { model?: string }
+  init?: Partial<AzureOpenAIConfig> & { model?: string },
 ): AzureOpenAIConfig {
   return {
     apiKey:
@@ -71,7 +71,7 @@ export function getAzureBaseUrl(config: AzureOpenAIConfig): string {
 
 export function getAzureModel(openAIModel: string) {
   for (const [key, value] of Object.entries(
-    ALL_AZURE_OPENAI_EMBEDDING_MODELS
+    ALL_AZURE_OPENAI_EMBEDDING_MODELS,
   )) {
     if (value.openAIModel === openAIModel) {
       return key;

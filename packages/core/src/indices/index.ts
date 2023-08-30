@@ -1,3 +1,3 @@
 export * from "./BaseIndex";
-export * from "./list";
+export * from "./summary";
 export * from "./vectorStore";

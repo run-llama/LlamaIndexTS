@@ -1,10 +1,11 @@
 import _ from "lodash";
 import { Document } from "../Node";
-import { BaseReader } from "./base";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
-import { PDFReader } from "./PDFReader";
 import { PapaCSVReader } from "./CSVReader";
+import { MarkdownReader } from "./MarkdownReader";
+import { PDFReader } from "./PDFReader";
+import { BaseReader } from "./base";
 
 /**
  * Read a .txt file
@@ -12,7 +13,7 @@ import { PapaCSVReader } from "./CSVReader";
 export class TextFileReader implements BaseReader {
   async loadData(
     file: string,
-    fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem
+    fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file, "utf-8");
     return [new Document({ text: dataBuffer, id_: file })];
@@ -23,6 +24,7 @@ const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   txt: new TextFileReader(),
   pdf: new PDFReader(),
   csv: new PapaCSVReader(),
+  md: new MarkdownReader(),
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {

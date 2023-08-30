@@ -73,7 +73,7 @@ export const DEFAULT_FS: GenericFileSystem | CompleteFileSystem =
  */
 export async function exists(
   fs: GenericFileSystem,
-  path: string
+  path: string,
 ): Promise<boolean> {
   try {
     await fs.access(path);
@@ -90,11 +90,11 @@ export async function exists(
  */
 export async function* walk(
   fs: WalkableFileSystem,
-  dirPath: string
+  dirPath: string,
 ): AsyncIterable<string> {
   if (fs instanceof InMemoryFileSystem) {
     throw new Error(
-      "The InMemoryFileSystem does not support directory traversal."
+      "The InMemoryFileSystem does not support directory traversal.",
     );
   }
 

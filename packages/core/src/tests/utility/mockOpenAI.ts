@@ -1,7 +1,7 @@
 import { OpenAIEmbedding } from "../../Embedding";
 import { globalsHelper } from "../../GlobalsHelper";
-import { ChatMessage, OpenAI } from "../../llm/LLM";
 import { CallbackManager, Event } from "../../callbacks/CallbackManager";
+import { ChatMessage, OpenAI } from "../../llm/LLM";
 
 export function mockLlmGeneration({
   languageModel,
@@ -57,7 +57,7 @@ export function mockLlmGeneration({
             },
           });
         });
-      }
+      },
     );
 }
 
