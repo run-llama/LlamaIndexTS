@@ -2,9 +2,9 @@
   "name": "llamaindex",
   "version": "0.0.24",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.6.1",
+    "@anthropic-ai/sdk": "^0.6.2",
     "lodash": "^4.17.21",
-    "openai": "^4.2.0",
+    "openai": "^4.3.1",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
     "replicate": "^0.16.1",
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.197",
-    "@types/node": "^18.17.9",
+    "@types/node": "^18.17.12",
     "@types/papaparse": "^5.3.8",
     "@types/pdf-parse": "^1.1.1",
     "@types/uuid": "^9.0.2",

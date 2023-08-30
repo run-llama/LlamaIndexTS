@@ -20,7 +20,7 @@ In a new folder:
 export OPENAI_API_KEY="sk-......" # Replace with your key from https://platform.openai.com/account/api-keys
 pnpm init
 pnpm install typescript
-pnpm exec tsc –-init # if needed
+pnpm exec tsc --init # if needed
 pnpm install llamaindex
 pnpm install @types/node
 ```
@@ -36,7 +36,7 @@ async function main() {
   // Load essay from abramov.txt in Node
   const essay = await fs.readFile(
     "node_modules/llamaindex/examples/abramov.txt",
-    "utf-8"
+    "utf-8",
   );
 
   // Create Document object with essay
@@ -48,7 +48,7 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query(
-    "What did the author do in college?"
+    "What did the author do in college?",
   );
 
   // Output response
@@ -61,7 +61,7 @@ main();
 Then you can run it using
 
 ```bash
-pnpm dlx ts-node example.ts
+pnpx ts-node example.ts
 ```
 
 ## Playground
