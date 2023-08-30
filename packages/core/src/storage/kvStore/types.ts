@@ -7,7 +7,7 @@ export abstract class BaseKVStore {
   abstract put(
     key: string,
     val: Record<string, any>,
-    collection?: string
+    collection?: string,
   ): Promise<void>;
   abstract get(key: string, collection?: string): Promise<StoredValue>;
   abstract getAll(collection?: string): Promise<Record<string, StoredValue>>;

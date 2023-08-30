@@ -1,7 +1,7 @@
-import { DEFAULT_FS, GenericFileSystem } from "../storage/FileSystem";
 import Papa, { ParseConfig } from "papaparse";
-import { BaseReader } from "./base";
 import { Document } from "../Node";
+import { DEFAULT_FS, GenericFileSystem } from "../storage/FileSystem";
+import { BaseReader } from "./base";
 
 /**
  * papaparse-based csv parser
@@ -24,7 +24,7 @@ export class PapaCSVReader implements BaseReader {
     concatRows: boolean = true,
     colJoiner: string = ", ",
     rowJoiner: string = "\n",
-    papaConfig?: ParseConfig
+    papaConfig?: ParseConfig,
   ) {
     this.concatRows = concatRows;
     this.colJoiner = colJoiner;
@@ -40,7 +40,7 @@ export class PapaCSVReader implements BaseReader {
    */
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS
+    fs: GenericFileSystem = DEFAULT_FS,
   ): Promise<Document[]> {
     const fileContent: string = await fs.readFile(file, "utf-8");
     const result = Papa.parse(fileContent, this.papaConfig);

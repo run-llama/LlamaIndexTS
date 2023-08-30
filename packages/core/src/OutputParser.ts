@@ -28,7 +28,7 @@ class OutputParserError extends Error {
 
   constructor(
     message: string,
-    options: { cause?: Error; output?: string } = {}
+    options: { cause?: Error; output?: string } = {},
   ) {
     // @ts-ignore
     super(message, options); // https://github.com/tc39/proposal-error-cause
@@ -62,7 +62,7 @@ function parseJsonMarkdown(text: string) {
   const beginIndex = text.indexOf(beginDelimiter);
   const endIndex = text.indexOf(
     endDelimiter,
-    beginIndex + beginDelimiter.length
+    beginIndex + beginDelimiter.length,
   );
   if (beginIndex === -1 || endIndex === -1) {
     throw new OutputParserError("Not a json markdown", { output: text });

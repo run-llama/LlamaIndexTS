@@ -1,6 +1,6 @@
-import { VectorStoreIndex } from "./VectorStoreIndex";
 import { globalsHelper } from "../../GlobalsHelper";
 import { NodeWithScore } from "../../Node";
+import { BaseRetriever } from "../../Retriever";
 import { ServiceContext } from "../../ServiceContext";
 import { Event } from "../../callbacks/CallbackManager";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants";
@@ -8,7 +8,7 @@ import {
   VectorStoreQuery,
   VectorStoreQueryMode,
 } from "../../storage/vectorStore/types";
-import { BaseRetriever } from "../../Retriever";
+import { VectorStoreIndex } from "./VectorStoreIndex";
 
 /**
  * VectorIndexRetriever retrieves nodes from a VectorIndex.

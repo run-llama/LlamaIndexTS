@@ -1,8 +1,5 @@
 import { existsSync, rmSync } from "fs";
-import {
-  storageContextFromDefaults,
-  StorageContext,
-} from "../storage/StorageContext";
+import { storageContextFromDefaults } from "../storage/StorageContext";
 
 jest.spyOn(console, "error");
 

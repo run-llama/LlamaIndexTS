@@ -25,7 +25,7 @@ async function main() {
   // Load essay from abramov.txt in Node
   const essay = await fs.readFile(
     "node_modules/llamaindex/examples/abramov.txt",
-    "utf-8"
+    "utf-8",
   );
 
   // Create Document object with essay
@@ -37,7 +37,7 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query(
-    "What did the author do in college?"
+    "What did the author do in college?",
   );
 
   // Output response

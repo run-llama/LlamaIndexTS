@@ -9,7 +9,7 @@ sidebar_position: 0
 ```typescript
 import { Document } from "llamaindex";
 
-document = new Document({ text: "text", metadata: { "key": "val" }});
+document = new Document({ text: "text", metadata: { key: "val" } });
 ```
 
 ## API Reference

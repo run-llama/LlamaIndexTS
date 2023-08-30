@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
@@ -7,10 +8,9 @@ import {
 import { Response } from "./Response";
 import { CompactAndRefine, ResponseSynthesizer } from "./ResponseSynthesizer";
 import { BaseRetriever } from "./Retriever";
-import { v4 as uuidv4 } from "uuid";
-import { Event } from "./callbacks/CallbackManager";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
+import { Event } from "./callbacks/CallbackManager";
 
 /**
  * A query engine is a question answerer that can use one or more steps.
@@ -33,7 +33,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
 
   constructor(
     retriever: BaseRetriever,
-    responseSynthesizer?: ResponseSynthesizer
+    responseSynthesizer?: ResponseSynthesizer,
   ) {
     this.retriever = retriever;
     const serviceContext: ServiceContext | undefined =
@@ -122,7 +122,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     };
 
     const subQNodes = await Promise.all(
-      subQuestions.map((subQ) => this.querySubQ(subQ, subQueryParentEvent))
+      subQuestions.map((subQ) => this.querySubQ(subQ, subQueryParentEvent)),
     );
 
     const nodes = subQNodes
@@ -133,7 +133,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
 
   private async querySubQ(
     subQ: SubQuestion,
-    parentEvent?: Event
+    parentEvent?: Event,
   ): Promise<NodeWithScore | null> {
     try {
       const question = subQ.subQuestion;

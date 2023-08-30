@@ -1,5 +1,5 @@
 name: Feature Request
-title: 'Sweep: '
+title: "Sweep: "
 description: Write something like "Write an api endpoint that does "..." in the "..." file"
 labels: sweep
 body:
