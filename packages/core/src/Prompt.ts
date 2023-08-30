@@ -361,7 +361,6 @@ export const defaultKeywordExtractPrompt = ({
   context = "",
   maxKeywords = 10,
 }) => {
-  // const { text = "", maxKeywords = 10 } = input;
   return `
 Some text is provided below. Given the text, extract up to ${maxKeywords} keywords from the text. Avoid stopwords.
 ---------------------
@@ -377,7 +376,6 @@ export const defaultQueryKeywordExtractPrompt = ({
   question = "",
   maxKeywords = 10,
 }) => {
-  // const { question = "", maxKeywords = 10 } = input;
   return `(
   "A question is provided below. Given the question, extract up to ${maxKeywords} "
   "keywords from the text. Focus on extracting the keywords that we can use "
