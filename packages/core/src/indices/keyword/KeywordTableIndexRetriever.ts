@@ -83,8 +83,8 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
   }
 }
 
-// Extracts keywords using GPT.
-export class KeywordTableGPTRetriever extends BaseKeywordTableRetriever {
+// Extracts keywords using LLMs.
+export class KeywordTableLLMRetriever extends BaseKeywordTableRetriever {
   async getKeywords(query: string): Promise<string[]> {
     const response = await this.serviceContext.llm.complete(
       this.queryKeywordExtractTemplate({

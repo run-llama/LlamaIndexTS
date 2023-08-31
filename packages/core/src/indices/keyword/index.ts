@@ -3,7 +3,7 @@ export {
   KeywordTableRetrieverMode,
 } from "./KeywordTableIndex";
 export {
-  KeywordTableGPTRetriever,
+  KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,
   KeywordTableSimpleRetriever,
 } from "./KeywordTableIndexRetriever";

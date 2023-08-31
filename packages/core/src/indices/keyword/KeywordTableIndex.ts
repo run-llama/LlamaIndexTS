@@ -16,7 +16,7 @@ import {
   KeywordTable,
 } from "../BaseIndex";
 import {
-  KeywordTableGPTRetriever,
+  KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,
   KeywordTableSimpleRetriever,
 } from "./KeywordTableIndexRetriever";
@@ -36,7 +36,7 @@ export enum KeywordTableRetrieverMode {
 }
 
 const KeywordTableRetrieverMap = {
-  [KeywordTableRetrieverMode.DEFAULT]: KeywordTableGPTRetriever,
+  [KeywordTableRetrieverMode.DEFAULT]: KeywordTableLLMRetriever,
   [KeywordTableRetrieverMode.SIMPLE]: KeywordTableSimpleRetriever,
   [KeywordTableRetrieverMode.RAKE]: KeywordTableRAKERetriever,
 };
@@ -81,20 +81,20 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.KEYWORD_TABLE) {
       throw new Error(
-        "Attempting to initialize ListIndex with non-list indexStruct",
+        "Attempting to initialize KeywordTableIndex with non-keyword table indexStruct",
       );
     }
 
     if (indexStruct) {
       if (options.nodes) {
         throw new Error(
-          "Cannot initialize VectorStoreIndex with both nodes and indexStruct",
+          "Cannot initialize KeywordTableIndex with both nodes and indexStruct",
         );
       }
     } else {
       if (!options.nodes) {
         throw new Error(
-          "Cannot initialize VectorStoreIndex without nodes or indexStruct",
+          "Cannot initialize KeywordTableIndex without nodes or indexStruct",
         );
       }
       indexStruct = await KeywordTableIndex.buildIndexFromNodes(
