@@ -88,8 +88,8 @@ export class KeywordTableGPTRetriever extends BaseKeywordTableRetriever {
   async getKeywords(query: string): Promise<string[]> {
     const response = await this.serviceContext.llm.complete(
       this.queryKeywordExtractTemplate({
-        text: query,
-        maxKeywords: String(this.maxKeywordsPerQuery),
+        question: query,
+        maxKeywords: this.maxKeywordsPerQuery,
       }),
     );
     const keywords = extractKeywordsGivenResponse(

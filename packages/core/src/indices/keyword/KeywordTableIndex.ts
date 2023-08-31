@@ -41,10 +41,6 @@ const KeywordTableRetrieverMap = {
   [KeywordTableRetrieverMode.RAKE]: KeywordTableRAKERetriever,
 };
 
-export interface KeywordIndexInit extends BaseIndexInit<KeywordTable> {
-  mode?: KeywordTableRetrieverMode;
-}
-
 /**
  * The KeywordTableIndex, an index that extracts keywords from each Node and builds a mapping from each keyword to the corresponding Nodes of that keyword.
  */
@@ -147,7 +143,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   ): Promise<Set<string>> {
     const response = await serviceContext.llm.complete(
       defaultKeywordExtractPrompt({
-        text,
+        context: text,
       }),
     );
     return extractKeywordsGivenResponse(response.message.content, "KEYWORDS:");
