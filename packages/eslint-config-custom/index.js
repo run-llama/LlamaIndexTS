@@ -26,6 +26,8 @@ module.exports = {
           "DEBUG",
           "no_proxy",
           "NO_PROXY",
+
+          "NOTION_TOKEN",
         ],
       },
     ],
