@@ -1,5 +1,5 @@
 import { Client, collectPaginatedAPI } from "@notionhq/client";
-import md from "md-utils-ts";
+import * as md from "md-utils-ts";
 import { Document } from "../Node";
 import { BaseReader } from "./base";
 
