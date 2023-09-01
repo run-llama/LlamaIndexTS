@@ -5,7 +5,7 @@
     "@anthropic-ai/sdk": "^0.6.2",
     "@notionhq/client": "^2.2.12",
     "lodash": "^4.17.21",
-    "md-utils-ts": "^1.0.4",
+    "md-utils-ts": "^2.0.0",
     "openai": "^4.3.1",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
