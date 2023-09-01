@@ -1,5 +1,5 @@
 // @ts-ignore
-import rake from "rake-js";
+import rake from "rake-modified";
 
 // Get subtokens from a list of tokens., filtering for stopwords.
 export function expandTokensWithSubtokens(tokens: Set<string>): Set<string> {
@@ -73,7 +73,7 @@ export function rakeExtractKeywords(
   textChunk: string,
   maxKeywords?: number,
 ): Set<string> {
-  const keywords = rake(textChunk);
+  const keywords = Object.keys(rake(textChunk));
   const limitedKeywords = maxKeywords
     ? keywords.slice(0, maxKeywords)
     : keywords;

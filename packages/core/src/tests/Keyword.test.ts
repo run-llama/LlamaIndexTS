@@ -46,20 +46,35 @@ describe("RakeExtractKeywords", () => {
     const result = rakeExtractKeywords(sampleText);
     expect(result).toEqual(
       new Set([
-        "write then",
-        "write essays",
-        "short stories",
-        "worked on",
         "strong feelings",
-        "main things",
-        "imagined made",
+        "beginning writers",
+        "short stories",
+        "write essays",
+        "stories",
+        "write",
+        "deep",
+        "imagined",
+        "characters",
+        "plot",
+        "hardly",
+        "awful",
+        "probably",
+        "supposed",
+        "wrote",
+        "didn",
+        "programming",
+        "writing",
+        "school",
+        "outside",
+        "main",
+        "college",
       ]),
     );
   });
 
   test("should respect the maxKeywords parameter", () => {
     const result = rakeExtractKeywords(sampleText, 2);
-    expect(result).toEqual(new Set(["write then", "write essays"]));
+    expect(result).toEqual(new Set(["strong feelings", "beginning writers"]));
   });
 
   test("should handle empty return from rake", () => {
