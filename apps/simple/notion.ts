@@ -1,9 +1,9 @@
 import { Client } from "@notionhq/client";
 import { program } from "commander";
 import { NotionReader, VectorStoreIndex } from "llamaindex";
+import { stdin as input, stdout as output } from "node:process";
 // readline/promises is still experimental so not in @types/node yet
 // @ts-ignore
-import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
 program
