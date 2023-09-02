@@ -3,10 +3,12 @@
   "private": true,
   "name": "simple",
   "dependencies": {
+    "@notionhq/client": "^2.2.12",
+    "commander": "^11.0.0",
     "llamaindex": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^18.17.6"
+    "@types/node": "^18.17.12"
   },
   "scripts": {
     "lint": "eslint ."
