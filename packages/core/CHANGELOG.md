@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.26
+
+### Patch Changes
+
+- 5bb55bc: Add notion loader (thank you @TomPenguin!)
+
 ## 0.0.25
 
 ### Patch Changes
