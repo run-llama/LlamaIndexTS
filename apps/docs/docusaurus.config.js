@@ -58,26 +58,31 @@ const config = {
     ({
       // Replace with your project's social card
       image: "img/favicon.png", // TODO change this
-      navbar: {
-        title: "LlamaIndex.TS",
-        logo: {
-          alt: "LlamaIndex.TS",
-          src: "img/favicon.png",
+        navbar: {
+          title: "LlamaIndex.TS",
+          logo: {
+            alt: "LlamaIndex.TS",
+            src: "img/favicon.png",
+          },
+          items: [
+            {
+              type: "docSidebar",
+              sidebarId: "mySidebar",
+              position: "left",
+              label: "Docs",
+            },
+            {
+              href: "/pptx-support",
+              label: "PPTX Support",
+              position: "left",
+            },
+            {
+              href: "https://github.com/run-llama/LlamaIndexTS",
+              label: "GitHub",
+              position: "right",
+            },
+          ],
         },
-        items: [
-          {
-            type: "docSidebar",
-            sidebarId: "mySidebar",
-            position: "left",
-            label: "Docs",
-          },
-          {
-            href: "https://github.com/run-llama/LlamaIndexTS",
-            label: "GitHub",
-            position: "right",
-          },
-        ],
-      },
       footer: {
         style: "dark",
         links: [
@@ -150,3 +155,32 @@ const config = {
 };
 
 module.exports = config;
+
+// Add a new Markdown file for the pptx support section
+fs.writeFileSync('docs/pptx-support.md', `
+# PPTX Support
+
+LlamaIndexTS now supports pptx files!
+
+## Loading PPTX Files
+
+To load a pptx file, you can use the PptxReader class. Here's an example:
+
+\`\`\`typescript
+import { PptxReader } from 'llamaindexts';
+
+const reader = new PptxReader();
+const nodes = reader.read('path/to/your/file.pptx');
+\`\`\`
+
+## Querying PPTX Files
+
+Once you've loaded a pptx file, you can query it just like any other file. Here's an example:
+
+\`\`\`typescript
+import { QueryEngine } from 'llamaindexts';
+
+const engine = new QueryEngine();
+const results = engine.query('your query here');
+\`\`\`
+`);
