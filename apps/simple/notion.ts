@@ -1,6 +1,10 @@
 import { Client } from "@notionhq/client";
 import { program } from "commander";
-import { NotionReader } from "llamaindex";
+import { NotionReader, VectorStoreIndex } from "llamaindex";
+// readline/promises is still experimental so not in @types/node yet
+// @ts-ignore
+import { stdin as input, stdout as output } from "node:process";
+import readline from "node:readline/promises";
 
 program
   .argument("[page]", "Notion page id (must be provided)")
@@ -60,6 +64,26 @@ program
     const reader = new NotionReader({ client: notion });
     const documents = await reader.loadData(page);
     console.log(documents);
+
+    // Split text and create embeddings. Store them in a VectorStoreIndex
+    const index = await VectorStoreIndex.fromDocuments(documents);
+
+    // Create query engine
+    const queryEngine = index.asQueryEngine();
+
+    const rl = readline.createInterface({ input, output });
+    while (true) {
+      const query = await rl.question("Query: ");
+
+      if (!query) {
+        break;
+      }
+
+      const response = await queryEngine.query(query);
+
+      // Output response
+      console.log(response.toString());
+    }
   });
 
 program.parse();
