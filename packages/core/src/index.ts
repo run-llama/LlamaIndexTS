@@ -22,6 +22,7 @@ export * from "./callbacks/CallbackManager";
 
 export * from "./readers/CSVReader";
 export * from "./readers/MarkdownReader";
+export * from "./readers/NotionReader";
 export * from "./readers/PDFReader";
 export * from "./readers/SimpleDirectoryReader";
 export * from "./readers/base";
