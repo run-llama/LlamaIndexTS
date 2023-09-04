@@ -3,11 +3,17 @@ import { crawler, Crawler, Pages, pageToString } from "notion-md-crawler";
 import { Document } from "../Node";
 import { BaseReader } from "./base";
 
+type OptionalSerializers = Parameters<Crawler>[number]["serializers"];
+type NotionReaderOptions = {
+  client: Client;
+  serializers?: OptionalSerializers;
+};
+
 export class NotionReader implements BaseReader {
   private crawl: ReturnType<Crawler>;
 
-  constructor(options: { client: Client }) {
-    this.crawl = crawler({ client: options.client });
+  constructor({ client, serializers }: NotionReaderOptions) {
+    this.crawl = crawler({ client, serializers });
   }
 
   toDocuments(pages: Pages): Document[] {
