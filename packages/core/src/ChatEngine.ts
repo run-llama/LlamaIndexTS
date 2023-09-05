@@ -17,6 +17,14 @@ import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
  */
+export interface ChatHistorySummarizer {
+  /**
+   * Summarize the chat history.
+   * @param chatHistory
+   */
+  summarize(chatHistory: ChatMessage[]): ChatMessage[];
+}
+
 export interface ChatEngine {
   /**
    * Send message along with the class's current chat history to the LLM.
@@ -29,6 +37,11 @@ export interface ChatEngine {
    * Resets the chat history so that it's empty.
    */
   reset(): void;
+
+  /**
+   * Summarizer for the chat history.
+   */
+  chatHistorySummarizer: ChatHistorySummarizer;
 }
 
 /**
@@ -46,6 +59,9 @@ export class SimpleChatEngine implements ChatEngine {
   async chat(message: string, chatHistory?: ChatMessage[]): Promise<Response> {
     chatHistory = chatHistory ?? this.chatHistory;
     chatHistory.push({ content: message, role: "user" });
+    if (chatHistory.length > MAX_CHAT_HISTORY_SIZE) {
+      chatHistory = this.chatHistorySummarizer.summarize(chatHistory);
+    }
     const response = await this.llm.chat(chatHistory);
     chatHistory.push(response.message);
     this.chatHistory = chatHistory;
