@@ -174,6 +174,10 @@ export class OpenAI implements LLM {
     messages: ChatMessage[],
     parentEvent?: Event,
   ): Promise<ChatResponse> {
+    if (messages[0].role === "summary") {
+      // Handle summarized chat history
+    }
+  
     const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
@@ -403,11 +407,15 @@ If a question does not make any sense, or is not factually coherent, explain why
     messages: ChatMessage[],
     _parentEvent?: Event,
   ): Promise<ChatResponse> {
+    if (messages[0].role === "summary") {
+      // Handle summarized chat history
+    }
+  
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
       .replicateApi as `${string}/${string}:${string}`;
-
+  
     const { prompt, systemPrompt } = this.mapMessagesToPrompt(messages);
-
+  
     const replicateOptions: any = {
       input: {
         prompt,
@@ -502,6 +510,10 @@ export class Anthropic implements LLM {
     messages: ChatMessage[],
     parentEvent?: Event | undefined,
   ): Promise<ChatResponse> {
+    if (messages[0].role === "summary") {
+      // Handle summarized chat history
+    }
+  
     const response = await this.session.anthropic.completions.create({
       model: this.model,
       prompt: this.mapMessagesToPrompt(messages),
@@ -509,7 +521,7 @@ export class Anthropic implements LLM {
       temperature: this.temperature,
       top_p: this.topP,
     });
-
+  
     return {
       message: { content: response.completion.trimStart(), role: "assistant" },
       //^ We're trimming the start because Anthropic often starts with a space in the response
