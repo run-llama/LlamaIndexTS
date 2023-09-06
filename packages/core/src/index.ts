@@ -28,3 +28,4 @@ export * from "./readers/SimpleDirectoryReader";
 export * from "./readers/base";
 
 export * from "./storage";
+export * from "./PromptHelper";
