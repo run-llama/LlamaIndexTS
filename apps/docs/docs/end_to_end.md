@@ -14,7 +14,7 @@ Read a file and chat about it with the LLM.
 
 Create a vector index and query it. The vector index will use embeddings to fetch the top k most relevant nodes. By default, the top k is 2.
 
-## [Summary Index](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/summarIndex.ts)
+## [Summary Index](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/summaryIndex.ts)
 
 Create a list index and query it. This example also use the `LLMRetriever`, which will use the LLM to select the best nodes to use when generating answer.
 
