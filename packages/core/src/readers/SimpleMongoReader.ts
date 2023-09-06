@@ -5,7 +5,7 @@ import { MongoClient } from "mongodb";
 /**
  * Read in from MongoDB
  */
-export class MongoReader implements BaseReader {
+export class SimpleMongoReader implements BaseReader {
     private client:MongoClient;
 
     constructor(client: MongoClient)
@@ -14,12 +14,11 @@ export class MongoReader implements BaseReader {
     }
     async loadData(db_name: string,
         collection_name: string,
-        max_docs?: number,
+        max_docs = Infinity,
         //TODO: Think about whether we want to pass generic objects in...
-        field_names?: object,
-        query_dict?: object,
-        query_options?: object,
-        projection?: object
+        query_dict = {},
+        query_options = {},
+        projection = {}
         ): Promise<Document[]> {
 
         //Make cursor
@@ -30,14 +29,14 @@ export class MongoReader implements BaseReader {
 
         //Get items from collection using built-in functions
         const cursor: Partial<Document>[] = await this.client.db(db_name).collection(collection_name)
-                                                                    .find(query, options)
-                                                                    .limit(limit)
-                                                                    .project(projections)
+                                                                    .find(query_dict, query_options)
+                                                                    .limit(max_docs)
+                                                                    .project(projection)
                                                                     .toArray();
 
         //Aggregate results and return
         const documents: Document[] = [];
-        cursor.forEach((element: Partial<Document>)=> {documents.push(new Document(element))});
+        cursor.forEach((element: Partial<Document>)=> {documents.push(new Document({text: JSON.stringify(element)}))});
         return documents;
     }
 }
