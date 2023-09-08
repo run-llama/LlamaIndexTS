@@ -356,3 +356,34 @@ ${context}
 };
 
 export type ContextSystemPrompt = typeof defaultContextSystemPrompt;
+
+export const defaultKeywordExtractPrompt = ({
+  context = "",
+  maxKeywords = 10,
+}) => {
+  return `
+Some text is provided below. Given the text, extract up to ${maxKeywords} keywords from the text. Avoid stopwords.
+---------------------
+${context}
+---------------------
+Provide keywords in the following comma-separated format: 'KEYWORDS: <keywords>'
+`;
+};
+
+export type KeywordExtractPrompt = typeof defaultKeywordExtractPrompt;
+
+export const defaultQueryKeywordExtractPrompt = ({
+  question = "",
+  maxKeywords = 10,
+}) => {
+  return `(
+  "A question is provided below. Given the question, extract up to ${maxKeywords} "
+  "keywords from the text. Focus on extracting the keywords that we can use "
+  "to best lookup answers to the question. Avoid stopwords."
+  "---------------------"
+  "${question}"
+  "---------------------"
+  "Provide keywords in the following comma-separated format: 'KEYWORDS: <keywords>'"
+)`;
+};
+export type QueryKeywordExtractPrompt = typeof defaultQueryKeywordExtractPrompt;

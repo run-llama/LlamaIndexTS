@@ -294,5 +294,5 @@ export function jsonToNode(json: any) {
  */
 export interface NodeWithScore {
   node: BaseNode;
-  score: number;
+  score?: number;
 }
