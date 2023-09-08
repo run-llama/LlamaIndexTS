@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.27
+
+### Patch Changes
+
+- 4a5591b: Chat History summarization (thanks @marcusschlesser)
+- 4a5591b: Notion database support (thanks @TomPenguin)
+- 4a5591b: KeywordIndex (thanks @swk777)
+
 ## 0.0.26
 
 ### Patch Changes

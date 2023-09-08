@@ -1,5 +1,14 @@
 # simple
 
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [4a5591b]
+- Updated dependencies [4a5591b]
+- Updated dependencies [4a5591b]
+  - llamaindex@0.0.27
+
 ## 0.0.24
 
 ### Patch Changes
