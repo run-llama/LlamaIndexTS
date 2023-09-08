@@ -128,9 +128,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
-      md-utils-ts:
-        specifier: ^2.0.0
-        version: 2.0.0
+      notion-md-crawler:
+        specifier: ^0.0.2
+        version: 0.0.2
       openai:
         specifier: ^4.3.1
         version: 4.3.1
@@ -10202,6 +10202,15 @@ packages:
   /normalize-url@6.1.0:
     resolution: {integrity: sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==}
     engines: {node: '>=10'}
+    dev: false
+
+  /notion-md-crawler@0.0.2:
+    resolution: {integrity: sha512-lE3/DFMrg7GSbl1sBfDuLVLyxw+yjdarPVm1JGfQ6eONEbNGgO+BdZxpwwZQ1uYeEJurAXMXb/AXT8GKYjKAyg==}
+    dependencies:
+      '@notionhq/client': 2.2.12
+      md-utils-ts: 2.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /npm-run-path@4.0.1:
