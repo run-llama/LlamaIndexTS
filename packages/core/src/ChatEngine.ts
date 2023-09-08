@@ -1,4 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
+import { Event } from "./callbacks/CallbackManager";
+import { ChatHistory, SimpleChatHistory } from "./ChatHistory";
+import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 import { TextNode } from "./Node";
 import {
   CondenseQuestionPrompt,
@@ -11,8 +14,6 @@ import { BaseQueryEngine } from "./QueryEngine";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
-import { Event } from "./callbacks/CallbackManager";
-import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
@@ -186,5 +187,30 @@ export class ContextChatEngine implements ChatEngine {
 
   reset() {
     this.chatHistory = [];
+  }
+}
+
+/**
+ * HistoryChatEngine is a ChatEngine that uses a ChatHistory to keep track of the chat history. This is an example with the same behavior as SimpleChatEngine
+ * TODO: generally use the ChatHistory instead of ChatMessage[] - breaking change
+ */
+export class HistoryChatEngine implements ChatEngine {
+  chatHistory: ChatHistory;
+  llm: LLM;
+
+  constructor(init?: Partial<HistoryChatEngine>) {
+    this.chatHistory = init?.chatHistory ?? new SimpleChatHistory();
+    this.llm = init?.llm ?? new OpenAI();
+  }
+
+  async chat(message: string): Promise<Response> {
+    this.chatHistory.addMessage({ content: message, role: "user" });
+    const response = await this.llm.chat(this.chatHistory.messages);
+    this.chatHistory.addMessage(response.message);
+    return new Response(response.message.content);
+  }
+
+  reset() {
+    this.chatHistory.reset();
   }
 }
