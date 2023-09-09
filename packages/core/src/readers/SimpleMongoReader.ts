@@ -17,9 +17,9 @@ export class SimpleMongoReader implements BaseReader {
    * @param {string} db_name - The name of the database to load.
    * @param {string} collection_name - The name of the collection to load.
    * @param {Number} [max_docs = 0] - Maximum number of documents to return. 0 means no limit.
-   * @param {object} [query_dict={}] - Specific query, as specified by MongoDB NodeJS documentation.
-   * @param {object} [query_options={}] - Specific query options, as specified by MongoDB NodeJS documentation.
-   * @param {projection} [projection = {}] - Projection options, as specified by MongoDB NodeJS documentation.
+   * @param {Record<string, any>} [query_dict={}] - Specific query, as specified by MongoDB NodeJS documentation.
+   * @param {Record<string, any>} [query_options={}] - Specific query options, as specified by MongoDB NodeJS documentation.
+   * @param {Record<string, any>} [projection = {}] - Projection options, as specified by MongoDB NodeJS documentation.
    * @returns {Promise<Document[]>}
    */
   async loadData(
@@ -27,9 +27,9 @@ export class SimpleMongoReader implements BaseReader {
     collection_name: string,
     max_docs = 0,
     //For later: Think about whether we want to pass generic objects in...
-    query_dict = {},
-    query_options = {},
-    projection = {},
+    query_dict: Record<string, any> = {},
+    query_options: Record<string, any> = {},
+    projection: Record<string, any> = {},
   ): Promise<Document[]> {
     //Get items from collection using built-in functions
     const cursor: Partial<Document>[] = await this.client
