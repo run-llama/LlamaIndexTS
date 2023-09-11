@@ -7,7 +7,6 @@
     "lodash": "^4.17.21",
     "notion-md-crawler": "^0.0.2",
     "md-utils-ts": "^2.0.0",
-    "mongodb": "^6.0.0",
     "openai": "^4.3.1",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
