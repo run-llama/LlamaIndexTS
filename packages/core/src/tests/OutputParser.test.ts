@@ -2,7 +2,6 @@ import { SubQuestionOutputParser } from "../OutputParser";
 
 describe("SubQuestionOutputParser", () => {
   test("parses expected", () => {
-    //TODO: This is dummy code, fill this in...
     const parser = new SubQuestionOutputParser();
 
     const data = [
