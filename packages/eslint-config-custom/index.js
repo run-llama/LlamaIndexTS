@@ -28,6 +28,7 @@ module.exports = {
           "NO_PROXY",
 
           "NOTION_TOKEN",
+          "MONGODB_URI",
         ],
       },
     ],
