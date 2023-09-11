@@ -149,3 +149,12 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     }
   }
 }
+
+//Need to add boilerplate code so I can start a PR
+//TODO: Elliot - making RouterQueryEngine
+class RouterQueryEngine implements BaseQueryEngine {
+  async query(query: string, parentEvent?: Event): Promise<Response>{
+    const response = await new Response("dummy response");
+    return response;
+  }
+}
