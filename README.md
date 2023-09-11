@@ -89,6 +89,37 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 - OpenAI GPT-3.5-turbo and GPT-4
 - Anthropic Claude Instant and Claude 2
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
+- Python Llama CPP API
+- Hugging Faces Text Generation Inference
+- Ooba Text Generation API
+
+## New Connectors:
+
+We have added support for three new connectors:
+
+- Python Llama CPP API: This connector allows you to use the Python bindings for the llama.cpp library with LlamaIndex.TS. To use this connector, simply import it and create a new instance of the PythonLlamaCpp class.
+
+```ts
+import { PythonLlamaCpp } from "llamaindex";
+
+const pythonLlamaCpp = new PythonLlamaCpp();
+```
+
+- Hugging Faces Text Generation Inference: This connector allows you to use the Hugging Faces text generation inference tool with LlamaIndex.TS. To use this connector, simply import it and create a new instance of the HuggingFacesTextGeneration class.
+
+```ts
+import { HuggingFacesTextGeneration } from "llamaindex";
+
+const huggingFacesTextGeneration = new HuggingFacesTextGeneration();
+```
+
+- Ooba Text Generation API: This connector allows you to use the Ooba text generation API with LlamaIndex.TS. To use this connector, simply import it and create a new instance of the OobaTextGeneration class.
+
+```ts
+import { OobaTextGeneration } from "llamaindex";
+
+const oobaTextGeneration = new OobaTextGeneration();
+```
 
 ## Contributing:
 
