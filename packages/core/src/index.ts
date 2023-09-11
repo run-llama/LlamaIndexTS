@@ -15,6 +15,9 @@ export * from "./TextSplitter";
 export * from "./Tool";
 export * from "./constants";
 export * from "./llm/LLM";
+export * from "./llm/PythonLlamaCpp";
+export * from "./llm/HuggingFacesTextGeneration";
+export * from "./llm/OobaTextGeneration";
 
 export * from "./indices";
 
