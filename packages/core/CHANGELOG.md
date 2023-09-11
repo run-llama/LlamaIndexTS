@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 4a5591b: Chat History summarization (thanks @marcusschlesser)
+- 4a5591b: Chat History summarization (thanks @marcusschiesser)
 - 4a5591b: Notion database support (thanks @TomPenguin)
 - 4a5591b: KeywordIndex (thanks @swk777)
 
