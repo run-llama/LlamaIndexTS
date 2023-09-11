@@ -16,6 +16,9 @@ import {
 } from "./azure";
 import { OpenAISession, getOpenAISession } from "./openai";
 import { ReplicateSession } from "./replicate";
+import { PythonLlamaCpp } from "./PythonLlamaCpp";
+import { HuggingFacesTextGeneration } from "./HuggingFacesTextGeneration";
+import { OobaTextGeneration } from "./OobaTextGeneration";
 
 export type MessageType =
   | "user"
@@ -24,21 +27,17 @@ export type MessageType =
   | "generic"
   | "function";
 
-export interface ChatMessage {
-  content: string;
-  role: MessageType;
-}
-
-export interface ChatResponse {
-  message: ChatMessage;
-  raw?: Record<string, any>;
-  delta?: string;
-}
-
-// NOTE in case we need CompletionResponse to diverge from ChatResponse in the future
-export type CompletionResponse = ChatResponse;
-
-/**
+export const ALL_AVAILABLE_LLAMAS = {
+  "openai-gpt3": OpenAI,
+  "openai-gpt4": OpenAI,
+  "anthropic-claude": Anthropic,
+  "llama2-70b": LlamaDeuce,
+  "llama2-13b": LlamaDeuce,
+  "llama2-7b": LlamaDeuce,
+  "python-llama-cpp": PythonLlamaCpp,
+  "hugging-faces-text-generation": HuggingFacesTextGeneration,
+  "ooba-text-generation": OobaTextGeneration,
+};
  * Unified language model interface
  */
 export interface LLM {
@@ -49,31 +48,27 @@ export interface LLM {
   chat(messages: ChatMessage[], parentEvent?: Event): Promise<ChatResponse>;
 
   /**
-   * Get a prompt completion from the LLM
-   * @param prompt the prompt to complete
-   */
-  complete(prompt: string, parentEvent?: Event): Promise<CompletionResponse>;
-}
-
-export const GPT4_MODELS = {
-  "gpt-4": { contextWindow: 8192 },
-  "gpt-4-32k": { contextWindow: 32768 },
-};
-
-export const TURBO_MODELS = {
-  "gpt-3.5-turbo": { contextWindow: 4096 },
-  "gpt-3.5-turbo-16k": { contextWindow: 16384 },
-};
-
-/**
- * We currently support GPT-3.5 and GPT-4 models
- */
-export const ALL_AVAILABLE_OPENAI_MODELS = {
-  ...GPT4_MODELS,
-  ...TURBO_MODELS,
-};
-
-/**
+   export function getLLM(llmName: keyof typeof ALL_AVAILABLE_LLAMAS): LLM {
+     switch (llmName) {
+       case "openai-gpt3":
+       case "openai-gpt4":
+         return new OpenAI();
+       case "anthropic-claude":
+         return new Anthropic();
+       case "llama2-70b":
+       case "llama2-13b":
+       case "llama2-7b":
+         return new LlamaDeuce();
+       case "python-llama-cpp":
+         return new PythonLlamaCpp();
+       case "hugging-faces-text-generation":
+         return new HuggingFacesTextGeneration();
+       case "ooba-text-generation":
+         return new OobaTextGeneration();
+       default:
+         throw new Error(`Unsupported LLM: ${llmName}`);
+     }
+   }
  * OpenAI LLM implementation
  */
 export class OpenAI implements LLM {
