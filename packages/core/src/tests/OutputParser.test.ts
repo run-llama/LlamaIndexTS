@@ -49,4 +49,42 @@ ${data_str}
 
     expect(parser.parse(JSON.stringify(data))).toEqual(real_answer);
   });
+
+  test("parses null single response", () => {
+    const parser = new SubQuestionOutputParser();
+    const data_str =
+      "[\n" +
+      "    {\n" +
+      `        "subQuestion": "Sorry, I don't have any relevant information to answer your question",\n` +
+      '        "toolName": ""\n' +
+      "    }\n" +
+      "]";
+    const data = [
+      {
+        subQuestion:
+          "Sorry, I don't have any relevant information to answer your question",
+        toolName: "",
+      },
+    ];
+    const real_answer = { parsedOutput: data, rawOutput: data_str };
+    expect(parser.parse(data_str)).toEqual(real_answer);
+  });
+
+  test("Single JSON object case", () => {
+    const parser = new SubQuestionOutputParser();
+    const data_str =
+      "    {\n" +
+      `        "subQuestion": "Sorry, I don't have any relevant information to answer your question",\n` +
+      '        "toolName": ""\n' +
+      "    }\n";
+    const data = [
+      {
+        subQuestion:
+          "Sorry, I don't have any relevant information to answer your question",
+        toolName: "",
+      },
+    ];
+    const real_answer = { parsedOutput: data, rawOutput: data_str };
+    expect(parser.parse(data_str)).toEqual(real_answer);
+  });
 });

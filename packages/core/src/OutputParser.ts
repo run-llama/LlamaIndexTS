@@ -56,11 +56,15 @@ class OutputParserError extends Error {
 function parseJsonMarkdown(text: string) {
   text = text.trim();
 
-  //This code is more general than the previous version, and should be faster.
   const beginIndex = text.indexOf("[");
   const endIndex = text.lastIndexOf("]");
   const jsonText = text.substring(beginIndex, endIndex + 1);
   try {
+    //Single JSON object case.
+    if(beginIndex === -1 || endIndex === -1){
+      return [JSON.parse(text)];
+    }
+    //Multiple JSON object case.
     return JSON.parse(jsonText);
   } catch (e) {
     throw new OutputParserError("Not a json markdown", { output: text });
