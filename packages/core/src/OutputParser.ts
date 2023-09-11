@@ -56,14 +56,54 @@ class OutputParserError extends Error {
 function parseJsonMarkdown(text: string) {
   text = text.trim();
 
-  //This code is more general than the previous version, and should be faster.
-  const beginIndex = text.indexOf("[");
-  const endIndex = text.lastIndexOf("]");
-  const jsonText = text.substring(beginIndex, endIndex + 1);
-  try {
+  const beginDelimiter = "```json";
+  const endDelimiter = "```";
+
+  const beginIndex = text.indexOf(beginDelimiter);
+  const endIndex = text.indexOf(
+    endDelimiter,
+    beginIndex + beginDelimiter.length,
+  );
+  //Scenario 1: LLM follows instruction format. However, it doesn't always do this.
+  if (!(beginIndex === -1 || endIndex === -1)) {
+    const jsonText = text.substring(
+      beginIndex + beginDelimiter.length,
+      endIndex,
+    );
     return JSON.parse(jsonText);
+  }
+
+  //Scenario 2: LLM follows instruction format roughly, but doesn't do this exactly.
+  // For example: [```json] part was not returned, or there are irregular \n spaces.
+  try {
+    //This isn't a JSON markdown, but we should try again with something else.
+    //Try to get data_str to be a list of JSON objects
+    const new_data_str: string[] = text
+      .replace("[", " ")
+      .replace("]", " ")
+      .replace("\n", " ")
+      .trim()
+      //Warning: This regex might be slow.
+      .split(/(?=},)/g);
+    const arr_length = new_data_str.length;
+
+    //String formatting
+    //First to penultimate element
+    for (let i = 0; i < arr_length - 1; i++) {
+      new_data_str[i] += "}";
+    }
+    //Second to final element
+    for (let i = 1; i < arr_length; i++) {
+      new_data_str[i] = new_data_str[i].replace("},", " ");
+    }
+    const output: object[] = new_data_str.map((item) => JSON.parse(item));
+    return output;
   } catch (e) {
-    throw new OutputParserError("Not a json markdown", { output: text });
+    //In the worst case scenario and our options are exhausted, throw error.
+    throw new OutputParserError("Not a valid json", {
+      cause: e as Error,
+      output: text,
+    });
   }
 }
 
