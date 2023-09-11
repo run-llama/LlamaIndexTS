@@ -64,14 +64,13 @@ function parseJsonMarkdown(text: string) {
     endDelimiter,
     beginIndex + beginDelimiter.length,
   );
-
-  const jsonText = text.substring(beginIndex + beginDelimiter.length, endIndex);
-
   //Scenario 1: LLM follows instruction format. However, it doesn't always do this.
-  try {
+  if (!(beginIndex === -1 || endIndex === -1)) {
+    const jsonText = text.substring(
+      beginIndex + beginDelimiter.length,
+      endIndex,
+    );
     return JSON.parse(jsonText);
-  } catch (e) {
-    //Fall through
   }
 
   //Scenario 2: LLM follows instruction format roughly, but doesn't do this exactly.

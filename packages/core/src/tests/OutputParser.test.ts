@@ -1,5 +1,7 @@
 import { SubQuestionOutputParser } from "../OutputParser";
 
+//This parser is really important, so make sure to add tests
+// as the parser sees through more iterations.
 describe("SubQuestionOutputParser", () => {
   test("parses expected", () => {
     const parser = new SubQuestionOutputParser();
