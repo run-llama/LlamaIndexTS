@@ -2,8 +2,6 @@ import { MongoClient } from "mongodb";
 import { VectorStoreIndex } from "../../packages/core/src/indices";
 import { Document } from "../../packages/core/src/Node";
 import { SimpleMongoReader } from "../../packages/core/src/readers/SimpleMongoReader";
-import { serviceContextFromDefaults } from "../../packages/core/src/ServiceContext";
-import { storageContextFromDefaults } from "../../packages/core/src/storage/StorageContext";
 
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
@@ -14,7 +12,7 @@ async function main() {
   const options: object = {};
   const projections: object = { embedding: 0 };
   const limit: number = Infinity;
-  const uri: string = process.env.MONGO_URI ?? "fake_uri";
+  const uri: string = process.env.MONGODB_URI ?? "fake_uri";
   const client: MongoClient = new MongoClient(uri);
 
   //Where the real code starts
