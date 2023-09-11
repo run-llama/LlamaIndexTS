@@ -90,6 +90,12 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 - Anthropic Claude Instant and Claude 2
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
 
+## Supported APIs:
+
+- Python Llama CPP API: A Python binding for the llama.cpp library, providing low-level access to the C API of llama.cpp and a high-level Python API for text completion.
+- Hugging Faces Text Generation Inference: A large language model text generation inference tool, used in production at HuggingFace to power Hugging Chat, the Inference API, and Inference Endpoint.
+- Ooba Text Generation API: A Gradio web UI for Large Language Models, supporting transformers, GPTQ, llama.cpp (GGUF), and Llama models.
+
 ## Contributing:
 
 We are in the very early days of LlamaIndex.TS. If you’re interested in hacking on it with us check out our [contributing guide](/CONTRIBUTING.md)
