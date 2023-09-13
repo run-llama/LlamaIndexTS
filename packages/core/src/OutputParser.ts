@@ -61,18 +61,17 @@ function parseJsonMarkdown(text: string) {
 
   var left: number;
   var right: number;
-  if(left_square < left_brace && left_square != -1){
+  if (left_square < left_brace && left_square != -1) {
     left = left_square;
     right = text.lastIndexOf("]");
-  }
-  else{
+  } else {
     left = left_brace;
     right = text.lastIndexOf("}");
   }
   const jsonText = text.substring(left, right + 1);
   try {
     //Single JSON object case
-    if(left_square === -1){
+    if (left_square === -1) {
       return [JSON.parse(jsonText)];
     }
     //Multiple JSON object case.
