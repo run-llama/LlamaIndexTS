@@ -155,6 +155,50 @@ Answer:`;
 
 export type ChoiceSelectPrompt = typeof defaultChoiceSelectPrompt;
 
+
+
+export const defaultSingleSelectPrompt = ({context = "", query = ""}) => {
+  //The original defaultSingleSelectPrompt; we don't have a numbered list to pass in,
+  //so we try without the numbered list.
+
+  // return `Some choices are given below. It is provided in a numbered list
+  // (1 to ${context.length}),
+  // where each item in the list corresponds to a summary.\n
+  // ---------------------\n
+  // ${context}
+  // \n---------------------\n
+  // Using only the choices above and not prior knowledge, return 
+  // the choice that is most relevant to the question: '${query}'\n`;
+  return `Some choices are given below. It is provided in a numbered list,
+    where each item in the list corresponds to a summary.\n
+    ---------------------\n
+    ${context}
+    \n---------------------\n
+    Using only the choices above and not prior knowledge, return 
+    the choice that is most relevant to the question: '${query}'\n
+    Provide choice in the following format: '{answer: <number>, reason: <string>}' in JSON format, where the reason field explains why 
+    this summary was selected in relation to the question.\n
+    If no choices are relevant, return a single answer of '{answer: 0, reason: <string>}'\n`;
+}
+export type SingleSelectPrompt = typeof defaultSingleSelectPrompt;
+
+export const defaultMultiSelectPrompt = ({context = "", query = "", branching_factor = 1}) => {
+  return `Some choices are given below. It is provided in a numbered list,
+    where each item in the list corresponds to a summary.\n
+    ---------------------\n
+    ${context}
+    \n---------------------\n
+    Using only the choices above and not prior knowledge, return 
+    the top choices (no more than ${branching_factor}, ranked by most relevant to least) that 
+    are most relevant to the question: '${query}'\n
+    Provide choices in the following format: '[{answer: <number>, reason: <string>}, ..., {answer: <number>, reason: <string>}]' in JSON format, 
+    where the reason field explains why this summary was selected in relation to the question.\n
+    If no choices are relevant, return a single answer of '{answer: 0, reason: <string>}'\n`;
+}
+
+export type MultiSelectPrompt = typeof defaultMultiSelectPrompt;
+
+
 /*
 PREFIX = """\
 Given a user question, and a list of tools, output a list of relevant sub-questions \
