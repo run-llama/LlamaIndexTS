@@ -56,13 +56,24 @@ class OutputParserError extends Error {
 function parseJsonMarkdown(text: string) {
   text = text.trim();
 
-  const beginIndex = text.indexOf("[");
-  const endIndex = text.lastIndexOf("]");
-  const jsonText = text.substring(beginIndex, endIndex + 1);
+  const left_square = text.indexOf("[");
+  const left_brace = text.indexOf("{");
+
+  var left: number;
+  var right: number;
+  if(left_square < left_brace && left_square != -1){
+    left = left_square;
+    right = text.lastIndexOf("]");
+  }
+  else{
+    left = left_brace;
+    right = text.lastIndexOf("}");
+  }
+  const jsonText = text.substring(left, right + 1);
   try {
-    //Single JSON object case.
-    if(beginIndex === -1 || endIndex === -1){
-      return [JSON.parse(text)];
+    //Single JSON object case
+    if(left_square === -1){
+      return [JSON.parse(jsonText)];
     }
     //Multiple JSON object case.
     return JSON.parse(jsonText);
