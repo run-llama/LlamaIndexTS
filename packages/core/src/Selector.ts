@@ -39,7 +39,7 @@ export class LLMSelector implements BaseSelector {
   async select(
     query: string,
     metadata: ToolMetadata[],
-    num_selections: number,
+    num_selections = 1,
   ): Promise<Selection[]> {
     //Depending on if we have the single or multi-select case, change input object to prompt.
     var input;
