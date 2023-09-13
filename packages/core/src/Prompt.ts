@@ -155,9 +155,7 @@ Answer:`;
 
 export type ChoiceSelectPrompt = typeof defaultChoiceSelectPrompt;
 
-
-
-export const defaultSingleSelectPrompt = ({context = "", query = ""}) => {
+export const defaultSingleSelectPrompt = ({ context = "", query = "" }) => {
   //The original defaultSingleSelectPrompt; we don't have a numbered list to pass in,
   //so we try without the numbered list.
 
@@ -167,7 +165,7 @@ export const defaultSingleSelectPrompt = ({context = "", query = ""}) => {
   // ---------------------\n
   // ${context}
   // \n---------------------\n
-  // Using only the choices above and not prior knowledge, return 
+  // Using only the choices above and not prior knowledge, return
   // the choice that is most relevant to the question: '${query}'\n`;
   return `Some choices are given below. It is provided in a numbered list,
     where each item in the list corresponds to a summary.\n
@@ -179,10 +177,14 @@ export const defaultSingleSelectPrompt = ({context = "", query = ""}) => {
     Provide choice in the following format: '{answer: <number>, reason: <string>}' in JSON format, where the reason field explains why 
     this summary was selected in relation to the question.\n
     If no choices are relevant, return a single answer of '{answer: 0, reason: <string>}'\n`;
-}
+};
 export type SingleSelectPrompt = typeof defaultSingleSelectPrompt;
 
-export const defaultMultiSelectPrompt = ({context = "", query = "", branching_factor = 1}) => {
+export const defaultMultiSelectPrompt = ({
+  context = "",
+  query = "",
+  branching_factor = 1,
+}) => {
   return `Some choices are given below. It is provided in a numbered list,
     where each item in the list corresponds to a summary.\n
     ---------------------\n
@@ -194,10 +196,9 @@ export const defaultMultiSelectPrompt = ({context = "", query = "", branching_fa
     Provide choices in the following format: '[{answer: <number>, reason: <string>}, ..., {answer: <number>, reason: <string>}]' in JSON format, 
     where the reason field explains why this summary was selected in relation to the question.\n
     If no choices are relevant, return a single answer of '{answer: 0, reason: <string>}'\n`;
-}
+};
 
 export type MultiSelectPrompt = typeof defaultMultiSelectPrompt;
-
 
 /*
 PREFIX = """\
