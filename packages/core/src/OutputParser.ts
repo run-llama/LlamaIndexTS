@@ -53,7 +53,7 @@ class OutputParserError extends Error {
  * @param text A markdown block with JSON
  * @returns parsed JSON object
  */
-function parseJsonMarkdown(text: string) {
+export function parseJsonMarkdown(text: string) {
   text = text.trim();
 
   const left_square = text.indexOf("[");
