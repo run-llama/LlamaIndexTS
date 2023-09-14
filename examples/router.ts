@@ -5,7 +5,7 @@ import {
   defaultSingleSelectPrompt,
   MultiSelectPrompt,
   SingleSelectPrompt,
-} from "../../packages/core/src/Prompt";
+} from "../packages/core/src/Prompt";
 import { LLMSelector } from "../packages/core/src/Selector";
 import { ToolMetadata } from "../packages/core/src/Tool";
 import { TreeSummarize } from "../packages/core/src/ResponseSynthesizer";
