@@ -7,14 +7,14 @@
     "lodash": "^4.17.21",
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.0.0",
-    "notion-md-crawler": "^0.0.6",
-    "openai": "^4.6.0",
+    "notion-md-crawler": "^0.0.2",
+    "openai": "^4.7.0",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
     "rake-modified": "^1.0.8",
     "replicate": "^0.18.0",
     "tiktoken-node": "^0.0.6",
-    "uuid": "^9.0.0",
+    "uuid": "^9.0.1",
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
@@ -22,7 +22,7 @@
     "@types/node": "^18.17.15",
     "@types/papaparse": "^5.3.8",
     "@types/pdf-parse": "^1.1.1",
-    "@types/uuid": "^9.0.3",
+    "@types/uuid": "^9.0.4",
     "node-stdlib-browser": "^1.2.0",
     "tsup": "^7.2.0"
   },
