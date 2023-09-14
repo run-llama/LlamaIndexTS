@@ -53,30 +53,31 @@ class OutputParserError extends Error {
  * @param text A markdown block with JSON
  * @returns parsed JSON object
  */
-function parseJsonMarkdown(text: string) {
+export function parseJsonMarkdown(text: string) {
   text = text.trim();
 
-  const beginDelimiter = "```json";
-  const endDelimiter = "```";
+  const left_square = text.indexOf("[");
+  const left_brace = text.indexOf("{");
 
-  const beginIndex = text.indexOf(beginDelimiter);
-  const endIndex = text.indexOf(
-    endDelimiter,
-    beginIndex + beginDelimiter.length,
-  );
-  if (beginIndex === -1 || endIndex === -1) {
-    throw new OutputParserError("Not a json markdown", { output: text });
+  var left: number;
+  var right: number;
+  if (left_square < left_brace && left_square != -1) {
+    left = left_square;
+    right = text.lastIndexOf("]");
+  } else {
+    left = left_brace;
+    right = text.lastIndexOf("}");
   }
-
-  const jsonText = text.substring(beginIndex + beginDelimiter.length, endIndex);
-
+  const jsonText = text.substring(left, right + 1);
   try {
+    //Single JSON object case
+    if (left_square === -1) {
+      return [JSON.parse(jsonText)];
+    }
+    //Multiple JSON object case.
     return JSON.parse(jsonText);
   } catch (e) {
-    throw new OutputParserError("Not a valid json", {
-      cause: e as Error,
-      output: text,
-    });
+    throw new OutputParserError("Not a json markdown", { output: text });
   }
 }
 
