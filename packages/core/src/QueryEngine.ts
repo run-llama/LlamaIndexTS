@@ -6,11 +6,12 @@ import {
   SubQuestion,
 } from "./QuestionGenerator";
 import { Response } from "./Response";
-import { CompactAndRefine, ResponseSynthesizer } from "./ResponseSynthesizer";
+import { CompactAndRefine, ResponseSynthesizer, TreeSummarize} from "./ResponseSynthesizer";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
 import { Event } from "./callbacks/CallbackManager";
+import { BaseSelector, Selection } from "./Selector";
 
 /**
  * A query engine is a question answerer that can use one or more steps.
@@ -150,11 +151,46 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
   }
 }
 
-//Need to add boilerplate code so I can start a PR
-//TODO: Elliot - making RouterQueryEngine
-class RouterQueryEngine implements BaseQueryEngine {
-  async query(query: string, parentEvent?: Event): Promise<Response>{
-    const response = await new Response("dummy response");
-    return response;
+//Implement Router Query Engine
+export class RouterQueryEngine implements BaseQueryEngine {
+  queryEngines: QueryEngineTool[];
+  selector: BaseSelector;
+  serviceContext: ServiceContext;
+  metadata: ToolMetadata[];
+  //Fix summarizer type later
+  summarizer: any;
+
+  constructor(queryEngines: QueryEngineTool[], selector: BaseSelector,
+              summarizer?: any, serviceContext?: ServiceContext){
+    this.queryEngines = queryEngines;
+    this.selector = selector;
+    this.metadata = queryEngines.map(engine => engine.metadata);
+    this.serviceContext = serviceContext || serviceContextFromDefaults();
+    this.summarizer = summarizer || new TreeSummarize(this.serviceContext);
   }
+  async query(query: string): Promise<Response>{
+    //Get selections
+    const result: Selection[] = await this.selector.select(query, this.metadata);
+    //Query each selected engine
+    const responses: Response[] = [];
+    result.map(async candidate => {
+      const idx_to_query: number = candidate.answer;
+
+      //A list's index starts at 1, so we need to correct for that.
+      //An idx_to_query being 0 implies that no candidate query engine has been selected.
+      if(idx_to_query != 0){
+        console.log(`Querying QueryEngine#${idx_to_query} for this reason: ${candidate.reason}\n`);
+        const entry: Response = await this.queryEngines[idx_to_query-1].queryEngine.query(query);
+        responses.push(entry);
+      }
+    });
+
+    //Synthesize each engine's output
+    if(responses.length === 0){
+      return new Response("No query engine was found to be relevant.");
+    }
+    const text_chunks: string[] = responses.map(response => response.response);
+    const final_response = await this.summarizer.query(query, text_chunks);
+    return final_response;
+  };
 }
