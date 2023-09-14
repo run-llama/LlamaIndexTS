@@ -11,43 +11,47 @@ export interface Selection {
 
 //Base interface for selectors
 export interface BaseSelector {
+
+  llm: LLM;
+  prompt: SimplePrompt;
+  max_outputs: number;
+
   /**
    * Selects 1 or more choices from several candidate query engines, using a LLM.
    * @param query
    * @param metadata
-   * @param num_selections
    */
 
   //In the Python side, they have multiple selectors for single and multiple.
   //We'll try to implement one where we only need a single class for both.
   select(
     query: string,
-    metadata: ToolMetadata[],
-    num_selections?: number,
+    metadata: ToolMetadata[]
   ): Promise<Selection[]>;
 }
 
 export class LLMSelector implements BaseSelector {
   llm: LLM;
   prompt: SimplePrompt;
+  max_outputs: number;
 
   //We want to specify a function that returns a string
-  constructor(llm: LLM, prompt: SimplePrompt) {
+  constructor(llm: LLM, prompt: SimplePrompt, max_outputs = 1) {
     this.llm = llm;
     this.prompt = prompt;
+    this.max_outputs = max_outputs;
   }
   async select(
     query: string,
-    metadata: ToolMetadata[],
-    num_selections = 1,
+    metadata: ToolMetadata[]
   ): Promise<Selection[]> {
     //Depending on if we have the single or multi-select case, change input object to prompt.
     var input;
-    if (num_selections > 1) {
+    if (this.max_outputs > 1) {
       input = {
         context: buildToolsText(metadata),
         query: query,
-        branching_factor: num_selections.toString(),
+        branching_factor: this.max_outputs.toString(),
       };
     } else {
       input = { context: buildToolsText(metadata), query: query };

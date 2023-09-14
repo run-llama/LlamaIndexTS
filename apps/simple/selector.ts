@@ -28,8 +28,8 @@ async function main() {
   const prompt: SingleSelectPrompt = defaultSingleSelectPrompt;
   const prompt2: MultiSelectPrompt = defaultMultiSelectPrompt;
 
-  const selector = new LLMSelector(llm, prompt2);
-  console.log(await selector.select(query, mock_metadata, 2));
+  const selector = new LLMSelector(llm, prompt2, 2);
+  console.log(await selector.select(query, mock_metadata));
 }
 
 main();
