@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.28
+
+### Patch Changes
+
+- 96bb657: Typesafe metadata (thanks @TomPenguin)
+- 96bb657: MongoReader (thanks @kkang2097)
+- 837854d: Make OutputParser less strict and add tests (Thanks @kkang2097)
+
 ## 0.0.27
 
 ### Patch Changes
