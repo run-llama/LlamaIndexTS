@@ -11,7 +11,6 @@ export interface Selection {
 
 //Base interface for selectors
 export interface BaseSelector {
-
   llm: LLM;
   prompt: SimplePrompt;
   max_outputs: number;
@@ -24,10 +23,7 @@ export interface BaseSelector {
 
   //In the Python side, they have multiple selectors for single and multiple.
   //We'll try to implement one where we only need a single class for both.
-  select(
-    query: string,
-    metadata: ToolMetadata[]
-  ): Promise<Selection[]>;
+  select(query: string, metadata: ToolMetadata[]): Promise<Selection[]>;
 }
 
 export class LLMSelector implements BaseSelector {
@@ -41,10 +37,7 @@ export class LLMSelector implements BaseSelector {
     this.prompt = prompt;
     this.max_outputs = max_outputs;
   }
-  async select(
-    query: string,
-    metadata: ToolMetadata[]
-  ): Promise<Selection[]> {
+  async select(query: string, metadata: ToolMetadata[]): Promise<Selection[]> {
     //Depending on if we have the single or multi-select case, change input object to prompt.
     var input;
     if (this.max_outputs > 1) {
