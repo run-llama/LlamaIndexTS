@@ -296,3 +296,5 @@ export class OpenAIEmbedding extends BaseEmbedding {
     return this.getOpenAIEmbedding(query);
   }
 }
+
+//We need a class that wraps and caches embeddings
