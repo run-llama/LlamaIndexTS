@@ -173,7 +173,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
     const result: Selection[] = await this.selector.select(query, this.metadata);
     //Query each selected engine
     const responses: Response[] = [];
-    result.map(async candidate => {
+    await Promise.all(result.map(async candidate => {
       const idx_to_query: number = candidate.answer;
 
       //A list's index starts at 1, so we need to correct for that.
@@ -183,14 +183,14 @@ export class RouterQueryEngine implements BaseQueryEngine {
         const entry: Response = await this.queryEngines[idx_to_query-1].queryEngine.query(query);
         responses.push(entry);
       }
-    });
+    }));
 
     //Synthesize each engine's output
     if(responses.length === 0){
       return new Response("No query engine was found to be relevant.");
     }
     const text_chunks: string[] = responses.map(response => response.response);
-    const final_response = await this.summarizer.query(query, text_chunks);
+    const final_response = await this.summarizer.getResponse(query, text_chunks);
     return final_response;
   };
 }
