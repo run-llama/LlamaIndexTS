@@ -1,11 +1,12 @@
 import _ from "lodash";
 import { Document } from "../Node";
-import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
+import { CompleteFileSystem, walk } from "../storage/FileSystem";
+import { BaseReader } from "./base";
 import { PapaCSVReader } from "./CSVReader";
+import { DocxReader } from "./DocxReader";
 import { MarkdownReader } from "./MarkdownReader";
 import { PDFReader } from "./PDFReader";
-import { BaseReader } from "./base";
 
 /**
  * Read a .txt file
@@ -25,6 +26,7 @@ const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   pdf: new PDFReader(),
   csv: new PapaCSVReader(),
   md: new MarkdownReader(),
+  docx: new DocxReader(),
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {

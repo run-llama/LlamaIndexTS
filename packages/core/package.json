@@ -5,6 +5,7 @@
     "@anthropic-ai/sdk": "^0.6.2",
     "@notionhq/client": "^2.2.13",
     "lodash": "^4.17.21",
+    "mammoth": "^1.6.0",
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.0.0",
     "notion-md-crawler": "^0.0.2",
