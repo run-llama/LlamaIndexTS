@@ -1,8 +1,5 @@
 import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
-import { ChatCompletionChunk } from "openai/resources/chat";
-import { Stream } from "openai/streaming";
 import { CallbackManager, Event, StreamToken, StreamCallbackResponse } from "../callbacks/CallbackManager";
-import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 
 import {
   ANTHROPIC_AI_PROMPT,
@@ -207,6 +204,7 @@ export class OpenAI implements LLM {
   }
 
   //We can wrap a stream in a generator to add some additional logging behavior
+  //For future edits: syntax for generator type is <typeof Yield, typeof Return, typeof Accept>
   async* stream_chat(
     messages: ChatMessage[],
     parentEvent?: Event,
