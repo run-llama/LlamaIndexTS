@@ -1,6 +1,9 @@
 import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
-import { CallbackManager, Event } from "../callbacks/CallbackManager";
+import { ChatCompletionChunk } from "openai/resources/chat";
+import { Stream } from "openai/streaming";
+import { CallbackManager, Event, StreamToken, StreamCallbackResponse } from "../callbacks/CallbackManager";
 import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
+
 import {
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
@@ -185,21 +188,6 @@ export class OpenAI implements LLM {
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
-
-    if (this.callbackManager?.onLLMStream) {
-      // Streaming
-      const response = await this.session.openai.chat.completions.create({
-        ...baseRequestParams,
-        stream: true,
-      });
-
-      const { message, role } = await handleOpenAIStream({
-        response,
-        onLLMStream: this.callbackManager.onLLMStream,
-        parentEvent,
-      });
-      return { message: { content: message, role } };
-    } else {
       // Non-streaming
       const response = await this.session.openai.chat.completions.create({
         ...baseRequestParams,
@@ -208,7 +196,7 @@ export class OpenAI implements LLM {
 
       const content = response.choices[0].message?.content ?? "";
       return { message: { content, role: response.choices[0].message.role } };
-    }
+    
   }
 
   async complete(
@@ -216,6 +204,57 @@ export class OpenAI implements LLM {
     parentEvent?: Event,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
+  }
+
+  //We can wrap a stream in a generator to add some additional logging behavior
+  async* stream_chat(
+    messages: ChatMessage[],
+    parentEvent?: Event,
+  ): AsyncGenerator<Partial<StreamToken>, void, unknown> {
+    const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
+      model: this.model,
+      temperature: this.temperature,
+      max_tokens: this.maxTokens,
+      messages: messages.map((message) => ({
+        role: this.mapMessageType(message.role),
+        content: message.content,
+      })),
+      top_p: this.topP,
+      ...this.additionalChatOptions,
+    };
+
+    //Note: I doubt our StreamToken interface would universally work with every streaming API, so
+    //      our code becomes less elegant.. but it works. Subject to change.
+
+    //Now let's wrap our stream in a callback
+    const onLLMStream = (this.callbackManager?.onLLMStream) ? this.callbackManager?.onLLMStream : () => {};
+    const chunk_stream: AsyncIterable<Partial<StreamToken>> = await this.session.openai.chat.completions.create({
+          ...baseRequestParams,
+          stream: true,
+        });
+
+    //Indices
+    var idx_counter: number = 0;
+    for await(const part of chunk_stream){
+      //Increment
+      if(part.choices){
+        part.choices[0].index = idx_counter;
+        const is_done: boolean = (part.choices[0].finish_reason === "stop") ? true: false;
+        //onLLMStream Callback
+        if(parentEvent){
+          const stream_callback: StreamCallbackResponse = {event: parentEvent, index: idx_counter, isDone: is_done, token: part};
+          onLLMStream(stream_callback);
+        }
+      }
+      idx_counter += 1;
+      yield part;
+    }
+    return;
+  }
+
+  //Stream_complete doesn't need to be async because it's child function is already async
+  stream_complete(query: string, parentEvent?: Event): AsyncGenerator<Partial<StreamToken>, void, unknown> {
+    return this.stream_chat([{content: query, role: "user"}]);
   }
 }
 
