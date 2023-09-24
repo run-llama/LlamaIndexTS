@@ -38,7 +38,7 @@ export interface StreamToken {
 export interface StreamCallbackResponse extends BaseCallbackResponse {
   index: number;
   isDone?: boolean;
-  token?: StreamToken;
+  token?: Partial<StreamToken>;
 }
 
 export interface RetrievalCallbackResponse extends BaseCallbackResponse {
