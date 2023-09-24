@@ -53,6 +53,10 @@ export interface LLM {
    * @param prompt the prompt to complete
    */
   complete(prompt: string, parentEvent?: Event): Promise<CompletionResponse>;
+
+  stream_chat?(messages: ChatMessage[], parentEvent?: Event): AsyncGenerator<Partial<StreamToken>, void, unknown>;
+
+  stream_complete?(query: string, parentEvent?: Event): AsyncGenerator<Partial<StreamToken>, void, unknown>;
 }
 
 export const GPT4_MODELS = {
