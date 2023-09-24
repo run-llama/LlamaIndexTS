@@ -9,10 +9,8 @@ async function main() {
     const message: ChatMessage = {content: query, role: "user"};
     
 
+    //TODO: Callback stuff, like logging
 
-    const cb: CallbackManager = new CallbackManager();
-    cb.onLLMStream = () => {"something"};
-    // console.log(cb.onLLMStream);
 
     //Stream Chat
     // const stream = llm.stream_chat([message]);
