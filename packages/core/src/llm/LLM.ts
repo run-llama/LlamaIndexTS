@@ -248,6 +248,13 @@ export class OpenAI implements LLM {
         stream: true,
       });
 
+    const event: Event = parentEvent
+      ? parentEvent
+      : {
+          id: "unspecified",
+          type: "llmPredict" as EventType,
+        };
+
     //Indices
     var idx_counter: number = 0;
     for await (const part of chunk_stream) {
@@ -256,12 +263,7 @@ export class OpenAI implements LLM {
       const is_done: boolean =
         part.choices[0].finish_reason === "stop" ? true : false;
       //onLLMStream Callback
-      const event: Event = parentEvent
-        ? parentEvent
-        : {
-            id: "unspecified",
-            type: "llmPredict" as EventType,
-          };
+
       const stream_callback: StreamCallbackResponse = {
         event: event,
         index: idx_counter,
