@@ -7,8 +7,6 @@ import {
 import { ChatMessage, MessageType, OpenAI } from "../packages/core/src/llm/LLM";
 
 async function main() {
-  const smth = "user" as MessageType;
-
   const query: string = "Where is Istanbul?";
 
   const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
