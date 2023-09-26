@@ -19,7 +19,7 @@ That's where **LlamaIndex.TS** comes in.
 
 LlamaIndex.TS provides the following tools:
 
-- **Data loading** ingest your existing `txt` and `pdf` data directly
+- **Data loading** ingest your existing `.txt`, `.pdf`, `.csv`, `.md` and `.docx` data directly
 - **Data indexes** structure your data in intermediate representations that are easy and performant for LLMs to consume.
 - **Engines** provide natural language access to your data. For example:
   - Query engines are powerful retrieval interfaces for knowledge-augmented output.
