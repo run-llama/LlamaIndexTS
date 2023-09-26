@@ -14,7 +14,7 @@
     "pdf-parse": "^1.1.1",
     "rake-modified": "^1.0.8",
     "replicate": "^0.18.1",
-    "tiktoken-node": "^0.0.6",
+    "tiktoken": "^1.0.10",
     "uuid": "^9.0.1",
     "wink-nlp": "^1.14.3"
   },
