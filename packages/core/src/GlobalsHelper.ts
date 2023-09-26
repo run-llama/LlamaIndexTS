@@ -1,3 +1,6 @@
+import cl100k_base from "tiktoken/encoders/cl100k_base.json";
+import { Tiktoken } from "tiktoken/lite";
+
 import { v4 as uuidv4 } from "uuid";
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
 
@@ -6,14 +9,30 @@ import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
  */
 class GlobalsHelper {
   defaultTokenizer: {
-    encode: (text: string) => number[];
-    decode: (tokens: number[]) => string;
+    encode: (text: string) => Uint32Array;
+    decode: (tokens: Uint32Array) => string;
   } | null = null;
+
+  private initDefaultTokenizer() {
+    const encoding = new Tiktoken(
+      cl100k_base.bpe_ranks,
+      cl100k_base.special_tokens,
+      cl100k_base.pat_str,
+    );
+
+    this.defaultTokenizer = {
+      encode: (text: string) => {
+        return encoding.encode(text);
+      },
+      decode: (tokens: Uint32Array) => {
+        return new TextDecoder().decode(encoding.decode(tokens));
+      },
+    };
+  }
 
   tokenizer() {
     if (!this.defaultTokenizer) {
-      const tiktoken = require("tiktoken-node");
-      this.defaultTokenizer = tiktoken.getEncoding("gpt2");
+      this.initDefaultTokenizer();
     }
 
     return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
@@ -21,8 +40,7 @@ class GlobalsHelper {
 
   tokenizerDecoder() {
     if (!this.defaultTokenizer) {
-      const tiktoken = require("tiktoken-node");
-      this.defaultTokenizer = tiktoken.getEncoding("gpt2");
+      this.initDefaultTokenizer();
     }
 
     return this.defaultTokenizer!.decode.bind(this.defaultTokenizer);
