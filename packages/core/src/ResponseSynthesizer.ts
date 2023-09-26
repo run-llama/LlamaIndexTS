@@ -1,18 +1,18 @@
+import { Event } from "./callbacks/CallbackManager";
+import { LLM } from "./llm/LLM";
 import { MetadataMode, NodeWithScore } from "./Node";
 import {
+  defaultRefinePrompt,
+  defaultTextQaPrompt,
+  defaultTreeSummarizePrompt,
   RefinePrompt,
   SimplePrompt,
   TextQaPrompt,
   TreeSummarizePrompt,
-  defaultRefinePrompt,
-  defaultTextQaPrompt,
-  defaultTreeSummarizePrompt,
 } from "./Prompt";
 import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
-import { Event } from "./callbacks/CallbackManager";
-import { LLM } from "./llm/LLM";
 
 /**
  * Response modes of the response synthesizer
@@ -231,6 +231,7 @@ export class TreeSummarize implements BaseResponseBuilder {
       throw new Error("Must have at least one text chunk");
     }
 
+    // Should we send the query here too?
     const packedTextChunks = this.serviceContext.promptHelper.repack(
       this.summaryTemplate,
       textChunks,
@@ -241,6 +242,7 @@ export class TreeSummarize implements BaseResponseBuilder {
         await this.serviceContext.llm.complete(
           this.summaryTemplate({
             context: packedTextChunks[0],
+            query,
           }),
           parentEvent,
         )
@@ -251,6 +253,7 @@ export class TreeSummarize implements BaseResponseBuilder {
           this.serviceContext.llm.complete(
             this.summaryTemplate({
               context: chunk,
+              query,
             }),
             parentEvent,
           ),
