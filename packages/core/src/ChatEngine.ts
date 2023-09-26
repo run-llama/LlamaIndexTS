@@ -26,6 +26,9 @@ export interface ChatEngine {
    */
   chat(message: string, chatHistory?: ChatMessage[]): Promise<Response>;
 
+
+  stream_chat?(message: string, chatHistory?: ChatMessage[]): AsyncGenerator<string, void, unknown>;
+
   /**
    * Resets the chat history so that it's empty.
    */
@@ -51,6 +54,29 @@ export class SimpleChatEngine implements ChatEngine {
     chatHistory.push(response.message);
     this.chatHistory = chatHistory;
     return new Response(response.message.content);
+  }
+
+  async *stream_chat(message: string, chatHistory?: ChatMessage[]): AsyncGenerator<string, void, unknown> {
+
+    //Streaming capability is optional on LLM, as of v0.0.29
+    if(!this.llm.stream_chat){
+      //TODO: We need some sort of tracing here.
+      throw Error("Streaming not supported for this LLM.");
+    }
+
+    chatHistory = chatHistory ?? this.chatHistory;
+    chatHistory.push({ content: message, role: "user" });
+    const response_generator = this.llm.stream_chat(chatHistory);
+
+    var accumulator: string = "";
+    for await(const part of response_generator){
+      accumulator += part;
+      yield part;
+    }
+
+    chatHistory.push({ content: accumulator, role: "assistant" });
+    this.chatHistory = chatHistory;
+    return;
   }
 
   reset() {
