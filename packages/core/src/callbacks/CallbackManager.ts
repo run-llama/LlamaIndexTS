@@ -20,7 +20,8 @@ interface BaseCallbackResponse {
   event: Event;
 }
 
-export interface StreamToken {
+//Specify StreamToken per mainstream LLM
+export interface DefaultStreamToken {
   id: string;
   object: string;
   created: number;
@@ -35,10 +36,21 @@ export interface StreamToken {
   }[];
 }
 
+//OpenAI stream token schema is the default.
+//Note: Anthropic and Replicate also use similar token schemas.
+export type OpenAIStreamToken = DefaultStreamToken;
+
+//
+//Callback Responses
+//
+//TODO: Write Embedding Callbacks
+
+//StreamCallbackResponse should let practitioners implement callbacks out of the box...
+//When custom streaming LLMs are involved, people are expected to write their own StreamCallbackResponses
 export interface StreamCallbackResponse extends BaseCallbackResponse {
   index: number;
   isDone?: boolean;
-  token?: StreamToken;
+  token: DefaultStreamToken;
 }
 
 export interface RetrievalCallbackResponse extends BaseCallbackResponse {
