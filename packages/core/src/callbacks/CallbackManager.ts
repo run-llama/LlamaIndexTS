@@ -50,7 +50,7 @@ export type OpenAIStreamToken = DefaultStreamToken;
 export interface StreamCallbackResponse extends BaseCallbackResponse {
   index: number;
   isDone?: boolean;
-  token: DefaultStreamToken;
+  token?: DefaultStreamToken;
 }
 
 export interface RetrievalCallbackResponse extends BaseCallbackResponse {
