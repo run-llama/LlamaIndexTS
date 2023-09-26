@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.6.2",
     "@notionhq/client": "^2.2.13",
