@@ -34,7 +34,7 @@ export class PromptHelper {
   numOutput = DEFAULT_NUM_OUTPUTS;
   chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO;
   chunkSizeLimit?: number;
-  tokenizer: (text: string) => number[];
+  tokenizer: (text: string) => Uint32Array;
   separator = " ";
 
   constructor(
@@ -42,7 +42,7 @@ export class PromptHelper {
     numOutput = DEFAULT_NUM_OUTPUTS,
     chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
     chunkSizeLimit?: number,
-    tokenizer?: (text: string) => number[],
+    tokenizer?: (text: string) => Uint32Array,
     separator = " ",
   ) {
     this.contextWindow = contextWindow;

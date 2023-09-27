@@ -9,7 +9,8 @@
     "noEmit": true,
     "strict": true,
     "lib": ["es2015", "dom"],
-    "target": "ES2015"
+    "target": "ES2015",
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules"]
 }

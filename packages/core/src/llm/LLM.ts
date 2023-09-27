@@ -1,10 +1,16 @@
 import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
-import { CallbackManager, Event } from "../callbacks/CallbackManager";
-import { handleOpenAIStream } from "../callbacks/utility/handleOpenAIStream";
 import {
+  CallbackManager,
+  Event,
+  EventType,
+  OpenAIStreamToken,
+  StreamCallbackResponse,
+} from "../callbacks/CallbackManager";
+
+import {
+  AnthropicSession,
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
-  AnthropicSession,
   getAnthropicSession,
 } from "./anthropic";
 import {
@@ -14,7 +20,7 @@ import {
   getAzureModel,
   shouldUseAzure,
 } from "./azure";
-import { OpenAISession, getOpenAISession } from "./openai";
+import { getOpenAISession, OpenAISession } from "./openai";
 import { ReplicateSession } from "./replicate";
 
 export type MessageType =
@@ -53,6 +59,16 @@ export interface LLM {
    * @param prompt the prompt to complete
    */
   complete(prompt: string, parentEvent?: Event): Promise<CompletionResponse>;
+
+  stream_chat?(
+    messages: ChatMessage[],
+    parentEvent?: Event,
+  ): AsyncGenerator<string, void, unknown>;
+
+  stream_complete?(
+    query: string,
+    parentEvent?: Event,
+  ): AsyncGenerator<string, void, unknown>;
 }
 
 export const GPT4_MODELS = {
@@ -185,30 +201,14 @@ export class OpenAI implements LLM {
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
+    // Non-streaming
+    const response = await this.session.openai.chat.completions.create({
+      ...baseRequestParams,
+      stream: false,
+    });
 
-    if (this.callbackManager?.onLLMStream) {
-      // Streaming
-      const response = await this.session.openai.chat.completions.create({
-        ...baseRequestParams,
-        stream: true,
-      });
-
-      const { message, role } = await handleOpenAIStream({
-        response,
-        onLLMStream: this.callbackManager.onLLMStream,
-        parentEvent,
-      });
-      return { message: { content: message, role } };
-    } else {
-      // Non-streaming
-      const response = await this.session.openai.chat.completions.create({
-        ...baseRequestParams,
-        stream: false,
-      });
-
-      const content = response.choices[0].message?.content ?? "";
-      return { message: { content, role: response.choices[0].message.role } };
-    }
+    const content = response.choices[0].message?.content ?? "";
+    return { message: { content, role: response.choices[0].message.role } };
   }
 
   async complete(
@@ -216,6 +216,75 @@ export class OpenAI implements LLM {
     parentEvent?: Event,
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
+  }
+
+  //We can wrap a stream in a generator to add some additional logging behavior
+  //For future edits: syntax for generator type is <typeof Yield, typeof Return, typeof Accept>
+  //"typeof Accept" refers to what types you'll accept when you manually call generator.next(<AcceptType>)
+  async *stream_chat(
+    messages: ChatMessage[],
+    parentEvent?: Event,
+  ): AsyncGenerator<string, void, unknown> {
+    const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
+      model: this.model,
+      temperature: this.temperature,
+      max_tokens: this.maxTokens,
+      messages: messages.map((message) => ({
+        role: this.mapMessageType(message.role),
+        content: message.content,
+      })),
+      top_p: this.topP,
+      ...this.additionalChatOptions,
+    };
+
+    //Now let's wrap our stream in a callback
+    const onLLMStream = this.callbackManager?.onLLMStream
+      ? this.callbackManager.onLLMStream
+      : () => {};
+
+    const chunk_stream: AsyncIterable<OpenAIStreamToken> =
+      await this.session.openai.chat.completions.create({
+        ...baseRequestParams,
+        stream: true,
+      });
+
+    const event: Event = parentEvent
+      ? parentEvent
+      : {
+          id: "unspecified",
+          type: "llmPredict" as EventType,
+        };
+
+    //Indices
+    var idx_counter: number = 0;
+    for await (const part of chunk_stream) {
+      //Increment
+      part.choices[0].index = idx_counter;
+      const is_done: boolean =
+        part.choices[0].finish_reason === "stop" ? true : false;
+      //onLLMStream Callback
+
+      const stream_callback: StreamCallbackResponse = {
+        event: event,
+        index: idx_counter,
+        isDone: is_done,
+        token: part,
+      };
+      onLLMStream(stream_callback);
+
+      idx_counter++;
+
+      yield part.choices[0].delta.content ? part.choices[0].delta.content : "";
+    }
+    return;
+  }
+
+  //Stream_complete doesn't need to be async because it's child function is already async
+  stream_complete(
+    query: string,
+    parentEvent?: Event,
+  ): AsyncGenerator<string, void, unknown> {
+    return this.stream_chat([{ content: query, role: "user" }], parentEvent);
   }
 }
 

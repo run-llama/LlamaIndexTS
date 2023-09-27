@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.29
+
+### Patch Changes
+
+- a52143b: Added DocxReader for Word documents (thanks @jayantasamaddar)
+- 1b7fd95: Updated OpenAI streaming (thanks @kkang2097)
+- 0db3f41: Migrated to Tiktoken lite, which hopefully fixes the Windows issue
+
 ## 0.0.28
 
 ### Patch Changes
