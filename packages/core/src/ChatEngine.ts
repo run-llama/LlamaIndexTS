@@ -155,13 +155,13 @@ export class CondenseQuestionChatEngine implements ChatEngine {
  */
 export class ContextChatEngine implements ChatEngine {
   retriever: BaseRetriever;
-  chatModel: OpenAI;
+  chatModel: LLM;
   chatHistory: ChatMessage[];
   contextSystemPrompt: ContextSystemPrompt;
 
   constructor(init: {
     retriever: BaseRetriever;
-    chatModel?: OpenAI;
+    chatModel?: LLM;
     chatHistory?: ChatMessage[];
     contextSystemPrompt?: ContextSystemPrompt;
   }) {
@@ -211,6 +211,55 @@ export class ContextChatEngine implements ChatEngine {
     );
   }
 
+  async *stream_chat(message: string, chatHistory?: ChatMessage[] | undefined): AsyncGenerator<string, void, unknown> {
+    chatHistory = chatHistory ?? this.chatHistory;
+
+
+    //Streaming capability is optional on LLM, as of v0.0.29
+    if(!this.chatModel.stream_chat){
+      //TODO: We need some sort of tracing here.
+      throw Error("Streaming not supported for this LLM.");
+    }
+
+    const parentEvent: Event = {
+      id: uuidv4(),
+      type: "wrapper",
+      tags: ["final"],
+    };
+    const sourceNodesWithScore = await this.retriever.retrieve(
+      message,
+      parentEvent,
+    );
+
+    const systemMessage: ChatMessage = {
+      content: this.contextSystemPrompt({
+        context: sourceNodesWithScore
+          .map((r) => (r.node as TextNode).text)
+          .join("\n\n"),
+      }),
+      role: "system",
+    };
+
+    chatHistory.push({ content: message, role: "user" });
+
+
+    const response_stream = this.chatModel.stream_chat(
+      [systemMessage, ...chatHistory],
+      parentEvent,
+    );
+    var accumulator: string = "";
+    for await(const part of response_stream){
+      accumulator += part;
+      yield part;
+    }
+
+    chatHistory.push({content: accumulator, role: "system"});
+
+    this.chatHistory = chatHistory;
+
+    return;
+  }
+
   reset() {
     this.chatHistory = [];
   }
@@ -234,6 +283,26 @@ export class HistoryChatEngine implements ChatEngine {
     const response = await this.llm.chat(this.chatHistory.messages);
     this.chatHistory.addMessage(response.message);
     return new Response(response.message.content);
+  }
+
+  async *stream_chat(message: string): AsyncGenerator<string, void, unknown> {
+
+    //Streaming capability is optional on LLM, as of v0.0.29
+    if(!this.llm.stream_chat){
+      //TODO: We need some sort of tracing here.
+      throw Error("Streaming not supported for this LLM.");
+    }
+
+    this.chatHistory.addMessage({ content: message, role: "user" });
+    const response_stream = this.llm.stream_chat(this.chatHistory.messages);
+
+    var accumulator = "";
+    for await(const part of response_stream){
+      accumulator += part;
+      yield part;
+    }
+    this.chatHistory.addMessage({content: accumulator, role: "user"});
+    return;
   }
 
   reset() {
