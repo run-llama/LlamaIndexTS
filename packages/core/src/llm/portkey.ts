@@ -10,7 +10,7 @@ export const readEnv = (env: string, default_val?: string): string | undefined =
 
 interface PortkeyOptions {
   apiKey?: string;
-  baseUrl?: string;
+  baseURL?: string;
   mode?: string;
   llms?: [LLMOptions] | null
 }
@@ -23,8 +23,8 @@ export class PortkeySession {
       options.apiKey = readEnv('PORTKEY_API_KEY')
     }
 
-    if (!options.baseUrl) {
-      options.baseUrl = readEnv('PORTKEY_BASE_URL', "https://api.portkey.ai")
+    if (!options.baseURL) {
+      options.baseURL = readEnv('PORTKEY_BASE_URL', "https://api.portkey.ai")
     }
 
     this.portkey = new Portkey({});

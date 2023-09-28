@@ -598,7 +598,7 @@ export class Anthropic implements LLM {
 
 export class Portkey implements LLM {
   apiKey?: string = undefined;
-  baseUrl?: string = undefined;
+  baseURL?: string = undefined;
   mode?: string = undefined;
   llms?: [LLMOptions] | null = undefined;
   session: PortkeySession;
@@ -606,12 +606,12 @@ export class Portkey implements LLM {
 
   constructor(init?: Partial<Portkey>) {
     this.apiKey = init?.apiKey
-    this.baseUrl = init?.baseUrl
+    this.baseURL = init?.baseURL
     this.mode = init?.mode
     this.llms = init?.llms
     this.session = getPortkeySession({
       apiKey: this.apiKey,
-      baseUrl: this.baseUrl,
+      baseURL: this.baseURL,
       llms: this.llms,
       mode: this.mode
     })
