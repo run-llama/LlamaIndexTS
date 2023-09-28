@@ -1,10 +1,5 @@
 import * as tiktoken from "tiktoken-node";
-import {
-  CallbackManager,
-  Event,
-  EventType,
-} from "../packages/core/src/callbacks/CallbackManager";
-import { ChatMessage, MessageType, OpenAI } from "../packages/core/src/llm/LLM";
+import { ChatMessage, OpenAI } from "../packages/core/src/llm/LLM";
 
 async function main() {
   const query: string = `
@@ -28,7 +23,6 @@ Where is Istanbul?
 
   // const stream2 = await llm.chat([message], undefined);
   const stream = await llm.complete(query, undefined, true);
-
 
   for await (const part of stream) {
     //This only gives you the string part of a stream

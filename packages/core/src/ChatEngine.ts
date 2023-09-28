@@ -25,8 +25,14 @@ export interface ChatEngine {
    * @param chatHistory optional chat history if you want to customize the chat history
    * @param streaming optional streaming flag, which auto-sets the return value if True.
    */
-  chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : Response>
-(message: string, chatHistory?: ChatMessage[], streaming?: T): Promise<R>;
+  chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
+  >(
+    message: string,
+    chatHistory?: ChatMessage[],
+    streaming?: T,
+  ): Promise<R>;
 
   /**
    * Resets the chat history so that it's empty.
@@ -46,11 +52,12 @@ export class SimpleChatEngine implements ChatEngine {
     this.llm = init?.llm ?? new OpenAI();
   }
 
-  async chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : Response>
-  (message: string, chatHistory?: ChatMessage[], streaming?: T): Promise<R> {
-
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
+  >(message: string, chatHistory?: ChatMessage[], streaming?: T): Promise<R> {
     //Streaming option
-    if(streaming){
+    if (streaming) {
       return this.streamChat(message, chatHistory) as R;
     }
 
@@ -63,13 +70,20 @@ export class SimpleChatEngine implements ChatEngine {
     return new Response(response.message.content) as R;
   }
 
-  protected async *streamChat(message: string, chatHistory?: ChatMessage[]): AsyncGenerator<string, void, unknown> {
+  protected async *streamChat(
+    message: string,
+    chatHistory?: ChatMessage[],
+  ): AsyncGenerator<string, void, unknown> {
     chatHistory = chatHistory ?? this.chatHistory;
     chatHistory.push({ content: message, role: "user" });
-    const response_generator = await this.llm.chat(chatHistory, undefined, true);
+    const response_generator = await this.llm.chat(
+      chatHistory,
+      undefined,
+      true,
+    );
 
     var accumulator: string = "";
-    for await(const part of response_generator){
+    for await (const part of response_generator) {
       accumulator += part;
       yield part;
     }
@@ -125,10 +139,13 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     );
   }
 
-  async chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : Response>(
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
+  >(
     message: string,
     chatHistory?: ChatMessage[] | undefined,
-    streaming?: T
+    streaming?: T,
   ): Promise<R> {
     chatHistory = chatHistory ?? this.chatHistory;
 
@@ -174,12 +191,18 @@ export class ContextChatEngine implements ChatEngine {
       init?.contextSystemPrompt ?? defaultContextSystemPrompt;
   }
 
-  async chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : Response>
-  (message: string, chatHistory?: ChatMessage[] | undefined, streaming?: T): Promise<R> {
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
+  >(
+    message: string,
+    chatHistory?: ChatMessage[] | undefined,
+    streaming?: T,
+  ): Promise<R> {
     chatHistory = chatHistory ?? this.chatHistory;
 
     //Streaming option
-    if(streaming){
+    if (streaming) {
       return this.streamChat(message, chatHistory) as R;
     }
 
@@ -218,7 +241,10 @@ export class ContextChatEngine implements ChatEngine {
     ) as R;
   }
 
-  protected async *streamChat(message: string, chatHistory?: ChatMessage[] | undefined): AsyncGenerator<string, void, unknown> {
+  protected async *streamChat(
+    message: string,
+    chatHistory?: ChatMessage[] | undefined,
+  ): AsyncGenerator<string, void, unknown> {
     chatHistory = chatHistory ?? this.chatHistory;
 
     const parentEvent: Event = {
@@ -242,19 +268,18 @@ export class ContextChatEngine implements ChatEngine {
 
     chatHistory.push({ content: message, role: "user" });
 
-
     const response_stream = await this.chatModel.chat(
       [systemMessage, ...chatHistory],
       parentEvent,
-      true
+      true,
     );
     var accumulator: string = "";
-    for await(const part of response_stream){
+    for await (const part of response_stream) {
       accumulator += part;
       yield part;
     }
 
-    chatHistory.push({content: accumulator, role: "system"});
+    chatHistory.push({ content: accumulator, role: "system" });
 
     this.chatHistory = chatHistory;
 
@@ -279,10 +304,16 @@ export class HistoryChatEngine implements ChatEngine {
     this.llm = init?.llm ?? new OpenAI();
   }
 
-  async chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : Response>
-  (message: string, chatHistory?: ChatMessage[] | undefined, streaming?: T ): Promise<R> {
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
+  >(
+    message: string,
+    chatHistory?: ChatMessage[] | undefined,
+    streaming?: T,
+  ): Promise<R> {
     //Streaming option
-    if(streaming){
+    if (streaming) {
       return this.streamChat(message, chatHistory) as R;
     }
     this.chatHistory.addMessage({ content: message, role: "user" });
@@ -291,17 +322,23 @@ export class HistoryChatEngine implements ChatEngine {
     return new Response(response.message.content) as R;
   }
 
-  protected async *streamChat(message: string, chatHistory?: ChatMessage[] | undefined): AsyncGenerator<string, void, unknown> {
-
+  protected async *streamChat(
+    message: string,
+    chatHistory?: ChatMessage[] | undefined,
+  ): AsyncGenerator<string, void, unknown> {
     this.chatHistory.addMessage({ content: message, role: "user" });
-    const response_stream = await this.llm.chat(this.chatHistory.messages, undefined, true);
+    const response_stream = await this.llm.chat(
+      this.chatHistory.messages,
+      undefined,
+      true,
+    );
 
     var accumulator = "";
-    for await(const part of response_stream){
+    for await (const part of response_stream) {
       accumulator += part;
       yield part;
     }
-    this.chatHistory.addMessage({content: accumulator, role: "user"});
+    this.chatHistory.addMessage({ content: accumulator, role: "user" });
     return;
   }
 

@@ -53,18 +53,30 @@ export interface LLM {
   /**
    * Get a chat response from the LLM
    * @param messages
-   * 
+   *
    * The return type of chat() and complete() are set by the "streaming" parameter being set to True.
    */
-  chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>
-  (messages: ChatMessage[], parentEvent?: Event, streaming?: T): Promise<R>;
+  chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(
+    messages: ChatMessage[],
+    parentEvent?: Event,
+    streaming?: T,
+  ): Promise<R>;
 
   /**
    * Get a prompt completion from the LLM
    * @param prompt the prompt to complete
    */
-  complete<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>
-  (prompt: string, parentEvent?: Event, streaming?: T): Promise<R>;
+  complete<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(
+    prompt: string,
+    parentEvent?: Event,
+    streaming?: T,
+  ): Promise<R>;
 }
 
 export const GPT4_MODELS = {
@@ -184,11 +196,10 @@ export class OpenAI implements LLM {
     }
   }
 
-  async chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>(
-    messages: ChatMessage[],
-    parentEvent?: Event,
-    streaming?: T,
-  ): Promise<R>  {
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(messages: ChatMessage[], parentEvent?: Event, streaming?: T): Promise<R> {
     const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
@@ -201,8 +212,8 @@ export class OpenAI implements LLM {
       ...this.additionalChatOptions,
     };
     // Streaming
-    if(streaming){
-      if(!this.hasStreaming){
+    if (streaming) {
+      if (!this.hasStreaming) {
         throw Error("No streaming support for this LLM.");
       }
       return this.streamChat(messages, parentEvent) as R;
@@ -214,15 +225,20 @@ export class OpenAI implements LLM {
     });
 
     const content = response.choices[0].message?.content ?? "";
-    return { message: { content, role: response.choices[0].message.role } } as R;
+    return {
+      message: { content, role: response.choices[0].message.role },
+    } as R;
   }
 
-  async complete<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>(
-    prompt: string,
-    parentEvent?: Event,
-    streaming?: T
-  ): Promise<R> {
-    return this.chat([{ content: prompt, role: "user" }], parentEvent, streaming);
+  async complete<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(prompt: string, parentEvent?: Event, streaming?: T): Promise<R> {
+    return this.chat(
+      [{ content: prompt, role: "user" }],
+      parentEvent,
+      streaming,
+    );
   }
 
   //We can wrap a stream in a generator to add some additional logging behavior
@@ -477,11 +493,10 @@ If a question does not make any sense, or is not factually coherent, explain why
     };
   }
 
-  async chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>(
-    messages: ChatMessage[],
-    _parentEvent?: Event,
-    streaming?: T
-  ): Promise<R> {
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(messages: ChatMessage[], _parentEvent?: Event, streaming?: T): Promise<R> {
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
       .replicateApi as `${string}/${string}:${string}`;
 
@@ -518,11 +533,10 @@ If a question does not make any sense, or is not factually coherent, explain why
     } as R;
   }
 
-  async complete<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>(
-    prompt: string,
-    parentEvent?: Event,
-    streaming?: T
-  ): Promise<R> {
+  async complete<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(prompt: string, parentEvent?: Event, streaming?: T): Promise<R> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
 }
@@ -530,7 +544,6 @@ If a question does not make any sense, or is not factually coherent, explain why
 /**
  * Anthropic LLM implementation
  */
-
 
 //TODO: Add streaming for this
 export class Anthropic implements LLM {
@@ -585,10 +598,13 @@ export class Anthropic implements LLM {
     );
   }
 
-  async chat<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>(
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(
     messages: ChatMessage[],
     parentEvent?: Event | undefined,
-    streaming?: T
+    streaming?: T,
   ): Promise<R> {
     const response = await this.session.anthropic.completions.create({
       model: this.model,
@@ -604,10 +620,13 @@ export class Anthropic implements LLM {
       // That space will be re-added when we generate the next prompt.
     } as R;
   }
-  async complete<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>(
+  async complete<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(
     prompt: string,
     parentEvent?: Event | undefined,
-    streaming?: T
+    streaming?: T,
   ): Promise<R> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent) as R;
   }
