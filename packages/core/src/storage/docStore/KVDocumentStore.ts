@@ -9,7 +9,7 @@ type DocMetaData = { docHash: string; refDocId?: string };
 
 export class KVDocumentStore extends BaseDocumentStore {
   private kvstore: BaseKVStore;
-  private nodeCollection: string;
+  protected nodeCollection: string;
   private refDocCollection: string;
   private metadataCollection: string;
 

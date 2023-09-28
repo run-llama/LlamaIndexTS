@@ -6,7 +6,7 @@ import { BaseIndexStore } from "./types";
 
 export class KVIndexStore extends BaseIndexStore {
   private _kvStore: BaseKVStore;
-  private _collection: string;
+  protected _collection: string;
 
   constructor(kvStore: BaseKVStore, namespace: string = DEFAULT_NAMESPACE) {
     super();
