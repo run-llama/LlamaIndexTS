@@ -205,7 +205,7 @@ export class OpenAI implements LLM {
       if(!this.hasStreaming){
         throw Error("No streaming support for this LLM.");
       }
-      return this.stream_chat(messages, parentEvent) as R;
+      return this.streamChat(messages, parentEvent) as R;
     }
     // Non-streaming
     const response = await this.session.openai.chat.completions.create({
@@ -228,7 +228,7 @@ export class OpenAI implements LLM {
   //We can wrap a stream in a generator to add some additional logging behavior
   //For future edits: syntax for generator type is <typeof Yield, typeof Return, typeof Accept>
   //"typeof Accept" refers to what types you'll accept when you manually call generator.next(<AcceptType>)
-  protected async *stream_chat(
+  protected async *streamChat(
     messages: ChatMessage[],
     parentEvent?: Event,
   ): AsyncGenerator<string, void, unknown> {
@@ -286,12 +286,12 @@ export class OpenAI implements LLM {
     return;
   }
 
-  //Stream_complete doesn't need to be async because it's child function is already async
-  protected stream_complete(
+  //streamComplete doesn't need to be async because it's child function is already async
+  protected streamComplete(
     query: string,
     parentEvent?: Event,
   ): AsyncGenerator<string, void, unknown> {
-    return this.stream_chat([{ content: query, role: "user" }], parentEvent);
+    return this.streamChat([{ content: query, role: "user" }], parentEvent);
   }
 }
 
