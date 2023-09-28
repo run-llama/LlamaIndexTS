@@ -22,7 +22,6 @@ export interface BaseQueryEngine {
    * @param parentEvent
    */
   query(query: string, parentEvent?: Event): Promise<Response>;
-  stream_query?(query: string, parentEvent?: Event): AsyncGenerator<string, void, unknown>;
 }
 
 /**
