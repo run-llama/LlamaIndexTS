@@ -1,5 +1,6 @@
 import * as tiktoken from "tiktoken-node";
 import { ChatMessage, OpenAI } from "../packages/core/src/llm/LLM";
+import {SimpleChatEngine } from "../packages/core/src/ChatEngine";
 
 async function main() {
   const query: string = `
@@ -38,6 +39,17 @@ Where is Istanbul?
   console.log(
     `Output token total using tokenizer on accumulated output: ${correct_total_tokens}`,
   );
+
+
+  accumulated_result = "";
+  const chatEngine: SimpleChatEngine = new SimpleChatEngine();
+  const chatStream = await chatEngine.chat(query, undefined, true);
+    for await (const part of chatStream){
+      console.log(part);
+      accumulated_result += part;
+    }
+
+  console.log(accumulated_result);
 }
 
 main();
