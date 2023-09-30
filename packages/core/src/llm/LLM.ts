@@ -546,7 +546,6 @@ If a question does not make any sense, or is not factually coherent, explain why
  * Anthropic LLM implementation
  */
 
-//TODO: Add streaming for this
 export class Anthropic implements LLM {
   // Per completion Anthropic params
   model: string;
