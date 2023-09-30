@@ -4,6 +4,7 @@ import {
   Event,
   EventType,
   OpenAIStreamToken,
+  AnthropicStreamToken,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
 
@@ -606,6 +607,15 @@ export class Anthropic implements LLM {
     parentEvent?: Event | undefined,
     streaming?: T,
   ): Promise<R> {
+
+    //Streaming
+    if (streaming) {
+      if (!this.hasStreaming) {
+        throw Error("No streaming support for this LLM.");
+      }
+      return this.streamChat(messages, parentEvent) as R;
+    }
+    //Non-streaming
     const response = await this.session.anthropic.completions.create({
       model: this.model,
       prompt: this.mapMessagesToPrompt(messages),
@@ -620,6 +630,35 @@ export class Anthropic implements LLM {
       // That space will be re-added when we generate the next prompt.
     } as R;
   }
+
+  protected async *streamChat(messages: ChatMessage[], parentEvent?: Event | undefined): AsyncGenerator<string, void, unknown>
+  {
+    // AsyncIterable<AnthropicStreamToken>
+    const stream:AsyncIterable<AnthropicStreamToken>  = await this.session.anthropic.completions.create({
+      model: this.model,
+      prompt: this.mapMessagesToPrompt(messages),
+      max_tokens_to_sample: this.maxTokens ?? 100000,
+      temperature: this.temperature,
+      top_p: this.topP,
+      streaming: true
+    })
+
+    var idx_counter: number = 0;
+    for await (const part of stream) {
+      //Increment
+      part.choices[0].index = idx_counter;
+      const is_done: boolean =
+        part.choices[0].finish_reason === "stop" ? true : false;
+      //TODO: LLM Stream Callback, pending re-work.
+
+      idx_counter++;
+      yield part.choices[0].delta.content ? part.choices[0].delta.content : "";
+
+    return;
+  }
+
+}
+
   async complete<
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
@@ -629,5 +668,9 @@ export class Anthropic implements LLM {
     streaming?: T,
   ): Promise<R> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent) as R;
+  }
+
+  protected stream_complete(prompt: string, parentEvent?: Event | undefined): AsyncGenerator<string, void, unknown>{
+    return this.streamChat([{ content: prompt, role: "user" }], parentEvent);
   }
 }
