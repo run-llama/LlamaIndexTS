@@ -1,4 +1,4 @@
-import {ChatMessage, OpenAI, Anthropic, SimpleChatEngine} from "llamaindex";
+import { Anthropic, ChatMessage, SimpleChatEngine } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
@@ -35,7 +35,7 @@ Where is Istanbul?
     //Case 2: .chat(query, undefined, false) => Response object
     //Case 3: .chat(query, undefined) => Response object
     const chatStream = await chatEngine.chat(query, undefined, true);
-    for await (const part of chatStream){
+    for await (const part of chatStream) {
       process.stdout.write(part);
       // accumulated_result += part;
     }
