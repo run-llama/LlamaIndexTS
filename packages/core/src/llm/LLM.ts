@@ -642,22 +642,17 @@ export class Anthropic implements LLM {
         max_tokens_to_sample: this.maxTokens ?? 100000,
         temperature: this.temperature,
         top_p: this.topP,
-        streaming: true,
+        stream: true,
       });
 
     var idx_counter: number = 0;
     for await (const part of stream) {
-      //Increment
-      part.choices[0].index = idx_counter;
-      const is_done: boolean =
-        part.choices[0].finish_reason === "stop" ? true : false;
       //TODO: LLM Stream Callback, pending re-work.
 
       idx_counter++;
-      yield part.choices[0].delta.content ? part.choices[0].delta.content : "";
-
-      return;
+      yield part.completion;
     }
+    return;
   }
 
   async complete<
@@ -668,10 +663,13 @@ export class Anthropic implements LLM {
     parentEvent?: Event | undefined,
     streaming?: T,
   ): Promise<R> {
-    return this.chat([{ content: prompt, role: "user" }], parentEvent) as R;
+    if(streaming){
+      return this.streamComplete(prompt, parentEvent) as R;
+    }
+    return this.chat([{ content: prompt, role: "user" }], parentEvent, streaming) as R;
   }
 
-  protected stream_complete(
+  protected streamComplete(
     prompt: string,
     parentEvent?: Event | undefined,
   ): AsyncGenerator<string, void, unknown> {
