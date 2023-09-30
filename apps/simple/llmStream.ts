@@ -1,4 +1,4 @@
-import {ChatMessage, OpenAI, SimpleChatEngine} from "llamaindex";
+import {ChatMessage, OpenAI, Anthropic, SimpleChatEngine} from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
@@ -7,7 +7,8 @@ async function main() {
 Where is Istanbul?
   `;
 
-  const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
+  // const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
+  const llm = new Anthropic();
   const message: ChatMessage = { content: query, role: "user" };
 
   var accumulated_result: string = "";
@@ -20,17 +21,6 @@ Where is Istanbul?
   //either an AsyncGenerator or a Response.
   // Omitting the streaming flag automatically sets streaming to false
 
-  // const stream2 = await llm.chat([message], undefined);
-  const stream = await llm.complete(query, undefined, true);
-
-  for await (const part of stream) {
-    //This only gives you the string part of a stream
-    console.log(part);
-    accumulated_result += part;
-  }
-
-
-  accumulated_result = "";
   const chatEngine: SimpleChatEngine = new SimpleChatEngine();
 
   const rl = readline.createInterface({ input, output });
@@ -41,6 +31,9 @@ Where is Istanbul?
       break;
     }
 
+    //Case 1: .chat(query, undefined, true) => Stream
+    //Case 2: .chat(query, undefined, false) => Response object
+    //Case 3: .chat(query, undefined) => Response object
     const chatStream = await chatEngine.chat(query, undefined, true);
     for await (const part of chatStream){
       process.stdout.write(part);
