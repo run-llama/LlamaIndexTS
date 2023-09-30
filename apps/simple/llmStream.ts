@@ -1,6 +1,6 @@
-import * as tiktoken from "tiktoken-node";
-import { ChatMessage, OpenAI } from "../packages/core/src/llm/LLM";
-import {SimpleChatEngine } from "../packages/core/src/ChatEngine";
+import {ChatMessage, OpenAI, SimpleChatEngine} from "llamaindex";
+import { stdin as input, stdout as output } from "node:process";
+import readline from "node:readline/promises";
 
 async function main() {
   const query: string = `
@@ -13,9 +13,7 @@ Where is Istanbul?
   var accumulated_result: string = "";
   var total_tokens: number = 0;
 
-  //Callback stuff, like logging token usage.
-  //GPT 3.5 Turbo uses CL100K_Base encodings, check your LLM to see which tokenizer it uses.
-  const encoding = tiktoken.getEncoding("cl100k_base");
+  //TODO: Add callbacks later
 
   //Stream Complete
   //Note: Setting streaming flag to true or false will auto-set your return type to
@@ -31,25 +29,24 @@ Where is Istanbul?
     accumulated_result += part;
   }
 
-  const correct_total_tokens: number =
-    encoding.encode(accumulated_result).length;
-
-  console.log(accumulated_result);
-  //Check if our stream token counter works
-  console.log(
-    `Output token total using tokenizer on accumulated output: ${correct_total_tokens}`,
-  );
-
 
   accumulated_result = "";
   const chatEngine: SimpleChatEngine = new SimpleChatEngine();
-  const chatStream = await chatEngine.chat(query, undefined, true);
-    for await (const part of chatStream){
-      console.log(part);
-      accumulated_result += part;
+
+  const rl = readline.createInterface({ input, output });
+  while (true) {
+    const query = await rl.question("Query: ");
+
+    if (!query) {
+      break;
     }
 
-  console.log(accumulated_result);
+    const chatStream = await chatEngine.chat(query, undefined, true);
+    for await (const part of chatStream){
+      process.stdout.write(part);
+      // accumulated_result += part;
+    }
+  }
 }
 
 main();
