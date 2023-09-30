@@ -663,10 +663,14 @@ export class Anthropic implements LLM {
     parentEvent?: Event | undefined,
     streaming?: T,
   ): Promise<R> {
-    if(streaming){
+    if (streaming) {
       return this.streamComplete(prompt, parentEvent) as R;
     }
-    return this.chat([{ content: prompt, role: "user" }], parentEvent, streaming) as R;
+    return this.chat(
+      [{ content: prompt, role: "user" }],
+      parentEvent,
+      streaming,
+    ) as R;
   }
 
   protected streamComplete(

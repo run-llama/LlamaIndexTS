@@ -1,5 +1,5 @@
-import {OpenAI, Anthropic, ChatMessage, SimpleChatEngine } from "llamaindex";
-// import {Anthropic} from '@anthropic-ai/sdk';
+import { ChatMessage, OpenAI, SimpleChatEngine } from "llamaindex";
+import {Anthropic} from "../../packages/core/src/llm/LLM";
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
@@ -9,11 +9,8 @@ Where is Istanbul?
   `;
 
   // const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
-  const llm = new OpenAI();
+  const llm = new Anthropic();
   const message: ChatMessage = { content: query, role: "user" };
-
-  // var accumulated_result: string = "";
-  // var total_tokens: number = 0;
 
   //TODO: Add callbacks later
 
@@ -22,7 +19,10 @@ Where is Istanbul?
   //either an AsyncGenerator or a Response.
   // Omitting the streaming flag automatically sets streaming to false
 
-  const chatEngine: SimpleChatEngine = new SimpleChatEngine({chatHistory: undefined, llm: llm});
+  const chatEngine: SimpleChatEngine = new SimpleChatEngine({
+    chatHistory: undefined,
+    llm: llm,
+  });
 
   const rl = readline.createInterface({ input, output });
   while (true) {
