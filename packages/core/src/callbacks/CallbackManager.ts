@@ -39,6 +39,13 @@ export interface DefaultStreamToken {
 //OpenAI stream token schema is the default.
 //Note: Anthropic and Replicate also use similar token schemas.
 export type OpenAIStreamToken = DefaultStreamToken;
+export type AnthropicStreamToken = {
+  completion: string;
+  model: string;
+  stop_reason: string | undefined;
+  stop?: boolean | undefined;
+  log_id?: string;
+};
 
 //
 //Callback Responses
