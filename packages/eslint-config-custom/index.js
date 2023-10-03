@@ -18,6 +18,12 @@ module.exports = {
           "OPENAI_API_BASE",
           "OPENAI_API_VERSION",
           "OPENAI_API_TYPE",
+          "OPENAI_API_ORGANIZATION",
+
+          "PINECONE_API_KEY",
+          "PINECONE_ENVIRONMENT",
+          "PINECONE_PROJECT_ID",
+          "PINECONE_INDEX_NAME",
 
           "AZURE_OPENAI_API_KEY",
           "AZURE_OPENAI_API_INSTANCE_NAME",

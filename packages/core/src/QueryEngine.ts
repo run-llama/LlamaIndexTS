@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { Event } from "./callbacks/CallbackManager";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
@@ -10,7 +11,6 @@ import { CompactAndRefine, ResponseSynthesizer } from "./ResponseSynthesizer";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
-import { Event } from "./callbacks/CallbackManager";
 
 /**
  * A query engine is a question answerer that can use one or more steps.
@@ -30,16 +30,19 @@ export interface BaseQueryEngine {
 export class RetrieverQueryEngine implements BaseQueryEngine {
   retriever: BaseRetriever;
   responseSynthesizer: ResponseSynthesizer;
+  preFilters?: unknown;
 
   constructor(
     retriever: BaseRetriever,
     responseSynthesizer?: ResponseSynthesizer,
+    preFilters?: unknown,
   ) {
     this.retriever = retriever;
     const serviceContext: ServiceContext | undefined =
       this.retriever.getServiceContext();
     this.responseSynthesizer =
       responseSynthesizer || new ResponseSynthesizer({ serviceContext });
+    this.preFilters = preFilters;
   }
 
   async query(query: string, parentEvent?: Event) {
@@ -48,7 +51,11 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
       type: "wrapper",
       tags: ["final"],
     };
-    const nodes = await this.retriever.retrieve(query, _parentEvent);
+    const nodes = await this.retriever.retrieve(
+      query,
+      _parentEvent,
+      this.preFilters,
+    );
     return this.responseSynthesizer.synthesize(query, nodes, _parentEvent);
   }
 }

@@ -219,6 +219,27 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return index;
   }
 
+  static async fromVectorStore(
+    vectorStore: VectorStore,
+    serviceContext: ServiceContext,
+  ) {
+    if (!vectorStore.storesText) {
+      throw new Error(
+        "Cannot initialize from a vector store that does not store text",
+      );
+    }
+
+    const storageContext = await storageContextFromDefaults({ vectorStore });
+
+    const index = await VectorStoreIndex.init({
+      nodes: [],
+      storageContext,
+      serviceContext,
+    });
+
+    return index;
+  }
+
   asRetriever(options?: any): VectorIndexRetriever {
     return new VectorIndexRetriever({ index: this, ...options });
   }
