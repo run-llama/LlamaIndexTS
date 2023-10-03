@@ -17,7 +17,9 @@ import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
 /**
  * Please do not use this class in production; it's only for demonstration purposes.
  */
-class PineconeVectorStore<T extends RecordMetadata = RecordMetadata> implements VectorStore {
+class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
+  implements VectorStore
+{
   storesText = true;
   isEmbeddingQuery = false;
 
@@ -25,13 +27,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata> implements 
   pineconeClient!: Pinecone;
   index!: Index<T>;
 
-  constructor({
-    indexName,
-    client,
-  }: {
-    indexName: string;
-    client: Pinecone;
-  }) {
+  constructor({ indexName, client }: { indexName: string; client: Pinecone }) {
     this.indexName = indexName;
     this.pineconeClient = client;
     this.index = client.index<T>(indexName);
@@ -46,9 +42,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata> implements 
     kwargs?: any,
   ): Promise<VectorStoreQueryResult> {
     let queryEmbedding: number[] = [];
-    if (
-      query.queryEmbedding
-    ) {
+    if (query.queryEmbedding) {
       if (typeof query.alpha === "number") {
         const alpha = query.alpha;
         queryEmbedding = query.queryEmbedding.map((v) => v * alpha);
@@ -68,8 +62,11 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata> implements 
       includeMetadata: true,
     });
 
-
-    console.log(`Numbers of vectors returned by Pinecone after preFilters are applied: ${response?.matches?.length || 0}.`);
+    console.log(
+      `Numbers of vectors returned by Pinecone after preFilters are applied: ${
+        response?.matches?.length || 0
+      }.`,
+    );
 
     const topKIds: string[] = [];
     const topKNodes: TextNode[] = [];
@@ -130,29 +127,29 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata> implements 
 /**
  * The goal of this example is to show how to use Pinecone as a vector store
  * for LlamaIndexTS with(out) preFilters.
- * 
+ *
  * It should not be used in production like that,
  * as you might want to find a proper PineconeVectorStore implementation.
  */
 async function main() {
-  process.env.PINECONE_API_KEY = 'Your Pinecone API Key.';
-  process.env.PINECONE_ENVIRONMENT = 'Your Pinecone Environment.';
-  process.env.PINECONE_PROJECT_ID = 'Your Pinecone Project ID.';
-  process.env.PINECONE_INDEX_NAME = 'Your Pinecone Index Name.';
-  process.env.OPENAI_API_KEY = 'Your OpenAI API Key.';
-  process.env.OPENAI_API_ORGANISATION = 'Your OpenAI API Organisation.'
+  process.env.PINECONE_API_KEY = "Your Pinecone API Key.";
+  process.env.PINECONE_ENVIRONMENT = "Your Pinecone Environment.";
+  process.env.PINECONE_PROJECT_ID = "Your Pinecone Project ID.";
+  process.env.PINECONE_INDEX_NAME = "Your Pinecone Index Name.";
+  process.env.OPENAI_API_KEY = "Your OpenAI API Key.";
+  process.env.OPENAI_API_ORGANIZATION = "Your OpenAI API Organization.";
 
   const getPineconeVectorStore = async () => {
     return new PineconeVectorStore({
-      indexName: process.env.PINECONE_INDEX_NAME || 'index-name',
+      indexName: process.env.PINECONE_INDEX_NAME || "index-name",
       client: new Pinecone(),
     });
-  }
+  };
 
   const getServiceContext = () => {
     const openAI = new OpenAI({
       model: "gpt-4",
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.OPENAI_API_KEY,
     });
 
     return serviceContextFromDefaults({
@@ -163,33 +160,36 @@ async function main() {
   const getQueryEngine = async (filter: unknown) => {
     const vectorStore = await getPineconeVectorStore();
     const serviceContext = getServiceContext();
-  
+
     const vectorStoreIndex = await VectorStoreIndex.fromVectorStore(
       vectorStore,
       serviceContext,
     );
-  
-    const retriever = new VectorIndexRetriever({ index: vectorStoreIndex, similarityTopK: 500 });
-  
+
+    const retriever = new VectorIndexRetriever({
+      index: vectorStoreIndex,
+      similarityTopK: 500,
+    });
+
     const responseSynthesizer = new ResponseSynthesizer({
       serviceContext,
       responseBuilder: new TreeSummarize(serviceContext),
     });
-  
+
     return new RetrieverQueryEngine(retriever, responseSynthesizer, {
-      filter
+      filter,
     });
-  }
-  
+  };
+
   // whatever is a key from your metadata
   const queryEngine = await getQueryEngine({
     whatever: {
       $gte: 1,
-      $lte: 100
+      $lte: 100,
     },
   });
 
-  const response = await queryEngine.query('How many results do you have?');
+  const response = await queryEngine.query("How many results do you have?");
 
   console.log(response.toString());
 }
