@@ -8,6 +8,7 @@ import {
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
 
+import { LLMOptions } from "portkey-ai";
 import {
   AnthropicSession,
   ANTHROPIC_AI_PROMPT,
@@ -22,6 +23,7 @@ import {
   shouldUseAzure,
 } from "./azure";
 import { getOpenAISession, OpenAISession } from "./openai";
+import { PortkeySession, getPortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate";
 
 export type MessageType =
@@ -677,5 +679,106 @@ export class Anthropic implements LLM {
     parentEvent?: Event | undefined,
   ): AsyncGenerator<string, void, unknown> {
     return this.streamChat([{ content: prompt, role: "user" }], parentEvent);
+  }
+}
+
+
+export class Portkey implements LLM {
+  apiKey?: string = undefined;
+  baseURL?: string = undefined;
+  mode?: string = undefined;
+  llms?: [LLMOptions] | null = undefined;
+  session: PortkeySession;
+  callbackManager?: CallbackManager;
+
+  constructor(init?: Partial<Portkey>) {
+    this.apiKey = init?.apiKey
+    this.baseURL = init?.baseURL
+    this.mode = init?.mode
+    this.llms = init?.llms
+    this.session = getPortkeySession({
+      apiKey: this.apiKey,
+      baseURL: this.baseURL,
+      llms: this.llms,
+      mode: this.mode
+    })
+    this.callbackManager = init?.callbackManager;
+  }
+
+  async chat(
+    messages: ChatMessage[],
+    parentEvent?: Event | undefined,
+    params?: Record<string, any>
+  ): Promise<ChatResponse> {
+    const resolvedParams = params || {}
+    const response = await this.session.portkey.chatCompletions.create({
+      messages,
+      ...resolvedParams
+    });
+
+    const content = response.choices[0].message?.content ?? "";
+    const role = response.choices[0].message?.role || "assistant";
+    return { message: { content, role: role as MessageType } };
+  }
+  async complete(
+    prompt: string,
+    parentEvent?: Event | undefined,
+  ): Promise<CompletionResponse> {
+    return this.chat([{ content: prompt, role: "user" }], parentEvent);
+  }
+
+  async *stream_chat(
+    messages: ChatMessage[],
+    parentEvent?: Event,
+    params?: Record<string, any>
+  ): AsyncGenerator<string, void, unknown> {
+    // Wrapping the stream in a callback.
+    const onLLMStream = this.callbackManager?.onLLMStream
+      ? this.callbackManager.onLLMStream
+      : () => {};
+
+    const chunk_stream =
+      await this.session.portkey.chatCompletions.create({
+        messages,
+        ...params,
+        stream: true,
+      });
+
+    const event: Event = parentEvent
+      ? parentEvent
+      : {
+          id: "unspecified",
+          type: "llmPredict" as EventType,
+        };
+
+    //Indices
+    var idx_counter: number = 0;
+    for await (const part of chunk_stream) {
+      //Increment
+      part.choices[0].index = idx_counter;
+      const is_done: boolean =
+        part.choices[0].finish_reason === "stop" ? true : false;
+      //onLLMStream Callback
+
+      const stream_callback: StreamCallbackResponse = {
+        event: event,
+        index: idx_counter,
+        isDone: is_done,
+        // token: part,
+      };
+      onLLMStream(stream_callback);
+
+      idx_counter++;
+
+      yield part.choices[0].delta?.content ?? "";
+    }
+    return;
+  }
+
+  stream_complete(
+    query: string,
+    parentEvent?: Event,
+  ): AsyncGenerator<string, void, unknown> {
+    return this.stream_chat([{ content: query, role: "user" }], parentEvent);
   }
 }
