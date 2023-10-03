@@ -4,6 +4,7 @@
   "name": "simple",
   "dependencies": {
     "@notionhq/client": "^2.2.12",
+    "@pinecone-database/pinecone": "^1.0.1",
     "commander": "^11.0.0",
     "llamaindex": "workspace:*"
   },

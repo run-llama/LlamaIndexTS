@@ -1,9 +1,9 @@
+import { Event } from "../../callbacks/CallbackManager";
+import { DEFAULT_SIMILARITY_TOP_K } from "../../constants";
 import { globalsHelper } from "../../GlobalsHelper";
 import { NodeWithScore } from "../../Node";
 import { BaseRetriever } from "../../Retriever";
 import { ServiceContext } from "../../ServiceContext";
-import { Event } from "../../callbacks/CallbackManager";
-import { DEFAULT_SIMILARITY_TOP_K } from "../../constants";
 import {
   VectorStoreQuery,
   VectorStoreQueryMode,
@@ -32,7 +32,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     this.similarityTopK = similarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
   }
 
-  async retrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]> {
+  async retrieve(query: string, parentEvent?: Event, preFilters?: unknown): Promise<NodeWithScore[]> {
     const queryEmbedding =
       await this.serviceContext.embedModel.getQueryEmbedding(query);
 
@@ -41,10 +41,15 @@ export class VectorIndexRetriever implements BaseRetriever {
       mode: VectorStoreQueryMode.DEFAULT,
       similarityTopK: this.similarityTopK,
     };
-    const result = await this.index.vectorStore.query(q);
+    const result = await this.index.vectorStore.query(q, preFilters);
 
     let nodesWithScores: NodeWithScore[] = [];
     for (let i = 0; i < result.ids.length; i++) {
+      const nodeFromResult = result.nodes?.[i];
+      if (!this.index.indexStruct.nodesDict[result.ids[i]] && nodeFromResult) {
+        this.index.indexStruct.nodesDict[result.ids[i]] = nodeFromResult;
+      }
+
       const node = this.index.indexStruct.nodesDict[result.ids[i]];
       nodesWithScores.push({
         node: node,
