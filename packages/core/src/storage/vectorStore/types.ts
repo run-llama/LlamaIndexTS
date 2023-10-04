@@ -67,5 +67,5 @@ export interface VectorStore {
     query: VectorStoreQuery,
     options?: any,
   ): Promise<VectorStoreQueryResult>;
-  persist(persistPath: string, fs?: GenericFileSystem): Promise<void>;
+  persist?(persistPath: string, fs?: GenericFileSystem): Promise<void>;
 }
