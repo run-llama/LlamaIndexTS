@@ -317,7 +317,7 @@ export class HistoryChatEngine implements ChatEngine {
       return this.streamChat(message, chatHistory) as R;
     }
     this.chatHistory.addMessage({ content: message, role: "user" });
-    const response = await this.llm.chat(this.chatHistory.messages);
+    const response = await this.llm.chat(this.chatHistory.requestMessages);
     this.chatHistory.addMessage(response.message);
     return new Response(response.message.content) as R;
   }
@@ -328,7 +328,7 @@ export class HistoryChatEngine implements ChatEngine {
   ): AsyncGenerator<string, void, unknown> {
     this.chatHistory.addMessage({ content: message, role: "user" });
     const response_stream = await this.llm.chat(
-      this.chatHistory.messages,
+      this.chatHistory.requestMessages,
       undefined,
       true,
     );
