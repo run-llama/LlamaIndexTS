@@ -23,7 +23,7 @@ import {
   shouldUseAzure,
 } from "./azure";
 import { getOpenAISession, OpenAISession } from "./openai";
-import { PortkeySession, getPortkeySession } from "./portkey";
+import { getPortkeySession, PortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate";
 
 export type MessageType =
@@ -51,7 +51,7 @@ export type CompletionResponse = ChatResponse;
  * Unified language model interface
  */
 export interface LLM {
-  //Whether a LLM has streaming support
+  // Whether a LLM has streaming support
   hasStreaming: boolean;
   /**
    * Get a chat response from the LLM
@@ -104,16 +104,17 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
  * OpenAI LLM implementation
  */
 export class OpenAI implements LLM {
+  hasStreaming: boolean = true;
+
   // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
   temperature: number;
   topP: number;
   maxTokens?: number;
   additionalChatOptions?: Omit<
-    Partial<OpenAILLM.Chat.CompletionCreateParams>,
+    Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
     "max_tokens" | "messages" | "model" | "temperature" | "top_p" | "streaming"
   >;
-  hasStreaming: boolean;
 
   // OpenAI session params
   apiKey?: string = undefined;
@@ -141,7 +142,6 @@ export class OpenAI implements LLM {
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalChatOptions = init?.additionalChatOptions;
     this.additionalSessionOptions = init?.additionalSessionOptions;
-    this.hasStreaming = init?.hasStreaming ?? true;
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
@@ -203,7 +203,7 @@ export class OpenAI implements LLM {
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
   >(messages: ChatMessage[], parentEvent?: Event, streaming?: T): Promise<R> {
-    const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
+    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
@@ -251,7 +251,7 @@ export class OpenAI implements LLM {
     messages: ChatMessage[],
     parentEvent?: Event,
   ): AsyncGenerator<string, void, unknown> {
-    const baseRequestParams: OpenAILLM.Chat.CompletionCreateParams = {
+    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
@@ -549,6 +549,8 @@ If a question does not make any sense, or is not factually coherent, explain why
  */
 
 export class Anthropic implements LLM {
+  hasStreaming: boolean = true;
+
   // Per completion Anthropic params
   model: string;
   temperature: number;
@@ -560,7 +562,6 @@ export class Anthropic implements LLM {
   maxRetries: number;
   timeout?: number;
   session: AnthropicSession;
-  hasStreaming: boolean;
 
   callbackManager?: CallbackManager;
 
@@ -580,7 +581,6 @@ export class Anthropic implements LLM {
         maxRetries: this.maxRetries,
         timeout: this.timeout,
       });
-    this.hasStreaming = init?.hasStreaming ?? true;
 
     this.callbackManager = init?.callbackManager;
   }
@@ -682,8 +682,9 @@ export class Anthropic implements LLM {
   }
 }
 
-
 export class Portkey implements LLM {
+  hasStreaming: boolean = true;
+
   apiKey?: string = undefined;
   baseURL?: string = undefined;
   mode?: string = undefined;
@@ -692,57 +693,73 @@ export class Portkey implements LLM {
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<Portkey>) {
-    this.apiKey = init?.apiKey
-    this.baseURL = init?.baseURL
-    this.mode = init?.mode
-    this.llms = init?.llms
+    this.apiKey = init?.apiKey;
+    this.baseURL = init?.baseURL;
+    this.mode = init?.mode;
+    this.llms = init?.llms;
     this.session = getPortkeySession({
       apiKey: this.apiKey,
       baseURL: this.baseURL,
       llms: this.llms,
-      mode: this.mode
-    })
+      mode: this.mode,
+    });
     this.callbackManager = init?.callbackManager;
   }
 
-  async chat(
+  async chat<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(
     messages: ChatMessage[],
     parentEvent?: Event | undefined,
-    params?: Record<string, any>
-  ): Promise<ChatResponse> {
-    const resolvedParams = params || {}
-    const response = await this.session.portkey.chatCompletions.create({
-      messages,
-      ...resolvedParams
-    });
+    streaming?: T,
+    params?: Record<string, any>,
+  ): Promise<R> {
+    if (streaming) {
+      return this.streamChat(messages, parentEvent, params) as R;
+    } else {
+      const resolvedParams = params || {};
+      const response = await this.session.portkey.chatCompletions.create({
+        messages,
+        ...resolvedParams,
+      });
 
-    const content = response.choices[0].message?.content ?? "";
-    const role = response.choices[0].message?.role || "assistant";
-    return { message: { content, role: role as MessageType } };
+      const content = response.choices[0].message?.content ?? "";
+      const role = response.choices[0].message?.role || "assistant";
+      return { message: { content, role: role as MessageType } } as R;
+    }
   }
-  async complete(
+
+  async complete<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(
     prompt: string,
     parentEvent?: Event | undefined,
-  ): Promise<CompletionResponse> {
-    return this.chat([{ content: prompt, role: "user" }], parentEvent);
+    streaming?: T,
+  ): Promise<R> {
+    return this.chat(
+      [{ content: prompt, role: "user" }],
+      parentEvent,
+      streaming,
+    );
   }
 
-  async *stream_chat(
+  async *streamChat(
     messages: ChatMessage[],
     parentEvent?: Event,
-    params?: Record<string, any>
+    params?: Record<string, any>,
   ): AsyncGenerator<string, void, unknown> {
     // Wrapping the stream in a callback.
     const onLLMStream = this.callbackManager?.onLLMStream
       ? this.callbackManager.onLLMStream
       : () => {};
 
-    const chunk_stream =
-      await this.session.portkey.chatCompletions.create({
-        messages,
-        ...params,
-        stream: true,
-      });
+    const chunkStream = await this.session.portkey.chatCompletions.create({
+      messages,
+      ...params,
+      stream: true,
+    });
 
     const event: Event = parentEvent
       ? parentEvent
@@ -753,7 +770,7 @@ export class Portkey implements LLM {
 
     //Indices
     var idx_counter: number = 0;
-    for await (const part of chunk_stream) {
+    for await (const part of chunkStream) {
       //Increment
       part.choices[0].index = idx_counter;
       const is_done: boolean =
@@ -775,10 +792,10 @@ export class Portkey implements LLM {
     return;
   }
 
-  stream_complete(
+  streamComplete(
     query: string,
     parentEvent?: Event,
   ): AsyncGenerator<string, void, unknown> {
-    return this.stream_chat([{ content: query, role: "user" }], parentEvent);
+    return this.streamChat([{ content: query, role: "user" }], parentEvent);
   }
 }
