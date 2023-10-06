@@ -31,7 +31,8 @@ export type MessageType =
   | "assistant"
   | "system"
   | "generic"
-  | "function";
+  | "function"
+  | "memory";
 
 export interface ChatMessage {
   content: string;
