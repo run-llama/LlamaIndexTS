@@ -6,7 +6,6 @@
     "moduleResolution": "node",
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "noEmit": true,
     "strict": true,
     "lib": ["es2015", "dom"],
     "target": "ES2015",
