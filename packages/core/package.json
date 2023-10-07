@@ -9,22 +9,22 @@
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.1.0",
     "notion-md-crawler": "^0.0.2",
-    "openai": "^4.10.0",
+    "openai": "^4.11.1",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
+    "portkey-ai": "^0.1.11",
     "rake-modified": "^1.0.8",
-    "replicate": "^0.18.1",
+    "replicate": "^0.20.0",
     "tiktoken": "^1.0.10",
     "uuid": "^9.0.1",
-    "wink-nlp": "^1.14.3",
-    "portkey-ai": "^0.1.11"
+    "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.199",
-    "@types/node": "^18.18.0",
+    "@types/node": "^18.18.4",
     "@types/papaparse": "^5.3.9",
     "@types/pdf-parse": "^1.1.2",
-    "@types/uuid": "^9.0.4",
+    "@types/uuid": "^9.0.5",
     "node-stdlib-browser": "^1.2.0",
     "tsup": "^7.2.0"
   },
