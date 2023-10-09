@@ -61,8 +61,12 @@ export class SummaryChatHistory implements ChatHistory {
 
   private async summarize() {
     // get all messages after the last summary message (including)
+    // if there's no summary message, get all messages
+    const lastSummaryIndex = this.getLastSummaryIndex();
     const chatHistoryStr = messagesToHistoryStr(
-      this.messages.slice(this.getLastSummaryIndex()),
+      lastSummaryIndex === -1
+        ? this.messages
+        : this.messages.slice(lastSummaryIndex),
     );
 
     const response = await this.llm.complete(
@@ -73,12 +77,10 @@ export class SummaryChatHistory implements ChatHistory {
   }
 
   async addMessage(message: ChatMessage) {
-    const lastSummaryIndex = this.getLastSummaryIndex();
-    // if there are more than or equal `messagesToSummarize` messages since the last summary, call summarize
-    if (
-      lastSummaryIndex !== -1 &&
-      this.messages.length - lastSummaryIndex - 1 >= this.messagesToSummarize
-    ) {
+    const messagesSinceLastSummary =
+      this.messages.length - this.getLastSummaryIndex() - 1;
+    // if there are too many messages since the last summary, call summarize
+    if (messagesSinceLastSummary >= this.messagesToSummarize) {
       // TODO: define what are better conditions, e.g. depending on the context length of the LLM?
       // for now we just summarize each `messagesToSummarize` messages
       await this.summarize();
@@ -88,14 +90,19 @@ export class SummaryChatHistory implements ChatHistory {
 
   // Find last summary message
   private getLastSummaryIndex() {
-    return this.messages
-      .slice()
-      .reverse()
-      .findIndex((message) => message.role === "memory");
+    return (
+      this.messages.length -
+      1 -
+      this.messages
+        .slice()
+        .reverse()
+        .findIndex((message) => message.role === "memory")
+    );
   }
 
   get requestMessages() {
     const lastSummaryIndex = this.getLastSummaryIndex();
+    if (lastSummaryIndex === -1) return this.messages;
     // get array of all system messages
     const systemMessages = this.messages.filter(
       (message) => message.role === "system",

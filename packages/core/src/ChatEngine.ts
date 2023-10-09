@@ -314,11 +314,11 @@ export class HistoryChatEngine implements ChatEngine {
   ): Promise<R> {
     //Streaming option
     if (streaming) {
-      return this.streamChat(message, chatHistory) as R;
+      return this.streamChat(message) as R;
     }
-    this.chatHistory.addMessage({ content: message, role: "user" });
+    await this.chatHistory.addMessage({ content: message, role: "user" });
     const response = await this.llm.chat(this.chatHistory.requestMessages);
-    this.chatHistory.addMessage(response.message);
+    await this.chatHistory.addMessage(response.message);
     return new Response(response.message.content) as R;
   }
 
@@ -326,7 +326,7 @@ export class HistoryChatEngine implements ChatEngine {
     message: string,
     chatHistory?: ChatMessage[] | undefined,
   ): AsyncGenerator<string, void, unknown> {
-    this.chatHistory.addMessage({ content: message, role: "user" });
+    await this.chatHistory.addMessage({ content: message, role: "user" });
     const response_stream = await this.llm.chat(
       this.chatHistory.requestMessages,
       undefined,
@@ -338,7 +338,7 @@ export class HistoryChatEngine implements ChatEngine {
       accumulator += part;
       yield part;
     }
-    this.chatHistory.addMessage({ content: accumulator, role: "user" });
+    await this.chatHistory.addMessage({ content: accumulator, role: "user" });
     return;
   }
 
