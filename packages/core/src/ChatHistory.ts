@@ -144,7 +144,7 @@ export class SummaryChatHistory implements ChatHistory {
   }
 
   private get nonSystemMessages() {
-    // get array of all system messages
+    // get array of all non-system messages
     return this.messages.filter((message) => message.role !== "system");
   }
 
