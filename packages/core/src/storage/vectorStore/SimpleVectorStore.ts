@@ -75,9 +75,12 @@ export class SimpleVectorStore implements VectorStore {
   }
 
   async delete(refDocId: string): Promise<void> {
+    //Find all nodes associated with a given document
     let textIdsToDelete = Object.keys(this.data.textIdToRefDocId).filter(
       (textId) => this.data.textIdToRefDocId[textId] === refDocId,
     );
+
+    //Delete all nodes associated with a given document
     for (let textId of textIdsToDelete) {
       delete this.data.embeddingDict[textId];
       delete this.data.textIdToRefDocId[textId];
