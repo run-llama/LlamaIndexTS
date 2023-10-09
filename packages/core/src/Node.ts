@@ -300,9 +300,3 @@ export interface NodeWithScore<T extends Metadata = Metadata> {
   node: BaseNode<T>;
   score?: number;
 }
-
-
-/**
- * A node forcibly without an embedding
- */
-export type EmbeddingOmissionNode = Omit<BaseNode, "embedding">;
