@@ -2,7 +2,6 @@ import { BaseNode } from '../../Node';
 import { GenericFileSystem } from '../FileSystem';
 import {VectorStore, VectorStoreQuery, VectorStoreQueryResult} from './types';
 import {MilvusClient} from "@zilliz/milvus2-sdk-node";
-import { EmbeddingOmissionNode } from '../../Node';
 
 
 export class MilvusVectorStore implements VectorStore {
@@ -11,11 +10,13 @@ export class MilvusVectorStore implements VectorStore {
   isEmbeddingQuery?: boolean;
   client: MilvusClient;
   collectionName: string;
+  docIdField: string;
 
-  constructor(client: MilvusClient, collectionName: string, storesText?: boolean){
+  constructor(client: MilvusClient, collectionName: string, docIdField?: string, storesText?: boolean){
     //Assign params
     this.collectionName = collectionName;
     this.client = client;
+    this.docIdField = docIdField ? docIdField : "id_";
     this.storesText = storesText ? storesText : true;
   }
 
@@ -41,14 +42,15 @@ export class MilvusVectorStore implements VectorStore {
           }
 
           //Take out our embedding from the embeddingResult easily, using types.
-          let resultNoEmbedding: EmbeddingOmissionNode = embeddingResult;
+          let resultNoEmbedding: Omit<BaseNode, "embedding"> = embeddingResult;
           
           //Insert into Milvus
-          const response = await this.client.insert(this.collectionName,
-            [{
+          //TODO: Elliot, fix this :)
+          const response = await this.client.insert({collection_name: this.collectionName,
+            fields_data: [{
               embeddingField: embeddingResult.embedding,
-            ...resultNoEmbedding
-          }]);
+              ...resultNoEmbedding
+          }]});
 
           //TODO: Add additional checks later, after we implement Callback features
         }
@@ -60,15 +62,37 @@ export class MilvusVectorStore implements VectorStore {
 
   //TODO: Think about this more before implementing...
   async delete(refDocId: string, deleteKwargs?: any): Promise<void>{
-    //Delete all entries associated with a certain Document
-    this.client.delete(this.collectionName, [refDocId], ...deleteKwargs);
+    //Delete all entries based on an expression
+    //For Milvus, "refDocId" is equivalent to "expr" in the Milvus NodeJS docs
+
+    //TODO: Restructure this expression...
+    //Something about the logic is fishy :(
+
+
+
+    //Current Python logic:
+    // Query relevant docs -> find docId -> erase them
+
+
+    //Query relevant docs
+    // const filter: string = `${this.docIdField} in ${refDocId}`;
+    // const entries = this.client.query(
+    //   this.collectionName,
+    //   filter
+    // );
+
+    // console.log(entries);
+    
+
     return;
   };
 
   //TODO: Rethink types here, to think idiomatically
   async query(query: VectorStoreQuery, kwargs?: any): Promise<VectorStoreQueryResult>{
     //Find any number of queries, I think
-    return;
+
+    const result: VectorStoreQueryResult = {similarities: [0], ids: ["something"]};
+    return await result;
   };
 
 
