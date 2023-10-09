@@ -60,7 +60,8 @@ export interface VectorStoreQuery {
 export interface VectorStore {
   storesText: boolean;
   isEmbeddingQuery?: boolean;
-  client(): any;
+  //Note: This client should be just a variable, we shouldn't restrict this to a function.
+  client: any;
   add(embeddingResults: BaseNode[]): Promise<string[]>;
   delete(refDocId: string, deleteKwargs?: any): Promise<void>;
   query(
