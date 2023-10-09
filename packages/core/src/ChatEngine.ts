@@ -338,7 +338,10 @@ export class HistoryChatEngine implements ChatEngine {
       accumulator += part;
       yield part;
     }
-    await this.chatHistory.addMessage({ content: accumulator, role: "user" });
+    await this.chatHistory.addMessage({
+      content: accumulator,
+      role: "assistant",
+    });
     return;
   }
 
