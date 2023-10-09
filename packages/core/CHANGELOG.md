@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.0.30
+
+### Patch Changes
+
+- 139abad: Streaming improvements including Anthropic (thanks @kkang2097)
+- 139abad: Portkey integration (Thank you @noble-varghese)
+- eb0e994: Add export for PromptHelper (thanks @zigamall)
+- eb0e994: Publish ESM module again
+- 139abad: Pinecone demo (thanks @Einsenhorn)
+
 ## 0.0.29
 
 ### Patch Changes
