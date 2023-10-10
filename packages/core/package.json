@@ -12,9 +12,9 @@
     "openai": "^4.11.1",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
-    "portkey-ai": "^0.1.11",
+    "portkey-ai": "^0.1.13",
     "rake-modified": "^1.0.8",
-    "replicate": "^0.20.0",
+    "replicate": "^0.20.1",
     "tiktoken": "^1.0.10",
     "uuid": "^9.0.1",
     "wink-nlp": "^1.14.3"

@@ -84,6 +84,26 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 - [SimplePrompt](/packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
+## Note: NextJS:
+
+If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the follow config to your next.config.js to have it use imports/exports in the same way Node does.
+
+```js
+export const runtime = "nodejs" // default
+```
+
+```js
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ["pdf-parse"], // Puts pdf-parse in actual NodeJS mode with NextJS App Router
+  },
+};
+
+module.exports = nextConfig;
+```
+
 ## Supported LLMs:
 
 - OpenAI GPT-3.5-turbo and GPT-4
