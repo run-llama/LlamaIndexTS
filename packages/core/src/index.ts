@@ -1,5 +1,6 @@
 export * from "./callbacks/CallbackManager";
 export * from "./ChatEngine";
+export * from "./ChatHistory";
 export * from "./constants";
 export * from "./Embedding";
 export * from "./GlobalsHelper";
