@@ -1,4 +1,4 @@
-import tiktoken from "tiktoken";
+import { globalsHelper } from "./GlobalsHelper";
 import {
   ALL_AVAILABLE_OPENAI_MODELS,
   ChatMessage,
@@ -76,13 +76,13 @@ export class SummaryChatHistory implements ChatHistory {
 
   private tokens(messages: ChatMessage[]): number {
     // for latest OpenAI models, see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
-    const encoding = tiktoken.encoding_for_model(this.llm.model);
+    const tokenizer = globalsHelper.tokenizer();
     const tokensPerMessage = 3;
     let numTokens = 0;
     for (const message of messages) {
       numTokens += tokensPerMessage;
       for (const value of Object.values(message)) {
-        numTokens += encoding.encode(value).length;
+        numTokens += tokenizer(value).length;
       }
     }
     numTokens += 3; // every reply is primed with <|im_start|>assistant<|im_sep|>
