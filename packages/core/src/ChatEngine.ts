@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Event } from "./callbacks/CallbackManager";
-import { ChatHistory, SimpleChatHistory } from "./ChatHistory";
+import { SummaryChatHistory } from "./ChatHistory";
 import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 import { TextNode } from "./Node";
 import {
@@ -292,16 +292,22 @@ export class ContextChatEngine implements ChatEngine {
 }
 
 /**
- * HistoryChatEngine is a ChatEngine that uses a ChatHistory to keep track of the chat history. This is an example with the same behavior as SimpleChatEngine
- * TODO: generally use the ChatHistory instead of ChatMessage[] - breaking change
+ * HistoryChatEngine is a ChatEngine that uses a SummaryChatHistory to keep track of the chat history.
+ * TODO: generally use the ChatHistory interface instead of ChatMessage[] for all chat engines - breaking change
  */
 export class HistoryChatEngine implements ChatEngine {
-  chatHistory: ChatHistory;
-  llm: LLM;
+  summaryChatHistory: SummaryChatHistory;
+  llm: OpenAI;
 
   constructor(init?: Partial<HistoryChatEngine>) {
-    this.chatHistory = init?.chatHistory ?? new SimpleChatHistory();
-    this.llm = init?.llm ?? new OpenAI();
+    const llm = init?.llm ?? new OpenAI();
+    this.llm = llm;
+    this.summaryChatHistory =
+      init?.summaryChatHistory ??
+      new SummaryChatHistory({
+        messages: init?.chatHistory,
+        llm: llm,
+      });
   }
 
   async chat<
@@ -316,9 +322,14 @@ export class HistoryChatEngine implements ChatEngine {
     if (streaming) {
       return this.streamChat(message) as R;
     }
-    await this.chatHistory.addMessage({ content: message, role: "user" });
-    const response = await this.llm.chat(this.chatHistory.requestMessages);
-    await this.chatHistory.addMessage(response.message);
+    await this.summaryChatHistory.addMessage({
+      content: message,
+      role: "user",
+    });
+    const response = await this.llm.chat(
+      this.summaryChatHistory.requestMessages,
+    );
+    await this.summaryChatHistory.addMessage(response.message);
     return new Response(response.message.content) as R;
   }
 
@@ -326,9 +337,12 @@ export class HistoryChatEngine implements ChatEngine {
     message: string,
     chatHistory?: ChatMessage[] | undefined,
   ): AsyncGenerator<string, void, unknown> {
-    await this.chatHistory.addMessage({ content: message, role: "user" });
+    await this.summaryChatHistory.addMessage({
+      content: message,
+      role: "user",
+    });
     const response_stream = await this.llm.chat(
-      this.chatHistory.requestMessages,
+      this.summaryChatHistory.requestMessages,
       undefined,
       true,
     );
@@ -338,7 +352,7 @@ export class HistoryChatEngine implements ChatEngine {
       accumulator += part;
       yield part;
     }
-    await this.chatHistory.addMessage({
+    await this.summaryChatHistory.addMessage({
       content: accumulator,
       role: "assistant",
     });
@@ -346,6 +360,10 @@ export class HistoryChatEngine implements ChatEngine {
   }
 
   reset() {
-    this.chatHistory.reset();
+    this.summaryChatHistory.reset();
+  }
+
+  get chatHistory() {
+    return this.summaryChatHistory.messages;
   }
 }
