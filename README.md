@@ -25,14 +25,15 @@ pnpm install llamaindex
 pnpm install @types/node
 ```
 
-Create the file example.ts
-
-```ts
 // example.ts
 import fs from "fs/promises";
 import { Document, VectorStoreIndex } from "llamaindex";
+import { Tiktoken } from "@dqbd/tiktoken";
 
 async function main() {
+  // Initialize Tiktoken with the WASM binary file
+  const tiktoken = new Tiktoken({ wasmURL: '/path/to/tiktoken_bg.wasm' });
+
   // Load essay from abramov.txt in Node
   const essay = await fs.readFile(
     "node_modules/llamaindex/examples/abramov.txt",
@@ -56,7 +57,6 @@ async function main() {
 }
 
 main();
-```
 
 Then you can run it using
 
