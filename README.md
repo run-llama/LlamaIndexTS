@@ -84,12 +84,12 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 - [SimplePrompt](/packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
-## Note: NextJS:
+## Note: NextJS and Vercel Edge Runtime:
 
-If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the follow config to your next.config.js to have it use imports/exports in the same way Node does.
+If you're using NextJS App Router, you'll need to use the NodeJS runtime (default). For Vercel Edge Runtime, you'll need to use the "vercel" runtime and add the `@dqbd/tiktoken` package to your `next.config.js` to have it use imports/exports in the same way Node does.
 
 ```js
-export const runtime = "nodejs" // default
+export const runtime = "vercel" // for Vercel Edge Runtime
 ```
 
 ```js
@@ -97,12 +97,14 @@ export const runtime = "nodejs" // default
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Puts pdf-parse in actual NodeJS mode with NextJS App Router
+    serverComponentsExternalPackages: ["pdf-parse", "@dqbd/tiktoken"], // Puts pdf-parse and @dqbd/tiktoken in actual NodeJS mode with NextJS App Router
   },
 };
 
 module.exports = nextConfig;
 ```
+
+For detailed instructions, please refer to the [Environments](/apps/docs/docs/environments.md) section.
 
 ## Supported LLMs:
 
