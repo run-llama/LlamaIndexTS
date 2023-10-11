@@ -20,8 +20,12 @@ Create the file `example.ts`. This code will load some example data, create a do
 // example.ts
 import fs from "fs/promises";
 import { Document, VectorStoreIndex } from "llamaindex";
+import { Tiktoken } from "@dqbd/tiktoken";
 
 async function main() {
+  // Initialize Tiktoken with the WASM binary file
+  const tiktoken = new Tiktoken({ wasmURL: '/path/to/tiktoken_bg.wasm' });
+
   // Load essay from abramov.txt in Node
   const essay = await fs.readFile(
     "node_modules/llamaindex/examples/abramov.txt",
