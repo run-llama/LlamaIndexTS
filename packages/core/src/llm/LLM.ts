@@ -9,6 +9,7 @@ import {
 } from "../callbacks/CallbackManager";
 
 import { LLMOptions } from "portkey-ai";
+import { globalsHelper, Tokenizers } from "../GlobalsHelper";
 import {
   AnthropicSession,
   ANTHROPIC_AI_PROMPT,
@@ -48,10 +49,20 @@ export interface ChatResponse {
 // NOTE in case we need CompletionResponse to diverge from ChatResponse in the future
 export type CompletionResponse = ChatResponse;
 
+export interface LLMMetadata {
+  model: string;
+  temperature: number;
+  topP: number;
+  maxTokens?: number;
+  contextWindow: number;
+  tokenizer: Tokenizers | undefined;
+}
+
 /**
  * Unified language model interface
  */
 export interface LLM {
+  metadata: LLMMetadata;
   // Whether a LLM has streaming support
   hasStreaming: boolean;
   /**
@@ -81,6 +92,11 @@ export interface LLM {
     parentEvent?: Event,
     streaming?: T,
   ): Promise<R>;
+
+  /**
+   * Calculates the number of tokens needed for the given chat messages
+   */
+  tokens(messages: ChatMessage[]): number;
 }
 
 export const GPT4_MODELS = {
@@ -181,6 +197,32 @@ export class OpenAI implements LLM {
     }
 
     this.callbackManager = init?.callbackManager;
+  }
+
+  get metadata() {
+    return {
+      model: this.model,
+      temperature: this.temperature,
+      topP: this.topP,
+      maxTokens: this.maxTokens,
+      contextWindow: ALL_AVAILABLE_OPENAI_MODELS[this.model].contextWindow,
+      tokenizer: Tokenizers.CL100K_BASE,
+    };
+  }
+
+  tokens(messages: ChatMessage[]): number {
+    // for latest OpenAI models, see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
+    const tokenizer = globalsHelper.tokenizer(this.metadata.tokenizer);
+    const tokensPerMessage = 3;
+    let numTokens = 0;
+    for (const message of messages) {
+      numTokens += tokensPerMessage;
+      for (const value of Object.values(message)) {
+        numTokens += tokenizer(value).length;
+      }
+    }
+    numTokens += 3; // every reply is primed with <|im_start|>assistant<|im_sep|>
+    return numTokens;
   }
 
   mapMessageType(
@@ -393,6 +435,21 @@ export class LlamaDeuce implements LLM {
     this.hasStreaming = init?.hasStreaming ?? false;
   }
 
+  tokens(messages: ChatMessage[]): number {
+    throw new Error("Method not implemented.");
+  }
+
+  get metadata() {
+    return {
+      model: this.model,
+      temperature: this.temperature,
+      topP: this.topP,
+      maxTokens: this.maxTokens,
+      contextWindow: ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].contextWindow,
+      tokenizer: undefined,
+    };
+  }
+
   mapMessagesToPrompt(messages: ChatMessage[]) {
     if (this.chatStrategy === DeuceChatStrategy.A16Z) {
       return this.mapMessagesToPromptA16Z(messages);
@@ -545,6 +602,12 @@ If a question does not make any sense, or is not factually coherent, explain why
   }
 }
 
+export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
+  // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
+  "claude-2": { contextWindow: 100000 },
+  "claude-instant-1": { contextWindow: 100000 },
+};
+
 /**
  * Anthropic LLM implementation
  */
@@ -553,7 +616,7 @@ export class Anthropic implements LLM {
   hasStreaming: boolean = true;
 
   // Per completion Anthropic params
-  model: string;
+  model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
   temperature: number;
   topP: number;
   maxTokens?: number;
@@ -584,6 +647,21 @@ export class Anthropic implements LLM {
       });
 
     this.callbackManager = init?.callbackManager;
+  }
+  
+  tokens(messages: ChatMessage[]): number {
+    throw new Error("Method not implemented.");
+  }
+
+  get metadata() {
+    return {
+      model: this.model,
+      temperature: this.temperature,
+      topP: this.topP,
+      maxTokens: this.maxTokens,
+      contextWindow: ALL_AVAILABLE_ANTHROPIC_MODELS[this.model].contextWindow,
+      tokenizer: undefined,
+    };
   }
 
   mapMessagesToPrompt(messages: ChatMessage[]) {
@@ -705,6 +783,14 @@ export class Portkey implements LLM {
       mode: this.mode,
     });
     this.callbackManager = init?.callbackManager;
+  }
+
+  tokens(messages: ChatMessage[]): number {
+    throw new Error("Method not implemented.");
+  }
+
+  get metadata(): LLMMetadata {
+    throw new Error("metadata not implemented for Portkey");
   }
 
   async chat<
