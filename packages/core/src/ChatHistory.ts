@@ -51,9 +51,11 @@ export class SummaryChatHistory implements ChatHistory {
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
   llm: LLM;
+  private messagesBefore: number;
 
   constructor(init?: Partial<SummaryChatHistory>) {
     this.messages = init?.messages ?? [];
+    this.messagesBefore = this.messages.length;
     this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
     this.llm = init?.llm ?? new OpenAI();
     if (!this.llm.metadata.maxTokens) {
@@ -142,5 +144,14 @@ export class SummaryChatHistory implements ChatHistory {
 
   reset() {
     this.messages = [];
+  }
+
+  /**
+   * @returns the number of new messages since the last call to this function (or since calling the constructor)
+   */
+  newMessages() {
+    const newMessages = this.messages.slice(this.messagesBefore);
+    this.messagesBefore = this.messages.length;
+    return newMessages;
   }
 }
