@@ -297,7 +297,7 @@ export class ContextChatEngine implements ChatEngine {
  */
 export class HistoryChatEngine implements ChatEngine {
   summaryChatHistory: SummaryChatHistory;
-  llm: OpenAI;
+  llm: LLM;
 
   constructor(init?: Partial<HistoryChatEngine>) {
     const llm = init?.llm ?? new OpenAI();
