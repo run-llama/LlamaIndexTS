@@ -4,6 +4,10 @@ import { Tiktoken } from "tiktoken/lite";
 import { v4 as uuidv4 } from "uuid";
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
 
+export enum Tokenizers {
+  CL100K_BASE = "cl100k_base",
+}
+
 /**
  * Helper class singleton
  */
@@ -30,7 +34,10 @@ class GlobalsHelper {
     };
   }
 
-  tokenizer() {
+  tokenizer(encoding?: string) {
+    if (encoding && encoding !== Tokenizers.CL100K_BASE) {
+      throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
+    }
     if (!this.defaultTokenizer) {
       this.initDefaultTokenizer();
     }
@@ -38,7 +45,10 @@ class GlobalsHelper {
     return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
   }
 
-  tokenizerDecoder() {
+  tokenizerDecoder(encoding?: string) {
+    if (encoding && encoding !== Tokenizers.CL100K_BASE) {
+      throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
+    }
     if (!this.defaultTokenizer) {
       this.initDefaultTokenizer();
     }
