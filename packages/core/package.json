@@ -39,6 +39,6 @@
     "lint": "eslint .",
     "test": "jest",
     "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --watch"
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   }
 }
