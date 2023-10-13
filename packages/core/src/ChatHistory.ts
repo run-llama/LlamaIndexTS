@@ -69,12 +69,8 @@ export class SummaryChatHistory implements ChatHistory {
   }
 
   private async summarize(): Promise<ChatMessage> {
-    // get all messages after the last summary message (including)
-    // if there's no summary message, get all messages (without system messages)
-    const lastSummaryIndex = this.getLastSummaryIndex();
-    const messagesToSummarize = !lastSummaryIndex
-      ? this.nonSystemMessages
-      : this.messages.slice(lastSummaryIndex);
+    // get the conversation messages to create summary
+    const messagesToSummarize = this.calcConversationMessages();
 
     let promptMessages;
     do {
@@ -120,20 +116,36 @@ export class SummaryChatHistory implements ChatHistory {
     return this.messages.filter((message) => message.role !== "system");
   }
 
-  private calcCurrentRequestMessages(transientMessages?: ChatMessage[]) {
+  /**
+   * Calculates the messages that describe the conversation so far.
+   * If there's no memory, all non-system messages are used.
+   * If there's a memory, uses all messages after the last summary message.
+   */
+  private calcConversationMessages(transformSummary?: boolean): ChatMessage[] {
     const lastSummaryIndex = this.getLastSummaryIndex();
-    if (!lastSummaryIndex) return this.messages;
-    // convert summary message so it can be send to the LLM
-    const summaryMessage: ChatMessage = {
-      content: `This is a summary of conversation so far: ${this.messages[lastSummaryIndex].content}`,
-      role: "system",
-    };
-    // return system messages, last summary and all messages after the last summary message
+    if (!lastSummaryIndex) {
+      // there's no memory, so just use all non-system messages
+      return this.nonSystemMessages;
+    } else {
+      // there's a memory, so use all messages after the last summary message
+      // and convert summary message so it can be send to the LLM
+      const summaryMessage: ChatMessage = transformSummary
+        ? {
+            content: `Summary of the conversation so far: ${this.messages[lastSummaryIndex].content}`,
+            role: "system",
+          }
+        : this.messages[lastSummaryIndex];
+      return [summaryMessage, ...this.messages.slice(lastSummaryIndex + 1)];
+    }
+  }
+
+  private calcCurrentRequestMessages(transientMessages?: ChatMessage[]) {
+    // TODO: check order: currently, we're sending:
+    // system messages first, then transient messages and then the messages that describe the conversation so far
     return [
       ...this.systemMessages,
       ...(transientMessages ? transientMessages : []),
-      summaryMessage,
-      ...this.messages.slice(lastSummaryIndex + 1),
+      ...this.calcConversationMessages(true),
     ];
   }
 
@@ -155,6 +167,9 @@ export class SummaryChatHistory implements ChatHistory {
         // otherwise just add the memory message
         this.messages.push(memoryMessage);
       }
+      // TODO: we still might have too many tokens
+      // e.g. too large system messages or transient messages
+      // how should we deal with that?
       return this.calcCurrentRequestMessages(transientMessages);
     }
     return requestMessages;
