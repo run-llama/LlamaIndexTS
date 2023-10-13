@@ -1,10 +1,4 @@
-import tiktoken from "tiktoken";
-import {
-  ALL_AVAILABLE_OPENAI_MODELS,
-  ChatMessage,
-  MessageType,
-  OpenAI,
-} from "./llm/LLM";
+import { ChatMessage, LLM, MessageType, OpenAI } from "./llm/LLM";
 import {
   defaultSummaryPrompt,
   messagesToHistoryStr,
@@ -56,37 +50,19 @@ export class SummaryChatHistory implements ChatHistory {
   tokensToSummarize: number;
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
-  llm: OpenAI;
+  llm: LLM;
 
   constructor(init?: Partial<SummaryChatHistory>) {
     this.messages = init?.messages ?? [];
     this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
     this.llm = init?.llm ?? new OpenAI();
-    if (!this.llm.maxTokens) {
+    if (!this.llm.metadata.maxTokens) {
       throw new Error(
         "LLM maxTokens is not set. Needed so the summarizer ensures the context window size of the LLM.",
       );
     }
-    // TODO: currently, this only works with OpenAI
-    // to support more LLMs, we have to move the tokenizer and the context window size to the LLM interface
     this.tokensToSummarize =
-      ALL_AVAILABLE_OPENAI_MODELS[this.llm.model].contextWindow -
-      this.llm.maxTokens;
-  }
-
-  private tokens(messages: ChatMessage[]): number {
-    // for latest OpenAI models, see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
-    const encoding = tiktoken.encoding_for_model(this.llm.model);
-    const tokensPerMessage = 3;
-    let numTokens = 0;
-    for (const message of messages) {
-      numTokens += tokensPerMessage;
-      for (const value of Object.values(message)) {
-        numTokens += encoding.encode(value).length;
-      }
-    }
-    numTokens += 3; // every reply is primed with <|im_start|>assistant<|im_sep|>
-    return numTokens;
+      this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
   }
 
   private async summarize(): Promise<ChatMessage> {
@@ -109,7 +85,7 @@ export class SummaryChatHistory implements ChatHistory {
       ];
       // remove oldest message until the chat history is short enough for the context window
       messagesToSummarize.shift();
-    } while (this.tokens(promptMessages) > this.tokensToSummarize);
+    } while (this.llm.tokens(promptMessages) > this.tokensToSummarize);
 
     const response = await this.llm.chat(promptMessages);
     return { content: response.message.content, role: "memory" };
@@ -117,7 +93,7 @@ export class SummaryChatHistory implements ChatHistory {
 
   async addMessage(message: ChatMessage) {
     // get tokens of current request messages and the new message
-    const tokens = this.tokens([...this.requestMessages, message]);
+    const tokens = this.llm.tokens([...this.requestMessages, message]);
     // if there are too many tokens for the next request, call summarize
     if (tokens > this.tokensToSummarize) {
       const memoryMessage = await this.summarize();
