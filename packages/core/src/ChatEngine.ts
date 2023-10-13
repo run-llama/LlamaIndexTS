@@ -317,15 +317,17 @@ export class ContextChatEngine implements ChatEngine {
 }
 
 /**
- * StatelessChatEngine is a ChatEngine that doesn't keep a state of the chat history.
- * Instead a `ChatHistory` which keep the state is passed in as a parameter for each call to the `chat` method.
- * Optionally, a `ContextGenerator` can be used to generate a context for each call to `chat`.
+ * HistoryChatEngine is a ChatEngine that uses a `ChatHistory` object
+ * to keeps track of chat's message history.
+ * A `ChatHistory` object is passed as a parameter for each call to the `chat` method,
+ * so the state of the chat engine is preserved between calls.
+ * Optionally, a `ContextGenerator` can be used to generate an additional context for each call to `chat`.
  */
-export class StatelessChatEngine {
+export class HistoryChatEngine {
   llm: LLM;
   contextGenerator?: ContextGenerator;
 
-  constructor(init?: Partial<StatelessChatEngine>) {
+  constructor(init?: Partial<HistoryChatEngine>) {
     this.llm = init?.llm ?? new OpenAI();
     this.contextGenerator = init?.contextGenerator;
   }
@@ -339,16 +341,16 @@ export class StatelessChatEngine {
       return this.streamChat(message, chatHistory) as R;
     }
     const context = await this.contextGenerator?.generate(message);
-    await chatHistory.addMessage({
+    chatHistory.addMessage({
       content: message,
       role: "user",
     });
     const response = await this.llm.chat(
-      context
-        ? [context.message, ...chatHistory.requestMessages]
-        : chatHistory.requestMessages,
+      await chatHistory.requestMessages(
+        context ? [context.message] : undefined,
+      ),
     );
-    await chatHistory.addMessage(response.message);
+    chatHistory.addMessage(response.message);
     return new Response(response.message.content) as R;
   }
 
@@ -357,15 +359,14 @@ export class StatelessChatEngine {
     chatHistory: ChatHistory,
   ): AsyncGenerator<string, void, unknown> {
     const context = await this.contextGenerator?.generate(message);
-    await chatHistory.addMessage({
+    chatHistory.addMessage({
       content: message,
       role: "user",
     });
-    const requestMessages = context
-      ? [context.message, ...chatHistory.requestMessages]
-      : chatHistory.requestMessages;
     const response_stream = await this.llm.chat(
-      requestMessages,
+      await chatHistory.requestMessages(
+        context ? [context.message] : undefined,
+      ),
       undefined,
       true,
     );
@@ -375,7 +376,7 @@ export class StatelessChatEngine {
       accumulator += part;
       yield part;
     }
-    await chatHistory.addMessage({
+    chatHistory.addMessage({
       content: accumulator,
       role: "assistant",
     });

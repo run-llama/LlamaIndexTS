@@ -14,12 +14,12 @@ export interface ChatHistory {
    * Adds a message to the chat history.
    * @param message
    */
-  addMessage(message: ChatMessage): Promise<void>;
+  addMessage(message: ChatMessage): void;
 
   /**
    * Returns the messages that should be used as input to the LLM.
    */
-  requestMessages: ChatMessage[];
+  requestMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]>;
 
   /**
    * Resets the chat history so that it's empty.
@@ -33,12 +33,13 @@ export class SimpleChatHistory implements ChatHistory {
   constructor(init?: Partial<SimpleChatHistory>) {
     this.messages = init?.messages ?? [];
   }
-  async addMessage(message: ChatMessage) {
+
+  addMessage(message: ChatMessage) {
     this.messages.push(message);
   }
 
-  get requestMessages() {
-    return this.messages;
+  async requestMessages(transientMessages?: ChatMessage[]) {
+    return [...(transientMessages ?? []), ...this.messages];
   }
 
   reset() {
@@ -93,14 +94,7 @@ export class SummaryChatHistory implements ChatHistory {
     return { content: response.message.content, role: "memory" };
   }
 
-  async addMessage(message: ChatMessage) {
-    // get tokens of current request messages and the new message
-    const tokens = this.llm.tokens([...this.requestMessages, message]);
-    // if there are too many tokens for the next request, call summarize
-    if (tokens > this.tokensToSummarize) {
-      const memoryMessage = await this.summarize();
-      this.messages.push(memoryMessage);
-    }
+  addMessage(message: ChatMessage) {
     this.messages.push(message);
   }
 
@@ -126,7 +120,7 @@ export class SummaryChatHistory implements ChatHistory {
     return this.messages.filter((message) => message.role !== "system");
   }
 
-  get requestMessages() {
+  private calcCurrentRequestMessages(transientMessages?: ChatMessage[]) {
     const lastSummaryIndex = this.getLastSummaryIndex();
     if (!lastSummaryIndex) return this.messages;
     // convert summary message so it can be send to the LLM
@@ -137,9 +131,33 @@ export class SummaryChatHistory implements ChatHistory {
     // return system messages, last summary and all messages after the last summary message
     return [
       ...this.systemMessages,
+      ...(transientMessages ? transientMessages : []),
       summaryMessage,
       ...this.messages.slice(lastSummaryIndex + 1),
     ];
+  }
+
+  async requestMessages(transientMessages?: ChatMessage[]) {
+    const requestMessages = this.calcCurrentRequestMessages(transientMessages);
+
+    // get tokens of current request messages and the transient messages
+    const tokens = this.llm.tokens(requestMessages);
+    if (tokens > this.tokensToSummarize) {
+      // if there are too many tokens for the next request, call summarize
+      const memoryMessage = await this.summarize();
+      const lastMessage = this.messages.at(-1);
+      if (lastMessage && lastMessage.role === "user") {
+        // if last message is a user message, ensure that it's sent after the new memory message
+        this.messages.pop();
+        this.messages.push(memoryMessage);
+        this.messages.push(lastMessage);
+      } else {
+        // otherwise just add the memory message
+        this.messages.push(memoryMessage);
+      }
+      return this.calcCurrentRequestMessages(transientMessages);
+    }
+    return requestMessages;
   }
 
   reset() {
