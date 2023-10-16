@@ -25,13 +25,20 @@ export interface ChatHistory {
    * Resets the chat history so that it's empty.
    */
   reset(): void;
+
+  /**
+   * Returns the new messages since the last call to this function (or since calling the constructor)
+   */
+  newMessages(): ChatMessage[];
 }
 
 export class SimpleChatHistory implements ChatHistory {
   messages: ChatMessage[];
+  private messagesBefore: number;
 
   constructor(init?: Partial<SimpleChatHistory>) {
     this.messages = init?.messages ?? [];
+    this.messagesBefore = this.messages.length;
   }
 
   addMessage(message: ChatMessage) {
@@ -44,6 +51,12 @@ export class SimpleChatHistory implements ChatHistory {
 
   reset() {
     this.messages = [];
+  }
+
+  newMessages() {
+    const newMessages = this.messages.slice(this.messagesBefore);
+    this.messagesBefore = this.messages.length;
+    return newMessages;
   }
 }
 
@@ -179,9 +192,6 @@ export class SummaryChatHistory implements ChatHistory {
     this.messages = [];
   }
 
-  /**
-   * @returns the number of new messages since the last call to this function (or since calling the constructor)
-   */
   newMessages() {
     const newMessages = this.messages.slice(this.messagesBefore);
     this.messagesBefore = this.messages.length;
