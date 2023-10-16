@@ -14,35 +14,49 @@ export interface ChatHistory {
    * Adds a message to the chat history.
    * @param message
    */
-  addMessage(message: ChatMessage): Promise<void>;
+  addMessage(message: ChatMessage): void;
 
   /**
    * Returns the messages that should be used as input to the LLM.
    */
-  requestMessages: ChatMessage[];
+  requestMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]>;
 
   /**
    * Resets the chat history so that it's empty.
    */
   reset(): void;
+
+  /**
+   * Returns the new messages since the last call to this function (or since calling the constructor)
+   */
+  newMessages(): ChatMessage[];
 }
 
 export class SimpleChatHistory implements ChatHistory {
   messages: ChatMessage[];
+  private messagesBefore: number;
 
   constructor(init?: Partial<SimpleChatHistory>) {
     this.messages = init?.messages ?? [];
+    this.messagesBefore = this.messages.length;
   }
-  async addMessage(message: ChatMessage) {
+
+  addMessage(message: ChatMessage) {
     this.messages.push(message);
   }
 
-  get requestMessages() {
-    return this.messages;
+  async requestMessages(transientMessages?: ChatMessage[]) {
+    return [...(transientMessages ?? []), ...this.messages];
   }
 
   reset() {
     this.messages = [];
+  }
+
+  newMessages() {
+    const newMessages = this.messages.slice(this.messagesBefore);
+    this.messagesBefore = this.messages.length;
+    return newMessages;
   }
 }
 
@@ -51,9 +65,11 @@ export class SummaryChatHistory implements ChatHistory {
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
   llm: LLM;
+  private messagesBefore: number;
 
   constructor(init?: Partial<SummaryChatHistory>) {
     this.messages = init?.messages ?? [];
+    this.messagesBefore = this.messages.length;
     this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
     this.llm = init?.llm ?? new OpenAI();
     if (!this.llm.metadata.maxTokens) {
@@ -66,12 +82,8 @@ export class SummaryChatHistory implements ChatHistory {
   }
 
   private async summarize(): Promise<ChatMessage> {
-    // get all messages after the last summary message (including)
-    // if there's no summary message, get all messages (without system messages)
-    const lastSummaryIndex = this.getLastSummaryIndex();
-    const messagesToSummarize = !lastSummaryIndex
-      ? this.nonSystemMessages
-      : this.messages.slice(lastSummaryIndex);
+    // get the conversation messages to create summary
+    const messagesToSummarize = this.calcConversationMessages();
 
     let promptMessages;
     do {
@@ -91,14 +103,7 @@ export class SummaryChatHistory implements ChatHistory {
     return { content: response.message.content, role: "memory" };
   }
 
-  async addMessage(message: ChatMessage) {
-    // get tokens of current request messages and the new message
-    const tokens = this.llm.tokens([...this.requestMessages, message]);
-    // if there are too many tokens for the next request, call summarize
-    if (tokens > this.tokensToSummarize) {
-      const memoryMessage = await this.summarize();
-      this.messages.push(memoryMessage);
-    }
+  addMessage(message: ChatMessage) {
     this.messages.push(message);
   }
 
@@ -124,23 +129,72 @@ export class SummaryChatHistory implements ChatHistory {
     return this.messages.filter((message) => message.role !== "system");
   }
 
-  get requestMessages() {
+  /**
+   * Calculates the messages that describe the conversation so far.
+   * If there's no memory, all non-system messages are used.
+   * If there's a memory, uses all messages after the last summary message.
+   */
+  private calcConversationMessages(transformSummary?: boolean): ChatMessage[] {
     const lastSummaryIndex = this.getLastSummaryIndex();
-    if (!lastSummaryIndex) return this.messages;
-    // convert summary message so it can be send to the LLM
-    const summaryMessage: ChatMessage = {
-      content: `This is a summary of conversation so far: ${this.messages[lastSummaryIndex].content}`,
-      role: "system",
-    };
-    // return system messages, last summary and all messages after the last summary message
+    if (!lastSummaryIndex) {
+      // there's no memory, so just use all non-system messages
+      return this.nonSystemMessages;
+    } else {
+      // there's a memory, so use all messages after the last summary message
+      // and convert summary message so it can be send to the LLM
+      const summaryMessage: ChatMessage = transformSummary
+        ? {
+            content: `Summary of the conversation so far: ${this.messages[lastSummaryIndex].content}`,
+            role: "system",
+          }
+        : this.messages[lastSummaryIndex];
+      return [summaryMessage, ...this.messages.slice(lastSummaryIndex + 1)];
+    }
+  }
+
+  private calcCurrentRequestMessages(transientMessages?: ChatMessage[]) {
+    // TODO: check order: currently, we're sending:
+    // system messages first, then transient messages and then the messages that describe the conversation so far
     return [
       ...this.systemMessages,
-      summaryMessage,
-      ...this.messages.slice(lastSummaryIndex + 1),
+      ...(transientMessages ? transientMessages : []),
+      ...this.calcConversationMessages(true),
     ];
+  }
+
+  async requestMessages(transientMessages?: ChatMessage[]) {
+    const requestMessages = this.calcCurrentRequestMessages(transientMessages);
+
+    // get tokens of current request messages and the transient messages
+    const tokens = this.llm.tokens(requestMessages);
+    if (tokens > this.tokensToSummarize) {
+      // if there are too many tokens for the next request, call summarize
+      const memoryMessage = await this.summarize();
+      const lastMessage = this.messages.at(-1);
+      if (lastMessage && lastMessage.role === "user") {
+        // if last message is a user message, ensure that it's sent after the new memory message
+        this.messages.pop();
+        this.messages.push(memoryMessage);
+        this.messages.push(lastMessage);
+      } else {
+        // otherwise just add the memory message
+        this.messages.push(memoryMessage);
+      }
+      // TODO: we still might have too many tokens
+      // e.g. too large system messages or transient messages
+      // how should we deal with that?
+      return this.calcCurrentRequestMessages(transientMessages);
+    }
+    return requestMessages;
   }
 
   reset() {
     this.messages = [];
+  }
+
+  newMessages() {
+    const newMessages = this.messages.slice(this.messagesBefore);
+    this.messagesBefore = this.messages.length;
+    return newMessages;
   }
 }
