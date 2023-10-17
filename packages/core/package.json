@@ -1,6 +1,7 @@
 {
   "name": "llamaindex",
   "version": "0.0.30",
+  "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.6.2",
     "@notionhq/client": "^2.2.13",
@@ -35,6 +36,7 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
+  "repository": "run-llama/LlamaIndexTS",
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
