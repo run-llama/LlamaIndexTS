@@ -87,23 +87,22 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       );
     }
 
-    if (!indexStruct && !options.nodes) {
+    if (options.nodes) {
+      // If nodes are passed in, then we need to update the index
+      indexStruct = await VectorStoreIndex.buildIndexFromNodes(
+        options.nodes,
+        serviceContext,
+        vectorStore,
+        docStore,
+        indexStruct,
+      );
+
+      await indexStore.addIndexStruct(indexStruct);
+    } else if (!indexStruct) {
       throw new Error(
         "Cannot initialize VectorStoreIndex without nodes or indexStruct",
       );
     }
-
-    const nodes = options.nodes ?? [];
-
-    indexStruct = await VectorStoreIndex.buildIndexFromNodes(
-      nodes,
-      serviceContext,
-      vectorStore,
-      docStore,
-      indexStruct,
-    );
-
-    await indexStore.addIndexStruct(indexStruct);
 
     return new VectorStoreIndex({
       storageContext,
