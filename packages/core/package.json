@@ -29,6 +29,7 @@
     "@types/uuid": "^9.0.6",
     "execa": "5.1.1",
     "fs-fixture": "^1.2.0",
+    "get-port": "^5.1.1",
     "node-stdlib-browser": "^1.2.0",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2"
