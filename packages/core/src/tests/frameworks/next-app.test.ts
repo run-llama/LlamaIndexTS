@@ -1,5 +1,5 @@
 import execa, { ExecaChildProcess } from "execa";
-import { FsFixture, createFixture } from "fs-fixture";
+import { createFixture, FsFixture } from "fs-fixture";
 import getPort from "get-port";
 
 describe("Next App Router", () => {
@@ -38,8 +38,11 @@ describe("Next App Router", () => {
 
   test("Node Runtime", async () => {
     const response = await fetch(`http://localhost:${port}/api/node-runtime`);
-    expect(await response.json()).toEqual(
-      "The author attended college but did not find it particularly interesting or relevant to their programming interests. They slacked off, skipped lectures, and eventually stopped attending altogether. They returned their Macbook and only went back to the college five years later to pick up their papers.",
-    );
-  }, 20000);
+    const result = await response.json();
+
+    for (const [assertion, value] of Object.entries(result.assertions)) {
+      expect({ assertion, value }).toStrictEqual({ assertion, value: true });
+    }
+    expect(result.status).toBe("success");
+  });
 });

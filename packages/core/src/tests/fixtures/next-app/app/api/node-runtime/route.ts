@@ -1,24 +1,49 @@
-import fs from "fs/promises";
-import { Document, VectorStoreIndex } from "llamaindex";
+import {
+  Anthropic,
+  LlamaDeuce,
+  OpenAI,
+  PapaCSVReader,
+  PDFReader,
+  Portkey,
+} from "llamaindex";
 
 export const runtime = "nodejs";
 
+type ResponseObject = {
+  status: "success" | "failure";
+  message: string;
+  assertions: Record<string, boolean>;
+};
+
 export async function GET(_request: Request) {
-  // Load essay from abramov.txt in Node
-  const essay = await fs.readFile("./public/abramov.txt", "utf-8");
+  const response: ResponseObject = {
+    status: "success",
+    message: "",
+    assertions: {},
+  };
 
-  // Create Document object with essay
-  const document = new Document({ text: essay });
+  function makeAssertion(name: string, condition: boolean) {
+    if (!condition) {
+      response.status = "failure";
+      response.message = `Assertion failed for ${name}.`;
+    }
+    response.assertions[name] = condition;
+  }
 
-  // Split text and create embeddings. Store them in a VectorStoreIndex
-  const index = await VectorStoreIndex.fromDocuments([document]);
+  makeAssertion("OpenAI", typeof OpenAI === "function");
+  makeAssertion("LlamaDeuce", typeof LlamaDeuce === "function");
+  makeAssertion("Anthropic", typeof Anthropic === "function");
+  makeAssertion("Portkey", typeof Portkey === "function");
 
-  // Query the index
-  const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(
-    "What did the author do in college?",
-  );
+  const { VectorStoreIndex } = await import("llamaindex");
+  makeAssertion("VectorStoreIndex", typeof VectorStoreIndex === "function");
+
+  const pdfReader = new PDFReader();
+  makeAssertion("pdfReader.loadData", typeof pdfReader.loadData === "function");
+
+  const csvReader = new PapaCSVReader();
+  makeAssertion("csvReader.loadData", typeof csvReader.loadData === "function");
 
   // Output response
-  return Response.json(response.toString());
+  return Response.json(response);
 }

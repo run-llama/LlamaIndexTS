@@ -7,26 +7,30 @@ describe("Node: System", () => {
 
     await execa("npm", ["link", "llamaindex"], { cwd: fixture.path });
 
-    const result = await execa("node", [fixture.path]);
+    const response = await execa("node", [fixture.path]);
+    const result = JSON.parse(response.stdout);
 
-    expect(result.stdout).toContain(
-      "The author attended college but did not find it particularly interesting or relevant to their programming interests. They slacked off, skipped lectures, and eventually stopped attending altogether. They returned their Macbook and only went back to the college five years later to pick up their papers.",
-    );
+    for (const [assertion, value] of Object.entries(result.assertions)) {
+      expect({ assertion, value }).toStrictEqual({ assertion, value: true });
+    }
+    expect(result.status).toBe("success");
 
     await execa("npm", ["unlink", "llamaindex"], { cwd: fixture.path });
-  }, 10000);
+  });
 
   test("CJS", async () => {
     const fixture = await createFixture("./src/tests/fixtures/cjs");
 
     await execa("npm", ["link", "llamaindex"], { cwd: fixture.path });
 
-    const result = await execa("node", [fixture.path]);
+    const response = await execa("node", [fixture.path]);
+    const result = JSON.parse(response.stdout);
 
-    expect(result.stdout).toContain(
-      "The author attended college but did not find it particularly interesting or relevant to their programming interests. They slacked off, skipped lectures, and eventually stopped attending altogether. They returned their Macbook and only went back to the college five years later to pick up their papers.",
-    );
+    for (const [assertion, value] of Object.entries(result.assertions)) {
+      expect({ assertion, value }).toStrictEqual({ assertion, value: true });
+    }
+    expect(result.status).toBe("success");
 
     await execa("npm", ["unlink", "llamaindex"], { cwd: fixture.path });
-  }, 10000);
+  });
 });
