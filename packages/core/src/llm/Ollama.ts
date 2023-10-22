@@ -14,7 +14,7 @@ export class Ollama implements LLM {
     return result;
   }
 
-  // Removed duplicate 'complete' method
+  async complete<
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
   >(
@@ -22,7 +22,8 @@ export class Ollama implements LLM {
     parentEvent?: Event | undefined,
     streaming?: T,
   ): Promise<R> {
-    // Removed duplicate 'complete' method
+    return this.chat([{ content: prompt, role: "user" }], parentEvent, streaming);
+  }
 
   async *streamEndpoint(model: string, prompt: string, options: Record<string, any>): AsyncGenerator<string, void, unknown> {
     // Logic for streaming the model's output
@@ -37,10 +38,8 @@ export class Ollama implements LLM {
     parentEvent?: Event | undefined,
     streaming?: T,
   ): Promise<R> {
-    // Logic for chat
     return this.ollama.chat(messages, parentEvent, streaming);
   }
-    T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
   >(
     prompt: string,
