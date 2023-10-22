@@ -13,7 +13,10 @@ export class Ollama implements LLM {
   async runModelLocally(model: string, options: Record<string, any>): Promise<string> {
     // Logic for running the model locally
     const result = await this.ollama.runModelLocally(model, options); // Run the model locally using the Ollama instance and return the result
-    return result;
+    if (result.error) {
+      throw new Error(result.error);
+    }
+    return result.output;
   }
 
   async complete<
@@ -43,16 +46,7 @@ export class Ollama implements LLM {
     return this.ollama.chat(messages, parentEvent, streaming);
   }
   
-  // Removed duplicated complete method
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    prompt: string,
-    parentEvent?: Event | undefined,
-    streaming?: T,
-  ): Promise<R> {
-    return this.chat([{ content: prompt, role: "user" }], parentEvent, streaming);
-  }
+  // Duplicated complete method removed
 
   tokens(messages: ChatMessage[]): number {
     // Logic for calculating tokens
