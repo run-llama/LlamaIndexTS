@@ -40,6 +40,9 @@ export class Ollama implements LLM {
   ): Promise<R> {
     return this.ollama.chat(messages, parentEvent, streaming);
   }
+  
+  async complete<
+    T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
   >(
     prompt: string,
