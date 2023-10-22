@@ -7,6 +7,7 @@ import {
   OpenAIStreamToken,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
+import { Ollama } from "./Ollama";
 
 import { LLMOptions } from "portkey-ai";
 import { globalsHelper, Tokenizers } from "../GlobalsHelper";
@@ -97,6 +98,17 @@ export interface LLM {
    * Calculates the number of tokens needed for the given chat messages
    */
   tokens(messages: ChatMessage[]): number;
+
+  /**
+   * Initialize an Ollama instance
+   */
+  initOllama(): Promise<Ollama>;
+
+  /**
+   * Send a prompt to the Ollama instance and get a response
+   * @param prompt the prompt to send
+   */
+  ollamaChat(prompt: string): Promise<string>;
 }
 
 export const GPT4_MODELS = {
