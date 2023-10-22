@@ -10,7 +10,16 @@ export class Ollama implements LLM {
     return Promise.resolve("");
   }
 
-  async completePrompt(prompt: string, options: Record<string, any>): Promise<string> {
+  async complete<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(
+    prompt: string,
+    parentEvent?: Event | undefined,
+    streaming?: T,
+  ): Promise<R> {
+    return this.chat([{ content: prompt, role: "user" }], parentEvent, streaming);
+  }
     // Logic for completing the prompt
     return Promise.resolve("");
   }
@@ -28,12 +37,9 @@ export class Ollama implements LLM {
     parentEvent?: Event | undefined,
     streaming?: T,
   ): Promise<R> {
-    // Logic for calculating tokens
-    let totalTokens = 0;
-    for (const message of messages) {
-      totalTokens += message.content.split(' ').length;
-    }
-    return totalTokens;
+    // Logic for chat
+    // This is a placeholder and needs to be replaced with actual implementation
+    return Promise.resolve({ message: { content: "", role: "assistant" } } as R);
   }
 
   async complete<
@@ -63,6 +69,7 @@ export class Ollama implements LLM {
       topP: 0.9,
       maxTokens: 1000,
       contextWindow: 500,
+      tokenizer: Tokenizers.CL100K_BASE, // Add tokenizer property
     };
   }
 }
