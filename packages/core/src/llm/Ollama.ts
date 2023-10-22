@@ -4,6 +4,7 @@ import { OllamaInstance } from "./OllamaInstance";
 
 export class Ollama implements LLM {
   private ollama: OllamaInstance; // Add a private property to hold the Ollama instance
+  private hasStreaming: boolean; // Add a private property to hold the streaming capability of the Ollama instance
 
   constructor(ollamaInstance: OllamaInstance) {
     // Initialize Ollama instance
@@ -32,7 +33,14 @@ export class Ollama implements LLM {
 
   async *streamEndpoint(model: string, prompt: string, options: Record<string, any>): AsyncGenerator<string, void, unknown> {
     // Logic for streaming the model's output
-    yield "";
+    if (this.hasStreaming) {
+      const stream = this.ollama.streamEndpoint(model, prompt, options);
+      for await (const output of stream) {
+        yield output;
+      }
+    } else {
+      throw new Error("Streaming is not supported by this Ollama instance.");
+    }
   }
 
   async chat<
