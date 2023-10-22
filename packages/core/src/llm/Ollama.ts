@@ -1,13 +1,17 @@
 import { LLM, ChatMessage, ChatResponse } from "./LLM";
 
 export class Ollama implements LLM {
+  private ollama: any; // Add a private property to hold the Ollama instance
+
   constructor(init?: Partial<Ollama>) {
     // Initialize Ollama instance
+    this.ollama = new Ollama(init); // Initialize the Ollama instance
   }
 
   async runModelLocally(model: string, options: Record<string, any>): Promise<string> {
     // Logic for running the model locally
-    return Promise.resolve("");
+    const result = await this.ollama.runModelLocally(model, options); // Run the model locally using the Ollama instance and return the result
+    return result;
   }
 
   async complete<
@@ -19,9 +23,6 @@ export class Ollama implements LLM {
     streaming?: T,
   ): Promise<R> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent, streaming);
-  }
-    // Logic for completing the prompt
-    return Promise.resolve("");
   }
 
   async *streamEndpoint(model: string, prompt: string, options: Record<string, any>): AsyncGenerator<string, void, unknown> {
