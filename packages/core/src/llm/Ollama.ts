@@ -28,8 +28,12 @@ export class Ollama implements LLM {
     parentEvent?: Event | undefined,
     streaming?: T,
   ): Promise<R> {
-    // Logic for chat
-    return this.ollama.chat(messages, parentEvent, streaming);
+    // Logic for calculating tokens
+    let totalTokens = 0;
+    for (const message of messages) {
+      totalTokens += message.content.split(' ').length;
+    }
+    return totalTokens;
   }
 
   async complete<
@@ -45,11 +49,20 @@ export class Ollama implements LLM {
 
   tokens(messages: ChatMessage[]): number {
     // Logic for calculating tokens
-    return 0;
+    let totalTokens = 0;
+    for (const message of messages) {
+      totalTokens += message.content.split(' ').length;
+    }
+    return totalTokens;
   }
 
   get metadata() {
-    // Logic for getting metadata
-    return this.ollama.metadata;
+    return {
+      model: "OllamaModel",
+      temperature: 0.1,
+      topP: 0.9,
+      maxTokens: 1000,
+      contextWindow: 500,
+    };
   }
 }
