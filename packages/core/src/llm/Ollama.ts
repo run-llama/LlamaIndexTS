@@ -1,4 +1,6 @@
-import { LLM, ChatMessage, ChatResponse } from "./LLM";
+import { LLM, ChatMessage, ChatResponse, Event } from "./LLM";
+import { Tokenizers } from "../helpers/GlobalsHelper";
+import { OllamaInstance } from "./OllamaInstance";
 
 export class Ollama implements LLM {
   private ollama: OllamaInstance; // Add a private property to hold the Ollama instance
@@ -41,7 +43,7 @@ export class Ollama implements LLM {
     return this.ollama.chat(messages, parentEvent, streaming);
   }
   
-  async complete<
+  // Removed duplicated complete method
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
   >(
