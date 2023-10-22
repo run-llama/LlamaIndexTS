@@ -1,11 +1,11 @@
 import { LLM, ChatMessage, ChatResponse } from "./LLM";
 
 export class Ollama implements LLM {
-  private ollama: any; // Add a private property to hold the Ollama instance
+  private ollama: OllamaInstance; // Add a private property to hold the Ollama instance
 
-  constructor(init?: Partial<Ollama>) {
+  constructor(ollamaInstance: OllamaInstance) {
     // Initialize Ollama instance
-    this.ollama = new Ollama(init); // Initialize the Ollama instance
+    this.ollama = ollamaInstance; // Initialize the Ollama instance with the provided OllamaInstance
   }
 
   async runModelLocally(model: string, options: Record<string, any>): Promise<string> {
