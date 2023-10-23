@@ -11,7 +11,7 @@ describe("Next App Router", () => {
     port = await getPort();
     fixture = await createFixture("./src/tests/fixtures/next-app");
 
-    // await execa("npm", ["link", "llamaindex"], { cwd: fixture.path });
+    await execa("npm", ["link", "llamaindex"], { cwd: fixture.path });
 
     server = execa("npm", ["run", "dev", "--", `--port=${port}`], {
       cwd: fixture.path,
@@ -33,7 +33,7 @@ describe("Next App Router", () => {
   afterAll(async () => {
     server.kill();
 
-    // await execa("npm", ["unlink", "llamaindex"], { cwd: fixture.path });
+    await execa("npm", ["unlink", "llamaindex"], { cwd: fixture.path });
   });
 
   test("Node Runtime", async () => {
