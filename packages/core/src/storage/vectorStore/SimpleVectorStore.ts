@@ -156,6 +156,17 @@ export class SimpleVectorStore implements VectorStore {
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
+  async loadFromPersistPath(persistPath: string): Promise<VectorStore> {
+    const fs = this.fs;
+    let dirPath = path.dirname(persistPath);
+    if (!(await exists(fs, dirPath))) {
+      await fs.mkdir(dirPath);
+    }
+    let fileData = await fs.readFile(persistPath);
+    let dataDict = JSON.parse(fileData.toString());
+    return SimpleVectorStore.fromDict(dataDict);
+  }
+
   static async fromPersistPath(
     persistPath: string,
     fs?: GenericFileSystem,
