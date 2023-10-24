@@ -254,7 +254,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    * @returns A new VectorStoreIndex object.
    */
   static async fromPersistPath(persistPath: string): Promise<VectorStoreIndex> {
-    const vectorStore = await SimpleVectorStore.loadFromPersistPath(persistPath);
+    const vectorStore = await SimpleVectorStore.fromPersistPath(persistPath);
     const serviceContext = serviceContextFromDefaults({});
     const storageContext = await storageContextFromDefaults({ vectorStore });
 
