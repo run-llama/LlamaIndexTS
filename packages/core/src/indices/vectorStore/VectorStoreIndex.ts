@@ -12,6 +12,7 @@ import {
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
 import { VectorStore } from "../../storage/vectorStore/types";
+import { SimpleVectorStore } from "../../storage/vectorStore/SimpleVectorStore";
 import {
   BaseIndex,
   BaseIndexInit,
