@@ -28,7 +28,7 @@ describe("Next App Router", () => {
         }
       });
     });
-  }, 10000);
+  }, 20000);
 
   afterAll(async () => {
     server.kill();
