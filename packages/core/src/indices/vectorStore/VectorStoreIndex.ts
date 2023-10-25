@@ -18,6 +18,7 @@ import {
   IndexDict,
   IndexStructType,
 } from "../BaseIndex";
+import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import { VectorIndexRetriever } from "./VectorIndexRetriever";
 
 export interface VectorIndexOptions {
@@ -246,11 +247,15 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: ResponseSynthesizer;
+    preFilters?: unknown;
+    nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),
       responseSynthesizer,
+      options?.preFilters,
+      options?.nodePostprocessors,
     );
   }
 
