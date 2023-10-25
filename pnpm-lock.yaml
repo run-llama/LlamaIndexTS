@@ -232,6 +232,9 @@ importers:
       async-retry:
         specifier: 1.3.1
         version: 1.3.1
+      async-sema:
+        specifier: 3.0.1
+        version: 3.0.1
       ci-info:
         specifier: watson/ci-info#f43f6a1cefff47fb361c88cf4b943fdbcaafe540
         version: github.com/watson/ci-info/f43f6a1cefff47fb361c88cf4b943fdbcaafe540
@@ -4961,6 +4964,10 @@ packages:
     resolution: {integrity: sha512-aiieFW/7h3hY0Bq5d+ktDBejxuwR78vRu9hDUdR8rNhSaQ29VzPL4AoIRG7D/c7tdenwOcKvgPM6tIxB3cB6HA==}
     dependencies:
       retry: 0.12.0
+    dev: true
+
+  /async-sema@3.0.1:
+    resolution: {integrity: sha512-fKT2riE8EHAvJEfLJXZiATQWqZttjx1+tfgnVshCDrH8vlw4YC8aECe0B8MU184g+aVRFVgmfxFlKZKaozSrNw==}
     dev: true
 
   /asynckit@0.4.0:
