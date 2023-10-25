@@ -49,7 +49,8 @@
     "prompts": "2.1.0",
     "tar": "6.1.15",
     "update-check": "1.5.4",
-    "validate-npm-package-name": "3.0.0"
+    "validate-npm-package-name": "3.0.0",
+    "async-sema": "3.0.1"
   },
   "engines": {
     "node": ">=16.14.0"
