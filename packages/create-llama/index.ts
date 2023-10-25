@@ -289,7 +289,7 @@ async function run(): Promise<void> {
       packageManager,
       example: example && example !== 'default' ? example : undefined,
       examplePath: program.examplePath,
-      tailwind: program.tailwind,
+      tailwind: true,
       eslint: program.eslint,
       srcDir: program.srcDir,
       importAlias: program.importAlias,
@@ -316,7 +316,7 @@ async function run(): Promise<void> {
       appPath: resolvedProjectPath,
       packageManager,
       eslint: program.eslint,
-      tailwind: program.tailwind,
+      tailwind: true,
       srcDir: program.srcDir,
       importAlias: program.importAlias,
     })

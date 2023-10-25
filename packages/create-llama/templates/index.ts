@@ -8,9 +8,10 @@ import fs from 'fs/promises'
 import path from 'path'
 import { cyan, bold } from 'picocolors'
 import { Sema } from 'async-sema'
-import { version } from '../package.json'
 
 import { GetTemplateFileArgs, InstallTemplateArgs } from './types'
+
+const NEXT_VERSION = '13.5.6';
 
 /**
  * Get the file path for a given file in a template, e.g. "next.config.js".
@@ -184,7 +185,9 @@ export const installTemplate = async ({
     dependencies: {
       react: '^18',
       'react-dom': '^18',
-      next: process.env.NEXT_PRIVATE_TEST_VERSION ?? version,
+      next: NEXT_VERSION,
+      llamaindex: "0.0.0-20231018030303",
+		  encoding: "^0.1.13"
     },
     devDependencies: {},
   }
@@ -215,7 +218,7 @@ export const installTemplate = async ({
     packageJson.devDependencies = {
       ...packageJson.devDependencies,
       eslint: '^8',
-      'eslint-config-next': version,
+      'eslint-config-next': NEXT_VERSION,
     }
   }
 
