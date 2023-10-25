@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Event } from "./callbacks/CallbackManager";
+import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
@@ -30,12 +31,14 @@ export interface BaseQueryEngine {
 export class RetrieverQueryEngine implements BaseQueryEngine {
   retriever: BaseRetriever;
   responseSynthesizer: ResponseSynthesizer;
+  nodePostprocessors: BaseNodePostprocessor[];
   preFilters?: unknown;
 
   constructor(
     retriever: BaseRetriever,
     responseSynthesizer?: ResponseSynthesizer,
     preFilters?: unknown,
+    nodePostprocessors?: BaseNodePostprocessor[],
   ) {
     this.retriever = retriever;
     const serviceContext: ServiceContext | undefined =
@@ -43,6 +46,24 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
     this.responseSynthesizer =
       responseSynthesizer || new ResponseSynthesizer({ serviceContext });
     this.preFilters = preFilters;
+    this.nodePostprocessors = nodePostprocessors || [];
+  }
+
+  private applyNodePostprocessors(nodes: NodeWithScore[]) {
+    return this.nodePostprocessors.reduce(
+      (nodes, nodePostprocessor) => nodePostprocessor.postprocessNodes(nodes),
+      nodes,
+    );
+  }
+
+  private async retrieve(query: string, parentEvent: Event) {
+    const nodes = await this.retriever.retrieve(
+      query,
+      parentEvent,
+      this.preFilters,
+    );
+
+    return this.applyNodePostprocessors(nodes);
   }
 
   async query(query: string, parentEvent?: Event) {
@@ -51,11 +72,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
       type: "wrapper",
       tags: ["final"],
     };
-    const nodes = await this.retriever.retrieve(
-      query,
-      _parentEvent,
-      this.preFilters,
-    );
+    const nodes = await this.retrieve(query, _parentEvent);
     return this.responseSynthesizer.synthesize(query, nodes, _parentEvent);
   }
 }

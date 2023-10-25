@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { Event } from "./callbacks/CallbackManager";
 import { ChatHistory } from "./ChatHistory";
+import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
 import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 import { NodeWithScore, TextNode } from "./Node";
 import {
@@ -178,14 +179,24 @@ export interface ContextGenerator {
 export class DefaultContextGenerator implements ContextGenerator {
   retriever: BaseRetriever;
   contextSystemPrompt: ContextSystemPrompt;
+  nodePostprocessors: BaseNodePostprocessor[];
 
   constructor(init: {
     retriever: BaseRetriever;
     contextSystemPrompt?: ContextSystemPrompt;
+    nodePostprocessors?: BaseNodePostprocessor[];
   }) {
     this.retriever = init.retriever;
     this.contextSystemPrompt =
       init?.contextSystemPrompt ?? defaultContextSystemPrompt;
+    this.nodePostprocessors = init.nodePostprocessors || [];
+  }
+
+  private applyNodePostprocessors(nodes: NodeWithScore[]) {
+    return this.nodePostprocessors.reduce(
+      (nodes, nodePostprocessor) => nodePostprocessor.postprocessNodes(nodes),
+      nodes,
+    );
   }
 
   async generate(message: string, parentEvent?: Event): Promise<Context> {
@@ -201,16 +212,16 @@ export class DefaultContextGenerator implements ContextGenerator {
       parentEvent,
     );
 
+    const nodes = this.applyNodePostprocessors(sourceNodesWithScore);
+
     return {
       message: {
         content: this.contextSystemPrompt({
-          context: sourceNodesWithScore
-            .map((r) => (r.node as TextNode).text)
-            .join("\n\n"),
+          context: nodes.map((r) => (r.node as TextNode).text).join("\n\n"),
         }),
         role: "system",
       },
-      nodes: sourceNodesWithScore,
+      nodes,
     };
   }
 }
@@ -230,6 +241,7 @@ export class ContextChatEngine implements ChatEngine {
     chatModel?: LLM;
     chatHistory?: ChatMessage[];
     contextSystemPrompt?: ContextSystemPrompt;
+    nodePostprocessors?: BaseNodePostprocessor[];
   }) {
     this.chatModel =
       init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
