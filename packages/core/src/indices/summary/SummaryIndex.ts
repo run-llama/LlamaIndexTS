@@ -10,17 +10,18 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   StorageContext,
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
-import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexList,
   IndexStructType,
 } from "../BaseIndex";
+import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import {
   SummaryIndexLLMRetriever,
   SummaryIndexRetriever,
@@ -155,6 +156,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: ResponseSynthesizer;
+    nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {
     let { retriever, responseSynthesizer } = options ?? {};
 
@@ -170,7 +172,12 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       });
     }
 
-    return new RetrieverQueryEngine(retriever, responseSynthesizer);
+    return new RetrieverQueryEngine(
+      retriever,
+      responseSynthesizer,
+      undefined,
+      options?.nodePostprocessors,
+    );
   }
 
   static async buildIndexFromNodes(
