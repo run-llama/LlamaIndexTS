@@ -39,45 +39,10 @@ const program = new Commander.Command(packageJson.name)
     projectPath = name
   })
   .option(
-    '--ts, --typescript',
-    `
-
-  Initialize as a TypeScript project. (default)
-`
-  )
-  .option(
-    '--js, --javascript',
-    `
-
-  Initialize as a JavaScript project.
-`
-  )
-  .option(
-    '--tailwind',
-    `
-
-  Initialize with Tailwind CSS config. (default)
-`
-  )
-  .option(
     '--eslint',
     `
 
   Initialize with eslint config.
-`
-  )
-  .option(
-    '--app',
-    `
-
-  Initialize as an App Router project.
-`
-  )
-  .option(
-    '--src-dir',
-    `
-
-  Initialize inside a \`src/\` directory.
 `
   )
   .option(
@@ -120,7 +85,7 @@ const program = new Commander.Command(packageJson.name)
     `
 
   An example to bootstrap the app with. You can use an example name
-  from the official Next.js repo or a GitHub URL. The URL can use
+  from the official LlamaIndex repo or a GitHub URL. The URL can use
   any branch and/or subdirectory
 `
   )
@@ -155,7 +120,7 @@ const packageManager = !!program.useNpm
   : getPkgManager()
 
 async function run(): Promise<void> {
-  const conf = new Conf({ projectName: 'create-next-app' })
+  const conf = new Conf({ projectName: 'create-llama' })
 
   if (program.resetPreferences) {
     conf.clear()
@@ -254,42 +219,6 @@ async function run(): Promise<void> {
     const getPrefOrDefault = (field: string) =>
       preferences[field] ?? defaults[field]
 
-    if (!program.typescript && !program.javascript) {
-      if (ciInfo.isCI) {
-        // default to TypeScript in CI as we can't prompt to
-        // prevent breaking setup flows
-        program.typescript = getPrefOrDefault('typescript')
-      } else {
-        const styledTypeScript = blue('TypeScript')
-        const { typescript } = await prompts(
-          {
-            type: 'toggle',
-            name: 'typescript',
-            message: `Would you like to use ${styledTypeScript}?`,
-            initial: getPrefOrDefault('typescript'),
-            active: 'Yes',
-            inactive: 'No',
-          },
-          {
-            /**
-             * User inputs Ctrl+C or Ctrl+D to exit the prompt. We should close the
-             * process and not write to the file system.
-             */
-            onCancel: () => {
-              console.error('Exiting.')
-              process.exit(1)
-            },
-          }
-        )
-        /**
-         * Depending on the prompt response, set the appropriate program flags.
-         */
-        program.typescript = Boolean(typescript)
-        program.javascript = !Boolean(typescript)
-        preferences.typescript = Boolean(typescript)
-      }
-    }
-
     if (
       !process.argv.includes('--eslint') &&
       !process.argv.includes('--no-eslint')
@@ -309,68 +238,6 @@ async function run(): Promise<void> {
         })
         program.eslint = Boolean(eslint)
         preferences.eslint = Boolean(eslint)
-      }
-    }
-
-    if (
-      !process.argv.includes('--tailwind') &&
-      !process.argv.includes('--no-tailwind')
-    ) {
-      if (ciInfo.isCI) {
-        program.tailwind = getPrefOrDefault('tailwind')
-      } else {
-        const tw = blue('Tailwind CSS')
-        const { tailwind } = await prompts({
-          onState: onPromptState,
-          type: 'toggle',
-          name: 'tailwind',
-          message: `Would you like to use ${tw}?`,
-          initial: getPrefOrDefault('tailwind'),
-          active: 'Yes',
-          inactive: 'No',
-        })
-        program.tailwind = Boolean(tailwind)
-        preferences.tailwind = Boolean(tailwind)
-      }
-    }
-
-    if (
-      !process.argv.includes('--src-dir') &&
-      !process.argv.includes('--no-src-dir')
-    ) {
-      if (ciInfo.isCI) {
-        program.srcDir = getPrefOrDefault('srcDir')
-      } else {
-        const styledSrcDir = blue('`src/` directory')
-        const { srcDir } = await prompts({
-          onState: onPromptState,
-          type: 'toggle',
-          name: 'srcDir',
-          message: `Would you like to use ${styledSrcDir}?`,
-          initial: getPrefOrDefault('srcDir'),
-          active: 'Yes',
-          inactive: 'No',
-        })
-        program.srcDir = Boolean(srcDir)
-        preferences.srcDir = Boolean(srcDir)
-      }
-    }
-
-    if (!process.argv.includes('--app') && !process.argv.includes('--no-app')) {
-      if (ciInfo.isCI) {
-        program.app = getPrefOrDefault('app')
-      } else {
-        const styledAppDir = blue('App Router')
-        const { appRouter } = await prompts({
-          onState: onPromptState,
-          type: 'toggle',
-          name: 'appRouter',
-          message: `Would you like to use ${styledAppDir}? (recommended)`,
-          initial: getPrefOrDefault('app'),
-          active: 'Yes',
-          inactive: 'No',
-        })
-        program.app = Boolean(appRouter)
       }
     }
 
@@ -422,10 +289,8 @@ async function run(): Promise<void> {
       packageManager,
       example: example && example !== 'default' ? example : undefined,
       examplePath: program.examplePath,
-      typescript: program.typescript,
       tailwind: program.tailwind,
       eslint: program.eslint,
-      appRouter: program.app,
       srcDir: program.srcDir,
       importAlias: program.importAlias,
     })
@@ -450,10 +315,8 @@ async function run(): Promise<void> {
     await createApp({
       appPath: resolvedProjectPath,
       packageManager,
-      typescript: program.typescript,
       eslint: program.eslint,
       tailwind: program.tailwind,
-      appRouter: program.app,
       srcDir: program.srcDir,
       importAlias: program.importAlias,
     })
@@ -469,15 +332,15 @@ async function notifyUpdate(): Promise<void> {
     if (res?.latest) {
       const updateMessage =
         packageManager === 'yarn'
-          ? 'yarn global add create-next-app'
+          ? 'yarn global add create-llama'
           : packageManager === 'pnpm'
-          ? 'pnpm add -g create-next-app'
+          ? 'pnpm add -g create-llama'
           : packageManager === 'bun'
-          ? 'bun add -g create-next-app'
-          : 'npm i -g create-next-app'
+          ? 'bun add -g create-llama'
+          : 'npm i -g create-llama'
 
       console.log(
-        yellow(bold('A new version of `create-next-app` is available!')) +
+        yellow(bold('A new version of `create-llama` is available!')) +
           '\n' +
           'You can update by running: ' +
           cyan(updateMessage) +
