@@ -247,13 +247,14 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: ResponseSynthesizer;
+    preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),
       responseSynthesizer,
-      undefined,
+      options?.preFilters,
       options?.nodePostprocessors,
     );
   }

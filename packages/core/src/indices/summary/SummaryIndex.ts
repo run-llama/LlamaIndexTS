@@ -156,6 +156,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: ResponseSynthesizer;
+    preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {
     let { retriever, responseSynthesizer } = options ?? {};
@@ -175,7 +176,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     return new RetrieverQueryEngine(
       retriever,
       responseSynthesizer,
-      undefined,
+      options?.preFilters,
       options?.nodePostprocessors,
     );
   }
