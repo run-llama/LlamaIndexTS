@@ -15,7 +15,6 @@ export class SimilarityPostprocessor implements BaseNodePostprocessor {
     if (this.similarityCutoff === undefined) return nodes;
 
     const cutoff = this.similarityCutoff || 0;
-    console.log(nodes);
     return nodes.filter((node) => node.score && node.score >= cutoff);
   }
 }
