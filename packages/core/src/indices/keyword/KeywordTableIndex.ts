@@ -15,6 +15,7 @@ import {
   IndexStructType,
   KeywordTable,
 } from "../BaseIndex";
+import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import {
   KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,
@@ -129,11 +130,15 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: ResponseSynthesizer;
+    preFilters?: unknown;
+    nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),
       responseSynthesizer,
+      options?.preFilters,
+      options?.nodePostprocessors,
     );
   }
 
