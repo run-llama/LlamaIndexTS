@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.31
+
+### Patch Changes
+
+- 6c55b2d: Give HistoryChatEngine pluggable options (thanks @marcusschiesser)
+- 8aa8c65: Add SimilarityPostProcessor (thanks @TomPenguin)
+- 6c55b2d: Added LLMMetadata (thanks @marcusschiesser)
+
 ## 0.0.30
 
 ### Patch Changes
