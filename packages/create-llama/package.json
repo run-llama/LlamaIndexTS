@@ -1,21 +1,21 @@
 {
-  "name": "create-next-app",
-  "version": "13.5.6",
+  "name": "create-llama",
+  "version": "0.0.1",
   "keywords": [
-    "react",
-    "next",
+    "rag",
+    "llamaindex",
     "next.js"
   ],
-  "description": "Create Next.js-powered React apps with one command",
+  "description": "Create LlamaIndex-powered apps with one command",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vercel/next.js",
-    "directory": "packages/create-next-app"
+    "url": "https://github.com/run-llama/LlamaIndexTS",
+    "directory": "packages/create-llama"
   },
-  "author": "Next.js Team <support@vercel.com>",
+  "author": "LlamaIndex Team <info@runllama.ai>",
   "license": "MIT",
   "bin": {
-    "create-next-app": "./dist/index.js"
+    "create-llama": "./dist/index.js"
   },
   "files": [
     "dist"

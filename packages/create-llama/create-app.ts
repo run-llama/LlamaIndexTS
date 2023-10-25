@@ -29,10 +29,8 @@ export async function createApp({
   packageManager,
   example,
   examplePath,
-  typescript,
   tailwind,
   eslint,
-  appRouter,
   srcDir,
   importAlias,
 }: {
@@ -40,22 +38,14 @@ export async function createApp({
   packageManager: PackageManager
   example?: string
   examplePath?: string
-  typescript: boolean
   tailwind: boolean
   eslint: boolean
-  appRouter: boolean
   srcDir: boolean
   importAlias: string
 }): Promise<void> {
   let repoInfo: RepoInfo | undefined
-  const mode: TemplateMode = typescript ? 'ts' : 'js'
-  const template: TemplateType = appRouter
-    ? tailwind
-      ? 'app-tw'
-      : 'app'
-    : tailwind
-    ? 'default-tw'
-    : 'default'
+  const mode: TemplateMode = 'nextjs';
+  const template: TemplateType = 'simple';
 
   if (example) {
     let repoUrl: URL | undefined
@@ -141,7 +131,7 @@ export async function createApp({
   const isOnline = !useYarn || (await getOnline())
   const originalDirectory = process.cwd()
 
-  console.log(`Creating a new Next.js app in ${green(root)}.`)
+  console.log(`Creating a new LlamaIndex app in ${green(root)}.`)
   console.log()
 
   process.chdir(root)
@@ -201,7 +191,7 @@ export async function createApp({
     const tsconfigPath = path.join(root, 'tsconfig.json')
     if (fs.existsSync(tsconfigPath)) {
       fs.copyFileSync(
-        getTemplateFile({ template, mode: 'ts', file: 'next-env.d.ts' }),
+        getTemplateFile({ template, mode: 'nextjs', file: 'next-env.d.ts' }),
         path.join(root, 'next-env.d.ts')
       )
     }
