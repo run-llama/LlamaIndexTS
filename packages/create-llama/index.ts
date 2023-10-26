@@ -179,10 +179,6 @@ async function run(): Promise<void> {
   const defaults: typeof preferences = {
     framework: "nextjs",
     eslint: true,
-    app: true,
-    srcDir: false,
-    importAlias: "@/*",
-    customizeImportAlias: false,
   };
   const getPrefOrDefault = (field: string) =>
     preferences[field] ?? defaults[field];
@@ -236,51 +232,11 @@ async function run(): Promise<void> {
     }
   }
 
-  if (typeof program.importAlias !== "string" || !program.importAlias.length) {
-    if (ciInfo.isCI) {
-      // We don't use preferences here because the default value is @/* regardless of existing preferences
-      program.importAlias = defaults.importAlias;
-    } else {
-      const styledImportAlias = blue("import alias");
-
-      const { customizeImportAlias } = await prompts({
-        onState: onPromptState,
-        type: "toggle",
-        name: "customizeImportAlias",
-        message: `Would you like to customize the default ${styledImportAlias} (${defaults.importAlias})?`,
-        initial: getPrefOrDefault("customizeImportAlias"),
-        active: "Yes",
-        inactive: "No",
-      });
-
-      if (!customizeImportAlias) {
-        // We don't use preferences here because the default value is @/* regardless of existing preferences
-        program.importAlias = defaults.importAlias;
-      } else {
-        const { importAlias } = await prompts({
-          onState: onPromptState,
-          type: "text",
-          name: "importAlias",
-          message: `What ${styledImportAlias} would you like configured?`,
-          initial: getPrefOrDefault("importAlias"),
-          validate: (value) =>
-            /.+\/\*/.test(value)
-              ? true
-              : "Import alias must follow the pattern <prefix>/*",
-        });
-        program.importAlias = importAlias;
-        preferences.importAlias = importAlias;
-      }
-    }
-  }
-
   await createApp({
     framework: program.framework,
     appPath: resolvedProjectPath,
     packageManager,
     eslint: program.eslint,
-    srcDir: program.srcDir,
-    importAlias: program.importAlias,
   });
   conf.set("preferences", preferences);
 }

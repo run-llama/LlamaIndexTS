@@ -16,15 +16,11 @@ export async function createApp({
   appPath,
   packageManager,
   eslint,
-  srcDir,
-  importAlias,
 }: {
   framework: TemplateFramework;
   appPath: string;
   packageManager: PackageManager;
   eslint: boolean;
-  srcDir: boolean;
-  importAlias: string;
 }): Promise<void> {
   const template: TemplateType = "simple";
 
@@ -67,8 +63,6 @@ export async function createApp({
     packageManager,
     isOnline,
     eslint,
-    srcDir,
-    importAlias,
   });
 
   if (tryGitInit(root)) {
