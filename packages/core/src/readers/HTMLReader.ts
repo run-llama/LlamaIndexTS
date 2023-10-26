@@ -1,7 +1,7 @@
 import { stripHtml } from "string-strip-html";
 import { Document } from "../Node";
-import { GenericFileSystem } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
+import { GenericFileSystem } from "../storage/FileSystem";
 import { BaseReader } from "./base";
 
 /**
@@ -23,7 +23,7 @@ export class HTMLReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = DEFAULT_FS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, 'utf-8');
+    const dataBuffer = await fs.readFile(file, "utf-8");
     const htmlOptions = this.getOptions();
     const content = this.parseContent(dataBuffer, htmlOptions);
     return [new Document({ text: content, id_: file })];

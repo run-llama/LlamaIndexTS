@@ -1,5 +1,4 @@
-import { VectorStoreIndex } from "llamaindex";
-import { HTMLReader } from "llamaindex";
+import { HTMLReader, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   // Load page
@@ -11,7 +10,9 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query("What were the notable changes in 18.1?");
+  const response = await queryEngine.query(
+    "What were the notable changes in 18.1?",
+  );
 
   // Output response
   console.log(response.toString());
