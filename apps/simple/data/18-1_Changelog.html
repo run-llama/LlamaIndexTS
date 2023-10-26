@@ -1,0 +1,1086 @@
+<h2>Notable Change in 18.1 (November 13, 2018)</h2>
+<ul>
+  <li>Site Admin section for managing Categories (Trove) has&nbsp;been fixed.</li>
+  <li>SVN hooks have been implemented.</li>
+  <li>Kanban now properly shows tickets assigned to "nobody" when you group by assignee.</li>
+  <li>Sprints and Releases - Burndown charts rendering properly now.<br></li>
+  <li>Wiki - Added right-click context menu for following or copying a wiki link.</li>
+  <li>Installer now prompts user for license key information and asks if they'd like to start the docker containers.
+  </li>
+  <li>Repository code indexing can be enabled/disabled by project admins.</li>
+  <li>Numerous bug fixes.</li>
+</ul>
+<table cellspacing="0" cellpadding="0"
+  style="caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-family: -webkit-standard; width: 1269px;"
+  data-mce-style="caret-color: #000000; color: #000000; font-family: -webkit-standard; width: 1269px;"
+  class="mce-item-table">
+  <tbody>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(176, 179, 178); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #b0b3b2; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>Ticket</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; background-color: rgb(176, 179, 178); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; background-color: #b0b3b2; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>Summary</b></span>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32649</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            Admin: If you are a Tracker Admin there is no way to add a new tracker.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32692</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            EF Admin: Missing optoins for required fields on transition</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32697</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Account
+            Registration: Confirmation page broken.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32698</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Site
+            Admin - Users: Can't activate an account</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32699</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Site
+            Admin - Edit User: If admin approves a pending account, it should generate an email.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32717</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Workflow
+            transition: when going from Needs Merge to FTR in Status field, the first attemp fails with an 500 error.
+            Seccond attempt succeeds but assignement is not set to nobody</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32751</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Site
+            admin - groups do not reload user list</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33054</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Next
+            scm does not honor disabling tracker item associations</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33057</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            Queries: Date filter tab only shows intrinisc date fields and NOT date extra fields.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33061</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TIB
+            - "Sprint = None" filter does not work</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33207</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Release
+            - Add release # to UI footer</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>31635</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">APIDOCS:
+            Navigation broken, some examples show raw JSON.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>31989</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Installer/Upgrade:
+            After doing the docker install/upgrade ask the user if they want to set the license key information.</span>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32131</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Document
+            GForgeNext configuration settings.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32212</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Kanban:
+            Group by assignee doesn't show nobody user anymore.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 15px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 15px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32619</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 15px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 15px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Installer:
+            After installation prompt to ask user if they want to start GForge (run-gf-next)</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32642</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            Item notifications: when a tracker item is created, include the details field</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32661</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Implement
+            SVN hooks</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32716</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Wiki
+            - Create a pop-up menu for right-click actions</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32765</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Sprint
+            - Burndown Chart renders incorrectly</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32776</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TIB:
+            Odd issue with quick filter directive.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32789</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TIB
+            - Assignee dropdown is empty</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32795</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Site
+            Admin: Can't set pending account to deleted.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32864</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            Admin: Roles aren't showing proper setting.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32951</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Problem
+            with building queries in Next.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33033</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><u>ProjectModuleService</u><a
+              href='/gf/project//wiki/?pagename=ProjectModuleService&amp;parent_page=18.1+ChangeLog'>?</a>: when
+            switching modules, the daemon is not notified</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>30993</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Docman:
+            Minor update columns in list view and data in card view</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32130</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Project
+            Creation: mega-menu doesn't reflect enabled modules or Site Admin options</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32340</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">In
+            tracker support email notifications, the field <u>WaitingFor</u><a
+              href='/gf/project//wiki/?pagename=WaitingFor&amp;parent_page=18.1+ChangeLog'>?</a> is displayed with the
+            old value</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32342</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Breadcrumd
+            in Tracker Query editor doesn't take you to tracker item browse</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32343</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Include
+            follow-ups in tracker item email notifications</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32641</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            Item Notifications: include assignees changes in email notifications</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 15px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 15px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32662</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 15px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 15px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Implement
+            the same TI Add modal found on kanban in the TIB directive on the Sprint and FRS pages.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32670</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Build
+            - Remove asset-bundler-php and associated composer libs</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32673</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Chat:Certain
+            files generate a 413: "Request Entity too Large"</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32677</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TIB
+            - Quick Filter Sprint give 0 results</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32679</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TIB:
+            Filter drop-down should only show queries that are public or owned by user.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32701</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            Queries: Can't create a new query.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32707</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tracker
+            email notifications: details fiels is escaped although html content is perfectly valid</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32712</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TI
+            Edit: Can't set the submitter properly</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32755</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Sprints
+            and FRS: Burndowns show "remaining" dipping below zero</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32774</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Tickler
+            count shows max of 20</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32790</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Fix
+            ui unit test</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32862</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TI
+            Edit submitter dropdown shows too many users</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32867</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Project
+            POST service might fail hwne updating existing project</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33032</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Wiki
+            use inline images</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33042</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Site
+            Search: search terms cleared out when changing what to show.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33052</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Git:
+            Promotion Model for gforge5 shows up on tickets in brand new project.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33060</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TIB
+            - Show # of items being displayed in current page</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33063</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">TI
+            Edit Modal: I can't change assignee.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 15px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 15px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33159</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 15px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 15px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Wrong
+            url in workflow notification email template</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>33164</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Sample
+            ticket with trivial commit for GE demo.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>31988</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Wiki:
+            Wiki updates posted twice to chat.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32133</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Chat
+            shows an extra message entry when it's being monitored</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32213</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Kanban:
+            Mouse hover creates UI "glitch"</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32341</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Do
+            not include Waiting For field in tracker email notifications for non-support Trackers</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32680</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Sprint:
+            Clean up progress bar on smaller screens with minor tweak.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+        style="width: 43.640625px; height: 16px; background-color: rgb(212, 212, 212); border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 43.640625px; height: 16px; background-color: #d4d4d4; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"><b>32775</b></span>
+        </p>
+      </td>
+      <td valign="top"
+        style="width: 817.359375px; height: 16px; border-width: 1px; border-color: rgb(0, 0, 0); padding-right: 4px; padding-left: 4px;"
+        data-mce-style="width: 817.359375px; height: 16px; border-width: 1px; border-color: #000000; padding-right: 4px; padding-left: 4px;">
+        <p style="margin-bottom: 0px;" data-mce-style="margin-bottom: 0px;"><span face="Helvetica Neue" color="#000000"
+            data-mce-style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;"
+            style="font-stretch: normal; font-size: 14px; line-height: normal; font-family: 'Helvetica Neue'; -webkit-font-kerning: none; font-variant-ligatures: common-ligatures; -webkit-text-stroke-color: #ffffff; color: #000000;">Project
+            Admin-&gt;SCM Tab: Add button toggle on/off code indexing.</span></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
