@@ -5,6 +5,7 @@ import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { BaseReader } from "./base";
 import { PapaCSVReader } from "./CSVReader";
 import { DocxReader } from "./DocxReader";
+import { HTMLReader } from "./HTMLReader";
 import { MarkdownReader } from "./MarkdownReader";
 import { PDFReader } from "./PDFReader";
 
@@ -27,6 +28,8 @@ const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   csv: new PapaCSVReader(),
   md: new MarkdownReader(),
   docx: new DocxReader(),
+  htm: new HTMLReader(),
+  html: new HTMLReader(),
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {
