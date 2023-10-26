@@ -1,11 +1,11 @@
 import { PackageManager } from "../helpers/get-pkg-manager";
 
 export type TemplateType = "simple";
-export type TemplateMode = "nextjs";
+export type TemplateFramework = "nextjs" | "express";
 
 export interface GetTemplateFileArgs {
   template: TemplateType;
-  mode: TemplateMode;
+  framework: TemplateFramework;
   file: string;
 }
 
@@ -14,11 +14,9 @@ export interface InstallTemplateArgs {
   root: string;
   packageManager: PackageManager;
   isOnline: boolean;
-
   template: TemplateType;
-  mode: TemplateMode;
+  framework: TemplateFramework;
   eslint: boolean;
-  tailwind: boolean;
   srcDir: boolean;
   importAlias: string;
 }

@@ -8,25 +8,24 @@ import { getOnline } from "./helpers/is-online";
 import { isWriteable } from "./helpers/is-writeable";
 import { makeDir } from "./helpers/make-dir";
 
-import type { TemplateMode, TemplateType } from "./templates";
+import type { TemplateFramework, TemplateType } from "./templates";
 import { installTemplate } from "./templates";
 
 export async function createApp({
+  framework,
   appPath,
   packageManager,
-  tailwind,
   eslint,
   srcDir,
   importAlias,
 }: {
+  framework: TemplateFramework;
   appPath: string;
   packageManager: PackageManager;
-  tailwind: boolean;
   eslint: boolean;
   srcDir: boolean;
   importAlias: string;
 }): Promise<void> {
-  const mode: TemplateMode = "nextjs";
   const template: TemplateType = "simple";
 
   const root = path.resolve(appPath);
@@ -64,10 +63,9 @@ export async function createApp({
     appName,
     root,
     template,
-    mode,
+    framework,
     packageManager,
     isOnline,
-    tailwind,
     eslint,
     srcDir,
     importAlias,

@@ -1,0 +1,22 @@
+{
+  "name": "llama-index-express",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/index.js\""
+  },
+  "dependencies": {
+    "express": "^4",
+    "llamaindex": "0.0.31"
+  },
+  "devDependencies": {
+    "@types/express": "^4",
+    "@types/node": "^20",
+    "concurrently": "^8",
+    "nodemon": "^3",
+    "typescript": "^5",
+    "eslint": "^8"
+  }
+}
