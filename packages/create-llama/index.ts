@@ -8,7 +8,7 @@ import path from "path";
 import { blue, bold, cyan, green, red, yellow } from "picocolors";
 import prompts from "prompts";
 import checkForUpdate from "update-check";
-import { createApp, DownloadError } from "./create-app";
+import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { validateNpmName } from "./helpers/validate-pkg";
@@ -78,25 +78,6 @@ const program = new Commander.Command(packageJson.name)
     `
 
   Explicitly tell the CLI to bootstrap the application using Bun
-`,
-  )
-  .option(
-    "-e, --example [name]|[github-url]",
-    `
-
-  An example to bootstrap the app with. You can use an example name
-  from the official LlamaIndex repo or a GitHub URL. The URL can use
-  any branch and/or subdirectory
-`,
-  )
-  .option(
-    "--example-path <path-to-example>",
-    `
-
-  In a rare case, your GitHub URL might contain a branch name with
-  a slash (e.g. bug/fix-1) and the path to the example (e.g. foo/bar).
-  In this case, you must specify the path to the example separately:
-  --example-path foo/bar
 `,
   )
   .option(
@@ -179,13 +160,6 @@ async function run(): Promise<void> {
     process.exit(1);
   }
 
-  if (program.example === true) {
-    console.error(
-      "Please provide an example name or url, otherwise remove the example option.",
-    );
-    process.exit(1);
-  }
-
   /**
    * Verify the project dir is empty or doesn't exist
    */
@@ -197,130 +171,90 @@ async function run(): Promise<void> {
     process.exit(1);
   }
 
-  const example = typeof program.example === "string" && program.example.trim();
   const preferences = (conf.get("preferences") || {}) as Record<
     string,
     boolean | string
   >;
-  /**
-   * If the user does not provide the necessary flags, prompt them for whether
-   * to use TS or JS.
-   */
-  if (!example) {
-    const defaults: typeof preferences = {
-      typescript: true,
-      eslint: true,
-      tailwind: true,
-      app: true,
-      srcDir: false,
-      importAlias: "@/*",
-      customizeImportAlias: false,
-    };
-    const getPrefOrDefault = (field: string) =>
-      preferences[field] ?? defaults[field];
 
-    if (
-      !process.argv.includes("--eslint") &&
-      !process.argv.includes("--no-eslint")
-    ) {
-      if (ciInfo.isCI) {
-        program.eslint = getPrefOrDefault("eslint");
-      } else {
-        const styledEslint = blue("ESLint");
-        const { eslint } = await prompts({
-          onState: onPromptState,
-          type: "toggle",
-          name: "eslint",
-          message: `Would you like to use ${styledEslint}?`,
-          initial: getPrefOrDefault("eslint"),
-          active: "Yes",
-          inactive: "No",
-        });
-        program.eslint = Boolean(eslint);
-        preferences.eslint = Boolean(eslint);
-      }
+  const defaults: typeof preferences = {
+    eslint: true,
+    tailwind: true,
+    app: true,
+    srcDir: false,
+    importAlias: "@/*",
+    customizeImportAlias: false,
+  };
+  const getPrefOrDefault = (field: string) =>
+    preferences[field] ?? defaults[field];
+
+  if (
+    !process.argv.includes("--eslint") &&
+    !process.argv.includes("--no-eslint")
+  ) {
+    if (ciInfo.isCI) {
+      program.eslint = getPrefOrDefault("eslint");
+    } else {
+      const styledEslint = blue("ESLint");
+      const { eslint } = await prompts({
+        onState: onPromptState,
+        type: "toggle",
+        name: "eslint",
+        message: `Would you like to use ${styledEslint}?`,
+        initial: getPrefOrDefault("eslint"),
+        active: "Yes",
+        inactive: "No",
+      });
+      program.eslint = Boolean(eslint);
+      preferences.eslint = Boolean(eslint);
     }
+  }
 
-    if (
-      typeof program.importAlias !== "string" ||
-      !program.importAlias.length
-    ) {
-      if (ciInfo.isCI) {
+  if (typeof program.importAlias !== "string" || !program.importAlias.length) {
+    if (ciInfo.isCI) {
+      // We don't use preferences here because the default value is @/* regardless of existing preferences
+      program.importAlias = defaults.importAlias;
+    } else {
+      const styledImportAlias = blue("import alias");
+
+      const { customizeImportAlias } = await prompts({
+        onState: onPromptState,
+        type: "toggle",
+        name: "customizeImportAlias",
+        message: `Would you like to customize the default ${styledImportAlias} (${defaults.importAlias})?`,
+        initial: getPrefOrDefault("customizeImportAlias"),
+        active: "Yes",
+        inactive: "No",
+      });
+
+      if (!customizeImportAlias) {
         // We don't use preferences here because the default value is @/* regardless of existing preferences
         program.importAlias = defaults.importAlias;
       } else {
-        const styledImportAlias = blue("import alias");
-
-        const { customizeImportAlias } = await prompts({
+        const { importAlias } = await prompts({
           onState: onPromptState,
-          type: "toggle",
-          name: "customizeImportAlias",
-          message: `Would you like to customize the default ${styledImportAlias} (${defaults.importAlias})?`,
-          initial: getPrefOrDefault("customizeImportAlias"),
-          active: "Yes",
-          inactive: "No",
+          type: "text",
+          name: "importAlias",
+          message: `What ${styledImportAlias} would you like configured?`,
+          initial: getPrefOrDefault("importAlias"),
+          validate: (value) =>
+            /.+\/\*/.test(value)
+              ? true
+              : "Import alias must follow the pattern <prefix>/*",
         });
-
-        if (!customizeImportAlias) {
-          // We don't use preferences here because the default value is @/* regardless of existing preferences
-          program.importAlias = defaults.importAlias;
-        } else {
-          const { importAlias } = await prompts({
-            onState: onPromptState,
-            type: "text",
-            name: "importAlias",
-            message: `What ${styledImportAlias} would you like configured?`,
-            initial: getPrefOrDefault("importAlias"),
-            validate: (value) =>
-              /.+\/\*/.test(value)
-                ? true
-                : "Import alias must follow the pattern <prefix>/*",
-          });
-          program.importAlias = importAlias;
-          preferences.importAlias = importAlias;
-        }
+        program.importAlias = importAlias;
+        preferences.importAlias = importAlias;
       }
     }
   }
 
-  try {
-    await createApp({
-      appPath: resolvedProjectPath,
-      packageManager,
-      example: example && example !== "default" ? example : undefined,
-      examplePath: program.examplePath,
-      tailwind: true,
-      eslint: program.eslint,
-      srcDir: program.srcDir,
-      importAlias: program.importAlias,
-    });
-  } catch (reason) {
-    if (!(reason instanceof DownloadError)) {
-      throw reason;
-    }
-
-    const res = await prompts({
-      onState: onPromptState,
-      type: "confirm",
-      name: "builtin",
-      message:
-        `Could not download "${example}" because of a connectivity issue between your machine and GitHub.\n` +
-        `Do you want to use the default template instead?`,
-      initial: true,
-    });
-    if (!res.builtin) {
-      throw reason;
-    }
-
-    await createApp({
-      appPath: resolvedProjectPath,
-      packageManager,
-      eslint: program.eslint,
-      tailwind: true,
-      srcDir: program.srcDir,
-      importAlias: program.importAlias,
-    });
-  }
+  await createApp({
+    appPath: resolvedProjectPath,
+    packageManager,
+    tailwind: true,
+    eslint: program.eslint,
+    srcDir: program.srcDir,
+    importAlias: program.importAlias,
+  });
   conf.set("preferences", preferences);
 }
 
