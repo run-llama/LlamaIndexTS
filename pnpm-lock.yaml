@@ -119,6 +119,9 @@ importers:
       '@types/node':
         specifier: ^18.18.6
         version: 18.18.6
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.1(@types/node@18.18.6)(typescript@4.9.5)
 
   packages/core:
     dependencies:
@@ -161,6 +164,9 @@ importers:
       replicate:
         specifier: ^0.20.1
         version: 0.20.1
+      string-strip-html:
+        specifier: ^8.5.0
+        version: 8.5.0
       tiktoken:
         specifier: ^1.0.10
         version: 1.0.10
@@ -366,7 +372,7 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
-      '@jridgewell/trace-mapping': 0.3.19
+      '@jridgewell/trace-mapping': 0.3.20
 
   /@anthropic-ai/sdk@0.8.0:
     resolution: {integrity: sha512-1PmmPjztnl4ioGK5r33HHneSr2Hs4B6PObpvMpIAdeqbvj8t9wq8VBPvxPzmcIS2aC73dTUgAh7z5FTSJeZmOQ==}
@@ -3486,7 +3492,7 @@ packages:
     resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
-      '@jridgewell/trace-mapping': 0.3.19
+      '@jridgewell/trace-mapping': 0.3.20
 
   /@jridgewell/sourcemap-codec@1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
@@ -13070,6 +13076,11 @@ packages:
       char-regex: 1.0.2
       strip-ansi: 6.0.1
     dev: true
+
+  /string-strip-html@8.5.0:
+    resolution: {integrity: sha512-5ICsK1B1j0A3AF1d45m0sqQCcmi1Q+t1QpF+b794LO5FTHV+ITkGR5C+UCDJQZgs5LMuRruqr6j48PxQVIurJQ==}
+    engines: {node: '>=14'}
+    dev: false
 
   /string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
