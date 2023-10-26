@@ -8,21 +8,19 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { bold, cyan } from "picocolors";
-import { version } from "../package.json"
+import { version } from "../package.json";
 
 import { GetTemplateFileArgs, InstallTemplateArgs } from "./types";
-
-const NEXT_VERSION = "13.5.6";
 
 /**
  * Get the file path for a given file in a template, e.g. "next.config.js".
  */
 export const getTemplateFile = ({
   template,
-  mode,
+  framework,
   file,
 }: GetTemplateFileArgs): string => {
-  return path.join(__dirname, template, mode, file);
+  return path.join(__dirname, template, framework, file);
 };
 
 export const SRC_DIR_NAMES = ["app", "pages", "styles"];
@@ -36,8 +34,7 @@ export const installTemplate = async ({
   packageManager,
   isOnline,
   template,
-  mode,
-  tailwind,
+  framework,
   eslint,
   srcDir,
   importAlias,
@@ -48,14 +45,9 @@ export const installTemplate = async ({
    * Copy the template files to the target directory.
    */
   console.log("\nInitializing project with template:", template, "\n");
-  const templatePath = path.join(__dirname, template, mode);
+  const templatePath = path.join(__dirname, template, framework);
   const copySource = ["**"];
   if (!eslint) copySource.push("!eslintrc.json");
-  if (!tailwind)
-    copySource.push(
-      mode == "nextjs" ? "tailwind.config.ts" : "!tailwind.config.js",
-      "!postcss.config.js",
-    );
 
   await copy(copySource, root, {
     parents: true,
@@ -148,7 +140,7 @@ export const installTemplate = async ({
       ),
     );
 
-    if (tailwind) {
+    if (framework === "nextjs") {
       const tailwindConfigFile = path.join(root, "tailwind.config.ts");
       await fs.writeFile(
         tailwindConfigFile,
@@ -160,64 +152,31 @@ export const installTemplate = async ({
     }
   }
 
-  /** Create a package.json for the new project and write it to disk. */
-  const packageJson: any = {
-    name: appName,
-    version: "0.1.0",
-    private: true,
-    scripts: {
-      dev: "next dev",
-      build: "next build",
-      start: "next start",
-      lint: "next lint",
-    },
-    /**
-     * Default dependencies.
-     */
-    dependencies: {
-      react: "^18",
-      "react-dom": "^18",
-      next: NEXT_VERSION,
-      llamaindex: version,
-    },
-    devDependencies: {},
-  };
-
   /**
-   * TypeScript projects will have type definitions and other devDependencies.
+   * Update the package.json scripts.
    */
-  packageJson.devDependencies = {
-    ...packageJson.devDependencies,
-    typescript: "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+  const packageJsonFile = path.join(root, "package.json");
+  const packageJson: any = JSON.parse(
+    await fs.readFile(packageJsonFile, "utf8"),
+  );
+  packageJson.name = appName;
+  packageJson.version = "0.1.0";
+
+  packageJson.dependencies = {
+    ...packageJson.dependencies,
+    llamaindex: version,
   };
 
-  /* Add Tailwind CSS dependencies. */
-  if (tailwind) {
-    packageJson.devDependencies = {
-      ...packageJson.devDependencies,
-      autoprefixer: "^10",
-      postcss: "^8",
-      tailwindcss: "^3",
-    };
+  if (!eslint) {
+    // Remove packages starting with "eslint" from devDependencies
+    packageJson.devDependencies = Object.fromEntries(
+      Object.entries(packageJson.devDependencies).filter(
+        ([key]) => !key.startsWith("eslint"),
+      ),
+    );
   }
-
-  /* Default ESLint dependencies. */
-  if (eslint) {
-    packageJson.devDependencies = {
-      ...packageJson.devDependencies,
-      eslint: "^8",
-      "eslint-config-next": NEXT_VERSION,
-    };
-  }
-
-  const devDeps = Object.keys(packageJson.devDependencies).length;
-  if (!devDeps) delete packageJson.devDependencies;
-
   await fs.writeFile(
-    path.join(root, "package.json"),
+    packageJsonFile,
     JSON.stringify(packageJson, null, 2) + os.EOL,
   );
 
@@ -225,11 +184,9 @@ export const installTemplate = async ({
   for (const dependency in packageJson.dependencies)
     console.log(`- ${cyan(dependency)}`);
 
-  if (devDeps) {
-    console.log("\nInstalling devDependencies:");
-    for (const dependency in packageJson.devDependencies)
-      console.log(`- ${cyan(dependency)}`);
-  }
+  console.log("\nInstalling devDependencies:");
+  for (const dependency in packageJson.devDependencies)
+    console.log(`- ${cyan(dependency)}`);
 
   console.log();
 

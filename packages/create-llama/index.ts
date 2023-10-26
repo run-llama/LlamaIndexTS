@@ -177,8 +177,8 @@ async function run(): Promise<void> {
   >;
 
   const defaults: typeof preferences = {
+    framework: "nextjs",
     eslint: true,
-    tailwind: true,
     app: true,
     srcDir: false,
     importAlias: "@/*",
@@ -186,6 +186,33 @@ async function run(): Promise<void> {
   };
   const getPrefOrDefault = (field: string) =>
     preferences[field] ?? defaults[field];
+
+  if (!program.framework) {
+    if (ciInfo.isCI) {
+      program.framework = getPrefOrDefault("framework");
+    } else {
+      const { framework } = await prompts(
+        {
+          type: "select",
+          name: "framework",
+          message: "Which framework would you like to use?",
+          choices: [
+            { title: "NextJS", value: "nextjs" },
+            { title: "Express", value: "express" },
+          ],
+          initial: 0,
+        },
+        {
+          onCancel: () => {
+            console.error("Exiting.");
+            process.exit(1);
+          },
+        },
+      );
+      program.framework = framework;
+      preferences.framework = framework;
+    }
+  }
 
   if (
     !process.argv.includes("--eslint") &&
@@ -248,9 +275,9 @@ async function run(): Promise<void> {
   }
 
   await createApp({
+    framework: program.framework,
     appPath: resolvedProjectPath,
     packageManager,
-    tailwind: true,
     eslint: program.eslint,
     srcDir: program.srcDir,
     importAlias: program.importAlias,
