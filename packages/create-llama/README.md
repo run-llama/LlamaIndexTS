@@ -17,14 +17,14 @@ pnpm create llama-app
 bunx create-llama
 ```
 
-You will be asked for the name of your project, and then whether you want to
+You will be asked for the name of your project, and then which framework you want to use
 create a TypeScript project:
 
 ```bash
-✔ Would you like to use TypeScript? … No / Yes
+✔ Which framework would you like to use? › NextJS
 ```
 
-Select **Yes** to install the necessary types/dependencies and create a new TS project.
+You can choose between NextJS and Express.
 
 ### Non-interactive
 
