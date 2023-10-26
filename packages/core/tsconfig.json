@@ -3,6 +3,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
+    "module": "esnext",
     "moduleResolution": "node",
     "preserveWatchOutput": true,
     "skipLibCheck": true,

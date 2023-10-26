@@ -1,4 +1,3 @@
-import { stripHtml } from "string-strip-html";
 import { Document } from "../Node";
 import { DEFAULT_FS } from "../storage/constants";
 import { GenericFileSystem } from "../storage/FileSystem";
@@ -25,7 +24,7 @@ export class HTMLReader implements BaseReader {
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file, "utf-8");
     const htmlOptions = this.getOptions();
-    const content = this.parseContent(dataBuffer, htmlOptions);
+    const content = await this.parseContent(dataBuffer, htmlOptions);
     return [new Document({ text: content, id_: file })];
   }
 
@@ -36,7 +35,8 @@ export class HTMLReader implements BaseReader {
    * @see getOptions
    * @returns The HTML content, stripped of unwanted tags and attributes
    */
-  parseContent(html: string, options: any = {}): string {
+  async parseContent(html: string, options: any = {}): Promise<string> {
+    const { stripHtml } = await import("string-strip-html"); // ESM only
     return stripHtml(html).result;
   }
 
