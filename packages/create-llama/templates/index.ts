@@ -8,6 +8,7 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { bold, cyan } from "picocolors";
+import { version } from "../package.json"
 
 import { GetTemplateFileArgs, InstallTemplateArgs } from "./types";
 
@@ -177,8 +178,7 @@ export const installTemplate = async ({
       react: "^18",
       "react-dom": "^18",
       next: NEXT_VERSION,
-      llamaindex: "0.0.0-20231018030303",
-      encoding: "^0.1.13",
+      llamaindex: version,
     },
     devDependencies: {},
   };
