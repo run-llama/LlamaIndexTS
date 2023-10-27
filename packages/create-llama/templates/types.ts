@@ -1,6 +1,6 @@
 import { PackageManager } from "../helpers/get-pkg-manager";
 
-export type TemplateType = "simple";
+export type TemplateType = "simple" | "streaming";
 export type TemplateFramework = "nextjs" | "express";
 
 export interface InstallTemplateArgs {

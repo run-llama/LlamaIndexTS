@@ -177,11 +177,39 @@ async function run(): Promise<void> {
   >;
 
   const defaults: typeof preferences = {
+    template: "simple",
     framework: "nextjs",
     eslint: true,
   };
   const getPrefOrDefault = (field: string) =>
     preferences[field] ?? defaults[field];
+
+  if (!program.template) {
+    if (ciInfo.isCI) {
+      program.template = getPrefOrDefault("template");
+    } else {
+      const { template } = await prompts(
+        {
+          type: "select",
+          name: "template",
+          message: "Which template would you like to use?",
+          choices: [
+            { title: "Simple chat without streaming", value: "simple" },
+            { title: "Simple chat with streaming", value: "streaming" },
+          ],
+          initial: 0,
+        },
+        {
+          onCancel: () => {
+            console.error("Exiting.");
+            process.exit(1);
+          },
+        },
+      );
+      program.template = template;
+      preferences.template = template;
+    }
+  }
 
   if (!program.framework) {
     if (ciInfo.isCI) {
@@ -233,6 +261,7 @@ async function run(): Promise<void> {
   }
 
   await createApp({
+    template: program.template,
     framework: program.framework,
     appPath: resolvedProjectPath,
     packageManager,

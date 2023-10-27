@@ -12,18 +12,18 @@ import type { TemplateFramework, TemplateType } from "./templates";
 import { installTemplate } from "./templates";
 
 export async function createApp({
+  template,
   framework,
   appPath,
   packageManager,
   eslint,
 }: {
+  template: TemplateType;
   framework: TemplateFramework;
   appPath: string;
   packageManager: PackageManager;
   eslint: boolean;
 }): Promise<void> {
-  const template: TemplateType = "simple";
-
   const root = path.resolve(appPath);
 
   if (!(await isWriteable(path.dirname(root)))) {
