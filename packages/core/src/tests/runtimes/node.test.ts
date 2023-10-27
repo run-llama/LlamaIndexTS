@@ -16,6 +16,7 @@ describe("Node: System", () => {
     expect(result.status).toBe("success");
 
     await execa("npm", ["unlink", "llamaindex"], { cwd: fixture.path });
+    await fixture.rm();
   });
 
   test("CJS", async () => {
@@ -32,5 +33,6 @@ describe("Node: System", () => {
     expect(result.status).toBe("success");
 
     await execa("npm", ["unlink", "llamaindex"], { cwd: fixture.path });
+    await fixture.rm();
   });
 });

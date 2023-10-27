@@ -1,6 +1,7 @@
 import execa, { ExecaChildProcess } from "execa";
 import { createFixture, FsFixture } from "fs-fixture";
 import getPort from "get-port";
+import terminate from "terminate";
 
 describe("Next App Router", () => {
   let port: number;
@@ -31,9 +32,10 @@ describe("Next App Router", () => {
   }, 20000);
 
   afterAll(async () => {
-    server.kill();
+    await terminate(server.pid!);
 
     await execa("npm", ["unlink", "llamaindex"], { cwd: fixture.path });
+    await fixture.rm();
   });
 
   test("Node Runtime", async () => {

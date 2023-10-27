@@ -31,6 +31,7 @@
     "fs-fixture": "^1.2.0",
     "get-port": "^5.1.1",
     "node-stdlib-browser": "^1.2.0",
+    "terminate": "^2.6.1",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2"
   },
