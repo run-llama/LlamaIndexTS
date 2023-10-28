@@ -1,8 +1,8 @@
 To use the `SimpleMongoReader`, you first need to import it from the `llamaindex` package. You also need to import the `MongoClient` from the `mongodb` package. 
 
-Next, create an instance of `MongoClient` with your MongoDB URI as the argument. 
+Next, create an instance of `MongoClient` with your MongoDB URI as the argument; 
 
-Finally, create an instance of `SimpleMongoReader` by passing the `MongoClient` instance as an argument.
+Finally, create an instance of `SimpleMongoReader` by passing the `MongoClient` instance as an argument;
 ```
 
 ## Methods
@@ -23,7 +23,7 @@ This method is used to load data from a MongoDB collection. It takes the followi
 The method returns a Promise that resolves to an array of `Document` instances.
 
 ```typescript
-To load data from a MongoDB collection, call the `loadData` method on the `SimpleMongoReader` instance. 
+To load data from a MongoDB collection, call the `loadData` method on the `SimpleMongoReader` instance; 
 
 This method takes two arguments: the name of the database and the name of the collection. 
 
