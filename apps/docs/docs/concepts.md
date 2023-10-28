@@ -33,7 +33,7 @@ LlamaIndex.TS help you prepare the knowledge base with a suite of data connector
 ![](./_static/concepts/indexing.jpg)
 
 [**Data Loaders**](./modules/high_level/data_loader.md):
-A data connector (i.e. `Reader`) ingest data from different data sources and data formats into a simple `Document` representation (text and simple metadata).
+A data connector (i.e. `Reader`) ingest data from different data sources and data formats into a simple `Document` representation (text and simple metadata). One such data loader is the `SimpleMongoReader`, which can be used to ingest data from a MongoDB database.
 
 [**Documents / Nodes**](./modules/high_level/documents_and_nodes.md): A `Document` is a generic container around any data source - for instance, a PDF, an API output, or retrieved data from a database. A `Node` is the atomic unit of data in LlamaIndex and represents a "chunk" of a source `Document`. It's a rich representation that includes metadata and relationships (to other nodes) to enable accurate and expressive retrieval operations.
 
