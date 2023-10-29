@@ -12,7 +12,7 @@ import { getBiggestPrompt } from "./PromptHelper";
 import { Response } from "./Response";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
-import { LLM } from "./llm/LLM";
+import { LLM, LocalLLM } from "./llm/LLM";
 
 /**
  * Response modes of the response synthesizer
@@ -262,6 +262,21 @@ export class TreeSummarize implements BaseResponseBuilder {
         summaries.map((s) => s.message.content),
       );
     }
+  }
+}
+
+export class QaResponseBuilder implements BaseResponseBuilder {
+  llm: LocalLLM;
+
+  constructor(llm: LocalLLM) {
+    this.llm = llm
+  }
+
+  async getResponse(
+    query: string,
+    textChunks: string[],
+  ): Promise<string> {
+    return await this.llm.qa(query, textChunks.join("\n\n"));
   }
 }
 

@@ -35,7 +35,6 @@ export class VectorIndexRetriever implements BaseRetriever {
   async retrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]> {
     const queryEmbedding =
       await this.serviceContext.embedModel.getQueryEmbedding(query);
-
     const q: VectorStoreQuery = {
       queryEmbedding: queryEmbedding,
       mode: VectorStoreQueryMode.DEFAULT,

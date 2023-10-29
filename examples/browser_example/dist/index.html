@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8" />
+	<title>Getting Started</title>
+  </head>
+  <body>
+    <script src="main.bundle.js"></script>
+    <script>
+      async function readText(event) {
+        const file = event.target.files.item(0);
+        const text = await file.text();
+        document.getElementById("text-file").content = text;
+      }
+    </script>
+    <form id="chatbot", action="javascript:ask()">
+      <input id="text-file" type="file" onchange="readText(event)"/><br>
+      <label for="question">Your question:</label>
+      <input type="text" id="question" name="question" />
+      <button type="submit">Ask</button>
+    </form>
+    <div id="answer"></div>
+  </body>
+</html>

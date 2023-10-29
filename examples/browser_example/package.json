@@ -1,0 +1,22 @@
+{
+  "name": "pdf_example",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.88.2",
+    "webpack-bundle-analyzer": "^4.9.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "llamaindex": "file:../../packages/core"
+  }
+}

@@ -10,6 +10,7 @@ import {
 } from "./llm/azure";
 import { OpenAISession, getOpenAISession } from "./llm/openai";
 import { VectorStoreQueryMode } from "./storage/vectorStore/types";
+import { pipeline } from '@xenova/transformers';
 
 /**
  * Similarity type
@@ -121,7 +122,6 @@ export function getTopKEmbeddings(
     resultSimilarities.push(similarities[i].similarity);
     resultIds.push(similarities[i].id);
   }
-
   return [resultSimilarities, resultIds];
 }
 
@@ -294,5 +294,22 @@ export class OpenAIEmbedding extends BaseEmbedding {
 
   async getQueryEmbedding(query: string): Promise<number[]> {
     return this.getOpenAIEmbedding(query);
+  }
+
+}
+
+export class LocalEmbedding extends BaseEmbedding {
+  async embedd(text: string) {
+    const extractor = await pipeline("feature-extraction", 'Xenova/all-MiniLM-L6-v2');
+    const embeddings = await extractor(text, {pooling: 'mean', normalize: 'true'});
+    return embeddings.data;
+  }
+
+  getTextEmbedding(text: string): Promise<number[]> {
+    return this.embedd(text);
+  }
+
+  getQueryEmbedding(query: string): Promise<number[]> {
+    return this.embedd(query);
   }
 }

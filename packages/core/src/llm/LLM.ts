@@ -22,6 +22,7 @@ import {
 } from "./azure";
 import { getOpenAISession, OpenAISession } from "./openai";
 import { ReplicateSession } from "./replicate";
+import { pipeline } from "@xenova/transformers";
 
 export type MessageType =
   | "user"
@@ -591,4 +592,25 @@ export class Anthropic implements LLM {
   ): Promise<CompletionResponse> {
     return this.chat([{ content: prompt, role: "user" }], parentEvent);
   }
+}
+
+export class LocalLLM implements LLM {
+
+  async qa(question: string, context: string): Promise<string> {
+    let responder = await pipeline('question-answering', 'Xenova/distilbert-base-uncased-distilled-squad');
+    return responder(question, context);
+  }
+
+  async chat(messages: ChatMessage[], parentEvent?: Event): Promise<ChatResponse> {
+    let generator = await pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-783M');
+    console.log("chat", messages[0].content);
+    return {
+      message: { content: generator(messages[0].content, { max_new_tokens: 10000000 }), role: "assistant" }
+    };
+  }
+
+  complete(prompt: string, parentEvent?: Event): Promise<CompletionResponse> {
+    return this.chat([{ content: prompt, role: "user" }], parentEvent);
+  }
+
 }

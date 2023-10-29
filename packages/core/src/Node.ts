@@ -1,4 +1,4 @@
-import crypto from "crypto"; // TODO Node dependency
+import CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 
 export enum NodeRelationship {
@@ -175,13 +175,13 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
    * @returns
    */
   generateHash() {
-    const hashFunction = crypto.createHash("sha256");
+    const hashFunction = CryptoJS.algo.SHA256.create();
     hashFunction.update(`type=${this.getType()}`);
     hashFunction.update(
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
     );
     hashFunction.update(this.getContent(MetadataMode.ALL));
-    return hashFunction.digest("base64");
+    return hashFunction.finalize().toString(CryptoJS.enc.Base64);
   }
 
   getType(): ObjectType {

@@ -4,6 +4,9 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.6.2",
     "@notionhq/client": "^2.2.13",
+    "@xenova/transformers": "^2.6.2",
+    "crypto-js": "^4.1.1",
+    "js-tiktoken": "^1.0.7",
     "lodash": "^4.17.21",
     "mammoth": "^1.6.0",
     "md-utils-ts": "^2.0.0",
@@ -14,27 +17,36 @@
     "pdf-parse": "^1.1.1",
     "rake-modified": "^1.0.8",
     "replicate": "^0.18.1",
-    "tiktoken": "^1.0.10",
     "uuid": "^9.0.1",
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.1.2",
+    "@types/jest": "^29.5.5",
     "@types/lodash": "^4.14.199",
     "@types/node": "^18.18.0",
     "@types/papaparse": "^5.3.9",
     "@types/pdf-parse": "^1.1.2",
     "@types/uuid": "^9.0.4",
+    "node-loader": "^2.0.0",
     "node-stdlib-browser": "^1.2.0",
-    "tsup": "^7.2.0"
+    "ts-loader": "^9.4.4",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.2",
+    "webpack-bundle-analyzer": "^4.9.1",
+    "webpack-cli": "^5.1.4"
   },
   "engines": {
     "node": ">=18.0.0"
   },
+  "browser": "./dist/browser.bundle.js",
   "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
+  "main": "./dist/node.bundle.js",
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "build": "tsup src/index.ts --format esm,cjs --dts"
+    "old-build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "webpack"
   }
 }
