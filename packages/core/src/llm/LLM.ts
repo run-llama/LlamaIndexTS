@@ -7,7 +7,7 @@ import {
   OpenAIStreamToken,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
-import { GradientBaseModelLLM, GradientModelAdapterLLM } from "./gradient";
+import { _BaseGradientLLM, GradientBaseModelLLM, GradientModelAdapterLLM } from "./gradient";
 
 import { LLMOptions } from "portkey-ai";
 import { globalsHelper, Tokenizers } from "../GlobalsHelper";
@@ -401,6 +401,14 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   contextWindow: 4096,
   gradientApi: "gradient/baseModelLLM"
 },
+"GradientModelAdapterLLM": {
+  contextWindow: 4096,
+  gradientApi: "gradient/modelAdapterLLM"
+},
+"GradientBaseModelLLM": {
+  contextWindow: 4096,
+  gradientApi: "gradient/baseModelLLM"
+},
 "GradientModelAdapterLLM": 
   contextWindow: 4096,
   gradientApi: "gradient/modelAdapterLLM"
@@ -568,6 +576,7 @@ If a question does not make any sense, or is not factually coherent, explain why
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
   >(messages: ChatMessage[], _parentEvent?: Event, streaming?: T): Promise<R> {
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
+    export { _BaseGradientLLM, GradientBaseModelLLM, GradientModelAdapterLLM };
       .replicateApi as `${string}/${string}:${string}`;
 
     const { prompt, systemPrompt } = this.mapMessagesToPrompt(messages);
