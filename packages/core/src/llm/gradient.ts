@@ -19,33 +19,38 @@ export class GradientBaseModelLLM extends _BaseGradientLLM {
   }
 
   async initialize() {
-    // Code to initialize the model based on the baseModelSlug
+    // Replace with actual code to initialize the model based on the baseModelSlug
   }
 
   async close() {
-    // Code to close the model
+    // Replace with actual code to close the model
   }
 
   async completePrompt(prompt: string) {
-    // Code to complete the prompt using the model
+    // Replace with actual code to complete the prompt using the model
     return '';
   }
 }
 
 export class GradientModelAdapterLLM extends _BaseGradientLLM {
-  private adapter: any;
+  private adapter: AdapterType; // Replace AdapterType with the actual type
 
-  constructor(model: string, adapter: any) {
+  constructor(model: string, adapter: AdapterType) {
     super(model);
     this.adapter = adapter;
   }
 
   async initialize() {
-    // Code to initialize the model using the adapter
+    // Replace with actual code to initialize the model using the adapter
   }
 
   async close() {
-    // Code to close the model using the adapter
+    // Replace with actual code to close the model using the adapter
+  }
+
+  async completePrompt(prompt: string) {
+    // Replace with actual code to complete the prompt using the model and the adapter
+    return '';
   }
 
   async completePrompt(prompt: string) {
