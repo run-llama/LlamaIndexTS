@@ -1,4 +1,4 @@
-import { CondenseQuestionChatEngine, BaseQueryEngine, ChatMessage, ServiceContext, defaultCondenseQuestionPrompt } from 'packages/core/src/ChatEngine.ts';
+import { CondenseQuestionChatEngine, BaseQueryEngine, ChatMessage, ServiceContext, defaultCondenseQuestionPrompt } from '../../packages/core/src/ChatEngine.ts';
 
 // Mock implementation of BaseQueryEngine
 class MockQueryEngine extends BaseQueryEngine {
