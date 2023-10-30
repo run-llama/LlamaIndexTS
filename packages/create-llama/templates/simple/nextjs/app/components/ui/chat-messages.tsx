@@ -1,12 +1,16 @@
 "use client";
 
-import ChatItem from "@/app/components/chat-item";
-import { useChat } from "@/app/components/chat-section";
 import { useEffect, useRef } from "react";
+import ChatItem from "./chat-item";
 
-export default function ChatHistory() {
+export interface Message {
+  id: string;
+  content: string;
+  role: string;
+}
+
+export default function ChatMessages({ messages }: { messages: Message[] }) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
-  const { chatHistory } = useChat();
 
   const scrollToBottom = () => {
     if (scrollableChatContainerRef.current) {
@@ -17,7 +21,7 @@ export default function ChatHistory() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatHistory.length]);
+  }, [messages.length]);
 
   return (
     <div className="w-full max-w-5xl p-4 bg-white rounded-xl shadow-xl">
@@ -25,8 +29,8 @@ export default function ChatHistory() {
         className="flex flex-col gap-5 divide-y h-[50vh] overflow-auto"
         ref={scrollableChatContainerRef}
       >
-        {chatHistory.map((chatMessage, index) => (
-          <ChatItem key={index} {...chatMessage} />
+        {messages.map((m: Message) => (
+          <ChatItem key={m.id} {...m} />
         ))}
       </div>
     </div>

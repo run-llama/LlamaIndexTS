@@ -1,45 +1,62 @@
 "use client";
 
-import ChatHistory from "@/app/components/chat-history";
-import MessageForm from "@/app/components/message-form";
-import ChatStorageService from "@/app/services/chatStorage.service";
-import { ChatMessage } from "llamaindex";
-import { createContext, useContext, useEffect, useState } from "react";
-
-const ChatSectionContext = createContext<{
-  chatHistory: ChatMessage[];
-  loadChat: () => void;
-}>({
-  chatHistory: [],
-  loadChat: () => {},
-});
-
-const ChatSectionContextProvider = (props: { children: JSX.Element[] }) => {
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
-
-  const loadChat = () => {
-    const data = ChatStorageService.getChatHistory();
-    setChatHistory(data);
-  };
-
-  useEffect(() => {
-    loadChat();
-  }, []);
-
-  return (
-    <ChatSectionContext.Provider value={{ chatHistory, loadChat }}>
-      {props.children}
-    </ChatSectionContext.Provider>
-  );
-};
+import { nanoid } from "nanoid";
+import { useState } from "react";
+import ChatInput from "./ui/chat-input";
+import ChatMessages, { Message } from "./ui/chat-messages";
 
 export default function ChatSection() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState("");
+
+  const getAssistantMessage = async (messages: Message[]) => {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messages,
+      }),
+    });
+    const data = await response.json();
+    const assistantMessage = data.result as Message;
+    return assistantMessage;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input) return;
+    try {
+      setLoading(true);
+      const newMessages = [
+        ...messages,
+        { id: nanoid(), content: input, role: "user" },
+      ];
+      setMessages(newMessages);
+      setInput("");
+      const assistantMessage = await getAssistantMessage(newMessages);
+      setMessages([...newMessages, { ...assistantMessage }]);
+      setLoading(false);
+    } catch (error: any) {
+      alert(JSON.stringify(error));
+    }
+  };
+
+  const handleInputChange = (e: any): void => {
+    setInput(e.target.value);
+  };
+
   return (
-    <ChatSectionContextProvider>
-      <ChatHistory />
-      <MessageForm />
-    </ChatSectionContextProvider>
+    <>
+      <ChatMessages messages={messages} />
+      <ChatInput
+        handleSubmit={handleSubmit}
+        isLoading={loading}
+        input={input}
+        handleInputChange={handleInputChange}
+      />
+    </>
   );
 }
-
-export const useChat = () => useContext(ChatSectionContext);

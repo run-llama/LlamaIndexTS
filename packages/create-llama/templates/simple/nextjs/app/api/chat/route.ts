@@ -7,17 +7,13 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      message,
-      chatHistory,
-    }: {
-      message: string;
-      chatHistory: ChatMessage[];
-    } = body;
-    if (!message || !chatHistory) {
+    const { messages }: { messages: ChatMessage[] } = body;
+    const lastMessage = messages.pop();
+    if (!messages || !lastMessage || lastMessage.role !== "user") {
       return NextResponse.json(
         {
-          error: "message, chatHistory are required in the request body",
+          error:
+            "messages are required in the request body and the last message must be from the user",
         },
         { status: 400 },
       );
@@ -31,7 +27,7 @@ export async function POST(request: NextRequest) {
       llm,
     });
 
-    const response = await chatEngine.chat(message, chatHistory);
+    const response = await chatEngine.chat(lastMessage.content, messages);
     const result: ChatMessage = {
       role: "assistant",
       content: response.response,

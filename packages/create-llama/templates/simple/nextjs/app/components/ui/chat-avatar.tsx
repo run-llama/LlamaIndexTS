@@ -1,10 +1,10 @@
 "use client";
 
-import { ChatMessage } from "llamaindex";
 import Image from "next/image";
+import { Message } from "./chat-messages";
 
-export default function ChatAvatar(chatMessage: ChatMessage) {
-  if (chatMessage.role === "user") {
+export default function ChatAvatar(message: Message) {
+  if (message.role === "user") {
     return (
       <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow bg-background">
         <svg
