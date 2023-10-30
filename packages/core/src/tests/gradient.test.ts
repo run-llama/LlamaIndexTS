@@ -1,4 +1,4 @@
-import { GradientBaseModelLLM, GradientModelAdapterLLM } from '../llm/gradient';
+const { GradientBaseModelLLM, GradientModelAdapterLLM } = require('../llm/gradient');
 
 describe('GradientBaseModelLLM', () => {
   it('should initialize the model', async () => {
