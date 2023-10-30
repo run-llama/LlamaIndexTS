@@ -405,14 +405,6 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   contextWindow: 4096,
   gradientApi: "gradient/modelAdapterLLM"
 },
-"GradientBaseModelLLM": {
-  contextWindow: 4096,
-  gradientApi: "gradient/baseModelLLM"
-},
-"GradientModelAdapterLLM": 
-  contextWindow: 4096,
-  gradientApi: "gradient/modelAdapterLLM"
-},
 
 export enum DeuceChatStrategy {
   A16Z = "a16z",
