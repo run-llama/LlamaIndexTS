@@ -1,7 +1,7 @@
 export abstract class _BaseGradientLLM {
-  protected model: any;
+  protected model: string;
 
-  constructor(model: any) {
+  constructor(model: string) {
     this.model = model;
   }
 
@@ -13,21 +13,21 @@ export abstract class _BaseGradientLLM {
 export class GradientBaseModelLLM extends _BaseGradientLLM {
   private baseModelSlug: string;
 
-  constructor(model: any, baseModelSlug: string) {
+  constructor(model: string, baseModelSlug: string) {
     super(model);
     this.baseModelSlug = baseModelSlug;
   }
 
   async initialize() {
-    // Initialize the model based on the baseModelSlug
+    // Code to initialize the model based on the baseModelSlug
   }
 
   async close() {
-    // Close the model
+    // Code to close the model
   }
 
   async completePrompt(prompt: string) {
-    // Complete the prompt using the model
+    // Code to complete the prompt using the model
     return '';
   }
 }
@@ -35,21 +35,21 @@ export class GradientBaseModelLLM extends _BaseGradientLLM {
 export class GradientModelAdapterLLM extends _BaseGradientLLM {
   private adapter: any;
 
-  constructor(model: any, adapter: any) {
+  constructor(model: string, adapter: any) {
     super(model);
     this.adapter = adapter;
   }
 
   async initialize() {
-    // Initialize the model using the adapter
+    // Code to initialize the model using the adapter
   }
 
   async close() {
-    // Close the model using the adapter
+    // Code to close the model using the adapter
   }
 
   async completePrompt(prompt: string) {
-    // Complete the prompt using the model and the adapter
+    // Code to complete the prompt using the model and the adapter
     return '';
   }
 }
