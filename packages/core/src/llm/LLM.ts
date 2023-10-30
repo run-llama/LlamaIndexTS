@@ -7,6 +7,7 @@ import {
   OpenAIStreamToken,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
+import { GradientBaseModelLLM, GradientModelAdapterLLM } from "./gradient";
 
 import { LLMOptions } from "portkey-ai";
 import { globalsHelper, Tokenizers } from "../GlobalsHelper";
@@ -396,6 +397,14 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
       "a16z-infra/llama7b-v2-chat:4f0b260b6a13eb53a6b1891f089d57c08f41003ae79458be5011303d81a394dc",
   },
 };
+"GradientBaseModelLLM": {
+  contextWindow: 4096,
+  gradientApi: "gradient/baseModelLLM"
+},
+"GradientModelAdapterLLM": {
+  contextWindow: 4096,
+  gradientApi: "gradient/modelAdapterLLM"
+},
 
 export enum DeuceChatStrategy {
   A16Z = "a16z",
