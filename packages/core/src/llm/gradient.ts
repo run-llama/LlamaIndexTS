@@ -33,9 +33,9 @@ export class GradientBaseModelLLM extends _BaseGradientLLM {
 }
 
 export class GradientModelAdapterLLM extends _BaseGradientLLM {
-  private adapter: AdapterType; // Replace AdapterType with the actual type
+  private adapter: any;
 
-  constructor(model: string, adapter: AdapterType) {
+  constructor(model: string, adapter: any) {
     super(model);
     this.adapter = adapter;
   }
