@@ -5,9 +5,18 @@ export abstract class _BaseGradientLLM {
     this.model = model;
   }
 
-  abstract initialize(): Promise<void>;
-  abstract close(): Promise<void>;
-  abstract completePrompt(prompt: string): Promise<string>;
+  async initialize(): Promise<void> {
+    // Code to initialize the model
+  }
+  
+  async close(): Promise<void> {
+    // Code to close the model
+  }
+  
+  async completePrompt(prompt: string): Promise<string> {
+    // Code to complete the prompt using the model
+    return '';
+  }
 }
 
 export class GradientBaseModelLLM extends _BaseGradientLLM {
@@ -18,18 +27,7 @@ export class GradientBaseModelLLM extends _BaseGradientLLM {
     this.baseModelSlug = baseModelSlug;
   }
 
-  async initialize() {
-    // Replace with actual code to initialize the model based on the baseModelSlug
-  }
-
-  async close() {
-    // Replace with actual code to close the model
-  }
-
-  async completePrompt(prompt: string) {
-    // Replace with actual code to complete the prompt using the model
-    return '';
-  }
+  // Removed methods as they are already defined in the parent class
 }
 
 export class GradientModelAdapterLLM extends _BaseGradientLLM {
@@ -40,18 +38,7 @@ export class GradientModelAdapterLLM extends _BaseGradientLLM {
     this.adapter = adapter;
   }
 
-  async initialize() {
-    // Replace with actual code to initialize the model using the adapter
-  }
-
-  async close() {
-    // Replace with actual code to close the model using the adapter
-  }
-
-  async completePrompt(prompt: string) {
-    // Replace with actual code to complete the prompt using the model and the adapter
-    return '';
-  }
+  // Removed methods as they are already defined in the parent class
 
   async completePrompt(prompt: string) {
     // Code to complete the prompt using the model and the adapter
