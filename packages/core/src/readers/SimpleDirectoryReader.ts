@@ -9,6 +9,13 @@ import { HTMLReader } from "./HTMLReader";
 import { MarkdownReader } from "./MarkdownReader";
 import { PDFReader } from "./PDFReader";
 
+type ReaderCallback = (category: string, name: string, status: ReaderStatus, message?: string) => boolean;
+enum ReaderStatus {
+  Started = 0,
+  Completed,
+  Error
+}
+
 /**
  * Read a .txt file
  */
@@ -22,7 +29,7 @@ export class TextFileReader implements BaseReader {
   }
 }
 
-const FILE_EXT_TO_READER: Record<string, BaseReader> = {
+export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   txt: new TextFileReader(),
   pdf: new PDFReader(),
   csv: new PapaCSVReader(),
@@ -40,20 +47,40 @@ export type SimpleDirectoryReaderLoadDataProps = {
 };
 
 /**
- * Read all of the documents in a directory. Currently supports PDF and TXT files.
+ * Read all of the documents in a directory. 
+ * By default, supports the list of file types
+ * in the FILE_EXIT_TO_READER map.
  */
 export class SimpleDirectoryReader implements BaseReader {
+  constructor(private observer?: ReaderCallback) {}
+
   async loadData({
     directoryPath,
     fs = DEFAULT_FS as CompleteFileSystem,
     defaultReader = new TextFileReader(),
     fileExtToReader = FILE_EXT_TO_READER,
   }: SimpleDirectoryReaderLoadDataProps): Promise<Document[]> {
+
+    // Observer can decide to skip the directory
+    if (this.doObserverCheck(
+      'Directory', directoryPath, ReaderStatus.Started
+    ) == false) {
+      return Promise.reject('Cancelled');
+    }
+
     let docs: Document[] = [];
     for await (const filePath of walk(fs, directoryPath)) {
       try {
         const fileExt = _.last(filePath.split(".")) || "";
 
+        // Observer can decide to skip each file
+        if (this.doObserverCheck(
+          'File', filePath, ReaderStatus.Started
+        ) == false) {
+          // Skip this file
+          continue;
+        }    
+    
         let reader = null;
 
         if (fileExt in fileExtToReader) {
@@ -61,16 +88,57 @@ export class SimpleDirectoryReader implements BaseReader {
         } else if (!_.isNil(defaultReader)) {
           reader = defaultReader;
         } else {
-          console.warn(`No reader for file extension of ${filePath}`);
+          const msg = `No reader for file extension of ${filePath}`;
+          console.warn(msg);
+
+          // In an error condition, observer's false cancels the whole process.
+          if (this.doObserverCheck(
+            'File', filePath, ReaderStatus.Error, msg
+          ) == false) {
+            return this.getCancelled();
+          }
+  
           continue;
         }
 
         const fileDocs = await reader.loadData(filePath, fs);
-        docs.push(...fileDocs);
+
+        // Observer can still cancel addition of the resulting docs from this file
+        if (this.doObserverCheck(
+          'File', filePath, ReaderStatus.Completed
+        )) {   
+          docs.push(...fileDocs);
+        }      
       } catch (e) {
-        console.error(`Error reading file ${filePath}: ${e}`);
+        const msg = `Error reading file ${filePath}: ${e}`;
+        console.error(msg);
+
+        // In an error condition, observer's false cancels the whole process.
+        if (this.doObserverCheck(
+          'File', filePath, ReaderStatus.Error, msg
+        ) == false) {
+          return this.getCancelled();
+        }
       }
     }
+
+    // After successful import of all files, directory completion
+    // is only a notification for observer, cannot be cancelled.
+    this.doObserverCheck(
+      'Directory', directoryPath, ReaderStatus.Completed
+    );
+
     return docs;
+  }
+
+  private getCancelled() {
+    return Promise.reject('Cancelled');
+  }
+
+  private doObserverCheck(category: string, name: string, status: ReaderStatus, message?: string): boolean {
+    if (this.observer) {
+      return this.observer(category, name, status, message);
+    }
+    return true;
   }
 }
