@@ -1,9 +1,12 @@
-import { CondenseQuestionChatEngine, BaseQueryEngine, ChatMessage, ServiceContext, defaultCondenseQuestionPrompt } from '../../packages/core/src/ChatEngine.ts';
+import { CondenseQuestionChatEngine, ChatMessage } from '../../packages/core/src/ChatEngine';
+import { BaseQueryEngine } from '../../packages/core/src/QueryEngine';
+import { ServiceContext } from '../../packages/core/src/ServiceContext';
+import { defaultCondenseQuestionPrompt } from '../../packages/core/src/Prompt';
 
 // Mock implementation of BaseQueryEngine
 class MockQueryEngine extends BaseQueryEngine {
   async query(query: string) {
-    return { response: 'Mock response' };
+    return { response: 'Mock response', getFormattedSources: () => [] };
   }
 }
 
