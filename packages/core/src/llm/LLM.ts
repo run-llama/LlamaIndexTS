@@ -401,7 +401,7 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   contextWindow: 4096,
   gradientApi: "gradient/baseModelLLM"
 },
-"GradientModelAdapterLLM": {
+"GradientModelAdapterLLM": 
   contextWindow: 4096,
   gradientApi: "gradient/modelAdapterLLM"
 },
