@@ -1,6 +1,6 @@
 "use client";
 
-import ChatAvatar from "@/app/components/chat-avatar";
+import ChatAvatar from "@/app/components/ui/chat-avatar";
 import { Message } from "ai/react";
 
 export default function ChatItem(chatMessage: Message) {
