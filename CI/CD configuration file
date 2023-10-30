@@ -1,0 +1,17 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  script:
+    - tsc
+    - node main.js
+
+test:
+  script:
+    - npm run test
+
+deploy:
+  script:
+    - npm run deploy
