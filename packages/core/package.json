@@ -5,6 +5,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.8.1",
     "@notionhq/client": "^2.2.13",
+    "js-tiktoken": "^1.0.7",
     "lodash": "^4.17.21",
     "mammoth": "^1.6.0",
     "md-utils-ts": "^2.0.0",
@@ -17,7 +18,6 @@
     "rake-modified": "^1.0.8",
     "replicate": "^0.20.1",
     "string-strip-html": "^13.4.3",
-    "tiktoken": "^1.0.10",
     "uuid": "^9.0.1",
     "wink-nlp": "^1.14.3"
   },
