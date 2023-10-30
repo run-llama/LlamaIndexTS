@@ -73,6 +73,7 @@ describe("SentenceSplitter", () => {
     let splits = sentenceSplitter.splitText(
       "This is a sentence. This is another sentence. 1.0",
     );
+
     expect(splits).toEqual([
       "This is a sentence.",
       "This is another sentence.",
