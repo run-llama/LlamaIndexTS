@@ -23,5 +23,5 @@ jobs:
         restore-keys: |
           ${{ runner.OS }}-node-
     - run: pnpm install
-    - run: pnpm eslint --fix "{file_path}/**/*.ts" "{file_path}/**/*.js"
+    - run: pnpm eslint --fix "./**/*.ts" "./**/*.js"
     - run: pnpm run test
