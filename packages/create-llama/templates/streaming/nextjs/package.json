@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "node ./app/api/chat/engines/context/generate.mjs"
   },
   "dependencies": {
     "ai": "^2",
