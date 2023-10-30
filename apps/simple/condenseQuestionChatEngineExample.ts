@@ -4,14 +4,15 @@ import { ServiceContext } from '../../packages/core/src/ServiceContext';
 import { defaultCondenseQuestionPrompt } from '../../packages/core/src/Prompt';
 
 // Mock implementation of BaseQueryEngine
-class MockQueryEngine extends BaseQueryEngine {
+class MockQueryEngine implements BaseQueryEngine {
   async query(query: string) {
     return { response: 'Mock response', getFormattedSources: () => [] };
   }
 }
 
 const queryEngine = new MockQueryEngine();
-const serviceContext = new ServiceContext();
+import { serviceContextFromDefaults } from '../../packages/core/src/ServiceContext';
+const serviceContext = serviceContextFromDefaults();
 
 const condenseQuestionChatEngine = new CondenseQuestionChatEngine({
   queryEngine: queryEngine,
