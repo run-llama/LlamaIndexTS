@@ -1,16 +1,20 @@
 "use client";
 
-import MessageForm from "@/app/components/message-form";
+import ChatInput from "@/app/components/ui/chat-input";
 import { useChat } from "ai/react";
-import ChatHistory from "./chat-history";
+import ChatMessages from "./ui/chat-messages";
 
 export default function ChatSection() {
-  const chat = useChat();
+  const { messages, input, handleSubmit, handleInputChange } = useChat();
 
   return (
     <>
-      <ChatHistory messages={chat.messages} />
-      <MessageForm chat={chat} />
+      <ChatMessages messages={messages} />
+      <ChatInput
+        input={input}
+        handleSubmit={handleSubmit}
+        handleInputChange={handleInputChange}
+      />
     </>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import ChatItem from "@/app/components/chat-item";
+import ChatItem from "@/app/components/ui/chat-item";
 import { Message } from "ai/react";
 import { useEffect, useRef } from "react";
 
-export default function ChatHistory({ messages }: { messages: Message[] }) {
+export default function ChatMessages({ messages }: { messages: Message[] }) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {

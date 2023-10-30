@@ -2,11 +2,11 @@
 
 import { UseChatHelpers } from "ai/react";
 
-export default function MessageForm({ chat }: { chat: UseChatHelpers }) {
+export default function ChatInput(props: Partial<UseChatHelpers>) {
   return (
     <>
       <form
-        onSubmit={chat.handleSubmit}
+        onSubmit={props.handleSubmit}
         className="flex items-start justify-between w-full max-w-5xl p-4 bg-white rounded-xl shadow-xl gap-4"
       >
         <input
@@ -14,8 +14,8 @@ export default function MessageForm({ chat }: { chat: UseChatHelpers }) {
           name="message"
           placeholder="Type a message"
           className="w-full p-4 rounded-xl shadow-inner flex-1"
-          value={chat.input}
-          onChange={chat.handleInputChange}
+          value={props.input}
+          onChange={props.handleInputChange}
         />
         <button
           type="submit"
