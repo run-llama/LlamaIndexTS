@@ -35,7 +35,13 @@ When we publish to NPM we will have a tsc compiled version of the library in JS.
 
 ### Test cases
 
-To run them, run
+Before running the tests, compile the TypeScript files to JavaScript. This can be done by running the following command:
+
+```
+pnpm run build
+```
+
+After the build process is complete, you can run the tests with:
 
 ```
 pnpm run test
