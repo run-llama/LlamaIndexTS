@@ -5,7 +5,8 @@ import { useChat } from "ai/react";
 import ChatMessages from "./ui/chat-messages";
 
 export default function ChatSection() {
-  const { messages, input, handleSubmit, handleInputChange } = useChat();
+  const { messages, input, isLoading, handleSubmit, handleInputChange } =
+    useChat();
 
   return (
     <>
@@ -14,6 +15,7 @@ export default function ChatSection() {
         input={input}
         handleSubmit={handleSubmit}
         handleInputChange={handleInputChange}
+        isLoading={isLoading}
       />
     </>
   );

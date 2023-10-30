@@ -1,8 +1,13 @@
 "use client";
 
-import ChatItem from "@/app/components/ui/chat-item";
-import { Message } from "ai/react";
 import { useEffect, useRef } from "react";
+import ChatItem from "./chat-item";
+
+export interface Message {
+  id: string;
+  content: string;
+  role: string;
+}
 
 export default function ChatMessages({ messages }: { messages: Message[] }) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
