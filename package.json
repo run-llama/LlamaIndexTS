@@ -22,7 +22,7 @@
     "ts-jest": "^29.1.1",
     "turbo": "^1.10.16"
   },
-  "packageManager": "pnpm@7.15.0",
+  "packageManager": "pnpm@8.10.0",
   "dependencies": {
     "@changesets/cli": "^2.26.2"
   },

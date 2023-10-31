@@ -15,6 +15,7 @@ export * from "./QueryEngine";
 export * from "./QuestionGenerator";
 export * from "./readers/base";
 export * from "./readers/CSVReader";
+export * from "./readers/AssemblyAI";
 export * from "./readers/MarkdownReader";
 export * from "./readers/NotionReader";
 export * from "./readers/PDFReader";
