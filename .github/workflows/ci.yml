@@ -25,4 +25,4 @@ jobs:
       run: pnpm run test
 
     - name: Run Prettier
-      run: npx prettier --write {file_path}
+      run: npx prettier --write '**/*.ts'
