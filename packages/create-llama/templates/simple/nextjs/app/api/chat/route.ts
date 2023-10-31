@@ -1,5 +1,6 @@
-import { ChatMessage, OpenAI, SimpleChatEngine } from "llamaindex";
+import { ChatMessage, OpenAI } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
+import { createChatEngine } from "../../../../../engines/context";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,9 +24,7 @@ export async function POST(request: NextRequest) {
       model: "gpt-3.5-turbo",
     });
 
-    const chatEngine = new SimpleChatEngine({
-      llm,
-    });
+    const chatEngine = await createChatEngine(llm);
 
     const response = await chatEngine.chat(lastMessage.content, messages);
     const result: ChatMessage = {

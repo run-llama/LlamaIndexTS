@@ -8,18 +8,24 @@ import { getOnline } from "./helpers/is-online";
 import { isWriteable } from "./helpers/is-writeable";
 import { makeDir } from "./helpers/make-dir";
 
-import type { TemplateFramework, TemplateType } from "./templates";
+import type {
+  TemplateEngine,
+  TemplateFramework,
+  TemplateType,
+} from "./templates";
 import { installTemplate } from "./templates";
 
 export async function createApp({
   template,
   framework,
+  engine,
   appPath,
   packageManager,
   eslint,
 }: {
   template: TemplateType;
   framework: TemplateFramework;
+  engine: TemplateEngine;
   appPath: string;
   packageManager: PackageManager;
   eslint: boolean;
@@ -51,15 +57,12 @@ export async function createApp({
 
   process.chdir(root);
 
-  /**
-   * If an example repository is not provided for cloning, proceed
-   * by installing from a template.
-   */
   await installTemplate({
     appName,
     root,
     template,
     framework,
+    engine,
     packageManager,
     isOnline,
     eslint,

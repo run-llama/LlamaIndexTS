@@ -19,6 +19,7 @@ export const installTemplate = async ({
   isOnline,
   template,
   framework,
+  engine,
   eslint,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
@@ -53,6 +54,24 @@ export const installTemplate = async ({
   });
 
   /**
+   * Copy the selected chat engine files to the target directory and reference it.
+   */
+  console.log("\nUsing chat engine:", engine, "\n");
+  const enginePath = path.join(__dirname, "engines", engine);
+  const engineDestPath = path.join(root, "app", "api", "chat", "engine");
+  await copy("**", engineDestPath, {
+    parents: true,
+    cwd: enginePath,
+  });
+  const routeFile = path.join(engineDestPath, "..", "route.ts");
+  const routeFileContent = await fs.readFile(routeFile, "utf8");
+  const newContent = routeFileContent.replace(
+    /^import { createChatEngine }.*$/m,
+    'import { createChatEngine } from "./engine"\n',
+  );
+  await fs.writeFile(routeFile, newContent);
+
+  /**
    * Update the package.json scripts.
    */
   const packageJsonFile = path.join(root, "package.json");
@@ -66,6 +85,14 @@ export const installTemplate = async ({
     ...packageJson.dependencies,
     llamaindex: version,
   };
+
+  if (engine === "context") {
+    // add generate script if using context engine
+    packageJson.scripts = {
+      ...packageJson.scripts,
+      generate: "node ./app/api/chat/engine/generate.mjs",
+    };
+  }
 
   if (!eslint) {
     // Remove packages starting with "eslint" from devDependencies

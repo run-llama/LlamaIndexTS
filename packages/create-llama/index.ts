@@ -179,6 +179,7 @@ async function run(): Promise<void> {
   const defaults: typeof preferences = {
     template: "simple",
     framework: "nextjs",
+    engine: "simple",
     eslint: true,
   };
   const getPrefOrDefault = (field: string) =>
@@ -194,10 +195,10 @@ async function run(): Promise<void> {
           name: "template",
           message: "Which template would you like to use?",
           choices: [
-            { title: "Simple chat without streaming", value: "simple" },
-            { title: "Simple chat with streaming", value: "streaming" },
+            { title: "Chat without streaming", value: "simple" },
+            { title: "Chat with streaming", value: "streaming" },
           ],
-          initial: 0,
+          initial: 1,
         },
         {
           onCancel: () => {
@@ -238,6 +239,33 @@ async function run(): Promise<void> {
     }
   }
 
+  if (!program.engine) {
+    if (ciInfo.isCI) {
+      program.engine = getPrefOrDefault("engine");
+    } else {
+      const { engine } = await prompts(
+        {
+          type: "select",
+          name: "engine",
+          message: "Which chat engine would you like to use?",
+          choices: [
+            { title: "SimpleChatEngine", value: "simple" },
+            { title: "ContextChatEngine", value: "context" },
+          ],
+          initial: 0,
+        },
+        {
+          onCancel: () => {
+            console.error("Exiting.");
+            process.exit(1);
+          },
+        },
+      );
+      program.engine = engine;
+      preferences.engine = engine;
+    }
+  }
+
   if (
     !process.argv.includes("--eslint") &&
     !process.argv.includes("--no-eslint")
@@ -263,6 +291,7 @@ async function run(): Promise<void> {
   await createApp({
     template: program.template,
     framework: program.framework,
+    engine: program.engine,
     appPath: resolvedProjectPath,
     packageManager,
     eslint: program.eslint,
