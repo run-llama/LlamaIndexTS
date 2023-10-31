@@ -28,6 +28,20 @@ pnpm install
 Note: we use pnpm in this repo, which has a lot of the same functionality and CLI options as npm but it does do some things better in a monorepo, like centralizing dependencies and caching.
 
 PNPM's has documentation on its [workspace feature](https://pnpm.io/workspaces) and Turborepo had some [useful documentation also](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks).
+### Handling Lockfile Issues
+
+If you encounter issues with the lockfile not being compatible with your version of pnpm, you can delete the existing lockfile and run `pnpm install` to generate a new one. Here are the steps:
+
+1. Delete the existing lockfile:
+   ```
+   rm pnpm-lock.yaml
+   ```
+2. Run `pnpm install` to generate a new lockfile:
+   ```
+   pnpm install
+   ```
+
+This should resolve any issues related to the lockfile.
 
 ### Running Typescript
 
