@@ -239,30 +239,32 @@ async function run(): Promise<void> {
     }
   }
 
-  if (!program.engine) {
-    if (ciInfo.isCI) {
-      program.engine = getPrefOrDefault("engine");
-    } else {
-      const { engine } = await prompts(
-        {
-          type: "select",
-          name: "engine",
-          message: "Which chat engine would you like to use?",
-          choices: [
-            { title: "SimpleChatEngine", value: "simple" },
-            { title: "ContextChatEngine", value: "context" },
-          ],
-          initial: 0,
-        },
-        {
-          onCancel: () => {
-            console.error("Exiting.");
-            process.exit(1);
+  if (program.framework === "express" || program.framework === "nextjs") {
+    if (!program.engine) {
+      if (ciInfo.isCI) {
+        program.engine = getPrefOrDefault("engine");
+      } else {
+        const { engine } = await prompts(
+          {
+            type: "select",
+            name: "engine",
+            message: "Which chat engine would you like to use?",
+            choices: [
+              { title: "SimpleChatEngine", value: "simple" },
+              { title: "ContextChatEngine", value: "context" },
+            ],
+            initial: 0,
           },
-        },
-      );
-      program.engine = engine;
-      preferences.engine = engine;
+          {
+            onCancel: () => {
+              console.error("Exiting.");
+              process.exit(1);
+            },
+          },
+        );
+        program.engine = engine;
+        preferences.engine = engine;
+      }
     }
   }
 

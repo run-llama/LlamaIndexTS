@@ -56,20 +56,30 @@ export const installTemplate = async ({
   /**
    * Copy the selected chat engine files to the target directory and reference it.
    */
-  console.log("\nUsing chat engine:", engine, "\n");
-  const enginePath = path.join(__dirname, "engines", engine);
-  const engineDestPath = path.join(root, "app", "api", "chat", "engine");
-  await copy("**", engineDestPath, {
-    parents: true,
-    cwd: enginePath,
-  });
-  const routeFile = path.join(engineDestPath, "..", "route.ts");
-  const routeFileContent = await fs.readFile(routeFile, "utf8");
-  const newContent = routeFileContent.replace(
-    /^import { createChatEngine }.*$/m,
-    'import { createChatEngine } from "./engine"\n',
-  );
-  await fs.writeFile(routeFile, newContent);
+  let relativeEngineDestPath;
+  if (framework === "express" || framework === "nextjs") {
+    console.log("\nUsing chat engine:", engine, "\n");
+    const enginePath = path.join(__dirname, "engines", engine);
+    relativeEngineDestPath =
+      framework === "nextjs"
+        ? path.join("app", "api", "chat")
+        : path.join("src", "controllers");
+    await copy("**", path.join(root, relativeEngineDestPath, "engine"), {
+      parents: true,
+      cwd: enginePath,
+    });
+    const routeFile = path.join(
+      root,
+      relativeEngineDestPath,
+      framework === "nextjs" ? "route.ts" : "llm.controller.ts",
+    );
+    const routeFileContent = await fs.readFile(routeFile, "utf8");
+    const newContent = routeFileContent.replace(
+      /^import { createChatEngine }.*$/m,
+      'import { createChatEngine } from "./engine"\n',
+    );
+    await fs.writeFile(routeFile, newContent);
+  }
 
   /**
    * Update the package.json scripts.
@@ -86,11 +96,15 @@ export const installTemplate = async ({
     llamaindex: version,
   };
 
-  if (engine === "context") {
+  if (engine === "context" && relativeEngineDestPath) {
     // add generate script if using context engine
     packageJson.scripts = {
       ...packageJson.scripts,
-      generate: "node ./app/api/chat/engine/generate.mjs",
+      generate: `node ${path.join(
+        relativeEngineDestPath,
+        "engine",
+        "generate.mjs",
+      )}`,
     };
   }
 
