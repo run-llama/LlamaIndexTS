@@ -307,22 +307,37 @@ export class ResponseSynthesizer {
     this.metadataMode = metadataMode;
   }
 
-  async synthesize(
-    query: string,
-    nodesWithScore: NodeWithScore[],
-    parentEvent?: Event,
-  ) {
+  async synthesize<
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<Response, void, unknown> : Response,
+  >({
+    query,
+    nodesWithScore,
+    parentEvent,
+    streaming,
+  }: {
+    query: string;
+    nodesWithScore: NodeWithScore[];
+    parentEvent?: Event;
+    streaming?: T;
+  }): Promise<R> {
     let textChunks: string[] = nodesWithScore.map(({ node }) =>
       node.getContent(this.metadataMode),
     );
-    const response = await this.responseBuilder.getResponse(
-      query,
-      textChunks,
-      parentEvent,
-    );
-    return new Response(
-      response,
-      nodesWithScore.map(({ node }) => node),
-    );
+
+    if (!streaming) {
+      const response = await this.responseBuilder.getResponse(
+        query,
+        textChunks,
+        parentEvent,
+      );
+
+      return new Response(
+        response,
+        nodesWithScore.map(({ node }) => node),
+      );
+    } else {
+      return;
+    }
   }
 }

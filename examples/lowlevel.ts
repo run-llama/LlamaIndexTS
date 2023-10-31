@@ -27,9 +27,9 @@ import {
     },
   ];
 
-  const response = await responseSynthesizer.synthesize(
-    "What age am I?",
+  const response = await responseSynthesizer.synthesize({
+    query: "What age am I?",
     nodesWithScore,
-  );
+  });
   console.log(response.response);
 })();

@@ -36,7 +36,7 @@ const nodesWithScore: NodeWithScore[] = [
 ];
 
 const response = await responseSynthesizer.synthesize(
-  "What age am I?",
+  query: "What age am I?",
   nodesWithScore,
 );
 console.log(response.response);
