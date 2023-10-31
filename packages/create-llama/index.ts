@@ -180,6 +180,7 @@ async function run(): Promise<void> {
     template: "simple",
     framework: "nextjs",
     engine: "simple",
+    ui: "html",
     eslint: true,
   };
   const getPrefOrDefault = (field: string) =>
@@ -239,6 +240,35 @@ async function run(): Promise<void> {
     }
   }
 
+  if (program.framework === "nextjs") {
+    if (!program.ui) {
+      if (ciInfo.isCI) {
+        program.ui = getPrefOrDefault("ui");
+      } else {
+        const { ui } = await prompts(
+          {
+            type: "select",
+            name: "ui",
+            message: "Which UI would you like to use?",
+            choices: [
+              { title: "Just HTML", value: "html" },
+              { title: "Shadcn", value: "shadcn" },
+            ],
+            initial: 0,
+          },
+          {
+            onCancel: () => {
+              console.error("Exiting.");
+              process.exit(1);
+            },
+          },
+        );
+        program.ui = ui;
+        preferences.ui = ui;
+      }
+    }
+  }
+
   if (program.framework === "express" || program.framework === "nextjs") {
     if (!program.engine) {
       if (ciInfo.isCI) {
@@ -294,6 +324,7 @@ async function run(): Promise<void> {
     template: program.template,
     framework: program.framework,
     engine: program.engine,
+    ui: program.ui,
     appPath: resolvedProjectPath,
     packageManager,
     eslint: program.eslint,

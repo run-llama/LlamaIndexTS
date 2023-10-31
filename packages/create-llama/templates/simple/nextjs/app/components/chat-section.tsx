@@ -2,8 +2,7 @@
 
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import ChatInput from "./ui/chat-input";
-import ChatMessages, { Message } from "./ui/chat-messages";
+import { ChatInput, ChatMessages, Message } from "../../../../ui/html/chat";
 
 export default function ChatSection() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -37,7 +36,7 @@ export default function ChatSection() {
       setMessages(newMessages);
       setInput("");
       const assistantMessage = await getAssistantMessage(newMessages);
-      setMessages([...newMessages, { ...assistantMessage }]);
+      setMessages([...newMessages, { ...assistantMessage, id: nanoid() }]);
       setLoading(false);
     } catch (error: any) {
       alert(JSON.stringify(error));

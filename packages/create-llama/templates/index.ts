@@ -20,6 +20,7 @@ export const installTemplate = async ({
   template,
   framework,
   engine,
+  ui,
   eslint,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
@@ -82,6 +83,26 @@ export const installTemplate = async ({
   }
 
   /**
+   * Copy the selected UI files to the target directory and reference it.
+   */
+  if (framework === "nextjs") {
+    console.log("\nUsing UI:", ui, "\n");
+    const uiPath = path.join(__dirname, "ui", ui);
+    const componentsPath = path.join("app", "components");
+    await copy("**", path.join(root, componentsPath, "ui"), {
+      parents: true,
+      cwd: uiPath,
+    });
+    const chatSectionFile = path.join(root, componentsPath, "chat-section.tsx");
+    const chatSectionFileContent = await fs.readFile(chatSectionFile, "utf8");
+    const newContent = chatSectionFileContent.replace(
+      /^import { ChatInput, ChatMessages, Message }.*$/m,
+      'import { ChatInput, ChatMessages, Message } from "./ui/chat"\n',
+    );
+    await fs.writeFile(chatSectionFile, newContent);
+  }
+
+  /**
    * Update the package.json scripts.
    */
   const packageJsonFile = path.join(root, "package.json");
@@ -105,6 +126,17 @@ export const installTemplate = async ({
         "engine",
         "generate.mjs",
       )}`,
+    };
+  }
+
+  if (framework === "nextjs" && ui === "shadcn") {
+    // add shadcn dependencies to package.json
+    packageJson.dependencies = {
+      ...packageJson.dependencies,
+      "tailwind-merge": "^2",
+      "@radix-ui/react-slot": "^1",
+      "class-variance-authority": "^0.7",
+      "lucide-react": "^0.291",
     };
   }
 

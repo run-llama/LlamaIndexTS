@@ -1,13 +1,6 @@
-"use client";
-
 import { useEffect, useRef } from "react";
-import ChatItem from "./chat-item";
 
-export interface Message {
-  id: string;
-  content: string;
-  role: string;
-}
+import ChatMessage, { Message } from "./chat-message";
 
 export default function ChatMessages({ messages }: { messages: Message[] }) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
@@ -24,13 +17,13 @@ export default function ChatMessages({ messages }: { messages: Message[] }) {
   }, [messages.length]);
 
   return (
-    <div className="w-full max-w-5xl p-4 bg-white rounded-xl shadow-xl">
+    <div className="mx-auto w-full max-w-5xl rounded-xl bg-white p-4 shadow-xl">
       <div
-        className="flex flex-col gap-5 divide-y h-[50vh] overflow-auto"
+        className="flex h-[50vh] flex-col gap-5 divide-y overflow-auto"
         ref={scrollableChatContainerRef}
       >
-        {messages.map((m: Message) => (
-          <ChatItem key={m.id} {...m} />
+        {messages.map((m) => (
+          <ChatMessage key={m.id} {...m} />
         ))}
       </div>
     </div>

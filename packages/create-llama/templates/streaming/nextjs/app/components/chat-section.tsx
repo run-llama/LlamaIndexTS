@@ -1,8 +1,7 @@
 "use client";
 
-import ChatInput from "@/app/components/ui/chat-input";
 import { useChat } from "ai/react";
-import ChatMessages from "./ui/chat-messages";
+import { ChatInput, ChatMessages, Message } from "../../../../ui/html/chat";
 
 export default function ChatSection() {
   const { messages, input, isLoading, handleSubmit, handleInputChange } =

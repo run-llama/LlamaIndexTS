@@ -12,6 +12,7 @@ import type {
   TemplateEngine,
   TemplateFramework,
   TemplateType,
+  TemplateUI,
 } from "./templates";
 import { installTemplate } from "./templates";
 
@@ -19,6 +20,7 @@ export async function createApp({
   template,
   framework,
   engine,
+  ui,
   appPath,
   packageManager,
   eslint,
@@ -26,6 +28,7 @@ export async function createApp({
   template: TemplateType;
   framework: TemplateFramework;
   engine: TemplateEngine;
+  ui: TemplateUI;
   appPath: string;
   packageManager: PackageManager;
   eslint: boolean;
@@ -63,6 +66,7 @@ export async function createApp({
     template,
     framework,
     engine,
+    ui,
     packageManager,
     isOnline,
     eslint,
