@@ -1,5 +1,5 @@
 import express from "express";
-import { chat } from "../controllers/llm.controller";
+import { chat } from "../controllers/chat.controller";
 
 const llmRouter = express.Router();
 

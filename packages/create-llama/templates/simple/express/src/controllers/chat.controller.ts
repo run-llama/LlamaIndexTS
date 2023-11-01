@@ -4,16 +4,12 @@ import { createChatEngine } from "../../../../engines/context";
 
 export const chat = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {
-      message,
-      chatHistory,
-    }: {
-      message: string;
-      chatHistory: ChatMessage[];
-    } = req.body;
-    if (!message || !chatHistory) {
+    const { messages }: { messages: ChatMessage[] } = req.body;
+    const lastMessage = messages.pop();
+    if (!messages || !lastMessage || lastMessage.role !== "user") {
       return res.status(400).json({
-        error: "message, chatHistory are required in the request body",
+        error:
+          "messages are required in the request body and the last message must be from the user",
       });
     }
 
@@ -23,7 +19,7 @@ export const chat = async (req: Request, res: Response, next: NextFunction) => {
 
     const chatEngine = await createChatEngine(llm);
 
-    const response = await chatEngine.chat(message, chatHistory);
+    const response = await chatEngine.chat(lastMessage.content, messages);
     const result: ChatMessage = {
       role: "assistant",
       content: response.response,

@@ -72,7 +72,7 @@ export const installTemplate = async ({
     const routeFile = path.join(
       root,
       relativeEngineDestPath,
-      framework === "nextjs" ? "route.ts" : "llm.controller.ts",
+      framework === "nextjs" ? "route.ts" : "chat.controller.ts",
     );
     const routeFileContent = await fs.readFile(routeFile, "utf8");
     const newContent = routeFileContent.replace(

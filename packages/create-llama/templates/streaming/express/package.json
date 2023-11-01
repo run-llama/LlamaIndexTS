@@ -1,5 +1,5 @@
 {
-  "name": "llama-index-express",
+  "name": "llama-index-express-streaming",
   "version": "1.0.0",
   "main": "dist/index.js",
   "type": "module",
@@ -9,6 +9,7 @@
     "dev": "concurrently \"tsup index.ts --format esm --dts --watch\" \"nodemon -q dist/index.js\""
   },
   "dependencies": {
+    "ai": "^2",
     "express": "^4",
     "llamaindex": "0.0.31"
   },
