@@ -14,7 +14,7 @@ import type {
   TemplateType,
   TemplateUI,
 } from "./templates";
-import { installTemplate } from "./templates";
+import { installPythonTemplate, installTemplate } from "./templates";
 
 export async function createApp({
   template,
@@ -60,17 +60,21 @@ export async function createApp({
 
   process.chdir(root);
 
-  await installTemplate({
-    appName,
-    root,
-    template,
-    framework,
-    engine,
-    ui,
-    packageManager,
-    isOnline,
-    eslint,
-  });
+  if (framework === "fastapi") {
+    await installPythonTemplate({ appName, root, template, framework });
+  } else {
+    await installTemplate({
+      appName,
+      root,
+      template,
+      framework,
+      engine,
+      ui,
+      packageManager,
+      isOnline,
+      eslint,
+    });
+  }
 
   if (tryGitInit(root)) {
     console.log("Initialized a git repository.");

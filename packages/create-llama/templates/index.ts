@@ -7,7 +7,7 @@ import path from "path";
 import { bold, cyan } from "picocolors";
 import { version } from "../package.json";
 
-import { InstallTemplateArgs } from "./types";
+import { InstallPythonTemplateArgs, InstallTemplateArgs } from "./types";
 
 /**
  * Install a LlamaIndex internal template to a given `root` directory.
@@ -164,6 +164,38 @@ export const installTemplate = async ({
   console.log();
 
   await install(packageManager, isOnline);
+};
+
+export const installPythonTemplate = async ({
+  appName,
+  root,
+  template,
+  framework,
+}: InstallPythonTemplateArgs) => {
+  console.log("\nInitializing Python project with template:", template, "\n");
+  const templatePath = path.join(__dirname, template, framework);
+  await copy("**", root, {
+    parents: true,
+    cwd: templatePath,
+    rename(name) {
+      switch (name) {
+        case "gitignore": {
+          return `.${name}`;
+        }
+        // README.md is ignored by webpack-asset-relocator-loader used by ncc:
+        // https://github.com/vercel/webpack-asset-relocator-loader/blob/e9308683d47ff507253e37c9bcbb99474603192b/src/asset-relocator.js#L227
+        case "README-template.md": {
+          return "README.md";
+        }
+        default: {
+          return name;
+        }
+      }
+    },
+  });
+  console.log(
+    "\nPython project, dependencies won't be installed automatically.\n",
+  );
 };
 
 export * from "./types";

@@ -225,6 +225,7 @@ async function run(): Promise<void> {
           choices: [
             { title: "NextJS", value: "nextjs" },
             { title: "Express", value: "express" },
+            { title: "FastAPI (Python)", value: "fastapi" },
           ],
           initial: 0,
         },
@@ -299,6 +300,7 @@ async function run(): Promise<void> {
   }
 
   if (
+    program.framework !== "fastapi" &&
     !process.argv.includes("--eslint") &&
     !process.argv.includes("--no-eslint")
   ) {
