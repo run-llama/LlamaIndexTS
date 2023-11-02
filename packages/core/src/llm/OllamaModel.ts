@@ -1,6 +1,6 @@
 import { LLM } from './LLM';
 
-export class OllamaModel extends LLM {
+export class OllamaModel implements LLM {
   private model: any;
 
   constructor() {
