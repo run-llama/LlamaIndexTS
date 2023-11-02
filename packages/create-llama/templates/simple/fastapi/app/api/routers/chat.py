@@ -18,11 +18,15 @@ class _ChatData(BaseModel):
     messages: List[_Message]
 
 
+class _Result(BaseModel):
+    result: _Message
+
+
 @r.post("")
 async def chat(
     data: _ChatData,
     index: VectorStoreIndex = Depends(get_index),
-) -> _Message:
+) -> _Result:
     # check preconditions and get last message
     if len(data.messages) == 0:
         raise HTTPException(
@@ -47,4 +51,6 @@ async def chat(
     # query chat engine
     chat_engine = index.as_chat_engine()
     response = chat_engine.chat(lastMessage.content, messages)
-    return _Message(role=MessageRole.ASSISTANT, content=response.response)
+    return _Result(
+        result=_Message(role=MessageRole.ASSISTANT, content=response.response)
+    )
