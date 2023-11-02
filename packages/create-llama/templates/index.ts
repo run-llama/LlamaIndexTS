@@ -22,6 +22,7 @@ export const installTemplate = async ({
   engine,
   ui,
   eslint,
+  customApiPath,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -116,6 +117,20 @@ export const installTemplate = async ({
     ...packageJson.dependencies,
     llamaindex: version,
   };
+
+  if (engine === "external" && customApiPath) {
+    console.log(
+      "\nUsing external API with custom API path:",
+      customApiPath,
+      "\n",
+    );
+    const apiPath = path.join(root, "app", "api");
+    await fs.rmdir(apiPath, { recursive: true });
+    packageJson.scripts = {
+      ...packageJson.scripts,
+      dev: `NEXT_PUBLIC_CHAT_API=${customApiPath} next dev`,
+    };
+  }
 
   if (engine === "context" && relativeEngineDestPath) {
     // add generate script if using context engine

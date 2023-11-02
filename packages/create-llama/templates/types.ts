@@ -2,7 +2,7 @@ import { PackageManager } from "../helpers/get-pkg-manager";
 
 export type TemplateType = "simple" | "streaming";
 export type TemplateFramework = "nextjs" | "express" | "fastapi";
-export type TemplateEngine = "simple" | "context";
+export type TemplateEngine = "simple" | "context" | "external";
 export type TemplateUI = "html" | "shadcn";
 
 export interface InstallPythonTemplateArgs {
@@ -22,4 +22,5 @@ export interface InstallTemplateArgs {
   engine: TemplateEngine;
   ui: TemplateUI;
   eslint: boolean;
+  customApiPath: string;
 }

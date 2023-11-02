@@ -5,7 +5,7 @@ import { ChatInput, ChatMessages, Message } from "../../../../ui/html/chat";
 
 export default function ChatSection() {
   const { messages, input, isLoading, handleSubmit, handleInputChange } =
-    useChat();
+    useChat({ api: process.env.NEXT_PUBLIC_CHAT_API });
 
   return (
     <>

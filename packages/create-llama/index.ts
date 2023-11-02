@@ -11,6 +11,7 @@ import checkForUpdate from "update-check";
 import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
+import { isUrl } from "./helpers/is-url";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 
@@ -43,13 +44,6 @@ const program = new Commander.Command(packageJson.name)
     `
 
   Initialize with eslint config.
-`,
-  )
-  .option(
-    "--import-alias <alias-to-configure>",
-    `
-
-  Specify import alias to use (default "@/*").
 `,
   )
   .option(
@@ -182,9 +176,17 @@ async function run(): Promise<void> {
     engine: "simple",
     ui: "html",
     eslint: true,
+    customApiPath: "http://localhost:8000/api/chat",
   };
   const getPrefOrDefault = (field: string) =>
     preferences[field] ?? defaults[field];
+
+  const handlers = {
+    onCancel: () => {
+      console.error("Exiting.");
+      process.exit(1);
+    },
+  };
 
   if (!program.template) {
     if (ciInfo.isCI) {
@@ -201,12 +203,7 @@ async function run(): Promise<void> {
           ],
           initial: 1,
         },
-        {
-          onCancel: () => {
-            console.error("Exiting.");
-            process.exit(1);
-          },
-        },
+        handlers,
       );
       program.template = template;
       preferences.template = template;
@@ -229,12 +226,7 @@ async function run(): Promise<void> {
           ],
           initial: 0,
         },
-        {
-          onCancel: () => {
-            console.error("Exiting.");
-            process.exit(1);
-          },
-        },
+        handlers,
       );
       program.framework = framework;
       preferences.framework = framework;
@@ -257,12 +249,7 @@ async function run(): Promise<void> {
             ],
             initial: 0,
           },
-          {
-            onCancel: () => {
-              console.error("Exiting.");
-              process.exit(1);
-            },
-          },
+          handlers,
         );
         program.ui = ui;
         preferences.ui = ui;
@@ -275,6 +262,15 @@ async function run(): Promise<void> {
       if (ciInfo.isCI) {
         program.engine = getPrefOrDefault("engine");
       } else {
+        const external =
+          program.framework === "nextjs"
+            ? [
+                {
+                  title: "External chat engine (e.g. FastAPI)",
+                  value: "external",
+                },
+              ]
+            : [];
         const { engine } = await prompts(
           {
             type: "select",
@@ -283,18 +279,37 @@ async function run(): Promise<void> {
             choices: [
               { title: "SimpleChatEngine", value: "simple" },
               { title: "ContextChatEngine", value: "context" },
+              ...external,
             ],
             initial: 0,
           },
-          {
-            onCancel: () => {
-              console.error("Exiting.");
-              process.exit(1);
-            },
-          },
+          handlers,
         );
         program.engine = engine;
         preferences.engine = engine;
+      }
+    }
+    if (
+      program.framework === "nextjs" &&
+      program.engine === "external" &&
+      !program.customApiPath
+    ) {
+      if (ciInfo.isCI) {
+        program.customApiPath = getPrefOrDefault("customApiPath");
+      } else {
+        const { customApiPath } = await prompts(
+          {
+            type: "text",
+            name: "customApiPath",
+            message:
+              "URL path of your external chat engine (used for development)?",
+            validate: (url) => (isUrl(url) ? true : "Please enter a valid URL"),
+            initial: getPrefOrDefault("customApiPath"),
+          },
+          handlers,
+        );
+        program.customApiPath = customApiPath;
+        preferences.customApiPath = customApiPath;
       }
     }
   }
@@ -330,6 +345,7 @@ async function run(): Promise<void> {
     appPath: resolvedProjectPath,
     packageManager,
     eslint: program.eslint,
+    customApiPath: program.customApiPath,
   });
   conf.set("preferences", preferences);
 }

@@ -1,19 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from "path";
 import { green } from "picocolors";
-import type { PackageManager } from "./helpers/get-pkg-manager";
 import { tryGitInit } from "./helpers/git";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { getOnline } from "./helpers/is-online";
 import { isWriteable } from "./helpers/is-writeable";
 import { makeDir } from "./helpers/make-dir";
 
-import type {
-  TemplateEngine,
-  TemplateFramework,
-  TemplateType,
-  TemplateUI,
-} from "./templates";
+import type { InstallTemplateArgs } from "./templates";
 import { installPythonTemplate, installTemplate } from "./templates";
 
 export async function createApp({
@@ -24,14 +18,9 @@ export async function createApp({
   appPath,
   packageManager,
   eslint,
-}: {
-  template: TemplateType;
-  framework: TemplateFramework;
-  engine: TemplateEngine;
-  ui: TemplateUI;
+  customApiPath,
+}: Omit<InstallTemplateArgs, "appName" | "root" | "isOnline"> & {
   appPath: string;
-  packageManager: PackageManager;
-  eslint: boolean;
 }): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -73,6 +62,7 @@ export async function createApp({
       packageManager,
       isOnline,
       eslint,
+      customApiPath,
     });
   }
 

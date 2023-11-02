@@ -10,7 +10,7 @@ export default function ChatSection() {
   const [input, setInput] = useState("");
 
   const getAssistantMessage = async (messages: Message[]) => {
-    const response = await fetch("/api/chat", {
+    const response = await fetch(process.env.NEXT_PUBLIC_CHAT_API ?? "/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
