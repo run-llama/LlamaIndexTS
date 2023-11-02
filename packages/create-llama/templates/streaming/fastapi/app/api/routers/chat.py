@@ -1,57 +1,35 @@
-import logging
-import os
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from llama_index import (
-    StorageContext,
-    load_index_from_storage,
-    SimpleDirectoryReader,
-    VectorStoreIndex,
-)
-from llama_index.llms.base import MessageRole
-from pydantic import BaseModel
-from sse_starlette.sse import EventSourceResponse
 
-STORAGE_DIR = "./storage"  # directory to cache the generated index
-DATA_DIR = "./data"  # directory containing the documents to index
+from fastapi.responses import StreamingResponse
+
+from app.utils.json import json_to_model
+from app.utils.index import get_index
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from llama_index import VectorStoreIndex
+from llama_index.llms.base import MessageRole, ChatMessage
+from pydantic import BaseModel
 
 chat_router = r = APIRouter()
 
 
-class Message(BaseModel):
+class _Message(BaseModel):
     role: MessageRole
     content: str
 
 
 class _ChatData(BaseModel):
-    messages: List[Message]
+    messages: List[_Message]
 
 
-def get_index():
-    logger = logging.getLogger("uvicorn")
-    # check if storage already exists
-    if not os.path.exists(STORAGE_DIR):
-        logger.info("Creating new index")
-        # load the documents and create the index
-        documents = SimpleDirectoryReader(DATA_DIR).load_data()
-        index = VectorStoreIndex.from_documents(documents)
-        # store it for later
-        index.storage_context.persist(STORAGE_DIR)
-        logger.info(f"Finished creating new index. Stored in {STORAGE_DIR}")
-    else:
-        # load the existing index
-        logger.info(f"Loading index from {STORAGE_DIR}...")
-        storage_context = StorageContext.from_defaults(persist_dir=STORAGE_DIR)
-        index = load_index_from_storage(storage_context)
-        logger.info(f"Finished loading index from {STORAGE_DIR}")
-    return index
-
-
-@r.post("/")
+@r.post("")
 async def chat(
-    request: Request, data: _ChatData, index: VectorStoreIndex = Depends(get_index)
-) -> Message:
-    # check preconditions
+    request: Request,
+    # Note: To support clients sending a JSON object using content-type "text/plain",
+    # we need to use Depends(json_to_model(_ChatData)) here
+    data: _ChatData = Depends(json_to_model(_ChatData)),
+    index: VectorStoreIndex = Depends(get_index),
+):
+    # check preconditions and get last message
     if len(data.messages) == 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -63,10 +41,18 @@ async def chat(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Last message must be from user",
         )
+    # convert messages coming from the request to type ChatMessage
+    messages = [
+        ChatMessage(
+            role=m.role,
+            content=m.content,
+        )
+        for m in data.messages
+    ]
 
     # query chat engine
     chat_engine = index.as_chat_engine()
-    response = chat_engine.stream_chat(lastMessage.content, data.messages)
+    response = chat_engine.stream_chat(lastMessage.content, messages)
 
     # stream response
     async def event_generator():
@@ -76,4 +62,4 @@ async def chat(
                 break
             yield token
 
-    return EventSourceResponse(event_generator())
+    return StreamingResponse(event_generator(), media_type="text/plain")

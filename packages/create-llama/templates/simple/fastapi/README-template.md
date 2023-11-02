@@ -27,6 +27,12 @@ You can start editing the API by modifying `app/api/routers/chat.py`. The endpoi
 
 Open [http://localhost:8000/docs](http://localhost:8000/docs) with your browser to see the Swagger UI of the API.
 
+The API allows CORS for all origins to simplify development. You can change this behavior by setting the `ENVIRONMENT` environment variable to `prod`:
+
+```
+ENVIRONMENT=prod uvicorn main:app
+```
+
 ## Learn More
 
 To learn more about LlamaIndex, take a look at the following resources:

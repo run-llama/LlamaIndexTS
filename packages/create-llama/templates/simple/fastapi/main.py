@@ -1,3 +1,4 @@
+import logging
 import os
 import uvicorn
 from app.api.routers.chat import chat_router
@@ -6,11 +7,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origin = os.getenv("CORS_ORIGIN")
-if origin:
+environment = os.getenv("ENVIRONMENT", "dev")  # Default to 'development' if not set
+
+
+if environment == "dev":
+    logger = logging.getLogger("uvicorn")
+    logger.warning("Running in development mode - allowing CORS for all origins")
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[origin],
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
