@@ -30,7 +30,7 @@ export const installTemplate = async ({
    * Copy the template files to the target directory.
    */
   console.log("\nInitializing project with template:", template, "\n");
-  const templatePath = path.join(__dirname, template, framework);
+  const templatePath = path.join(__dirname, "types", template, framework);
   const copySource = ["**"];
   if (!eslint) copySource.push("!eslintrc.json");
 
@@ -59,9 +59,10 @@ export const installTemplate = async ({
    * Copy the selected chat engine files to the target directory and reference it.
    */
   let relativeEngineDestPath;
+  const compPath = path.join(__dirname, "components");
   if (framework === "express" || framework === "nextjs") {
     console.log("\nUsing chat engine:", engine, "\n");
-    const enginePath = path.join(__dirname, "engines", engine);
+    const enginePath = path.join(compPath, "engines", engine);
     relativeEngineDestPath =
       framework === "nextjs"
         ? path.join("app", "api", "chat")
@@ -88,7 +89,7 @@ export const installTemplate = async ({
    */
   if (framework === "nextjs") {
     console.log("\nUsing UI:", ui, "\n");
-    const uiPath = path.join(__dirname, "ui", ui);
+    const uiPath = path.join(compPath, "ui", ui);
     const componentsPath = path.join("app", "components");
     await copy("**", path.join(root, componentsPath, "ui"), {
       parents: true,
@@ -188,7 +189,7 @@ export const installPythonTemplate = async ({
   framework,
 }: InstallPythonTemplateArgs) => {
   console.log("\nInitializing Python project with template:", template, "\n");
-  const templatePath = path.join(__dirname, template, framework);
+  const templatePath = path.join(__dirname, "types", template, framework);
   await copy("**", root, {
     parents: true,
     cwd: templatePath,

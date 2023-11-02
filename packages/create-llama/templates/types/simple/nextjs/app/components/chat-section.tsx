@@ -2,7 +2,7 @@
 
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import { ChatInput, ChatMessages, Message } from "../../../../ui/html/chat";
+import { ChatInput, ChatMessages, Message } from "../../../../../ui/html/chat";
 
 export default function ChatSection() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -10,15 +10,18 @@ export default function ChatSection() {
   const [input, setInput] = useState("");
 
   const getAssistantMessage = async (messages: Message[]) => {
-    const response = await fetch(process.env.NEXT_PUBLIC_CHAT_API ?? "/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_CHAT_API ?? "/api/chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages,
+        }),
       },
-      body: JSON.stringify({
-        messages,
-      }),
-    });
+    );
     const data = await response.json();
     const assistantMessage = data.result as Message;
     return assistantMessage;
