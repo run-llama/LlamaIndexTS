@@ -11,7 +11,6 @@ import checkForUpdate from "update-check";
 import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
-import { isUrl } from "./helpers/is-url";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 
@@ -167,7 +166,7 @@ async function run(): Promise<void> {
     engine: "simple",
     ui: "html",
     eslint: true,
-    customApiPath: "http://localhost:8000/api/chat",
+    frontend: false,
   };
   const getPrefOrDefault = (field: string) =>
     preferences[field] ?? defaults[field];
@@ -224,7 +223,36 @@ async function run(): Promise<void> {
     }
   }
 
-  if (program.framework === "nextjs") {
+  if (program.framework === "express" || program.framework === "fastapi") {
+    // if a backend-only framework is selected, ask whether we should create a frontend
+    if (!program.frontend) {
+      if (ciInfo.isCI) {
+        program.frontend = getPrefOrDefault("frontend");
+      } else {
+        const styledNextJS = blue("NextJS");
+        const styledBackend = green(
+          program.framework === "express"
+            ? "Express "
+            : program.framework === "fastapi"
+            ? "FastAPI (Python) "
+            : "",
+        );
+        const { frontend } = await prompts({
+          onState: onPromptState,
+          type: "toggle",
+          name: "frontend",
+          message: `Would you like to generate a ${styledNextJS} frontend for your ${styledBackend}backend?`,
+          initial: getPrefOrDefault("frontend"),
+          active: "Yes",
+          inactive: "No",
+        });
+        program.frontend = Boolean(frontend);
+        preferences.frontend = Boolean(frontend);
+      }
+    }
+  }
+
+  if (program.framework === "nextjs" || program.frontend) {
     if (!program.ui) {
       if (ciInfo.isCI) {
         program.ui = getPrefOrDefault("ui");
@@ -253,15 +281,6 @@ async function run(): Promise<void> {
       if (ciInfo.isCI) {
         program.engine = getPrefOrDefault("engine");
       } else {
-        const external =
-          program.framework === "nextjs"
-            ? [
-                {
-                  title: "External chat engine (e.g. FastAPI)",
-                  value: "external",
-                },
-              ]
-            : [];
         const { engine } = await prompts(
           {
             type: "select",
@@ -270,7 +289,6 @@ async function run(): Promise<void> {
             choices: [
               { title: "SimpleChatEngine", value: "simple" },
               { title: "ContextChatEngine", value: "context" },
-              ...external,
             ],
             initial: 0,
           },
@@ -278,29 +296,6 @@ async function run(): Promise<void> {
         );
         program.engine = engine;
         preferences.engine = engine;
-      }
-    }
-    if (
-      program.framework === "nextjs" &&
-      program.engine === "external" &&
-      !program.customApiPath
-    ) {
-      if (ciInfo.isCI) {
-        program.customApiPath = getPrefOrDefault("customApiPath");
-      } else {
-        const { customApiPath } = await prompts(
-          {
-            type: "text",
-            name: "customApiPath",
-            message:
-              "URL path of your external chat engine (used for development)?",
-            validate: (url) => (isUrl(url) ? true : "Please enter a valid URL"),
-            initial: getPrefOrDefault("customApiPath"),
-          },
-          handlers,
-        );
-        program.customApiPath = customApiPath;
-        preferences.customApiPath = customApiPath;
       }
     }
   }
@@ -336,7 +331,7 @@ async function run(): Promise<void> {
     appPath: resolvedProjectPath,
     packageManager,
     eslint: program.eslint,
-    customApiPath: program.customApiPath,
+    frontend: program.frontend,
   });
   conf.set("preferences", preferences);
 }

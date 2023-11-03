@@ -7,12 +7,12 @@ import path from "path";
 import { bold, cyan } from "picocolors";
 import { version } from "../package.json";
 
-import { InstallPythonTemplateArgs, InstallTemplateArgs } from "./types";
+import { InstallTemplateArgs } from "./types";
 
 /**
  * Install a LlamaIndex internal template to a given `root` directory.
  */
-export const installTemplate = async ({
+const installTSTemplate = async ({
   appName,
   root,
   packageManager,
@@ -60,7 +60,7 @@ export const installTemplate = async ({
    */
   let relativeEngineDestPath;
   const compPath = path.join(__dirname, "components");
-  if (framework === "express" || framework === "nextjs") {
+  if (engine && (framework === "express" || framework === "nextjs")) {
     console.log("\nUsing chat engine:", engine, "\n");
     const enginePath = path.join(compPath, "engines", engine);
     relativeEngineDestPath =
@@ -101,7 +101,7 @@ export const installTemplate = async ({
     llamaindex: version,
   };
 
-  if (engine === "external" && customApiPath) {
+  if (framework === "nextjs" && customApiPath) {
     console.log(
       "\nUsing external API with custom API path:",
       customApiPath,
@@ -166,12 +166,11 @@ export const installTemplate = async ({
   await install(packageManager, isOnline);
 };
 
-export const installPythonTemplate = async ({
-  appName,
+const installPythonTemplate = async ({
   root,
   template,
   framework,
-}: InstallPythonTemplateArgs) => {
+}: Pick<InstallTemplateArgs, "root" | "framework" | "template">) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(__dirname, "types", template, framework);
   await copy("**", root, {
@@ -196,6 +195,15 @@ export const installPythonTemplate = async ({
   console.log(
     "\nPython project, dependencies won't be installed automatically.\n",
   );
+};
+
+export const installTemplate = async (props: InstallTemplateArgs) => {
+  process.chdir(props.root);
+  if (props.framework === "fastapi") {
+    await installPythonTemplate(props);
+  } else {
+    await installTSTemplate(props);
+  }
 };
 
 export * from "./types";
