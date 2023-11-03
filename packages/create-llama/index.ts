@@ -68,13 +68,6 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
-    "--use-bun",
-    `
-
-  Explicitly tell the CLI to bootstrap the application using Bun
-`,
-  )
-  .option(
     "--reset-preferences",
     `
 
@@ -90,8 +83,6 @@ const packageManager = !!program.useNpm
   ? "pnpm"
   : !!program.useYarn
   ? "yarn"
-  : !!program.useBun
-  ? "bun"
   : getPkgManager();
 
 async function run(): Promise<void> {
@@ -361,8 +352,6 @@ async function notifyUpdate(): Promise<void> {
           ? "yarn global add create-llama"
           : packageManager === "pnpm"
           ? "pnpm add -g create-llama"
-          : packageManager === "bun"
-          ? "bun add -g create-llama"
           : "npm i -g create-llama";
 
       console.log(

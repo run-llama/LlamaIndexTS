@@ -13,8 +13,6 @@ npx create-llama@latest
 yarn create llama-app
 # or
 pnpm create llama-app
-# or
-bunx create-llama
 ```
 
 You will be asked for the name of your project, and then which framework you want to use
@@ -49,10 +47,6 @@ Options:
   --use-yarn
 
     Explicitly tell the CLI to bootstrap the app using Yarn
-
-  --use-bun
-
-    Explicitly tell the CLI to bootstrap the app using Bun
 
 ```
 
