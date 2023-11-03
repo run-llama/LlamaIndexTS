@@ -256,9 +256,6 @@ importers:
       picocolors:
         specifier: 1.0.0
         version: 1.0.0
-      prettier-plugin-tailwindcss:
-        specifier: 0.3.0
-        version: 0.3.0(prettier-plugin-organize-imports@3.2.3)(prettier@3.0.3)
       prompts:
         specifier: 2.1.0
         version: 2.1.0

@@ -12,7 +12,6 @@
     "url": "https://github.com/run-llama/LlamaIndexTS",
     "directory": "packages/create-llama"
   },
-  "author": "LlamaIndex Team <info@runllama.ai>",
   "license": "MIT",
   "bin": {
     "create-llama": "./dist/index.js"
@@ -22,11 +21,9 @@
   ],
   "scripts": {
     "dev": "ncc build ./index.ts -w -o dist/",
-    "prerelease": "node ../../scripts/rm.mjs dist",
-    "release": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
-    "prepublishOnly": "cd ../../ && turbo run build",
-    "build": "pnpm release",
-    "lint-fix": "pnpm prettier -w --plugin prettier-plugin-tailwindcss 'templates/*-tw/{ts,js}/{app,pages}/**/*.{js,ts,tsx}'"
+    "build": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
+    "lint": "eslint . --ignore-pattern dist",
+    "prepublishOnly": "cd ../../ && turbo run build"
   },
   "devDependencies": {
     "@types/async-retry": "1.4.2",
@@ -46,7 +43,6 @@
     "fast-glob": "3.3.1",
     "got": "10.7.0",
     "picocolors": "1.0.0",
-    "prettier-plugin-tailwindcss": "0.3.0",
     "prompts": "2.1.0",
     "tar": "6.1.15",
     "update-check": "1.5.4",
