@@ -2,7 +2,7 @@
 
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import { ChatInput, ChatMessages, Message } from "../../../../../ui/html/chat";
+import { ChatInput, ChatMessages, Message } from "./ui/chat";
 
 export default function ChatSection() {
   const [messages, setMessages] = useState<Message[]>([]);

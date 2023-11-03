@@ -84,13 +84,6 @@ export const installTemplate = async ({
       parents: true,
       cwd: uiPath,
     });
-    const chatSectionFile = path.join(root, componentsPath, "chat-section.tsx");
-    const chatSectionFileContent = await fs.readFile(chatSectionFile, "utf8");
-    const newContent = chatSectionFileContent.replace(
-      /^import { ChatInput, ChatMessages, Message }.*$/m,
-      'import { ChatInput, ChatMessages, Message } from "./ui/chat"\n',
-    );
-    await fs.writeFile(chatSectionFile, newContent);
   }
 
   /**
@@ -116,7 +109,7 @@ export const installTemplate = async ({
     );
     // remove the default api folder
     const apiPath = path.join(root, "app", "api");
-    await fs.rmdir(apiPath, { recursive: true });
+    await fs.rm(apiPath, { recursive: true });
     // modify the dev script to use the custom api path
     packageJson.scripts = {
       ...packageJson.scripts,
