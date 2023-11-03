@@ -31,7 +31,8 @@
       "trim": "1.0.1",
       "@babel/traverse": "7.23.2"
     }
-  }
+  },
+  "type": "module"
 }
 
   },
