@@ -27,19 +27,22 @@ export class OllamaModel implements LLM {
   }
 
   async chat(messages: ChatMessage[], parentEvent?: Event, streaming?: boolean): Promise<ChatResponse> {
-    // Implement chat method
-    throw new Error("Method not implemented.");
-  }
-
-  async complete(prompt: string, parentEvent?: Event, streaming?: boolean): Promise<ChatResponse> {
-    // Implement complete method
-    throw new Error("Method not implemented.");
-  }
-
-  tokens(messages: ChatMessage[]): number {
-    // Implement tokens method
-    throw new Error("Method not implemented.");
-  }
+      // Implement chat method for Ollama model
+      // This is a placeholder and will need to be replaced with the actual chat logic
+      return Promise.resolve({messages: [], finish: false});
+    }
+  
+    async complete(prompt: string, parentEvent?: Event, streaming?: boolean): Promise<ChatResponse> {
+      // Implement complete method for Ollama model
+      // This is a placeholder and will need to be replaced with the actual complete logic
+      return Promise.resolve({messages: [], finish: false});
+    }
+  
+    tokens(messages: ChatMessage[]): number {
+      // Implement tokens method for Ollama model
+      // This is a placeholder and will need to be replaced with the actual tokens logic
+      return 0;
+    }
     // Load the Ollama model from the specified path
     const fs = require('fs');
     this.model = JSON.parse(fs.readFileSync(modelPath, 'utf8'));
