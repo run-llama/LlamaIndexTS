@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.0.32
+
+### Patch Changes
+
+- 90c0b83: Add HTMLReader (thanks @mtutty)
+- dfd22aa: Add observer/filter to the SimpleDirectoryReader (thanks @mtutty)
+
 ## 0.0.31
 
 ### Patch Changes
