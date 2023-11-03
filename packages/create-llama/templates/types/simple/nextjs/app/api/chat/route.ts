@@ -1,6 +1,6 @@
 import { ChatMessage, OpenAI } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
-import { createChatEngine } from "../../../../../../engines/context";
+import { createChatEngine } from "./engine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ChatMessage, OpenAI } from "llamaindex";
-import { createChatEngine } from "../../../../engines/context";
+import { createChatEngine } from "./engine";
 
 export const chat = async (req: Request, res: Response, next: NextFunction) => {
   try {

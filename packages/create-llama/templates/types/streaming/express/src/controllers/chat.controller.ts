@@ -1,7 +1,7 @@
 import { streamToResponse } from "ai";
 import { NextFunction, Request, Response } from "express";
 import { ChatMessage, OpenAI } from "llamaindex";
-import { createChatEngine } from "../../../../engines/context";
+import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
 
 export const chat = async (req: Request, res: Response, next: NextFunction) => {

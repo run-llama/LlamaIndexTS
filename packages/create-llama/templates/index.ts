@@ -71,17 +71,6 @@ export const installTemplate = async ({
       parents: true,
       cwd: enginePath,
     });
-    const routeFile = path.join(
-      root,
-      relativeEngineDestPath,
-      framework === "nextjs" ? "route.ts" : "chat.controller.ts",
-    );
-    const routeFileContent = await fs.readFile(routeFile, "utf8");
-    const newContent = routeFileContent.replace(
-      /^import { createChatEngine }.*$/m,
-      'import { createChatEngine } from "./engine"\n',
-    );
-    await fs.writeFile(routeFile, newContent);
   }
 
   /**
@@ -125,8 +114,10 @@ export const installTemplate = async ({
       customApiPath,
       "\n",
     );
+    // remove the default api folder
     const apiPath = path.join(root, "app", "api");
     await fs.rmdir(apiPath, { recursive: true });
+    // modify the dev script to use the custom api path
     packageJson.scripts = {
       ...packageJson.scripts,
       dev: `NEXT_PUBLIC_CHAT_API=${customApiPath} next dev`,
