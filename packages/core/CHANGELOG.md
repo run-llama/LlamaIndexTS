@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.34
+
+### Patch Changes
+
+- 2a27e21: Add support for gpt-3.5-turbo-1106
+
 ## 0.0.33
 
 ### Patch Changes
