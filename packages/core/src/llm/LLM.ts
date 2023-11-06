@@ -102,6 +102,8 @@ export interface LLM {
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
+  "gpt-4-1106-preview": { contextWindow: 128000 },
+  "gpt-4-vision-preview": { contextWindow: 8192 },
   "gpt-4-32k": { contextWindow: 32768 },
 };
 
@@ -649,7 +651,7 @@ export class Anthropic implements LLM {
 
     this.callbackManager = init?.callbackManager;
   }
-  
+
   tokens(messages: ChatMessage[]): number {
     throw new Error("Method not implemented.");
   }
