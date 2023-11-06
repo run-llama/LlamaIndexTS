@@ -1,36 +1,25 @@
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
 
 import { Button } from "../button";
 import ChatAvatar from "./chat-avatar";
-
-export interface Message {
-  id: string;
-  content: string;
-  role: string;
-}
+import { Message } from "./chat.interface";
+import Markdown from "./markdown";
+import { useCopyToClipboard } from "./use-copy-to-clipboard";
 
 export default function ChatMessage(chatMessage: Message) {
-  const [isCopied, setIsCopied] = useState(false);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(chatMessage.content);
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
-  };
-
+  const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
   return (
-    <div className="flex items-start gap-4 pt-5">
+    <div className="flex items-start gap-4 pr-5 pt-5">
       <ChatAvatar role={chatMessage.role} />
       <div className="group flex flex-1 justify-between gap-2">
-        <p className="break-words">{chatMessage.content}</p>
+        <div className="flex-1">
+          <Markdown content={chatMessage.content} />
+        </div>
         <Button
-          onClick={copyToClipboard}
+          onClick={() => copyToClipboard(chatMessage.content)}
           size="icon"
           variant="ghost"
-          className="hidden h-8 w-8 group-hover:flex"
+          className="h-8 w-8 opacity-0 group-hover:opacity-100"
         >
           {isCopied ? (
             <Check className="h-4 w-4" />

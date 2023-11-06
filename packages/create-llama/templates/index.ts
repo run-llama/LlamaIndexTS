@@ -137,6 +137,17 @@ const installTSTemplate = async ({
       "@radix-ui/react-slot": "^1",
       "class-variance-authority": "^0.7",
       "lucide-react": "^0.291",
+      remark: "^14.0.3",
+      "remark-code-import": "^1.2.0",
+      "remark-gfm": "^3.0.1",
+      "remark-math": "^5.1.1",
+      "react-markdown": "^8.0.7",
+      "react-syntax-highlighter": "^15.5.0",
+    };
+
+    packageJson.devDependencies = {
+      ...packageJson.devDependencies,
+      "@types/react-syntax-highlighter": "^15.5.6",
     };
   }
 

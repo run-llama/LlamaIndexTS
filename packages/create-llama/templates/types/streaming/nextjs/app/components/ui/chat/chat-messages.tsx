@@ -9,7 +9,17 @@ export interface Message {
   role: string;
 }
 
-export default function ChatMessages({ messages }: { messages: Message[] }) {
+export default function ChatMessages({
+  messages,
+  isLoading,
+  reload,
+  stop,
+}: {
+  messages: Message[];
+  isLoading?: boolean;
+  stop?: () => void;
+  reload?: () => void;
+}) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {

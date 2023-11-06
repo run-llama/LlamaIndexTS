@@ -1,20 +1,17 @@
-import * as React from "react";
-
 import { Button } from "../button";
 import { Input } from "../input";
+import { ChatHandler } from "./chat.interface";
 
-export interface ChatInputProps {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  input: string;
-  isLoading: boolean;
-}
-
-export default function ChatInput(props: ChatInputProps) {
+export default function ChatInput(
+  props: Pick<
+    ChatHandler,
+    "isLoading" | "handleSubmit" | "handleInputChange" | "input"
+  >,
+) {
   return (
     <form
       onSubmit={props.handleSubmit}
-      className="mx-auto flex w-full max-w-5xl items-start justify-between gap-4 rounded-xl bg-white p-4 shadow-xl"
+      className="flex w-full items-start justify-between gap-4 rounded-xl bg-white p-4 shadow-xl"
     >
       <Input
         autoFocus
@@ -24,7 +21,7 @@ export default function ChatInput(props: ChatInputProps) {
         value={props.input}
         onChange={props.handleInputChange}
       />
-      <Button disabled={props.isLoading} type="submit">
+      <Button type="submit" disabled={props.isLoading}>
         Send message
       </Button>
     </form>

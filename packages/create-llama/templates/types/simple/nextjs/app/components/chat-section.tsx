@@ -2,11 +2,11 @@
 
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import { ChatInput, ChatMessages, Message } from "./ui/chat";
+import { ChatInput, ChatInputProps, ChatMessages, Message } from "./ui/chat";
 
-export default function ChatSection() {
+function useChat(): ChatInputProps & { messages: Message[] } {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
 
   const getAssistantMessage = async (messages: Message[]) => {
@@ -30,8 +30,10 @@ export default function ChatSection() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input) return;
+
+    setIsLoading(true);
+
     try {
-      setLoading(true);
       const newMessages = [
         ...messages,
         { id: nanoid(), content: input, role: "user" },
@@ -40,9 +42,11 @@ export default function ChatSection() {
       setInput("");
       const assistantMessage = await getAssistantMessage(newMessages);
       setMessages([...newMessages, { ...assistantMessage, id: nanoid() }]);
-      setLoading(false);
     } catch (error: any) {
-      alert(JSON.stringify(error));
+      console.log(error);
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,15 +54,27 @@ export default function ChatSection() {
     setInput(e.target.value);
   };
 
+  return {
+    messages,
+    isLoading,
+    input,
+    handleSubmit,
+    handleInputChange,
+  };
+}
+
+export default function ChatSection() {
+  const { messages, isLoading, input, handleSubmit, handleInputChange } =
+    useChat();
   return (
-    <>
+    <div className="space-y-4 max-w-5xl w-full">
       <ChatMessages messages={messages} />
       <ChatInput
         handleSubmit={handleSubmit}
-        isLoading={loading}
+        isLoading={isLoading}
         input={input}
         handleInputChange={handleInputChange}
       />
-    </>
+    </div>
   );
 }
