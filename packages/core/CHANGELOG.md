@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.33
+
+### Patch Changes
+
+- 5e2e92c: gpt-4-1106-preview and gpt-4-vision-preview from OpenAI dev day
+
 ## 0.0.32
 
 ### Patch Changes
