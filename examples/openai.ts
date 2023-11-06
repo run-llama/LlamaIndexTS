@@ -1,7 +1,7 @@
 import { OpenAI } from "llamaindex";
 
 (async () => {
-  const llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.0 });
+  const llm = new OpenAI({ model: "gpt-3.5-turbo-1106", temperature: 0.1 });
 
   // complete api
   const response1 = await llm.complete("How are you?");

@@ -9,7 +9,7 @@ import { OpenAI } from "llamaindex";
 
   // chat api
   const response2 = await llm.chat([
-    { content: "Tell me a joke!", role: "user" },
+    { content: "Tell me a joke.", role: "user" },
   ]);
   console.log(response2.message.content);
 })();
