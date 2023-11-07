@@ -64,12 +64,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     let indexStruct: IndexDict | undefined;
 
     if (options.indexStruct && indexStructs.length > 0) {
-      throw new Error(
-        "Cannot initialize index with both indexStruct and indexStore",
-      );
-    }
-
-    if (options.indexStruct) {
+      indexStruct = indexStructs[0];
+    } else if (options.indexStruct) {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
       indexStruct = indexStructs[0];
