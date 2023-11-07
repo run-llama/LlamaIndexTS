@@ -33,6 +33,7 @@ async function main() {
   });
   const loadedIndex = await VectorStoreIndex.init({
     storageContext: secondStorageContext,
+    indexId: "your_index_id", // replace "your_index_id" with the actual index id
   });
   const loadedQueryEngine = loadedIndex.asQueryEngine();
   const loadedResponse = await loadedQueryEngine.query(
