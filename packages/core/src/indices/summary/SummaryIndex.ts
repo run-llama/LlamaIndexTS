@@ -61,12 +61,8 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     let indexStruct: IndexList | null;
 
     if (options.indexStruct && indexStructs.length > 0) {
-      throw new Error(
-        "Cannot initialize index with both indexStruct and indexStore",
-      );
-    }
-
-    if (options.indexStruct) {
+      indexStruct = indexStructs[0];
+    } else if (options.indexStruct) {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
       indexStruct = indexStructs[0];
@@ -244,22 +240,25 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     for (const node of nodes) {
       const refNode = node.sourceNode;
       if (_.isNil(refNode)) {
-        continue;
-      }
-
-      const refDocInfo = await this.docStore.getRefDocInfo(refNode.nodeId);
-
-      if (_.isNil(refDocInfo)) {
-        continue;
-      }
-
-      refDocInfoMap[refNode.nodeId] = refDocInfo;
+    else if (options.indexStruct) {
+      indexStruct = options.indexStruct;
+    } else if (indexStructs.length == 1) {
+      indexStruct = indexStructs[0];
+    } else if (indexStructs.length > 1 && options.indexId) {
+      indexStruct = (await indexStore.getIndexStruct(
+        options.indexId,
+      )) as IndexList;
+    } else {
+      indexStruct = null;
     }
 
-    return refDocInfoMap;
-  }
-}
+    // check indexStruct type
+    if (indexStruct && indexStruct.type !== IndexStructType.LIST) {
+      throw new Error(
+        "Attempting to initialize SummaryIndex with non-list indexStruct",
+      );
+    }
 
-// Legacy
+    if (indexStruct) {
 export type ListIndex = SummaryIndex;
 export type ListRetrieverMode = SummaryRetrieverMode;
