@@ -31,8 +31,9 @@ async function main() {
   const secondStorageContext = await storageContextFromDefaults({
     persistDir: "./storage",
   });
+  const { indexStore } = secondStorageContext;
   const loadedIndex = await VectorStoreIndex.init({
-    storageContext: secondStorageContext,
+    indexStore,
   });
   const loadedQueryEngine = loadedIndex.asQueryEngine();
   const loadedResponse = await loadedQueryEngine.query(
