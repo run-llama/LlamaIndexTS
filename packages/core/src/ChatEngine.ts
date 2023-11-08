@@ -1,8 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Event } from "./callbacks/CallbackManager";
 import { ChatHistory } from "./ChatHistory";
-import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
-import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   CondenseQuestionPrompt,
@@ -15,6 +12,9 @@ import { BaseQueryEngine } from "./QueryEngine";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
+import { Event } from "./callbacks/CallbackManager";
+import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
+import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
@@ -347,7 +347,7 @@ export class HistoryChatEngine {
   async chat<
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
-  >(message: string, chatHistory: ChatHistory, streaming?: T): Promise<R> {
+  >(message: any, chatHistory: ChatHistory, streaming?: T): Promise<R> {
     //Streaming option
     if (streaming) {
       return this.streamChat(message, chatHistory) as R;
@@ -367,7 +367,7 @@ export class HistoryChatEngine {
   }
 
   protected async *streamChat(
-    message: string,
+    message: any,
     chatHistory: ChatHistory,
   ): AsyncGenerator<string, void, unknown> {
     const context = await this.contextGenerator?.generate(message);
