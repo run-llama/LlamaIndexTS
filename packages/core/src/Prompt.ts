@@ -357,6 +357,21 @@ ${context}
 
 export type ContextSystemPrompt = typeof defaultContextSystemPrompt;
 
+export const defaultMultiModalPrompt = ({
+  originalMessage = "",
+  response = "",
+}) => {
+  return `Answer to the given original message. Base your answer on the given previous response and add details from the given context. The new answer should be twice as long as the previous response.
+
+<Previous Reponse>
+${response}
+<Original Message>
+${originalMessage}
+`;
+};
+
+export type MultiModalPrompt = typeof defaultMultiModalPrompt;
+
 export const defaultKeywordExtractPrompt = ({
   context = "",
   maxKeywords = 10,

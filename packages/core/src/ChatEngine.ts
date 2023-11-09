@@ -1,9 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
+import { defaultMultiModalPrompt } from "../dist";
 import { ChatHistory } from "./ChatHistory";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   CondenseQuestionPrompt,
   ContextSystemPrompt,
+  MultiModalPrompt,
   defaultCondenseQuestionPrompt,
   defaultContextSystemPrompt,
   messagesToHistoryStr,
@@ -328,6 +330,17 @@ export class ContextChatEngine implements ChatEngine {
   }
 }
 
+export interface MessageContentDetail {
+  type: "text" | "image_url";
+  text: string;
+  image_url: { url: string };
+}
+
+/**
+ * Extended type for the content of a message that allows for multi-modal messages.
+ */
+export type MessageContent = string | MessageContentDetail[];
+
 /**
  * HistoryChatEngine is a ChatEngine that uses a `ChatHistory` object
  * to keeps track of chat's message history.
@@ -338,47 +351,45 @@ export class ContextChatEngine implements ChatEngine {
 export class HistoryChatEngine {
   llm: LLM;
   contextGenerator?: ContextGenerator;
+  multiModalPrompt: MultiModalPrompt;
 
   constructor(init?: Partial<HistoryChatEngine>) {
     this.llm = init?.llm ?? new OpenAI();
     this.contextGenerator = init?.contextGenerator;
+    this.multiModalPrompt = init?.multiModalPrompt ?? defaultMultiModalPrompt;
   }
 
   async chat<
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
-  >(message: any, chatHistory: ChatHistory, streaming?: T): Promise<R> {
+  >(
+    message: MessageContent,
+    chatHistory: ChatHistory,
+    streaming?: T,
+  ): Promise<R> {
     //Streaming option
     if (streaming) {
       return this.streamChat(message, chatHistory) as R;
     }
-    const context = await this.contextGenerator?.generate(message);
-    chatHistory.addMessage({
-      content: message,
-      role: "user",
-    });
-    const response = await this.llm.chat(
-      await chatHistory.requestMessages(
-        context ? [context.message] : undefined,
-      ),
+    const requestMessages = await this.prepareRequestMessages(
+      message,
+      chatHistory,
     );
+    const response = await this.llm.chat(requestMessages);
     chatHistory.addMessage(response.message);
     return new Response(response.message.content) as R;
   }
 
   protected async *streamChat(
-    message: any,
+    message: MessageContent,
     chatHistory: ChatHistory,
   ): AsyncGenerator<string, void, unknown> {
-    const context = await this.contextGenerator?.generate(message);
-    chatHistory.addMessage({
-      content: message,
-      role: "user",
-    });
+    const requestMessages = await this.prepareRequestMessages(
+      message,
+      chatHistory,
+    );
     const response_stream = await this.llm.chat(
-      await chatHistory.requestMessages(
-        context ? [context.message] : undefined,
-      ),
+      requestMessages,
       undefined,
       true,
     );
@@ -393,5 +404,65 @@ export class HistoryChatEngine {
       role: "assistant",
     });
     return;
+  }
+
+  private async prepareRequestMessages(
+    message: MessageContent,
+    chatHistory: ChatHistory,
+  ) {
+    chatHistory.addMessage({
+      content: message,
+      role: "user",
+    });
+    let requestMessages;
+    if (typeof message === "string" || !this.contextGenerator) {
+      // it's a normal text message, or a multi-modal message without context generator
+      requestMessages = await this.prepareNormalRequest(message, chatHistory);
+    } else {
+      // it's a multi-modal message with context generator
+      requestMessages = await this.prepareMultiModalRequestWithContext(
+        message,
+        chatHistory,
+      );
+    }
+    return requestMessages;
+  }
+
+  private async prepareNormalRequest(
+    message: MessageContent,
+    chatHistory: ChatHistory,
+  ) {
+    const context = await this.contextGenerator?.generate(message as string);
+
+    const requestMessages = await chatHistory.requestMessages(
+      context ? [context.message] : undefined,
+    );
+    return requestMessages;
+  }
+
+  private async prepareMultiModalRequestWithContext(
+    message: MessageContentDetail[],
+    chatHistory: ChatHistory,
+  ) {
+    // it's a multi-modal message with context generator, call the model first and generate a context based on the result
+    const mmRequestMessages = await chatHistory.requestMessages();
+    const response = (await this.llm.chat(mmRequestMessages)).message.content;
+    const context = await this.contextGenerator!.generate(response);
+    // retrieve the text from the original multi-modal message (concatenate texts if there are multiple)
+    const originalMessage = message
+      .filter((c) => c.type === "text")
+      .map((c) => c.text)
+      .join("\n\n");
+    // now prepare to call the LLM with the context, and a prompt that uses a) the response to the multi-modal message and b) the text parts of the original multi-modal message
+    const newMessage: ChatMessage = {
+      role: "user",
+      content: this.multiModalPrompt({ response, originalMessage }),
+    };
+    const requestMessages = [
+      context.message,
+      ...mmRequestMessages.slice(0, -1), // skip multi-modal message as we already have its text in `newMessage`
+      newMessage,
+    ];
+    return requestMessages;
   }
 }
