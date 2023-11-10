@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { Express, Request, Response } from "express";
 import chatRouter from "./src/routes/chat.route";
 

@@ -9,6 +9,7 @@
     "dev": "concurrently \"tsup index.ts --format esm --dts --watch\" \"nodemon -q dist/index.js\""
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "express": "^4",
     "llamaindex": "0.0.31"
   },

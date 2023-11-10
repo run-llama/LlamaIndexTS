@@ -7,7 +7,29 @@ import path from "path";
 import { bold, cyan } from "picocolors";
 import { version } from "../package.json";
 
-import { InstallTemplateArgs } from "./types";
+import { InstallTemplateArgs, TemplateFramework } from "./types";
+
+const envFileNameMap: Record<TemplateFramework, string> = {
+  nextjs: ".env.local",
+  express: ".env",
+  fastapi: ".env",
+};
+
+const createEnvLocalFile = async (
+  root: string,
+  framework: TemplateFramework,
+  openAIKey?: string,
+) => {
+  if (openAIKey) {
+    const envFileName = envFileNameMap[framework];
+    if (!envFileName) return;
+    await fs.writeFile(
+      path.join(root, envFileName),
+      `OPENAI_API_KEY=${openAIKey}\n`,
+    );
+    console.log(`Created '${envFileName}' file containing OPENAI_API_KEY`);
+  }
+};
 
 /**
  * Install a LlamaIndex internal template to a given `root` directory.
@@ -23,6 +45,7 @@ const installTSTemplate = async ({
   ui,
   eslint,
   customApiPath,
+  openAIKey,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -85,6 +108,8 @@ const installTSTemplate = async ({
       cwd: uiPath,
     });
   }
+
+  await createEnvLocalFile(root, framework, openAIKey);
 
   /**
    * Update the package.json scripts.
@@ -181,7 +206,11 @@ const installPythonTemplate = async ({
   root,
   template,
   framework,
-}: Pick<InstallTemplateArgs, "root" | "framework" | "template">) => {
+  openAIKey,
+}: Pick<
+  InstallTemplateArgs,
+  "root" | "framework" | "template" | "openAIKey"
+>) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(__dirname, "types", template, framework);
   await copy("**", root, {
@@ -203,6 +232,9 @@ const installPythonTemplate = async ({
       }
     },
   });
+
+  await createEnvLocalFile(root, framework, openAIKey);
+
   console.log(
     "\nPython project, dependencies won't be installed automatically.\n",
   );

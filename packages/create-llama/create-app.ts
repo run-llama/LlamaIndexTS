@@ -21,6 +21,7 @@ export async function createApp({
   packageManager,
   eslint,
   frontend,
+  openAIKey,
 }: Omit<
   InstallTemplateArgs,
   "appName" | "root" | "isOnline" | "customApiPath"
@@ -63,6 +64,7 @@ export async function createApp({
     packageManager,
     isOnline,
     eslint,
+    openAIKey,
   };
 
   if (frontend) {

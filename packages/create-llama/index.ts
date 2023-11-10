@@ -167,6 +167,7 @@ async function run(): Promise<void> {
     ui: "html",
     eslint: true,
     frontend: false,
+    openAIKey: "",
   };
   const getPrefOrDefault = (field: string) =>
     preferences[field] ?? defaults[field];
@@ -300,6 +301,19 @@ async function run(): Promise<void> {
     }
   }
 
+  if (!program.openAIKey) {
+    const { key } = await prompts(
+      {
+        type: "text",
+        name: "key",
+        message: "Please provide your OpenAI API key (leave blank to skip):",
+      },
+      handlers,
+    );
+    program.openAIKey = key;
+    preferences.openAIKey = key;
+  }
+
   if (
     program.framework !== "fastapi" &&
     !process.argv.includes("--eslint") &&
@@ -332,6 +346,7 @@ async function run(): Promise<void> {
     packageManager,
     eslint: program.eslint,
     frontend: program.frontend,
+    openAIKey: program.openAIKey,
   });
   conf.set("preferences", preferences);
 }
