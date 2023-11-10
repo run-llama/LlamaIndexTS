@@ -99,11 +99,14 @@ const installTSTemplate = async ({
   /**
    * Copy the selected UI files to the target directory and reference it.
    */
-  if (framework === "nextjs") {
+  if (framework === "nextjs" && ui !== "html") {
     console.log("\nUsing UI:", ui, "\n");
     const uiPath = path.join(compPath, "ui", ui);
-    const componentsPath = path.join("app", "components");
-    await copy("**", path.join(root, componentsPath, "ui"), {
+    const destUiPath = path.join(root, "app", "components", "ui");
+    // remove the default ui folder
+    await fs.rm(destUiPath, { recursive: true });
+    // copy the selected ui folder
+    await copy("**", destUiPath, {
       parents: true,
       cwd: uiPath,
     });
