@@ -3,7 +3,7 @@ import express, { Express, Request, Response } from "express";
 import chatRouter from "./src/routes/chat.route";
 
 const app: Express = express();
-const port = 3000;
+const port = 8000;
 
 app.use(express.json());
 

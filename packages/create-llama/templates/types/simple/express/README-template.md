@@ -17,7 +17,7 @@ npm run dev
 Then call the express API endpoint `/api/chat` to see the result:
 
 ```
-curl --location 'localhost:3000/api/chat' \
+curl --location 'localhost:8000/api/chat' \
 --header 'Content-Type: application/json' \
 --data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
 ```
