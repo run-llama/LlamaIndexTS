@@ -24,7 +24,10 @@ export class OpenAISession {
     if (options.azure) {
       this.openai = new AzureOpenAI(options);
     } else {
-      this.openai = new OpenAI(options);
+      this.openai = new OpenAI({
+        ...options,
+        // defaultHeaders: { "OpenAI-Beta": "assistants=v1" },
+      });
     }
   }
 }
