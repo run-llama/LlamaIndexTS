@@ -8,12 +8,13 @@ import {
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
 
+import { ChatCompletionMessageParam } from "openai/resources";
 import { LLMOptions } from "portkey-ai";
 import { globalsHelper, Tokenizers } from "../GlobalsHelper";
 import {
-  AnthropicSession,
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
+  AnthropicSession,
   getAnthropicSession,
 } from "./anthropic";
 import {
@@ -37,7 +38,7 @@ export type MessageType =
   | "memory";
 
 export interface ChatMessage {
-  content: string;
+  content: any;
   role: MessageType;
 }
 
@@ -254,10 +255,13 @@ export class OpenAI implements LLM {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
-      messages: messages.map((message) => ({
-        role: this.mapMessageType(message.role),
-        content: message.content,
-      })),
+      messages: messages.map(
+        (message) =>
+          ({
+            role: this.mapMessageType(message.role),
+            content: message.content,
+          }) as ChatCompletionMessageParam,
+      ),
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
@@ -302,10 +306,13 @@ export class OpenAI implements LLM {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
-      messages: messages.map((message) => ({
-        role: this.mapMessageType(message.role),
-        content: message.content,
-      })),
+      messages: messages.map(
+        (message) =>
+          ({
+            role: this.mapMessageType(message.role),
+            content: message.content,
+          }) as ChatCompletionMessageParam,
+      ),
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
