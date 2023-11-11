@@ -11,7 +11,7 @@
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.2.0",
     "notion-md-crawler": "^0.0.2",
-    "openai": "^4.15.4",
+    "openai": "^4.16.1",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
     "pg": "^8.11.3",

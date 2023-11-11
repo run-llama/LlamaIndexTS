@@ -30,7 +30,7 @@ export interface DefaultStreamToken {
     index: number;
     delta: {
       content?: string | null;
-      role?: "user" | "assistant" | "system" | "function";
+      role?: "user" | "assistant" | "system" | "function" | "tool";
     };
     finish_reason: string | null;
   }[];

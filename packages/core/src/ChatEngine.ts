@@ -1,8 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Event } from "./callbacks/CallbackManager";
 import { ChatHistory } from "./ChatHistory";
-import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
-import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   CondenseQuestionPrompt,
@@ -15,6 +12,9 @@ import { BaseQueryEngine } from "./QueryEngine";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
+import { Event } from "./callbacks/CallbackManager";
+import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
+import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
 
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
@@ -328,6 +328,17 @@ export class ContextChatEngine implements ChatEngine {
   }
 }
 
+export interface MessageContentDetail {
+  type: "text" | "image_url";
+  text: string;
+  image_url: { url: string };
+}
+
+/**
+ * Extended type for the content of a message that allows for multi-modal messages.
+ */
+export type MessageContent = string | MessageContentDetail[];
+
 /**
  * HistoryChatEngine is a ChatEngine that uses a `ChatHistory` object
  * to keeps track of chat's message history.
@@ -347,38 +358,34 @@ export class HistoryChatEngine {
   async chat<
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
-  >(message: string, chatHistory: ChatHistory, streaming?: T): Promise<R> {
+  >(
+    message: MessageContent,
+    chatHistory: ChatHistory,
+    streaming?: T,
+  ): Promise<R> {
     //Streaming option
     if (streaming) {
       return this.streamChat(message, chatHistory) as R;
     }
-    const context = await this.contextGenerator?.generate(message);
-    chatHistory.addMessage({
-      content: message,
-      role: "user",
-    });
-    const response = await this.llm.chat(
-      await chatHistory.requestMessages(
-        context ? [context.message] : undefined,
-      ),
+    const requestMessages = await this.prepareRequestMessages(
+      message,
+      chatHistory,
     );
+    const response = await this.llm.chat(requestMessages);
     chatHistory.addMessage(response.message);
     return new Response(response.message.content) as R;
   }
 
   protected async *streamChat(
-    message: string,
+    message: MessageContent,
     chatHistory: ChatHistory,
   ): AsyncGenerator<string, void, unknown> {
-    const context = await this.contextGenerator?.generate(message);
-    chatHistory.addMessage({
-      content: message,
-      role: "user",
-    });
+    const requestMessages = await this.prepareRequestMessages(
+      message,
+      chatHistory,
+    );
     const response_stream = await this.llm.chat(
-      await chatHistory.requestMessages(
-        context ? [context.message] : undefined,
-      ),
+      requestMessages,
       undefined,
       true,
     );
@@ -393,5 +400,32 @@ export class HistoryChatEngine {
       role: "assistant",
     });
     return;
+  }
+
+  private async prepareRequestMessages(
+    message: MessageContent,
+    chatHistory: ChatHistory,
+  ) {
+    chatHistory.addMessage({
+      content: message,
+      role: "user",
+    });
+    let requestMessages;
+    let context;
+    if (this.contextGenerator) {
+      if (Array.isArray(message)) {
+        // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
+        // so we can pass them to the context generator
+        message = (message as MessageContentDetail[])
+          .filter((c) => c.type === "text")
+          .map((c) => c.text)
+          .join("\n\n");
+      }
+      context = await this.contextGenerator.generate(message);
+    }
+    requestMessages = await chatHistory.requestMessages(
+      context ? [context.message] : undefined,
+    );
+    return requestMessages;
   }
 }
