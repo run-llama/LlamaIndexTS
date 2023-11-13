@@ -267,7 +267,9 @@ const installPythonTemplate = async ({
   );
 };
 
-export const installTemplate = async (props: InstallTemplateArgs) => {
+export const installTemplate = async (
+  props: InstallTemplateArgs & { backend: boolean },
+) => {
   process.chdir(props.root);
   if (props.framework === "fastapi") {
     await installPythonTemplate(props);
@@ -275,16 +277,20 @@ export const installTemplate = async (props: InstallTemplateArgs) => {
     await installTSTemplate(props);
   }
 
-  // Copy the environment file to the target directory.
-  await createEnvLocalFile(props.root, props.framework, props.openAIKey);
+  if (props.backend) {
+    // This is a backend, so we need to copy the test data and create the env file.
 
-  // Copy test pdf file
-  await copyTestData(
-    props.root,
-    props.framework,
-    props.packageManager,
-    props.engine,
-  );
+    // Copy the environment file to the target directory.
+    await createEnvLocalFile(props.root, props.framework, props.openAIKey);
+
+    // Copy test pdf file
+    await copyTestData(
+      props.root,
+      props.framework,
+      props.packageManager,
+      props.engine,
+    );
+  }
 };
 
 export * from "./types";

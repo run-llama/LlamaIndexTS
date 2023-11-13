@@ -71,7 +71,7 @@ export async function createApp({
     // install backend
     const backendRoot = path.join(root, "backend");
     await makeDir(backendRoot);
-    await installTemplate({ ...args, root: backendRoot });
+    await installTemplate({ ...args, root: backendRoot, backend: true });
     // install frontend
     const frontendRoot = path.join(root, "frontend");
     await makeDir(frontendRoot);
@@ -80,6 +80,7 @@ export async function createApp({
       root: frontendRoot,
       framework: "nextjs",
       customApiPath: "http://localhost:8000/api/chat",
+      backend: false,
     });
     // copy readme for fullstack
     await fs.promises.copyFile(
@@ -87,7 +88,7 @@ export async function createApp({
       path.join(root, "README.md"),
     );
   } else {
-    await installTemplate(args);
+    await installTemplate({ ...args, backend: true });
   }
 
   process.chdir(root);
