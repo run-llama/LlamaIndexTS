@@ -1,5 +1,5 @@
 import { copy } from "../helpers/copy";
-import { install } from "../helpers/install";
+import { callPackageManager } from "../helpers/install";
 
 import fs from "fs/promises";
 import os from "os";
@@ -7,7 +7,12 @@ import path from "path";
 import { bold, cyan } from "picocolors";
 import { version } from "../package.json";
 
-import { InstallTemplateArgs, TemplateFramework } from "./types";
+import { PackageManager } from "../helpers/get-pkg-manager";
+import {
+  InstallTemplateArgs,
+  TemplateEngine,
+  TemplateFramework,
+} from "./types";
 
 const envFileNameMap: Record<TemplateFramework, string> = {
   nextjs: ".env.local",
@@ -31,6 +36,48 @@ const createEnvLocalFile = async (
   }
 };
 
+const copyTestData = async (
+  root: string,
+  framework: TemplateFramework,
+  packageManager?: PackageManager,
+  engine?: TemplateEngine,
+) => {
+  if (engine === "context" || framework === "fastapi") {
+    const srcPath = path.join(__dirname, "components", "data");
+    const destPath = path.join(root, "data");
+    console.log(`\nCopying test data to ${cyan(destPath)}\n`);
+    await copy("**", destPath, {
+      parents: true,
+      cwd: srcPath,
+    });
+  }
+
+  if (packageManager && engine === "context") {
+    console.log(
+      `\nRunning ${cyan("npm run generate")} to generate the context data.\n`,
+    );
+    await callPackageManager(packageManager, true, ["run", "generate"]);
+    console.log();
+  }
+};
+
+const rename = (name: string) => {
+  switch (name) {
+    case "gitignore":
+    case "eslintrc.json": {
+      return `.${name}`;
+    }
+    // README.md is ignored by webpack-asset-relocator-loader used by ncc:
+    // https://github.com/vercel/webpack-asset-relocator-loader/blob/e9308683d47ff507253e37c9bcbb99474603192b/src/asset-relocator.js#L227
+    case "README-template.md": {
+      return "README.md";
+    }
+    default: {
+      return name;
+    }
+  }
+};
+
 /**
  * Install a LlamaIndex internal template to a given `root` directory.
  */
@@ -45,7 +92,6 @@ const installTSTemplate = async ({
   ui,
   eslint,
   customApiPath,
-  openAIKey,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -56,23 +102,6 @@ const installTSTemplate = async ({
   const templatePath = path.join(__dirname, "types", template, framework);
   const copySource = ["**"];
   if (!eslint) copySource.push("!eslintrc.json");
-
-  const rename = (name: string) => {
-    switch (name) {
-      case "gitignore":
-      case "eslintrc.json": {
-        return `.${name}`;
-      }
-      // README.md is ignored by webpack-asset-relocator-loader used by ncc:
-      // https://github.com/vercel/webpack-asset-relocator-loader/blob/e9308683d47ff507253e37c9bcbb99474603192b/src/asset-relocator.js#L227
-      case "README-template.md": {
-        return "README.md";
-      }
-      default: {
-        return name;
-      }
-    }
-  };
 
   await copy(copySource, root, {
     parents: true,
@@ -114,8 +143,6 @@ const installTSTemplate = async ({
       rename,
     });
   }
-
-  await createEnvLocalFile(root, framework, openAIKey);
 
   /**
    * Update the package.json scripts.
@@ -205,18 +232,14 @@ const installTSTemplate = async ({
 
   console.log();
 
-  await install(packageManager, isOnline);
+  await callPackageManager(packageManager, isOnline);
 };
 
 const installPythonTemplate = async ({
   root,
   template,
   framework,
-  openAIKey,
-}: Pick<
-  InstallTemplateArgs,
-  "root" | "framework" | "template" | "openAIKey"
->) => {
+}: Pick<InstallTemplateArgs, "root" | "framework" | "template">) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(__dirname, "types", template, framework);
   await copy("**", root, {
@@ -239,8 +262,6 @@ const installPythonTemplate = async ({
     },
   });
 
-  await createEnvLocalFile(root, framework, openAIKey);
-
   console.log(
     "\nPython project, dependencies won't be installed automatically.\n",
   );
@@ -253,6 +274,17 @@ export const installTemplate = async (props: InstallTemplateArgs) => {
   } else {
     await installTSTemplate(props);
   }
+
+  // Copy the environment file to the target directory.
+  await createEnvLocalFile(props.root, props.framework, props.openAIKey);
+
+  // Copy test pdf file
+  await copyTestData(
+    props.root,
+    props.framework,
+    props.packageManager,
+    props.engine,
+  );
 };
 
 export * from "./types";

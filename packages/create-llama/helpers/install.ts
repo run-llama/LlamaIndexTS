@@ -8,13 +8,13 @@ import type { PackageManager } from "./get-pkg-manager";
  *
  * @returns A Promise that resolves once the installation is finished.
  */
-export async function install(
+export async function callPackageManager(
   /** Indicate which package manager to use. */
   packageManager: PackageManager,
   /** Indicate whether there is an active Internet connection.*/
   isOnline: boolean,
+  args: string[] = ["install"],
 ): Promise<void> {
-  let args: string[] = ["install"];
   if (!isOnline) {
     console.log(
       yellow("You appear to be offline.\nFalling back to the local cache."),
