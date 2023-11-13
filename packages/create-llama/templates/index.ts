@@ -57,25 +57,27 @@ const installTSTemplate = async ({
   const copySource = ["**"];
   if (!eslint) copySource.push("!eslintrc.json");
 
+  const rename = (name: string) => {
+    switch (name) {
+      case "gitignore":
+      case "eslintrc.json": {
+        return `.${name}`;
+      }
+      // README.md is ignored by webpack-asset-relocator-loader used by ncc:
+      // https://github.com/vercel/webpack-asset-relocator-loader/blob/e9308683d47ff507253e37c9bcbb99474603192b/src/asset-relocator.js#L227
+      case "README-template.md": {
+        return "README.md";
+      }
+      default: {
+        return name;
+      }
+    }
+  };
+
   await copy(copySource, root, {
     parents: true,
     cwd: templatePath,
-    rename(name) {
-      switch (name) {
-        case "gitignore":
-        case "eslintrc.json": {
-          return `.${name}`;
-        }
-        // README.md is ignored by webpack-asset-relocator-loader used by ncc:
-        // https://github.com/vercel/webpack-asset-relocator-loader/blob/e9308683d47ff507253e37c9bcbb99474603192b/src/asset-relocator.js#L227
-        case "README-template.md": {
-          return "README.md";
-        }
-        default: {
-          return name;
-        }
-      }
-    },
+    rename,
   });
 
   /**
@@ -109,6 +111,7 @@ const installTSTemplate = async ({
     await copy("**", destUiPath, {
       parents: true,
       cwd: uiPath,
+      rename,
     });
   }
 
