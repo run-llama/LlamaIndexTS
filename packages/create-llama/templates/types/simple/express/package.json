@@ -6,13 +6,16 @@
   "scripts": {
     "build": "tsup index.ts --format esm --dts",
     "start": "node dist/index.js",
-    "dev": "concurrently \"tsup index.ts --format esm --dts --watch\" \"nodemon -q dist/index.js\""
+    "dev": "concurrently \"tsup index.ts --format esm --dts --watch\" \"nodemon -q dist/index.js\"",
+    "test": "braintrust eval"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4",
-    "llamaindex": "0.0.31"
+    "llamaindex": "0.0.31",
+    "braintrust":"^0.0.71",
+    "autoevals": "^0.0.31"
   },
   "devDependencies": {
     "@types/cors": "^2.8.16",
