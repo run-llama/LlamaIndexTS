@@ -35,6 +35,10 @@ module.exports = {
 
           "NOTION_TOKEN",
           "MONGODB_URI",
+
+          "https_proxy",
+          "npm_config_user_agent",
+          "NEXT_PUBLIC_CHAT_API",
         ],
       },
     ],
