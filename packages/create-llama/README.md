@@ -1,7 +1,16 @@
 # Create LlamaIndex App
 
-The easiest way to get started with LlamaIndex is by using `create-llama`. This CLI tool enables you to quickly start building a new LlamaIndex application, with everything set up for you. 
-To get started, use the following command:
+The easiest way to get started with [LlamaIndex](https://www.llamaindex.ai/) is by using `create-llama`. This CLI tool enables you to quickly start building a new LlamaIndex application, with everything set up for you. 
+
+## Features
+
+- NextJS, ExpressJS, or FastAPI (python) stateless backend generation 💻
+- Streaming or non-streaming backend ⚡
+- Optional `shadcn` or `html` frontend generation 🎨
+
+## Get Started
+
+You can run `create-llama` in interactive or non-interatactive mode.
 
 ### Interactive
 
@@ -17,14 +26,24 @@ yarn create llama
 pnpm create llama
 ```
 
-You will be asked for the name of your project, and then which framework you want to use
-create a TypeScript project:
+You will be asked for the name of your project, along with other configuration options.
+
+Here is an example:
 
 ```bash
+>> npm create llama
+Need to install the following packages:
+  create-llama@0.0.3
+Ok to proceed? (y) y
+✔ What is your project named? … my-app
+✔ Which template would you like to use? › Chat with streaming
 ✔ Which framework would you like to use? › NextJS
+✔ Which UI would you like to use? › Just HTML
+✔ Which chat engine would you like to use? › ContextChatEngine
+✔ Please provide your OpenAI API key (leave blank to skip): … 
+✔ Would you like to use ESLint? … No / Yes
+Creating a new LlamaIndex app in /home/my-app.
 ```
-
-You can choose between NextJS and Express.
 
 ### Non-interactive
 
@@ -52,3 +71,7 @@ Options:
 
 ```
 
+## LlamaIndex Documentation
+
+- [TS/JS docs](https://ts.llamaindex.ai/)
+- [Python docs](https://docs.llamaindex.ai/en/stable/)
