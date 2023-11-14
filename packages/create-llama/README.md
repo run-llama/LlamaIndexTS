@@ -10,9 +10,11 @@ You can create a new project interactively by running:
 ```bash
 npx create-llama@latest
 # or
-yarn create llama-app
+npm create llama
 # or
-pnpm create llama-app
+yarn create llama
+# or
+pnpm create llama
 ```
 
 You will be asked for the name of your project, and then which framework you want to use
