@@ -10,7 +10,7 @@ The easiest way to get started with [LlamaIndex](https://www.llamaindex.ai/) is 
 
 ## Get Started
 
-You can run `create-llama` in interactive or non-interatactive mode.
+You can run `create-llama` in interactive or non-interactive mode.
 
 ### Interactive
 
