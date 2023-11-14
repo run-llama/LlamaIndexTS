@@ -1,4 +1,5 @@
 import { ChatMessage, OpenAI } from "llamaindex";
+import process from 'process';
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine";
 
@@ -28,6 +29,9 @@ export async function POST(request: NextRequest) {
 
     const response = await chatEngine.chat(lastMessage.content, messages);
     const result: ChatMessage = {
+if (!process.env.REPLICATE_API_TOKEN) {
+  throw new Error('The REPLICATE_API_TOKEN environment variable is required to use LlamaDeuce. Please set this in your environment.');
+}
       role: "assistant",
       content: response.response,
     };
