@@ -6,7 +6,7 @@ The easiest way to get started with [LlamaIndex](https://www.llamaindex.ai/) is 
 
 - NextJS, ExpressJS, or FastAPI (python) stateless backend generation 💻
 - Streaming or non-streaming backend ⚡
-- Optional `shadcn` or `html` frontend generation 🎨
+- Optional `shadcn` frontend generation 🎨
 
 ## Get Started
 
