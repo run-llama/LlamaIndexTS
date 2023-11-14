@@ -5,7 +5,7 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { bold, cyan } from "picocolors";
-import { version } from "../package.json";
+import { version } from "../../core/package.json";
 
 import { PackageManager } from "../helpers/get-pkg-manager";
 import {
