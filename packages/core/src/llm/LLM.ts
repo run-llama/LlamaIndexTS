@@ -26,6 +26,7 @@ import {
 } from "./azure";
 import { getOpenAISession, OpenAISession } from "./openai";
 import { getPortkeySession, PortkeySession } from "./portkey";
+import { OllamaModel } from './OllamaModel';
 import { ReplicateSession } from "./replicate";
 
 export type MessageType =
