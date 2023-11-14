@@ -6,6 +6,7 @@ import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { getOnline } from "./helpers/is-online";
 import { isWriteable } from "./helpers/is-writeable";
 import { makeDir } from "./helpers/make-dir";
+import { execSync } from "child_process";
 
 import fs from "fs";
 import terminalLink from "terminal-link";
@@ -107,3 +108,5 @@ export async function createApp({
   );
   console.log();
 }
+    execSync('npm run build', { cwd: backendRoot, stdio: 'inherit' });
+    execSync('npm run build', { cwd: frontendRoot, stdio: 'inherit' });
