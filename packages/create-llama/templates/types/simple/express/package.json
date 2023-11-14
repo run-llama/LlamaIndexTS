@@ -1,0 +1,27 @@
+{
+  "name": "llama-index-express",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsup index.ts --format esm --dts",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"tsup index.ts --format esm --dts --watch\" \"nodemon -q dist/index.js\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4",
+    "llamaindex": "0.0.31"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.16",
+    "@types/express": "^4",
+    "@types/node": "^20",
+    "concurrently": "^8",
+    "eslint": "^8",
+    "nodemon": "^3",
+    "tsup": "^7",
+    "typescript": "^5"
+  }
+}
