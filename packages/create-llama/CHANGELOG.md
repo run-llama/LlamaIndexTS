@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.5
+
+### Patch Changes
+
+- 25257f4: Fix issue where it doesn't find OpenAI Key when running npm run generate (#182) (thanks @RayFernando1337)
+
 ## 0.0.4
 
 ### Patch Changes
