@@ -288,8 +288,11 @@ async function run(): Promise<void> {
             name: "engine",
             message: "Which chat engine would you like to use?",
             choices: [
-              { title: "SimpleChatEngine", value: "simple" },
               { title: "ContextChatEngine", value: "context" },
+              {
+                title: "SimpleChatEngine",
+                value: "simple (no data, just chat)",
+              },
             ],
             initial: 0,
           },
@@ -359,10 +362,10 @@ async function notifyUpdate(): Promise<void> {
     if (res?.latest) {
       const updateMessage =
         packageManager === "yarn"
-          ? "yarn global add create-llama"
+          ? "yarn global add create-llama@latest"
           : packageManager === "pnpm"
-          ? "pnpm add -g create-llama"
-          : "npm i -g create-llama";
+          ? "pnpm add -g create-llama@latest"
+          : "npm i -g create-llama@latest";
 
       console.log(
         yellow(bold("A new version of `create-llama` is available!")) +
