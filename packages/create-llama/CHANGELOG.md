@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.4
+
+### Patch Changes
+
+- 031e926: Update create-llama readme (thanks Logan)
+
 ## 0.0.3
 
 ### Patch Changes
