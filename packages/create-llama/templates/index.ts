@@ -33,6 +33,7 @@ const createEnvLocalFile = async (
       `OPENAI_API_KEY=${openAIKey}\n`,
     );
     console.log(`Created '${envFileName}' file containing OPENAI_API_KEY`);
+    process.env["OPENAI_API_KEY"] = openAIKey;
   }
 };
 
@@ -53,11 +54,21 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
-    console.log(
-      `\nRunning ${cyan("npm run generate")} to generate the context data.\n`,
-    );
-    await callPackageManager(packageManager, true, ["run", "generate"]);
-    console.log();
+    if (process.env["OPENAI_API_KEY"]) {
+      console.log(
+        `\nRunning ${cyan(
+          `${packageManager} run generate`,
+        )} to generate the context data.\n`,
+      );
+      await callPackageManager(packageManager, true, ["run", "generate"]);
+      console.log();
+    } else {
+      console.log(
+        `\nAfter setting your OpenAI key, run ${cyan(
+          `${packageManager} run generate`,
+        )} to generate the context data.\n`,
+      );
+    }
   }
 };
 
