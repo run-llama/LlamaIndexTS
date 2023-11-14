@@ -6,6 +6,8 @@ sidebar_position: 4
 
 We include several end-to-end examples using LlamaIndex.TS in the repository
 
+Check out the examples below or try them out and complete them in minutes with interactive Github Codespace tutorials provided by Dev-Docs [here](https://codespaces.new/team-dev-docs/lits-dev-docs-playground?devcontainer_path=.devcontainer%2Fjavascript_ltsquickstart%2Fdevcontainer.json):
+
 ## [Chat Engine](https://github.com/run-llama/LlamaIndexTS/blob/main/apps/simple/chatEngine.ts)
 
 Read a file and chat about it with the LLM.
