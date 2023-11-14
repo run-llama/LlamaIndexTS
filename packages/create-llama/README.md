@@ -10,6 +10,8 @@ The easiest way to get started with [LlamaIndex](https://www.llamaindex.ai/) is 
 
 ## Get Started
 
+Before you start, please note that to use `LlamaDeuce`, you must set the `REPLICATE_API_TOKEN` environment variable. This is required to authenticate with the Replicate API.
+
 You can run `create-llama` in interactive or non-interactive mode.
 
 ### Interactive
@@ -44,6 +46,7 @@ Ok to proceed? (y) y
 ✔ Would you like to use ESLint? … No / Yes
 Creating a new LlamaIndex app in /home/my-app.
 ```
+✔ Please provide your Replicate API key (leave blank to skip): … 
 
 ### Non-interactive
 
