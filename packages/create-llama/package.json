@@ -44,6 +44,13 @@
     "got": "10.7.0",
     "picocolors": "1.0.0",
     "prompts": "2.1.0",
+    "prettier": "^x.x.x",
+    "prettier": "^x.x.x"
+    "prompts": "2.1.0",
+    "prettier": "^x.x.x"
+    "fs-promise": "^3.0.0",
+    "stable": "^0.2.0",
+    "trim": "^1.0.3"
     "tar": "6.1.15",
     "terminal-link": "^3.0.0",
     "update-check": "1.5.4",

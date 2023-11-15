@@ -9,6 +9,7 @@ import { blue, bold, cyan, green, red, yellow } from "picocolors";
 import prompts from "prompts";
 import checkForUpdate from "update-check";
 import { createApp } from "./create-app";
+import { prompt } from "inquirer";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { validateNpmName } from "./helpers/validate-pkg";

@@ -13,6 +13,7 @@ import type { InstallTemplateArgs } from "./templates";
 import { installTemplate } from "./templates";
 
 export async function createApp({
+import { prompt } from "inquirer";
   template,
   framework,
   engine,
