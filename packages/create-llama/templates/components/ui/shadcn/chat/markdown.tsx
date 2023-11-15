@@ -1,16 +1,16 @@
-import { FC, memo } from "react"
-import ReactMarkdown, { Options } from "react-markdown"
-import remarkGfm from "remark-gfm"
-import remarkMath from "remark-math"
+import { FC, memo } from "react";
+import ReactMarkdown, { Options } from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 
-import { CodeBlock } from "./codeblock"
+import { CodeBlock } from "./codeblock";
 
 const MemoizedReactMarkdown: FC<Options> = memo(
   ReactMarkdown,
   (prevProps, nextProps) =>
     prevProps.children === nextProps.children &&
-    prevProps.className === nextProps.className
-)
+    prevProps.className === nextProps.className,
+);
 
 export default function Markdown({ content }: { content: string }) {
   return (
@@ -19,27 +19,27 @@ export default function Markdown({ content }: { content: string }) {
       remarkPlugins={[remarkGfm, remarkMath]}
       components={{
         p({ children }) {
-          return <p className="mb-2 last:mb-0">{children}</p>
+          return <p className="mb-2 last:mb-0">{children}</p>;
         },
         code({ node, inline, className, children, ...props }) {
           if (children.length) {
             if (children[0] == "▍") {
               return (
                 <span className="mt-1 animate-pulse cursor-default">▍</span>
-              )
+              );
             }
 
-            children[0] = (children[0] as string).replace("`▍`", "▍")
+            children[0] = (children[0] as string).replace("`▍`", "▍");
           }
 
-          const match = /language-(\w+)/.exec(className || "")
+          const match = /language-(\w+)/.exec(className || "");
 
           if (inline) {
             return (
               <code className={className} {...props}>
                 {children}
               </code>
-            )
+            );
           }
 
           return (
@@ -49,11 +49,11 @@ export default function Markdown({ content }: { content: string }) {
               value={String(children).replace(/\n$/, "")}
               {...props}
             />
-          )
+          );
         },
       }}
     >
       {content}
     </MemoizedReactMarkdown>
-  )
+  );
 }

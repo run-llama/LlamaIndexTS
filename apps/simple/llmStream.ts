@@ -1,7 +1,7 @@
-import { ChatMessage, OpenAI, SimpleChatEngine } from "llamaindex";
-import {Anthropic} from "../../packages/core/src/llm/LLM";
+import { ChatMessage, SimpleChatEngine } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
+import { Anthropic } from "../../packages/core/src/llm/LLM";
 
 async function main() {
   const query: string = `

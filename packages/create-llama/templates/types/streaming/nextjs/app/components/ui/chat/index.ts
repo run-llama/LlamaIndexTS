@@ -3,4 +3,4 @@ import ChatMessages from "./chat-messages";
 
 export type { ChatInputProps } from "./chat-input";
 export type { Message } from "./chat-messages";
-export { ChatMessages, ChatInput };
+export { ChatInput, ChatMessages };
