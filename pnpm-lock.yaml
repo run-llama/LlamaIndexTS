@@ -168,8 +168,8 @@ importers:
         specifier: ^1.0.8
         version: 1.0.8
       replicate:
-        specifier: ^0.20.1
-        version: 0.20.1
+        specifier: ^0.21.1
+        version: 0.21.1
       string-strip-html:
         specifier: ^13.4.3
         version: 13.4.3
@@ -12839,8 +12839,8 @@ packages:
     engines: {node: '>=0.10'}
     dev: false
 
-  /replicate@0.20.1:
-    resolution: {integrity: sha512-QVyI1rowGsSfNuDrRmumYPdCHa/fN/RkI3NHpcK0i5hSSiWK69URAyheAC/0MIAiS3oUs4kD56PB9zEI4oHENw==}
+  /replicate@0.21.1:
+    resolution: {integrity: sha512-ftR416+tuD55u6Rz0s5QsxoC2ZasslyFg9jxytirPhqFQwTQy9arU0vF29811t4iws8cMc+neL0IUzyq0pFlkQ==}
     engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
     dev: false
 
