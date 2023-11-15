@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.6
+
+### Patch Changes
+
+- 4431ec7: Label bug fix
+
 ## 0.0.5
 
 ### Patch Changes
