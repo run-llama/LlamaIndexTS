@@ -79,10 +79,10 @@ const program = new Commander.Command(packageJson.name)
 const packageManager = !!program.useNpm
   ? "npm"
   : !!program.usePnpm
-  ? "pnpm"
-  : !!program.useYarn
-  ? "yarn"
-  : getPkgManager();
+    ? "pnpm"
+    : !!program.useYarn
+      ? "yarn"
+      : getPkgManager();
 
 async function run(): Promise<void> {
   const conf = new Conf({ projectName: "create-llama" });
@@ -235,8 +235,8 @@ async function run(): Promise<void> {
           program.framework === "express"
             ? "Express "
             : program.framework === "fastapi"
-            ? "FastAPI (Python) "
-            : "",
+              ? "FastAPI (Python) "
+              : "",
         );
         const { frontend } = await prompts({
           onState: onPromptState,
@@ -364,8 +364,8 @@ async function notifyUpdate(): Promise<void> {
         packageManager === "yarn"
           ? "yarn global add create-llama@latest"
           : packageManager === "pnpm"
-          ? "pnpm add -g create-llama@latest"
-          : "npm i -g create-llama@latest";
+            ? "pnpm add -g create-llama@latest"
+            : "npm i -g create-llama@latest";
 
       console.log(
         yellow(bold("A new version of `create-llama` is available!")) +

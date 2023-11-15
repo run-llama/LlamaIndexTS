@@ -1,6 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import { Event } from "./callbacks/CallbackManager";
-import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
@@ -12,6 +10,8 @@ import { CompactAndRefine, ResponseSynthesizer } from "./ResponseSynthesizer";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
+import { Event } from "./callbacks/CallbackManager";
+import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
 
 /**
  * A query engine is a question answerer that can use one or more steps.

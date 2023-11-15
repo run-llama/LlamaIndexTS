@@ -32,7 +32,11 @@ export class VectorIndexRetriever implements BaseRetriever {
     this.similarityTopK = similarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
   }
 
-  async retrieve(query: string, parentEvent?: Event, preFilters?: unknown): Promise<NodeWithScore[]> {
+  async retrieve(
+    query: string,
+    parentEvent?: Event,
+    preFilters?: unknown,
+  ): Promise<NodeWithScore[]> {
     const queryEmbedding =
       await this.serviceContext.embedModel.getQueryEmbedding(query);
 
