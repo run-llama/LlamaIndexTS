@@ -74,5 +74,28 @@ Options:
 
 - [TS/JS docs](https://ts.llamaindex.ai/)
 - [Python docs](https://docs.llamaindex.ai/en/stable/)
+## Running the Application
+
+After creating your new LlamaIndex application, you need to install all the necessary dependencies and build the application before you can start it. Follow these steps:
+
+1. Install the dependencies:
+
+```bash
+npm install
+```
+
+2. Create a production build of the application:
+
+```bash
+npm run build
+```
+
+3. Start the application:
+
+```bash
+npm run start
+```
+
+Please note that `npm run start` is meant to start a production server and requires a build to be created first.
 
 Inspired by and adapted from [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app)
