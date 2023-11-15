@@ -31,7 +31,7 @@ You will be asked for the name of your project, along with other configuration o
 Here is an example:
 
 ```bash
->> npm create llama
+>> npm create llama@latest
 Need to install the following packages:
   create-llama@latest
 Ok to proceed? (y) y
