@@ -6,7 +6,7 @@ import readline from "node:readline/promises";
 import { ChatMessage, LlamaDeuce, OpenAI } from "llamaindex";
 
 (async () => {
-  const gpt4 = new OpenAI({ model: "gpt-4-vision-preview", temperature: 0.9 });
+  const gpt4 = new OpenAI({ model: "gpt-4", temperature: 0.9 });
   const l2 = new LlamaDeuce({
     model: "Llama-2-70b-chat-4bit",
     temperature: 0.9,
