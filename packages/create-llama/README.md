@@ -17,13 +17,7 @@ You can run `create-llama` in interactive or non-interactive mode.
 You can create a new project interactively by running:
 
 ```bash
-npx create-llama@latest
-# or
 npm create llama@latest
-# or
-yarn create llama
-# or
-pnpm create llama@latest
 ```
 
 You will be asked for the name of your project, along with other configuration options.
