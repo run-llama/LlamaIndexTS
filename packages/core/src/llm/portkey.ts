@@ -1,9 +1,12 @@
 import _ from "lodash";
 import { LLMOptions, Portkey } from "portkey-ai";
 
-export const readEnv = (env: string, default_val?: string): string | undefined => {
-  if (typeof process !== 'undefined') {
-      return process.env?.[env] ?? default_val;
+export const readEnv = (
+  env: string,
+  default_val?: string,
+): string | undefined => {
+  if (typeof process !== "undefined") {
+    return process.env?.[env] ?? default_val;
   }
   return default_val;
 };
@@ -12,23 +15,23 @@ interface PortkeyOptions {
   apiKey?: string;
   baseURL?: string;
   mode?: string;
-  llms?: [LLMOptions] | null
+  llms?: [LLMOptions] | null;
 }
 
 export class PortkeySession {
   portkey: Portkey;
 
-  constructor(options:PortkeyOptions = {}) {
+  constructor(options: PortkeyOptions = {}) {
     if (!options.apiKey) {
-      options.apiKey = readEnv('PORTKEY_API_KEY')
+      options.apiKey = readEnv("PORTKEY_API_KEY");
     }
 
     if (!options.baseURL) {
-      options.baseURL = readEnv('PORTKEY_BASE_URL', "https://api.portkey.ai")
+      options.baseURL = readEnv("PORTKEY_BASE_URL", "https://api.portkey.ai");
     }
 
     this.portkey = new Portkey({});
-    this.portkey.llms = [{}]
+    this.portkey.llms = [{}];
     if (!options.apiKey) {
       throw new Error("Set Portkey ApiKey in PORTKEY_API_KEY env variable");
     }
@@ -59,4 +62,3 @@ export function getPortkeySession(options: PortkeyOptions = {}) {
   }
   return session;
 }
-
