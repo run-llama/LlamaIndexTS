@@ -29,6 +29,9 @@ pnpm create llama@latest
 You will be asked for the name of your project, along with other configuration options.
 
 Here is an example:
+You will be asked for the name of your project, along with other configuration options, including the model selection.
+
+Here is an example:
 
 ```bash
 >> npm create llama
