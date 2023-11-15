@@ -16,7 +16,7 @@
     "pdf-parse": "^1.1.1",
     "portkey-ai": "^0.1.16",
     "rake-modified": "^1.0.8",
-    "replicate": "^0.20.1",
+    "replicate": "^0.21.1",
     "string-strip-html": "^13.4.3",
     "uuid": "^9.0.1",
     "wink-nlp": "^1.14.3"
