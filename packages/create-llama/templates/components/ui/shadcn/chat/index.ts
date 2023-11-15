@@ -2,4 +2,4 @@ import ChatInput from "./chat-input";
 import ChatMessages from "./chat-messages";
 
 export { type ChatHandler, type Message } from "./chat.interface";
-export { ChatMessages, ChatInput };
+export { ChatInput, ChatMessages };

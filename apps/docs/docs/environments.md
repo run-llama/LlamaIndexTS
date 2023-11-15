@@ -11,7 +11,7 @@ LlamaIndex currently officially supports NodeJS 18 and NodeJS 20.
 If you're using NextJS App Router route handlers/serverless functions, you'll need to use the NodeJS mode:
 
 ```js
-export const runtime = "nodejs" // default
+export const runtime = "nodejs"; // default
 ```
 
 and you'll need to add an exception for pdf-parse in your next.config.js
