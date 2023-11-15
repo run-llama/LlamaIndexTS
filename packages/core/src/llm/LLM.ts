@@ -377,10 +377,10 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   "Llama-2-70b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
-      "replicate/llama70b-v2-chat:2c1608e18606fad2812020dc541930f2d0495ce32eee50074220b87300bc16e1",
+      "meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
     //^ Model is based off of exllama 4bit.
   },
-  "Llama-2-13b-chat": {
+  "Llama-2-13b-chat-old": {
     contextWindow: 4096,
     replicateApi:
       "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
@@ -389,9 +389,9 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   "Llama-2-13b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
-      "a16z-infra/llama13b-v2-chat:2a7f981751ec7fdf87b5b91ad4db53683a98082e9ff7bfd12c8cd5ea85980a52",
+      "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d",
   },
-  "Llama-2-7b-chat": {
+  "Llama-2-7b-chat-old": {
     contextWindow: 4096,
     replicateApi:
       "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
@@ -403,7 +403,7 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   "Llama-2-7b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
-      "a16z-infra/llama7b-v2-chat:4f0b260b6a13eb53a6b1891f089d57c08f41003ae79458be5011303d81a394dc",
+      "meta/llama-2-7b-chat:13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0",
   },
 };
 
@@ -415,6 +415,8 @@ export enum DeuceChatStrategy {
   // Unfortunately any string only API won't support these properly.
   REPLICATE4BIT = "replicate4bit",
   //^ To satisfy Replicate's 4 bit models' requirements where they also insert some INST tags
+  REPLICATE4BITWNEWLINES = "replicate4bitwnewlines",
+  //^ Replicate's documentation recommends using newlines: https://replicate.com/blog/how-to-prompt-llama
 }
 
 /**
@@ -434,7 +436,7 @@ export class LlamaDeuce implements LLM {
     this.chatStrategy =
       init?.chatStrategy ??
       (this.model.endsWith("4bit")
-        ? DeuceChatStrategy.REPLICATE4BIT // With the newer A16Z/Replicate models they do the system message themselves.
+        ? DeuceChatStrategy.REPLICATE4BITWNEWLINES // With the newer Replicate models they do the system message themselves.
         : DeuceChatStrategy.METAWBOS); // With BOS and EOS seems to work best, although they all have problems past a certain point
     this.temperature = init?.temperature ?? 0.1; // minimum temperature is 0.01 for Replicate endpoint
     this.topP = init?.topP ?? 1;
@@ -468,7 +470,15 @@ export class LlamaDeuce implements LLM {
     } else if (this.chatStrategy === DeuceChatStrategy.METAWBOS) {
       return this.mapMessagesToPromptMeta(messages, { withBos: true });
     } else if (this.chatStrategy === DeuceChatStrategy.REPLICATE4BIT) {
-      return this.mapMessagesToPromptMeta(messages, { replicate4Bit: true });
+      return this.mapMessagesToPromptMeta(messages, {
+        replicate4Bit: true,
+        withNewlines: true,
+      });
+    } else if (this.chatStrategy === DeuceChatStrategy.REPLICATE4BITWNEWLINES) {
+      return this.mapMessagesToPromptMeta(messages, {
+        replicate4Bit: true,
+        withNewlines: true,
+      });
     } else {
       return this.mapMessagesToPromptMeta(messages);
     }
@@ -503,9 +513,17 @@ export class LlamaDeuce implements LLM {
 
   mapMessagesToPromptMeta(
     messages: ChatMessage[],
-    opts?: { withBos?: boolean; replicate4Bit?: boolean },
+    opts?: {
+      withBos?: boolean;
+      replicate4Bit?: boolean;
+      withNewlines?: boolean;
+    },
   ) {
-    const { withBos = false, replicate4Bit = false } = opts ?? {};
+    const {
+      withBos = false,
+      replicate4Bit = false,
+      withNewlines = false,
+    } = opts ?? {};
     const DEFAULT_SYSTEM_PROMPT = `You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
 
 If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.`;
@@ -553,11 +571,18 @@ If a question does not make any sense, or is not factually coherent, explain why
     return {
       prompt: messages.reduce((acc, message, index) => {
         if (index % 2 === 0) {
-          return `${acc}${
-            withBos ? BOS : ""
-          }${B_INST} ${message.content.trim()} ${E_INST}`;
+          return (
+            `${acc}${
+              withBos ? BOS : ""
+            }${B_INST} ${message.content.trim()} ${E_INST}` +
+            (withNewlines ? "\n" : "")
+          );
         } else {
-          return `${acc} ${message.content.trim()} ` + (withBos ? EOS : ""); // Yes, the EOS comes after the space. This is not a mistake.
+          return (
+            `${acc} ${message.content.trim()}` +
+            (withNewlines ? "\n" : " ") +
+            (withBos ? EOS : "")
+          ); // Yes, the EOS comes after the space. This is not a mistake.
         }
       }, ""),
       systemPrompt,
