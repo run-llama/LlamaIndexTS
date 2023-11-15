@@ -290,8 +290,8 @@ async function run(): Promise<void> {
             choices: [
               { title: "ContextChatEngine", value: "context" },
               {
-                title: "SimpleChatEngine",
-                value: "simple (no data, just chat)",
+                title: "SimpleChatEngine (no data, just chat)",
+                value: "simple",
               },
             ],
             initial: 0,
