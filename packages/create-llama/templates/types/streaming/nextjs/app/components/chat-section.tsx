@@ -2,6 +2,7 @@
 
 import { useChat } from "ai/react";
 import { ChatInput, ChatMessages } from "./ui/chat";
+import { Spinner } from 'react-bootstrap';
 
 export default function ChatSection() {
   const {
@@ -28,6 +29,7 @@ export default function ChatSection() {
         handleInputChange={handleInputChange}
         isLoading={isLoading}
       />
+      {isLoading && <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>}
     </div>
   );
 }
