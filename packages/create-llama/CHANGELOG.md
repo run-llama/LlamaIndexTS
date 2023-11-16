@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 4431ec7: Label bug fix
+- 4431ec7: Label bug fix (thanks @marcusschiesser)
 
 ## 0.0.5
 
@@ -16,16 +16,16 @@
 
 ### Patch Changes
 
-- 031e926: Update create-llama readme (thanks Logan)
+- 031e926: Update create-llama readme (thanks @logan-markewich)
 
 ## 0.0.3
 
 ### Patch Changes
 
-- 91b42a3: change version (thanks Marcus)
+- 91b42a3: change version (thanks @marcusschiesser)
 
 ## 0.0.2
 
 ### Patch Changes
 
-- e2a6805: Hello Create Llama (thanks Marcus!)
+- e2a6805: Hello Create Llama (thanks @marcusschiesser)
