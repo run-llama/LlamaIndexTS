@@ -272,12 +272,13 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
   }
 }
 
-export function jsonToNode(json: any) {
-  if (!json.type) {
+export function jsonToNode(json: any, type?: ObjectType) {
+  if (!json.type && !type) {
     throw new Error("Node type not found");
   }
+  const nodeType = type || json.type;
 
-  switch (json.type) {
+  switch (nodeType) {
     case ObjectType.TEXT:
       return new TextNode(json);
     case ObjectType.INDEX:
@@ -285,7 +286,7 @@ export function jsonToNode(json: any) {
     case ObjectType.DOCUMENT:
       return new Document(json);
     default:
-      throw new Error(`Invalid node type: ${json.type}`);
+      throw new Error(`Invalid node type: ${nodeType}`);
   }
 }
 
