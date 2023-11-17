@@ -2,6 +2,9 @@
 const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["llamaindex"],
+    outputFileTracingIncludes: {
+      "/*": ["./cache/**/*"],
+    },
   },
 };
 
