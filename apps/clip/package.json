@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "private": true,
+  "name": "cliptest",
+  "type": "module",
+  "dependencies": {
+    "@xenova/transformers": "^2.8.0",
+    "llamaindex": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^18.18.6",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  }
+}
