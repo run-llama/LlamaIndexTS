@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useDeferredValue } from "react";
 
 import ChatActions from "./chat-actions";
 import ChatMessage from "./chat-message";
@@ -6,7 +6,7 @@ import { ChatHandler } from "./chat.interface";
 import { Spinner } from './spinner'
 
 export default function ChatMessages(
-  props: Pick<ChatHandler, "messages" | "isLoading" | "reload" | "stop" | "isPending">,
+  props: Pick<ChatHandler, "messages" | "isLoading" | "reload" | "stop">,
 ) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
   const messageLength = props.messages.length;
@@ -24,6 +24,12 @@ export default function ChatMessages(
   const showReload =
     props.reload && !props.isLoading && isLastMessageFromAssistant;
   const showStop = props.stop && props.isLoading;
+  const content = lastMessage?.content ?? ''
+  const deferredContent = useDeferredValue(content)
+  const isPending = props.isLoading ? !isLastMessageFromAssistant : (
+    props.isLoading &&
+    isLastMessageFromAssistant && content === deferredContent
+  )
 
   useEffect(() => {
     scrollToBottom();
@@ -38,7 +44,7 @@ export default function ChatMessages(
         {props.messages.map((m) => (
           <ChatMessage key={m.id} {...m} />
         ))}
-        {props.isPending && (
+        {isPending && (
           <div
             className='flex justify-center items-center pt-10'
           >
