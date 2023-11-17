@@ -79,11 +79,13 @@ Now if all has gone well you should be able to log in to the Mongo Atlas UI and 
 
 ![MongoDB Atlas collections](./docs/3_vectors_in_db.png)
 
-Now it's time to create the vector search index so that you can query the data. First, click the Search tab, and then click "Create Search Index":
+Now it's time to create the vector search index so that you can query the data.
+It's not yet possible to programmatically create a vector search index using the [`createIndex`](https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/) function, therefore we have to create one manually in the UI.
+To do so, first, click the Search tab, and then click "Create Search Index":
 
 ![MongoDB Atlas create search index](./docs/4_search_tab.png)
 
-It's not yet possible to create a vector search index using the Visual Editor, so select JSON editor:
+We have to use the JSON editor, as the Visual Editor does not yet support to create a vector search index:
 
 ![MongoDB Atlas JSON editor](./docs/5_json_editor.png)
 
