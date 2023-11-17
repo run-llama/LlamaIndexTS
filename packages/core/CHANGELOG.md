@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 63f2108: Add multimodal support (thanks Marcus)
+- 63f2108: Add multimodal support (thanks @marcusschiesser)
 
 ## 0.0.34
 
