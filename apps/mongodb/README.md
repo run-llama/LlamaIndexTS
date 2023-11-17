@@ -67,7 +67,9 @@ If the data you're indexing is the tweets we gave you, you're ready to go:
 pnpm ts-node 2_load_and_index.ts
 ```
 
-What you're doing here is creating a Reader which loads the data out of Mongo in the collection and database specified. It looks for text in a set of specific keys in each object. In this case we've given it just one key, "full_text". The final parameter is a mongo [query document](https://www.mongodb.com/docs/manual/tutorial/query-documents/), a JSON object you can use to filter your objects down to a subset. We're leaving it empty because we want all the tweets in the collection.
+> Note: this script is running a couple of minutes and currently doesn't show any progress.
+
+What you're doing here is creating a Reader which loads the data out of Mongo in the collection and database specified. It looks for text in a set of specific keys in each object. In this case we've given it just one key, "full_text".
 
 Now you're creating a vector search client for Mongo. In addition to a MongoDB client object, you again tell it what database everything is in. This time you give it the name of the collection where you'll store the vector embeddings, and the name of the vector search index you'll create in the next step.
 
