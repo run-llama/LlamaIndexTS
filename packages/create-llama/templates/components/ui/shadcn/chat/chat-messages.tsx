@@ -1,9 +1,9 @@
 import { useEffect, useRef, useDeferredValue } from "react";
+import { Loader2 } from "lucide-react";
 
 import ChatActions from "./chat-actions";
 import ChatMessage from "./chat-message";
 import { ChatHandler } from "./chat.interface";
-import { Spinner } from './spinner'
 
 export default function ChatMessages(
   props: Pick<ChatHandler, "messages" | "isLoading" | "reload" | "stop">,
@@ -48,7 +48,7 @@ export default function ChatMessages(
           <div
             className='flex justify-center items-center pt-10'
           >
-          <Spinner/>
+            <Loader2 className="h-4 w-4 animate-spin"/>
           </div>
         )}
       </div>
