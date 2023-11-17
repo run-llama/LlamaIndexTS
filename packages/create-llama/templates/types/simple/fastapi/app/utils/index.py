@@ -15,8 +15,9 @@ STORAGE_DIR = "./storage"  # directory to cache the generated index
 DATA_DIR = "./data"  # directory containing the documents to index
 
 service_context = ServiceContext.from_defaults(
-    llm=OpenAI("gpt-3.5-turbo")
+    llm=OpenAI(model="gpt-3.5-turbo")
 )
+
 
 def get_index():
     logger = logging.getLogger("uvicorn")
