@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.7
+
+### Patch Changes
+
+- 9f9f293: Added more to README and made it easier to switch models (thanks @seldo)
+
 ## 0.0.6
 
 ### Patch Changes
