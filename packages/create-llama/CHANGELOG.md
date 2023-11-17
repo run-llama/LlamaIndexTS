@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.8
+
+### Patch Changes
+
+- 8cdb07f: Fix Next deployment (thanks @seldo and @marcusschiesser)
+
 ## 0.0.7
 
 ### Patch Changes
