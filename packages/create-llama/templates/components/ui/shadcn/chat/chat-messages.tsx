@@ -3,9 +3,10 @@ import { useEffect, useRef } from "react";
 import ChatActions from "./chat-actions";
 import ChatMessage from "./chat-message";
 import { ChatHandler } from "./chat.interface";
+import { Spinner } from './spinner'
 
 export default function ChatMessages(
-  props: Pick<ChatHandler, "messages" | "isLoading" | "reload" | "stop">,
+  props: Pick<ChatHandler, "messages" | "isLoading" | "reload" | "stop" | "isPending">,
 ) {
   const scrollableChatContainerRef = useRef<HTMLDivElement>(null);
   const messageLength = props.messages.length;
@@ -37,6 +38,13 @@ export default function ChatMessages(
         {props.messages.map((m) => (
           <ChatMessage key={m.id} {...m} />
         ))}
+        {props.isPending && (
+          <div
+            className='flex justify-center items-center pt-10'
+          >
+          <Spinner/>
+          </div>
+        )}
       </div>
       <div className="flex justify-end py-4">
         <ChatActions
