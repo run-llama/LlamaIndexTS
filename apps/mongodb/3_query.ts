@@ -24,10 +24,10 @@ async function query() {
 
   const retriever = index.asRetriever({ similarityTopK: 20 });
   const queryEngine = index.asQueryEngine({ retriever });
-  const response = await queryEngine.query(
+  const result = await queryEngine.query(
     "What does the author think of web frameworks?",
   );
-  console.log(response);
+  console.log(result.response);
   await client.close();
 }
 

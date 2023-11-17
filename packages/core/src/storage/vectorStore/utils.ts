@@ -1,10 +1,4 @@
-import {
-  BaseNode,
-  IndexNode,
-  Metadata,
-  ObjectType,
-  jsonToNode,
-} from "../../Node";
+import { BaseNode, Metadata, ObjectType, jsonToNode } from "../../Node";
 
 const DEFAULT_TEXT_KEY = "text";
 
@@ -36,7 +30,7 @@ export function nodeToMetadata(
   nodeObj["embedding"] = null;
 
   metadata["_node_content"] = JSON.stringify(nodeObj);
-  metadata["_node_type"] = node.constructor.name;
+  metadata["_node_type"] = node.constructor.name.replace("_", ""); // remove leading underscore to be compatible with Python
 
   metadata["document_id"] = node.sourceNode?.nodeId || "None";
   metadata["doc_id"] = node.sourceNode?.nodeId || "None";
@@ -46,17 +40,18 @@ export function nodeToMetadata(
 }
 
 export function metadataDictToNode(metadata: Metadata): BaseNode {
-  const nodeObj = metadata["_node_content"];
-  if (!nodeObj) {
+  const nodeContent = metadata["_node_content"];
+  if (!nodeContent) {
     throw new Error("Node content not found in metadata.");
   }
+  const nodeObj = JSON.parse(nodeContent);
 
   // Note: we're using the name of the class stored in `_node_type`
   // and not the type attribute to reconstruct
   // the node. This way we're compatible with LlamaIndex Python
   const node_type = metadata["_node_type"];
   switch (node_type) {
-    case IndexNode.name:
+    case "IndexNode":
       return jsonToNode(nodeObj, ObjectType.INDEX);
     default:
       return jsonToNode(nodeObj, ObjectType.TEXT);
