@@ -6,7 +6,7 @@ import { LlamaIndexStream } from "./llamaindex-stream";
 
 export const chat = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { messages }: { messages: ChatMessage[] } = req.body;
+    const { messages }: { messages: ChatMessage[] } = JSON.parse(req.body);
     const lastMessage = messages.pop();
     if (!messages || !lastMessage || lastMessage.role !== "user") {
       return res.status(400).json({
