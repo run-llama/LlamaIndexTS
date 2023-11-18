@@ -32,13 +32,37 @@ describe("similarity", () => {
   });
 
   test("calculates euclidean similarity", () => {
-    const queryEmbedding = [1, 0];
-    const docEmbedding1 = [0, 1]; // farther from query, distance 1.414
-    const docEmbedding2 = [1, 1]; // closer to query distance 1
-    expect(
-      similarity(queryEmbedding, docEmbedding1, SimilarityType.EUCLIDEAN),
-    ).toBeLessThan(
-      similarity(queryEmbedding, docEmbedding2, SimilarityType.EUCLIDEAN),
-    );
+      const queryEmbedding = [1, 0];
+      const docEmbedding1 = [0, 1]; // farther from query, distance 1.414
+      const docEmbedding2 = [1, 1]; // closer to query distance 1
+      expect(
+        similarity(queryEmbedding, docEmbedding1, SimilarityType.EUCLIDEAN),
+      ).toBeLessThan(
+        similarity(queryEmbedding, docEmbedding2, SimilarityType.EUCLIDEAN),
+      );
+    });
+  
+    test("calculates cosine similarity with zero vectors", () => {
+      const embedding1 = [0, 0];
+      const embedding2 = [0, 0];
+      expect(similarity(embedding1, embedding2, SimilarityType.DEFAULT)).toEqual(
+        NaN,
+      );
+    });
+  
+    test("calculates dot product with zero vectors", () => {
+      const embedding1 = [0, 0];
+      const embedding2 = [0, 0];
+      expect(
+        similarity(embedding1, embedding2, SimilarityType.DOT_PRODUCT),
+      ).toEqual(0);
+    });
+  
+    test("calculates euclidean similarity with zero vectors", () => {
+      const embedding1 = [0, 0];
+      const embedding2 = [0, 0];
+      expect(
+        similarity(embedding1, embedding2, SimilarityType.EUCLIDEAN),
+      ).toEqual(0);
+    });
   });
-});
