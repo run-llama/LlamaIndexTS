@@ -24,12 +24,12 @@ export default function ChatMessages(
   const showReload =
     props.reload && !props.isLoading && isLastMessageFromAssistant;
   const showStop = props.stop && props.isLoading;
-  const content = lastMessage?.content ?? ''
-  const deferredContent = useDeferredValue(content)
+  const content = lastMessage?.content ?? "";
+  const deferredContent = useDeferredValue(content);
   const isPending = props.isLoading ? !isLastMessageFromAssistant : (
     props.isLoading &&
     isLastMessageFromAssistant && content === deferredContent
-  )
+  );
 
   useEffect(() => {
     scrollToBottom();
