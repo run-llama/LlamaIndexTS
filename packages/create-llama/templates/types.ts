@@ -17,4 +17,5 @@ export interface InstallTemplateArgs {
   eslint: boolean;
   customApiPath?: string;
   openAIKey?: string;
+  forBackend?: string;
 }
