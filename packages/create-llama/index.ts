@@ -214,6 +214,7 @@ async function run(): Promise<void> {
             { title: "NextJS", value: "nextjs" },
             { title: "Express", value: "express" },
             { title: "FastAPI (Python)", value: "fastapi" },
+            { title: "Svelte", value: "svelte" },
           ],
           initial: 0,
         },
@@ -253,7 +254,7 @@ async function run(): Promise<void> {
     }
   }
 
-  if (program.framework === "nextjs" || program.frontend) {
+  if (program.framework === "nextjs" || program.framework === "svelte" || program.frontend) {
     if (!program.ui) {
       if (ciInfo.isCI) {
         program.ui = getPrefOrDefault("ui");
@@ -350,6 +351,7 @@ async function run(): Promise<void> {
     eslint: program.eslint,
     frontend: program.frontend,
     openAIKey: program.openAIKey,
+    svelte: program.framework === "svelte",
   });
   conf.set("preferences", preferences);
 }
