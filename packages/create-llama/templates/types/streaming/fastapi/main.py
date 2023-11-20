@@ -1,12 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import logging
 import os
 import uvicorn
 from app.api.routers.chat import chat_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = FastAPI()
 
