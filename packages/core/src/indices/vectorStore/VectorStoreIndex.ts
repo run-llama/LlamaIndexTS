@@ -11,6 +11,7 @@ import {
   StorageContext,
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
+import { SimpleVectorStore } from "../../storage/vectorStore/SimpleVectorStore";
 import { VectorStore } from "../../storage/vectorStore/types";
 import {
   BaseIndex,
@@ -219,6 +220,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return index;
   }
 
+  /**
+   * Creates a VectorStoreIndex from a VectorStore object.
+   * The VectorStore object must store text.
+   * @param vectorStore The VectorStore object to create the VectorStoreIndex from.
+   * @param serviceContext The ServiceContext to use.
+   * @returns A new VectorStoreIndex object.
+   */
   static async fromVectorStore(
     vectorStore: VectorStore,
     serviceContext: ServiceContext,
@@ -229,6 +237,26 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       );
     }
 
+    const storageContext = await storageContextFromDefaults({ vectorStore });
+
+    const index = await VectorStoreIndex.init({
+      nodes: [],
+      storageContext,
+      serviceContext,
+    });
+
+    return index;
+  }
+
+  /**
+   * Creates a VectorStoreIndex from a persistence path.
+   * The persistence path must point to a valid VectorStore object.
+   * @param persistPath The persistence path to create the VectorStoreIndex from.
+   * @returns A new VectorStoreIndex object.
+   */
+  static async fromPersistPath(persistPath: string): Promise<VectorStoreIndex> {
+    const vectorStore = await SimpleVectorStore.fromPersistPath(persistPath);
+    const serviceContext = serviceContextFromDefaults({});
     const storageContext = await storageContextFromDefaults({ vectorStore });
 
     const index = await VectorStoreIndex.init({
