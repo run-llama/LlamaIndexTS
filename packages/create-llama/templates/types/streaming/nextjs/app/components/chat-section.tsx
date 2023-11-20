@@ -3,7 +3,7 @@
 import { useChat } from "ai/react";
 import { ChatInput, ChatMessages } from "./ui/chat";
 
-export default function ChatSection() {
+export default function ChatSection({ selectedValue }) {
   const {
     messages,
     input,
@@ -12,7 +12,7 @@ export default function ChatSection() {
     handleInputChange,
     reload,
     stop,
-  } = useChat({ api: process.env.NEXT_PUBLIC_CHAT_API });
+  } = useChat({ api: process.env.NEXT_PUBLIC_CHAT_API, selectedValue });
 
   return (
     <div className="space-y-4 max-w-5xl w-full">
