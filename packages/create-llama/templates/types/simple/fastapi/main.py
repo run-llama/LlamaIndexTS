@@ -1,3 +1,4 @@
+from pathlib import Path
 import logging
 import os
 import uvicorn
@@ -6,7 +7,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(Path('.env'))
+
+print(f"OPENAI_API_KEY: {os.getenv('OPENAI_API_KEY')}")
 
 app = FastAPI()
 
