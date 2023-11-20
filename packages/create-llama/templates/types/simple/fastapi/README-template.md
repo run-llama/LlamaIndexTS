@@ -9,9 +9,10 @@ poetry install
 poetry shell
 ```
 
-Second, run the development server:
+Second, export your API key. Then run the development server:
 
 ```
+export $(cat .env)
 python main.py
 ```
 
