@@ -10,7 +10,6 @@
   "dependencies": {
     "ai": "^2",
     "llamaindex": "0.0.31",
-    "lucide-react": "^0.291.0",
     "next": "^13",
     "react": "^18",
     "react-dom": "^18"
