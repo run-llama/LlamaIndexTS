@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.9
+
+### Patch Changes
+
+- acfe232: Deployment fixes (thanks @seldo)
+
 ## 0.0.8
 
 ### Patch Changes
