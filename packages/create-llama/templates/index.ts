@@ -103,6 +103,7 @@ const installTSTemplate = async ({
   ui,
   eslint,
   customApiPath,
+  forBackend,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -119,6 +120,26 @@ const installTSTemplate = async ({
     cwd: templatePath,
     rename,
   });
+
+  /**
+   * If the backend is next.js, rename next.config.app.js to next.config.js
+   * If not, rename next.config.static.js to next.config.js
+   */
+  if (framework == "nextjs" && forBackend === "nextjs") {
+    const nextConfigAppPath = path.join(root, "next.config.app.js");
+    const nextConfigPath = path.join(root, "next.config.js");
+    await fs.rename(nextConfigAppPath, nextConfigPath);
+    // delete next.config.static.js
+    const nextConfigStaticPath = path.join(root, "next.config.static.js");
+    await fs.rm(nextConfigStaticPath);
+  } else if (framework == "nextjs" && typeof forBackend === "undefined") {
+    const nextConfigStaticPath = path.join(root, "next.config.static.js");
+    const nextConfigPath = path.join(root, "next.config.js");
+    await fs.rename(nextConfigStaticPath, nextConfigPath);
+    // delete next.config.app.js
+    const nextConfigAppPath = path.join(root, "next.config.app.js");
+    await fs.rm(nextConfigAppPath);
+  }
 
   /**
    * Copy the selected chat engine files to the target directory and reference it.
