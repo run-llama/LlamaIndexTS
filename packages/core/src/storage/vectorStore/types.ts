@@ -1,5 +1,4 @@
 import { BaseNode } from "../../Node";
-import { GenericFileSystem } from "../FileSystem";
 
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];
@@ -62,10 +61,9 @@ export interface VectorStore {
   isEmbeddingQuery?: boolean;
   client(): any;
   add(embeddingResults: BaseNode[]): Promise<string[]>;
-  delete(refDocId: string, deleteKwargs?: any): Promise<void>;
+  delete(refDocId: string, deleteOptions?: any): Promise<void>;
   query(
     query: VectorStoreQuery,
     options?: any,
   ): Promise<VectorStoreQueryResult>;
-  persist(persistPath: string, fs?: GenericFileSystem): Promise<void>;
 }
