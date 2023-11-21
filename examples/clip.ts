@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { ClipEmbedding, SimilarityType, similarity } from "llamaindex";
 
 async function main() {
