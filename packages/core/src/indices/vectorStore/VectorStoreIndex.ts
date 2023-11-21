@@ -39,7 +39,7 @@ export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
   vectorStore: VectorStore;
 
-  private constructor(init: VectorIndexConstructorProps) {
+  protected constructor(init: VectorIndexConstructorProps) {
     super(init);
     this.vectorStore = init.vectorStore;
   }
@@ -259,15 +259,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     );
   }
 
-  async insertNodes(nodes: BaseNode[]): Promise<void> {
-    const embeddingResults = await VectorStoreIndex.getNodeEmbeddingResults(
-      nodes,
-      this.serviceContext,
-    );
+  async insertNodesToStore(
+    vectorStore: VectorStore,
+    nodes: BaseNode[],
+  ): Promise<void> {
+    const newIds = await vectorStore.add(nodes);
 
-    const newIds = await this.vectorStore.add(embeddingResults);
-
-    if (!this.vectorStore.storesText) {
+    if (!vectorStore.storesText) {
       for (let i = 0; i < nodes.length; ++i) {
         this.indexStruct.addNode(nodes[i], newIds[i]);
         this.docStore.addDocuments([nodes[i]], true);
@@ -282,6 +280,14 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     }
 
     await this.storageContext.indexStore.addIndexStruct(this.indexStruct);
+  }
+
+  async insertNodes(nodes: BaseNode[]): Promise<void> {
+    const embeddingResults = await VectorStoreIndex.getNodeEmbeddingResults(
+      nodes,
+      this.serviceContext,
+    );
+    await this.insertNodesToStore(this.vectorStore, embeddingResults);
   }
 
   async deleteRefDoc(

@@ -229,13 +229,16 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
   }
 }
 
-// export class ImageNode extends TextNode {
-//   image: string = "";
+export type ImageType = string | Blob | URL;
 
-//   getType(): ObjectType {
-//     return ObjectType.IMAGE;
-//   }
-// }
+export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
+  image?: ImageType; // base64 encoded image string
+  textEmbedding?: number[]; // Assuming text embedding is an array of numbers
+
+  static getType(): string {
+    return ObjectType.IMAGE;
+  }
+}
 
 export class IndexNode<T extends Metadata = Metadata> extends TextNode<T> {
   indexId: string = "";
