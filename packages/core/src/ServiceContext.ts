@@ -1,7 +1,7 @@
-import { BaseEmbedding, OpenAIEmbedding } from "./Embedding";
 import { NodeParser, SimpleNodeParser } from "./NodeParser";
 import { PromptHelper } from "./PromptHelper";
 import { CallbackManager } from "./callbacks/CallbackManager";
+import { BaseEmbedding, OpenAIEmbedding } from "./embeddings";
 import { LLM, OpenAI } from "./llm/LLM";
 
 /**
