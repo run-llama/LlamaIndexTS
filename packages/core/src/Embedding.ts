@@ -1,13 +1,5 @@
-import { ClientOptions as OpenAIClientOptions } from "openai";
-
-import {
-  AutoProcessor,
-  AutoTokenizer,
-  CLIPTextModelWithProjection,
-  CLIPVisionModelWithProjection,
-  RawImage,
-} from "@xenova/transformers";
 import _ from "lodash";
+import { ClientOptions as OpenAIClientOptions } from "openai";
 import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
 import {
   AzureOpenAIConfig,
@@ -308,6 +300,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
 export type ImageType = string | Blob | URL;
 
 async function readImage(input: ImageType) {
+  const { RawImage } = await import("@xenova/transformers");
   if (input instanceof Blob) {
     return await RawImage.fromBlob(input);
   } else if (_.isString(input) || input instanceof URL) {
@@ -320,7 +313,7 @@ async function readImage(input: ImageType) {
 /*
  * Base class for Multi Modal embeddings.
  */
-abstract class MultiModalEmbedding extends BaseEmbedding {
+export abstract class MultiModalEmbedding extends BaseEmbedding {
   abstract getImageEmbedding(images: ImageType): Promise<number[]>;
 
   async getImageEmbeddings(images: ImageType[]): Promise<number[][]> {
@@ -347,6 +340,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getTokenizer() {
     if (!this.tokenizer) {
+      const { AutoTokenizer } = await import("@xenova/transformers");
       this.tokenizer = await AutoTokenizer.from_pretrained(this.modelType);
     }
     return this.tokenizer;
@@ -354,6 +348,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getProcessor() {
     if (!this.processor) {
+      const { AutoProcessor } = await import("@xenova/transformers");
       this.processor = await AutoProcessor.from_pretrained(this.modelType);
     }
     return this.processor;
@@ -361,6 +356,9 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getVisionModel() {
     if (!this.visionModel) {
+      const { CLIPVisionModelWithProjection } = await import(
+        "@xenova/transformers"
+      );
       this.visionModel = await CLIPVisionModelWithProjection.from_pretrained(
         this.modelType,
       );
@@ -371,6 +369,9 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getTextModel() {
     if (!this.textModel) {
+      const { CLIPTextModelWithProjection } = await import(
+        "@xenova/transformers"
+      );
       this.textModel = await CLIPTextModelWithProjection.from_pretrained(
         this.modelType,
       );

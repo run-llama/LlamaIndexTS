@@ -19,12 +19,12 @@ async function main() {
   const sim1 = similarity(
     textEmbedding1,
     imageEmbedding,
-    SimilarityType.COSINE,
+    SimilarityType.DEFAULT,
   );
   const sim2 = similarity(
     textEmbedding2,
     imageEmbedding,
-    SimilarityType.COSINE,
+    SimilarityType.DEFAULT,
   );
 
   console.log(`Similarity between "${text1}" and the image is ${sim1}`);

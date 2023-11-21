@@ -2,12 +2,16 @@
   "version": "0.0.1",
   "private": true,
   "name": "clip-test",
-  "type": "module",
   "dependencies": {
     "dotenv": "^16.3.1",
     "llamaindex": "workspace:*"
   },
+  "devDependencies": {
+    "@types/node": "^18",
+    "ts-node": "^10.9.1"
+  },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "ts-node ./clip_test.ts"
   }
 }
