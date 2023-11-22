@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.35
+
+### Patch Changes
+
+- 63f2108: Add multimodal support (thanks @marcusschiesser)
+
 ## 0.0.34
 
 ### Patch Changes

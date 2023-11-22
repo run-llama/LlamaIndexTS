@@ -1,4 +1,4 @@
-import { encodingForModel, TiktokenModel } from "js-tiktoken";
+import { encodingForModel } from "js-tiktoken";
 
 import { v4 as uuidv4 } from "uuid";
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
@@ -27,7 +27,7 @@ class GlobalsHelper {
         const numberArray = Array.from(tokens);
         const text = encoding.decode(numberArray);
         const uint8Array = new TextEncoder().encode(text);
-        return new TextDecoder().decode(uint8Array);      
+        return new TextDecoder().decode(uint8Array);
       },
     };
   }
@@ -39,10 +39,10 @@ class GlobalsHelper {
     if (!this.defaultTokenizer) {
       this.initDefaultTokenizer();
     }
-  
+
     return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
   }
-  
+
   tokenizerDecoder(encoding?: string) {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
@@ -50,7 +50,7 @@ class GlobalsHelper {
     if (!this.defaultTokenizer) {
       this.initDefaultTokenizer();
     }
-  
+
     return this.defaultTokenizer!.decode.bind(this.defaultTokenizer);
   }
 

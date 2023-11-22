@@ -1,0 +1,10 @@
+name: Bugfix
+title: ""
+description: Write something like "We notice ... behavior when ... happens instead of ...""
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Details
+      description: More details about the bug
+      placeholder: The bug might be in ... file
