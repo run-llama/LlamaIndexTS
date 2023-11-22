@@ -1,24 +1,19 @@
 import _ from "lodash";
 import { BaseNode, ImageNode, MetadataMode, TextNode } from "../../Node";
 import { ClipEmbedding, MultiModalEmbedding } from "../../embeddings";
-import { VectorStore } from "../../storage";
+import { SimpleVectorStore, VectorStore } from "../../storage";
 import { VectorStoreIndex } from "../vectorStore";
 import { VectorIndexConstructorProps } from "../vectorStore/VectorStoreIndex";
-
-export interface MultiModalVectorIndexConstructorProps
-  extends VectorIndexConstructorProps {
-  imageVectorStore: VectorStore;
-  imageEmbedModel?: MultiModalEmbedding;
-}
 
 export class MultiModalVectorStoreIndex extends VectorStoreIndex {
   imageVectorStore: VectorStore;
   imageEmbedModel: MultiModalEmbedding;
 
-  constructor(init: MultiModalVectorIndexConstructorProps) {
+  protected constructor(init: VectorIndexConstructorProps) {
     super(init);
-    this.imageVectorStore = init.imageVectorStore;
-    this.imageEmbedModel = init.imageEmbedModel ?? new ClipEmbedding();
+    // TODO: get image vector store from storage context
+    this.imageVectorStore = new SimpleVectorStore();
+    this.imageEmbedModel = new ClipEmbedding();
   }
 
   /**
@@ -34,12 +29,8 @@ export class MultiModalVectorStoreIndex extends VectorStoreIndex {
   ) {
     const isImageToText = nodes.every((node) => _.isString(node.text));
     if (isImageToText) {
-      // image nodes have a text, use the text embedding model
-      return VectorStoreIndex.getNodeEmbeddingResults(
-        nodes,
-        this.serviceContext,
-        logProgress,
-      );
+      // every image node has a text, use the text embedding model
+      return this.getNodeEmbeddingResults(nodes, logProgress);
     }
 
     const nodesWithEmbeddings: ImageNode[] = [];
@@ -90,5 +81,13 @@ export class MultiModalVectorStoreIndex extends VectorStoreIndex {
     const imageNodesWithEmbedding =
       await this.getImageNodeEmbeddingResults(imageNodes);
     super.insertNodesToStore(this.imageVectorStore, imageNodesWithEmbedding);
+  }
+
+  async deleteRefDoc(
+    refDocId: string,
+    deleteFromDocStore: boolean = true,
+  ): Promise<void> {
+    await this.deleteRefDocFromStore(this.imageVectorStore, refDocId);
+    await super.deleteRefDoc(refDocId, deleteFromDocStore);
   }
 }
