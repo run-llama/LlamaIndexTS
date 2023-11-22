@@ -1,7 +1,6 @@
 name: Bugfix
-title: "Sweep: "
+title: ""
 description: Write something like "We notice ... behavior when ... happens instead of ...""
-labels: sweep
 body:
   - type: textarea
     id: description
