@@ -1,6 +1,5 @@
 export * from "./ChatEngine";
 export * from "./ChatHistory";
-export * from "./Embedding";
 export * from "./GlobalsHelper";
 export * from "./Node";
 export * from "./NodeParser";
@@ -17,6 +16,7 @@ export * from "./TextSplitter";
 export * from "./Tool";
 export * from "./callbacks/CallbackManager";
 export * from "./constants";
+export * from "./embeddings";
 export * from "./indices";
 export * from "./llm/LLM";
 export * from "./readers/CSVReader";
