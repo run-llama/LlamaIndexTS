@@ -13,8 +13,8 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
     "@turbo/gen": "^1.10.16",
-    "@types/jest": "^29.5.8",
-    "eslint": "^8.53.0",
+    "@types/jest": "^29.5.10",
+    "eslint": "^8.54.0",
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.3",
     "jest": "^29.7.0",
