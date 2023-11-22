@@ -1,11 +1,10 @@
 name: Feature Request
-title: "Sweep: "
-description: Write something like "Write an api endpoint that does "..." in the "..." file"
-labels: sweep
+title: ""
+description: Write something like "Write an api endpoint that does "..." in the "..." file". If you would like to use sweep.dev prefix with "Sweep:"
 body:
   - type: textarea
     id: description
     attributes:
       label: Details
-      description: More details for Sweep
+      description: More details
       placeholder: The new endpoint should use the ... class from ... file because it contains ... logic
