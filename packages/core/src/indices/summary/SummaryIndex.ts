@@ -10,11 +10,11 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   StorageContext,
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
-import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   BaseIndex,
   BaseIndexInit,

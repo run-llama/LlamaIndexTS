@@ -6,7 +6,7 @@ import {
   getAzureModel,
   shouldUseAzure,
 } from "../llm/azure";
-import { OpenAISession, getOpenAISession } from "../llm/openai";
+import { getOpenAISession, OpenAISession } from "../llm/openai";
 import { BaseEmbedding } from "./types";
 
 export enum OpenAIEmbeddingModelType {
