@@ -1,34 +1,36 @@
 import { program } from "commander";
+import { AudioTranscriptReader, CreateTranscriptParameters } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 // readline/promises is still experimental so not in @types/node yet
 // @ts-ignore
 import readline from "node:readline/promises";
-import { AudioTranscriptReader, CreateTranscriptParameters } from "../packages/core/src/readers/AssemblyAI";
-import { VectorStoreIndex } from "../packages/core/src/indices";
+import { VectorStoreIndex } from "../../packages/core/src/indices";
 
 program
-  .option("-a, --audio-url [string]", "URL or path of the audio file to transcribe")
-  .option('-i, --transcript-id [string]', "ID of the AssemblyAI transcript")
+  .option(
+    "-a, --audio-url [string]",
+    "URL or path of the audio file to transcribe",
+  )
+  .option("-i, --transcript-id [string]", "ID of the AssemblyAI transcript")
   .action(async (options) => {
     if (!process.env.ASSEMBLYAI_API_KEY) {
-      console.log(
-        "No ASSEMBLYAI_API_KEY found in environment variables.",
-      );
+      console.log("No ASSEMBLYAI_API_KEY found in environment variables.");
       return;
     }
 
     const reader = new AudioTranscriptReader();
     let params: CreateTranscriptParameters | string;
-    console.log(options)
+    console.log(options);
     if (options.audioUrl) {
       params = {
-        audio_url: options.audioUrl
+        audio_url: options.audioUrl,
       };
     } else if (options.transcriptId) {
       params = options.transcriptId;
-    }
-    else {
-      console.log("You must provide either an --audio-url or a --transcript-id");
+    } else {
+      console.log(
+        "You must provide either an --audio-url or a --transcript-id",
+      );
       return;
     }
 
