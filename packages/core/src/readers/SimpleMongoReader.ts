@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { Document } from "../Node";
+import { Document, Metadata } from "../Node";
 import { BaseReader } from "./base";
 
 /**
@@ -13,39 +13,70 @@ export class SimpleMongoReader implements BaseReader {
   }
 
   /**
-   * Loads data from MongoDB collection
-   * @param {string} db_name - The name of the database to load.
-   * @param {string} collection_name - The name of the collection to load.
-   * @param {Number} [max_docs = 0] - Maximum number of documents to return. 0 means no limit.
-   * @param {Record<string, any>} [query_dict={}] - Specific query, as specified by MongoDB NodeJS documentation.
-   * @param {Record<string, any>} [query_options={}] - Specific query options, as specified by MongoDB NodeJS documentation.
-   * @param {Record<string, any>} [projection = {}] - Projection options, as specified by MongoDB NodeJS documentation.
-   * @returns {Promise<Document[]>}
+   * Flattens an array of strings or string arrays into a single-dimensional array of strings.
+   * @param texts - The array of strings or string arrays to flatten.
+   * @returns The flattened array of strings.
    */
-  async loadData(
-    db_name: string,
-    collection_name: string,
-    max_docs = 0,
-    //For later: Think about whether we want to pass generic objects in...
-    query_dict: Record<string, any> = {},
-    query_options: Record<string, any> = {},
-    projection: Record<string, any> = {},
-  ): Promise<Document[]> {
-    //Get items from collection using built-in functions
-    const cursor: Partial<Document>[] = await this.client
-      .db(db_name)
-      .collection(collection_name)
-      .find(query_dict, query_options)
-      .limit(max_docs)
-      .project(projection)
-      .toArray();
+  private flatten(texts: Array<string | string[]>): string[] {
+    return texts.reduce<string[]>(
+      (result, text) => result.concat(text instanceof Array ? text : [text]),
+      [],
+    );
+  }
 
-    //Aggregate results and return
+  /**
+   * Loads data from MongoDB collection
+   * @param {string} dbName - The name of the database to load.
+   * @param {string} collectionName - The name of the collection to load.
+   * @param {string[]} fieldNames - An array of field names to retrieve from each document. Defaults to ["text"].
+   * @param {string} separator - The separator to join multiple field values. Defaults to an empty string.
+   * @param {Record<string, any>} filterQuery - Specific query, as specified by MongoDB NodeJS documentation.
+   * @param {Number} maxDocs - The maximum number of documents to retrieve. Defaults to 0 (retrieve all documents).
+   * @param {string[]} metadataNames - An optional array of metadata field names. If specified extracts this information as metadata.
+   * @returns {Promise<Document[]>}
+   * @throws If a field specified in fieldNames or metadataNames is not found in a MongoDB document.
+   */
+  public async loadData(
+    dbName: string,
+    collectionName: string,
+    fieldNames: string[] = ["text"],
+    separator: string = "",
+    filterQuery: Record<string, any> = {},
+    maxDocs: number = 0,
+    metadataNames?: string[],
+  ): Promise<Document[]> {
+    const db = this.client.db(dbName);
+    // Get items from collection
+    const cursor = db
+      .collection(collectionName)
+      .find(filterQuery)
+      .limit(maxDocs);
+
     const documents: Document[] = [];
-    cursor.forEach((element: Partial<Document>) => {
-      //For later: Metadata filtering
-      documents.push(new Document({ text: JSON.stringify(element) }));
-    });
+
+    for await (const item of cursor) {
+      try {
+        const texts: Array<string | string[]> = fieldNames.map(
+          (name) => item[name],
+        );
+        const flattenedTexts = this.flatten(texts);
+        const text = flattenedTexts.join(separator);
+
+        let metadata: Metadata = {};
+        if (metadataNames) {
+          // extract metadata if fields are specified
+          metadata = Object.fromEntries(
+            metadataNames.map((name) => [name, item[name]]),
+          );
+        }
+
+        documents.push(new Document({ text, metadata }));
+      } catch (err) {
+        throw new Error(
+          `Field not found in Mongo document: ${(err as Error).message}`,
+        );
+      }
+    }
     return documents;
   }
 }

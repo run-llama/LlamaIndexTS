@@ -1,6 +1,6 @@
-import { OpenAIEmbedding } from "../../Embedding";
-import { globalsHelper } from "../../GlobalsHelper";
 import { CallbackManager, Event } from "../../callbacks/CallbackManager";
+import { OpenAIEmbedding } from "../../embeddings";
+import { globalsHelper } from "../../GlobalsHelper";
 import { ChatMessage, OpenAI } from "../../llm/LLM";
 
 export function mockLlmGeneration({

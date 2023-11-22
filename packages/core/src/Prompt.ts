@@ -36,6 +36,15 @@ Answer:`;
 
 export type TextQaPrompt = typeof defaultTextQaPrompt;
 
+export const anthropicTextQaPrompt = ({ context = "", query = "" }) => {
+  return `Context information:
+<context>
+${context}
+</context>
+Given the context information and not prior knowledge, answer the query.
+Query: ${query}`;
+};
+
 /*
 DEFAULT_SUMMARY_PROMPT_TMPL = (
     "Write a summary of the following. Try to use only the "

@@ -1,4 +1,4 @@
-import crypto from "crypto"; // TODO Node dependency
+import CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 
 export enum NodeRelationship {
@@ -175,13 +175,13 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
    * @returns
    */
   generateHash() {
-    const hashFunction = crypto.createHash("sha256");
+    const hashFunction = CryptoJS.algo.SHA256.create();
     hashFunction.update(`type=${this.getType()}`);
     hashFunction.update(
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
     );
     hashFunction.update(this.getContent(MetadataMode.ALL));
-    return hashFunction.digest("base64");
+    return hashFunction.finalize().toString(CryptoJS.enc.Base64);
   }
 
   getType(): ObjectType {
@@ -272,12 +272,13 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
   }
 }
 
-export function jsonToNode(json: any) {
-  if (!json.type) {
+export function jsonToNode(json: any, type?: ObjectType) {
+  if (!json.type && !type) {
     throw new Error("Node type not found");
   }
+  const nodeType = type || json.type;
 
-  switch (json.type) {
+  switch (nodeType) {
     case ObjectType.TEXT:
       return new TextNode(json);
     case ObjectType.INDEX:
@@ -285,7 +286,7 @@ export function jsonToNode(json: any) {
     case ObjectType.DOCUMENT:
       return new Document(json);
     default:
-      throw new Error(`Invalid node type: ${json.type}`);
+      throw new Error(`Invalid node type: ${nodeType}`);
   }
 }
 

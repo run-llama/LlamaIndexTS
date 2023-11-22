@@ -1,5 +1,30 @@
 # llamaindex
 
+## 0.0.35
+
+### Patch Changes
+
+- 63f2108: Add multimodal support (thanks @marcusschiesser)
+
+## 0.0.34
+
+### Patch Changes
+
+- 2a27e21: Add support for gpt-3.5-turbo-1106
+
+## 0.0.33
+
+### Patch Changes
+
+- 5e2e92c: gpt-4-1106-preview and gpt-4-vision-preview from OpenAI dev day
+
+## 0.0.32
+
+### Patch Changes
+
+- 90c0b83: Add HTMLReader (thanks @mtutty)
+- dfd22aa: Add observer/filter to the SimpleDirectoryReader (thanks @mtutty)
+
 ## 0.0.31
 
 ### Patch Changes

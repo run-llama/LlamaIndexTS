@@ -89,7 +89,7 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the follow config to your next.config.js to have it use imports/exports in the same way Node does.
 
 ```js
-export const runtime = "nodejs" // default
+export const runtime = "nodejs"; // default
 ```
 
 ```js
