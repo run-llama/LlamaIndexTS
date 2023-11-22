@@ -1,4 +1,3 @@
-import { OpenAIEmbedding } from "../Embedding";
 import { Document } from "../Node";
 import {
   ResponseSynthesizer,
@@ -10,6 +9,7 @@ import {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
+import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 import { OpenAI } from "../llm/LLM";

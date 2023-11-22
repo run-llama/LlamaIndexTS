@@ -1,33 +1,16 @@
-import { ClientOptions as OpenAIClientOptions } from "openai";
-
-import { DEFAULT_SIMILARITY_TOP_K } from "./constants";
-import {
-  AzureOpenAIConfig,
-  getAzureBaseUrl,
-  getAzureConfigFromEnv,
-  getAzureModel,
-  shouldUseAzure,
-} from "./llm/azure";
-import { OpenAISession, getOpenAISession } from "./llm/openai";
-import { VectorStoreQueryMode } from "./storage/vectorStore/types";
-
-/**
- * Similarity type
- * Default is cosine similarity. Dot product and negative Euclidean distance are also supported.
- */
-export enum SimilarityType {
-  DEFAULT = "cosine",
-  DOT_PRODUCT = "dot_product",
-  EUCLIDEAN = "euclidean",
-}
+import _ from "lodash";
+import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
+import { VectorStoreQueryMode } from "../storage";
+import { SimilarityType } from "./types";
 
 /**
  * The similarity between two embeddings.
  * @param embedding1
  * @param embedding2
  * @param mode
- * @returns similartiy score with higher numbers meaning the two embeddings are more similar
+ * @returns similarity score with higher numbers meaning the two embeddings are more similar
  */
+
 export function similarity(
   embedding1: number[],
   embedding2: number[],
@@ -42,7 +25,6 @@ export function similarity(
   // will probably cause some avoidable loss of floating point precision
   // ml-distance is worth watching although they currently also use the naive
   // formulas
-
   function norm(x: number[]): number {
     let result = 0;
     for (let i = 0; i < x.length; i++) {
@@ -201,98 +183,14 @@ export function getTopKMMREmbeddings(
 
   return [resultSimilarities, resultIds];
 }
-
-export abstract class BaseEmbedding {
-  similarity(
-    embedding1: number[],
-    embedding2: number[],
-    mode: SimilarityType = SimilarityType.DEFAULT,
-  ): number {
-    return similarity(embedding1, embedding2, mode);
-  }
-
-  abstract getTextEmbedding(text: string): Promise<number[]>;
-  abstract getQueryEmbedding(query: string): Promise<number[]>;
-}
-
-enum OpenAIEmbeddingModelType {
-  TEXT_EMBED_ADA_002 = "text-embedding-ada-002",
-}
-
-export class OpenAIEmbedding extends BaseEmbedding {
-  model: OpenAIEmbeddingModelType;
-
-  // OpenAI session params
-  apiKey?: string = undefined;
-  maxRetries: number;
-  timeout?: number;
-  additionalSessionOptions?: Omit<
-    Partial<OpenAIClientOptions>,
-    "apiKey" | "maxRetries" | "timeout"
-  >;
-
-  session: OpenAISession;
-
-  constructor(init?: Partial<OpenAIEmbedding> & { azure?: AzureOpenAIConfig }) {
-    super();
-
-    this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
-
-    this.maxRetries = init?.maxRetries ?? 10;
-    this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
-    this.additionalSessionOptions = init?.additionalSessionOptions;
-
-    if (init?.azure || shouldUseAzure()) {
-      const azureConfig = getAzureConfigFromEnv({
-        ...init?.azure,
-        model: getAzureModel(this.model),
-      });
-
-      if (!azureConfig.apiKey) {
-        throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
-        );
-      }
-
-      this.apiKey = azureConfig.apiKey;
-      this.session =
-        init?.session ??
-        getOpenAISession({
-          azure: true,
-          apiKey: this.apiKey,
-          baseURL: getAzureBaseUrl(azureConfig),
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          defaultQuery: { "api-version": azureConfig.apiVersion },
-          ...this.additionalSessionOptions,
-        });
-    } else {
-      this.apiKey = init?.apiKey ?? undefined;
-      this.session =
-        init?.session ??
-        getOpenAISession({
-          apiKey: this.apiKey,
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          ...this.additionalSessionOptions,
-        });
-    }
-  }
-
-  private async getOpenAIEmbedding(input: string) {
-    const { data } = await this.session.openai.embeddings.create({
-      model: this.model,
-      input,
-    });
-
-    return data[0].embedding;
-  }
-
-  async getTextEmbedding(text: string): Promise<number[]> {
-    return this.getOpenAIEmbedding(text);
-  }
-
-  async getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getOpenAIEmbedding(query);
+export async function readImage(input: ImageType) {
+  const { RawImage } = await import("@xenova/transformers");
+  if (input instanceof Blob) {
+    return await RawImage.fromBlob(input);
+  } else if (_.isString(input) || input instanceof URL) {
+    return await RawImage.fromURL(input);
+  } else {
+    throw new Error(`Unsupported input type: ${typeof input}`);
   }
 }
+export type ImageType = string | Blob | URL;
