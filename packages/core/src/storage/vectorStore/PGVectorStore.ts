@@ -1,25 +1,21 @@
-import pg from 'pg';
-import pgvector from 'pgvector/pg';
+import pg from "pg";
+import pgvector from "pgvector/pg";
 
-import {
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
-} from "./types";
+import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
 
-import { BaseNode, Document, Metadata, MetadataMode } from '../../Node';
-import { GenericFileSystem } from '../FileSystem';
+import { BaseNode, Document, Metadata, MetadataMode } from "../../Node";
+import { GenericFileSystem } from "../FileSystem";
 
-export const PGVECTOR_SCHEMA = 'public';
-export const PGVECTOR_TABLE = 'llamaindex_embedding';
+export const PGVECTOR_SCHEMA = "public";
+export const PGVECTOR_TABLE = "llamaindex_embedding";
 
 /**
- * Provides support for writing and querying vector data in Postgres.  
+ * Provides support for writing and querying vector data in Postgres.
  */
 export class PGVectorStore implements VectorStore {
   storesText: boolean = true;
 
-  private collection: string = '';
+  private collection: string = "";
 
   /*
     FROM pg LIBRARY:
@@ -66,8 +62,7 @@ export class PGVectorStore implements VectorStore {
   }
 
   private async getDb(): Promise<pg.Client> {
-    if (! this.db) {
-
+    if (!this.db) {
       try {
         // Create DB connection
         // Read connection params from env - see comment block above
@@ -83,7 +78,6 @@ export class PGVectorStore implements VectorStore {
 
         // All good?  Keep the connection reference
         this.db = db;
-
       } catch (err: any) {
         console.error(err);
         return Promise.reject(err);
@@ -95,7 +89,7 @@ export class PGVectorStore implements VectorStore {
 
   private async checkSchema(db: pg.Client) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${PGVECTOR_SCHEMA}`);
-    
+
     const tbl = `CREATE TABLE IF NOT EXISTS ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE}(
       id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       external_id VARCHAR,
@@ -135,7 +129,7 @@ export class PGVectorStore implements VectorStore {
     const sql: string = `DELETE FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
       WHERE collection = $1`;
 
-    const db = await this.getDb() as pg.Client;
+    const db = (await this.getDb()) as pg.Client;
     const ret = await db.query(sql, [this.collection]);
 
     return ret;
@@ -148,28 +142,27 @@ export class PGVectorStore implements VectorStore {
    * @returns A list of zero or more id values for the created records.
    */
   async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
-
     const sql: string = `INSERT INTO ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
       (id, external_id, collection, document, metadata, embeddings) 
       VALUES ($1, $2, $3, $4, $5, $6)`;
 
-    const db = await this.getDb() as pg.Client;
+    const db = (await this.getDb()) as pg.Client;
 
     let ret: string[] = [];
     for (let index = 0; index < embeddingResults.length; index++) {
       const row = embeddingResults[index];
 
-      let id: any = row.id_.length? row.id_: null;
+      let id: any = row.id_.length ? row.id_ : null;
       let meta = row.metadata || {};
       meta.create_date = new Date();
 
       const params = [
         id,
-        '', 
+        "",
         this.collection,
         row.getContent(MetadataMode.EMBED),
-        meta, 
-        '[' + row.getEmbedding().join(',') + ']'
+        meta,
+        "[" + row.getEmbedding().join(",") + "]",
       ];
 
       try {
@@ -180,7 +173,7 @@ export class PGVectorStore implements VectorStore {
           ret.push(id);
         }
       } catch (err) {
-        const msg = `${ err }`;
+        const msg = `${err}`;
         console.log(msg, err);
       }
     }
@@ -196,12 +189,16 @@ export class PGVectorStore implements VectorStore {
    * @returns Promise that resolves if the delete query did not throw an error.
    */
   async delete(refDocId: string, deleteKwargs?: any): Promise<void> {
-    const collectionCriteria = this.collection.length ? "AND collection = $2": "";
+    const collectionCriteria = this.collection.length
+      ? "AND collection = $2"
+      : "";
     const sql: string = `DELETE FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
-      WHERE id = $1 ${ collectionCriteria }`;
+      WHERE id = $1 ${collectionCriteria}`;
 
-    const db = await this.getDb() as pg.Client;
-    const params = this.collection.length ? [refDocId, this.collection] : [refDocId];
+    const db = (await this.getDb()) as pg.Client;
+    const params = this.collection.length
+      ? [refDocId, this.collection]
+      : [refDocId];
     await db.query(sql, params);
     return Promise.resolve();
   }
@@ -212,45 +209,43 @@ export class PGVectorStore implements VectorStore {
    * @param options Required by VectorStore interface.  Currently ignored.
    * @returns Zero or more Document instances with data from the vector store.
    */
-  async query(query: VectorStoreQuery, options?: any): Promise<VectorStoreQueryResult> {
+  async query(
+    query: VectorStoreQuery,
+    options?: any,
+  ): Promise<VectorStoreQueryResult> {
     // TODO QUERY TYPES:
     //    Distance:       SELECT embedding <-> $1 AS distance FROM items;
     //    Inner Product:  SELECT (embedding <#> $1) * -1 AS inner_product FROM items;
     //    Cosine Sim:     SELECT 1 - (embedding <=> $1) AS cosine_similarity FROM items;
 
-    const embedding = '[' + query.queryEmbedding?.join(',') + ']';
+    const embedding = "[" + query.queryEmbedding?.join(",") + "]";
     const max = query.similarityTopK ?? 2;
-    const where = this.collection.length ? "WHERE collection = $2": "";
+    const where = this.collection.length ? "WHERE collection = $2" : "";
     // TODO Add collection filter if set
     const sql = `SELECT * FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE}
-      ${ where }
-      ORDER BY embeddings <-> $1 LIMIT ${ max }
+      ${where}
+      ORDER BY embeddings <-> $1 LIMIT ${max}
     `;
 
-    const db = await this.getDb() as pg.Client;
-    const params = this.collection.length ? 
-      [embedding, this.collection] : [ embedding]
+    const db = (await this.getDb()) as pg.Client;
+    const params = this.collection.length
+      ? [embedding, this.collection]
+      : [embedding];
     const results = await db.query(sql, params);
 
-    const nodes = results.rows.map(
-      (row) => {
-        return new Document({
-          id_: row.id,
-          text: row.document,
-          metadata: row.metadata,
-          embedding: row.embeddings
-        })
-      }
-    );
+    const nodes = results.rows.map((row) => {
+      return new Document({
+        id_: row.id,
+        text: row.document,
+        metadata: row.metadata,
+        embedding: row.embeddings,
+      });
+    });
 
     const ret = {
       nodes: nodes,
-      similarities: results.rows.map(
-        (row) => row.embeddings
-      ),
-      ids: results.rows.map(
-        (row) => row.id
-      )
+      similarities: results.rows.map((row) => row.embeddings),
+      ids: results.rows.map((row) => row.id),
     };
 
     return Promise.resolve(ret);
@@ -258,11 +253,14 @@ export class PGVectorStore implements VectorStore {
 
   /**
    * Required by VectorStore interface.  Currently ignored.
-   * @param persistPath 
-   * @param fs 
+   * @param persistPath
+   * @param fs
    * @returns Resolved Promise.
    */
-  persist(persistPath: string, fs?: GenericFileSystem | undefined): Promise<void> {
+  persist(
+    persistPath: string,
+    fs?: GenericFileSystem | undefined,
+  ): Promise<void> {
     return Promise.resolve();
   }
 }
