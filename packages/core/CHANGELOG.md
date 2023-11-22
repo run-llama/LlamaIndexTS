@@ -1,5 +1,16 @@
 # llamaindex
 
+## 0.0.36
+
+### Patch Changes
+
+- Support for Claude 2.1
+- Add AssemblyAI integration (thanks @Swimburger)
+- Use cryptoJS (thanks @marcusschiesser)
+- Add PGVectorStore (thanks @mtutty)
+- Add CLIP embeddings (thanks @marcusschiesser)
+- Add MongoDB support (thanks @marcusschiesser)
+
 ## 0.0.35
 
 ### Patch Changes
