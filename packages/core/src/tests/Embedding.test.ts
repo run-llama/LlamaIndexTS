@@ -1,4 +1,4 @@
-import { SimilarityType, similarity } from "../embeddings";
+import { similarity, SimilarityType } from "../embeddings";
 
 describe("similarity", () => {
   test("throws error on mismatched lengths", () => {

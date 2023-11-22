@@ -1,4 +1,4 @@
-import { BaseNode, Metadata, ObjectType, jsonToNode } from "../../Node";
+import { BaseNode, jsonToNode, Metadata, ObjectType } from "../../Node";
 
 const DEFAULT_TEXT_KEY = "text";
 
