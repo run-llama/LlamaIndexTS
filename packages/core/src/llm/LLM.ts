@@ -639,7 +639,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
-  "claude-2": { contextWindow: 100000 },
+  "claude-2": { contextWindow: 200000 },
   "claude-instant-1": { contextWindow: 100000 },
 };
 
@@ -705,10 +705,12 @@ export class Anthropic implements LLM {
         return (
           acc +
           `${
-            message.role === "assistant"
-              ? ANTHROPIC_AI_PROMPT
-              : ANTHROPIC_HUMAN_PROMPT
-          } ${message.content} `
+            message.role === "system"
+              ? ""
+              : message.role === "assistant"
+                ? ANTHROPIC_AI_PROMPT + " "
+                : ANTHROPIC_HUMAN_PROMPT + " "
+          }${message.content.trim()}`
         );
       }, "") + ANTHROPIC_AI_PROMPT
     );
@@ -729,6 +731,7 @@ export class Anthropic implements LLM {
       }
       return this.streamChat(messages, parentEvent) as R;
     }
+
     //Non-streaming
     const response = await this.session.anthropic.completions.create({
       model: this.model,
