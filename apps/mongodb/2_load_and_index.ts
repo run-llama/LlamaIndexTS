@@ -3,8 +3,8 @@ import * as dotenv from "dotenv";
 import {
   MongoDBAtlasVectorSearch,
   SimpleMongoReader,
-  VectorStoreIndex,
   storageContextFromDefaults,
+  VectorStoreIndex,
 } from "llamaindex";
 import { MongoClient } from "mongodb";
 

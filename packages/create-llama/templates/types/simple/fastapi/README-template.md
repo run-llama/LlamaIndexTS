@@ -12,6 +12,7 @@ poetry shell
 By default, we use the OpenAI LLM (though you can customize, see app/api/routers/chat.py). As a result you need to specify an `OPENAI_API_KEY` in an .env file in this directory.
 
 Example `backend/.env` file:
+
 ```
 OPENAI_API_KEY=<openai_api_key>
 ```
