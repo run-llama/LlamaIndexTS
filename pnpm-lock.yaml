@@ -49,22 +49,6 @@ importers:
         specifier: ^1.10.16
         version: 1.10.16
 
-  apps/clip:
-    dependencies:
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
-      llamaindex:
-        specifier: workspace:*
-        version: link:../../packages/core
-    devDependencies:
-      '@types/node':
-        specifier: ^18
-        version: 18.18.8
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.1(@types/node@18.18.8)(typescript@5.2.2)
-
   apps/docs:
     dependencies:
       '@docusaurus/core':
