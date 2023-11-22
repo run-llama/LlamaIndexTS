@@ -1,13 +1,13 @@
 import _ from "lodash";
 import * as path from "path";
-import { BaseNode } from "../../Node";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
 } from "../../embeddings";
-import { GenericFileSystem, exists } from "../FileSystem";
+import { BaseNode } from "../../Node";
 import { DEFAULT_FS, DEFAULT_PERSIST_DIR } from "../constants";
+import { exists, GenericFileSystem } from "../FileSystem";
 import {
   VectorStore,
   VectorStoreQuery,

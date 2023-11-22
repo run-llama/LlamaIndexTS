@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
-import { Document } from "../../packages/core/src/Node";
 import { VectorStoreIndex } from "../../packages/core/src/indices";
+import { Document } from "../../packages/core/src/Node";
 import { SimpleMongoReader } from "../../packages/core/src/readers/SimpleMongoReader";
 
 import { stdin as input, stdout as output } from "node:process";

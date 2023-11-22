@@ -2,8 +2,8 @@
 import * as dotenv from "dotenv";
 import {
   MongoDBAtlasVectorSearch,
-  VectorStoreIndex,
   serviceContextFromDefaults,
+  VectorStoreIndex,
 } from "llamaindex";
 import { MongoClient } from "mongodb";
 
