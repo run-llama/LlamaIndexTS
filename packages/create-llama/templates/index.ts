@@ -14,26 +14,14 @@ import {
   TemplateFramework,
 } from "./types";
 
-const envFileNameMap: Record<TemplateFramework, string> = {
-  nextjs: ".env.local",
-  express: ".env",
-  fastapi: ".env",
-};
-
-const createEnvLocalFile = async (
-  root: string,
-  framework: TemplateFramework,
-  openAIKey?: string,
-) => {
+const createEnvLocalFile = async (root: string, openAIKey?: string) => {
   if (openAIKey) {
-    const envFileName = envFileNameMap[framework];
-    if (!envFileName) return;
+    const envFileName = ".env";
     await fs.writeFile(
       path.join(root, envFileName),
       `OPENAI_API_KEY=${openAIKey}\n`,
     );
     console.log(`Created '${envFileName}' file containing OPENAI_API_KEY`);
-    process.env["OPENAI_API_KEY"] = openAIKey;
   }
 };
 
@@ -42,6 +30,7 @@ const copyTestData = async (
   framework: TemplateFramework,
   packageManager?: PackageManager,
   engine?: TemplateEngine,
+  openAIKey?: string,
 ) => {
   if (engine === "context" || framework === "fastapi") {
     const srcPath = path.join(__dirname, "components", "data");
@@ -54,7 +43,7 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
-    if (process.env["OPENAI_API_KEY"]) {
+    if (openAIKey || process.env["OPENAI_API_KEY"]) {
       console.log(
         `\nRunning ${cyan(
           `${packageManager} run generate`,
@@ -313,7 +302,7 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, props.framework, props.openAIKey);
+    await createEnvLocalFile(props.root, props.openAIKey);
 
     // Copy test pdf file
     await copyTestData(
@@ -321,6 +310,7 @@ export const installTemplate = async (
       props.framework,
       props.packageManager,
       props.engine,
+      props.openAIKey,
     );
   }
 };
