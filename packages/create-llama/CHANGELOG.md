@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.10
+
+### Patch Changes
+
+- Bugfixes (thanks @marcusschiesser)
+
 ## 0.0.9
 
 ### Patch Changes
