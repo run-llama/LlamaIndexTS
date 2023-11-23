@@ -9,7 +9,7 @@
     "dev": "concurrently \"tsup index.ts --format esm --dts --watch\" \"nodemon -q dist/index.js\""
   },
   "dependencies": {
-    "ai": "^2",
+    "ai": "^2.2.5",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4",
