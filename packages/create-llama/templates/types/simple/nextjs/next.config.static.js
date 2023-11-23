@@ -2,6 +2,15 @@
 const nextConfig = {
   output: "export",
   images: { unoptimized: true },
+  webpack: (config) => {
+    // See https://webpack.js.org/configuration/resolve/#resolvealias
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      sharp$: false,
+      "onnxruntime-node$": false,
+    };
+    return config;
+  },
   experimental: {
     serverComponentsExternalPackages: ["llamaindex"],
     outputFileTracingIncludes: {
