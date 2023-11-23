@@ -14,26 +14,14 @@ import {
   TemplateFramework,
 } from "./types";
 
-const envFileNameMap: Record<TemplateFramework, string> = {
-  nextjs: ".env.local",
-  express: ".env",
-  fastapi: ".env",
-};
-
-const createEnvLocalFile = async (
-  root: string,
-  framework: TemplateFramework,
-  openAIKey?: string,
-) => {
+const createEnvLocalFile = async (root: string, openAIKey?: string) => {
   if (openAIKey) {
-    const envFileName = envFileNameMap[framework];
-    if (!envFileName) return;
+    const envFileName = ".env";
     await fs.writeFile(
       path.join(root, envFileName),
       `OPENAI_API_KEY=${openAIKey}\n`,
     );
     console.log(`Created '${envFileName}' file containing OPENAI_API_KEY`);
-    process.env["OPENAI_API_KEY"] = openAIKey;
   }
 };
 
@@ -42,7 +30,16 @@ const copyTestData = async (
   framework: TemplateFramework,
   packageManager?: PackageManager,
   engine?: TemplateEngine,
+  openAIKey?: string,
 ) => {
+  if (framework === "nextjs") {
+    // XXX: This is a hack to make the build for nextjs work with pdf-parse
+    // pdf-parse needs './test/data/05-versions-space.pdf' to exist - can be removed when pdf-parse is removed
+    const srcFile = path.join(__dirname, "components", "data", "101.pdf");
+    const destPath = path.join(root, "test", "data");
+    await fs.mkdir(destPath, { recursive: true });
+    await fs.copyFile(srcFile, path.join(destPath, "05-versions-space.pdf"));
+  }
   if (engine === "context" || framework === "fastapi") {
     const srcPath = path.join(__dirname, "components", "data");
     const destPath = path.join(root, "data");
@@ -54,7 +51,7 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
-    if (process.env["OPENAI_API_KEY"]) {
+    if (openAIKey || process.env["OPENAI_API_KEY"]) {
       console.log(
         `\nRunning ${cyan(
           `${packageManager} run generate`,
@@ -226,6 +223,7 @@ const installTSTemplate = async ({
       "tailwind-merge": "^2",
       "@radix-ui/react-slot": "^1",
       "class-variance-authority": "^0.7",
+      clsx: "^1.2.1",
       "lucide-react": "^0.291",
       remark: "^14.0.3",
       "remark-code-import": "^1.2.0",
@@ -313,7 +311,7 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, props.framework, props.openAIKey);
+    await createEnvLocalFile(props.root, props.openAIKey);
 
     // Copy test pdf file
     await copyTestData(
@@ -321,6 +319,7 @@ export const installTemplate = async (
       props.framework,
       props.packageManager,
       props.engine,
+      props.openAIKey,
     );
   }
 };
