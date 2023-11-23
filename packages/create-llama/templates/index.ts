@@ -215,6 +215,7 @@ const installTSTemplate = async ({
       "tailwind-merge": "^2",
       "@radix-ui/react-slot": "^1",
       "class-variance-authority": "^0.7",
+      clsx: "^1.2.1",
       "lucide-react": "^0.291",
       remark: "^14.0.3",
       "remark-code-import": "^1.2.0",
