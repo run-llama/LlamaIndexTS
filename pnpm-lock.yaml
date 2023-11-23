@@ -156,6 +156,9 @@ importers:
       '@xenova/transformers':
         specifier: ^2.8.0
         version: 2.8.0
+      assemblyai:
+        specifier: ^3.0.1
+        version: 3.1.1
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -5199,6 +5202,15 @@ packages:
       minimalistic-assert: 1.0.1
       safer-buffer: 2.1.2
     dev: true
+
+  /assemblyai@3.1.1:
+    resolution: {integrity: sha512-rEhLnIZU7TupOkdzN9WjxhVU5bxMVofkNslzTArsuilaqOusPUmh6I7SGcJCGwKKE8qEweBaoY4DZ03cxv4KoA==}
+    dependencies:
+      ws: 8.14.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
 
   /assert@2.1.0:
     resolution: {integrity: sha512-eLHpSK/Y4nhMJ07gDaAzoX/XAKS8PSaojml3M0DM4JpV1LAi5JOJ/p6H/XWrl8L+DzVEvVCW1z3vWAaB9oTsQw==}
