@@ -22,12 +22,14 @@ export async function createApp({
   eslint,
   frontend,
   openAIKey,
+  svelte,
 }: Omit<
   InstallTemplateArgs,
   "appName" | "root" | "isOnline" | "customApiPath"
 > & {
   appPath: string;
   frontend: boolean;
+  svelte: boolean;
 }): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -75,13 +77,23 @@ export async function createApp({
     // install frontend
     const frontendRoot = path.join(root, "frontend");
     await makeDir(frontendRoot);
-    await installTemplate({
-      ...args,
-      root: frontendRoot,
-      framework: "nextjs",
-      customApiPath: "http://localhost:8000/api/chat",
-      backend: false,
-    });
+    if (svelte) {
+      await installTemplate({
+        ...args,
+        root: frontendRoot,
+        framework: "svelte",
+        customApiPath: "http://localhost:8000/api/chat",
+        backend: false,
+      });
+    } else {
+      await installTemplate({
+        ...args,
+        root: frontendRoot,
+        framework: "nextjs",
+        customApiPath: "http://localhost:8000/api/chat",
+        backend: false,
+      });
+    }
     // copy readme for fullstack
     await fs.promises.copyFile(
       path.join(__dirname, "templates", "README-fullstack.md"),
