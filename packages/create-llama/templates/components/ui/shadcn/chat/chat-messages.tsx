@@ -1,4 +1,4 @@
-import { useEffect, useRef, useDeferredValue } from "react";
+import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 
 import ChatActions from "./chat-actions";
@@ -24,12 +24,11 @@ export default function ChatMessages(
   const showReload =
     props.reload && !props.isLoading && isLastMessageFromAssistant;
   const showStop = props.stop && props.isLoading;
-  const content = lastMessage?.content ?? "";
-  const deferredContent = useDeferredValue(content);
-  const isPending = props.isLoading ? !isLastMessageFromAssistant : (
-    props.isLoading &&
-    isLastMessageFromAssistant && content === deferredContent
-  );
+
+  // `isPending` indicate
+  // that stream response is not yet received from the server,
+  // so we show a loading indicator to give a better UX.
+  const isPending = props.isLoading && !isLastMessageFromAssistant;
 
   useEffect(() => {
     scrollToBottom();
