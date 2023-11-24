@@ -1,5 +1,6 @@
+import { MODEL } from "@/constants";
 import { Message, StreamingTextResponse } from "ai";
-import { OpenAI } from "llamaindex";
+import { MessageContent, OpenAI } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
@@ -7,10 +8,29 @@ import { LlamaIndexStream } from "./llamaindex-stream";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const getLastMessageContent = (
+  textMessage: string,
+  imageUrl: string | undefined,
+): MessageContent => {
+  if (!imageUrl) return textMessage;
+  return [
+    {
+      type: "text",
+      text: textMessage,
+    },
+    {
+      type: "image_url",
+      image_url: {
+        url: imageUrl,
+      },
+    },
+  ];
+};
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { messages }: { messages: Message[] } = body;
+    const { messages, data }: { messages: Message[]; data: any } = body;
     const lastMessage = messages.pop();
     if (!messages || !lastMessage || lastMessage.role !== "user") {
       return NextResponse.json(
@@ -23,12 +43,21 @@ export async function POST(request: NextRequest) {
     }
 
     const llm = new OpenAI({
-      model: "gpt-3.5-turbo",
+      model: MODEL,
     });
 
     const chatEngine = await createChatEngine(llm);
 
-    const response = await chatEngine.chat(lastMessage.content, messages, true);
+    const lastMessageContent = getLastMessageContent(
+      lastMessage.content,
+      data?.imageUrl,
+    );
+
+    const response = await chatEngine.chat(
+      lastMessageContent as MessageContent,
+      messages,
+      true,
+    );
 
     // Transform the response into a readable stream
     const stream = LlamaIndexStream(response);

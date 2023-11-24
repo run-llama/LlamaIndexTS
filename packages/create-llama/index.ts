@@ -277,6 +277,32 @@ async function run(): Promise<void> {
     }
   }
 
+  if (program.framework === "nextjs") {
+    if (!program.model) {
+      if (ciInfo.isCI) {
+        program.model = getPrefOrDefault("model");
+      } else {
+        const { model } = await prompts(
+          {
+            type: "select",
+            name: "model",
+            message: "Which model would you like to use?",
+            choices: [
+              { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+              { title: "gpt-4", value: "gpt-4" },
+              { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
+              { title: "gpt-4-vision-preview", value: "gpt-4-vision-preview" },
+            ],
+            initial: 0,
+          },
+          handlers,
+        );
+        program.model = model;
+        preferences.model = model;
+      }
+    }
+  }
+
   if (program.framework === "express" || program.framework === "nextjs") {
     if (!program.engine) {
       if (ciInfo.isCI) {
@@ -350,6 +376,7 @@ async function run(): Promise<void> {
     eslint: program.eslint,
     frontend: program.frontend,
     openAIKey: program.openAIKey,
+    model: program.model,
   });
   conf.set("preferences", preferences);
 }
