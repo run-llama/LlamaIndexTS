@@ -12,6 +12,14 @@ import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./templates";
 import { installTemplate } from "./templates";
 
+export type InstallAppArgs = Omit<
+  InstallTemplateArgs,
+  "appName" | "root" | "isOnline" | "customApiPath"
+> & {
+  appPath: string;
+  frontend: boolean;
+};
+
 export async function createApp({
   template,
   framework,
@@ -23,13 +31,7 @@ export async function createApp({
   frontend,
   openAIKey,
   model,
-}: Omit<
-  InstallTemplateArgs,
-  "appName" | "root" | "isOnline" | "customApiPath"
-> & {
-  appPath: string;
-  frontend: boolean;
-}): Promise<void> {
+}: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
   if (!(await isWriteable(path.dirname(root)))) {
