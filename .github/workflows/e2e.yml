@@ -7,6 +7,7 @@ on:
       - 'packages/create-llama/**'
       - '.github/workflows/e2e.yml'
     branches: [ main ]
+
 jobs:
   e2e:
     name: create-llama
@@ -23,8 +24,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
+        run: pnpm install
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
         working-directory: ./packages/create-llama
