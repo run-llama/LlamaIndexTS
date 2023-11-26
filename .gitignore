@@ -40,3 +40,9 @@ dist/
 
 # vs code
 .vscode/launch.json
+
+.cache
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/

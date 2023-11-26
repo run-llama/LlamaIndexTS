@@ -13,6 +13,12 @@ import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
+import {
+  templateEngineSchema,
+  templateFrameworkSchema,
+  templateTypeSchema,
+  templateUISchema,
+} from "./templates/types";
 
 let projectPath: string = "";
 
@@ -71,6 +77,36 @@ const program = new Commander.Command(packageJson.name)
     `
 
   Explicitly tell the CLI to reset any stored preferences
+`,
+  )
+  .option(
+    "--template <template>",
+    `
+  Select a template to bootstrap the application with.
+`,
+  )
+  .option(
+    "--engine <engine>",
+    `
+  Select a chat engine to bootstrap the application with.
+`,
+  )
+  .option(
+    "--framework <framework>",
+    `
+  Select a framework to bootstrap the application with.
+`,
+  )
+  .option(
+    "--open-ai-key <key>",
+    `
+  Provide an OpenAI API key.
+`,
+  )
+  .option(
+    "--ui <ui>",
+    `
+  Select a UI to bootstrap the application with.
 `,
   )
   .allowUnknownOption()
@@ -304,7 +340,7 @@ async function run(): Promise<void> {
     }
   }
 
-  if (!program.openAIKey) {
+  if (!program.openAiKey) {
     const { key } = await prompts(
       {
         type: "text",
@@ -313,8 +349,8 @@ async function run(): Promise<void> {
       },
       handlers,
     );
-    program.openAIKey = key;
-    preferences.openAIKey = key;
+    program.openAiKey = key;
+    preferences.openAiKey = key;
   }
 
   if (
@@ -340,6 +376,11 @@ async function run(): Promise<void> {
     }
   }
 
+  templateUISchema.parse(program.ui);
+  templateEngineSchema.parse(program.engine);
+  templateFrameworkSchema.parse(program.framework);
+  templateTypeSchema.parse(program.template);
+
   await createApp({
     template: program.template,
     framework: program.framework,
@@ -349,7 +390,7 @@ async function run(): Promise<void> {
     packageManager,
     eslint: program.eslint,
     frontend: program.frontend,
-    openAIKey: program.openAIKey,
+    openAIKey: program.openAiKey,
   });
   conf.set("preferences", preferences);
 }
