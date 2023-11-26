@@ -5,9 +5,13 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  test:
+  e2e:
+    name: E2E Tests on create-llama
     timeout-minutes: 60
-    runs-on: [macos-latest, ubuntu-latest, windows-latest]
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node.js
