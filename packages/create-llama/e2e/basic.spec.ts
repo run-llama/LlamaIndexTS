@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { exec } from "child_process";
 import { execSync } from "node:child_process";
+import crypto from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import waitPort from "wait-port";
