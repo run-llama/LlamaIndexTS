@@ -10,7 +10,8 @@ jobs:
     runs-on: [macos-latest, ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 18
       - name: Install dependencies
@@ -19,6 +20,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
         run: pnpm exec playwright test
+        working-directory: ./packages/create-llama
       - uses: actions/upload-artifact@v3
         if: always()
         with:
