@@ -5,10 +5,11 @@ on:
   pull_request:
     paths:
       - 'packages/create-llama/**'
+      - '.github/workflows/e2e.yml'
     branches: [ main ]
 jobs:
   e2e:
-    name: E2E Tests on create-llama
+    name: create-llama
     timeout-minutes: 60
     strategy:
       fail-fast: true
