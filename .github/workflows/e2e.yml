@@ -3,6 +3,8 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    paths:
+      - 'packages/create-llama/**'
     branches: [ main ]
 jobs:
   e2e:
