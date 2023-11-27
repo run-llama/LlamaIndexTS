@@ -109,6 +109,12 @@ const program = new Commander.Command(packageJson.name)
   Select a UI to bootstrap the application with.
 `,
   )
+  .option(
+    "--frontend",
+    `
+  Whether to generate a frontend for your backend.
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
 
@@ -261,8 +267,11 @@ async function run(): Promise<void> {
   }
 
   if (program.framework === "express" || program.framework === "fastapi") {
+    if (process.argv.includes("--no-frontend")) {
+      program.frontend = false;
+    }
     // if a backend-only framework is selected, ask whether we should create a frontend
-    if (!program.frontend) {
+    if (program.frontend === undefined) {
       if (ciInfo.isCI) {
         program.frontend = getPrefOrDefault("frontend");
       } else {
@@ -287,6 +296,9 @@ async function run(): Promise<void> {
         preferences.frontend = Boolean(frontend);
       }
     }
+  } else {
+    // single project if framework is nextjs
+    program.frontend = false;
   }
 
   if (program.framework === "nextjs" || program.frontend) {
