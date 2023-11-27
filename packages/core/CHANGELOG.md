@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.37
+
+### Patch Changes
+
+- 3bab231: Fixed errors (#225 and #226) Thanks @marcusschiesser
+
 ## 0.0.36
 
 ### Patch Changes

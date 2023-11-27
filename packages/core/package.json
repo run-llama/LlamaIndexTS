@@ -1,13 +1,12 @@
 {
   "name": "llamaindex",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.9.1",
     "@notionhq/client": "^2.2.13",
     "@pinecone-database/pinecone": "^1.1.2",
     "@xenova/transformers": "^2.8.0",
-    "assemblyai": "^3.0.1",
     "crypto-js": "^4.2.0",
     "js-tiktoken": "^1.0.8",
     "lodash": "^4.17.21",
@@ -51,12 +50,5 @@
     "test": "jest",
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
-  },
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
   }
 }
