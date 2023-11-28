@@ -4,6 +4,7 @@ import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
 import { PapaCSVReader } from "./CSVReader";
 import { DocxReader } from "./DocxReader";
+import { EpubReader } from "./EpubReader";
 import { HTMLReader } from "./HTMLReader";
 import { MarkdownReader } from "./MarkdownReader";
 import { PDFReader } from "./PDFReader";
@@ -42,6 +43,7 @@ export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   docx: new DocxReader(),
   htm: new HTMLReader(),
   html: new HTMLReader(),
+  epub: new EpubReader(),
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {

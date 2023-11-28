@@ -97,7 +97,7 @@ export const runtime = "nodejs"; // default
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Puts pdf-parse in actual NodeJS mode with NextJS App Router
+    serverComponentsExternalPackages: ["pdf-parse", "@gxl/epub-parser"], // Puts pdf-parse and @gxl/epub-parser in actual NodeJS mode with NextJS App Router
   },
 };
 

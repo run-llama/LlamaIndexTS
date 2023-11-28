@@ -4,6 +4,7 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.9.1",
+    "@gxl/epub-parser": "2.0.4",
     "@notionhq/client": "^2.2.13",
     "@xenova/transformers": "^2.8.0",
     "crypto-js": "^4.2.0",

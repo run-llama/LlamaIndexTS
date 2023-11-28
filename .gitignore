@@ -40,3 +40,6 @@ dist/
 
 # vs code
 .vscode/launch.json
+
+# jetbrains ide
+.idea/
