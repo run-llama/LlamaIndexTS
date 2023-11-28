@@ -13,7 +13,7 @@
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.3.0",
     "notion-md-crawler": "^0.0.2",
-    "openai": "^4.19.1",
+    "openai": "^4.20.0",
     "papaparse": "^5.4.1",
     "pdf-parse": "^1.1.1",
     "pg": "^8.11.3",

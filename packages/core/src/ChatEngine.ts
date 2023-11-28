@@ -30,7 +30,7 @@ export interface ChatEngine {
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
   >(
-    message: string,
+    message: MessageContent,
     chatHistory?: ChatMessage[],
     streaming?: T,
   ): Promise<R>;
@@ -56,7 +56,11 @@ export class SimpleChatEngine implements ChatEngine {
   async chat<
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
-  >(message: string, chatHistory?: ChatMessage[], streaming?: T): Promise<R> {
+  >(
+    message: MessageContent,
+    chatHistory?: ChatMessage[],
+    streaming?: T,
+  ): Promise<R> {
     //Streaming option
     if (streaming) {
       return this.streamChat(message, chatHistory) as R;
@@ -72,7 +76,7 @@ export class SimpleChatEngine implements ChatEngine {
   }
 
   protected async *streamChat(
-    message: string,
+    message: MessageContent,
     chatHistory?: ChatMessage[],
   ): AsyncGenerator<string, void, unknown> {
     chatHistory = chatHistory ?? this.chatHistory;
@@ -144,14 +148,14 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
   >(
-    message: string,
+    message: MessageContent,
     chatHistory?: ChatMessage[] | undefined,
     streaming?: T,
   ): Promise<R> {
     chatHistory = chatHistory ?? this.chatHistory;
 
     const condensedQuestion = (
-      await this.condenseQuestion(chatHistory, message)
+      await this.condenseQuestion(chatHistory, extractText(message))
     ).message.content;
 
     const response = await this.queryEngine.query(condensedQuestion);
@@ -256,7 +260,7 @@ export class ContextChatEngine implements ChatEngine {
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : Response,
   >(
-    message: string,
+    message: MessageContent,
     chatHistory?: ChatMessage[] | undefined,
     streaming?: T,
   ): Promise<R> {
@@ -272,7 +276,10 @@ export class ContextChatEngine implements ChatEngine {
       type: "wrapper",
       tags: ["final"],
     };
-    const context = await this.contextGenerator.generate(message, parentEvent);
+    const context = await this.contextGenerator.generate(
+      extractText(message),
+      parentEvent,
+    );
 
     chatHistory.push({ content: message, role: "user" });
 
@@ -291,7 +298,7 @@ export class ContextChatEngine implements ChatEngine {
   }
 
   protected async *streamChat(
-    message: string,
+    message: MessageContent,
     chatHistory?: ChatMessage[] | undefined,
   ): AsyncGenerator<string, void, unknown> {
     chatHistory = chatHistory ?? this.chatHistory;
@@ -301,7 +308,10 @@ export class ContextChatEngine implements ChatEngine {
       type: "wrapper",
       tags: ["final"],
     };
-    const context = await this.contextGenerator.generate(message, parentEvent);
+    const context = await this.contextGenerator.generate(
+      extractText(message),
+      parentEvent,
+    );
 
     chatHistory.push({ content: message, role: "user" });
 
@@ -330,14 +340,32 @@ export class ContextChatEngine implements ChatEngine {
 
 export interface MessageContentDetail {
   type: "text" | "image_url";
-  text: string;
-  image_url: { url: string };
+  text?: string;
+  image_url?: { url: string };
 }
 
 /**
  * Extended type for the content of a message that allows for multi-modal messages.
  */
 export type MessageContent = string | MessageContentDetail[];
+
+/**
+ * Extracts just the text from a multi-modal message or the message itself if it's just text.
+ *
+ * @param message The message to extract text from.
+ * @returns The extracted text
+ */
+function extractText(message: MessageContent): string {
+  if (Array.isArray(message)) {
+    // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
+    // so we can pass them to the context generator
+    return (message as MessageContentDetail[])
+      .filter((c) => c.type === "text")
+      .map((c) => c.text)
+      .join("\n\n");
+  }
+  return message;
+}
 
 /**
  * HistoryChatEngine is a ChatEngine that uses a `ChatHistory` object
@@ -413,15 +441,8 @@ export class HistoryChatEngine {
     let requestMessages;
     let context;
     if (this.contextGenerator) {
-      if (Array.isArray(message)) {
-        // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
-        // so we can pass them to the context generator
-        message = (message as MessageContentDetail[])
-          .filter((c) => c.type === "text")
-          .map((c) => c.text)
-          .join("\n\n");
-      }
-      context = await this.contextGenerator.generate(message);
+      const textOnly = extractText(message);
+      context = await this.contextGenerator.generate(textOnly);
     }
     requestMessages = await chatHistory.requestMessages(
       context ? [context.message] : undefined,

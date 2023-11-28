@@ -18,4 +18,5 @@ export interface InstallTemplateArgs {
   customApiPath?: string;
   openAIKey?: string;
   forBackend?: string;
+  model: string;
 }
