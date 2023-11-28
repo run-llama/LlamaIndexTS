@@ -5,7 +5,7 @@ slug: /
 
 # What is LlamaIndex.TS?
 
-LlamaIndex.TS is a data framework for LLM applications to ingest, structure, and access private or domain-specific data. While a python package is also available (see [here](https://gpt-index.readthedocs.io/en/latest/)), LlamaIndex.TS offers core features in a simple package, optimized for usage with TypeScript.
+LlamaIndex.TS is a data framework for LLM applications to ingest, structure, and access private or domain-specific data. While a python package is also available (see [here](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS offers core features in a simple package, optimized for usage with TypeScript.
 
 ## 🚀 Why LlamaIndex.TS?
 
