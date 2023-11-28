@@ -142,6 +142,11 @@ export class PGVectorStore implements VectorStore {
    * @returns A list of zero or more id values for the created records.
    */
   async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
+    if (embeddingResults.length == 0) {
+      console.debug("Empty list sent to PGVectorStore::add");
+      return Promise.resolve([]);
+    }
+
     const sql: string = `INSERT INTO ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
       (id, external_id, collection, document, metadata, embeddings) 
       VALUES ($1, $2, $3, $4, $5, $6)`;
@@ -222,9 +227,13 @@ export class PGVectorStore implements VectorStore {
     const max = query.similarityTopK ?? 2;
     const where = this.collection.length ? "WHERE collection = $2" : "";
     // TODO Add collection filter if set
-    const sql = `SELECT * FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE}
+    const sql = `SELECT 
+        v.*, 
+        embeddings <-> $1 s 
+      FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} v
       ${where}
-      ORDER BY embeddings <-> $1 LIMIT ${max}
+      ORDER BY s 
+      LIMIT ${max}
     `;
 
     const db = (await this.getDb()) as pg.Client;
@@ -244,7 +253,7 @@ export class PGVectorStore implements VectorStore {
 
     const ret = {
       nodes: nodes,
-      similarities: results.rows.map((row) => row.embeddings),
+      similarities: results.rows.map((row) => row.s),
       ids: results.rows.map((row) => row.id),
     };
 
