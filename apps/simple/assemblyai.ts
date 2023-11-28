@@ -1,5 +1,5 @@
 import { program } from "commander";
-import { AudioTranscriptReader, CreateTranscriptParameters } from "llamaindex";
+import { AudioTranscriptReader, TranscribeParams } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 // readline/promises is still experimental so not in @types/node yet
 // @ts-ignore
@@ -19,11 +19,10 @@ program
     }
 
     const reader = new AudioTranscriptReader();
-    let params: CreateTranscriptParameters | string;
-    console.log(options);
+    let params: TranscribeParams | string;
     if (options.audioUrl) {
       params = {
-        audio_url: options.audioUrl,
+        audio: options.audioUrl,
       };
     } else if (options.transcriptId) {
       params = options.transcriptId;
