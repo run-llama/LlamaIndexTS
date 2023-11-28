@@ -39,7 +39,10 @@ export class VectorIndexRetriever implements BaseRetriever {
     parentEvent?: Event,
     preFilters?: unknown,
   ): Promise<NodeWithScore[]> {
-    const nodesWithScores = await this.textRetrieve(query, preFilters);
+    let nodesWithScores = await this.textRetrieve(query, preFilters);
+    nodesWithScores = nodesWithScores.concat(
+      await this.imageRetrieve(query, preFilters),
+    );
     this.sendEvent(query, nodesWithScores, parentEvent);
     return nodesWithScores;
   }
@@ -50,6 +53,19 @@ export class VectorIndexRetriever implements BaseRetriever {
   ): Promise<NodeWithScore[]> {
     const q = await this.buildVectorStoreQuery(this.index.embedModel, query);
     const result = await this.index.vectorStore.query(q, preFilters);
+    return this.buildNodeListFromQueryResult(result);
+  }
+
+  private async imageRetrieve(query: string, preFilters?: unknown) {
+    if (!this.index.imageEmbedModel || !this.index.imageVectorStore) {
+      // no-op if image embedding and vector store are not set
+      return [];
+    }
+    const q = await this.buildVectorStoreQuery(
+      this.index.imageEmbedModel,
+      query,
+    );
+    const result = await this.index.imageVectorStore.query(q, preFilters);
     return this.buildNodeListFromQueryResult(result);
   }
 
