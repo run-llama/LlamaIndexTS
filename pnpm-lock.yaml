@@ -178,8 +178,8 @@ importers:
         specifier: ^0.0.2
         version: 0.0.2
       openai:
-        specifier: ^4.19.1
-        version: 4.19.1
+        specifier: ^4.20.0
+        version: 4.20.0
       papaparse:
         specifier: ^5.4.1
         version: 5.4.1
@@ -11469,8 +11469,8 @@ packages:
       is-wsl: 2.2.0
     dev: false
 
-  /openai@4.19.1:
-    resolution: {integrity: sha512-9TddzuZBn2xxhghGGTHLZ4EeNBGTLs3xVzh266NiSJvtUsCsZQ5yVV6H5NhnhyAkKK8uUiZOUUlUAk3HdV+4xg==}
+  /openai@4.20.0:
+    resolution: {integrity: sha512-VbAYerNZFfIIeESS+OL9vgDkK8Mnri55n+jN0UN/HZeuM0ghGh6nDN6UGRZxslNgyJ7XmY/Ca9DO4YYyvrszGA==}
     hasBin: true
     dependencies:
       '@types/node': 18.18.12
