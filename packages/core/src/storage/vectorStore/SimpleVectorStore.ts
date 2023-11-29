@@ -164,7 +164,7 @@ export class SimpleVectorStore implements VectorStore {
 
     let dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
-      await fs.mkdir(dirPath);
+      await fs.mkdir(dirPath, { recursive: true });
     }
 
     let dataDict: any = {};

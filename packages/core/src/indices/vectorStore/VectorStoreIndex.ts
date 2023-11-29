@@ -197,33 +197,25 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   /**
    * High level API: split documents, get embeddings, and build index.
    * @param documents
-   * @param storageContext
-   * @param serviceContext
+   * @param args
    * @returns
    */
   static async fromDocuments(
     documents: Document[],
-    args: {
-      storageContext?: StorageContext;
-      serviceContext?: ServiceContext;
-    } = {},
+    args: VectorIndexOptions = {},
   ): Promise<VectorStoreIndex> {
-    let { storageContext, serviceContext } = args;
-    storageContext = storageContext ?? (await storageContextFromDefaults({}));
-    serviceContext = serviceContext ?? serviceContextFromDefaults({});
-    const docStore = storageContext.docStore;
+    args.storageContext =
+      args.storageContext ?? (await storageContextFromDefaults({}));
+    args.serviceContext = args.serviceContext ?? serviceContextFromDefaults({});
+    const docStore = args.storageContext.docStore;
 
     for (const doc of documents) {
       docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
-    const index = await this.init({
-      nodes,
-      storageContext,
-      serviceContext,
-    });
-    return index;
+    args.nodes =
+      args.serviceContext.nodeParser.getNodesFromDocuments(documents);
+    return await this.init(args);
   }
 
   static async fromVectorStore(

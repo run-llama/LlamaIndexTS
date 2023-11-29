@@ -232,10 +232,10 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
 export type ImageType = string | Blob | URL;
 
 export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
-  image?: ImageType; // base64 encoded image string
+  image?: ImageType; // image as blob
   textEmbedding?: number[]; // Assuming text embedding is an array of numbers
 
-  static getType(): string {
+  getType(): ObjectType {
     return ObjectType.IMAGE;
   }
 }
@@ -293,9 +293,20 @@ export function jsonToNode(json: any, type?: ObjectType) {
   }
 }
 
-// export class ImageDocument extends Document {
-//   image?: string;
-// }
+export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
+  constructor(init?: Partial<ImageDocument<T>>) {
+    super(init);
+    Object.assign(this, init);
+
+    if (new.target === ImageDocument) {
+      this.hash = this.generateHash();
+    }
+  }
+
+  getType() {
+    return ObjectType.DOCUMENT;
+  }
+}
 
 /**
  * A node with a similarity score

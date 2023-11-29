@@ -5,6 +5,7 @@ import { DEFAULT_FS } from "../storage/constants";
 import { PapaCSVReader } from "./CSVReader";
 import { DocxReader } from "./DocxReader";
 import { HTMLReader } from "./HTMLReader";
+import { ImageReader } from "./ImageReader";
 import { MarkdownReader } from "./MarkdownReader";
 import { PDFReader } from "./PDFReader";
 import { BaseReader } from "./base";
@@ -42,6 +43,10 @@ export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   docx: new DocxReader(),
   htm: new HTMLReader(),
   html: new HTMLReader(),
+  jpg: new ImageReader(),
+  jpeg: new ImageReader(),
+  png: new ImageReader(),
+  gif: new ImageReader(),
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {
@@ -54,7 +59,7 @@ export type SimpleDirectoryReaderLoadDataProps = {
 /**
  * Read all of the documents in a directory.
  * By default, supports the list of file types
- * in the FILE_EXIT_TO_READER map.
+ * in the FILE_EXT_TO_READER map.
  */
 export class SimpleDirectoryReader implements BaseReader {
   constructor(private observer?: ReaderCallback) {}
