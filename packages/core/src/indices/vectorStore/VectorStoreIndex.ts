@@ -1,4 +1,3 @@
-import _ from "lodash";
 import {
   BaseNode,
   Document,
@@ -150,7 +149,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   /**
    * Get the embeddings for nodes.
    * @param nodes
-   * @param serviceContext
    * @param logProgress log progress to console (useful for debugging)
    * @returns
    */
@@ -348,11 +346,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     nodes: ImageNode[],
     logProgress: boolean = false,
   ): Promise<BaseNode[]> {
-    const isImageToText = nodes.every((node) => _.isString(node.text));
-    if (isImageToText) {
-      // every image node has a text, use the text embedding model
-      return this.getNodeEmbeddingResults(nodes, logProgress);
-    }
     if (!this.imageEmbedModel) {
       return [];
     }
@@ -364,9 +357,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       if (logProgress) {
         console.log(`getting embedding for node ${i}/${nodes.length}`);
       }
-      node.embedding = await this.imageEmbedModel.getImageEmbedding(
-        node.getContent(MetadataMode.EMBED),
-      );
+      node.embedding = await this.imageEmbedModel.getImageEmbedding(node.image);
       nodesWithEmbeddings.push(node);
     }
 
@@ -383,8 +374,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     for (let node of nodes) {
       if (node instanceof ImageNode) {
         imageNodes.push(node);
-      }
-      if (node instanceof TextNode) {
+      } else if (node instanceof TextNode) {
         textNodes.push(node);
       }
     }

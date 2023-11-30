@@ -1,9 +1,12 @@
 import {
+  ImageNode,
   serviceContextFromDefaults,
   SimpleDirectoryReader,
   SimpleVectorStore,
+  TextNode,
   VectorStoreIndex,
 } from "llamaindex";
+import * as path from "path";
 
 async function main() {
   // read data into documents
@@ -28,7 +31,17 @@ async function main() {
     "what are Vincent van Gogh's famous paintings",
   );
   for (const result of results) {
-    console.log(result.node);
+    const node = result.node;
+    if (!node) {
+      continue;
+    }
+    if (node instanceof ImageNode) {
+      console.log(`Image: ${path.join(__dirname, node.id_)}`);
+    } else if (node instanceof TextNode) {
+      console.log("Text:", (node as TextNode).text.substring(0, 128));
+    }
+    console.log(`ID: ${node.id_}`);
+    console.log(`Similarity: ${result.score}`);
   }
 }
 

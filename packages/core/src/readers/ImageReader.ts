@@ -18,7 +18,7 @@ export class ImageReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = DEFAULT_FS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
+    const dataBuffer = await fs.readFile(file);
     const blob = new Blob([dataBuffer]);
     return [new ImageDocument({ image: blob, id_: file })];
   }
