@@ -1,12 +1,7 @@
 import { AstraDB } from "@datastax/astra-db-ts";
 import { Collection } from "@datastax/astra-db-ts/dist/collections";
 import { BaseNode, MetadataMode } from "../../Node";
-import {
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryMode,
-  VectorStoreQueryResult,
-} from "./types";
+import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
 import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 const MAX_INSERT_BATCH_SIZE = 20;
@@ -38,13 +33,29 @@ export class AstraDBVectorStore implements VectorStore {
     this.astraDBClient = new AstraDB(token, dbId, region, keyspace);
   }
 
-  async create(collection: string, options?: any): Promise<void> {
+  /**
+   * Create a new collection in your Astra DB vector database.
+   * You must still use connect() to connect to the collection.
+   *
+   * @TODO align options type with the JSON API's expected format
+   * @param collection your new colletion's name
+   * @param options: CreateCollectionOptions used to set the number of vector dimensions and similarity metric
+   * @returns Promise that resolves if the creation did not throw an error.
+   */
+  async create(collection: string, options: any): Promise<void> {
     await this.astraDBClient.createCollection(collection, options);
     console.debug("Created Astra DB collection");
 
     return;
   }
 
+  /**
+   * Connect to an existing collection in your Astra DB vector database.
+   * You must call this before adding, deleting, or querying.
+   *
+   * @param collection your existing colletion's name
+   * @returns Promise that resolves if the connection did not throw an error.
+   */
   async connect(collection: string): Promise<void> {
     this.collection = await this.astraDBClient.collection(collection);
     console.debug("Connected to Astra DB collection");
@@ -52,10 +63,19 @@ export class AstraDBVectorStore implements VectorStore {
     return;
   }
 
+  /**
+   * Get an instance of your Astra DB client.
+   * @returns the AstraDB client
+   */
   client(): AstraDB {
     return this.astraDBClient;
   }
 
+  /**
+   * Add your document(s) to your Astra DB collection.
+   *
+   * @returns and array of node ids which were added
+   */
   async add(nodes: BaseNode[]): Promise<string[]> {
     if (!this.collection) {
       throw new Error("Must connect to collection before adding.");
@@ -94,6 +114,13 @@ export class AstraDBVectorStore implements VectorStore {
     return dataToInsert.map((node) => node._id);
   }
 
+  /**
+   * Delete a document from your Astra DB collection.
+   *
+   * @param refDocId the id of the document to delete
+   * @param deleteOptions: any DeleteOneOptions to pass to the delete query
+   * @returns Promise that resolves if the delete query did not throw an error.
+   */
   async delete(refDocId: string, deleteOptions?: any): Promise<void> {
     if (!this.collection) {
       throw new Error("Must connect to collection before deleting.");
@@ -102,7 +129,7 @@ export class AstraDBVectorStore implements VectorStore {
 
     console.debug(`Deleting row with id ${refDocId}`);
 
-    await this.collection.deleteOne(
+    await collection.deleteOne(
       {
         _id: refDocId,
       },
@@ -110,6 +137,12 @@ export class AstraDBVectorStore implements VectorStore {
     );
   }
 
+  /**
+   * Query documents from your Astra DB collection to get the closest match to your embedding.
+   *
+   * @param query: VectorStoreQuery
+   * @param options: Not used
+   */
   async query(
     query: VectorStoreQuery,
     options?: any,
@@ -118,15 +151,6 @@ export class AstraDBVectorStore implements VectorStore {
       throw new Error("Must connect to collection before querying.");
     }
     const collection = this.collection;
-
-    const availableQueryModes = [
-      VectorStoreQueryMode.DEFAULT,
-      VectorStoreQueryMode.MMR,
-    ];
-
-    if (!availableQueryModes.includes(query.mode)) {
-      throw new Error("Query mode must be one of: " + availableQueryModes);
-    }
 
     const filters: Record<string, any> = {};
     query.filters?.filters?.forEach((f) => {
