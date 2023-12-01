@@ -146,7 +146,6 @@ export class AstraDBVectorStore implements VectorStore {
     const similarities: number[] = [];
 
     await cursor.forEach(async (doc: Record<string, any>) => {
-      // console.log(doc);
       ids.push(doc._id);
       similarities.push(doc.$similarity);
       const node = metadataDictToNode({
@@ -155,12 +154,6 @@ export class AstraDBVectorStore implements VectorStore {
       delete doc.$vector;
       node.setContent(JSON.stringify(doc));
       nodes.push(node);
-      // nodes.push(new Document({
-      //   id_: doc._id,
-      //   text: doc.document,
-      //   metadata: row.metadata,
-      //   embedding: doc.$vector,
-      // }))
     });
 
     return {
