@@ -10,6 +10,11 @@ module.exports = {
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",
 
+          "ASTRA_DB_ID",
+          "ASTRA_DB_REGION",
+          "ASTRA_DB_APPLICATION_TOKEN",
+          "ASTRA_DB_NAMESPACE",
+
           "AZURE_OPENAI_KEY",
           "AZURE_OPENAI_ENDPOINT",
           "AZURE_OPENAI_API_VERSION",
