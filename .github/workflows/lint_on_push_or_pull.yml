@@ -12,14 +12,14 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-
       - name: Run lint
         run: pnpm run lint
