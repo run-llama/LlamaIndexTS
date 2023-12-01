@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { ImageType } from "../Node";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
 import { VectorStoreQueryMode } from "../storage";
 import { SimilarityType } from "./types";
@@ -183,6 +184,7 @@ export function getTopKMMREmbeddings(
 
   return [resultSimilarities, resultIds];
 }
+
 export async function readImage(input: ImageType) {
   const { RawImage } = await import("@xenova/transformers");
   if (input instanceof Blob) {
@@ -193,4 +195,3 @@ export async function readImage(input: ImageType) {
     throw new Error(`Unsupported input type: ${typeof input}`);
   }
 }
-export type ImageType = string | Blob | URL;
