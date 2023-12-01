@@ -8,7 +8,7 @@ import path from "path";
 import { blue, bold, cyan, green, red, yellow } from "picocolors";
 import prompts from "prompts";
 import checkForUpdate from "update-check";
-import { createApp } from "./create-app";
+import { InstallAppArgs, createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { validateNpmName } from "./helpers/validate-pkg";
@@ -155,21 +155,22 @@ async function run(): Promise<void> {
     process.exit(1);
   }
 
-  const preferences = (conf.get("preferences") || {}) as Record<
-    string,
-    boolean | string
-  >;
+  // TODO: use Args also for program
+  type Args = Omit<InstallAppArgs, "appPath" | "packageManager">;
 
-  const defaults: typeof preferences = {
-    template: "simple",
+  const preferences = (conf.get("preferences") || {}) as Args;
+
+  const defaults: Args = {
+    template: "streaming",
     framework: "nextjs",
     engine: "simple",
     ui: "html",
     eslint: true,
     frontend: false,
     openAIKey: "",
+    model: "gpt-3.5-turbo",
   };
-  const getPrefOrDefault = (field: string) =>
+  const getPrefOrDefault = (field: keyof Args) =>
     preferences[field] ?? defaults[field];
 
   const handlers = {
@@ -178,28 +179,6 @@ async function run(): Promise<void> {
       process.exit(1);
     },
   };
-
-  if (!program.template) {
-    if (ciInfo.isCI) {
-      program.template = getPrefOrDefault("template");
-    } else {
-      const { template } = await prompts(
-        {
-          type: "select",
-          name: "template",
-          message: "Which template would you like to use?",
-          choices: [
-            { title: "Chat without streaming", value: "simple" },
-            { title: "Chat with streaming", value: "streaming" },
-          ],
-          initial: 1,
-        },
-        handlers,
-      );
-      program.template = template;
-      preferences.template = template;
-    }
-  }
 
   if (!program.framework) {
     if (ciInfo.isCI) {
@@ -221,6 +200,31 @@ async function run(): Promise<void> {
       );
       program.framework = framework;
       preferences.framework = framework;
+    }
+  }
+
+  if (program.framework === "nextjs") {
+    program.template = "streaming";
+  }
+  if (!program.template) {
+    if (ciInfo.isCI) {
+      program.template = getPrefOrDefault("template");
+    } else {
+      const { template } = await prompts(
+        {
+          type: "select",
+          name: "template",
+          message: "Which template would you like to use?",
+          choices: [
+            { title: "Chat without streaming", value: "simple" },
+            { title: "Chat with streaming", value: "streaming" },
+          ],
+          initial: 1,
+        },
+        handlers,
+      );
+      program.template = template;
+      preferences.template = template;
     }
   }
 
@@ -273,6 +277,32 @@ async function run(): Promise<void> {
         );
         program.ui = ui;
         preferences.ui = ui;
+      }
+    }
+  }
+
+  if (program.framework === "nextjs") {
+    if (!program.model) {
+      if (ciInfo.isCI) {
+        program.model = getPrefOrDefault("model");
+      } else {
+        const { model } = await prompts(
+          {
+            type: "select",
+            name: "model",
+            message: "Which model would you like to use?",
+            choices: [
+              { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+              { title: "gpt-4", value: "gpt-4" },
+              { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
+              { title: "gpt-4-vision-preview", value: "gpt-4-vision-preview" },
+            ],
+            initial: 0,
+          },
+          handlers,
+        );
+        program.model = model;
+        preferences.model = model;
       }
     }
   }
@@ -350,6 +380,7 @@ async function run(): Promise<void> {
     eslint: program.eslint,
     frontend: program.frontend,
     openAIKey: program.openAIKey,
+    model: program.model,
   });
   conf.set("preferences", preferences);
 }

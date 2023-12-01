@@ -14,6 +14,7 @@ export enum ObjectType {
   IMAGE = "IMAGE",
   INDEX = "INDEX",
   DOCUMENT = "DOCUMENT",
+  IMAGE_DOCUMENT = "IMAGE_DOCUMENT",
 }
 
 export enum MetadataMode {
@@ -229,14 +230,6 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
   }
 }
 
-// export class ImageNode extends TextNode {
-//   image: string = "";
-
-//   getType(): ObjectType {
-//     return ObjectType.IMAGE;
-//   }
-// }
-
 export class IndexNode<T extends Metadata = Metadata> extends TextNode<T> {
   indexId: string = "";
 
@@ -285,14 +278,47 @@ export function jsonToNode(json: any, type?: ObjectType) {
       return new IndexNode(json);
     case ObjectType.DOCUMENT:
       return new Document(json);
+    case ObjectType.IMAGE_DOCUMENT:
+      return new ImageDocument(json);
     default:
       throw new Error(`Invalid node type: ${nodeType}`);
   }
 }
 
-// export class ImageDocument extends Document {
-//   image?: string;
-// }
+export type ImageType = string | Blob | URL;
+
+export type ImageNodeConstructorProps<T extends Metadata> = Pick<
+  ImageNode<T>,
+  "image" | "id_"
+> &
+  Partial<ImageNode<T>>;
+
+export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
+  image: ImageType; // image as blob
+
+  constructor(init: ImageNodeConstructorProps<T>) {
+    super(init);
+    this.image = init.image;
+  }
+
+  getType(): ObjectType {
+    return ObjectType.IMAGE;
+  }
+}
+
+export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
+  constructor(init: ImageNodeConstructorProps<T>) {
+    super(init);
+
+    if (new.target === ImageDocument) {
+      this.hash = this.generateHash();
+    }
+  }
+
+  getType() {
+    return ObjectType.IMAGE_DOCUMENT;
+  }
+}
 
 /**
  * A node with a similarity score
