@@ -1,0 +1,34 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.mySidebar.category.Modules": {
+    "message": "Modules",
+    "description": "The label for category Modules in sidebar mySidebar"
+  },
+  "sidebar.mySidebar.category.High-Level Modules": {
+    "message": "High-Level Modules",
+    "description": "The label for category High-Level Modules in sidebar mySidebar"
+  },
+  "sidebar.mySidebar.category.Low-Level Modules": {
+    "message": "Low-Level Modules",
+    "description": "The label for category Low-Level Modules in sidebar mySidebar"
+  },
+  "sidebar.mySidebar.category.API": {
+    "message": "API",
+    "description": "The label for category API in sidebar mySidebar"
+  },
+  "sidebar.mySidebar.category.Enumerations": {
+    "message": "Enumerations",
+    "description": "The label for category Enumerations in sidebar mySidebar"
+  },
+  "sidebar.mySidebar.category.Classes": {
+    "message": "Classes",
+    "description": "The label for category Classes in sidebar mySidebar"
+  },
+  "sidebar.mySidebar.category.Interfaces": {
+    "message": "Interfaces",
+    "description": "The label for category Interfaces in sidebar mySidebar"
+  }
+}
