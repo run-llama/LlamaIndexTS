@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-# 读取器 / 装载器
+# 读取器 / 加载器
 
-LlamaIndex.TS 支持使用 `SimpleDirectoryReader` 类从文件夹轻松加载文件。目前支持 `.txt`、`.pdf`、`.csv`、`.md` 和 `.docx` 文件，未来将支持更多文件类型！
+LlamaIndex.TS 支持使用 `SimpleDirectoryReader` 类从文件夹中轻松加载文件。目前支持 `.txt`、`.pdf`、`.csv`、`.md` 和 `.docx` 文件，未来计划支持更多格式！
 
 ```typescript
 import { SimpleDirectoryReader } from "llamaindex";
