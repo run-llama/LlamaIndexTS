@@ -9,5 +9,6 @@ export { SimpleKVStore } from "./kvStore/SimpleKVStore";
 export * from "./kvStore/types";
 export { MongoDBAtlasVectorSearch } from "./vectorStore/MongoDBAtlasVectorStore";
 export { PGVectorStore } from "./vectorStore/PGVectorStore";
+export { PineconeVectorStore } from "./vectorStore/PineconeVectorStore";
 export { SimpleVectorStore } from "./vectorStore/SimpleVectorStore";
 export * from "./vectorStore/types";
