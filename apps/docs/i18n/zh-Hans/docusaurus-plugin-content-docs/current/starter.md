@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # 入门教程
 
-一旦您已经[使用NPM安装了LlamaIndex.TS](installation)并设置好了OpenAI密钥，您就可以开始您的第一个应用程序了：
+一旦您已经[使用NPM安装了LlamaIndex.TS](installation)并设置好了您的OpenAI密钥，您就可以开始您的第一个应用程序了：
 
 在一个新的文件夹中：
 
@@ -45,7 +45,7 @@ async function main() {
 main();
 ```
 
-然后您可以使用以下命令运行它
+然后您可以运行它：
 
 ```bash
 npx ts-node example.ts

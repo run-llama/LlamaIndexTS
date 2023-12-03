@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-# ChatEngine
+# 聊天引擎 (ChatEngine)
 
-聊天引擎是与索引中的数据进行快速简单交流的方式。
+聊天引擎是一种快速简便的方式，可与索引中的数据进行交流。
 
 ```typescript
 const retriever = index.asRetriever();

@@ -21,7 +21,7 @@ export const runtime = "nodejs"; // 默认
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // 将 pdf-parse 放入实际的 NodeJS 模式中，与 NextJS 应用路由器一起使用
+    serverComponentsExternalPackages: ["pdf-parse"], // 将 pdf-parse 放入实际的 NodeJS 模式与 NextJS 应用路由器
   },
 };
 
