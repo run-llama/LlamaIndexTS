@@ -1,6 +1,10 @@
+---
+sidebar_position: 3
+---
+
 # NodeParser
 
-`NodeParser` 在 LlamaIndex 中负责将 `Document` 对象拆分为更易管理的 `Node` 对象。当您调用 `.fromDocuments()` 时，将使用 `ServiceContext` 中的 `NodeParser` 自动执行此操作。或者，您可以使用它提前拆分文档。
+`NodeParser` 在 LlamaIndex 中负责将 `Document` 对象拆分为更易管理的 `Node` 对象。当您调用 `.fromDocuments()` 时，将自动使用 `ServiceContext` 中的 `NodeParser` 来执行此操作。或者，您也可以使用它提前拆分文档。
 
 ```typescript
 import { Document, SimpleNodeParser } from "llamaindex";
@@ -13,7 +17,7 @@ const nodes = nodeParser.getNodesFromDocuments([
 
 ## TextSplitter
 
-底层的文本拆分器将按句子拆分文本。它也可以作为一个独立的模块来拆分原始文本。
+底层的文本拆分器将按句拆分文本。它也可以作为一个独立的模块来拆分原始文本。
 
 ```typescript
 import { SentenceSplitter } from "llamaindex";

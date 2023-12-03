@@ -4,14 +4,14 @@ sidebar_position: 2
 
 # 入门教程
 
-一旦您[使用NPM安装了LlamaIndex.TS](installation.md)并设置好您的OpenAI密钥，您就可以开始您的第一个应用程序了：
+一旦您已经[使用NPM安装了LlamaIndex.TS](installation)并设置好了您的OpenAI密钥，您就可以开始您的第一个应用程序了：
 
 在一个新的文件夹中：
 
 ```bash npm2yarn
 npm install typescript
 npm install @types/node
-npx tsc --init # if needed
+npx tsc --init # 如果需要的话
 ```
 
 创建文件 `example.ts`。这段代码将加载一些示例数据，创建一个文档，对其进行索引（使用OpenAI创建嵌入），然后创建一个查询引擎来回答有关数据的问题。
@@ -45,7 +45,7 @@ async function main() {
 main();
 ```
 
-然后您可以运行以下命令来执行它
+然后您可以使用以下命令运行它
 
 ```bash
 npx ts-node example.ts

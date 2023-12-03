@@ -1,6 +1,10 @@
-# Retriever
+---
+sidebar_position: 5
+---
 
-在 LlamaIndex 中，检索器是使用查询字符串从索引中获取 `Node` 的工具。`VectorIndexRetriever` 将获取相似度最高的前 k 个节点。与此同时，`SummaryIndexRetriever` 将获取所有节点，而不管查询如何。
+# 检索器
+
+在 LlamaIndex 中，检索器用于使用查询字符串从索引中获取 `Node`。`VectorIndexRetriever` 将获取前 k 个最相似的节点。与此同时，`SummaryIndexRetriever` 将获取所有节点，无论查询如何。
 
 ```typescript
 const retriever = vector_index.asRetriever();

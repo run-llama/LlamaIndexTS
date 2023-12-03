@@ -1,3 +1,7 @@
+---
+sidebar_position: 0
+---
+
 # LLM
 
 LLM负责阅读文本并生成对查询的自然语言响应。默认情况下，LlamaIndex.TS使用`gpt-3.5-turbo`。
