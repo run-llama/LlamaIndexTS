@@ -1,5 +1,6 @@
 import { copy } from "../helpers/copy";
 import { callPackageManager } from "../helpers/install";
+import dotenv from 'dotenv';
 
 import fs from "fs/promises";
 import os from "os";
@@ -68,6 +69,7 @@ const copyTestData = async (
     }
   }
 };
+dotenv.config();
 
 const rename = (name: string) => {
   switch (name) {
