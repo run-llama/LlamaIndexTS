@@ -3,10 +3,14 @@
   "private": true,
   "name": "simple",
   "dependencies": {
+    "@notionhq/client": "^2.2.13",
+    "@pinecone-database/pinecone": "^1.1.2",
+    "commander": "^11.1.0",
     "llamaindex": "latest"
   },
   "devDependencies": {
-    "@types/node": "^18"
+    "@types/node": "^18.18.6",
+    "ts-node": "^10.9.1"
   },
   "scripts": {
     "lint": "eslint ."

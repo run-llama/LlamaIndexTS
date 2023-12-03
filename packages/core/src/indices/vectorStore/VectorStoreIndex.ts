@@ -1,4 +1,12 @@
-import { BaseNode, Document, MetadataMode } from "../../Node";
+import {
+  BaseNode,
+  Document,
+  ImageNode,
+  MetadataMode,
+  ObjectType,
+  TextNode,
+  jsonToNode,
+} from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { ResponseSynthesizer } from "../../ResponseSynthesizer";
 import { BaseRetriever } from "../../Retriever";
@@ -6,11 +14,16 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
-import { BaseDocumentStore } from "../../storage/docStore/types";
+import {
+  BaseEmbedding,
+  ClipEmbedding,
+  MultiModalEmbedding,
+} from "../../embeddings";
 import {
   StorageContext,
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
+import { BaseIndexStore } from "../../storage/indexStore/types";
 import { VectorStore } from "../../storage/vectorStore/types";
 import {
   BaseIndex,
@@ -21,16 +34,21 @@ import {
 import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import { VectorIndexRetriever } from "./VectorIndexRetriever";
 
-export interface VectorIndexOptions {
-  nodes?: BaseNode[];
+interface IndexStructOptions {
   indexStruct?: IndexDict;
   indexId?: string;
+}
+export interface VectorIndexOptions extends IndexStructOptions {
+  nodes?: BaseNode[];
   serviceContext?: ServiceContext;
   storageContext?: StorageContext;
+  imageVectorStore?: VectorStore;
+  vectorStore?: VectorStore;
 }
 
 export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
-  vectorStore: VectorStore;
+  indexStore: BaseIndexStore;
+  imageVectorStore?: VectorStore;
 }
 
 /**
@@ -38,15 +56,24 @@ export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
  */
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
   vectorStore: VectorStore;
+  indexStore: BaseIndexStore;
+  embedModel: BaseEmbedding;
+  imageVectorStore?: VectorStore;
+  imageEmbedModel?: MultiModalEmbedding;
 
   private constructor(init: VectorIndexConstructorProps) {
     super(init);
-    this.vectorStore = init.vectorStore;
+    this.indexStore = init.indexStore;
+    this.vectorStore = init.vectorStore ?? init.storageContext.vectorStore;
+    this.embedModel = init.serviceContext.embedModel;
+    this.imageVectorStore = init.imageVectorStore;
+    if (this.imageVectorStore) {
+      this.imageEmbedModel = new ClipEmbedding();
+    }
   }
 
   /**
-   * The async init function should be called after the constructor.
-   * This is needed to handle persistence.
+   * The async init function creates a new VectorStoreIndex.
    * @param options
    * @returns
    */
@@ -55,11 +82,43 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       options.storageContext ?? (await storageContextFromDefaults({}));
     const serviceContext =
       options.serviceContext ?? serviceContextFromDefaults({});
-    const docStore = storageContext.docStore;
-    const vectorStore = storageContext.vectorStore;
     const indexStore = storageContext.indexStore;
+    const docStore = storageContext.docStore;
 
-    // Setup IndexStruct from storage
+    let indexStruct = await VectorStoreIndex.setupIndexStructFromStorage(
+      indexStore,
+      options,
+    );
+
+    if (!options.nodes && !indexStruct) {
+      throw new Error(
+        "Cannot initialize VectorStoreIndex without nodes or indexStruct",
+      );
+    }
+
+    indexStruct = indexStruct ?? new IndexDict();
+
+    const index = new this({
+      storageContext,
+      serviceContext,
+      docStore,
+      indexStruct,
+      indexStore,
+      vectorStore: options.vectorStore,
+      imageVectorStore: options.imageVectorStore,
+    });
+
+    if (options.nodes) {
+      // If nodes are passed in, then we need to update the index
+      await index.buildIndexFromNodes(options.nodes);
+    }
+    return index;
+  }
+
+  private static async setupIndexStructFromStorage(
+    indexStore: BaseIndexStore,
+    options: IndexStructOptions,
+  ) {
     let indexStructs = (await indexStore.getIndexStructs()) as IndexDict[];
     let indexStruct: IndexDict | undefined;
 
@@ -77,55 +136,23 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       indexStruct = (await indexStore.getIndexStruct(
         options.indexId,
       )) as IndexDict;
-    } else {
-      indexStruct = undefined;
     }
-
-    // check indexStruct type
+    // Check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.SIMPLE_DICT) {
       throw new Error(
         "Attempting to initialize VectorStoreIndex with non-vector indexStruct",
       );
     }
-
-    if (options.nodes) {
-      // If nodes are passed in, then we need to update the index
-      indexStruct = await VectorStoreIndex.buildIndexFromNodes(
-        options.nodes,
-        serviceContext,
-        vectorStore,
-        docStore,
-        indexStruct,
-      );
-
-      await indexStore.addIndexStruct(indexStruct);
-    } else if (!indexStruct) {
-      throw new Error(
-        "Cannot initialize VectorStoreIndex without nodes or indexStruct",
-      );
-    }
-
-    return new VectorStoreIndex({
-      storageContext,
-      serviceContext,
-      docStore,
-      vectorStore,
-      indexStruct,
-    });
+    return indexStruct;
   }
 
   /**
    * Get the embeddings for nodes.
    * @param nodes
-   * @param serviceContext
    * @param logProgress log progress to console (useful for debugging)
    * @returns
    */
-  static async getNodeEmbeddingResults(
-    nodes: BaseNode[],
-    serviceContext: ServiceContext,
-    logProgress = false,
-  ) {
+  async getNodeEmbeddingResults(nodes: BaseNode[], logProgress = false) {
     const nodesWithEmbeddings: BaseNode[] = [];
 
     for (let i = 0; i < nodes.length; ++i) {
@@ -133,7 +160,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       if (logProgress) {
         console.log(`getting embedding for node ${i}/${nodes.length}`);
       }
-      const embedding = await serviceContext.embedModel.getTextEmbedding(
+      const embedding = await this.embedModel.getTextEmbedding(
         node.getContent(MetadataMode.EMBED),
       );
       node.embedding = embedding;
@@ -146,77 +173,47 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   /**
    * Get embeddings for nodes and place them into the index.
    * @param nodes
-   * @param serviceContext
-   * @param vectorStore
    * @returns
    */
-  static async buildIndexFromNodes(
-    nodes: BaseNode[],
-    serviceContext: ServiceContext,
-    vectorStore: VectorStore,
-    docStore: BaseDocumentStore,
-    indexDict?: IndexDict,
-  ): Promise<IndexDict> {
-    indexDict = indexDict ?? new IndexDict();
-
+  async buildIndexFromNodes(nodes: BaseNode[]) {
     // Check if the index already has nodes with the same hash
     const newNodes = nodes.filter((node) =>
-      Object.entries(indexDict!.nodesDict).reduce((acc, [key, value]) => {
-        if (value.hash === node.hash) {
-          acc = false;
-        }
-        return acc;
-      }, true),
+      Object.entries(this.indexStruct!.nodesDict).reduce(
+        (acc, [key, value]) => {
+          if (value.hash === node.hash) {
+            acc = false;
+          }
+          return acc;
+        },
+        true,
+      ),
     );
 
-    const embeddingResults = await this.getNodeEmbeddingResults(
-      newNodes,
-      serviceContext,
-    );
-
-    await vectorStore.add(embeddingResults);
-
-    if (!vectorStore.storesText) {
-      await docStore.addDocuments(embeddingResults, true);
-    }
-
-    for (const node of embeddingResults) {
-      indexDict.addNode(node);
-    }
-
-    return indexDict;
+    await this.insertNodes(newNodes);
   }
 
   /**
    * High level API: split documents, get embeddings, and build index.
    * @param documents
-   * @param storageContext
-   * @param serviceContext
+   * @param args
    * @returns
    */
   static async fromDocuments(
     documents: Document[],
-    args: {
-      storageContext?: StorageContext;
-      serviceContext?: ServiceContext;
-    } = {},
+    args: VectorIndexOptions = {},
   ): Promise<VectorStoreIndex> {
-    let { storageContext, serviceContext } = args;
-    storageContext = storageContext ?? (await storageContextFromDefaults({}));
-    serviceContext = serviceContext ?? serviceContextFromDefaults({});
-    const docStore = storageContext.docStore;
+    args.storageContext =
+      args.storageContext ?? (await storageContextFromDefaults({}));
+    args.serviceContext = args.serviceContext ?? serviceContextFromDefaults({});
+    const docStore = args.storageContext.docStore;
 
     for (const doc of documents) {
       docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
-    const index = await VectorStoreIndex.init({
-      nodes,
-      storageContext,
-      serviceContext,
-    });
-    return index;
+    args.nodes =
+      args.serviceContext.nodeParser.getNodesFromDocuments(documents);
+    return await this.init(args);
   }
 
   static async fromVectorStore(
@@ -231,7 +228,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     const storageContext = await storageContextFromDefaults({ vectorStore });
 
-    const index = await VectorStoreIndex.init({
+    const index = await this.init({
       nodes: [],
       storageContext,
       serviceContext,
@@ -259,51 +256,131 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     );
   }
 
-  async insertNodes(nodes: BaseNode[]): Promise<void> {
-    const embeddingResults = await VectorStoreIndex.getNodeEmbeddingResults(
-      nodes,
-      this.serviceContext,
-    );
+  protected async insertNodesToStore(
+    vectorStore: VectorStore,
+    nodes: BaseNode[],
+  ): Promise<void> {
+    const newIds = await vectorStore.add(nodes);
 
-    const newIds = await this.vectorStore.add(embeddingResults);
-
-    if (!this.vectorStore.storesText) {
-      for (let i = 0; i < nodes.length; ++i) {
-        this.indexStruct.addNode(nodes[i], newIds[i]);
-        this.docStore.addDocuments([nodes[i]], true);
-      }
-    } else {
-      for (let i = 0; i < nodes.length; ++i) {
-        if (nodes[i].getType() === "INDEX") {
-          this.indexStruct.addNode(nodes[i], newIds[i]);
-          this.docStore.addDocuments([nodes[i]], true);
-        }
+    // NOTE: if the vector store doesn't store text,
+    // we need to add the nodes to the index struct and document store
+    // NOTE: if the vector store keeps text,
+    // we only need to add image and index nodes
+    for (let i = 0; i < nodes.length; ++i) {
+      const type = nodes[i].getType();
+      if (
+        !vectorStore.storesText ||
+        type === ObjectType.INDEX ||
+        type === ObjectType.IMAGE
+      ) {
+        const nodeWithoutEmbedding = jsonToNode(nodes[i].toJSON());
+        nodeWithoutEmbedding.embedding = undefined;
+        this.indexStruct.addNode(nodeWithoutEmbedding, newIds[i]);
+        this.docStore.addDocuments([nodeWithoutEmbedding], true);
       }
     }
+  }
 
-    await this.storageContext.indexStore.addIndexStruct(this.indexStruct);
+  async insertNodes(nodes: BaseNode[]): Promise<void> {
+    if (!nodes || nodes.length === 0) {
+      return;
+    }
+    const { imageNodes, textNodes } = this.splitNodes(nodes);
+    if (imageNodes.length > 0) {
+      if (!this.imageVectorStore) {
+        throw new Error("Cannot insert image nodes without image vector store");
+      }
+      const imageNodesWithEmbedding =
+        await this.getImageNodeEmbeddingResults(imageNodes);
+      await this.insertNodesToStore(
+        this.imageVectorStore,
+        imageNodesWithEmbedding,
+      );
+    }
+    const embeddingResults = await this.getNodeEmbeddingResults(textNodes);
+    await this.insertNodesToStore(this.vectorStore, embeddingResults);
+    await this.indexStore.addIndexStruct(this.indexStruct);
   }
 
   async deleteRefDoc(
     refDocId: string,
     deleteFromDocStore: boolean = true,
   ): Promise<void> {
-    this.vectorStore.delete(refDocId);
-
-    if (!this.vectorStore.storesText) {
-      const refDocInfo = await this.docStore.getRefDocInfo(refDocId);
-
-      if (refDocInfo) {
-        for (const nodeId of refDocInfo.nodeIds) {
-          this.indexStruct.delete(nodeId);
-        }
-      }
-
-      await this.storageContext.indexStore.addIndexStruct(this.indexStruct);
+    await this.deleteRefDocFromStore(this.vectorStore, refDocId);
+    if (this.imageVectorStore) {
+      await this.deleteRefDocFromStore(this.imageVectorStore, refDocId);
     }
 
     if (deleteFromDocStore) {
       await this.docStore.deleteDocument(refDocId, false);
     }
+  }
+
+  protected async deleteRefDocFromStore(
+    vectorStore: VectorStore,
+    refDocId: string,
+  ): Promise<void> {
+    vectorStore.delete(refDocId);
+
+    if (!vectorStore.storesText) {
+      const refDocInfo = await this.docStore.getRefDocInfo(refDocId);
+
+      if (refDocInfo) {
+        for (const nodeId of refDocInfo.nodeIds) {
+          this.indexStruct.delete(nodeId);
+          vectorStore.delete(nodeId);
+        }
+      }
+      await this.indexStore.addIndexStruct(this.indexStruct);
+    }
+  }
+
+  /**
+   * Get the embeddings for image nodes.
+   * @param nodes
+   * @param serviceContext
+   * @param logProgress log progress to console (useful for debugging)
+   * @returns
+   */
+  async getImageNodeEmbeddingResults(
+    nodes: ImageNode[],
+    logProgress: boolean = false,
+  ): Promise<BaseNode[]> {
+    if (!this.imageEmbedModel) {
+      return [];
+    }
+
+    const nodesWithEmbeddings: ImageNode[] = [];
+
+    for (let i = 0; i < nodes.length; ++i) {
+      const node = nodes[i];
+      if (logProgress) {
+        console.log(`getting embedding for node ${i}/${nodes.length}`);
+      }
+      node.embedding = await this.imageEmbedModel.getImageEmbedding(node.image);
+      nodesWithEmbeddings.push(node);
+    }
+
+    return nodesWithEmbeddings;
+  }
+
+  private splitNodes(nodes: BaseNode[]): {
+    imageNodes: ImageNode[];
+    textNodes: TextNode[];
+  } {
+    let imageNodes: ImageNode[] = [];
+    let textNodes: TextNode[] = [];
+
+    for (let node of nodes) {
+      if (node instanceof ImageNode) {
+        imageNodes.push(node);
+      } else if (node instanceof TextNode) {
+        textNodes.push(node);
+      }
+    }
+    return {
+      imageNodes,
+      textNodes,
+    };
   }
 }

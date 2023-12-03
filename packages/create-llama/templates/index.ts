@@ -101,6 +101,7 @@ const installTSTemplate = async ({
   eslint,
   customApiPath,
   forBackend,
+  model,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -171,6 +172,14 @@ const installTSTemplate = async ({
       cwd: uiPath,
       rename,
     });
+  }
+
+  if (framework === "nextjs") {
+    await fs.writeFile(
+      path.join(root, "constants.ts"),
+      `export const MODEL = "${model || "gpt-3.5-turbo"}";\n`,
+    );
+    console.log("\nUsing OpenAI model: ", model || "gpt-3.5-turbo", "\n");
   }
 
   /**
