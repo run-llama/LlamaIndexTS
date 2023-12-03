@@ -17,7 +17,7 @@ const nodes = nodeParser.getNodesFromDocuments([
 
 ## TextSplitter
 
-底层的文本拆分器将按句拆分文本。它也可以作为一个独立的模块来拆分原始文本。
+底层的文本拆分器将按句子拆分文本。它也可以作为一个独立的模块来拆分原始文本。
 
 ```typescript
 import { SentenceSplitter } from "llamaindex";

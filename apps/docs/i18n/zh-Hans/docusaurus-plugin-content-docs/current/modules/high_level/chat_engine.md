@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # ChatEngine
 
-聊天引擎
+聊天引擎是与索引中的数据进行快速简单交流的方式。
 
 ```typescript
 const retriever = index.asRetriever();

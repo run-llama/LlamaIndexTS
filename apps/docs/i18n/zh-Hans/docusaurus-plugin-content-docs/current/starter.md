@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # 入门教程
 
-一旦您已经[使用NPM安装了LlamaIndex.TS](installation)并设置好了您的OpenAI密钥，您就可以开始您的第一个应用程序了：
+一旦您已经[使用NPM安装了LlamaIndex.TS](installation)并设置好了OpenAI密钥，您就可以开始您的第一个应用程序了：
 
 在一个新的文件夹中：
 
@@ -14,7 +14,7 @@ npm install @types/node
 npx tsc --init # 如果需要的话
 ```
 
-创建文件 `example.ts`。这段代码将加载一些示例数据，创建一个文档，对其进行索引（使用OpenAI创建嵌入），然后创建一个查询引擎来回答有关数据的问题。
+创建文件 `example.ts`。这段代码将加载一些示例数据，创建一个文档，对其进行索引（使用OpenAI创建嵌入），然后创建查询引擎以回答有关数据的问题。
 
 ```ts
 // example.ts
@@ -51,4 +51,4 @@ main();
 npx ts-node example.ts
 ```
 
-准备好了解更多吗？请查看我们在 https://llama-playground.vercel.app/ 上的NextJS演示。源代码可在 https://github.com/run-llama/ts-playground 找到。
+准备好了解更多吗？请查看我们在 https://llama-playground.vercel.app/ 上的NextJS沙盒。源代码可在 https://github.com/run-llama/ts-playground 找到。
