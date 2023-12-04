@@ -108,7 +108,7 @@ export async function createApp({
   console.log(
     `Now have a look at the ${terminalLink(
       "README.md",
-      `file://${appName}/README.md`,
+      `file://${root}/README.md`,
     )} and learn how to get started.`,
   );
   console.log();
