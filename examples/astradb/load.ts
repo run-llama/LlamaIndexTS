@@ -1,7 +1,9 @@
-import { VectorStoreIndex } from "../../packages/core/src/indices/vectorStore/VectorStoreIndex";
-import { PapaCSVReader } from "../../packages/core/src/readers/CSVReader";
-import { storageContextFromDefaults } from "../../packages/core/src/storage";
-import { AstraDBVectorStore } from "../../packages/core/src/storage/vectorStore/AstraDBVectorStore";
+import {
+  AstraDBVectorStore,
+  PapaCSVReader,
+  storageContextFromDefaults,
+  VectorStoreIndex,
+} from "llamaindex";
 
 const collectionName = "movie_reviews";
 

@@ -13,11 +13,16 @@ export class AstraDBVectorStore implements VectorStore {
   astraDBClient: AstraDB;
   collection: Collection | undefined;
 
-  constructor() {
-    const token = process.env.ASTRA_DB_APPLICATION_TOKEN;
-    const dbId = process.env.ASTRA_DB_ID;
-    const region = process.env.ASTRA_DB_REGION;
-    const keyspace = process.env.ASTRA_DB_NAMESPACE;
+  constructor(params?: {
+    token: string;
+    dbId: string;
+    region: string;
+    keyspace: string;
+  }) {
+    const token = params?.token ?? process.env.ASTRA_DB_APPLICATION_TOKEN;
+    const dbId = params?.dbId ?? process.env.ASTRA_DB_ID;
+    const region = params?.region ?? process.env.ASTRA_DB_REGION;
+    const keyspace = params?.keyspace ?? process.env.ASTRA_DB_NAMESPACE;
 
     if (!dbId) {
       throw new Error("Must specify ASTRA_DB_ID via env variable.");

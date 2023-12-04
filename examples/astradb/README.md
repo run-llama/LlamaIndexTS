@@ -19,7 +19,7 @@ Here are two sample scripts which work well with the sample data in the Astra Po
 - `OPENAI_API_KEY`: Your OpenAI key
 
 2. `cd` Into the `examples` directory
-3. run `pnpm i`
+3. run `npm i`
 
 ## Load the data
 

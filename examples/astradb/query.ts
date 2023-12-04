@@ -1,8 +1,10 @@
-import { serviceContextFromDefaults } from "../../packages/core/src/ServiceContext";
-import { VectorStoreIndex } from "../../packages/core/src/indices/vectorStore/VectorStoreIndex";
-import { AstraDBVectorStore } from "../../packages/core/src/storage/vectorStore/AstraDBVectorStore";
+import {
+  AstraDBVectorStore,
+  serviceContextFromDefaults,
+  VectorStoreIndex,
+} from "llamaindex";
 
-const collectionName = "movie_reviews";
+const collectionName = "movie_reviews_2";
 
 async function main() {
   try {
