@@ -2,12 +2,7 @@
 
 ### Prepare Environment
 
-Make sure to run `pnpm install` and set your OpenAI environment variable before running these examples.
-
-```
-pnpm install
-export OPENAI_API_KEY="sk-..."
-```
+Read and follow the instructions in the [README.md](../README.md) file located one directory up to make sure your JS/TS dependencies are set up. The commands listed below are also run from that parent directory.
 
 ### Sign up for MongoDB Atlas
 
@@ -21,7 +16,7 @@ The signup process will walk you through the process of creating your cluster an
 
 ### Set up environment variables
 
-Copy the connection string (make sure you include your password) and put it into a file called `.env` in the root of this repo. It should look like this:
+Copy the connection string (make sure you include your password) and put it into a file called `.env` in the parent folder of this directory. It should look like this:
 
 ```
 MONGODB_URI=mongodb+srv://seldo:xxxxxxxxxxx@llamaindexdemocluster.xfrdhpz.mongodb.net/?retryWrites=true&w=majority
@@ -39,7 +34,7 @@ MONGODB_COLLECTION=tiny_tweets_collection
 You are now ready to import our ready-made data set into Mongo. This is the file `tinytweets.json`, a selection of approximately 1000 tweets from @seldo on Twitter in mid-2019. With your environment set up you can do this by running
 
 ```
-pnpm ts-node 1_import.ts
+npx ts-node mongodb/1_import.ts
 ```
 
 If you don't want to use tweets, you can replace `json_file` with any other array of JSON objects, but you will need to modify some code later to make sure the correct field gets indexed. There is no LlamaIndex-specific code here; you can load your data into Mongo any way you want to.
@@ -64,7 +59,7 @@ MONGODB_VECTOR_INDEX=tiny_tweets_vector_index
 If the data you're indexing is the tweets we gave you, you're ready to go:
 
 ```bash
-pnpm ts-node 2_load_and_index.ts
+npx ts-node mongodb/2_load_and_index.ts
 ```
 
 > Note: this script is running a couple of minutes and currently doesn't show any progress.
@@ -119,7 +114,7 @@ Now you're ready to query your data!
 You can do this by running
 
 ```bash
-pnpm ts-node 3_query.ts
+npx ts-node mongodb/3_query.ts
 ```
 
 This sets up a connection to Atlas just like `2_load_and_index.ts` did, then it creates a [query engine](https://docs.llamaindex.ai/en/stable/understanding/querying/querying.html#getting-started) and runs a query against it.

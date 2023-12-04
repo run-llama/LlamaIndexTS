@@ -6,7 +6,7 @@ import { MongoClient } from "mongodb";
 // Load environment variables from local .env file
 dotenv.config();
 
-const jsonFile = "tinytweets.json";
+const jsonFile = "./data/tinytweets.json";
 const mongoUri = process.env.MONGODB_URI!;
 const databaseName = process.env.MONGODB_DATABASE!;
 const collectionName = process.env.MONGODB_COLLECTION!;
