@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Starter Tutorial
 
-Once you have [installed LlamaIndex.TS using NPM](installation.md) and set up your OpenAI key, you're ready to start your first app:
+Once you have [installed LlamaIndex.TS using NPM](installation) and set up your OpenAI key, you're ready to start your first app:
 
 In a new folder:
 
