@@ -31,6 +31,7 @@ export async function createApp({
   frontend,
   openAIKey,
   model,
+  communityProjectPath,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -69,6 +70,7 @@ export async function createApp({
     eslint,
     openAIKey,
     model,
+    communityProjectPath,
   };
 
   if (frontend) {

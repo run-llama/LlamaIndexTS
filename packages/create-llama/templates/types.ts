@@ -19,4 +19,5 @@ export interface InstallTemplateArgs {
   openAIKey?: string;
   forBackend?: string;
   model: string;
+  communityProjectPath?: string;
 }

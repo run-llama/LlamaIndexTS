@@ -7,7 +7,9 @@ import path from "path";
 import { bold, cyan } from "picocolors";
 import { version } from "../../core/package.json";
 
+import { COMMUNITY_OWNER, COMMUNITY_REPO } from "../helpers/constant";
 import { PackageManager } from "../helpers/get-pkg-manager";
+import { downloadAndExtractRepo } from "../helpers/repo";
 import {
   InstallTemplateArgs,
   TemplateEngine,
@@ -306,10 +308,29 @@ const installPythonTemplate = async ({
   );
 };
 
+const installCommunityProject = async ({
+  root,
+  communityProjectPath,
+}: Pick<InstallTemplateArgs, "root" | "communityProjectPath">) => {
+  console.log("\nInstalling community project:", communityProjectPath!);
+  await downloadAndExtractRepo(root, {
+    username: COMMUNITY_OWNER,
+    name: COMMUNITY_REPO,
+    branch: "main",
+    filePath: communityProjectPath!,
+  });
+};
+
 export const installTemplate = async (
   props: InstallTemplateArgs & { backend: boolean },
 ) => {
   process.chdir(props.root);
+
+  if (props.communityProjectPath) {
+    await installCommunityProject(props);
+    return;
+  }
+
   if (props.framework === "fastapi") {
     await installPythonTemplate(props);
   } else {
