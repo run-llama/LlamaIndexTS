@@ -326,7 +326,7 @@ export const installTemplate = async (
 ) => {
   process.chdir(props.root);
 
-  if (props.communityProjectPath) {
+  if (props.template === "community" && props.communityProjectPath) {
     await installCommunityProject(props);
     return;
   }
