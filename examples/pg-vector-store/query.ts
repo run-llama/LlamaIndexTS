@@ -1,6 +1,8 @@
-import { VectorStoreIndex } from "../../../packages/core/src/indices/vectorStore/VectorStoreIndex";
-import { serviceContextFromDefaults } from "../../../packages/core/src/ServiceContext";
-import { PGVectorStore } from "../../../packages/core/src/storage/vectorStore/PGVectorStore";
+import {
+  PGVectorStore,
+  VectorStoreIndex,
+  serviceContextFromDefaults,
+} from "llamaindex";
 
 async function main() {
   const readline = require("readline").createInterface({
