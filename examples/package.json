@@ -6,7 +6,9 @@
     "@notionhq/client": "^2.2.13",
     "@pinecone-database/pinecone": "^1.1.2",
     "commander": "^11.1.0",
-    "llamaindex": "latest"
+    "llamaindex": "latest",
+    "dotenv": "^16.3.1",
+    "mongodb": "^6.2.0"
   },
   "devDependencies": {
     "@types/node": "^18.18.6",
