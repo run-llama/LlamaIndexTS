@@ -337,6 +337,8 @@ export class OpenAI implements LLM {
     //Indices
     var idx_counter: number = 0;
     for await (const part of chunk_stream) {
+      if (!part.choices.length) continue;
+
       //Increment
       part.choices[0].index = idx_counter;
       const is_done: boolean =

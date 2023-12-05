@@ -1,6 +1,6 @@
 import { PackageManager } from "../helpers/get-pkg-manager";
 
-export type TemplateType = "simple" | "streaming";
+export type TemplateType = "simple" | "streaming" | "community";
 export type TemplateFramework = "nextjs" | "express" | "fastapi";
 export type TemplateEngine = "simple" | "context";
 export type TemplateUI = "html" | "shadcn";
@@ -19,4 +19,5 @@ export interface InstallTemplateArgs {
   openAIKey?: string;
   forBackend?: string;
   model: string;
+  communityProjectPath?: string;
 }
