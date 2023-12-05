@@ -9,6 +9,7 @@ module.exports = {
           "OPENAI_API_KEY",
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",
+          "ASSEMBLYAI_API_KEY",
 
           "ASTRA_DB_ID",
           "ASTRA_DB_REGION",
