@@ -98,19 +98,44 @@ export interface LLM {
    * Calculates the number of tokens needed for the given chat messages
    */
   tokens(messages: ChatMessage[]): number;
+
+  /**
+   * Returns the usage information of the LLM
+   */
+  usage: Usage;
 }
 
 export const GPT4_MODELS = {
-  "gpt-4": { contextWindow: 8192 },
-  "gpt-4-32k": { contextWindow: 32768 },
-  "gpt-4-1106-preview": { contextWindow: 128000 },
-  "gpt-4-vision-preview": { contextWindow: 8192 },
+  "gpt-4": { contextWindow: 8192, promptCost: 0.03, completionCost: 0.06 },
+  "gpt-4-32k": { contextWindow: 32768, promptCost: 0.06, completionCost: 0.12 },
+  "gpt-4-1106-preview": {
+    contextWindow: 128000,
+    promptCost: 0.01,
+    completionCost: 0.03,
+  },
+  "gpt-4-vision-preview": {
+    contextWindow: 8192,
+    promptCost: 0.01,
+    completionCost: 0.03,
+  },
 };
 
 export const GPT35_MODELS = {
-  "gpt-3.5-turbo": { contextWindow: 4096 },
-  "gpt-3.5-turbo-16k": { contextWindow: 16384 },
-  "gpt-3.5-turbo-1106": { contextWindow: 16384 },
+  "gpt-3.5-turbo": {
+    contextWindow: 4096,
+    promptCost: 0.001,
+    completionCost: 0.002,
+  },
+  "gpt-3.5-turbo-16k": {
+    contextWindow: 16384,
+    promptCost: 0.001,
+    completionCost: 0.002,
+  },
+  "gpt-3.5-turbo-1106": {
+    contextWindow: 16384,
+    promptCost: 0.001,
+    completionCost: 0.002,
+  },
 };
 
 /**
@@ -120,6 +145,19 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
 };
+
+export class Usage {
+  promptTokens: number;
+  completionTokens: number;
+  computeSeconds: number;
+  cost: number;
+  constructor() {
+    this.promptTokens = 0;
+    this.completionTokens = 0;
+    this.cost = 0;
+    this.computeSeconds = 0;
+  }
+}
 
 /**
  * OpenAI LLM implementation
@@ -149,6 +187,7 @@ export class OpenAI implements LLM {
 
   callbackManager?: CallbackManager;
 
+  usage: Usage;
   constructor(
     init?: Partial<OpenAI> & {
       azure?: AzureOpenAIConfig;
@@ -163,6 +202,8 @@ export class OpenAI implements LLM {
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalChatOptions = init?.additionalChatOptions;
     this.additionalSessionOptions = init?.additionalSessionOptions;
+
+    this.usage = new Usage();
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
@@ -278,6 +319,18 @@ export class OpenAI implements LLM {
     });
 
     const content = response.choices[0].message?.content ?? "";
+
+    // Update usage
+    this.usage.promptTokens += response.usage?.prompt_tokens || 0;
+    this.usage.completionTokens += response.usage?.completion_tokens || 0;
+    this.usage.cost +=
+      ((response.usage?.prompt_tokens || 0) *
+        ALL_AVAILABLE_OPENAI_MODELS[this.model].promptCost) /
+        1000 +
+      ((response.usage?.completion_tokens || 0) *
+        ALL_AVAILABLE_OPENAI_MODELS[this.model].completionCost) /
+        1000;
+
     return {
       message: { content, role: response.choices[0].message.role },
     } as R;
@@ -430,7 +483,7 @@ export class LlamaDeuce implements LLM {
   maxTokens?: number;
   replicateSession: ReplicateSession;
   hasStreaming: boolean;
-
+  usage: Usage;
   constructor(init?: Partial<LlamaDeuce>) {
     this.model = init?.model ?? "Llama-2-70b-chat-4bit";
     this.chatStrategy =
@@ -445,6 +498,7 @@ export class LlamaDeuce implements LLM {
       ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].contextWindow; // For Replicate, the default is 500 tokens which is too low.
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
     this.hasStreaming = init?.hasStreaming ?? false;
+    this.usage = new Usage();
   }
 
   tokens(messages: ChatMessage[]): number {
@@ -620,6 +674,7 @@ If a question does not make any sense, or is not factually coherent, explain why
       api,
       replicateOptions,
     );
+
     return {
       message: {
         content: (response as Array<string>).join("").trimStart(),
@@ -639,8 +694,12 @@ If a question does not make any sense, or is not factually coherent, explain why
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
-  "claude-2": { contextWindow: 200000 },
-  "claude-instant-1": { contextWindow: 100000 },
+  "claude-2": { contextWindow: 200000, promptCost: 8.0, completionCost: 24.0 },
+  "claude-instant-1": {
+    contextWindow: 100000,
+    promptCost: 0.8,
+    completionCost: 2.4,
+  },
 };
 
 /**
@@ -664,6 +723,7 @@ export class Anthropic implements LLM {
 
   callbackManager?: CallbackManager;
 
+  usage: Usage;
   constructor(init?: Partial<Anthropic>) {
     this.model = init?.model ?? "claude-2";
     this.temperature = init?.temperature ?? 0.1;
@@ -681,6 +741,7 @@ export class Anthropic implements LLM {
         timeout: this.timeout,
       });
 
+    this.usage = new Usage();
     this.callbackManager = init?.callbackManager;
   }
 
@@ -809,6 +870,7 @@ export class Portkey implements LLM {
   session: PortkeySession;
   callbackManager?: CallbackManager;
 
+  usage: Usage;
   constructor(init?: Partial<Portkey>) {
     this.apiKey = init?.apiKey;
     this.baseURL = init?.baseURL;
@@ -821,6 +883,8 @@ export class Portkey implements LLM {
       mode: this.mode,
     });
     this.callbackManager = init?.callbackManager;
+
+    this.usage = new Usage();
   }
 
   tokens(messages: ChatMessage[]): number {
