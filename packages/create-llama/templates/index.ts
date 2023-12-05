@@ -7,7 +7,9 @@ import path from "path";
 import { bold, cyan } from "picocolors";
 import { version } from "../../core/package.json";
 
+import { COMMUNITY_OWNER, COMMUNITY_REPO } from "../helpers/constant";
 import { PackageManager } from "../helpers/get-pkg-manager";
+import { downloadAndExtractRepo } from "../helpers/repo";
 import {
   InstallTemplateArgs,
   TemplateEngine,
@@ -101,6 +103,7 @@ const installTSTemplate = async ({
   eslint,
   customApiPath,
   forBackend,
+  model,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -159,7 +162,7 @@ const installTSTemplate = async ({
   /**
    * Copy the selected UI files to the target directory and reference it.
    */
-  if (framework === "nextjs" && ui !== "html") {
+  if (framework === "nextjs" && ui !== "shadcn") {
     console.log("\nUsing UI:", ui, "\n");
     const uiPath = path.join(compPath, "ui", ui);
     const destUiPath = path.join(root, "app", "components", "ui");
@@ -171,6 +174,14 @@ const installTSTemplate = async ({
       cwd: uiPath,
       rename,
     });
+  }
+
+  if (framework === "nextjs") {
+    await fs.writeFile(
+      path.join(root, "constants.ts"),
+      `export const MODEL = "${model || "gpt-3.5-turbo"}";\n`,
+    );
+    console.log("\nUsing OpenAI model: ", model || "gpt-3.5-turbo", "\n");
   }
 
   /**
@@ -216,26 +227,26 @@ const installTSTemplate = async ({
     };
   }
 
-  if (framework === "nextjs" && ui === "shadcn") {
-    // add shadcn dependencies to package.json
+  if (framework === "nextjs" && ui === "html") {
+    // remove shadcn dependencies if html ui is selected
     packageJson.dependencies = {
       ...packageJson.dependencies,
-      "tailwind-merge": "^2",
-      "@radix-ui/react-slot": "^1",
-      "class-variance-authority": "^0.7",
-      clsx: "^1.2.1",
-      "lucide-react": "^0.291",
-      remark: "^14.0.3",
-      "remark-code-import": "^1.2.0",
-      "remark-gfm": "^3.0.1",
-      "remark-math": "^5.1.1",
-      "react-markdown": "^8.0.7",
-      "react-syntax-highlighter": "^15.5.0",
+      "tailwind-merge": undefined,
+      "@radix-ui/react-slot": undefined,
+      "class-variance-authority": undefined,
+      clsx: undefined,
+      "lucide-react": undefined,
+      remark: undefined,
+      "remark-code-import": undefined,
+      "remark-gfm": undefined,
+      "remark-math": undefined,
+      "react-markdown": undefined,
+      "react-syntax-highlighter": undefined,
     };
 
     packageJson.devDependencies = {
       ...packageJson.devDependencies,
-      "@types/react-syntax-highlighter": "^15.5.6",
+      "@types/react-syntax-highlighter": undefined,
     };
   }
 
@@ -297,10 +308,29 @@ const installPythonTemplate = async ({
   );
 };
 
+const installCommunityProject = async ({
+  root,
+  communityProjectPath,
+}: Pick<InstallTemplateArgs, "root" | "communityProjectPath">) => {
+  console.log("\nInstalling community project:", communityProjectPath!);
+  await downloadAndExtractRepo(root, {
+    username: COMMUNITY_OWNER,
+    name: COMMUNITY_REPO,
+    branch: "main",
+    filePath: communityProjectPath!,
+  });
+};
+
 export const installTemplate = async (
   props: InstallTemplateArgs & { backend: boolean },
 ) => {
   process.chdir(props.root);
+
+  if (props.template === "community" && props.communityProjectPath) {
+    await installCommunityProject(props);
+    return;
+  }
+
   if (props.framework === "fastapi") {
     await installPythonTemplate(props);
   } else {

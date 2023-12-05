@@ -1,5 +1,6 @@
 "use client";
 
+import { MODEL } from "@/constants";
 import { useChat } from "ai/react";
 import { ChatInput, ChatMessages } from "./ui/chat";
 import { Spinner } from 'react-bootstrap';
@@ -28,6 +29,7 @@ export default function ChatSection() {
         handleSubmit={handleSubmit}
         handleInputChange={handleInputChange}
         isLoading={isLoading}
+        multiModal={MODEL === "gpt-4-vision-preview"}
       />
       {isLoading && <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>}
     </div>
