@@ -8,12 +8,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
     "ai": "^2.2.25",
-    "llamaindex": "0.0.31",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^1.2.1",
     "dotenv": "^16.3.1",
+    "llamaindex": "0.0.37",
+    "lucide-react": "^0.294.0",
     "next": "^13",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-markdown": "^8.0.7",
+    "react-syntax-highlighter": "^15.5.0",
+    "remark": "^14.0.3",
+    "remark-code-import": "^1.2.0",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.1",
+    "supports-color": "^9.4.0",
+    "tailwind-merge": "^2.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -24,6 +36,7 @@
     "eslint-config-next": "^13",
     "postcss": "^8",
     "tailwindcss": "^3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@types/react-syntax-highlighter": "^15.5.6"
   }
 }
