@@ -29,7 +29,7 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
-    locales: ["en", "fr"],
+    locales: ["en", "fr", "zh-Hans"],
   },
 
   presets: [
@@ -79,6 +79,10 @@ const config = {
             href: "https://github.com/run-llama/LlamaIndexTS",
             label: "GitHub",
             position: "right",
+          },
+          {
+            type: "localeDropdown",
+            position: "left",
           },
         ],
       },
