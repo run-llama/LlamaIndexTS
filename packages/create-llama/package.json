@@ -1,7 +1,6 @@
 {
   "name": "create-llama",
   "version": "0.0.11",
-  "type": "module",
   "keywords": [
     "rag",
     "llamaindex",

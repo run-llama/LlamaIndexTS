@@ -1,7 +1,7 @@
 import { ChildProcess, exec, execSync } from "child_process";
 import crypto from "node:crypto";
 import { mkdir } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import * as path from "path";
 import waitPort from "wait-port";
 
 export type AppType = "--frontend" | "--no-frontend" | "";
@@ -13,7 +13,7 @@ export async function runApp(
   appType: AppType,
   port: number,
 ): Promise<ChildProcess[]> {
-  const cps = [];
+  const cps: ChildProcess[] = [];
 
   try {
     switch (appType) {
@@ -71,9 +71,7 @@ export function runCreateLlama(
   templateUI: string,
   appType: AppType,
 ) {
-  const createLlama = fileURLToPath(
-    new URL("../dist/index.js", import.meta.url),
-  );
+  const createLlama = path.join(__dirname, "..", "dist", "index.js");
 
   const name = [
     templateType,
@@ -110,9 +108,7 @@ export function runCreateLlama(
   return name;
 }
 export async function createTestDir() {
-  const cwd = fileURLToPath(
-    new URL(`.cache/${crypto.randomUUID()}`, import.meta.url),
-  );
+  const cwd = path.join(__dirname, ".cache", crypto.randomUUID());
   await mkdir(cwd, { recursive: true });
   return cwd;
 }
