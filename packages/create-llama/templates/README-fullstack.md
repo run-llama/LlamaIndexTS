@@ -16,3 +16,8 @@ To learn more about LlamaIndex, take a look at the following resources:
 - [LlamaIndexTS Documentation](https://ts.llamaindex.ai) - learn about LlamaIndex (Typescript features).
 
 You can check out [the LlamaIndexTS GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
+
++ 
++ ### Model Selection
++ 
++ When creating a new LlamaIndex app, you can select a model to use. The available models are Model1, Model2, and Model3. The selected model will be used in the generated code.

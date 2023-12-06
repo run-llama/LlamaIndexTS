@@ -67,13 +67,7 @@ You can also replace OpenAI with one of our [dozens of other supported LLMs](htt
 The simplest thing to do is run `create-llama` in interactive mode:
 
 ```bash
-npx create-llama@latest
-# or
 npm create llama@latest
-# or
-yarn create llama
-# or
-pnpm create llama@latest
 ```
 
 You will be asked for the name of your project, along with other configuration options, something like this:
@@ -86,10 +80,32 @@ Ok to proceed? (y) y
 ✔ What is your project named? … my-app
 ✔ Which template would you like to use? › Chat with streaming
 ✔ Which framework would you like to use? › NextJS
+✔ Which UI would you like to use? › Shadcn
+✔ Which chat engine would you like to use? › SimpleChatEngine
+✔ **Please provide your llm of choice (leave blank to skip): …**
+✔ Please select a model › Model1 / Model2 / Model3
+✔ Please provide your API key (leave blank to skip): … 
+✔ Would you like to use ESLint? … No / Yes
+✔ Which chat engine would you like to use? › ContextChatEngine
+✔ Please provide your OpenAI API key (leave blank to skip): …
+✔ Would you like to use ESLint? … No / Yes
+Creating a new LlamaIndex app in /home/my-app.
+```
+Here is an example:
+
+```bash
+>> npm create llama
+Need to install the following packages:
+  create-llama@latest
+Ok to proceed? (y) y
+✔ What is your project named? … my-app
+✔ Which template would you like to use? › Chat with streaming
+✔ Which framework would you like to use? › NextJS
 ✔ Which UI would you like to use? › Just HTML
 ✔ Which chat engine would you like to use? › ContextChatEngine
 ✔ Please provide your OpenAI API key (leave blank to skip): …
 ✔ Would you like to use ESLint? … No / Yes
+✔ Please select a model › Model1 / Model2 / Model3
 Creating a new LlamaIndex app in /home/my-app.
 ```
 
