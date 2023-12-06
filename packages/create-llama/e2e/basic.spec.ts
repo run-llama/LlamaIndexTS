@@ -27,7 +27,9 @@ for (const templateType of templateTypes) {
         }
         const appType: AppType =
           templateFramework === "express" || templateFramework === "fastapi"
-            ? "--frontend"
+            ? templateType === "simple"
+              ? "--no-frontend" // simple templates don't have frontends
+              : "--frontend"
             : "";
         test(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async ({
           page,
@@ -46,8 +48,10 @@ for (const templateType of templateTypes) {
           const cps = await runApp(cwd, name, appType, port);
 
           // test frontend
-          await page.goto(`http://localhost:${port}`);
-          await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
+          if (appType !== "--no-frontend") {
+            await page.goto(`http://localhost:${port}`);
+            await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
+          }
           // TODO: test backend using curl (would need OpenAI key)
           // clean processes
           cps.forEach((cp) => cp.kill());

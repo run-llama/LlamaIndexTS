@@ -17,11 +17,6 @@ export async function runApp(
 
   try {
     switch (appType) {
-      case "--no-frontend":
-        cps.push(
-          await createProcess("npm run dev", `${cwd}/${name}/backend`, port),
-        );
-        break;
       case "--frontend":
         cps.push(
           await createProcess(
