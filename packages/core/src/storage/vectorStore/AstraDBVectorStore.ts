@@ -1,8 +1,7 @@
 import { AstraDB } from "@datastax/astra-db-ts";
 import { Collection } from "@datastax/astra-db-ts/dist/collections";
-import { BaseNode, MetadataMode } from "../../Node";
+import { BaseNode, Document, MetadataMode } from "../../Node";
 import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 const MAX_INSERT_BATCH_SIZE = 20;
 
@@ -11,31 +10,48 @@ export class AstraDBVectorStore implements VectorStore {
   flatMetadata: boolean = true;
 
   astraDBClient: AstraDB;
-  collection: Collection | undefined;
+  idKey: string;
+  contentKey: string | undefined; // if undefined the entirety of the node aside from the id and embedding will be stored as content
+  metadataKey: string;
 
-  constructor(params?: {
-    token: string;
-    dbId: string;
-    region: string;
-    keyspace: string;
-  }) {
-    const token = params?.token ?? process.env.ASTRA_DB_APPLICATION_TOKEN;
-    const dbId = params?.dbId ?? process.env.ASTRA_DB_ID;
-    const region = params?.region ?? process.env.ASTRA_DB_REGION;
-    const keyspace = params?.keyspace ?? process.env.ASTRA_DB_NAMESPACE;
+  private collection: Collection | undefined;
 
-    if (!dbId) {
-      throw new Error("Must specify ASTRA_DB_ID via env variable.");
+  constructor(
+    init?: Partial<AstraDBVectorStore> & {
+      params?: {
+        token: string;
+        dbId: string;
+        region: string;
+        keyspace: string;
+      };
+    },
+  ) {
+    if (init?.astraDBClient) {
+      this.astraDBClient = init.astraDBClient;
+    } else {
+      const token =
+        init?.params?.token ?? process.env.ASTRA_DB_APPLICATION_TOKEN;
+      const dbId = init?.params?.dbId ?? process.env.ASTRA_DB_ID;
+      const region = init?.params?.region ?? process.env.ASTRA_DB_REGION;
+      const keyspace = init?.params?.keyspace ?? process.env.ASTRA_DB_NAMESPACE;
+
+      if (!dbId) {
+        throw new Error("Must specify ASTRA_DB_ID via env variable.");
+      }
+      if (!token) {
+        throw new Error(
+          "Must specify ASTRA_DB_APPLICATION_TOKEN via env variable.",
+        );
+      }
+      if (!region) {
+        throw new Error("Must specify ASTRA_DB_REGION via env variable.");
+      }
+      this.astraDBClient = new AstraDB(token, dbId, region, keyspace);
     }
-    if (!token) {
-      throw new Error(
-        "Must specify ASTRA_DB_APPLICATION_TOKEN via env variable.",
-      );
-    }
-    if (!region) {
-      throw new Error("Must specify ASTRA_DB_REGION via env variable.");
-    }
-    this.astraDBClient = new AstraDB(token, dbId, region, keyspace);
+
+    this.idKey = init?.idKey ?? "_id";
+    this.contentKey = init?.contentKey;
+    this.metadataKey = init?.metadataKey ?? "metadata";
   }
 
   /**
@@ -91,13 +107,11 @@ export class AstraDBVectorStore implements VectorStore {
       return [];
     }
     const dataToInsert = nodes.map((node) => {
-      const metadata = nodeToMetadata(node, true, undefined, this.flatMetadata);
-
       return {
         _id: node.id_,
         $vector: node.getEmbedding(),
-        content: node.getContent(MetadataMode.NONE) || "",
-        metadata,
+        content: node.getContent(MetadataMode.ALL),
+        metadata: node.metadata,
       };
     });
 
@@ -174,14 +188,31 @@ export class AstraDBVectorStore implements VectorStore {
     const ids: string[] = [];
     const similarities: number[] = [];
 
-    await cursor.forEach(async (doc: Record<string, any>) => {
-      ids.push(doc._id);
-      similarities.push(doc.$similarity);
-      const node = metadataDictToNode({
-        _node_content: JSON.stringify({ text: doc }),
+    await cursor.forEach(async (row: Record<string, any>) => {
+      const id = row[this.idKey];
+      const embedding = row.$vector;
+      const similarity = row.$similarity;
+      const metadata = row[this.metadataKey];
+
+      // Remove fields from content
+      delete row[this.idKey];
+      delete row.$similarity;
+      delete row.$vector;
+      delete row[this.metadataKey];
+
+      const content = this.contentKey
+        ? row[this.contentKey]
+        : JSON.stringify(row);
+
+      const node = new Document({
+        id_: id,
+        text: content,
+        metadata: metadata ?? {},
+        embedding: embedding,
       });
-      delete doc.$vector;
-      node.setContent(JSON.stringify(doc));
+
+      ids.push(id);
+      similarities.push(similarity);
       nodes.push(node);
     });
 
