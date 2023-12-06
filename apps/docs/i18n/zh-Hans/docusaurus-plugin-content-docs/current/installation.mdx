@@ -1,0 +1,69 @@
+---
+sidebar_position: 1
+---
+
+
+# 安装与设置
+
+确保你的 NodeJS 版本为 v18 或更高。
+
+
+
+## 使用 create-llama
+
+使用 `create-llama` 是开始构建 LlamaIndex 应用的最简单方法。这个 CLI 工具能让你快速开始一个新的 LlamaIndex 应用，所有设置都为你准备好了。
+
+只需运行
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+即可开始。一旦你的应用生成后，运行
+
+```bash npm2yarn
+npm run dev
+```
+
+来启动开发服务器。然后你可以访问 [http://localhost:3000](http://localhost:3000) 来查看你的应用。
+
+## 通过 NPM 安装
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+
+### 环境变量
+
+我们的示例默认使用 OpenAI。你需要像这样设置你的 OpenAI 密钥：
+
+```bash
+export OPENAI_API_KEY="sk-......" # 请替换为你从 https://platform.openai.com/account/api-keys 获取的密钥
+```
+
+如果你想要每次自动加载它，将其添加到你的 .zshrc/.bashrc 文件中。
+
+警告：不要将你的 OpenAI 密钥提交到版本控制中。
+
