@@ -80,10 +80,6 @@ const config = {
             label: "GitHub",
             position: "right",
           },
-          {
-            type: "localeDropdown",
-            position: "left",
-          },
         ],
       },
       footer: {
