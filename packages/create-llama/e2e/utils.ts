@@ -21,16 +21,22 @@ export async function runApp(
         cps.push(
           await createProcess(
             "npm run dev",
-            `${cwd}/${name}/backend`,
+            path.join(cwd, name, "backend"),
             port + 1,
           ),
         );
         cps.push(
-          await createProcess("npm run dev", `${cwd}/${name}/frontend`, port),
+          await createProcess(
+            "npm run dev",
+            path.join(cwd, name, "frontend"),
+            port,
+          ),
         );
         break;
       default:
-        cps.push(await createProcess("npm run dev", `${cwd}/${name}`, port));
+        cps.push(
+          await createProcess("npm run dev", path.join(cwd, name), port),
+        );
         break;
     }
   } catch (e) {
