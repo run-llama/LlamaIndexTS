@@ -1,6 +1,6 @@
 name: Bugfix
 title: ""
-description: Write something like "We notice ... behavior when ... happens instead of ...""
+description: Write something like "We notice ... behavior when ... happens instead of ..." If you would like to use sweep.dev prefix with "Sweep:"
 body:
   - type: textarea
     id: description
