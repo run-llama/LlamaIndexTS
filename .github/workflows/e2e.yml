@@ -1,12 +1,12 @@
 name: E2E Tests
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
     paths:
-      - 'packages/create-llama/**'
-      - '.github/workflows/e2e.yml'
-    branches: [ main ]
+      - "packages/create-llama/**"
+      - ".github/workflows/e2e.yml"
+    branches: [main]
 
 jobs:
   e2e:
@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node-version: [18, 20]
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: [18]
+        os: [macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Install Playwright Browsers

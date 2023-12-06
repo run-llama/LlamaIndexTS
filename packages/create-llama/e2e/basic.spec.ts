@@ -8,10 +8,10 @@ import type {
 } from "../templates";
 import { createTestDir, runApp, runCreateLlama, type AppType } from "./utils";
 
-const templateTypes: TemplateType[] = ["streaming"];
-const templateFrameworks: TemplateFramework[] = ["express"];
-const templateEngines: TemplateEngine[] = ["simple"];
-const templateUIs: TemplateUI[] = ["html"];
+const templateTypes: TemplateType[] = ["streaming", "simple"];
+const templateFrameworks: TemplateFramework[] = ["nextjs", "express"];
+const templateEngines: TemplateEngine[] = ["simple", "context"];
+const templateUIs: TemplateUI[] = ["shadcn", "html"];
 
 for (const templateType of templateTypes) {
   for (const templateFramework of templateFrameworks) {
