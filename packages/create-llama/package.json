@@ -24,7 +24,7 @@
     "dev": "ncc build ./index.ts -w -o dist/",
     "build": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
     "lint": "eslint . --ignore-pattern dist",
-    "e2e": "playwright test",
+    "e2e": "playwright test --reporter=list",
     "prepublishOnly": "cd ../../ && turbo run build"
   },
   "devDependencies": {
