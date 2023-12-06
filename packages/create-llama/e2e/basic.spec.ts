@@ -17,14 +17,18 @@ for (const templateType of templateTypes) {
   for (const templateFramework of templateFrameworks) {
     for (const templateEngine of templateEngines) {
       for (const templateUI of templateUIs) {
-        const appType: AppType =
-          templateFramework === "express" || templateFramework === "fastapi"
-            ? "--frontend"
-            : "";
+        if (templateFramework === "nextjs" && templateType === "simple") {
+          // nextjs doesn't support simple templates - skip tests
+          continue;
+        }
         if (templateEngine === "context") {
           // we don't test context templates because it needs OPEN_AI_KEY
           continue;
         }
+        const appType: AppType =
+          templateFramework === "express" || templateFramework === "fastapi"
+            ? "--frontend"
+            : "";
         test(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async ({
           page,
         }) => {
