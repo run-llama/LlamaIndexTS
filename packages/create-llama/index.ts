@@ -66,37 +66,50 @@ const program = new Commander.Command(packageJson.name)
   .option(
     "--template <template>",
     `
+
   Select a template to bootstrap the application with.
 `,
   )
   .option(
     "--engine <engine>",
     `
+
   Select a chat engine to bootstrap the application with.
 `,
   )
   .option(
     "--framework <framework>",
     `
+
   Select a framework to bootstrap the application with.
 `,
   )
   .option(
     "--open-ai-key <key>",
     `
+
   Provide an OpenAI API key.
 `,
   )
   .option(
     "--ui <ui>",
     `
+
   Select a UI to bootstrap the application with.
 `,
   )
   .option(
     "--frontend",
     `
+
   Whether to generate a frontend for your backend.
+`,
+  )
+  .option(
+    "--model",
+    `
+
+  Select OpenAI model to use. E.g. gpt-3.5-turbo.
 `,
   )
   .allowUnknownOption()
@@ -149,7 +162,7 @@ async function run(): Promise<void> {
       "\nPlease specify the project directory:\n" +
         `  ${cyan(program.name())} ${green("<project-directory>")}\n` +
         "For example:\n" +
-        `  ${cyan(program.name())} ${green("my-next-app")}\n\n` +
+        `  ${cyan(program.name())} ${green("my-app")}\n\n` +
         `Run ${cyan(`${program.name()} --help`)} to see all options.`,
     );
     process.exit(1);
