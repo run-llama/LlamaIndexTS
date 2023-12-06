@@ -29,7 +29,7 @@ export async function createApp({
   packageManager,
   eslint,
   frontend,
-  openAiKey: openAIKey,
+  openAiKey,
   model,
   communityProjectPath,
 }: InstallAppArgs): Promise<void> {
@@ -68,7 +68,7 @@ export async function createApp({
     packageManager,
     isOnline,
     eslint,
-    openAIKey,
+    openAiKey,
     model,
     communityProjectPath,
   };

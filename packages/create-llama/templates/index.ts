@@ -16,12 +16,12 @@ import {
   TemplateFramework,
 } from "./types";
 
-const createEnvLocalFile = async (root: string, openAIKey?: string) => {
-  if (openAIKey) {
+const createEnvLocalFile = async (root: string, openAiKey?: string) => {
+  if (openAiKey) {
     const envFileName = ".env";
     await fs.writeFile(
       path.join(root, envFileName),
-      `OPENAI_API_KEY=${openAIKey}\n`,
+      `OPENAI_API_KEY=${openAiKey}\n`,
     );
     console.log(`Created '${envFileName}' file containing OPENAI_API_KEY`);
   }
@@ -32,7 +32,7 @@ const copyTestData = async (
   framework: TemplateFramework,
   packageManager?: PackageManager,
   engine?: TemplateEngine,
-  openAIKey?: string,
+  openAiKey?: string,
 ) => {
   if (framework === "nextjs") {
     // XXX: This is a hack to make the build for nextjs work with pdf-parse
@@ -53,7 +53,7 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
-    if (openAIKey || process.env["OPENAI_API_KEY"]) {
+    if (openAiKey || process.env["OPENAI_API_KEY"]) {
       console.log(
         `\nRunning ${cyan(
           `${packageManager} run generate`,
