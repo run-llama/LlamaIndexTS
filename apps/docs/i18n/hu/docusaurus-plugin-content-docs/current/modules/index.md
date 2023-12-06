@@ -1,6 +1,6 @@
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Alapmodulok
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 A LlamaIndex.TS több alapmodult kínál, amelyeket magas szintű modulokra és alacsony szintű modulokra osztottunk fel, hogy gyorsan elkezdhessünk, és testreszabható kulcskomponenseket kaphassunk.
 

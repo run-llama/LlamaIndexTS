@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # QueryEngine (Spørringsmotor)
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 En spørringsmotor pakker inn en `Retriever` og en `ResponseSynthesizer` i en pipeline, som vil bruke spørringsstrengen til å hente noder og deretter sende dem til LLM for å generere et svar.
 

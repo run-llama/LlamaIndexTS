@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
-
 # Conceptes de Nivell Alt
+
+`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
 
 LlamaIndex.TS t'ajuda a construir aplicacions amb potència LLM (per exemple, Q&A, chatbot) sobre dades personalitzades.
 

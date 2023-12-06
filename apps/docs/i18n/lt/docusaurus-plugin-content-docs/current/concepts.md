@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Aukšto lygio sąvokos
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 LlamaIndex.TS padeda jums kurti LLM pagrįstas aplikacijas (pvz., klausimų ir atsakymų sistema, chatbot'as) naudojant pasirinktinius duomenis.
 

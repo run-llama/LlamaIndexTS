@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Mikä on LlamaIndex.TS?
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 LlamaIndex.TS on tietokehys LLM-sovelluksille, joka mahdollistaa yksityisten tai aluekohtaisten tietojen syöttämisen, rakenteen luomisen ja käyttämisen. Vaikka Python-paketti on myös saatavilla (katso [täältä](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS tarjoaa ydintoiminnot yksinkertaisessa paketissa, joka on optimoitu TypeScriptin käyttöön.
 

@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # Høynivåkonsepter
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 LlamaIndex.TS hjelper deg med å bygge LLM-drevne applikasjoner (f.eks. spørsmål og svar, chatbot) over egendefinerte data.
 

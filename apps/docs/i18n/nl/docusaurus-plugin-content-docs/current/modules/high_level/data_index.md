@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Index
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 Een index is de basiscontainer en organisatie voor uw gegevens. LlamaIndex.TS ondersteunt twee indexes:
 

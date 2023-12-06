@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
-
 # ResponseSynthesizer (SintetizatorOdgovora)
+
+`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
 
 ResponseSynthesizer je odgovoran za slanje upita, čvorova i predložaka za generisanje odgovora LLM-u. Postoje nekoliko ključnih načina generisanja odgovora:
 

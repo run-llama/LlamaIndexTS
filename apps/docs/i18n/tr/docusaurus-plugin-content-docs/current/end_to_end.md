@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Uçtan Uca Örnekler
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 Depoda LlamaIndex.TS kullanarak birkaç uçtan uca örnek bulunmaktadır.
 

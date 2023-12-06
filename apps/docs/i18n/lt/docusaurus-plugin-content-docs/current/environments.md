@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Aplinkos
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 LlamaIndex šiuo metu oficialiai palaiko NodeJS 18 ir NodeJS 20.
 

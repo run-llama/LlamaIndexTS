@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # Khái niệm cấp cao
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 LlamaIndex.TS giúp bạn xây dựng các ứng dụng được cung cấp bởi LLM (ví dụ: Q&A, chatbot) trên dữ liệu tùy chỉnh.
 

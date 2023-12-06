@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Indice
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 Un indice è il contenitore e l'organizzazione di base per i tuoi dati. LlamaIndex.TS supporta due tipi di indici:
 

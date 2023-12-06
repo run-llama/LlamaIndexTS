@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
-
 # Exemplos de Ponta a Ponta
+
+`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
 
 Incluímos vários exemplos de ponta a ponta usando o LlamaIndex.TS no repositório.
 

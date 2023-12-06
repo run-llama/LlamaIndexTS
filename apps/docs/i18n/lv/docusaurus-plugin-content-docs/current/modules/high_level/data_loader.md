@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Lasītājs / Ielādētājs
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 LlamaIndex.TS atbalsta vieglu failu ielādi no mapēm, izmantojot klasi `SimpleDirectoryReader`. Pašlaik tiek atbalstīti failu formāti `.txt`, `.pdf`, `.csv`, `.md` un `.docx`, bet nākotnē plānots atbalstīt vēl vairāk!
 

@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # NodeParser
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 `NodeParser` dalam LlamaIndex bertanggung jawab untuk membagi objek `Document` menjadi objek `Node` yang lebih mudah dikelola. Ketika Anda memanggil `.fromDocuments()`, `NodeParser` dari `ServiceContext` digunakan untuk melakukan ini secara otomatis untuk Anda. Atau, Anda dapat menggunakannya untuk membagi dokumen sebelum waktunya.
 

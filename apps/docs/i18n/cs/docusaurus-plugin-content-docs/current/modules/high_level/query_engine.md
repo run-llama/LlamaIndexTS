@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
-
 # QueryEngine (Dotazovací engine)
+
+`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
 
 Dotazovací engine obaluje `Retriever` a `ResponseSynthesizer` do potrubí, které použije řetězec dotazu k získání uzlů a poté je odešle do LLM pro generování odpovědi.
 

@@ -1,6 +1,6 @@
-`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
-
 # Mòduls principals
+
+`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
 
 LlamaIndex.TS ofereix diversos mòduls principals, separats en mòduls de nivell alt per començar ràpidament i mòduls de nivell baix per personalitzar els components clau segons les teves necessitats.
 

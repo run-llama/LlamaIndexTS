@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Dokumenty i Węzły
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 `Dokumenty` i `Węzły` są podstawowymi elementami budowy każdego indeksu. Podczas gdy API dla tych obiektów jest podobne, obiekty `Dokument` reprezentują całe pliki, podczas gdy `Węzły` są mniejszymi fragmentami tego oryginalnego dokumentu, które są odpowiednie dla LLM i Q&A.
 

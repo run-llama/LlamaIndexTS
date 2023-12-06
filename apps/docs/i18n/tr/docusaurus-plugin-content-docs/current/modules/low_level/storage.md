@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Depolama
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex.TS'de depolama otomatik olarak çalışır, bir `StorageContext` nesnesini yapılandırdıktan sonra. Sadece `persistDir`'yi yapılandırın ve bir indekse ekleyin.
 

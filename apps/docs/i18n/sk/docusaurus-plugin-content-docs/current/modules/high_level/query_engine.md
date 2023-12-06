@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # QueryEngine (Poizvedovalni pogon)
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Poizvedovalni pogon ovije `Retriever` in `ResponseSynthesizer` v cevovod, ki bo uporabil poizvedovalni niz za pridobivanje vozlišč in jih nato poslal v LLM za generiranje odgovora.
 

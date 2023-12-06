@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Hoog-Niveau Concepten
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 LlamaIndex.TS helpt je bij het bouwen van LLM-aangedreven applicaties (bijv. Q&A, chatbot) over aangepaste gegevens.
 

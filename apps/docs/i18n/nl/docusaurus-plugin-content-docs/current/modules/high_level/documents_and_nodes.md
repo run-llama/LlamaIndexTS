@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Documenten en Nodes
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 `Documenten` en `Nodes` zijn de basisbouwstenen van elke index. Hoewel de API voor deze objecten vergelijkbaar is, vertegenwoordigen `Documenten` objecten volledige bestanden, terwijl `Nodes` kleinere delen zijn van dat oorspronkelijke document, die geschikt zijn voor een LLM en Q&A.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
-
 # Indeks
+
+`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
 
 Et indeks er den grundlæggende beholder og organisering af dine data. LlamaIndex.TS understøtter to indeks:
 

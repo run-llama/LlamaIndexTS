@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # LlamaIndex.TS là gì?
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 LlamaIndex.TS là một framework dữ liệu cho các ứng dụng LLM để tiếp nhận, cấu trúc và truy cập dữ liệu riêng tư hoặc dữ liệu cụ thể cho lĩnh vực. Trong khi có một gói python cũng có sẵn (xem [ở đây](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS cung cấp các tính năng cốt lõi trong một gói đơn giản, tối ưu cho việc sử dụng với TypeScript.
 

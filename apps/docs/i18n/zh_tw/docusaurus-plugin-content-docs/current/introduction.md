@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
-
 # 什麼是LlamaIndex.TS?
+
+`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
 
 LlamaIndex.TS是一個數據框架，用於LLM應用程序對私有或特定領域的數據進行摄取、結構化和訪問。雖然還提供了一個Python包（請參見[這裡](https://docs.llamaindex.ai/en/stable/)），但LlamaIndex.TS提供了一個簡單的包，針對TypeScript進行了優化，提供了核心功能。
 

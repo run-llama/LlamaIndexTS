@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # LLM
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LLM, metinleri okuma ve sorgulara doğal dil yanıtları üretme işlemlerinden sorumludur. Varsayılan olarak, LlamaIndex.TS `gpt-3.5-turbo` kullanır.
 

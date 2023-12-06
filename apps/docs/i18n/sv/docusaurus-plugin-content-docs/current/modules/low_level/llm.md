@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
-
 # LLM
+
+`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
 
 LLM är ansvarig för att läsa text och generera naturliga språksvar på frågor. Som standard använder LlamaIndex.TS `gpt-3.5-turbo`.
 

@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # Retriever (Recuperador)
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 Un recuperador en LlamaIndex es lo que se utiliza para obtener `Node`s de un índice utilizando una cadena de consulta. Un `VectorIndexRetriever` obtendrá los nodos más similares a los k mejores. Mientras tanto, un `SummaryIndexRetriever` obtendrá todos los nodos sin importar la consulta.
 

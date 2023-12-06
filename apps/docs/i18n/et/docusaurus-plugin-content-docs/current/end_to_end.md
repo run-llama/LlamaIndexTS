@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Lõpust lõppu näited
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 Meie repositooriumis on mitmeid lõpust lõppu näiteid, kasutades LlamaIndex.TS
 

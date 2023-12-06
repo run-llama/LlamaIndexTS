@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Opslag
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 Opslag in LlamaIndex.TS werkt automatisch zodra je een `StorageContext` object hebt geconfigureerd. Configureer gewoon de `persistDir` en voeg deze toe aan een index.
 

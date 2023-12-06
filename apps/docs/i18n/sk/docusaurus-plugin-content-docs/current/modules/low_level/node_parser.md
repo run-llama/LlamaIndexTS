@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # NodeParser (Razčlenjevalnik vozlišč)
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 `NodeParser` v LlamaIndexu je odgovoren za razdeljevanje objektov `Document` v bolj obvladljive objekte `Node`. Ko pokličete `.fromDocuments()`, se `NodeParser` iz `ServiceContext`a uporabi za samodejno razdeljevanje. Lahko pa ga uporabite tudi za predhodno razdeljevanje dokumentov.
 

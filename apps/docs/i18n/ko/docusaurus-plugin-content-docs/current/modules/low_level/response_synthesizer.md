@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
-
 # ResponseSynthesizer (응답 합성기)
+
+`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
 
 ResponseSynthesizer는 쿼리, 노드 및 프롬프트 템플릿을 LLM에 보내 응답을 생성하는 역할을 담당합니다. 응답을 생성하는 몇 가지 주요 모드가 있습니다:
 

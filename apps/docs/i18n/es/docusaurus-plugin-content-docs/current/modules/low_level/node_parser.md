@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # NodeParser (Analizador de Nodos)
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 El `NodeParser` en LlamaIndex es responsable de dividir los objetos `Document` en objetos `Node` más manejables. Cuando llamas a `.fromDocuments()`, el `NodeParser` del `ServiceContext` se utiliza automáticamente para hacer esto por ti. Alternativamente, puedes usarlo para dividir documentos de antemano.
 

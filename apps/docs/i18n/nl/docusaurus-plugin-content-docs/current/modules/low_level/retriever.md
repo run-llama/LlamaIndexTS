@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Retriever
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 Een retriever in LlamaIndex is wat wordt gebruikt om `Node`s op te halen uit een index met behulp van een zoekopdracht. Een `VectorIndexRetriever` haalt de meest vergelijkbare knooppunten op. Ondertussen haalt een `SummaryIndexRetriever` alle knooppunten op, ongeacht de zoekopdracht.
 

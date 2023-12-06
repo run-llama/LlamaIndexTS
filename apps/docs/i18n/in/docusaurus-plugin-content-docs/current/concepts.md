@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Konsep Tingkat Tinggi
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 LlamaIndex.TS membantu Anda membangun aplikasi yang didukung oleh LLM (misalnya Q&A, chatbot) dengan menggunakan data kustom.
 

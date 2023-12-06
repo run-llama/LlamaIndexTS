@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Vodič za začetek
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Ko ste [namestili LlamaIndex.TS z uporabo NPM](namestitev) in nastavili svoj OpenAI ključ, ste pripravljeni za zagon prve aplikacije:
 

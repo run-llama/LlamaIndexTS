@@ -1,6 +1,6 @@
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Moduły podstawowe
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 LlamaIndex.TS oferuje kilka modułów podstawowych, podzielonych na moduły wysokiego poziomu, które umożliwiają szybkie rozpoczęcie pracy, oraz moduły niskiego poziomu, które umożliwiają dostosowanie kluczowych komponentów według potrzeb.
 

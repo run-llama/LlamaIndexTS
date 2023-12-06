@@ -1,6 +1,6 @@
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Moduli principali
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 LlamaIndex.TS offre diversi moduli principali, suddivisi in moduli di alto livello per iniziare rapidamente e moduli di basso livello per personalizzare i componenti chiave come desideri.
 

@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Yüksek Düzeyli Kavramlar
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex.TS, özel veriler üzerinde LLM destekli uygulamalar (örneğin, soru-cevap, sohbet botu) oluşturmanıza yardımcı olur.
 

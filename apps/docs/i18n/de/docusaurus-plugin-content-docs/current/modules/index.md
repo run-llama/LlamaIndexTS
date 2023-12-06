@@ -1,6 +1,6 @@
-`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
-
 # Kernmodule
+
+`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
 
 LlamaIndex.TS bietet mehrere Kernmodule, die in High-Level-Module für einen schnellen Einstieg und Low-Level-Module für die Anpassung von Schlüsselkomponenten unterteilt sind, wie Sie es benötigen.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Indeks
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 Indeks on teie andmete põhiline konteiner ja korraldus. LlamaIndex.TS toetab kahte indeksit:
 

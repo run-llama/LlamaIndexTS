@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Kazalo
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Kazalo je osnovni kontejner in organizacija za vaše podatke. LlamaIndex.TS podpira dve kazali:
 

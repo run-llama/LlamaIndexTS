@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Samouczek dla początkujących
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 Po zainstalowaniu [LlamaIndex.TS przy użyciu NPM](installation) i skonfigurowaniu klucza OpenAI, jesteś gotowy, aby rozpocząć pracę nad swoją pierwszą aplikacją:
 

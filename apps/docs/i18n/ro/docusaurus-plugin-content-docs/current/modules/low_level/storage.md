@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Stocare
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 Stocarea în LlamaIndex.TS funcționează automat odată ce ați configurat un obiect `StorageContext`. Doar configurați `persistDir` și atașați-l la un index.
 

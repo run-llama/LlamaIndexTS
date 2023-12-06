@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
-
 # LlamaIndex.TS란 무엇인가요?
+
+`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
 
 LlamaIndex.TS는 LLM 애플리케이션에서 개인 또는 도메인별 데이터를 수집, 구조화 및 액세스하기 위한 데이터 프레임워크입니다. 파이썬 패키지도 사용할 수 있지만 (여기를 참조하세요: [링크](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS는 TypeScript와 함께 사용하기 위해 최적화된 간단한 패키지로 핵심 기능을 제공합니다.
 

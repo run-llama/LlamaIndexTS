@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # Incrustación
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 El modelo de incrustación en LlamaIndex es responsable de crear representaciones numéricas de texto. Por defecto, LlamaIndex utilizará el modelo `text-embedding-ada-002` de OpenAI.
 

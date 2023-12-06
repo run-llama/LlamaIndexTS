@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # ResponseSynthesizer (Syntetizátor odpovedí)
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 ResponseSynthesizer je zodpovedný za odosielanie dotazu, uzlov a šablón promptov do LLM (Language Model) na generovanie odpovede. Existujú niekoľko kľúčových režimov na generovanie odpovede:
 

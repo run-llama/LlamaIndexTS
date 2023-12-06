@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Okuyucu / Yükleyici
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex.TS, `SimpleDirectoryReader` sınıfını kullanarak klasörlerden dosyaların kolayca yüklenmesini destekler. Şu anda `.txt`, `.pdf`, `.csv`, `.md` ve `.docx` dosyaları desteklenmektedir ve gelecekte daha fazlası planlanmaktadır!
 

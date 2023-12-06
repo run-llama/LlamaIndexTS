@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
-
 # Ugradnja
+
+`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
 
 Model ugradnje u LlamaIndexu odgovoran je za stvaranje numeričkih reprezentacija teksta. Prema zadanim postavkama, LlamaIndex će koristiti model `text-embedding-ada-002` iz OpenAI-a.
 

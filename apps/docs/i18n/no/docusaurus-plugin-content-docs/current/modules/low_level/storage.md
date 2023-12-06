@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # Lagring
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 Lagring i LlamaIndex.TS fungerer automatisk når du har konfigurert et `StorageContext`-objekt. Bare konfigurer `persistDir` og fest det til en indeks.
 

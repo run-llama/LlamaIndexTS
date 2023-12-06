@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
-
 # Retriever (Recuperador)
+
+`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
 
 Um recuperador no LlamaIndex é o que é usado para buscar `Node`s de um índice usando uma string de consulta. Um `VectorIndexRetriever` buscará os nós mais similares ao top-k. Enquanto isso, um `SummaryIndexRetriever` buscará todos os nós, independentemente da consulta.
 

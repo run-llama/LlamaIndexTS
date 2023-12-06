@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Tutorial de pornire
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 După ce ați [instalat LlamaIndex.TS folosind NPM](installation) și ați configurat cheia OpenAI, sunteți gata să începeți prima aplicație:
 

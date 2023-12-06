@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Incorporazione
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 Il modello di incorporazione in LlamaIndex è responsabile per la creazione di rappresentazioni numeriche del testo. Per impostazione predefinita, LlamaIndex utilizzerà il modello `text-embedding-ada-002` di OpenAI.
 

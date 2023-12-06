@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # QueryEngine (Lekérdezési motor)
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 A lekérdezési motor egy `Retriever` és egy `ResponseSynthesizer` objektumot csomagol be egy csővezetékbe, amely a lekérdezési karakterláncot használja a csomópontok lekérdezésére, majd elküldi azokat az LLM-nek a válasz generálásához.
 

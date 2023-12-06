@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Przykłady od początku do końca
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 W repozytorium zawieramy kilka przykładów od początku do końca, korzystając z LlamaIndex.TS.
 

@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # ResponseSynthesizer (Válaszszintetizátor)
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 A ResponseSynthesizer felelős a lekérdezés, a csomópontok és a sablonok elküldéséért az LLM-nek a válasz generálásához. Néhány kulcsfontosságú módja van a válasz generálásának:
 

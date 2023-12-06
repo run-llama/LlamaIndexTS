@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # ResponseSynthesizer
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 ResponseSynthesizer on vastuussa kyselyn, solmujen ja ohjepohjien lähettämisestä LLM:lle vastauksen luomiseksi. On muutamia avainmoodit vastauksen luomiseen:
 

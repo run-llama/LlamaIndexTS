@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Retriever
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 Retriever dalam LlamaIndex adalah yang digunakan untuk mengambil `Node` dari indeks menggunakan string query. Sebuah `VectorIndexRetriever` akan mengambil k node yang paling mirip. Sementara itu, `SummaryIndexRetriever` akan mengambil semua node tanpa memperdulikan query.
 

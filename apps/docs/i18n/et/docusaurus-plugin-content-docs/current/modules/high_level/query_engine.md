@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # QueryEngine (Päringumootor)
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 Päringumootor ümbritseb `Retriever`-i ja `ResponseSynthesizer`-i torustikku, mis kasutab päringu stringi sõlmede toomiseks ja seejärel saadab need LLM-ile vastuse genereerimiseks.
 

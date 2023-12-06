@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Concepte de nivel înalt
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 LlamaIndex.TS vă ajută să construiți aplicații cu motor LLM (de exemplu, Q&A, chatbot) peste date personalizate.
 

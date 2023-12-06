@@ -1,6 +1,6 @@
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # Các Module Cốt Lõi
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 LlamaIndex.TS cung cấp một số module cốt lõi, được chia thành các module cấp cao để bắt đầu nhanh chóng và các module cấp thấp để tùy chỉnh các thành phần chính theo nhu cầu của bạn.
 

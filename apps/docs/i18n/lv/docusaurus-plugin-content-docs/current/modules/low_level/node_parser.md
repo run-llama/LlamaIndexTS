@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # NodeParser
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 `NodeParser` LlamaIndex ir atbildīgs par `Document` objektu sadalīšanu mazāk pārvaldāmos `Node` objektos. Kad jūs izsaucat `.fromDocuments()`, `NodeParser` no `ServiceContext` tiek izmantots, lai to automātiski izdarītu jums. Alternatīvi, jūs varat to izmantot, lai iepriekš sadalītu dokumentus.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
-
 # Indeks
+
+`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
 
 Indeks je osnovni spremnik i organizacija za vaše podatke. LlamaIndex.TS podržava dva indeksa:
 

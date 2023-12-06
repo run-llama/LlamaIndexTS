@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # ChatEngine (Klepetalni pogon)
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Klepetalni pogon je hiter in preprost način za klepetanje s podatki v vašem indeksu.
 

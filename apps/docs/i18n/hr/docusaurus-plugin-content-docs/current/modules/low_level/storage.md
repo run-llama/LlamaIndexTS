@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
-
 # Pohrana (Storage)
+
+`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
 
 Pohrana u LlamaIndex.TS radi automatski nakon što ste konfigurirali objekt `StorageContext`. Samo konfigurirajte `persistDir` i dodijelite ga indeksu.
 

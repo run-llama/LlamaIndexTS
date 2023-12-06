@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Vkladanie
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 Model vkladania v LlamaIndexe je zodpovedný za vytváranie číselných reprezentácií textu. LlamaIndex štandardne používa model `text-embedding-ada-002` od OpenAI.
 

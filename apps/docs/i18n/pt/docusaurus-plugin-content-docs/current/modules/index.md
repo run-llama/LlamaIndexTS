@@ -1,6 +1,6 @@
-`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
-
 # Módulos Principais
+
+`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
 
 O LlamaIndex.TS oferece vários módulos principais, separados em módulos de alto nível para começar rapidamente e módulos de baixo nível para personalizar os principais componentes conforme necessário.
 

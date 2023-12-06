@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # ChatEngine (聊天引擎)
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 聊天引擎是一种快速简便的与索引中的数据进行聊天的方式。
 

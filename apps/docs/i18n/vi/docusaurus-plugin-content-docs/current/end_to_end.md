@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # Ví dụ từ đầu đến cuối
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 Chúng tôi bao gồm một số ví dụ từ đầu đến cuối sử dụng LlamaIndex.TS trong kho lưu trữ
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
-
 # 索引 (Index)
+
+`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
 
 索引是您的数据的基本容器和组织方式。LlamaIndex.TS 支持两种索引：
 

@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
-
 # NodeParser (節點解析器)
+
+`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
 
 在 LlamaIndex 中，`NodeParser` 負責將 `Document` 物件拆分成更易管理的 `Node` 物件。當您呼叫 `.fromDocuments()` 時，`ServiceContext` 中的 `NodeParser` 會自動為您執行此操作。或者，您也可以使用它提前拆分文件。
 

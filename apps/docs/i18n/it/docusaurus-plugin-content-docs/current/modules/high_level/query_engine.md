@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # QueryEngine (Motore di Query)
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 Un motore di query avvolge un `Retriever` e un `ResponseSynthesizer` in una pipeline, che utilizzerà la stringa di query per recuperare i nodi e quindi inviarli al LLM per generare una risposta.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # Chỉ mục (Index)
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 Một chỉ mục là một container cơ bản và tổ chức cho dữ liệu của bạn. LlamaIndex.TS hỗ trợ hai loại chỉ mục:
 

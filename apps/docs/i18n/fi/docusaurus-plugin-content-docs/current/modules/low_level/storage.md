@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Tallennus
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 Tallennus LlamaIndex.TS:ssä toimii automaattisesti, kun olet määrittänyt `StorageContext`-objektin. Aseta vain `persistDir` ja liitä se indeksiin.
 

@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Vdelava
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Model vdelave v LlamaIndexu je odgovoren za ustvarjanje numeričnih predstav besedila. Privzeto bo LlamaIndex uporabil model `text-embedding-ada-002` iz OpenAI.
 

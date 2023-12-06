@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Korkean tason käsitteet
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 LlamaIndex.TS auttaa sinua rakentamaan LLM-teknologiaa hyödyntäviä sovelluksia (esim. kysymys-vastaus, chatbotti) omien tietojen päälle.
 

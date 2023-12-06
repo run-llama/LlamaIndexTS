@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Pradžios vadovas
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 Kai jūs [įdiegėte LlamaIndex.TS naudodami NPM](installation) ir sukonfigūravote savo OpenAI raktą, jūs esate pasiruošę pradėti savo pirmąją programą:
 

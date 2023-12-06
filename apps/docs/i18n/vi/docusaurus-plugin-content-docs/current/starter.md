@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # Hướng dẫn bắt đầu
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 Sau khi bạn đã [cài đặt LlamaIndex.TS bằng NPM](installation) và thiết lập khóa OpenAI của bạn, bạn đã sẵn sàng để bắt đầu ứng dụng đầu tiên của mình:
 

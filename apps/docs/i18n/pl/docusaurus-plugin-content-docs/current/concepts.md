@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Wysokopoziomowe koncepcje
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 LlamaIndex.TS pomaga w budowaniu aplikacji opartych na LLM (np. pytania i odpowiedzi, chatbot) na podstawie niestandardowych danych.
 

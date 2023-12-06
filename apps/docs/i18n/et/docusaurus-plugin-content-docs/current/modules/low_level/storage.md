@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Andmehoidla (Storage)
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 Andmehoidla LlamaIndex.TS-s töötab automaatselt, kui olete konfigureerinud `StorageContext` objekti. Lihtsalt seadistage `persistDir` ja kinnitage see indeksile.
 

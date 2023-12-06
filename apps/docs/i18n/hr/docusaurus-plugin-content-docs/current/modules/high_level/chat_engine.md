@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
-
 # ChatEngine (聊天引擎)
+
+`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
 
 ChatEngine (聊天引擎) je brz i jednostavan način za razgovor s podacima u vašem indeksu.
 

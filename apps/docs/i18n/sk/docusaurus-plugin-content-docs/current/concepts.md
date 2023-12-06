@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Koncepti na visoki ravni
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 LlamaIndex.TS vam pomaga graditi aplikacije, ki temeljijo na LLM (npr. vprašanja in odgovori, chatbot) nad prilagojenimi podatki.
 

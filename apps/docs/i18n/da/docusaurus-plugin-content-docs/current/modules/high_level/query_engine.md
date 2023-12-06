@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
-
 # QueryEngine
+
+`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
 
 En query engine pakker en `Retriever` og en `ResponseSynthesizer` ind i en pipeline, der vil bruge query strengen til at hente noder og derefter sende dem til LLM for at generere et svar.
 

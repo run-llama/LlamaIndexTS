@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Archiviazione
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 L'archiviazione in LlamaIndex.TS funziona automaticamente una volta configurato un oggetto `StorageContext`. Basta configurare il `persistDir` e collegarlo a un indice.
 

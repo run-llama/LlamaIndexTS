@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Saugojimas
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 Saugojimas LlamaIndex.TS veikia automatiškai, kai jūs sukonfigūruojate `StorageContext` objektą. Tiesiog sukonfigūruokite `persistDir` ir pridėkite jį prie indekso.
 

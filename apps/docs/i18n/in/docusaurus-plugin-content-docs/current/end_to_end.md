@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Contoh End-to-End
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 Kami menyertakan beberapa contoh end-to-end menggunakan LlamaIndex.TS di repositori ini.
 

@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # ChatEngine (ChatEngine)
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 ChatEngine je rýchly a jednoduchý spôsob, ako komunikovať s dátami vo vašom indexe.
 

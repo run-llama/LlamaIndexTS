@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Įterpimas
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 Įterpimo modelis LlamaIndex atsakingas už teksto skaitinės reprezentacijos kūrimą. Pagal numatytuosius nustatymus, LlamaIndex naudos `text-embedding-ada-002` modelį iš OpenAI.
 

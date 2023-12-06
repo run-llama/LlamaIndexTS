@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Başlangıç Kılavuzu
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 [LlamaIndex.TS'i NPM kullanarak kurduktan](installation) ve OpenAI anahtarınızı ayarladıktan sonra, ilk uygulamanıza başlamaya hazırsınız:
 

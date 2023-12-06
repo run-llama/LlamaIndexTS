@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # NodeParser
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 `NodeParser` trong LlamaIndex có trách nhiệm chia các đối tượng `Document` thành các đối tượng `Node` dễ quản lý hơn. Khi bạn gọi `.fromDocuments()`, `NodeParser` từ `ServiceContext` được sử dụng để tự động thực hiện điều này cho bạn. Hoặc bạn cũng có thể sử dụng nó để chia tài liệu trước.
 

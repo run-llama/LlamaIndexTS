@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
-
 # Index
+
+`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
 
 Ein Index ist der grundlegende Container und die Organisation für Ihre Daten. LlamaIndex.TS unterstützt zwei Indizes:
 

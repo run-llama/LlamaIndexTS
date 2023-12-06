@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
-
 # Startvejledning
+
+`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
 
 Når du har [installeret LlamaIndex.TS ved hjælp af NPM](installation) og har konfigureret din OpenAI-nøgle, er du klar til at starte din første app:
 

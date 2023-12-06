@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Dokumenti in vozlišča
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 `Dokumenti` in `vozlišča` so osnovni gradniki vsakega indeksa. Čeprav je API za te objekte podoben, objekti `Dokument` predstavljajo celotne datoteke, medtem ko so `vozlišča` manjši deli tega izvirnega dokumenta, primerni za LLM in Q&A.
 

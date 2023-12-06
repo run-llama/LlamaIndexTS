@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Pridobitelj
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Pridobitelj v LlamaIndexu se uporablja za pridobivanje `Node`-ov iz indeksa z uporabo poizvedbenega niza. `VectorIndexRetriever` bo pridobil najbolj podobne vozlišča glede na kriterij k. Medtem pa bo `SummaryIndexRetriever` pridobil vsa vozlišča, ne glede na poizvedbo.
 

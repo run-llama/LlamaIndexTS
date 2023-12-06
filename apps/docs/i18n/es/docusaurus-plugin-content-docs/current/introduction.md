@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # ¿Qué es LlamaIndex.TS?
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 LlamaIndex.TS es un marco de datos para aplicaciones LLM que permite la ingestión, estructuración y acceso a datos privados o específicos de dominio. Si bien también está disponible un paquete de Python (ver [aquí](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS ofrece características principales en un paquete sencillo, optimizado para su uso con TypeScript.
 

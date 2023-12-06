@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
-
 # LLM
+
+`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
 
 LLM je zodpovědný za čtení textu a generování přirozených jazykových odpovědí na dotazy. Výchozím modelem pro LlamaIndex.TS je `gpt-3.5-turbo`.
 

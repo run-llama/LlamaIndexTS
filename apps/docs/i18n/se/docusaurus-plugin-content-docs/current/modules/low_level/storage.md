@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
-
 # Skladište (Storage)
+
+`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
 
 Skladište u LlamaIndex.TS automatski funkcioniše kada konfigurišete objekat `StorageContext`. Samo konfigurišite `persistDir` i povežite ga sa indeksom.
 

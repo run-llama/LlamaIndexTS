@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
-
 # ResponseSynthesizer
+
+`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
 
 Der ResponseSynthesizer ist dafür verantwortlich, die Abfrage, Knoten und Vorlagen für die Antwort an den LLM zu senden, um eine Antwort zu generieren. Es gibt einige wichtige Modi zur Generierung einer Antwort:
 

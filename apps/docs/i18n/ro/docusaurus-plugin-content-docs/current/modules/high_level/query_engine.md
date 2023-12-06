@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # QueryEngine (Motor de interogare)
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 Un motor de interogare încapsulează un `Retriever` și un `ResponseSynthesizer` într-un șir de procese, care va utiliza șirul de interogare pentru a obține nodurile și apoi le va trimite la LLM pentru a genera un răspuns.
 

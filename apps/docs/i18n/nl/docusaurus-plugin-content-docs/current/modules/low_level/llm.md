@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # LLM
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 De LLM is verantwoordelijk voor het lezen van tekst en het genereren van natuurlijke taalreacties op vragen. Standaard maakt LlamaIndex.TS gebruik van `gpt-3.5-turbo`.
 

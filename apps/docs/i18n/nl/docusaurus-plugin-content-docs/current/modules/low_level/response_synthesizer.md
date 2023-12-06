@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # ResponseSynthesizer
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 De ResponseSynthesizer is verantwoordelijk voor het verzenden van de query, nodes en prompt templates naar de LLM om een ​​reactie te genereren. Er zijn een paar belangrijke modi voor het genereren van een reactie:
 

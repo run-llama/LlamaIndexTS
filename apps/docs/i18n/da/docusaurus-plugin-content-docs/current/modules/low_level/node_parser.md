@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
-
 # NodeParser
+
+`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
 
 `NodeParser` i LlamaIndex er ansvarlig for at opdele `Document` objekter i mere håndterbare `Node` objekter. Når du kalder `.fromDocuments()`, bruges `NodeParser` fra `ServiceContext` til automatisk at gøre dette for dig. Alternativt kan du bruge det til at opdele dokumenter på forhånd.
 

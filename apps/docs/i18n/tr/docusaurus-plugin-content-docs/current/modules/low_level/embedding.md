@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Gömme (Embedding)
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex içindeki gömme modeli, metnin sayısal temsillerini oluşturmakla sorumludur. Varsayılan olarak, LlamaIndex, OpenAI'den `text-embedding-ada-002` modelini kullanır.
 

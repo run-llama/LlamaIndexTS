@@ -1,6 +1,6 @@
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Pamatmoduļi
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 LlamaIndex.TS piedāvā vairākus pamatmoduļus, kas ir sadalīti augsta līmeņa moduļos, lai ātri sāktu darbu, un zemā līmeņa moduļos, lai pielāgotu galvenos komponentus pēc vajadzības.
 

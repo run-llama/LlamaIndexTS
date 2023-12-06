@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # NodeParser
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 `NodeParser` LlamaIndexissä on vastuussa `Document`-objektien jakamisesta hallittavampiin `Node`-objekteihin. Kun kutsut `.fromDocuments()`, `ServiceContext`-ista käytetään `NodeParser`-objektia, joka tekee tämän automaattisesti puolestasi. Vaihtoehtoisesti voit käyttää sitä dokumenttien jakamiseen etukäteen.
 

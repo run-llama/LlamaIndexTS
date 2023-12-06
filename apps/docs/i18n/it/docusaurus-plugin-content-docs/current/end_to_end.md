@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Esempi end-to-end
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 Includiamo diversi esempi end-to-end utilizzando LlamaIndex.TS nel repository.
 

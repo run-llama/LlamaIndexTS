@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # Ejemplos de principio a fin
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 Incluimos varios ejemplos de principio a fin utilizando LlamaIndex.TS en el repositorio.
 

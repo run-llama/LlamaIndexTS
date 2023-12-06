@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Vysokoúrovňové koncepty
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 LlamaIndex.TS vám pomáha vytvárať aplikácie s využitím LLM (napr. Q&A, chatbot) nad vlastnými dátami.
 

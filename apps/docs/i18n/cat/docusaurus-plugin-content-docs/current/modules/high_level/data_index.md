@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
-
 # Índex
+
+`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
 
 Un índex és el contenidor bàsic i l'organització de les dades. LlamaIndex.TS suporta dos índexos:
 

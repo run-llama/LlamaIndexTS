@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Panduan Pemula
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 Setelah Anda [menginstal LlamaIndex.TS menggunakan NPM](installation) dan mengatur kunci OpenAI Anda, Anda siap untuk memulai aplikasi pertama Anda:
 

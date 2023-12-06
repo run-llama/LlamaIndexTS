@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
-
 # Retriever (Získávač)
+
+`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
 
 Získávač (Retriever) v LlamaIndexu je používán k získání uzlů (`Node`) z indexu pomocí dotazovacího řetězce. Získávač `VectorIndexRetriever` získává nejpodobnější uzly s nejvyšším skóre. Zatímco získávač `SummaryIndexRetriever` získává všechny uzly bez ohledu na dotaz.
 

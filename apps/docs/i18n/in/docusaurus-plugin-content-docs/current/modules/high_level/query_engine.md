@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # QueryEngine
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 Query engine adalah sebuah mesin query yang menggabungkan `Retriever` dan `ResponseSynthesizer` menjadi sebuah pipeline, yang akan menggunakan string query untuk mengambil node dan kemudian mengirimnya ke LLM untuk menghasilkan respons.
 

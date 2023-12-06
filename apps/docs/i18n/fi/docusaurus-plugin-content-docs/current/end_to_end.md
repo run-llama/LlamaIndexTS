@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Esimerkkejä päästä päähän
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 Sisällytämme useita esimerkkejä, jotka käyttävät LlamaIndex.TS:ää repositoryssa.
 

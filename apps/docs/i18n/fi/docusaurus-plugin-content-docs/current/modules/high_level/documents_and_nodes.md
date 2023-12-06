@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Dokumentit ja solmut
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 `Dokumentit` ja `Solmut` ovat minkä tahansa indeksin perusrakennuspalikoita. Vaikka näiden objektien API on samankaltainen, `Dokumentti`-objektit edustavat kokonaisia tiedostoja, kun taas `Solmut` ovat pienempiä osia alkuperäisestä dokumentista, jotka sopivat LLM:ään ja kysymyksiin ja vastauksiin.
 

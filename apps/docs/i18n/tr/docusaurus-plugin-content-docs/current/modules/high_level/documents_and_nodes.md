@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Belgeler ve Düğümler
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 `Belge`ler ve `Düğüm`ler, herhangi bir dizinin temel yapı taşlarıdır. Bu nesnelerin API'si benzer olsa da, `Belge` nesneleri tüm dosyaları temsil ederken, `Düğüm`ler, orijinal belgenin daha küçük parçalarıdır ve LLM ve Q&A için uygundur.
 

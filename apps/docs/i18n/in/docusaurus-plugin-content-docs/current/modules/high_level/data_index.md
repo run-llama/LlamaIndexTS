@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Indeks
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 Indeks adalah wadah dasar dan organisasi untuk data Anda. LlamaIndex.TS mendukung dua jenis indeks:
 

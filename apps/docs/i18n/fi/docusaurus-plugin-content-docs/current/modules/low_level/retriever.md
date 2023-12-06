@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Retriever (Hakija)
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 Retriever (Hakija) LlamaIndexissä on se, mitä käytetään `Node`jen hakemiseen indeksistä käyttäen kyselymerkkijonoa. `VectorIndexRetriever` hakee k-kpl samankaltaisimpia solmuja. Toisaalta `SummaryIndexRetriever` hakee kaikki solmut riippumatta kyselystä.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # İndeks
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 Bir indeks, verilerinizin temel konteyneri ve organizasyonudur. LlamaIndex.TS, iki indeksi destekler:
 

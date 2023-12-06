@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # QueryEngine
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 Een query-engine wikkelt een `Retriever` en een `ResponseSynthesizer` in een pijplijn, die de queryreeks zal gebruiken om knooppunten op te halen en deze vervolgens naar de LLM stuurt om een ​​reactie te genereren.
 

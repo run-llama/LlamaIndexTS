@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
-
 # Conceitos de Alto Nível
+
+`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
 
 LlamaIndex.TS ajuda você a construir aplicativos com LLM (por exemplo, Q&A, chatbot) sobre dados personalizados.
 

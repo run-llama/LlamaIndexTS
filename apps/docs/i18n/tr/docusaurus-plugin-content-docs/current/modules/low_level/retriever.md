@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Retriever (Alıcı)
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex'te bir alıcı, bir sorgu dizesi kullanarak bir dizinden `Node`'ları almak için kullanılan bir bileşendir. Bir `VectorIndexRetriever` en benzer düğümleri getirecektir. Öte yandan, bir `SummaryIndexRetriever` sorguya bakılmaksızın tüm düğümleri getirecektir.
 

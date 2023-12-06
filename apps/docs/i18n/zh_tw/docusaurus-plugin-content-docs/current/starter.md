@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
-
 # 入門教程
+
+`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
 
 一旦您[使用NPM安裝了LlamaIndex.TS](installation)並設置了您的OpenAI密鑰，您就可以開始您的第一個應用程序了：
 

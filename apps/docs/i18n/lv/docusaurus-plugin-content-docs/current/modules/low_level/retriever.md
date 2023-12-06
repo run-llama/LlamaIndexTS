@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Atgūtājs
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 Atgūtājs LlamaIndex ir tas, kas tiek izmantots, lai iegūtu `Node` no indeksa, izmantojot vaicājuma virkni. `VectorIndexRetriever` iegūs vislīdzīgākos virsotnes k. Tāpat `SummaryIndexRetriever` iegūs visus mezglus neatkarīgi no vaicājuma.
 

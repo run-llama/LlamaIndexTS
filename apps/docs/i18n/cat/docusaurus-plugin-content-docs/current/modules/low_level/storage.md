@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
-
 # Emmagatzematge
+
+`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
 
 L'emmagatzematge a LlamaIndex.TS funciona automàticament un cop hagueu configurat un objecte `StorageContext`. Simplement configureu el `persistDir` i adjunteu-lo a un índex.
 

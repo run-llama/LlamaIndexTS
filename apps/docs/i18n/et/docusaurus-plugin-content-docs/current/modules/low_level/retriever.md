@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Retriever (Taastaja)
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 Retriever (Taastaja) LlamaIndexis on see, mida kasutatakse `Node`-de toomiseks indeksist päringu stringi abil. `VectorIndexRetriever` toob kõige sarnasemad sõlmed top-k kujul. Samal ajal toob `SummaryIndexRetriever` kõik sõlmed olenemata päringust.
 

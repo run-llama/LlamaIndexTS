@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
-
 # O que é o LlamaIndex.TS?
+
+`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
 
 O LlamaIndex.TS é um framework de dados para aplicativos LLM para ingestão, estruturação e acesso a dados privados ou específicos de domínio. Embora um pacote Python também esteja disponível (veja [aqui](https://docs.llamaindex.ai/en/stable/)), o LlamaIndex.TS oferece recursos principais em um pacote simples, otimizado para uso com TypeScript.
 

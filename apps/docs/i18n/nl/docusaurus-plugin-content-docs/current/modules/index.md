@@ -1,6 +1,6 @@
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Kernmodules
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 LlamaIndex.TS biedt verschillende kernmodules aan, onderverdeeld in modules op hoog niveau om snel aan de slag te gaan, en modules op laag niveau om belangrijke componenten aan te passen zoals u dat wilt.
 

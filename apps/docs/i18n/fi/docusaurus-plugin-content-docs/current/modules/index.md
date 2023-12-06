@@ -1,6 +1,6 @@
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Ydinmoduulit
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 LlamaIndex.TS tarjoaa useita ydinmoduuleja, jotka on jaettu korkean tason moduuleihin nopeaa aloittamista varten ja matalan tason moduuleihin, joiden avulla voit mukauttaa keskeisiä komponentteja tarpeidesi mukaan.
 

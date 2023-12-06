@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Kaj je LlamaIndex.TS?
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 LlamaIndex.TS je podatkovni okvir za LLM aplikacije, ki omogoča vnos, strukturiranje in dostop do zasebnih ali domensko specifičnih podatkov. Čeprav je na voljo tudi Python paket (glej [tukaj](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS ponuja osnovne funkcije v preprostem paketu, optimiziranem za uporabo s TypeScriptom.
 

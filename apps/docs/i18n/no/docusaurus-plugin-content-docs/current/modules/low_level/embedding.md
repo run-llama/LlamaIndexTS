@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # Innbygging
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 Innbyggingsmodellen i LlamaIndex er ansvarlig for å opprette numeriske representasjoner av tekst. Som standard vil LlamaIndex bruke modellen `text-embedding-ada-002` fra OpenAI.
 

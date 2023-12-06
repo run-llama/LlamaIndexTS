@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
-
 # Documents i Nodes
+
+`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
 
 Els `Document`s i els `Node`s són els blocs de construcció bàsics de qualsevol índex. Tot i que l'API per a aquests objectes és similar, els objectes `Document` representen fitxers sencers, mentre que els `Node`s són peces més petites d'aquest document original, que són adequades per a un LLM i una Q&A.
 

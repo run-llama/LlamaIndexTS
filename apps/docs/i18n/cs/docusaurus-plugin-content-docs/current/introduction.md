@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
-
 # Co je LlamaIndex.TS?
+
+`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
 
 LlamaIndex.TS je datový framework pro aplikace LLM, který slouží k příjmu, strukturování a přístupu k soukromým nebo doménově specifickým datům. Zatímco je také k dispozici python balíček (viz [zde](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS nabízí základní funkce v jednoduchém balíčku, optimalizovaném pro použití s TypeScriptem.
 

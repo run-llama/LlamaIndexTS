@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
-
 # Čitač / Učitavač
+
+`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
 
 LlamaIndex.TS podržava jednostavno učitavanje datoteka iz foldera koristeći klasu `SimpleDirectoryReader`. Trenutno se podržavaju `.txt`, `.pdf`, `.csv`, `.md` i `.docx` datoteke, a u budućnosti se planira podrška za još više formata!
 

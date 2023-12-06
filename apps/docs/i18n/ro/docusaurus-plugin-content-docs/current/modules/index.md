@@ -1,6 +1,6 @@
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Module de bază
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 LlamaIndex.TS oferă mai multe module de bază, separate în module de nivel înalt pentru a începe rapid și module de nivel scăzut pentru a personaliza componentele cheie după nevoie.
 

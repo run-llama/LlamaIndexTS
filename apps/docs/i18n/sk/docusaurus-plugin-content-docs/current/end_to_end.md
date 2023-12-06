@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Primeri od začetka do konca
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Vključujemo več primerov od začetka do konca, ki uporabljajo LlamaIndex.TS v repozitoriju.
 

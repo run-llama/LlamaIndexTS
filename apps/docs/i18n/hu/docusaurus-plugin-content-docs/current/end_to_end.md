@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Végponttól végpontig példák
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 Több végponttól végpontig példát tartalmazunk a LlamaIndex.TS használatával a repository-ban.
 

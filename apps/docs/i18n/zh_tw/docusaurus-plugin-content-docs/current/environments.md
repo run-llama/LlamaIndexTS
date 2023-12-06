@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
-
 # 環境
+
+`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
 
 LlamaIndex 目前正式支援 NodeJS 18 和 NodeJS 20。
 

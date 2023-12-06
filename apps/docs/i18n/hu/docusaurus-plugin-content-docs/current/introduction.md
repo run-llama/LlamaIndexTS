@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Mi az LlamaIndex.TS?
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 Az LlamaIndex.TS egy adatkeretrendszer az LLM alkalmazások számára, amely lehetővé teszi a privát vagy domain-specifikus adatok beolvasását, strukturálását és hozzáférését. Bár elérhető egy Python csomag is (lásd [itt](https://docs.llamaindex.ai/en/stable/)), az LlamaIndex.TS egyszerű csomagban kínálja a fő funkciókat, amelyeket a TypeScript használatára optimalizáltak.
 

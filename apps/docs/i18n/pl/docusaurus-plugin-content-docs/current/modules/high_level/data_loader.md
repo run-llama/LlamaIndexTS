@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Czytnik / Ładowarka
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 LlamaIndex.TS umożliwia łatwe wczytywanie plików z folderów za pomocą klasy `SimpleDirectoryReader`. Obecnie obsługiwane są pliki `.txt`, `.pdf`, `.csv`, `.md` i `.docx`, a w przyszłości planowane jest dodanie obsługi kolejnych formatów!
 

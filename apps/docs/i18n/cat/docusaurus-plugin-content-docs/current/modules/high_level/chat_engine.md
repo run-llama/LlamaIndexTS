@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
-
 # ChatEngine (Motor de Xat)
+
+`Aquesta documentació s'ha traduït automàticament i pot contenir errors. No dubteu a obrir una Pull Request per suggerir canvis.`
 
 El motor de xat és una manera ràpida i senzilla de xatejar amb les dades del teu índex.
 

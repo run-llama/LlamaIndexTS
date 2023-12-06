@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # QueryEngine
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 Bir sorgu motoru, bir `Retriever` ve bir `ResponseSynthesizer`'ı bir boru hattına sarar ve sorgu dizesini kullanarak düğümleri alır ve ardından yanıt oluşturmak için LLM'ye gönderir.
 

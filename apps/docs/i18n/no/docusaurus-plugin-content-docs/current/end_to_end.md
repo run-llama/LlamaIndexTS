@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # Eksempler fra start til slutt
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 Vi inkluderer flere eksempler fra start til slutt ved bruk av LlamaIndex.TS i repositoryen.
 

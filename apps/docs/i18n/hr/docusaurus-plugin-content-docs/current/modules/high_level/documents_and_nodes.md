@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
-
 # Dokumenti i Čvorovi
+
+`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
 
 `Dokumenti` i `Čvorovi` su osnovni građevni blokovi svakog indeksa. Iako je API za ove objekte sličan, objekti `Dokumenta` predstavljaju cijele datoteke, dok su `Čvorovi` manji dijelovi tog originalnog dokumenta, koji su prikladni za LLM i Q&A.
 

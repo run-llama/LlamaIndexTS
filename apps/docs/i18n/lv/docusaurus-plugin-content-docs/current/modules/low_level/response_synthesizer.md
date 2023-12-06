@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # ResponseSynthesizer (Atbildes sintezators)
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 ResponseSynthesizer ir atbildīgs par vaicājuma, mezglu un iedvesmas veidņu nosūtīšanu LLM, lai ģenerētu atbildi. Ir daži galvenie režīmi atbildes ģenerēšanai:
 

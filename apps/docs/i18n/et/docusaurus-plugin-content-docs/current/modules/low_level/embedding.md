@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Sisseehitamine (Embedding)
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 Sisseehitamise mudel LlamaIndexis vastutab teksti numbriliste esituste loomise eest. Vaikimisi kasutab LlamaIndex OpenAI `text-embedding-ada-002` mudelit.
 

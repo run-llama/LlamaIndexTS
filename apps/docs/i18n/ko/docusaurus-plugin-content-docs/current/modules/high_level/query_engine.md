@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
-
 # QueryEngine (쿼리 엔진)
+
+`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
 
 쿼리 엔진은 `Retriever`와 `ResponseSynthesizer`를 하나의 파이프라인으로 묶어서, 쿼리 문자열을 사용하여 노드를 가져온 다음 LLM에게 응답을 생성하도록 합니다.
 

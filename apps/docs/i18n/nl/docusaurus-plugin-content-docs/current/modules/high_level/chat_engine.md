@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # ChatEngine
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 De chatengine is een snelle en eenvoudige manier om te chatten met de gegevens in uw index.
 

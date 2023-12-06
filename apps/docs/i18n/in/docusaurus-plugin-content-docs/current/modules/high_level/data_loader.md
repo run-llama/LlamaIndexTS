@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Pemutar / Pemuat
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 LlamaIndex.TS mendukung pengambilan file dari folder dengan mudah menggunakan kelas `SimpleDirectoryReader`. Saat ini, file `.txt`, `.pdf`, `.csv`, `.md`, dan `.docx` didukung, dengan rencana untuk menambahkan lebih banyak di masa depan!
 

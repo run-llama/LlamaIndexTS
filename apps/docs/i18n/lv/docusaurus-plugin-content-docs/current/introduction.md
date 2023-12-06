@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Kas ir LlamaIndex.TS?
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 LlamaIndex.TS ir datu pamatstruktūra LLM lietojumprogrammām, lai ievadītu, strukturētu un piekļūtu privātiem vai domēna specifiskiem datiem. Lai gan ir pieejams arī Python pakotne (skatīt [šeit](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS piedāvā pamata funkcijas vienkāršā pakotnē, kas optimizēta lietošanai ar TypeScript.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Indeks
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 Indeks to podstawowy kontener i organizacja dla Twoich danych. LlamaIndex.TS obsługuje dwa indeksy:
 

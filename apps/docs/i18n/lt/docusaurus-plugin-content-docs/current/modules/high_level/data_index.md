@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Indeksas
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 Indeksas yra pagrindinis jūsų duomenų konteineris ir organizavimo būdas. LlamaIndex.TS palaiko du indeksus:
 

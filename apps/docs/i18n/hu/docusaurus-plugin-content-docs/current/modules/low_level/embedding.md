@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Beágyazás
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 A beágyazási modell a LlamaIndexben felelős a szöveg numerikus reprezentációinak létrehozásáért. Alapértelmezetten a LlamaIndex a `text-embedding-ada-002` modellt használja az OpenAI-tól.
 

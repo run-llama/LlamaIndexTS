@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Tárolás
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 A tárolás a LlamaIndex.TS-ben automatikusan működik, miután konfiguráltál egy `StorageContext` objektumot. Csak állítsd be a `persistDir`-t és csatold azt egy indexhez.
 

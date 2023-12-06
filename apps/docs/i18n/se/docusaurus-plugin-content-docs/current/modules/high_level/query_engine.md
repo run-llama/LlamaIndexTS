@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
-
 # QueryEngine (Upitni motor)
+
+`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
 
 QueryEngine (Upitni motor) obuhvata `Retriever` i `ResponseSynthesizer` u cevovodu, koji će koristiti upitni niz za dohvat čvorova, a zatim ih poslati LLM-u da generiše odgovor.
 

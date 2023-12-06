@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # ResponseSynthesizer (Trình tổng hợp phản hồi)
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 ResponseSynthesizer là trách nhiệm của việc gửi truy vấn, các nút và mẫu gợi ý đến LLM để tạo ra một phản hồi. Có một số chế độ chính để tạo ra một phản hồi:
 

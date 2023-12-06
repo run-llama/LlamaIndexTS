@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # LLM
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 LLM je odgovoren za branje besedila in ustvarjanje naravnih jezikovnih odgovorov na poizvedbe. Privzeto LlamaIndex.TS uporablja `gpt-3.5-turbo`.
 

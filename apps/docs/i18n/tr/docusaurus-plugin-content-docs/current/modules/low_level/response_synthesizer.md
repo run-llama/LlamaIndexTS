@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # ResponseSynthesizer
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 ResponseSynthesizer, sorguyu, düğümleri ve prompt şablonlarını yanıt üretmek için LLM'ye gönderme işlemini üstlenir. Yanıt üretmek için birkaç temel mod vardır:
 

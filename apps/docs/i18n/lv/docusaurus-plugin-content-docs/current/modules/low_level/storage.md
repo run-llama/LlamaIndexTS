@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Krātuve
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 Krātuve LlamaIndex.TS darbojas automātiski, kad jūs konfigurējat `StorageContext` objektu. Vienkārši konfigurējiet `persistDir` un pievienojiet to indeksam.
 

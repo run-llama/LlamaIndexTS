@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # LLM
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 LLM vastutab teksti lugemise ja loomuliku keele vastuste genereerimise eest päringutele. Vaikimisi kasutab LlamaIndex.TS `gpt-3.5-turbo`-d.
 

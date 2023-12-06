@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
-
 # Pretraživač
+
+`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
 
 Pretraživač u LlamaIndex-u se koristi za dohvatanje `Node`-ova iz indeksa koristeći upitni niz. `VectorIndexRetriever` će dohvatiti prvih k najsličnijih čvorova. S druge strane, `SummaryIndexRetriever` će dohvatiti sve čvorove bez obzira na upit.
 

@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Ce este LlamaIndex.TS?
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 LlamaIndex.TS este un cadru de date pentru aplicațiile LLM pentru a prelua, structura și accesa date private sau specifice domeniului. În timp ce există și un pachet Python disponibil (vezi [aici](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS oferă funcții de bază într-un pachet simplu, optimizat pentru utilizarea cu TypeScript.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Index (Index)
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 Az index az adatok alapvető tárolója és szervezője. A LlamaIndex.TS két indexet támogat:
 

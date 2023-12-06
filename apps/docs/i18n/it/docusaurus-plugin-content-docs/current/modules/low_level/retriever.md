@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Retriever
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 Un retriever in LlamaIndex è ciò che viene utilizzato per recuperare i `Node` da un indice utilizzando una stringa di query. Un `VectorIndexRetriever` recupererà i nodi più simili in cima alla lista. Nel frattempo, un `SummaryIndexRetriever` recupererà tutti i nodi indipendentemente dalla query.
 

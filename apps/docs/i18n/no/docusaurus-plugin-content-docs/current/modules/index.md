@@ -1,6 +1,6 @@
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # Kjerne Moduler
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 LlamaIndex.TS tilbyr flere kjerne moduler, delt inn i høy-nivå moduler for å komme raskt i gang, og lav-nivå moduler for å tilpasse nøkkelkomponenter etter behov.
 

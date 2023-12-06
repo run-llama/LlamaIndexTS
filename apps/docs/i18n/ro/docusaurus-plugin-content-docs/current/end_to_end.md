@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Exemple de la cap la coadă
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 Includem mai multe exemple de la cap la coadă folosind LlamaIndex.TS în depozitul nostru.
 

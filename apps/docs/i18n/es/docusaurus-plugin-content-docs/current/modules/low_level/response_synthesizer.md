@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # ResponseSynthesizer (SintetizadorDeRespuestas)
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 El ResponseSynthesizer es responsable de enviar la consulta, los nodos y las plantillas de indicaciones al LLM para generar una respuesta. Hay algunos modos clave para generar una respuesta:
 

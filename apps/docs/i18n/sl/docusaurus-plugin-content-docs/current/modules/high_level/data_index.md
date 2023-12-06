@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Index
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 Index je základný kontajner a organizácia pre vaše dáta. LlamaIndex.TS podporuje dva indexy:
 

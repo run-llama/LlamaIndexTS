@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
-
 # Dohvatnik
+
+`Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.`
 
 Dohvatnik u LlamaIndexu se koristi za dohvaćanje `Node`-ova iz indeksa koristeći upitni niz. `VectorIndexRetriever` će dohvatiti prvih k najsličnijih čvorova. S druge strane, `SummaryIndexRetriever` će dohvatiti sve čvorove bez obzira na upit.
 

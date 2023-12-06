@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Užklausos variklis (QueryEngine)
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 Užklausos variklis apgaubia `Retriever` ir `ResponseSynthesizer` į vieną grandinę, kuri naudos užklausos eilutę, kad gautų mazgus ir tada juos siųstų į LLM, kad sugeneruotų atsakymą.
 

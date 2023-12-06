@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Alustamise õpetus
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 Kui olete [LlamaIndex.TS installinud NPM-i abil](installation) ja seadistanud oma OpenAI võtme, olete valmis oma esimest rakendust alustama:
 

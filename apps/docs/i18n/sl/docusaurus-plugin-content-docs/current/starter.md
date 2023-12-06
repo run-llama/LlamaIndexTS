@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Úvodný návod
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 Ak ste [nainštalovali LlamaIndex.TS pomocou NPM](installation) a nastavili svoj OpenAI kľúč, ste pripravení začať s vašou prvou aplikáciou:
 

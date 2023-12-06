@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
-
 # Примери од почетка до краja
+
+`Ova dokumentacija je automatski prevedena i može sadržati greške. Ne oklevajte da otvorite Pull Request za predlaganje izmena.`
 
 У репозиторијуму укључујемо неколико примера од почетка до краја користећи LlamaIndex.TS
 

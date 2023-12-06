@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Príklady od začiatku do konca
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 V repozitári máme niekoľko príkladov od začiatku do konca, ktoré používajú LlamaIndex.TS.
 

@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
-
 # Čtenář / Načítání
+
+`Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.`
 
 LlamaIndex.TS podporuje snadné načítání souborů z adresářů pomocí třídy `SimpleDirectoryReader`. V současné době jsou podporovány soubory `.txt`, `.pdf`, `.csv`, `.md` a `.docx`, s plánem na podporu dalších typů souborů v budoucnosti!
 

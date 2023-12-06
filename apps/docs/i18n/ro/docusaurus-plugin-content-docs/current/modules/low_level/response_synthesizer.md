@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # ResponseSynthesizer (SintetizatorRaspuns)
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 Sintetizatorul de răspunsuri este responsabil pentru trimiterea interogării, nodurilor și șabloanelor de prompt către LLM pentru a genera un răspuns. Există câteva moduri cheie de generare a unui răspuns:
 

@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
-
 # Speicherung
+
+`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
 
 Die Speicherung in LlamaIndex.TS funktioniert automatisch, sobald Sie ein `StorageContext`-Objekt konfiguriert haben. Konfigurieren Sie einfach das `persistDir` und fügen Sie es einem Index hinzu.
 

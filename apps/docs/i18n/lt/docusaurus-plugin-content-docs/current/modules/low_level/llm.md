@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # LLM
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 LLM yra atsakingas už teksto skaitymą ir natūralių kalbos atsakymų generavimą į užklausas. Pagal numatytuosius nustatymus, LlamaIndex.TS naudoja `gpt-3.5-turbo`.
 

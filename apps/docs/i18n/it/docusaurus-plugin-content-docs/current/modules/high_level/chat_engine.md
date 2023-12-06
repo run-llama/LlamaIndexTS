@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # ChatEngine (Motore di Chat)
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 Il motore di chat è un modo rapido e semplice per chattare con i dati nel tuo indice.
 

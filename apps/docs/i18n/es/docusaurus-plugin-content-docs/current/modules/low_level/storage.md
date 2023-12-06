@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # Almacenamiento
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 El almacenamiento en LlamaIndex.TS funciona automáticamente una vez que hayas configurado un objeto `StorageContext`. Simplemente configura el `persistDir` y adjúntalo a un índice.
 

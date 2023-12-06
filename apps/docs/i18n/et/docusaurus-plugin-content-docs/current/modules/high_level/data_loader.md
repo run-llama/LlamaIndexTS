@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Lugeja / Laadija
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 LlamaIndex.TS toetab failide lihtsat laadimist kaustadest, kasutades `SimpleDirectoryReader` klassi. Praegu toetatakse `.txt`, `.pdf`, `.csv`, `.md` ja `.docx` faile, tulevikus on plaanis lisada veel rohkem!
 

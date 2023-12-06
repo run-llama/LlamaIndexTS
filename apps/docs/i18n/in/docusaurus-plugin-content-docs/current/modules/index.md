@@ -1,6 +1,6 @@
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Modul Inti
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 LlamaIndex.TS menawarkan beberapa modul inti, yang terbagi menjadi modul tingkat tinggi untuk memulai dengan cepat, dan modul tingkat rendah untuk menyesuaikan komponen kunci sesuai kebutuhan Anda.
 

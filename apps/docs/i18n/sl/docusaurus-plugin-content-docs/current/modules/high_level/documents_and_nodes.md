@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Dokumenty a uzly
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 `Dokumenty` a `Uzly` sú základné stavebné bloky každého indexu. Zatiaľ čo API pre tieto objekty je podobné, objekty `Dokument` predstavujú celé súbory, zatiaľ čo `Uzly` sú menšie časti tohto pôvodného dokumentu, ktoré sú vhodné pre LLM a Q&A.
 

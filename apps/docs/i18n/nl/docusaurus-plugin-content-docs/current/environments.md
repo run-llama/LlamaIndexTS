@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Omgevingen
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 LlamaIndex ondersteunt momenteel officieel NodeJS 18 en NodeJS 20.
 

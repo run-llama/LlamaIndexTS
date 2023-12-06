@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
-
 # 儲存 (Storage)
+
+`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
 
 在 LlamaIndex.TS 中，一旦您配置了 `StorageContext` 物件，儲存就會自動運作。只需配置 `persistDir` 並將其附加到索引即可。
 

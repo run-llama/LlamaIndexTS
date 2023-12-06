@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # QueryEngine (Kyselymoottori)
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 Kyselymoottori käärii `Retriever`-objektin ja `ResponseSynthesizer`-objektin putkeen, joka käyttää kyselymerkkijonoa hakeakseen solmuja ja lähettää ne sitten LLM:lle vastauksen generoimiseksi.
 

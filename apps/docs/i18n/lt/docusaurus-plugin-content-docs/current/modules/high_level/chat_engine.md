@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # ChatEngine (Pokalbių variklis)
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 Pokalbių variklis yra greitas ir paprastas būdas bendrauti su duomenimis savo indekse.
 

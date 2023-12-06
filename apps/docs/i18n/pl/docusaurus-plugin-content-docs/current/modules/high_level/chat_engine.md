@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # ChatEngine (聊天引擎)
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 Silnik czatu to szybki i prosty sposób na rozmowę z danymi w Twoim indeksie.
 

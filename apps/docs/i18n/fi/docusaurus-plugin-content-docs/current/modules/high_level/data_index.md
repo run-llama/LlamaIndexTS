@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Sisällysluettelo
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 Sisällysluettelo on peruscontainer ja organisaatio tietojesi säilyttämiseen. LlamaIndex.TS tukee kahta tyyppiä indeksejä:
 

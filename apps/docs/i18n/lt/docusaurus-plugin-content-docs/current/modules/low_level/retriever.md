@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Gavėjas (Retriever)
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 Gavėjas LlamaIndex'e yra tai, kas naudojama išgauti `Node`'us iš indekso naudojant užklausos eilutę. `VectorIndexRetriever` išgaus top-k panašiausius mazgus. Tuo tarpu `SummaryIndexRetriever` išgaus visus mazgus, nepriklausomai nuo užklausos.
 

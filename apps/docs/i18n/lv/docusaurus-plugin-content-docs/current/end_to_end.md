@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Galam līdz galam piemēri
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 Mūsu repozitorijā ir iekļauti vairāki galam līdz galam piemēri, izmantojot LlamaIndex.TS
 

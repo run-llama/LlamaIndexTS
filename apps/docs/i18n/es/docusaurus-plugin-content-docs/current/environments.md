@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # Entornos
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 LlamaIndex actualmente admite oficialmente NodeJS 18 y NodeJS 20.
 

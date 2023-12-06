@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Augstā līmeņa koncepti
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 LlamaIndex.TS palīdz jums veidot LLM jaudīgas lietojumprogrammas (piemēram, jautājumu un atbilžu sistēmu, čatbota) ar pielāgotiem datiem.
 

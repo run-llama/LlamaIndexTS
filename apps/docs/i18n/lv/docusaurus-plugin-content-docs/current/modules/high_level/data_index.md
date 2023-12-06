@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Indekss
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 Indekss ir pamata konteineris un organizācija jūsu datiem. LlamaIndex.TS atbalsta divus indeksus:
 

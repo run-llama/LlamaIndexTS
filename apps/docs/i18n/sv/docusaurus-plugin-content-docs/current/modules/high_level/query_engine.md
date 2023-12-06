@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
-
 # QueryEngine (Frågemotor)
+
+`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
 
 En frågemotor omsluter en `Retriever` och en `ResponseSynthesizer` i en pipeline, som kommer att använda frågesträngen för att hämta noder och sedan skicka dem till LLM för att generera ett svar.
 

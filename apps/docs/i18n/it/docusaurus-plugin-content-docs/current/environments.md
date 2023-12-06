@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Ambienti
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 LlamaIndex attualmente supporta ufficialmente NodeJS 18 e NodeJS 20.
 

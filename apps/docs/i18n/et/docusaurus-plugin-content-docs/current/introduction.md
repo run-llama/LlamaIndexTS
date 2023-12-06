@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Mis on LlamaIndex.TS?
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 LlamaIndex.TS on andmefraimvork LLM rakenduste jaoks, mis võimaldab andmete vastuvõtmist, struktureerimist ja juurdepääsu privaatsetele või domeenispetsiifilistele andmetele. Kuigi on saadaval ka Pythoni pakett (vaata [siit](https://docs.llamaindex.ai/en/stable/)), pakub LlamaIndex.TS põhifunktsioone lihtsas pakendis, mis on optimeeritud TypeScripti kasutamiseks.
 

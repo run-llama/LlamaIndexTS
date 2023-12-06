@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Index
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 Un index este containerul de bază și organizarea datelor tale. LlamaIndex.TS suportă două tipuri de index:
 

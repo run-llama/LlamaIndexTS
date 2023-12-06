@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # ResponseSynthesizer
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 ResponseSynthesizer bertanggung jawab untuk mengirimkan query, node, dan template prompt ke LLM untuk menghasilkan respons. Ada beberapa mode utama untuk menghasilkan respons:
 

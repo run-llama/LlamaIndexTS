@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # LLM
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 LLM vastaa tekstin lukemisesta ja luonnollisten kielten vastausten tuottamisesta kyselyihin. Oletusarvoisesti LlamaIndex.TS käyttää `gpt-3.5-turbo` -mallia.
 

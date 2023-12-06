@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # ResponseSynthesizer (Atsakymo sintezatorius)
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 ResponseSynthesizer (Atsakymo sintezatorius) yra atsakingas už užklausos, mazgų ir šablonų perdavimą LLM (Lietuvių kalbos modeliui) generuoti atsakymą. Yra keletas pagrindinių būdų, kaip generuoti atsakymą:
 

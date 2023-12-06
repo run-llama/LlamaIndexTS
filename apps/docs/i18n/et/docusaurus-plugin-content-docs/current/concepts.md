@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Kõrgtasemel kontseptsioonid
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 LlamaIndex.TS aitab teil luua LLM-toega rakendusi (nt küsimuste ja vastuste süsteem, vestlusrobot) kohandatud andmete põhjal.
 

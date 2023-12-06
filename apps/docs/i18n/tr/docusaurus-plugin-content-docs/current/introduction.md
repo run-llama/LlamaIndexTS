@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # LlamaIndex.TS Nedir?
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex.TS, LLM uygulamalarının özel veya alan özgü verilerini almak, yapılandırmak ve erişmek için bir veri çerçevesidir. Bir Python paketi de mevcuttur (buraya bakın: [buraya](https://docs.llamaindex.ai/en/stable/)), ancak LlamaIndex.TS, TypeScript ile kullanım için optimize edilmiş basit bir paket içinde temel özellikler sunar.
 

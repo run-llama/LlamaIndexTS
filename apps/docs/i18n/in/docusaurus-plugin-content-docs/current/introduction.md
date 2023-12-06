@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Apa itu LlamaIndex.TS?
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 LlamaIndex.TS adalah kerangka data untuk aplikasi LLM untuk mengambil, membangun struktur, dan mengakses data pribadi atau khusus domain. Meskipun paket python juga tersedia (lihat [di sini](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS menawarkan fitur inti dalam paket yang sederhana, dioptimalkan untuk penggunaan dengan TypeScript.
 

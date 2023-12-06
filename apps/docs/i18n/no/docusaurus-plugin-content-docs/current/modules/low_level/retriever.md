@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # Retriever (Henter)
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 En retriever i LlamaIndex er det som brukes for å hente `Node`-er fra en indeks ved hjelp av en spørringsstreng. En `VectorIndexRetriever` vil hente de mest lignende nodene i topp-k resultatene. I mellomtiden vil en `SummaryIndexRetriever` hente alle nodene uavhengig av spørringen.
 

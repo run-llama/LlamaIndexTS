@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # ResponseSynthesizer (Vastuse sünteesija)
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 ResponseSynthesizer on vastutav päringu, sõlmede ja vihjete mallide saatmise eest LLM-ile vastuse genereerimiseks. On mõned olulised režiimid vastuse genereerimiseks:
 

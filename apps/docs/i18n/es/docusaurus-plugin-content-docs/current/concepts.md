@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # Conceptos de Alto Nivel
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 LlamaIndex.TS te ayuda a construir aplicaciones impulsadas por LLM (por ejemplo, Q&A, chatbot) sobre datos personalizados.
 

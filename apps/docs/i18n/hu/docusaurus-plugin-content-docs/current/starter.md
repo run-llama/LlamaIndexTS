@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Kezdő útmutató
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 Miután [telepítette a LlamaIndex.TS-t az NPM segítségével](installation) és beállította az OpenAI kulcsát, már készen áll az első alkalmazásának elindítására:
 

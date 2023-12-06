@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
-
 # QueryEngine (Motor de Consulta)
+
+`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
 
 Um motor de consulta envolve um `Retriever` e um `ResponseSynthesizer` em um pipeline, que usará a string de consulta para buscar nós e, em seguida, enviá-los para o LLM para gerar uma resposta.
 

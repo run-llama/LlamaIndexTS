@@ -1,6 +1,6 @@
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # Põhimoodulid
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 LlamaIndex.TS pakub mitmeid põhimooduleid, mis on jaotatud kõrgtasemel mooduliteks kiireks alustamiseks ja madalatasemelisteks mooduliteks, et kohandada olulisi komponente vastavalt vajadusele.
 

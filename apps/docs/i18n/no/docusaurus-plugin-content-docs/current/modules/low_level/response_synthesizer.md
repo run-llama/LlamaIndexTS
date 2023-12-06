@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
-
 # ResponseSynthesizer (SvarSyntetisator)
+
+`Denne dokumentasjonen har blitt automatisk oversatt og kan inneholde feil. Ikke nøl med å åpne en Pull Request for å foreslå endringer.`
 
 SvarSyntetisatoren er ansvarlig for å sende spørringen, nodene og malene for prompten til LLM for å generere et svar. Det er noen få nøkkelmoduser for å generere et svar:
 

@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
-
 # Miljöer
+
+`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
 
 LlamaIndex stöder för närvarande officiellt NodeJS 18 och NodeJS 20.
 

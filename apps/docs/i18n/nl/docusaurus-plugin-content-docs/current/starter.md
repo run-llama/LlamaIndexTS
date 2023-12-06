@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Startgids
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 Zodra je [LlamaIndex.TS hebt geïnstalleerd met behulp van NPM](installation) en je OpenAI-sleutel hebt ingesteld, ben je klaar om je eerste app te starten:
 

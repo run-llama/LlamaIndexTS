@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # Ievadjuce
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 Kad esi [uzstādījis LlamaIndex.TS, izmantojot NPM](installation) un iestatījis savu OpenAI atslēgu, esi gatavs sākt savu pirmo lietotni:
 

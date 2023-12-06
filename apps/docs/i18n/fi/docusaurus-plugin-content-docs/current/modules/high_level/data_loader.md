@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Lukija / Lataaja
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 LlamaIndex.TS tukee tiedostojen helppoa lataamista kansioista käyttämällä `SimpleDirectoryReader` -luokkaa. Tällä hetkellä tuetaan `.txt`, `.pdf`, `.csv`, `.md` ja `.docx` -tiedostoja, ja tulevaisuudessa on suunnitteilla lisää!
 

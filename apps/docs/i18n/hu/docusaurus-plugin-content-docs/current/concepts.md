@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # Magas szintű fogalmak
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 A LlamaIndex.TS segít az LLM-alapú alkalmazások (pl. kérdés-válasz, chatbot) készítésében saját adatok felett.
 

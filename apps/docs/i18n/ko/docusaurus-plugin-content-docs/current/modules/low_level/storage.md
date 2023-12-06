@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
-
 # 저장소 (Storage)
+
+`이 문서는 자동 번역되었으며 오류가 포함될 수 있습니다. 변경 사항을 제안하려면 Pull Request를 열어 주저하지 마십시오.`
 
 LlamaIndex.TS의 저장소는 `StorageContext` 객체를 구성한 후 자동으로 작동합니다. `persistDir`을 구성하고 인덱스에 연결하기만 하면 됩니다.
 

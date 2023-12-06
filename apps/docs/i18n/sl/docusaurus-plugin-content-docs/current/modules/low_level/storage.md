@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Úložisko (Storage)
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 Úložisko v LlamaIndex.TS funguje automaticky, akonáhle ste nakonfigurovali objekt `StorageContext`. Stačí nakonfigurovať `persistDir` a pripojiť ho k indexu.
 

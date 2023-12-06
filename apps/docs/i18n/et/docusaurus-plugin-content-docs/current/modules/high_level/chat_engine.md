@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # ChatEngine (聊天引擎)
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 ChatEngine (聊天引擎) on kiire ja lihtne viis suhelda andmetega oma indeksis.
 

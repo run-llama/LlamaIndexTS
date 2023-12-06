@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
-
 # 查詢引擎 (QueryEngine)
+
+`此文件已自動翻譯，可能包含錯誤。如有更改建議，請毫不猶豫地提交 Pull Request。`
 
 查詢引擎將`Retriever`和`ResponseSynthesizer`封裝成一個流程，使用查詢字串來檢索節點，然後將它們發送到LLM以生成回應。
 

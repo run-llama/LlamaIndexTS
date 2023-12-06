@@ -1,6 +1,6 @@
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Temel Modüller
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex.TS, hızlı başlamanız için yüksek seviyeli modüllere ve ihtiyaçlarınıza göre özelleştirebileceğiniz düşük seviyeli modüllere ayrılmış birkaç temel modül sunar.
 

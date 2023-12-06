@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # ResponseSynthesizer (SintetizatorOdgovora)
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 SintetizatorOdgovora je odgovoren za pošiljanje poizvedbe, vozlišč in predlogov predlogov LLM za generiranje odgovora. Obstaja nekaj ključnih načinov za generiranje odgovora:
 

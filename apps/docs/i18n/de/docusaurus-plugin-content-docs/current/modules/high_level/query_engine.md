@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
-
 # QueryEngine (Abfrage-Engine)
+
+`Diese Dokumentation wurde automatisch übersetzt und kann Fehler enthalten. Zögern Sie nicht, einen Pull Request zu öffnen, um Änderungen vorzuschlagen.`
 
 Eine Abfrage-Engine umschließt einen `Retriever` und einen `ResponseSynthesizer` in einer Pipeline, die den Abfrage-String verwendet, um Knoten abzurufen und sie dann an den LLM zu senden, um eine Antwort zu generieren.
 

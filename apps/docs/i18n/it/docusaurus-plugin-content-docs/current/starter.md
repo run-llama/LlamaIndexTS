@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
-
 # Tutorial di Avvio
+
+`Questa documentazione è stata tradotta automaticamente e può contenere errori. Non esitare ad aprire una Pull Request per suggerire modifiche.`
 
 Una volta che hai [installato LlamaIndex.TS utilizzando NPM](installation) e configurato la tua chiave OpenAI, sei pronto per avviare la tua prima app:
 

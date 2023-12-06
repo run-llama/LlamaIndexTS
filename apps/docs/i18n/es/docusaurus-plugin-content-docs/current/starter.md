@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
-
 # Tutorial de Inicio
+
+`Esta documentación ha sido traducida automáticamente y puede contener errores. No dudes en abrir una Pull Request para sugerir cambios.`
 
 Una vez que hayas [instalado LlamaIndex.TS usando NPM](installation) y configurado tu clave de OpenAI, estás listo para comenzar tu primera aplicación:
 

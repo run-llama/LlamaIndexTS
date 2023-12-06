@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Osadzanie
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 Model osadzania w LlamaIndex jest odpowiedzialny za tworzenie numerycznych reprezentacji tekstu. Domyślnie LlamaIndex będzie używał modelu `text-embedding-ada-002` z OpenAI.
 

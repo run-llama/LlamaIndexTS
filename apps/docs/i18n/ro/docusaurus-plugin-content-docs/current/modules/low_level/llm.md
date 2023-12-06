@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # LLM
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 LLM-ul este responsabil de citirea textului și generarea de răspunsuri în limbaj natural la interogări. În mod implicit, LlamaIndex.TS utilizează `gpt-3.5-turbo`.
 

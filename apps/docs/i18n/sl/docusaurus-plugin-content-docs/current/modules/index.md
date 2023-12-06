@@ -1,6 +1,6 @@
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # Hlavné moduly
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 LlamaIndex.TS ponúka niekoľko hlavných modulov, ktoré sú rozdelené na moduly vysokej úrovne pre rýchly štart a moduly nízkej úrovne pre prispôsobenie kľúčových komponentov podľa potreby.
 

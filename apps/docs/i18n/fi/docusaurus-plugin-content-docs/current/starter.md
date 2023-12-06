@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
-
 # Aloitusopas
+
+`Tämä dokumentaatio on käännetty automaattisesti ja se saattaa sisältää virheitä. Älä epäröi avata Pull Requestia ehdottaaksesi muutoksia.`
 
 Kun olet [asentanut LlamaIndex.TS:n käyttäen NPM:ää](asennus) ja määrittänyt OpenAI-avaimen, olet valmis aloittamaan ensimmäisen sovelluksesi:
 

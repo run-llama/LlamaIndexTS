@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # ChatEngine (聊天引擎)
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 A chat engine egy gyors és egyszerű módja annak, hogy beszélgethessen az indexben található adatokkal.
 

@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
-
 # LLM
+
+`Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.`
 
 Az LLM felelős a szöveg olvasásáért és természetes nyelvű válaszok generálásáért a lekérdezésekre. Alapértelmezetten a LlamaIndex.TS a `gpt-3.5-turbo`-t használja.
 

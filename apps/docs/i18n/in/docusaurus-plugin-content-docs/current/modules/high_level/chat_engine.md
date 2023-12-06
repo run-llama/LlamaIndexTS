@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # ChatEngine (聊天引擎)
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 ChatEngine (聊天引擎) adalah cara cepat dan sederhana untuk melakukan obrolan dengan data di indeks Anda.
 

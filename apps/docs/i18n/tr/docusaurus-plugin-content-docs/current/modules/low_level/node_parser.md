@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # NodeParser
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 `NodeParser`, LlamaIndex içinde `Document` nesnelerini daha yönetilebilir `Node` nesnelerine bölen bir bileşendir. `.fromDocuments()` çağrıldığında, `ServiceContext` içindeki `NodeParser` otomatik olarak bunu yapmak için kullanılır. Alternatif olarak, belgeleri önceden bölmek için de kullanabilirsiniz.
 

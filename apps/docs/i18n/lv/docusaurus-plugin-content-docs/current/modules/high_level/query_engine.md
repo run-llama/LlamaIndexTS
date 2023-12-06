@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
-
 # QueryEngine (Vaicājumu dzinējs)
+
+`Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.`
 
 Vaicājumu dzinējs ietver "Retriever" un "ResponseSynthesizer" komponentes vienā plūsmā, kas izmanto vaicājuma virkni, lai iegūtu mezglus un pēc tam nosūtītu tos LLM, lai ģenerētu atbildi.
 

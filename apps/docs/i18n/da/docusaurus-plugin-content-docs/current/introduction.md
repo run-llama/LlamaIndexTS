@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
-
 # Hvad er LlamaIndex.TS?
+
+`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
 
 LlamaIndex.TS er et dataframework til LLM-applikationer til at indtage, strukturere og få adgang til private eller domænespecifikke data. Mens der også er en python-pakke tilgængelig (se [her](https://docs.llamaindex.ai/en/stable/)), tilbyder LlamaIndex.TS kernefunktioner i en simpel pakke, optimeret til brug med TypeScript.
 

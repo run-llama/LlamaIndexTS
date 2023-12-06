@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # Przechowywanie danych
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 Przechowywanie danych w LlamaIndex.TS działa automatycznie po skonfigurowaniu obiektu `StorageContext`. Wystarczy skonfigurować `persistDir` i dołączyć go do indeksu.
 

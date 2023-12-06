@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
-
 # NodeParser
+
+`See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.`
 
 `NodeParser` LlamaIndexis on vastutav `Document` objektide jagamise eest hõlpsamini hallatavateks `Node` objektideks. Kui kutsute `.fromDocuments()` meetodit, kasutatakse `ServiceContext`-i `NodeParser`-it selle automaatseks tegemiseks. Võite seda ka kasutada dokumentide ette jagamiseks.
 

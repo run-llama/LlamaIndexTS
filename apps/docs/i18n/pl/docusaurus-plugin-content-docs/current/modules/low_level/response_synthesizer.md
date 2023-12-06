@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # ResponseSynthesizer (SyntezatorOdpowiedzi)
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 ResponseSynthesizer jest odpowiedzialny za wysyłanie zapytania, węzłów i szablonów promptów do LLM w celu wygenerowania odpowiedzi. Istnieje kilka kluczowych trybów generowania odpowiedzi:
 

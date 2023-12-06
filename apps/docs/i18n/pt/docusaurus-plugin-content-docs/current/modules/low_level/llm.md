@@ -2,9 +2,9 @@
 sidebar_position: 0
 ---
 
-`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
-
 # LLM
+
+`Esta documentação foi traduzida automaticamente e pode conter erros. Não hesite em abrir um Pull Request para sugerir alterações.`
 
 O LLM é responsável por ler texto e gerar respostas em linguagem natural para consultas. Por padrão, o LlamaIndex.TS usa `gpt-3.5-turbo`.
 

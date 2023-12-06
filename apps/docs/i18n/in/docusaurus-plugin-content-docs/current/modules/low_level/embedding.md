@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
-
 # Menyematkan (Embedding)
+
+`Dokumentasi ini telah diterjemahkan secara otomatis dan mungkin mengandung kesalahan. Jangan ragu untuk membuka Pull Request untuk mengusulkan perubahan.`
 
 Model penyemat di LlamaIndex bertanggung jawab untuk membuat representasi numerik dari teks. Secara default, LlamaIndex akan menggunakan model `text-embedding-ada-002` dari OpenAI.
 

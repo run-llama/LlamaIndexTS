@@ -2,9 +2,9 @@
 sidebar_position: 1
 ---
 
-`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
-
 # Înglobare (Embedding)
+
+`Această documentație a fost tradusă automat și poate conține erori. Nu ezitați să deschideți un Pull Request pentru a sugera modificări.`
 
 Modelul de înglobare din LlamaIndex este responsabil pentru crearea reprezentărilor numerice ale textului. În mod implicit, LlamaIndex va utiliza modelul `text-embedding-ada-002` de la OpenAI.
 

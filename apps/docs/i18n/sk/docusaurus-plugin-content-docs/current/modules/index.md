@@ -1,6 +1,6 @@
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Osnovni moduli
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 LlamaIndex.TS ponuja več osnovnih modulov, razdeljenih na visokonivojske module za hitro začetek in nizkonivojske module za prilagajanje ključnih komponent po potrebi.
 

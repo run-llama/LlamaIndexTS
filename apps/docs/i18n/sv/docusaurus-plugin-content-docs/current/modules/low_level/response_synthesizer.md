@@ -2,9 +2,9 @@
 sidebar_position: 6
 ---
 
-`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
-
 # ResponseSynthesizer
+
+`Denna dokumentation har översatts automatiskt och kan innehålla fel. Tveka inte att öppna en Pull Request för att föreslå ändringar.`
 
 ResponseSynthesizer är ansvarig för att skicka frågan, noderna och promptmallarna till LLM för att generera ett svar. Det finns några nyckellägen för att generera ett svar:
 

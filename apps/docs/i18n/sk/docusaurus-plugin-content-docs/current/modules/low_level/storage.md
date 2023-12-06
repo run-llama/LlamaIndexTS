@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
-
 # Shranjevanje (Storage)
+
+`Ta dokumentacija je bila samodejno prevedena in lahko vsebuje napake. Ne oklevajte odpreti Pull Request za predlaganje sprememb.`
 
 Shranjevanje v LlamaIndex.TS deluje samodejno, ko konfigurirate objekt `StorageContext`. Preprosto nastavite `persistDir` in ga povežite z indeksom.
 

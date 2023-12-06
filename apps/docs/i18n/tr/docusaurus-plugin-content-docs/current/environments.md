@@ -2,9 +2,9 @@
 sidebar_position: 5
 ---
 
-`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
-
 # Ortamlar
+
+`Bu belge otomatik olarak çevrilmiştir ve hatalar içerebilir. Değişiklik önermek için bir Pull Request açmaktan çekinmeyin.`
 
 LlamaIndex şu anda resmi olarak NodeJS 18 ve NodeJS 20'yi desteklemektedir.
 

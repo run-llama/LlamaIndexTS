@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
-
 # QueryEngine (Silnik zapytań)
+
+`Ta dokumentacja została przetłumaczona automatycznie i może zawierać błędy. Nie wahaj się otworzyć Pull Request, aby zaproponować zmiany.`
 
 Silnik zapytań zawiera w sobie `Retriever` oraz `ResponseSynthesizer` w jednym potoku, który używa ciągu zapytań do pobrania węzłów, a następnie wysyła je do LLM w celu wygenerowania odpowiedzi.
 

@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
-
 # QueryEngine (Trình truy vấn)
+
+`Tài liệu này đã được dịch tự động và có thể chứa lỗi. Đừng ngần ngại mở một Pull Request để đề xuất thay đổi.`
 
 Một trình truy vấn bao gồm một `Retriever` và một `ResponseSynthesizer` trong một đường ống, sẽ sử dụng chuỗi truy vấn để truy xuất các nút và sau đó gửi chúng đến LLM để tạo ra một phản hồi.
 

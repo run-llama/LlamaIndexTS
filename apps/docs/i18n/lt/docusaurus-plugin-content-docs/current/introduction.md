@@ -3,9 +3,9 @@ sidebar_position: 0
 slug: /
 ---
 
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Kas yra LlamaIndex.TS?
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 LlamaIndex.TS yra duomenų pagrindas LLM aplikacijoms, skirtas įkelti, struktūrizuoti ir pasiekti privačius arba domeno specifinius duomenis. Nors taip pat yra prieinamas Python paketas (žr. [čia](https://docs.llamaindex.ai/en/stable/)), LlamaIndex.TS siūlo pagrindines funkcijas paprastoje paketo versijoje, optimizuotoje naudojimui su TypeScript.
 

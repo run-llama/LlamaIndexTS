@@ -2,9 +2,9 @@
 sidebar_position: 7
 ---
 
-`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
-
 # Opbevaring
+
+`Denne dokumentation er blevet automatisk oversat og kan indeholde fejl. Tøv ikke med at åbne en Pull Request for at foreslå ændringer.`
 
 Opbevaring i LlamaIndex.TS fungerer automatisk, når du har konfigureret et `StorageContext` objekt. Du skal bare konfigurere `persistDir` og tilknytte det til en indeks.
 

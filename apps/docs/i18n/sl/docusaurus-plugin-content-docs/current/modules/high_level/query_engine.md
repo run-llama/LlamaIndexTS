@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
-
 # QueryEngine (Dotazný modul)
+
+`Táto dokumentácia bola automaticky preložená a môže obsahovať chyby. Neváhajte otvoriť Pull Request na navrhnutie zmien.`
 
 Dotazný modul obaluje `Retriever` a `ResponseSynthesizer` do rúry, ktorá použije reťazec dotazu na získanie uzlov a potom ich pošle do LLM na generovanie odpovede.
 

@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
-
 # Voorbeelden van begin tot eind
+
+`Deze documentatie is automatisch vertaald en kan fouten bevatten. Aarzel niet om een Pull Request te openen om wijzigingen voor te stellen.`
 
 We hebben verschillende voorbeelden van begin tot eind opgenomen met behulp van LlamaIndex.TS in de repository.
 

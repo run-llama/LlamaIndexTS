@@ -1,6 +1,6 @@
-`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
-
 # Pagrindiniai moduliai
+
+`Ši dokumentacija buvo automatiškai išversta ir gali turėti klaidų. Nedvejodami atidarykite Pull Request, jei norite pasiūlyti pakeitimus.`
 
 LlamaIndex.TS siūlo keletą pagrindinių modulių, kurie yra suskirstyti į aukšto lygio modulius, skirtus greitam pradėjimui, ir žemo lygio modulius, skirtus tinkinti pagrindinius komponentus pagal jūsų poreikius.
 
