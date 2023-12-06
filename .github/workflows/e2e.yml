@@ -16,7 +16,7 @@ jobs:
       fail-fast: true
       matrix:
         node-version: [18, 20]
-        os: [macos-latest, windows-latest]
+        os: [macos-latest] # add windows-latest after timeout issue is fixed (see https://github.com/run-llama/LlamaIndexTS/issues/263)
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
