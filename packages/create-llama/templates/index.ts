@@ -341,7 +341,7 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, props.openAIKey);
+    await createEnvLocalFile(props.root, props.openAiKey);
 
     // Copy test pdf file
     await copyTestData(
@@ -349,7 +349,7 @@ export const installTemplate = async (
       props.framework,
       props.packageManager,
       props.engine,
-      props.openAIKey,
+      props.openAiKey,
     );
   }
 };

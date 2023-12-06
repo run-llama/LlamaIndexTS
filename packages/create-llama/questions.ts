@@ -14,7 +14,7 @@ const defaults: QuestionArgs = {
   ui: "html",
   eslint: true,
   frontend: false,
-  openAIKey: "",
+  openAiKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
 };
@@ -131,8 +131,11 @@ export const askQuestions = async (
   }
 
   if (program.framework === "express" || program.framework === "fastapi") {
+    if (process.argv.includes("--no-frontend")) {
+      program.frontend = false;
+    }
     // if a backend-only framework is selected, ask whether we should create a frontend
-    if (!program.frontend) {
+    if (program.frontend === undefined) {
       if (ciInfo.isCI) {
         program.frontend = getPrefOrDefault("frontend");
       } else {
@@ -157,6 +160,9 @@ export const askQuestions = async (
         preferences.frontend = Boolean(frontend);
       }
     }
+  } else {
+    // single project if framework is nextjs
+    program.frontend = false;
   }
 
   if (program.framework === "nextjs" || program.frontend) {
@@ -239,7 +245,7 @@ export const askQuestions = async (
     }
   }
 
-  if (!program.openAIKey) {
+  if (!program.openAiKey) {
     const { key } = await prompts(
       {
         type: "text",
@@ -248,8 +254,8 @@ export const askQuestions = async (
       },
       handlers,
     );
-    program.openAIKey = key;
-    preferences.openAIKey = key;
+    program.openAiKey = key;
+    preferences.openAiKey = key;
   }
 
   if (
@@ -274,4 +280,10 @@ export const askQuestions = async (
       preferences.eslint = Boolean(eslint);
     }
   }
+
+  // TODO: consider using zod to validate the input (doesn't work like this as not every option is required)
+  // templateUISchema.parse(program.ui);
+  // templateEngineSchema.parse(program.engine);
+  // templateFrameworkSchema.parse(program.framework);
+  // templateTypeSchema.parse(program.template);``
 };

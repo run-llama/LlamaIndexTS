@@ -1,6 +1,7 @@
 {
   "name": "create-llama",
   "version": "0.0.11",
+  "type": "module",
   "keywords": [
     "rag",
     "llamaindex",
@@ -23,9 +24,11 @@
     "dev": "ncc build ./index.ts -w -o dist/",
     "build": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
     "lint": "eslint . --ignore-pattern dist",
+    "e2e": "playwright test",
     "prepublishOnly": "cd ../../ && turbo run build"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.0",
     "@types/async-retry": "1.4.2",
     "@types/ci-info": "2.0.0",
     "@types/cross-spawn": "6.0.0",
@@ -47,7 +50,8 @@
     "tar": "6.1.15",
     "terminal-link": "^3.0.0",
     "update-check": "1.5.4",
-    "validate-npm-package-name": "3.0.0"
+    "validate-npm-package-name": "3.0.0",
+    "wait-port": "^1.1.0"
   },
   "engines": {
     "node": ">=16.14.0"

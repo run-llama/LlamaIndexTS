@@ -7,5 +7,10 @@
     "esModuleInterop": true,
     "skipLibCheck": false
   },
-  "exclude": ["templates", "dist"]
+  "exclude": ["templates", "dist"],
+  "references": [
+    {
+      "path": "./e2e/tsconfig.json"
+    }
+  ]
 }

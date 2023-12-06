@@ -63,6 +63,42 @@ const program = new Commander.Command(packageJson.name)
   Explicitly tell the CLI to reset any stored preferences
 `,
   )
+  .option(
+    "--template <template>",
+    `
+  Select a template to bootstrap the application with.
+`,
+  )
+  .option(
+    "--engine <engine>",
+    `
+  Select a chat engine to bootstrap the application with.
+`,
+  )
+  .option(
+    "--framework <framework>",
+    `
+  Select a framework to bootstrap the application with.
+`,
+  )
+  .option(
+    "--open-ai-key <key>",
+    `
+  Provide an OpenAI API key.
+`,
+  )
+  .option(
+    "--ui <ui>",
+    `
+  Select a UI to bootstrap the application with.
+`,
+  )
+  .option(
+    "--frontend",
+    `
+  Whether to generate a frontend for your backend.
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
 
@@ -157,7 +193,7 @@ async function run(): Promise<void> {
     packageManager,
     eslint: program.eslint,
     frontend: program.frontend,
-    openAIKey: program.openAIKey,
+    openAiKey: program.openAiKey,
     model: program.model,
     communityProjectPath: program.communityProjectPath,
   });
