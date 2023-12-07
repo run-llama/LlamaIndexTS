@@ -43,3 +43,7 @@ Uses the `SubQuestionQueryEngine`, which breaks complex queries into multiple qu
 ## [Low Level Modules](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/lowlevel.ts)
 
 This example uses several low-level components, which removes the need for an actual query engine. These components can be used anywhere, in any application, or customized and sub-classed to meet your own needs.
+
+## [JSON Entity Extraction](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/jsonExtract.ts)
+
+Features OpenAI's chat API (using [`json_mode`](https://platform.openai.com/docs/guides/text-generation/json-mode)) to extract a JSON object from a sales call transcript.
