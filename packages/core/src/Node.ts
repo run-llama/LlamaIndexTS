@@ -1,4 +1,4 @@
-import crypto from "crypto"; // TODO Node dependency
+import CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 
 export enum NodeRelationship {
@@ -14,6 +14,7 @@ export enum ObjectType {
   IMAGE = "IMAGE",
   INDEX = "INDEX",
   DOCUMENT = "DOCUMENT",
+  IMAGE_DOCUMENT = "IMAGE_DOCUMENT",
 }
 
 export enum MetadataMode {
@@ -175,13 +176,13 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
    * @returns
    */
   generateHash() {
-    const hashFunction = crypto.createHash("sha256");
+    const hashFunction = CryptoJS.algo.SHA256.create();
     hashFunction.update(`type=${this.getType()}`);
     hashFunction.update(
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
     );
     hashFunction.update(this.getContent(MetadataMode.ALL));
-    return hashFunction.digest("base64");
+    return hashFunction.finalize().toString(CryptoJS.enc.Base64);
   }
 
   getType(): ObjectType {
@@ -229,14 +230,6 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
   }
 }
 
-// export class ImageNode extends TextNode {
-//   image: string = "";
-
-//   getType(): ObjectType {
-//     return ObjectType.IMAGE;
-//   }
-// }
-
 export class IndexNode<T extends Metadata = Metadata> extends TextNode<T> {
   indexId: string = "";
 
@@ -272,26 +265,60 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
   }
 }
 
-export function jsonToNode(json: any) {
-  if (!json.type) {
+export function jsonToNode(json: any, type?: ObjectType) {
+  if (!json.type && !type) {
     throw new Error("Node type not found");
   }
+  const nodeType = type || json.type;
 
-  switch (json.type) {
+  switch (nodeType) {
     case ObjectType.TEXT:
       return new TextNode(json);
     case ObjectType.INDEX:
       return new IndexNode(json);
     case ObjectType.DOCUMENT:
       return new Document(json);
+    case ObjectType.IMAGE_DOCUMENT:
+      return new ImageDocument(json);
     default:
-      throw new Error(`Invalid node type: ${json.type}`);
+      throw new Error(`Invalid node type: ${nodeType}`);
   }
 }
 
-// export class ImageDocument extends Document {
-//   image?: string;
-// }
+export type ImageType = string | Blob | URL;
+
+export type ImageNodeConstructorProps<T extends Metadata> = Pick<
+  ImageNode<T>,
+  "image" | "id_"
+> &
+  Partial<ImageNode<T>>;
+
+export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
+  image: ImageType; // image as blob
+
+  constructor(init: ImageNodeConstructorProps<T>) {
+    super(init);
+    this.image = init.image;
+  }
+
+  getType(): ObjectType {
+    return ObjectType.IMAGE;
+  }
+}
+
+export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
+  constructor(init: ImageNodeConstructorProps<T>) {
+    super(init);
+
+    if (new.target === ImageDocument) {
+      this.hash = this.generateHash();
+    }
+  }
+
+  getType() {
+    return ObjectType.IMAGE_DOCUMENT;
+  }
+}
 
 /**
  * A node with a similarity score

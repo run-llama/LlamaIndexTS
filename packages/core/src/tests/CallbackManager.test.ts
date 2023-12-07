@@ -1,18 +1,18 @@
-import { OpenAIEmbedding } from "../Embedding";
+import {
+  CallbackManager,
+  RetrievalCallbackResponse,
+  StreamCallbackResponse,
+} from "../callbacks/CallbackManager";
+import { OpenAIEmbedding } from "../embeddings";
+import { SummaryIndex } from "../indices/summary";
+import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
+import { OpenAI } from "../llm/LLM";
 import { Document } from "../Node";
 import {
   ResponseSynthesizer,
   SimpleResponseBuilder,
 } from "../ResponseSynthesizer";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import {
-  CallbackManager,
-  RetrievalCallbackResponse,
-  StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
-import { SummaryIndex } from "../indices/summary";
-import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-import { OpenAI } from "../llm/LLM";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
 // Mock the OpenAI getOpenAISession function during testing

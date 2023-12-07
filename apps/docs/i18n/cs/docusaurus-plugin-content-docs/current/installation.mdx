@@ -1,0 +1,68 @@
+---
+sidebar_position: 1
+---
+
+
+# Instalace a nastavení
+
+```Tato dokumentace byla automaticky přeložena a může obsahovat chyby. Neváhejte otevřít Pull Request pro navrhování změn.```
+
+
+Ujistěte se, že máte nainstalovaný NodeJS ve verzi 18 nebo vyšší.
+
+
+## Použití create-llama
+
+Nejjednodušší způsob, jak začít s LlamaIndexem, je použití `create-llama`. Tento nástroj příkazového řádku vám umožní rychle začít s vytvářením nové aplikace LlamaIndex s přednastaveným prostředím.
+
+Jen spusťte
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+abyste začali. Jakmile je vaše aplikace vygenerována, spusťte
+
+```bash npm2yarn
+npm run dev
+```
+
+pro spuštění vývojového serveru. Poté můžete navštívit [http://localhost:3000](http://localhost:3000), abyste viděli vaši aplikaci.
+## Instalace pomocí NPM
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+### Proměnné prostředí
+
+Naše příklady výchozí používají OpenAI. Budete potřebovat nastavit svůj Open AI klíč následovně:
+
+```bash
+export OPENAI_API_KEY="sk-......" # Nahraďte svým klíčem z https://platform.openai.com/account/api-keys
+```
+
+Pokud chcete, aby se klíč automaticky načítal pokaždé, přidejte ho do souboru .zshrc/.bashrc.
+
+VAROVÁNÍ: Neukládejte svůj OpenAI klíč do verzovacího systému.

@@ -5,12 +5,17 @@ import {
   VectorStoreIndex,
 } from "llamaindex";
 
+import * as dotenv from "dotenv";
+
 import {
   CHUNK_OVERLAP,
   CHUNK_SIZE,
   STORAGE_CACHE_DIR,
   STORAGE_DIR,
 } from "./constants.mjs";
+
+// Load environment variables from local .env file
+dotenv.config();
 
 async function getRuntime(func) {
   const start = Date.now();

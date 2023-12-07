@@ -1,0 +1,71 @@
+---
+sidebar_position: 1
+---
+
+
+# التثبيت والإعداد
+
+```تمت ترجمة هذه الوثيقة تلقائيًا وقد تحتوي على أخطاء. لا تتردد في فتح طلب سحب لاقتراح تغييرات.```
+
+
+تأكد من أن لديك NodeJS v18 أو أحدث.
+
+
+## باستخدام create-llama
+
+أسهل طريقة للبدء مع LlamaIndex هي باستخدام `create-llama`. هذه الأداة سطر الأوامر تمكنك من بدء بناء تطبيق LlamaIndex جديد بسرعة، مع كل شيء معد لك.
+
+ما عليك سوى تشغيل
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+للبدء. بمجرد إنشاء التطبيق الخاص بك، قم بتشغيل
+
+```bash npm2yarn
+npm run dev
+```
+
+لبدء خادم التطوير. يمكنك ثم زيارة [http://localhost:3000](http://localhost:3000) لرؤية تطبيقك.
+## التثبيت من NPM
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+### المتغيرات البيئية
+
+تستخدم أمثلتنا OpenAI افتراضيًا. ستحتاج إلى إعداد مفتاح Open AI الخاص بك على النحو التالي:
+
+```bash
+export OPENAI_API_KEY="sk-......" # استبدله بالمفتاح الخاص بك من https://platform.openai.com/account/api-keys
+```
+
+إذا كنت ترغب في تحميله تلقائيًا في كل مرة، قم بإضافته إلى ملف .zshrc/.bashrc الخاص بك.
+
+تحذير: لا تقم بإضافة مفتاح OpenAI الخاص بك إلى نظام التحكم في الإصدارات.
+
+
+"

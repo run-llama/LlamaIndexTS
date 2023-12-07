@@ -7,33 +7,23 @@ import path from "path";
 import { bold, cyan } from "picocolors";
 import { version } from "../../core/package.json";
 
+import { COMMUNITY_OWNER, COMMUNITY_REPO } from "../helpers/constant";
 import { PackageManager } from "../helpers/get-pkg-manager";
+import { downloadAndExtractRepo } from "../helpers/repo";
 import {
   InstallTemplateArgs,
   TemplateEngine,
   TemplateFramework,
 } from "./types";
 
-const envFileNameMap: Record<TemplateFramework, string> = {
-  nextjs: ".env.local",
-  express: ".env",
-  fastapi: ".env",
-};
-
-const createEnvLocalFile = async (
-  root: string,
-  framework: TemplateFramework,
-  openAIKey?: string,
-) => {
-  if (openAIKey) {
-    const envFileName = envFileNameMap[framework];
-    if (!envFileName) return;
+const createEnvLocalFile = async (root: string, openAiKey?: string) => {
+  if (openAiKey) {
+    const envFileName = ".env";
     await fs.writeFile(
       path.join(root, envFileName),
-      `OPENAI_API_KEY=${openAIKey}\n`,
+      `OPENAI_API_KEY=${openAiKey}\n`,
     );
     console.log(`Created '${envFileName}' file containing OPENAI_API_KEY`);
-    process.env["OPENAI_API_KEY"] = openAIKey;
   }
 };
 
@@ -42,7 +32,16 @@ const copyTestData = async (
   framework: TemplateFramework,
   packageManager?: PackageManager,
   engine?: TemplateEngine,
+  openAiKey?: string,
 ) => {
+  if (framework === "nextjs") {
+    // XXX: This is a hack to make the build for nextjs work with pdf-parse
+    // pdf-parse needs './test/data/05-versions-space.pdf' to exist - can be removed when pdf-parse is removed
+    const srcFile = path.join(__dirname, "components", "data", "101.pdf");
+    const destPath = path.join(root, "test", "data");
+    await fs.mkdir(destPath, { recursive: true });
+    await fs.copyFile(srcFile, path.join(destPath, "05-versions-space.pdf"));
+  }
   if (engine === "context" || framework === "fastapi") {
     const srcPath = path.join(__dirname, "components", "data");
     const destPath = path.join(root, "data");
@@ -54,7 +53,7 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
-    if (process.env["OPENAI_API_KEY"]) {
+    if (openAiKey || process.env["OPENAI_API_KEY"]) {
       console.log(
         `\nRunning ${cyan(
           `${packageManager} run generate`,
@@ -103,6 +102,8 @@ const installTSTemplate = async ({
   ui,
   eslint,
   customApiPath,
+  forBackend,
+  model,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -119,6 +120,26 @@ const installTSTemplate = async ({
     cwd: templatePath,
     rename,
   });
+
+  /**
+   * If the backend is next.js, rename next.config.app.js to next.config.js
+   * If not, rename next.config.static.js to next.config.js
+   */
+  if (framework == "nextjs" && forBackend === "nextjs") {
+    const nextConfigAppPath = path.join(root, "next.config.app.js");
+    const nextConfigPath = path.join(root, "next.config.js");
+    await fs.rename(nextConfigAppPath, nextConfigPath);
+    // delete next.config.static.js
+    const nextConfigStaticPath = path.join(root, "next.config.static.js");
+    await fs.rm(nextConfigStaticPath);
+  } else if (framework == "nextjs" && typeof forBackend === "undefined") {
+    const nextConfigStaticPath = path.join(root, "next.config.static.js");
+    const nextConfigPath = path.join(root, "next.config.js");
+    await fs.rename(nextConfigStaticPath, nextConfigPath);
+    // delete next.config.app.js
+    const nextConfigAppPath = path.join(root, "next.config.app.js");
+    await fs.rm(nextConfigAppPath);
+  }
 
   /**
    * Copy the selected chat engine files to the target directory and reference it.
@@ -141,7 +162,7 @@ const installTSTemplate = async ({
   /**
    * Copy the selected UI files to the target directory and reference it.
    */
-  if (framework === "nextjs" && ui !== "html") {
+  if (framework === "nextjs" && ui !== "shadcn") {
     console.log("\nUsing UI:", ui, "\n");
     const uiPath = path.join(compPath, "ui", ui);
     const destUiPath = path.join(root, "app", "components", "ui");
@@ -153,6 +174,14 @@ const installTSTemplate = async ({
       cwd: uiPath,
       rename,
     });
+  }
+
+  if (framework === "nextjs") {
+    await fs.writeFile(
+      path.join(root, "constants.ts"),
+      `export const MODEL = "${model || "gpt-3.5-turbo"}";\n`,
+    );
+    console.log("\nUsing OpenAI model: ", model || "gpt-3.5-turbo", "\n");
   }
 
   /**
@@ -198,25 +227,26 @@ const installTSTemplate = async ({
     };
   }
 
-  if (framework === "nextjs" && ui === "shadcn") {
-    // add shadcn dependencies to package.json
+  if (framework === "nextjs" && ui === "html") {
+    // remove shadcn dependencies if html ui is selected
     packageJson.dependencies = {
       ...packageJson.dependencies,
-      "tailwind-merge": "^2",
-      "@radix-ui/react-slot": "^1",
-      "class-variance-authority": "^0.7",
-      "lucide-react": "^0.291",
-      remark: "^14.0.3",
-      "remark-code-import": "^1.2.0",
-      "remark-gfm": "^3.0.1",
-      "remark-math": "^5.1.1",
-      "react-markdown": "^8.0.7",
-      "react-syntax-highlighter": "^15.5.0",
+      "tailwind-merge": undefined,
+      "@radix-ui/react-slot": undefined,
+      "class-variance-authority": undefined,
+      clsx: undefined,
+      "lucide-react": undefined,
+      remark: undefined,
+      "remark-code-import": undefined,
+      "remark-gfm": undefined,
+      "remark-math": undefined,
+      "react-markdown": undefined,
+      "react-syntax-highlighter": undefined,
     };
 
     packageJson.devDependencies = {
       ...packageJson.devDependencies,
-      "@types/react-syntax-highlighter": "^15.5.6",
+      "@types/react-syntax-highlighter": undefined,
     };
   }
 
@@ -278,10 +308,29 @@ const installPythonTemplate = async ({
   );
 };
 
+const installCommunityProject = async ({
+  root,
+  communityProjectPath,
+}: Pick<InstallTemplateArgs, "root" | "communityProjectPath">) => {
+  console.log("\nInstalling community project:", communityProjectPath!);
+  await downloadAndExtractRepo(root, {
+    username: COMMUNITY_OWNER,
+    name: COMMUNITY_REPO,
+    branch: "main",
+    filePath: communityProjectPath!,
+  });
+};
+
 export const installTemplate = async (
   props: InstallTemplateArgs & { backend: boolean },
 ) => {
   process.chdir(props.root);
+
+  if (props.template === "community" && props.communityProjectPath) {
+    await installCommunityProject(props);
+    return;
+  }
+
   if (props.framework === "fastapi") {
     await installPythonTemplate(props);
   } else {
@@ -292,7 +341,7 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, props.framework, props.openAIKey);
+    await createEnvLocalFile(props.root, props.openAiKey);
 
     // Copy test pdf file
     await copyTestData(
@@ -300,6 +349,7 @@ export const installTemplate = async (
       props.framework,
       props.packageManager,
       props.engine,
+      props.openAiKey,
     );
   }
 };

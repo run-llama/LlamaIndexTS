@@ -1,11 +1,11 @@
 import _ from "lodash";
 import * as path from "path";
+import { BaseNode } from "../../Node";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
-} from "../../Embedding";
-import { BaseNode } from "../../Node";
+} from "../../embeddings";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_FS, DEFAULT_PERSIST_DIR } from "../constants";
 import {
@@ -164,7 +164,7 @@ export class SimpleVectorStore implements VectorStore {
 
     let dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
-      await fs.mkdir(dirPath);
+      await fs.mkdir(dirPath, { recursive: true });
     }
 
     let dataDict: any = {};

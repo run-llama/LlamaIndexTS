@@ -1,0 +1,10 @@
+name: Refactor
+title: ""
+description: Write something like "Modify the ... api endpoint to use ... version and ... framework" If you would like to use sweep.dev prefix with "Sweep:"
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Details
+      description: More details
+      placeholder: We are migrating this function to ... version because ...

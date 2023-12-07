@@ -12,6 +12,14 @@ import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./templates";
 import { installTemplate } from "./templates";
 
+export type InstallAppArgs = Omit<
+  InstallTemplateArgs,
+  "appName" | "root" | "isOnline" | "customApiPath"
+> & {
+  appPath: string;
+  frontend: boolean;
+};
+
 export async function createApp({
   template,
   framework,
@@ -21,14 +29,10 @@ export async function createApp({
   packageManager,
   eslint,
   frontend,
-  openAIKey,
-}: Omit<
-  InstallTemplateArgs,
-  "appName" | "root" | "isOnline" | "customApiPath"
-> & {
-  appPath: string;
-  frontend: boolean;
-}): Promise<void> {
+  openAiKey,
+  model,
+  communityProjectPath,
+}: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
   if (!(await isWriteable(path.dirname(root)))) {
@@ -64,7 +68,9 @@ export async function createApp({
     packageManager,
     isOnline,
     eslint,
-    openAIKey,
+    openAiKey,
+    model,
+    communityProjectPath,
   };
 
   if (frontend) {
@@ -88,7 +94,7 @@ export async function createApp({
       path.join(root, "README.md"),
     );
   } else {
-    await installTemplate({ ...args, backend: true });
+    await installTemplate({ ...args, backend: true, forBackend: framework });
   }
 
   process.chdir(root);
@@ -102,7 +108,7 @@ export async function createApp({
   console.log(
     `Now have a look at the ${terminalLink(
       "README.md",
-      `file://${appName}/README.md`,
+      `file://${root}/README.md`,
     )} and learn how to get started.`,
   );
   console.log();

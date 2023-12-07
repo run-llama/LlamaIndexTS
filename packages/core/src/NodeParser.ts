@@ -1,4 +1,10 @@
-import { Document, NodeRelationship, TextNode } from "./Node";
+import {
+  BaseNode,
+  Document,
+  ImageDocument,
+  NodeRelationship,
+  TextNode,
+} from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
@@ -27,12 +33,19 @@ export function getTextSplitsFromDocument(
  * @returns An array of nodes.
  */
 export function getNodesFromDocument(
-  document: Document,
+  doc: BaseNode,
   textSplitter: SentenceSplitter,
   includeMetadata: boolean = true,
   includePrevNextRel: boolean = true,
 ) {
-  let nodes: TextNode[] = [];
+  if (doc instanceof ImageDocument) {
+    return [doc];
+  }
+  if (!(doc instanceof Document)) {
+    throw new Error("Expected either an Image Document or Document");
+  }
+  const document = doc as Document;
+  const nodes: TextNode[] = [];
 
   const textSplits = getTextSplitsFromDocument(document, textSplitter);
 
@@ -62,7 +75,7 @@ export function getNodesFromDocument(
 }
 
 /**
- * A NodeParser generates TextNodes from Documents
+ * A NodeParser generates Nodes from Documents
  */
 export interface NodeParser {
   /**
@@ -70,7 +83,7 @@ export interface NodeParser {
    * @param documents - The documents to generate nodes from.
    * @returns An array of nodes.
    */
-  getNodesFromDocuments(documents: Document[]): TextNode[];
+  getNodesFromDocuments(documents: BaseNode[]): BaseNode[];
 }
 
 /**
@@ -121,7 +134,7 @@ export class SimpleNodeParser implements NodeParser {
    * Generate Node objects from documents
    * @param documents
    */
-  getNodesFromDocuments(documents: Document[]) {
+  getNodesFromDocuments(documents: BaseNode[]) {
     return documents
       .map((document) => getNodesFromDocument(document, this.textSplitter))
       .flat();

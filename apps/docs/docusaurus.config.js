@@ -29,7 +29,23 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
-    locales: ["en"],
+    locales: [
+    "en", 
+    "zh-Hans", 
+    "es",
+    "fr",
+    "de",
+    "ja",
+    "ko",
+    "pt",
+    "ar",
+    "it",
+    "tr",
+    "pl",
+    "nl",
+    "vi",
+    "th",
+    ], // "fa", "ru", "ro", "sv", "hu", "cs", "el", "da", "fi", "he", "no", "hi", "in", "sl", "se", "sk", "uk", "bg", "hr", "lt", "lv", "et", "cat"
   },
 
   presets: [
@@ -70,6 +86,10 @@ const config = {
             sidebarId: "mySidebar",
             position: "left",
             label: "Docs",
+          },
+          {
+            type: "localeDropdown",
+            position: "left",
           },
           {
             href: "https://github.com/run-llama/LlamaIndexTS",

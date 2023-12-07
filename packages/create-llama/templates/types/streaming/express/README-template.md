@@ -18,7 +18,7 @@ Then call the express API endpoint `/api/chat` to see the result:
 
 ```
 curl --location 'localhost:8000/api/chat' \
---header 'Content-Type: application/json' \
+--header 'Content-Type: text/plain' \
 --data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
 ```
 

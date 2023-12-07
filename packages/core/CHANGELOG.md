@@ -1,5 +1,32 @@
 # llamaindex
 
+## 0.0.38
+
+### Patch Changes
+
+- 786c25d: Fixes to the PGVectorStore (thanks @mtutty)
+- bf9e263: Azure bugfix (thanks @parhammmm)
+- bf9e263: AssemblyAI updates (thanks @Swimburger)
+- 786c25d: Add GPT-4 Vision support (thanks @marcusschiesser)
+- bf9e263: Internationalization of docs (thanks @hexapode and @disiok)
+
+## 0.0.37
+
+### Patch Changes
+
+- 3bab231: Fixed errors (#225 and #226) Thanks @marcusschiesser
+
+## 0.0.36
+
+### Patch Changes
+
+- Support for Claude 2.1
+- Add AssemblyAI integration (thanks @Swimburger)
+- Use cryptoJS (thanks @marcusschiesser)
+- Add PGVectorStore (thanks @mtutty)
+- Add CLIP embeddings (thanks @marcusschiesser)
+- Add MongoDB support (thanks @marcusschiesser)
+
 ## 0.0.35
 
 ### Patch Changes
