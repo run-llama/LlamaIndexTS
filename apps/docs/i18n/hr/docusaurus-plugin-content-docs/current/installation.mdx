@@ -1,0 +1,68 @@
+---
+sidebar_position: 1
+---
+
+
+# Instalacija i postavljanje
+
+```Ova dokumentacija je automatski prevedena i može sadržavati greške. Ne ustručavajte se otvoriti Pull Request za predlaganje promjena.```
+
+
+Provjerite imate li NodeJS verziju 18 ili noviju.
+
+
+## Korištenje create-llama
+
+Najlakši način za početak rada s LlamaIndexom je korištenje `create-llama`. Ovaj CLI alat omogućuje vam brzo pokretanje izrade nove aplikacije LlamaIndex, s već postavljenim svime što vam je potrebno.
+
+Samo pokrenite
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+da biste započeli. Nakon što se vaša aplikacija generira, pokrenite
+
+```bash npm2yarn
+npm run dev
+```
+
+za pokretanje razvojnog poslužitelja. Zatim možete posjetiti [http://localhost:3000](http://localhost:3000) da biste vidjeli svoju aplikaciju.
+## Instalacija putem NPM-a
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+### Varijable okruženja
+
+Naši primjeri koriste OpenAI prema zadanim postavkama. Morat ćete postaviti svoj OpenAI ključ na sljedeći način:
+
+```bash
+export OPENAI_API_KEY="sk-......" # Zamijenite s vašim ključem s https://platform.openai.com/account/api-keys
+```
+
+Ako želite da se automatski učita svaki put, dodajte ga u svoj .zshrc/.bashrc.
+
+UPOZORENJE: ne stavljajte svoj OpenAI ključ u verziju kontrolnog sustava.

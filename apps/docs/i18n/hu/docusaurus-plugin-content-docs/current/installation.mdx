@@ -1,0 +1,68 @@
+---
+sidebar_position: 1
+---
+
+
+# Telepítés és Beállítás
+
+```Ezt a dokumentációt automatikusan fordították le, és tartalmazhat hibákat. Ne habozzon nyitni egy Pull Requestet a változtatások javasolására.```
+
+
+Győződjön meg róla, hogy rendelkezik a NodeJS v18 vagy annál újabb verziójával.
+
+
+## A create-llama használata
+
+A LlamaIndex leggyorsabb módja a kezdéshez a `create-llama` használata. Ez a CLI eszköz lehetővé teszi, hogy gyorsan elkezdjen egy új LlamaIndex alkalmazást építeni, minden szükséges beállítással.
+
+Csak futtassa a következő parancsot:
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+a kezdéshez. Miután létrehozta az alkalmazást, futtassa a következő parancsot:
+
+```bash npm2yarn
+npm run dev
+```
+
+a fejlesztői szerver indításához. Ezután meglátogathatja a [http://localhost:3000](http://localhost:3000) címet az alkalmazás megtekintéséhez.
+## Telepítés az NPM-ről
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+### Környezeti változók
+
+Példáink alapértelmezetten az OpenAI-t használják. A következőképpen kell beállítania az Open AI kulcsát:
+
+```bash
+export OPENAI_API_KEY="sk-......" # Cserélje ki a kulcsot a https://platform.openai.com/account/api-keys oldalon található kulcsával
+```
+
+Ha azt szeretné, hogy minden alkalommal automatikusan betöltődjön, adja hozzá a .zshrc/.bashrc fájljához.
+
+FIGYELEM: Ne tegye közzé az OpenAI kulcsát a verziókezelő rendszerben.
