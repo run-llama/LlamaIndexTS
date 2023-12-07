@@ -1,0 +1,45 @@
+name: E2E Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "packages/create-llama/**"
+      - ".github/workflows/e2e.yml"
+    branches: [main]
+
+jobs:
+  e2e:
+    name: create-llama
+    timeout-minutes: 60
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [18, 20]
+        os: [macos-latest] # add windows-latest after timeout issue is fixed (see https://github.com/run-llama/LlamaIndexTS/issues/263)
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+        working-directory: ./packages/create-llama
+      - name: Build create-llama
+        run: pnpm run build
+        working-directory: ./packages/create-llama
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
+        working-directory: ./packages/create-llama
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: ./packages/create-llama/playwright-report/
+          retention-days: 30
