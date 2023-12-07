@@ -32,6 +32,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,md}": "prettier --write"
+    "(!apps/docs/i18n/**/docusaurus-plugin-content-docs/current/api/*).{js,jsx,ts,tsx,md}": "prettier --write"
   }
 }

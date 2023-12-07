@@ -1,0 +1,31 @@
+---
+sidebar_position: 5
+---
+
+# पर्यावरण (Environments)
+
+`इस दस्तावेज़ का अनुवाद स्वचालित रूप से किया गया है और इसमें त्रुटियाँ हो सकती हैं। परिवर्तन सुझाने के लिए पुल रिक्वेस्ट खोलने में संकोच न करें।`
+
+LlamaIndex वर्तमान में NodeJS 18 और NodeJS 20 का आधिकारिक समर्थन करता है।
+
+## NextJS ऐप राउटर (NextJS App Router)
+
+यदि आप NextJS ऐप राउटर रूट हैंडलर / सर्वरलेस फंक्शन का उपयोग कर रहे हैं, तो आपको NodeJS मोड का उपयोग करना होगा:
+
+```js
+export const runtime = "nodejs"; // डिफ़ॉल्ट
+```
+
+और आपको अपने next.config.js में pdf-parse के लिए एक अपवाद जोड़ने की आवश्यकता होगी
+
+```js
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ["pdf-parse"], // NextJS ऐप राउटर में pdf-parse को वास्तविक NodeJS मोड में रखता है
+  },
+};
+
+module.exports = nextConfig;
+```
