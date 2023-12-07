@@ -31,14 +31,15 @@ const config = {
     defaultLocale: "en",
     locales: [
       "en",
-      "fr",
       "zh-Hans",
       "es",
+      "fr",
       "ru",
       "de",
       "jp",
       "ko",
       "pt",
+      "ar",
       "it",
       "ar",
       "tr",
@@ -70,6 +71,7 @@ const config = {
       "cat",
     ],
   },
+  
 
   presets: [
     [
