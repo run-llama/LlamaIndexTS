@@ -65,7 +65,11 @@ const config = {
           ],
         },
         blog: false,
-      }),
+        gtag: {
+          trackingID: 'G-NB9B8LW9W5',
+          anonymizeIP: true,
+        },
+    }),
     ],
   ],
 
