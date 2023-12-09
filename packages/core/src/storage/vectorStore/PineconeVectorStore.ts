@@ -1,6 +1,9 @@
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
+import { VectorStore, 
+        VectorStoreQuery, 
+        VectorStoreQueryResult,
+        ExactMatchFilter, 
+        MetadataFilters } from "./types";
 
-import { ExactMatchFilter, MetadataFilters } from "../../../dist";
 import { BaseNode, Document, Metadata, MetadataMode } from "../../Node";
 import { GenericFileSystem } from "../FileSystem";
 
@@ -137,9 +140,9 @@ export class PineconeVectorStore implements VectorStore {
     var options: any = {
       vector: query.queryEmbedding,
       topK: query.similarityTopK,
-      //   include_values: true,
-      //   include_metadara: true,
-      //   filter: filter
+      include_values: true,
+      include_metadara: true,
+      filter: filter
     };
 
     const idx = await this.index();
