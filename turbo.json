@@ -1,6 +1,5 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["PINECONE_CHUNK_SIZE", "PINECONE_INDEX_NAME"],
   "globalDependencies": ["**/.env.*local"],
   "pipeline": {
     "build": {
