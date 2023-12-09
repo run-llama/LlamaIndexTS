@@ -1,5 +1,13 @@
 # create-llama
 
+## 0.0.11
+
+### Patch Changes
+
+- 2aeb341: - Added option to create a new project based on community templates
+  - Added OpenAI model selector for NextJS projects
+  - Added GPT4 Vision support (and file upload)
+
 ## 0.0.10
 
 ### Patch Changes

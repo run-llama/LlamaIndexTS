@@ -1,0 +1,74 @@
+---
+sidebar_position: 1
+---
+
+
+# स्थापना और सेटअप
+
+```इस दस्तावेज़ का अनुवाद स्वचालित रूप से किया गया है और इसमें त्रुटियाँ हो सकती हैं। परिवर्तन सुझाने के लिए पुल रिक्वेस्ट खोलने में संकोच न करें।```
+
+
+सुनिश्चित करें कि आपके पास NodeJS v18 या उच्चतर संस्करण है।
+
+
+## create-llama का उपयोग करें
+
+LlamaIndex के साथ शुरू होने का सबसे आसान तरीका `create-llama` का उपयोग करके है। यह CLI टूल आपको त्वरित रूप से एक नया LlamaIndex एप्लिकेशन बनाने की सुविधा प्रदान करता है, जिसमें सब कुछ आपके लिए सेटअप किया जाता है।
+
+बस निम्नलिखित को चलाएँ
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+शुरू होने के लिए। जब आपका ऐप उत्पन्न हो जाए, तो चलाएँ
+
+```bash npm2yarn
+npm run dev
+```
+
+विकास सर्वर चालू करने के लिए। फिर आप [http://localhost:3000](http://localhost:3000) पर अपना ऐप देख सकते हैं।
+
+
+"
+## NPM से स्थापना
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+### पर्यावरण चर
+
+हमारे उदाहरण डिफ़ॉल्ट रूप से OpenAI का उपयोग करते हैं। आपको निम्नलिखित तरीके से अपनी Open AI कुंजी को सेटअप करने की आवश्यकता होगी:
+
+```bash
+export OPENAI_API_KEY="sk-......" # अपनी कुंजी के साथ बदलें https://platform.openai.com/account/api-keys से
+```
+
+यदि आप चाहते हैं कि यह हर बार स्वचालित रूप से लोड हो जाए, तो इसे अपने .zshrc/.bashrc में जोड़ें।
+
+चेतावनी: अपनी OpenAI कुंजी को संस्करण नियंत्रण में न देखें।
+
+
+"

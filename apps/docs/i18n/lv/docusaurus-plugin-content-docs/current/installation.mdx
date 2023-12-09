@@ -1,0 +1,68 @@
+---
+sidebar_position: 1
+---
+
+
+# Instalācija un iestatīšana
+
+```Šis dokuments ir automātiski tulkots un var saturēt kļūdas. Nevilciniet atvērt Pull Request, lai ierosinātu izmaiņas.```
+
+
+Pārliecinieties, ka jums ir NodeJS v18 vai jaunāka versija.
+
+
+## Izmantojot create-llama
+
+Vienkāršākais veids, kā sākt darbu ar LlamaIndex, ir izmantot `create-llama`. Šis CLI rīks ļauj jums ātri sākt jaunas LlamaIndex lietotnes izveidi, ar visu nepieciešamo iestatījumu jau sagatavotu.
+
+Vienkārši izpildiet komandu
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+lai sāktu. Kad jūsu lietotne ir izveidota, izpildiet komandu
+
+```bash npm2yarn
+npm run dev
+```
+
+lai startētu izstrādes serveri. Tad jūs varat apmeklēt [http://localhost:3000](http://localhost:3000), lai redzētu savu lietotni.
+## Instalēšana no NPM
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+### Vides mainīgie
+
+Mūsu piemēri pēc noklusējuma izmanto OpenAI. Jums būs jāiestata savs Open AI atslēga šādi:
+
+```bash
+export OPENAI_API_KEY="sk-......" # Aizvietojiet ar savu atslēgu no https://platform.openai.com/account/api-keys
+```
+
+Ja vēlaties, lai tas tiktu automātiski ielādēts katru reizi, pievienojiet to savam .zshrc/.bashrc failam.
+
+BRĪDINĀJUMS: neiekļaujiet savu OpenAI atslēgu versiju kontroles sistēmā.

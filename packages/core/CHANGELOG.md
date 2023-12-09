@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.0.38
+
+### Patch Changes
+
+- 786c25d: Fixes to the PGVectorStore (thanks @mtutty)
+- bf9e263: Azure bugfix (thanks @parhammmm)
+- bf9e263: AssemblyAI updates (thanks @Swimburger)
+- 786c25d: Add GPT-4 Vision support (thanks @marcusschiesser)
+- bf9e263: Internationalization of docs (thanks @hexapode and @disiok)
+
 ## 0.0.37
 
 ### Patch Changes

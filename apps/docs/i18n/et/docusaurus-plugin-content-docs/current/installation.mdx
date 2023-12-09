@@ -1,0 +1,68 @@
+---
+sidebar_position: 1
+---
+
+
+# Paigaldamine ja seadistamine
+
+```See dokumentatsioon on tõlgitud automaatselt ja võib sisaldada vigu. Ärge kartke avada Pull Request, et pakkuda muudatusi.```
+
+
+Veenduge, et teil oleks NodeJS versioon 18 või uuem.
+
+
+## Kasutades create-llama
+
+Lihtsaim viis LlamaIndexiga alustamiseks on kasutada `create-llama` tööriista. See käsurea tööriist võimaldab teil kiiresti alustada uue LlamaIndex rakenduse loomist, kõik on juba teie jaoks seadistatud.
+
+Lihtsalt käivitage
+
+<Tabs>
+<TabItem value="1" label="npm" default>
+
+```bash
+npx create-llama@latest
+```
+
+</TabItem>
+<TabItem value="2" label="Yarn">
+
+```bash
+yarn create llama
+```
+
+</TabItem>
+<TabItem value="3" label="pnpm">
+
+```bash
+pnpm create llama@latest
+```
+
+</TabItem>
+</Tabs>
+
+alustamiseks. Kui teie rakendus on genereeritud, käivitage
+
+```bash npm2yarn
+npm run dev
+```
+
+arendusserveri käivitamiseks. Seejärel saate külastada [http://localhost:3000](http://localhost:3000), et näha oma rakendust.
+## Paigaldamine NPM-ist
+
+```bash npm2yarn
+npm install llamaindex
+```
+
+
+### Keskkonnamuutujad
+
+Meie näidetes kasutatakse vaikimisi OpenAI-d. Peate oma Open AI võtme seadistama järgmiselt:
+
+```bash
+export OPENAI_API_KEY="sk-......" # Asendage oma võti aadressilt https://platform.openai.com/account/api-keys
+```
+
+Kui soovite, et see laaditakse automaatselt iga kord, lisage see oma .zshrc/.bashrc faili.
+
+HOIATUS: ärge lisage oma OpenAI võtit versioonihaldusesse.
