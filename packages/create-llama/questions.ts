@@ -189,7 +189,7 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "nextjs") {
+  if (program.framework === "express" || program.framework === "nextjs") {
     if (!program.model) {
       if (ciInfo.isCI) {
         program.model = getPrefOrDefault("model");

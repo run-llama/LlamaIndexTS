@@ -176,7 +176,7 @@ const installTSTemplate = async ({
     });
   }
 
-  if (framework === "nextjs") {
+  if (framework === "nextjs" || framework === "express") {
     await fs.writeFile(
       path.join(root, "constants.ts"),
       `export const MODEL = "${model || "gpt-3.5-turbo"}";\n`,

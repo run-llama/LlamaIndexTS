@@ -1,6 +1,7 @@
 import { streamToResponse } from "ai";
 import { NextFunction, Request, Response } from "express";
 import { ChatMessage, OpenAI } from "llamaindex";
+import { MODEL } from "../../constants";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
 
@@ -16,7 +17,7 @@ export const chat = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const llm = new OpenAI({
-      model: "gpt-3.5-turbo",
+      model: MODEL,
     });
 
     const chatEngine = await createChatEngine(llm);
