@@ -1,14 +1,13 @@
 import { program } from "commander";
-import { AudioTranscriptReader, TranscribeParams } from "llamaindex";
+import { AudioTranscriptReader, TranscribeParams, VectorStoreIndex } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 // readline/promises is still experimental so not in @types/node yet
 // @ts-ignore
 import readline from "node:readline/promises";
-import { VectorStoreIndex } from "../../packages/core/src/indices";
 
 program
   .option(
-    "-a, --audio-url [string]",
+    "-a, --audio [string]",
     "URL or path of the audio file to transcribe",
   )
   .option("-i, --transcript-id [string]", "ID of the AssemblyAI transcript")
@@ -20,15 +19,15 @@ program
 
     const reader = new AudioTranscriptReader();
     let params: TranscribeParams | string;
-    if (options.audioUrl) {
+    if (options.audio) {
       params = {
-        audio: options.audioUrl,
+        audio: options.audio,
       };
     } else if (options.transcriptId) {
       params = options.transcriptId;
     } else {
       console.log(
-        "You must provide either an --audio-url or a --transcript-id",
+        "You must provide either an --audio or a --transcript-id",
       );
       return;
     }
