@@ -1,9 +1,17 @@
-import { MistralAI } from "llamaindex";
+import { MistralAI, MistralAIEmbedding } from "llamaindex";
 
 (async () => {
-  const llm = new MistralAI({ model: "mistral-tiny" });
+  // embeddings
+  const embedding = new MistralAIEmbedding();
+  const embeddingsResponse = await embedding.getTextEmbedding(
+    "What is the best French cheese?",
+  );
+  console.log(
+    `MistralAI embeddings are ${embeddingsResponse.length} numbers long\n`,
+  );
 
   // chat api (non-streaming)
+  const llm = new MistralAI({ model: "mistral-tiny" });
   const response = await llm.chat([
     { content: "What is the best French cheese?", role: "user" },
   ]);

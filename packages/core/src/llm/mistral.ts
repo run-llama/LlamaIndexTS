@@ -12,32 +12,11 @@ export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-medium": { contextWindow: 4096 },
 };
 
-/**
- * MistralAI LLM implementation
- */
-export class MistralAI implements LLM {
-  hasStreaming: boolean = true;
-
-  // Per completion MistralAI params
-  model: keyof typeof ALL_AVAILABLE_MISTRAL_MODELS;
-  temperature: number;
-  topP: number;
-  maxTokens?: number;
+export class MistralAISession {
   apiKey?: string;
-  callbackManager?: CallbackManager;
-  safeMode: boolean;
-  randomSeed?: number;
-
   private client: any;
 
-  constructor(init?: Partial<MistralAI>) {
-    this.model = init?.model ?? "mistral-small";
-    this.temperature = init?.temperature ?? 0.1;
-    this.topP = init?.topP ?? 1;
-    this.maxTokens = init?.maxTokens ?? undefined;
-    this.callbackManager = init?.callbackManager;
-    this.safeMode = init?.safeMode ?? false;
-    this.randomSeed = init?.randomSeed ?? undefined;
+  constructor(init?: Partial<MistralAISession>) {
     if (init?.apiKey) {
       this.apiKey = init?.apiKey;
     } else {
@@ -56,6 +35,36 @@ export class MistralAI implements LLM {
       this.client = new MistralClient(this.apiKey);
     }
     return this.client;
+  }
+}
+
+/**
+ * MistralAI LLM implementation
+ */
+export class MistralAI implements LLM {
+  hasStreaming: boolean = true;
+
+  // Per completion MistralAI params
+  model: keyof typeof ALL_AVAILABLE_MISTRAL_MODELS;
+  temperature: number;
+  topP: number;
+  maxTokens?: number;
+  apiKey?: string;
+  callbackManager?: CallbackManager;
+  safeMode: boolean;
+  randomSeed?: number;
+
+  private session: MistralAISession;
+
+  constructor(init?: Partial<MistralAI>) {
+    this.model = init?.model ?? "mistral-small";
+    this.temperature = init?.temperature ?? 0.1;
+    this.topP = init?.topP ?? 1;
+    this.maxTokens = init?.maxTokens ?? undefined;
+    this.callbackManager = init?.callbackManager;
+    this.safeMode = init?.safeMode ?? false;
+    this.randomSeed = init?.randomSeed ?? undefined;
+    this.session = new MistralAISession(init);
   }
 
   get metadata() {
@@ -97,7 +106,7 @@ export class MistralAI implements LLM {
       return this.streamChat(messages, parentEvent) as R;
     }
     // Non-streaming
-    const client = await this.getClient();
+    const client = await this.session.getClient();
     const response = await client.chat(this.buildParams(messages));
     const message = response.choices[0].message;
     return {
@@ -125,7 +134,7 @@ export class MistralAI implements LLM {
       ? this.callbackManager.onLLMStream
       : () => {};
 
-    const client = await this.getClient();
+    const client = await this.session.getClient();
     const chunkStream = await client.chatStream(this.buildParams(messages));
 
     const event: Event = parentEvent
