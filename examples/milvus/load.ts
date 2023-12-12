@@ -13,7 +13,9 @@ async function main() {
     const reader = new PapaCSVReader(false);
     const docs = await reader.loadData("milvus/data/movie_reviews.csv");
 
-    const vectorStore = new MilvusVectorStore();
+    const vectorStore = new MilvusVectorStore({
+      contentKey: 'content',
+    });
 
     const milvus = vectorStore.client()
 
@@ -23,9 +25,9 @@ async function main() {
       fields: [
         {
           name: 'id',
-          data_type: DataType.Int64,
+          data_type: DataType.VarChar,
           is_primary_key: true,
-          autoID: true,
+          max_length: 200
         },
         {
           name: 'embedding',
@@ -45,7 +47,7 @@ async function main() {
     });
     await milvus.createIndex({
       collection_name: collectionName,
-      field_name: 'vector',
+      field_name: 'embedding',
       index_type: 'HNSW',
       params: { efConstruction: 10, M: 4 },
       metric_type: 'L2',

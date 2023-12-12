@@ -8,7 +8,9 @@ const collectionName = "movie_reviews";
 
 async function main() {
   try {
-    const milvus = new MilvusVectorStore();
+    const milvus = new MilvusVectorStore({
+      contentKey: 'content',
+    });
     await milvus.connect(collectionName);
 
     const ctx = serviceContextFromDefaults();
