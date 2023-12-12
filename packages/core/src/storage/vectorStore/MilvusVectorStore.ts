@@ -80,7 +80,7 @@ export class MilvusVectorStore implements VectorStore {
       collection_name: this.collection,
       data: nodes.map(node => {
         const entry: RowData = {
-          //id: node.id_,
+          [this.idKey]: node.id_,
           [this.embeddingKey]: node.getEmbedding(),
           [this.metadataKey]: node.metadata,
         }
@@ -115,7 +115,6 @@ export class MilvusVectorStore implements VectorStore {
     if (!this.collection) {
       throw new Error("Must connect to collection before querying.");
     }
-
 
     const found = await this.milvusClient.search({
       collection_name: this.collection,
