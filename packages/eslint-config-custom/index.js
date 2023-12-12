@@ -35,6 +35,8 @@ module.exports = {
           "AZURE_OPENAI_API_INSTANCE_NAME",
           "AZURE_OPENAI_API_DEPLOYMENT_NAME",
 
+          "MISTRAL_API_KEY",
+
           "DEBUG",
           "no_proxy",
           "NO_PROXY",
