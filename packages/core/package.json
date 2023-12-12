@@ -23,6 +23,8 @@
     "cohere-ai": "^7.7.5",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.10",
+    "@zilliz/milvus2-sdk-node": "^2.3.5",
+    "crypto-js": "^4.2.0",
     "lodash": "^4.17.21",
     "mammoth": "^1.6.0",
     "md-utils-ts": "^2.0.0",
