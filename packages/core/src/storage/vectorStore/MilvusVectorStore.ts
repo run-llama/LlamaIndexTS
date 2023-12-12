@@ -67,9 +67,8 @@ export class MilvusVectorStore implements VectorStore {
       data: nodes.map(node => {
         return {
           //id: node.id_,
-          vector: node.getEmbedding(),
-          content: node.getContent(MetadataMode.ALL),
-          type: node.getType(),
+          embedding: node.getEmbedding(),
+          content: node.getContent(MetadataMode.NONE),
           metadata: node.metadata,
         }
       })
@@ -103,20 +102,17 @@ export class MilvusVectorStore implements VectorStore {
       collection_name: this.collection,
       limit: query.similarityTopK,
       vector: query.queryEmbedding,
-
     })
 
     return {
       nodes: found.results.map(result => {
         result.id
 
-        console.log('result', result)
-
         return new Document({
           id_: result.id,
           metadata: result.metadata ?? {},
           text: result.content,
-          embedding: result.vector,
+          embedding: result.embedding,
         })
       }),
       similarities: found.results.map(result => result.score),

@@ -3,7 +3,7 @@ import {
   PapaCSVReader,
   storageContextFromDefaults,
   VectorStoreIndex,
-} from "llamaindex";
+} from "llamaindex"
 import { DataType } from '@zilliz/milvus2-sdk-node'
 
 const collectionName = "movie_reviews";
@@ -22,46 +22,36 @@ async function main() {
       collection_name: collectionName,
       fields: [
         {
-          name: 'reviewid',
-          description: 'ID field',
+          name: 'id',
           data_type: DataType.Int64,
           is_primary_key: true,
           autoID: true,
         },
         {
-          name: 'reviewtext',
+          name: 'embedding',
+          data_type: DataType.FloatVector,
+          dim: 1536,
+        },
+        {
+          name: 'content',
           data_type: DataType.VarChar,
           max_length: 9000
         },
         {
-          name: 'title',
-          data_type: DataType.VarChar,
-          max_length: 100
-        },
-        {
-          name: 'criticname',
-          data_type: DataType.VarChar,
-          max_length: 100
-        },
-        {
-          name: 'reviewstate',
-          data_type: DataType.VarChar,
-          max_length: 20
-        },
-        {
-          name: 'originalscore',
-          data_type: DataType.VarChar,
-          max_length: 10
-        },
-        {
-          name: 'creationdate',
-          data_type: DataType.VarChar,
-          max_length: 10
+          name: 'metadata',
+          data_type: DataType.JSON
         },
       ],
-      vector: { size: 1536, function: "cosine" },
+    });
+    await milvus.createIndex({
+      collection_name: collectionName,
+      field_name: 'vector',
+      index_type: 'HNSW',
+      params: { efConstruction: 10, M: 4 },
+      metric_type: 'L2',
     });
     await vectorStore.connect(collectionName);
+
 
     const ctx = await storageContextFromDefaults({ vectorStore });
     const index = await VectorStoreIndex.fromDocuments(docs, {
