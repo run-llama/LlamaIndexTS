@@ -1,4 +1,4 @@
-import { ClientConfig, DeleteReq, MilvusClient } from '@zilliz/milvus2-sdk-node'
+import { ClientConfig, DeleteReq, MilvusClient, RowData } from '@zilliz/milvus2-sdk-node'
 import { BaseNode, Document, Metadata, MetadataMode } from '../../Node'
 import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from './types'
 import { ChannelOptions } from '@grpc/grpc-js';
@@ -10,6 +10,11 @@ export class MilvusVectorStore implements VectorStore {
   private milvusClient: MilvusClient
   private collection: string = ''
 
+  private idKey: string;
+  private contentKey: string | undefined; // if undefined the entirety of the node aside from the id and embedding will be stored as content
+  private metadataKey: string;
+  private embeddingKey: string;
+
   constructor(init?: Partial<{ milvusClient: MilvusClient }> & {
     params?: {
       configOrAddress: ClientConfig | string,
@@ -18,6 +23,10 @@ export class MilvusVectorStore implements VectorStore {
       password?: string,
       channelOptions?: ChannelOptions
     };
+    idKey?: string;
+    contentKey?: string;
+    metadataKey?: string;
+    embeddingKey?: string;
   }) {
     if (init?.milvusClient) {
       this.milvusClient = init.milvusClient;
@@ -42,6 +51,11 @@ export class MilvusVectorStore implements VectorStore {
         init?.params?.channelOptions,
       )
     }
+
+    this.idKey = init?.idKey ?? "id";
+    this.contentKey = init?.contentKey;
+    this.metadataKey = init?.metadataKey ?? "metadata";
+    this.embeddingKey = init?.embeddingKey ?? "embedding";
   }
 
   public client(): MilvusClient {
@@ -65,12 +79,17 @@ export class MilvusVectorStore implements VectorStore {
     const result = await this.milvusClient.insert({
       collection_name: this.collection,
       data: nodes.map(node => {
-        return {
+        const entry: RowData = {
           //id: node.id_,
-          embedding: node.getEmbedding(),
-          content: node.getContent(MetadataMode.NONE),
-          metadata: node.metadata,
+          [this.embeddingKey]: node.getEmbedding(),
+          [this.metadataKey]: node.metadata,
         }
+
+        if (this.contentKey) {
+          entry[this.contentKey] = node.getContent(MetadataMode.NONE)
+        }
+
+        return entry
       })
     })
 
@@ -106,13 +125,11 @@ export class MilvusVectorStore implements VectorStore {
 
     return {
       nodes: found.results.map(result => {
-        result.id
-
         return new Document({
-          id_: result.id,
-          metadata: result.metadata ?? {},
-          text: result.content,
-          embedding: result.embedding,
+          id_: result[this.idKey],
+          metadata: result[this.metadataKey] ?? {},
+          text: this.contentKey ? result[this.contentKey] : JSON.stringify(result),
+          embedding: result[this.embeddingKey],
         })
       }),
       similarities: found.results.map(result => result.score),
