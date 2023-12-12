@@ -12,7 +12,7 @@ LlamaIndex.TS aims to be a lightweight, easy to use set of libraries to help you
 
 ## Getting started with an example:
 
-LlamaIndex.TS requries Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
+LlamaIndex.TS requires Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
 
 In a new folder:
 
@@ -86,7 +86,7 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 ## Note: NextJS:
 
-If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the follow config to your next.config.js to have it use imports/exports in the same way Node does.
+If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the following config to your next.config.js to have it use imports/exports in the same way Node does.
 
 ```js
 export const runtime = "nodejs"; // default
@@ -96,6 +96,15 @@ export const runtime = "nodejs"; // default
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      sharp$: false,
+      "onnxruntime-node$": false,
+      mongodb$: false,
+    };
+    return config;
+  },
   experimental: {
     serverComponentsExternalPackages: ["pdf-parse"], // Puts pdf-parse in actual NodeJS mode with NextJS App Router
   },
@@ -109,6 +118,7 @@ module.exports = nextConfig;
 - OpenAI GPT-3.5-turbo and GPT-4
 - Anthropic Claude Instant and Claude 2
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
+- MistralAI Chat LLMs
 
 ## Contributing:
 

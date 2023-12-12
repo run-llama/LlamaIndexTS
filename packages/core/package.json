@@ -5,6 +5,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.9.1",
     "@datastax/astra-db-ts": "^0.1.0",
+    "@mistralai/mistralai": "^0.0.7",
     "@notionhq/client": "^2.2.14",
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.1",
+    "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.2",
     "@types/papaparse": "^5.3.14",
