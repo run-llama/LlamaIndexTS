@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     const llm = new OpenAI({
       model: MODEL,
-      maxTokens: 2048,
+      maxTokens: 512,
     });
 
     const chatEngine = await createChatEngine(llm);
