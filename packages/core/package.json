@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.1",
+    "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.2",
     "@types/papaparse": "^5.3.14",
