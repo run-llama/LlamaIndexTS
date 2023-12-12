@@ -1,21 +1,21 @@
-# DataStax AstraDB Vector Store
+# Milvus Vector Store
 
-Here are two sample scripts which work well with the sample data in the Astra Portal
+Here are two sample scripts which work with loading and querying data from a Milvus Vector Store.
 
 ## Prerequisites
 
-- An Astra DB account. You can [create one here](https://astra.datastax.com/register).
-  - An Astra Vector Database
+- An Milvus Vector Database
+  - Hosted https://milvus.io/
+  - Self Hosted https://milvus.io/docs/install_standalone-docker.md
 - An OpenAI API Key
 
 ## Setup
 
 1. Set your env variables:
 
-- `ASTRA_DB_ID`: Your Astra DB vector database id
-- `ASTRA_DB_APPLICATION_TOKEN`: The generated app token for your Astra database
-- `ASTRA_DB_REGION`: Your Astra DB database region
-- `ASTRA_DB_NAMESPACE`: The existing Astra Namespace/Keyspace (if you don't set this it will default to `default_keyspace`)
+- `MILVUS_ADDRESS`: Address of your Milvus Vector Store (like localhost:19530)
+- `MILVUS_USERNAME`: empty or username for your Milvus Vector Store
+- `MILVUS_PASSWORD`: empty or password for your Milvus Vector Store
 - `OPENAI_API_KEY`: Your OpenAI key
 
 2. `cd` Into the `examples` directory
@@ -23,12 +23,12 @@ Here are two sample scripts which work well with the sample data in the Astra Po
 
 ## Load the data
 
-This sample loads the same dataset of movie reviews as the Astra Portal sample dataset. (Feel free to load the data in your the Astra Data Explorer to compare)
+This sample loads the same dataset of movie reviews as sample dataset. You can install https://github.com/zilliztech/attu to inspect the loaded data.
 
-run `ts-node astradb/load`
+run `ts-node milvus/load`
 
 ## Use RAG to Query the data
 
-Check out your data in the Astra Data Explorer and change the sample query as you see fit.
+Check out your data in Attu and change the sample query as you see fit.
 
-run `ts-node astradb/query`
+run `ts-node milvus/query`
