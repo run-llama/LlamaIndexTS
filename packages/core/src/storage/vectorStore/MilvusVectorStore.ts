@@ -82,16 +82,20 @@ export class MilvusVectorStore implements VectorStore {
         const entry: RowData = {
           [this.idKey]: node.id_,
           [this.embeddingKey]: node.getEmbedding(),
-          [this.metadataKey]: node.metadata,
+          [this.metadataKey]: node.metadata ?? {},
         }
 
         if (this.contentKey) {
-          entry[this.contentKey] = node.getContent(MetadataMode.NONE)
+          entry[this.contentKey] = String(node.getContent(MetadataMode.NONE))
         }
 
         return entry
       })
     })
+
+    if (!result.IDs) {
+      return []
+    }
 
     if ('int_id' in result.IDs) {
       return result.IDs.int_id.data.map(i => String(i))
