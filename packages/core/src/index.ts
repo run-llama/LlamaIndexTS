@@ -18,7 +18,7 @@ export * from "./callbacks/CallbackManager";
 export * from "./constants";
 export * from "./embeddings";
 export * from "./indices";
-export * from "./llm/LLM";
+export * from "./llm";
 export * from "./readers/AssemblyAI";
 export * from "./readers/CSVReader";
 export * from "./readers/HTMLReader";
