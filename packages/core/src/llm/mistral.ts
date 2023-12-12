@@ -7,9 +7,9 @@ import {
 import { ChatMessage, ChatResponse, LLM } from "./LLM";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
-  "mistral-tiny": { contextWindow: 4096 },
-  "mistral-small": { contextWindow: 4096 },
-  "mistral-medium": { contextWindow: 4096 },
+  "mistral-tiny": { contextWindow: 32000 },
+  "mistral-small": { contextWindow: 32000 },
+  "mistral-medium": { contextWindow: 32000 },
 };
 
 export class MistralAISession {
