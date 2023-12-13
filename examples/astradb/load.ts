@@ -14,7 +14,7 @@ async function main() {
 
     const astraVS = new AstraDBVectorStore();
     await astraVS.create(collectionName, {
-      vector: { size: 1536, function: "cosine" },
+      vector: { dimension: 1536, metric: "cosine" },
     });
     await astraVS.connect(collectionName);
 
