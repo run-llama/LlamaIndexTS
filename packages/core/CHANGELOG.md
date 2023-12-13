@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.0.39
+
+### Patch Changes
+
+- 21510bd: Added support for MistralAI (LLM and Embeddings)
+- 25141b8: Add support for AstraDB vector store
+
 ## 0.0.38
 
 ### Patch Changes
