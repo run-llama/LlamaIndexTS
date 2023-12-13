@@ -21,6 +21,11 @@ module.exports = {
           "AZURE_OPENAI_API_VERSION",
           "AZURE_OPENAI_DEPLOYMENT",
 
+          "MILVUS_ADDRESS",
+          "MILVUS_SSL",
+          "MILVUS_USERNAME",
+          "MILVUS_PASSWORD",
+
           "OPENAI_API_BASE",
           "OPENAI_API_VERSION",
           "OPENAI_API_TYPE",
