@@ -25,10 +25,10 @@ Here are two sample scripts which work well with the sample data in the Astra Po
 
 This sample loads the same dataset of movie reviews as the Astra Portal sample dataset. (Feel free to load the data in your the Astra Data Explorer to compare)
 
-run `ts-node astradb/load`
+run `npx ts-node astradb/load`
 
 ## Use RAG to Query the data
 
 Check out your data in the Astra Data Explorer and change the sample query as you see fit.
 
-run `ts-node astradb/query`
+run `npx ts-node astradb/query`
