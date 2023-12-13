@@ -1,32 +1,41 @@
 import {
   ImageNode,
   serviceContextFromDefaults,
-  SimpleDirectoryReader,
   SimpleVectorStore,
+  storageContextFromDefaults,
   TextNode,
   VectorStoreIndex,
 } from "llamaindex";
 import * as path from "path";
 
-async function main() {
-  // read data into documents
-  const reader = new SimpleDirectoryReader();
-  const documents = await reader.loadData({
-    directoryPath: "data/multi_modal",
-  });
+export async function createRetriever() {
   // set up vector store index with two vector stores, one for text, the other for images
-  const serviceContext = serviceContextFromDefaults({ chunkSize: 512 });
-  const vectorStore = await SimpleVectorStore.fromPersistDir("./storage/text");
-  const imageVectorStore =
-    await SimpleVectorStore.fromPersistDir("./storage/images");
-  const index = await VectorStoreIndex.fromDocuments(documents, {
-    serviceContext,
-    imageVectorStore,
-    vectorStore,
+  const serviceContext = serviceContextFromDefaults({
+    chunkSize: 512,
+    chunkOverlap: 20,
   });
+  const vectorStore = await SimpleVectorStore.fromPersistDir(
+    path.join("storage", "text"),
+  );
+  const imageVectorStore = await SimpleVectorStore.fromPersistDir(
+    path.join("storage", "images"),
+  );
+  const storageContext = await storageContextFromDefaults({
+    persistDir: "storage",
+    vectorStore,
+    imageVectorStore,
+  });
+  const index = await VectorStoreIndex.init({
+    nodes: [],
+    storageContext,
+    serviceContext,
+  });
+  return index.asRetriever({ similarityTopK: 3 });
+}
+
+async function main() {
   // retrieve documents using the index
-  const retriever = index.asRetriever();
-  retriever.similarityTopK = 3;
+  const retriever = await createRetriever();
   const results = await retriever.retrieve(
     "what are Vincent van Gogh's famous paintings",
   );
