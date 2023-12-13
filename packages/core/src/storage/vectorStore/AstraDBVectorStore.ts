@@ -52,7 +52,6 @@ export class AstraDBVectorStore implements VectorStore {
    * Create a new collection in your Astra DB vector database.
    * You must still use connect() to connect to the collection.
    *
-   * @TODO align options type with the JSON API's expected format
    * @param collection your new colletion's name
    * @param options: CreateCollectionOptions used to set the number of vector dimensions and similarity metric
    * @returns Promise that resolves if the creation did not throw an error.
