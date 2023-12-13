@@ -66,7 +66,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     this.indexStore = init.indexStore;
     this.vectorStore = init.vectorStore ?? init.storageContext.vectorStore;
     this.embedModel = init.serviceContext.embedModel;
-    this.imageVectorStore = init.imageVectorStore;
+    this.imageVectorStore =
+      init.imageVectorStore ?? init.storageContext.imageVectorStore;
     if (this.imageVectorStore) {
       this.imageEmbedModel = new ClipEmbedding();
     }
@@ -219,6 +220,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   static async fromVectorStore(
     vectorStore: VectorStore,
     serviceContext: ServiceContext,
+    imageVectorStore?: VectorStore,
   ) {
     if (!vectorStore.storesText) {
       throw new Error(
@@ -226,7 +228,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       );
     }
 
-    const storageContext = await storageContextFromDefaults({ vectorStore });
+    const storageContext = await storageContextFromDefaults({
+      vectorStore,
+      imageVectorStore,
+    });
 
     const index = await this.init({
       nodes: [],
