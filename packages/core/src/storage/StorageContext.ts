@@ -11,12 +11,14 @@ export interface StorageContext {
   docStore: BaseDocumentStore;
   indexStore: BaseIndexStore;
   vectorStore: VectorStore;
+  imageVectorStore?: VectorStore;
 }
 
 type BuilderParams = {
   docStore?: BaseDocumentStore;
   indexStore?: BaseIndexStore;
   vectorStore?: VectorStore;
+  imageVectorStore?: VectorStore;
   persistDir?: string;
   fs?: GenericFileSystem;
 };
@@ -25,6 +27,7 @@ export async function storageContextFromDefaults({
   docStore,
   indexStore,
   vectorStore,
+  imageVectorStore,
   persistDir,
   fs,
 }: BuilderParams): Promise<StorageContext> {
@@ -51,5 +54,6 @@ export async function storageContextFromDefaults({
     docStore,
     indexStore,
     vectorStore,
+    imageVectorStore,
   };
 }
