@@ -104,6 +104,42 @@ const nextConfig = {
 module.exports = nextConfig;
 ```
 
+### NextJS with Milvus:
+
+As proto files are not loaded per default in NextJS, you'll need to add the following to your next.config.js to have it load the proto files.
+
+```js
+const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Copy the proto files to the server build directory
+      config.plugins.push(
+        new CopyWebpackPlugin({
+          patterns: [
+            {
+              from: path.join(
+                __dirname,
+                "node_modules/@zilliz/milvus2-sdk-node/dist"
+              ),
+              to: path.join(__dirname, ".next"),
+            },
+          ],
+        })
+      );
+    }
+    // Important: return the modified config
+    return config;
+  },
+};
+
+module.exports = nextConfig;
+```
+
 ## Supported LLMs:
 
 - OpenAI GPT-3.5-turbo and GPT-4
