@@ -25,10 +25,10 @@ Here are two sample scripts which work with loading and querying data from a Mil
 
 This sample loads the same dataset of movie reviews as sample dataset. You can install https://github.com/zilliztech/attu to inspect the loaded data.
 
-run `ts-node milvus/load`
+run `npx ts-node milvus/load`
 
 ## Use RAG to Query the data
 
 Check out your data in Attu and change the sample query as you see fit.
 
-run `ts-node milvus/query`
+run `npx ts-node milvus/query`
