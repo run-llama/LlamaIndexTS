@@ -1,6 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import { Event } from "./callbacks/CallbackManager";
-import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
@@ -8,10 +6,13 @@ import {
   SubQuestion,
 } from "./QuestionGenerator";
 import { Response } from "./Response";
-import { CompactAndRefine, ResponseSynthesizer } from "./ResponseSynthesizer";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
+import { Event } from "./callbacks/CallbackManager";
+import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
+import { CompactAndRefine, ResponseSynthesizer } from "./synthesizers";
+import { BaseSynthesizer } from "./synthesizers/types";
 
 /**
  * A query engine is a question answerer that can use one or more steps.
@@ -30,13 +31,13 @@ export interface BaseQueryEngine {
  */
 export class RetrieverQueryEngine implements BaseQueryEngine {
   retriever: BaseRetriever;
-  responseSynthesizer: ResponseSynthesizer;
+  responseSynthesizer: BaseSynthesizer;
   nodePostprocessors: BaseNodePostprocessor[];
   preFilters?: unknown;
 
   constructor(
     retriever: BaseRetriever,
-    responseSynthesizer?: ResponseSynthesizer,
+    responseSynthesizer?: BaseSynthesizer,
     preFilters?: unknown,
     nodePostprocessors?: BaseNodePostprocessor[],
   ) {
@@ -81,14 +82,14 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
 export class SubQuestionQueryEngine implements BaseQueryEngine {
-  responseSynthesizer: ResponseSynthesizer;
+  responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: Record<string, BaseQueryEngine>;
   metadatas: ToolMetadata[];
 
   constructor(init: {
     questionGen: BaseQuestionGenerator;
-    responseSynthesizer: ResponseSynthesizer;
+    responseSynthesizer: BaseSynthesizer;
     queryEngineTools: QueryEngineTool[];
   }) {
     this.questionGen = init.questionGen;
@@ -106,7 +107,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
   static fromDefaults(init: {
     queryEngineTools: QueryEngineTool[];
     questionGen?: BaseQuestionGenerator;
-    responseSynthesizer?: ResponseSynthesizer;
+    responseSynthesizer?: BaseSynthesizer;
     serviceContext?: ServiceContext;
   }) {
     const serviceContext =

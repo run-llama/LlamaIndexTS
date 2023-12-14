@@ -1,20 +1,21 @@
 import _ from "lodash";
 import { BaseNode, Document } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
-import {
-  CompactAndRefine,
-  ResponseSynthesizer,
-} from "../../ResponseSynthesizer";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
-import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   StorageContext,
   storageContextFromDefaults,
 } from "../../storage/StorageContext";
+import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
+import {
+  BaseSynthesizer,
+  CompactAndRefine,
+  ResponseSynthesizer,
+} from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,
@@ -155,7 +156,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
-    responseSynthesizer?: ResponseSynthesizer;
+    responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {

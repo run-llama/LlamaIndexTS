@@ -11,7 +11,7 @@ import { Document } from "../Node";
 import {
   ResponseSynthesizer,
   SimpleResponseBuilder,
-} from "../ResponseSynthesizer";
+} from "../synthesizers";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
