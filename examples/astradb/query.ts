@@ -4,7 +4,7 @@ import {
   VectorStoreIndex,
 } from "llamaindex";
 
-const collectionName = "movie_reviews_2";
+const collectionName = "movie_reviews";
 
 async function main() {
   try {

@@ -107,8 +107,8 @@ importers:
   examples:
     dependencies:
       '@datastax/astra-db-ts':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.2
+        version: 0.1.2
       '@notionhq/client':
         specifier: ^2.2.13
         version: 2.2.13
@@ -141,8 +141,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       '@datastax/astra-db-ts':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.2
+        version: 0.1.2
       '@mistralai/mistralai':
         specifier: ^0.0.7
         version: 0.0.7
@@ -2313,8 +2313,8 @@ packages:
       kuler: 2.0.0
     dev: false
 
-  /@datastax/astra-db-ts@0.1.0:
-    resolution: {integrity: sha512-GnF+9ntFBnh7TfDjRQew8NB4FoXJOyt34K5RbY4M7aqKw87Mtp1hbttwMDsor/ouX+pqpnw7kSrVVyMHKmo8kQ==}
+  /@datastax/astra-db-ts@0.1.2:
+    resolution: {integrity: sha512-JfgQCjNuyqJ4ki38pWBBz9oR/UJHJDruqjSLAZp0sjFr17asr2QMNsNTiW30otNqjA+mWBy9lS6x+mFXESvr0Q==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     requiresBuild: true
