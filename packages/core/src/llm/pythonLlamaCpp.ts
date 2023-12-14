@@ -1,4 +1,4 @@
-import { LlamaCpp } from 'python-llama-cpp';
+import { LlamaCpp } from 'node-llama-cpp';
 
 export class PythonLlamaCpp {
   private llamaCpp: LlamaCpp;
