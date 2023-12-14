@@ -9,7 +9,7 @@ export * from "./PromptHelper";
 export * from "./QueryEngine";
 export * from "./QuestionGenerator";
 export * from "./Response";
-export * from "./ResponseSynthesizer";
+export * from "./synthesizers";
 export * from "./Retriever";
 export * from "./ServiceContext";
 export * from "./TextSplitter";
