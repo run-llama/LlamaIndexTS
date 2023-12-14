@@ -2,7 +2,6 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
   SimpleDirectoryReader,
-  SimpleVectorStore,
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
@@ -22,17 +21,9 @@ async function generateDatasource(serviceContext: ServiceContext) {
     const documents = await new SimpleDirectoryReader().loadData({
       directoryPath: path.join("multimodal", "data"),
     });
-    // set up vector store index with two vector stores, one for text, the other for images
-    const vectorStore = await SimpleVectorStore.fromPersistDir(
-      path.join("storage", "text"),
-    );
-    const imageVectorStore = await SimpleVectorStore.fromPersistDir(
-      path.join("storage", "images"),
-    );
     const storageContext = await storageContextFromDefaults({
       persistDir: "storage",
-      vectorStore,
-      imageVectorStore,
+      storeImages: true,
     });
     await VectorStoreIndex.fromDocuments(documents, {
       serviceContext,
