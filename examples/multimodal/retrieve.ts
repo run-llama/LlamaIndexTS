@@ -7,7 +7,7 @@ import {
 } from "llamaindex";
 import * as path from "path";
 
-export async function createRetriever() {
+export async function createIndex() {
   // set up vector store index with two vector stores, one for text, the other for images
   const serviceContext = serviceContextFromDefaults({
     chunkSize: 512,
@@ -17,17 +17,17 @@ export async function createRetriever() {
     persistDir: "storage",
     storeImages: true,
   });
-  const index = await VectorStoreIndex.init({
+  return await VectorStoreIndex.init({
     nodes: [],
     storageContext,
     serviceContext,
   });
-  return index.asRetriever({ similarityTopK: 3 });
 }
 
 async function main() {
   // retrieve documents using the index
-  const retriever = await createRetriever();
+  const index = await createIndex();
+  const retriever = index.asRetriever({ similarityTopK: 3 });
   const results = await retriever.retrieve(
     "what are Vincent van Gogh's famous paintings",
   );

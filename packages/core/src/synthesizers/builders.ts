@@ -1,6 +1,5 @@
-import { Event } from "./callbacks/CallbackManager";
-import { LLM } from "./llm/LLM";
-import { MetadataMode, NodeWithScore } from "./Node";
+import { Event } from "../callbacks/CallbackManager";
+import { LLM } from "../llm/LLM";
 import {
   defaultRefinePrompt,
   defaultTextQaPrompt,
@@ -9,10 +8,9 @@ import {
   SimplePrompt,
   TextQaPrompt,
   TreeSummarizePrompt,
-} from "./Prompt";
-import { getBiggestPrompt } from "./PromptHelper";
-import { Response } from "./Response";
-import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
+} from "../Prompt";
+import { getBiggestPrompt } from "../PromptHelper";
+import { ServiceContext } from "../ServiceContext";
 
 /**
  * Response modes of the response synthesizer
@@ -27,7 +25,7 @@ enum ResponseMode {
 /**
  * A ResponseBuilder is used in a response synthesizer to generate a response from multiple response chunks.
  */
-interface BaseResponseBuilder {
+export interface BaseResponseBuilder {
   /**
    * Get the response from a query and a list of text chunks.
    * @param query
@@ -281,48 +279,5 @@ export function getResponseBuilder(
       return new TreeSummarize(serviceContext);
     default:
       return new CompactAndRefine(serviceContext);
-  }
-}
-
-/**
- * A ResponseSynthesizer is used to generate a response from a query and a list of nodes.
- */
-export class ResponseSynthesizer {
-  responseBuilder: BaseResponseBuilder;
-  serviceContext: ServiceContext;
-  metadataMode: MetadataMode;
-
-  constructor({
-    responseBuilder,
-    serviceContext,
-    metadataMode = MetadataMode.NONE,
-  }: {
-    responseBuilder?: BaseResponseBuilder;
-    serviceContext?: ServiceContext;
-    metadataMode?: MetadataMode;
-  } = {}) {
-    this.serviceContext = serviceContext ?? serviceContextFromDefaults();
-    this.responseBuilder =
-      responseBuilder ?? getResponseBuilder(this.serviceContext);
-    this.metadataMode = metadataMode;
-  }
-
-  async synthesize(
-    query: string,
-    nodesWithScore: NodeWithScore[],
-    parentEvent?: Event,
-  ) {
-    let textChunks: string[] = nodesWithScore.map(({ node }) =>
-      node.getContent(this.metadataMode),
-    );
-    const response = await this.responseBuilder.getResponse(
-      query,
-      textChunks,
-      parentEvent,
-    );
-    return new Response(
-      response,
-      nodesWithScore.map(({ node }) => node),
-    );
   }
 }
