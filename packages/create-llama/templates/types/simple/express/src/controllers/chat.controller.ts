@@ -1,11 +1,30 @@
-import { NextFunction, Request, Response } from "express";
-import { ChatMessage, OpenAI } from "llamaindex";
+import { Request, Response } from "express";
+import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
 import { MODEL } from "../../constants";
 import { createChatEngine } from "./engine";
 
-export const chat = async (req: Request, res: Response, next: NextFunction) => {
+const getLastMessageContent = (
+  textMessage: string,
+  imageUrl: string | undefined,
+): MessageContent => {
+  if (!imageUrl) return textMessage;
+  return [
+    {
+      type: "text",
+      text: textMessage,
+    },
+    {
+      type: "image_url",
+      image_url: {
+        url: imageUrl,
+      },
+    },
+  ];
+};
+
+export const chat = async (req: Request, res: Response) => {
   try {
-    const { messages }: { messages: ChatMessage[] } = JSON.parse(req.body);
+    const { messages, data }: { messages: ChatMessage[]; data: any } = req.body;
     const lastMessage = messages.pop();
     if (!messages || !lastMessage || lastMessage.role !== "user") {
       return res.status(400).json({
@@ -18,9 +37,17 @@ export const chat = async (req: Request, res: Response, next: NextFunction) => {
       model: MODEL,
     });
 
+    const lastMessageContent = getLastMessageContent(
+      lastMessage.content,
+      data?.imageUrl,
+    );
+
     const chatEngine = await createChatEngine(llm);
 
-    const response = await chatEngine.chat(lastMessage.content, messages);
+    const response = await chatEngine.chat(
+      lastMessageContent as MessageContent,
+      messages,
+    );
     const result: ChatMessage = {
       role: "assistant",
       content: response.response,
