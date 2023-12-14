@@ -1,7 +1,6 @@
 import {
   ImageNode,
   serviceContextFromDefaults,
-  SimpleVectorStore,
   storageContextFromDefaults,
   TextNode,
   VectorStoreIndex,
@@ -14,16 +13,9 @@ export async function createRetriever() {
     chunkSize: 512,
     chunkOverlap: 20,
   });
-  const vectorStore = await SimpleVectorStore.fromPersistDir(
-    path.join("storage", "text"),
-  );
-  const imageVectorStore = await SimpleVectorStore.fromPersistDir(
-    path.join("storage", "images"),
-  );
   const storageContext = await storageContextFromDefaults({
     persistDir: "storage",
-    vectorStore,
-    imageVectorStore,
+    storeImages: true,
   });
   const index = await VectorStoreIndex.init({
     nodes: [],
