@@ -12,10 +12,8 @@ Here are two sample scripts which work well with the sample data in the Astra Po
 
 1. Set your env variables:
 
-- `ASTRA_DB_ID`: Your Astra DB vector database id
 - `ASTRA_DB_APPLICATION_TOKEN`: The generated app token for your Astra database
-- `ASTRA_DB_REGION`: Your Astra DB database region
-- `ASTRA_DB_NAMESPACE`: The existing Astra Namespace/Keyspace (if you don't set this it will default to `default_keyspace`)
+- `ASTRA_DB_ENDPOINT`: The API endpoint for your Astra database
 - `OPENAI_API_KEY`: Your OpenAI key
 
 2. `cd` Into the `examples` directory

@@ -1,5 +1,6 @@
 import { AstraDB } from "@datastax/astra-db-ts";
 import { Collection } from "@datastax/astra-db-ts/dist/collections";
+import { CreateCollectionOptions } from "@datastax/astra-db-ts/dist/collections/options";
 import { BaseNode, Document, MetadataMode } from "../../Node";
 import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
 
@@ -20,9 +21,7 @@ export class AstraDBVectorStore implements VectorStore {
     init?: Partial<AstraDBVectorStore> & {
       params?: {
         token: string;
-        dbId: string;
-        region: string;
-        keyspace: string;
+        endpoint: string;
       };
     },
   ) {
@@ -31,22 +30,17 @@ export class AstraDBVectorStore implements VectorStore {
     } else {
       const token =
         init?.params?.token ?? process.env.ASTRA_DB_APPLICATION_TOKEN;
-      const dbId = init?.params?.dbId ?? process.env.ASTRA_DB_ID;
-      const region = init?.params?.region ?? process.env.ASTRA_DB_REGION;
-      const keyspace = init?.params?.keyspace ?? process.env.ASTRA_DB_NAMESPACE;
+      const endpoint = init?.params?.endpoint ?? process.env.ASTRA_DB_ENDPOINT;
 
-      if (!dbId) {
-        throw new Error("Must specify ASTRA_DB_ID via env variable.");
-      }
       if (!token) {
         throw new Error(
           "Must specify ASTRA_DB_APPLICATION_TOKEN via env variable.",
         );
       }
-      if (!region) {
-        throw new Error("Must specify ASTRA_DB_REGION via env variable.");
+      if (!endpoint) {
+        throw new Error("Must specify ASTRA_DB_ENDPOINT via env variable.");
       }
-      this.astraDBClient = new AstraDB(token, dbId, region, keyspace);
+      this.astraDBClient = new AstraDB(token, endpoint);
     }
 
     this.idKey = init?.idKey ?? "_id";
@@ -58,12 +52,14 @@ export class AstraDBVectorStore implements VectorStore {
    * Create a new collection in your Astra DB vector database.
    * You must still use connect() to connect to the collection.
    *
-   * @TODO align options type with the JSON API's expected format
    * @param collection your new colletion's name
    * @param options: CreateCollectionOptions used to set the number of vector dimensions and similarity metric
    * @returns Promise that resolves if the creation did not throw an error.
    */
-  async create(collection: string, options: any): Promise<void> {
+  async create(
+    collection: string,
+    options: CreateCollectionOptions,
+  ): Promise<void> {
     await this.astraDBClient.createCollection(collection, options);
     console.debug("Created Astra DB collection");
 
@@ -118,7 +114,7 @@ export class AstraDBVectorStore implements VectorStore {
     console.debug(`Adding ${dataToInsert.length} rows to table`);
 
     // Perform inserts in steps of MAX_INSERT_BATCH_SIZE
-    let batchData = [];
+    let batchData: any[] = [];
 
     for (let i = 0; i < dataToInsert.length; i += MAX_INSERT_BATCH_SIZE) {
       batchData.push(dataToInsert.slice(i, i + MAX_INSERT_BATCH_SIZE));
