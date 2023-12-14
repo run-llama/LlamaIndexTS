@@ -13,7 +13,12 @@ export default function ChatSection() {
     handleInputChange,
     reload,
     stop,
-  } = useChat({ api: process.env.NEXT_PUBLIC_CHAT_API });
+  } = useChat({
+    api: process.env.NEXT_PUBLIC_CHAT_API,
+    headers: {
+      "Content-Type": "application/json", // using JSON because of vercel/ai 2.2.26
+    },
+  });
 
   return (
     <div className="space-y-4 max-w-5xl w-full">
