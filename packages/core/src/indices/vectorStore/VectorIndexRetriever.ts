@@ -1,10 +1,10 @@
+import { globalsHelper } from "../../GlobalsHelper";
+import { ImageNode, Metadata, NodeWithScore } from "../../Node";
+import { BaseRetriever } from "../../Retriever";
+import { ServiceContext } from "../../ServiceContext";
 import { Event } from "../../callbacks/CallbackManager";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants";
 import { BaseEmbedding } from "../../embeddings";
-import { globalsHelper } from "../../GlobalsHelper";
-import { Metadata, NodeWithScore } from "../../Node";
-import { BaseRetriever } from "../../Retriever";
-import { ServiceContext } from "../../ServiceContext";
 import {
   VectorStoreQuery,
   VectorStoreQueryMode,
@@ -108,6 +108,12 @@ export class VectorIndexRetriever implements BaseRetriever {
       }
 
       const node = this.index.indexStruct.nodesDict[result.ids[i]];
+      // XXX: Hack, if it's an image node, we reconstruct the image from the URL
+      // Alternative: Store image in doc store and retrieve it here
+      if (node instanceof ImageNode) {
+        node.image = node.getUrl();
+      }
+
       nodesWithScores.push({
         node: node,
         score: result.similarities[i],

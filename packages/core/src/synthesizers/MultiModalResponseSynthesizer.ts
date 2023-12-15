@@ -1,8 +1,14 @@
 import { MessageContentDetail } from "../ChatEngine";
-import { MetadataMode, NodeWithScore, splitNodesByType } from "../Node";
+import {
+  ImageNode,
+  MetadataMode,
+  NodeWithScore,
+  splitNodesByType,
+} from "../Node";
 import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { Event } from "../callbacks/CallbackManager";
+import { imageToDataUrl } from "../embeddings";
 import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
 import { BaseSynthesizer } from "./types";
 
@@ -34,15 +40,19 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
     // TODO: use builders to generate context
     const context = textChunks.join("\n\n");
     const textPrompt = this.textQATemplate({ context, query });
-    // TODO: get images from imageNodes
+    const images = await Promise.all(
+      imageNodes.map(async (node: ImageNode) => {
+        return {
+          type: "image_url",
+          image_url: {
+            url: await imageToDataUrl(node.image),
+          },
+        } as MessageContentDetail;
+      }),
+    );
     const prompt: MessageContentDetail[] = [
       { type: "text", text: textPrompt },
-      {
-        type: "image_url",
-        image_url: {
-          url: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Vincent_van_Gogh_%281853-1890%29_Caf%C3%A9terras_bij_nacht_%28place_du_Forum%29_Kr%C3%B6ller-M%C3%BCller_Museum_Otterlo_23-8-2016_13-35-40.JPG",
-        },
-      },
+      ...images,
     ];
     let response = await this.serviceContext.llm.complete(prompt, parentEvent);
     return new Response(response.message.content, nodes);
