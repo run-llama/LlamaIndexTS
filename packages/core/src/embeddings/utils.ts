@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { ImageType } from "../Node";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
-import { VectorStoreQueryMode } from "../storage";
+import { DEFAULT_FS, VectorStoreQueryMode } from "../storage";
 import { SimilarityType } from "./types";
 
 /**
@@ -185,6 +185,16 @@ export function getTopKMMREmbeddings(
   return [resultSimilarities, resultIds];
 }
 
+async function blobToDataUrl(input: Blob) {
+  const { fileTypeFromBuffer } = await import("file-type");
+  const buffer = Buffer.from(await input.arrayBuffer());
+  const type = await fileTypeFromBuffer(buffer);
+  if (!type) {
+    throw new Error("Unsupported image type");
+  }
+  return "data:" + type.mime + ";base64," + buffer.toString("base64");
+}
+
 export async function readImage(input: ImageType) {
   const { RawImage } = await import("@xenova/transformers");
   if (input instanceof Blob) {
@@ -194,4 +204,54 @@ export async function readImage(input: ImageType) {
   } else {
     throw new Error(`Unsupported input type: ${typeof input}`);
   }
+}
+
+export async function imageToString(input: ImageType): Promise<string> {
+  if (input instanceof Blob) {
+    // if the image is a Blob, convert it to a base64 data URL
+    return await blobToDataUrl(input);
+  } else if (_.isString(input)) {
+    return input;
+  } else if (input instanceof URL) {
+    return input.toString();
+  } else {
+    throw new Error(`Unsupported input type: ${typeof input}`);
+  }
+}
+
+export function stringToImage(input: string): ImageType {
+  if (input.startsWith("data:")) {
+    // if the input is a base64 data URL, convert it back to a Blob
+    const base64Data = input.split(",")[1];
+    const byteArray = Buffer.from(base64Data, "base64");
+    return new Blob([byteArray]);
+  } else if (input.startsWith("http://") || input.startsWith("https://")) {
+    return new URL(input);
+  } else if (_.isString(input)) {
+    return input;
+  } else {
+    throw new Error(`Unsupported input type: ${typeof input}`);
+  }
+}
+
+export async function imageToDataUrl(input: ImageType): Promise<string> {
+  // first ensure, that the input is a Blob
+  if (
+    (input instanceof URL && input.protocol === "file:") ||
+    _.isString(input)
+  ) {
+    // string or file URL
+    const fs = DEFAULT_FS;
+    const dataBuffer = await fs.readFile(
+      input instanceof URL ? input.pathname : input,
+    );
+    input = new Blob([dataBuffer]);
+  } else if (!(input instanceof Blob)) {
+    if (input instanceof URL) {
+      throw new Error(`Unsupported URL with protocol: ${input.protocol}`);
+    } else {
+      throw new Error(`Unsupported input type: ${typeof input}`);
+    }
+  }
+  return await blobToDataUrl(input);
 }
