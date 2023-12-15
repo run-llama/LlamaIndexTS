@@ -1,4 +1,5 @@
 import CryptoJS from "crypto-js";
+import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
 export enum NodeRelationship {
@@ -303,6 +304,12 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
 
   getType(): ObjectType {
     return ObjectType.IMAGE;
+  }
+
+  getUrl(): URL {
+    // id_ stores the relative path, convert it to the URL of the file
+    const absPath = path.resolve(this.id_);
+    return new URL(`file://${absPath}`);
   }
 }
 

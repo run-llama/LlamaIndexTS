@@ -10,6 +10,7 @@
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
     "crypto-js": "^4.2.0",
+    "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.8",
     "lodash": "^4.17.21",
     "mammoth": "^1.6.0",

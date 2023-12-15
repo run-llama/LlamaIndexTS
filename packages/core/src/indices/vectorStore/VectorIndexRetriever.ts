@@ -1,10 +1,10 @@
+import { globalsHelper } from "../../GlobalsHelper";
+import { ImageNode, Metadata, NodeWithScore } from "../../Node";
+import { BaseRetriever } from "../../Retriever";
+import { ServiceContext } from "../../ServiceContext";
 import { Event } from "../../callbacks/CallbackManager";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants";
 import { BaseEmbedding } from "../../embeddings";
-import { globalsHelper } from "../../GlobalsHelper";
-import { Metadata, NodeWithScore } from "../../Node";
-import { BaseRetriever } from "../../Retriever";
-import { ServiceContext } from "../../ServiceContext";
 import {
   VectorStoreQuery,
   VectorStoreQueryMode,
@@ -18,20 +18,23 @@ import { VectorStoreIndex } from "./VectorStoreIndex";
 
 export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
-  similarityTopK;
+  similarityTopK: number;
+  imageSimilarityTopK: number;
   private serviceContext: ServiceContext;
 
   constructor({
     index,
     similarityTopK,
+    imageSimilarityTopK,
   }: {
     index: VectorStoreIndex;
     similarityTopK?: number;
+    imageSimilarityTopK?: number;
   }) {
     this.index = index;
     this.serviceContext = this.index.serviceContext;
-
     this.similarityTopK = similarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
+    this.imageSimilarityTopK = imageSimilarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
   }
 
   async retrieve(
@@ -51,7 +54,11 @@ export class VectorIndexRetriever implements BaseRetriever {
     query: string,
     preFilters?: unknown,
   ): Promise<NodeWithScore[]> {
-    const q = await this.buildVectorStoreQuery(this.index.embedModel, query);
+    const q = await this.buildVectorStoreQuery(
+      this.index.embedModel,
+      query,
+      this.similarityTopK,
+    );
     const result = await this.index.vectorStore.query(q, preFilters);
     return this.buildNodeListFromQueryResult(result);
   }
@@ -64,6 +71,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     const q = await this.buildVectorStoreQuery(
       this.index.imageEmbedModel,
       query,
+      this.imageSimilarityTopK,
     );
     const result = await this.index.imageVectorStore.query(q, preFilters);
     return this.buildNodeListFromQueryResult(result);
@@ -89,13 +97,14 @@ export class VectorIndexRetriever implements BaseRetriever {
   protected async buildVectorStoreQuery(
     embedModel: BaseEmbedding,
     query: string,
+    similarityTopK: number,
   ): Promise<VectorStoreQuery> {
     const queryEmbedding = await embedModel.getQueryEmbedding(query);
 
     return {
       queryEmbedding: queryEmbedding,
       mode: VectorStoreQueryMode.DEFAULT,
-      similarityTopK: this.similarityTopK,
+      similarityTopK: similarityTopK,
     };
   }
 
@@ -108,6 +117,12 @@ export class VectorIndexRetriever implements BaseRetriever {
       }
 
       const node = this.index.indexStruct.nodesDict[result.ids[i]];
+      // XXX: Hack, if it's an image node, we reconstruct the image from the URL
+      // Alternative: Store image in doc store and retrieve it here
+      if (node instanceof ImageNode) {
+        node.image = node.getUrl();
+      }
+
       nodesWithScores.push({
         node: node,
         score: result.similarities[i],
