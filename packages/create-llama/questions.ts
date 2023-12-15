@@ -257,12 +257,7 @@ export const askQuestions = async (
                 title: "No, just store the data in the file system",
                 value: "none",
               },
-              {
-                title: "AstraDB",
-                value: "astra",
-              },
               { title: "MongoDB", value: "mongo" },
-              { title: "Postgres Vector Store", value: "pg" },
             ],
             initial: 0,
           },
