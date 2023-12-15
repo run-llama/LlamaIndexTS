@@ -227,20 +227,44 @@ export const askQuestions = async (
           {
             type: "select",
             name: "engine",
-            message: "Which chat engine would you like to use?",
+            message: "Which data source would you like to use?",
             choices: [
-              { title: "ContextChatEngine", value: "context" },
               {
-                title: "SimpleChatEngine (no data, just chat)",
+                title: "No data, just a simple chat",
                 value: "simple",
               },
+              { title: "Use an example PDF", value: "context" },
             ],
-            initial: 0,
+            initial: 1,
           },
           handlers,
         );
         program.engine = engine;
         preferences.engine = engine;
+      }
+    }
+    if (program.engine !== "simple" && !program.vectorDb) {
+      if (ciInfo.isCI) {
+        program.vectorDb = getPrefOrDefault("vectorDb");
+      } else {
+        const { vectorDb } = await prompts(
+          {
+            type: "select",
+            name: "vectorDb",
+            message: "Would you like to use a vector database?",
+            choices: [
+              {
+                title: "No, just store the data in the file system",
+                value: "none",
+              },
+              { title: "MongoDB", value: "mongo" },
+            ],
+            initial: 0,
+          },
+          handlers,
+        );
+        program.vectorDb = vectorDb;
+        preferences.vectorDb = vectorDb;
       }
     }
   }

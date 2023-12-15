@@ -14,16 +14,34 @@ import {
   InstallTemplateArgs,
   TemplateEngine,
   TemplateFramework,
+  TemplateVectorDB,
 } from "./types";
 
-const createEnvLocalFile = async (root: string, openAiKey?: string) => {
+const createEnvLocalFile = async (
+  root: string,
+  openAiKey?: string,
+  vectorDb?: TemplateVectorDB,
+) => {
+  const envFileName = ".env";
+  let content = "";
+
   if (openAiKey) {
-    const envFileName = ".env";
-    await fs.writeFile(
-      path.join(root, envFileName),
-      `OPENAI_API_KEY=${openAiKey}\n`,
-    );
-    console.log(`Created '${envFileName}' file containing OPENAI_API_KEY`);
+    content += `OPENAI_API_KEY=${openAiKey}\n`;
+  }
+
+  switch (vectorDb) {
+    case "mongo": {
+      content += `MONGODB_URI=\n`;
+      content += `MONGODB_DATABASE=\n`;
+      content += `MONGODB_VECTORS=\n`;
+      content += `MONGODB_VECTOR_INDEX=\n`;
+      break;
+    }
+  }
+
+  if (content) {
+    await fs.writeFile(path.join(root, envFileName), content);
+    console.log(`Created '${envFileName}' file. Please check the settings.`);
   }
 };
 
@@ -33,6 +51,7 @@ const copyTestData = async (
   packageManager?: PackageManager,
   engine?: TemplateEngine,
   openAiKey?: string,
+  vectorDb?: TemplateVectorDB,
 ) => {
   if (framework === "nextjs") {
     // XXX: This is a hack to make the build for nextjs work with pdf-parse
@@ -53,21 +72,29 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
-    if (openAiKey || process.env["OPENAI_API_KEY"]) {
+    const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
+    const hasVectorDb = vectorDb && vectorDb !== "none";
+    const shouldRunGenerateAfterInstall = hasOpenAiKey && vectorDb === "none";
+    if (shouldRunGenerateAfterInstall) {
       console.log(
         `\nRunning ${cyan(
           `${packageManager} run generate`,
         )} to generate the context data.\n`,
       );
       await callPackageManager(packageManager, true, ["run", "generate"]);
-      console.log();
-    } else {
-      console.log(
-        `\nAfter setting your OpenAI key, run ${cyan(
-          `${packageManager} run generate`,
-        )} to generate the context data.\n`,
-      );
+      return console.log();
     }
+
+    const settings = [];
+    if (!hasOpenAiKey) settings.push("your OpenAI key");
+    if (hasVectorDb) settings.push("your Vector DB environment variables");
+    const generateMessage = `run ${cyan(
+      `${packageManager} run generate`,
+    )} to generate the context data.\n`;
+    const message = settings.length
+      ? `After setting ${settings.join(" and ")}, ${generateMessage}`
+      : generateMessage;
+    console.log(`\n${message}\n`);
   }
 };
 
@@ -104,6 +131,7 @@ const installTSTemplate = async ({
   customApiPath,
   forBackend,
   model,
+  vectorDb,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -148,14 +176,22 @@ const installTSTemplate = async ({
   const compPath = path.join(__dirname, "components");
   if (engine && (framework === "express" || framework === "nextjs")) {
     console.log("\nUsing chat engine:", engine, "\n");
-    const enginePath = path.join(compPath, "engines", engine);
+
+    let vectorDBFolder: string = engine;
+
+    if (engine !== "simple" && vectorDb) {
+      console.log("\nUsing vector DB:", vectorDb, "\n");
+      vectorDBFolder = vectorDb;
+    }
+
+    const VectorDBPath = path.join(compPath, "vectordbs", vectorDBFolder);
     relativeEngineDestPath =
       framework === "nextjs"
         ? path.join("app", "api", "chat")
         : path.join("src", "controllers");
     await copy("**", path.join(root, relativeEngineDestPath, "engine"), {
       parents: true,
-      cwd: enginePath,
+      cwd: VectorDBPath,
     });
   }
 
@@ -341,7 +377,7 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, props.openAiKey);
+    await createEnvLocalFile(props.root, props.openAiKey, props.vectorDb);
 
     // Copy test pdf file
     await copyTestData(
@@ -350,6 +386,7 @@ export const installTemplate = async (
       props.packageManager,
       props.engine,
       props.openAiKey,
+      props.vectorDb,
     );
   }
 };
