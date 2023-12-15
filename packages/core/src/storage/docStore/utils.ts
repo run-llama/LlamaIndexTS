@@ -1,11 +1,11 @@
-import { BaseNode, Document, ObjectType, TextNode } from "../../Node";
+import { BaseNode, jsonToNode } from "../../Node";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
 
-export function docToJson(doc: BaseNode): Record<string, any> {
+export async function docToJson(doc: BaseNode): Promise<Record<string, any>> {
   return {
-    [DATA_KEY]: JSON.stringify(doc),
+    [DATA_KEY]: JSON.stringify(await doc.aToJSON()),
     [TYPE_KEY]: doc.getType(),
   };
 }
@@ -13,26 +13,5 @@ export function docToJson(doc: BaseNode): Record<string, any> {
 export function jsonToDoc(docDict: Record<string, any>): BaseNode {
   let docType = docDict[TYPE_KEY];
   let dataDict = JSON.parse(docDict[DATA_KEY]);
-  let doc: BaseNode;
-
-  if (docType === ObjectType.DOCUMENT) {
-    doc = new Document({
-      text: dataDict.text,
-      id_: dataDict.id_,
-      embedding: dataDict.embedding,
-      hash: dataDict.hash,
-      metadata: dataDict.metadata,
-    });
-  } else if (docType === ObjectType.TEXT) {
-    doc = new TextNode({
-      text: dataDict.text,
-      id_: dataDict.id_,
-      hash: dataDict.hash,
-      metadata: dataDict.metadata,
-    });
-  } else {
-    throw new Error(`Unknown doc type: ${docType}`);
-  }
-
-  return doc;
+  return jsonToNode(dataDict, docType);
 }

@@ -4,7 +4,6 @@ import {
   ImageNode,
   MetadataMode,
   ObjectType,
-  jsonToNode,
   splitNodesByType,
 } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
@@ -24,7 +23,7 @@ import {
 } from "../../storage/StorageContext";
 import { BaseIndexStore } from "../../storage/indexStore/types";
 import { VectorStore } from "../../storage/vectorStore/types";
-import { ResponseSynthesizer, BaseSynthesizer } from "../../synthesizers";
+import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,
@@ -276,9 +275,11 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       if (
         !vectorStore.storesText ||
         type === ObjectType.INDEX ||
-        type === ObjectType.IMAGE
+        type === ObjectType.IMAGE ||
+        type === ObjectType.IMAGE_DOCUMENT
       ) {
-        const nodeWithoutEmbedding = jsonToNode(nodes[i].toJSON());
+        // TODO: calling clone is inefficient for image nodes, optimize this later
+        const nodeWithoutEmbedding = await nodes[i].clone();
         nodeWithoutEmbedding.embedding = undefined;
         this.indexStruct.addNode(nodeWithoutEmbedding, newIds[i]);
         this.docStore.addDocuments([nodeWithoutEmbedding], true);

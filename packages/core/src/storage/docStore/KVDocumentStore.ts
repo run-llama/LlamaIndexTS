@@ -45,7 +45,7 @@ export class KVDocumentStore extends BaseDocumentStore {
         );
       }
       let nodeKey = doc.id_;
-      let data = docToJson(doc);
+      let data = await docToJson(doc);
       await this.kvstore.put(nodeKey, data, this.nodeCollection);
       let metadata: DocMetaData = { docHash: doc.hash };
 
