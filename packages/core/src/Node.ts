@@ -1,6 +1,7 @@
 import CryptoJS from "crypto-js";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import { imageToString, stringToImage } from "./embeddings";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -147,6 +148,19 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   toJSON(): Record<string, any> {
     return { ...this, type: this.getType() };
   }
+
+  /**
+   * Async version of toJSON (used to return larger objects like images)
+   * @returns
+   */
+  async aToJSON(): Promise<Record<string, any>> {
+    return this.toJSON();
+  }
+
+  async clone() {
+    const json = await this.aToJSON();
+    return jsonToNode(json);
+  }
 }
 
 /**
@@ -266,24 +280,34 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
   }
 }
 
-export function jsonToNode(json: any, type?: ObjectType) {
+export function jsonToNode(json: any, type?: ObjectType): BaseNode {
   if (!json.type && !type) {
     throw new Error("Node type not found");
   }
   const nodeType = type || json.type;
 
+  let node;
   switch (nodeType) {
     case ObjectType.TEXT:
-      return new TextNode(json);
+      node = new TextNode(json);
+      break;
     case ObjectType.INDEX:
-      return new IndexNode(json);
+      node = new IndexNode(json);
+      break;
     case ObjectType.DOCUMENT:
-      return new Document(json);
+      node = new Document(json);
+      break;
     case ObjectType.IMAGE_DOCUMENT:
-      return new ImageDocument(json);
+      node = ImageDocument.fromJSON(json);
+      break;
     default:
       throw new Error(`Invalid node type: ${nodeType}`);
   }
+  // XXX: Calling the constructor generates a new hash that we don't want when we're
+  // deserializing the node. So we set the original hash here again. This is a hacky solution
+  // and we have to clean that up when we refactor the hashing mechanism.
+  node.hash = json.hash;
+  return node;
 }
 
 export type ImageType = string | Blob | URL;
@@ -306,6 +330,13 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
     return ObjectType.IMAGE;
   }
 
+  async aToJSON(): Promise<Record<string, any>> {
+    return {
+      ...(await super.aToJSON()),
+      image: await imageToString(this.image),
+    };
+  }
+
   getUrl(): URL {
     // id_ stores the relative path, convert it to the URL of the file
     const absPath = path.resolve(this.id_);
@@ -320,6 +351,14 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
     if (new.target === ImageDocument) {
       this.hash = this.generateHash();
     }
+  }
+
+  static fromJSON(json: any) {
+    if (typeof json.image !== "string") {
+      return new ImageDocument(json);
+    }
+    const image = stringToImage(json.image);
+    return new ImageDocument({ ...json, image });
   }
 
   getType() {
