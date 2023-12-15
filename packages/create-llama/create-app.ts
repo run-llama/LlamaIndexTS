@@ -32,6 +32,7 @@ export async function createApp({
   openAiKey,
   model,
   communityProjectPath,
+  vectorDb,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -71,6 +72,7 @@ export async function createApp({
     openAiKey,
     model,
     communityProjectPath,
+    vectorDb,
   };
 
   if (frontend) {

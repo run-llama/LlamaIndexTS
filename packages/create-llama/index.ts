@@ -209,6 +209,7 @@ async function run(): Promise<void> {
     openAiKey: program.openAiKey,
     model: program.model,
     communityProjectPath: program.communityProjectPath,
+    vectorDb: program.vectorDb,
   });
   conf.set("preferences", preferences);
 }
