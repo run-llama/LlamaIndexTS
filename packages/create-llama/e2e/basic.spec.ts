@@ -51,6 +51,19 @@ for (const templateType of templateTypes) {
           if (appType !== "--no-frontend") {
             await page.goto(`http://localhost:${port}`);
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
+
+            // test submit a message and check if having successful response from /api/chat endpoint
+            await page.fill("form input", "hello");
+            await page.click("form button[type=submit]");
+            const response = await page.waitForResponse(
+              (res) => {
+                return res.url().includes("/api/chat") && res.status() === 200;
+              },
+              {
+                timeout: 1000 * 60,
+              },
+            );
+            expect(response.ok()).toBeTruthy();
           }
           // TODO: test backend using curl (would need OpenAI key)
           // clean processes
