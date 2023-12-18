@@ -8,6 +8,7 @@ import { StorageContext } from "../storage/StorageContext";
 import { BaseDocumentStore } from "../storage/docStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
 import { VectorStore } from "../storage/vectorStore/types";
+import { KeywordTable } from "./keyword/KeywordTableIndex";
 
 /**
  * The underlying structure of each index.
@@ -85,6 +86,12 @@ export function jsonToIndexStruct(json: any): IndexStruct {
       return acc;
     }, {});
     return indexDict;
+  } else if (json.type === IndexStructType.KEYWORD_TABLE) {
+    const keywordTable = new KeywordTable(json.indexId, json.summary);
+    Object.entries(json.table).forEach(([keyword, nodeIds]) => {
+      keywordTable.addNode(nodeIds, keyword);
+    });
+    return keywordTable;
   } else {
     throw new Error(`Unknown index struct type: ${json.type}`);
   }
