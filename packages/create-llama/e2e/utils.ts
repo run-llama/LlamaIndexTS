@@ -96,7 +96,7 @@ export function runCreateLlama(
     "--model",
     MODEL,
     "--open-ai-key",
-    "testKey",
+    process.env.OPENAI_API_KEY || "testKey",
     appType,
     "--eslint",
     "--use-npm",

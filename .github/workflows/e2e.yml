@@ -36,6 +36,8 @@ jobs:
         working-directory: ./packages/create-llama
       - name: Run Playwright tests
         run: pnpm exec playwright test
+        env: 
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         working-directory: ./packages/create-llama
       - uses: actions/upload-artifact@v3
         if: always()
