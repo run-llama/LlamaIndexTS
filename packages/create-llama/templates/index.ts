@@ -247,7 +247,7 @@ const installTSTemplate = async ({
     // modify the dev script to use the custom api path
     packageJson.scripts = {
       ...packageJson.scripts,
-      dev: `NEXT_PUBLIC_CHAT_API=${customApiPath} next dev`,
+      dev: `cross-env NEXT_PUBLIC_CHAT_API=${customApiPath} next dev`,
     };
   }
 
