@@ -31,10 +31,16 @@ const createEnvLocalFile = async (
 
   switch (vectorDb) {
     case "mongo": {
+      content += `# For generating a connection URI, see https://www.mongodb.com/docs/guides/atlas/connection-string\n`;
       content += `MONGODB_URI=\n`;
       content += `MONGODB_DATABASE=\n`;
       content += `MONGODB_VECTORS=\n`;
       content += `MONGODB_VECTOR_INDEX=\n`;
+      break;
+    }
+    case "pg": {
+      content += `# For generating a connection URI, see https://www.postgresql.org/docs/16/libpq-connect.html#LIBPQ-CONNSTRING-URIS\n`;
+      content += `PG_CONNECTION_STRING=\n`;
       break;
     }
   }
