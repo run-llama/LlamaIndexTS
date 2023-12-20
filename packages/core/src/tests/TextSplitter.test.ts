@@ -10,7 +10,7 @@ describe("SentenceSplitter", () => {
     const sentenceSplitter = new SentenceSplitter({});
     // generate the same line as above but correct syntax errors
     let splits = sentenceSplitter.getParagraphSplits(
-      "This is a paragraph.\n\nThis is another paragraph.",
+      "This is a paragraph.\n\n\nThis is another paragraph.",
       undefined,
     );
     expect(splits).toEqual([
