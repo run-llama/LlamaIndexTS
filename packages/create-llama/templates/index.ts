@@ -53,14 +53,6 @@ const copyTestData = async (
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
 ) => {
-  if (framework === "nextjs") {
-    // XXX: This is a hack to make the build for nextjs work with pdf-parse
-    // pdf-parse needs './test/data/05-versions-space.pdf' to exist - can be removed when pdf-parse is removed
-    const srcFile = path.join(__dirname, "components", "data", "101.pdf");
-    const destPath = path.join(root, "test", "data");
-    await fs.mkdir(destPath, { recursive: true });
-    await fs.copyFile(srcFile, path.join(destPath, "05-versions-space.pdf"));
-  }
   if (engine === "context" || framework === "fastapi") {
     const srcPath = path.join(__dirname, "components", "data");
     const destPath = path.join(root, "data");
