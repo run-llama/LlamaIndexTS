@@ -1,5 +1,5 @@
+import { EOL } from 'node:os'
 // GitHub translated
-
 import { globalsHelper } from "./GlobalsHelper";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
@@ -41,11 +41,7 @@ export const cjkSentenceTokenizer = (text: string) => {
   );
 };
 
-export const unixLineSeparator = "\n";
-export const windowsLineSeparator = "\r\n";
-export const unixParagraphSeparator = unixLineSeparator + unixLineSeparator;
-export const windowsParagraphSeparator =
-  windowsLineSeparator + windowsLineSeparator;
+export const defaultParagraphSeparator = EOL + EOL + EOL
 
 // In theory there's also Mac style \r only, but it's pre-OSX and I don't think
 // many documents will use it.
@@ -78,7 +74,7 @@ export class SentenceSplitter {
       chunkOverlap = DEFAULT_CHUNK_OVERLAP,
       tokenizer = null,
       tokenizerDecoder = null,
-      paragraphSeparator = unixParagraphSeparator,
+      paragraphSeparator = defaultParagraphSeparator,
       chunkingTokenizerFn = undefined,
       splitLongSentences = false,
     } = options ?? {};
