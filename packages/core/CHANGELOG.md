@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.40
+
+### Patch Changes
+
+- e9f6de1: Added support for multi-modal RAG (retriever and query engine) incl. an example
+  Fixed persisting and loading image vector stores
+- 606ffa4: Updated Astra client and added associated type changes
+
 ## 0.0.39
 
 ### Patch Changes

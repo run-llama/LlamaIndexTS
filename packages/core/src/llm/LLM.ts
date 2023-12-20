@@ -27,6 +27,7 @@ import {
 import { getOpenAISession, OpenAISession } from "./openai";
 import { getPortkeySession, PortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate";
+import { MessageContent } from "../ChatEngine";
 
 export type MessageType =
   | "user"
@@ -89,7 +90,7 @@ export interface LLM {
     T extends boolean | undefined = undefined,
     R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
   >(
-    prompt: string,
+    prompt: MessageContent,
     parentEvent?: Event,
     streaming?: T,
   ): Promise<R>;

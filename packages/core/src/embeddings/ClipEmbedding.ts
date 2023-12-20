@@ -62,7 +62,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
     const loadedImage = await readImage(image);
     const imageInputs = await (await this.getProcessor())(loadedImage);
     const { image_embeds } = await (await this.getVisionModel())(imageInputs);
-    return image_embeds.data;
+    return Array.from(image_embeds.data);
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {

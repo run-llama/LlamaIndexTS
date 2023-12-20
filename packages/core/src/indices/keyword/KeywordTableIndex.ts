@@ -1,7 +1,6 @@
 import { BaseNode, Document, MetadataMode } from "../../Node";
 import { defaultKeywordExtractPrompt } from "../../Prompt";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
-import { ResponseSynthesizer } from "../../ResponseSynthesizer";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
@@ -9,6 +8,7 @@ import {
 } from "../../ServiceContext";
 import { StorageContext, storageContextFromDefaults } from "../../storage";
 import { BaseDocumentStore } from "../../storage/docStore/types";
+import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,
@@ -129,7 +129,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
 
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
-    responseSynthesizer?: ResponseSynthesizer;
+    responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {

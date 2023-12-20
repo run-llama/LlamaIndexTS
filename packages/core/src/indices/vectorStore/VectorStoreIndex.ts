@@ -4,11 +4,10 @@ import {
   ImageNode,
   MetadataMode,
   ObjectType,
-  TextNode,
   jsonToNode,
+  splitNodesByType,
 } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
-import { ResponseSynthesizer } from "../../ResponseSynthesizer";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
@@ -25,6 +24,7 @@ import {
 } from "../../storage/StorageContext";
 import { BaseIndexStore } from "../../storage/indexStore/types";
 import { VectorStore } from "../../storage/vectorStore/types";
+import { ResponseSynthesizer, BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,
@@ -66,7 +66,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     this.indexStore = init.indexStore;
     this.vectorStore = init.vectorStore ?? init.storageContext.vectorStore;
     this.embedModel = init.serviceContext.embedModel;
-    this.imageVectorStore = init.imageVectorStore;
+    this.imageVectorStore =
+      init.imageVectorStore ?? init.storageContext.imageVectorStore;
     if (this.imageVectorStore) {
       this.imageEmbedModel = new ClipEmbedding();
     }
@@ -219,6 +220,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   static async fromVectorStore(
     vectorStore: VectorStore,
     serviceContext: ServiceContext,
+    imageVectorStore?: VectorStore,
   ) {
     if (!vectorStore.storesText) {
       throw new Error(
@@ -226,7 +228,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       );
     }
 
-    const storageContext = await storageContextFromDefaults({ vectorStore });
+    const storageContext = await storageContextFromDefaults({
+      vectorStore,
+      imageVectorStore,
+    });
 
     const index = await this.init({
       nodes: [],
@@ -243,7 +248,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
-    responseSynthesizer?: ResponseSynthesizer;
+    responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {
@@ -285,7 +290,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (!nodes || nodes.length === 0) {
       return;
     }
-    const { imageNodes, textNodes } = this.splitNodes(nodes);
+    const { imageNodes, textNodes } = splitNodesByType(nodes);
     if (imageNodes.length > 0) {
       if (!this.imageVectorStore) {
         throw new Error("Cannot insert image nodes without image vector store");
@@ -362,25 +367,5 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     }
 
     return nodesWithEmbeddings;
-  }
-
-  private splitNodes(nodes: BaseNode[]): {
-    imageNodes: ImageNode[];
-    textNodes: TextNode[];
-  } {
-    let imageNodes: ImageNode[] = [];
-    let textNodes: TextNode[] = [];
-
-    for (let node of nodes) {
-      if (node instanceof ImageNode) {
-        imageNodes.push(node);
-      } else if (node instanceof TextNode) {
-        textNodes.push(node);
-      }
-    }
-    return {
-      imageNodes,
-      textNodes,
-    };
   }
 }

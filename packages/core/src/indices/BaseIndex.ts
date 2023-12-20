@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { BaseNode, Document, jsonToNode } from "../Node";
 import { BaseQueryEngine } from "../QueryEngine";
-import { ResponseSynthesizer } from "../ResponseSynthesizer";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext } from "../ServiceContext";
 import { StorageContext } from "../storage/StorageContext";
 import { BaseDocumentStore } from "../storage/docStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
 import { VectorStore } from "../storage/vectorStore/types";
+import { BaseSynthesizer } from "../synthesizers";
 
 /**
  * The underlying structure of each index.
@@ -180,7 +180,7 @@ export abstract class BaseIndex<T> {
    */
   abstract asQueryEngine(options?: {
     retriever?: BaseRetriever;
-    responseSynthesizer?: ResponseSynthesizer;
+    responseSynthesizer?: BaseSynthesizer;
   }): BaseQueryEngine;
 
   /**

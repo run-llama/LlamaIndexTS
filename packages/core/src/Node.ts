@@ -1,4 +1,5 @@
 import CryptoJS from "crypto-js";
+import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
 export enum NodeRelationship {
@@ -304,6 +305,12 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
   getType(): ObjectType {
     return ObjectType.IMAGE;
   }
+
+  getUrl(): URL {
+    // id_ stores the relative path, convert it to the URL of the file
+    const absPath = path.resolve(this.id_);
+    return new URL(`file://${absPath}`);
+  }
 }
 
 export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
@@ -326,4 +333,24 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
 export interface NodeWithScore<T extends Metadata = Metadata> {
   node: BaseNode<T>;
   score?: number;
+}
+
+export function splitNodesByType(nodes: BaseNode[]): {
+  imageNodes: ImageNode[];
+  textNodes: TextNode[];
+} {
+  let imageNodes: ImageNode[] = [];
+  let textNodes: TextNode[] = [];
+
+  for (let node of nodes) {
+    if (node instanceof ImageNode) {
+      imageNodes.push(node);
+    } else if (node instanceof TextNode) {
+      textNodes.push(node);
+    }
+  }
+  return {
+    imageNodes,
+    textNodes,
+  };
 }
