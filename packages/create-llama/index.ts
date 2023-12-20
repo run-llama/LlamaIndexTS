@@ -204,8 +204,6 @@ async function run(): Promise<void> {
   const preferences = (conf.get("preferences") || {}) as QuestionArgs;
   await askQuestions(program as unknown as QuestionArgs, preferences);
 
-  console.log(program);
-
   await createApp({
     template: program.template,
     framework: program.framework,
