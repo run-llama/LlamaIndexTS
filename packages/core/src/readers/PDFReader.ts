@@ -11,9 +11,18 @@ export class PDFReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = DEFAULT_FS,
   ): Promise<Document[]> {
-    const fileContent = await fs.readFile(file);
-    const data = await readPDF(fileContent);
-    return [new Document({ text: data.text, id_: file })];
+    const content = (await fs.readFile(file)) as any;
+    if (!(content instanceof Buffer)) {
+      console.warn(`PDF File ${file} can only be loaded using the Node FS`);
+      return [];
+    }
+    const data = new Uint8Array(
+      content.buffer,
+      content.byteOffset,
+      content.byteLength,
+    );
+    const pdf = await readPDF(data);
+    return [new Document({ text: pdf.text, id_: file })];
   }
 }
 
@@ -21,10 +30,7 @@ export class PDFReader implements BaseReader {
 async function readPage(pageData: any) {
   //check documents https://mozilla.github.io/pdf.js/
   const textContent = await pageData.getTextContent({
-    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.
-    normalizeWhitespace: false,
-    //do not attempt to combine same line TextItem's. The default value is `false`.
-    disableCombineTextItems: false,
+    includeMarkedContent: false,
   });
 
   let lastY = null,
@@ -45,16 +51,13 @@ async function readPage(pageData: any) {
 }
 
 const PDF_DEFAULT_OPTIONS = {
-  pagerender: readPage,
   max: 0,
-  //check https://mozilla.github.io/pdf.js/getting_started/
-  version: "v1.10.100",
 };
 
-async function readPDF(content: string, options = PDF_DEFAULT_OPTIONS) {
-  const PDFJS = await loadPDFJS();
+async function readPDF(data: Uint8Array, options = PDF_DEFAULT_OPTIONS) {
+  const { getDocument, version } = await import("pdfjs-dist");
 
-  const doc = await PDFJS.getDocument(content);
+  const doc = await getDocument({ data }).promise;
   const metaData = await doc.getMetadata().catch(() => null);
   const counter =
     options.max === 0 ? doc.numPages : Math.max(options.max, doc.numPages);
@@ -64,7 +67,7 @@ async function readPDF(content: string, options = PDF_DEFAULT_OPTIONS) {
   for (let i = 1; i <= counter; i++) {
     try {
       const pageData = await doc.getPage(i);
-      const pageText = await options.pagerender(pageData);
+      const pageText = await readPage(pageData);
 
       text += `\n\n${pageText}`;
     } catch (err) {
@@ -72,7 +75,7 @@ async function readPDF(content: string, options = PDF_DEFAULT_OPTIONS) {
     }
   }
 
-  doc.destroy();
+  await doc.destroy();
 
   return {
     numpages: doc.numPages,
@@ -80,17 +83,6 @@ async function readPDF(content: string, options = PDF_DEFAULT_OPTIONS) {
     info: metaData?.info,
     metadata: metaData?.metadata,
     text,
-    version: PDFJS.version,
+    version,
   };
-}
-
-async function loadPDFJS() {
-  // @ts-ignore
-  const { default: module } = await import("pdfjs-dist/build/pdf.js");
-  // Disable workers to avoid yet another cross-origin issue (workers need
-  // the URL of the script to be loaded, and dynamically loading a cross-origin
-  // script does not work).
-  module.disableWorker = true;
-  const { getDocument, version } = module;
-  return { getDocument, version };
 }
