@@ -34,6 +34,9 @@ for (const templateType of templateTypes) {
         test(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async ({
           page,
         }) => {
+          const port = Math.floor(Math.random() * 10000) + 10000;
+          const externalPort = port + 1;
+
           const cwd = await createTestDir();
           const name = runCreateLlama(
             cwd,
@@ -42,10 +45,10 @@ for (const templateType of templateTypes) {
             templateEngine,
             templateUI,
             appType,
+            externalPort,
           );
 
-          const port = Math.floor(Math.random() * 10000) + 10000;
-          const cps = await runApp(cwd, name, appType, port);
+          const cps = await runApp(cwd, name, appType, port, externalPort);
 
           // test frontend
           if (appType !== "--no-frontend") {

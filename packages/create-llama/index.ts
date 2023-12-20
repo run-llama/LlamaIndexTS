@@ -112,6 +112,13 @@ const program = new Commander.Command(packageJson.name)
   Select OpenAI model to use. E.g. gpt-3.5-turbo.
 `,
   )
+  .option(
+    "--external-port <external>",
+    `
+
+Select external port.
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
 
@@ -197,6 +204,8 @@ async function run(): Promise<void> {
   const preferences = (conf.get("preferences") || {}) as QuestionArgs;
   await askQuestions(program as unknown as QuestionArgs, preferences);
 
+  console.log(program);
+
   await createApp({
     template: program.template,
     framework: program.framework,
@@ -210,6 +219,7 @@ async function run(): Promise<void> {
     model: program.model,
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
+    externalPort: program.externalPort,
   });
   conf.set("preferences", preferences);
 }
