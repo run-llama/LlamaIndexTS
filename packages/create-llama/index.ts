@@ -106,7 +106,7 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
-    "--model",
+    "--model <model>",
     `
 
   Select OpenAI model to use. E.g. gpt-3.5-turbo.
