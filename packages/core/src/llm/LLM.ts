@@ -46,7 +46,7 @@ export interface ChatResponse {
   raw?: Record<string, any>;
   delta?: string;
   metrics?: any;
-  usage?: any;
+  usage?: Usage;
 }
 
 // NOTE in case we need CompletionResponse to diverge from ChatResponse in the future
