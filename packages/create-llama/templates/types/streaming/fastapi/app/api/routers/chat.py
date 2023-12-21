@@ -2,11 +2,11 @@ from typing import List
 
 from fastapi.responses import StreamingResponse
 
-from app.utils.json import json_to_model
 from app.utils.index import get_index
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from llama_index import VectorStoreIndex
-from llama_index.llms.base import MessageRole, ChatMessage
+from llama_index.llms.base import ChatMessage
+from llama_index.llms.types import MessageRole
 from pydantic import BaseModel
 
 chat_router = r = APIRouter()
@@ -24,9 +24,7 @@ class _ChatData(BaseModel):
 @r.post("")
 async def chat(
     request: Request,
-    # Note: To support clients sending a JSON object using content-type "text/plain",
-    # we need to use Depends(json_to_model(_ChatData)) here
-    data: _ChatData = Depends(json_to_model(_ChatData)),
+    data: _ChatData,
     index: VectorStoreIndex = Depends(get_index),
 ):
     # check preconditions and get last message
