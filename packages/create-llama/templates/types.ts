@@ -4,7 +4,7 @@ export type TemplateType = "simple" | "streaming" | "community";
 export type TemplateFramework = "nextjs" | "express" | "fastapi";
 export type TemplateEngine = "simple" | "context";
 export type TemplateUI = "html" | "shadcn";
-export type TemplateVectorDB = "none" | "mongo";
+export type TemplateVectorDB = "none" | "mongo" | "pg";
 
 export interface InstallTemplateArgs {
   appName: string;
