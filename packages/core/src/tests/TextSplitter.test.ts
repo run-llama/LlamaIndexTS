@@ -83,7 +83,6 @@ describe("SentenceSplitter", () => {
     ]);
   });
 
-  // TODO: fix this, Chinese text is not split correctly
   test("splits cjk", () => {
     let sentenceSplitter = new SentenceSplitter({
       chunkSize: 12,
