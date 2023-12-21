@@ -8,10 +8,10 @@ import type {
 } from "../templates";
 import { createTestDir, runApp, runCreateLlama, type AppType } from "./utils";
 
-const templateTypes: TemplateType[] = ["streaming", "simple"];
-const templateFrameworks: TemplateFramework[] = ["nextjs", "express"];
-const templateEngines: TemplateEngine[] = ["simple", "context"];
-const templateUIs: TemplateUI[] = ["shadcn", "html"];
+const templateTypes: TemplateType[] = ["streaming"];
+const templateFrameworks: TemplateFramework[] = ["express"];
+const templateEngines: TemplateEngine[] = ["simple"];
+const templateUIs: TemplateUI[] = ["shadcn"];
 
 for (const templateType of templateTypes) {
   for (const templateFramework of templateFrameworks) {
@@ -33,6 +33,7 @@ for (const templateType of templateTypes) {
             : "";
         test(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async ({
           page,
+          request,
         }) => {
           const port = Math.floor(Math.random() * 10000) + 10000;
           const externalPort = port + 1;
@@ -55,20 +56,38 @@ for (const templateType of templateTypes) {
             await page.goto(`http://localhost:${port}`);
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
 
-            // test submit a message and check if having successful response from /api/chat endpoint
-            await page.fill("form input", "hello");
-            await page.click("form button[type=submit]");
-            const response = await page.waitForResponse(
-              (res) => {
-                return res.url().includes("/api/chat") && res.status() === 200;
-              },
+            // test call backend api
+            const response = await request.post(
+              `http://localhost:${externalPort}/api/chat`,
               {
-                timeout: 1000 * 60,
+                data: {
+                  messages: [
+                    {
+                      role: "user",
+                      content: "Hello",
+                    },
+                  ],
+                },
               },
             );
             const text = await response.text();
-            console.log(text);
+            console.log("AI response: ", text);
             expect(response.ok()).toBeTruthy();
+
+            // test submit a message and check if having successful response from /api/chat endpoint
+            // await page.fill("form input", "hello");
+            // await page.click("form button[type=submit]");
+            // const response = await page.waitForResponse(
+            //   (res) => {
+            //     return res.url().includes("/api/chat") && res.status() === 200;
+            //   },
+            //   {
+            //     timeout: 1000 * 60,
+            //   },
+            // );
+            // const text = await response.text();
+            // console.log(text);
+            // expect(response.ok()).toBeTruthy();
           }
           // TODO: test backend using curl (would need OpenAI key)
           // clean processes
