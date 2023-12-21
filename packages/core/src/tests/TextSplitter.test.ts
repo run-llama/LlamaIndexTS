@@ -1,6 +1,4 @@
 import { cjkSentenceTokenizer, SentenceSplitter } from '../TextSplitter'
-// @ts-expect-error
-import { Segment, useDefault as d } from 'segmentit'
 
 describe("SentenceSplitter", () => {
   test("initializes", () => {
