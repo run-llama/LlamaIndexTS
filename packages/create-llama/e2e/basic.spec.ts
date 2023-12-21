@@ -66,6 +66,8 @@ for (const templateType of templateTypes) {
                 timeout: 1000 * 60,
               },
             );
+            const text = await response.text();
+            console.log(text);
             expect(response.ok()).toBeTruthy();
           }
           // TODO: test backend using curl (would need OpenAI key)
