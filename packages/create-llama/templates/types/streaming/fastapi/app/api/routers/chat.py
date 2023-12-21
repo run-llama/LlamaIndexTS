@@ -1,10 +1,10 @@
 from typing import List
 
 from fastapi.responses import StreamingResponse
+from llama_index.chat_engine.types import BaseChatEngine
 
-from app.utils.index import get_index
+from app.engine.index import get_chat_engine
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from llama_index import VectorStoreIndex
 from llama_index.llms.base import ChatMessage
 from llama_index.llms.types import MessageRole
 from pydantic import BaseModel
@@ -25,7 +25,7 @@ class _ChatData(BaseModel):
 async def chat(
     request: Request,
     data: _ChatData,
-    index: VectorStoreIndex = Depends(get_index),
+    chat_engine: BaseChatEngine = Depends(get_chat_engine),
 ):
     # check preconditions and get last message
     if len(data.messages) == 0:
@@ -49,7 +49,6 @@ async def chat(
     ]
 
     # query chat engine
-    chat_engine = index.as_chat_engine()
     response = chat_engine.stream_chat(lastMessage.content, messages)
 
     # stream response
