@@ -25,6 +25,11 @@ export const defaultSentenceTokenizer = (text: string): string[] => {
 
 // Refs: https://github.com/fxsjy/jieba/issues/575#issuecomment-359637511
 const resentencesp = /([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))/;
+/**
+ * Tokenizes sentences. Suitable for Chinese, Japanese, and Korean. Use instead of `defaultSentenceTokenizer`.
+ * @param text
+ * @returns string[]
+ */
 export function cjkSentenceTokenizer(sentence: string): string[] {
   const slist = [];
   const parts = sentence.split(resentencesp);
