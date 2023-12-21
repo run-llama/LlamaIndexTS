@@ -1,3 +1,4 @@
+import nlp from 'compromise'
 import { EOL } from 'node:os'
 // GitHub translated
 import { globalsHelper } from "./GlobalsHelper";
@@ -18,28 +19,27 @@ class TextSplit {
 
 type SplitRep = { text: string; numTokens: number };
 
-/**
- * Tokenizes sentences. Suitable for English and most European languages.
- * @param text
- * @returns
- */
-export const englishSentenceTokenizer = (text: string) => {
-  // The first part is a lazy match for any character.
-  return text.match(/.+?[.?!]+[\])'"`’”]*(?:\s|$)|.+/g);
+export const defaultSentenceTokenizer = (text: string): string[] => {
+  return nlp(text).sentences().json().map((sentence: any) => sentence.text);
 };
 
-/**
- * Tokenizes sentences. Suitable for Chinese, Japanese, and Korean.
- * @param text
- * @returns
- */
-export const cjkSentenceTokenizer = (text: string) => {
-  // Accepts english style sentence endings with space and
-  // CJK style sentence endings with no space.
-  return text.match(
-    /.+?[.?!]+[\])'"`’”]*(?:\s|$)|.+?[。？！]+[\])'"`’”]*(?:\s|$)?|.+/g,
-  );
-};
+// Refs: https://github.com/fxsjy/jieba/issues/575#issuecomment-359637511
+const resentencesp = /([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))/;
+export function cjsSentenceTokenizer(sentence: string): string[] {
+  const slist = [];
+  const parts = sentence.split(resentencesp);
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (resentencesp.test(part) && slist.length > 0) {
+      slist[slist.length - 1] += part;
+    } else if (part) {
+      slist.push(part);
+    }
+  }
+
+  return slist.filter((s) => s.length > 0);
+}
 
 export const defaultParagraphSeparator = EOL + EOL + EOL
 
@@ -57,7 +57,7 @@ export class SentenceSplitter {
   private tokenizer: any;
   private tokenizerDecoder: any;
   private paragraphSeparator: string;
-  private chunkingTokenizerFn: (text: string) => RegExpMatchArray | null;
+  private chunkingTokenizerFn: (text: string) => string[];
   private splitLongSentences: boolean;
 
   constructor(options?: {
@@ -66,7 +66,7 @@ export class SentenceSplitter {
     tokenizer?: any;
     tokenizerDecoder?: any;
     paragraphSeparator?: string;
-    chunkingTokenizerFn?: (text: string) => RegExpMatchArray | null;
+    chunkingTokenizerFn?: (text: string) => string[];
     splitLongSentences?: boolean;
   }) {
     const {
@@ -75,7 +75,7 @@ export class SentenceSplitter {
       tokenizer = null,
       tokenizerDecoder = null,
       paragraphSeparator = defaultParagraphSeparator,
-      chunkingTokenizerFn = undefined,
+      chunkingTokenizerFn,
       splitLongSentences = false,
     } = options ?? {};
 
@@ -93,7 +93,7 @@ export class SentenceSplitter {
       tokenizerDecoder ?? globalsHelper.tokenizerDecoder();
 
     this.paragraphSeparator = paragraphSeparator;
-    this.chunkingTokenizerFn = chunkingTokenizerFn ?? englishSentenceTokenizer;
+    this.chunkingTokenizerFn = chunkingTokenizerFn ?? defaultSentenceTokenizer;
     this.splitLongSentences = splitLongSentences;
   }
 
@@ -218,15 +218,16 @@ export class SentenceSplitter {
         curChunkTokens + newSentenceSplits[i].numTokens >
         effectiveChunkSize
       ) {
-        // push curent doc list to docs
-        docs.push(
-          new TextSplit(
-            curChunkSentences
-              .map((sentence) => sentence.text)
-              .join(" ")
-              .trim(),
-          ),
-        );
+        if (curChunkSentences.length > 0) {
+          // push curent doc list to docs
+          docs.push(
+            new TextSplit(
+              curChunkSentences.map((sentence) => sentence.text).
+                join(" ").
+                trim(),
+            ),
+          );
+        }
 
         const lastChunkSentences = curChunkSentences;
 

@@ -9,6 +9,7 @@
     "@notionhq/client": "^2.2.14",
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
+    "compromise": "^14.10.1",
     "crypto-js": "^4.2.0",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.8",
