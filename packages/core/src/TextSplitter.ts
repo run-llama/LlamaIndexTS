@@ -25,7 +25,7 @@ export const defaultSentenceTokenizer = (text: string): string[] => {
 
 // Refs: https://github.com/fxsjy/jieba/issues/575#issuecomment-359637511
 const resentencesp = /([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))/;
-export function cjsSentenceTokenizer(sentence: string): string[] {
+export function cjkSentenceTokenizer(sentence: string): string[] {
   const slist = [];
   const parts = sentence.split(resentencesp);
 
