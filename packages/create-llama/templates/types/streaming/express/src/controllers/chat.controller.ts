@@ -1,7 +1,6 @@
 import { streamToResponse } from "ai";
 import { Request, Response } from "express";
 import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
-import { MODEL } from "../../constants";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
 
@@ -36,7 +35,7 @@ export const chat = async (req: Request, res: Response) => {
     }
 
     const llm = new OpenAI({
-      model: MODEL,
+      model: process.env.MODEL,
     });
 
     const chatEngine = await createChatEngine(llm);

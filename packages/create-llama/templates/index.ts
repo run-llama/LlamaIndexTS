@@ -19,17 +19,24 @@ import {
 
 const createEnvLocalFile = async (
   root: string,
-  openAiKey?: string,
-  vectorDb?: TemplateVectorDB,
+  opts?: {
+    openAiKey?: string;
+    vectorDb?: TemplateVectorDB;
+    model?: string;
+  },
 ) => {
   const envFileName = ".env";
   let content = "";
 
-  if (openAiKey) {
-    content += `OPENAI_API_KEY=${openAiKey}\n`;
+  const model = opts?.model || "gpt-3.5-turbo";
+  content += `NEXT_PUBLIC_MODEL=${model}\n`;
+  content += `MODEL=${model}\n`;
+
+  if (opts?.openAiKey) {
+    content += `OPENAI_API_KEY=${opts?.openAiKey}\n`;
   }
 
-  switch (vectorDb) {
+  switch (opts?.vectorDb) {
     case "mongo": {
       content += `MONGODB_URI=\n`;
       content += `MONGODB_DATABASE=\n`;
@@ -205,10 +212,6 @@ const installTSTemplate = async ({
   }
 
   if (framework === "nextjs" || framework === "express") {
-    await fs.writeFile(
-      path.join(root, "constants.ts"),
-      `export const MODEL = "${model || "gpt-3.5-turbo"}";\n`,
-    );
     console.log("\nUsing OpenAI model: ", model || "gpt-3.5-turbo", "\n");
   }
 
@@ -369,7 +372,11 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, props.openAiKey, props.vectorDb);
+    await createEnvLocalFile(props.root, {
+      openAiKey: props.openAiKey,
+      vectorDb: props.vectorDb,
+      model: props.model,
+    });
 
     // Copy test pdf file
     await copyTestData(

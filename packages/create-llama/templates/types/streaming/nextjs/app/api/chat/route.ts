@@ -1,4 +1,3 @@
-import { MODEL } from "@/constants";
 import { Message, StreamingTextResponse } from "ai";
 import { MessageContent, OpenAI } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
@@ -43,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const llm = new OpenAI({
-      model: MODEL,
+      model: process.env.MODEL,
       maxTokens: 512,
     });
 
