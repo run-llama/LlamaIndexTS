@@ -23,14 +23,20 @@ const createEnvLocalFile = async (
     openAiKey?: string;
     vectorDb?: TemplateVectorDB;
     model?: string;
+    framework?: TemplateFramework;
   },
 ) => {
   const envFileName = ".env";
   let content = "";
 
   const model = opts?.model || "gpt-3.5-turbo";
-  content += `NEXT_PUBLIC_MODEL=${model}\n`;
-  content += `MODEL=${model}\n`;
+  if (opts?.framework === "express") {
+    content += `MODEL=${model}\n`;
+  }
+  if (opts?.framework === "nextjs") {
+    content += `MODEL=${model}\nNEXT_PUBLIC_MODEL=${model}\n`;
+  }
+  console.log("\nUsing OpenAI model: ", model, "\n");
 
   if (opts?.openAiKey) {
     content += `OPENAI_API_KEY=${opts?.openAiKey}\n`;
@@ -211,10 +217,6 @@ const installTSTemplate = async ({
     });
   }
 
-  if (framework === "nextjs" || framework === "express") {
-    console.log("\nUsing OpenAI model: ", model || "gpt-3.5-turbo", "\n");
-  }
-
   /**
    * Update the package.json scripts.
    */
@@ -376,6 +378,7 @@ export const installTemplate = async (
       openAiKey: props.openAiKey,
       vectorDb: props.vectorDb,
       model: props.model,
+      framework: props.framework,
     });
 
     // Copy test pdf file
