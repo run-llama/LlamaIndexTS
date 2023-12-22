@@ -63,7 +63,7 @@ for (const templateType of templateTypes) {
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
           });
 
-          test("Frontend should be able submit a message and receive response", async ({
+          test("Frontend should be able to submit a message and receive a response", async ({
             page,
           }) => {
             test.skip(appType === "--no-frontend");
