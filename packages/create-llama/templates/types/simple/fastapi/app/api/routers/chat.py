@@ -1,10 +1,10 @@
 from typing import List
 
-from app.utils.index import get_index
 from fastapi import APIRouter, Depends, HTTPException, status
 from llama_index import VectorStoreIndex
 from llama_index.llms.base import MessageRole, ChatMessage
 from pydantic import BaseModel
+from app.context import get_index
 
 chat_router = r = APIRouter()
 

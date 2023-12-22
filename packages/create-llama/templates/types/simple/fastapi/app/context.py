@@ -1,5 +1,5 @@
-import logging
 import os
+import logging
 
 from llama_index import (
     SimpleDirectoryReader,
@@ -10,16 +10,17 @@ from llama_index import (
 )
 from llama_index.llms import OpenAI
 
-
 STORAGE_DIR = "./storage"  # directory to cache the generated index
 DATA_DIR = "./data"  # directory containing the documents to index
 
-service_context = ServiceContext.from_defaults(
-    llm=OpenAI(model="gpt-3.5-turbo")
-)
-
+def create_base_context():
+    model = os.getenv("MODEL", "gpt-3.5-turbo")
+    return ServiceContext.from_defaults(
+        llm=OpenAI(model=model),
+    )
 
 def get_index():
+    service_context = create_base_context()
     logger = logging.getLogger("uvicorn")
     # check if storage already exists
     if not os.path.exists(STORAGE_DIR):
