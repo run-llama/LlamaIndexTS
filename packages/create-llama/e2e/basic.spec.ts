@@ -1,5 +1,6 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { expect, test } from "@playwright/test";
+import { ChildProcess } from "child_process";
 import type {
   TemplateEngine,
   TemplateFramework,
@@ -31,58 +32,83 @@ for (const templateType of templateTypes) {
               ? "--no-frontend" // simple templates don't have frontends
               : "--frontend"
             : "";
-        test(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async ({
-          page,
-          request,
-        }) => {
-          const port = Math.floor(Math.random() * 10000) + 10000;
-          const externalPort = port + 1;
+        test.describe(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async () => {
+          let port: number;
+          let externalPort: number;
+          let cwd: string;
+          let name: string;
+          let cps: ChildProcess[];
 
-          const cwd = await createTestDir();
-          const name = runCreateLlama(
-            cwd,
-            templateType,
-            templateFramework,
-            templateEngine,
-            templateUI,
-            appType,
-            externalPort,
-          );
+          test.beforeAll(async () => {
+            port = Math.floor(Math.random() * 10000) + 10000;
+            externalPort = port + 1;
 
-          const cps = await runApp(cwd, name, appType, port, externalPort);
+            cwd = await createTestDir();
+            name = runCreateLlama(
+              cwd,
+              templateType,
+              templateFramework,
+              templateEngine,
+              templateUI,
+              appType,
+              externalPort,
+            );
 
-          // test frontend
-          if (appType !== "--no-frontend") {
+            cps = await runApp(cwd, name, appType, port, externalPort);
+          });
+
+          test("Frontend should have a title", async ({ page }) => {
+            test.skip(appType === "--no-frontend");
             await page.goto(`http://localhost:${port}`);
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
-          }
+          });
 
-          // test backend
-          const backendPort =
-            templateFramework === "express" && appType === "--frontend"
-              ? externalPort
-              : port;
-
-          const response = await request.post(
-            `http://localhost:${backendPort}/api/chat`,
-            {
-              data: {
-                messages: [
-                  {
-                    role: "user",
-                    content: "Hello",
-                  },
-                ],
+          test("Frontend should be able submit a message and receive response", async ({
+            page,
+          }) => {
+            test.skip(appType === "--no-frontend");
+            await page.goto(`http://localhost:${port}`);
+            await page.fill("form input", "hello");
+            await page.click("form button[type=submit]");
+            const response = await page.waitForResponse(
+              (res) => {
+                return res.url().includes("/api/chat") && res.status() === 200;
               },
-            },
-          );
-          const text = await response.text();
-          console.log("AI response: ", text);
-          expect(response.ok()).toBeTruthy();
+              {
+                timeout: 1000 * 60,
+              },
+            );
+            const text = await response.text();
+            console.log("AI response when submitting message: ", text);
+            expect(response.ok()).toBeTruthy();
+          });
 
-          // TODO: test backend using curl (would need OpenAI key)
+          test("Backend should response when calling API", async ({
+            request,
+          }) => {
+            test.skip(appType !== "--no-frontend");
+            const response = await request.post(
+              `http://localhost:${port}/api/chat`,
+              {
+                data: {
+                  messages: [
+                    {
+                      role: "user",
+                      content: "Hello",
+                    },
+                  ],
+                },
+              },
+            );
+            const text = await response.text();
+            console.log("AI response when calling API: ", text);
+            expect(response.ok()).toBeTruthy();
+          });
+
           // clean processes
-          cps.forEach((cp) => cp.kill());
+          test.afterAll(async () => {
+            cps.map((cp) => cp.kill());
+          });
         });
       }
     }
