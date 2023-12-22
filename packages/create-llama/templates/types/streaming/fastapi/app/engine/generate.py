@@ -12,7 +12,8 @@ from llama_index import (
     VectorStoreIndex,
 )
 
-logger = logging.getLogger("uvicorn")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 
 def generate_datasource(service_context):
