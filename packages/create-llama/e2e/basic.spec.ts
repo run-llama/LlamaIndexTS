@@ -1,5 +1,6 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { expect, test } from "@playwright/test";
+import { ChildProcess } from "child_process";
 import type {
   TemplateEngine,
   TemplateFramework,
@@ -31,30 +32,83 @@ for (const templateType of templateTypes) {
               ? "--no-frontend" // simple templates don't have frontends
               : "--frontend"
             : "";
-        test(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async ({
-          page,
-        }) => {
-          const cwd = await createTestDir();
-          const name = runCreateLlama(
-            cwd,
-            templateType,
-            templateFramework,
-            templateEngine,
-            templateUI,
-            appType,
-          );
+        test.describe(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async () => {
+          let port: number;
+          let externalPort: number;
+          let cwd: string;
+          let name: string;
+          let cps: ChildProcess[];
 
-          const port = Math.floor(Math.random() * 10000) + 10000;
-          const cps = await runApp(cwd, name, appType, port);
+          test.beforeAll(async () => {
+            port = Math.floor(Math.random() * 10000) + 10000;
+            externalPort = port + 1;
 
-          // test frontend
-          if (appType !== "--no-frontend") {
+            cwd = await createTestDir();
+            name = runCreateLlama(
+              cwd,
+              templateType,
+              templateFramework,
+              templateEngine,
+              templateUI,
+              appType,
+              externalPort,
+            );
+
+            cps = await runApp(cwd, name, appType, port, externalPort);
+          });
+
+          test("Frontend should have a title", async ({ page }) => {
+            test.skip(appType === "--no-frontend");
             await page.goto(`http://localhost:${port}`);
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
-          }
-          // TODO: test backend using curl (would need OpenAI key)
+          });
+
+          test("Frontend should be able to submit a message and receive a response", async ({
+            page,
+          }) => {
+            test.skip(appType === "--no-frontend");
+            await page.goto(`http://localhost:${port}`);
+            await page.fill("form input", "hello");
+            await page.click("form button[type=submit]");
+            const response = await page.waitForResponse(
+              (res) => {
+                return res.url().includes("/api/chat") && res.status() === 200;
+              },
+              {
+                timeout: 1000 * 60,
+              },
+            );
+            const text = await response.text();
+            console.log("AI response when submitting message: ", text);
+            expect(response.ok()).toBeTruthy();
+          });
+
+          test("Backend should response when calling API", async ({
+            request,
+          }) => {
+            test.skip(appType !== "--no-frontend");
+            const response = await request.post(
+              `http://localhost:${port}/api/chat`,
+              {
+                data: {
+                  messages: [
+                    {
+                      role: "user",
+                      content: "Hello",
+                    },
+                  ],
+                },
+              },
+            );
+            const text = await response.text();
+            console.log("AI response when calling API: ", text);
+            expect(response.ok()).toBeTruthy();
+          });
+
           // clean processes
-          cps.forEach((cp) => cp.kill());
+          test.afterAll(async () => {
+            cps.map((cp) => cp.kill());
+          });
         });
       }
     }

@@ -33,6 +33,7 @@ export async function createApp({
   model,
   communityProjectPath,
   vectorDb,
+  externalPort,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -73,6 +74,7 @@ export async function createApp({
     model,
     communityProjectPath,
     vectorDb,
+    externalPort,
   };
 
   if (frontend) {
@@ -87,7 +89,7 @@ export async function createApp({
       ...args,
       root: frontendRoot,
       framework: "nextjs",
-      customApiPath: "http://localhost:8000/api/chat",
+      customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
       backend: false,
     });
     // copy readme for fullstack

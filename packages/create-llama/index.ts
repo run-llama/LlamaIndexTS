@@ -106,10 +106,17 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
-    "--model",
+    "--model <model>",
     `
 
   Select OpenAI model to use. E.g. gpt-3.5-turbo.
+`,
+  )
+  .option(
+    "--external-port <external>",
+    `
+
+Select external port.
 `,
   )
   .allowUnknownOption()
@@ -210,6 +217,7 @@ async function run(): Promise<void> {
     model: program.model,
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
+    externalPort: program.externalPort,
   });
   conf.set("preferences", preferences);
 }

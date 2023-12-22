@@ -12,6 +12,7 @@ export async function runApp(
   name: string,
   appType: AppType,
   port: number,
+  externalPort: number,
 ): Promise<ChildProcess[]> {
   const cps: ChildProcess[] = [];
 
@@ -22,7 +23,7 @@ export async function runApp(
           await createProcess(
             "npm run dev",
             path.join(cwd, name, "backend"),
-            port + 1,
+            externalPort,
           ),
         );
         cps.push(
@@ -71,6 +72,7 @@ export function runCreateLlama(
   templateEngine: string,
   templateUI: string,
   appType: AppType,
+  externalPort: number,
 ) {
   const createLlama = path.join(__dirname, "..", "dist", "index.js");
 
@@ -96,10 +98,12 @@ export function runCreateLlama(
     "--model",
     MODEL,
     "--open-ai-key",
-    "testKey",
+    process.env.OPENAI_API_KEY || "testKey",
     appType,
     "--eslint",
     "--use-npm",
+    "--external-port",
+    externalPort,
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
   execSync(command, {
