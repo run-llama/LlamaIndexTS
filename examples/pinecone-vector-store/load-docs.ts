@@ -5,7 +5,7 @@ import {
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
-import { PineconeVectorStore } from "../../../packages/core/src/storage/vectorStore/PineconeVectorStore";
+import { PineconeVectorStore } from "llamaindex";
 
 async function getSourceFilenames(sourceDir: string) {
   return await fs
