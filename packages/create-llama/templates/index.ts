@@ -187,7 +187,12 @@ const installTSTemplate = async ({
       vectorDBFolder = vectorDb;
     }
 
-    const VectorDBPath = path.join(compPath, "vectordbs", vectorDBFolder);
+    const VectorDBPath = path.join(
+      compPath,
+      "vectordbs",
+      "typescript",
+      vectorDBFolder,
+    );
     relativeEngineDestPath =
       framework === "nextjs"
         ? path.join("app", "api", "chat")
