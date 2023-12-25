@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from llama_index import VectorStoreIndex
 from llama_index.llms.base import MessageRole, ChatMessage
 from pydantic import BaseModel
-from app.context import get_index
+from app.engine.index import get_chat_engine
 
 chat_router = r = APIRouter()
 
@@ -25,7 +25,7 @@ class _Result(BaseModel):
 @r.post("")
 async def chat(
     data: _ChatData,
-    index: VectorStoreIndex = Depends(get_index),
+    chat_engine: VectorStoreIndex = Depends(get_chat_engine),
 ) -> _Result:
     # check preconditions and get last message
     if len(data.messages) == 0:
@@ -49,7 +49,6 @@ async def chat(
     ]
 
     # query chat engine
-    chat_engine = index.as_chat_engine()
     response = chat_engine.chat(lastMessage.content, messages)
     return _Result(
         result=_Message(role=MessageRole.ASSISTANT, content=response.response)

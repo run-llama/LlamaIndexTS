@@ -311,7 +311,8 @@ const installPythonTemplate = async ({
   root,
   template,
   framework,
-}: Pick<InstallTemplateArgs, "root" | "framework" | "template">) => {
+  engine,
+}: Pick<InstallTemplateArgs, "root" | "framework" | "template" | "engine">) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(__dirname, "types", template, framework);
   await copy("**", root, {
@@ -333,6 +334,15 @@ const installPythonTemplate = async ({
       }
     },
   });
+
+  if (engine === "context") {
+    const compPath = path.join(__dirname, "components");
+    const VectorDBPath = path.join(compPath, "vectordbs", "python", "none");
+    await copy("**", path.join(root, "app", "engine"), {
+      parents: true,
+      cwd: VectorDBPath,
+    });
+  }
 
   console.log(
     "\nPython project, dependencies won't be installed automatically.\n",

@@ -189,7 +189,11 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "express" || program.framework === "nextjs") {
+  if (
+    program.framework === "express" ||
+    program.framework === "nextjs" ||
+    program.framework === "fastapi"
+  ) {
     if (!program.model) {
       if (ciInfo.isCI) {
         program.model = getPrefOrDefault("model");
@@ -218,7 +222,11 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "express" || program.framework === "nextjs") {
+  if (
+    program.framework === "express" ||
+    program.framework === "nextjs" ||
+    program.framework === "fastapi"
+  ) {
     if (!program.engine) {
       if (ciInfo.isCI) {
         program.engine = getPrefOrDefault("engine");
@@ -243,7 +251,11 @@ export const askQuestions = async (
         preferences.engine = engine;
       }
     }
-    if (program.engine !== "simple" && !program.vectorDb) {
+    if (
+      program.engine !== "simple" &&
+      !program.vectorDb &&
+      program.framework !== "fastapi"
+    ) {
       if (ciInfo.isCI) {
         program.vectorDb = getPrefOrDefault("vectorDb");
       } else {

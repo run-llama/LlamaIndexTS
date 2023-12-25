@@ -38,3 +38,7 @@ def get_index():
         index = load_index_from_storage(storage_context,service_context=service_context)
         logger.info(f"Finished loading index from {STORAGE_DIR}")
     return index
+
+def get_chat_engine():
+    index = get_index()
+    return index.as_chat_engine()
