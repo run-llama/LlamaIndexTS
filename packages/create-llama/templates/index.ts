@@ -30,11 +30,9 @@ const createEnvLocalFile = async (
   let content = "";
 
   const model = opts?.model || "gpt-3.5-turbo";
-  if (opts?.framework === "express") {
-    content += `MODEL=${model}\n`;
-  }
+  content += `MODEL=${model}\n`;
   if (opts?.framework === "nextjs") {
-    content += `MODEL=${model}\nNEXT_PUBLIC_MODEL=${model}\n`;
+    content += `NEXT_PUBLIC_MODEL=${model}\n`;
   }
   console.log("\nUsing OpenAI model: ", model, "\n");
 
