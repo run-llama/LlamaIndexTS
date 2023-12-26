@@ -17,7 +17,13 @@ Example `backend/.env` file:
 OPENAI_API_KEY=<openai_api_key>
 ```
 
-Second, run the development server:
+Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
+
+```
+python app/engine/generate.py
+```
+
+Third, run the development server:
 
 ```
 python main.py
