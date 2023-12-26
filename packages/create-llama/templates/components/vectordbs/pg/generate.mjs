@@ -22,7 +22,7 @@ async function loadAndIndex() {
   vectorStore.db = new pg.Client({
     connectionString: process.env.PG_CONNECTION_STRING,
   });
-  vectorStore.db.connect();
+  await vectorStore.db.connect();
   console.log(`Connected to postgres.`);
   vectorStore.setCollection(STORAGE_DIR);
   vectorStore.clearCollection();
