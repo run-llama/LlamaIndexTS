@@ -8,6 +8,7 @@ def create_service_context():
     base = create_base_context()
     return ServiceContext.from_defaults(
         llm=base.llm,
+        embed_model=base.embed_model,
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
