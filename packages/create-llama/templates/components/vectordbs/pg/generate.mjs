@@ -22,10 +22,13 @@ async function loadAndIndex() {
   vectorStore.db = new pg.Client({
     connectionString: process.env.PG_CONNECTION_STRING,
   });
+  vectorStore.db.connect();
+  console.log(`Connected to postgres.`);
   vectorStore.setCollection(STORAGE_DIR);
   vectorStore.clearCollection();
 
   // create index from all the Documents
+  console.log("Start creating embeddings...");
   const storageContext = await storageContextFromDefaults({ vectorStore });
   await VectorStoreIndex.fromDocuments(documents, { storageContext });
   console.log(`Successfully created embeddings.`);
