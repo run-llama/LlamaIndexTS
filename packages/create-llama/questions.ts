@@ -189,95 +189,84 @@ export const askQuestions = async (
     }
   }
 
-  if (
-    program.framework === "express" ||
-    program.framework === "nextjs" ||
-    program.framework === "fastapi"
-  ) {
-    if (!program.model) {
-      if (ciInfo.isCI) {
-        program.model = getPrefOrDefault("model");
-      } else {
-        const { model } = await prompts(
-          {
-            type: "select",
-            name: "model",
-            message: "Which model would you like to use?",
-            choices: [
-              { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
-              { title: "gpt-4", value: "gpt-4" },
-              { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
-              {
-                title: "gpt-4-vision-preview",
-                value: "gpt-4-vision-preview",
-              },
-            ],
-            initial: 0,
-          },
-          handlers,
-        );
-        program.model = model;
-        preferences.model = model;
-      }
+  if (!program.model) {
+    if (ciInfo.isCI) {
+      program.model = getPrefOrDefault("model");
+    } else {
+      const { model } = await prompts(
+        {
+          type: "select",
+          name: "model",
+          message: "Which model would you like to use?",
+          choices: [
+            { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+            { title: "gpt-4", value: "gpt-4" },
+            { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
+            {
+              title: "gpt-4-vision-preview",
+              value: "gpt-4-vision-preview",
+            },
+          ],
+          initial: 0,
+        },
+        handlers,
+      );
+      program.model = model;
+      preferences.model = model;
+    }
+  }
+
+  if (!program.engine) {
+    if (ciInfo.isCI) {
+      program.engine = getPrefOrDefault("engine");
+    } else {
+      const { engine } = await prompts(
+        {
+          type: "select",
+          name: "engine",
+          message: "Which data source would you like to use?",
+          choices: [
+            {
+              title: "No data, just a simple chat",
+              value: "simple",
+            },
+            { title: "Use an example PDF", value: "context" },
+          ],
+          initial: 1,
+        },
+        handlers,
+      );
+      program.engine = engine;
+      preferences.engine = engine;
     }
   }
 
   if (
-    program.framework === "express" ||
-    program.framework === "nextjs" ||
-    program.framework === "fastapi"
+    program.engine !== "simple" &&
+    !program.vectorDb &&
+    program.framework !== "fastapi"
   ) {
-    if (!program.engine) {
-      if (ciInfo.isCI) {
-        program.engine = getPrefOrDefault("engine");
-      } else {
-        const { engine } = await prompts(
-          {
-            type: "select",
-            name: "engine",
-            message: "Which data source would you like to use?",
-            choices: [
-              {
-                title: "No data, just a simple chat",
-                value: "simple",
-              },
-              { title: "Use an example PDF", value: "context" },
-            ],
-            initial: 1,
-          },
-          handlers,
-        );
-        program.engine = engine;
-        preferences.engine = engine;
-      }
-    }
-    if (
-      program.engine !== "simple" &&
-      !program.vectorDb &&
-      program.framework !== "fastapi"
-    ) {
-      if (ciInfo.isCI) {
-        program.vectorDb = getPrefOrDefault("vectorDb");
-      } else {
-        const { vectorDb } = await prompts(
-          {
-            type: "select",
-            name: "vectorDb",
-            message: "Would you like to use a vector database?",
-            choices: [
-              {
-                title: "No, just store the data in the file system",
-                value: "none",
-              },
-              { title: "MongoDB", value: "mongo" },
-            ],
-            initial: 0,
-          },
-          handlers,
-        );
-        program.vectorDb = vectorDb;
-        preferences.vectorDb = vectorDb;
-      }
+    if (ciInfo.isCI) {
+      program.vectorDb = getPrefOrDefault("vectorDb");
+    } else {
+      const { vectorDb } = await prompts(
+        {
+          type: "select",
+          name: "vectorDb",
+          message: "Would you like to use a vector database?",
+          choices: [
+            {
+              title: "No, just store the data in the file system",
+              value: "none",
+            },
+            { title: "MongoDB", value: "mongo" },
+          ],
+          initial: 0,
+        },
+        handlers,
+      );
+      program.vectorDb = vectorDb;
+      preferences.vectorDb = vectorDb;
     }
   }
 

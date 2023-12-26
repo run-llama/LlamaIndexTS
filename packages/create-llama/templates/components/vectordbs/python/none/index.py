@@ -14,7 +14,7 @@ def get_chat_engine():
     # check if storage already exists
     if not os.path.exists(STORAGE_DIR):
         raise Exception(
-            "StorageContext is empty - call 'npm run generate' to generate the storage first"
+            "StorageContext is empty - call 'python app/engine/generate.py' to generate the storage first"
         )
     logger = logging.getLogger("uvicorn")
     # load the existing index

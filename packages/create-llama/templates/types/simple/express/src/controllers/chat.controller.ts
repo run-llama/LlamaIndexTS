@@ -33,7 +33,7 @@ export const chat = async (req: Request, res: Response) => {
     }
 
     const llm = new OpenAI({
-      model: process.env.MODEL,
+      model: process.env.MODEL || "gpt-3.5-turbo",
     });
 
     const lastMessageContent = getLastMessageContent(

@@ -2,7 +2,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from llama_index import VectorStoreIndex
-from llama_index.llms.base import MessageRole, ChatMessage
+from llama_index.llms.base import ChatMessage
+from llama_index.llms.types import MessageRole
 from pydantic import BaseModel
 from app.engine.index import get_chat_engine
 

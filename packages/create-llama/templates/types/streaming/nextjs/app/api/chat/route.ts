@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const llm = new OpenAI({
-      model: process.env.MODEL,
+      model: process.env.MODEL || "gpt-3.5-turbo",
       maxTokens: 512,
     });
 
