@@ -121,6 +121,12 @@ Select external port.
   )
   .allowUnknownOption()
   .parse(process.argv);
+if (process.argv.includes("--no-frontend")) {
+  program.frontend = false;
+}
+if (process.argv.includes("--no-eslint")) {
+  program.eslint = false;
+}
 
 const packageManager = !!program.useNpm
   ? "npm"

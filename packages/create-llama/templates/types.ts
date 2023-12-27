@@ -13,7 +13,7 @@ export interface InstallTemplateArgs {
   isOnline: boolean;
   template: TemplateType;
   framework: TemplateFramework;
-  engine?: TemplateEngine;
+  engine: TemplateEngine;
   ui: TemplateUI;
   eslint: boolean;
   customApiPath?: string;

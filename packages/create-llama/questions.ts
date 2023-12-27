@@ -89,14 +89,8 @@ export const askQuestions = async (
         })),
         initial: 0,
       },
-      {
-        onCancel: () => {
-          console.error("Exiting.");
-          process.exit(1);
-        },
-      },
+      handlers,
     );
-
     program.communityProjectPath = communityProjectPath;
     preferences.communityProjectPath = communityProjectPath;
     return; // early return - no further questions needed for community projects
@@ -130,11 +124,12 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "express" || program.framework === "fastapi") {
-    if (process.argv.includes("--no-frontend")) {
-      program.frontend = false;
-    }
+  if (
+    program.template === "streaming" &&
+    (program.framework === "express" || program.framework === "fastapi")
+  ) {
     // if a backend-only framework is selected, ask whether we should create a frontend
+    // (only for streaming backends)
     if (program.frontend === undefined) {
       if (ciInfo.isCI) {
         program.frontend = getPrefOrDefault("frontend");
@@ -161,7 +156,6 @@ export const askQuestions = async (
       }
     }
   } else {
-    // single project if framework is nextjs
     program.frontend = false;
   }
 
@@ -283,11 +277,7 @@ export const askQuestions = async (
     preferences.openAiKey = key;
   }
 
-  if (
-    program.framework !== "fastapi" &&
-    !process.argv.includes("--eslint") &&
-    !process.argv.includes("--no-eslint")
-  ) {
+  if (program.framework !== "fastapi" && program.eslint === undefined) {
     if (ciInfo.isCI) {
       program.eslint = getPrefOrDefault("eslint");
     } else {
