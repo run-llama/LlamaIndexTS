@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from llama_index import VectorStoreIndex
+from llama_index.chat_engine.types import BaseChatEngine
 from llama_index.llms.base import ChatMessage
 from llama_index.llms.types import MessageRole
 from pydantic import BaseModel
@@ -26,7 +26,7 @@ class _Result(BaseModel):
 @r.post("")
 async def chat(
     data: _ChatData,
-    chat_engine: VectorStoreIndex = Depends(get_chat_engine),
+    chat_engine: BaseChatEngine = Depends(get_chat_engine),
 ) -> _Result:
     # check preconditions and get last message
     if len(data.messages) == 0:
