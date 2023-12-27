@@ -20,8 +20,9 @@
     "dist"
   ],
   "scripts": {
+    "clean": "rm -rf dist && find ./templates \\( -name \"dist\" -o -name \"__pycache__\" -o -name \"node_modules\" -o -name \"poetry.lock\" \\) -depth -exec rm -fr {} \\;",
     "dev": "ncc build ./index.ts -w -o dist/",
-    "build": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
+    "build": "npm run clean && ncc build ./index.ts -o ./dist/ && rm -fr dist/data dist/none dist/typescript dist/ui",
     "lint": "eslint . --ignore-pattern dist",
     "e2e": "playwright test --reporter=list",
     "prepublishOnly": "cd ../../ && turbo run build"
