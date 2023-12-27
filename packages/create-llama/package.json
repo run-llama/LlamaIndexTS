@@ -24,7 +24,7 @@
     "dev": "ncc build ./index.ts -w -o dist/",
     "build": "npm run clean && ncc build ./index.ts -o ./dist/ && rm -fr dist/data dist/none dist/typescript dist/ui",
     "lint": "eslint . --ignore-pattern dist",
-    "e2e": "playwright test --reporter=list",
+    "e2e": "playwright test",
     "prepublishOnly": "cd ../../ && turbo run build"
   },
   "devDependencies": {
