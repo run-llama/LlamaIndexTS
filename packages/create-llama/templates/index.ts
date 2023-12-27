@@ -64,7 +64,7 @@ const copyTestData = async (
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
 ) => {
-  if (engine === "context" || framework === "fastapi") {
+  if (engine === "context") {
     const srcPath = path.join(__dirname, "components", "data");
     const destPath = path.join(root, "data");
     console.log(`\nCopying test data to ${cyan(destPath)}\n`);
@@ -75,29 +75,29 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
+    const runGenerate = `${cyan(
+      framework === "fastapi"
+        ? "python app/engine/generate.py"
+        : `${packageManager} run generate`,
+    )}`;
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
     const hasVectorDb = vectorDb && vectorDb !== "none";
-    const shouldRunGenerateAfterInstall = hasOpenAiKey && vectorDb === "none";
+    const shouldRunGenerateAfterInstall =
+      hasOpenAiKey && framework !== "fastapi" && vectorDb === "none";
     if (shouldRunGenerateAfterInstall) {
-      console.log(
-        `\nRunning ${cyan(
-          `${packageManager} run generate`,
-        )} to generate the context data.\n`,
-      );
+      console.log(`\nRunning ${runGenerate} to generate the context data.\n`);
       await callPackageManager(packageManager, true, ["run", "generate"]);
-      return console.log();
+      console.log();
+      return;
     }
 
     const settings = [];
     if (!hasOpenAiKey) settings.push("your OpenAI key");
     if (hasVectorDb) settings.push("your Vector DB environment variables");
-    const generateMessage = `run ${cyan(
-      `${packageManager} run generate`,
-    )} to generate the context data.\n`;
-    const message = settings.length
-      ? `After setting ${settings.join(" and ")}, ${generateMessage}`
-      : generateMessage;
-    console.log(`\n${message}\n`);
+    const settingsMessage =
+      settings.length > 0 ? `After setting ${settings.join(" and ")}, ` : "";
+    const generateMessage = `run ${runGenerate} to generate the context data.`;
+    console.log(`\n${settingsMessage}${generateMessage}\n\n`);
   }
 };
 
