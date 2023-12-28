@@ -317,7 +317,11 @@ const installPythonTemplate = async ({
   template,
   framework,
   engine,
-}: Pick<InstallTemplateArgs, "root" | "framework" | "template" | "engine">) => {
+  vectorDb,
+}: Pick<
+  InstallTemplateArgs,
+  "root" | "framework" | "template" | "engine" | "vectorDb"
+>) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(__dirname, "types", template, framework);
   await copy("**", root, {
@@ -342,7 +346,12 @@ const installPythonTemplate = async ({
 
   if (engine === "context") {
     const compPath = path.join(__dirname, "components");
-    const VectorDBPath = path.join(compPath, "vectordbs", "python", "none");
+    const VectorDBPath = path.join(
+      compPath,
+      "vectordbs",
+      "python",
+      vectorDb || "none",
+    );
     await copy("**", path.join(root, "app", "engine"), {
       parents: true,
       cwd: VectorDBPath,

@@ -239,28 +239,24 @@ export const askQuestions = async (
     if (ciInfo.isCI) {
       program.vectorDb = getPrefOrDefault("vectorDb");
     } else {
-      if (program.framework === "fastapi") {
-        program.vectorDb = "none";
-      } else {
-        const { vectorDb } = await prompts(
-          {
-            type: "select",
-            name: "vectorDb",
-            message: "Would you like to use a vector database?",
-            choices: [
-              {
-                title: "No, just store the data in the file system",
-                value: "none",
-              },
-              { title: "MongoDB", value: "mongo" },
-            ],
-            initial: 0,
-          },
-          handlers,
-        );
-        program.vectorDb = vectorDb;
-        preferences.vectorDb = vectorDb;
-      }
+      const { vectorDb } = await prompts(
+        {
+          type: "select",
+          name: "vectorDb",
+          message: "Would you like to use a vector database?",
+          choices: [
+            {
+              title: "No, just store the data in the file system",
+              value: "none",
+            },
+            { title: "MongoDB", value: "mongo" },
+          ],
+          initial: 0,
+        },
+        handlers,
+      );
+      program.vectorDb = vectorDb;
+      preferences.vectorDb = vectorDb;
     }
   }
 
