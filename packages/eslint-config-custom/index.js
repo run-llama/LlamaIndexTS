@@ -45,6 +45,8 @@ module.exports = {
           "https_proxy",
           "npm_config_user_agent",
           "NEXT_PUBLIC_CHAT_API",
+          "MODEL",
+          "NEXT_PUBLIC_MODEL",
         ],
       },
     ],

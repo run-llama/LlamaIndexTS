@@ -20,10 +20,11 @@
     "dist"
   ],
   "scripts": {
+    "clean": "rimraf --glob ./dist ./templates/**/__pycache__ ./templates/**/node_modules ./templates/**/poetry.lock",
     "dev": "ncc build ./index.ts -w -o dist/",
-    "build": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
+    "build": "npm run clean && ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
     "lint": "eslint . --ignore-pattern dist",
-    "e2e": "playwright test --reporter=list",
+    "e2e": "playwright test",
     "prepublishOnly": "cd ../../ && turbo run build"
   },
   "devDependencies": {
@@ -46,6 +47,7 @@
     "got": "10.7.0",
     "picocolors": "1.0.0",
     "prompts": "2.1.0",
+    "rimraf": "^5.0.5",
     "tar": "6.1.15",
     "terminal-link": "^3.0.0",
     "update-check": "1.5.4",

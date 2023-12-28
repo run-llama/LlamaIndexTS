@@ -89,14 +89,8 @@ export const askQuestions = async (
         })),
         initial: 0,
       },
-      {
-        onCancel: () => {
-          console.error("Exiting.");
-          process.exit(1);
-        },
-      },
+      handlers,
     );
-
     program.communityProjectPath = communityProjectPath;
     preferences.communityProjectPath = communityProjectPath;
     return; // early return - no further questions needed for community projects
@@ -130,11 +124,12 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "express" || program.framework === "fastapi") {
-    if (process.argv.includes("--no-frontend")) {
-      program.frontend = false;
-    }
+  if (
+    program.template === "streaming" &&
+    (program.framework === "express" || program.framework === "fastapi")
+  ) {
     // if a backend-only framework is selected, ask whether we should create a frontend
+    // (only for streaming backends)
     if (program.frontend === undefined) {
       if (ciInfo.isCI) {
         program.frontend = getPrefOrDefault("frontend");
@@ -161,7 +156,6 @@ export const askQuestions = async (
       }
     }
   } else {
-    // single project if framework is nextjs
     program.frontend = false;
   }
 
@@ -189,63 +183,64 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "express" || program.framework === "nextjs") {
-    if (!program.model) {
-      if (ciInfo.isCI) {
-        program.model = getPrefOrDefault("model");
-      } else {
-        const { model } = await prompts(
-          {
-            type: "select",
-            name: "model",
-            message: "Which model would you like to use?",
-            choices: [
-              { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
-              { title: "gpt-4", value: "gpt-4" },
-              { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
-              {
-                title: "gpt-4-vision-preview",
-                value: "gpt-4-vision-preview",
-              },
-            ],
-            initial: 0,
-          },
-          handlers,
-        );
-        program.model = model;
-        preferences.model = model;
-      }
+  if (!program.model) {
+    if (ciInfo.isCI) {
+      program.model = getPrefOrDefault("model");
+    } else {
+      const { model } = await prompts(
+        {
+          type: "select",
+          name: "model",
+          message: "Which model would you like to use?",
+          choices: [
+            { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+            { title: "gpt-4", value: "gpt-4" },
+            { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
+            {
+              title: "gpt-4-vision-preview",
+              value: "gpt-4-vision-preview",
+            },
+          ],
+          initial: 0,
+        },
+        handlers,
+      );
+      program.model = model;
+      preferences.model = model;
     }
   }
 
-  if (program.framework === "express" || program.framework === "nextjs") {
-    if (!program.engine) {
-      if (ciInfo.isCI) {
-        program.engine = getPrefOrDefault("engine");
-      } else {
-        const { engine } = await prompts(
-          {
-            type: "select",
-            name: "engine",
-            message: "Which data source would you like to use?",
-            choices: [
-              {
-                title: "No data, just a simple chat",
-                value: "simple",
-              },
-              { title: "Use an example PDF", value: "context" },
-            ],
-            initial: 1,
-          },
-          handlers,
-        );
-        program.engine = engine;
-        preferences.engine = engine;
-      }
+  if (!program.engine) {
+    if (ciInfo.isCI) {
+      program.engine = getPrefOrDefault("engine");
+    } else {
+      const { engine } = await prompts(
+        {
+          type: "select",
+          name: "engine",
+          message: "Which data source would you like to use?",
+          choices: [
+            {
+              title: "No data, just a simple chat",
+              value: "simple",
+            },
+            { title: "Use an example PDF", value: "context" },
+          ],
+          initial: 1,
+        },
+        handlers,
+      );
+      program.engine = engine;
+      preferences.engine = engine;
     }
-    if (program.engine !== "simple" && !program.vectorDb) {
-      if (ciInfo.isCI) {
-        program.vectorDb = getPrefOrDefault("vectorDb");
+  }
+
+  if (program.engine !== "simple" && !program.vectorDb) {
+    if (ciInfo.isCI) {
+      program.vectorDb = getPrefOrDefault("vectorDb");
+    } else {
+      if (program.framework === "fastapi") {
+        program.vectorDb = "none";
       } else {
         const { vectorDb } = await prompts(
           {
@@ -282,11 +277,7 @@ export const askQuestions = async (
     preferences.openAiKey = key;
   }
 
-  if (
-    program.framework !== "fastapi" &&
-    !process.argv.includes("--eslint") &&
-    !process.argv.includes("--no-eslint")
-  ) {
+  if (program.framework !== "fastapi" && program.eslint === undefined) {
     if (ciInfo.isCI) {
       program.eslint = getPrefOrDefault("eslint");
     } else {
