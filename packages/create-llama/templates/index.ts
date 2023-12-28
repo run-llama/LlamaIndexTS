@@ -42,7 +42,7 @@ const createEnvLocalFile = async (
 
   switch (opts?.vectorDb) {
     case "mongo": {
-      content += `MONGODB_URI=\n`;
+      content += `MONGO_URI=\n`;
       content += `MONGODB_DATABASE=\n`;
       content += `MONGODB_VECTORS=\n`;
       content += `MONGODB_VECTOR_INDEX=\n`;
