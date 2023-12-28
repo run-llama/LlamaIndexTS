@@ -22,8 +22,7 @@
   "scripts": {
     "clean": "rimraf --glob ./dist ./templates/**/__pycache__ ./templates/**/node_modules ./templates/**/poetry.lock",
     "dev": "ncc build ./index.ts -w -o dist/",
-    "build": "npm run clean && ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register && npm run postbuild",
-    "postbuild": "rimraf dist/data dist/none dist/typescript dist/ui",
+    "build": "npm run clean && ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
     "lint": "eslint . --ignore-pattern dist",
     "e2e": "playwright test",
     "prepublishOnly": "cd ../../ && turbo run build"
