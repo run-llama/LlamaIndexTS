@@ -7,6 +7,7 @@
     "@datastax/astra-db-ts": "^0.1.2",
     "@mistralai/mistralai": "^0.0.7",
     "@notionhq/client": "^2.2.14",
+    "@pinecone-database/pinecone": "^1.1.2",
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
     "compromise": "^14.10.1",
