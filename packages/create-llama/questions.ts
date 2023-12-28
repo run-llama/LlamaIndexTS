@@ -253,6 +253,7 @@ export const askQuestions = async (
                 value: "none",
               },
               { title: "MongoDB", value: "mongo" },
+              { title: "Pinecone", value: "pinecone" },
             ],
             initial: 0,
           },
