@@ -1,6 +1,5 @@
 "use client";
 
-import { MODEL } from "@/constants";
 import { useChat } from "ai/react";
 import { ChatInput, ChatMessages } from "./ui/chat";
 
@@ -33,7 +32,7 @@ export default function ChatSection() {
         handleSubmit={handleSubmit}
         handleInputChange={handleInputChange}
         isLoading={isLoading}
-        multiModal={MODEL === "gpt-4-vision-preview"}
+        multiModal={process.env.NEXT_PUBLIC_MODEL === "gpt-4-vision-preview"}
       />
     </div>
   );

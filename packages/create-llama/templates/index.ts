@@ -19,17 +19,28 @@ import {
 
 const createEnvLocalFile = async (
   root: string,
-  openAiKey?: string,
-  vectorDb?: TemplateVectorDB,
+  opts?: {
+    openAiKey?: string;
+    vectorDb?: TemplateVectorDB;
+    model?: string;
+    framework?: TemplateFramework;
+  },
 ) => {
   const envFileName = ".env";
   let content = "";
 
-  if (openAiKey) {
-    content += `OPENAI_API_KEY=${openAiKey}\n`;
+  const model = opts?.model || "gpt-3.5-turbo";
+  content += `MODEL=${model}\n`;
+  if (opts?.framework === "nextjs") {
+    content += `NEXT_PUBLIC_MODEL=${model}\n`;
+  }
+  console.log("\nUsing OpenAI model: ", model, "\n");
+
+  if (opts?.openAiKey) {
+    content += `OPENAI_API_KEY=${opts?.openAiKey}\n`;
   }
 
-  switch (vectorDb) {
+  switch (opts?.vectorDb) {
     case "mongo": {
       content += `MONGODB_URI=\n`;
       content += `MONGODB_DATABASE=\n`;
@@ -53,7 +64,7 @@ const copyTestData = async (
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
 ) => {
-  if (engine === "context" || framework === "fastapi") {
+  if (engine === "context") {
     const srcPath = path.join(__dirname, "components", "data");
     const destPath = path.join(root, "data");
     console.log(`\nCopying test data to ${cyan(destPath)}\n`);
@@ -64,29 +75,29 @@ const copyTestData = async (
   }
 
   if (packageManager && engine === "context") {
+    const runGenerate = `${cyan(
+      framework === "fastapi"
+        ? "python app/engine/generate.py"
+        : `${packageManager} run generate`,
+    )}`;
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
     const hasVectorDb = vectorDb && vectorDb !== "none";
-    const shouldRunGenerateAfterInstall = hasOpenAiKey && vectorDb === "none";
+    const shouldRunGenerateAfterInstall =
+      hasOpenAiKey && framework !== "fastapi" && vectorDb === "none";
     if (shouldRunGenerateAfterInstall) {
-      console.log(
-        `\nRunning ${cyan(
-          `${packageManager} run generate`,
-        )} to generate the context data.\n`,
-      );
+      console.log(`\nRunning ${runGenerate} to generate the context data.\n`);
       await callPackageManager(packageManager, true, ["run", "generate"]);
-      return console.log();
+      console.log();
+      return;
     }
 
     const settings = [];
     if (!hasOpenAiKey) settings.push("your OpenAI key");
     if (hasVectorDb) settings.push("your Vector DB environment variables");
-    const generateMessage = `run ${cyan(
-      `${packageManager} run generate`,
-    )} to generate the context data.\n`;
-    const message = settings.length
-      ? `After setting ${settings.join(" and ")}, ${generateMessage}`
-      : generateMessage;
-    console.log(`\n${message}\n`);
+    const settingsMessage =
+      settings.length > 0 ? `After setting ${settings.join(" and ")}, ` : "";
+    const generateMessage = `run ${runGenerate} to generate the context data.`;
+    console.log(`\n${settingsMessage}${generateMessage}\n\n`);
   }
 };
 
@@ -176,7 +187,12 @@ const installTSTemplate = async ({
       vectorDBFolder = vectorDb;
     }
 
-    const VectorDBPath = path.join(compPath, "vectordbs", vectorDBFolder);
+    const VectorDBPath = path.join(
+      compPath,
+      "vectordbs",
+      "typescript",
+      vectorDBFolder,
+    );
     relativeEngineDestPath =
       framework === "nextjs"
         ? path.join("app", "api", "chat")
@@ -202,14 +218,6 @@ const installTSTemplate = async ({
       cwd: uiPath,
       rename,
     });
-  }
-
-  if (framework === "nextjs" || framework === "express") {
-    await fs.writeFile(
-      path.join(root, "constants.ts"),
-      `export const MODEL = "${model || "gpt-3.5-turbo"}";\n`,
-    );
-    console.log("\nUsing OpenAI model: ", model || "gpt-3.5-turbo", "\n");
   }
 
   /**
@@ -308,7 +316,8 @@ const installPythonTemplate = async ({
   root,
   template,
   framework,
-}: Pick<InstallTemplateArgs, "root" | "framework" | "template">) => {
+  engine,
+}: Pick<InstallTemplateArgs, "root" | "framework" | "template" | "engine">) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(__dirname, "types", template, framework);
   await copy("**", root, {
@@ -330,6 +339,15 @@ const installPythonTemplate = async ({
       }
     },
   });
+
+  if (engine === "context") {
+    const compPath = path.join(__dirname, "components");
+    const VectorDBPath = path.join(compPath, "vectordbs", "python", "none");
+    await copy("**", path.join(root, "app", "engine"), {
+      parents: true,
+      cwd: VectorDBPath,
+    });
+  }
 
   console.log(
     "\nPython project, dependencies won't be installed automatically.\n",
@@ -369,7 +387,12 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, props.openAiKey, props.vectorDb);
+    await createEnvLocalFile(props.root, {
+      openAiKey: props.openAiKey,
+      vectorDb: props.vectorDb,
+      model: props.model,
+      framework: props.framework,
+    });
 
     // Copy test pdf file
     await copyTestData(

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
-import { MODEL } from "../../constants";
 import { createChatEngine } from "./engine";
 
 const getLastMessageContent = (
@@ -34,7 +33,7 @@ export const chat = async (req: Request, res: Response) => {
     }
 
     const llm = new OpenAI({
-      model: MODEL,
+      model: process.env.MODEL || "gpt-3.5-turbo",
     });
 
     const lastMessageContent = getLastMessageContent(
