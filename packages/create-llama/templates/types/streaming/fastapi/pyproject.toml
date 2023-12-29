@@ -12,7 +12,6 @@ uvicorn = { extras = ["standard"], version = "^0.23.2" }
 llama-index = "^0.9.19"
 pypdf = "^3.17.0"
 python-dotenv = "^1.0.0"
-pymongo = "^4.6.1"
 
 
 [build-system]

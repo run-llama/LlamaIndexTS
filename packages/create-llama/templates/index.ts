@@ -1,3 +1,4 @@
+import { parse, stringify } from "smol-toml";
 import { copy } from "../helpers/copy";
 import { callPackageManager } from "../helpers/install";
 
@@ -313,6 +314,62 @@ const installTSTemplate = async ({
   await callPackageManager(packageManager, isOnline);
 };
 
+interface IDependencyItem {
+  name: string;
+  version: string;
+}
+
+const getPythonAddOnDependencies = (vectorDb?: TemplateVectorDB) => {
+  const addOnDependencies: IDependencyItem[] = [];
+
+  switch (vectorDb) {
+    case "mongo": {
+      addOnDependencies.push({
+        name: "pymongo",
+        version: "^4.6.1",
+      });
+      break;
+    }
+  }
+
+  return addOnDependencies;
+};
+
+const preparePythonDependencies = async (
+  root: string,
+  addOnDependencies: IDependencyItem[],
+) => {
+  if (addOnDependencies.length === 0) return;
+
+  const FILENAME = "pyproject.toml";
+  try {
+    // Parse toml file
+    const file = path.join(root, FILENAME);
+    const fileContent = await fs.readFile(file, "utf8");
+    const fileParsed = parse(fileContent);
+
+    // Modify toml dependencies
+    const tool = fileParsed.tool as any;
+    const dependencies = tool.poetry.dependencies as any;
+    for (const dependency of addOnDependencies) {
+      dependencies[dependency.name] = dependency.version;
+    }
+
+    // Write toml file
+    const newFileContent = stringify(fileParsed);
+    await fs.writeFile(file, newFileContent);
+
+    const dependenciesString = addOnDependencies.map((d) => d.name).join(", ");
+    console.log(`\nAdded ${dependenciesString} to ${cyan(FILENAME)}\n`);
+  } catch (error) {
+    console.log(
+      `Error when preparing ${FILENAME} file for Python template\n`,
+      error,
+    );
+    console.log(error);
+  }
+};
+
 const installPythonTemplate = async ({
   root,
   template,
@@ -358,6 +415,9 @@ const installPythonTemplate = async ({
       cwd: VectorDBPath,
     });
   }
+
+  const addOnDependencies = getPythonAddOnDependencies(vectorDb);
+  await preparePythonDependencies(root, addOnDependencies);
 
   console.log(
     "\nPython project, dependencies won't be installed automatically.\n",
