@@ -5,17 +5,17 @@ import { parse, stringify } from "smol-toml";
 import { copy } from "../helpers/copy";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
-interface IDependencyItem {
+interface Dependency {
   name: string;
   version: string;
 }
 
-const getPythonAddOnDependencies = (vectorDb?: TemplateVectorDB) => {
-  const addOnDependencies: IDependencyItem[] = [];
+const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
+  const dependencies: Dependency[] = [];
 
   switch (vectorDb) {
     case "mongo": {
-      addOnDependencies.push({
+      dependencies.push({
         name: "pymongo",
         version: "^4.6.1",
       });
@@ -23,25 +23,26 @@ const getPythonAddOnDependencies = (vectorDb?: TemplateVectorDB) => {
     }
   }
 
-  return addOnDependencies;
+  return dependencies;
 };
-const preparePythonDependencies = async (
-  root: string,
-  addOnDependencies: IDependencyItem[],
+
+const addDependencies = async (
+  projectDir: string,
+  dependencies: Dependency[],
 ) => {
-  if (addOnDependencies.length === 0) return;
+  if (dependencies.length === 0) return;
 
   const FILENAME = "pyproject.toml";
   try {
     // Parse toml file
-    const file = path.join(root, FILENAME);
+    const file = path.join(projectDir, FILENAME);
     const fileContent = await fs.readFile(file, "utf8");
     const fileParsed = parse(fileContent);
 
     // Modify toml dependencies
     const tool = fileParsed.tool as any;
     const dependencies = tool.poetry.dependencies as any;
-    for (const dependency of addOnDependencies) {
+    for (const dependency of dependencies) {
       dependencies[dependency.name] = dependency.version;
     }
 
@@ -49,16 +50,19 @@ const preparePythonDependencies = async (
     const newFileContent = stringify(fileParsed);
     await fs.writeFile(file, newFileContent);
 
-    const dependenciesString = addOnDependencies.map((d) => d.name).join(", ");
+    const dependenciesString = dependencies
+      .map((d: Dependency) => d.name)
+      .join(", ");
     console.log(`\nAdded ${dependenciesString} to ${cyan(FILENAME)}\n`);
   } catch (error) {
     console.log(
-      `Error when preparing ${FILENAME} file for Python template\n`,
+      `Error while updating dependencies for Poetry project file ${FILENAME}\n`,
       error,
     );
     console.log(error);
   }
 };
+
 export const installPythonTemplate = async ({
   root,
   template,
@@ -105,8 +109,8 @@ export const installPythonTemplate = async ({
     });
   }
 
-  const addOnDependencies = getPythonAddOnDependencies(vectorDb);
-  await preparePythonDependencies(root, addOnDependencies);
+  const addOnDependencies = getAdditionalDependencies(vectorDb);
+  await addDependencies(root, addOnDependencies);
 
   console.log(
     "\nPython project, dependencies won't be installed automatically.\n",
