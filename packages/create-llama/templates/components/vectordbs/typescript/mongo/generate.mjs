@@ -11,7 +11,7 @@ import { STORAGE_DIR, checkRequiredEnvVars } from "./shared.mjs";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGODB_URI;
+const mongoUri = process.env.MONGO_URI;
 const databaseName = process.env.MONGODB_DATABASE;
 const vectorCollectionName = process.env.MONGODB_VECTORS;
 const indexName = process.env.MONGODB_VECTOR_INDEX;
