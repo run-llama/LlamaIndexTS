@@ -41,25 +41,22 @@ const addDependencies = async (
 
     // Modify toml dependencies
     const tool = fileParsed.tool as any;
-    const dependencies = tool.poetry.dependencies as any;
+    const existingDependencies = tool.poetry.dependencies as any;
     for (const dependency of dependencies) {
-      dependencies[dependency.name] = dependency.version;
+      existingDependencies[dependency.name] = dependency.version;
     }
 
     // Write toml file
     const newFileContent = stringify(fileParsed);
     await fs.writeFile(file, newFileContent);
 
-    const dependenciesString = dependencies
-      .map((d: Dependency) => d.name)
-      .join(", ");
+    const dependenciesString = dependencies.map((d) => d.name).join(", ");
     console.log(`\nAdded ${dependenciesString} to ${cyan(FILENAME)}\n`);
   } catch (error) {
     console.log(
       `Error while updating dependencies for Poetry project file ${FILENAME}\n`,
       error,
     );
-    console.log(error);
   }
 };
 
