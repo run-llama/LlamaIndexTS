@@ -13,12 +13,10 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
     "@turbo/gen": "^1.10.16",
-    "@types/crypto-js": "^4.2.1",
     "@types/jest": "^29.5.10",
-    "@types/uuid": "^9.0.7",
     "eslint": "^8.54.0",
-    "eslint-config-custom": "*",
-    "husky": "^8.0.0",
+    "eslint-config-custom": "workspace:*",
+    "husky": "^8.0.3",
     "jest": "^29.7.0",
     "lint-staged": "^15.1.0",
     "prettier": "^3.1.0",
@@ -35,9 +33,5 @@
   },
   "lint-staged": {
     "(!apps/docs/i18n/**/docusaurus-plugin-content-docs/current/api/*).{js,jsx,ts,tsx,md}": "prettier --write"
-  },
-  "dependencies": {
-    "chromadb": "^1.7.3",
-    "llamaindex": "^0.0.40"
   }
 }
