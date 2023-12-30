@@ -1,102 +1,76 @@
 import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
-import { OpenAIEmbeddingFunction } from 'chromadb'
 import { BaseNode, Document, MetadataMode } from "../../Node";
-
 import { ChromaClient, Collection } from 'chromadb'
-
-const client = new ChromaClient();
-const MAX_INSERT_BATCH_SIZE = 20;
-
-
-
 
 export class ChromaVectorStore implements VectorStore {
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
-  chromaClient: ChromaClient
-  collectionName: string
-  idKey: string
-  metadataKey: string
-  contentKey: string | undefined
-
-  
+  chromaClient: ChromaClient;
+  collectionName: string;
+  embeddingKey: string;
+  idKey: string;
+  textKey: string;
+  metadataKey: string;
+  contentKey: string | undefined;
   private collection: Collection | undefined;
 
-  constructor(
-    init?: Partial<ChromaVectorStore> & {
-      params?: {
-        // Add necessary ChromaDB connection parameters
-      };
-    },
-  ) {
+  constructor(init?: Partial<ChromaVectorStore> & { params?: {} }) {
     this.chromaClient = new ChromaClient();
     this.collectionName = init?.collectionName ?? "default_collection";
     this.idKey = init?.idKey ?? "_id";
+    this.textKey = init?.textKey ?? "text";
+    this.embeddingKey = init?.embeddingKey ?? "embedding";
     this.contentKey = init?.contentKey;
     this.metadataKey = init?.metadataKey ?? "metadata";
   }
 
+  //Create a new collection
   async create(collectionName: string): Promise<void> {
     await this.chromaClient.createCollection({
       name: collectionName
     });
-    console.debug('Created ChromaDB collection')
   }
-
+  
+  //Connect to existing ChromaDB collection
   async connect(collectionName: string): Promise<void> {
     this.collection = await this.chromaClient.getCollection({
       name: collectionName,
     });
-    console.debug('Connected to ChromaDB collection');
   }
 
   client(): ChromaClient {
     return this.chromaClient;
   }
 
-  //add document to chromadb collection 
+  //Add document to ChromaDB collection
   async add(nodes: BaseNode[]): Promise<string[]> {
     if (!this.collection) {
-      throw new Error("Must connect to collection before adding.")
+        throw new Error("Must connect to collection before adding.");
     }
 
-    const collection = this.collection;
-    if (!nodes || nodes.length == 0) {
-      return [];
+    if (!nodes || nodes.length === 0) {
+        return [];
     }
 
-    const dataToInsert = nodes.map((node) => {
-      return {
-        _id: node.id_,
-        $vector: node.getEmbedding(),
-        content: node.getContent(MetadataMode.ALL),
-        metadata: node.metadata,
-      };
-    });
+    const dataToInsert = {
+        ids: nodes.map((node) => node.id_),
+        embeddings: nodes.map((node) => node.getEmbedding()),
+        metadatas: nodes.map((node) => node.metadata),
+        documents: nodes.map((node) => node.getContent(MetadataMode.ALL)),
+    };
 
-    console.debug(`Adding ${dataToInsert.length} rows to table`);
+    const result = await this.collection.add(dataToInsert);
+    const insertedIds: string[] = [];
 
-    let batchData: any[] = [];
-    for (let i = 0; i < dataToInsert.length; i += MAX_INSERT_BATCH_SIZE) {
-      batchData.push(dataToInsert.slice(i, i + MAX_INSERT_BATCH_SIZE));
-    }
-
-    for (const batch of batchData) {
-      console.debug(`Inserting batch of size ${batch.length}`);
-      await this.collection.add(batch);
-    }
-
-    return dataToInsert.map((node) => node._id);
+    return insertedIds;
   }
-
-  //delete document from collection 
+  
+  //delete document from collection
   async delete(refDocId: string, deleteOptions?: any): Promise<void> {
     if (!this.collection) {
       throw new Error('Must connect to collection before deleting')
     }
-
-    console.debug('Deleting row with id $(refDocID)');
 
     await this.collection.delete({
       ids: [refDocId],
@@ -104,12 +78,46 @@ export class ChromaVectorStore implements VectorStore {
     });
   }
 
-  //query document from chromadb collection to get closest match to embedding 
-  async query(
-    query: VectorStoreQuery,
-    options?: any,
-  ): Promise<VectorStoreQueryResult> {
-    throw new Error('query method is not implemented yet');
+  //Query document from ChromaDB collection to get the closest match to given embedding. 
+  async query(query: VectorStoreQuery, options?: any): Promise<VectorStoreQueryResult> {
+    if (!this.collection) {
+      throw new Error("Must connect to collection before querying.");
+    }
+  
+    const result = await this.collection.query({
+      queryEmbeddings: query.queryEmbedding,
+      nResults: query.similarityTopK,
+    });
+  
+    const rows: any[] = Array.isArray(result) ? result : [result];
+  
+    const nodes: BaseNode[] = [];
+    const ids: string[] = [];
+    const similarities: number[] = [];
+  
+    for (const row of rows) {
+      const id = row._id;
+      const embedding = row.$vector;
+      const similarity = row.$similarity;
+      const metadata = row.metadata;
+      const content = row.content || JSON.stringify(row);
+      
+      const node = new Document({
+        id_: id,
+        text: content,
+        metadata: metadata ?? {},
+        embedding: embedding,
+      });
+  
+      ids.push(id);
+      similarities.push(similarity);
+      nodes.push(node);
+    }
+  
+    return {
+      similarities,
+      ids,
+      nodes,
+    };
   }
-
 }
