@@ -11,7 +11,7 @@ import { checkRequiredEnvVars, CHUNK_OVERLAP, CHUNK_SIZE } from "./shared.mjs";
 
 async function getDataSource(llm: LLM) {
   checkRequiredEnvVars();
-  const client = new MongoClient(process.env.MONGODB_URI!);
+  const client = new MongoClient(process.env.MONGO_URI!);
   const serviceContext = serviceContextFromDefaults({
     llm,
     chunkSize: CHUNK_SIZE,
