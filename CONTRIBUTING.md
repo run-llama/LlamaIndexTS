@@ -31,11 +31,21 @@ PNPM's has documentation on its [workspace feature](https://pnpm.io/workspaces) 
 
 ### Running Typescript
 
-When we publish to NPM we will have a tsc compiled version of the library in JS. For now, the easiest thing to do is use ts-node.
+When we publish to NPM we will have a tsc compiled version of the library in JS. For now, the easiest thing to do is use ts-node. To run a TypeScript file, use the following command:
+
+```
+pnpx ts-node {file_path}
+```
 
 ### Test cases
 
-To run them, run
+Before running the tests, compile the TypeScript files to JavaScript. This can be done by running the following command:
+
+```
+pnpm run build
+```
+
+After the build process is complete, you can run the tests with:
 
 ```
 pnpm run test
