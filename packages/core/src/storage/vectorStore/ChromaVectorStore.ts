@@ -1,42 +1,35 @@
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
+import { VectorStore, VectorStoreQuery, VectorStoreQueryMode, VectorStoreQueryResult } from "./types";
 import { BaseNode, Document, MetadataMode } from "../../Node";
-import { ChromaClient, Collection } from 'chromadb'
+import { ChromaClient, Collection, IncludeEnum, Where, WhereDocument, Metadata, Embeddings } from 'chromadb'
 
+type ChromaDBParams = {
+  collectionName: string
+}
+
+type ChromaDeleteOptions = {
+  where?: Where;
+  whereDocument?: WhereDocument;
+}
+type ChromaQueryOptions = {
+  whereDocument?: WhereDocument
+}
 export class ChromaVectorStore implements VectorStore {
   storesText: boolean = true;
-  flatMetadata: boolean = true;
+  private chromaClient: ChromaClient
+  private collection: Collection | null;
 
-  chromaClient: ChromaClient;
-  collectionName: string;
-  embeddingKey: string;
-  idKey: string;
-  textKey: string;
-  metadataKey: string;
-  contentKey: string | undefined;
-  private collection: Collection | undefined;
-
-  constructor(init?: Partial<ChromaVectorStore> & { params?: {} }) {
+  constructor(params: ChromaDBParams) {
     this.chromaClient = new ChromaClient();
-    this.collectionName = init?.collectionName ?? "default_collection";
-    this.idKey = init?.idKey ?? "_id";
-    this.textKey = init?.textKey ?? "text";
-    this.embeddingKey = init?.embeddingKey ?? "embedding";
-    this.contentKey = init?.contentKey;
-    this.metadataKey = init?.metadataKey ?? "metadata";
-  }
-
-  //Create a new collection
-  async create(collectionName: string): Promise<void> {
-    await this.chromaClient.createCollection({
-      name: collectionName
-    });
-  }
-  
-  //Connect to existing ChromaDB collection
-  async connect(collectionName: string): Promise<void> {
-    this.collection = await this.chromaClient.getCollection({
-      name: collectionName,
-    });
+    this.collection = null;
+    //create the collection
+    this.chromaClient.createCollection({
+      name: params.collectionName,
+    }).then((collection) => {
+      this.collection = collection;
+    }).catch((err) => {
+      console.error(err);
+    }
+    );
   }
 
   client(): ChromaClient {
@@ -44,92 +37,87 @@ export class ChromaVectorStore implements VectorStore {
   }
 
   //Add document to ChromaDB collection
-  async add(nodes: BaseNode[]): Promise<string[]> {
+  async add(embeddingResults: BaseNode[]): Promise<string[]> {
     if (!this.collection) {
-        throw new Error("Must connect to collection before adding.");
+        throw new Error("Must initialize collection before adding.");
     }
 
-    if (!nodes || nodes.length === 0) {
-        return [];
+    const allNodesHaveEmbeddings = embeddingResults.every((node) => node.embedding != undefined);
+    const embeddings = allNodesHaveEmbeddings ? embeddingResults.map((node) => node.getEmbedding()): undefined
+    try {
+      await this.collection.add({
+        ids: embeddingResults.map((node) => node.id_),
+        metadatas: embeddingResults.map((node) => node.metadata),
+        documents: embeddingResults.map((node) => node.getContent(MetadataMode.NONE)),
+        embeddings: embeddings
+      });
     }
-
-    const dataToInsert = {
-        ids: nodes.map((node) => node.id_),
-        embeddings: nodes.map((node) => node.getEmbedding()),
-        metadatas: nodes.map((node) => node.metadata),
-        documents: nodes.map((node) => node.getContent(MetadataMode.ALL)),
-    };
-
-
-    const result = await this.collection.add(dataToInsert);
-    const insertedIds: string[] = [];
-
-    return insertedIds;
+    catch (err) {
+      const msg = `${err}`
+      console.log(msg, err);
+      throw err
+    }
+    return embeddingResults.map((node) => node.id_)
   }
   
   //delete document from collection
-  async delete(refDocId: string, deleteOptions?: any): Promise<void> {
+  async delete(refDocId: string, deleteOptions?: ChromaDeleteOptions): Promise<void> {
     if (!this.collection) {
-      throw new Error('Must connect to collection before deleting')
+      throw new Error('Must initialize collection before deleting')
     }
 
-    await this.collection.delete({
-      ids: [refDocId],
-      where: deleteOptions,
-    });
+    try {
+      await this.collection.delete({
+        ids: [refDocId],
+        where: deleteOptions?.where,
+        whereDocument: deleteOptions?.whereDocument,
+      });
+    } catch (err) {
+      const msg = `${err}`;
+      console.log(msg, err);
+      throw err;
+    }
   }
 
   //Query document from ChromaDB collection to get the closest match to given embedding. 
-  async query(query: VectorStoreQuery, options?: any): Promise<VectorStoreQueryResult> {
+  async query(query: VectorStoreQuery, options?: ChromaQueryOptions): Promise<VectorStoreQueryResult> {
     if (!this.collection) {
       throw new Error("Must connect to collection before querying.");
     }
-  
-
-
-    const metadataFilters: Record<string, any> = {};
-  // Assuming your metadata is stored under the 'metadata' key
-  if (query.filters?.filters) {
-    query.filters.filters.forEach((mf) => {
-      metadataFilters[mf.key] = mf.value;
-    });
-  }
-    const result = await this.collection.query({
-      queryEmbeddings: query.queryEmbedding,
-      nResults: query.similarityTopK,
-      where: metadataFilters,
-      //whereDocument:{"$contains":"search_string"}
-    });
-  
-    const rows: any[] = Array.isArray(result) ? result : [result];
-  
-    const nodes: BaseNode[] = [];
-    const ids: string[] = [];
-    const similarities: number[] = [];
-  
-    for (const row of rows) {
-      const id = row._id;
-      const embedding = row.$vector;
-      const similarity = row.$similarity;
-      const metadata = row.metadata;
-      const content = row.content || JSON.stringify(row);
-      
-      const node = new Document({
-        id_: id,
-        text: content,
-        metadata: metadata ?? {},
-        embedding: embedding,
-      });
-  
-      ids.push(id);
-      similarities.push(similarity);
-      nodes.push(node);
+    if (query.docIds) {
+      throw new Error("ChromaDB does not support querying by docIDs");
     }
-  
-    return {
-      similarities,
-      ids,
-      nodes,
-    };
-  }
+    if (query.mode != VectorStoreQueryMode.DEFAULT) {
+      throw new Error("ChromaDB does not support querying by mode");
+    }
+
+    const chromaWhere: { [x: string]: string | number | boolean; } = {};  
+    if (query.filters) {
+      query.filters.filters.map((filter) => {
+        const filterKey = filter.key;
+        const filterValue = filter.value;
+        chromaWhere[filterKey] = filterValue;
+      }
+      );
+    }
+    try {
+      const queryResponse = await this.collection.query({
+        queryEmbeddings: query.queryEmbedding ?? undefined,
+        queryTexts: query.queryStr ?? undefined,
+        nResults: query.similarityTopK,
+        where: Object.keys(chromaWhere).length ? chromaWhere: undefined, 
+        whereDocument: options?.whereDocument,
+        //ChromaDB doesn't return the result embeddings by default so we need to include them  
+        include: [IncludeEnum.Distances, IncludeEnum.Metadatas, IncludeEnum.Documents, IncludeEnum.Embeddings]
+      });
+      catch (err) {
+
+      }
+    }
 }
+}
+  
+
+
+    
+  
