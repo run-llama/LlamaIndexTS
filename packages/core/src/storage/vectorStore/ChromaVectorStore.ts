@@ -60,6 +60,7 @@ export class ChromaVectorStore implements VectorStore {
         documents: nodes.map((node) => node.getContent(MetadataMode.ALL)),
     };
 
+
     const result = await this.collection.add(dataToInsert);
     const insertedIds: string[] = [];
 
@@ -84,9 +85,20 @@ export class ChromaVectorStore implements VectorStore {
       throw new Error("Must connect to collection before querying.");
     }
   
+
+
+    const metadataFilters: Record<string, any> = {};
+  // Assuming your metadata is stored under the 'metadata' key
+  if (query.filters?.filters) {
+    query.filters.filters.forEach((mf) => {
+      metadataFilters[mf.key] = mf.value;
+    });
+  }
     const result = await this.collection.query({
       queryEmbeddings: query.queryEmbedding,
       nResults: query.similarityTopK,
+      where: metadataFilters,
+      //whereDocument:{"$contains":"search_string"}
     });
   
     const rows: any[] = Array.isArray(result) ? result : [result];
