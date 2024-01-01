@@ -57,7 +57,7 @@ export interface VectorStoreQuery {
 }
 
 export interface VectorStore {
-  storesText: boolean;  
+  storesText: boolean;
   isEmbeddingQuery?: boolean;
   client(): any;
   add(embeddingResults: BaseNode[]): Promise<string[]>;
