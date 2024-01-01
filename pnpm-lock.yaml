@@ -115,6 +115,9 @@ importers:
       '@pinecone-database/pinecone':
         specifier: ^1.1.2
         version: 1.1.2
+      chromadb:
+        specifier: ^1.7.3
+        version: 1.7.3(openai@4.20.1)
       commander:
         specifier: ^11.1.0
         version: 11.1.0

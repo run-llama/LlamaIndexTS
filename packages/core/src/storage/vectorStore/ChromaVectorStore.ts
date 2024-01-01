@@ -10,9 +10,11 @@ type ChromaDeleteOptions = {
   where?: Where;
   whereDocument?: WhereDocument;
 }
+
 type ChromaQueryOptions = {
   whereDocument?: WhereDocument
 }
+
 export class ChromaVectorStore implements VectorStore {
   storesText: boolean = true;
   private chromaClient: ChromaClient
@@ -110,14 +112,25 @@ export class ChromaVectorStore implements VectorStore {
         //ChromaDB doesn't return the result embeddings by default so we need to include them  
         include: [IncludeEnum.Distances, IncludeEnum.Metadatas, IncludeEnum.Documents, IncludeEnum.Embeddings]
       });
-      catch (err) {
-
-      }
+      //Only given 1 embedding/text, so get 0th index for everything
+      const vectorStoreQueryResult: VectorStoreQueryResult = {
+        nodes: queryResponse.ids[0].map((id, index) => {
+          return new Document({
+            id_: id,
+            text: (queryResponse.documents as string[][])[0][index],
+            metadata: queryResponse.metadatas[0][index] ?? {},
+            embedding: (queryResponse.embeddings as Embeddings[])[0][index],
+          });
+        }),
+        similarities: (queryResponse.distances as number[][])[0].map((distance) => 1 - distance),
+        ids: queryResponse.ids[0],
+      };
+      return vectorStoreQueryResult;
     }
+    catch (err) {
+      const msg = `${err}`
+      console.log(msg, err)
+      throw err
+    }
+  }
 }
-}
-  
-
-
-    
-  
