@@ -19,5 +19,4 @@ sandbox:
     - pnpm eslint --fix {file_path}
     - pnpx ts-node --type-check {file_path}
     - pnpm test
-
 # Default Values: https://github.com/sweepai/sweep/blob/main/sweep.yaml

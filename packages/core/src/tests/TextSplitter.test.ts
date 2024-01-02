@@ -1,4 +1,4 @@
-import { cjkSentenceTokenizer, SentenceSplitter } from '../TextSplitter'
+import { cjkSentenceTokenizer, SentenceSplitter } from "../TextSplitter";
 
 describe("SentenceSplitter", () => {
   test("initializes", () => {
@@ -88,7 +88,9 @@ describe("SentenceSplitter", () => {
       chunkingTokenizerFn: cjkSentenceTokenizer,
     });
 
-    const splits = sentenceSplitter.splitText("此后如竟没有炬火：我便是唯一的光。倘若有了炬火，出了太阳，我们自然心悦诚服的消失。不但毫无不平，而且还要随喜赞美这炬火或太阳；因为他照了人类，连我都在内。");
+    const splits = sentenceSplitter.splitText(
+      "此后如竟没有炬火：我便是唯一的光。倘若有了炬火，出了太阳，我们自然心悦诚服的消失。不但毫无不平，而且还要随喜赞美这炬火或太阳；因为他照了人类，连我都在内。",
+    );
     expect(splits).toEqual([
       "此后如竟没有炬火：我便是唯一的光。",
       "倘若有了炬火，出了太阳，我们自然心悦诚服的消失。",

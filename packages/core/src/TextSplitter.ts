@@ -1,5 +1,5 @@
-import nlp from 'compromise'
-import { EOL } from 'node:os'
+import nlp from "compromise";
+import { EOL } from "node:os";
 // GitHub translated
 import { globalsHelper } from "./GlobalsHelper";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
@@ -20,11 +20,15 @@ class TextSplit {
 type SplitRep = { text: string; numTokens: number };
 
 export const defaultSentenceTokenizer = (text: string): string[] => {
-  return nlp(text).sentences().json().map((sentence: any) => sentence.text);
+  return nlp(text)
+    .sentences()
+    .json()
+    .map((sentence: any) => sentence.text);
 };
 
 // Refs: https://github.com/fxsjy/jieba/issues/575#issuecomment-359637511
-const resentencesp = /([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))/;
+const resentencesp =
+  /([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))/;
 /**
  * Tokenizes sentences. Suitable for Chinese, Japanese, and Korean. Use instead of `defaultSentenceTokenizer`.
  * @param text
@@ -46,7 +50,7 @@ export function cjkSentenceTokenizer(sentence: string): string[] {
   return slist.filter((s) => s.length > 0);
 }
 
-export const defaultParagraphSeparator = EOL + EOL + EOL
+export const defaultParagraphSeparator = EOL + EOL + EOL;
 
 // In theory there's also Mac style \r only, but it's pre-OSX and I don't think
 // many documents will use it.
@@ -227,9 +231,10 @@ export class SentenceSplitter {
           // push curent doc list to docs
           docs.push(
             new TextSplit(
-              curChunkSentences.map((sentence) => sentence.text).
-                join(" ").
-                trim(),
+              curChunkSentences
+                .map((sentence) => sentence.text)
+                .join(" ")
+                .trim(),
             ),
           );
         }

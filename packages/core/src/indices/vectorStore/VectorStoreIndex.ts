@@ -24,7 +24,7 @@ import {
 } from "../../storage/StorageContext";
 import { BaseIndexStore } from "../../storage/indexStore/types";
 import { VectorStore } from "../../storage/vectorStore/types";
-import { ResponseSynthesizer, BaseSynthesizer } from "../../synthesizers";
+import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,

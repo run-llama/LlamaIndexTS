@@ -28,7 +28,7 @@ module.exports = {
           "PINECONE_ENVIRONMENT",
           "PINECONE_PROJECT_ID",
           "PINECONE_INDEX_NAME",
-          "PINECONE_CHUNK_SIZE", 
+          "PINECONE_CHUNK_SIZE",
           "PINECONE_INDEX_NAME",
 
           "AZURE_OPENAI_API_KEY",
