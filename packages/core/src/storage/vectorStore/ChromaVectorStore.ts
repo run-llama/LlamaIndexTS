@@ -44,6 +44,7 @@ export class ChromaVectorStore implements VectorStore {
         throw new Error("Must initialize collection before adding.");
     }
 
+    //Check if all nodes have an embedding and only if they do, add the embeddings to the collection
     const allNodesHaveEmbeddings = embeddingResults.every((node) => node.embedding != undefined);
     const embeddings = allNodesHaveEmbeddings ? embeddingResults.map((node) => node.getEmbedding()): undefined
     try {
