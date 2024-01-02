@@ -4,9 +4,10 @@ import {
   ImageDocument,
   NodeRelationship,
   TextNode,
-} from "./Node";
-import { SentenceSplitter } from "./TextSplitter";
-import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
+} from "../Node";
+import { SentenceSplitter } from "../TextSplitter";
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants";
+import { NodeParser } from "./types";
 
 /**
  * Splits the text of a document into smaller parts.
@@ -14,25 +15,23 @@ import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
  * @param textSplitter - The text splitter to use.
  * @returns An array of text splits.
  */
-export function getTextSplitsFromDocument(
+function getTextSplitsFromDocument(
   document: Document,
   textSplitter: SentenceSplitter,
 ) {
   const text = document.getText();
-  const splits = textSplitter.splitText(text);
-
-  return splits;
+  return textSplitter.splitText(text);
 }
 
 /**
  * Generates an array of nodes from a document.
- * @param document - The document to generate nodes from.
+ * @param doc
  * @param textSplitter - The text splitter to use.
  * @param includeMetadata - Whether to include metadata in the nodes.
  * @param includePrevNextRel - Whether to include previous and next relationships in the nodes.
  * @returns An array of nodes.
  */
-export function getNodesFromDocument(
+function getNodesFromDocument(
   doc: BaseNode,
   textSplitter: SentenceSplitter,
   includeMetadata: boolean = true,
@@ -72,18 +71,6 @@ export function getNodesFromDocument(
   }
 
   return nodes;
-}
-
-/**
- * A NodeParser generates Nodes from Documents
- */
-export interface NodeParser {
-  /**
-   * Generates an array of nodes from an array of documents.
-   * @param documents - The documents to generate nodes from.
-   * @returns An array of nodes.
-   */
-  getNodesFromDocuments(documents: BaseNode[]): BaseNode[];
 }
 
 /**
