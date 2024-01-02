@@ -23,7 +23,6 @@ export class ChromaVectorStore implements VectorStore {
   constructor(params: ChromaDBParams) {
     this.chromaClient = new ChromaClient();
     this.collection = null;
-    //create the collection
     this.chromaClient.createCollection({
       name: params.collectionName,
     }).then((collection) => {
@@ -38,13 +37,12 @@ export class ChromaVectorStore implements VectorStore {
     return this.chromaClient;
   }
 
-  //Add document to ChromaDB collection
   async add(embeddingResults: BaseNode[]): Promise<string[]> {
     if (!this.collection) {
         throw new Error("Must initialize collection before adding.");
     }
 
-    //Check if all nodes have an embedding and only if they do, add the embeddings to the collection
+    // Check if all nodes have an embedding and only if they do, add the embeddings to the collection
     const allNodesHaveEmbeddings = embeddingResults.every((node) => node.embedding != undefined);
     const embeddings = allNodesHaveEmbeddings ? embeddingResults.map((node) => node.getEmbedding()): undefined
     try {
@@ -63,7 +61,6 @@ export class ChromaVectorStore implements VectorStore {
     return embeddingResults.map((node) => node.id_)
   }
   
-  //delete document from collection
   async delete(refDocId: string, deleteOptions?: ChromaDeleteOptions): Promise<void> {
     if (!this.collection) {
       throw new Error('Must initialize collection before deleting')
@@ -82,7 +79,6 @@ export class ChromaVectorStore implements VectorStore {
     }
   }
 
-  //Query document from ChromaDB collection to get the closest match to given embedding. 
   async query(query: VectorStoreQuery, options?: ChromaQueryOptions): Promise<VectorStoreQueryResult> {
     if (!this.collection) {
       throw new Error("Must connect to collection before querying.");
