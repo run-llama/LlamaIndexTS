@@ -1,6 +1,8 @@
-import { VectorStoreIndex } from "llamaindex";
-import { serviceContextFromDefaults } from "llamaindex";
-import { PineconeVectorStore } from "llamaindex";
+import {
+  PineconeVectorStore,
+  VectorStoreIndex,
+  serviceContextFromDefaults,
+} from "llamaindex";
 
 async function main() {
   const readline = require("readline").createInterface({

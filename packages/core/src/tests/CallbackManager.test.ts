@@ -1,3 +1,5 @@
+import { Document } from "../Node";
+import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import {
   CallbackManager,
   RetrievalCallbackResponse,
@@ -7,12 +9,7 @@ import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 import { OpenAI } from "../llm/LLM";
-import { Document } from "../Node";
-import {
-  ResponseSynthesizer,
-  SimpleResponseBuilder,
-} from "../synthesizers";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
+import { ResponseSynthesizer, SimpleResponseBuilder } from "../synthesizers";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
 // Mock the OpenAI getOpenAISession function during testing

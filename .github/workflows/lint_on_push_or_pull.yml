@@ -17,9 +17,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Run lint
         run: pnpm run lint
+      - name: Run Prettier
+        run: pnpm run format
