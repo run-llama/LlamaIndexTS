@@ -39,7 +39,7 @@ Für komplexere Anwendungen ermöglichen unsere APIs auf niedrigerer Ebene fortg
 
 `npm install llamaindex`
 
-Unsere Dokumentation enthält [Installationsanweisungen](./installation.md) und ein [Einführungstutorial](./starter.md), um Ihre erste Anwendung zu erstellen.
+Unsere Dokumentation enthält [Installationsanweisungen](./installation.mdx) und ein [Einführungstutorial](./starter.md), um Ihre erste Anwendung zu erstellen.
 
 Sobald Sie bereit sind, bietet [High-Level-Konzepte](./concepts.md) einen Überblick über die modulare Architektur von LlamaIndex. Für praktische Beispiele schauen Sie sich unsere [End-to-End-Tutorials](./end_to_end.md) an.
 
