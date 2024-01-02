@@ -39,7 +39,7 @@ Per a aplicacions més complexes, les nostres API de nivell inferior permeten al
 
 `npm install llamaindex`
 
-La nostra documentació inclou [Instruccions d'Instal·lació](./installation.md) i un [Tutorial d'Inici](./starter.md) per a construir la vostra primera aplicació.
+La nostra documentació inclou [Instruccions d'Instal·lació](./installation.mdx) i un [Tutorial d'Inici](./starter.md) per a construir la vostra primera aplicació.
 
 Un cop tingueu tot a punt, [Conceptes de Nivell Alt](./concepts.md) ofereix una visió general de l'arquitectura modular de LlamaIndex. Per a més exemples pràctics, consulteu els nostres [Tutorials de Principi a Fi](./end_to_end.md).
 
