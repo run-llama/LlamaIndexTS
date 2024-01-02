@@ -1,5 +1,13 @@
 # create-llama
 
+## 0.0.12
+
+### Patch Changes
+
+- 9c5e22a: Added cross-env so frontends with Express/FastAPI backends are working under Windows
+- 5ab65eb: Bring Python templates with TS templates to feature parity
+- 9c5e22a: Added vector DB selector to create-llama (starting with MongoDB support)
+
 ## 0.0.11
 
 ### Patch Changes
