@@ -11,7 +11,6 @@
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
     "compromise": "^14.10.1",
-    "crypto-js": "^4.2.0",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.8",
     "lodash": "^4.17.21",
@@ -32,7 +31,6 @@
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
-    "@types/crypto-js": "^4.2.1",
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.2",

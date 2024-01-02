@@ -161,9 +161,6 @@ importers:
       compromise:
         specifier: ^14.10.1
         version: 14.10.1
-      crypto-js:
-        specifier: ^4.2.0
-        version: 4.2.0
       file-type:
         specifier: ^18.7.0
         version: 18.7.0
@@ -219,9 +216,6 @@ importers:
         specifier: ^1.14.3
         version: 1.14.3
     devDependencies:
-      '@types/crypto-js':
-        specifier: ^4.2.1
-        version: 4.2.1
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -4441,10 +4435,6 @@ packages:
       '@types/node': 20.9.0
     dev: true
 
-  /@types/crypto-js@4.2.1:
-    resolution: {integrity: sha512-FSPGd9+OcSok3RsM0UZ/9fcvMOXJ1ENE/ZbLfOPlBWj7BgXtEAM8VYfTtT760GiLbQIMoVozwVuisjvsVwqYWw==}
-    dev: true
-
   /@types/eslint-scope@3.7.5:
     resolution: {integrity: sha512-JNvhIEyxVW6EoMIFIvj93ZOywYFatlpu9deeH6eSx6PE3WHYvHaQtmHmQeNw7aA81bYGBPPQqdtBm6b1SsQMmA==}
     dependencies:
@@ -6819,10 +6809,6 @@ packages:
       randombytes: 2.1.0
       randomfill: 1.0.4
     dev: true
-
-  /crypto-js@4.2.0:
-    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
-    dev: false
 
   /crypto-random-string@2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
