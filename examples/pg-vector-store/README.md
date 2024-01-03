@@ -14,6 +14,19 @@ You'll also need a value for OPENAI_API_KEY in your environment.
 
 **NOTE:** Using `--rm` in the example docker command above means that the vector store will be deleted every time the container is stopped. For production purposes, use a volume to ensure persistence across restarts.
 
+## Use a database on cloud
+
+We recommend using a managed database service on cloud. For example, you can use [Timescale](https://www.timescale.com/blog/postgresql-as-a-vector-database-create-store-and-query-openai-embeddings-with-pgvector/) to create a PostgreSQL database instance. You can then run the following command to set up environment variables for the database connection:
+
+```bash
+export PGHOST=<your database host>
+export PGUSER=<your database user>
+export PGPASSWORD=<your database password>
+export PGDATABASE=<your database name>
+export PGPORT=<your database port>
+export OPENAI_API_KEY=<your openai api key>s
+```
+
 ## Setup and Loading Docs
 
 Read and follow the instructions in the README.md file located one directory up to make sure your JS/TS dependencies are set up. The commands listed below are also run from that parent directory.
