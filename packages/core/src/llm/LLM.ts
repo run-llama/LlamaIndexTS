@@ -927,3 +927,86 @@ export class Portkey implements LLM {
     return this.streamChat([{ content: query, role: "user" }], parentEvent);
   }
 }
+
+export class Ollama implements LLM {
+  readonly hasStreaming = true
+
+  // https://ollama.ai/library
+  model: string;
+  baseURL: string = 'http://127.0.0.1:11434'
+  temperature: number = 0.75;
+  contextWindow: number = 4096;
+  requestTimeout: number = 60 * 1000; // Default is 60 seconds
+  promptKey?: string;
+  additionalChatOptions?: Record<string, unknown>;
+
+  constructor (
+    init: Partial<Ollama> & {
+      model: string;
+    }
+  ) {
+    this.model = init.model;
+  }
+
+  get metadata(): LLMMetadata {
+    return {
+      model: this.model,
+      temperature: this.temperature,
+      topP: 1,
+      maxTokens: undefined,
+      contextWindow: this.contextWindow,
+      tokenizer: undefined,
+    }
+  }
+
+  async chat
+  <
+    T extends boolean | undefined = undefined,
+    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
+  >(messages: ChatMessage[], parentEvent?: Event, streaming?: T): Promise<R> {
+    const payload = {
+      model: this.model,
+      messages: messages.map(message => ({
+        role: message.role,
+        content: message.content,
+      })),
+      stream: streaming,
+    }
+    const response = await fetch(`${this.baseURL}/api/chat`, {
+      body: JSON.stringify(payload),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    if (!streaming) {
+      const raw = await response.json()
+      const { message } = raw
+      return {
+        message: {
+          role: "assistant",
+          content: message.content
+        },
+        raw
+      } satisfies ChatResponse as R
+    } else {
+      const stream = response.body!
+      const reader = stream.getReader()
+      return (async function* () {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) {
+            return
+          }
+          yield JSON.parse(Buffer.from(value).toString('utf-8')).message.content
+        }
+      }()) satisfies AsyncGenerator<string, void, unknown> as R
+    }
+  }
+  complete<T extends boolean | undefined = undefined, R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse>(prompt: MessageContent, parentEvent?: Event | undefined, streaming?: T | undefined): Promise<R> {
+      throw new Error("Method not implemented.");
+  }
+  tokens(messages: ChatMessage[]): number {
+      throw new Error("Method not implemented.");
+  }
+}
