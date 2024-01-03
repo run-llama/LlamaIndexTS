@@ -27,6 +27,7 @@ export class Ollama extends BaseEmbedding implements LLM {
       model: string;
     },
   ) {
+    super();
     this.model = init.model;
     Object.assign(this, init);
   }
