@@ -7,7 +7,7 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "llamaindex": ["../packages/core/src/index.ts"],
+      "llamaindex": ["../packages/core/src/index.ts"]
     }
-  },
+  }
 }
