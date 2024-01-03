@@ -16,15 +16,14 @@ export function nodeToMetadata(
   textField: string = DEFAULT_TEXT_KEY,
   flatMetadata: boolean = false,
 ): Metadata {
-  const nodeObj = node.toJSON();
-  const { metadata, embedding, ...rest } = nodeObj;
+  const { metadata, embedding, ...rest } = node.toJSON();
 
   if (flatMetadata) {
-    validateIsFlat(node.metadata);
+    validateIsFlat(metadata);
   }
 
   if (removeText) {
-    nodeObj[textField] = "";
+    rest[textField] = "";
   }
 
   metadata["_node_content"] = JSON.stringify(rest);

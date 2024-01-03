@@ -141,11 +141,13 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   }
 
   /**
-   * Used with built in JSON.stringify
+   * Creates a deep-clone of the node as JSON
    * @returns
    */
   toJSON(): Record<string, any> {
-    return { ...this, type: this.getType() };
+    const json: Record<string, any> = structuredClone(this);
+    json.type = this.getType();
+    return json;
   }
 }
 
