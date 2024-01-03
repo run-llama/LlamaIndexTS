@@ -76,7 +76,7 @@ Now if all has gone well you should be able to log in to the Mongo Atlas UI and 
 
 Now it's time to create the vector search index so that you can query the data.
 It's not yet possible to programmatically create a vector search index using the [`createIndex`](https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/) function, therefore we have to create one manually in the UI.
-To do so, first, click the Search tab, and then click "Create Search Index":
+To do so, first, click the 'Atlas Search' tab, and then click "Create Search Index":
 
 ![MongoDB Atlas create search index](./docs/4_search_tab.png)
 
@@ -88,16 +88,14 @@ Now under "database and collection" select `tiny_tweets_db` and within that sele
 
 ```json
 {
-  "mappings": {
-    "dynamic": true,
-    "fields": {
-      "embedding": {
-        "dimensions": 1536,
-        "similarity": "cosine",
-        "type": "knnVector"
-      }
+  "fields": [
+    {
+      "type": "vector",
+      "path": "embedding",
+      "numDimensions": 1536,
+      "similarity": "cosine"
     }
-  }
+  ]
 }
 ```
 
