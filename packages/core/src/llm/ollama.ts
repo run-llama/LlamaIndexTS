@@ -153,7 +153,6 @@ export class Ollama extends BaseEmbedding implements LLM {
     }
   }
 
-  // this is unnecessary for Ollama, since all calculations are done locally
   tokens(messages: ChatMessage[]): number {
     throw new Error("Method not implemented.");
   }
