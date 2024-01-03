@@ -16,6 +16,8 @@ export class PGVectorStore implements VectorStore {
   storesText: boolean = true;
 
   private collection: string = "";
+  private schemaName: string = PGVECTOR_SCHEMA;
+  private tableName: string = PGVECTOR_TABLE;
 
   /*
     FROM pg LIBRARY:
@@ -37,7 +39,10 @@ export class PGVectorStore implements VectorStore {
   */
   db?: pg.Client;
 
-  constructor() {}
+  constructor(config?: { schemaName?: string; tableName?: string }) {
+    this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
+    this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+  }
 
   /**
    * Setter for the collection property.
@@ -88,9 +93,9 @@ export class PGVectorStore implements VectorStore {
   }
 
   private async checkSchema(db: pg.Client) {
-    await db.query(`CREATE SCHEMA IF NOT EXISTS ${PGVECTOR_SCHEMA}`);
+    await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
-    const tbl = `CREATE TABLE IF NOT EXISTS ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE}(
+    const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
       id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       external_id VARCHAR,
       collection VARCHAR,
@@ -100,8 +105,8 @@ export class PGVectorStore implements VectorStore {
     )`;
     await db.query(tbl);
 
-    const idxs = `CREATE INDEX IF NOT EXISTS idx_${PGVECTOR_TABLE}_external_id ON ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} (external_id);
-      CREATE INDEX IF NOT EXISTS idx_${PGVECTOR_TABLE}_collection ON ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} (collection);`;
+    const idxs = `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_external_id ON ${this.schemaName}.${this.tableName} (external_id);
+      CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
     await db.query(idxs);
 
     // TODO add IVFFlat or HNSW indexing?
@@ -126,7 +131,7 @@ export class PGVectorStore implements VectorStore {
    * @returns The result of the delete query.
    */
   async clearCollection() {
-    const sql: string = `DELETE FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
+    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName} 
       WHERE collection = $1`;
 
     const db = (await this.getDb()) as pg.Client;
@@ -147,7 +152,7 @@ export class PGVectorStore implements VectorStore {
       return Promise.resolve([]);
     }
 
-    const sql: string = `INSERT INTO ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
+    const sql: string = `INSERT INTO ${this.schemaName}.${this.tableName} 
       (id, external_id, collection, document, metadata, embeddings) 
       VALUES ($1, $2, $3, $4, $5, $6)`;
 
@@ -197,7 +202,7 @@ export class PGVectorStore implements VectorStore {
     const collectionCriteria = this.collection.length
       ? "AND collection = $2"
       : "";
-    const sql: string = `DELETE FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
+    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName} 
       WHERE id = $1 ${collectionCriteria}`;
 
     const db = (await this.getDb()) as pg.Client;
@@ -230,7 +235,7 @@ export class PGVectorStore implements VectorStore {
     const sql = `SELECT 
         v.*, 
         embeddings <-> $1 s 
-      FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} v
+      FROM ${this.schemaName}.${this.tableName} v
       ${where}
       ORDER BY s 
       LIMIT ${max}
