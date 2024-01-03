@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import CryptoJS from "crypto-js";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
@@ -141,13 +141,11 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   }
 
   /**
-   * Creates a deep-clone of the node as JSON
+   * Used with built in JSON.stringify
    * @returns
    */
   toJSON(): Record<string, any> {
-    const json: Record<string, any> = structuredClone(this);
-    json.type = this.getType();
-    return json;
+    return { ...this, type: this.getType() };
   }
 }
 
@@ -179,13 +177,13 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
    * @returns
    */
   generateHash() {
-    const hashFunction = createHash("sha256");
+    const hashFunction = CryptoJS.algo.SHA256.create();
     hashFunction.update(`type=${this.getType()}`);
     hashFunction.update(
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
     );
     hashFunction.update(this.getContent(MetadataMode.ALL));
-    return hashFunction.digest("base64");
+    return hashFunction.finalize().toString(CryptoJS.enc.Base64);
   }
 
   getType(): ObjectType {
