@@ -102,11 +102,20 @@ export class Ollama extends BaseEmbedding implements LLM {
       if (done) {
         return;
       }
-      const json = JSON.parse(Buffer.from(value).toString("utf-8"));
-      if (json.error) {
-        throw new Error(json.error);
+      const lines = Buffer.from(value)
+        .toString("utf-8")
+        .split("\n")
+        .map((line) => line.trim());
+      for (const line of lines) {
+        if (line === "") {
+          continue;
+        }
+        const json = JSON.parse(line);
+        if (json.error) {
+          throw new Error(json.error);
+        }
+        yield accessor(json);
       }
-      yield accessor(json);
     }
   }
 
