@@ -1,29 +1,25 @@
+import { Document, SimpleMongoReader, VectorStoreIndex } from "llamaindex";
 import { MongoClient } from "mongodb";
-import { Document } from "../../packages/core/src/Node";
-import { VectorStoreIndex } from "../../packages/core/src/indices";
-import { SimpleMongoReader } from "../../packages/core/src/readers/SimpleMongoReader";
 
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
 async function main() {
   //Dummy test code
-  const query: object = { _id: "waldo" };
-  const options: object = {};
-  const projections: object = { embedding: 0 };
+  const filterQuery = {};
   const limit: number = Infinity;
-  const uri: string = process.env.MONGODB_URI ?? "fake_uri";
+  const uri: string = process.env.MONGODB_URI ?? "mongodb://localhost:27017";
   const client: MongoClient = new MongoClient(uri);
 
   //Where the real code starts
   const MR = new SimpleMongoReader(client);
   const documents: Document[] = await MR.loadData(
-    "data",
-    "posts",
-    1,
-    {},
-    options,
-    projections,
+    "db",
+    "collection",
+    ["text"],
+    "",
+    filterQuery,
+    limit,
   );
 
   //
@@ -43,7 +39,7 @@ async function main() {
   // console.log(nodes);
 
   //
-  //Making Vector Store from documents
+  // Making Vector Store from documents
   //
 
   const index = await VectorStoreIndex.fromDocuments(documents);
