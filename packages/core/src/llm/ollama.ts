@@ -1,6 +1,6 @@
 import { ok } from "node:assert";
-import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { MessageContent } from "../ChatEngine";
+import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { ChatMessage, ChatResponse, LLM, LLMMetadata } from "./LLM";
 
 const messageAccessor = (data: any) => data.message.content;
