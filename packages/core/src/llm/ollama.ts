@@ -86,11 +86,11 @@ export class Ollama extends BaseEmbedding implements LLM {
       const stream = response.body;
       ok(stream, "stream is null");
       ok(stream instanceof ReadableStream, "stream is not readable");
-      return this._streamChat(stream, messageAccessor, parentEvent) as R;
+      return this.streamChat(stream, messageAccessor, parentEvent) as R;
     }
   }
 
-  private async *_streamChat(
+  private async *streamChat(
     stream: ReadableStream<Uint8Array>,
     accessor: (data: any) => string,
     parentEvent?: Event,
@@ -149,7 +149,7 @@ export class Ollama extends BaseEmbedding implements LLM {
       const stream = response.body;
       ok(stream, "stream is null");
       ok(stream instanceof ReadableStream, "stream is not readable");
-      return this._streamChat(stream, completionAccessor, parentEvent) as R;
+      return this.streamChat(stream, completionAccessor, parentEvent) as R;
     }
   }
 
@@ -157,7 +157,7 @@ export class Ollama extends BaseEmbedding implements LLM {
     throw new Error("Method not implemented.");
   }
 
-  private async _getEmbedding(prompt: string): Promise<number[]> {
+  private async getEmbedding(prompt: string): Promise<number[]> {
     const payload = {
       model: this.model,
       prompt,
@@ -181,10 +181,10 @@ export class Ollama extends BaseEmbedding implements LLM {
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {
-    return this._getEmbedding(text);
+    return this.getEmbedding(text);
   }
 
   async getQueryEmbedding(query: string): Promise<number[]> {
-    return this._getEmbedding(query);
+    return this.getEmbedding(query);
   }
 }
