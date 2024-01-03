@@ -2,7 +2,14 @@ export const STORAGE_DIR = "./data";
 export const CHUNK_SIZE = 512;
 export const CHUNK_OVERLAP = 20;
 
-const REQUIRED_ENV_VARS = ["PG_CONNECTION_STRING"];
+const REQUIRED_ENV_VARS = [
+  "PGHOST",
+  "PGUSER",
+  "PGPASSWORD",
+  "PGDATABASE",
+  "PGPORT",
+  "OPENAI_API_KEY",
+];
 
 export function checkRequiredEnvVars() {
   const missingEnvVars = REQUIRED_ENV_VARS.filter((envVar) => {

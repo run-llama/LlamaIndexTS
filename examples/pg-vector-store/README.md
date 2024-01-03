@@ -16,7 +16,7 @@ You'll also need a value for OPENAI_API_KEY in your environment.
 
 ## Use a database on cloud
 
-We recommend using a managed database service on cloud. For example, you can use [Timescale](https://www.timescale.com/blog/postgresql-as-a-vector-database-create-store-and-query-openai-embeddings-with-pgvector/) to create a PostgreSQL database instance. You can then run the following command to set up environment variables for the database connection:
+We recommend using a managed database service on cloud. For example, you can use [Timescale](https://docs.timescale.com/use-timescale/latest/services/create-a-service/?ref=timescale.com) to create a PostgreSQL database instance. You can then run the following command to set up environment variables for the database connection:
 
 ```bash
 export PGHOST=<your database host>
