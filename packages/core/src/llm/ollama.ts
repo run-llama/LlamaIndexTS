@@ -1,13 +1,14 @@
 import { ok } from "node:assert";
 import { MessageContent } from "../ChatEngine";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
+import { BaseEmbedding } from "../embeddings";
 import { ChatMessage, ChatResponse, LLM, LLMMetadata } from "./LLM";
 
 const messageAccessor = (data: any) => data.message.content;
 const completionAccessor = (data: any) => data.response;
 
 // https://github.com/jmorganca/ollama
-export class Ollama implements LLM {
+export class Ollama implements LLM, BaseEmbedding {
   readonly hasStreaming = true;
 
   // https://ollama.ai/library
@@ -155,5 +156,36 @@ export class Ollama implements LLM {
   // this is unnecessary for Ollama, since all calculations are done locally
   tokens(messages: ChatMessage[]): number {
     throw new Error("Method not implemented.");
+  }
+
+  private async _getEmbedding(prompt: string): Promise<number[]> {
+    const payload = {
+      model: this.model,
+      prompt,
+      options: {
+        temperature: this.temperature,
+        num_ctx: this.contextWindow,
+        top_p: this.topP,
+        ...this.additionalChatOptions,
+      },
+    };
+    const response = await fetch(`${this.baseURL}/api/embeddings`, {
+      body: JSON.stringify(payload),
+      method: "POST",
+      signal: AbortSignal.timeout(this.requestTimeout),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const { embedding } = await response.json();
+    return embedding;
+  }
+
+  async getTextEmbedding(text: string): Promise<number[]> {
+    return this._getEmbedding(text);
+  }
+
+  async getQueryEmbedding(query: string): Promise<number[]> {
+    return this._getEmbedding(query);
   }
 }

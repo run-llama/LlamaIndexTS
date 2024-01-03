@@ -32,4 +32,8 @@ import { Ollama } from "llamaindex";
     }
     console.log(); // newline
   }
+  {
+    const embedding = await llm.getTextEmbedding("Hello world!");
+    console.log("Embedding:", embedding);
+  }
 })();
