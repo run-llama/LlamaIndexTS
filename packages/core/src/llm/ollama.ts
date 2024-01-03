@@ -8,7 +8,7 @@ const messageAccessor = (data: any) => data.message.content;
 const completionAccessor = (data: any) => data.response;
 
 // https://github.com/jmorganca/ollama
-export class Ollama implements LLM, BaseEmbedding {
+export class Ollama extends BaseEmbedding implements LLM {
   readonly hasStreaming = true;
 
   // https://ollama.ai/library
