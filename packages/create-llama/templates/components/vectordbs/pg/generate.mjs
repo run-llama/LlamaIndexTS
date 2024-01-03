@@ -6,7 +6,6 @@ import {
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
-import pg from "pg";
 import { STORAGE_DIR, checkRequiredEnvVars } from "./shared.mjs";
 
 dotenv.config();
@@ -19,11 +18,6 @@ async function loadAndIndex() {
 
   // create postgres vector store
   const vectorStore = new PGVectorStore();
-  vectorStore.db = new pg.Client({
-    connectionString: process.env.PG_CONNECTION_STRING,
-  });
-  await vectorStore.db.connect();
-  console.log(`Connected to postgres.`);
   vectorStore.setCollection(STORAGE_DIR);
   vectorStore.clearCollection();
 
@@ -38,4 +32,5 @@ async function loadAndIndex() {
   checkRequiredEnvVars();
   await loadAndIndex();
   console.log("Finished generating storage.");
+  process.exit(0);
 })();
