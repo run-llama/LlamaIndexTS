@@ -17,7 +17,9 @@ async function loadAndIndex() {
   });
 
   // create postgres vector store
-  const vectorStore = new PGVectorStore();
+  const vectorStore = new PGVectorStore({
+    connectionString: process.env.PG_CONNECTION_STRING,
+  });
   vectorStore.setCollection(STORAGE_DIR);
   vectorStore.clearCollection();
 

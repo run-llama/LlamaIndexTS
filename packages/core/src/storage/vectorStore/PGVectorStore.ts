@@ -18,6 +18,7 @@ export class PGVectorStore implements VectorStore {
   private collection: string = "";
   private schemaName: string = PGVECTOR_SCHEMA;
   private tableName: string = PGVECTOR_TABLE;
+  private connectionString: string | undefined = undefined;
 
   /*
     FROM pg LIBRARY:
@@ -39,9 +40,14 @@ export class PGVectorStore implements VectorStore {
   */
   db?: pg.Client;
 
-  constructor(config?: { schemaName?: string; tableName?: string }) {
+  constructor(config?: {
+    schemaName?: string;
+    tableName?: string;
+    connectionString?: string;
+  }) {
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+    this.connectionString = config?.connectionString;
   }
 
   /**
@@ -71,9 +77,7 @@ export class PGVectorStore implements VectorStore {
       try {
         // Create DB connection
         // Read connection params from env - see comment block above
-        const db = new pg.Client({
-          connectionString: process.env.PG_CONNECTION_STRING,
-        });
+        const db = new pg.Client();
         await db.connect();
 
         // Check vector extension
@@ -142,6 +146,29 @@ export class PGVectorStore implements VectorStore {
     return ret;
   }
 
+  private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
+    const result = [];
+    for (let index = 0; index < embeddingResults.length; index++) {
+      const row = embeddingResults[index];
+
+      let id: any = row.id_.length ? row.id_ : null;
+      let meta = row.metadata || {};
+      meta.create_date = new Date();
+
+      const params = [
+        id,
+        "",
+        this.collection,
+        row.getContent(MetadataMode.EMBED),
+        meta,
+        "[" + row.getEmbedding().join(",") + "]",
+      ];
+
+      result.push(params);
+    }
+    return result;
+  }
+
   /**
    * Adds vector record(s) to the table.
    * NOTE: Uses the collection property controlled by setCollection/getCollection.
@@ -159,29 +186,15 @@ export class PGVectorStore implements VectorStore {
       VALUES ($1, $2, $3, $4, $5, $6)`;
 
     const db = (await this.getDb()) as pg.Client;
+    const data = this.getDataToInsert(embeddingResults);
 
     let ret: string[] = [];
-    for (let index = 0; index < embeddingResults.length; index++) {
-      const row = embeddingResults[index];
-
-      let id: any = row.id_.length ? row.id_ : null;
-      let meta = row.metadata || {};
-      meta.create_date = new Date();
-
-      const params = [
-        id,
-        "",
-        this.collection,
-        row.getContent(MetadataMode.EMBED),
-        meta,
-        "[" + row.getEmbedding().join(",") + "]",
-      ];
-
+    for (let index = 0; index < data.length; index++) {
+      const params = data[index];
       try {
         const result = await db.query(sql, params);
-
         if (result.rows.length) {
-          id = result.rows[0].id as string;
+          const id = result.rows[0].id as string;
           ret.push(id);
         }
       } catch (err) {

@@ -233,7 +233,6 @@ export const askQuestions = async (
       program.engine = engine;
       preferences.engine = engine;
     }
-
     if (program.engine !== "simple" && !program.vectorDb) {
       if (ciInfo.isCI) {
         program.vectorDb = getPrefOrDefault("vectorDb");
