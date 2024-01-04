@@ -1,9 +1,12 @@
 import ciInfo from "ci-info";
+import fs from "fs";
+import path from "path";
 import { blue, green } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { getRepoRootFolders } from "./helpers/repo";
+import { TemplateFramework } from "./templates";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
 
@@ -24,6 +27,31 @@ const handlers = {
     console.error("Exiting.");
     process.exit(1);
   },
+};
+
+const getVectorDbChoices = (framework: TemplateFramework) => {
+  const choices = [
+    {
+      title: "No, just store the data in the file system",
+      value: "none",
+    },
+    { title: "MongoDB", value: "mongo" },
+    { title: "PostgreSQL", value: "pg" },
+  ];
+
+  const vectodbLang = framework === "fastapi" ? "python" : "typescript";
+  const compPath = path.join(__dirname, "components");
+  const vectordbPath = path.join(compPath, "vectordbs", vectodbLang);
+
+  const availableChoices = fs
+    .readdirSync(vectordbPath)
+    .filter((file) => fs.statSync(path.join(vectordbPath, file)).isDirectory());
+
+  const displayedChoices = choices.filter((choice) =>
+    availableChoices.includes(choice.value),
+  );
+
+  return displayedChoices;
 };
 
 export const onPromptState = (state: any) => {
@@ -242,14 +270,7 @@ export const askQuestions = async (
             type: "select",
             name: "vectorDb",
             message: "Would you like to use a vector database?",
-            choices: [
-              {
-                title: "No, just store the data in the file system",
-                value: "none",
-              },
-              { title: "MongoDB", value: "mongo" },
-              { title: "PostgreSQL", value: "pg" },
-            ],
+            choices: getVectorDbChoices(program.framework),
             initial: 0,
           },
           handlers,
