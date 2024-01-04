@@ -258,7 +258,6 @@ export const askQuestions = async (
                 value: "none",
               },
               { title: "MongoDB", value: "mongo" },
-              { title: "PostgreSQL", value: "pg" },
             ],
             initial: 0,
           },

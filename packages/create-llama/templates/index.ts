@@ -32,7 +32,7 @@ const createEnvLocalFile = async (
   switch (vectorDb) {
     case "mongo": {
       content += `# For generating a connection URI, see https://www.mongodb.com/docs/guides/atlas/connection-string\n`;
-      content += `MONGODB_URI=\n`;
+      content += `MONGO_URI=\n`;
       content += `MONGODB_DATABASE=\n`;
       content += `MONGODB_VECTORS=\n`;
       content += `MONGODB_VECTOR_INDEX=\n`;
