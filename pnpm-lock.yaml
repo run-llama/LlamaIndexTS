@@ -122,7 +122,7 @@ importers:
         specifier: ^16.3.1
         version: 16.3.1
       llamaindex:
-        specifier: workspace:*
+        specifier: latest
         version: link:../packages/core
       mongodb:
         specifier: ^6.2.0
