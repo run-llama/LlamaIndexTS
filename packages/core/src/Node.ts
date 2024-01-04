@@ -281,24 +281,34 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
   }
 }
 
-export function jsonToNode(json: any, type?: ObjectType) {
+export function jsonToNode(json: any, type?: ObjectType): BaseNode {
   if (!json.type && !type) {
     throw new Error("Node type not found");
   }
   const nodeType = type || json.type;
 
+  let node;
   switch (nodeType) {
     case ObjectType.TEXT:
-      return new TextNode(json);
+      node = new TextNode(json);
+      break;
     case ObjectType.INDEX:
-      return new IndexNode(json);
+      node = new IndexNode(json);
+      break;
     case ObjectType.DOCUMENT:
-      return new Document(json);
+      node = new Document(json);
+      break;
     case ObjectType.IMAGE_DOCUMENT:
-      return new ImageDocument(json);
+      node = new ImageDocument(json);
+      break;
     default:
       throw new Error(`Invalid node type: ${nodeType}`);
   }
+  // XXX: Calling the constructor generates a new hash that we don't want when we're
+  // deserializing the node. So we set the original hash here again. This is a hacky solution
+  // and we have to clean that up when we refactor the hashing mechanism.
+  node.hash = json.hash;
+  return node;
 }
 
 export type ImageType = string | Blob | URL;
