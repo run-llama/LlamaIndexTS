@@ -40,11 +40,7 @@ const createEnvLocalFile = async (
     }
     case "pg": {
       content += `# For generating a connection URI, see https://docs.timescale.com/use-timescale/latest/services/create-a-service\n`;
-      content += `PGHOST=\n`;
-      content += `PGUSER=\n`;
-      content += `PGPASSWORD=\n`;
-      content += `PGDATABASE=\n`;
-      content += `PGPORT=\n`;
+      content += `PG_CONNECTION_STRING=\n`;
       break;
     }
   }
