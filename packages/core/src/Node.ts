@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { createHash } from "node:crypto";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
@@ -141,11 +142,25 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   }
 
   /**
-   * Used with built in JSON.stringify
-   * @returns
+   * Called by built in JSON.stringify (see https://javascript.info/json)
+   * Properties are read-only as they are not deep-cloned (not necessary for stringification).
+   * @see toMutableJSON - use to return a mutable JSON instead
    */
   toJSON(): Record<string, any> {
     return { ...this, type: this.getType() };
+  }
+
+  clone(): BaseNode {
+    return jsonToNode(this.toMutableJSON()) as BaseNode;
+  }
+
+  /**
+   * Converts the object to a JSON representation.
+   * Properties can be safely modified as a deep clone of the properties are created.
+   * @return {Record<string, any>} - The JSON representation of the object.
+   */
+  toMutableJSON(): Record<string, any> {
+    return _.cloneDeep(this.toJSON());
   }
 }
 

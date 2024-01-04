@@ -4,7 +4,6 @@ import {
   ImageNode,
   MetadataMode,
   ObjectType,
-  jsonToNode,
   splitNodesByType,
 } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
@@ -278,7 +277,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         type === ObjectType.INDEX ||
         type === ObjectType.IMAGE
       ) {
-        const nodeWithoutEmbedding = jsonToNode(nodes[i].toJSON());
+        const nodeWithoutEmbedding = nodes[i].clone();
         nodeWithoutEmbedding.embedding = undefined;
         this.indexStruct.addNode(nodeWithoutEmbedding, newIds[i]);
         this.docStore.addDocuments([nodeWithoutEmbedding], true);

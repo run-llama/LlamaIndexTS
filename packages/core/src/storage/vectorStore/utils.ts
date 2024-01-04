@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { BaseNode, jsonToNode, Metadata, ObjectType } from "../../Node";
 
 const DEFAULT_TEXT_KEY = "text";
@@ -17,7 +16,7 @@ export function nodeToMetadata(
   textField: string = DEFAULT_TEXT_KEY,
   flatMetadata: boolean = false,
 ): Metadata {
-  const { metadata, embedding, ...rest } = _.cloneDeep(node.toJSON());
+  const { metadata, embedding, ...rest } = node.toMutableJSON();
 
   if (flatMetadata) {
     validateIsFlat(metadata);
