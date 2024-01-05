@@ -17,12 +17,13 @@ import {
   ClipEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings";
+import { BaseNodePostprocessor } from "../../postprocessors";
 import {
+  BaseIndexStore,
   StorageContext,
+  VectorStore,
   storageContextFromDefaults,
-} from "../../storage/StorageContext";
-import { BaseIndexStore } from "../../storage/indexStore/types";
-import { VectorStore } from "../../storage/vectorStore/types";
+} from "../../storage";
 import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
@@ -30,7 +31,6 @@ import {
   IndexDict,
   IndexStructType,
 } from "../BaseIndex";
-import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import { VectorIndexRetriever } from "./VectorIndexRetriever";
 
 interface IndexStructOptions {
