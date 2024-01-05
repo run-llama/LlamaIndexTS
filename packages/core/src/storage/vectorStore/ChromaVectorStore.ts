@@ -87,19 +87,13 @@ export class ChromaVectorStore implements VectorStore {
     refDocId: string,
     deleteOptions?: ChromaDeleteOptions,
   ): Promise<void> {
-    try {
-      const collection = await this.getCollection();
-      await collection.delete({
-        ids: [refDocId],
-        where: deleteOptions?.where,
-        whereDocument: deleteOptions?.whereDocument,
-      });
-      this.clearCollection();
-    } catch (err) {
-      const msg = `${err}`;
-      console.log(msg, err);
-      throw err;
-    }
+    const collection = await this.getCollection();
+    await collection.delete({
+      ids: [refDocId],
+      where: deleteOptions?.where,
+      whereDocument: deleteOptions?.whereDocument,
+    });
+    this.clearCollection();
   }
 
   async query(
@@ -121,41 +115,36 @@ export class ChromaVectorStore implements VectorStore {
         chromaWhere[filterKey] = filterValue;
       });
     }
-    try {
-      const collection = await this.getCollection();
-      const queryResponse: QueryResponse = await collection.query({
-        queryEmbeddings: query.queryEmbedding ?? undefined,
-        queryTexts: query.queryStr ?? undefined,
-        nResults: query.similarityTopK,
-        where: Object.keys(chromaWhere).length ? chromaWhere : undefined,
-        whereDocument: options?.whereDocument,
-        //ChromaDB doesn't return the result embeddings by default so we need to include them
-        include: [
-          IncludeEnum.Distances,
-          IncludeEnum.Metadatas,
-          IncludeEnum.Documents,
-          IncludeEnum.Embeddings,
-        ],
-      });
-      const vectorStoreQueryResult: VectorStoreQueryResult = {
-        nodes: queryResponse.ids[0].map((id, index) => {
-          return new Document({
-            id_: id,
-            text: (queryResponse.documents as string[][])[0][index],
-            metadata: queryResponse.metadatas[0][index] ?? {},
-            embedding: (queryResponse.embeddings as Embeddings[])[0][index],
-          });
-        }),
-        similarities: (queryResponse.distances as number[][])[0].map(
-          (distance) => 1 - distance,
-        ),
-        ids: queryResponse.ids[0],
-      };
-      return vectorStoreQueryResult;
-    } catch (err) {
-      const msg = `${err}`;
-      console.log(msg, err);
-      throw err;
-    }
+
+    const collection = await this.getCollection();
+    const queryResponse: QueryResponse = await collection.query({
+      queryEmbeddings: query.queryEmbedding ?? undefined,
+      queryTexts: query.queryStr ?? undefined,
+      nResults: query.similarityTopK,
+      where: Object.keys(chromaWhere).length ? chromaWhere : undefined,
+      whereDocument: options?.whereDocument,
+      //ChromaDB doesn't return the result embeddings by default so we need to include them
+      include: [
+        IncludeEnum.Distances,
+        IncludeEnum.Metadatas,
+        IncludeEnum.Documents,
+        IncludeEnum.Embeddings,
+      ],
+    });
+    const vectorStoreQueryResult: VectorStoreQueryResult = {
+      nodes: queryResponse.ids[0].map((id, index) => {
+        return new Document({
+          id_: id,
+          text: (queryResponse.documents as string[][])[0][index],
+          metadata: queryResponse.metadatas[0][index] ?? {},
+          embedding: (queryResponse.embeddings as Embeddings[])[0][index],
+        });
+      }),
+      similarities: (queryResponse.distances as number[][])[0].map(
+        (distance) => 1 - distance,
+      ),
+      ids: queryResponse.ids[0],
+    };
+    return vectorStoreQueryResult;
   }
 }
