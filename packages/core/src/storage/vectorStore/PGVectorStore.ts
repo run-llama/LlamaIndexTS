@@ -11,6 +11,7 @@ export const PGVECTOR_TABLE = "llamaindex_embedding";
 
 /**
  * Provides support for writing and querying vector data in Postgres.
+ * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
  */
 export class PGVectorStore implements VectorStore {
   storesText: boolean = true;
@@ -20,26 +21,24 @@ export class PGVectorStore implements VectorStore {
   private tableName: string = PGVECTOR_TABLE;
   private connectionString: string | undefined = undefined;
 
-  /*
-    FROM pg LIBRARY:
-    type Config = {
-      user?: string, // default process.env.PGUSER || process.env.USER
-      password?: string or function, //default process.env.PGPASSWORD
-      host?: string, // default process.env.PGHOST
-      database?: string, // default process.env.PGDATABASE || user
-      port?: number, // default process.env.PGPORT
-      connectionString?: string, // e.g. postgres://user:password@host:5432/database
-      ssl?: any, // passed directly to node.TLSSocket, supports all tls.connect options
-      types?: any, // custom type parsers
-      statement_timeout?: number, // number of milliseconds before a statement in query will time out, default is no timeout
-      query_timeout?: number, // number of milliseconds before a query call will timeout, default is no timeout
-      application_name?: string, // The name of the application that created this Client instance
-      connectionTimeoutMillis?: number, // number of milliseconds to wait for connection, default is no timeout
-      idle_in_transaction_session_timeout?: number // number of milliseconds before terminating any session with an open idle transaction, default is no timeout
-    }  
-  */
-  db?: pg.Client;
+  private db?: pg.Client;
 
+  /**
+   * Constructs a new instance of the PGVectorStore
+   *
+   * If the `connectionString` is not provided the following env variables are
+   * used to connect to the DB:
+   * PGHOST=<your database host>
+   * PGUSER=<your database user>
+   * PGPASSWORD=<your database password>
+   * PGDATABASE=<your database name>
+   * PGPORT=<your database port>
+   *
+   * @param {object} config - The configuration settings for the instance.
+   * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
+   * @param {string} config.tableName - The name of the table (optional). Defaults to PGVECTOR_TABLE.
+   * @param {string} config.connectionString - The connection string (optional).
+   */
   constructor(config?: {
     schemaName?: string;
     tableName?: string;
@@ -120,8 +119,6 @@ export class PGVectorStore implements VectorStore {
     // TODO add IVFFlat or HNSW indexing?
     return db;
   }
-
-  // isEmbeddingQuery?: boolean | undefined;
 
   /**
    * Connects to the database specified in environment vars.
