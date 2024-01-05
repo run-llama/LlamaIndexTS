@@ -6,11 +6,13 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { BaseNodePostprocessor } from "../../postprocessors";
 import {
+  BaseDocumentStore,
+  RefDocInfo,
   StorageContext,
   storageContextFromDefaults,
-} from "../../storage/StorageContext";
-import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
+} from "../../storage";
 import {
   BaseSynthesizer,
   CompactAndRefine,
@@ -22,7 +24,6 @@ import {
   IndexList,
   IndexStructType,
 } from "../BaseIndex";
-import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import {
   SummaryIndexLLMRetriever,
   SummaryIndexRetriever,

@@ -10,9 +10,12 @@ import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
 import { Event } from "./callbacks/CallbackManager";
-import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
-import { CompactAndRefine, ResponseSynthesizer } from "./synthesizers";
-import { BaseSynthesizer } from "./synthesizers/types";
+import { BaseNodePostprocessor } from "./postprocessors";
+import {
+  BaseSynthesizer,
+  CompactAndRefine,
+  ResponseSynthesizer,
+} from "./synthesizers";
 
 /**
  * A query engine is a question answerer that can use one or more steps.
