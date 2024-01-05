@@ -10,6 +10,7 @@ import {
 
 import { ChatCompletionMessageParam } from "openai/resources";
 import { LLMOptions } from "portkey-ai";
+import { MessageContent } from "../ChatEngine";
 import { globalsHelper, Tokenizers } from "../GlobalsHelper";
 import {
   ANTHROPIC_AI_PROMPT,
@@ -27,7 +28,6 @@ import {
 import { getOpenAISession, OpenAISession } from "./openai";
 import { getPortkeySession, PortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate";
-import { MessageContent } from "../ChatEngine";
 
 export type MessageType =
   | "user"

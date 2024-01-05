@@ -49,6 +49,11 @@ const createEnvLocalFile = async (
       content += `MONGODB_VECTOR_INDEX=\n`;
       break;
     }
+    case "pg": {
+      content += `# For generating a connection URI, see https://docs.timescale.com/use-timescale/latest/services/create-a-service\n`;
+      content += `PG_CONNECTION_STRING=\n`;
+      break;
+    }
   }
 
   if (content) {

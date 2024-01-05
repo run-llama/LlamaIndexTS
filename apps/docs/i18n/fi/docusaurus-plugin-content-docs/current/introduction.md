@@ -41,7 +41,7 @@ Monimutkaisempiin sovelluksiin tarjoamme matalamman tason API:t, jotka mahdollis
 
 `npm install llamaindex`
 
-Dokumentaatiostamme löydät [asennusohjeet](./installation.md) ja [aloitusopetusohjelman](./starter.md) ensimmäisen sovelluksesi rakentamiseen.
+Dokumentaatiostamme löydät [asennusohjeet](./installation.mdx) ja [aloitusopetusohjelman](./starter.md) ensimmäisen sovelluksesi rakentamiseen.
 
 Kun olet päässyt vauhtiin, [Korkean tason käsitteet](./concepts.md) antaa yleiskuvan LlamaIndexin modulaarisesta arkkitehtuurista. Lisää käytännön esimerkkejä löydät [Päästä päähän -opetusohjelmista](./end_to_end.md).
 

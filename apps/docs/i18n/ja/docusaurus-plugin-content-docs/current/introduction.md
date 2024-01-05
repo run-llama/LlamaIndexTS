@@ -39,7 +39,7 @@ LlamaIndex.TSは、JavaScriptとTypeScriptを使用してLLMアプリを構築�
 
 `npm install llamaindex`
 
-私たちのドキュメントには、[インストール手順](./installation.md)と[スターターチュートリアル](./starter.md)が含まれており、最初のアプリケーションの構築をサポートします。
+私たちのドキュメントには、[インストール手順](./installation.mdx)と[スターターチュートリアル](./starter.md)が含まれており、最初のアプリケーションの構築をサポートします。
 
 一度準備ができたら、[ハイレベルなコンセプト](./concepts.md)では、LlamaIndexのモジュラーアーキテクチャの概要を説明しています。より実践的な例については、[エンドツーエンドのチュートリアル](./end_to_end.md)を参照してください。
 

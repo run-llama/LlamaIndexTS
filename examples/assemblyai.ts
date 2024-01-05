@@ -1,15 +1,16 @@
 import { program } from "commander";
-import { AudioTranscriptReader, TranscribeParams, VectorStoreIndex } from "llamaindex";
+import {
+  AudioTranscriptReader,
+  TranscribeParams,
+  VectorStoreIndex,
+} from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 // readline/promises is still experimental so not in @types/node yet
 // @ts-ignore
 import readline from "node:readline/promises";
 
 program
-  .option(
-    "-a, --audio [string]",
-    "URL or path of the audio file to transcribe",
-  )
+  .option("-a, --audio [string]", "URL or path of the audio file to transcribe")
   .option("-i, --transcript-id [string]", "ID of the AssemblyAI transcript")
   .action(async (options) => {
     if (!process.env.ASSEMBLYAI_API_KEY) {
@@ -26,9 +27,7 @@ program
     } else if (options.transcriptId) {
       params = options.transcriptId;
     } else {
-      console.log(
-        "You must provide either an --audio or a --transcript-id",
-      );
+      console.log("You must provide either an --audio or a --transcript-id");
       return;
     }
 

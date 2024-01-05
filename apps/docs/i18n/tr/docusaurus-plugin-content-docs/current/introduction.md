@@ -41,7 +41,7 @@ Daha karmaşık uygulamalar için, düşük seviyeli API'larımız, gelişmiş k
 
 `npm install llamaindex`
 
-Dökümantasyonumuz, [Kurulum Talimatları](./installation.md) ve ilk uygulamanızı oluşturmanız için bir [Başlangıç Kılavuzu](./starter.md) içerir.
+Dökümantasyonumuz, [Kurulum Talimatları](./installation.mdx) ve ilk uygulamanızı oluşturmanız için bir [Başlangıç Kılavuzu](./starter.md) içerir.
 
 Çalışmaya başladıktan sonra, [Yüksek Düzeyli Kavramlar](./concepts.md) LlamaIndex'in modüler mimarisinin bir genel bakışını sunar. Daha fazla pratik örnek için [Uçtan Uca Öğreticilerimize](./end_to_end.md) göz atabilirsiniz.
 

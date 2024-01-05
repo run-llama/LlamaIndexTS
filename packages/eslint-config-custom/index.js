@@ -28,7 +28,7 @@ module.exports = {
           "PINECONE_ENVIRONMENT",
           "PINECONE_PROJECT_ID",
           "PINECONE_INDEX_NAME",
-          "PINECONE_CHUNK_SIZE", 
+          "PINECONE_CHUNK_SIZE",
           "PINECONE_INDEX_NAME",
 
           "AZURE_OPENAI_API_KEY",
@@ -43,6 +43,8 @@ module.exports = {
 
           "NOTION_TOKEN",
           "MONGODB_URI",
+
+          "PG_CONNECTION_STRING",
 
           "https_proxy",
           "npm_config_user_agent",

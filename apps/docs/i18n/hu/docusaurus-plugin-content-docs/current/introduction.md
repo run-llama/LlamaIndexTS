@@ -39,7 +39,7 @@ A komplexebb alkalmazásokhoz a mélyebb szintű API-k lehetővé teszik a halad
 
 `npm install llamaindex`
 
-A dokumentációnk tartalmazza a [Telepítési utasításokat](./installation.md) és egy [Kezdő útmutatót](./starter.md) az első alkalmazás létrehozásához.
+A dokumentációnk tartalmazza a [Telepítési utasításokat](./installation.mdx) és egy [Kezdő útmutatót](./starter.md) az első alkalmazás létrehozásához.
 
 Miután elindultál, a [Magas szintű fogalmak](./concepts.md) áttekintést ad a LlamaIndex moduláris architektúrájáról. További gyakorlati példákért tekintsd meg az [End-to-End útmutatóinkat](./end_to_end.md).
 

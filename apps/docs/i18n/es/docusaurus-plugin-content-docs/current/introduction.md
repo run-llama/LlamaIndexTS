@@ -39,7 +39,7 @@ Para aplicaciones más complejas, nuestras API de nivel inferior permiten a los 
 
 `npm install llamaindex`
 
-Nuestra documentación incluye [Instrucciones de instalación](./installation.md) y un [Tutorial de inicio](./starter.md) para construir tu primera aplicación.
+Nuestra documentación incluye [Instrucciones de instalación](./installation.mdx) y un [Tutorial de inicio](./starter.md) para construir tu primera aplicación.
 
 Una vez que estés en funcionamiento, [Conceptos de alto nivel](./concepts.md) ofrece una visión general de la arquitectura modular de LlamaIndex. Para obtener ejemplos prácticos más detallados, consulta nuestros [Tutoriales de extremo a extremo](./end_to_end.md).
 

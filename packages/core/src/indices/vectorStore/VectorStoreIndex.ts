@@ -4,7 +4,6 @@ import {
   ImageNode,
   MetadataMode,
   ObjectType,
-  jsonToNode,
   splitNodesByType,
 } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
@@ -24,7 +23,7 @@ import {
 } from "../../storage/StorageContext";
 import { BaseIndexStore } from "../../storage/indexStore/types";
 import { VectorStore } from "../../storage/vectorStore/types";
-import { ResponseSynthesizer, BaseSynthesizer } from "../../synthesizers";
+import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,
@@ -278,7 +277,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         type === ObjectType.INDEX ||
         type === ObjectType.IMAGE
       ) {
-        const nodeWithoutEmbedding = jsonToNode(nodes[i].toJSON());
+        const nodeWithoutEmbedding = nodes[i].clone();
         nodeWithoutEmbedding.embedding = undefined;
         this.indexStruct.addNode(nodeWithoutEmbedding, newIds[i]);
         this.docStore.addDocuments([nodeWithoutEmbedding], true);

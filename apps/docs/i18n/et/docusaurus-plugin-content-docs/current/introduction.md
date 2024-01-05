@@ -39,7 +39,7 @@ Täpsemate rakenduste jaoks võimaldavad meie madalama taseme API-d edasijõudnu
 
 `npm install llamaindex`
 
-Meie dokumentatsioonis on [paigaldusjuhised](./installation.md) ja [algõpetus](./starter.md) oma esimese rakenduse loomiseks.
+Meie dokumentatsioonis on [paigaldusjuhised](./installation.mdx) ja [algõpetus](./starter.md) oma esimese rakenduse loomiseks.
 
 Kui olete valmis ja töötate, siis [kõrgtasemel kontseptsioonid](./concepts.md) annavad ülevaate LlamaIndexi moodularhitektuurist. Praktiliste näidete jaoks vaadake läbi meie [otsast lõpuni õpetused](./end_to_end.md).
 
