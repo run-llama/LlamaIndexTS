@@ -18,6 +18,7 @@ export * from "./embeddings";
 export * from "./indices";
 export * from "./llm";
 export * from "./nodeParsers";
+export * from "./postprocessors";
 export * from "./readers/AssemblyAI";
 export * from "./readers/CSVReader";
 export * from "./readers/HTMLReader";
