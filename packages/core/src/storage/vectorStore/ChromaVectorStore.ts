@@ -3,20 +3,19 @@ import {
   ChromaClient,
   ChromaClientParams,
   Collection,
-  Embeddings,
   IncludeEnum,
   QueryResponse,
   Where,
   WhereDocument,
 } from "chromadb";
-import { BaseNode, Document, MetadataMode } from "../../Node";
+import { BaseNode, MetadataMode } from "../../Node";
 import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
 } from "./types";
-import { nodeToMetadata } from "./utils";
+import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 type ChromaDeleteOptions = {
   where?: Where;
@@ -36,7 +35,7 @@ export class ChromaVectorStore implements VectorStore {
   private collectionName: string;
 
   constructor(collectionName: string, chromaClientParams?: ChromaClientParams) {
-    this.clearCollection();
+    this.collection = null;
     this.collectionName = collectionName;
     this.chromaClient = new ChromaClient(chromaClientParams);
   }
@@ -54,10 +53,6 @@ export class ChromaVectorStore implements VectorStore {
       this.collection = coll;
     }
     return this.collection;
-  }
-
-  clearCollection(): void {
-    this.collection = null;
   }
 
   private getDataToInsert(nodes: BaseNode[]): AddParams {
@@ -93,7 +88,7 @@ export class ChromaVectorStore implements VectorStore {
       where: deleteOptions?.where,
       whereDocument: deleteOptions?.whereDocument,
     });
-    this.clearCollection();
+    this.collection = null;
   }
 
   async query(
@@ -133,12 +128,11 @@ export class ChromaVectorStore implements VectorStore {
     });
     const vectorStoreQueryResult: VectorStoreQueryResult = {
       nodes: queryResponse.ids[0].map((id, index) => {
-        return new Document({
-          id_: id,
-          text: (queryResponse.documents as string[][])[0][index],
-          metadata: queryResponse.metadatas[0][index] ?? {},
-          embedding: (queryResponse.embeddings as Embeddings[])[0][index],
-        });
+        const text = (queryResponse.documents as string[][])[0][index];
+        const metaData = queryResponse.metadatas[0][index] ?? {};
+        const node = metadataDictToNode(metaData);
+        node.setContent(text);
+        return node;
       }),
       similarities: (queryResponse.distances as number[][])[0].map(
         (distance) => 1 - distance,
