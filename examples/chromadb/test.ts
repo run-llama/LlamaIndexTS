@@ -9,6 +9,7 @@ async function main() {
   try {
     console.log("Loading data from astradb/data/movie_reviews.csv")
     const reader = new PapaCSVReader(false, ", ", "\n", {
+  header: true,
       header: true
     });
     const docs = await reader.loadData("../astradb/data/movie_reviews.csv");
@@ -19,6 +20,7 @@ async function main() {
     const ctx = await storageContextFromDefaults({ vectorStore: chromaVS });
     console.log("Embedding documents and adding to index")
     const index = await VectorStoreIndex.fromDocuments(docs, {
+  storageContext: ctx,
       storageContext: ctx,
     });
 
