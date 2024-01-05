@@ -6,7 +6,12 @@ import {
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
-import { STORAGE_DIR, checkRequiredEnvVars } from "./shared.mjs";
+import {
+  PGVECTOR_SCHEMA,
+  PGVECTOR_TABLE,
+  STORAGE_DIR,
+  checkRequiredEnvVars,
+} from "./shared.mjs";
 
 dotenv.config();
 
@@ -19,6 +24,8 @@ async function loadAndIndex() {
   // create postgres vector store
   const vectorStore = new PGVectorStore({
     connectionString: process.env.PG_CONNECTION_STRING,
+    schemaName: PGVECTOR_SCHEMA,
+    tableName: PGVECTOR_TABLE,
   });
   vectorStore.setCollection(STORAGE_DIR);
   vectorStore.clearCollection();

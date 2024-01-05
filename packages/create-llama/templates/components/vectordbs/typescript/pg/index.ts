@@ -6,12 +6,20 @@ import {
   VectorStoreIndex,
   serviceContextFromDefaults,
 } from "llamaindex";
-import { CHUNK_OVERLAP, CHUNK_SIZE, checkRequiredEnvVars } from "./shared.mjs";
+import {
+  CHUNK_OVERLAP,
+  CHUNK_SIZE,
+  PGVECTOR_SCHEMA,
+  PGVECTOR_TABLE,
+  checkRequiredEnvVars,
+} from "./shared.mjs";
 
 async function getDataSource(llm: LLM) {
   checkRequiredEnvVars();
   const pgvs = new PGVectorStore({
     connectionString: process.env.PG_CONNECTION_STRING,
+    schemaName: PGVECTOR_SCHEMA,
+    tableName: PGVECTOR_TABLE,
   });
   const serviceContext = serviceContextFromDefaults({
     llm,

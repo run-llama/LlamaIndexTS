@@ -77,7 +77,9 @@ export class PGVectorStore implements VectorStore {
       try {
         // Create DB connection
         // Read connection params from env - see comment block above
-        const db = new pg.Client();
+        const db = new pg.Client({
+          connectionString: this.connectionString,
+        });
         await db.connect();
 
         // Check vector extension

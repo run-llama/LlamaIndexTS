@@ -1,6 +1,8 @@
 export const STORAGE_DIR = "./data";
 export const CHUNK_SIZE = 512;
 export const CHUNK_OVERLAP = 20;
+export const PGVECTOR_SCHEMA = "public";
+export const PGVECTOR_TABLE = "llamaindex_embedding";
 
 const REQUIRED_ENV_VARS = ["PG_CONNECTION_STRING", "OPENAI_API_KEY"];
 
