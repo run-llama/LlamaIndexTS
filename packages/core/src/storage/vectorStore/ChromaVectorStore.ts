@@ -1,6 +1,6 @@
 import { VectorStore, VectorStoreQuery, VectorStoreQueryMode, VectorStoreQueryResult } from "./types";
 import { BaseNode, Document, MetadataMode } from "../../Node";
-import { ChromaClient, Collection, IncludeEnum, Where, WhereDocument, Metadata, Embeddings } from 'chromadb'
+import { ChromaClient, Collection, IncludeEnum, Where, WhereDocument, Metadata, Embeddings } from 'chromadb';
 
 type ChromaDBParams = {
   collectionName: string
@@ -17,7 +17,7 @@ type ChromaQueryOptions = {
 
 export class ChromaVectorStore implements VectorStore {
   storesText: boolean = true;
-  private chromaClient: ChromaClient
+  private chromaClient: ChromaClient;
   private collection: Collection | null;
 
   constructor(params: ChromaDBParams) {
@@ -43,8 +43,8 @@ export class ChromaVectorStore implements VectorStore {
     }
 
     // Check if all nodes have an embedding and only if they do, add the embeddings to the collection
-    const allNodesHaveEmbeddings = embeddingResults.every((node) => node.embedding != undefined);
-    const embeddings = allNodesHaveEmbeddings ? embeddingResults.map((node) => node.getEmbedding()): undefined
+    const allNodesHaveEmbeddings = embeddingResults.every((node) => node.embedding !== undefined);
+    const embeddings = allNodesHaveEmbeddings ? embeddingResults.map((node) => node.getEmbedding()): undefined;
     try {
       await this.collection.add({
         ids: embeddingResults.map((node) => node.id_),
@@ -54,16 +54,16 @@ export class ChromaVectorStore implements VectorStore {
       });
     }
     catch (err) {
-      const msg = `${err}`
+      const msg = `${err}`;
       console.log(msg, err);
-      throw err
+      throw err;
     }
     return embeddingResults.map((node) => node.id_)
   }
   
   async delete(refDocId: string, deleteOptions?: ChromaDeleteOptions): Promise<void> {
     if (!this.collection) {
-      throw new Error('Must initialize collection before deleting')
+      throw new Error('Must initialize collection before deleting');
     }
 
     try {
@@ -90,7 +90,7 @@ export class ChromaVectorStore implements VectorStore {
       throw new Error("ChromaDB does not support querying by mode");
     }
 
-    const chromaWhere: { [x: string]: string | number | boolean; } = {};  
+    const chromaWhere: { [x: string]: string | number | boolean; } = {};
     if (query.filters) {
       query.filters.filters.map((filter) => {
         const filterKey = filter.key;
@@ -104,7 +104,7 @@ export class ChromaVectorStore implements VectorStore {
         queryEmbeddings: query.queryEmbedding ?? undefined,
         queryTexts: query.queryStr ?? undefined,
         nResults: query.similarityTopK,
-        where: Object.keys(chromaWhere).length ? chromaWhere: undefined, 
+        where: Object.keys(chromaWhere).length ? chromaWhere: undefined,
         whereDocument: options?.whereDocument,
         //ChromaDB doesn't return the result embeddings by default so we need to include them  
         include: [IncludeEnum.Distances, IncludeEnum.Metadatas, IncludeEnum.Documents, IncludeEnum.Embeddings]
@@ -125,9 +125,9 @@ export class ChromaVectorStore implements VectorStore {
       return vectorStoreQueryResult;
     }
     catch (err) {
-      const msg = `${err}`
-      console.log(msg, err)
-      throw err
+      const msg = `${err}`;
+      console.log(msg, err);
+      throw err;
     }
   }
 }
