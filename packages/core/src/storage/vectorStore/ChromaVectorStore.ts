@@ -1,9 +1,11 @@
 import {
   AddParams,
   ChromaClient,
+  ChromaClientParams,
   Collection,
   Embeddings,
   IncludeEnum,
+  QueryResponse,
   Where,
   WhereDocument,
 } from "chromadb";
@@ -14,10 +16,7 @@ import {
   VectorStoreQueryMode,
   VectorStoreQueryResult,
 } from "./types";
-
-type ChromaDBParams = {
-  collectionName: string;
-};
+import { nodeToMetadata } from "./utils";
 
 type ChromaDeleteOptions = {
   where?: Where;
@@ -29,29 +28,30 @@ type ChromaQueryOptions = {
 };
 
 export class ChromaVectorStore implements VectorStore {
+  DEFAULT_TEXT_KEY = "text";
   storesText: boolean = true;
+  flatMetadata: boolean = true;
   private chromaClient: ChromaClient;
   private collection: Collection | null = null;
+  private collectionName: string;
 
-  constructor() {
+  constructor(collectionName: string, chromaClientParams?: ChromaClientParams) {
     this.clearCollection();
-    this.chromaClient = new ChromaClient();
+    this.collectionName = collectionName;
+    this.chromaClient = new ChromaClient(chromaClientParams);
   }
 
   client(): ChromaClient {
     return this.chromaClient;
   }
 
-  async setCollection(collectionName: string) {
-    const coll = await this.chromaClient.createCollection({
-      name: collectionName,
-    });
-    this.collection = coll;
-  }
-
-  getCollection(): Collection {
+  // Singleton pattern to ensure we only create one collection
+  async getCollection(): Promise<Collection> {
     if (!this.collection) {
-      throw new Error("Must initialize collection before getting.");
+      const coll = await this.chromaClient.createCollection({
+        name: this.collectionName,
+      });
+      this.collection = coll;
     }
     return this.collection;
   }
@@ -61,10 +61,13 @@ export class ChromaVectorStore implements VectorStore {
   }
 
   private getDataToInsert(nodes: BaseNode[]): AddParams {
+    const metadatas = nodes.map((node) =>
+      nodeToMetadata(node, true, this.DEFAULT_TEXT_KEY, this.flatMetadata),
+    );
     return {
       embeddings: nodes.map((node) => node.getEmbedding()),
       ids: nodes.map((node) => node.id_),
-      metadatas: nodes.map((node) => node.metadata),
+      metadatas,
       documents: nodes.map((node) => node.getContent(MetadataMode.NONE)),
     };
   }
@@ -75,15 +78,8 @@ export class ChromaVectorStore implements VectorStore {
     }
 
     const dataToInsert = this.getDataToInsert(nodes);
-
-    try {
-      await this.getCollection().add(dataToInsert);
-    } catch (err) {
-      const msg = `${err}`;
-      console.log(msg, err);
-      return [];
-    }
-
+    const collection = await this.getCollection();
+    await collection.add(dataToInsert);
     return nodes.map((node) => node.id_);
   }
 
@@ -92,7 +88,8 @@ export class ChromaVectorStore implements VectorStore {
     deleteOptions?: ChromaDeleteOptions,
   ): Promise<void> {
     try {
-      await this.getCollection().delete({
+      const collection = await this.getCollection();
+      await collection.delete({
         ids: [refDocId],
         where: deleteOptions?.where,
         whereDocument: deleteOptions?.whereDocument,
@@ -125,7 +122,8 @@ export class ChromaVectorStore implements VectorStore {
       });
     }
     try {
-      const queryResponse = await this.getCollection().query({
+      const collection = await this.getCollection();
+      const queryResponse: QueryResponse = await collection.query({
         queryEmbeddings: query.queryEmbedding ?? undefined,
         queryTexts: query.queryStr ?? undefined,
         nResults: query.similarityTopK,
@@ -139,7 +137,6 @@ export class ChromaVectorStore implements VectorStore {
           IncludeEnum.Embeddings,
         ],
       });
-      //Only given 1 embedding/text, so get 0th index for everything
       const vectorStoreQueryResult: VectorStoreQueryResult = {
         nodes: queryResponse.ids[0].map((id, index) => {
           return new Document({

@@ -18,8 +18,7 @@ async function main() {
     const docs = await reader.loadData(sourceFile);
 
     console.log("Creating ChromaDB vector store");
-    const chromaVS = new ChromaVectorStore();
-    await chromaVS.setCollection(collectionName);
+    const chromaVS = new ChromaVectorStore(collectionName);
     const ctx = await storageContextFromDefaults({ vectorStore: chromaVS });
 
     console.log("Embedding documents and adding to index");
