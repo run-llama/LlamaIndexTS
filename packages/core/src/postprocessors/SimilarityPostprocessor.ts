@@ -1,8 +1,5 @@
 import { NodeWithScore } from "../Node";
-
-export interface BaseNodePostprocessor {
-  postprocessNodes: (nodes: NodeWithScore[]) => NodeWithScore[];
-}
+import { BaseNodePostprocessor } from "./types";
 
 export class SimilarityPostprocessor implements BaseNodePostprocessor {
   similarityCutoff?: number;
