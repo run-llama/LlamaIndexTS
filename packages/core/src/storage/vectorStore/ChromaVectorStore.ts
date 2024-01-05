@@ -26,25 +26,31 @@ type ChromaQueryOptions = {
   whereDocument?: WhereDocument;
 };
 
+const DEFAULT_TEXT_KEY = "text";
+
 export class ChromaVectorStore implements VectorStore {
-  DEFAULT_TEXT_KEY = "text";
   storesText: boolean = true;
   flatMetadata: boolean = true;
+  textKey: string;
   private chromaClient: ChromaClient;
   private collection: Collection | null = null;
   private collectionName: string;
 
-  constructor(collectionName: string, chromaClientParams?: ChromaClientParams) {
+  constructor(init: {
+    collectionName: string;
+    textKey?: string;
+    chromaClientParams?: ChromaClientParams;
+  }) {
     this.collection = null;
-    this.collectionName = collectionName;
-    this.chromaClient = new ChromaClient(chromaClientParams);
+    this.collectionName = init.collectionName;
+    this.chromaClient = new ChromaClient(init.chromaClientParams);
+    this.textKey = init.textKey ?? DEFAULT_TEXT_KEY;
   }
 
   client(): ChromaClient {
     return this.chromaClient;
   }
 
-  // Singleton pattern to ensure we only create one collection
   async getCollection(): Promise<Collection> {
     if (!this.collection) {
       const coll = await this.chromaClient.createCollection({
@@ -57,7 +63,7 @@ export class ChromaVectorStore implements VectorStore {
 
   private getDataToInsert(nodes: BaseNode[]): AddParams {
     const metadatas = nodes.map((node) =>
-      nodeToMetadata(node, true, this.DEFAULT_TEXT_KEY, this.flatMetadata),
+      nodeToMetadata(node, true, this.textKey, this.flatMetadata),
     );
     return {
       embeddings: nodes.map((node) => node.getEmbedding()),
