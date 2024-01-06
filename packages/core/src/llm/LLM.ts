@@ -46,6 +46,8 @@ export interface ChatResponse {
   message: ChatMessage;
   raw?: Record<string, any>;
   delta?: string;
+  metrics?: any;
+  usage?: Usage;
 }
 
 // NOTE in case we need CompletionResponse to diverge from ChatResponse in the future
@@ -99,19 +101,44 @@ export interface LLM {
    * Calculates the number of tokens needed for the given chat messages
    */
   tokens(messages: ChatMessage[]): number;
+
+  /**
+   * Returns the usage information of the LLM
+   */
+  usage: Usage;
 }
 
 export const GPT4_MODELS = {
-  "gpt-4": { contextWindow: 8192 },
-  "gpt-4-32k": { contextWindow: 32768 },
-  "gpt-4-1106-preview": { contextWindow: 128000 },
-  "gpt-4-vision-preview": { contextWindow: 8192 },
+  "gpt-4": { contextWindow: 8192, promptCost: 0.03, completionCost: 0.06 },
+  "gpt-4-32k": { contextWindow: 32768, promptCost: 0.06, completionCost: 0.12 },
+  "gpt-4-1106-preview": {
+    contextWindow: 128000,
+    promptCost: 0.01,
+    completionCost: 0.03,
+  },
+  "gpt-4-vision-preview": {
+    contextWindow: 8192,
+    promptCost: 0.01,
+    completionCost: 0.03,
+  },
 };
 
 export const GPT35_MODELS = {
-  "gpt-3.5-turbo": { contextWindow: 4096 },
-  "gpt-3.5-turbo-16k": { contextWindow: 16384 },
-  "gpt-3.5-turbo-1106": { contextWindow: 16384 },
+  "gpt-3.5-turbo": {
+    contextWindow: 4096,
+    promptCost: 0.001,
+    completionCost: 0.002,
+  },
+  "gpt-3.5-turbo-16k": {
+    contextWindow: 16384,
+    promptCost: 0.001,
+    completionCost: 0.002,
+  },
+  "gpt-3.5-turbo-1106": {
+    contextWindow: 16384,
+    promptCost: 0.001,
+    completionCost: 0.002,
+  },
 };
 
 /**
@@ -121,6 +148,19 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
 };
+
+export class Usage {
+  promptTokens: number;
+  completionTokens: number;
+  computeSeconds: number;
+  cost: number;
+  constructor() {
+    this.promptTokens = 0;
+    this.completionTokens = 0;
+    this.cost = 0;
+    this.computeSeconds = 0;
+  }
+}
 
 /**
  * OpenAI LLM implementation
@@ -150,6 +190,7 @@ export class OpenAI implements LLM {
 
   callbackManager?: CallbackManager;
 
+  usage: Usage;
   constructor(
     init?: Partial<OpenAI> & {
       azure?: AzureOpenAIConfig;
@@ -164,6 +205,8 @@ export class OpenAI implements LLM {
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalChatOptions = init?.additionalChatOptions;
     this.additionalSessionOptions = init?.additionalSessionOptions;
+
+    this.usage = new Usage();
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
@@ -279,8 +322,21 @@ export class OpenAI implements LLM {
     });
 
     const content = response.choices[0].message?.content ?? "";
+
+    // Update usage
+    this.usage.promptTokens += response.usage?.prompt_tokens || 0;
+    this.usage.completionTokens += response.usage?.completion_tokens || 0;
+    this.usage.cost +=
+      ((response.usage?.prompt_tokens || 0) *
+        ALL_AVAILABLE_OPENAI_MODELS[this.model].promptCost) /
+        1000 +
+      ((response.usage?.completion_tokens || 0) *
+        ALL_AVAILABLE_OPENAI_MODELS[this.model].completionCost) /
+        1000;
+
     return {
       message: { content, role: response.choices[0].message.role },
+      usage: response.usage,
     } as R;
   }
 
@@ -376,23 +432,27 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
     replicateApi:
       "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48",
     //^ Previous 70b model. This is also actually 4 bit, although not exllama.
+    costPerSecond: 0.0014,
   },
   "Llama-2-70b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
       "meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
     //^ Model is based off of exllama 4bit.
+    costPerSecond: 0.0014,
   },
   "Llama-2-13b-chat-old": {
     contextWindow: 4096,
     replicateApi:
       "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
+    costPerSecond: 0.000725,
   },
   //^ Last known good 13b non-quantized model. In future versions they add the SYS and INST tags themselves
   "Llama-2-13b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
       "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d",
+    costPerSecond: 0.000725,
   },
   "Llama-2-7b-chat-old": {
     contextWindow: 4096,
@@ -402,11 +462,13 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
     // tags themselves
     // https://github.com/replicate/cog-llama-template/commit/fa5ce83912cf82fc2b9c01a4e9dc9bff6f2ef137
     // Problem is that they fix the max_new_tokens issue in the same commit. :-(
+    costPerSecond: 0.000725,
   },
   "Llama-2-7b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
       "meta/llama-2-7b-chat:13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0",
+    costPerSecond: 0.000725,
   },
 };
 
@@ -433,7 +495,7 @@ export class LlamaDeuce implements LLM {
   maxTokens?: number;
   replicateSession: ReplicateSession;
   hasStreaming: boolean;
-
+  usage: Usage;
   constructor(init?: Partial<LlamaDeuce>) {
     this.model = init?.model ?? "Llama-2-70b-chat-4bit";
     this.chatStrategy =
@@ -448,6 +510,7 @@ export class LlamaDeuce implements LLM {
       ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].contextWindow; // For Replicate, the default is 500 tokens which is too low.
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
     this.hasStreaming = init?.hasStreaming ?? false;
+    this.usage = new Usage();
   }
 
   tokens(messages: ChatMessage[]): number {
@@ -619,16 +682,23 @@ If a question does not make any sense, or is not factually coherent, explain why
     //TODO: Add streaming for this
 
     //Non-streaming
-    const response = await this.replicateSession.replicate.run(
+    const response = (await this.replicateSession.replicate.run(
       api,
       replicateOptions,
-    );
+    )) as any;
+
+    this.usage.computeSeconds += response.metrics?.predict_time;
+    this.usage.cost +=
+      response.metrics?.predict_time *
+      ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].costPerSecond;
+
     return {
       message: {
         content: (response as Array<string>).join("").trimStart(),
         //^ We need to do this because Replicate returns a list of strings (for streaming functionality which is not exposed by the run function)
         role: "assistant",
       },
+      metrics: response.metrics,
     } as R;
   }
 
@@ -642,8 +712,12 @@ If a question does not make any sense, or is not factually coherent, explain why
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
-  "claude-2": { contextWindow: 200000 },
-  "claude-instant-1": { contextWindow: 100000 },
+  "claude-2": { contextWindow: 200000, promptCost: 8.0, completionCost: 24.0 },
+  "claude-instant-1": {
+    contextWindow: 100000,
+    promptCost: 0.8, // for 1 Million tokens
+    completionCost: 2.4, // for 1 Million tokens
+  },
 };
 
 /**
@@ -667,6 +741,7 @@ export class Anthropic implements LLM {
 
   callbackManager?: CallbackManager;
 
+  usage: Usage;
   constructor(init?: Partial<Anthropic>) {
     this.model = init?.model ?? "claude-2";
     this.temperature = init?.temperature ?? 0.1;
@@ -684,6 +759,7 @@ export class Anthropic implements LLM {
         timeout: this.timeout,
       });
 
+    this.usage = new Usage();
     this.callbackManager = init?.callbackManager;
   }
 
@@ -812,6 +888,7 @@ export class Portkey implements LLM {
   session: PortkeySession;
   callbackManager?: CallbackManager;
 
+  usage: Usage;
   constructor(init?: Partial<Portkey>) {
     this.apiKey = init?.apiKey;
     this.baseURL = init?.baseURL;
@@ -824,6 +901,8 @@ export class Portkey implements LLM {
       mode: this.mode,
     });
     this.callbackManager = init?.callbackManager;
+
+    this.usage = new Usage();
   }
 
   tokens(messages: ChatMessage[]): number {
