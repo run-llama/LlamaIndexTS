@@ -16,3 +16,16 @@ Ako koristite NextJS App Router rukovatelje rutama/serverless funkcije, trebat �
 export const runtime = "nodejs"; // zadano
 ```
 
+i trebat ćete dodati iznimku za pdf-parse u vašem next.config.js
+
+```js
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ["pdf-parse"], // Stavlja pdf-parse u stvarni NodeJS način rada s NextJS App Routerom
+  },
+};
+
+module.exports = nextConfig;
+```

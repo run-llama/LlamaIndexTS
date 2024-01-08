@@ -16,3 +16,16 @@ Dacă utilizați handler-ele de rute/funcții serverless ale Routerului aplicaț
 export const runtime = "nodejs"; // implicit
 ```
 
+și va trebui să adăugați o excepție pentru pdf-parse în fișierul next.config.js
+
+```js
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ["pdf-parse"], // Plasează pdf-parse în modul NodeJS real cu Routerul aplicației NextJS
+  },
+};
+
+module.exports = nextConfig;
+```
