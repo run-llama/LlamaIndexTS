@@ -6,8 +6,12 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
-import { StorageContext, storageContextFromDefaults } from "../../storage";
-import { BaseDocumentStore } from "../../storage/docStore/types";
+import { BaseNodePostprocessor } from "../../postprocessors";
+import {
+  BaseDocumentStore,
+  StorageContext,
+  storageContextFromDefaults,
+} from "../../storage";
 import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
@@ -15,7 +19,6 @@ import {
   IndexStructType,
   KeywordTable,
 } from "../BaseIndex";
-import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import {
   KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,

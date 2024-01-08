@@ -13,8 +13,8 @@ import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
-import { BaseNodePostprocessor } from "./indices/BaseNodePostprocessor";
-import { ChatMessage, LLM, OpenAI } from "./llm/LLM";
+import { ChatMessage, LLM, OpenAI } from "./llm";
+import { BaseNodePostprocessor } from "./postprocessors";
 
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
