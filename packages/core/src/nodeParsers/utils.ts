@@ -53,6 +53,10 @@ export function getNodesFromDocument(
     const node = new TextNode({
       text: textSplit,
       metadata: includeMetadata ? _.cloneDeep(document.metadata) : {},
+      excludedEmbedMetadataKeys: _.cloneDeep(
+        document.excludedEmbedMetadataKeys,
+      ),
+      excludedLlmMetadataKeys: _.cloneDeep(document.excludedLlmMetadataKeys),
     });
     node.relationships[NodeRelationship.SOURCE] = document.asRelatedNodeInfo();
     nodes.push(node);
