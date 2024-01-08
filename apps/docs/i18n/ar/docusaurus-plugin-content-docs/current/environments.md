@@ -15,17 +15,3 @@ sidebar_position: 5
 ```js
 export const runtime = "nodejs"; // الافتراضي
 ```
-
-وستحتاج أيضًا إلى إضافة استثناء لـ pdf-parse في next.config.js الخاص بك
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // يضع pdf-parse في وضع NodeJS الفعلي مع NextJS App Router
-  },
-};
-
-module.exports = nextConfig;
-```

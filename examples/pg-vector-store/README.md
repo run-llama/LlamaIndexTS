@@ -19,12 +19,12 @@ If you prefer using a managed service, you can use [Timescale](https://docs.time
 Having created a DB instance, you can then set up environment variables for your database connection:
 
 ```bash
-export PGHOST=<your database host>
-export PGUSER=<your database user>
-export PGPASSWORD=<your database password>
-export PGDATABASE=<your database name>
-export PGPORT=<your database port>
-export OPENAI_API_KEY=<your openai api key>
+export PGHOST=your database host
+export PGUSER=your database user
+export PGPASSWORD=your database password
+export PGDATABASE=your database name
+export PGPORT=your database port
+export OPENAI_API_KEY=your openai api key
 ```
 
 Set the environment variables above to match your database setup.

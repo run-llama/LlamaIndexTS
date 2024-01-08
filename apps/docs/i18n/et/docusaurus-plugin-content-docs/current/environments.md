@@ -15,17 +15,3 @@ Kui kasutate NextJS rakenduse marsruuteri marsruutide käsitlejaid/serverita fun
 ```js
 export const runtime = "nodejs"; // vaikimisi
 ```
-
-ja peate lisama erandi pdf-parse jaoks oma next.config.js failis
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Paneb pdf-parse tegelikult NodeJS režiimi koos NextJS rakenduse marsruuteriga
-  },
-};
-
-module.exports = nextConfig;
-```
