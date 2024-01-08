@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.0.42
+
+### Patch Changes
+
+- 16f04c7: Add local embeddings using hugging face
+- 16f04c7: Add sentence window retrieval
+
 ## 0.0.41
 
 ### Patch Changes
