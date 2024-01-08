@@ -21,6 +21,29 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
       });
       break;
     }
+    case "pg": {
+      dependencies.push(
+        ...[
+          {
+            name: "psycopg2-binary",
+            version: "^2.9.1",
+          },
+          {
+            name: "sqlalchemy",
+            version: "^2.0.25",
+          },
+          {
+            name: "asyncpg",
+            version: "^0.29.0",
+          },
+          {
+            name: "pgvector",
+            version: "^0.2.4",
+          },
+        ],
+      );
+      break;
+    }
   }
 
   return dependencies;
