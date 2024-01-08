@@ -11,7 +11,6 @@ const nextConfig = {
     return config;
   },
   experimental: {
-    serverComponentsExternalPackages: ["llamaindex"],
     outputFileTracingIncludes: {
       "/*": ["./cache/**/*"],
     },
