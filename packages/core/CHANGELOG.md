@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.0.41
+
+### Patch Changes
+
+- c835f78: Use compromise as sentence tokenizer
+- c835f78: Removed pdf-parse, and directly use latest pdf.js
+- c835f78: Added pinecone vector DB
+- c835f78: Added support for Ollama
+
 ## 0.0.40
 
 ### Patch Changes
