@@ -16,16 +16,3 @@ Jei naudojate NextJS Aplikacijos maršrutizatoriaus maršrutų tvarkyklės / ser
 export const runtime = "nodejs"; // numatytasis
 ```
 
-ir turėsite pridėti išimtį pdf-parse savo next.config.js
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Prideda pdf-parse į tikrąjį NodeJS režimą su NextJS Aplikacijos maršrutizatoriumi
-  },
-};
-
-module.exports = nextConfig;
-```

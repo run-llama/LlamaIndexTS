@@ -15,17 +15,3 @@ LlamaIndex в настоящее время официально поддерж�
 ```js
 export const runtime = "nodejs"; // по умолчанию
 ```
-
-и вам потребуется добавить исключение для pdf-parse в вашем файле next.config.js
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Помещает pdf-parse в режим фактического NodeJS с помощью маршрутизатора приложений NextJS
-  },
-};
-
-module.exports = nextConfig;
-```

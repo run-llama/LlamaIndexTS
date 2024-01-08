@@ -15,17 +15,3 @@ NextJS 앱 라우터 라우트 핸들러/서버리스 함수를 사용하는 경
 ```js
 export const runtime = "nodejs"; // 기본값
 ```
-
-그리고 next.config.js에서 pdf-parse에 대한 예외를 추가해야합니다.
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // pdf-parse를 실제 NodeJS 모드로 NextJS 앱 라우터에 추가합니다.
-  },
-};
-
-module.exports = nextConfig;
-```

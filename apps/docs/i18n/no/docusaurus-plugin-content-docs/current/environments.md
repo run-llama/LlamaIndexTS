@@ -15,17 +15,3 @@ Hvis du bruker NextJS App Router rutehåndterere/serverløse funksjoner, må du 
 ```js
 export const runtime = "nodejs"; // standard
 ```
-
-og du må legge til et unntak for pdf-parse i next.config.js-filen din
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Setter pdf-parse i faktisk NodeJS-modus med NextJS App Router
-  },
-};
-
-module.exports = nextConfig;
-```
