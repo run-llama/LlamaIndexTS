@@ -15,17 +15,3 @@ Se você estiver usando os manipuladores de rota/funções serverless do Roteado
 ```js
 export const runtime = "nodejs"; // padrão
 ```
-
-e você precisará adicionar uma exceção para o pdf-parse no seu next.config.js
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Coloca o pdf-parse no modo NodeJS real com o Roteador de Aplicativos NextJS
-  },
-};
-
-module.exports = nextConfig;
-```

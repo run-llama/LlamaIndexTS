@@ -15,17 +15,3 @@ Ja izmantojat NextJS lietotnes maršrutētāja maršrutētājus/servera funkcija
 ```js
 export const runtime = "nodejs"; // noklusējums
 ```
-
-un jums būs jāpievieno izņēmums pdf-parse savā next.config.js failā
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Ievieto pdf-parse faktiskajā NodeJS režīmā ar NextJS lietotnes maršrutētāju
-  },
-};
-
-module.exports = nextConfig;
-```

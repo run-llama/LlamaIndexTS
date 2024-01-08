@@ -15,17 +15,3 @@ Ha a NextJS alkalmazás útválasztó útválasztó kezelőket/szerver nélküli
 ```js
 export const runtime = "nodejs"; // alapértelmezett
 ```
-
-és hozzá kell adnia egy kivételt a pdf-parse-hez a next.config.js fájlban
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // A pdf-parse-t valódi NodeJS módban helyezi el a NextJS alkalmazás útválasztó
-  },
-};
-
-module.exports = nextConfig;
-```
