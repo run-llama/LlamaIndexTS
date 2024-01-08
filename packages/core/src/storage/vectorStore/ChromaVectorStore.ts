@@ -41,7 +41,6 @@ export class ChromaVectorStore implements VectorStore {
     textKey?: string;
     chromaClientParams?: ChromaClientParams;
   }) {
-    this.collection = null;
     this.collectionName = init.collectionName;
     this.chromaClient = new ChromaClient(init.chromaClientParams);
     this.textKey = init.textKey ?? DEFAULT_TEXT_KEY;
@@ -94,7 +93,6 @@ export class ChromaVectorStore implements VectorStore {
       where: deleteOptions?.where,
       whereDocument: deleteOptions?.whereDocument,
     });
-    this.collection = null;
   }
 
   async query(
