@@ -28,11 +28,11 @@ export class PGVectorStore implements VectorStore {
    *
    * If the `connectionString` is not provided the following env variables are
    * used to connect to the DB:
-   * PGHOST=<your database host>
-   * PGUSER=<your database user>
-   * PGPASSWORD=<your database password>
-   * PGDATABASE=<your database name>
-   * PGPORT=<your database port>
+   * PGHOST=your database host
+   * PGUSER=your database user
+   * PGPASSWORD=your database password
+   * PGDATABASE=your database name
+   * PGPORT=your database port
    *
    * @param {object} config - The configuration settings for the instance.
    * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
