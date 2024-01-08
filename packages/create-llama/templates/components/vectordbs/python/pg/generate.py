@@ -19,8 +19,6 @@ logger = logging.getLogger()
 
 def generate_datasource(service_context):
     logger.info("Creating new index")
-    # Initialize the PGVector environment variables
-
     # load the documents and create the index
     documents = SimpleDirectoryReader(DATA_DIR).load_data()
     store = init_pg_vector_store_from_env()
