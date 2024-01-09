@@ -8,6 +8,7 @@ import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 interface Dependency {
   name: string;
   version: string;
+  extras?: string[];
 }
 
 const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
@@ -22,27 +23,11 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
       break;
     }
     case "pg": {
-      dependencies.push(
-        ...[
-          {
-            name: "psycopg2-binary",
-            version: "^2.9.1",
-          },
-          {
-            name: "sqlalchemy",
-            version: "^2.0.25",
-          },
-          {
-            name: "asyncpg",
-            version: "^0.29.0",
-          },
-          {
-            name: "pgvector",
-            version: "^0.2.4",
-          },
-        ],
-      );
-      break;
+      dependencies.push({
+        name: "llama-index",
+        version: "^0.9.19",
+        extras: ["postgres"],
+      });
     }
   }
 
@@ -66,7 +51,14 @@ const addDependencies = async (
     const tool = fileParsed.tool as any;
     const existingDependencies = tool.poetry.dependencies as any;
     for (const dependency of dependencies) {
-      existingDependencies[dependency.name] = dependency.version;
+      if (dependency.extras) {
+        existingDependencies[dependency.name] = {
+          version: dependency.version,
+          extras: dependency.extras,
+        };
+      } else {
+        existingDependencies[dependency.name] = dependency.version;
+      }
     }
 
     // Write toml file

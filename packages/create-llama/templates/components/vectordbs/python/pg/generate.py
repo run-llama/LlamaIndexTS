@@ -30,7 +30,7 @@ def generate_datasource(service_context):
         show_progress=True,  # this will show you a progress bar as the embeddings are created
     )
     logger.info(
-        f"Successfully created embeddings in the PGVector, schema={store.schema_name} table={store.table_name}"
+        f"Successfully created embeddings in the PG vector store, schema={store.schema_name} table={store.table_name}"
     )
 
 
