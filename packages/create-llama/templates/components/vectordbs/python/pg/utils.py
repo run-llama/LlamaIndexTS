@@ -1,68 +1,23 @@
 import os
 from llama_index.vector_stores import PGVectorStore
-from pydantic import BaseModel
 from urllib.parse import urlparse
-
-
-class PGConnectionElements(BaseModel):
-    user: str
-    password: str
-    host: str
-    port: int
-    database: str
-
-
-def destruct_pg_connection_string(conn_string: str) -> PGConnectionElements:
-    """
-    Destructs the PostgreSQL connection string into its elements.
-    """
-    parsed_url = urlparse(conn_string)
-
-    user = parsed_url.username
-    password = parsed_url.password
-    host = parsed_url.hostname
-    port = parsed_url.port
-    database = parsed_url.path[1:]
-
-    return PGConnectionElements(
-        user=user,
-        password=password,
-        host=host,
-        port=port,
-        database=database
-    )
-
-
-def get_pg_conn_elements_from_env() -> PGConnectionElements:
-    """
-    Returns the PostgreSQL connection elements from the environment variables:
-    [PGUSER, PGPASSWORD, PGHOST, PGPORT, PGDATABASE]
-    """
-    env_conn_str = os.environ.get("PG_CONNECTION_STRING")
-    if env_conn_str is not None:
-        return destruct_pg_connection_string(os.environ["PG_CONNECTION_STRING"])
-    else:
-        user = os.environ.get("PGUSER")
-        password = os.environ.get("PGPASSWORD")
-        host = os.environ.get("PGHOST")
-        port = int(os.environ.get("PGPORT", 5432))
-        database = os.environ.get("PGDATABASE")
-        return PGConnectionElements(
-            user=user,
-            password=password,
-            host=host,
-            port=port,
-            database=database
-        )
+from app.engine.constants import PGVECTOR_SCHEMA, PGVECTOR_TABLE
 
 
 def init_pg_vector_store_from_env():
-    # Initialize the PGVectorStore instance from environment variables
-    pg_conn_elements = get_pg_conn_elements_from_env()
-    pg_schema = os.environ.get("PGSCHEMA", "public")
-    pg_table = os.environ.get("POTABLE", "llamaindex_embedding")
-    return PGVectorStore.from_params(
-        **pg_conn_elements.model_dump(),
-        schema_name=pg_schema,
-        table_name=pg_table
+    original_conn_string = os.environ.get("PG_CONNECTION_STRING")
+    if original_conn_string is None:
+        raise ValueError("PG_CONNECTION_STRING environment variable is not set.")
+
+    # The PGVectorStore requires both two connection strings, one for psycopg2 and one for asyncpg
+    # Update the configured scheme with the psycopg2 and asyncpg schemes
+    original_scheme = urlparse(original_conn_string).scheme + "://"
+    conn_string = original_conn_string.replace(original_scheme, "postgresql+psycopg2://")
+    async_conn_string = original_conn_string.replace(original_scheme, "postgresql+asyncpg://")
+
+    return PGVectorStore(
+        connection_string=conn_string,
+        async_connection_string=async_conn_string,
+        schema_name=PGVECTOR_SCHEMA,
+        table_name=PGVECTOR_TABLE
     )
