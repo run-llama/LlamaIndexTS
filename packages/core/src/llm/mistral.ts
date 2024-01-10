@@ -95,7 +95,7 @@ export class MistralAI implements LLM {
     };
   }
 
-  async chat(messages: ChatMessage[], parentEvent?: Event, streaming?: boolean): Promise<ChatResponse> {
+  async chat(messages: ChatMessage[], parentEvent?: Event, streaming?: boolean): Promise<any> {
     // Streaming
     if (streaming) {
       if (!this.hasStreaming) {
