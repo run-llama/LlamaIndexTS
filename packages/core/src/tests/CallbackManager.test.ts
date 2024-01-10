@@ -56,8 +56,8 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
 
     serviceContext = serviceContextFromDefaults({
       callbackManager,
-      llm: languageModel,
-      embedModel,
+      llm: newLanguageModel,
+      embedModel: new OpenAIEmbedding(),
     });
   });
 
