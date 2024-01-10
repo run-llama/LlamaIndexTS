@@ -1,4 +1,4 @@
-import { similarity, SimilarityType } from "../embeddings";
+import { similarity, SimilarityType, ChatMessage, LLM, LLMChatParamsStreaming, LLMCompletionParamsStreaming } from "../embeddings";
 
 describe("similarity", () => {
   test("throws error on mismatched lengths", () => {
