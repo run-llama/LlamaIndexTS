@@ -1,5 +1,5 @@
 import _ from "lodash";
-import OpenAI, { ClientOptions } from "openai";
+import OpenAI from "openai";
 
 export { OpenAI };
 
@@ -47,7 +47,7 @@ let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
  * @returns
  */
 export function getOpenAISession(
-  options: ClientOptions & { azure?: boolean } = {},
+  options: { azure?: boolean } = {},
 ) {
   let session = defaultOpenAISession.find((session) => {
     return _.isEqual(session.options, options);
