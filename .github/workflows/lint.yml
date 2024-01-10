@@ -1,4 +1,4 @@
-name: Lint Code
+name: Lint Code from Test
 
 on:
   push:
@@ -11,6 +11,8 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+
+    steps:
 
     steps:
       - uses: actions/checkout@v4
