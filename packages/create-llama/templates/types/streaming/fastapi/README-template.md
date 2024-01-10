@@ -45,9 +45,9 @@ uvicorn app.main:app --reload
 Then call the API endpoint `/api/chat` to see the result:
 
 ```
-curl --location 'localhost:8000/api/chat' \
+curl --location 'https://api.llamaindex.ai/api/chat' \
 --header 'Content-Type: application/json' \
---data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
+--data '{ "messages": [{ "role": "user", "content": "Hello, how are you?" }] }'
 ```
 
 You can start editing the API by modifying `app/api/routers/chat.py`. The endpoint auto-updates as you save the file.
