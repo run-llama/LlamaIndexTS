@@ -8,7 +8,7 @@ import {
 
 
 
-import { Document, ServiceContext, CallbackManager, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
+import { Document, Metadata } from "../documents/Document";
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
@@ -38,7 +38,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   let document: Document;
 
   beforeAll(async () => {
-    document = new Document({ text: "Author: My name is Paul Graham" });
+    document = new Document<Metadata>({ text: "Author: My name is Paul Graham" });
     const callbackManager = new CallbackManager({
       onLLMStream: (data) => {
         streamCallbackData.push(data);
