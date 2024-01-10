@@ -1,26 +1,95 @@
 
 
-import {
-  
-  RetrievalCallbackResponse,
-  StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
-
-
-
-import { Document, ServiceContext, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
-import { OpenAIEmbedding } from "../embeddings";
-import { SummaryIndex } from "../indices/summary";
-import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-
-// Removed duplicate import statements for mockEmbeddingModel and mockLlmGeneration
-
+<<<<<<< REPLACE (index=1)
 // Mock the OpenAI getOpenAISession function during testing
 jest.mock("../llm/openai", () => {
   return {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };
 });
+=======
+
+<<<<<<< REPLACE (index=2)
+  beforeEach(() => {
+    streamCallbackData = [];
+    retrieveCallbackData = [];
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  test("For VectorStoreIndex w/ a SimpleResponseBuilder", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.fromDocuments([document], {
+      serviceContext,
+    });
+    const queryEngine = vectorStoreIndex.asQueryEngine();
+    const query = "What is the author's name?";
+    const response = await queryEngine.query(query);
+    expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
+    expect(streamCallbackData).toEqual([
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 0,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 1,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 2,
+        isDone: true,
+      },
+    ]);
+    expect(retrieveCallbackData).toEqual([
+      {
+        query: query,
+        nodes: expect.any(Array),
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "retrieve",
+          tags: ["final"],
+        },
+      },
+    ]);
+    // both retrieval and streaming should have
+    // the same parent event
+    expect(streamCallbackData[0].event.parentId).toBe(
+      retrieveCallbackData[0].event.parentId,
+    );
+  }
+=======
 
 
 
@@ -99,6 +168,83 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
         },
       },
       {
+  test("For SummaryIndex w/ a SummaryIndexRetriever", async () => {
+    const summaryIndex = await SummaryIndex.fromDocuments([document], {
+      serviceContext,
+    });
+    const responseBuilder = new SimpleResponseBuilder(serviceContext);
+    const responseSynthesizer = new ResponseSynthesizer({
+      serviceContext: serviceContext,
+      responseBuilder,
+    });
+    const queryEngine = summaryIndex.asQueryEngine({
+      responseSynthesizer,
+    });
+    const query = "What is the author's name?";
+    const response = await queryEngine.query(query);
+    expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
+    expect(streamCallbackData).toEqual([
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 0,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 1,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 2,
+        isDone: true,
+      },
+    ]);
+    expect(retrieveCallbackData).toEqual([
+      {
+        query: query,
+        nodes: expect.any(Array),
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "retrieve",
+          tags: ["final"],
+        },
+      },
+    ]);
+    // both retrieval and streaming should have
+    // the same parent event
+    expect(streamCallbackData[0].event.parentId).toBe(
+      retrieveCallbackData[0].event.parentId,
+    );
+  }
         event: {
           id: expect.any(String),
           parentId: expect.any(String),
