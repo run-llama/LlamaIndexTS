@@ -118,7 +118,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     }
 
     const languageModel = new OpenAI({
-      model: "gpt-3.5-turbo",
+      model: "valid_model_name",
       callbackManager,
     });
     mockLlmGeneration({ languageModel, callbackManager });
