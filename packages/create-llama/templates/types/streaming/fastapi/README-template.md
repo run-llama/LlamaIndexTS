@@ -39,7 +39,7 @@ python app/engine/generate_embeddings.py
 Third, run the development server:
 
 ```
-python app/main.py
+uvicorn app.main:app --reload
 ```
 
 Then call the API endpoint `/api/chat` to see the result:
