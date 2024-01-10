@@ -10,7 +10,7 @@ jest.mock("../llm/openai", () => {
 =======
 
 <<<<<<< REPLACE (index=2)
-  beforeEach(() => {
+      // Removed duplicate identifier 'CallbackManager'
     streamCallbackData = [];
     retrieveCallbackData = [];
   });
