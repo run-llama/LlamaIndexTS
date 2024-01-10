@@ -5,7 +5,7 @@ load_dotenv()
 import logging
 import os
 import uvicorn
-from app.api.routers.chat import chat_router
+from app.api.routes.chat import router as chat_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
