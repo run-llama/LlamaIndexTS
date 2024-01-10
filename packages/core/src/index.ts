@@ -21,6 +21,7 @@ export * from "./nodeParsers";
 export * from "./postprocessors";
 export * from "./readers/AssemblyAI";
 export * from "./readers/CSVReader";
+export * from "./readers/DocxReader";
 export * from "./readers/HTMLReader";
 export * from "./readers/MarkdownReader";
 export * from "./readers/NotionReader";
