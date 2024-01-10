@@ -8,7 +8,7 @@ import {
 
 
 
-import { Document, Metadata } from "../documents/Document";
+import { serviceContextFromDefaults } from "./ServiceContext";
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
@@ -32,7 +32,7 @@ jest.mock("../llm/openai", () => {
 });
 
 describe("CallbackManager: onLLMStream and onRetrieve", () => {
-  let serviceContext: ServiceContext;
+  let serviceContext = serviceContextFromDefaults();
   let streamCallbackData: StreamCallbackResponse[] = [];
   let retrieveCallbackData: RetrievalCallbackResponse[] = [];
   let document: Document;
@@ -57,11 +57,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     const embedModel = new OpenAIEmbedding();
     mockEmbeddingModel(embedModel);
 
-    serviceContext = serviceContextFromDefaults({
-      callbackManager,
-      llm: languageModel,
-      embedModel,
-    });
+    serviceContext = serviceContextFromDefaults();
   });
 
   beforeEach(() => {
@@ -75,7 +71,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
 
   test("For VectorStoreIndex w/ a SimpleResponseBuilder", async () => {
     const vectorStoreIndex = await VectorStoreIndex.fromDocuments([document], {
-      serviceContext,
+      serviceContext: serviceContext,
     });
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
@@ -146,7 +142,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
 
   test("For SummaryIndex w/ a SummaryIndexRetriever", async () => {
     const summaryIndex = await SummaryIndex.fromDocuments([document], {
-      serviceContext,
+      serviceContext: serviceContext,
     });
     const responseBuilder = new SimpleResponseBuilder(serviceContext);
     const responseSynthesizer = new ResponseSynthesizer({
