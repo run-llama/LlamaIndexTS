@@ -49,6 +49,31 @@ curl --location 'localhost:8000/api/chat' \
 --header 'Content-Type: application/json' \
 --data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
 ```
+Example `.env` file:
+
+```
+OPENAI_API_KEY=<openai_api_key>
+```
+
+Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
+
+```
+python app/engine/generate.py
+```
+
+Third, run the development server:
+
+```
+python app/main.py
+```
+
+Then call the API endpoint `/api/chat` to see the result:
+
+```
+curl --location 'localhost:8000/api/chat' \
+--header 'Content-Type: application/json' \
+--data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
+```
 
 You can start editing the API by modifying `app/api/routers/chat.py`. The endpoint auto-updates as you save the file.
 
