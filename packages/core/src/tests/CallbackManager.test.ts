@@ -8,7 +8,7 @@ import {
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-import { OpenAIEmbedding, OpenAI, ChatMessage, Event, mockEmbeddingModel, mockLlmGeneration, ClientOptions, LLM } from "../llm/openai";
+import { OpenAI, ChatMessage, Event, mockEmbeddingModel, mockLlmGeneration, ClientOptions, LLM } from "../llm/openai";
 
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
@@ -51,7 +51,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     });
     mockLlmGeneration({ languageModel, callbackManager });
 
-    const embedModel = new OpenAIEmbedding();
+    
     mockEmbeddingModel(embedModel);
 
     serviceContext = serviceContextFromDefaults({
