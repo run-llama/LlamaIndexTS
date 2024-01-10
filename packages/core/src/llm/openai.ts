@@ -37,8 +37,7 @@ export class OpenAISession {
 // I'm not 100% sure this is necessary vs. just starting a new session
 
 
-let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
-  [];
+
 
 /**
  * Get a session for the OpenAI API. If one already exists with the same options,
