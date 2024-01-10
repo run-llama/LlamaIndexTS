@@ -8,7 +8,7 @@ import {
 
 
 
-import { Document, ServiceContext, CallbackManager, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
+export { Document, ServiceContext, CallbackManager, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
