@@ -13,7 +13,7 @@ import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 
-// Removed duplicate import statements for mockEmbeddingModel and mockLlmGeneration
+// Removed duplicate import statements for mockEmbeddingModel and languageModel.chat
 
 // Mock the OpenAI getOpenAISession function during testing
 jest.mock("../llm/openai", () => {
