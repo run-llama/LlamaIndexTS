@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import OpenAI, { ClientOptions } from 'openai';
 
-export { OpenAI, AzureOpenAI, OpenAISession, getOpenAISession };
+export { OpenAI, OpenAISession, getOpenAISession };
 
 export class AzureOpenAI extends OpenAI {
   protected override authHeaders() {
