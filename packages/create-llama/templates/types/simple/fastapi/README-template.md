@@ -36,6 +36,10 @@ curl --location '127.0.0.1:8000/api/chat' \
 --header 'Content-Type: application/json' \
    - Examine the GitHub Actions error logs to identify the cause of the failure.
    - Look for error messages, stack traces, and warnings to pinpoint the root cause.
+   - Ensure that all dependencies are correctly set up. Check for any missing or incompatible dependencies.
+   - Verify the environment setup and configuration, including environment variables, secrets, and settings.
+   - If the issue persists, refer to the [GitHub Actions documentation](https://docs.github.com/en/actions) for troubleshooting and further assistance.
+   - Look for error messages, stack traces, and warnings to pinpoint the root cause.
 
 2. **Fixing Common Issues**
    - Ensure that all dependencies are correctly set up. Check for any missing or incompatible dependencies.
