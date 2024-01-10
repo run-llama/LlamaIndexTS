@@ -1,15 +1,16 @@
 import _ from 'lodash';
+import * as openai from 'openai';
 import OpenAI, { ClientOptions } from 'openai';
 
 export { OpenAI, getOpenAISession };
 
-export class AzureOpenAI extends OpenAI {
+class AzureOpenAI extends OpenAI {
   protected override authHeaders() {
     return { "api-key": this.apiKey };
   }
 }
 
-class OpenAISession {
+export class OpenAISession {
   openai: OpenAI;
 
   constructor(options: ClientOptions & { azure?: boolean } = {}) {
