@@ -1,13 +1,13 @@
-import { Document } from "../Node";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
+
+
 import {
   CallbackManager,
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
-import { OpenAIEmbedding } from "../embeddings";
-import { SummaryIndex } from "../indices/summary";
-import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
+
+
+
 import { Document, ServiceContext, CallbackManager, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
@@ -21,7 +21,7 @@ jest.mock("../llm/openai", () => {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };
 });
-import { ResponseSynthesizer, SimpleResponseBuilder } from "../synthesizers";
+import { ResponseSynthesizer, SimpleResponseBuilder, mockLlmGeneration, mockEmbeddingModel } from "../synthesizers";
 
 
 // Mock the OpenAI getOpenAISession function during testing
@@ -48,7 +48,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       },
     });
 
-    const languageModel = new OpenAI({
+    const languageModel = new open({
       model: "gpt-3.5-turbo",
       callbackManager,
     });
