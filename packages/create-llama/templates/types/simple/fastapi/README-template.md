@@ -35,7 +35,7 @@ Third, run the development server:
 ```
 python main.py
 
-Then call the API endpoint `/api/chat` to see the result:
+Then call the API endpoint `/api/chat` to see the result. The request body should contain a `messages` array with a `role` and `content` field:
 
 ```
 curl --location 'localhost:8000/api/chat' \
@@ -54,7 +54,7 @@ ENVIRONMENT=prod uvicorn main:app
 ```
 ```
 
-Then call the API endpoint `/api/chat` to see the result:
+Then call the API endpoint `/api/chat` to see the result. For example, you can use the following curl command to call the endpoint:
 
 ```
 curl --location 'localhost:8000/api/chat' \
