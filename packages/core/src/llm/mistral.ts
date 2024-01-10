@@ -3,6 +3,7 @@ import {
   Event,
   EventType,
   StreamCallbackResponse,
+  LLMChatParamsStreaming,
 } from "../callbacks/CallbackManager";
 import { ChatMessage, ChatResponse, LLM } from "./LLM";
 
