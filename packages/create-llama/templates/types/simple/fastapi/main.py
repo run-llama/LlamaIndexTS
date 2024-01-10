@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
@@ -11,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-environment = os.getenv("ENVIRONMENT", "dev")  # Default to 'development' if not set
+environment = os.getenv("ENVIRONMENT", default="dev")  # Default to 'development' if not set
 
 
 if environment == "dev":
@@ -25,7 +27,7 @@ if environment == "dev":
         allow_headers=["*"],
     )
 
-app.include_router(chat_router, prefix="/api/chat")
+app.include_router(chat_router, prefix="/api/chat", tags=["chat"])
 
 
 if __name__ == "__main__":
