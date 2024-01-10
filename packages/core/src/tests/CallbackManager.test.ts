@@ -124,7 +124,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     mockLlmGeneration({ languageModel, callbackManager });
 
     const embedModel = new OpenAIEmbedding();
-    mockEmbeddingModel(embedModel);
+    (embedModel);
 
     serviceContext = serviceContextFromDefaults({
       callbackManager,
