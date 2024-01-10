@@ -5,7 +5,7 @@ import {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
-import {  } from "../../embeddings/OpenAIEmbedding";
+import { OpenAIEmbedding } from "../../embeddings/OpenAIEmbedding";
 import {  } from "../indices/summary";
 import {  } from "../indices/vectorStore/VectorStoreIndex";
 import { Document, ServiceContext, CallbackManager, RetrievalCallbackResponse, StreamCallbackResponse } from "../../callbacks/CallbackManager";
