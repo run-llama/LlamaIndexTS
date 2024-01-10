@@ -21,7 +21,7 @@ jest.mock("../llm/openai", () => {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };
 });
-import { ResponseSynthesizer, SimpleResponseBuilder, mockLlmGeneration, mockEmbeddingModel } from "../synthesizers";
+
 
 
 // Mock the OpenAI getOpenAISession function during testing
@@ -38,7 +38,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   let document: Document;
 
   beforeAll(async () => {
-    document = new Document({ text: "Author: My name is Paul Graham" });
+    // document = new Document({ text: "Author: My name is Paul Graham" });
     const callbackManager = {
       onLLMStream: (data) => {
         streamCallbackData.push(data);
