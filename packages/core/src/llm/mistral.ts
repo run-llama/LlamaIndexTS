@@ -41,7 +41,7 @@ export class MistralAISession {
 /**
  * MistralAI LLM implementation
  */
-export class MistralAI implements LLMAI {
+export class MistralAI implements LLM {
   hasStreaming: boolean = true;
   
 
