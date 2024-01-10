@@ -46,7 +46,7 @@ export class OpenAISession {
  * @returns
  */
 export function getOpenAISession(
-  options: ClientOptions & { azure?: boolean } = {},
+  options: Partial<ClientOptions> & { azure?: boolean } = {},
 ) {
   let session = defaultOpenAISession.find((session) => {
     return _.isEqual(session.options, options);
