@@ -33,7 +33,7 @@ OPENAI_API_KEY=your_actual_api_key_here
 Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
 
 ```
-python app/engine/generate.py
+python app/engine/generate_embeddings.py
 ```
 
 Third, run the development server:
