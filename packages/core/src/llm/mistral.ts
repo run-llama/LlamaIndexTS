@@ -143,7 +143,6 @@ export class MistralAI implements LLM {
     var idx_counter: number = 0;
     for await (const part of chunkStream) {
       if (!part.choices.length) continue;
-
       part.choices[0].index = idx_counter;
       const isDone: boolean =
         part.choices[0].finish_reason === "stop" ? true : false;
