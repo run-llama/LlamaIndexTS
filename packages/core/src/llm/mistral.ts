@@ -103,7 +103,7 @@ export class MistralAI implements LLM {
         throw Error("No streaming support for this LLM.");
       }
       const client = await this.session.getClient();
-      const response = await client.chat(this.buildParams(messages));
+      const response = await client.chat(this.buildParams(message));
       const message = response.choices[0].message;
       return message;
     }
@@ -132,7 +132,7 @@ export class MistralAI implements LLM {
       : () => {};
 
     const client = await this.session.getClient();
-    const chunkStream = await client.chatStream(this.buildParams(messages));
+    const chunkStream = await client.chatStream(this.buildParams(message));
 
     const event: Event = parentEvent
       ? parentEvent
