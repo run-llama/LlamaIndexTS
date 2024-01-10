@@ -1,4 +1,4 @@
-from llama_index.chat_engine import SimpleChatEngine
+from app.engine.index import SimpleChatEngine
 
 from app.context import create_base_context
 
