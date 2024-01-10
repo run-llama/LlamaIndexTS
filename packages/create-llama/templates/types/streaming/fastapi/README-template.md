@@ -26,6 +26,35 @@ If GitHub Actions run into issues, follow these steps to troubleshoot and resolv
 
 Example `.env` file:
 
+
+Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
+
+```
+python app/engine/generate.py
+```
+
+Third, run the development server:
+
+```
+python app/main.py
+```
+
+Then call the API endpoint `/api/chat` to see the result:
+
+Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
+
+```
+python app/engine/generate.py
+```
+
+Third, run the development server:
+
+```
+python app/main.py
+```
+
+Then call the API endpoint `/api/chat` to see the result:
+
 ```
 OPENAI_API_KEY=<openai_api_key>
 ```
@@ -50,6 +79,22 @@ curl --location 'localhost:8000/api/chat' \
 --data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
 ```
 Example `.env` file:
+
+```bash
+OPENAI_API_KEY=<openai_api_key>
+```Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
+
+```python
+python app/engine/generate.py
+```
+
+Third, run the development server:
+
+```python
+python app/main.py
+```
+
+Then call the API endpoint `/api/chat` to see the result:
 
 ```
 OPENAI_API_KEY=<openai_api_key>
@@ -84,6 +129,15 @@ The API allows CORS for all origins to simplify development. You can change this
 ```
 ENVIRONMENT=prod uvicorn main:app
 ```
+
+## Learn More
+To learn more about LlamaIndex, take a look at the following resources:
+
+- [LlamaIndex Documentation](https://docs.llamaindex.ai) - learn about LlamaIndex.
+
+You can check out [the LlamaIndex GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
+
+For more information on troubleshooting GitHub Actions and understanding the error logs, refer to the [GitHub Actions documentation](https://docs.github.com/en/actions).
 
 ## Learn More
 
