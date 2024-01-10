@@ -39,7 +39,7 @@ python app/engine/generate_embeddings.py
 Third, run the development server:
 
 ```
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 Then call the API endpoint `/api/chat` to see the result:
