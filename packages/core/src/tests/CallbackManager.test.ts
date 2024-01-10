@@ -8,7 +8,16 @@ import {
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-import { OpenAI } from "../llm/LLM";
+import { OpenAI } from "../llm/mistral";
+import { ResponseSynthesizer, SimpleResponseBuilder } from "../synthesizers";
+import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
+
+// Mock the OpenAI getOpenAISession function during testing
+jest.mock("../llm/openai", () => {
+  return {
+    getOpenAISession: jest.fn().mockImplementation(() => null),
+  };
+});
 import { ResponseSynthesizer, SimpleResponseBuilder } from "../synthesizers";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
