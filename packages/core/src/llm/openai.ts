@@ -1,7 +1,7 @@
-import _ from "lodash";
-import OpenAI, { ClientOptions } from "openai";
+import _ from 'lodash';
+import OpenAI, { ClientOptions } from 'openai';
 
-export { OpenAI };
+export { OpenAI, AzureOpenAI, OpenAISession, getOpenAISession };
 
 export class AzureOpenAI extends OpenAI {
   protected override authHeaders() {
@@ -14,7 +14,7 @@ export class OpenAISession {
 
   constructor(options: ClientOptions & { azure?: boolean } = {}) {
     if (!options.apiKey) {
-      if (typeof process !== undefined) {
+      if (typeof process !== 'undefined') {
         options.apiKey = process.env.OPENAI_API_KEY;
       }
     }
