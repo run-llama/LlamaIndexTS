@@ -27,7 +27,7 @@ If GitHub Actions run into issues, follow these steps to troubleshoot and resolv
 Example `.env` file:
 
 ```
-OPENAI_API_KEY=<openai_api_key>
+OPENAI_API_KEY=your_actual_api_key_here
 ```
 
 Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
