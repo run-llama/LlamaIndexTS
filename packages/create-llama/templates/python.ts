@@ -64,7 +64,7 @@ const addDependencies = async (
         // Update dependency
         if (typeof orignalValue === "string") {
           existingDependencies[dependency.name] = {
-            version: orignalValue,
+            version: dependency.version ?? orignalValue,
             extras: dependency.extras,
           };
         } else {
