@@ -2,6 +2,8 @@ import os
 
 from llama_index import ServiceContext
 from llama_index.llms import OpenAI
+from llama_index.engine import BaseChatEngine
+from dotenv import load_dotenv
 
 
 def create_base_context():
