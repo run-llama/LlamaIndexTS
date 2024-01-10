@@ -117,7 +117,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       },
     }
 
-    const languageModel = new open({
+    const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
       callbackManager,
     });
