@@ -1,4 +1,4 @@
-import { similarity, SimilarityType } from "../embeddings";
+import { ChatMessage, similarity, SimilarityType } from "../embeddings";
 
 describe("similarity", () => {
   test("throws error on mismatched lengths", () => {
