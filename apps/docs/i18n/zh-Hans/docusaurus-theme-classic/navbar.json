@@ -11,7 +11,7 @@
     "message": "Docs",
     "description": "Navbar item with label Docs"
   },
-  "item.label.GitHub": {
+  "item.url.GitHub": "https://github.com/run-llama/LlamaIndexTS"
     "message": "GitHub",
     "description": "Navbar item with label GitHub"
   }
