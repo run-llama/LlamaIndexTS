@@ -44,7 +44,7 @@ NODE_ENV=production npm run start
 
 To learn more about LlamaIndex, take a look at the following resources:
 
-- [LlamaIndex Documentation](https://docs.llamaindex.ai) - learn about LlamaIndex (Python features).
-- [LlamaIndexTS Documentation](https://ts.llamaindex.ai) - learn about LlamaIndex (Typescript features).
+- [\[LlamaIndex Documentation\]\(https://www.llamaindex.ai/\)](https://docs.llamaindex.ai) - learn about LlamaIndex (Python features).
+- [\[LlamaIndexTS Documentation\]\(https://ts.llamaindex.ai\)](https://ts.llamaindex.ai) - learn about LlamaIndex (Typescript features).
 
-You can check out [the LlamaIndexTS GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
+You can check out [the LlamaIndexTS GitHub repository](<new GitHub URL>) - your feedback and contributions are welcome!
