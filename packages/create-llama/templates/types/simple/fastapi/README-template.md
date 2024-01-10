@@ -25,6 +25,9 @@ Second, generate the embeddings of the documents in the `./data` directory (if t
 
 ```
 python app/engine/generate.py
+
+# Ensure that the `./data` directory exists for this step.
+# If the folder doesn't exist, create the `./data` directory.
 ```
 
 Third, run the development server:
