@@ -5,7 +5,7 @@ import {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
-import {  } from "../../embeddings/OpenAIEmbedding";
+
 import {  } from "../indices/summary";
 import {  } from "../indices/vectorStore/VectorStoreIndex";
 
