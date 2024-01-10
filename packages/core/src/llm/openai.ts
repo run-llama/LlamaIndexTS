@@ -35,8 +35,8 @@ export class OpenAISession {
 }
 
 // I'm not 100% sure this is necessary vs. just starting a new session
-// every time we make a call. They say they try to reuse connections
-// so in theory this is more efficient, but we should test it in the future.
+
+
 let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
   [];
 
