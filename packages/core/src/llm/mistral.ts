@@ -132,7 +132,7 @@ export class MistralAI implements LLM {
       : () => {};
 
     const client = await this.session.getClient();
-    const chunkStream = await client.chatStream(this.buildParams(message));
+    const chunkStream = await client.chatStream(this.buildParams(messages));
 
     const event: Event = parentEvent
       ? parentEvent
@@ -140,6 +140,29 @@ export class MistralAI implements LLM {
           id: "unspecified",
           type: "llmPredict" as EventType,
         };
+
+    //Indices
+    var idx_counter: number = 0;
+    for await (const part of chunkStream) {
+      if (!part.choices.length) continue;
+      part.choices[0].index = idx_counter;
+      const isDone: boolean =
+        part.choices[0].finish_reason === "stop" ? true : false;
+
+      const stream_callback: StreamCallbackResponse = {
+        event: event,
+        index: idx_counter,
+        isDone: isDone,
+        token: part,
+      };
+      onLLMStream(stream_callback);
+
+      idx_counter++;
+
+      yield part.choices[0].delta.content ?? "";
+    }
+    return;
+  }
 
     //Indices
     var idx_counter: number = 0;
