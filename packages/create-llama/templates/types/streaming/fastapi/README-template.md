@@ -1,4 +1,4 @@
-This is a [LlamaIndex](https://www.llamaindex.ai/) project using [FastAPI](https://fastapi.tiangolo.com/) bootstrapped with [`create-llama`](https://github.com/run-llama/LlamaIndexTS/tree/main/packages/create-llama).
+This is a [LlamaIndex](https://www.llamaindex.ai/) project using [FastAPI](https://fastapi.tiangolo.com/) bootstrapped with [`create-llama`](https://github.com/run-llama/create-llama-ts).
 
 ## Getting Started
 
@@ -26,7 +26,7 @@ python app/engine/generate.py
 Third, run the development server:
 
 ```
-python main.py
+python app/main.py
 ```
 
 Then call the API endpoint `/api/chat` to see the result:
@@ -53,4 +53,4 @@ To learn more about LlamaIndex, take a look at the following resources:
 
 - [LlamaIndex Documentation](https://docs.llamaindex.ai) - learn about LlamaIndex.
 
-You can check out [the LlamaIndex GitHub repository](https://github.com/run-llama/llama_index) - your feedback and contributions are welcome!
+You can check out [the LlamaIndex GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
