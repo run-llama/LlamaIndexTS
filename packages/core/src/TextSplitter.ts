@@ -18,7 +18,6 @@ class TextSplit {
 
 type SplitRep = { text: string; numTokens: number };
 
-// match english
 const defaultregex = /[.?!][\])'"`’”]*(?:\s|$)/g;
 export const defaultSentenceTokenizer = (text: string): string[] => {
   const slist = [];
