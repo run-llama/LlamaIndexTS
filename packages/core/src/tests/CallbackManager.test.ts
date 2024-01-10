@@ -126,7 +126,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     const embedModel = new OpenAIEmbedding();
     (embedModel);
 
-    serviceContext = serviceContextFromDefaults({
+    serviceContext = serviceContextFromServiceContext(serviceContext,
       callbackManager,
       llm: languageModel,
       embedModel,
