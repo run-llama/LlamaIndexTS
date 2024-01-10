@@ -7,7 +7,7 @@ import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
 interface Dependency {
   name: string;
-  version: string;
+  version?: string;
   extras?: string[];
 }
 
@@ -25,7 +25,6 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
     case "pg": {
       dependencies.push({
         name: "llama-index",
-        version: "^0.9.19",
         extras: ["postgres"],
       });
     }
@@ -51,13 +50,28 @@ const addDependencies = async (
     const tool = fileParsed.tool as any;
     const existingDependencies = tool.poetry.dependencies as any;
     for (const dependency of dependencies) {
-      if (dependency.extras) {
-        existingDependencies[dependency.name] = {
-          version: dependency.version,
-          extras: dependency.extras,
-        };
+      const orignalValue = existingDependencies[dependency.name];
+      if (orignalValue === undefined) {
+        // Add dependency
+        if (dependency.version === undefined) {
+          throw Error(
+            `Dependency ${dependency.name} is missing version attribute!`,
+          );
+        } else {
+          existingDependencies[dependency.name] = dependency.version;
+        }
       } else {
-        existingDependencies[dependency.name] = dependency.version;
+        // Update dependency
+        if (typeof orignalValue === "string") {
+          existingDependencies[dependency.name] = {
+            version: orignalValue,
+            extras: dependency.extras,
+          };
+        } else {
+          orignalValue.version = dependency.version ?? orignalValue.version;
+          orignalValue.extras = dependency.extras;
+          existingDependencies[dependency.name] = orignalValue;
+        }
       }
     }
 
