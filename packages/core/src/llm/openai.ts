@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import OpenAI, { ClientOptions } from 'openai';
 
-export { OpenAI, OpenAISession, getOpenAISession };
+export { OpenAI, getOpenAISession };
 
 export class AzureOpenAI extends OpenAI {
   protected override authHeaders() {
@@ -9,7 +9,7 @@ export class AzureOpenAI extends OpenAI {
   }
 }
 
-export class OpenAISession {
+class OpenAISession {
   openai: OpenAI;
 
   constructor(options: ClientOptions & { azure?: boolean } = {}) {
