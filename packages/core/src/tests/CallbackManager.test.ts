@@ -8,7 +8,7 @@ import {
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-import { OpenAI, ChatMessage, Event, mockEmbeddingModel,  ClientOptions, LLM } from "../llm/openai";
+import { OpenAI, Event, ClientOptions } from "../llm/openai";
 
 
 
