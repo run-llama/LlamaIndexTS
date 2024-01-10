@@ -6,10 +6,15 @@ First, setup the environment:
 
 ```
 poetry install
-poetry shell
+poetry check
 ```
 
-By default, we use the OpenAI LLM (though you can customize, see `app/context.py`). As a result, you need to specify an `OPENAI_API_KEY` in an .env file in this directory.
+By default, we use the OpenAI LLM (though you can customize, see `app/context.py`). You need to set up the `OPENAI_API_KEY` environment variable as per the application requirements.
+
+Verifying Environment Setup and Configuration
+   - Check, update, or create a `.env` file in the project directory with the `OPENAI_API_KEY` environment variable.
+
+Referring to the [GitHub Actions documentation](https://docs.github.com/en/actions) for further assistance.
 
 ## Troubleshooting GitHub Actions
 
