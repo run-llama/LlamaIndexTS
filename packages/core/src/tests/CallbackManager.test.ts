@@ -21,7 +21,7 @@ jest.mock("../llm/openai", () => {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };
 });
-import { ResponseSynthesizer, SimpleResponseBuilder, mockLlmGeneration, mockEmbeddingModel } from "../synthesizers";
+import { ResponseSynthesizer, SimpleResponseBuilder } from "../synthesizers";
 
 
 // Mock the OpenAI getOpenAISession function during testing
