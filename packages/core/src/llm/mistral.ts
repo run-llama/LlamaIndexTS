@@ -101,7 +101,7 @@ export class MistralAI implements LLM {
       if (!this.hasStreaming) {
         throw Error("No streaming support for this LLM.");
       }
-      return this.streamChat(messages, parentEvent) as R;
+      return this.streamChat(messages, parentEvent) as any;
     }
     // Non-streaming
     const client = await this.session.getClient();
