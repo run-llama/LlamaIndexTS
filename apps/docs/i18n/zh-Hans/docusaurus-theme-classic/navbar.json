@@ -1,6 +1,6 @@
 {
   "title": {
-    "message": "LlamaIndex.TS",
+    "message": "LlamaIndex",
     "description": "The title in the navbar"
   },
   "logo.alt": {
@@ -8,11 +8,11 @@
     "description": "The alt text of navbar logo"
   },
   "item.label.Docs": {
-    "message": "Docs",
+    "message": "LlamaIndex Docs",
     "description": "Navbar item with label Docs"
   },
   "item.label.GitHub": {
-    "message": "GitHub",
+    "message": "LlamaIndex GitHub",
     "description": "Navbar item with label GitHub"
   }
 }
