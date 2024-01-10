@@ -42,7 +42,7 @@ export class MistralAISession {
  * MistralAI LLM implementation
  */
 export class MistralAI implements LLM {
-  hasStreaming: boolean = true;
+  hasStreaming: boolean = true
   
 
   // Per completion MistralAI params
