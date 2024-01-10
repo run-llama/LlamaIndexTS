@@ -101,15 +101,16 @@ export class MistralAI implements LLM {
       if (!this.hasStreaming) {
         throw Error("No streaming support for this LLM.");
       }
-      return this.streamChat(messages, parentEvent) as any;
+      const client = await this.session.getClient();
+      const response = await client.chat(this.buildParams(messages));
+      const message = response.choices[0].message;
+      return message;
     }
     // Non-streaming
     const client = await this.session.getClient();
     const response = await client.chat(this.buildParams(messages));
     const message = response.choices[0].message;
-    return {
-      message,
-    } as R;
+    return message;
   }
 
   async complete(prompt: string, parentEvent?: Event, streaming?: boolean): Promise<ChatResponse> {
