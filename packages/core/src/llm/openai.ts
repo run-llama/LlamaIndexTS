@@ -1,6 +1,8 @@
 import _ from "lodash";
 import OpenAI, { ClientOptions } from "openai";
 
+export { OpenAI };
+
 export class AzureOpenAI extends OpenAI {
   protected override authHeaders() {
     return { "api-key": this.apiKey };
