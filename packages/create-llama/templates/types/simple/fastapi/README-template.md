@@ -2,11 +2,13 @@ This is a [LlamaIndex](https://www.llamaindex.ai/) project using [FastAPI](https
 
 ## Getting Started
 
-First, setup the environment:
+First, setup the environment by running the following commands:
 
 ```
+```bash
 poetry install
 poetry shell
+```
 ```
 
 By default, we use the OpenAI LLM (though you can customize, see app/api/routers/chat.py). As a result you need to specify an `OPENAI_API_KEY` in an .env file in this directory.
@@ -17,29 +19,33 @@ Example `backend/.env` file:
 OPENAI_API_KEY=<openai_api_key>
 ```
 
-Second, generate the embeddings of the documents in the `./app/data` directory (if this folder exists - otherwise, skip this step):
+Second, generate the embeddings of the documents by following the steps below:
 
 ```
+```bash
 python app/data/generate.py
 ```
+```
 
-Third, run the development server:
+Next, run the development server with the command below:
 
 ```
 python main.py
 ```
 
-Then call the API endpoint `/api/chat` to see the result:
+After running the server, call the API endpoint `/api/chat` to see the result using the following command:
 
 ```
+```bash
 curl --location '127.0.0.1:8000/api/chat' \
 --header 'Content-Type: application/json' \
 --data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
 ```
+```
 
 You can start editing the API by modifying `app/api/routers/chat.py`. The endpoint auto-updates as you save the file.
 
-Open [http://localhost:8000/docs](http://localhost:8000/docs) with your browser to see the Swagger UI of the API.
+Now, open [http://localhost:8000/docs](http://localhost:8000/docs) with your browser to see the Swagger UI of the API.
 
 The API allows CORS for all origins to simplify development. You can change this behavior by setting the `ENVIRONMENT` environment variable to `prod`:
 
@@ -47,10 +53,24 @@ The API allows CORS for all origins to simplify development. You can change this
 ENVIRONMENT=prod uvicorn main:app
 ```
 
-## Learn More
+## Troubleshooting and Error Logs
+
+### Troubleshooting Common GitHub Actions Issues
+
+If the GitHub Actions run fails, please consider the following troubleshooting steps:
 
 To learn more about LlamaIndex, take a look at the following resources:
 
-- [LlamaIndex Documentation](https://docs.llamaindex.ai) - learn about LlamaIndex.
+- [LlamaIndex Documentation](https://docs.llamaindex.ai) - learn more about LlamaIndex.
+
+### Accessing and Interpreting Error Logs
+
+When the GitHub Actions run fails, you can access error logs to investigate the cause. Follow these steps to access the logs:
+
+1. Navigate to the GitHub Actions page for the repository.
+2. Click on the failed workflow to view the details.
+3. Scroll down to find the error logs and examine the details.
+
+The error logs provide valuable information to help identify the root cause of the failure.
 
 You can check out [the LlamaIndex GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
