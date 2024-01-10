@@ -10,7 +10,7 @@ import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 import { OpenAI, ChatMessage, Event, mockEmbeddingModel, mockLlmGeneration, ClientOptions, LLM } from "../llm/openai";
 
-import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
+
 
 // Mock the OpenAI getOpenAISession function during testing
 jest.mock("../llm/openai", () => {
@@ -52,7 +52,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     mockLlmGeneration({ languageModel, callbackManager });
 
     
-    mockEmbeddingModel(embedModel);
+    
 
     serviceContext = serviceContextFromDefaults({
       callbackManager,
@@ -76,7 +76,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     });
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
-    const response = await queryEngine.query(query);
+    const response = await queryEngine.query(query, serviceContext);
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
     expect(streamCallbackData).toEqual([
       {
