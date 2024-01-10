@@ -1,12 +1,12 @@
-import { MarkdownReader, VectorStoreIndex } from "llamaindex";
+import { DocxReader, VectorStoreIndex } from "llamaindex";
 
-const FILE_PATH = "./data/planets.mdx";
-const SAMPLE_QUERY = "List all planets";
+const FILE_PATH = "./data/stars.docx";
+const SAMPLE_QUERY = "Information about Zodiac";
 
 async function main() {
   // Load markdown file
   console.log("Loading data...");
-  const reader = new MarkdownReader();
+  const reader = new DocxReader();
   const documents = await reader.loadData(FILE_PATH);
 
   // Create embeddings

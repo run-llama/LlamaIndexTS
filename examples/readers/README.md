@@ -1,7 +1,6 @@
-## MarkdownReader Example
+## Readers Example
 
-This example shows how to use `MarkdownReader` to load documents and test query.
-Supported document formats are: `.md`, `.mdx`.
+These example show how to use reader classes to load documents and test query.
 
 1. Make sure you are in `examples` directory
 
@@ -17,6 +16,14 @@ export OPENAI_API_KEY=your_openai_api_key
 
 3. Run the following command to load documents and test query:
 
+- MarkdownReader Example
+
 ```bash
-npx ts-node readers/md/index.ts
+npx ts-node readers/load-md.ts
+```
+
+- DocxReader Example
+
+```bash
+npx ts-node readers/load-docx.ts
 ```
