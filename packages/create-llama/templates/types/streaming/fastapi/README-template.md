@@ -16,48 +16,48 @@ By default, we use the OpenAI LLM (though you can customize, see `app/context.py
 If GitHub Actions run into issues, follow these steps to troubleshoot and resolve common problems.
 
 1. **Analyzing Error Logs**
-   - Examine the GitHub Actions error logs to identify the cause of the failure.
-   - Look for error messages, stack traces, and warnings to pinpoint the root cause.
+   - Analyze the error logs to identify any missing setup, incorrect configurations, or environment variable issues.
+   - Look for error messages, stack traces, warnings, or hints to pinpoint the root cause of the failure.
 
 2. **Fixing Common Issues**
-   - Ensure that all dependencies are correctly set up. Check for any missing or incompatible dependencies.
-   - Verify the environment setup and configuration, including environment variables, secrets, and settings.
-   - If the issue persists, refer to the [GitHub Actions documentation](https://docs.github.com/en/actions) for troubleshooting and further assistance.
+   - Verify that the workflow file (e.g., main.yml) is correctly configured and includes all necessary steps, environment variables, and dependencies.
+   - Analyze the error logs to identify any missing setup, incorrect configurations, or environment variable issues.
+   - Use the GitHub Actions documentation to troubleshoot and resolve common problems.
 
 Example `.env` file:
 
 ```
-OPENAI_API_KEY=<openai_api_key>
+OPENAI_API_KEY=your_openai_api_key
+ANOTHER_VARIABLE=another_value
 ```
 
 Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
 
 ```
-python app/engine/generate.py
+generate-document-embeddings
 ```
 
 Third, run the development server:
 
 ```
-python app/main.py
+uvicorn app.main:app --reload
 ```
 
 Then call the API endpoint `/api/chat` to see the result:
 
 ```
-curl --location 'localhost:8000/api/chat' \
---header 'Content-Type: application/json' \
---data '{ "messages": [{ "role": "user", "content": "Hello" }] }'
+http POST :8000/api/chat messages:='[{ role=user, content=Hello }]'
 ```
 
-You can start editing the API by modifying `app/api/routers/chat.py`. The endpoint auto-updates as you save the file.
+To edit the API, modify the file located at `app/api/routers/chat.py`. The endpoint auto-updates as you save the file.
 
-Open [http://localhost:8000/docs](http://localhost:8000/docs) with your browser to see the Swagger UI of the API.
+Access the Swagger UI of the API at [http://localhost:8000/docs](http://localhost:8000/docs).
 
-The API allows CORS for all origins to simplify development. You can change this behavior by setting the `ENVIRONMENT` environment variable to `prod`:
+To run the development server in production mode, set the `ENVIRONMENT` environment variable to `prod` and execute the following command:
 
+```sh
+uvicorn app.main:app --reload --workers 4 --host 0.0.0.0 --port 80
 ```
-ENVIRONMENT=prod uvicorn main:app
 ```
 
 ## Learn More
@@ -68,4 +68,6 @@ To learn more about LlamaIndex, take a look at the following resources:
 
 You can check out [the LlamaIndex GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
 
-For more information on troubleshooting GitHub Actions and understanding the error logs, refer to the [GitHub Actions documentation](https://docs.github.com/en/actions).
+For more information on troubleshooting GitHub Actions, understanding the error logs, and deploying FastAPI applications, refer to the following resources:
+- [GitHub Actions Documentation](https://docs.github.com/en/actions) - learn about GitHub Actions.
+- [FastAPI Deployment Documentation](https://fastapi.tiangolo.com/deployment/) - learn about deploying FastAPI applications.
