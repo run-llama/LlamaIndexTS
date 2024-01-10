@@ -8,9 +8,12 @@ import {
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-import { Document, ServiceContext, CallbackManager, OpenAIEmbedding, OpenAI, ChatMessage, Event, mockEmbeddingModel, mockLlmGeneration, ClientOptions, LLM } from "../llm/openai";
+import { Document, ServiceContext, CallbackManager, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
+import { OpenAIEmbedding } from "../embeddings";
+import { SummaryIndex } from "../indices/summary";
+import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
 
-import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
+// Removed duplicate import statements for mockEmbeddingModel and mockLlmGeneration
 
 // Mock the OpenAI getOpenAISession function during testing
 jest.mock("../llm/openai", () => {
