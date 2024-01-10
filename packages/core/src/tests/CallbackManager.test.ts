@@ -8,7 +8,7 @@ import {
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-import { OpenAI } from "../llm/openai";
+import { Document, ServiceContext, CallbackManager, OpenAIEmbedding, OpenAI, ChatMessage, Event, mockEmbeddingModel, mockLlmGeneration, ClientOptions, LLM } from "../llm/openai";
 
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
