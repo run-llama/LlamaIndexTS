@@ -8,7 +8,7 @@ import {
 
 
 
-import { Document, ServiceContext, CallbackManager, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
+import { Document, ServiceContext, RetrievalCallbackResponse, StreamCallbackResponse } from "../callbacks/CallbackManager";
 import { OpenAIEmbedding } from "../embeddings";
 import { SummaryIndex } from "../indices/summary";
 import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
@@ -39,14 +39,14 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
 
   beforeAll(async () => {
     document = new Document({ text: "Author: My name is Paul Graham" });
-    const callbackManager = new CallbackManager({
+    const callbackManager = {
       onLLMStream: (data) => {
         streamCallbackData.push(data);
       },
       onRetrieve: (data) => {
         retrieveCallbackData.push(data);
       },
-    });
+    }
 
     const languageModel = new open({
       model: "gpt-3.5-turbo",
