@@ -10,7 +10,6 @@ import {
 
 import { ChatCompletionMessageParam } from "openai/resources";
 import { LLMOptions } from "portkey-ai";
-import { MessageContent } from "../ChatEngine";
 import { globalsHelper, Tokenizers } from "../GlobalsHelper";
 import {
   ANTHROPIC_AI_PROMPT,
@@ -48,8 +47,9 @@ export interface ChatResponse {
   delta?: string;
 }
 
-// NOTE in case we need CompletionResponse to diverge from ChatResponse in the future
-export type CompletionResponse = ChatResponse;
+export interface CompletionResponse {
+  text: string;
+}
 
 export interface LLMMetadata {
   model: string;
@@ -60,45 +60,95 @@ export interface LLMMetadata {
   tokenizer: Tokenizers | undefined;
 }
 
+export interface LLMChatParamsBase {
+  messages: ChatMessage[];
+  parentEvent?: Event;
+  extraParams?: Record<string, any>;
+}
+
+export interface LLMChatParamsStreaming extends LLMChatParamsBase {
+  stream: true;
+}
+
+export interface LLMChatParamsNonStreaming extends LLMChatParamsBase {
+  stream?: false | null;
+}
+
+export interface LLMCompletionParamsBase {
+  prompt: string;
+  parentEvent?: Event;
+}
+
+export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {
+  stream: true;
+}
+
+export interface LLMCompletionParamsNonStreaming
+  extends LLMCompletionParamsBase {
+  stream?: false | null;
+}
+
 /**
  * Unified language model interface
  */
 export interface LLM {
   metadata: LLMMetadata;
-  // Whether a LLM has streaming support
-  hasStreaming: boolean;
   /**
    * Get a chat response from the LLM
-   * @param messages
    *
-   * The return type of chat() and complete() are set by the "streaming" parameter being set to True.
+   * @param params
    */
-  chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    messages: ChatMessage[],
-    parentEvent?: Event,
-    streaming?: T,
-  ): Promise<R>;
+  chat(params: LLMChatParamsStreaming): Promise<AsyncIterable<string>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
 
   /**
    * Get a prompt completion from the LLM
-   * @param prompt the prompt to complete
+   * @param params
    */
-  complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    prompt: MessageContent,
-    parentEvent?: Event,
-    streaming?: T,
-  ): Promise<R>;
+  complete(
+    params: LLMCompletionParamsStreaming,
+  ): Promise<AsyncIterable<string>>;
+  complete(
+    params: LLMCompletionParamsNonStreaming,
+  ): Promise<CompletionResponse>;
 
   /**
    * Calculates the number of tokens needed for the given chat messages
    */
   tokens(messages: ChatMessage[]): number;
+}
+
+abstract class BaseLLM implements LLM {
+  abstract metadata: LLMMetadata;
+
+  complete(
+    params: LLMCompletionParamsStreaming,
+  ): Promise<AsyncIterable<string>>;
+  complete(
+    params: LLMCompletionParamsNonStreaming,
+  ): Promise<CompletionResponse>;
+  async complete(
+    params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
+  ): Promise<CompletionResponse | AsyncIterable<string>> {
+    const { prompt, parentEvent, stream } = params;
+    if (stream) {
+      return this.chat({
+        messages: [{ content: prompt, role: "user" }],
+        parentEvent,
+        stream: true,
+      });
+    }
+    const chatResponse = await this.chat({
+      messages: [{ content: prompt, role: "user" }],
+      parentEvent,
+    });
+    return { text: chatResponse.message.content as string };
+  }
+
+  abstract chat(params: LLMChatParamsStreaming): Promise<AsyncIterable<string>>;
+  abstract chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+
+  abstract tokens(messages: ChatMessage[]): number;
 }
 
 export const GPT4_MODELS = {
@@ -125,9 +175,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
 /**
  * OpenAI LLM implementation
  */
-export class OpenAI implements LLM {
-  hasStreaming: boolean = true;
-
+export class OpenAI extends BaseLLM {
   // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
   temperature: number;
@@ -135,7 +183,7 @@ export class OpenAI implements LLM {
   maxTokens?: number;
   additionalChatOptions?: Omit<
     Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
-    "max_tokens" | "messages" | "model" | "temperature" | "top_p" | "streaming"
+    "max_tokens" | "messages" | "model" | "temperature" | "top_p" | "stream"
   >;
 
   // OpenAI session params
@@ -155,6 +203,7 @@ export class OpenAI implements LLM {
       azure?: AzureOpenAIConfig;
     },
   ) {
+    super();
     this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
@@ -251,10 +300,12 @@ export class OpenAI implements LLM {
     }
   }
 
-  async chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(messages: ChatMessage[], parentEvent?: Event, streaming?: T): Promise<R> {
+  chat(params: LLMChatParamsStreaming): Promise<AsyncIterable<string>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  async chat(
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+  ): Promise<ChatResponse | AsyncIterable<string>> {
+    const { messages, parentEvent, stream } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
@@ -270,11 +321,8 @@ export class OpenAI implements LLM {
       ...this.additionalChatOptions,
     };
     // Streaming
-    if (streaming) {
-      if (!this.hasStreaming) {
-        throw Error("No streaming support for this LLM.");
-      }
-      return this.streamChat(messages, parentEvent) as R;
+    if (stream) {
+      return this.streamChat(params);
     }
     // Non-streaming
     const response = await this.session.openai.chat.completions.create({
@@ -285,27 +333,13 @@ export class OpenAI implements LLM {
     const content = response.choices[0].message?.content ?? "";
     return {
       message: { content, role: response.choices[0].message.role },
-    } as R;
+    };
   }
 
-  async complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(prompt: string, parentEvent?: Event, streaming?: T): Promise<R> {
-    return this.chat(
-      [{ content: prompt, role: "user" }],
-      parentEvent,
-      streaming,
-    );
-  }
-
-  //We can wrap a stream in a generator to add some additional logging behavior
-  //For future edits: syntax for generator type is <typeof Yield, typeof Return, typeof Accept>
-  //"typeof Accept" refers to what types you'll accept when you manually call generator.next(<AcceptType>)
-  protected async *streamChat(
-    messages: ChatMessage[],
-    parentEvent?: Event,
-  ): AsyncGenerator<string, void, unknown> {
+  protected async *streamChat({
+    messages,
+    parentEvent,
+  }: LLMChatParamsStreaming): AsyncIterable<string> {
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
@@ -364,14 +398,6 @@ export class OpenAI implements LLM {
     }
     return;
   }
-
-  //streamComplete doesn't need to be async because it's child function is already async
-  protected streamComplete(
-    query: string,
-    parentEvent?: Event,
-  ): AsyncGenerator<string, void, unknown> {
-    return this.streamChat([{ content: query, role: "user" }], parentEvent);
-  }
 }
 
 export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
@@ -429,16 +455,16 @@ export enum DeuceChatStrategy {
 /**
  * Llama2 LLM implementation
  */
-export class LlamaDeuce implements LLM {
+export class LlamaDeuce extends BaseLLM {
   model: keyof typeof ALL_AVAILABLE_LLAMADEUCE_MODELS;
   chatStrategy: DeuceChatStrategy;
   temperature: number;
   topP: number;
   maxTokens?: number;
   replicateSession: ReplicateSession;
-  hasStreaming: boolean;
 
   constructor(init?: Partial<LlamaDeuce>) {
+    super();
     this.model = init?.model ?? "Llama-2-70b-chat-4bit";
     this.chatStrategy =
       init?.chatStrategy ??
@@ -451,7 +477,6 @@ export class LlamaDeuce implements LLM {
       init?.maxTokens ??
       ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].contextWindow; // For Replicate, the default is 500 tokens which is too low.
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
-    this.hasStreaming = init?.hasStreaming ?? false;
   }
 
   tokens(messages: ChatMessage[]): number {
@@ -596,10 +621,12 @@ If a question does not make any sense, or is not factually coherent, explain why
     };
   }
 
-  async chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(messages: ChatMessage[], _parentEvent?: Event, streaming?: T): Promise<R> {
+  chat(params: LLMChatParamsStreaming): Promise<AsyncIterable<string>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  async chat(
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+  ): Promise<ChatResponse | AsyncIterable<string>> {
+    const { messages, parentEvent, stream } = params;
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
       .replicateApi as `${string}/${string}:${string}`;
 
@@ -633,14 +660,7 @@ If a question does not make any sense, or is not factually coherent, explain why
         //^ We need to do this because Replicate returns a list of strings (for streaming functionality which is not exposed by the run function)
         role: "assistant",
       },
-    } as R;
-  }
-
-  async complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(prompt: string, parentEvent?: Event, streaming?: T): Promise<R> {
-    return this.chat([{ content: prompt, role: "user" }], parentEvent);
+    };
   }
 }
 
@@ -654,9 +674,7 @@ export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
  * Anthropic LLM implementation
  */
 
-export class Anthropic implements LLM {
-  hasStreaming: boolean = true;
-
+export class Anthropic extends BaseLLM {
   // Per completion Anthropic params
   model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
   temperature: number;
@@ -672,6 +690,7 @@ export class Anthropic implements LLM {
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<Anthropic>) {
+    super();
     this.model = init?.model ?? "claude-2";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 0.999; // Per Ben Mann
@@ -723,20 +742,15 @@ export class Anthropic implements LLM {
     );
   }
 
-  async chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    messages: ChatMessage[],
-    parentEvent?: Event | undefined,
-    streaming?: T,
-  ): Promise<R> {
+  chat(params: LLMChatParamsStreaming): Promise<AsyncIterable<string>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  async chat(
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+  ): Promise<ChatResponse | AsyncIterable<string>> {
+    const { messages, parentEvent, stream } = params;
     //Streaming
-    if (streaming) {
-      if (!this.hasStreaming) {
-        throw Error("No streaming support for this LLM.");
-      }
-      return this.streamChat(messages, parentEvent) as R;
+    if (stream) {
+      return this.streamChat(messages, parentEvent);
     }
 
     //Non-streaming
@@ -752,13 +766,13 @@ export class Anthropic implements LLM {
       message: { content: response.completion.trimStart(), role: "assistant" },
       //^ We're trimming the start because Anthropic often starts with a space in the response
       // That space will be re-added when we generate the next prompt.
-    } as R;
+    };
   }
 
   protected async *streamChat(
     messages: ChatMessage[],
     parentEvent?: Event | undefined,
-  ): AsyncGenerator<string, void, unknown> {
+  ): AsyncIterable<string> {
     // AsyncIterable<AnthropicStreamToken>
     const stream: AsyncIterable<AnthropicStreamToken> =
       await this.session.anthropic.completions.create({
@@ -779,36 +793,9 @@ export class Anthropic implements LLM {
     }
     return;
   }
-
-  async complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    prompt: string,
-    parentEvent?: Event | undefined,
-    streaming?: T,
-  ): Promise<R> {
-    if (streaming) {
-      return this.streamComplete(prompt, parentEvent) as R;
-    }
-    return this.chat(
-      [{ content: prompt, role: "user" }],
-      parentEvent,
-      streaming,
-    ) as R;
-  }
-
-  protected streamComplete(
-    prompt: string,
-    parentEvent?: Event | undefined,
-  ): AsyncGenerator<string, void, unknown> {
-    return this.streamChat([{ content: prompt, role: "user" }], parentEvent);
-  }
 }
 
-export class Portkey implements LLM {
-  hasStreaming: boolean = true;
-
+export class Portkey extends BaseLLM {
   apiKey?: string = undefined;
   baseURL?: string = undefined;
   mode?: string = undefined;
@@ -817,6 +804,7 @@ export class Portkey implements LLM {
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<Portkey>) {
+    super();
     this.apiKey = init?.apiKey;
     this.baseURL = init?.baseURL;
     this.mode = init?.mode;
@@ -838,43 +826,25 @@ export class Portkey implements LLM {
     throw new Error("metadata not implemented for Portkey");
   }
 
-  async chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    messages: ChatMessage[],
-    parentEvent?: Event | undefined,
-    streaming?: T,
-    params?: Record<string, any>,
-  ): Promise<R> {
-    if (streaming) {
-      return this.streamChat(messages, parentEvent, params) as R;
+  chat(params: LLMChatParamsStreaming): Promise<AsyncIterable<string>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  async chat(
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+  ): Promise<ChatResponse | AsyncIterable<string>> {
+    const { messages, parentEvent, stream, extraParams } = params;
+    if (stream) {
+      return this.streamChat(messages, parentEvent, extraParams);
     } else {
-      const resolvedParams = params || {};
+      const bodyParams = extraParams || {};
       const response = await this.session.portkey.chatCompletions.create({
         messages,
-        ...resolvedParams,
+        ...bodyParams,
       });
 
       const content = response.choices[0].message?.content ?? "";
       const role = response.choices[0].message?.role || "assistant";
-      return { message: { content, role: role as MessageType } } as R;
+      return { message: { content, role: role as MessageType } };
     }
-  }
-
-  async complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    prompt: string,
-    parentEvent?: Event | undefined,
-    streaming?: T,
-  ): Promise<R> {
-    return this.chat(
-      [{ content: prompt, role: "user" }],
-      parentEvent,
-      streaming,
-    );
   }
 
   async *streamChat(
@@ -922,12 +892,5 @@ export class Portkey implements LLM {
       yield part.choices[0].delta?.content ?? "";
     }
     return;
-  }
-
-  streamComplete(
-    query: string,
-    parentEvent?: Event,
-  ): AsyncGenerator<string, void, unknown> {
-    return this.streamChat([{ content: query, role: "user" }], parentEvent);
   }
 }
