@@ -68,4 +68,4 @@ To learn more about LlamaIndex, take a look at the following resources:
 
 You can check out [the LlamaIndex GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
 
-For more information on troubleshooting GitHub Actions and understanding the error logs, refer to the [GitHub Actions documentation](https://docs.github.com/en/actions).
+
