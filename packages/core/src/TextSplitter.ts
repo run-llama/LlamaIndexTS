@@ -1,4 +1,3 @@
-import nlp from "compromise";
 import { EOL } from "node:os";
 // GitHub translated
 import { globalsHelper } from "./GlobalsHelper";
@@ -20,10 +19,7 @@ class TextSplit {
 type SplitRep = { text: string; numTokens: number };
 
 export const defaultSentenceTokenizer = (text: string): string[] => {
-  return nlp(text)
-    .sentences()
-    .json()
-    .map((sentence: any) => sentence.text);
+  return text.match(/.+?[.?!][\])'"`’”]*(?:\s|$)|.+/g) ?? [text];
 };
 
 // Refs: https://github.com/fxsjy/jieba/issues/575#issuecomment-359637511
