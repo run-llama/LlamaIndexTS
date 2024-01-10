@@ -43,6 +43,7 @@ export class MistralAISession {
  */
 export class MistralAI implements LLM {
   hasStreaming: boolean = true;
+  
 
   // Per completion MistralAI params
   model: keyof typeof ALL_AVAILABLE_MISTRAL_MODELS;
@@ -94,10 +95,7 @@ export class MistralAI implements LLM {
     };
   }
 
-  async chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(messages: ChatMessage[], parentEvent?: Event, streaming?: T): Promise<R> {
+  async chat(messages: ChatMessage[], parentEvent?: Event, streaming?: boolean): Promise<ChatResponse> {
     // Streaming
     if (streaming) {
       if (!this.hasStreaming) {
@@ -114,10 +112,7 @@ export class MistralAI implements LLM {
     } as R;
   }
 
-  async complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(prompt: string, parentEvent?: Event, streaming?: T): Promise<R> {
+  async complete(prompt: string, parentEvent?: Event, streaming?: boolean): Promise<ChatResponse> {
     return this.chat(
       [{ content: prompt, role: "user" }],
       parentEvent,
