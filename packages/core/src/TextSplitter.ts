@@ -18,8 +18,18 @@ class TextSplit {
 
 type SplitRep = { text: string; numTokens: number };
 
+// match english
+const defaultregex = /[.?!][\])'"`’”]*(?:\s|$)/g;
 export const defaultSentenceTokenizer = (text: string): string[] => {
-  return text.match(/.+?[.?!][\])'"`’”]*(?:\s|$)|.+/g) ?? [text];
+  const slist = [];
+  const iter = text.matchAll(defaultregex);
+  let lastIdx = 0;
+  for (const match of iter) {
+    slist.push(text.slice(lastIdx, match.index! + 1));
+    lastIdx = match.index! + 1;
+  }
+  slist.push(text.slice(lastIdx));
+  return slist.filter((s) => s.length > 0);
 };
 
 // Refs: https://github.com/fxsjy/jieba/issues/575#issuecomment-359637511
