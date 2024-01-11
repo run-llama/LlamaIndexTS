@@ -24,8 +24,8 @@
     "description": "The label of footer link with label=Twitter linking to https://twitter.com/LlamaIndex"
   },
   "link.item.label.GitHub": {
-    "message": "GitHub",
-    "description": "The label of footer link with label=GitHub linking to https://github.com/run-llama/LlamaIndexTS"
+    "message": "GitHub_link",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/run-llama/LlamaIndexTS_repo"
   },
   "copyright": {
     "message": "Copyright © 2023 LlamaIndex. Built with Docusaurus.",
