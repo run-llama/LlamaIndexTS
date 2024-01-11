@@ -13,17 +13,3 @@ If you're using NextJS App Router route handlers/serverless functions, you'll ne
 ```js
 export const runtime = "nodejs"; // default
 ```
-
-and you'll need to add an exception for pdf-parse in your next.config.js
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Puts pdf-parse in actual NodeJS mode with NextJS App Router
-  },
-};
-
-module.exports = nextConfig;
-```

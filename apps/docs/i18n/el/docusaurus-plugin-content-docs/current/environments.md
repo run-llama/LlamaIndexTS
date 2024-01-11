@@ -15,17 +15,3 @@ sidebar_position: 5
 ```js
 export const runtime = "nodejs"; // προεπιλογή
 ```
-
-και θα πρέπει να προσθέσετε μια εξαίρεση για το pdf-parse στο next.config.js σας
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Βάζει το pdf-parse σε πραγματική λειτουργία NodeJS με τον δρομολογητή NextJS App
-  },
-};
-
-module.exports = nextConfig;
-```

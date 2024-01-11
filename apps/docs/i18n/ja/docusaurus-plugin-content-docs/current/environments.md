@@ -15,17 +15,3 @@ NextJSアプリケーションルーターのルートハンドラー/サーバ�
 ```js
 export const runtime = "nodejs"; // デフォルト
 ```
-
-また、next.config.jsでpdf-parseの例外を追加する必要があります。
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // pdf-parseを実際のNodeJSモードに配置するためのNextJSアプリケーションルーター
-  },
-};
-
-module.exports = nextConfig;
-```

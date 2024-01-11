@@ -7,7 +7,8 @@ import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
 interface Dependency {
   name: string;
-  version: string;
+  version?: string;
+  extras?: string[];
 }
 
 const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
@@ -21,12 +22,43 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
       });
       break;
     }
+    case "pg": {
+      dependencies.push({
+        name: "llama-index",
+        extras: ["postgres"],
+      });
+    }
   }
 
   return dependencies;
 };
 
-const addDependencies = async (
+const mergePoetryDependencies = (
+  dependencies: Dependency[],
+  existingDependencies: any,
+) => {
+  for (const dependency of dependencies) {
+    let value = existingDependencies[dependency.name] ?? {};
+
+    // default string value is equal to attribute "version"
+    if (typeof value === "string") {
+      value = { version: value };
+    }
+
+    value.version = dependency.version ?? value.version;
+    value.extras = dependency.extras ?? value.extras;
+
+    if (value.version === undefined) {
+      throw new Error(
+        `Dependency "${dependency.name}" is missing attribute "version"!`,
+      );
+    }
+
+    existingDependencies[dependency.name] = value;
+  }
+};
+
+export const addDependencies = async (
   projectDir: string,
   dependencies: Dependency[],
 ) => {
@@ -42,9 +74,7 @@ const addDependencies = async (
     // Modify toml dependencies
     const tool = fileParsed.tool as any;
     const existingDependencies = tool.poetry.dependencies as any;
-    for (const dependency of dependencies) {
-      existingDependencies[dependency.name] = dependency.version;
-    }
+    mergePoetryDependencies(dependencies, existingDependencies);
 
     // Write toml file
     const newFileContent = stringify(fileParsed);

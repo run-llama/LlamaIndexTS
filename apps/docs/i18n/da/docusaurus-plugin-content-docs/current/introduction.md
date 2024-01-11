@@ -39,7 +39,7 @@ Til mere komplekse applikationer giver vores API'er på lavere niveau avancerede
 
 `npm install llamaindex`
 
-Vores dokumentation inkluderer [Installationsinstruktioner](./installation.md) og en [Starter Tutorial](./starter.md) til at bygge din første applikation.
+Vores dokumentation inkluderer [Installationsinstruktioner](./installation.mdx) og en [Starter Tutorial](./starter.md) til at bygge din første applikation.
 
 Når du er i gang, giver [Højniveaukoncepter](./concepts.md) et overblik over LlamaIndex's modulære arkitektur. For flere praktiske eksempler, kan du kigge igennem vores [End-to-End Tutorials](./end_to_end.md).
 

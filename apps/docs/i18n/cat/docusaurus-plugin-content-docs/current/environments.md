@@ -15,17 +15,3 @@ Si utilitzeu els gestors de rutes/funcions sense servidor de l'enrutador d'aplic
 ```js
 export const runtime = "nodejs"; // per defecte
 ```
-
-i haureu d'afegir una excepció per a pdf-parse al vostre next.config.js
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Posiciona pdf-parse en el mode NodeJS real amb l'enrutador d'aplicacions NextJS
-  },
-};
-
-module.exports = nextConfig;
-```
