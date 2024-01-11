@@ -27,3 +27,28 @@ npx ts-node readers/load-md.ts
 ```bash
 npx ts-node readers/load-docx.ts
 ```
+
+- PdfReader Example
+
+```bash
+npx ts-node readers/load-pdf.ts
+```
+
+- HtmlReader Example
+
+```bash
+npx ts-node readers/load-html.ts
+```
+
+- CsvReader Example
+
+```bash
+npx ts-node readers/load-csv.ts
+```
+
+- NotionReader Example
+
+```bash
+export NOTION_TOKEN=your_notion_token
+npx ts-node readers/load-notion.ts
+```
