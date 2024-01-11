@@ -33,7 +33,32 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
   return dependencies;
 };
 
-const addDependencies = async (
+const mergePoetryDependencies = (
+  dependencies: Dependency[],
+  existingDependencies: any,
+) => {
+  for (const dependency of dependencies) {
+    let value = existingDependencies[dependency.name] ?? {};
+
+    // default string value is equal to attribute "version"
+    if (typeof value === "string") {
+      value = { version: value };
+    }
+
+    value.version = dependency.version ?? value.version;
+    value.extras = dependency.extras ?? value.extras;
+
+    if (value.version === undefined) {
+      throw new Error(
+        `Dependency "${dependency.name}" is missing attribute "version"!`,
+      );
+    }
+
+    existingDependencies[dependency.name] = value;
+  }
+};
+
+export const addDependencies = async (
   projectDir: string,
   dependencies: Dependency[],
 ) => {
@@ -49,31 +74,7 @@ const addDependencies = async (
     // Modify toml dependencies
     const tool = fileParsed.tool as any;
     const existingDependencies = tool.poetry.dependencies as any;
-    for (const dependency of dependencies) {
-      const orignalValue = existingDependencies[dependency.name];
-      if (orignalValue === undefined) {
-        // Add dependency
-        if (dependency.version === undefined) {
-          throw Error(
-            `Dependency ${dependency.name} is missing version attribute!`,
-          );
-        } else {
-          existingDependencies[dependency.name] = dependency.version;
-        }
-      } else {
-        // Update dependency
-        if (typeof orignalValue === "string") {
-          existingDependencies[dependency.name] = {
-            version: dependency.version ?? orignalValue,
-            extras: dependency.extras,
-          };
-        } else {
-          orignalValue.version = dependency.version ?? orignalValue.version;
-          orignalValue.extras = dependency.extras;
-          existingDependencies[dependency.name] = orignalValue;
-        }
-      }
-    }
+    mergePoetryDependencies(dependencies, existingDependencies);
 
     // Write toml file
     const newFileContent = stringify(fileParsed);
