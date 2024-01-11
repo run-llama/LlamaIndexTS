@@ -8,8 +8,8 @@
     "lint": "turbo run lint",
     "prepare": "husky install",
     "test": "turbo run test",
-    "publish-packages": "turbo run build lint test --filter=\"!docs\" && changeset version && changeset publish",
-    "publish-snapshot": "turbo run build lint test --filter=\"!docs\" && changeset version --snapshot && changeset publish"
+    "new-version": "turbo run build lint test --filter=\"!docs\" && changeset version",
+    "new-snapshot": "turbo run build lint test --filter=\"!docs\" && changeset version --snapshot"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
