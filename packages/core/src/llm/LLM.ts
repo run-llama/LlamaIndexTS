@@ -52,6 +52,7 @@ export interface ChatResponseChunk {
 
 export interface CompletionResponse {
   text: string;
+  raw?: Record<string, any>;
 }
 
 export interface LLMMetadata {
@@ -78,7 +79,7 @@ export interface LLMChatParamsNonStreaming extends LLMChatParamsBase {
 }
 
 export interface LLMCompletionParamsBase {
-  prompt: string;
+  prompt: any;
   parentEvent?: Event;
 }
 
@@ -123,7 +124,7 @@ export interface LLM {
   tokens(messages: ChatMessage[]): number;
 }
 
-abstract class BaseLLM implements LLM {
+export abstract class BaseLLM implements LLM {
   abstract metadata: LLMMetadata;
 
   private async *chatToComplete(

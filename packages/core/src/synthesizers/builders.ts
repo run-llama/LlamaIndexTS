@@ -64,8 +64,8 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
     };
 
     const prompt = this.textQATemplate(input);
-    const response = await this.llm.complete(prompt, parentEvent);
-    return response.message.content;
+    const response = await this.llm.complete({ prompt, parentEvent });
+    return response.text;
   }
 }
 
@@ -128,13 +128,13 @@ export class Refine implements BaseResponseBuilder {
     for (const chunk of textChunks) {
       if (!response) {
         response = (
-          await this.serviceContext.llm.complete(
-            textQATemplate({
+          await this.serviceContext.llm.complete({
+            prompt: textQATemplate({
               context: chunk,
             }),
             parentEvent,
-          )
-        ).message.content;
+          })
+        ).text;
       } else {
         response = await this.refineResponseSingle(
           response,
@@ -163,14 +163,14 @@ export class Refine implements BaseResponseBuilder {
 
     for (const chunk of textChunks) {
       response = (
-        await this.serviceContext.llm.complete(
-          refineTemplate({
+        await this.serviceContext.llm.complete({
+          prompt: refineTemplate({
             context: chunk,
             existingAnswer: response,
           }),
           parentEvent,
-        )
-      ).message.content;
+        })
+      ).text;
     }
     return response;
   }
@@ -237,30 +237,30 @@ export class TreeSummarize implements BaseResponseBuilder {
 
     if (packedTextChunks.length === 1) {
       return (
-        await this.serviceContext.llm.complete(
-          this.summaryTemplate({
+        await this.serviceContext.llm.complete({
+          prompt: this.summaryTemplate({
             context: packedTextChunks[0],
             query,
           }),
           parentEvent,
-        )
-      ).message.content;
+        })
+      ).text;
     } else {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
-          this.serviceContext.llm.complete(
-            this.summaryTemplate({
+          this.serviceContext.llm.complete({
+            prompt: this.summaryTemplate({
               context: chunk,
               query,
             }),
             parentEvent,
-          ),
+          }),
         ),
       );
 
       return this.getResponse(
         query,
-        summaries.map((s) => s.message.content),
+        summaries.map((s) => s.text),
       );
     }
   }

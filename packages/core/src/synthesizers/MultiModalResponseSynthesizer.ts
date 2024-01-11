@@ -54,7 +54,10 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
       { type: "text", text: textPrompt },
       ...images,
     ];
-    let response = await this.serviceContext.llm.complete(prompt, parentEvent);
-    return new Response(response.message.content, nodes);
+    let response = await this.serviceContext.llm.complete({
+      prompt,
+      parentEvent,
+    });
+    return new Response(response.text, nodes);
   }
 }

@@ -1,11 +1,27 @@
 import { ok } from "node:assert";
-import { MessageContent } from "../ChatEngine";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { BaseEmbedding } from "../embeddings";
-import { ChatMessage, ChatResponse, LLM, LLMMetadata } from "./LLM";
+import {
+  ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
+  CompletionResponse,
+  LLM,
+  LLMChatParamsNonStreaming,
+  LLMChatParamsStreaming,
+  LLMCompletionParamsNonStreaming,
+  LLMCompletionParamsStreaming,
+  LLMMetadata,
+} from "./LLM";
 
-const messageAccessor = (data: any) => data.message.content;
-const completionAccessor = (data: any) => data.response;
+const messageAccessor = (data: any): ChatResponseChunk => {
+  return {
+    delta: data.message.content,
+  };
+};
+const completionAccessor = (data: any): CompletionResponse => {
+  return { text: data.response };
+};
 
 // https://github.com/jmorganca/ollama
 export class Ollama extends BaseEmbedding implements LLM {
@@ -43,21 +59,21 @@ export class Ollama extends BaseEmbedding implements LLM {
     };
   }
 
-  async chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    messages: ChatMessage[],
-    parentEvent?: Event | undefined,
-    streaming?: T,
-  ): Promise<R> {
+  chat(
+    params: LLMChatParamsStreaming,
+  ): Promise<AsyncIterable<ChatResponseChunk>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  async chat(
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+  ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
+    const { messages, parentEvent, stream } = params;
     const payload = {
       model: this.model,
       messages: messages.map((message) => ({
         role: message.role,
         content: message.content,
       })),
-      stream: !!streaming,
+      stream: !!stream,
       options: {
         temperature: this.temperature,
         num_ctx: this.contextWindow,
@@ -73,7 +89,7 @@ export class Ollama extends BaseEmbedding implements LLM {
         "Content-Type": "application/json",
       },
     });
-    if (!streaming) {
+    if (!stream) {
       const raw = await response.json();
       const { message } = raw;
       return {
@@ -82,20 +98,20 @@ export class Ollama extends BaseEmbedding implements LLM {
           content: message.content,
         },
         raw,
-      } satisfies ChatResponse as R;
+      };
     } else {
       const stream = response.body;
       ok(stream, "stream is null");
       ok(stream instanceof ReadableStream, "stream is not readable");
-      return this.streamChat(stream, messageAccessor, parentEvent) as R;
+      return this.streamChat(stream, messageAccessor, parentEvent);
     }
   }
 
-  private async *streamChat(
+  private async *streamChat<T>(
     stream: ReadableStream<Uint8Array>,
-    accessor: (data: any) => string,
+    accessor: (data: any) => T,
     parentEvent?: Event,
-  ): AsyncGenerator<string, void, unknown> {
+  ): AsyncIterable<T> {
     const reader = stream.getReader();
     while (true) {
       const { done, value } = await reader.read();
@@ -119,18 +135,20 @@ export class Ollama extends BaseEmbedding implements LLM {
     }
   }
 
-  async complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(
-    prompt: MessageContent,
-    parentEvent?: Event | undefined,
-    streaming?: T | undefined,
-  ): Promise<R> {
+  complete(
+    params: LLMCompletionParamsStreaming,
+  ): Promise<AsyncIterable<CompletionResponse>>;
+  complete(
+    params: LLMCompletionParamsNonStreaming,
+  ): Promise<CompletionResponse>;
+  async complete(
+    params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
+  ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
+    const { prompt, parentEvent, stream } = params;
     const payload = {
       model: this.model,
       prompt: prompt,
-      stream: !!streaming,
+      stream: !!stream,
       options: {
         temperature: this.temperature,
         num_ctx: this.contextWindow,
@@ -146,20 +164,17 @@ export class Ollama extends BaseEmbedding implements LLM {
         "Content-Type": "application/json",
       },
     });
-    if (!streaming) {
+    if (!stream) {
       const raw = await response.json();
       return {
-        message: {
-          role: "assistant",
-          content: raw.response,
-        },
+        text: raw.response,
         raw,
-      } satisfies ChatResponse as R;
+      };
     } else {
       const stream = response.body;
       ok(stream, "stream is null");
       ok(stream instanceof ReadableStream, "stream is not readable");
-      return this.streamChat(stream, completionAccessor, parentEvent) as R;
+      return this.streamChat(stream, completionAccessor, parentEvent);
     }
   }
 
