@@ -1,5 +1,12 @@
 # create-llama
 
+## 0.0.13
+
+### Patch Changes
+
+- Added PostgreSQL vector store (for Typescript and Python)
+- Improved async handling in FastAPI
+
 ## 0.0.12
 
 ### Patch Changes
