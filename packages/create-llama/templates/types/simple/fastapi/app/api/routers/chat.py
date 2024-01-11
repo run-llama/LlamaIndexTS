@@ -50,7 +50,7 @@ async def chat(
     ]
 
     # query chat engine
-    response = chat_engine.chat(lastMessage.content, messages)
+    response = await chat_engine.achat(lastMessage.content, messages)
     return _Result(
         result=_Message(role=MessageRole.ASSISTANT, content=response.response)
     )

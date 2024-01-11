@@ -10,7 +10,6 @@
     "@pinecone-database/pinecone": "^1.1.2",
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
-    "compromise": "^14.10.1",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.8",
     "lodash": "^4.17.21",
