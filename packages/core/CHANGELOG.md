@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.43
+
+### Patch Changes
+
+- Fix performance issue parsing nodes: use regex to split texts
+
 ## 0.0.42
 
 ### Patch Changes
