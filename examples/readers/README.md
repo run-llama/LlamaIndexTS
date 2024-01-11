@@ -1,6 +1,6 @@
-## Readers Example
+## Reader Examples
 
-These example show how to use reader classes to load documents and test query.
+These examples show how to use a specific reader class by loading a document and running a test query.
 
 1. Make sure you are in `examples` directory
 

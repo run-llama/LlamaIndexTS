@@ -4,7 +4,7 @@ const FILE_PATH = "./data/stars.docx";
 const SAMPLE_QUERY = "Information about Zodiac";
 
 async function main() {
-  // Load markdown file
+  // Load docx file
   console.log("Loading data...");
   const reader = new DocxReader();
   const documents = await reader.loadData(FILE_PATH);
