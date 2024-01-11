@@ -52,3 +52,10 @@ npx ts-node readers/load-csv.ts
 export NOTION_TOKEN=your_notion_token
 npx ts-node readers/load-notion.ts
 ```
+
+- AssemblyAI Example
+
+```bash
+export ASSEMBLYAI_API_KEY=your_assemblyai_api_key
+npx ts-node readers/load-assemblyai.ts
+```
