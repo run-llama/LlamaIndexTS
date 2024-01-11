@@ -1,9 +1,14 @@
 # Chroma Vector Store Example
 
+This sample loads the same dataset of movie reviews from csv file. Then it uses the Chroma Vector Store to save the embedding vectors and test query the data.
+
 ## Prerequisites
 
-// TODO: add instructions for setting up database instance
-// TODO: add instructions for setting up environment variables
+Setup OpenAI API Key:
+
+```bash
+export OPENAI_API_KEY=your_key
+```
 
 ## Test Loading Docs and Querying
 
