@@ -1,8 +1,8 @@
 {
-  "snippet1": {
+  "snippet1": {"code": "code1",
     "code": "The code content for snippet 1"
   },
-  "snippet2": {
+  "snippet2": {"code": "code2",
     "code": "The code content for snippet 2"
   }
 }
