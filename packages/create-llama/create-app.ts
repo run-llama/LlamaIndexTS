@@ -91,7 +91,6 @@ export async function createApp({
       framework: "nextjs",
       customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
       backend: false,
-      forBackend: args.framework,
     });
     // copy readme for fullstack
     await fs.promises.copyFile(
