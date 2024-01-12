@@ -3,12 +3,13 @@
   "private": true,
   "name": "examples",
   "dependencies": {
-    "@notionhq/client": "^2.2.13",
     "@datastax/astra-db-ts": "^0.1.2",
+    "@notionhq/client": "^2.2.13",
     "@pinecone-database/pinecone": "^1.1.2",
+    "chromadb": "^1.7.3",
     "commander": "^11.1.0",
-    "llamaindex": "latest",
     "dotenv": "^16.3.1",
+    "llamaindex": "latest",
     "mongodb": "^6.2.0"
   },
   "devDependencies": {
