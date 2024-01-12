@@ -1,11 +1,19 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es2019",
     "moduleResolution": "node",
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "skipLibCheck": false
+    "skipLibCheck": true
   },
-  "exclude": ["templates", "dist"]
+  "include": [
+    "create-app.ts",
+    "index.ts",
+    "./helpers",
+    "questions.ts",
+    "package.json"
+  ],
+  "exclude": ["dist"]
 }

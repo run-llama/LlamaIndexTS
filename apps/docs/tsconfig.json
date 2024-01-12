@@ -1,7 +1,11 @@
 {
   // This file is not used in compilation. It is here just for a nice editor experience.
-  "extends": "@tsconfig/docusaurus/tsconfig.json",
+  "extends": "./node_modules/@tsconfig/docusaurus/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "composite": true,
+    "incremental": true,
+    "outDir": "./lib",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
   }
 }

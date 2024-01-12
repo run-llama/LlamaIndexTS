@@ -1,14 +1,14 @@
-import { copy } from "../helpers/copy";
-import { callPackageManager } from "../helpers/install";
+import { copy } from "./copy";
+import { callPackageManager } from "./install";
 
 import fs from "fs/promises";
 import path from "path";
 import { cyan } from "picocolors";
 
-import { COMMUNITY_OWNER, COMMUNITY_REPO } from "../helpers/constant";
-import { PackageManager } from "../helpers/get-pkg-manager";
-import { downloadAndExtractRepo } from "../helpers/repo";
+import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
+import { PackageManager } from "./get-pkg-manager";
 import { installPythonTemplate } from "./python";
+import { downloadAndExtractRepo } from "./repo";
 import {
   InstallTemplateArgs,
   TemplateEngine,
@@ -71,7 +71,13 @@ const copyTestData = async (
   vectorDb?: TemplateVectorDB,
 ) => {
   if (engine === "context") {
-    const srcPath = path.join(__dirname, "components", "data");
+    const srcPath = path.join(
+      __dirname,
+      "..",
+      "templates",
+      "components",
+      "data",
+    );
     const destPath = path.join(root, "data");
     console.log(`\nCopying test data to ${cyan(destPath)}\n`);
     await copy("**", destPath, {

@@ -37,6 +37,7 @@ yarn-error.log*
 .vercel
 
 dist/
+lib/
 
 # vs code
 .vscode/launch.json

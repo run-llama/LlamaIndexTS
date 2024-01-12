@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "./lib",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo",
+    "incremental": true,
+    "composite": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/docs/tsconfig.json"
+    },
+    {
+      "path": "./packages/core"
+    },
+    {
+      "path": "./packages/create-llama"
+    },
+    {
+      "path": "./packages/create-llama/e2e"
+    },
+    {
+      "path": "./examples"
+    }
+  ]
+}

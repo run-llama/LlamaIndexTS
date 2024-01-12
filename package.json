@@ -8,6 +8,7 @@
     "lint": "turbo run lint",
     "prepare": "husky install",
     "test": "turbo run test",
+    "type-check": "tsc -b --diagnostics",
     "new-version": "turbo run build lint test --filter=\"!docs\" && changeset version",
     "new-snapshot": "turbo run build lint test --filter=\"!docs\" && changeset version --snapshot"
   },
@@ -23,7 +24,8 @@
     "prettier": "^3.1.1",
     "prettier-plugin-organize-imports": "^3.2.4",
     "ts-jest": "^29.1.1",
-    "turbo": "^1.11.2"
+    "turbo": "^1.11.2",
+    "typescript": "^5.3.3"
   },
   "packageManager": "pnpm@8.10.5+sha256.a4bd9bb7b48214bbfcd95f264bd75bb70d100e5d4b58808f5cd6ab40c6ac21c5",
   "pnpm": {

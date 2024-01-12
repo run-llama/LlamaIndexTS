@@ -4,9 +4,9 @@ import path from "path";
 import { blue, green } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
+import { TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { getRepoRootFolders } from "./helpers/repo";
-import { TemplateFramework } from "./templates";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
 
