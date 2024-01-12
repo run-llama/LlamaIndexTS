@@ -32,12 +32,12 @@
   "devDependencies": {
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^18.19.2",
+    "@types/node": "^18.19.6",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.10.9",
+    "bunchee": "^4.3.3",
     "node-stdlib-browser": "^1.2.0",
-    "tsup": "^7.2.0",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -45,11 +45,34 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
-  "repository": "run-llama/LlamaIndexTS",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.mts",
+      "import": "./dist/*.mjs",
+      "require": "./dist/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "examples",
+    "src",
+    "types",
+    "CHANGELOG.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/core"
+  },
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
+    "build": "bunchee",
+    "dev": "bunchee -w"
   }
 }
