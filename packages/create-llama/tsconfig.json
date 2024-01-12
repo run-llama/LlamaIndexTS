@@ -8,5 +8,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "exclude": ["templates", "dist"]
+  "include": ["./**/*.ts"],
+  "exclude": ["dist"]
 }
