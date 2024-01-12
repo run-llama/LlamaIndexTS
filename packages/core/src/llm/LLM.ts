@@ -129,7 +129,7 @@ export class OpenAI implements LLM {
   hasStreaming: boolean = true;
 
   // Per completion OpenAI params
-  model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS;
+  model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
   temperature: number;
   topP: number;
   maxTokens?: number;
@@ -205,12 +205,16 @@ export class OpenAI implements LLM {
   }
 
   get metadata() {
+    const contextWindow =
+      ALL_AVAILABLE_OPENAI_MODELS[
+        this.model as keyof typeof ALL_AVAILABLE_OPENAI_MODELS
+      ]?.contextWindow ?? 1024;
     return {
       model: this.model,
       temperature: this.temperature,
       topP: this.topP,
       maxTokens: this.maxTokens,
-      contextWindow: ALL_AVAILABLE_OPENAI_MODELS[this.model].contextWindow,
+      contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
     };
   }
