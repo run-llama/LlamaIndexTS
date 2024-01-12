@@ -1,16 +1,10 @@
 import { MessageContentDetail } from "../ChatEngine";
-import {
-  ImageNode,
-  MetadataMode,
-  NodeWithScore,
-  splitNodesByType,
-} from "../Node";
+import { ImageNode, MetadataMode, splitNodesByType } from "../Node";
 import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { Event } from "../callbacks/CallbackManager";
 import { imageToDataUrl } from "../embeddings";
 import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
-import { BaseSynthesizer } from "./types";
+import { BaseSynthesizer, SynthesizeParams } from "./types";
 
 export class MultiModalResponseSynthesizer implements BaseSynthesizer {
   serviceContext: ServiceContext;
@@ -27,11 +21,11 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
-  async synthesize(
-    query: string,
-    nodesWithScore: NodeWithScore[],
-    parentEvent?: Event,
-  ): Promise<Response> {
+  async synthesize({
+    query,
+    nodesWithScore,
+    parentEvent,
+  }: SynthesizeParams): Promise<Response> {
     const nodes = nodesWithScore.map(({ node }) => node);
     const { imageNodes, textNodes } = splitNodesByType(nodes);
     const textChunks = textNodes.map((node) =>

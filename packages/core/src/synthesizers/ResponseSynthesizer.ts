@@ -1,9 +1,8 @@
-import { Event } from "../callbacks/CallbackManager";
-import { MetadataMode, NodeWithScore } from "../Node";
+import { MetadataMode } from "../Node";
 import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { BaseResponseBuilder, getResponseBuilder } from "./builders";
-import { BaseSynthesizer } from "./types";
+import { BaseSynthesizer, SynthesizeParams } from "./types";
 
 /**
  * A ResponseSynthesizer is used to generate a response from a query and a list of nodes.
@@ -28,11 +27,7 @@ export class ResponseSynthesizer implements BaseSynthesizer {
     this.metadataMode = metadataMode;
   }
 
-  async synthesize(
-    query: string,
-    nodesWithScore: NodeWithScore[],
-    parentEvent?: Event,
-  ) {
+  async synthesize({ query, nodesWithScore, parentEvent }: SynthesizeParams) {
     let textChunks: string[] = nodesWithScore.map(({ node }) =>
       node.getContent(this.metadataMode),
     );
