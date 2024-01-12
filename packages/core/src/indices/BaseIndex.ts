@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "node:crypto";
 import { BaseNode, Document, jsonToNode } from "../Node";
 import { BaseQueryEngine } from "../QueryEngine";
 import { BaseRetriever } from "../Retriever";
@@ -16,7 +16,7 @@ export abstract class IndexStruct {
   indexId: string;
   summary?: string;
 
-  constructor(indexId = uuidv4(), summary = undefined) {
+  constructor(indexId = randomUUID(), summary = undefined) {
     this.indexId = indexId;
     this.summary = summary;
   }
