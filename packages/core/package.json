@@ -59,6 +59,13 @@
       "require": "./dist/*.js"
     }
   },
+  "files": [
+    "dist",
+    "examples",
+    "src",
+    "types",
+    "CHANGELOG.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
