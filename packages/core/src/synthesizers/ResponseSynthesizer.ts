@@ -1,9 +1,11 @@
 import { MetadataMode } from "../Node";
 import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { BaseResponseBuilder, getResponseBuilder } from "./builders";
+import { streamConverter } from "../llm/utils";
+import { getResponseBuilder } from "./builders";
 import {
   BaseSynthesizer,
+  ResponseBuilder,
   SynthesizeParamsNonStreaming,
   SynthesizeParamsStreaming,
 } from "./types";
@@ -12,7 +14,7 @@ import {
  * A ResponseSynthesizer is used to generate a response from a query and a list of nodes.
  */
 export class ResponseSynthesizer implements BaseSynthesizer {
-  responseBuilder: BaseResponseBuilder;
+  responseBuilder: ResponseBuilder;
   serviceContext: ServiceContext;
   metadataMode: MetadataMode;
 
@@ -21,7 +23,7 @@ export class ResponseSynthesizer implements BaseSynthesizer {
     serviceContext,
     metadataMode = MetadataMode.NONE,
   }: {
-    responseBuilder?: BaseResponseBuilder;
+    responseBuilder?: ResponseBuilder;
     serviceContext?: ServiceContext;
     metadataMode?: MetadataMode;
   } = {}) {
@@ -43,20 +45,24 @@ export class ResponseSynthesizer implements BaseSynthesizer {
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
   > {
-    let textChunks: string[] = nodesWithScore.map(({ node }) =>
+    const textChunks: string[] = nodesWithScore.map(({ node }) =>
       node.getContent(this.metadataMode),
     );
+    const nodes = nodesWithScore.map(({ node }) => node);
     if (stream) {
-      throw new Error("streaming not implemented");
+      const response = await this.responseBuilder.getResponse({
+        query,
+        textChunks,
+        parentEvent,
+        stream,
+      });
+      return streamConverter(response, (chunk) => new Response(chunk, nodes));
     }
-    const response = await this.responseBuilder.getResponse(
+    const response = await this.responseBuilder.getResponse({
       query,
       textChunks,
       parentEvent,
-    );
-    return new Response(
-      response,
-      nodesWithScore.map(({ node }) => node),
-    );
+    });
+    return new Response(response, nodes);
   }
 }

@@ -1,7 +1,7 @@
 import { BaseNode } from "./Node";
 
 /**
- * Respone is the output of a LLM
+ * Response is the output of a LLM
  */
 export class Response {
   response: string;

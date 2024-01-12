@@ -1,5 +1,6 @@
 import { Event } from "../callbacks/CallbackManager";
-import { LLM } from "../llm/LLM";
+import { LLM } from "../llm";
+import { streamConverter } from "../llm/utils";
 import {
   defaultRefinePrompt,
   defaultTextQaPrompt,
@@ -11,6 +12,11 @@ import {
 } from "../Prompt";
 import { getBiggestPrompt } from "../PromptHelper";
 import { ServiceContext } from "../ServiceContext";
+import {
+  ResponseBuilder,
+  ResponseBuilderParamsNonStreaming,
+  ResponseBuilderParamsStreaming,
+} from "./types";
 
 /**
  * Response modes of the response synthesizer
@@ -23,28 +29,9 @@ enum ResponseMode {
 }
 
 /**
- * A ResponseBuilder is used in a response synthesizer to generate a response from multiple response chunks.
- */
-export interface BaseResponseBuilder {
-  /**
-   * Get the response from a query and a list of text chunks.
-   * @param query
-   * @param textChunks
-   * @param parentEvent
-   * @param prevResponse
-   */
-  getResponse(
-    query: string,
-    textChunks: string[],
-    parentEvent?: Event,
-    prevResponse?: string,
-  ): Promise<string>;
-}
-
-/**
  * A response builder that just concatenates responses.
  */
-export class SimpleResponseBuilder implements BaseResponseBuilder {
+export class SimpleResponseBuilder implements ResponseBuilder {
   llm: LLM;
   textQATemplate: SimplePrompt;
 
@@ -53,26 +40,40 @@ export class SimpleResponseBuilder implements BaseResponseBuilder {
     this.textQATemplate = defaultTextQaPrompt;
   }
 
-  async getResponse(
-    query: string,
-    textChunks: string[],
-    parentEvent?: Event,
-  ): Promise<string> {
+  getResponse(
+    params: ResponseBuilderParamsStreaming,
+  ): Promise<AsyncIterable<string>>;
+  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
+  async getResponse({
+    query,
+    textChunks,
+    parentEvent,
+    stream,
+  }:
+    | ResponseBuilderParamsStreaming
+    | ResponseBuilderParamsNonStreaming): Promise<
+    AsyncIterable<string> | string
+  > {
     const input = {
       query,
       context: textChunks.join("\n\n"),
     };
 
     const prompt = this.textQATemplate(input);
-    const response = await this.llm.complete({ prompt, parentEvent });
-    return response.text;
+    if (stream) {
+      const response = await this.llm.complete({ prompt, parentEvent, stream });
+      return streamConverter(response, (chunk) => chunk.text);
+    } else {
+      const response = await this.llm.complete({ prompt, parentEvent, stream });
+      return response.text;
+    }
   }
 }
 
 /**
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
  */
-export class Refine implements BaseResponseBuilder {
+export class Refine implements ResponseBuilder {
   serviceContext: ServiceContext;
   textQATemplate: TextQaPrompt;
   refineTemplate: RefinePrompt;
@@ -87,12 +88,24 @@ export class Refine implements BaseResponseBuilder {
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
 
-  async getResponse(
-    query: string,
-    textChunks: string[],
-    parentEvent?: Event,
-    prevResponse?: string,
-  ): Promise<string> {
+  getResponse(
+    params: ResponseBuilderParamsStreaming,
+  ): Promise<AsyncIterable<string>>;
+  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
+  async getResponse({
+    query,
+    textChunks,
+    parentEvent,
+    prevResponse,
+    stream,
+  }:
+    | ResponseBuilderParamsStreaming
+    | ResponseBuilderParamsNonStreaming): Promise<
+    AsyncIterable<string> | string
+  > {
+    if (stream) {
+      throw new Error("streaming not implemented");
+    }
     let response: string | undefined = undefined;
 
     for (const chunk of textChunks) {
@@ -180,12 +193,24 @@ export class Refine implements BaseResponseBuilder {
  * CompactAndRefine is a slight variation of Refine that first compacts the text chunks into the smallest possible number of chunks.
  */
 export class CompactAndRefine extends Refine {
-  async getResponse(
-    query: string,
-    textChunks: string[],
-    parentEvent?: Event,
-    prevResponse?: string,
-  ): Promise<string> {
+  getResponse(
+    params: ResponseBuilderParamsStreaming,
+  ): Promise<AsyncIterable<string>>;
+  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
+  async getResponse({
+    query,
+    textChunks,
+    parentEvent,
+    prevResponse,
+    stream,
+  }:
+    | ResponseBuilderParamsStreaming
+    | ResponseBuilderParamsNonStreaming): Promise<
+    AsyncIterable<string> | string
+  > {
+    if (stream) {
+      throw new Error("streaming not implemented");
+    }
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: query });
     const refineTemplate: SimplePrompt = (input) =>
@@ -196,19 +221,19 @@ export class CompactAndRefine extends Refine {
       maxPrompt,
       textChunks,
     );
-    const response = super.getResponse(
+    const response = super.getResponse({
       query,
-      newTexts,
+      textChunks: newTexts,
       parentEvent,
       prevResponse,
-    );
+    });
     return response;
   }
 }
 /**
  * TreeSummarize repacks the text chunks into the smallest possible number of chunks and then summarizes them, then recursively does so until there's one chunk left.
  */
-export class TreeSummarize implements BaseResponseBuilder {
+export class TreeSummarize implements ResponseBuilder {
   serviceContext: ServiceContext;
   summaryTemplate: TreeSummarizePrompt;
 
@@ -220,11 +245,23 @@ export class TreeSummarize implements BaseResponseBuilder {
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
-  async getResponse(
-    query: string,
-    textChunks: string[],
-    parentEvent?: Event,
-  ): Promise<string> {
+  getResponse(
+    params: ResponseBuilderParamsStreaming,
+  ): Promise<AsyncIterable<string>>;
+  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
+  async getResponse({
+    query,
+    textChunks,
+    parentEvent,
+    stream,
+  }:
+    | ResponseBuilderParamsStreaming
+    | ResponseBuilderParamsNonStreaming): Promise<
+    AsyncIterable<string> | string
+  > {
+    if (stream) {
+      throw new Error("streaming not implemented");
+    }
     if (!textChunks || textChunks.length === 0) {
       throw new Error("Must have at least one text chunk");
     }
@@ -258,10 +295,10 @@ export class TreeSummarize implements BaseResponseBuilder {
         ),
       );
 
-      return this.getResponse(
+      return this.getResponse({
         query,
-        summaries.map((s) => s.text),
-      );
+        textChunks: summaries.map((s) => s.text),
+      });
     }
   }
 }
@@ -269,7 +306,7 @@ export class TreeSummarize implements BaseResponseBuilder {
 export function getResponseBuilder(
   serviceContext: ServiceContext,
   responseMode?: ResponseMode,
-): BaseResponseBuilder {
+): ResponseBuilder {
   switch (responseMode) {
     case ResponseMode.SIMPLE:
       return new SimpleResponseBuilder(serviceContext);
