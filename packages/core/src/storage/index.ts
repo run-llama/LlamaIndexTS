@@ -8,6 +8,7 @@ export * from "./indexStore/types";
 export { SimpleKVStore } from "./kvStore/SimpleKVStore";
 export * from "./kvStore/types";
 export { AstraDBVectorStore } from "./vectorStore/AstraDBVectorStore";
+export { ChromaVectorStore } from "./vectorStore/ChromaVectorStore";
 export { MongoDBAtlasVectorSearch } from "./vectorStore/MongoDBAtlasVectorStore";
 export { PGVectorStore } from "./vectorStore/PGVectorStore";
 export { PineconeVectorStore } from "./vectorStore/PineconeVectorStore";
