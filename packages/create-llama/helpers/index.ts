@@ -162,6 +162,10 @@ export const installTemplate = async (
       props.openAiKey,
       props.vectorDb,
     );
+  } else if (props.forBackend) {
+    // this is a frontend for fullstack templates, create .env file with uncredentialed variables
+    const content = `MODEL=${props.model}\nNEXT_PUBLIC_MODEL=${props.model}\n`;
+    await fs.writeFile(path.join(props.root, ".env"), content);
   }
 };
 
