@@ -17,7 +17,8 @@
     "create-llama": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "./dist/index.js",
+    "./templates"
   ],
   "scripts": {
     "clean": "rimraf --glob ./dist ./templates/**/__pycache__ ./templates/**/node_modules ./templates/**/poetry.lock",

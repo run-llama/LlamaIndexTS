@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import { cyan } from "picocolors";
 import { parse, stringify } from "smol-toml";
-import { copy } from "../helpers/copy";
+import { copy } from "./copy";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
 interface Dependency {
@@ -101,7 +101,14 @@ export const installPythonTemplate = async ({
   "root" | "framework" | "template" | "engine" | "vectorDb"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
-  const templatePath = path.join(__dirname, "types", template, framework);
+  const templatePath = path.join(
+    __dirname,
+    "..",
+    "templates",
+    "types",
+    template,
+    framework,
+  );
   await copy("**", root, {
     parents: true,
     cwd: templatePath,
@@ -123,7 +130,7 @@ export const installPythonTemplate = async ({
   });
 
   if (engine === "context") {
-    const compPath = path.join(__dirname, "components");
+    const compPath = path.join(__dirname, "..", "templates", "components");
     const VectorDBPath = path.join(
       compPath,
       "vectordbs",

@@ -8,7 +8,7 @@ import type {
   TemplateFramework,
   TemplateType,
   TemplateUI,
-} from "../templates";
+} from "../helpers";
 import { createTestDir, runApp, runCreateLlama, type AppType } from "./utils";
 
 const templateTypes: TemplateType[] = ["streaming", "simple"];

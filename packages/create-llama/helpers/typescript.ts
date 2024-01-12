@@ -46,7 +46,14 @@ export const installTSTemplate = async ({
    * Copy the template files to the target directory.
    */
   console.log("\nInitializing project with template:", template, "\n");
-  const templatePath = path.join(__dirname, "types", template, framework);
+  const templatePath = path.join(
+    __dirname,
+    "..",
+    "templates",
+    "types",
+    template,
+    framework,
+  );
   const copySource = ["**"];
   if (!eslint) copySource.push("!eslintrc.json");
 
@@ -80,7 +87,7 @@ export const installTSTemplate = async ({
    * Copy the selected chat engine files to the target directory and reference it.
    */
   let relativeEngineDestPath;
-  const compPath = path.join(__dirname, "components");
+  const compPath = path.join(__dirname, "..", "templates", "components");
   if (engine && (framework === "express" || framework === "nextjs")) {
     console.log("\nUsing chat engine:", engine, "\n");
 

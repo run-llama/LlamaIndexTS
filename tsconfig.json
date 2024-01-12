@@ -23,6 +23,9 @@
       "path": "./packages/create-llama"
     },
     {
+      "path": "./packages/create-llama/e2e"
+    },
+    {
       "path": "./examples"
     }
   ]

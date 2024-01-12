@@ -8,6 +8,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["./**/*.ts"],
+  "include": [
+    "create-app.ts",
+    "index.ts",
+    "./helpers",
+    "questions.ts",
+    "package.json"
+  ],
   "exclude": ["dist"]
 }
