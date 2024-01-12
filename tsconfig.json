@@ -9,7 +9,10 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true
+    "composite": true,
+    "paths": {
+      "llamaindex": ["./packages/core/src/index"]
+    }
   },
   "files": [],
   "references": [
