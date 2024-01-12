@@ -1,7 +1,6 @@
 import _ from "lodash";
-import { createHash } from "node:crypto";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
+import { createHash, randomUUID } from "node:crypto";
+import path from "node:path";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -49,7 +48,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    *
    * Set to a UUID by default.
    */
-  id_: string = uuidv4();
+  id_: string = randomUUID();
   embedding?: number[];
 
   // Metadata fields
