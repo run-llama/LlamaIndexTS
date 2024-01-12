@@ -37,8 +37,8 @@
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.10.9",
     "@types/uuid": "^9.0.7",
+    "bunchee": "^4.3.3",
     "node-stdlib-browser": "^1.2.0",
-    "tsup": "^7.2.0",
     "typescript": "^5.3.2"
   },
   "engines": {
@@ -47,11 +47,22 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
-  "repository": "run-llama/LlamaIndexTS",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/llamaindex"
+  },
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
+    "build": "bunchee",
+    "dev": "bunchee -w"
   }
 }
