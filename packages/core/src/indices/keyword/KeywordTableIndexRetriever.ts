@@ -86,16 +86,13 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
 // Extracts keywords using LLMs.
 export class KeywordTableLLMRetriever extends BaseKeywordTableRetriever {
   async getKeywords(query: string): Promise<string[]> {
-    const response = await this.serviceContext.llm.complete(
-      this.queryKeywordExtractTemplate({
+    const response = await this.serviceContext.llm.complete({
+      prompt: this.queryKeywordExtractTemplate({
         question: query,
         maxKeywords: this.maxKeywordsPerQuery,
       }),
-    );
-    const keywords = extractKeywordsGivenResponse(
-      response.message.content,
-      "KEYWORDS:",
-    );
+    });
+    const keywords = extractKeywordsGivenResponse(response.text, "KEYWORDS:");
     return [...keywords];
   }
 }
