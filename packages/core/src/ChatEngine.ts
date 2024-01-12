@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "node:crypto";
 import { ChatHistory } from "./ChatHistory";
 import { NodeWithScore, TextNode } from "./Node";
 import {
@@ -206,7 +206,7 @@ export class DefaultContextGenerator implements ContextGenerator {
   async generate(message: string, parentEvent?: Event): Promise<Context> {
     if (!parentEvent) {
       parentEvent = {
-        id: uuidv4(),
+        id: randomUUID(),
         type: "wrapper",
         tags: ["final"],
       };
@@ -272,7 +272,7 @@ export class ContextChatEngine implements ChatEngine {
     }
 
     const parentEvent: Event = {
-      id: uuidv4(),
+      id: randomUUID(),
       type: "wrapper",
       tags: ["final"],
     };
@@ -304,7 +304,7 @@ export class ContextChatEngine implements ChatEngine {
     chatHistory = chatHistory ?? this.chatHistory;
 
     const parentEvent: Event = {
-      id: uuidv4(),
+      id: randomUUID(),
       type: "wrapper",
       tags: ["final"],
     };

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "node:crypto";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
@@ -72,7 +72,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
 
   async query(query: string, parentEvent?: Event) {
     const _parentEvent: Event = parentEvent || {
-      id: uuidv4(),
+      id: randomUUID(),
       type: "wrapper",
       tags: ["final"],
     };
@@ -136,14 +136,14 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
 
     // groups final retrieval+synthesis operation
     const parentEvent: Event = {
-      id: uuidv4(),
+      id: randomUUID(),
       type: "wrapper",
       tags: ["final"],
     };
 
     // groups all sub-queries
     const subQueryParentEvent: Event = {
-      id: uuidv4(),
+      id: randomUUID(),
       parentId: parentEvent.id,
       type: "wrapper",
       tags: ["intermediate"],
