@@ -1,6 +1,7 @@
 import { Check, Copy } from "lucide-react";
 
 import { JSONValue, Message } from "ai";
+import Image from "next/image";
 import { Button } from "../button";
 import ChatAvatar from "./chat-avatar";
 import Markdown from "./markdown";
@@ -18,10 +19,13 @@ function ChatMessageData({ messageData }: { messageData: JSONValue }) {
   const { image_url, type } = messageData as unknown as ChatMessageImageData;
   if (type === "image_url") {
     return (
-      <div>
-        <img
+      <div className="rounded-md max-w-[200px] shadow-md">
+        <Image
           src={image_url.url}
-          className="rounded-md max-w-[200px] shadow-md"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
           alt=""
         />
       </div>
@@ -32,6 +36,7 @@ function ChatMessageData({ messageData }: { messageData: JSONValue }) {
 
 export default function ChatMessage(chatMessage: Message) {
   const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
+  console.log(chatMessage);
   return (
     <div className="flex items-start gap-4 pr-5 pt-5">
       <ChatAvatar role={chatMessage.role} />

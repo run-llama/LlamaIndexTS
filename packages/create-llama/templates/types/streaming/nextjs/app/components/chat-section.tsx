@@ -2,7 +2,7 @@
 
 import { useChat } from "ai/react";
 import { useMemo } from "react";
-import { transformMessages } from "./transform";
+import { insertDataIntoMessages } from "./transform";
 import { ChatInput, ChatMessages } from "./ui/chat";
 
 export default function ChatSection() {
@@ -23,7 +23,7 @@ export default function ChatSection() {
   });
 
   const transformedMessages = useMemo(() => {
-    return transformMessages(messages, data);
+    return insertDataIntoMessages(messages, data);
   }, [messages, data]);
 
   return (

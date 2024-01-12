@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const llm = new OpenAI({
-      model: process.env.MODEL || ("gpt-3.5-turbo" as any),
+      model: (process.env.MODEL as any) ?? "gpt-3.5-turbo",
       maxTokens: 512,
     });
 
@@ -60,14 +60,14 @@ export async function POST(request: NextRequest) {
     );
 
     // Transform the response into a readable stream
-    const stream = LlamaIndexStream(response, {
+    const { stream, data: streamData } = LlamaIndexStream(response, {
       parserOptions: {
         image_url: data?.imageUrl,
       },
     });
 
     // Return a StreamingTextResponse, which can be consumed by the client
-    return new StreamingTextResponse(stream.stream, {}, stream.data);
+    return new StreamingTextResponse(stream, {}, streamData);
   } catch (error) {
     console.error("[LlamaIndex]", error);
     return NextResponse.json(

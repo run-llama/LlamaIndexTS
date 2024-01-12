@@ -6,7 +6,7 @@ export const isValidMessageData = (rawData: JSONValue | undefined) => {
   return true;
 };
 
-export const transformMessages = (
+export const insertDataIntoMessages = (
   messages: Message[],
   data: JSONValue[] | undefined,
 ) => {
