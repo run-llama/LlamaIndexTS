@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.44
+
+### Patch Changes
+
+- 648482b: Feat: Add support for Chroma DB as a vector store
+
 ## 0.0.43
 
 ### Patch Changes
