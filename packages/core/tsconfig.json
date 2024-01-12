@@ -1,5 +1,4 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,8 +10,7 @@
     "strict": true,
     "lib": ["es2015", "dom"],
     "target": "ES2015",
-    "resolveJsonModule": true,
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "resolveJsonModule": true
   },
   "include": ["./src"],
   "exclude": ["node_modules"]
