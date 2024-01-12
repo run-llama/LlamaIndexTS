@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "./lib/",
-    "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
