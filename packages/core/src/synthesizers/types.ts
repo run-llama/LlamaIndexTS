@@ -2,10 +2,18 @@ import { Event } from "../callbacks/CallbackManager";
 import { NodeWithScore } from "../Node";
 import { Response } from "../Response";
 
-export interface SynthesizeParams {
+export interface SynthesizeParamsBase {
   query: string;
   nodesWithScore: NodeWithScore[];
   parentEvent?: Event;
+}
+
+export interface SynthesizeParamsStreaming extends SynthesizeParamsBase {
+  stream: true;
+}
+
+export interface SynthesizeParamsNonStreaming extends SynthesizeParamsBase {
+  stream?: false | null;
 }
 
 /**
@@ -13,5 +21,8 @@ export interface SynthesizeParams {
  * TODO: convert response builders to implement this interface (similar to Python).
  */
 export interface BaseSynthesizer {
-  synthesize(params: SynthesizeParams): Promise<Response>;
+  synthesize(
+    params: SynthesizeParamsStreaming,
+  ): Promise<AsyncIterable<Response>>;
+  synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
 }

@@ -4,7 +4,11 @@ import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { imageToDataUrl } from "../embeddings";
 import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
-import { BaseSynthesizer, SynthesizeParams } from "./types";
+import {
+  BaseSynthesizer,
+  SynthesizeParamsNonStreaming,
+  SynthesizeParamsStreaming,
+} from "./types";
 
 export class MultiModalResponseSynthesizer implements BaseSynthesizer {
   serviceContext: ServiceContext;
@@ -21,11 +25,21 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
+  synthesize(
+    params: SynthesizeParamsStreaming,
+  ): Promise<AsyncIterable<Response>>;
+  synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
   async synthesize({
     query,
     nodesWithScore,
     parentEvent,
-  }: SynthesizeParams): Promise<Response> {
+    stream,
+  }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
+    AsyncIterable<Response> | Response
+  > {
+    if (stream) {
+      throw new Error("streaming not implemented");
+    }
     const nodes = nodesWithScore.map(({ node }) => node);
     const { imageNodes, textNodes } = splitNodesByType(nodes);
     const textChunks = textNodes.map((node) =>
