@@ -1,7 +1,6 @@
 import { Portkey } from "llamaindex";
 
 (async () => {
-  const llms = [{}];
   const portkey = new Portkey({
     mode: "single",
     llms: [
@@ -13,7 +12,7 @@ import { Portkey } from "llamaindex";
       },
     ],
   });
-  const result = portkey.stream_chat([
+  const result = portkey.streamChat([
     { role: "system", content: "You are a helpful assistant." },
     { role: "user", content: "Tell me a joke." },
   ]);

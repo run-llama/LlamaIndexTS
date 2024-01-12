@@ -4,7 +4,7 @@
   "name": "examples",
   "dependencies": {
     "@datastax/astra-db-ts": "^0.1.2",
-    "@notionhq/client": "^2.2.13",
+    "@notionhq/client": "^2.2.14",
     "@pinecone-database/pinecone": "^1.1.2",
     "chromadb": "^1.7.3",
     "commander": "^11.1.0",
