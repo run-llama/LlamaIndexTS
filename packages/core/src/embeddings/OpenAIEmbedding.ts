@@ -14,7 +14,7 @@ export enum OpenAIEmbeddingModelType {
 }
 
 export class OpenAIEmbedding extends BaseEmbedding {
-  model: OpenAIEmbeddingModelType;
+  model: OpenAIEmbeddingModelType | string;
 
   // OpenAI session params
   apiKey?: string = undefined;
