@@ -10,7 +10,7 @@ import {
   TextQaPrompt,
   TreeSummarizePrompt,
 } from "../Prompt";
-import { getBiggestPrompt } from "../PromptHelper";
+import { getBiggestPrompt, PromptHelper } from "../PromptHelper";
 import { ServiceContext } from "../ServiceContext";
 import {
   ResponseBuilder,
@@ -74,7 +74,8 @@ export class SimpleResponseBuilder implements ResponseBuilder {
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
  */
 export class Refine implements ResponseBuilder {
-  serviceContext: ServiceContext;
+  llm: LLM;
+  promptHelper: PromptHelper;
   textQATemplate: TextQaPrompt;
   refineTemplate: RefinePrompt;
 
@@ -83,7 +84,8 @@ export class Refine implements ResponseBuilder {
     textQATemplate?: TextQaPrompt,
     refineTemplate?: RefinePrompt,
   ) {
-    this.serviceContext = serviceContext;
+    this.llm = serviceContext.llm;
+    this.promptHelper = serviceContext.promptHelper;
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
@@ -132,16 +134,14 @@ export class Refine implements ResponseBuilder {
   ): Promise<string> {
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: queryStr });
-    const textChunks = this.serviceContext.promptHelper.repack(textQATemplate, [
-      textChunk,
-    ]);
+    const textChunks = this.promptHelper.repack(textQATemplate, [textChunk]);
 
     let response: string | undefined = undefined;
 
     for (const chunk of textChunks) {
       if (!response) {
         response = (
-          await this.serviceContext.llm.complete({
+          await this.llm.complete({
             prompt: textQATemplate({
               context: chunk,
             }),
@@ -170,13 +170,11 @@ export class Refine implements ResponseBuilder {
     const refineTemplate: SimplePrompt = (input) =>
       this.refineTemplate({ ...input, query: queryStr });
 
-    const textChunks = this.serviceContext.promptHelper.repack(refineTemplate, [
-      textChunk,
-    ]);
+    const textChunks = this.promptHelper.repack(refineTemplate, [textChunk]);
 
     for (const chunk of textChunks) {
       response = (
-        await this.serviceContext.llm.complete({
+        await this.llm.complete({
           prompt: refineTemplate({
             context: chunk,
             existingAnswer: response,
@@ -208,40 +206,43 @@ export class CompactAndRefine extends Refine {
     | ResponseBuilderParamsNonStreaming): Promise<
     AsyncIterable<string> | string
   > {
-    if (stream) {
-      throw new Error("streaming not implemented");
-    }
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: query });
     const refineTemplate: SimplePrompt = (input) =>
       this.refineTemplate({ ...input, query: query });
 
     const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
-    const newTexts = this.serviceContext.promptHelper.repack(
-      maxPrompt,
-      textChunks,
-    );
-    const response = super.getResponse({
+    const newTexts = this.promptHelper.repack(maxPrompt, textChunks);
+    const params = {
       query,
       textChunks: newTexts,
       parentEvent,
       prevResponse,
-    });
-    return response;
+    };
+    if (stream) {
+      return super.getResponse({
+        ...params,
+        stream,
+      });
+    }
+    return super.getResponse(params);
   }
 }
+
 /**
  * TreeSummarize repacks the text chunks into the smallest possible number of chunks and then summarizes them, then recursively does so until there's one chunk left.
  */
 export class TreeSummarize implements ResponseBuilder {
-  serviceContext: ServiceContext;
+  llm: LLM;
+  promptHelper: PromptHelper;
   summaryTemplate: TreeSummarizePrompt;
 
   constructor(
     serviceContext: ServiceContext,
     summaryTemplate?: TreeSummarizePrompt,
   ) {
-    this.serviceContext = serviceContext;
+    this.llm = serviceContext.llm;
+    this.promptHelper = serviceContext.promptHelper;
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
@@ -259,33 +260,33 @@ export class TreeSummarize implements ResponseBuilder {
     | ResponseBuilderParamsNonStreaming): Promise<
     AsyncIterable<string> | string
   > {
-    if (stream) {
-      throw new Error("streaming not implemented");
-    }
     if (!textChunks || textChunks.length === 0) {
       throw new Error("Must have at least one text chunk");
     }
 
     // Should we send the query here too?
-    const packedTextChunks = this.serviceContext.promptHelper.repack(
+    const packedTextChunks = this.promptHelper.repack(
       this.summaryTemplate,
       textChunks,
     );
 
     if (packedTextChunks.length === 1) {
-      return (
-        await this.serviceContext.llm.complete({
-          prompt: this.summaryTemplate({
-            context: packedTextChunks[0],
-            query,
-          }),
-          parentEvent,
-        })
-      ).text;
+      const params = {
+        prompt: this.summaryTemplate({
+          context: packedTextChunks[0],
+          query,
+        }),
+        parentEvent,
+      };
+      if (stream) {
+        const response = await this.llm.complete({ ...params, stream });
+        return streamConverter(response, (chunk) => chunk.text);
+      }
+      return (await this.llm.complete(params)).text;
     } else {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
-          this.serviceContext.llm.complete({
+          this.llm.complete({
             prompt: this.summaryTemplate({
               context: chunk,
               query,
@@ -295,10 +296,17 @@ export class TreeSummarize implements ResponseBuilder {
         ),
       );
 
-      return this.getResponse({
+      const params = {
         query,
         textChunks: summaries.map((s) => s.text),
-      });
+      };
+      if (stream) {
+        return this.getResponse({
+          ...params,
+          stream,
+        });
+      }
+      return this.getResponse(params);
     }
   }
 }
