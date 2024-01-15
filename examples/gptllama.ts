@@ -25,12 +25,12 @@ import { ChatMessage, LlamaDeuce, OpenAI } from "llamaindex";
 
   while (true) {
     const next = history.length % 2 === 1 ? gpt4 : l2;
-    const r = await next.chat(
-      history.map(({ content, role }) => ({
+    const r = await next.chat({
+      messages: history.map(({ content, role }) => ({
         content,
         role: next === l2 ? role : role === "user" ? "assistant" : "user",
       })),
-    );
+    });
     history.push({
       content: r.message.content,
       role: next === l2 ? "assistant" : "user",

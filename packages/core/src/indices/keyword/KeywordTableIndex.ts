@@ -149,12 +149,12 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     text: string,
     serviceContext: ServiceContext,
   ): Promise<Set<string>> {
-    const response = await serviceContext.llm.complete(
-      defaultKeywordExtractPrompt({
+    const response = await serviceContext.llm.complete({
+      prompt: defaultKeywordExtractPrompt({
         context: text,
       }),
-    );
-    return extractKeywordsGivenResponse(response.message.content, "KEYWORDS:");
+    });
+    return extractKeywordsGivenResponse(response.text, "KEYWORDS:");
   }
 
   /**
