@@ -105,23 +105,27 @@ export class Refine implements ResponseBuilder {
     | ResponseBuilderParamsNonStreaming): Promise<
     AsyncIterable<string> | string
   > {
-    if (stream) {
-      throw new Error("streaming not implemented");
-    }
-    let response: string | undefined = undefined;
+    let response: AsyncIterable<string> | string | undefined = prevResponse;
 
-    for (const chunk of textChunks) {
-      if (!prevResponse) {
-        response = await this.giveResponseSingle(query, chunk, parentEvent);
-      } else {
-        response = await this.refineResponseSingle(
-          prevResponse,
+    for (let i = 0; i < textChunks.length; i++) {
+      const chunk = textChunks[i];
+      const lastChunk = i === textChunks.length - 1;
+      if (!response) {
+        response = await this.giveResponseSingle(
           query,
           chunk,
+          !!stream && lastChunk,
+          parentEvent,
+        );
+      } else {
+        response = await this.refineResponseSingle(
+          response as string,
+          query,
+          chunk,
+          !!stream && lastChunk,
           parentEvent,
         );
       }
-      prevResponse = response;
     }
 
     return response ?? "Empty Response";
@@ -130,41 +134,45 @@ export class Refine implements ResponseBuilder {
   private async giveResponseSingle(
     queryStr: string,
     textChunk: string,
+    stream: boolean,
     parentEvent?: Event,
-  ): Promise<string> {
+  ) {
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: queryStr });
     const textChunks = this.promptHelper.repack(textQATemplate, [textChunk]);
 
-    let response: string | undefined = undefined;
+    let response: AsyncIterable<string> | string | undefined = undefined;
 
-    for (const chunk of textChunks) {
+    for (let i = 0; i < textChunks.length; i++) {
+      const chunk = textChunks[i];
+      const lastChunk = i === textChunks.length - 1;
       if (!response) {
-        response = (
-          await this.llm.complete({
-            prompt: textQATemplate({
-              context: chunk,
-            }),
-            parentEvent,
-          })
-        ).text;
+        response = await this.complete({
+          prompt: textQATemplate({
+            context: chunk,
+          }),
+          parentEvent,
+          stream: stream && lastChunk,
+        });
       } else {
         response = await this.refineResponseSingle(
-          response,
+          response as string,
           queryStr,
           chunk,
+          stream && lastChunk,
           parentEvent,
         );
       }
     }
 
-    return response ?? "Empty Response";
+    return response;
   }
 
   private async refineResponseSingle(
-    response: string,
+    initialReponse: string,
     queryStr: string,
     textChunk: string,
+    stream: boolean,
     parentEvent?: Event,
   ) {
     const refineTemplate: SimplePrompt = (input) =>
@@ -172,18 +180,35 @@ export class Refine implements ResponseBuilder {
 
     const textChunks = this.promptHelper.repack(refineTemplate, [textChunk]);
 
-    for (const chunk of textChunks) {
-      response = (
-        await this.llm.complete({
-          prompt: refineTemplate({
-            context: chunk,
-            existingAnswer: response,
-          }),
-          parentEvent,
-        })
-      ).text;
+    let response: AsyncIterable<string> | string = initialReponse;
+
+    for (let i = 0; i < textChunks.length; i++) {
+      const chunk = textChunks[i];
+      const lastChunk = i === textChunks.length - 1;
+      response = await this.complete({
+        prompt: refineTemplate({
+          context: chunk,
+          existingAnswer: response as string,
+        }),
+        parentEvent,
+        stream: stream && lastChunk,
+      });
     }
     return response;
+  }
+
+  async complete(params: {
+    prompt: string;
+    stream: boolean;
+    parentEvent?: Event;
+  }): Promise<AsyncIterable<string> | string> {
+    if (params.stream) {
+      const response = await this.llm.complete({ ...params, stream: true });
+      return streamConverter(response, (chunk) => chunk.text);
+    } else {
+      const response = await this.llm.complete({ ...params, stream: false });
+      return response.text;
+    }
   }
 }
 
