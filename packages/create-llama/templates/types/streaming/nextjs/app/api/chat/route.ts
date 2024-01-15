@@ -1,5 +1,5 @@
 import { Message, StreamingTextResponse } from "ai";
-import { MessageContent, OpenAI } from "llamaindex";
+import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const llm = new OpenAI({
-      model: process.env.MODEL || "gpt-3.5-turbo",
+      model: (process.env.MODEL as any) ?? "gpt-3.5-turbo",
       maxTokens: 512,
     });
 
@@ -55,15 +55,19 @@ export async function POST(request: NextRequest) {
 
     const response = await chatEngine.chat(
       lastMessageContent as MessageContent,
-      messages,
+      messages as ChatMessage[],
       true,
     );
 
     // Transform the response into a readable stream
-    const stream = LlamaIndexStream(response);
+    const { stream, data: streamData } = LlamaIndexStream(response, {
+      parserOptions: {
+        image_url: data?.imageUrl,
+      },
+    });
 
     // Return a StreamingTextResponse, which can be consumed by the client
-    return new StreamingTextResponse(stream);
+    return new StreamingTextResponse(stream, {}, streamData);
   } catch (error) {
     console.error("[LlamaIndex]", error);
     return NextResponse.json(
