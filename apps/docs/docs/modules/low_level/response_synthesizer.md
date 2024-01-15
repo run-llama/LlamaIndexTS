@@ -42,6 +42,19 @@ const response = await responseSynthesizer.synthesize({
 console.log(response.response);
 ```
 
+The `synthesize` function also supports streaming, just add `stream: true` as an option:
+
+```typescript
+const stream = await responseSynthesizer.synthesize({
+  query: "What age am I?",
+  nodesWithScore,
+  stream: true,
+});
+for await (const chunk of stream) {
+  process.stdout.write(chunk.response);
+}
+```
+
 ## API Reference
 
 - [ResponseSynthesizer](../../api/classes/ResponseSynthesizer.md)
