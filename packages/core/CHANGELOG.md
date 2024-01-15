@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.45
+
+### Patch Changes
+
+- 2e6b36e: feat: support together AI
+
 ## 0.0.44
 
 ### Patch Changes

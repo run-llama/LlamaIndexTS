@@ -1,5 +1,12 @@
 # create-llama
 
+## 0.0.14
+
+### Patch Changes
+
+- 2e6b36e: fix: re-organize file structure
+- 2b356c8: fix: relative path incorrect
+
 ## 0.0.13
 
 ### Patch Changes
