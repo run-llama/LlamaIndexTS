@@ -14,7 +14,7 @@ export enum OpenAIEmbeddingModelType {
 }
 
 export abstract class OpenAIEmbeddingLike extends BaseEmbedding {
-  model: string;
+  abstract model: string;
 
   // OpenAI session params
   apiKey?: string = undefined;
@@ -27,17 +27,47 @@ export abstract class OpenAIEmbeddingLike extends BaseEmbedding {
 
   session: OpenAISession;
 
-  constructor(
-    init?: Partial<OpenAIEmbeddingLike> & { azure?: AzureOpenAIConfig },
-  ) {
+  constructor(init?: Partial<OpenAIEmbeddingLike>) {
     super();
-
-    this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
 
     this.maxRetries = init?.maxRetries ?? 10;
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalSessionOptions = init?.additionalSessionOptions;
 
+    this.apiKey = init?.apiKey ?? undefined;
+    this.session =
+      init?.session ??
+      getOpenAISession({
+        apiKey: this.apiKey,
+        maxRetries: this.maxRetries,
+        timeout: this.timeout,
+        ...this.additionalSessionOptions,
+      });
+  }
+
+  private async getOpenAIEmbedding(input: string) {
+    const { data } = await this.session.openai.embeddings.create({
+      model: this.model,
+      input,
+    });
+
+    return data[0].embedding;
+  }
+
+  async getTextEmbedding(text: string): Promise<number[]> {
+    return this.getOpenAIEmbedding(text);
+  }
+
+  async getQueryEmbedding(query: string): Promise<number[]> {
+    return this.getOpenAIEmbedding(query);
+  }
+}
+
+export class OpenAIEmbedding extends OpenAIEmbeddingLike {
+  public override model: OpenAIEmbeddingModelType;
+  constructor(init?: Partial<OpenAIEmbedding> & { azure?: AzureOpenAIConfig }) {
+    super(init);
+    this.model = init?.model ?? OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
         ...init?.azure,
@@ -62,41 +92,6 @@ export abstract class OpenAIEmbeddingLike extends BaseEmbedding {
           defaultQuery: { "api-version": azureConfig.apiVersion },
           ...this.additionalSessionOptions,
         });
-    } else {
-      this.apiKey = init?.apiKey ?? undefined;
-      this.session =
-        init?.session ??
-        getOpenAISession({
-          apiKey: this.apiKey,
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          ...this.additionalSessionOptions,
-        });
     }
-  }
-
-  private async getOpenAIEmbedding(input: string) {
-    const { data } = await this.session.openai.embeddings.create({
-      model: this.model,
-      input,
-    });
-
-    return data[0].embedding;
-  }
-
-  async getTextEmbedding(text: string): Promise<number[]> {
-    return this.getOpenAIEmbedding(text);
-  }
-
-  async getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getOpenAIEmbedding(query);
-  }
-}
-
-export class OpenAIEmbedding extends OpenAIEmbeddingLike {
-  public override model: OpenAIEmbeddingModelType;
-  constructor(init?: Partial<OpenAIEmbedding>) {
-    super(init);
-    this.model = init?.model ?? OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
   }
 }
