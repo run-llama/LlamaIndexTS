@@ -196,7 +196,7 @@ export const ALL_AVAILABLE_OPENAI_MODELS: Record<
 
 type OpenAIModel = keyof typeof GPT4_MODELS | keyof typeof GPT35_MODELS;
 
-export abstract class OpenAILike implements LLM {
+export abstract class OpenAILike extends BaseLLM implements LLM {
   hasStreaming: boolean = true;
 
   abstract model: string;
@@ -221,6 +221,7 @@ export abstract class OpenAILike implements LLM {
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<OpenAILike>) {
+    super();
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
