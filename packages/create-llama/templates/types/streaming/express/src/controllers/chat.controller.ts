@@ -67,6 +67,7 @@ export const chat = async (req: Request, res: Response) => {
         // https://sdk.vercel.ai/docs/api-reference/stream-data#on-the-server
         "X-Experimental-Stream-Data": "true",
         "Content-Type": "text/plain; charset=utf-8",
+        "Access-Control-Expose-Headers": "X-Experimental-Stream-Data",
       },
     });
   } catch (error) {
