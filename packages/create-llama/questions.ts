@@ -40,7 +40,7 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   ];
 
   const vectodbLang = framework === "fastapi" ? "python" : "typescript";
-  const compPath = path.join(__dirname, "components");
+  const compPath = path.join(__dirname, "..", "templates", "components");
   const vectordbPath = path.join(compPath, "vectordbs", vectodbLang);
 
   const availableChoices = fs
