@@ -179,9 +179,6 @@ importers:
       js-tiktoken:
         specifier: ^1.0.8
         version: 1.0.8
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       mammoth:
         specifier: ^1.6.0
         version: 1.6.0
@@ -243,6 +240,9 @@ importers:
       bunchee:
         specifier: ^4.3.3
         version: 4.3.3(typescript@5.3.3)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       node-stdlib-browser:
         specifier: ^1.2.0
         version: 1.2.0
