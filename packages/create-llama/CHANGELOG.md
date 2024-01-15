@@ -1,11 +1,5 @@
 # create-llama
 
-## 0.0.15
-
-### Patch Changes
-
-- 8e124e5: feat: support showing image on chat message
-
 ## 0.0.14
 
 ### Patch Changes
