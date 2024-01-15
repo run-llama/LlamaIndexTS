@@ -1,5 +1,10 @@
 # LlamaIndex.TS
 
+[![NPM Version](https://img.shields.io/npm/v/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![NPM License](https://img.shields.io/npm/l/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![NPM Downloads](https://img.shields.io/npm/dm/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![Discord](https://img.shields.io/discord/1059199217496772688)](https://discord.com/invite/eN6D2HQ4aX)
+
 LlamaIndex is a data framework for your LLM application.
 
 Use your own data with large language models (LLMs, OpenAI ChatGPT and others) in Typescript and Javascript.

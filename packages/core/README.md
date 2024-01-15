@@ -1,5 +1,10 @@
 # LlamaIndex.TS
 
+[![NPM Version](https://img.shields.io/npm/v/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![NPM License](https://img.shields.io/npm/l/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![NPM Downloads](https://img.shields.io/npm/dm/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![Discord](https://img.shields.io/discord/1059199217496772688)](https://discord.com/invite/eN6D2HQ4aX)
+
 LlamaIndex is a data framework for your LLM application.
 
 Use your own data with large language models (LLMs, OpenAI ChatGPT and others) in Typescript and Javascript.
@@ -12,7 +17,7 @@ LlamaIndex.TS aims to be a lightweight, easy to use set of libraries to help you
 
 ## Getting started with an example:
 
-LlamaIndex.TS requries Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
+LlamaIndex.TS requires Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
 
 In a new folder:
 
@@ -84,11 +89,38 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 - [SimplePrompt](/packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
+## Note: NextJS:
+
+If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the following config to your next.config.js to have it use imports/exports in the same way Node does.
+
+```js
+export const runtime = "nodejs"; // default
+```
+
+```js
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      sharp$: false,
+      "onnxruntime-node$": false,
+      mongodb$: false,
+    };
+    return config;
+  },
+};
+
+module.exports = nextConfig;
+```
+
 ## Supported LLMs:
 
 - OpenAI GPT-3.5-turbo and GPT-4
 - Anthropic Claude Instant and Claude 2
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
+- MistralAI Chat LLMs
 
 ## Contributing:
 
