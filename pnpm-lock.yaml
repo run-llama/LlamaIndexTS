@@ -180,8 +180,8 @@ importers:
         specifier: ^1.0.8
         version: 1.0.8
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: npm:lodash-es@^4.17.21
+        version: /lodash-es@4.17.21
       mammoth:
         specifier: ^1.6.0
         version: 1.6.0

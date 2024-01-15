@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { BaseNode, MetadataMode } from "../../Node";
 
 export type NodeFormatterFunction = (summaryNodes: BaseNode[]) => string;
@@ -44,7 +43,7 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
       }
       return lineTokens;
     })
-    .filter((lineTokens) => !_.isNil(lineTokens)) as string[][];
+    .filter((lineTokens): lineTokens is string[] => !lineTokens == null);
 
   // parse the answer number and relevance score
   return lineTokens.reduce(

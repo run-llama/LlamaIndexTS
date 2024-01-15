@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { IndexStruct, jsonToIndexStruct } from "../../indices/BaseIndex";
 import { DEFAULT_NAMESPACE } from "../constants";
 import { BaseKVStore } from "../kvStore/types";
@@ -25,7 +24,7 @@ export class KVIndexStore extends BaseIndexStore {
   }
 
   async getIndexStruct(structId?: string): Promise<IndexStruct | undefined> {
-    if (_.isNil(structId)) {
+    if (structId == null) {
       let structs = await this.getIndexStructs();
       if (structs.length !== 1) {
         throw new Error("More than one index struct found");
@@ -33,7 +32,7 @@ export class KVIndexStore extends BaseIndexStore {
       return structs[0];
     } else {
       let json = await this._kvStore.get(structId, this._collection);
-      if (_.isNil(json)) {
+      if (json == null) {
         return;
       }
       return jsonToIndexStruct(json);
@@ -44,6 +43,6 @@ export class KVIndexStore extends BaseIndexStore {
     let jsons = (await this._kvStore.getAll(this._collection)) as {
       [key: string]: any;
     };
-    return _.values(jsons).map((json) => jsonToIndexStruct(json));
+    return Object.values(jsons).map((json) => jsonToIndexStruct(json));
   }
 }

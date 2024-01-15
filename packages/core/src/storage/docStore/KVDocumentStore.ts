@@ -1,4 +1,3 @@
-import _, * as lodash from "lodash";
 import { BaseNode, ObjectType } from "../../Node";
 import { DEFAULT_NAMESPACE } from "../constants";
 import { BaseKVStore } from "../kvStore/types";
@@ -55,7 +54,7 @@ export class KVDocumentStore extends BaseDocumentStore {
           extraInfo: {},
         };
         refDocInfo.nodeIds.push(doc.id_);
-        if (_.isEmpty(refDocInfo.extraInfo)) {
+        if (Object.keys(refDocInfo.extraInfo).length === 0) {
           refDocInfo.extraInfo = {};
         }
         await this.kvstore.put(
@@ -75,7 +74,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     raiseError: boolean = true,
   ): Promise<BaseNode | undefined> {
     let json = await this.kvstore.get(docId, this.nodeCollection);
-    if (_.isNil(json)) {
+    if (json == null) {
       if (raiseError) {
         throw new Error(`docId ${docId} not found.`);
       } else {
@@ -87,23 +86,23 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined> {
     let refDocInfo = await this.kvstore.get(refDocId, this.refDocCollection);
-    return refDocInfo ? (_.clone(refDocInfo) as RefDocInfo) : undefined;
+    return refDocInfo ? (structuredClone(refDocInfo) as RefDocInfo) : undefined;
   }
 
   async getAllRefDocInfo(): Promise<Record<string, RefDocInfo> | undefined> {
     let refDocInfos = await this.kvstore.getAll(this.refDocCollection);
-    if (_.isNil(refDocInfos)) {
+    if (refDocInfos == null) {
       return;
     }
     return refDocInfos as Record<string, RefDocInfo>;
   }
 
   async refDocExists(refDocId: string): Promise<boolean> {
-    return !_.isNil(await this.getRefDocInfo(refDocId));
+    return !((await this.getRefDocInfo(refDocId)) == null);
   }
 
   async documentExists(docId: string): Promise<boolean> {
-    return !_.isNil(await this.kvstore.get(docId, this.nodeCollection));
+    return !((await this.kvstore.get(docId, this.nodeCollection)) == null);
   }
 
   private async removeRefDocNode(docId: string): Promise<void> {
@@ -113,13 +112,15 @@ export class KVDocumentStore extends BaseDocumentStore {
     }
 
     let refDocId = metadata.refDocId;
-    if (_.isNil(refDocId)) {
+    if (refDocId == null) {
       return;
     }
 
     const refDocInfo = await this.kvstore.get(refDocId, this.refDocCollection);
-    if (!_.isNil(refDocInfo)) {
-      lodash.pull(refDocInfo.docIds, docId);
+    if (!(refDocInfo == null)) {
+      refDocInfo.nodeIds = refDocInfo.nodeIds.filter(
+        (id: string) => id !== docId,
+      );
 
       if (refDocInfo.docIds.length > 0) {
         this.kvstore.put(refDocId, refDocInfo.toDict(), this.refDocCollection);
@@ -150,7 +151,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     raiseError: boolean = true,
   ): Promise<void> {
     let refDocInfo = await this.getRefDocInfo(refDocId);
-    if (_.isNil(refDocInfo)) {
+    if (refDocInfo == null) {
       if (raiseError) {
         throw new Error(`ref_doc_id ${refDocId} not found.`);
       } else {
@@ -173,6 +174,6 @@ export class KVDocumentStore extends BaseDocumentStore {
 
   async getDocumentHash(docId: string): Promise<string | undefined> {
     let metadata = await this.kvstore.get(docId, this.metadataCollection);
-    return _.get(metadata, "docHash");
+    return metadata?.["docHash"];
   }
 }

@@ -1,4 +1,4 @@
-import _ from "lodash";
+import isEqual from "lodash/isEqual";
 import { LLMOptions, Portkey } from "portkey-ai";
 
 export const readEnv = (
@@ -53,7 +53,7 @@ let defaultPortkeySession: {
  */
 export function getPortkeySession(options: PortkeyOptions = {}) {
   let session = defaultPortkeySession.find((session) => {
-    return _.isEqual(session.options, options);
+    return isEqual(session.options, options);
   })?.session;
 
   if (!session) {

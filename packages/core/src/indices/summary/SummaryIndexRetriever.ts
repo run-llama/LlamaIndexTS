@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { globalsHelper } from "../../GlobalsHelper";
 import { NodeWithScore } from "../../Node";
 import { ChoiceSelectPrompt, defaultChoiceSelectPrompt } from "../../Prompt";
@@ -106,7 +105,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       const choiceNodes = await this.index.docStore.getNodes(choiceNodeIds);
       const nodeWithScores = choiceNodes.map((node, i) => ({
         node: node,
-        score: _.get(parseResult, `${i + 1}`, 1),
+        score: parseResult[`${i + 1}`] ?? 1,
       }));
 
       results.push(...nodeWithScores);

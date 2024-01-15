@@ -1,4 +1,3 @@
-import _ from "lodash";
 import {
   BaseNode,
   Document,
@@ -52,11 +51,13 @@ export function getNodesFromDocument(
   textSplits.forEach((textSplit) => {
     const node = new TextNode({
       text: textSplit,
-      metadata: includeMetadata ? _.cloneDeep(document.metadata) : {},
-      excludedEmbedMetadataKeys: _.cloneDeep(
+      metadata: includeMetadata ? structuredClone(document.metadata) : {},
+      excludedEmbedMetadataKeys: structuredClone(
         document.excludedEmbedMetadataKeys,
       ),
-      excludedLlmMetadataKeys: _.cloneDeep(document.excludedLlmMetadataKeys),
+      excludedLlmMetadataKeys: structuredClone(
+        document.excludedLlmMetadataKeys,
+      ),
     });
     node.relationships[NodeRelationship.SOURCE] = document.asRelatedNodeInfo();
     nodes.push(node);

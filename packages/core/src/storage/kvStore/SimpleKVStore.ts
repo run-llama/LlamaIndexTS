@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import * as path from "path";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_COLLECTION, DEFAULT_FS } from "../constants";
@@ -24,7 +23,7 @@ export class SimpleKVStore extends BaseKVStore {
     if (!(collection in this.data)) {
       this.data[collection] = {};
     }
-    this.data[collection][key] = _.clone(val); // Creating a shallow copy of the object
+    this.data[collection][key] = structuredClone(val); // Creating a shallow copy of the object
 
     if (this.persistPath) {
       await this.persist(this.persistPath, this.fs);
@@ -36,17 +35,17 @@ export class SimpleKVStore extends BaseKVStore {
     collection: string = DEFAULT_COLLECTION,
   ): Promise<any> {
     let collectionData = this.data[collection];
-    if (_.isNil(collectionData)) {
+    if (collectionData == null) {
       return null;
     }
     if (!(key in collectionData)) {
       return null;
     }
-    return _.clone(collectionData[key]); // Creating a shallow copy of the object
+    return structuredClone(collectionData[key]); // Creating a shallow copy of the object
   }
 
   async getAll(collection: string = DEFAULT_COLLECTION): Promise<DataType> {
-    return _.clone(this.data[collection]); // Creating a shallow copy of the object
+    return structuredClone(this.data[collection]); // Creating a shallow copy of the object
   }
 
   async delete(

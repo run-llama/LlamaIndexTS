@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { ImageType } from "../Node";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
 import { DEFAULT_FS, VectorStoreQueryMode } from "../storage";
@@ -199,7 +198,7 @@ export async function readImage(input: ImageType) {
   const { RawImage } = await import("@xenova/transformers");
   if (input instanceof Blob) {
     return await RawImage.fromBlob(input);
-  } else if (_.isString(input) || input instanceof URL) {
+  } else if (typeof input === "string" || input instanceof URL) {
     return await RawImage.fromURL(input);
   } else {
     throw new Error(`Unsupported input type: ${typeof input}`);
@@ -210,7 +209,7 @@ export async function imageToString(input: ImageType): Promise<string> {
   if (input instanceof Blob) {
     // if the image is a Blob, convert it to a base64 data URL
     return await blobToDataUrl(input);
-  } else if (_.isString(input)) {
+  } else if (typeof input === "string") {
     return input;
   } else if (input instanceof URL) {
     return input.toString();
@@ -227,7 +226,7 @@ export function stringToImage(input: string): ImageType {
     return new Blob([byteArray]);
   } else if (input.startsWith("http://") || input.startsWith("https://")) {
     return new URL(input);
-  } else if (_.isString(input)) {
+  } else if (typeof input === "string") {
     return input;
   } else {
     throw new Error(`Unsupported input type: ${typeof input}`);
@@ -238,7 +237,7 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
   // first ensure, that the input is a Blob
   if (
     (input instanceof URL && input.protocol === "file:") ||
-    _.isString(input)
+    typeof input === "string"
   ) {
     // string or file URL
     const fs = DEFAULT_FS;

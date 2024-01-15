@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { BaseNode, Document } from "../../Node";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
@@ -245,13 +244,13 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
     for (const node of nodes) {
       const refNode = node.sourceNode;
-      if (_.isNil(refNode)) {
+      if (refNode == null) {
         continue;
       }
 
       const refDocInfo = await this.docStore.getRefDocInfo(refNode.nodeId);
 
-      if (_.isNil(refDocInfo)) {
+      if (refDocInfo == null) {
         continue;
       }
 

@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { Document } from "../Node";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { DEFAULT_FS } from "../storage/constants";
@@ -80,7 +79,7 @@ export class SimpleDirectoryReader implements BaseReader {
     let docs: Document[] = [];
     for await (const filePath of walk(fs, directoryPath)) {
       try {
-        const fileExt = _.last(filePath.split(".")) || "";
+        const fileExt = filePath.split(".").at(-1) || "";
 
         // Observer can decide to skip each file
         if (!this.doObserverCheck("file", filePath, ReaderStatus.STARTED)) {
@@ -92,7 +91,7 @@ export class SimpleDirectoryReader implements BaseReader {
 
         if (fileExt in fileExtToReader) {
           reader = fileExtToReader[fileExt];
-        } else if (!_.isNil(defaultReader)) {
+        } else if (!(defaultReader == null)) {
           reader = defaultReader;
         } else {
           const msg = `No reader for file extension of ${filePath}`;

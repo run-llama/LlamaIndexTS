@@ -1,4 +1,3 @@
-import _ from "lodash";
 import * as path from "path";
 import { GenericFileSystem } from "../FileSystem";
 import {
@@ -58,7 +57,8 @@ export class SimpleDocumentStore extends KVDocumentStore {
   ): Promise<void> {
     fs = fs || DEFAULT_FS;
     if (
-      _.isObject(this.kvStore) &&
+      typeof this.kvStore === "object" &&
+      this.kvStore !== null &&
       this.kvStore instanceof BaseInMemoryKVStore
     ) {
       await this.kvStore.persist(persistPath, fs);
@@ -71,7 +71,11 @@ export class SimpleDocumentStore extends KVDocumentStore {
   }
 
   toDict(): SaveDict {
-    if (_.isObject(this.kvStore) && this.kvStore instanceof SimpleKVStore) {
+    if (
+      typeof this.kvStore === "object" &&
+      this.kvStore !== null &&
+      this.kvStore instanceof SimpleKVStore
+    ) {
       return this.kvStore.toDict();
     }
     // If the kvstore is not a SimpleKVStore, you might want to throw an error or return a default value.

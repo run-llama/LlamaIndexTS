@@ -1,4 +1,3 @@
-import _ from "lodash";
 import * as path from "path";
 import { BaseNode } from "../../Node";
 import {
@@ -86,7 +85,7 @@ export class SimpleVectorStore implements VectorStore {
   }
 
   async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
-    if (!_.isNil(query.filters)) {
+    if (!(query.filters == null)) {
       throw new Error(
         "Metadata filters not implemented for SimpleVectorStore yet.",
       );

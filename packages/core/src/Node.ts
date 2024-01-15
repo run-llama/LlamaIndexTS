@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { createHash, randomUUID } from "node:crypto";
 import path from "node:path";
 
@@ -159,7 +158,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * @return {Record<string, any>} - The JSON representation of the object.
    */
   toMutableJSON(): Record<string, any> {
-    return _.cloneDeep(this.toJSON());
+    return structuredClone(this.toJSON());
   }
 }
 
