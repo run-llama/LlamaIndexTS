@@ -47,14 +47,28 @@ export const chat = async (req: Request, res: Response) => {
 
     const response = await chatEngine.chat(
       lastMessageContent as MessageContent,
-      messages,
+      messages as ChatMessage[],
       true,
     );
 
     // Transform the response into a readable stream
-    const stream = LlamaIndexStream(response);
+    const { stream, data: streamData } = LlamaIndexStream(response, {
+      parserOptions: {
+        image_url: data?.imageUrl,
+      },
+    });
 
-    streamToResponse(stream, res);
+    // Pipe LlamaIndexStream to response
+    const processedStream = stream.pipeThrough(streamData.stream);
+    return streamToResponse(processedStream, res, {
+      headers: {
+        // MUST have the `X-Experimental-Stream-Data: 'true'` header
+        // in response so the client uses the correct parsing logic
+        // https://sdk.vercel.ai/docs/api-reference/stream-data#on-the-server
+        "X-Experimental-Stream-Data": "true",
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
   } catch (error) {
     console.error("[LlamaIndex]", error);
     return res.status(500).json({
