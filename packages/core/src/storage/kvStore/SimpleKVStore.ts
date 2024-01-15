@@ -1,5 +1,5 @@
 import _ from "lodash";
-import * as path from "path";
+import path from "path";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_COLLECTION, DEFAULT_FS } from "../constants";
 import { BaseKVStore } from "./types";
