@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.0.46
+
+### Patch Changes
+
+- 977f284: fixing import statement
+- 5d3bb66: fix: class SimpleKVStore might throw error in ES module
+- f18c9f6: refactor: Updated low-level streaming interface
+
 ## 0.0.45
 
 ### Patch Changes
