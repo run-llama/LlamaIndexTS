@@ -117,19 +117,22 @@ export const GPT35_MODELS = {
 /**
  * We currently support GPT-3.5 and GPT-4 models
  */
-export const ALL_AVAILABLE_OPENAI_MODELS = {
+export const ALL_AVAILABLE_OPENAI_MODELS: Record<
+  string,
+  {
+    contextWindow: number;
+  }
+> = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
 };
 
-/**
- * OpenAI LLM implementation
- */
-export class OpenAI implements LLM {
+type OpenAIModel = keyof typeof GPT4_MODELS | keyof typeof GPT35_MODELS;
+
+export abstract class OpenAILike implements LLM {
   hasStreaming: boolean = true;
 
-  // Per completion OpenAI params
-  model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
+  model: string;
   temperature: number;
   topP: number;
   maxTokens?: number;
@@ -151,11 +154,11 @@ export class OpenAI implements LLM {
   callbackManager?: CallbackManager;
 
   constructor(
-    init?: Partial<OpenAI> & {
+    init?: Partial<OpenAILike> & {
       azure?: AzureOpenAIConfig;
     },
   ) {
-    this.model = init?.model ?? "gpt-3.5-turbo";
+    this.model = init?.model ?? "unknown-llm";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
@@ -205,16 +208,12 @@ export class OpenAI implements LLM {
   }
 
   get metadata() {
-    const contextWindow =
-      ALL_AVAILABLE_OPENAI_MODELS[
-        this.model as keyof typeof ALL_AVAILABLE_OPENAI_MODELS
-      ]?.contextWindow ?? 1024;
     return {
       model: this.model,
       temperature: this.temperature,
       topP: this.topP,
       maxTokens: this.maxTokens,
-      contextWindow,
+      contextWindow: ALL_AVAILABLE_OPENAI_MODELS[this.model].contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
     };
   }
@@ -371,6 +370,14 @@ export class OpenAI implements LLM {
     parentEvent?: Event,
   ): AsyncGenerator<string, void, unknown> {
     return this.streamChat([{ content: query, role: "user" }], parentEvent);
+  }
+}
+
+export class OpenAI extends OpenAILike {
+  model: OpenAIModel;
+  constructor(init?: Partial<OpenAI>) {
+    super(init);
+    this.model = init?.model ?? "gpt-3.5-turbo";
   }
 }
 

@@ -13,8 +13,8 @@ export enum OpenAIEmbeddingModelType {
   TEXT_EMBED_ADA_002 = "text-embedding-ada-002",
 }
 
-export class OpenAIEmbedding extends BaseEmbedding {
-  model: OpenAIEmbeddingModelType | string;
+export abstract class OpenAIEmbeddingLike extends BaseEmbedding {
+  model: string;
 
   // OpenAI session params
   apiKey?: string = undefined;
@@ -27,7 +27,9 @@ export class OpenAIEmbedding extends BaseEmbedding {
 
   session: OpenAISession;
 
-  constructor(init?: Partial<OpenAIEmbedding> & { azure?: AzureOpenAIConfig }) {
+  constructor(
+    init?: Partial<OpenAIEmbeddingLike> & { azure?: AzureOpenAIConfig },
+  ) {
     super();
 
     this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
@@ -88,5 +90,13 @@ export class OpenAIEmbedding extends BaseEmbedding {
 
   async getQueryEmbedding(query: string): Promise<number[]> {
     return this.getOpenAIEmbedding(query);
+  }
+}
+
+export class OpenAIEmbedding extends OpenAIEmbeddingLike {
+  public override model: OpenAIEmbeddingModelType;
+  constructor(init?: Partial<OpenAIEmbedding>) {
+    super(init);
+    this.model = init?.model ?? OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
   }
 }
