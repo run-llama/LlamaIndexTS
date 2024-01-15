@@ -41,13 +41,13 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
     const toolsStr = buildToolsText(tools);
     const queryStr = query;
     const prediction = (
-      await this.llm.complete(
-        this.prompt({
+      await this.llm.complete({
+        prompt: this.prompt({
           toolsStr,
           queryStr,
         }),
-      )
-    ).message.content;
+      })
+    ).text;
 
     const structuredOutput = this.outputParser.parse(prediction);
 

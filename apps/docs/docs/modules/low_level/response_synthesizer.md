@@ -35,11 +35,24 @@ const nodesWithScore: NodeWithScore[] = [
   },
 ];
 
-const response = await responseSynthesizer.synthesize(
-  "What age am I?",
+const response = await responseSynthesizer.synthesize({
+  query: "What age am I?",
   nodesWithScore,
-);
+});
 console.log(response.response);
+```
+
+The `synthesize` function also supports streaming, just add `stream: true` as an option:
+
+```typescript
+const stream = await responseSynthesizer.synthesize({
+  query: "What age am I?",
+  nodesWithScore,
+  stream: true,
+});
+for await (const chunk of stream) {
+  process.stdout.write(chunk.response);
+}
 ```
 
 ## API Reference

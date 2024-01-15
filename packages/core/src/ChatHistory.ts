@@ -99,7 +99,7 @@ export class SummaryChatHistory implements ChatHistory {
       messagesToSummarize.shift();
     } while (this.llm.tokens(promptMessages) > this.tokensToSummarize);
 
-    const response = await this.llm.chat(promptMessages);
+    const response = await this.llm.chat({ messages: promptMessages });
     return { content: response.message.content, role: "memory" };
   }
 

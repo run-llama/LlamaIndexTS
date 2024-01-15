@@ -76,8 +76,12 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
       type: "wrapper",
       tags: ["final"],
     };
-    const nodes = await this.retrieve(query, _parentEvent);
-    return this.responseSynthesizer.synthesize(query, nodes, _parentEvent);
+    const nodesWithScore = await this.retrieve(query, _parentEvent);
+    return this.responseSynthesizer.synthesize({
+      query,
+      nodesWithScore,
+      parentEvent: _parentEvent,
+    });
   }
 }
 
@@ -153,10 +157,14 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
       subQuestions.map((subQ) => this.querySubQ(subQ, subQueryParentEvent)),
     );
 
-    const nodes = subQNodes
+    const nodesWithScore = subQNodes
       .filter((node) => node !== null)
       .map((node) => node as NodeWithScore);
-    return this.responseSynthesizer.synthesize(query, nodes, parentEvent);
+    return this.responseSynthesizer.synthesize({
+      query,
+      nodesWithScore,
+      parentEvent,
+    });
   }
 
   private async querySubQ(

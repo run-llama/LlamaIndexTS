@@ -69,7 +69,7 @@ export class SimpleChatEngine implements ChatEngine {
     //Non-streaming option
     chatHistory = chatHistory ?? this.chatHistory;
     chatHistory.push({ content: message, role: "user" });
-    const response = await this.llm.chat(chatHistory, undefined);
+    const response = await this.llm.chat({ messages: chatHistory });
     chatHistory.push(response.message);
     this.chatHistory = chatHistory;
     return new Response(response.message.content) as R;
@@ -81,16 +81,15 @@ export class SimpleChatEngine implements ChatEngine {
   ): AsyncGenerator<string, void, unknown> {
     chatHistory = chatHistory ?? this.chatHistory;
     chatHistory.push({ content: message, role: "user" });
-    const response_generator = await this.llm.chat(
-      chatHistory,
-      undefined,
-      true,
-    );
+    const response_generator = await this.llm.chat({
+      messages: chatHistory,
+      stream: true,
+    });
 
     var accumulator: string = "";
     for await (const part of response_generator) {
-      accumulator += part;
-      yield part;
+      accumulator += part.delta;
+      yield part.delta;
     }
 
     chatHistory.push({ content: accumulator, role: "assistant" });
@@ -136,12 +135,12 @@ export class CondenseQuestionChatEngine implements ChatEngine {
   private async condenseQuestion(chatHistory: ChatMessage[], question: string) {
     const chatHistoryStr = messagesToHistoryStr(chatHistory);
 
-    return this.serviceContext.llm.complete(
-      defaultCondenseQuestionPrompt({
+    return this.serviceContext.llm.complete({
+      prompt: defaultCondenseQuestionPrompt({
         question: question,
         chatHistory: chatHistoryStr,
       }),
-    );
+    });
   }
 
   async chat<
@@ -156,7 +155,7 @@ export class CondenseQuestionChatEngine implements ChatEngine {
 
     const condensedQuestion = (
       await this.condenseQuestion(chatHistory, extractText(message))
-    ).message.content;
+    ).text;
 
     const response = await this.queryEngine.query(condensedQuestion);
 
@@ -283,10 +282,10 @@ export class ContextChatEngine implements ChatEngine {
 
     chatHistory.push({ content: message, role: "user" });
 
-    const response = await this.chatModel.chat(
-      [context.message, ...chatHistory],
+    const response = await this.chatModel.chat({
+      messages: [context.message, ...chatHistory],
       parentEvent,
-    );
+    });
     chatHistory.push(response.message);
 
     this.chatHistory = chatHistory;
@@ -315,15 +314,15 @@ export class ContextChatEngine implements ChatEngine {
 
     chatHistory.push({ content: message, role: "user" });
 
-    const response_stream = await this.chatModel.chat(
-      [context.message, ...chatHistory],
+    const response_stream = await this.chatModel.chat({
+      messages: [context.message, ...chatHistory],
       parentEvent,
-      true,
-    );
+      stream: true,
+    });
     var accumulator: string = "";
     for await (const part of response_stream) {
-      accumulator += part;
-      yield part;
+      accumulator += part.delta;
+      yield part.delta;
     }
 
     chatHistory.push({ content: accumulator, role: "assistant" });
@@ -399,7 +398,7 @@ export class HistoryChatEngine {
       message,
       chatHistory,
     );
-    const response = await this.llm.chat(requestMessages);
+    const response = await this.llm.chat({ messages: requestMessages });
     chatHistory.addMessage(response.message);
     return new Response(response.message.content) as R;
   }
@@ -412,16 +411,15 @@ export class HistoryChatEngine {
       message,
       chatHistory,
     );
-    const response_stream = await this.llm.chat(
-      requestMessages,
-      undefined,
-      true,
-    );
+    const response_stream = await this.llm.chat({
+      messages: requestMessages,
+      stream: true,
+    });
 
     var accumulator = "";
     for await (const part of response_stream) {
-      accumulator += part;
-      yield part;
+      accumulator += part.delta;
+      yield part.delta;
     }
     chatHistory.addMessage({
       content: accumulator,
