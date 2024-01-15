@@ -2,4 +2,4 @@
 "llamaindex": patch
 ---
 
-refactor: Updated low-level streaming interface 
+refactor: Updated low-level streaming interface
