@@ -13,7 +13,6 @@
     "chromadb": "^1.7.3",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.8",
-    "lodash": "npm:lodash-es@^4.17.21",
     "mammoth": "^1.6.0",
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.3.0",
@@ -47,6 +46,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
+      "edge-light": "./dist/index.edge.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     }

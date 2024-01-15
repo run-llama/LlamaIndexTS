@@ -1,4 +1,3 @@
-import isEqual from "lodash/isEqual";
 import OpenAI, { ClientOptions } from "openai";
 
 export class AzureOpenAI extends OpenAI {
@@ -48,7 +47,7 @@ export function getOpenAISession(
   options: ClientOptions & { azure?: boolean } = {},
 ) {
   let session = defaultOpenAISession.find((session) => {
-    return isEqual(session.options, options);
+    return session.options === options;
   })?.session;
 
   if (!session) {

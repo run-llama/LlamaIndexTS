@@ -3,7 +3,6 @@ import Anthropic, {
   ClientOptions,
   HUMAN_PROMPT,
 } from "@anthropic-ai/sdk";
-import isEqual from "lodash/isEqual";
 
 export class AnthropicSession {
   anthropic: Anthropic;
@@ -39,7 +38,7 @@ let defaultAnthropicSession: {
  */
 export function getAnthropicSession(options: ClientOptions = {}) {
   let session = defaultAnthropicSession.find((session) => {
-    return isEqual(session.options, options);
+    return session.options === options;
   })?.session;
 
   if (!session) {
