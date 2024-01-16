@@ -1,0 +1,24 @@
+{
+  "name": "@llamaindex/edge-runtime-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git"
+  },
+  "dependencies": {
+    "@edge-runtime/cookies": "4.0.2",
+    "@edge-runtime/ponyfill": "2.4.1",
+    "@edge-runtime/primitives": "4.0.2",
+    "edge-runtime": "2.5.4",
+    "llamaindex": "workspace:^"
+  },
+  "private": true,
+  "devDependencies": {
+    "@edge-runtime/jest-environment": "^2.3.7"
+  }
+}
