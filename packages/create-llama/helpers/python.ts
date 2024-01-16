@@ -98,10 +98,15 @@ export const installPythonTemplate = async ({
   framework,
   engine,
   vectorDb,
-  isPoetryInstall,
+  installDependencies,
 }: Pick<
   InstallTemplateArgs,
-  "root" | "framework" | "template" | "engine" | "vectorDb" | "isPoetryInstall"
+  | "root"
+  | "framework"
+  | "template"
+  | "engine"
+  | "vectorDb"
+  | "installDependencies"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(
@@ -150,7 +155,7 @@ export const installPythonTemplate = async ({
   await addDependencies(root, addOnDependencies);
 
   // install python dependencies
-  if (isPoetryInstall) {
+  if (installDependencies) {
     if (isPoetryAvailable()) {
       console.log(
         `Installing python dependencies using poetry. This may take a while...`,

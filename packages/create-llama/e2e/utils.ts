@@ -104,6 +104,7 @@ export function runCreateLlama(
     "--use-npm",
     "--external-port",
     externalPort,
+    "--install-dependencies",
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
   execSync(command, {

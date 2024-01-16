@@ -23,5 +23,5 @@ export interface InstallTemplateArgs {
   communityProjectPath?: string;
   vectorDb?: TemplateVectorDB;
   externalPort?: number;
-  isPoetryInstall?: boolean;
+  installDependencies?: boolean;
 }

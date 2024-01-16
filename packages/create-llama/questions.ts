@@ -152,21 +152,6 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "fastapi") {
-    // if backend framework is fastapi
-    // then we would ask the user whether they want to install the python dependencies automatically by using poetry or not
-    const { isPoetryInstall } = await prompts({
-      onState: onPromptState,
-      type: "toggle",
-      name: "isPoetryInstall",
-      message: `Would you like to install python dependencies automatically? This may take a while`,
-      initial: getPrefOrDefault("isPoetryInstall"),
-      active: "Yes",
-      inactive: "No",
-    });
-    program.isPoetryInstall = Boolean(isPoetryInstall);
-  }
-
   if (
     program.template === "streaming" &&
     (program.framework === "express" || program.framework === "fastapi")
@@ -224,6 +209,19 @@ export const askQuestions = async (
         preferences.ui = ui;
       }
     }
+  }
+
+  if (program.installDependencies === undefined) {
+    const { installDependencies } = await prompts({
+      onState: onPromptState,
+      type: "toggle",
+      name: "installDependencies",
+      message: `Would you like to install dependencies automatically? This may take a while`,
+      initial: getPrefOrDefault("installDependencies"),
+      active: "Yes",
+      inactive: "No",
+    });
+    program.installDependencies = Boolean(installDependencies);
   }
 
   if (!program.model) {

@@ -12,7 +12,7 @@ export function isPoetryAvailable(): boolean {
 
 export function tryPoetryInstall(): boolean {
   try {
-    execSync("poetry install", { stdio: "ignore" });
+    execSync("poetry install", { stdio: "inherit" });
     return true;
   } catch (_) {}
   return false;
@@ -20,7 +20,7 @@ export function tryPoetryInstall(): boolean {
 
 export function tryPoetryRun(command: string): boolean {
   try {
-    execSync(`poetry run ${command}`);
+    execSync(`poetry run ${command}`, { stdio: "inherit" });
     return true;
   } catch (_) {}
   return false;
