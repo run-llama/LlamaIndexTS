@@ -1,5 +1,5 @@
 import _ from "lodash";
-import * as path from "path";
+import path from "path";
 import { BaseNode } from "../../Node";
 import {
   getTopKEmbeddings,
