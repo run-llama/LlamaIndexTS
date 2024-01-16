@@ -33,9 +33,9 @@ async function main() {
     [nodePostprocessor],
   );
 
-  const response = await queryEngine.query(
-    "What did the author do growing up?",
-  );
+  const response = await queryEngine.query({
+    query: "What did the author do growing up?",
+  });
   console.log(response.response);
 }
 

@@ -15,7 +15,7 @@ async function main() {
 
   // Test query
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(SAMPLE_QUERY);
+  const response = await queryEngine.query({ query: SAMPLE_QUERY });
   console.log(`Test query > ${SAMPLE_QUERY}:\n`, response.toString());
 }
 

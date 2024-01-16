@@ -11,7 +11,16 @@ const retriever = index.asRetriever();
 const chatEngine = new ContextChatEngine({ retriever });
 
 // start chatting
-const response = await chatEngine.chat(query);
+const response = await chatEngine.chat({ message: query });
+```
+
+The `chat` function also supports streaming, just add `stream: true` as an option:
+
+```typescript
+const stream = await chatEngine.chat({ message: query, stream: true });
+for await (const chunk of stream) {
+  process.stdout.write(chunk.response);
+}
 ```
 
 ## Api References

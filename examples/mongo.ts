@@ -54,7 +54,7 @@ async function main() {
       break;
     }
 
-    const response = await queryEngine.query(query);
+    const response = await queryEngine.query({ query });
 
     // Output response
     console.log(response.toString());

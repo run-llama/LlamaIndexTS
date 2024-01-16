@@ -27,7 +27,7 @@ async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(query);
+  const response = await queryEngine.query({ query });
   return response.response;
 }
 

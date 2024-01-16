@@ -48,7 +48,7 @@ program
         break;
       }
 
-      const response = await queryEngine.query(query);
+      const response = await queryEngine.query({ query });
 
       console.log(response.toString());
     }

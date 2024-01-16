@@ -38,9 +38,9 @@ Given the CSV file, generate me Typescript code to answer the question: ${query}
   const queryEngine = index.asQueryEngine({ responseSynthesizer });
 
   // Query the index
-  const response = await queryEngine.query(
-    "What is the correlation between survival and age?",
-  );
+  const response = await queryEngine.query({
+    query: "What is the correlation between survival and age?",
+  });
 
   // Output response
   console.log(response.toString());
