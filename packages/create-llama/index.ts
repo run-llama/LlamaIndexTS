@@ -119,6 +119,13 @@ const program = new Commander.Command(packageJson.name)
 Select external port.
 `,
   )
+  .option(
+    "--install-dependencies",
+    `
+
+Whether install dependencies (backend/frontend) automatically or not.
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
 if (process.argv.includes("--no-frontend")) {
@@ -224,6 +231,7 @@ async function run(): Promise<void> {
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
+    installDependencies: program.installDependencies,
   });
   conf.set("preferences", preferences);
 }

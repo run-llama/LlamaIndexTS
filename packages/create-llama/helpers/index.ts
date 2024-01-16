@@ -7,6 +7,7 @@ import { cyan } from "picocolors";
 
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
 import { PackageManager } from "./get-pkg-manager";
+import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
 import { installPythonTemplate } from "./python";
 import { downloadAndExtractRepo } from "./repo";
 import {
@@ -89,18 +90,23 @@ const copyTestData = async (
   if (packageManager && engine === "context") {
     const runGenerate = `${cyan(
       framework === "fastapi"
-        ? "python app/engine/generate.py"
+        ? "poetry run python app/engine/generate.py"
         : `${packageManager} run generate`,
     )}`;
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
     const hasVectorDb = vectorDb && vectorDb !== "none";
-    const shouldRunGenerateAfterInstall =
-      hasOpenAiKey && framework !== "fastapi" && vectorDb === "none";
-    if (shouldRunGenerateAfterInstall) {
-      console.log(`\nRunning ${runGenerate} to generate the context data.\n`);
-      await callPackageManager(packageManager, true, ["run", "generate"]);
-      console.log();
-      return;
+    if (framework === "fastapi") {
+      if (hasOpenAiKey && vectorDb === "none" && isHavingPoetryLockFile()) {
+        console.log(`Running ${runGenerate} to generate the context data.`);
+        tryPoetryRun("python app/engine/generate.py");
+        return;
+      }
+    } else {
+      if (hasOpenAiKey && vectorDb === "none") {
+        console.log(`Running ${runGenerate} to generate the context data.`);
+        await callPackageManager(packageManager, true, ["run", "generate"]);
+        return;
+      }
     }
 
     const settings = [];

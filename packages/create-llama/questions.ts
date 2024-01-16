@@ -211,6 +211,19 @@ export const askQuestions = async (
     }
   }
 
+  if (program.installDependencies === undefined) {
+    const { installDependencies } = await prompts({
+      onState: onPromptState,
+      type: "toggle",
+      name: "installDependencies",
+      message: `Would you like to install dependencies automatically? This may take a while`,
+      initial: getPrefOrDefault("installDependencies"),
+      active: "Yes",
+      inactive: "No",
+    });
+    program.installDependencies = Boolean(installDependencies);
+  }
+
   if (!program.model) {
     if (ciInfo.isCI) {
       program.model = getPrefOrDefault("model");
