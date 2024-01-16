@@ -184,17 +184,22 @@ export const GPT35_MODELS = {
 /**
  * We currently support GPT-3.5 and GPT-4 models
  */
-export const ALL_AVAILABLE_OPENAI_MODELS = {
+export const ALL_AVAILABLE_OPENAI_MODELS: Record<
+  string,
+  {
+    contextWindow: number;
+  }
+> = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
 };
 
-/**
- * OpenAI LLM implementation
- */
-export class OpenAI extends BaseLLM {
-  // Per completion OpenAI params
-  model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
+type OpenAIModel = keyof typeof GPT4_MODELS | keyof typeof GPT35_MODELS;
+
+export abstract class OpenAILike extends BaseLLM implements LLM {
+  hasStreaming: boolean = true;
+
+  abstract model: string;
   temperature: number;
   topP: number;
   maxTokens?: number;
@@ -215,13 +220,8 @@ export class OpenAI extends BaseLLM {
 
   callbackManager?: CallbackManager;
 
-  constructor(
-    init?: Partial<OpenAI> & {
-      azure?: AzureOpenAIConfig;
-    },
-  ) {
+  constructor(init?: Partial<OpenAILike>) {
     super();
-    this.model = init?.model ?? "gpt-3.5-turbo";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
@@ -231,56 +231,26 @@ export class OpenAI extends BaseLLM {
     this.additionalChatOptions = init?.additionalChatOptions;
     this.additionalSessionOptions = init?.additionalSessionOptions;
 
-    if (init?.azure || shouldUseAzure()) {
-      const azureConfig = getAzureConfigFromEnv({
-        ...init?.azure,
-        model: getAzureModel(this.model),
+    this.apiKey = init?.apiKey ?? undefined;
+    this.session =
+      init?.session ??
+      getOpenAISession({
+        apiKey: this.apiKey,
+        maxRetries: this.maxRetries,
+        timeout: this.timeout,
+        ...this.additionalSessionOptions,
       });
-
-      if (!azureConfig.apiKey) {
-        throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
-        );
-      }
-
-      this.apiKey = azureConfig.apiKey;
-      this.session =
-        init?.session ??
-        getOpenAISession({
-          azure: true,
-          apiKey: this.apiKey,
-          baseURL: getAzureBaseUrl(azureConfig),
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          defaultQuery: { "api-version": azureConfig.apiVersion },
-          ...this.additionalSessionOptions,
-        });
-    } else {
-      this.apiKey = init?.apiKey ?? undefined;
-      this.session =
-        init?.session ??
-        getOpenAISession({
-          apiKey: this.apiKey,
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          ...this.additionalSessionOptions,
-        });
-    }
 
     this.callbackManager = init?.callbackManager;
   }
 
   get metadata() {
-    const contextWindow =
-      ALL_AVAILABLE_OPENAI_MODELS[
-        this.model as keyof typeof ALL_AVAILABLE_OPENAI_MODELS
-      ]?.contextWindow ?? 1024;
     return {
       model: this.model,
       temperature: this.temperature,
       topP: this.topP,
       maxTokens: this.maxTokens,
-      contextWindow,
+      contextWindow: ALL_AVAILABLE_OPENAI_MODELS[this.model].contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
     };
   }
@@ -418,6 +388,43 @@ export class OpenAI extends BaseLLM {
       };
     }
     return;
+  }
+}
+
+export class OpenAI extends OpenAILike {
+  model: OpenAIModel;
+  constructor(
+    init?: Partial<OpenAI> & {
+      azure?: AzureOpenAIConfig;
+    },
+  ) {
+    super(init);
+    this.model = init?.model ?? "gpt-3.5-turbo";
+    if (init?.azure || shouldUseAzure()) {
+      const azureConfig = getAzureConfigFromEnv({
+        ...init?.azure,
+        model: getAzureModel(this.model),
+      });
+
+      if (!azureConfig.apiKey) {
+        throw new Error(
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
+        );
+      }
+
+      this.apiKey = azureConfig.apiKey;
+      this.session =
+        init?.session ??
+        getOpenAISession({
+          azure: true,
+          apiKey: this.apiKey,
+          baseURL: getAzureBaseUrl(azureConfig),
+          maxRetries: this.maxRetries,
+          timeout: this.timeout,
+          defaultQuery: { "api-version": azureConfig.apiVersion },
+          ...this.additionalSessionOptions,
+        });
+    }
   }
 }
 

@@ -1,8 +1,8 @@
-import { OpenAIEmbedding } from "./OpenAIEmbedding";
+import { OpenAIEmbeddingLike } from "./OpenAIEmbedding";
 
-export class TogetherEmbedding extends OpenAIEmbedding {
+export class TogetherEmbedding extends OpenAIEmbeddingLike {
   override model: string;
-  constructor(init?: Partial<OpenAIEmbedding>) {
+  constructor(init?: Partial<TogetherEmbedding>) {
     super({
       apiKey: process.env.TOGETHER_API_KEY,
       ...init,

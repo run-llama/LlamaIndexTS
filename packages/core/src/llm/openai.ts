@@ -1,4 +1,3 @@
-import _ from "lodash";
 import OpenAI, { ClientOptions } from "openai";
 
 export class AzureOpenAI extends OpenAI {
@@ -35,8 +34,10 @@ export class OpenAISession {
 // I'm not 100% sure this is necessary vs. just starting a new session
 // every time we make a call. They say they try to reuse connections
 // so in theory this is more efficient, but we should test it in the future.
-let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
-  [];
+let defaultOpenAISession: {
+  session: OpenAISession;
+  options: ClientOptions;
+} | null = null;
 
 /**
  * Get a session for the OpenAI API. If one already exists with the same options,
@@ -47,14 +48,10 @@ let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
 export function getOpenAISession(
   options: ClientOptions & { azure?: boolean } = {},
 ) {
-  let session = defaultOpenAISession.find((session) => {
-    return _.isEqual(session.options, options);
-  })?.session;
-
-  if (!session) {
-    session = new OpenAISession(options);
-    defaultOpenAISession.push({ session, options });
+  if (!defaultOpenAISession) {
+    const session = new OpenAISession(options);
+    defaultOpenAISession = { session, options };
   }
 
-  return session;
+  return defaultOpenAISession.session;
 }
