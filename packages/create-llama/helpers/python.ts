@@ -1,8 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
-import { cyan } from "picocolors";
+import { cyan, yellow } from "picocolors";
 import { parse, stringify } from "smol-toml";
+import terminalLink from "terminal-link";
 import { copy } from "./copy";
+import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
 interface Dependency {
@@ -96,9 +98,10 @@ export const installPythonTemplate = async ({
   framework,
   engine,
   vectorDb,
+  isPoetryInstall,
 }: Pick<
   InstallTemplateArgs,
-  "root" | "framework" | "template" | "engine" | "vectorDb"
+  "root" | "framework" | "template" | "engine" | "vectorDb" | "isPoetryInstall"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(
@@ -146,7 +149,28 @@ export const installPythonTemplate = async ({
   const addOnDependencies = getAdditionalDependencies(vectorDb);
   await addDependencies(root, addOnDependencies);
 
-  console.log(
-    "\nPython project, dependencies won't be installed automatically.\n",
-  );
+  // install python dependencies
+  if (isPoetryInstall) {
+    if (isPoetryAvailable()) {
+      console.log(
+        `Installing python dependencies using poetry. This may take a while...`,
+      );
+      const installSuccessful = tryPoetryInstall();
+      if (!installSuccessful) {
+        console.warn(
+          yellow("Install failed. Please install dependencies manually."),
+        );
+      }
+    } else {
+      console.warn(
+        yellow(
+          `Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
+Please check ${terminalLink(
+            "Poetry Installation",
+            `https://python-poetry.org/docs/#installation`,
+          )} to install poetry first, then install the dependencies manually.`,
+        ),
+      );
+    }
+  }
 };

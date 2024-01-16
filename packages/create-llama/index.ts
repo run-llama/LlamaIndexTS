@@ -224,6 +224,7 @@ async function run(): Promise<void> {
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
+    isPoetryInstall: program.isPoetryInstall,
   });
   conf.set("preferences", preferences);
 }

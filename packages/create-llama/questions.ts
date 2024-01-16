@@ -152,6 +152,21 @@ export const askQuestions = async (
     }
   }
 
+  if (program.framework === "fastapi") {
+    // if backend framework is fastapi
+    // then we would ask the user whether they want to install the python dependencies automatically by using poetry or not
+    const { isPoetryInstall } = await prompts({
+      onState: onPromptState,
+      type: "toggle",
+      name: "isPoetryInstall",
+      message: `Would you like to install python dependencies automatically? This may take a while`,
+      initial: getPrefOrDefault("isPoetryInstall"),
+      active: "Yes",
+      inactive: "No",
+    });
+    program.isPoetryInstall = Boolean(isPoetryInstall);
+  }
+
   if (
     program.template === "streaming" &&
     (program.framework === "express" || program.framework === "fastapi")
