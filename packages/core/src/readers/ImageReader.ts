@@ -1,6 +1,5 @@
 import { Document, ImageDocument } from "../Node";
-import { DEFAULT_FS } from "../storage/constants";
-import { GenericFileSystem } from "../storage/FileSystem";
+import { GenericFileSystem, genericFileSystem } from "../storage/FileSystem";
 import { BaseReader } from "./base";
 
 /**
@@ -16,7 +15,7 @@ export class ImageReader implements BaseReader {
    */
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = genericFileSystem,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file);
     const blob = new Blob([dataBuffer]);
