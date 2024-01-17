@@ -168,6 +168,7 @@ export class Refine implements ResponseBuilder {
     return response;
   }
 
+  // eslint-disable-next-line max-params
   private async refineResponseSingle(
     initialReponse: string,
     queryStr: string,
