@@ -1,10 +1,6 @@
 import path from "path";
-import { GenericFileSystem } from "./FileSystem";
-import {
-  DEFAULT_FS,
-  DEFAULT_IMAGE_VECTOR_NAMESPACE,
-  DEFAULT_NAMESPACE,
-} from "./constants";
+import { GenericFileSystem, genericFileSystem } from "./FileSystem";
+import { DEFAULT_IMAGE_VECTOR_NAMESPACE, DEFAULT_NAMESPACE } from "./constants";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
 import { BaseDocumentStore } from "./docStore/types";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore";
@@ -44,7 +40,7 @@ export async function storageContextFromDefaults({
     vectorStore = vectorStore || new SimpleVectorStore();
     imageVectorStore = storeImages ? new SimpleVectorStore() : imageVectorStore;
   } else {
-    fs = fs || DEFAULT_FS;
+    fs = fs || genericFileSystem;
     docStore =
       docStore ||
       (await SimpleDocumentStore.fromPersistDir(

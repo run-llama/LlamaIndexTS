@@ -1,6 +1,5 @@
 import { Document } from "../Node";
-import { GenericFileSystem } from "../storage/FileSystem";
-import { DEFAULT_FS } from "../storage/constants";
+import { genericFileSystem, GenericFileSystem } from "../storage/FileSystem";
 import { BaseReader } from "./base";
 
 /**
@@ -9,7 +8,7 @@ import { BaseReader } from "./base";
 export class PDFReader implements BaseReader {
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = genericFileSystem,
   ): Promise<Document[]> {
     const content = (await fs.readFile(file)) as any;
     if (!(content instanceof Buffer)) {
