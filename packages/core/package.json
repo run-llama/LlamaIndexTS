@@ -58,6 +58,72 @@
       "import": "./dist/storage/FileSystem.mjs",
       "require": "./dist/storage/FileSystem.js"
     },
+    "./readers/AssemblyAI": {
+      "types": "./dist/readers/AssemblyAI.d.mts",
+      "edge-light": "./dist/readers/AssemblyAI.edge-light.mjs",
+      "import": "./dist/readers/AssemblyAI.mjs",
+      "require": "./dist/readers/AssemblyAI.js"
+    },
+    "./readers/base": {
+      "types": "./dist/readers/base.d.mts",
+      "edge-light": "./dist/readers/base.edge-light.mjs",
+      "import": "./dist/readers/base.mjs",
+      "require": "./dist/readers/base.js"
+    },
+    "./readers/CSVReader": {
+      "types": "./dist/readers/CSVReader.d.mts",
+      "edge-light": "./dist/readers/CSVReader.edge-light.mjs",
+      "import": "./dist/readers/CSVReader.mjs",
+      "require": "./dist/readers/CSVReader.js"
+    },
+    "./readers/DocxReader": {
+      "types": "./dist/readers/DocxReader.d.mts",
+      "edge-light": "./dist/readers/DocxReader.edge-light.mjs",
+      "import": "./dist/readers/DocxReader.mjs",
+      "require": "./dist/readers/DocxReader.js"
+    },
+    "./readers/HTMLReader": {
+      "types": "./dist/readers/HTMLReader.d.mts",
+      "edge-light": "./dist/readers/HTMLReader.edge-light.mjs",
+      "import": "./dist/readers/HTMLReader.mjs",
+      "require": "./dist/readers/HTMLReader.js"
+    },
+    "./readers/ImageReader": {
+      "types": "./dist/readers/ImageReader.d.mts",
+      "edge-light": "./dist/readers/ImageReader.edge-light.mjs",
+      "import": "./dist/readers/ImageReader.mjs",
+      "require": "./dist/readers/ImageReader.js"
+    },
+    "./readers/MarkdownReader": {
+      "types": "./dist/readers/MarkdownReader.d.mts",
+      "edge-light": "./dist/readers/MarkdownReader.edge-light.mjs",
+      "import": "./dist/readers/MarkdownReader.mjs",
+      "require": "./dist/readers/MarkdownReader.js"
+    },
+    "./readers/NotionReader": {
+      "types": "./dist/readers/NotionReader.d.mts",
+      "edge-light": "./dist/readers/NotionReader.edge-light.mjs",
+      "import": "./dist/readers/NotionReader.mjs",
+      "require": "./dist/readers/NotionReader.js"
+    },
+    "./readers/PDFReader": {
+      "types": "./dist/readers/PDFReader.d.mts",
+      "edge-light": "./dist/readers/PDFReader.edge-light.mjs",
+      "import": "./dist/readers/PDFReader.mjs",
+      "require": "./dist/readers/PDFReader.js"
+    },
+    "./readers/SimpleDirectoryReader": {
+      "types": "./dist/readers/SimpleDirectoryReader.d.mts",
+      "edge-light": "./dist/readers/SimpleDirectoryReader.edge-light.mjs",
+      "import": "./dist/readers/SimpleDirectoryReader.mjs",
+      "require": "./dist/readers/SimpleDirectoryReader.js"
+    },
+    "./readers/SimpleMongoReader": {
+      "types": "./dist/readers/SimpleMongoReader.d.mts",
+      "edge-light": "./dist/readers/SimpleMongoReader.edge-light.mjs",
+      "import": "./dist/readers/SimpleMongoReader.mjs",
+      "require": "./dist/readers/SimpleMongoReader.js"
+    },
     "./environments": {
       "types": "./dist/environments.d.mts",
       "edge-light": "./dist/environments.edge-light.mjs",
