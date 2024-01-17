@@ -11,7 +11,7 @@ export const genericFileSystem: GenericFileSystem = {
     await nodeFS.mkdir(path, options);
   },
   readFile(path, options) {
-    return nodeFS.readFile(path, options).then((buffer) => buffer.toString());
+    return nodeFS.readFile(path, options) as any;
   },
   writeFile(path, content, options) {
     return nodeFS.writeFile(path, content, options);
