@@ -4,6 +4,7 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.9.1",
+    "@aws-crypto/sha256-browser": "^5.2.0",
     "@datastax/astra-db-ts": "^0.1.2",
     "@mistralai/mistralai": "^0.0.7",
     "@notionhq/client": "^2.2.14",
@@ -50,6 +51,18 @@
       "edge-light": "./dist/index.edge-light.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./storage/FileSystem": {
+      "types": "./dist/storage/FileSystem.d.mts",
+      "edge-light": "./dist/storage/FileSystem.edge-light.mjs",
+      "import": "./dist/storage/FileSystem.mjs",
+      "require": "./dist/storage/FileSystem.js"
+    },
+    "./environments": {
+      "types": "./dist/environments.d.mts",
+      "edge-light": "./dist/environments.edge-light.mjs",
+      "import": "./dist/environments.mjs",
+      "require": "./dist/environments.js"
     },
     "./examples/*": "./examples/*"
   },

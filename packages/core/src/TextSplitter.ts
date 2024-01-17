@@ -1,7 +1,7 @@
-import { EOL } from "node:os";
 // GitHub translated
 import { globalsHelper } from "./GlobalsHelper";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
+import { EOL } from "./environments";
 
 class TextSplit {
   textChunk: string;

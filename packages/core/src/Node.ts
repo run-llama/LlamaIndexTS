@@ -1,6 +1,6 @@
 import _ from "lodash";
-import { createHash, randomUUID } from "node:crypto";
 import path from "node:path";
+import { createSHA256 } from "./environments.js";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -48,7 +48,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    *
    * Set to a UUID by default.
    */
-  id_: string = randomUUID();
+  id_: string = crypto.randomUUID();
   embedding?: number[];
 
   // Metadata fields
@@ -191,7 +191,7 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
    * @returns
    */
   generateHash() {
-    const hashFunction = createHash("sha256");
+    const hashFunction = createSHA256();
     hashFunction.update(`type=${this.getType()}`);
     hashFunction.update(
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
