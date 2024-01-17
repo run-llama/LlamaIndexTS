@@ -1,6 +1,6 @@
 import _ from "lodash";
 import path from "node:path";
-import { createSHA256 } from "./environments.js";
+import { createSHA256 } from "./environments";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
