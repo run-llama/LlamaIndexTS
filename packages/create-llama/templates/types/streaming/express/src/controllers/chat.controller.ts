@@ -62,8 +62,8 @@ export const chat = async (req: Request, res: Response) => {
     const processedStream = stream.pipeThrough(streamData.stream);
     return streamToResponse(processedStream, res, {
       headers: {
-        // MUST have the `X-Experimental-Stream-Data: 'true'` header
-        // in response so the client uses the correct parsing logic
+        // response MUST have the `X-Experimental-Stream-Data: 'true'` header
+        // so that the client uses the correct parsing logic, see
         // https://sdk.vercel.ai/docs/api-reference/stream-data#on-the-server
         "X-Experimental-Stream-Data": "true",
         "Content-Type": "text/plain; charset=utf-8",
