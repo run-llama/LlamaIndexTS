@@ -1,5 +1,5 @@
 import _ from "lodash";
-import * as path from "path";
+import path from "path";
 import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
