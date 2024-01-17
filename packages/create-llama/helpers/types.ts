@@ -23,4 +23,5 @@ export interface InstallTemplateArgs {
   communityProjectPath?: string;
   vectorDb?: TemplateVectorDB;
   externalPort?: number;
+  installDependencies?: boolean;
 }

@@ -6,8 +6,8 @@ const together = new TogetherLLM({
 });
 
 (async () => {
-  const generator = await together.chat(
-    [
+  const generator = await together.chat({
+    messages: [
       {
         role: "system",
         content: "You are an AI assistant",
@@ -17,12 +17,11 @@ const together = new TogetherLLM({
         content: "Tell me about San Francisco",
       },
     ],
-    undefined,
-    true,
-  );
+    stream: true,
+  });
   console.log("Chatting with Together AI...");
   for await (const message of generator) {
-    process.stdout.write(message);
+    process.stdout.write(message.delta);
   }
   const embedding = new TogetherEmbedding();
   const vector = await embedding.getTextEmbedding("Hello world!");

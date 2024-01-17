@@ -8,7 +8,16 @@ A query engine wraps a `Retriever` and a `ResponseSynthesizer` into a pipeline, 
 
 ```typescript
 const queryEngine = index.asQueryEngine();
-const response = await queryEngine.query("query string");
+const response = await queryEngine.query({ query: "query string" });
+```
+
+The `query` function also supports streaming, just add `stream: true` as an option:
+
+```typescript
+const stream = await queryEngine.query({ query: "query string", stream: true });
+for await (const chunk of stream) {
+  process.stdout.write(chunk.response);
+}
 ```
 
 ## Sub Question Query Engine

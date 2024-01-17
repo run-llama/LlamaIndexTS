@@ -12,11 +12,14 @@ import { Portkey } from "llamaindex";
       },
     ],
   });
-  const result = portkey.streamChat([
-    { role: "system", content: "You are a helpful assistant." },
-    { role: "user", content: "Tell me a joke." },
-  ]);
+  const result = await portkey.chat({
+    messages: [
+      { role: "system", content: "You are a helpful assistant." },
+      { role: "user", content: "Tell me a joke." },
+    ],
+    stream: true,
+  });
   for await (const res of result) {
-    process.stdout.write(res);
+    process.stdout.write(res.delta);
   }
 })();

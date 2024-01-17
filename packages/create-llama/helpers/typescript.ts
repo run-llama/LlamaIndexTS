@@ -39,6 +39,7 @@ export const installTSTemplate = async ({
   customApiPath,
   forBackend,
   vectorDb,
+  installDependencies,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -210,15 +211,17 @@ export const installTSTemplate = async ({
     JSON.stringify(packageJson, null, 2) + os.EOL,
   );
 
-  console.log("\nInstalling dependencies:");
-  for (const dependency in packageJson.dependencies)
-    console.log(`- ${cyan(dependency)}`);
+  if (installDependencies) {
+    console.log("\nInstalling dependencies:");
+    for (const dependency in packageJson.dependencies)
+      console.log(`- ${cyan(dependency)}`);
 
-  console.log("\nInstalling devDependencies:");
-  for (const dependency in packageJson.devDependencies)
-    console.log(`- ${cyan(dependency)}`);
+    console.log("\nInstalling devDependencies:");
+    for (const dependency in packageJson.devDependencies)
+      console.log(`- ${cyan(dependency)}`);
 
-  console.log();
+    console.log();
 
-  await callPackageManager(packageManager, isOnline);
+    await callPackageManager(packageManager, isOnline);
+  }
 };

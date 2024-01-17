@@ -11,7 +11,9 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
 
-  const response = await queryEngine.query("What does the example code do?");
+  const response = await queryEngine.query({
+    query: "What does the example code do?",
+  });
 
   // Output response
   console.log(response.toString());

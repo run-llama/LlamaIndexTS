@@ -1,7 +1,7 @@
-import { CallbackManager, Event } from "../../callbacks/CallbackManager";
+import { CallbackManager } from "../../callbacks/CallbackManager";
 import { OpenAIEmbedding } from "../../embeddings";
 import { globalsHelper } from "../../GlobalsHelper";
-import { ChatMessage, OpenAI } from "../../llm/LLM";
+import { LLMChatParamsBase, OpenAI } from "../../llm/LLM";
 
 export function mockLlmGeneration({
   languageModel,
@@ -13,7 +13,7 @@ export function mockLlmGeneration({
   jest
     .spyOn(languageModel, "chat")
     .mockImplementation(
-      async (messages: ChatMessage[], parentEvent?: Event) => {
+      async ({ messages, parentEvent }: LLMChatParamsBase) => {
         const text = "MOCK_TOKEN_1-MOCK_TOKEN_2";
         const event = globalsHelper.createEvent({
           parentEvent,

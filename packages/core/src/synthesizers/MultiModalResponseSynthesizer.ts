@@ -1,16 +1,14 @@
 import { MessageContentDetail } from "../ChatEngine";
-import {
-  ImageNode,
-  MetadataMode,
-  NodeWithScore,
-  splitNodesByType,
-} from "../Node";
+import { ImageNode, MetadataMode, splitNodesByType } from "../Node";
 import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { Event } from "../callbacks/CallbackManager";
 import { imageToDataUrl } from "../embeddings";
 import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
-import { BaseSynthesizer } from "./types";
+import {
+  BaseSynthesizer,
+  SynthesizeParamsNonStreaming,
+  SynthesizeParamsStreaming,
+} from "./types";
 
 export class MultiModalResponseSynthesizer implements BaseSynthesizer {
   serviceContext: ServiceContext;
@@ -27,11 +25,21 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
-  async synthesize(
-    query: string,
-    nodesWithScore: NodeWithScore[],
-    parentEvent?: Event,
-  ): Promise<Response> {
+  synthesize(
+    params: SynthesizeParamsStreaming,
+  ): Promise<AsyncIterable<Response>>;
+  synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
+  async synthesize({
+    query,
+    nodesWithScore,
+    parentEvent,
+    stream,
+  }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
+    AsyncIterable<Response> | Response
+  > {
+    if (stream) {
+      throw new Error("streaming not implemented");
+    }
     const nodes = nodesWithScore.map(({ node }) => node);
     const { imageNodes, textNodes } = splitNodesByType(nodes);
     const textChunks = textNodes.map((node) =>
@@ -54,7 +62,10 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
       { type: "text", text: textPrompt },
       ...images,
     ];
-    let response = await this.serviceContext.llm.complete(prompt, parentEvent);
-    return new Response(response.message.content, nodes);
+    let response = await this.serviceContext.llm.complete({
+      prompt,
+      parentEvent,
+    });
+    return new Response(response.text, nodes);
   }
 }
