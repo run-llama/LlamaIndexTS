@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.0.47
+
+### Patch Changes
+
+- 844029d: Add streaming support for QueryEngine (and unify streaming interface with ChatEngine)
+- 844029d: Breaking: Use parameter object for query and chat methods of ChatEngine and QueryEngine
+
 ## 0.0.46
 
 ### Patch Changes
