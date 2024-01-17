@@ -12,6 +12,7 @@ import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
+import { randomUUID } from "./environments";
 import { ChatMessage, LLM, OpenAI } from "./llm";
 import { BaseNodePostprocessor } from "./postprocessors";
 
@@ -204,7 +205,7 @@ export class DefaultContextGenerator implements ContextGenerator {
   async generate(message: string, parentEvent?: Event): Promise<Context> {
     if (!parentEvent) {
       parentEvent = {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         type: "wrapper",
         tags: ["final"],
       };
@@ -270,7 +271,7 @@ export class ContextChatEngine implements ChatEngine {
     }
 
     const parentEvent: Event = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       type: "wrapper",
       tags: ["final"],
     };
@@ -302,7 +303,7 @@ export class ContextChatEngine implements ChatEngine {
     chatHistory = chatHistory ?? this.chatHistory;
 
     const parentEvent: Event = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       type: "wrapper",
       tags: ["final"],
     };

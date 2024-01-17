@@ -1,6 +1,6 @@
 import _ from "lodash";
 import path from "node:path";
-import { createSHA256 } from "./environments";
+import { createSHA256, randomUUID } from "./environments";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -48,7 +48,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    *
    * Set to a UUID by default.
    */
-  id_: string = crypto.randomUUID();
+  id_: string = randomUUID();
   embedding?: number[];
 
   // Metadata fields

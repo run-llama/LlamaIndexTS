@@ -1,5 +1,7 @@
 import { Sha256 } from "@aws-crypto/sha256-browser";
 
+export const randomUUID = globalThis.crypto.randomUUID;
+
 export const createSHA256 = () => {
   return new Sha256();
 };
