@@ -8,35 +8,38 @@ import {
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages
  */
-export interface ChatHistory {
-  messages: ChatMessage[];
+export abstract class ChatHistory {
+  abstract get messages(): ChatMessage[];
   /**
    * Adds a message to the chat history.
    * @param message
    */
-  addMessage(message: ChatMessage): void;
+  abstract addMessage(message: ChatMessage): void;
 
   /**
    * Returns the messages that should be used as input to the LLM.
    */
-  requestMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]>;
+  abstract requestMessages(
+    transientMessages?: ChatMessage[],
+  ): Promise<ChatMessage[]>;
 
   /**
    * Resets the chat history so that it's empty.
    */
-  reset(): void;
+  abstract reset(): void;
 
   /**
    * Returns the new messages since the last call to this function (or since calling the constructor)
    */
-  newMessages(): ChatMessage[];
+  abstract newMessages(): ChatMessage[];
 }
 
-export class SimpleChatHistory implements ChatHistory {
+export class SimpleChatHistory extends ChatHistory {
   messages: ChatMessage[];
   private messagesBefore: number;
 
   constructor(init?: Partial<SimpleChatHistory>) {
+    super();
     this.messages = init?.messages ?? [];
     this.messagesBefore = this.messages.length;
   }
@@ -60,7 +63,7 @@ export class SimpleChatHistory implements ChatHistory {
   }
 }
 
-export class SummaryChatHistory implements ChatHistory {
+export class SummaryChatHistory extends ChatHistory {
   tokensToSummarize: number;
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
@@ -68,6 +71,7 @@ export class SummaryChatHistory implements ChatHistory {
   private messagesBefore: number;
 
   constructor(init?: Partial<SummaryChatHistory>) {
+    super();
     this.messages = init?.messages ?? [];
     this.messagesBefore = this.messages.length;
     this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
@@ -197,4 +201,13 @@ export class SummaryChatHistory implements ChatHistory {
     this.messagesBefore = this.messages.length;
     return newMessages;
   }
+}
+
+export function getHistory(
+  chatHistory?: ChatMessage[] | ChatHistory,
+): ChatHistory {
+  if (chatHistory instanceof ChatHistory) {
+    return chatHistory;
+  }
+  return new SimpleChatHistory({ messages: chatHistory });
 }
