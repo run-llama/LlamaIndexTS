@@ -46,9 +46,9 @@ async function main() {
     responseSynthesizer: new MultiModalResponseSynthesizer({ serviceContext }),
     retriever: index.asRetriever({ similarityTopK: 3, imageSimilarityTopK: 1 }),
   });
-  const result = await queryEngine.query(
-    "Tell me more about Vincent van Gogh's famous paintings",
-  );
+  const result = await queryEngine.query({
+    query: "Tell me more about Vincent van Gogh's famous paintings",
+  });
   console.log(result.response, "\n");
   images.forEach((image) =>
     console.log(`Image retrieved and used in inference: ${image.toString()}`),

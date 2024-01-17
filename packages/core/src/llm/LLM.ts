@@ -27,6 +27,7 @@ import {
 import { OpenAISession, getOpenAISession } from "./openai";
 import { PortkeySession, getPortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate";
+import { streamConverter } from "./utils";
 
 export type MessageType =
   | "user"
@@ -127,14 +128,6 @@ export interface LLM {
 export abstract class BaseLLM implements LLM {
   abstract metadata: LLMMetadata;
 
-  private async *chatToComplete(
-    stream: AsyncIterable<ChatResponseChunk>,
-  ): AsyncIterable<CompletionResponse> {
-    for await (const chunk of stream) {
-      yield { text: chunk.delta };
-    }
-  }
-
   complete(
     params: LLMCompletionParamsStreaming,
   ): Promise<AsyncIterable<CompletionResponse>>;
@@ -151,7 +144,11 @@ export abstract class BaseLLM implements LLM {
         parentEvent,
         stream: true,
       });
-      return this.chatToComplete(stream);
+      return streamConverter(stream, (chunk) => {
+        return {
+          text: chunk.delta,
+        };
+      });
     }
     const chatResponse = await this.chat({
       messages: [{ content: prompt, role: "user" }],
@@ -392,6 +389,7 @@ export class OpenAI extends BaseLLM {
           type: "llmPredict" as EventType,
         };
 
+    // TODO: add callback to streamConverter and use streamConverter here
     //Indices
     var idx_counter: number = 0;
     for await (const part of chunk_stream) {

@@ -28,9 +28,9 @@ async function main() {
 
     console.log("Querying index");
     const queryEngine = index.asQueryEngine();
-    const response = await queryEngine.query(
-      "Tell me about Godfrey Cheshire's rating of La Sapienza.",
-    );
+    const response = await queryEngine.query({
+      query: "Tell me about Godfrey Cheshire's rating of La Sapienza.",
+    });
     console.log(response.toString());
   } catch (e) {
     console.error(e);

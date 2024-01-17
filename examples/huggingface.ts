@@ -32,12 +32,15 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(
-    "What did the author do in college?",
-  );
+  const stream = await queryEngine.query({
+    query: "What did the author do in college?",
+    stream: true,
+  });
 
   // Output response
-  console.log(response.toString());
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.response);
+  }
 }
 
 main().catch(console.error);

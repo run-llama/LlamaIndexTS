@@ -67,7 +67,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     });
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
-    const response = await queryEngine.query(query);
+    const response = await queryEngine.query({ query });
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
     expect(streamCallbackData).toEqual([
       {
@@ -145,7 +145,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       responseSynthesizer,
     });
     const query = "What is the author's name?";
-    const response = await queryEngine.query(query);
+    const response = await queryEngine.query({ query });
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
     expect(streamCallbackData).toEqual([
       {
