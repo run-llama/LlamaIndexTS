@@ -346,7 +346,6 @@ export const askQuestions = async (
       },
       handlers,
     );
-    console.log("action", action);
     switch (action) {
       case "1":
         program.installDependencies = false;

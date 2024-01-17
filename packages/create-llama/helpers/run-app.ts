@@ -65,7 +65,6 @@ export async function runApp(
       );
     }
   } catch (e) {
-    console.log(e);
     cps.forEach((cp) => cp.kill());
     throw e;
   }
