@@ -24,4 +24,5 @@ export interface InstallTemplateArgs {
   vectorDb?: TemplateVectorDB;
   externalPort?: number;
   installDependencies?: boolean;
+  runApp?: boolean;
 }

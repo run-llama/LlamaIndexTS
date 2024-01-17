@@ -39,9 +39,9 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
     { title: "PostgreSQL", value: "pg" },
   ];
 
-  const vectodbLang = framework === "fastapi" ? "python" : "typescript";
+  const vectordbLang = framework === "fastapi" ? "python" : "typescript";
   const compPath = path.join(__dirname, "..", "templates", "components");
-  const vectordbPath = path.join(compPath, "vectordbs", vectodbLang);
+  const vectordbPath = path.join(compPath, "vectordbs", vectordbLang);
 
   const availableChoices = fs
     .readdirSync(vectordbPath)
@@ -52,6 +52,27 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   );
 
   return displayedChoices;
+};
+
+const getActionChoices = (program: QuestionArgs) => {
+  let actionChoices = [
+    {
+      title: "Just generate code (~1 sec)",
+      value: "1",
+    },
+    {
+      title: "Generate code and install dependencies (~2 min)",
+      value: "2",
+    },
+  ];
+
+  if (program.vectorDb === "none" && program.openAiKey !== "") {
+    actionChoices.push({
+      title: "Generate code, install dependencies, and run the app (~2 min)",
+      value: "3",
+    });
+  }
+  return actionChoices;
 };
 
 export const onPromptState = (state: any) => {
@@ -211,19 +232,6 @@ export const askQuestions = async (
     }
   }
 
-  if (program.installDependencies === undefined) {
-    const { installDependencies } = await prompts({
-      onState: onPromptState,
-      type: "toggle",
-      name: "installDependencies",
-      message: `Would you like to install dependencies automatically? This may take a while`,
-      initial: getPrefOrDefault("installDependencies"),
-      active: "Yes",
-      inactive: "No",
-    });
-    program.installDependencies = Boolean(installDependencies);
-  }
-
   if (!program.model) {
     if (ciInfo.isCI) {
       program.model = getPrefOrDefault("model");
@@ -323,6 +331,33 @@ export const askQuestions = async (
       });
       program.eslint = Boolean(eslint);
       preferences.eslint = Boolean(eslint);
+    }
+  }
+
+  // Ask for next creating action
+  if (program.installDependencies === undefined) {
+    const { action } = await prompts(
+      {
+        type: "select",
+        name: "action",
+        message: "How would you like to proceed?",
+        choices: getActionChoices(program),
+        initial: 1,
+      },
+      handlers,
+    );
+    console.log("action", action);
+    switch (action) {
+      case "1":
+        program.installDependencies = false;
+        break;
+      case "2":
+        program.installDependencies = true;
+        break;
+      case "3":
+        program.installDependencies = true;
+        program.runApp = true;
+        break;
     }
   }
 

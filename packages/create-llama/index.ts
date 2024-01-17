@@ -10,6 +10,7 @@ import checkForUpdate from "update-check";
 import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
+import { runApp } from "./helpers/run-app";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 import { QuestionArgs, askQuestions, onPromptState } from "./questions";
@@ -17,6 +18,8 @@ import { QuestionArgs, askQuestions, onPromptState } from "./questions";
 let projectPath: string = "";
 
 const handleSigTerm = () => process.exit(0);
+
+class RunApplicationError extends Error {}
 
 process.on("SIGINT", handleSigTerm);
 process.on("SIGTERM", handleSigTerm);
@@ -234,6 +237,30 @@ async function run(): Promise<void> {
     installDependencies: program.installDependencies,
   });
   conf.set("preferences", preferences);
+
+  if (program.runApp) {
+    try {
+      const cps = await runApp(
+        resolvedProjectPath,
+        program.frontend,
+        program.framework,
+        program.externalPort,
+      );
+
+      // Lock the process until all child processes exit
+      await Promise.all(
+        cps.map(
+          (cp) =>
+            new Promise((resolve, reject) => {
+              cp.on("exit", resolve);
+              cp.on("error", reject);
+            }),
+        ),
+      );
+    } catch (e) {
+      throw new RunApplicationError();
+    }
+  }
 }
 
 const update = checkForUpdate(packageJson).catch(() => null);
@@ -268,7 +295,9 @@ run()
   .catch(async (reason) => {
     console.log();
     console.log("Aborting installation.");
-    if (reason.command) {
+    if (reason instanceof RunApplicationError) {
+      console.log(red("Got error when running the application."), reason);
+    } else if (reason.command) {
       console.log(`  ${cyan(reason.command)} has failed.`);
     } else {
       console.log(
