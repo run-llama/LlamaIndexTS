@@ -1,7 +1,7 @@
 import nodeFS from "node:fs/promises";
 import type { GenericFileSystem } from "./FileSystem.core";
 
-export * from "./FileSystem.core.js";
+export * from "./FileSystem.core";
 
 export const genericFileSystem: GenericFileSystem = {
   access(path) {
