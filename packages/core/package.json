@@ -35,7 +35,7 @@
     "@types/node": "^18.19.6",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.10.9",
-    "bunchee": "^4.3.3",
+    "bunchee": "^4.4.0",
     "node-stdlib-browser": "^1.2.0",
     "typescript": "^5.3.3"
   },
@@ -47,6 +47,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
+      "edge-light": "./dist/index.edge-light.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
