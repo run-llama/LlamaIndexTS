@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "esnext",
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
