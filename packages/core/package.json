@@ -206,6 +206,6 @@
     "test": "jest",
     "build": "bunchee",
     "dev": "bunchee -w",
-    "circular-checl": "madge --circular ./src/*.ts"
+    "circular-check": "madge --circular ./src/*.ts"
   }
 }
