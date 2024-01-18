@@ -83,6 +83,11 @@ export class SummaryChatHistory extends ChatHistory {
     }
     this.tokensToSummarize =
       this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
+    if (this.tokensToSummarize < this.llm.metadata.contextWindow * 0.25) {
+      throw new Error(
+        "The number of tokens that trigger the summarize process are less than 25% of the context window. Try lowering maxTokens or use a model with a larger context window.",
+      );
+    }
   }
 
   private async summarize(): Promise<ChatMessage> {
