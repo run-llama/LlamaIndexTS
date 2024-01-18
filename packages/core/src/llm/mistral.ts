@@ -4,14 +4,14 @@ import {
   EventType,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
+import { BaseLLM } from "./base";
 import {
-  BaseLLM,
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
-} from "./LLM";
+} from "./types";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },

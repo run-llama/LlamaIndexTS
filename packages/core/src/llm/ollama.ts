@@ -12,7 +12,7 @@ import {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
-} from "./LLM";
+} from "./types";
 
 const messageAccessor = (data: any): ChatResponseChunk => {
   return {
