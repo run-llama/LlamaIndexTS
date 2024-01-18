@@ -35,7 +35,7 @@ export const chat = async (req: Request, res: Response) => {
     }
 
     const llm = new OpenAI({
-      model: process.env.MODEL || "gpt-3.5-turbo",
+      model: (process.env.MODEL as any) || "gpt-3.5-turbo",
     });
 
     const chatEngine = await createChatEngine(llm);
@@ -54,9 +54,24 @@ export const chat = async (req: Request, res: Response) => {
     });
 
     // Return a stream, which can be consumed by the Vercel/AI client
-    const stream = LlamaIndexStream(response);
+    const { stream, data: streamData } = LlamaIndexStream(response, {
+      parserOptions: {
+        image_url: data?.imageUrl,
+      },
+    });
 
-    streamToResponse(stream, res);
+    // Pipe LlamaIndexStream to response
+    const processedStream = stream.pipeThrough(streamData.stream);
+    return streamToResponse(processedStream, res, {
+      headers: {
+        // response MUST have the `X-Experimental-Stream-Data: 'true'` header
+        // so that the client uses the correct parsing logic, see
+        // https://sdk.vercel.ai/docs/api-reference/stream-data#on-the-server
+        "X-Experimental-Stream-Data": "true",
+        "Content-Type": "text/plain; charset=utf-8",
+        "Access-Control-Expose-Headers": "X-Experimental-Stream-Data",
+      },
+    });
   } catch (error) {
     console.error("[LlamaIndex]", error);
     return res.status(500).json({
