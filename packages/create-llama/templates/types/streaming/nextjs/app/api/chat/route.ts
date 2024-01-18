@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     // Calling LlamaIndex's ChatEngine to get a streamed response
     const response = await chatEngine.chat({
       message: userMessageContent,
-      messages,
+      chatHistory: messages,
       stream: true,
     });
 

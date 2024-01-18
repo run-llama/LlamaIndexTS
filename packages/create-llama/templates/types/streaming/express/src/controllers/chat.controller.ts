@@ -49,7 +49,7 @@ export const chat = async (req: Request, res: Response) => {
     // Calling LlamaIndex's ChatEngine to get a streamed response
     const response = await chatEngine.chat({
       message: userMessageContent,
-      messages,
+      chatHistory: messages,
       stream: true,
     });
 
