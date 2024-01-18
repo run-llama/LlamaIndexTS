@@ -1,11 +1,11 @@
 import _ from "lodash";
-import path from "path";
 import { BaseNode } from "../../Node";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
 } from "../../embeddings";
+import { dirname } from "../../environments";
 import { GenericFileSystem, exists, genericFileSystem } from "../FileSystem";
 import { DEFAULT_PERSIST_DIR } from "../constants";
 import {
@@ -148,7 +148,7 @@ export class SimpleVectorStore implements VectorStore {
     fs?: GenericFileSystem,
   ): Promise<void> {
     fs = fs || this.fs;
-    let dirPath = path.dirname(persistPath);
+    let dirPath = dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
@@ -162,7 +162,7 @@ export class SimpleVectorStore implements VectorStore {
   ): Promise<SimpleVectorStore> {
     fs = fs || genericFileSystem;
 
-    let dirPath = path.dirname(persistPath);
+    let dirPath = dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });
     }

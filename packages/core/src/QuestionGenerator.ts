@@ -9,7 +9,8 @@ import {
   defaultSubQuestionPrompt,
 } from "./Prompt";
 import { ToolMetadata } from "./Tool";
-import { LLM, OpenAI } from "./llm/LLM";
+import { LLM } from "./llm/LLM";
+import { OpenAI } from "./llm/openai";
 
 export interface SubQuestion {
   subQuestion: string;

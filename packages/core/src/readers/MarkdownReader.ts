@@ -1,5 +1,5 @@
 import { Document } from "../Node";
-import { genericFileSystem, GenericFileSystem } from "../storage";
+import { GenericFileSystem, genericFileSystem } from "../storage/FileSystem";
 import { BaseReader } from "./base";
 
 type MarkdownTuple = [string | null, string];

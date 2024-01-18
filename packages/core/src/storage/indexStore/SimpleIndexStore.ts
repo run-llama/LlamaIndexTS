@@ -1,4 +1,4 @@
-import path from "path";
+import { join } from "../../environments";
 import { GenericFileSystem, genericFileSystem } from "../FileSystem";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
@@ -21,10 +21,7 @@ export class SimpleIndexStore extends KVIndexStore {
     persistDir: string = DEFAULT_PERSIST_DIR,
     fs: GenericFileSystem = genericFileSystem,
   ): Promise<SimpleIndexStore> {
-    const persistPath = path.join(
-      persistDir,
-      DEFAULT_INDEX_STORE_PERSIST_FILENAME,
-    );
+    const persistPath = join(persistDir, DEFAULT_INDEX_STORE_PERSIST_FILENAME);
     return this.fromPersistPath(persistPath, fs);
   }
 

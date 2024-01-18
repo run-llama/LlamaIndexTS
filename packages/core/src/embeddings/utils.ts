@@ -1,8 +1,18 @@
 import _ from "lodash";
-import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
 import { ImageType } from "../Node";
-import { genericFileSystem, VectorStoreQueryMode } from "../storage";
-import { SimilarityType } from "./types";
+import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
+import { genericFileSystem } from "../storage/FileSystem";
+import { VectorStoreQueryMode } from "../storage/vectorStore/types";
+
+/**
+ * Similarity type
+ * Default is cosine similarity. Dot product and negative Euclidean distance are also supported.
+ */
+export enum SimilarityType {
+  DEFAULT = "cosine",
+  DOT_PRODUCT = "dot_product",
+  EUCLIDEAN = "euclidean",
+}
 
 /**
  * The similarity between two embeddings.
@@ -186,7 +196,7 @@ export function getTopKMMREmbeddings(
 }
 
 async function blobToDataUrl(input: Blob) {
-  const { fileTypeFromBuffer } = await import("file-type");
+  const { fileTypeFromBuffer } = await import("../environments");
   const buffer = Buffer.from(await input.arrayBuffer());
   const type = await fileTypeFromBuffer(buffer);
   if (!type) {

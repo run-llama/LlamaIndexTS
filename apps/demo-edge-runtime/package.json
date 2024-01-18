@@ -1,0 +1,32 @@
+{
+  "name": "demo-edge-runtime",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate": "node app/api/chat/engine/generate.mjs"
+  },
+  "dependencies": {
+    "ai": "^2.2.27",
+    "dotenv": "^16.3.1",
+    "llamaindex": "0.0.46",
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "supports-color": "^9.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.3",
+    "@types/react": "^18.2.42",
+    "@types/react-dom": "^18.2.17",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.55.0",
+    "eslint-config-next": "^14.0.3",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.2",
+    "cross-env": "^7.0.3"
+  }
+}

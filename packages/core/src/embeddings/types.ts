@@ -1,14 +1,4 @@
-import { similarity } from "./utils";
-
-/**
- * Similarity type
- * Default is cosine similarity. Dot product and negative Euclidean distance are also supported.
- */
-export enum SimilarityType {
-  DEFAULT = "cosine",
-  DOT_PRODUCT = "dot_product",
-  EUCLIDEAN = "euclidean",
-}
+import { similarity, SimilarityType } from "./utils";
 
 export abstract class BaseEmbedding {
   similarity(

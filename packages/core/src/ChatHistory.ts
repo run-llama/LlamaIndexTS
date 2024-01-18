@@ -1,9 +1,10 @@
-import { ChatMessage, LLM, MessageType, OpenAI } from "./llm/LLM";
 import {
+  SummaryPrompt,
   defaultSummaryPrompt,
   messagesToHistoryStr,
-  SummaryPrompt,
 } from "./Prompt";
+import { ChatMessage, LLM, MessageType } from "./llm/LLM";
+import { OpenAI } from "./llm/openai";
 
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages

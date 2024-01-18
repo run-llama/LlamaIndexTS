@@ -13,7 +13,8 @@ import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
 import { randomUUID } from "./environments";
-import { ChatMessage, LLM, OpenAI } from "./llm";
+import { ChatMessage, LLM } from "./llm";
+import { OpenAI } from "./llm/openai";
 import { BaseNodePostprocessor } from "./postprocessors";
 
 /**

@@ -1,4 +1,4 @@
-import path from "path";
+import { join } from "../environments";
 import { GenericFileSystem, genericFileSystem } from "./FileSystem";
 import { DEFAULT_IMAGE_VECTOR_NAMESPACE, DEFAULT_NAMESPACE } from "./constants";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
@@ -54,7 +54,7 @@ export async function storageContextFromDefaults({
       vectorStore || (await SimpleVectorStore.fromPersistDir(persistDir, fs));
     imageVectorStore = storeImages
       ? await SimpleVectorStore.fromPersistDir(
-          path.join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
+          join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
           fs,
         )
       : imageVectorStore;

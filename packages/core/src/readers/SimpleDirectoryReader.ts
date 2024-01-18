@@ -69,7 +69,7 @@ export class SimpleDirectoryReader implements BaseReader {
 
   async loadData({
     directoryPath,
-    fs = genericFileSystem as CompleteFileSystem,
+    fs = genericFileSystem,
     defaultReader = new TextFileReader(),
     fileExtToReader = FILE_EXT_TO_READER,
   }: SimpleDirectoryReaderLoadDataProps): Promise<Document[]> {

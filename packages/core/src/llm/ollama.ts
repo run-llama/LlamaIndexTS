@@ -1,6 +1,6 @@
-import { ok } from "node:assert";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { BaseEmbedding } from "../embeddings";
+import { assertExists } from "../utils";
 import {
   ChatMessage,
   ChatResponse,
@@ -101,8 +101,8 @@ export class Ollama extends BaseEmbedding implements LLM {
       };
     } else {
       const stream = response.body;
-      ok(stream, "stream is null");
-      ok(stream instanceof ReadableStream, "stream is not readable");
+      assertExists(stream, "stream is null");
+      assertExists(stream instanceof ReadableStream, "stream is not readable");
       return this.streamChat(stream, messageAccessor, parentEvent);
     }
   }
@@ -172,8 +172,8 @@ export class Ollama extends BaseEmbedding implements LLM {
       };
     } else {
       const stream = response.body;
-      ok(stream, "stream is null");
-      ok(stream instanceof ReadableStream, "stream is not readable");
+      assertExists(stream, "stream is null");
+      assertExists(stream instanceof ReadableStream, "stream is not readable");
       return this.streamChat(stream, completionAccessor, parentEvent);
     }
   }

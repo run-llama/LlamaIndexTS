@@ -8,11 +8,10 @@ import {
 } from "../../ServiceContext";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
-  BaseDocumentStore,
-  RefDocInfo,
   StorageContext,
   storageContextFromDefaults,
-} from "../../storage";
+} from "../../storage/StorageContext";
+import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
 import {
   BaseSynthesizer,
   CompactAndRefine,

@@ -1,5 +1,4 @@
 import _ from "lodash";
-import path from "node:path";
 import { createSHA256, randomUUID } from "./environments";
 
 export enum NodeRelationship {
@@ -321,9 +320,12 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
   }
 
   getUrl(): URL {
-    // id_ stores the relative path, convert it to the URL of the file
-    const absPath = path.resolve(this.id_);
-    return new URL(`file://${absPath}`);
+    if (typeof this.image === "string") {
+      return new URL(this.image);
+    } else if (this.image instanceof Blob) {
+      return new URL(URL.createObjectURL(this.image));
+    }
+    throw new Error("Invalid image type");
   }
 }
 

@@ -29,5 +29,22 @@ export * from "./readers/PDFReader";
 export * from "./readers/SimpleDirectoryReader";
 export * from "./readers/SimpleMongoReader";
 export * from "./readers/base";
-export * from "./storage";
+// #region storage
+export * from "./storage/FileSystem";
+export * from "./storage/StorageContext";
+export * from "./storage/constants";
+export { SimpleDocumentStore } from "./storage/docStore/SimpleDocumentStore";
+export * from "./storage/docStore/types";
+export { SimpleIndexStore } from "./storage/indexStore/SimpleIndexStore";
+export * from "./storage/indexStore/types";
+export { SimpleKVStore } from "./storage/kvStore/SimpleKVStore";
+export * from "./storage/kvStore/types";
+export { AstraDBVectorStore } from "./storage/vectorStore/AstraDBVectorStore";
+export { ChromaVectorStore } from "./storage/vectorStore/ChromaVectorStore";
+export { MongoDBAtlasVectorSearch } from "./storage/vectorStore/MongoDBAtlasVectorStore";
+export { PGVectorStore } from "./storage/vectorStore/PGVectorStore";
+export { PineconeVectorStore } from "./storage/vectorStore/PineconeVectorStore";
+export { SimpleVectorStore } from "./storage/vectorStore/SimpleVectorStore";
+export * from "./storage/vectorStore/types";
+// #endregion
 export * from "./synthesizers";

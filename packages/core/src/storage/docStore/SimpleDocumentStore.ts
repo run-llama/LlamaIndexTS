@@ -1,5 +1,5 @@
 import _ from "lodash";
-import path from "path";
+import { join } from "../../environments";
 import { GenericFileSystem, genericFileSystem } from "../FileSystem";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
@@ -27,10 +27,7 @@ export class SimpleDocumentStore extends KVDocumentStore {
     namespace?: string,
     fsModule?: GenericFileSystem,
   ): Promise<SimpleDocumentStore> {
-    const persistPath = path.join(
-      persistDir,
-      DEFAULT_DOC_STORE_PERSIST_FILENAME,
-    );
+    const persistPath = join(persistDir, DEFAULT_DOC_STORE_PERSIST_FILENAME);
     return await SimpleDocumentStore.fromPersistPath(
       persistPath,
       namespace,
@@ -49,7 +46,7 @@ export class SimpleDocumentStore extends KVDocumentStore {
   }
 
   async persist(
-    persistPath: string = path.join(
+    persistPath: string = join(
       DEFAULT_PERSIST_DIR,
       DEFAULT_DOC_STORE_PERSIST_FILENAME,
     ),

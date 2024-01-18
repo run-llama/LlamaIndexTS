@@ -1,5 +1,5 @@
 import _ from "lodash";
-import path from "path";
+import { dirname } from "../../environments";
 import { GenericFileSystem, exists, genericFileSystem } from "../FileSystem";
 import { DEFAULT_COLLECTION } from "../constants";
 import { BaseKVStore } from "./types";
@@ -63,7 +63,7 @@ export class SimpleKVStore extends BaseKVStore {
   async persist(persistPath: string, fs?: GenericFileSystem): Promise<void> {
     fs = fs || genericFileSystem;
     // TODO: decide on a way to polyfill path
-    let dirPath = path.dirname(persistPath);
+    let dirPath = dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
@@ -75,7 +75,7 @@ export class SimpleKVStore extends BaseKVStore {
     fs?: GenericFileSystem,
   ): Promise<SimpleKVStore> {
     fs = fs || genericFileSystem;
-    let dirPath = path.dirname(persistPath);
+    let dirPath = dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }

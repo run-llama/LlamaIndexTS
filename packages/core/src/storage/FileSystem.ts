@@ -1,9 +1,15 @@
 import nodeFS from "node:fs/promises";
-import type { GenericFileSystem } from "./FileSystem.core";
+import { CompleteFileSystem } from "./FileSystem.core";
 
 export * from "./FileSystem.core";
 
-export const genericFileSystem: GenericFileSystem = {
+export const genericFileSystem: CompleteFileSystem = {
+  readdir(path) {
+    return nodeFS.readdir(path);
+  },
+  stat(path) {
+    return nodeFS.stat(path);
+  },
   access(path) {
     return nodeFS.access(path);
   },

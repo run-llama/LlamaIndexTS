@@ -19,11 +19,11 @@ import {
 } from "../../embeddings";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
-  BaseIndexStore,
   StorageContext,
-  VectorStore,
   storageContextFromDefaults,
-} from "../../storage";
+} from "../../storage/StorageContext";
+import { BaseIndexStore } from "../../storage/indexStore/types";
+import { VectorStore } from "../../storage/vectorStore/types";
 import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
