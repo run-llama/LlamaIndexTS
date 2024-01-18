@@ -4,7 +4,7 @@ import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
 
-const getLastMessageContent = (
+const convertMessageContent = (
   textMessage: string,
   imageUrl: string | undefined,
 ): MessageContent => {
@@ -26,8 +26,8 @@ const getLastMessageContent = (
 export const chat = async (req: Request, res: Response) => {
   try {
     const { messages, data }: { messages: ChatMessage[]; data: any } = req.body;
-    const lastMessage = messages.pop();
-    if (!messages || !lastMessage || lastMessage.role !== "user") {
+    const userMessage = messages.pop();
+    if (!messages || !userMessage || userMessage.role !== "user") {
       return res.status(400).json({
         error:
           "messages are required in the request body and the last message must be from the user",
@@ -40,18 +40,20 @@ export const chat = async (req: Request, res: Response) => {
 
     const chatEngine = await createChatEngine(llm);
 
-    const lastMessageContent = getLastMessageContent(
-      lastMessage.content,
+    // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
+    const userMessageContent = convertMessageContent(
+      userMessage.content,
       data?.imageUrl,
     );
 
-    const response = await chatEngine.chat(
-      lastMessageContent as MessageContent,
-      messages,
-      true,
-    );
+    // Calling LlamaIndex's ChatEngine to get a streamed response
+    const response = await chatEngine.chat({
+      message: userMessageContent,
+      chatHistory: messages,
+      stream: true,
+    });
 
-    // Transform the response into a readable stream
+    // Return a stream, which can be consumed by the Vercel/AI client
     const stream = LlamaIndexStream(response);
 
     streamToResponse(stream, res);
