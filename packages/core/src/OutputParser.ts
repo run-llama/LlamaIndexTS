@@ -1,4 +1,7 @@
-import { SubQuestion } from "./QuestionGenerator";
+export interface SubQuestion {
+  subQuestion: string;
+  toolName: string;
+}
 
 /**
  * An OutputParser is used to extract structured data from the raw output of the LLM.

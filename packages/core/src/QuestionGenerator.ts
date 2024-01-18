@@ -1,8 +1,9 @@
 import {
   BaseOutputParser,
   StructuredOutput,
-  SubQuestionOutputParser,
-} from "./OutputParser";
+  SubQuestion,
+  SubQuestionOutputParser
+} from './OutputParser'
 import {
   SubQuestionPrompt,
   buildToolsText,
@@ -11,11 +12,6 @@ import {
 import { ToolMetadata } from "./Tool";
 import { LLM } from "./llm/LLM";
 import { OpenAI } from "./llm/openai";
-
-export interface SubQuestion {
-  subQuestion: string;
-  toolName: string;
-}
 
 /**
  * QuestionGenerators generate new questions for the LLM using tools and a user query.

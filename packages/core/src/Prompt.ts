@@ -1,6 +1,6 @@
 import { ChatMessage } from "./llm/LLM";
-import { SubQuestion } from "./QuestionGenerator";
 import { ToolMetadata } from "./Tool";
+import { SubQuestion } from './OutputParser'
 
 /**
  * A SimplePrompt is a function that takes a dictionary of inputs and returns a string.

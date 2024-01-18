@@ -2,7 +2,6 @@ import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
   LLMQuestionGenerator,
-  SubQuestion,
 } from "./QuestionGenerator";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
@@ -16,6 +15,7 @@ import {
   CompactAndRefine,
   ResponseSynthesizer,
 } from "./synthesizers";
+import { SubQuestion } from './OutputParser'
 
 /**
  * A query engine is a question answerer that can use one or more steps.

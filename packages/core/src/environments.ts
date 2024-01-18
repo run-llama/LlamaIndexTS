@@ -9,6 +9,9 @@ export const createSHA256 = () => {
   return createHash("sha256");
 };
 
-export { fileTypeFromBuffer } from "file-type";
+export async function fileTypeFromBuffer(buffer: Buffer) {
+  const { fileTypeFromBuffer } = await import("file-type")
+  return fileTypeFromBuffer(buffer);
+}
 
 export { EOL };

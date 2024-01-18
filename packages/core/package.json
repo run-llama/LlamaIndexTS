@@ -37,6 +37,7 @@
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.10.9",
     "bunchee": "^4.4.0",
+    "madge": "^6.1.0",
     "node-stdlib-browser": "^1.2.0",
     "typescript": "^5.3.3"
   },
@@ -212,6 +213,7 @@
     "lint": "eslint .",
     "test": "jest",
     "build": "bunchee",
-    "dev": "bunchee -w"
+    "dev": "bunchee -w",
+    "check:circular": "madge --circular ./src/index.ts"
   }
 }
