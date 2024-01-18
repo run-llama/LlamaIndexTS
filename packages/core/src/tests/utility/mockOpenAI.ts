@@ -1,7 +1,8 @@
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { OpenAIEmbedding } from "../../embeddings";
 import { globalsHelper } from "../../GlobalsHelper";
-import { LLMChatParamsBase, OpenAI } from "../../llm/LLM";
+import { OpenAI } from "../../llm/LLM";
+import { LLMChatParamsBase } from "../../llm/types";
 
 export function mockLlmGeneration({
   languageModel,

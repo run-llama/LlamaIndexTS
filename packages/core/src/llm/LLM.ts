@@ -24,146 +24,19 @@ import {
   getAzureModel,
   shouldUseAzure,
 } from "./azure";
+import { BaseLLM } from "./base";
 import { OpenAISession, getOpenAISession } from "./openai";
 import { PortkeySession, getPortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate";
-import { streamConverter } from "./utils";
-
-export type MessageType =
-  | "user"
-  | "assistant"
-  | "system"
-  | "generic"
-  | "function"
-  | "memory";
-
-export interface ChatMessage {
-  content: any;
-  role: MessageType;
-}
-
-export interface ChatResponse {
-  message: ChatMessage;
-  raw?: Record<string, any>;
-}
-
-export interface ChatResponseChunk {
-  delta: string;
-}
-
-export interface CompletionResponse {
-  text: string;
-  raw?: Record<string, any>;
-}
-
-export interface LLMMetadata {
-  model: string;
-  temperature: number;
-  topP: number;
-  maxTokens?: number;
-  contextWindow: number;
-  tokenizer: Tokenizers | undefined;
-}
-
-export interface LLMChatParamsBase {
-  messages: ChatMessage[];
-  parentEvent?: Event;
-  extraParams?: Record<string, any>;
-}
-
-export interface LLMChatParamsStreaming extends LLMChatParamsBase {
-  stream: true;
-}
-
-export interface LLMChatParamsNonStreaming extends LLMChatParamsBase {
-  stream?: false | null;
-}
-
-export interface LLMCompletionParamsBase {
-  prompt: any;
-  parentEvent?: Event;
-}
-
-export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {
-  stream: true;
-}
-
-export interface LLMCompletionParamsNonStreaming
-  extends LLMCompletionParamsBase {
-  stream?: false | null;
-}
-
-/**
- * Unified language model interface
- */
-export interface LLM {
-  metadata: LLMMetadata;
-  /**
-   * Get a chat response from the LLM
-   *
-   * @param params
-   */
-  chat(
-    params: LLMChatParamsStreaming,
-  ): Promise<AsyncIterable<ChatResponseChunk>>;
-  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-
-  /**
-   * Get a prompt completion from the LLM
-   * @param params
-   */
-  complete(
-    params: LLMCompletionParamsStreaming,
-  ): Promise<AsyncIterable<CompletionResponse>>;
-  complete(
-    params: LLMCompletionParamsNonStreaming,
-  ): Promise<CompletionResponse>;
-
-  /**
-   * Calculates the number of tokens needed for the given chat messages
-   */
-  tokens(messages: ChatMessage[]): number;
-}
-
-export abstract class BaseLLM implements LLM {
-  abstract metadata: LLMMetadata;
-
-  complete(
-    params: LLMCompletionParamsStreaming,
-  ): Promise<AsyncIterable<CompletionResponse>>;
-  complete(
-    params: LLMCompletionParamsNonStreaming,
-  ): Promise<CompletionResponse>;
-  async complete(
-    params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
-  ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
-    const { prompt, parentEvent, stream } = params;
-    if (stream) {
-      const stream = await this.chat({
-        messages: [{ content: prompt, role: "user" }],
-        parentEvent,
-        stream: true,
-      });
-      return streamConverter(stream, (chunk) => {
-        return {
-          text: chunk.delta,
-        };
-      });
-    }
-    const chatResponse = await this.chat({
-      messages: [{ content: prompt, role: "user" }],
-      parentEvent,
-    });
-    return { text: chatResponse.message.content as string };
-  }
-
-  abstract chat(
-    params: LLMChatParamsStreaming,
-  ): Promise<AsyncIterable<ChatResponseChunk>>;
-  abstract chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-
-  abstract tokens(messages: ChatMessage[]): number;
-}
+import {
+  ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
+  LLMChatParamsNonStreaming,
+  LLMChatParamsStreaming,
+  LLMMetadata,
+  MessageType,
+} from "./types";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },

@@ -1,4 +1,5 @@
-import { ChatMessage, LLM, MessageType, OpenAI } from "./llm/LLM";
+import { OpenAI } from "./llm/LLM";
+import { ChatMessage, LLM, MessageType } from "./llm/types";
 import {
   defaultSummaryPrompt,
   messagesToHistoryStr,
