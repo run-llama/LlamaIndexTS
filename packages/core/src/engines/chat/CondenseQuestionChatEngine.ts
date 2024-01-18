@@ -11,12 +11,11 @@ import {
   serviceContextFromDefaults,
 } from "../../ServiceContext";
 import { ChatMessage, LLM } from "../../llm";
-import { streamReducer } from "../../llm/utils";
+import { extractText, streamReducer } from "../../llm/utils";
 import {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
-  extractText,
 } from "./types";
 
 /**

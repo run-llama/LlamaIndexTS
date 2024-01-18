@@ -5,7 +5,8 @@ import { Response } from "../../Response";
 import { BaseRetriever } from "../../Retriever";
 import { Event } from "../../callbacks/CallbackManager";
 import { ChatMessage, ChatResponseChunk, LLM, OpenAI } from "../../llm";
-import { streamConverter, streamReducer } from "../../llm/utils";
+import { MessageContent } from "../../llm/types";
+import { extractText, streamConverter, streamReducer } from "../../llm/utils";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import { DefaultContextGenerator } from "./DefaultContextGenerator";
 import {
@@ -13,8 +14,6 @@ import {
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
   ContextGenerator,
-  MessageContent,
-  extractText,
 } from "./types";
 
 /**

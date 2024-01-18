@@ -2,7 +2,7 @@ import { ImageNode, MetadataMode, splitNodesByType } from "../Node";
 import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { imageToDataUrl } from "../embeddings";
-import { MessageContentDetail } from "../engines/chat/types";
+import { MessageContentDetail } from "../llm/types";
 import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
 import {
   BaseSynthesizer,

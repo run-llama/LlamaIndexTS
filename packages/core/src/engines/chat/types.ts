@@ -3,6 +3,7 @@ import { NodeWithScore } from "../../Node";
 import { Response } from "../../Response";
 import { Event } from "../../callbacks/CallbackManager";
 import { ChatMessage } from "../../llm";
+import { MessageContent } from "../../llm/types";
 
 /**
  * Represents the base parameters for ChatEngine.
@@ -50,33 +51,4 @@ export interface Context {
  */
 export interface ContextGenerator {
   generate(message: string, parentEvent?: Event): Promise<Context>;
-}
-
-export interface MessageContentDetail {
-  type: "text" | "image_url";
-  text?: string;
-  image_url?: { url: string };
-}
-
-/**
- * Extended type for the content of a message that allows for multi-modal messages.
- */
-export type MessageContent = string | MessageContentDetail[];
-
-/**
- * Extracts just the text from a multi-modal message or the message itself if it's just text.
- *
- * @param message The message to extract text from.
- * @returns The extracted text
- */
-export function extractText(message: MessageContent): string {
-  if (Array.isArray(message)) {
-    // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
-    // so we can pass them to the context generator
-    return (message as MessageContentDetail[])
-      .filter((c) => c.type === "text")
-      .map((c) => c.text)
-      .join("\n\n");
-  }
-  return message;
 }

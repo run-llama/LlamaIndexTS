@@ -42,6 +42,7 @@ export type MessageType =
   | "memory";
 
 export interface ChatMessage {
+  // TODO: use MessageContent
   content: any;
   role: MessageType;
 }
@@ -96,3 +97,14 @@ export interface LLMCompletionParamsNonStreaming
   extends LLMCompletionParamsBase {
   stream?: false | null;
 }
+
+export interface MessageContentDetail {
+  type: "text" | "image_url";
+  text?: string;
+  image_url?: { url: string };
+}
+
+/**
+ * Extended type for the content of a message that allows for multi-modal messages.
+ */
+export type MessageContent = string | MessageContentDetail[];
