@@ -7,16 +7,20 @@ import {
 import { Response } from "llamaindex";
 
 function createParser(res: AsyncIterable<Response>) {
+  const it = res[Symbol.asyncIterator]();
   const trimStartOfStream = trimStartOfStreamHelper();
   return new ReadableStream<string>({
     async pull(controller): Promise<void> {
-      for await (const message of res) {
-        const text = trimStartOfStream(message.response ?? "");
-        if (text) {
-          controller.enqueue(text);
-        }
+      const { value, done } = await it.next();
+      if (done) {
+        controller.close();
+        return;
       }
-      controller.close();
+
+      const text = trimStartOfStream(value.response ?? "");
+      if (text) {
+        controller.enqueue(text);
+      }
     },
   });
 }
