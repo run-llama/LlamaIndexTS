@@ -39,9 +39,6 @@ yarn-error.log*
 dist/
 lib/
 
-# vs code
-.vscode/launch.json
-
 .cache
 test-results/
 playwright-report/
