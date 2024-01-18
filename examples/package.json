@@ -1,7 +1,6 @@
 {
   "version": "0.0.3",
   "private": true,
-  "type": "module",
   "name": "examples",
   "dependencies": {
     "@datastax/astra-db-ts": "^0.1.2",
