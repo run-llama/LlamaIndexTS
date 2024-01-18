@@ -1,4 +1,3 @@
-export * from "./ChatEngine";
 export * from "./ChatHistory";
 export * from "./GlobalsHelper";
 export * from "./Node";
@@ -15,6 +14,7 @@ export * from "./Tool";
 export * from "./callbacks/CallbackManager";
 export * from "./constants";
 export * from "./embeddings";
+export * from "./engines/chat";
 export * from "./indices";
 export * from "./llm";
 export * from "./nodeParsers";
