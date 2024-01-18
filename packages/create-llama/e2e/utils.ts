@@ -73,6 +73,7 @@ export function runCreateLlama(
   templateUI: string,
   appType: AppType,
   externalPort: number,
+  postInstallAction: string,
 ) {
   const createLlama = path.join(__dirname, "..", "dist", "index.js");
 
@@ -104,7 +105,8 @@ export function runCreateLlama(
     "--use-npm",
     "--external-port",
     externalPort,
-    "--install-dependencies",
+    "--post-install-action",
+    postInstallAction,
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
   execSync(command, {

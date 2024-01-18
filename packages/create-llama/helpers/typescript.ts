@@ -5,6 +5,7 @@ import { bold, cyan } from "picocolors";
 import { version } from "../../core/package.json";
 import { copy } from "../helpers/copy";
 import { callPackageManager } from "../helpers/install";
+import { PackageManager } from "./get-pkg-manager";
 import { InstallTemplateArgs } from "./types";
 
 const rename = (name: string) => {
@@ -23,6 +24,35 @@ const rename = (name: string) => {
     }
   }
 };
+
+export const installTSDependencies = async (
+  root: string,
+  packageManager: PackageManager,
+  isOnline: boolean,
+): Promise<void> => {
+  process.chdir(root);
+
+  const packageJsonFile = path.join(root, "package.json");
+  const packageJson: any = JSON.parse(
+    await fs.readFile(packageJsonFile, "utf8"),
+  );
+
+  console.log("\nInstalling dependencies:");
+  for (const dependency in packageJson.dependencies)
+    console.log(`- ${cyan(dependency)}`);
+
+  console.log("\nInstalling devDependencies:");
+  for (const dependency in packageJson.devDependencies)
+    console.log(`- ${cyan(dependency)}`);
+
+  console.log();
+
+  await callPackageManager(packageManager, isOnline).catch((error) => {
+    console.error("Failed to install TS dependencies. Exiting...");
+    process.exit(1);
+  });
+};
+
 /**
  * Install a LlamaIndex internal template to a given `root` directory.
  */
@@ -30,7 +60,6 @@ export const installTSTemplate = async ({
   appName,
   root,
   packageManager,
-  isOnline,
   template,
   framework,
   engine,
@@ -39,7 +68,7 @@ export const installTSTemplate = async ({
   customApiPath,
   forBackend,
   vectorDb,
-  installDependencies,
+  postInstallAction,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -211,17 +240,7 @@ export const installTSTemplate = async ({
     JSON.stringify(packageJson, null, 2) + os.EOL,
   );
 
-  if (installDependencies) {
-    console.log("\nInstalling dependencies:");
-    for (const dependency in packageJson.dependencies)
-      console.log(`- ${cyan(dependency)}`);
-
-    console.log("\nInstalling devDependencies:");
-    for (const dependency in packageJson.devDependencies)
-      console.log(`- ${cyan(dependency)}`);
-
-    console.log();
-
-    await callPackageManager(packageManager, isOnline);
+  if (postInstallAction !== "none") {
+    await installTSDependencies(root, packageManager, true);
   }
 };

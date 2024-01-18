@@ -19,8 +19,6 @@ let projectPath: string = "";
 
 const handleSigTerm = () => process.exit(0);
 
-class RunApplicationError extends Error {}
-
 process.on("SIGINT", handleSigTerm);
 process.on("SIGTERM", handleSigTerm);
 
@@ -123,10 +121,10 @@ Select external port.
 `,
   )
   .option(
-    "--install-dependencies",
+    "--post-install-action <action>",
     `
 
-Whether install dependencies (backend/frontend) automatically or not.
+Choose an action after installation. For example, runApp or dependencies. Let the default option be to just generate the app.
 `,
   )
   .allowUnknownOption()
@@ -234,32 +232,18 @@ async function run(): Promise<void> {
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
-    installDependencies: program.installDependencies,
+    postInstallAction: program.postInstallAction,
   });
   conf.set("preferences", preferences);
 
-  if (program.runApp) {
-    try {
-      const cps = await runApp(
-        resolvedProjectPath,
-        program.frontend,
-        program.framework,
-        program.externalPort,
-      );
-
-      // Lock the process until all child processes exit
-      await Promise.all(
-        cps.map(
-          (cp) =>
-            new Promise((resolve, reject) => {
-              cp.on("exit", resolve);
-              cp.on("error", reject);
-            }),
-        ),
-      );
-    } catch (e) {
-      throw new RunApplicationError();
-    }
+  if (program.postInstallAction === "runApp") {
+    console.log("Running app...");
+    await runApp(
+      root,
+      program.frontend,
+      program.framework,
+      program.externalPort,
+    );
   }
 }
 
@@ -295,9 +279,7 @@ run()
   .catch(async (reason) => {
     console.log();
     console.log("Aborting installation.");
-    if (reason instanceof RunApplicationError) {
-      console.log(red("Got error when running the application."), reason);
-    } else if (reason.command) {
+    if (reason.command) {
       console.log(`  ${cyan(reason.command)} has failed.`);
     } else {
       console.log(

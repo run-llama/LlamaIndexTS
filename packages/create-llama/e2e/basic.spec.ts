@@ -48,6 +48,7 @@ for (const templateType of templateTypes) {
           let cwd: string;
           let name: string;
           let cps: ChildProcess[] = [];
+          const postInstallAction = "dependencies";
 
           test.beforeAll(async () => {
             port = Math.floor(Math.random() * 10000) + 10000;
@@ -62,6 +63,7 @@ for (const templateType of templateTypes) {
               templateUI,
               appType,
               externalPort,
+              postInstallAction,
             );
 
             if (templateFramework !== "fastapi") {
