@@ -37,6 +37,7 @@ export class PromptHelper {
   tokenizer: (text: string) => Uint32Array;
   separator = " ";
 
+  // eslint-disable-next-line max-params
   constructor(
     contextWindow = DEFAULT_CONTEXT_WINDOW,
     numOutput = DEFAULT_NUM_OUTPUTS,

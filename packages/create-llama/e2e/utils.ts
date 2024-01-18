@@ -7,6 +7,7 @@ import waitPort from "wait-port";
 export type AppType = "--frontend" | "--no-frontend" | "";
 const MODEL = "gpt-3.5-turbo";
 
+// eslint-disable-next-line max-params
 export async function runApp(
   cwd: string,
   name: string,
@@ -65,6 +66,7 @@ async function createProcess(command: string, cwd: string, port: number) {
   return cp;
 }
 
+// eslint-disable-next-line max-params
 export function runCreateLlama(
   cwd: string,
   templateType: string,

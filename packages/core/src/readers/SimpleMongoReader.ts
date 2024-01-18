@@ -36,6 +36,7 @@ export class SimpleMongoReader implements BaseReader {
    * @returns {Promise<Document[]>}
    * @throws If a field specified in fieldNames or metadataNames is not found in a MongoDB document.
    */
+  // eslint-disable-next-line max-params
   public async loadData(
     dbName: string,
     collectionName: string,
