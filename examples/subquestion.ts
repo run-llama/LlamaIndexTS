@@ -1,6 +1,6 @@
 import { Document, SubQuestionQueryEngine, VectorStoreIndex } from "llamaindex";
 
-import essay from "./essay";
+import essay from "./essay.js";
 
 (async () => {
   const document = new Document({ text: essay, id_: essay });

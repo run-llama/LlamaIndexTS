@@ -2,3 +2,4 @@ apps/docs/i18n
 pnpm-lock.yaml
 lib/
 dist/
+.docusaurus/
