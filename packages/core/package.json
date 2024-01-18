@@ -206,6 +206,6 @@
     "test": "jest",
     "build": "bunchee",
     "dev": "bunchee -w",
-    "circular-checl": "madge --warning ./dist/index.js"
+    "circular-checl": "madge --circular ./src/*.ts"
   }
 }
