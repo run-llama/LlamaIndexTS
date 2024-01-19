@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import * as path from "path";
 import waitPort from "wait-port";
+import { TemplateFramework } from "../helpers";
 
 export type AppType = "--frontend" | "--no-frontend" | "";
 const MODEL = "gpt-3.5-turbo";
@@ -11,17 +12,25 @@ export async function runApp(
   cwd: string,
   name: string,
   appType: AppType,
+  framework: TemplateFramework,
   port: number,
   externalPort: number,
 ): Promise<ChildProcess[]> {
   const cps: ChildProcess[] = [];
+
+  let backendCommand = "";
+  if (framework === "fastapi") {
+    backendCommand = `poetry run uvicorn main:app --host=0.0.0.0 --port=$PORT`;
+  } else {
+    backendCommand = "npm run dev";
+  }
 
   try {
     switch (appType) {
       case "--frontend":
         cps.push(
           await createProcess(
-            "npm run dev",
+            backendCommand,
             path.join(cwd, name, "backend"),
             externalPort,
           ),
@@ -36,7 +45,11 @@ export async function runApp(
         break;
       default:
         cps.push(
-          await createProcess("npm run dev", path.join(cwd, name), port),
+          await createProcess(
+            backendCommand,
+            path.join(cwd, name),
+            appType === "" ? port : externalPort,
+          ),
         );
         break;
     }
@@ -48,6 +61,7 @@ export async function runApp(
 }
 
 async function createProcess(command: string, cwd: string, port: number) {
+  console.log(`running command '${command}' in ${cwd} port ${port}`);
   const cp = exec(command, {
     cwd,
     env: {

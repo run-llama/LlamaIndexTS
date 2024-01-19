@@ -66,10 +66,14 @@ for (const templateType of templateTypes) {
               postInstallAction,
             );
 
-            if (templateFramework !== "fastapi") {
-              // don't run the app for fastapi for now (adds python dependency)
-              cps = await runApp(cwd, name, appType, port, externalPort);
-            }
+            cps = await runApp(
+              cwd,
+              name,
+              appType,
+              templateFramework,
+              port,
+              externalPort,
+            );
           });
 
           test("App folder should exist", async () => {
@@ -77,9 +81,7 @@ for (const templateType of templateTypes) {
             expect(dirExists).toBeTruthy();
           });
           test("Frontend should have a title", async ({ page }) => {
-            test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
-            );
+            test.skip(appType === "--no-frontend");
             await page.goto(`http://localhost:${port}`);
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
           });
@@ -87,9 +89,7 @@ for (const templateType of templateTypes) {
           test("Frontend should be able to submit a message and receive a response", async ({
             page,
           }) => {
-            test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
-            );
+            test.skip(appType === "--no-frontend");
             await page.goto(`http://localhost:${port}`);
             await page.fill("form input", "hello");
             await page.click("form button[type=submit]");
@@ -109,11 +109,10 @@ for (const templateType of templateTypes) {
           test("Backend should response when calling API", async ({
             request,
           }) => {
-            test.skip(
-              appType !== "--no-frontend" || templateFramework === "fastapi",
-            );
+            test.skip(appType !== "--no-frontend");
+            const backendPort = appType === "" ? port : externalPort;
             const response = await request.post(
-              `http://localhost:${port}/api/chat`,
+              `http://localhost:${backendPort}/api/chat`,
               {
                 data: {
                   messages: [
