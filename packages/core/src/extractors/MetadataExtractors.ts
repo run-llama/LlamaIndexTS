@@ -1,52 +1,15 @@
 import { BaseNode, MetadataMode, TextNode } from "../Node";
 import { LLM } from "../llm";
+import {
+  defaultKeywordExtractorPromptTemplate,
+  defaultQuestionAnswerPromptTemplate,
+  defaultSummaryExtractorPromptTemplate,
+  defaultTitleCombinePromptTemplate,
+  defaultTitleExtractorPromptTemplate,
+} from "./prompts";
 import { BaseExtractor } from "./types";
 
 const STRIP_REGEX = /(\r\n|\n|\r)/gm;
-
-const defaultKeywordExtractorPromptTemplate = ({
-  context_str,
-  keywords,
-}: {
-  context_str: string;
-  keywords: number;
-}) => `
-  /${context_str}. Give ${keywords} unique keywords for this \
-  document. Format as comma separated. Keywords:
-`;
-
-const defaultTitleExtractorPromptTemplate = ({
-  context_str,
-}: {
-  context_str: string;
-}) => `
-  /${context_str}. Give a title that summarizes all of the unique entities, titles or themes found in the context. Title:
-`;
-
-const defaultTitleCombinePromptTemplate = ({
-  context_str,
-}: {
-  context_str: string;
-}) => `
-  /${context_str}. Based on the above candidate titles and content, \
-  what is the comprehensive title for this document? Title:
-`;
-
-const defaultQuestionAnswerPromptTemplate = ({
-  context_str,
-  num_questions,
-}: {
-  context_str: string;
-  num_questions: number;
-}) => `
-  /${context_str}. Given the contextual information, \
-  generate ${num_questions} questions this context can provide \
-  specific answers to which are unlikely to be found elsewhere.
-
-  Higher-level summaries of surrounding context may be provided \
-  as well. Try using these summaries to generate better questions \
-  that this context can answer.
-`;
 
 /**
  * Extract keywords from a list of nodes.
@@ -233,6 +196,9 @@ export class TitleExtractor extends BaseExtractor {
   }
 }
 
+/**
+ * Extract questions from a list of nodes.
+ */
 export class QuestionsAnsweredExtractor extends BaseExtractor {
   /**
    * LLM instance.
@@ -247,6 +213,11 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
    */
   questions: number = 5;
 
+  /**
+   * The prompt template to use for the question extractor.
+   * @type {string}
+   * @default "{context}"
+   */
   promptTemplate: string = defaultQuestionAnswerPromptTemplate({
     context_str: "{context}",
     num_questions: this.questions,
@@ -324,5 +295,106 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
     );
 
     return results;
+  }
+}
+
+export class SummaryExtractor extends BaseExtractor {
+  /**
+   * LLM instance.
+   * @type {LLM}
+   */
+  llm: LLM;
+
+  /**
+   * List of summaries to extract: 'self', 'prev', 'next'
+   * @type {string[]}
+   */
+  summaries: string[];
+
+  /**
+   * The prompt template to use for the summary extractor.
+   * @type {string}
+   * @default "{context}"
+   */
+  promptTemplate: string = defaultSummaryExtractorPromptTemplate({
+    context_str: "{context}",
+  });
+
+  private _selfSummary: boolean;
+  private _prevSummary: boolean;
+  private _nextSummary: boolean;
+
+  constructor(
+    llm: LLM,
+    summaries: string[] = ["self"],
+    promptTemplate: string = defaultSummaryExtractorPromptTemplate({
+      context_str: "{context}",
+    }),
+  ) {
+    if (!summaries.some((s) => ["self", "prev", "next"].includes(s)))
+      throw new Error("Summaries must be one of 'self', 'prev', 'next'");
+
+    super();
+
+    this.llm = llm;
+    this.summaries = summaries;
+    this.promptTemplate = promptTemplate;
+
+    this._selfSummary = summaries.includes("self");
+    this._prevSummary = summaries.includes("prev");
+    this._nextSummary = summaries.includes("next");
+  }
+
+  /**
+   * Extract summary from a node.
+   * @param {BaseNode} node Node to extract summary from.
+   * @returns {Promise<Record<string, string>>} Summary extracted from the node.
+   */
+  async generateNodeSummary(node: BaseNode): Promise<string> {
+    if (this.isTextNodeOnly && !(node instanceof TextNode)) {
+      return "";
+    }
+
+    const context_str = node.getContent(this.metadataMode);
+
+    const prompt = defaultSummaryExtractorPromptTemplate({
+      context_str,
+    });
+
+    const summary = await this.llm.complete({
+      prompt,
+    });
+
+    return summary.text.replace(STRIP_REGEX, "");
+  }
+
+  /**
+   * Extract summaries from a list of nodes.
+   * @param {BaseNode[]} nodes Nodes to extract summaries from.
+   * @returns {Promise<Record<string, any>[]>} Summaries extracted from the nodes.
+   */
+  async extract(nodes: BaseNode[]): Promise<Record<string, any>[]> {
+    if (!nodes.every((n) => n instanceof TextNode))
+      throw new Error("Only `TextNode` is allowed for `Summary` extractor");
+
+    const nodeSummaries = await Promise.all(
+      nodes.map((node) => this.generateNodeSummary(node)),
+    );
+
+    let metadataList: any[] = nodes.map(() => ({}));
+
+    for (let i = 0; i < nodes.length; i++) {
+      if (i > 0 && this._prevSummary && nodeSummaries[i - 1]) {
+        metadataList[i]["prev_section_summary"] = nodeSummaries[i - 1];
+      }
+      if (i < nodes.length - 1 && this._nextSummary && nodeSummaries[i + 1]) {
+        metadataList[i]["next_section_summary"] = nodeSummaries[i + 1];
+      }
+      if (this._selfSummary && nodeSummaries[i]) {
+        metadataList[i]["section_summary"] = nodeSummaries[i];
+      }
+    }
+
+    return metadataList;
   }
 }

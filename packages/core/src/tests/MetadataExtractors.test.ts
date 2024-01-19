@@ -9,6 +9,7 @@ import { OpenAIEmbedding } from "../embeddings";
 import {
   KeywordExtractor,
   QuestionsAnsweredExtractor,
+  SummaryExtractor,
   TitleExtractor,
 } from "../extractors";
 import { OpenAI } from "../llm/LLM";
@@ -99,7 +100,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     });
   });
 
-  test("[MetadataExtractor] QuestionsAnswered returns questionsThisExcerptCanAnswer metadata", async () => {
+  test("[MetadataExtractor] QuestionsAnsweredExtractor returns questionsThisExcerptCanAnswer metadata", async () => {
     const nodeParser = new SimpleNodeParser();
 
     const nodes = nodeParser.getNodesFromDocuments([
@@ -116,6 +117,22 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
 
     expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
       questionsThisExcerptCanAnswer: DEFAULT_LLM_TEXT_OUTPUT,
+    });
+  });
+
+  test("[MetadataExtractor] SumamryExtractor returns section_summary metadata", async () => {
+    const nodeParser = new SimpleNodeParser();
+
+    const nodes = nodeParser.getNodesFromDocuments([
+      new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
+    ]);
+
+    const summaryExtractor = new SummaryExtractor(serviceContext.llm);
+
+    const nodesWithKeywordMetadata = await summaryExtractor.processNodes(nodes);
+
+    expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
+      section_summary: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });
 });
