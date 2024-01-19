@@ -18,7 +18,7 @@ import {
 
   const keywordExtractor = new KeywordExtractor(openaiLLM, 5);
 
-  const keywords = await keywordExtractor.extract(nodes);
+  const nodesWithKeywordMetadata = await keywordExtractor.processNodes(nodes);
 
-  process.stdout.write(JSON.stringify(keywords, null, 2));
+  process.stdout.write(JSON.stringify(nodesWithKeywordMetadata, null, 2));
 })();
