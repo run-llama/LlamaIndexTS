@@ -1,1 +1,1 @@
-export { KeywordExtractor } from "./MetadataExtractors";
+export { KeywordExtractor, TitleExtractor } from "./MetadataExtractors";
