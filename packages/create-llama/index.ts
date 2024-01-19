@@ -124,7 +124,7 @@ Select external port.
     "--post-install-action <action>",
     `
 
-Choose an action after installation. For example, runApp or dependencies. Let the default option be to just generate the app.
+Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
 `,
   )
   .allowUnknownOption()
