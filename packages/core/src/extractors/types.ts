@@ -1,9 +1,5 @@
 import { BaseNode, MetadataMode, TextNode } from "../Node";
-
-const DEFAULT_NODE_TEXT_TEMPLATE =
-  "\
-[Excerpt from document]\n{metadata_str}\n\
-Excerpt:\n-----\n{content}\n-----\n";
+import { defaultNodeTextTemplate } from "./prompts";
 
 /*
  * Abstract class for all extractors.
@@ -12,7 +8,7 @@ export abstract class BaseExtractor {
   isTextNodeOnly: boolean = true;
   showProgress: boolean = true;
   metadataMode: MetadataMode = MetadataMode.ALL;
-  nodeTextTemplate: string = DEFAULT_NODE_TEXT_TEMPLATE;
+  nodeTextTemplate: string = defaultNodeTextTemplate({});
   disableTemplateRewrite: boolean = false;
   inPlace: boolean = true;
   numWorkers: number = 4;

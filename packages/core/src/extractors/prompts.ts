@@ -52,3 +52,18 @@ export const defaultSummaryExtractorPromptTemplate = ({
   ${contextStr}. Summarize the key topics and entities of the section.s
   Summary:
 `;
+
+export const defaultNodeTextTemplate = ({
+  metadataStr = "",
+  content = "",
+}: {
+  metadataStr?: string;
+  content?: string;
+}) => `
+  [Excerpt from document]
+  ${metadataStr}
+  Excerpt:
+  -----
+  ${content}
+  -----
+`;
