@@ -2,4 +2,4 @@
 "create-llama": patch
 ---
 
-feat: support showing image on chat message
+Feat: Show images in chat messages using GPT4 Vision (Express and NextJS only)
