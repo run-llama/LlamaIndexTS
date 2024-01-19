@@ -106,7 +106,6 @@ const nextConfig = {
       ...config.resolve.alias,
       sharp$: false,
       "onnxruntime-node$": false,
-      mongodb$: false,
     };
     return config;
   },
