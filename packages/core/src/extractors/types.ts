@@ -1,11 +1,4 @@
-import { BaseNode, TextNode } from "../Node";
-
-export enum MetadataMode {
-  ALL = "all",
-  EMBED = "embed",
-  LLM = "llm",
-  NONE = "none",
-}
+import { BaseNode, MetadataMode, TextNode } from "../Node";
 
 const DEFAULT_NODE_TEXT_TEMPLATE =
   "\
@@ -24,13 +17,9 @@ export abstract class BaseExtractor {
   inPlace: boolean = true;
   numWorkers: number = 4;
 
-  abstract aextract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
+  abstract extract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
 
-  extract(nodes: BaseNode[]): Promise<Record<string, any>[]> {
-    return this.aextract(nodes);
-  }
-
-  async processNodesAsync(
+  async processNodes(
     nodes: BaseNode[],
     excludedEmbedMetadataKeys: string[] | undefined = undefined,
     excludedLlmMetadataKeys: string[] | undefined = undefined,
@@ -43,10 +32,10 @@ export abstract class BaseExtractor {
       newNodes = nodes.slice();
     }
 
-    let curMetadataList = await this.aextract(newNodes);
+    let curMetadataList = await this.extract(newNodes);
 
     for (let idx in newNodes) {
-      newNodes[idx].metadata.update(curMetadataList[idx]);
+      newNodes[idx].metadata = curMetadataList[idx];
     }
 
     for (let idx in newNodes) {
@@ -61,8 +50,8 @@ export abstract class BaseExtractor {
       if (!this.disableTemplateRewrite) {
         if (newNodes[idx] instanceof TextNode) {
           newNodes[idx] = new TextNode({
-            text: this.nodeTextTemplate,
-            metadata: newNodes[idx].metadata,
+            ...newNodes[idx],
+            textTemplate: this.nodeTextTemplate,
           });
         }
       }
@@ -70,11 +59,4 @@ export abstract class BaseExtractor {
 
     return newNodes;
   }
-
-  abstract processNodes(
-    nodes: BaseNode[],
-    excludedEmbedMetadataKeys: string[] | undefined,
-    excludedLlmMetadataKeys: string[] | undefined,
-    ...args: any[]
-  ): BaseNode[];
 }

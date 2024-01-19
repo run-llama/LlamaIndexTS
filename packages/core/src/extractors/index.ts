@@ -1,0 +1,1 @@
+export { KeywordExtractor } from "./MetadataExtractors";
