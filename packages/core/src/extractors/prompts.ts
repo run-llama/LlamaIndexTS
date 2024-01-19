@@ -1,52 +1,54 @@
-export const defaultKeywordExtractorPromptTemplate = ({
-  context_str,
-  keywords,
-}: {
-  context_str: string;
+export interface DefaultPromptTemplate {
+  contextStr: string;
+}
+
+export interface DefaultKeywordExtractorPromptTemplate
+  extends DefaultPromptTemplate {
   keywords: number;
-}) => `
-  /${context_str}. Give ${keywords} unique keywords for this \
+}
+
+export interface DefaultQuestionAnswerPromptTemplate
+  extends DefaultPromptTemplate {
+  numQuestions: number;
+}
+
+export const defaultKeywordExtractorPromptTemplate = ({
+  contextStr = "",
+  keywords = 5,
+}: DefaultKeywordExtractorPromptTemplate) => `
+  ${contextStr}. Give ${keywords} unique keywords for thiss
   document. Format as comma separated. Keywords:
 `;
 
 export const defaultTitleExtractorPromptTemplate = ({
-  context_str,
-}: {
-  context_str: string;
-}) => `
-  /${context_str}. Give a title that summarizes all of the unique entities, titles or themes found in the context. Title:
+  contextStr = "",
+}: DefaultPromptTemplate) => `
+  ${contextStr}. Give a title that summarizes all of the unique entities, titles or themes found in the context. Title:
 `;
 
 export const defaultTitleCombinePromptTemplate = ({
-  context_str,
-}: {
-  context_str: string;
-}) => `
-  /${context_str}. Based on the above candidate titles and content, \
+  contextStr = "",
+}: DefaultPromptTemplate) => `
+  ${contextStr}. Based on the above candidate titles and content,s
   what is the comprehensive title for this document? Title:
 `;
 
 export const defaultQuestionAnswerPromptTemplate = ({
-  context_str,
-  num_questions,
-}: {
-  context_str: string;
-  num_questions: number;
-}) => `
-  /${context_str}. Given the contextual information, \
-  generate ${num_questions} questions this context can provide \
+  contextStr,
+  numQuestions,
+}: DefaultQuestionAnswerPromptTemplate) => `
+  ${contextStr}. Given the contextual information,s
+  generate ${numQuestions} questions this context can provides
   specific answers to which are unlikely to be found elsewhere.
 
-  Higher-level summaries of surrounding context may be provided \
-  as well. Try using these summaries to generate better questions \
+  Higher-level summaries of surrounding context may be provideds
+  as well. Try using these summaries to generate better questionss
   that this context can answer.
 `;
 
 export const defaultSummaryExtractorPromptTemplate = ({
-  context_str,
-}: {
-  context_str: string;
-}) => `
-  /${context_str}. Summarize the key topics and entities of the section. \
+  contextStr,
+}: DefaultPromptTemplate) => `
+  ${contextStr}. Summarize the key topics and entities of the section.s
   Summary:
 `;

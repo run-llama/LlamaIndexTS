@@ -11,6 +11,10 @@ import { BaseExtractor } from "./types";
 
 const STRIP_REGEX = /(\r\n|\n|\r)/gm;
 
+type ExtractKeyword = {
+  excerptKeywords: string;
+};
+
 /**
  * Extract keywords from a list of nodes.
  */
@@ -47,16 +51,14 @@ export class KeywordExtractor extends BaseExtractor {
    * @param node Node to extract keywords from.
    * @returns Keywords extracted from the node.
    */
-  async extractKeywordsFromNodes(
-    node: BaseNode,
-  ): Promise<Record<string, string>> {
+  async extractKeywordsFromNodes(node: BaseNode): Promise<ExtractKeyword | {}> {
     if (this.isTextNodeOnly && !(node instanceof TextNode)) {
       return {};
     }
 
     const completion = await this.llm.complete({
       prompt: defaultKeywordExtractorPromptTemplate({
-        context_str: node.getContent(MetadataMode.ALL),
+        contextStr: node.getContent(MetadataMode.ALL),
         keywords: this.keywords,
       }),
     });
@@ -71,7 +73,7 @@ export class KeywordExtractor extends BaseExtractor {
    * @param nodes Nodes to extract keywords from.
    * @returns Keywords extracted from the nodes.
    */
-  async extract(nodes: BaseNode[]): Promise<Record<string, any>[]> {
+  async extract(nodes: BaseNode[]): Promise<Array<ExtractKeyword> | Array<{}>> {
     const results = await Promise.all(
       nodes.map((node) => this.extractKeywordsFromNodes(node)),
     );
@@ -79,6 +81,13 @@ export class KeywordExtractor extends BaseExtractor {
   }
 }
 
+type ExtractTitle = {
+  documentTitle: string;
+};
+
+/**
+ * Extract title from a list of nodes.
+ */
 export class TitleExtractor extends BaseExtractor {
   /**
    * LLM instance.
@@ -106,7 +115,7 @@ export class TitleExtractor extends BaseExtractor {
    * @default "{title}"
    */
   nodeTemplate: string = defaultTitleExtractorPromptTemplate({
-    context_str: "{title}",
+    contextStr: "{title}",
   });
 
   /**
@@ -115,7 +124,7 @@ export class TitleExtractor extends BaseExtractor {
    * @default "{title}"
    */
   combineTemplate: string = defaultTitleCombinePromptTemplate({
-    context_str: "{title}",
+    contextStr: "{title}",
   });
 
   /**
@@ -129,10 +138,10 @@ export class TitleExtractor extends BaseExtractor {
     llm: LLM,
     nodes: number = 5,
     node_template: string = defaultTitleExtractorPromptTemplate({
-      context_str: "{title}",
+      contextStr: "{title}",
     }),
     combine_template: string = defaultTitleCombinePromptTemplate({
-      context_str: "{title}",
+      contextStr: "{title}",
     }),
   ) {
     super();
@@ -146,9 +155,9 @@ export class TitleExtractor extends BaseExtractor {
   /**
    * Extract titles from a list of nodes.
    * @param {BaseNode[]} nodes Nodes to extract titles from.
-   * @returns {Promise<Record<string, any>[]>} Titles extracted from the nodes.
+   * @returns {Promise<BaseNode<ExtractTitle>[]>} Titles extracted from the nodes.
    */
-  async extract(nodes: BaseNode[]): Promise<Record<string, any>[]> {
+  async extract(nodes: BaseNode[]): Promise<Array<ExtractTitle>> {
     const nodesToExtractTitle: BaseNode[] = [];
 
     for (let i = 0; i < this.nodes; i++) {
@@ -167,7 +176,7 @@ export class TitleExtractor extends BaseExtractor {
     for (let i = 0; i < nodesToExtractTitle.length; i++) {
       const completion = await this.llm.complete({
         prompt: defaultTitleExtractorPromptTemplate({
-          context_str: nodesToExtractTitle[i].getContent(MetadataMode.ALL),
+          contextStr: nodesToExtractTitle[i].getContent(MetadataMode.ALL),
         }),
       });
 
@@ -179,7 +188,7 @@ export class TitleExtractor extends BaseExtractor {
 
       const completion = await this.llm.complete({
         prompt: defaultTitleCombinePromptTemplate({
-          context_str: combinedTitles,
+          contextStr: combinedTitles,
         }),
       });
 
@@ -195,6 +204,10 @@ export class TitleExtractor extends BaseExtractor {
     }));
   }
 }
+
+type ExtractQuestion = {
+  questionsThisExcerptCanAnswer: string;
+};
 
 /**
  * Extract questions from a list of nodes.
@@ -219,8 +232,8 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
    * @default "{context}"
    */
   promptTemplate: string = defaultQuestionAnswerPromptTemplate({
-    context_str: "{context}",
-    num_questions: this.questions,
+    contextStr: "{context}",
+    numQuestions: this.questions,
   });
 
   /**
@@ -241,8 +254,8 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
     llm: LLM,
     questions: number = 5,
     promptTemplate: string = defaultQuestionAnswerPromptTemplate({
-      context_str: "{context}",
-      num_questions: questions,
+      contextStr: "{context}",
+      numQuestions: questions,
     }),
     embeddingOnly: boolean = false,
   ) {
@@ -259,20 +272,20 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
   /**
    * Extract answered questions from a node.
    * @param {BaseNode} node Node to extract questions from.
-   * @returns {Promise<Record<string, any>>} Questions extracted from the node.
+   * @returns {Promise<Array<ExtractQuestion> | Array<{}>>} Questions extracted from the node.
    */
   async extractQuestionsFromNode(
     node: BaseNode,
-  ): Promise<Record<string, string>> {
+  ): Promise<ExtractQuestion | {}> {
     if (this.isTextNodeOnly && !(node instanceof TextNode)) {
       return {};
     }
 
-    const context_str = node.getContent(this.metadataMode);
+    const contextStr = node.getContent(this.metadataMode);
 
     const prompt = defaultQuestionAnswerPromptTemplate({
-      context_str,
-      num_questions: this.questions,
+      contextStr,
+      numQuestions: this.questions,
     });
 
     const questions = await this.llm.complete({
@@ -287,9 +300,11 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
   /**
    * Extract answered questions from a list of nodes.
    * @param {BaseNode[]} nodes Nodes to extract questions from.
-   * @returns {Promise<Record<string, any>[]>} Questions extracted from the nodes.
+   * @returns {Promise<Array<ExtractQuestion> | Array<{}>>} Questions extracted from the nodes.
    */
-  async extract(nodes: BaseNode[]): Promise<Record<string, any>[]> {
+  async extract(
+    nodes: BaseNode[],
+  ): Promise<Array<ExtractQuestion> | Array<{}>> {
     const results = await Promise.all(
       nodes.map((node) => this.extractQuestionsFromNode(node)),
     );
@@ -298,6 +313,15 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
   }
 }
 
+type ExtractSummary = {
+  sectionSummary: string;
+  prevSectionSummary: string;
+  nextSectionSummary: string;
+};
+
+/**
+ * Extract summary from a list of nodes.
+ */
 export class SummaryExtractor extends BaseExtractor {
   /**
    * LLM instance.
@@ -317,7 +341,7 @@ export class SummaryExtractor extends BaseExtractor {
    * @default "{context}"
    */
   promptTemplate: string = defaultSummaryExtractorPromptTemplate({
-    context_str: "{context}",
+    contextStr: "{context}",
   });
 
   private _selfSummary: boolean;
@@ -328,7 +352,7 @@ export class SummaryExtractor extends BaseExtractor {
     llm: LLM,
     summaries: string[] = ["self"],
     promptTemplate: string = defaultSummaryExtractorPromptTemplate({
-      context_str: "{context}",
+      contextStr: "{context}",
     }),
   ) {
     if (!summaries.some((s) => ["self", "prev", "next"].includes(s)))
@@ -348,17 +372,17 @@ export class SummaryExtractor extends BaseExtractor {
   /**
    * Extract summary from a node.
    * @param {BaseNode} node Node to extract summary from.
-   * @returns {Promise<Record<string, string>>} Summary extracted from the node.
+   * @returns {Promise<string>} Summary extracted from the node.
    */
   async generateNodeSummary(node: BaseNode): Promise<string> {
     if (this.isTextNodeOnly && !(node instanceof TextNode)) {
       return "";
     }
 
-    const context_str = node.getContent(this.metadataMode);
+    const contextStr = node.getContent(this.metadataMode);
 
     const prompt = defaultSummaryExtractorPromptTemplate({
-      context_str,
+      contextStr,
     });
 
     const summary = await this.llm.complete({
@@ -371,9 +395,9 @@ export class SummaryExtractor extends BaseExtractor {
   /**
    * Extract summaries from a list of nodes.
    * @param {BaseNode[]} nodes Nodes to extract summaries from.
-   * @returns {Promise<Record<string, any>[]>} Summaries extracted from the nodes.
+   * @returns {Promise<Array<ExtractSummary> | Arry<{}>>} Summaries extracted from the nodes.
    */
-  async extract(nodes: BaseNode[]): Promise<Record<string, any>[]> {
+  async extract(nodes: BaseNode[]): Promise<Array<ExtractSummary> | Array<{}>> {
     if (!nodes.every((n) => n instanceof TextNode))
       throw new Error("Only `TextNode` is allowed for `Summary` extractor");
 
@@ -385,13 +409,13 @@ export class SummaryExtractor extends BaseExtractor {
 
     for (let i = 0; i < nodes.length; i++) {
       if (i > 0 && this._prevSummary && nodeSummaries[i - 1]) {
-        metadataList[i]["prev_section_summary"] = nodeSummaries[i - 1];
+        metadataList[i]["prevSectionSummary"] = nodeSummaries[i - 1];
       }
       if (i < nodes.length - 1 && this._nextSummary && nodeSummaries[i + 1]) {
-        metadataList[i]["next_section_summary"] = nodeSummaries[i + 1];
+        metadataList[i]["nextSectionSummary"] = nodeSummaries[i + 1];
       }
       if (this._selfSummary && nodeSummaries[i]) {
-        metadataList[i]["section_summary"] = nodeSummaries[i];
+        metadataList[i]["sectionSummary"] = nodeSummaries[i];
       }
     }
 
