@@ -120,7 +120,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     });
   });
 
-  test("[MetadataExtractor] SumamryExtractor returns section_summary metadata", async () => {
+  test("[MetadataExtractor] SumamryExtractor returns sectionSummary metadata", async () => {
     const nodeParser = new SimpleNodeParser();
 
     const nodes = nodeParser.getNodesFromDocuments([
@@ -132,7 +132,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     const nodesWithKeywordMetadata = await summaryExtractor.processNodes(nodes);
 
     expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
-      section_summary: DEFAULT_LLM_TEXT_OUTPUT,
+      sectionSummary: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });
 });
