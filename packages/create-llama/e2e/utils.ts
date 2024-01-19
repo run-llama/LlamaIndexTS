@@ -3,7 +3,13 @@ import crypto from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import * as path from "path";
 import waitPort from "wait-port";
-import { TemplateFramework } from "../helpers";
+import {
+  TemplateEngine,
+  TemplateFramework,
+  TemplatePostInstallAction,
+  TemplateType,
+  TemplateUI,
+} from "../helpers";
 
 export type AppType = "--frontend" | "--no-frontend" | "";
 const MODEL = "gpt-3.5-turbo";
@@ -81,13 +87,13 @@ async function createProcess(command: string, cwd: string, port: number) {
 
 export function runCreateLlama(
   cwd: string,
-  templateType: string,
-  templateFramework: string,
-  templateEngine: string,
-  templateUI: string,
+  templateType: TemplateType,
+  templateFramework: TemplateFramework,
+  templateEngine: TemplateEngine,
+  templateUI: TemplateUI,
   appType: AppType,
   externalPort: number,
-  postInstallAction: string,
+  postInstallAction: TemplatePostInstallAction,
 ) {
   const createLlama = path.join(__dirname, "..", "dist", "index.js");
 

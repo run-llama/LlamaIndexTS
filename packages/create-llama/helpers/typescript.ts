@@ -26,17 +26,10 @@ const rename = (name: string) => {
 };
 
 export const installTSDependencies = async (
-  root: string,
+  packageJson: any,
   packageManager: PackageManager,
   isOnline: boolean,
 ): Promise<void> => {
-  process.chdir(root);
-
-  const packageJsonFile = path.join(root, "package.json");
-  const packageJson: any = JSON.parse(
-    await fs.readFile(packageJsonFile, "utf8"),
-  );
-
   console.log("\nInstalling dependencies:");
   for (const dependency in packageJson.dependencies)
     console.log(`- ${cyan(dependency)}`);
@@ -60,6 +53,7 @@ export const installTSTemplate = async ({
   appName,
   root,
   packageManager,
+  isOnline,
   template,
   framework,
   engine,
@@ -241,6 +235,6 @@ export const installTSTemplate = async ({
   );
 
   if (postInstallAction !== "none") {
-    await installTSDependencies(root, packageManager, true);
+    await installTSDependencies(packageJson, packageManager, isOnline);
   }
 };

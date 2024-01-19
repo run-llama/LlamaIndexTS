@@ -180,7 +180,7 @@ export const installPythonTemplate = async ({
   const addOnDependencies = getAdditionalDependencies(vectorDb);
   await addDependencies(root, addOnDependencies);
 
-  if (postInstallAction) {
+  if (postInstallAction !== "none") {
     installPythonDependencies(root);
   }
 };
