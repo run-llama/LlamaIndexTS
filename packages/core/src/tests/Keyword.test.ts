@@ -1,6 +1,6 @@
 import {
   rakeExtractKeywords,
-  simpleExtractKeywords,
+  simpleExtractKeywords
 } from "../indices/keyword/utils";
 describe("SimpleExtractKeywords", () => {
   test("should extract unique keywords", () => {
@@ -67,8 +67,8 @@ describe("RakeExtractKeywords", () => {
         "school",
         "outside",
         "main",
-        "college",
-      ]),
+        "college"
+      ])
     );
   });
 

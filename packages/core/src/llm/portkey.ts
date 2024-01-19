@@ -3,7 +3,7 @@ import { LLMOptions, Portkey } from "portkey-ai";
 
 export const readEnv = (
   env: string,
-  default_val?: string,
+  default_val?: string
 ): string | undefined => {
   if (typeof process !== "undefined") {
     return process.env?.[env] ?? default_val;

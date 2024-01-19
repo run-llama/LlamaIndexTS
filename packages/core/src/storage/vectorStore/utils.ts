@@ -14,7 +14,7 @@ export function nodeToMetadata(
   node: BaseNode,
   removeText: boolean = false,
   textField: string = DEFAULT_TEXT_KEY,
-  flatMetadata: boolean = false,
+  flatMetadata: boolean = false
 ): Metadata {
   const { metadata, embedding, ...rest } = node.toMutableJSON();
 

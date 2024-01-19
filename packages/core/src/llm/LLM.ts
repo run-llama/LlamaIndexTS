@@ -5,7 +5,7 @@ import {
   Event,
   EventType,
   OpenAIStreamToken,
-  StreamCallbackResponse,
+  StreamCallbackResponse
 } from "../callbacks/CallbackManager";
 
 import { ChatCompletionMessageParam } from "openai/resources";
@@ -15,14 +15,14 @@ import {
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
   AnthropicSession,
-  getAnthropicSession,
+  getAnthropicSession
 } from "./anthropic";
 import {
   AzureOpenAIConfig,
   getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
-  shouldUseAzure,
+  shouldUseAzure
 } from "./azure";
 import { BaseLLM } from "./base";
 import { OpenAISession, getOpenAISession } from "./openai";
@@ -35,20 +35,20 @@ import {
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
   LLMMetadata,
-  MessageType,
+  MessageType
 } from "./types";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
   "gpt-4-32k": { contextWindow: 32768 },
   "gpt-4-1106-preview": { contextWindow: 128000 },
-  "gpt-4-vision-preview": { contextWindow: 8192 },
+  "gpt-4-vision-preview": { contextWindow: 8192 }
 };
 
 export const GPT35_MODELS = {
   "gpt-3.5-turbo": { contextWindow: 4096 },
   "gpt-3.5-turbo-16k": { contextWindow: 16384 },
-  "gpt-3.5-turbo-1106": { contextWindow: 16384 },
+  "gpt-3.5-turbo-1106": { contextWindow: 16384 }
 };
 
 /**
@@ -56,7 +56,7 @@ export const GPT35_MODELS = {
  */
 export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
-  ...GPT35_MODELS,
+  ...GPT35_MODELS
 };
 
 /**
@@ -88,7 +88,7 @@ export class OpenAI extends BaseLLM {
   constructor(
     init?: Partial<OpenAI> & {
       azure?: AzureOpenAIConfig;
-    },
+    }
   ) {
     super();
     this.model = init?.model ?? "gpt-3.5-turbo";
@@ -104,12 +104,12 @@ export class OpenAI extends BaseLLM {
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
         ...init?.azure,
-        model: getAzureModel(this.model),
+        model: getAzureModel(this.model)
       });
 
       if (!azureConfig.apiKey) {
         throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable."
         );
       }
 
@@ -123,7 +123,7 @@ export class OpenAI extends BaseLLM {
           maxRetries: this.maxRetries,
           timeout: this.timeout,
           defaultQuery: { "api-version": azureConfig.apiVersion },
-          ...this.additionalSessionOptions,
+          ...this.additionalSessionOptions
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
@@ -133,7 +133,7 @@ export class OpenAI extends BaseLLM {
           apiKey: this.apiKey,
           maxRetries: this.maxRetries,
           timeout: this.timeout,
-          ...this.additionalSessionOptions,
+          ...this.additionalSessionOptions
         });
     }
 
@@ -151,7 +151,7 @@ export class OpenAI extends BaseLLM {
       topP: this.topP,
       maxTokens: this.maxTokens,
       contextWindow,
-      tokenizer: Tokenizers.CL100K_BASE,
+      tokenizer: Tokenizers.CL100K_BASE
     };
   }
 
@@ -171,7 +171,7 @@ export class OpenAI extends BaseLLM {
   }
 
   mapMessageType(
-    messageType: MessageType,
+    messageType: MessageType
   ): "user" | "assistant" | "system" | "function" {
     switch (messageType) {
       case "user":
@@ -188,11 +188,11 @@ export class OpenAI extends BaseLLM {
   }
 
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
@@ -203,11 +203,11 @@ export class OpenAI extends BaseLLM {
         (message) =>
           ({
             role: this.mapMessageType(message.role),
-            content: message.content,
-          }) as ChatCompletionMessageParam,
+            content: message.content
+          }) as ChatCompletionMessageParam
       ),
       top_p: this.topP,
-      ...this.additionalChatOptions,
+      ...this.additionalChatOptions
     };
     // Streaming
     if (stream) {
@@ -216,18 +216,18 @@ export class OpenAI extends BaseLLM {
     // Non-streaming
     const response = await this.session.openai.chat.completions.create({
       ...baseRequestParams,
-      stream: false,
+      stream: false
     });
 
     const content = response.choices[0].message?.content ?? "";
     return {
-      message: { content, role: response.choices[0].message.role },
+      message: { content, role: response.choices[0].message.role }
     };
   }
 
   protected async *streamChat({
     messages,
-    parentEvent,
+    parentEvent
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
@@ -237,11 +237,11 @@ export class OpenAI extends BaseLLM {
         (message) =>
           ({
             role: this.mapMessageType(message.role),
-            content: message.content,
-          }) as ChatCompletionMessageParam,
+            content: message.content
+          }) as ChatCompletionMessageParam
       ),
       top_p: this.topP,
-      ...this.additionalChatOptions,
+      ...this.additionalChatOptions
     };
 
     //Now let's wrap our stream in a callback
@@ -252,14 +252,14 @@ export class OpenAI extends BaseLLM {
     const chunk_stream: AsyncIterable<OpenAIStreamToken> =
       await this.session.openai.chat.completions.create({
         ...baseRequestParams,
-        stream: true,
+        stream: true
       });
 
     const event: Event = parentEvent
       ? parentEvent
       : {
           id: "unspecified",
-          type: "llmPredict" as EventType,
+          type: "llmPredict" as EventType
         };
 
     // TODO: add callback to streamConverter and use streamConverter here
@@ -278,14 +278,14 @@ export class OpenAI extends BaseLLM {
         event: event,
         index: idx_counter,
         isDone: is_done,
-        token: part,
+        token: part
       };
       onLLMStream(stream_callback);
 
       idx_counter++;
 
       yield {
-        delta: part.choices[0].delta.content ?? "",
+        delta: part.choices[0].delta.content ?? ""
       };
     }
     return;
@@ -296,30 +296,30 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   "Llama-2-70b-chat-old": {
     contextWindow: 4096,
     replicateApi:
-      "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48",
+      "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48"
     //^ Previous 70b model. This is also actually 4 bit, although not exllama.
   },
   "Llama-2-70b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
-      "meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
+      "meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3"
     //^ Model is based off of exllama 4bit.
   },
   "Llama-2-13b-chat-old": {
     contextWindow: 4096,
     replicateApi:
-      "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
+      "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5"
   },
   //^ Last known good 13b non-quantized model. In future versions they add the SYS and INST tags themselves
   "Llama-2-13b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
-      "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d",
+      "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
   },
   "Llama-2-7b-chat-old": {
     contextWindow: 4096,
     replicateApi:
-      "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
+      "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea"
     //^ Last (somewhat) known good 7b non-quantized model. In future versions they add the SYS and INST
     // tags themselves
     // https://github.com/replicate/cog-llama-template/commit/fa5ce83912cf82fc2b9c01a4e9dc9bff6f2ef137
@@ -328,8 +328,8 @@ export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   "Llama-2-7b-chat-4bit": {
     contextWindow: 4096,
     replicateApi:
-      "meta/llama-2-7b-chat:13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0",
-  },
+      "meta/llama-2-7b-chat:13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0"
+  }
 };
 
 export enum DeuceChatStrategy {
@@ -340,7 +340,7 @@ export enum DeuceChatStrategy {
   // Unfortunately any string only API won't support these properly.
   REPLICATE4BIT = "replicate4bit",
   //^ To satisfy Replicate's 4 bit models' requirements where they also insert some INST tags
-  REPLICATE4BITWNEWLINES = "replicate4bitwnewlines",
+  REPLICATE4BITWNEWLINES = "replicate4bitwnewlines"
   //^ Replicate's documentation recommends using newlines: https://replicate.com/blog/how-to-prompt-llama
 }
 
@@ -382,7 +382,7 @@ export class LlamaDeuce extends BaseLLM {
       topP: this.topP,
       maxTokens: this.maxTokens,
       contextWindow: ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].contextWindow,
-      tokenizer: undefined,
+      tokenizer: undefined
     };
   }
 
@@ -396,12 +396,12 @@ export class LlamaDeuce extends BaseLLM {
     } else if (this.chatStrategy === DeuceChatStrategy.REPLICATE4BIT) {
       return this.mapMessagesToPromptMeta(messages, {
         replicate4Bit: true,
-        withNewlines: true,
+        withNewlines: true
       });
     } else if (this.chatStrategy === DeuceChatStrategy.REPLICATE4BITWNEWLINES) {
       return this.mapMessagesToPromptMeta(messages, {
         replicate4Bit: true,
-        withNewlines: true,
+        withNewlines: true
       });
     } else {
       return this.mapMessagesToPromptMeta(messages);
@@ -418,7 +418,7 @@ export class LlamaDeuce extends BaseLLM {
           );
         }, "") + "\n\nAssistant:",
       //^ Here we're differing from A16Z by omitting the space. Generally spaces at the end of prompts decrease performance due to tokenization
-      systemPrompt: undefined,
+      systemPrompt: undefined
     };
   }
 
@@ -441,12 +441,12 @@ export class LlamaDeuce extends BaseLLM {
       withBos?: boolean;
       replicate4Bit?: boolean;
       withNewlines?: boolean;
-    },
+    }
   ) {
     const {
       withBos = false,
       replicate4Bit = false,
-      withNewlines = false,
+      withNewlines = false
     } = opts ?? {};
     const DEFAULT_SYSTEM_PROMPT = `You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
 
@@ -478,7 +478,7 @@ If a question does not make any sense, or is not factually coherent, explain why
         // @ts-ignore
         if (messages[0].role !== "user") {
           throw new Error(
-            "LlamaDeuce: if there is a system message, the second message must be a user message.",
+            "LlamaDeuce: if there is a system message, the second message must be a user message."
           );
         }
 
@@ -509,16 +509,16 @@ If a question does not make any sense, or is not factually coherent, explain why
           ); // Yes, the EOS comes after the space. This is not a mistake.
         }
       }, ""),
-      systemPrompt,
+      systemPrompt
     };
   }
 
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream } = params;
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
@@ -531,8 +531,8 @@ If a question does not make any sense, or is not factually coherent, explain why
         prompt,
         system_prompt: systemPrompt,
         temperature: this.temperature,
-        top_p: this.topP,
-      },
+        top_p: this.topP
+      }
     };
 
     if (this.model.endsWith("4bit")) {
@@ -549,14 +549,14 @@ If a question does not make any sense, or is not factually coherent, explain why
     //Non-streaming
     const response = await this.replicateSession.replicate.run(
       api,
-      replicateOptions,
+      replicateOptions
     );
     return {
       message: {
         content: (response as Array<string>).join("").trimStart(),
         //^ We need to do this because Replicate returns a list of strings (for streaming functionality which is not exposed by the run function)
-        role: "assistant",
-      },
+        role: "assistant"
+      }
     };
   }
 }
@@ -564,7 +564,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
   "claude-2": { contextWindow: 200000 },
-  "claude-instant-1": { contextWindow: 100000 },
+  "claude-instant-1": { contextWindow: 100000 }
 };
 
 /**
@@ -601,7 +601,7 @@ export class Anthropic extends BaseLLM {
       getAnthropicSession({
         apiKey: this.apiKey,
         maxRetries: this.maxRetries,
-        timeout: this.timeout,
+        timeout: this.timeout
       });
 
     this.callbackManager = init?.callbackManager;
@@ -618,7 +618,7 @@ export class Anthropic extends BaseLLM {
       topP: this.topP,
       maxTokens: this.maxTokens,
       contextWindow: ALL_AVAILABLE_ANTHROPIC_MODELS[this.model].contextWindow,
-      tokenizer: undefined,
+      tokenizer: undefined
     };
   }
 
@@ -640,11 +640,11 @@ export class Anthropic extends BaseLLM {
   }
 
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream } = params;
     //Streaming
@@ -658,11 +658,11 @@ export class Anthropic extends BaseLLM {
       prompt: this.mapMessagesToPrompt(messages),
       max_tokens_to_sample: this.maxTokens ?? 100000,
       temperature: this.temperature,
-      top_p: this.topP,
+      top_p: this.topP
     });
 
     return {
-      message: { content: response.completion.trimStart(), role: "assistant" },
+      message: { content: response.completion.trimStart(), role: "assistant" }
       //^ We're trimming the start because Anthropic often starts with a space in the response
       // That space will be re-added when we generate the next prompt.
     };
@@ -670,7 +670,7 @@ export class Anthropic extends BaseLLM {
 
   protected async *streamChat(
     messages: ChatMessage[],
-    parentEvent?: Event | undefined,
+    parentEvent?: Event | undefined
   ): AsyncIterable<ChatResponseChunk> {
     // AsyncIterable<AnthropicStreamToken>
     const stream: AsyncIterable<AnthropicStreamToken> =
@@ -680,7 +680,7 @@ export class Anthropic extends BaseLLM {
         max_tokens_to_sample: this.maxTokens ?? 100000,
         temperature: this.temperature,
         top_p: this.topP,
-        stream: true,
+        stream: true
       });
 
     var idx_counter: number = 0;
@@ -712,7 +712,7 @@ export class Portkey extends BaseLLM {
       apiKey: this.apiKey,
       baseURL: this.baseURL,
       llms: this.llms,
-      mode: this.mode,
+      mode: this.mode
     });
     this.callbackManager = init?.callbackManager;
   }
@@ -726,11 +726,11 @@ export class Portkey extends BaseLLM {
   }
 
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream, extraParams } = params;
     if (stream) {
@@ -739,7 +739,7 @@ export class Portkey extends BaseLLM {
       const bodyParams = extraParams || {};
       const response = await this.session.portkey.chatCompletions.create({
         messages,
-        ...bodyParams,
+        ...bodyParams
       });
 
       const content = response.choices[0].message?.content ?? "";
@@ -751,7 +751,7 @@ export class Portkey extends BaseLLM {
   async *streamChat(
     messages: ChatMessage[],
     parentEvent?: Event,
-    params?: Record<string, any>,
+    params?: Record<string, any>
   ): AsyncIterable<ChatResponseChunk> {
     // Wrapping the stream in a callback.
     const onLLMStream = this.callbackManager?.onLLMStream
@@ -761,14 +761,14 @@ export class Portkey extends BaseLLM {
     const chunkStream = await this.session.portkey.chatCompletions.create({
       messages,
       ...params,
-      stream: true,
+      stream: true
     });
 
     const event: Event = parentEvent
       ? parentEvent
       : {
           id: "unspecified",
-          type: "llmPredict" as EventType,
+          type: "llmPredict" as EventType
         };
 
     //Indices
@@ -783,7 +783,7 @@ export class Portkey extends BaseLLM {
       const stream_callback: StreamCallbackResponse = {
         event: event,
         index: idx_counter,
-        isDone: is_done,
+        isDone: is_done
         // token: part,
       };
       onLLMStream(stream_callback);

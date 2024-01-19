@@ -2,7 +2,7 @@ import { program } from "commander";
 import {
   AudioTranscriptReader,
   TranscribeParams,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 // readline/promises is still experimental so not in @types/node yet
@@ -22,7 +22,7 @@ program
     let params: TranscribeParams | string;
     if (options.audio) {
       params = {
-        audio: options.audio,
+        audio: options.audio
       };
     } else if (options.transcriptId) {
       params = options.transcriptId;

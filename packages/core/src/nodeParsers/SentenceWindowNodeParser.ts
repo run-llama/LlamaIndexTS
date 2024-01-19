@@ -39,7 +39,7 @@ export class SentenceWindowNodeParser implements NodeParser {
   }
 
   static fromDefaults(
-    init?: Partial<SentenceWindowNodeParser>,
+    init?: Partial<SentenceWindowNodeParser>
   ): SentenceWindowNodeParser {
     return new SentenceWindowNodeParser(init);
   }
@@ -55,14 +55,14 @@ export class SentenceWindowNodeParser implements NodeParser {
       doc,
       this.textSplitter.getSentenceSplits.bind(this.textSplitter),
       this.includeMetadata,
-      this.includePrevNextRel,
+      this.includePrevNextRel
     );
 
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
       const windowNodes = nodes.slice(
         Math.max(0, i - this.windowSize),
-        Math.min(i + this.windowSize + 1, nodes.length),
+        Math.min(i + this.windowSize + 1, nodes.length)
       );
 
       node.metadata[this.windowMetadataKey] = windowNodes
@@ -72,11 +72,11 @@ export class SentenceWindowNodeParser implements NodeParser {
 
       node.excludedEmbedMetadataKeys.push(
         this.windowMetadataKey,
-        this.originalTextMetadataKey,
+        this.originalTextMetadataKey
       );
       node.excludedLlmMetadataKeys.push(
         this.windowMetadataKey,
-        this.originalTextMetadataKey,
+        this.originalTextMetadataKey
       );
     }
 

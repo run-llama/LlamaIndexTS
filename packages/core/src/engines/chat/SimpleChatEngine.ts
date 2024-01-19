@@ -5,7 +5,7 @@ import { streamConverter, streamReducer } from "../../llm/utils";
 import {
   ChatEngine,
   ChatEngineParamsNonStreaming,
-  ChatEngineParamsStreaming,
+  ChatEngineParamsStreaming
 } from "./types";
 
 /**
@@ -24,7 +24,7 @@ export class SimpleChatEngine implements ChatEngine {
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
   async chat(
-    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
+    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming
   ): Promise<Response | AsyncIterable<Response>> {
     const { message, stream } = params;
 
@@ -36,7 +36,7 @@ export class SimpleChatEngine implements ChatEngine {
     if (stream) {
       const stream = await this.llm.chat({
         messages: await chatHistory.requestMessages(),
-        stream: true,
+        stream: true
       });
       return streamConverter(
         streamReducer({
@@ -45,14 +45,14 @@ export class SimpleChatEngine implements ChatEngine {
           reducer: (accumulator, part) => (accumulator += part.delta),
           finished: (accumulator) => {
             chatHistory.addMessage({ content: accumulator, role: "assistant" });
-          },
+          }
         }),
-        (r: ChatResponseChunk) => new Response(r.delta),
+        (r: ChatResponseChunk) => new Response(r.delta)
       );
     }
 
     const response = await this.llm.chat({
-      messages: await chatHistory.requestMessages(),
+      messages: await chatHistory.requestMessages()
     });
     chatHistory.addMessage(response.message);
     return new Response(response.message.content);

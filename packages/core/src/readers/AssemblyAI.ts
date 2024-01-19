@@ -4,7 +4,7 @@ import {
   SubtitleFormat,
   TranscribeParams,
   TranscriptParagraph,
-  TranscriptSentence,
+  TranscriptSentence
 } from "assemblyai";
 import { Document } from "../Node";
 import { BaseReader } from "./base";
@@ -32,7 +32,7 @@ abstract class AssemblyAIReader implements BaseReader {
     }
     if (!options.apiKey) {
       throw new Error(
-        "No AssemblyAI API key provided. Pass an `apiKey` option, or configure the `ASSEMBLYAI_API_KEY` environment variable.",
+        "No AssemblyAI API key provided. Pass an `apiKey` option, or configure the `ASSEMBLYAI_API_KEY` environment variable."
       );
     }
 
@@ -87,7 +87,7 @@ class AudioTranscriptParagraphsReader extends AssemblyAIReader {
     const paragraphsResponse =
       await this.client.transcripts.paragraphs(transcriptId);
     return paragraphsResponse.paragraphs.map(
-      (p: TranscriptParagraph) => new Document({ text: p.text }),
+      (p: TranscriptParagraph) => new Document({ text: p.text })
     );
   }
 }
@@ -106,7 +106,7 @@ class AudioTranscriptSentencesReader extends AssemblyAIReader {
     const sentencesResponse =
       await this.client.transcripts.sentences(transcriptId);
     return sentencesResponse.sentences.map(
-      (p: TranscriptSentence) => new Document({ text: p.text }),
+      (p: TranscriptSentence) => new Document({ text: p.text })
     );
   }
 }
@@ -123,12 +123,12 @@ class AudioSubtitlesReader extends AssemblyAIReader {
    */
   async loadData(
     params: TranscribeParams | string,
-    subtitleFormat: SubtitleFormat = "srt",
+    subtitleFormat: SubtitleFormat = "srt"
   ): Promise<Document[]> {
     let transcriptId = await this.getTranscriptId(params);
     const subtitles = await this.client.transcripts.subtitles(
       transcriptId,
-      subtitleFormat,
+      subtitleFormat
     );
     return [new Document({ text: subtitles })];
   }
@@ -138,6 +138,6 @@ export {
   AudioSubtitlesReader,
   AudioTranscriptParagraphsReader,
   AudioTranscriptReader,
-  AudioTranscriptSentencesReader,
+  AudioTranscriptSentencesReader
 };
 export type { AssemblyAIOptions, SubtitleFormat, TranscribeParams };

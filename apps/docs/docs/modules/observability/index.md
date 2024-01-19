@@ -30,6 +30,6 @@ import * as traceloop from "@traceloop/node-server-sdk";
 
 traceloop.initialize({
   apiKey: process.env.TRACELOOP_API_KEY,
-  disableBatch: true,
+  disableBatch: true
 });
 ```

@@ -39,7 +39,7 @@ export const installTSTemplate = async ({
   customApiPath,
   forBackend,
   vectorDb,
-  installDependencies,
+  installDependencies
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -53,7 +53,7 @@ export const installTSTemplate = async ({
     "templates",
     "types",
     template,
-    framework,
+    framework
   );
   const copySource = ["**"];
   if (!eslint) copySource.push("!eslintrc.json");
@@ -61,7 +61,7 @@ export const installTSTemplate = async ({
   await copy(copySource, root, {
     parents: true,
     cwd: templatePath,
-    rename,
+    rename
   });
 
   /**
@@ -103,7 +103,7 @@ export const installTSTemplate = async ({
       compPath,
       "vectordbs",
       "typescript",
-      vectorDBFolder,
+      vectorDBFolder
     );
     relativeEngineDestPath =
       framework === "nextjs"
@@ -111,7 +111,7 @@ export const installTSTemplate = async ({
         : path.join("src", "controllers");
     await copy("**", path.join(root, relativeEngineDestPath, "engine"), {
       parents: true,
-      cwd: VectorDBPath,
+      cwd: VectorDBPath
     });
   }
 
@@ -128,7 +128,7 @@ export const installTSTemplate = async ({
     await copy("**", destUiPath, {
       parents: true,
       cwd: uiPath,
-      rename,
+      rename
     });
   }
 
@@ -137,21 +137,21 @@ export const installTSTemplate = async ({
    */
   const packageJsonFile = path.join(root, "package.json");
   const packageJson: any = JSON.parse(
-    await fs.readFile(packageJsonFile, "utf8"),
+    await fs.readFile(packageJsonFile, "utf8")
   );
   packageJson.name = appName;
   packageJson.version = "0.1.0";
 
   packageJson.dependencies = {
     ...packageJson.dependencies,
-    llamaindex: version,
+    llamaindex: version
   };
 
   if (framework === "nextjs" && customApiPath) {
     console.log(
       "\nUsing external API with custom API path:",
       customApiPath,
-      "\n",
+      "\n"
     );
     // remove the default api folder
     const apiPath = path.join(root, "app", "api");
@@ -159,7 +159,7 @@ export const installTSTemplate = async ({
     // modify the dev script to use the custom api path
     packageJson.scripts = {
       ...packageJson.scripts,
-      dev: `cross-env NEXT_PUBLIC_CHAT_API=${customApiPath} next dev`,
+      dev: `cross-env NEXT_PUBLIC_CHAT_API=${customApiPath} next dev`
     };
   }
 
@@ -170,8 +170,8 @@ export const installTSTemplate = async ({
       generate: `node ${path.join(
         relativeEngineDestPath,
         "engine",
-        "generate.mjs",
-      )}`,
+        "generate.mjs"
+      )}`
     };
   }
 
@@ -189,12 +189,12 @@ export const installTSTemplate = async ({
       "remark-gfm": undefined,
       "remark-math": undefined,
       "react-markdown": undefined,
-      "react-syntax-highlighter": undefined,
+      "react-syntax-highlighter": undefined
     };
 
     packageJson.devDependencies = {
       ...packageJson.devDependencies,
-      "@types/react-syntax-highlighter": undefined,
+      "@types/react-syntax-highlighter": undefined
     };
   }
 
@@ -202,13 +202,13 @@ export const installTSTemplate = async ({
     // Remove packages starting with "eslint" from devDependencies
     packageJson.devDependencies = Object.fromEntries(
       Object.entries(packageJson.devDependencies).filter(
-        ([key]) => !key.startsWith("eslint"),
-      ),
+        ([key]) => !key.startsWith("eslint")
+      )
     );
   }
   await fs.writeFile(
     packageJsonFile,
-    JSON.stringify(packageJson, null, 2) + os.EOL,
+    JSON.stringify(packageJson, null, 2) + os.EOL
   );
 
   if (installDependencies) {

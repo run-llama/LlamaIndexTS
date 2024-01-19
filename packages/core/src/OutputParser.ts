@@ -28,7 +28,7 @@ class OutputParserError extends Error {
 
   constructor(
     message: string,
-    options: { cause?: Error; output?: string } = {},
+    options: { cause?: Error; output?: string } = {}
   ) {
     // @ts-ignore
     super(message, options); // https://github.com/tc39/proposal-error-cause

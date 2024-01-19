@@ -2,7 +2,7 @@ import { TogetherEmbedding, TogetherLLM } from "llamaindex";
 
 // process.env.TOGETHER_API_KEY is required
 const together = new TogetherLLM({
-  model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
+  model: "mistralai/Mixtral-8x7B-Instruct-v0.1"
 });
 
 (async () => {
@@ -10,14 +10,14 @@ const together = new TogetherLLM({
     messages: [
       {
         role: "system",
-        content: "You are an AI assistant",
+        content: "You are an AI assistant"
       },
       {
         role: "user",
-        content: "Tell me about San Francisco",
-      },
+        content: "Tell me about San Francisco"
+      }
     ],
-    stream: true,
+    stream: true
   });
   console.log("Chatting with Together AI...");
   for await (const message of generator) {

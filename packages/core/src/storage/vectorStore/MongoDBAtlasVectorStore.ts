@@ -4,13 +4,13 @@ import {
   MetadataFilters,
   VectorStore,
   VectorStoreQuery,
-  VectorStoreQueryResult,
+  VectorStoreQueryResult
 } from "./types";
 import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 // Utility function to convert metadata filters to MongoDB filter
 function toMongoDBFilter(
-  standardFilters: MetadataFilters,
+  standardFilters: MetadataFilters
 ): Record<string, any> {
   const filters: Record<string, any> = {};
   for (const filter of standardFilters.filters) {
@@ -37,7 +37,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
     init: Partial<MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
-    },
+    }
   ) {
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
@@ -45,7 +45,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
       const mongoUri = process.env.MONGODB_URI;
       if (!mongoUri) {
         throw new Error(
-          "Must specify MONGODB_URI via env variable if not directly passing in client.",
+          "Must specify MONGODB_URI via env variable if not directly passing in client."
         );
       }
       this.mongodbClient = new MongoClient(mongoUri);
@@ -71,21 +71,21 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
         node,
         true,
         this.textKey,
-        this.flatMetadata,
+        this.flatMetadata
       );
 
       return {
         [this.idKey]: node.id_,
         [this.embeddingKey]: node.getEmbedding(),
         [this.textKey]: node.getContent(MetadataMode.NONE) || "",
-        [this.metadataKey]: metadata,
+        [this.metadataKey]: metadata
       };
     });
 
     console.debug("Inserting data into MongoDB: ", dataToInsert);
     const insertResult = await this.collection.insertMany(
       dataToInsert,
-      this.insertOptions,
+      this.insertOptions
     );
     console.debug("Result of insert: ", insertResult);
     return nodes.map((node) => node.id_);
@@ -94,9 +94,9 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
   async delete(refDocId: string, deleteOptions?: any): Promise<void> {
     await this.collection.deleteOne(
       {
-        [`${this.metadataKey}.ref_doc_id`]: refDocId,
+        [`${this.metadataKey}.ref_doc_id`]: refDocId
       },
-      deleteOptions,
+      deleteOptions
     );
   }
 
@@ -106,14 +106,14 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
 
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: any
   ): Promise<VectorStoreQueryResult> {
     const params: any = {
       queryVector: query.queryEmbedding,
       path: this.embeddingKey,
       numCandidates: query.similarityTopK * 10,
       limit: query.similarityTopK,
-      index: this.indexName,
+      index: this.indexName
     };
 
     if (query.filters) {
@@ -126,9 +126,9 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
       {
         $project: {
           score: { $meta: "vectorSearchScore" },
-          [this.embeddingKey]: 0,
-        },
-      },
+          [this.embeddingKey]: 0
+        }
+      }
     ];
 
     console.debug("Running query pipeline: ", pipeline);
@@ -155,7 +155,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
     const result = {
       nodes,
       similarities,
-      ids,
+      ids
     };
 
     console.debug("Result of query (ids):", ids);

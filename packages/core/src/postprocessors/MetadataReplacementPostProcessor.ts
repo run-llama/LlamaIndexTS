@@ -12,7 +12,7 @@ export class MetadataReplacementPostProcessor implements BaseNodePostprocessor {
     for (let n of nodes) {
       n.node.setContent(
         n.node.metadata[this.targetMetadataKey] ??
-          n.node.getContent(MetadataMode.NONE),
+          n.node.getContent(MetadataMode.NONE)
       );
     }
 

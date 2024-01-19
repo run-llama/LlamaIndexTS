@@ -11,7 +11,7 @@ import { Document, SimpleNodeParser } from "llamaindex";
 
 const nodeParser = new SimpleNodeParser();
 const nodes = nodeParser.getNodesFromDocuments([
-  new Document({ text: "I am 10 years old. John is 20 years old." }),
+  new Document({ text: "I am 10 years old. John is 20 years old." })
 ]);
 ```
 

@@ -4,35 +4,35 @@ import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "../../ServiceContext";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
   BaseDocumentStore,
   RefDocInfo,
   StorageContext,
-  storageContextFromDefaults,
+  storageContextFromDefaults
 } from "../../storage";
 import {
   BaseSynthesizer,
   CompactAndRefine,
-  ResponseSynthesizer,
+  ResponseSynthesizer
 } from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexList,
-  IndexStructType,
+  IndexStructType
 } from "../BaseIndex";
 import {
   SummaryIndexLLMRetriever,
-  SummaryIndexRetriever,
+  SummaryIndexRetriever
 } from "./SummaryIndexRetriever";
 
 export enum SummaryRetrieverMode {
   DEFAULT = "default",
   // EMBEDDING = "embedding",
-  LLM = "llm",
+  LLM = "llm"
 }
 
 export interface SummaryIndexOptions {
@@ -64,7 +64,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
     if (options.indexStruct && indexStructs.length > 0) {
       throw new Error(
-        "Cannot initialize index with both indexStruct and indexStore",
+        "Cannot initialize index with both indexStruct and indexStore"
       );
     }
 
@@ -74,7 +74,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       indexStruct = indexStructs[0];
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
-        options.indexId,
+        options.indexId
       )) as IndexList;
     } else {
       indexStruct = null;
@@ -83,25 +83,25 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.LIST) {
       throw new Error(
-        "Attempting to initialize SummaryIndex with non-list indexStruct",
+        "Attempting to initialize SummaryIndex with non-list indexStruct"
       );
     }
 
     if (indexStruct) {
       if (options.nodes) {
         throw new Error(
-          "Cannot initialize SummaryIndex with both nodes and indexStruct",
+          "Cannot initialize SummaryIndex with both nodes and indexStruct"
         );
       }
     } else {
       if (!options.nodes) {
         throw new Error(
-          "Cannot initialize SummaryIndex without nodes or indexStruct",
+          "Cannot initialize SummaryIndex without nodes or indexStruct"
         );
       }
       indexStruct = await SummaryIndex.buildIndexFromNodes(
         options.nodes,
-        storageContext.docStore,
+        storageContext.docStore
       );
 
       await indexStore.addIndexStruct(indexStruct);
@@ -112,7 +112,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       serviceContext,
       docStore,
       indexStore,
-      indexStruct,
+      indexStruct
     });
   }
 
@@ -121,7 +121,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     args: {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
-    } = {},
+    } = {}
   ): Promise<SummaryIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
@@ -137,7 +137,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     const index = await SummaryIndex.init({
       nodes,
       storageContext,
-      serviceContext,
+      serviceContext
     });
     return index;
   }
@@ -171,7 +171,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       let responseBuilder = new CompactAndRefine(this.serviceContext);
       responseSynthesizer = new ResponseSynthesizer({
         serviceContext: this.serviceContext,
-        responseBuilder,
+        responseBuilder
       });
     }
 
@@ -179,14 +179,14 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       retriever,
       responseSynthesizer,
       options?.preFilters,
-      options?.nodePostprocessors,
+      options?.nodePostprocessors
     );
   }
 
   static async buildIndexFromNodes(
     nodes: BaseNode[],
     docStore: BaseDocumentStore,
-    indexStruct?: IndexList,
+    indexStruct?: IndexList
   ): Promise<IndexList> {
     indexStruct = indexStruct || new IndexList();
 
@@ -206,7 +206,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
   async deleteRefDoc(
     refDocId: string,
-    deleteFromDocStore?: boolean,
+    deleteFromDocStore?: boolean
   ): Promise<void> {
     const refDocInfo = await this.docStore.getRefDocInfo(refDocId);
 
@@ -225,7 +225,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
   async deleteNodes(nodeIds: string[], deleteFromDocStore: boolean) {
     this.indexStruct.nodes = this.indexStruct.nodes.filter(
-      (existingNodeId: string) => !nodeIds.includes(existingNodeId),
+      (existingNodeId: string) => !nodeIds.includes(existingNodeId)
     );
 
     if (deleteFromDocStore) {

@@ -18,10 +18,10 @@ if (isDevelopment) {
   app.use(cors());
 } else if (prodCorsOrigin) {
   console.log(
-    `Running in production mode - allowing CORS for domain: ${prodCorsOrigin}`,
+    `Running in production mode - allowing CORS for domain: ${prodCorsOrigin}`
   );
   const corsOptions = {
-    origin: prodCorsOrigin, // Restrict to production domain
+    origin: prodCorsOrigin // Restrict to production domain
   };
   app.use(cors(corsOptions));
 } else {

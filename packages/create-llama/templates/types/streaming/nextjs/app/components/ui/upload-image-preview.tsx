@@ -4,7 +4,7 @@ import { cn } from "./lib/utils";
 
 export default function UploadImagePreview({
   url,
-  onRemove,
+  onRemove
 }: {
   url: string;
   onRemove: () => void;
@@ -19,7 +19,7 @@ export default function UploadImagePreview({
       />
       <div
         className={cn(
-          "absolute -top-2 -right-2 w-6 h-6 z-10 bg-gray-500 text-white rounded-full hidden group-hover:block",
+          "absolute -top-2 -right-2 w-6 h-6 z-10 bg-gray-500 text-white rounded-full hidden group-hover:block"
         )}
       >
         <XCircleIcon

@@ -25,7 +25,7 @@ export class DefaultContextGenerator implements ContextGenerator {
   private applyNodePostprocessors(nodes: NodeWithScore[]) {
     return this.nodePostprocessors.reduce(
       (nodes, nodePostprocessor) => nodePostprocessor.postprocessNodes(nodes),
-      nodes,
+      nodes
     );
   }
 
@@ -34,12 +34,12 @@ export class DefaultContextGenerator implements ContextGenerator {
       parentEvent = {
         id: randomUUID(),
         type: "wrapper",
-        tags: ["final"],
+        tags: ["final"]
       };
     }
     const sourceNodesWithScore = await this.retriever.retrieve(
       message,
-      parentEvent,
+      parentEvent
     );
 
     const nodes = this.applyNodePostprocessors(sourceNodesWithScore);
@@ -47,11 +47,11 @@ export class DefaultContextGenerator implements ContextGenerator {
     return {
       message: {
         content: this.contextSystemPrompt({
-          context: nodes.map((r) => (r.node as TextNode).text).join("\n\n"),
+          context: nodes.map((r) => (r.node as TextNode).text).join("\n\n")
         }),
-        role: "system",
+        role: "system"
       },
-      nodes,
+      nodes
     };
   }
 }

@@ -9,7 +9,7 @@ import { BaseReader } from "./base";
 export class PDFReader implements BaseReader {
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<Document[]> {
     const content = (await fs.readFile(file)) as any;
     if (!(content instanceof Buffer)) {
@@ -19,7 +19,7 @@ export class PDFReader implements BaseReader {
     const data = new Uint8Array(
       content.buffer,
       content.byteOffset,
-      content.byteLength,
+      content.byteLength
     );
     const pdf = await readPDF(data);
     return [new Document({ text: pdf.text, id_: file })];
@@ -30,7 +30,7 @@ export class PDFReader implements BaseReader {
 async function readPage(pageData: any) {
   //check documents https://mozilla.github.io/pdf.js/
   const textContent = await pageData.getTextContent({
-    includeMarkedContent: false,
+    includeMarkedContent: false
   });
 
   let lastY = null,
@@ -51,7 +51,7 @@ async function readPage(pageData: any) {
 }
 
 const PDF_DEFAULT_OPTIONS = {
-  max: 0,
+  max: 0
 };
 
 async function readPDF(data: Uint8Array, options = PDF_DEFAULT_OPTIONS) {
@@ -83,6 +83,6 @@ async function readPDF(data: Uint8Array, options = PDF_DEFAULT_OPTIONS) {
     info: metaData?.info,
     metadata: metaData?.metadata,
     text,
-    version,
+    version
   };
 }

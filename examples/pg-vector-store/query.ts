@@ -1,13 +1,13 @@
 import {
   PGVectorStore,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "llamaindex";
 
 async function main() {
   const readline = require("readline").createInterface({
     input: process.stdin,
-    output: process.stdout,
+    output: process.stdout
   });
 
   try {
@@ -40,7 +40,7 @@ async function main() {
   } catch (err) {
     console.error(err);
     console.log(
-      "If your PGVectorStore init failed, make sure to set env vars for PGUSER or USER, PGHOST, PGPORT and PGPASSWORD as needed.",
+      "If your PGVectorStore init failed, make sure to set env vars for PGUSER or USER, PGHOST, PGPORT and PGPASSWORD as needed."
     );
     process.exit(1);
   }
@@ -57,7 +57,7 @@ function getUserInput(readline: any): Promise<string> {
       "What would you like to know?\n>",
       (userInput: string) => {
         resolve(userInput);
-      },
+      }
     );
   });
 }

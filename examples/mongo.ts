@@ -19,7 +19,7 @@ async function main() {
     ["text"],
     "",
     filterQuery,
-    limit,
+    limit
   );
 
   //

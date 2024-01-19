@@ -15,7 +15,7 @@ import { SimilarityType } from "./types";
 export function similarity(
   embedding1: number[],
   embedding2: number[],
-  mode: SimilarityType = SimilarityType.DEFAULT,
+  mode: SimilarityType = SimilarityType.DEFAULT
 ): number {
   if (embedding1.length !== embedding2.length) {
     throw new Error("Embedding length mismatch");
@@ -72,7 +72,7 @@ export function getTopKEmbeddings(
   embeddings: number[][],
   similarityTopK: number = DEFAULT_SIMILARITY_TOP_K,
   embeddingIds: any[] | null = null,
-  similarityCutoff: number | null = null,
+  similarityCutoff: number | null = null
 ): [number[], any[]] {
   if (embeddingIds == null) {
     embeddingIds = Array(embeddings.length).map((_, i) => i);
@@ -80,7 +80,7 @@ export function getTopKEmbeddings(
 
   if (embeddingIds.length !== embeddings.length) {
     throw new Error(
-      "getTopKEmbeddings: embeddings and embeddingIds length mismatch",
+      "getTopKEmbeddings: embeddings and embeddingIds length mismatch"
     );
   }
 
@@ -115,7 +115,7 @@ export function getTopKEmbeddingsLearner(
   embeddings: number[][],
   similarityTopK?: number,
   embeddingsIds?: any[],
-  queryMode: VectorStoreQueryMode = VectorStoreQueryMode.SVM,
+  queryMode: VectorStoreQueryMode = VectorStoreQueryMode.SVM
 ): [number[], any[]] {
   throw new Error("Not implemented yet");
   // To support SVM properly we're probably going to have to use something like
@@ -130,7 +130,7 @@ export function getTopKMMREmbeddings(
   similarityTopK: number | null = null,
   embeddingIds: any[] | null = null,
   _similarityCutoff: number | null = null,
-  mmrThreshold: number | null = null,
+  mmrThreshold: number | null = null
 ): [number[], any[]] {
   let threshold = mmrThreshold || 0.5;
   similarityFn = similarityFn || similarity;
@@ -167,7 +167,7 @@ export function getTopKMMREmbeddings(
     for (let embedId of Array.from(embedMap.keys())) {
       let overlapWithRecent = similarityFn(
         embeddings[embedMap.get(embedId)!],
-        embeddings[fullEmbedMap.get(recentEmbeddingId!)!],
+        embeddings[fullEmbedMap.get(recentEmbeddingId!)!]
       );
       if (
         threshold * embedSimilarity.get(embedId)! -
@@ -246,7 +246,7 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
     // string or file URL
     const fs = DEFAULT_FS;
     const dataBuffer = await fs.readFile(
-      input instanceof URL ? input.pathname : input,
+      input instanceof URL ? input.pathname : input
     );
     input = new Blob([dataBuffer]);
   } else if (!(input instanceof Blob)) {

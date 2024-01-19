@@ -4,7 +4,7 @@ import { readImage } from "./utils";
 
 export enum ClipEmbeddingModelType {
   XENOVA_CLIP_VIT_BASE_PATCH32 = "Xenova/clip-vit-base-patch32",
-  XENOVA_CLIP_VIT_BASE_PATCH16 = "Xenova/clip-vit-base-patch16",
+  XENOVA_CLIP_VIT_BASE_PATCH16 = "Xenova/clip-vit-base-patch16"
 }
 
 export class ClipEmbedding extends MultiModalEmbedding {
@@ -38,7 +38,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
         "@xenova/transformers"
       );
       this.visionModel = await CLIPVisionModelWithProjection.from_pretrained(
-        this.modelType,
+        this.modelType
       );
     }
 
@@ -51,7 +51,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
         "@xenova/transformers"
       );
       this.textModel = await CLIPTextModelWithProjection.from_pretrained(
-        this.modelType,
+        this.modelType
       );
     }
 

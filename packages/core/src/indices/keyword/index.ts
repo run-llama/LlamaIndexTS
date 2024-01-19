@@ -1,9 +1,9 @@
 export {
   KeywordTableIndex,
-  KeywordTableRetrieverMode,
+  KeywordTableRetrieverMode
 } from "./KeywordTableIndex";
 export {
   KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,
-  KeywordTableSimpleRetriever,
+  KeywordTableSimpleRetriever
 } from "./KeywordTableIndexRetriever";

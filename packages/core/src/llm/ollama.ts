@@ -11,12 +11,12 @@ import {
   LLMChatParamsStreaming,
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
-  LLMMetadata,
+  LLMMetadata
 } from "./types";
 
 const messageAccessor = (data: any): ChatResponseChunk => {
   return {
-    delta: data.message.content,
+    delta: data.message.content
   };
 };
 const completionAccessor = (data: any): CompletionResponse => {
@@ -41,7 +41,7 @@ export class Ollama extends BaseEmbedding implements LLM {
     init: Partial<Ollama> & {
       // model is required
       model: string;
-    },
+    }
   ) {
     super();
     this.model = init.model;
@@ -55,39 +55,39 @@ export class Ollama extends BaseEmbedding implements LLM {
       topP: this.topP,
       maxTokens: undefined,
       contextWindow: this.contextWindow,
-      tokenizer: undefined,
+      tokenizer: undefined
     };
   }
 
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream } = params;
     const payload = {
       model: this.model,
       messages: messages.map((message) => ({
         role: message.role,
-        content: message.content,
+        content: message.content
       })),
       stream: !!stream,
       options: {
         temperature: this.temperature,
         num_ctx: this.contextWindow,
         top_p: this.topP,
-        ...this.additionalChatOptions,
-      },
+        ...this.additionalChatOptions
+      }
     };
     const response = await fetch(`${this.baseURL}/api/chat`, {
       body: JSON.stringify(payload),
       method: "POST",
       signal: AbortSignal.timeout(this.requestTimeout),
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
     if (!stream) {
       const raw = await response.json();
@@ -95,9 +95,9 @@ export class Ollama extends BaseEmbedding implements LLM {
       return {
         message: {
           role: "assistant",
-          content: message.content,
+          content: message.content
         },
-        raw,
+        raw
       };
     } else {
       const stream = response.body;
@@ -110,7 +110,7 @@ export class Ollama extends BaseEmbedding implements LLM {
   private async *streamChat<T>(
     stream: ReadableStream<Uint8Array>,
     accessor: (data: any) => T,
-    parentEvent?: Event,
+    parentEvent?: Event
   ): AsyncIterable<T> {
     const reader = stream.getReader();
     while (true) {
@@ -136,13 +136,13 @@ export class Ollama extends BaseEmbedding implements LLM {
   }
 
   complete(
-    params: LLMCompletionParamsStreaming,
+    params: LLMCompletionParamsStreaming
   ): Promise<AsyncIterable<CompletionResponse>>;
   complete(
-    params: LLMCompletionParamsNonStreaming,
+    params: LLMCompletionParamsNonStreaming
   ): Promise<CompletionResponse>;
   async complete(
-    params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
+    params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming
   ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
     const { prompt, parentEvent, stream } = params;
     const payload = {
@@ -153,22 +153,22 @@ export class Ollama extends BaseEmbedding implements LLM {
         temperature: this.temperature,
         num_ctx: this.contextWindow,
         top_p: this.topP,
-        ...this.additionalChatOptions,
-      },
+        ...this.additionalChatOptions
+      }
     };
     const response = await fetch(`${this.baseURL}/api/generate`, {
       body: JSON.stringify(payload),
       method: "POST",
       signal: AbortSignal.timeout(this.requestTimeout),
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
     if (!stream) {
       const raw = await response.json();
       return {
         text: raw.response,
-        raw,
+        raw
       };
     } else {
       const stream = response.body;
@@ -190,16 +190,16 @@ export class Ollama extends BaseEmbedding implements LLM {
         temperature: this.temperature,
         num_ctx: this.contextWindow,
         top_p: this.topP,
-        ...this.additionalChatOptions,
-      },
+        ...this.additionalChatOptions
+      }
     };
     const response = await fetch(`${this.baseURL}/api/embeddings`, {
       body: JSON.stringify(payload),
       method: "POST",
       signal: AbortSignal.timeout(this.requestTimeout),
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
     const { embedding } = await response.json();
     return embedding;

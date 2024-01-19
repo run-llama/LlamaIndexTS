@@ -14,7 +14,7 @@ const identity = (x: string) => x;
 export const copy = async (
   src: string | string[],
   dest: string,
-  { cwd, rename = identity, parents = true }: CopyOption = {},
+  { cwd, rename = identity, parents = true }: CopyOption = {}
 ) => {
   const source = typeof src === "string" ? [src] : src;
 
@@ -26,7 +26,7 @@ export const copy = async (
     cwd,
     dot: true,
     absolute: false,
-    stats: false,
+    stats: false
   });
 
   const destRelativeToCwd = cwd ? path.resolve(cwd, dest) : dest;
@@ -45,6 +45,6 @@ export const copy = async (
       await fs.promises.mkdir(path.dirname(to), { recursive: true });
 
       return fs.promises.copyFile(from, to);
-    }),
+    })
   );
 };

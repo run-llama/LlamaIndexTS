@@ -5,7 +5,7 @@ import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_FS,
   DEFAULT_NAMESPACE,
-  DEFAULT_PERSIST_DIR,
+  DEFAULT_PERSIST_DIR
 } from "../constants";
 import { SimpleKVStore } from "../kvStore/SimpleKVStore";
 import { BaseInMemoryKVStore } from "../kvStore/types";
@@ -26,23 +26,23 @@ export class SimpleDocumentStore extends KVDocumentStore {
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
     namespace?: string,
-    fsModule?: GenericFileSystem,
+    fsModule?: GenericFileSystem
   ): Promise<SimpleDocumentStore> {
     const persistPath = path.join(
       persistDir,
-      DEFAULT_DOC_STORE_PERSIST_FILENAME,
+      DEFAULT_DOC_STORE_PERSIST_FILENAME
     );
     return await SimpleDocumentStore.fromPersistPath(
       persistPath,
       namespace,
-      fsModule,
+      fsModule
     );
   }
 
   static async fromPersistPath(
     persistPath: string,
     namespace?: string,
-    fs?: GenericFileSystem,
+    fs?: GenericFileSystem
   ): Promise<SimpleDocumentStore> {
     fs = fs || DEFAULT_FS;
     const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
@@ -52,9 +52,9 @@ export class SimpleDocumentStore extends KVDocumentStore {
   async persist(
     persistPath: string = path.join(
       DEFAULT_PERSIST_DIR,
-      DEFAULT_DOC_STORE_PERSIST_FILENAME,
+      DEFAULT_DOC_STORE_PERSIST_FILENAME
     ),
-    fs?: GenericFileSystem,
+    fs?: GenericFileSystem
   ): Promise<void> {
     fs = fs || DEFAULT_FS;
     if (

@@ -7,7 +7,7 @@ export interface ChatInputProps {
   handleInputChange?: (
     e:
       | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+      | React.ChangeEvent<HTMLTextAreaElement>
   ) => void;
   /** Form submission handler to automatically reset input and append a user message  */
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;

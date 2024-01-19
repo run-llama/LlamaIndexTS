@@ -1,7 +1,7 @@
 import {
   Document,
   KeywordTableIndex,
-  KeywordTableRetrieverMode,
+  KeywordTableRetrieverMode
 } from "llamaindex";
 import essay from "./essay";
 
@@ -12,16 +12,16 @@ async function main() {
   const allModes: KeywordTableRetrieverMode[] = [
     KeywordTableRetrieverMode.DEFAULT,
     KeywordTableRetrieverMode.SIMPLE,
-    KeywordTableRetrieverMode.RAKE,
+    KeywordTableRetrieverMode.RAKE
   ];
   allModes.forEach(async (mode) => {
     const queryEngine = index.asQueryEngine({
       retriever: index.asRetriever({
-        mode,
-      }),
+        mode
+      })
     });
     const response = await queryEngine.query({
-      query: "What did the author do growing up?",
+      query: "What did the author do growing up?"
     });
     console.log(response.toString());
   });

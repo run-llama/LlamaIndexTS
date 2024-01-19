@@ -6,7 +6,7 @@ const REQUIRED_ENV_VARS = [
   "MONGO_URI",
   "MONGODB_DATABASE",
   "MONGODB_VECTORS",
-  "MONGODB_VECTOR_INDEX",
+  "MONGODB_VECTOR_INDEX"
 ];
 
 export function checkRequiredEnvVars() {
@@ -17,11 +17,11 @@ export function checkRequiredEnvVars() {
   if (missingEnvVars.length > 0) {
     console.log(
       `The following environment variables are required but missing: ${missingEnvVars.join(
-        ", ",
-      )}`,
+        ", "
+      )}`
     );
     throw new Error(
-      `Missing environment variables: ${missingEnvVars.join(", ")}`,
+      `Missing environment variables: ${missingEnvVars.join(", ")}`
     );
   }
 }

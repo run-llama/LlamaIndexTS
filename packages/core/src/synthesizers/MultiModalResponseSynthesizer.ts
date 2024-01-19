@@ -7,7 +7,7 @@ import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
 import {
   BaseSynthesizer,
   SynthesizeParamsNonStreaming,
-  SynthesizeParamsStreaming,
+  SynthesizeParamsStreaming
 } from "./types";
 
 export class MultiModalResponseSynthesizer implements BaseSynthesizer {
@@ -18,7 +18,7 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
   constructor({
     serviceContext,
     textQATemplate,
-    metadataMode,
+    metadataMode
   }: Partial<MultiModalResponseSynthesizer> = {}) {
     this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.metadataMode = metadataMode ?? MetadataMode.NONE;
@@ -26,14 +26,14 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
   }
 
   synthesize(
-    params: SynthesizeParamsStreaming,
+    params: SynthesizeParamsStreaming
   ): Promise<AsyncIterable<Response>>;
   synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
   async synthesize({
     query,
     nodesWithScore,
     parentEvent,
-    stream,
+    stream
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
   > {
@@ -43,7 +43,7 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
     const nodes = nodesWithScore.map(({ node }) => node);
     const { imageNodes, textNodes } = splitNodesByType(nodes);
     const textChunks = textNodes.map((node) =>
-      node.getContent(this.metadataMode),
+      node.getContent(this.metadataMode)
     );
     // TODO: use builders to generate context
     const context = textChunks.join("\n\n");
@@ -53,18 +53,18 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
         return {
           type: "image_url",
           image_url: {
-            url: await imageToDataUrl(node.image),
-          },
+            url: await imageToDataUrl(node.image)
+          }
         } as MessageContentDetail;
-      }),
+      })
     );
     const prompt: MessageContentDetail[] = [
       { type: "text", text: textPrompt },
-      ...images,
+      ...images
     ];
     let response = await this.serviceContext.llm.complete({
       prompt,
-      parentEvent,
+      parentEvent
     });
     return new Response(response.text, nodes);
   }

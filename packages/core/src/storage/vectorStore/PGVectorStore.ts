@@ -77,7 +77,7 @@ export class PGVectorStore implements VectorStore {
         // Create DB connection
         // Read connection params from env - see comment block above
         const db = new pg.Client({
-          connectionString: this.connectionString,
+          connectionString: this.connectionString
         });
         await db.connect();
 
@@ -160,7 +160,7 @@ export class PGVectorStore implements VectorStore {
         this.collection,
         row.getContent(MetadataMode.EMBED),
         meta,
-        "[" + row.getEmbedding().join(",") + "]",
+        "[" + row.getEmbedding().join(",") + "]"
       ];
 
       result.push(params);
@@ -235,7 +235,7 @@ export class PGVectorStore implements VectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: any
   ): Promise<VectorStoreQueryResult> {
     // TODO QUERY TYPES:
     //    Distance:       SELECT embedding <-> $1 AS distance FROM items;
@@ -266,14 +266,14 @@ export class PGVectorStore implements VectorStore {
         id_: row.id,
         text: row.document,
         metadata: row.metadata,
-        embedding: row.embeddings,
+        embedding: row.embeddings
       });
     });
 
     const ret = {
       nodes: nodes,
       similarities: results.rows.map((row) => row.s),
-      ids: results.rows.map((row) => row.id),
+      ids: results.rows.map((row) => row.id)
     };
 
     return Promise.resolve(ret);
@@ -287,7 +287,7 @@ export class PGVectorStore implements VectorStore {
    */
   persist(
     persistPath: string,
-    fs?: GenericFileSystem | undefined,
+    fs?: GenericFileSystem | undefined
   ): Promise<void> {
     return Promise.resolve();
   }

@@ -1,12 +1,12 @@
 import {
   BaseOutputParser,
   StructuredOutput,
-  SubQuestionOutputParser,
+  SubQuestionOutputParser
 } from "./OutputParser";
 import {
   SubQuestionPrompt,
   buildToolsText,
-  defaultSubQuestionPrompt,
+  defaultSubQuestionPrompt
 } from "./Prompt";
 import { ToolMetadata } from "./Tool";
 import { OpenAI } from "./llm/LLM";
@@ -45,8 +45,8 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
       await this.llm.complete({
         prompt: this.prompt({
           toolsStr,
-          queryStr,
-        }),
+          queryStr
+        })
       })
     ).text;
 

@@ -7,14 +7,14 @@ import { similarity } from "./utils";
 export enum SimilarityType {
   DEFAULT = "cosine",
   DOT_PRODUCT = "dot_product",
-  EUCLIDEAN = "euclidean",
+  EUCLIDEAN = "euclidean"
 }
 
 export abstract class BaseEmbedding {
   similarity(
     embedding1: number[],
     embedding2: number[],
-    mode: SimilarityType = SimilarityType.DEFAULT,
+    mode: SimilarityType = SimilarityType.DEFAULT
   ): number {
     return similarity(embedding1, embedding2, mode);
   }

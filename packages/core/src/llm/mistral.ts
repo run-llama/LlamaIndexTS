@@ -2,7 +2,7 @@ import {
   CallbackManager,
   Event,
   EventType,
-  StreamCallbackResponse,
+  StreamCallbackResponse
 } from "../callbacks/CallbackManager";
 import { BaseLLM } from "./base";
 import {
@@ -10,13 +10,13 @@ import {
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
+  LLMChatParamsStreaming
 } from "./types";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },
   "mistral-small": { contextWindow: 32000 },
-  "mistral-medium": { contextWindow: 32000 },
+  "mistral-medium": { contextWindow: 32000 }
 };
 
 export class MistralAISession {
@@ -80,7 +80,7 @@ export class MistralAI extends BaseLLM {
       topP: this.topP,
       maxTokens: this.maxTokens,
       contextWindow: ALL_AVAILABLE_MISTRAL_MODELS[this.model].contextWindow,
-      tokenizer: undefined,
+      tokenizer: undefined
     };
   }
 
@@ -96,16 +96,16 @@ export class MistralAI extends BaseLLM {
       topP: this.topP,
       safeMode: this.safeMode,
       randomSeed: this.randomSeed,
-      messages,
+      messages
     };
   }
 
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, stream } = params;
     // Streaming
@@ -117,13 +117,13 @@ export class MistralAI extends BaseLLM {
     const response = await client.chat(this.buildParams(messages));
     const message = response.choices[0].message;
     return {
-      message,
+      message
     };
   }
 
   protected async *streamChat({
     messages,
-    parentEvent,
+    parentEvent
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
     //Now let's wrap our stream in a callback
     const onLLMStream = this.callbackManager?.onLLMStream
@@ -137,7 +137,7 @@ export class MistralAI extends BaseLLM {
       ? parentEvent
       : {
           id: "unspecified",
-          type: "llmPredict" as EventType,
+          type: "llmPredict" as EventType
         };
 
     //Indices
@@ -153,14 +153,14 @@ export class MistralAI extends BaseLLM {
         event: event,
         index: idx_counter,
         isDone: isDone,
-        token: part,
+        token: part
       };
       onLLMStream(stream_callback);
 
       idx_counter++;
 
       yield {
-        delta: part.choices[0].delta.content ?? "",
+        delta: part.choices[0].delta.content ?? ""
       };
     }
     return;

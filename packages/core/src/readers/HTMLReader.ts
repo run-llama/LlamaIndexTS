@@ -20,7 +20,7 @@ export class HTMLReader implements BaseReader {
    */
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file, "utf-8");
     const htmlOptions = this.getOptions();
@@ -52,8 +52,8 @@ export class HTMLReader implements BaseReader {
         "script", // default
         "style", // default
         "xml", // default
-        "head", // <-- custom-added
-      ],
+        "head" // <-- custom-added
+      ]
       // Keep the URLs for embedded links
       // cb: (tag: any, deleteFrom: number, deleteTo: number, insert: string, rangesArr: any, proposedReturn: string) => {
       //   let temp;

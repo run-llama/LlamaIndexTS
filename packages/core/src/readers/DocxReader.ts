@@ -8,7 +8,7 @@ export class DocxReader implements BaseReader {
   /** DocxParser */
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<Document[]> {
     const dataBuffer = (await fs.readFile(file)) as any;
     const { value } = await mammoth.extractRawText({ buffer: dataBuffer });

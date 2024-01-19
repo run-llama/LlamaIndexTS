@@ -8,7 +8,7 @@ import { BaseEmbedding } from "../../embeddings";
 import {
   VectorStoreQuery,
   VectorStoreQueryMode,
-  VectorStoreQueryResult,
+  VectorStoreQueryResult
 } from "../../storage/vectorStore/types";
 import { VectorStoreIndex } from "./VectorStoreIndex";
 
@@ -25,7 +25,7 @@ export class VectorIndexRetriever implements BaseRetriever {
   constructor({
     index,
     similarityTopK,
-    imageSimilarityTopK,
+    imageSimilarityTopK
   }: {
     index: VectorStoreIndex;
     similarityTopK?: number;
@@ -40,11 +40,11 @@ export class VectorIndexRetriever implements BaseRetriever {
   async retrieve(
     query: string,
     parentEvent?: Event,
-    preFilters?: unknown,
+    preFilters?: unknown
   ): Promise<NodeWithScore[]> {
     let nodesWithScores = await this.textRetrieve(query, preFilters);
     nodesWithScores = nodesWithScores.concat(
-      await this.textToImageRetrieve(query, preFilters),
+      await this.textToImageRetrieve(query, preFilters)
     );
     this.sendEvent(query, nodesWithScores, parentEvent);
     return nodesWithScores;
@@ -52,12 +52,12 @@ export class VectorIndexRetriever implements BaseRetriever {
 
   protected async textRetrieve(
     query: string,
-    preFilters?: unknown,
+    preFilters?: unknown
   ): Promise<NodeWithScore[]> {
     const q = await this.buildVectorStoreQuery(
       this.index.embedModel,
       query,
-      this.similarityTopK,
+      this.similarityTopK
     );
     const result = await this.index.vectorStore.query(q, preFilters);
     return this.buildNodeListFromQueryResult(result);
@@ -71,7 +71,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     const q = await this.buildVectorStoreQuery(
       this.index.imageEmbedModel,
       query,
-      this.imageSimilarityTopK,
+      this.imageSimilarityTopK
     );
     const result = await this.index.imageVectorStore.query(q, preFilters);
     return this.buildNodeListFromQueryResult(result);
@@ -80,7 +80,7 @@ export class VectorIndexRetriever implements BaseRetriever {
   protected sendEvent(
     query: string,
     nodesWithScores: NodeWithScore<Metadata>[],
-    parentEvent: Event | undefined,
+    parentEvent: Event | undefined
   ) {
     if (this.serviceContext.callbackManager.onRetrieve) {
       this.serviceContext.callbackManager.onRetrieve({
@@ -88,8 +88,8 @@ export class VectorIndexRetriever implements BaseRetriever {
         nodes: nodesWithScores,
         event: globalsHelper.createEvent({
           parentEvent,
-          type: "retrieve",
-        }),
+          type: "retrieve"
+        })
       });
     }
   }
@@ -97,14 +97,14 @@ export class VectorIndexRetriever implements BaseRetriever {
   protected async buildVectorStoreQuery(
     embedModel: BaseEmbedding,
     query: string,
-    similarityTopK: number,
+    similarityTopK: number
   ): Promise<VectorStoreQuery> {
     const queryEmbedding = await embedModel.getQueryEmbedding(query);
 
     return {
       queryEmbedding: queryEmbedding,
       mode: VectorStoreQueryMode.DEFAULT,
-      similarityTopK: similarityTopK,
+      similarityTopK: similarityTopK
     };
   }
 
@@ -125,7 +125,7 @@ export class VectorIndexRetriever implements BaseRetriever {
 
       nodesWithScores.push({
         node: node,
-        score: result.similarities[i],
+        score: result.similarities[i]
       });
     }
 

@@ -7,7 +7,7 @@ describe("SimpleNodeParser", () => {
   beforeEach(() => {
     simpleNodeParser = new SimpleNodeParser({
       chunkSize: 1024,
-      chunkOverlap: 20,
+      chunkOverlap: 20
     });
   });
 
@@ -16,7 +16,7 @@ describe("SimpleNodeParser", () => {
       text: "Hello. Cat Mouse. Dog.",
       metadata: { animals: true },
       excludedLlmMetadataKeys: ["animals"],
-      excludedEmbedMetadataKeys: ["animals"],
+      excludedEmbedMetadataKeys: ["animals"]
     });
     const result = simpleNodeParser.getNodesFromDocuments([doc]);
     expect(result.length).toEqual(1);
@@ -25,13 +25,13 @@ describe("SimpleNodeParser", () => {
     expect(node.metadata).not.toBe(doc.metadata);
     expect(node.excludedLlmMetadataKeys).not.toBe(doc.excludedLlmMetadataKeys);
     expect(node.excludedEmbedMetadataKeys).not.toBe(
-      doc.excludedEmbedMetadataKeys,
+      doc.excludedEmbedMetadataKeys
     );
     // but the same content
     expect(node.metadata).toEqual(doc.metadata);
     expect(node.excludedLlmMetadataKeys).toEqual(doc.excludedLlmMetadataKeys);
     expect(node.excludedEmbedMetadataKeys).toEqual(
-      doc.excludedEmbedMetadataKeys,
+      doc.excludedEmbedMetadataKeys
     );
     // check relationship
     expect(node.sourceNode?.nodeId).toBe(doc.id_);

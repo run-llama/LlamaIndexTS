@@ -36,10 +36,10 @@ export function serviceContextFromDefaults(options?: ServiceContextOptions) {
       options?.nodeParser ??
       new SimpleNodeParser({
         chunkSize: options?.chunkSize,
-        chunkOverlap: options?.chunkOverlap,
+        chunkOverlap: options?.chunkOverlap
       }),
     promptHelper: options?.promptHelper ?? new PromptHelper(),
-    callbackManager,
+    callbackManager
   };
 
   return serviceContext;
@@ -47,7 +47,7 @@ export function serviceContextFromDefaults(options?: ServiceContextOptions) {
 
 export function serviceContextFromServiceContext(
   serviceContext: ServiceContext,
-  options: ServiceContextOptions,
+  options: ServiceContextOptions
 ) {
   const newServiceContext = { ...serviceContext };
   if (options.llm) {

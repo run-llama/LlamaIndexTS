@@ -16,7 +16,7 @@ export class ImageReader implements BaseReader {
    */
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file);
     const blob = new Blob([dataBuffer]);

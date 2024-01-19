@@ -5,7 +5,7 @@ import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
-  DEFAULT_PADDING,
+  DEFAULT_PADDING
 } from "./constants";
 
 export function getEmptyPromptTxt(prompt: SimplePrompt) {
@@ -44,7 +44,7 @@ export class PromptHelper {
     chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
     chunkSizeLimit?: number,
     tokenizer?: (text: string) => Uint32Array,
-    separator = " ",
+    separator = " "
   ) {
     this.contextWindow = contextWindow;
     this.numOutput = numOutput;
@@ -77,7 +77,7 @@ export class PromptHelper {
   private getAvailableChunkSize(
     prompt: SimplePrompt,
     numChunks = 1,
-    padding = 5,
+    padding = 5
   ) {
     const availableContextSize = this.getAvailableContextSize(prompt);
 
@@ -100,7 +100,7 @@ export class PromptHelper {
   getTextSplitterGivenPrompt(
     prompt: SimplePrompt,
     numChunks = 1,
-    padding = DEFAULT_PADDING,
+    padding = DEFAULT_PADDING
   ) {
     const chunkSize = this.getAvailableChunkSize(prompt, numChunks, padding);
     if (chunkSize === 0) {
@@ -121,7 +121,7 @@ export class PromptHelper {
   repack(
     prompt: SimplePrompt,
     textChunks: string[],
-    padding = DEFAULT_PADDING,
+    padding = DEFAULT_PADDING
   ) {
     const textSplitter = this.getTextSplitterGivenPrompt(prompt, 1, padding);
     const combinedStr = textChunks.join("\n\n");

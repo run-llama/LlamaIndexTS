@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
 
 export enum Tokenizers {
-  CL100K_BASE = "cl100k_base",
+  CL100K_BASE = "cl100k_base"
 }
 
 /**
@@ -28,7 +28,7 @@ class GlobalsHelper {
         const text = encoding.decode(numberArray);
         const uint8Array = new TextEncoder().encode(text);
         return new TextDecoder().decode(uint8Array);
-      },
+      }
     };
   }
 
@@ -57,7 +57,7 @@ class GlobalsHelper {
   createEvent({
     parentEvent,
     type,
-    tags,
+    tags
   }: {
     parentEvent?: Event;
     type: EventType;
@@ -68,7 +68,7 @@ class GlobalsHelper {
       type,
       // inherit parent tags if tags not set
       tags: tags || parentEvent?.tags,
-      parentId: parentEvent?.id,
+      parentId: parentEvent?.id
     };
   }
 }

@@ -11,10 +11,10 @@ describe("MetadataReplacementPostProcessor", () => {
     nodes = [
       {
         node: new TextNode({
-          text: "OldContent",
+          text: "OldContent"
         }),
-        score: 5,
-      },
+        score: 5
+      }
     ];
   });
 

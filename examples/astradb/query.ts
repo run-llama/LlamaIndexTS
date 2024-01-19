@@ -1,7 +1,7 @@
 import {
   AstraDBVectorStore,
   serviceContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 const collectionName = "movie_reviews";
@@ -19,7 +19,7 @@ async function main() {
     const queryEngine = await index.asQueryEngine({ retriever });
 
     const results = await queryEngine.query({
-      query: "What is the best reviewed movie?",
+      query: "What is the best reviewed movie?"
     });
 
     console.log(results.response);

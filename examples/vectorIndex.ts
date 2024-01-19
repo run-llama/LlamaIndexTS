@@ -17,7 +17,7 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query({
-    query: "What did the author do in college?",
+    query: "What did the author do in college?"
   });
 
   // Output response

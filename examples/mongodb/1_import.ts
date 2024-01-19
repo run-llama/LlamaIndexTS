@@ -25,7 +25,7 @@ async function importJsonToMongo() {
   await collection.insertMany(tweets);
 
   console.log(
-    `Data imported successfully to the MongoDB collection ${collectionName}.`,
+    `Data imported successfully to the MongoDB collection ${collectionName}.`
   );
   await client.close();
 }

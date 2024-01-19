@@ -7,7 +7,7 @@ import type {
   TemplateEngine,
   TemplateFramework,
   TemplateType,
-  TemplateUI,
+  TemplateUI
 } from "../helpers";
 import { createTestDir, runApp, runCreateLlama, type AppType } from "./utils";
 
@@ -15,7 +15,7 @@ const templateTypes: TemplateType[] = ["streaming", "simple"];
 const templateFrameworks: TemplateFramework[] = [
   "nextjs",
   "express",
-  "fastapi",
+  "fastapi"
 ];
 const templateEngines: TemplateEngine[] = ["simple", "context"];
 const templateUIs: TemplateUI[] = ["shadcn", "html"];
@@ -61,7 +61,7 @@ for (const templateType of templateTypes) {
               templateEngine,
               templateUI,
               appType,
-              externalPort,
+              externalPort
             );
 
             if (templateFramework !== "fastapi") {
@@ -76,17 +76,17 @@ for (const templateType of templateTypes) {
           });
           test("Frontend should have a title", async ({ page }) => {
             test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
+              appType === "--no-frontend" || templateFramework === "fastapi"
             );
             await page.goto(`http://localhost:${port}`);
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
           });
 
           test("Frontend should be able to submit a message and receive a response", async ({
-            page,
+            page
           }) => {
             test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
+              appType === "--no-frontend" || templateFramework === "fastapi"
             );
             await page.goto(`http://localhost:${port}`);
             await page.fill("form input", "hello");
@@ -96,8 +96,8 @@ for (const templateType of templateTypes) {
                 return res.url().includes("/api/chat") && res.status() === 200;
               },
               {
-                timeout: 1000 * 60,
-              },
+                timeout: 1000 * 60
+              }
             );
             const text = await response.text();
             console.log("AI response when submitting message: ", text);
@@ -105,10 +105,10 @@ for (const templateType of templateTypes) {
           });
 
           test("Backend should response when calling API", async ({
-            request,
+            request
           }) => {
             test.skip(
-              appType !== "--no-frontend" || templateFramework === "fastapi",
+              appType !== "--no-frontend" || templateFramework === "fastapi"
             );
             const response = await request.post(
               `http://localhost:${port}/api/chat`,
@@ -117,11 +117,11 @@ for (const templateType of templateTypes) {
                   messages: [
                     {
                       role: "user",
-                      content: "Hello",
-                    },
-                  ],
-                },
-              },
+                      content: "Hello"
+                    }
+                  ]
+                }
+              }
             );
             const text = await response.text();
             console.log("AI response when calling API: ", text);

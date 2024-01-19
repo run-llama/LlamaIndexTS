@@ -10,7 +10,7 @@ export abstract class MultiModalEmbedding extends BaseEmbedding {
 
   async getImageEmbeddings(images: ImageType[]): Promise<number[][]> {
     return Promise.all(
-      images.map((imgFilePath) => this.getImageEmbedding(imgFilePath)),
+      images.map((imgFilePath) => this.getImageEmbedding(imgFilePath))
     );
   }
 }

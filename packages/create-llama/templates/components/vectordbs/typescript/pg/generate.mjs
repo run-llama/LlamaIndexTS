@@ -4,13 +4,13 @@ import {
   PGVectorStore,
   SimpleDirectoryReader,
   VectorStoreIndex,
-  storageContextFromDefaults,
+  storageContextFromDefaults
 } from "llamaindex";
 import {
   PGVECTOR_SCHEMA,
   PGVECTOR_TABLE,
   STORAGE_DIR,
-  checkRequiredEnvVars,
+  checkRequiredEnvVars
 } from "./shared.mjs";
 
 dotenv.config();
@@ -18,14 +18,14 @@ dotenv.config();
 async function loadAndIndex() {
   // load objects from storage and convert them into LlamaIndex Document objects
   const documents = await new SimpleDirectoryReader().loadData({
-    directoryPath: STORAGE_DIR,
+    directoryPath: STORAGE_DIR
   });
 
   // create postgres vector store
   const vectorStore = new PGVectorStore({
     connectionString: process.env.PG_CONNECTION_STRING,
     schemaName: PGVECTOR_SCHEMA,
-    tableName: PGVECTOR_TABLE,
+    tableName: PGVECTOR_TABLE
   });
   vectorStore.setCollection(STORAGE_DIR);
   vectorStore.clearCollection();

@@ -21,7 +21,7 @@ export function expandTokensWithSubtokens(tokens: Set<string>): Set<string> {
 export function extractKeywordsGivenResponse(
   response: string,
   startToken: string = "",
-  lowercase: boolean = true,
+  lowercase: boolean = true
 ): Set<string> {
   const results: string[] = [];
   response = response.trim();
@@ -44,11 +44,11 @@ export function extractKeywordsGivenResponse(
 
 export function simpleExtractKeywords(
   textChunk: string,
-  maxKeywords?: number,
+  maxKeywords?: number
 ): Set<string> {
   const regex: RegExp = /\w+/g;
   let tokens: string[] = [...textChunk.matchAll(regex)].map((token) =>
-    token[0].toLowerCase().trim(),
+    token[0].toLowerCase().trim()
   );
 
   // Creating a frequency map
@@ -59,7 +59,7 @@ export function simpleExtractKeywords(
 
   // Sorting tokens by frequency
   const sortedTokens: string[] = Object.keys(valueCounts).sort(
-    (a, b) => valueCounts[b] - valueCounts[a],
+    (a, b) => valueCounts[b] - valueCounts[a]
   );
 
   const keywords: string[] = maxKeywords
@@ -71,7 +71,7 @@ export function simpleExtractKeywords(
 
 export function rakeExtractKeywords(
   textChunk: string,
-  maxKeywords?: number,
+  maxKeywords?: number
 ): Set<string> {
   const keywords = Object.keys(rake(textChunk));
   const limitedKeywords = maxKeywords

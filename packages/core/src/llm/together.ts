@@ -7,8 +7,8 @@ export class TogetherLLM extends OpenAI {
       apiKey: process.env.TOGETHER_API_KEY,
       additionalSessionOptions: {
         ...init?.additionalSessionOptions,
-        baseURL: "https://api.together.xyz/v1",
-      },
+        baseURL: "https://api.together.xyz/v1"
+      }
     });
   }
 }

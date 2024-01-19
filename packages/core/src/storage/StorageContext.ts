@@ -3,7 +3,7 @@ import { GenericFileSystem } from "./FileSystem";
 import {
   DEFAULT_FS,
   DEFAULT_IMAGE_VECTOR_NAMESPACE,
-  DEFAULT_NAMESPACE,
+  DEFAULT_NAMESPACE
 } from "./constants";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
 import { BaseDocumentStore } from "./docStore/types";
@@ -36,7 +36,7 @@ export async function storageContextFromDefaults({
   imageVectorStore,
   storeImages,
   persistDir,
-  fs,
+  fs
 }: BuilderParams): Promise<StorageContext> {
   if (!persistDir) {
     docStore = docStore || new SimpleDocumentStore();
@@ -50,7 +50,7 @@ export async function storageContextFromDefaults({
       (await SimpleDocumentStore.fromPersistDir(
         persistDir,
         DEFAULT_NAMESPACE,
-        fs,
+        fs
       ));
     indexStore =
       indexStore || (await SimpleIndexStore.fromPersistDir(persistDir, fs));
@@ -59,7 +59,7 @@ export async function storageContextFromDefaults({
     imageVectorStore = storeImages
       ? await SimpleVectorStore.fromPersistDir(
           path.join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
-          fs,
+          fs
         )
       : imageVectorStore;
   }
@@ -68,6 +68,6 @@ export async function storageContextFromDefaults({
     docStore,
     indexStore,
     vectorStore,
-    imageVectorStore,
+    imageVectorStore
   };
 }

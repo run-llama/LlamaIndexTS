@@ -13,7 +13,7 @@ export default function ChatMessages({
   messages,
   isLoading,
   reload,
-  stop,
+  stop
 }: {
   messages: Message[];
   isLoading?: boolean;

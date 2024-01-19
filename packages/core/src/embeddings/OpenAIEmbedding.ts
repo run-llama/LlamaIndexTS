@@ -4,13 +4,13 @@ import {
   getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
-  shouldUseAzure,
+  shouldUseAzure
 } from "../llm/azure";
 import { OpenAISession, getOpenAISession } from "../llm/openai";
 import { BaseEmbedding } from "./types";
 
 export enum OpenAIEmbeddingModelType {
-  TEXT_EMBED_ADA_002 = "text-embedding-ada-002",
+  TEXT_EMBED_ADA_002 = "text-embedding-ada-002"
 }
 
 export class OpenAIEmbedding extends BaseEmbedding {
@@ -39,12 +39,12 @@ export class OpenAIEmbedding extends BaseEmbedding {
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = getAzureConfigFromEnv({
         ...init?.azure,
-        model: getAzureModel(this.model),
+        model: getAzureModel(this.model)
       });
 
       if (!azureConfig.apiKey) {
         throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
+          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable."
         );
       }
 
@@ -58,7 +58,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
           maxRetries: this.maxRetries,
           timeout: this.timeout,
           defaultQuery: { "api-version": azureConfig.apiVersion },
-          ...this.additionalSessionOptions,
+          ...this.additionalSessionOptions
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
@@ -68,7 +68,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
           apiKey: this.apiKey,
           maxRetries: this.maxRetries,
           timeout: this.timeout,
-          ...this.additionalSessionOptions,
+          ...this.additionalSessionOptions
         });
     }
   }
@@ -76,7 +76,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
   private async getOpenAIEmbedding(input: string) {
     const { data } = await this.session.openai.embeddings.create({
       model: this.model,
-      input,
+      input
     });
 
     return data[0].embedding;

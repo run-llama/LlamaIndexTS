@@ -8,8 +8,8 @@ export class TogetherEmbedding extends OpenAIEmbedding {
       ...init,
       additionalSessionOptions: {
         ...init?.additionalSessionOptions,
-        baseURL: "https://api.together.xyz/v1",
-      },
+        baseURL: "https://api.together.xyz/v1"
+      }
     });
     this.model = init?.model ?? "togethercomputer/m2-bert-80M-32k-retrieval";
   }

@@ -12,12 +12,12 @@ const FeatureList: FeatureItem[] = [
   {
     title: "Data Driven",
     Svg: require("@site/static/img/undraw_docusaurus_mountain.svg").default,
-    description: <>LlamaIndex.TS is all about using your data with LLMs.</>,
+    description: <>LlamaIndex.TS is all about using your data with LLMs.</>
   },
   {
     title: "Typescript Native",
     Svg: require("@site/static/img/undraw_docusaurus_tree.svg").default,
-    description: <>We ❤️ Typescript, and so do our users.</>,
+    description: <>We ❤️ Typescript, and so do our users.</>
   },
   {
     title: "Built by the Community",
@@ -26,8 +26,8 @@ const FeatureList: FeatureItem[] = [
       <>
         LlamaIndex.TS is a community project, and we welcome your contributions!
       </>
-    ),
-  },
+    )
+  }
 ];
 
 function Feature({ title, Svg, description }: FeatureItem) {

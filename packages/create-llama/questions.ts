@@ -19,24 +19,24 @@ const defaults: QuestionArgs = {
   frontend: false,
   openAiKey: "",
   model: "gpt-3.5-turbo",
-  communityProjectPath: "",
+  communityProjectPath: ""
 };
 
 const handlers = {
   onCancel: () => {
     console.error("Exiting.");
     process.exit(1);
-  },
+  }
 };
 
 const getVectorDbChoices = (framework: TemplateFramework) => {
   const choices = [
     {
       title: "No, just store the data in the file system",
-      value: "none",
+      value: "none"
     },
     { title: "MongoDB", value: "mongo" },
-    { title: "PostgreSQL", value: "pg" },
+    { title: "PostgreSQL", value: "pg" }
   ];
 
   const vectodbLang = framework === "fastapi" ? "python" : "typescript";
@@ -48,7 +48,7 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
     .filter((file) => fs.statSync(path.join(vectordbPath, file)).isDirectory());
 
   const displayedChoices = choices.filter((choice) =>
-    availableChoices.includes(choice.value),
+    availableChoices.includes(choice.value)
   );
 
   return displayedChoices;
@@ -66,10 +66,10 @@ export const onPromptState = (state: any) => {
 
 export const askQuestions = async (
   program: QuestionArgs,
-  preferences: QuestionArgs,
+  preferences: QuestionArgs
 ) => {
   const getPrefOrDefault = <K extends keyof QuestionArgs>(
-    field: K,
+    field: K
   ): QuestionArgs[K] => preferences[field] ?? defaults[field];
 
   if (!program.template) {
@@ -77,7 +77,7 @@ export const askQuestions = async (
       program.template = getPrefOrDefault("template");
     } else {
       const styledRepo = blue(
-        `https://github.com/${COMMUNITY_OWNER}/${COMMUNITY_REPO}`,
+        `https://github.com/${COMMUNITY_OWNER}/${COMMUNITY_REPO}`
       );
       const { template } = await prompts(
         {
@@ -89,12 +89,12 @@ export const askQuestions = async (
             { title: "Chat with streaming", value: "streaming" },
             {
               title: `Community template from ${styledRepo}`,
-              value: "community",
-            },
+              value: "community"
+            }
           ],
-          initial: 1,
+          initial: 1
         },
-        handlers,
+        handlers
       );
       program.template = template;
       preferences.template = template;
@@ -104,7 +104,7 @@ export const askQuestions = async (
   if (program.template === "community") {
     const rootFolderNames = await getRepoRootFolders(
       COMMUNITY_OWNER,
-      COMMUNITY_REPO,
+      COMMUNITY_REPO
     );
     const { communityProjectPath } = await prompts(
       {
@@ -113,11 +113,11 @@ export const askQuestions = async (
         message: "Select community template",
         choices: rootFolderNames.map((name) => ({
           title: name,
-          value: name,
+          value: name
         })),
-        initial: 0,
+        initial: 0
       },
-      handlers,
+      handlers
     );
     program.communityProjectPath = communityProjectPath;
     preferences.communityProjectPath = communityProjectPath;
@@ -130,7 +130,7 @@ export const askQuestions = async (
     } else {
       const choices = [
         { title: "Express", value: "express" },
-        { title: "FastAPI (Python)", value: "fastapi" },
+        { title: "FastAPI (Python)", value: "fastapi" }
       ];
       if (program.template === "streaming") {
         // allow NextJS only for streaming template
@@ -143,9 +143,9 @@ export const askQuestions = async (
           name: "framework",
           message: "Which framework would you like to use?",
           choices,
-          initial: 0,
+          initial: 0
         },
-        handlers,
+        handlers
       );
       program.framework = framework;
       preferences.framework = framework;
@@ -168,7 +168,7 @@ export const askQuestions = async (
             ? "Express "
             : program.framework === "fastapi"
               ? "FastAPI (Python) "
-              : "",
+              : ""
         );
         const { frontend } = await prompts({
           onState: onPromptState,
@@ -177,7 +177,7 @@ export const askQuestions = async (
           message: `Would you like to generate a ${styledNextJS} frontend for your ${styledBackend}backend?`,
           initial: getPrefOrDefault("frontend"),
           active: "Yes",
-          inactive: "No",
+          inactive: "No"
         });
         program.frontend = Boolean(frontend);
         preferences.frontend = Boolean(frontend);
@@ -199,11 +199,11 @@ export const askQuestions = async (
             message: "Which UI would you like to use?",
             choices: [
               { title: "Just HTML", value: "html" },
-              { title: "Shadcn", value: "shadcn" },
+              { title: "Shadcn", value: "shadcn" }
             ],
-            initial: 0,
+            initial: 0
           },
-          handlers,
+          handlers
         );
         program.ui = ui;
         preferences.ui = ui;
@@ -219,7 +219,7 @@ export const askQuestions = async (
       message: `Would you like to install dependencies automatically? This may take a while`,
       initial: getPrefOrDefault("installDependencies"),
       active: "Yes",
-      inactive: "No",
+      inactive: "No"
     });
     program.installDependencies = Boolean(installDependencies);
   }
@@ -239,12 +239,12 @@ export const askQuestions = async (
             { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
             {
               title: "gpt-4-vision-preview",
-              value: "gpt-4-vision-preview",
-            },
+              value: "gpt-4-vision-preview"
+            }
           ],
-          initial: 0,
+          initial: 0
         },
-        handlers,
+        handlers
       );
       program.model = model;
       preferences.model = model;
@@ -263,13 +263,13 @@ export const askQuestions = async (
           choices: [
             {
               title: "No data, just a simple chat",
-              value: "simple",
+              value: "simple"
             },
-            { title: "Use an example PDF", value: "context" },
+            { title: "Use an example PDF", value: "context" }
           ],
-          initial: 1,
+          initial: 1
         },
-        handlers,
+        handlers
       );
       program.engine = engine;
       preferences.engine = engine;
@@ -284,9 +284,9 @@ export const askQuestions = async (
             name: "vectorDb",
             message: "Would you like to use a vector database?",
             choices: getVectorDbChoices(program.framework),
-            initial: 0,
+            initial: 0
           },
-          handlers,
+          handlers
         );
         program.vectorDb = vectorDb;
         preferences.vectorDb = vectorDb;
@@ -299,9 +299,9 @@ export const askQuestions = async (
       {
         type: "text",
         name: "key",
-        message: "Please provide your OpenAI API key (leave blank to skip):",
+        message: "Please provide your OpenAI API key (leave blank to skip):"
       },
-      handlers,
+      handlers
     );
     program.openAiKey = key;
     preferences.openAiKey = key;
@@ -319,7 +319,7 @@ export const askQuestions = async (
         message: `Would you like to use ${styledEslint}?`,
         initial: getPrefOrDefault("eslint"),
         active: "Yes",
-        inactive: "No",
+        inactive: "No"
       });
       program.eslint = Boolean(eslint);
       preferences.eslint = Boolean(eslint);

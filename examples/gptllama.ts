@@ -9,7 +9,7 @@ import { ChatMessage, LlamaDeuce, OpenAI } from "llamaindex";
   const gpt4 = new OpenAI({ model: "gpt-4", temperature: 0.9 });
   const l2 = new LlamaDeuce({
     model: "Llama-2-70b-chat-4bit",
-    temperature: 0.9,
+    temperature: 0.9
   });
 
   const rl = readline.createInterface({ input, output });
@@ -18,9 +18,9 @@ import { ChatMessage, LlamaDeuce, OpenAI } from "llamaindex";
     {
       content:
         "Prefer shorter answers. Keep your response to 100 words or less.",
-      role: "system",
+      role: "system"
     },
-    { content: start, role: "user" },
+    { content: start, role: "user" }
   ];
 
   while (true) {
@@ -28,12 +28,12 @@ import { ChatMessage, LlamaDeuce, OpenAI } from "llamaindex";
     const r = await next.chat({
       messages: history.map(({ content, role }) => ({
         content,
-        role: next === l2 ? role : role === "user" ? "assistant" : "user",
-      })),
+        role: next === l2 ? role : role === "user" ? "assistant" : "user"
+      }))
     });
     history.push({
       content: r.message.content,
-      role: next === l2 ? "assistant" : "user",
+      role: next === l2 ? "assistant" : "user"
     });
     await rl.question((next === l2 ? "Llama: " : "GPT: ") + r.message.content);
   }

@@ -24,7 +24,7 @@ export abstract class IndexStruct {
   toJson(): Record<string, unknown> {
     return {
       indexId: this.indexId,
-      summary: this.summary,
+      summary: this.summary
     };
   }
 
@@ -39,7 +39,7 @@ export abstract class IndexStruct {
 export enum IndexStructType {
   SIMPLE_DICT = "simple_dict",
   LIST = "list",
-  KEYWORD_TABLE = "keyword_table",
+  KEYWORD_TABLE = "keyword_table"
 }
 
 export class IndexDict extends IndexStruct {
@@ -62,7 +62,7 @@ export class IndexDict extends IndexStruct {
     return {
       ...super.toJson(),
       nodesDict: this.nodesDict,
-      type: this.type,
+      type: this.type
     };
   }
 
@@ -102,7 +102,7 @@ export class IndexList extends IndexStruct {
     return {
       ...super.toJson(),
       nodes: this.nodes,
-      type: this.type,
+      type: this.type
     };
   }
 }
@@ -132,7 +132,7 @@ export class KeywordTable extends IndexStruct {
     return {
       ...super.toJson(),
       table: this.table,
-      type: this.type,
+      type: this.type
     };
   }
 }
@@ -189,7 +189,7 @@ export abstract class BaseIndex<T> {
    */
   async insert(document: Document) {
     const nodes = this.serviceContext.nodeParser.getNodesFromDocuments([
-      document,
+      document
     ]);
     await this.insertNodes(nodes);
     this.docStore.setDocumentHash(document.id_, document.hash);
@@ -198,6 +198,6 @@ export abstract class BaseIndex<T> {
   abstract insertNodes(nodes: BaseNode[]): Promise<void>;
   abstract deleteRefDoc(
     refDocId: string,
-    deleteFromDocStore?: boolean,
+    deleteFromDocStore?: boolean
   ): Promise<void>;
 }

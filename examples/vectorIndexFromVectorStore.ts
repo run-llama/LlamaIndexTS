@@ -9,7 +9,7 @@ import {
   VectorStore,
   VectorStoreIndex,
   VectorStoreQuery,
-  VectorStoreQueryResult,
+  VectorStoreQueryResult
 } from "llamaindex";
 
 import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
@@ -39,7 +39,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
 
   async query(
     query: VectorStoreQuery,
-    kwargs?: any,
+    kwargs?: any
   ): Promise<VectorStoreQueryResult> {
     let queryEmbedding: number[] = [];
     if (query.queryEmbedding) {
@@ -59,13 +59,13 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
       vector: queryEmbedding,
       topK: query.similarityTopK,
       includeValues: true,
-      includeMetadata: true,
+      includeMetadata: true
     });
 
     console.log(
       `Numbers of vectors returned by Pinecone after preFilters are applied: ${
         response?.matches?.length || 0
-      }.`,
+      }.`
     );
 
     const topKIds: string[] = [];
@@ -93,7 +93,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
       for (const match of response.matches) {
         const node = new TextNode({
           ...metadataToNode(match.metadata),
-          embedding: match.values,
+          embedding: match.values
         });
 
         topKIds.push(match.id);
@@ -105,7 +105,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
     const result = {
       ids: topKIds,
       nodes: topKNodes,
-      similarities: topKScores,
+      similarities: topKScores
     };
 
     return result;
@@ -142,18 +142,18 @@ async function main() {
   const getPineconeVectorStore = async () => {
     return new PineconeVectorStore({
       indexName: process.env.PINECONE_INDEX_NAME || "index-name",
-      client: new Pinecone(),
+      client: new Pinecone()
     });
   };
 
   const getServiceContext = () => {
     const openAI = new OpenAI({
       model: "gpt-4",
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env.OPENAI_API_KEY
     });
 
     return serviceContextFromDefaults({
-      llm: openAI,
+      llm: openAI
     });
   };
 
@@ -163,21 +163,21 @@ async function main() {
 
     const vectorStoreIndex = await VectorStoreIndex.fromVectorStore(
       vectorStore,
-      serviceContext,
+      serviceContext
     );
 
     const retriever = new VectorIndexRetriever({
       index: vectorStoreIndex,
-      similarityTopK: 500,
+      similarityTopK: 500
     });
 
     const responseSynthesizer = new ResponseSynthesizer({
       serviceContext,
-      responseBuilder: new TreeSummarize(serviceContext),
+      responseBuilder: new TreeSummarize(serviceContext)
     });
 
     return new RetrieverQueryEngine(retriever, responseSynthesizer, {
-      filter,
+      filter
     });
   };
 
@@ -185,12 +185,12 @@ async function main() {
   const queryEngine = await getQueryEngine({
     whatever: {
       $gte: 1,
-      $lte: 100,
-    },
+      $lte: 100
+    }
   });
 
   const response = await queryEngine.query({
-    query: "How many results do you have?",
+    query: "How many results do you have?"
   });
 
   console.log(response.toString());

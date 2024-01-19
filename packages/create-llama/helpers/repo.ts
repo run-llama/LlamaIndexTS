@@ -24,12 +24,12 @@ async function downloadTar(url: string) {
 
 export async function downloadAndExtractRepo(
   root: string,
-  { username, name, branch, filePath }: RepoInfo,
+  { username, name, branch, filePath }: RepoInfo
 ) {
   await makeDir(root);
 
   const tempFile = await downloadTar(
-    `https://codeload.github.com/${username}/${name}/tar.gz/${branch}`,
+    `https://codeload.github.com/${username}/${name}/tar.gz/${branch}`
   );
 
   await tar.x({
@@ -40,8 +40,8 @@ export async function downloadAndExtractRepo(
       p.startsWith(
         `${name}-${branch.replace(/\//g, "-")}${
           filePath ? `/${filePath}/` : "/"
-        }`,
-      ),
+        }`
+      )
   });
 
   await promises.unlink(tempFile);
@@ -49,12 +49,12 @@ export async function downloadAndExtractRepo(
 
 export async function getRepoRootFolders(
   owner: string,
-  repo: string,
+  repo: string
 ): Promise<string[]> {
   const url = `https://api.github.com/repos/${owner}/${repo}/contents`;
 
   const response = await got(url, {
-    responseType: "json",
+    responseType: "json"
   });
 
   const data = response.body as any[];

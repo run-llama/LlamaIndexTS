@@ -4,7 +4,7 @@ function callback(
   category: string,
   name: string,
   status: any,
-  message?: string,
+  message?: string
 ): boolean {
   console.log(category, name, status, message);
   if (name.endsWith(".pdf")) {

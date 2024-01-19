@@ -9,7 +9,7 @@ const transcript =
 async function main() {
   const llm = new OpenAI({
     model: "gpt-4-1106-preview",
-    additionalChatOptions: { response_format: { type: "json_object" } },
+    additionalChatOptions: { response_format: { type: "json_object" } }
   });
 
   const example = {
@@ -18,7 +18,7 @@ async function main() {
     products: ["product 1", "product 2"],
     rep_name: "Name of the sales rep",
     prospect_name: "Name of the prospect",
-    action_items: ["action item 1", "action item 2"],
+    action_items: ["action item 1", "action item 2"]
   };
 
   const response = await llm.chat({
@@ -26,14 +26,14 @@ async function main() {
       {
         role: "system",
         content: `You are an expert assistant for summarizing and extracting insights from sales call transcripts.\n\nGenerate a valid JSON in the following format:\n\n${JSON.stringify(
-          example,
-        )}`,
+          example
+        )}`
       },
       {
         role: "user",
-        content: `Here is the transcript: \n------\n${transcript}\n------`,
-      },
-    ],
+        content: `Here is the transcript: \n------\n${transcript}\n------`
+      }
+    ]
   });
 
   const json = JSON.parse(response.message.content);

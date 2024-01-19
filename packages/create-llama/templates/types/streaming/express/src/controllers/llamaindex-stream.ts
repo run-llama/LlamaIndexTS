@@ -4,7 +4,7 @@ import {
   createStreamDataTransformer,
   experimental_StreamData,
   trimStartOfStreamHelper,
-  type AIStreamCallbacksAndOptions,
+  type AIStreamCallbacksAndOptions
 } from "ai";
 import { Response } from "llamaindex";
 
@@ -15,7 +15,7 @@ type ParserOptions = {
 function createParser(
   res: AsyncIterable<Response>,
   data: experimental_StreamData,
-  opts?: ParserOptions,
+  opts?: ParserOptions
 ) {
   const it = res[Symbol.asyncIterator]();
   const trimStartOfStream = trimStartOfStreamHelper();
@@ -26,8 +26,8 @@ function createParser(
         const message: JSONValue = {
           type: "image_url",
           image_url: {
-            url: opts.image_url,
-          },
+            url: opts.image_url
+          }
         };
         data.append(message);
       } else {
@@ -47,7 +47,7 @@ function createParser(
       if (text) {
         controller.enqueue(text);
       }
-    },
+    }
   });
 }
 
@@ -56,13 +56,13 @@ export function LlamaIndexStream(
   opts?: {
     callbacks?: AIStreamCallbacksAndOptions;
     parserOptions?: ParserOptions;
-  },
+  }
 ): { stream: ReadableStream; data: experimental_StreamData } {
   const data = new experimental_StreamData();
   return {
     stream: createParser(res, data, opts?.parserOptions)
       .pipeThrough(createCallbacksTransformer(opts?.callbacks))
       .pipeThrough(createStreamDataTransformer(true)),
-    data,
+    data
   };
 }

@@ -32,7 +32,7 @@ export class SimpleNodeParser implements NodeParser {
       init?.textSplitter ??
       new SentenceSplitter({
         chunkSize: init?.chunkSize ?? DEFAULT_CHUNK_SIZE,
-        chunkOverlap: init?.chunkOverlap ?? DEFAULT_CHUNK_OVERLAP,
+        chunkOverlap: init?.chunkOverlap ?? DEFAULT_CHUNK_OVERLAP
       });
     this.includeMetadata = init?.includeMetadata ?? true;
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
@@ -58,8 +58,8 @@ export class SimpleNodeParser implements NodeParser {
           document,
           this.textSplitter.splitText.bind(this.textSplitter),
           this.includeMetadata,
-          this.includePrevNextRel,
-        ),
+          this.includePrevNextRel
+        )
       )
       .flat();
   }

@@ -12,7 +12,7 @@ export interface LLM {
    * @param params
    */
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
 
@@ -21,10 +21,10 @@ export interface LLM {
    * @param params
    */
   complete(
-    params: LLMCompletionParamsStreaming,
+    params: LLMCompletionParamsStreaming
   ): Promise<AsyncIterable<CompletionResponse>>;
   complete(
-    params: LLMCompletionParamsNonStreaming,
+    params: LLMCompletionParamsNonStreaming
   ): Promise<CompletionResponse>;
 
   /**

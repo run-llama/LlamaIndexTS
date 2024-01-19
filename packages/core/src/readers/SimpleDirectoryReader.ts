@@ -14,12 +14,12 @@ type ReaderCallback = (
   category: "file" | "directory",
   name: string,
   status: ReaderStatus,
-  message?: string,
+  message?: string
 ) => boolean;
 enum ReaderStatus {
   STARTED = 0,
   COMPLETE,
-  ERROR,
+  ERROR
 }
 
 /**
@@ -28,7 +28,7 @@ enum ReaderStatus {
 export class TextFileReader implements BaseReader {
   async loadData(
     file: string,
-    fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem,
+    fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file, "utf-8");
     return [new Document({ text: dataBuffer, id_: file })];
@@ -46,7 +46,7 @@ export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   jpg: new ImageReader(),
   jpeg: new ImageReader(),
   png: new ImageReader(),
-  gif: new ImageReader(),
+  gif: new ImageReader()
 };
 
 export type SimpleDirectoryReaderLoadDataProps = {
@@ -68,7 +68,7 @@ export class SimpleDirectoryReader implements BaseReader {
     directoryPath,
     fs = DEFAULT_FS as CompleteFileSystem,
     defaultReader = new TextFileReader(),
-    fileExtToReader = FILE_EXT_TO_READER,
+    fileExtToReader = FILE_EXT_TO_READER
   }: SimpleDirectoryReaderLoadDataProps): Promise<Document[]> {
     // Observer can decide to skip the directory
     if (
@@ -136,7 +136,7 @@ export class SimpleDirectoryReader implements BaseReader {
     category: "file" | "directory",
     name: string,
     status: ReaderStatus,
-    message?: string,
+    message?: string
   ): boolean {
     if (this.observer) {
       return this.observer(category, name, status, message);

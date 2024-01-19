@@ -5,7 +5,7 @@ import {
   TogetherEmbedding,
   TogetherLLM,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "llamaindex";
 
 async function main() {
@@ -20,17 +20,17 @@ async function main() {
 
   const serviceContext = serviceContextFromDefaults({
     llm: new TogetherLLM({ model: "mistralai/Mixtral-8x7B-Instruct-v0.1" }),
-    embedModel: new TogetherEmbedding(),
+    embedModel: new TogetherEmbedding()
   });
 
   const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
+    serviceContext
   });
 
   const queryEngine = index.asQueryEngine();
 
   const response = await queryEngine.query({
-    query: "What did the author do in college?",
+    query: "What did the author do in college?"
   });
 
   console.log(response.toString());

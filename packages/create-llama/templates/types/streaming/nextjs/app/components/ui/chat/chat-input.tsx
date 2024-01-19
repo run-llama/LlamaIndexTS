@@ -16,14 +16,14 @@ export default function ChatInput(
     | "handleInputChange"
   > & {
     multiModal?: boolean;
-  },
+  }
 ) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (imageUrl) {
       props.handleSubmit(e, {
-        data: { imageUrl: imageUrl },
+        data: { imageUrl: imageUrl }
       });
       setImageUrl(null);
       return;

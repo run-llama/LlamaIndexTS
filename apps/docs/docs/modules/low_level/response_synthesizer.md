@@ -27,17 +27,17 @@ const responseSynthesizer = new ResponseSynthesizer();
 const nodesWithScore: NodeWithScore[] = [
   {
     node: new TextNode({ text: "I am 10 years old." }),
-    score: 1,
+    score: 1
   },
   {
     node: new TextNode({ text: "John is 20 years old." }),
-    score: 0.5,
-  },
+    score: 0.5
+  }
 ];
 
 const response = await responseSynthesizer.synthesize({
   query: "What age am I?",
-  nodesWithScore,
+  nodesWithScore
 });
 console.log(response.response);
 ```
@@ -48,7 +48,7 @@ The `synthesize` function also supports streaming, just add `stream: true` as an
 const stream = await responseSynthesizer.synthesize({
   query: "What age am I?",
   nodesWithScore,
-  stream: true,
+  stream: true
 });
 for await (const chunk of stream) {
   process.stdout.write(chunk.response);

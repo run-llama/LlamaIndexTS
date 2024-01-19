@@ -8,7 +8,7 @@ import { ToolMetadata } from "./Tool";
  * NOTE 2: we default to empty string to make it easy to calculate prompt sizes
  */
 export type SimplePrompt = (
-  input: Record<string, string | undefined>,
+  input: Record<string, string | undefined>
 ) => string;
 
 /*
@@ -91,7 +91,7 @@ DEFAULT_REFINE_PROMPT_TMPL = (
 export const defaultRefinePrompt = ({
   query = "",
   existingAnswer = "",
-  context = "",
+  context = ""
 }) => {
   return `The original query is as follows: ${query}
 We have provided an existing answer: ${existingAnswer}
@@ -252,12 +252,12 @@ export function buildToolsText(tools: ToolMetadata[]) {
 const exampleTools: ToolMetadata[] = [
   {
     name: "uber_10k",
-    description: "Provides information about Uber financials for year 2021",
+    description: "Provides information about Uber financials for year 2021"
   },
   {
     name: "lyft_10k",
-    description: "Provides information about Lyft financials for year 2021",
-  },
+    description: "Provides information about Lyft financials for year 2021"
+  }
 ];
 
 const exampleQueryStr = `Compare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021`;
@@ -265,20 +265,20 @@ const exampleQueryStr = `Compare and contrast the revenue growth and EBITDA of U
 const exampleOutput: SubQuestion[] = [
   {
     subQuestion: "What is the revenue growth of Uber",
-    toolName: "uber_10k",
+    toolName: "uber_10k"
   },
   {
     subQuestion: "What is the EBITDA of Uber",
-    toolName: "uber_10k",
+    toolName: "uber_10k"
   },
   {
     subQuestion: "What is the revenue growth of Lyft",
-    toolName: "lyft_10k",
+    toolName: "lyft_10k"
   },
   {
     subQuestion: "What is the EBITDA of Lyft",
-    toolName: "lyft_10k",
-  },
+    toolName: "lyft_10k"
+  }
 ];
 
 export const defaultSubQuestionPrompt = ({ toolsStr = "", queryStr = "" }) => {
@@ -329,7 +329,7 @@ export type SubQuestionPrompt = typeof defaultSubQuestionPrompt;
 
 export const defaultCondenseQuestionPrompt = ({
   chatHistory = "",
-  question = "",
+  question = ""
 }) => {
   return `Given a conversation (between Human and Assistant) and a follow up message from Human, rewrite the message to be a standalone question that captures all relevant context from the conversation.
 
@@ -368,7 +368,7 @@ export type ContextSystemPrompt = typeof defaultContextSystemPrompt;
 
 export const defaultKeywordExtractPrompt = ({
   context = "",
-  maxKeywords = 10,
+  maxKeywords = 10
 }) => {
   return `
 Some text is provided below. Given the text, extract up to ${maxKeywords} keywords from the text. Avoid stopwords.
@@ -383,7 +383,7 @@ export type KeywordExtractPrompt = typeof defaultKeywordExtractPrompt;
 
 export const defaultQueryKeywordExtractPrompt = ({
   question = "",
-  maxKeywords = 10,
+  maxKeywords = 10
 }) => {
   return `(
   "A question is provided below. Given the question, extract up to ${maxKeywords} "

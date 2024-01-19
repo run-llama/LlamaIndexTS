@@ -2,9 +2,9 @@ export { SummaryIndex, SummaryRetrieverMode } from "./SummaryIndex";
 export type { ListIndex, ListRetrieverMode } from "./SummaryIndex";
 export {
   SummaryIndexLLMRetriever,
-  SummaryIndexRetriever,
+  SummaryIndexRetriever
 } from "./SummaryIndexRetriever";
 export type {
   ListIndexLLMRetriever,
-  ListIndexRetriever,
+  ListIndexRetriever
 } from "./SummaryIndexRetriever";

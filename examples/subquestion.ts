@@ -12,14 +12,14 @@ import essay from "./essay";
         queryEngine: index.asQueryEngine(),
         metadata: {
           name: "pg_essay",
-          description: "Paul Graham essay on What I Worked On",
-        },
-      },
-    ],
+          description: "Paul Graham essay on What I Worked On"
+        }
+      }
+    ]
   });
 
   const response = await queryEngine.query({
-    query: "How was Paul Grahams life different before and after YC?",
+    query: "How was Paul Grahams life different before and after YC?"
   });
 
   console.log(response.toString());

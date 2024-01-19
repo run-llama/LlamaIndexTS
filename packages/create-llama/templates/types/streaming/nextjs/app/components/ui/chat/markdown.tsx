@@ -9,7 +9,7 @@ const MemoizedReactMarkdown: FC<Options> = memo(
   ReactMarkdown,
   (prevProps, nextProps) =>
     prevProps.children === nextProps.children &&
-    prevProps.className === nextProps.className,
+    prevProps.className === nextProps.className
 );
 
 export default function Markdown({ content }: { content: string }) {
@@ -50,7 +50,7 @@ export default function Markdown({ content }: { content: string }) {
               {...props}
             />
           );
-        },
+        }
       }}
     >
       {content}

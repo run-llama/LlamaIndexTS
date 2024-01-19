@@ -6,14 +6,14 @@ import {
   IncludeEnum,
   QueryResponse,
   Where,
-  WhereDocument,
+  WhereDocument
 } from "chromadb";
 import { BaseNode, MetadataMode } from "../../Node";
 import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
-  VectorStoreQueryResult,
+  VectorStoreQueryResult
 } from "./types";
 import { metadataDictToNode, nodeToMetadata } from "./utils";
 
@@ -53,7 +53,7 @@ export class ChromaVectorStore implements VectorStore {
   async getCollection(): Promise<Collection> {
     if (!this.collection) {
       const coll = await this.chromaClient.createCollection({
-        name: this.collectionName,
+        name: this.collectionName
       });
       this.collection = coll;
     }
@@ -62,13 +62,13 @@ export class ChromaVectorStore implements VectorStore {
 
   private getDataToInsert(nodes: BaseNode[]): AddParams {
     const metadatas = nodes.map((node) =>
-      nodeToMetadata(node, true, this.textKey, this.flatMetadata),
+      nodeToMetadata(node, true, this.textKey, this.flatMetadata)
     );
     return {
       embeddings: nodes.map((node) => node.getEmbedding()),
       ids: nodes.map((node) => node.id_),
       metadatas,
-      documents: nodes.map((node) => node.getContent(MetadataMode.NONE)),
+      documents: nodes.map((node) => node.getContent(MetadataMode.NONE))
     };
   }
 
@@ -85,19 +85,19 @@ export class ChromaVectorStore implements VectorStore {
 
   async delete(
     refDocId: string,
-    deleteOptions?: ChromaDeleteOptions,
+    deleteOptions?: ChromaDeleteOptions
   ): Promise<void> {
     const collection = await this.getCollection();
     await collection.delete({
       ids: [refDocId],
       where: deleteOptions?.where,
-      whereDocument: deleteOptions?.whereDocument,
+      whereDocument: deleteOptions?.whereDocument
     });
   }
 
   async query(
     query: VectorStoreQuery,
-    options?: ChromaQueryOptions,
+    options?: ChromaQueryOptions
   ): Promise<VectorStoreQueryResult> {
     if (query.docIds) {
       throw new Error("ChromaDB does not support querying by docIDs");
@@ -127,8 +127,8 @@ export class ChromaVectorStore implements VectorStore {
         IncludeEnum.Distances,
         IncludeEnum.Metadatas,
         IncludeEnum.Documents,
-        IncludeEnum.Embeddings,
-      ],
+        IncludeEnum.Embeddings
+      ]
     });
     const vectorStoreQueryResult: VectorStoreQueryResult = {
       nodes: queryResponse.ids[0].map((id, index) => {
@@ -139,9 +139,9 @@ export class ChromaVectorStore implements VectorStore {
         return node;
       }),
       similarities: (queryResponse.distances as number[][])[0].map(
-        (distance) => 1 - distance,
+        (distance) => 1 - distance
       ),
-      ids: queryResponse.ids[0],
+      ids: queryResponse.ids[0]
     };
     return vectorStoreQueryResult;
   }

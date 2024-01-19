@@ -1,7 +1,7 @@
 import { BaseNode } from "../../Node";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
-  DEFAULT_PERSIST_DIR,
+  DEFAULT_PERSIST_DIR
 } from "../constants";
 import { GenericFileSystem } from "../FileSystem";
 
@@ -16,7 +16,7 @@ export abstract class BaseDocumentStore {
   // Save/load
   persist(
     persistPath: string = defaultPersistPath,
-    fs?: GenericFileSystem,
+    fs?: GenericFileSystem
   ): void {
     // Persist the docstore to a file.
   }
@@ -28,7 +28,7 @@ export abstract class BaseDocumentStore {
 
   abstract getDocument(
     docId: string,
-    raiseError: boolean,
+    raiseError: boolean
   ): Promise<BaseNode | undefined>;
 
   abstract deleteDocument(docId: string, raiseError: boolean): Promise<void>;
@@ -50,7 +50,7 @@ export abstract class BaseDocumentStore {
   // Nodes
   getNodes(nodeIds: string[], raiseError: boolean = true): Promise<BaseNode[]> {
     return Promise.all(
-      nodeIds.map((nodeId) => this.getNode(nodeId, raiseError)),
+      nodeIds.map((nodeId) => this.getNode(nodeId, raiseError))
     );
   }
 

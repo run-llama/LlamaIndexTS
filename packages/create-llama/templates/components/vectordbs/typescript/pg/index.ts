@@ -4,14 +4,14 @@ import {
   LLM,
   PGVectorStore,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "llamaindex";
 import {
   CHUNK_OVERLAP,
   CHUNK_SIZE,
   PGVECTOR_SCHEMA,
   PGVECTOR_TABLE,
-  checkRequiredEnvVars,
+  checkRequiredEnvVars
 } from "./shared.mjs";
 
 async function getDataSource(llm: LLM) {
@@ -19,12 +19,12 @@ async function getDataSource(llm: LLM) {
   const pgvs = new PGVectorStore({
     connectionString: process.env.PG_CONNECTION_STRING,
     schemaName: PGVECTOR_SCHEMA,
-    tableName: PGVECTOR_TABLE,
+    tableName: PGVECTOR_TABLE
   });
   const serviceContext = serviceContextFromDefaults({
     llm,
     chunkSize: CHUNK_SIZE,
-    chunkOverlap: CHUNK_OVERLAP,
+    chunkOverlap: CHUNK_OVERLAP
   });
   return await VectorStoreIndex.fromVectorStore(pgvs, serviceContext);
 }
@@ -34,6 +34,6 @@ export async function createChatEngine(llm: LLM) {
   const retriever = index.asRetriever({ similarityTopK: 5 });
   return new ContextChatEngine({
     chatModel: llm,
-    retriever,
+    retriever
   });
 }

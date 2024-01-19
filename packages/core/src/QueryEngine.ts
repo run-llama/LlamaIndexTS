@@ -3,7 +3,7 @@ import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
   LLMQuestionGenerator,
-  SubQuestion,
+  SubQuestion
 } from "./QuestionGenerator";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
@@ -14,7 +14,7 @@ import { BaseNodePostprocessor } from "./postprocessors";
 import {
   BaseSynthesizer,
   CompactAndRefine,
-  ResponseSynthesizer,
+  ResponseSynthesizer
 } from "./synthesizers";
 
 /**
@@ -58,7 +58,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
     retriever: BaseRetriever,
     responseSynthesizer?: BaseSynthesizer,
     preFilters?: unknown,
-    nodePostprocessors?: BaseNodePostprocessor[],
+    nodePostprocessors?: BaseNodePostprocessor[]
   ) {
     this.retriever = retriever;
     const serviceContext: ServiceContext | undefined =
@@ -72,7 +72,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
   private applyNodePostprocessors(nodes: NodeWithScore[]) {
     return this.nodePostprocessors.reduce(
       (nodes, nodePostprocessor) => nodePostprocessor.postprocessNodes(nodes),
-      nodes,
+      nodes
     );
   }
 
@@ -80,7 +80,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
     const nodes = await this.retriever.retrieve(
       query,
       parentEvent,
-      this.preFilters,
+      this.preFilters
     );
 
     return this.applyNodePostprocessors(nodes);
@@ -89,13 +89,13 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
   query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   query(params: QueryEngineParamsNonStreaming): Promise<Response>;
   async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming
   ): Promise<Response | AsyncIterable<Response>> {
     const { query, stream } = params;
     const parentEvent: Event = params.parentEvent || {
       id: randomUUID(),
       type: "wrapper",
-      tags: ["final"],
+      tags: ["final"]
     };
     const nodesWithScore = await this.retrieve(query, parentEvent);
     if (stream) {
@@ -103,13 +103,13 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
         query,
         nodesWithScore,
         parentEvent,
-        stream: true,
+        stream: true
       });
     }
     return this.responseSynthesizer.synthesize({
       query,
       nodesWithScore,
-      parentEvent,
+      parentEvent
     });
   }
 }
@@ -154,20 +154,20 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
       init.responseSynthesizer ??
       new ResponseSynthesizer({
         responseBuilder: new CompactAndRefine(serviceContext),
-        serviceContext,
+        serviceContext
       });
 
     return new SubQuestionQueryEngine({
       questionGen,
       responseSynthesizer,
-      queryEngineTools: init.queryEngineTools,
+      queryEngineTools: init.queryEngineTools
     });
   }
 
   query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   query(params: QueryEngineParamsNonStreaming): Promise<Response>;
   async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming
   ): Promise<Response | AsyncIterable<Response>> {
     const { query, stream } = params;
     const subQuestions = await this.questionGen.generate(this.metadatas, query);
@@ -176,7 +176,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     const parentEvent: Event = params.parentEvent || {
       id: randomUUID(),
       type: "wrapper",
-      tags: ["final"],
+      tags: ["final"]
     };
 
     // groups all sub-queries
@@ -184,11 +184,11 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
       id: randomUUID(),
       parentId: parentEvent.id,
       type: "wrapper",
-      tags: ["intermediate"],
+      tags: ["intermediate"]
     };
 
     const subQNodes = await Promise.all(
-      subQuestions.map((subQ) => this.querySubQ(subQ, subQueryParentEvent)),
+      subQuestions.map((subQ) => this.querySubQ(subQ, subQueryParentEvent))
     );
 
     const nodesWithScore = subQNodes
@@ -199,19 +199,19 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
         query,
         nodesWithScore,
         parentEvent,
-        stream: true,
+        stream: true
       });
     }
     return this.responseSynthesizer.synthesize({
       query,
       nodesWithScore,
-      parentEvent,
+      parentEvent
     });
   }
 
   private async querySubQ(
     subQ: SubQuestion,
-    parentEvent?: Event,
+    parentEvent?: Event
   ): Promise<NodeWithScore | null> {
     try {
       const question = subQ.subQuestion;
@@ -219,7 +219,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
 
       const response = await queryEngine.query({
         query: question,
-        parentEvent,
+        parentEvent
       });
       const responseText = response.response;
       const nodeText = `Sub question: ${question}\nResponse: ${responseText}`;

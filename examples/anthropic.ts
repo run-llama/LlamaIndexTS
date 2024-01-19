@@ -8,9 +8,9 @@ import { Anthropic } from "llamaindex";
       {
         content:
           "How much wood would a woodchuck chuck if a woodchuck could chuck wood?",
-        role: "user",
-      },
-    ],
+        role: "user"
+      }
+    ]
   });
   console.log(result);
 })();

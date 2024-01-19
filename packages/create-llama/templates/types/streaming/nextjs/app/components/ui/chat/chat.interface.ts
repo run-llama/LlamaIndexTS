@@ -8,7 +8,7 @@ export interface ChatHandler {
     e: React.FormEvent<HTMLFormElement>,
     ops?: {
       data?: any;
-    },
+    }
   ) => void;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   reload?: () => void;

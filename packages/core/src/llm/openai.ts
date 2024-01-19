@@ -25,7 +25,7 @@ export class OpenAISession {
       this.openai = new AzureOpenAI(options);
     } else {
       this.openai = new OpenAI({
-        ...options,
+        ...options
         // defaultHeaders: { "OpenAI-Beta": "assistants=v1" },
       });
     }
@@ -45,7 +45,7 @@ let defaultOpenAISession: { session: OpenAISession; options: ClientOptions }[] =
  * @returns
  */
 export function getOpenAISession(
-  options: ClientOptions & { azure?: boolean } = {},
+  options: ClientOptions & { azure?: boolean } = {}
 ) {
   let session = defaultOpenAISession.find((session) => {
     return _.isEqual(session.options, options);

@@ -3,7 +3,7 @@ import { ChatMessage, LLM, MessageType } from "./llm/types";
 import {
   defaultSummaryPrompt,
   messagesToHistoryStr,
-  SummaryPrompt,
+  SummaryPrompt
 } from "./Prompt";
 
 /**
@@ -21,7 +21,7 @@ export abstract class ChatHistory {
    * Returns the messages that should be used as input to the LLM.
    */
   abstract requestMessages(
-    transientMessages?: ChatMessage[],
+    transientMessages?: ChatMessage[]
   ): Promise<ChatMessage[]>;
 
   /**
@@ -79,14 +79,14 @@ export class SummaryChatHistory extends ChatHistory {
     this.llm = init?.llm ?? new OpenAI();
     if (!this.llm.metadata.maxTokens) {
       throw new Error(
-        "LLM maxTokens is not set. Needed so the summarizer ensures the context window size of the LLM.",
+        "LLM maxTokens is not set. Needed so the summarizer ensures the context window size of the LLM."
       );
     }
     this.tokensToSummarize =
       this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
     if (this.tokensToSummarize < this.llm.metadata.contextWindow * 0.25) {
       throw new Error(
-        "The number of tokens that trigger the summarize process are less than 25% of the context window. Try lowering maxTokens or use a model with a larger context window.",
+        "The number of tokens that trigger the summarize process are less than 25% of the context window. Try lowering maxTokens or use a model with a larger context window."
       );
     }
   }
@@ -100,10 +100,10 @@ export class SummaryChatHistory extends ChatHistory {
       promptMessages = [
         {
           content: this.summaryPrompt({
-            context: messagesToHistoryStr(messagesToSummarize),
+            context: messagesToHistoryStr(messagesToSummarize)
           }),
-          role: "user" as MessageType,
-        },
+          role: "user" as MessageType
+        }
       ];
       // remove oldest message until the chat history is short enough for the context window
       messagesToSummarize.shift();
@@ -121,7 +121,7 @@ export class SummaryChatHistory extends ChatHistory {
   private getLastSummaryIndex(): number | null {
     const reversedMessages = this.messages.slice().reverse();
     const index = reversedMessages.findIndex(
-      (message) => message.role === "memory",
+      (message) => message.role === "memory"
     );
     if (index === -1) {
       return null;
@@ -160,7 +160,7 @@ export class SummaryChatHistory extends ChatHistory {
       const summaryMessage: ChatMessage = transformSummary
         ? {
             content: `Summary of the conversation so far: ${this.messages[lastSummaryIndex].content}`,
-            role: "system",
+            role: "system"
           }
         : this.messages[lastSummaryIndex];
       return [summaryMessage, ...this.messages.slice(lastSummaryIndex + 1)];
@@ -173,7 +173,7 @@ export class SummaryChatHistory extends ChatHistory {
     return [
       ...this.systemMessages,
       ...(transientMessages ? transientMessages : []),
-      ...this.calcConversationMessages(true),
+      ...this.calcConversationMessages(true)
     ];
   }
 
@@ -215,7 +215,7 @@ export class SummaryChatHistory extends ChatHistory {
 }
 
 export function getHistory(
-  chatHistory?: ChatMessage[] | ChatHistory,
+  chatHistory?: ChatMessage[] | ChatHistory
 ): ChatHistory {
   if (chatHistory instanceof ChatHistory) {
     return chatHistory;

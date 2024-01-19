@@ -3,7 +3,7 @@ import {
   MetadataFilters,
   VectorStore,
   VectorStoreQuery,
-  VectorStoreQueryResult,
+  VectorStoreQueryResult
 } from "./types";
 
 import { BaseNode, Document, Metadata, MetadataMode } from "../../Node";
@@ -13,7 +13,7 @@ import {
   FetchResponse,
   Index,
   Pinecone,
-  ScoredPineconeRecord,
+  ScoredPineconeRecord
 } from "@pinecone-database/pinecone";
 
 type PineconeParams = {
@@ -135,7 +135,7 @@ export class PineconeVectorStore implements VectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: any
   ): Promise<VectorStoreQueryResult> {
     const filter = this.toPineconeFilter(query.filters);
 
@@ -144,7 +144,7 @@ export class PineconeVectorStore implements VectorStore {
       topK: query.similarityTopK,
       include_values: true,
       include_metadara: true,
-      filter: filter,
+      filter: filter
     };
 
     const idx = await this.index();
@@ -159,14 +159,14 @@ export class PineconeVectorStore implements VectorStore {
         id_: row.id,
         text: this.textFromResultRow(row),
         metadata: this.metaWithoutText(row.metadata),
-        embedding: row.values,
+        embedding: row.values
       });
     });
 
     const ret = {
       nodes: nodes,
       similarities: results.matches.map((row) => row.score || 999),
-      ids: results.matches.map((row) => row.id),
+      ids: results.matches.map((row) => row.id)
     };
 
     return Promise.resolve(ret);
@@ -180,7 +180,7 @@ export class PineconeVectorStore implements VectorStore {
    */
   persist(
     persistPath: string,
-    fs?: GenericFileSystem | undefined,
+    fs?: GenericFileSystem | undefined
   ): Promise<void> {
     return Promise.resolve();
   }
@@ -214,7 +214,7 @@ export class PineconeVectorStore implements VectorStore {
     return {
       id: id,
       values: node.getEmbedding(),
-      metadata: meta,
+      metadata: meta
     };
   }
 }

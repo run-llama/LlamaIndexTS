@@ -1,7 +1,7 @@
 import { Document, MetadataMode } from "../Node";
 import {
   metadataDictToNode,
-  nodeToMetadata,
+  nodeToMetadata
 } from "../storage/vectorStore/utils";
 
 describe("Testing VectorStore utils", () => {
@@ -10,7 +10,7 @@ describe("Testing VectorStore utils", () => {
   beforeEach(() => {
     node = new Document({
       text: "text",
-      metadata: { meta1: "Some metadata" },
+      metadata: { meta1: "Some metadata" }
     });
   });
 
@@ -38,7 +38,7 @@ describe("Testing VectorStore utils", () => {
   });
   test("metadataDictToNode should throw an error when node content not found in metadata", () => {
     const faultyMetadata = {
-      _node_type: "IndexNode",
+      _node_type: "IndexNode"
     };
     expect(() => {
       metadataDictToNode(faultyMetadata);

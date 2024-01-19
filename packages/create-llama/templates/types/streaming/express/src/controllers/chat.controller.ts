@@ -6,20 +6,20 @@ import { LlamaIndexStream } from "./llamaindex-stream";
 
 const convertMessageContent = (
   textMessage: string,
-  imageUrl: string | undefined,
+  imageUrl: string | undefined
 ): MessageContent => {
   if (!imageUrl) return textMessage;
   return [
     {
       type: "text",
-      text: textMessage,
+      text: textMessage
     },
     {
       type: "image_url",
       image_url: {
-        url: imageUrl,
-      },
-    },
+        url: imageUrl
+      }
+    }
   ];
 };
 
@@ -30,12 +30,12 @@ export const chat = async (req: Request, res: Response) => {
     if (!messages || !userMessage || userMessage.role !== "user") {
       return res.status(400).json({
         error:
-          "messages are required in the request body and the last message must be from the user",
+          "messages are required in the request body and the last message must be from the user"
       });
     }
 
     const llm = new OpenAI({
-      model: (process.env.MODEL as any) || "gpt-3.5-turbo",
+      model: (process.env.MODEL as any) || "gpt-3.5-turbo"
     });
 
     const chatEngine = await createChatEngine(llm);
@@ -43,21 +43,21 @@ export const chat = async (req: Request, res: Response) => {
     // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
     const userMessageContent = convertMessageContent(
       userMessage.content,
-      data?.imageUrl,
+      data?.imageUrl
     );
 
     // Calling LlamaIndex's ChatEngine to get a streamed response
     const response = await chatEngine.chat({
       message: userMessageContent,
       chatHistory: messages,
-      stream: true,
+      stream: true
     });
 
     // Return a stream, which can be consumed by the Vercel/AI client
     const { stream, data: streamData } = LlamaIndexStream(response, {
       parserOptions: {
-        image_url: data?.imageUrl,
-      },
+        image_url: data?.imageUrl
+      }
     });
 
     // Pipe LlamaIndexStream to response
@@ -69,13 +69,13 @@ export const chat = async (req: Request, res: Response) => {
         // https://sdk.vercel.ai/docs/api-reference/stream-data#on-the-server
         "X-Experimental-Stream-Data": "true",
         "Content-Type": "text/plain; charset=utf-8",
-        "Access-Control-Expose-Headers": "X-Experimental-Stream-Data",
-      },
+        "Access-Control-Expose-Headers": "X-Experimental-Stream-Data"
+      }
     });
   } catch (error) {
     console.error("[LlamaIndex]", error);
     return res.status(500).json({
-      error: (error as Error).message,
+      error: (error as Error).message
     });
   }
 };

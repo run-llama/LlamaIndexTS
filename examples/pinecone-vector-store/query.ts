@@ -1,13 +1,13 @@
 import {
   PineconeVectorStore,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "llamaindex";
 
 async function main() {
   const readline = require("readline").createInterface({
     input: process.stdin,
-    output: process.stdout,
+    output: process.stdout
   });
 
   try {
@@ -38,7 +38,7 @@ async function main() {
   } catch (err) {
     console.error(err);
     console.log(
-      "If your PineconeVectorStore connection failed, make sure to set env vars for PINECONE_API_KEY and PINECONE_ENVIRONMENT.",
+      "If your PineconeVectorStore connection failed, make sure to set env vars for PINECONE_API_KEY and PINECONE_ENVIRONMENT."
     );
     process.exit(1);
   }
@@ -55,7 +55,7 @@ function getUserInput(readline: any): Promise<string> {
       "What would you like to know?\n>",
       (userInput: string) => {
         resolve(userInput);
-      },
+      }
     );
   });
 }

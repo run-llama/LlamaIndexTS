@@ -21,7 +21,7 @@ export interface SynthesizeParamsNonStreaming extends SynthesizeParamsBase {
  */
 export interface BaseSynthesizer {
   synthesize(
-    params: SynthesizeParamsStreaming,
+    params: SynthesizeParamsStreaming
   ): Promise<AsyncIterable<Response>>;
   synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
 }
@@ -52,7 +52,7 @@ export interface ResponseBuilder {
    * @param params
    */
   getResponse(
-    params: ResponseBuilderParamsStreaming,
+    params: ResponseBuilderParamsStreaming
   ): Promise<AsyncIterable<string>>;
   getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
 }

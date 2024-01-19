@@ -2,7 +2,7 @@ import { IndexStruct } from "../../indices/BaseIndex";
 import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
-  DEFAULT_PERSIST_DIR,
+  DEFAULT_PERSIST_DIR
 } from "../constants";
 
 const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_INDEX_STORE_PERSIST_FILENAME}`;
@@ -18,7 +18,7 @@ export abstract class BaseIndexStore {
 
   async persist(
     persistPath: string = defaultPersistPath,
-    fs?: GenericFileSystem,
+    fs?: GenericFileSystem
   ): Promise<void> {
     // Persist the index store to disk.
   }

@@ -4,25 +4,25 @@ import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "../../ServiceContext";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
   BaseDocumentStore,
   StorageContext,
-  storageContextFromDefaults,
+  storageContextFromDefaults
 } from "../../storage";
 import { BaseSynthesizer } from "../../synthesizers";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexStructType,
-  KeywordTable,
+  KeywordTable
 } from "../BaseIndex";
 import {
   KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,
-  KeywordTableSimpleRetriever,
+  KeywordTableSimpleRetriever
 } from "./KeywordTableIndexRetriever";
 import { extractKeywordsGivenResponse } from "./utils";
 
@@ -36,13 +36,13 @@ export interface KeywordIndexOptions {
 export enum KeywordTableRetrieverMode {
   DEFAULT = "DEFAULT",
   SIMPLE = "SIMPLE",
-  RAKE = "RAKE",
+  RAKE = "RAKE"
 }
 
 const KeywordTableRetrieverMap = {
   [KeywordTableRetrieverMode.DEFAULT]: KeywordTableLLMRetriever,
   [KeywordTableRetrieverMode.SIMPLE]: KeywordTableSimpleRetriever,
-  [KeywordTableRetrieverMode.RAKE]: KeywordTableRAKERetriever,
+  [KeywordTableRetrieverMode.RAKE]: KeywordTableRAKERetriever
 };
 
 /**
@@ -66,7 +66,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
 
     if (options.indexStruct && indexStructs.length > 0) {
       throw new Error(
-        "Cannot initialize index with both indexStruct and indexStore",
+        "Cannot initialize index with both indexStruct and indexStore"
       );
     }
 
@@ -76,7 +76,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
       indexStruct = indexStructs[0];
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
-        options.indexId,
+        options.indexId
       )) as KeywordTable;
     } else {
       indexStruct = null;
@@ -85,26 +85,26 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     // check indexStruct type
     if (indexStruct && indexStruct.type !== IndexStructType.KEYWORD_TABLE) {
       throw new Error(
-        "Attempting to initialize KeywordTableIndex with non-keyword table indexStruct",
+        "Attempting to initialize KeywordTableIndex with non-keyword table indexStruct"
       );
     }
 
     if (indexStruct) {
       if (options.nodes) {
         throw new Error(
-          "Cannot initialize KeywordTableIndex with both nodes and indexStruct",
+          "Cannot initialize KeywordTableIndex with both nodes and indexStruct"
         );
       }
     } else {
       if (!options.nodes) {
         throw new Error(
-          "Cannot initialize KeywordTableIndex without nodes or indexStruct",
+          "Cannot initialize KeywordTableIndex without nodes or indexStruct"
         );
       }
       indexStruct = await KeywordTableIndex.buildIndexFromNodes(
         options.nodes,
         storageContext.docStore,
-        serviceContext,
+        serviceContext
       );
 
       await indexStore.addIndexStruct(indexStruct);
@@ -115,7 +115,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
       serviceContext,
       docStore,
       indexStore,
-      indexStruct,
+      indexStruct
     });
   }
 
@@ -141,18 +141,18 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
       retriever ?? this.asRetriever(),
       responseSynthesizer,
       options?.preFilters,
-      options?.nodePostprocessors,
+      options?.nodePostprocessors
     );
   }
 
   static async extractKeywords(
     text: string,
-    serviceContext: ServiceContext,
+    serviceContext: ServiceContext
   ): Promise<Set<string>> {
     const response = await serviceContext.llm.complete({
       prompt: defaultKeywordExtractPrompt({
-        context: text,
-      }),
+        context: text
+      })
     });
     return extractKeywordsGivenResponse(response.text, "KEYWORDS:");
   }
@@ -169,7 +169,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     args: {
       storageContext?: StorageContext;
       serviceContext?: ServiceContext;
-    } = {},
+    } = {}
   ): Promise<KeywordTableIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
@@ -185,7 +185,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     const index = await KeywordTableIndex.init({
       nodes,
       storageContext,
-      serviceContext,
+      serviceContext
     });
     return index;
   }
@@ -200,14 +200,14 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   static async buildIndexFromNodes(
     nodes: BaseNode[],
     docStore: BaseDocumentStore,
-    serviceContext: ServiceContext,
+    serviceContext: ServiceContext
   ): Promise<KeywordTable> {
     const indexStruct = new KeywordTable();
     await docStore.addDocuments(nodes, true);
     for (const node of nodes) {
       const keywords = await KeywordTableIndex.extractKeywords(
         node.getContent(MetadataMode.LLM),
-        serviceContext,
+        serviceContext
       );
       indexStruct.addNode([...keywords], node.id_);
     }
@@ -218,7 +218,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     for (let node of nodes) {
       const keywords = await KeywordTableIndex.extractKeywords(
         node.getContent(MetadataMode.LLM),
-        this.serviceContext,
+        this.serviceContext
       );
       this.indexStruct.addNode([...keywords], node.id_);
     }
@@ -227,7 +227,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   deleteNode(nodeId: string): void {
     const keywordsToDelete: Set<string> = new Set();
     for (const [keyword, existingNodeIds] of Object.entries(
-      this.indexStruct.table,
+      this.indexStruct.table
     )) {
       const index = existingNodeIds.indexOf(nodeId);
       if (index !== -1) {
@@ -258,7 +258,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
 
   async deleteRefDoc(
     refDocId: string,
-    deleteFromDocStore?: boolean,
+    deleteFromDocStore?: boolean
   ): Promise<void> {
     const refDocInfo = await this.docStore.getRefDocInfo(refDocId);
 

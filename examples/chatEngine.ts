@@ -7,7 +7,7 @@ import {
   ContextChatEngine,
   Document,
   serviceContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 import essay from "./essay";
@@ -16,7 +16,7 @@ async function main() {
   const document = new Document({ text: essay });
   const serviceContext = serviceContextFromDefaults({ chunkSize: 512 });
   const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
+    serviceContext
   });
   const retriever = index.asRetriever();
   retriever.similarityTopK = 5;

@@ -7,7 +7,7 @@ export enum NodeRelationship {
   PREVIOUS = "PREVIOUS",
   NEXT = "NEXT",
   PARENT = "PARENT",
-  CHILD = "CHILD",
+  CHILD = "CHILD"
 }
 
 export enum ObjectType {
@@ -15,14 +15,14 @@ export enum ObjectType {
   IMAGE = "IMAGE",
   INDEX = "INDEX",
   DOCUMENT = "DOCUMENT",
-  IMAGE_DOCUMENT = "IMAGE_DOCUMENT",
+  IMAGE_DOCUMENT = "IMAGE_DOCUMENT"
 }
 
 export enum MetadataMode {
   ALL = "ALL",
   EMBED = "EMBED",
   LLM = "LLM",
-  NONE = "NONE",
+  NONE = "NONE"
 }
 
 export type Metadata = Record<string, any>;
@@ -83,7 +83,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 
     if (Array.isArray(relationship)) {
       throw new Error(
-        "Previous object must be a single RelatedNodeInfo object",
+        "Previous object must be a single RelatedNodeInfo object"
       );
     }
 
@@ -115,7 +115,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 
     if (!Array.isArray(relationship)) {
       throw new Error(
-        "Child object must be a an array of RelatedNodeInfo objects",
+        "Child object must be a an array of RelatedNodeInfo objects"
       );
     }
 
@@ -136,7 +136,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
     return {
       nodeId: this.id_,
       metadata: this.metadata,
-      hash: this.hash,
+      hash: this.hash
     };
   }
 
@@ -194,7 +194,7 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
     const hashFunction = createHash("sha256");
     hashFunction.update(`type=${this.getType()}`);
     hashFunction.update(
-      `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
+      `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`
     );
     hashFunction.update(this.getContent(MetadataMode.ALL));
     return hashFunction.digest("base64");
@@ -365,6 +365,6 @@ export function splitNodesByType(nodes: BaseNode[]): {
   }
   return {
     imageNodes,
-    textNodes,
+    textNodes
   };
 }

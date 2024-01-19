@@ -4,7 +4,7 @@ import {
   MetadataReplacementPostProcessor,
   SentenceWindowNodeParser,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "llamaindex";
 import essay from "./essay";
 
@@ -16,7 +16,7 @@ async function main() {
   const nodeParser = new SentenceWindowNodeParser({
     windowSize: 3,
     windowMetadataKey: "window",
-    originalTextMetadataKey: "original_text",
+    originalTextMetadataKey: "original_text"
   });
   const embedModel = new HuggingFaceEmbedding();
   const serviceContext = serviceContextFromDefaults({ nodeParser, embedModel });
@@ -24,15 +24,15 @@ async function main() {
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments([document], {
     serviceContext,
-    logProgress: true,
+    logProgress: true
   });
 
   // Query the index
   const queryEngine = index.asQueryEngine({
-    nodePostprocessors: [new MetadataReplacementPostProcessor("window")],
+    nodePostprocessors: [new MetadataReplacementPostProcessor("window")]
   });
   const response = await queryEngine.query({
-    query: "What did the author do in college?",
+    query: "What did the author do in college?"
   });
 
   // Output response

@@ -2,7 +2,7 @@ import { MistralAISession } from "../llm/mistral";
 import { BaseEmbedding } from "./types";
 
 export enum MistralAIEmbeddingModelType {
-  MISTRAL_EMBED = "mistral-embed",
+  MISTRAL_EMBED = "mistral-embed"
 }
 
 export class MistralAIEmbedding extends BaseEmbedding {
@@ -21,7 +21,7 @@ export class MistralAIEmbedding extends BaseEmbedding {
     const client = await this.session.getClient();
     const { data } = await client.embeddings({
       model: this.model,
-      input: [input],
+      input: [input]
     });
 
     return data[0].embedding;

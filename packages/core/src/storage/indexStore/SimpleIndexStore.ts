@@ -3,7 +3,7 @@ import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_FS,
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
-  DEFAULT_PERSIST_DIR,
+  DEFAULT_PERSIST_DIR
 } from "../constants";
 import { DataType, SimpleKVStore } from "../kvStore/SimpleKVStore";
 import { BaseInMemoryKVStore } from "../kvStore/types";
@@ -20,18 +20,18 @@ export class SimpleIndexStore extends KVIndexStore {
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<SimpleIndexStore> {
     const persistPath = path.join(
       persistDir,
-      DEFAULT_INDEX_STORE_PERSIST_FILENAME,
+      DEFAULT_INDEX_STORE_PERSIST_FILENAME
     );
     return this.fromPersistPath(persistPath, fs);
   }
 
   static async fromPersistPath(
     persistPath: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<SimpleIndexStore> {
     let simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
     return new SimpleIndexStore(simpleKVStore);
@@ -39,7 +39,7 @@ export class SimpleIndexStore extends KVIndexStore {
 
   async persist(
     persistPath: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<void> {
     await this.kvStore.persist(persistPath, fs);
   }

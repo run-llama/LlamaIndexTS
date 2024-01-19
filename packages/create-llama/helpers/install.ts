@@ -13,11 +13,11 @@ export async function callPackageManager(
   packageManager: PackageManager,
   /** Indicate whether there is an active Internet connection.*/
   isOnline: boolean,
-  args: string[] = ["install"],
+  args: string[] = ["install"]
 ): Promise<void> {
   if (!isOnline) {
     console.log(
-      yellow("You appear to be offline.\nFalling back to the local cache."),
+      yellow("You appear to be offline.\nFalling back to the local cache.")
     );
     args.push("--offline");
   }
@@ -36,8 +36,8 @@ export async function callPackageManager(
         // we set NODE_ENV to development as pnpm skips dev
         // dependencies when production
         NODE_ENV: "development",
-        DISABLE_OPENCOLLECTIVE: "1",
-      },
+        DISABLE_OPENCOLLECTIVE: "1"
+      }
     });
     child.on("close", (code) => {
       if (code !== 0) {

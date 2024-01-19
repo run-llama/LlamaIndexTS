@@ -8,7 +8,7 @@ export const isValidMessageData = (rawData: JSONValue | undefined) => {
 
 export const insertDataIntoMessages = (
   messages: Message[],
-  data: JSONValue[] | undefined,
+  data: JSONValue[] | undefined
 ) => {
   if (!data) return messages;
   messages.forEach((message, i) => {

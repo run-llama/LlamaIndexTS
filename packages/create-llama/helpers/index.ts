@@ -14,7 +14,7 @@ import {
   InstallTemplateArgs,
   TemplateEngine,
   TemplateFramework,
-  TemplateVectorDB,
+  TemplateVectorDB
 } from "./types";
 import { installTSTemplate } from "./typescript";
 
@@ -25,7 +25,7 @@ const createEnvLocalFile = async (
     vectorDb?: TemplateVectorDB;
     model?: string;
     framework?: TemplateFramework;
-  },
+  }
 ) => {
   const envFileName = ".env";
   let content = "";
@@ -69,7 +69,7 @@ const copyTestData = async (
   packageManager?: PackageManager,
   engine?: TemplateEngine,
   openAiKey?: string,
-  vectorDb?: TemplateVectorDB,
+  vectorDb?: TemplateVectorDB
   // eslint-disable-next-line max-params
 ) => {
   if (engine === "context") {
@@ -78,13 +78,13 @@ const copyTestData = async (
       "..",
       "templates",
       "components",
-      "data",
+      "data"
     );
     const destPath = path.join(root, "data");
     console.log(`\nCopying test data to ${cyan(destPath)}\n`);
     await copy("**", destPath, {
       parents: true,
-      cwd: srcPath,
+      cwd: srcPath
     });
   }
 
@@ -92,7 +92,7 @@ const copyTestData = async (
     const runGenerate = `${cyan(
       framework === "fastapi"
         ? "poetry run python app/engine/generate.py"
-        : `${packageManager} run generate`,
+        : `${packageManager} run generate`
     )}`;
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
     const hasVectorDb = vectorDb && vectorDb !== "none";
@@ -122,19 +122,19 @@ const copyTestData = async (
 
 const installCommunityProject = async ({
   root,
-  communityProjectPath,
+  communityProjectPath
 }: Pick<InstallTemplateArgs, "root" | "communityProjectPath">) => {
   console.log("\nInstalling community project:", communityProjectPath!);
   await downloadAndExtractRepo(root, {
     username: COMMUNITY_OWNER,
     name: COMMUNITY_REPO,
     branch: "main",
-    filePath: communityProjectPath!,
+    filePath: communityProjectPath!
   });
 };
 
 export const installTemplate = async (
-  props: InstallTemplateArgs & { backend: boolean },
+  props: InstallTemplateArgs & { backend: boolean }
 ) => {
   process.chdir(props.root);
 
@@ -157,7 +157,7 @@ export const installTemplate = async (
       openAiKey: props.openAiKey,
       vectorDb: props.vectorDb,
       model: props.model,
-      framework: props.framework,
+      framework: props.framework
     });
 
     // Copy test pdf file
@@ -167,7 +167,7 @@ export const installTemplate = async (
       props.packageManager,
       props.engine,
       props.openAiKey,
-      props.vectorDb,
+      props.vectorDb
     );
   } else {
     // this is a frontend for a full-stack app, create .env file with model information

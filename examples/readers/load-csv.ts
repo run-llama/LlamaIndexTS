@@ -4,7 +4,7 @@ import {
   PapaCSVReader,
   ResponseSynthesizer,
   serviceContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 async function main() {
@@ -14,12 +14,12 @@ async function main() {
   const documents = await reader.loadData(path);
 
   const serviceContext = serviceContextFromDefaults({
-    llm: new OpenAI({ model: "gpt-4" }),
+    llm: new OpenAI({ model: "gpt-4" })
   });
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments(documents, {
-    serviceContext,
+    serviceContext
   });
 
   const csvPrompt = ({ context = "", query = "" }) => {
@@ -32,14 +32,14 @@ Given the CSV file, generate me Typescript code to answer the question: ${query}
   };
 
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(serviceContext, csvPrompt),
+    responseBuilder: new CompactAndRefine(serviceContext, csvPrompt)
   });
 
   const queryEngine = index.asQueryEngine({ responseSynthesizer });
 
   // Query the index
   const response = await queryEngine.query({
-    query: "What is the correlation between survival and age?",
+    query: "What is the correlation between survival and age?"
   });
 
   // Output response

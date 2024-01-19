@@ -13,7 +13,7 @@ import {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
-  ContextGenerator,
+  ContextGenerator
 } from "./types";
 
 /**
@@ -39,14 +39,14 @@ export class ContextChatEngine implements ChatEngine {
     this.contextGenerator = new DefaultContextGenerator({
       retriever: init.retriever,
       contextSystemPrompt: init?.contextSystemPrompt,
-      nodePostprocessors: init?.nodePostprocessors,
+      nodePostprocessors: init?.nodePostprocessors
     });
   }
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
   async chat(
-    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
+    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming
   ): Promise<Response | AsyncIterable<Response>> {
     const { message, stream } = params;
     const chatHistory = params.chatHistory
@@ -55,19 +55,19 @@ export class ContextChatEngine implements ChatEngine {
     const parentEvent: Event = {
       id: randomUUID(),
       type: "wrapper",
-      tags: ["final"],
+      tags: ["final"]
     };
     const requestMessages = await this.prepareRequestMessages(
       message,
       chatHistory,
-      parentEvent,
+      parentEvent
     );
 
     if (stream) {
       const stream = await this.chatModel.chat({
         messages: requestMessages.messages,
         parentEvent,
-        stream: true,
+        stream: true
       });
       return streamConverter(
         streamReducer({
@@ -76,14 +76,14 @@ export class ContextChatEngine implements ChatEngine {
           reducer: (accumulator, part) => (accumulator += part.delta),
           finished: (accumulator) => {
             chatHistory.addMessage({ content: accumulator, role: "assistant" });
-          },
+          }
         }),
-        (r: ChatResponseChunk) => new Response(r.delta, requestMessages.nodes),
+        (r: ChatResponseChunk) => new Response(r.delta, requestMessages.nodes)
       );
     }
     const response = await this.chatModel.chat({
       messages: requestMessages.messages,
-      parentEvent,
+      parentEvent
     });
     chatHistory.addMessage(response.message);
     return new Response(response.message.content, requestMessages.nodes);
@@ -96,17 +96,17 @@ export class ContextChatEngine implements ChatEngine {
   private async prepareRequestMessages(
     message: MessageContent,
     chatHistory: ChatHistory,
-    parentEvent?: Event,
+    parentEvent?: Event
   ) {
     chatHistory.addMessage({
       content: message,
-      role: "user",
+      role: "user"
     });
     const textOnly = extractText(message);
     const context = await this.contextGenerator.generate(textOnly, parentEvent);
     const nodes = context.nodes.map((r) => r.node);
     const messages = await chatHistory.requestMessages(
-      context ? [context.message] : undefined,
+      context ? [context.message] : undefined
     );
     return { nodes, messages };
   }

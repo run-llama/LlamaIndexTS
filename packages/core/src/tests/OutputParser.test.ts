@@ -9,12 +9,12 @@ describe("SubQuestionOutputParser", () => {
     const data = [
       {
         name: "uber_10k",
-        description: "Provides information about Uber financials for year 2021",
+        description: "Provides information about Uber financials for year 2021"
       },
       {
         name: "lyft_10k",
-        description: "Provides information about Lyft financials for year 2021",
-      },
+        description: "Provides information about Lyft financials for year 2021"
+      }
     ];
 
     const data_str: string = JSON.stringify(data);
@@ -34,12 +34,12 @@ ${data_str}
     const data = [
       {
         name: "uber_10k",
-        description: "Provides information about Uber financials for year 2021",
+        description: "Provides information about Uber financials for year 2021"
       },
       {
         name: "lyft_10k",
-        description: "Provides information about Lyft financials for year 2021",
-      },
+        description: "Provides information about Lyft financials for year 2021"
+      }
     ];
 
     const data_str: string = JSON.stringify(data);
@@ -63,8 +63,8 @@ ${data_str}
       {
         subQuestion:
           "Sorry, I don't have any relevant information to answer your question",
-        toolName: "",
-      },
+        toolName: ""
+      }
     ];
     const real_answer = { parsedOutput: data, rawOutput: data_str };
     expect(parser.parse(data_str)).toEqual(real_answer);
@@ -81,8 +81,8 @@ ${data_str}
       {
         subQuestion:
           "Sorry, I don't have any relevant information to answer your question",
-        toolName: "",
-      },
+        toolName: ""
+      }
     ];
     const real_answer = { parsedOutput: data, rawOutput: data_str };
     expect(parser.parse(data_str)).toEqual(real_answer);

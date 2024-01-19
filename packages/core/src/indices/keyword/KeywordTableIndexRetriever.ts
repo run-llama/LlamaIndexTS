@@ -3,7 +3,7 @@ import {
   defaultKeywordExtractPrompt,
   defaultQueryKeywordExtractPrompt,
   KeywordExtractPrompt,
-  QueryKeywordExtractPrompt,
+  QueryKeywordExtractPrompt
 } from "../../Prompt";
 import { BaseRetriever } from "../../Retriever";
 import { ServiceContext } from "../../ServiceContext";
@@ -13,7 +13,7 @@ import { KeywordTableIndex } from "./KeywordTableIndex";
 import {
   extractKeywordsGivenResponse,
   rakeExtractKeywords,
-  simpleExtractKeywords,
+  simpleExtractKeywords
 } from "./utils";
 
 // Base Keyword Table Retriever
@@ -33,7 +33,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     keywordExtractTemplate,
     queryKeywordExtractTemplate,
     maxKeywordsPerQuery = 10,
-    numChunksPerQuery = 10,
+    numChunksPerQuery = 10
   }: {
     index: KeywordTableIndex;
     keywordExtractTemplate?: KeywordExtractPrompt;
@@ -60,7 +60,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     const keywords = await this.getKeywords(query);
     const chunkIndicesCount: { [key: string]: number } = {};
     const filteredKeywords = keywords.filter((keyword) =>
-      this.indexStruct.table.has(keyword),
+      this.indexStruct.table.has(keyword)
     );
 
     for (let keyword of filteredKeywords) {
@@ -89,8 +89,8 @@ export class KeywordTableLLMRetriever extends BaseKeywordTableRetriever {
     const response = await this.serviceContext.llm.complete({
       prompt: this.queryKeywordExtractTemplate({
         question: query,
-        maxKeywords: this.maxKeywordsPerQuery,
-      }),
+        maxKeywords: this.maxKeywordsPerQuery
+      })
     });
     const keywords = extractKeywordsGivenResponse(response.text, "KEYWORDS:");
     return [...keywords];
@@ -101,7 +101,7 @@ export class KeywordTableLLMRetriever extends BaseKeywordTableRetriever {
 export class KeywordTableSimpleRetriever extends BaseKeywordTableRetriever {
   getKeywords(query: string): Promise<string[]> {
     return Promise.resolve([
-      ...simpleExtractKeywords(query, this.maxKeywordsPerQuery),
+      ...simpleExtractKeywords(query, this.maxKeywordsPerQuery)
     ]);
   }
 }
@@ -110,7 +110,7 @@ export class KeywordTableSimpleRetriever extends BaseKeywordTableRetriever {
 export class KeywordTableRAKERetriever extends BaseKeywordTableRetriever {
   getKeywords(query: string): Promise<string[]> {
     return Promise.resolve([
-      ...rakeExtractKeywords(query, this.maxKeywordsPerQuery),
+      ...rakeExtractKeywords(query, this.maxKeywordsPerQuery)
     ]);
   }
 }

@@ -10,7 +10,7 @@ import {
   ChoiceSelectParserFunction,
   NodeFormatterFunction,
   defaultFormatNodeBatchFn,
-  defaultParseChoiceSelectAnswerFn,
+  defaultParseChoiceSelectAnswerFn
 } from "./utils";
 
 /**
@@ -28,7 +28,7 @@ export class SummaryIndexRetriever implements BaseRetriever {
     const nodes = await this.index.docStore.getNodes(nodeIds);
     const result = nodes.map((node) => ({
       node: node,
-      score: 1,
+      score: 1
     }));
 
     if (this.index.serviceContext.callbackManager.onRetrieve) {
@@ -37,8 +37,8 @@ export class SummaryIndexRetriever implements BaseRetriever {
         nodes: result,
         event: globalsHelper.createEvent({
           parentEvent,
-          type: "retrieve",
-        }),
+          type: "retrieve"
+        })
       });
     }
 
@@ -68,7 +68,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
     choiceBatchSize: number = 10,
     formatNodeBatchFn?: NodeFormatterFunction,
     parseChoiceSelectAnswerFn?: ChoiceSelectParserFunction,
-    serviceContext?: ServiceContext,
+    serviceContext?: ServiceContext
   ) {
     this.index = index;
     this.choiceSelectPrompt = choiceSelectPrompt || defaultChoiceSelectPrompt;
@@ -91,14 +91,14 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       const input = { context: fmtBatchStr, query: query };
       const rawResponse = (
         await this.serviceContext.llm.complete({
-          prompt: this.choiceSelectPrompt(input),
+          prompt: this.choiceSelectPrompt(input)
         })
       ).text;
 
       // parseResult is a map from doc number to relevance score
       const parseResult = this.parseChoiceSelectAnswerFn(
         rawResponse,
-        nodesBatch.length,
+        nodesBatch.length
       );
       const choiceNodeIds = nodeIdsBatch.filter((nodeId, idx) => {
         return `${idx}` in parseResult;
@@ -107,7 +107,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       const choiceNodes = await this.index.docStore.getNodes(choiceNodeIds);
       const nodeWithScores = choiceNodes.map((node, i) => ({
         node: node,
-        score: _.get(parseResult, `${i + 1}`, 1),
+        score: _.get(parseResult, `${i + 1}`, 1)
       }));
 
       results.push(...nodeWithScores);
@@ -119,8 +119,8 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
         nodes: results,
         event: globalsHelper.createEvent({
           parentEvent,
-          type: "retrieve",
-        }),
+          type: "retrieve"
+        })
       });
     }
 

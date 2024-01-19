@@ -4,7 +4,7 @@ import {
   Document,
   OpenAI,
   serviceContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 async function main() {
@@ -17,16 +17,16 @@ async function main() {
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const serviceContext = serviceContextFromDefaults({
-    llm: new OpenAI({ model: "gpt-4" }),
+    llm: new OpenAI({ model: "gpt-4" })
   });
   const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
+    serviceContext
   });
 
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query({
-    query: "What did the author do in college?",
+    query: "What did the author do in college?"
   });
 
   // Output response

@@ -4,7 +4,7 @@ import { Ollama } from "llamaindex";
   const llm = new Ollama({ model: "llama2", temperature: 0.75 });
   {
     const response = await llm.chat({
-      messages: [{ content: "Tell me a joke.", role: "user" }],
+      messages: [{ content: "Tell me a joke.", role: "user" }]
     });
     console.log("Response 1:", response.message.content);
   }
@@ -15,7 +15,7 @@ import { Ollama } from "llamaindex";
   {
     const response = await llm.chat({
       messages: [{ content: "Tell me a joke.", role: "user" }],
-      stream: true,
+      stream: true
     });
     console.log("Response 3:");
     for await (const message of response) {
@@ -26,7 +26,7 @@ import { Ollama } from "llamaindex";
   {
     const response = await llm.complete({
       prompt: "How are you?",
-      stream: true,
+      stream: true
     });
     console.log("Response 4:");
     for await (const message of response) {

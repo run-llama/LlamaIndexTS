@@ -8,7 +8,7 @@ describe("StorageContext", () => {
     jest.mocked(console.error).mockImplementation(() => {}); // silence console.error
 
     const storageContext = await storageContextFromDefaults({
-      persistDir: "/tmp/test_dir",
+      persistDir: "/tmp/test_dir"
     });
 
     expect(existsSync("/tmp/test_dir")).toBe(true);

@@ -57,7 +57,7 @@ export class MarkdownReader implements BaseReader {
       // pass linting, assert keys are defined
       markdownTups.map((tuple) => [
         tuple[0]?.replace(/#/g, "").trim() || null,
-        tuple[1].replace(/<.*?>/g, ""),
+        tuple[1].replace(/<.*?>/g, "")
       ]);
     } else {
       markdownTups.map((tuple) => [tuple[0], tuple[1].replace(/<.*?>/g, "")]);
@@ -89,7 +89,7 @@ export class MarkdownReader implements BaseReader {
 
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<Document[]> {
     const content = await fs.readFile(file, { encoding: "utf-8" });
     const tups = this.parseTups(content);
@@ -98,8 +98,8 @@ export class MarkdownReader implements BaseReader {
       if (header) {
         results.push(
           new Document({
-            text: `\n\n${header}\n${value}`,
-          }),
+            text: `\n\n${header}\n${value}`
+          })
         );
       } else {
         results.push(new Document({ text: value }));

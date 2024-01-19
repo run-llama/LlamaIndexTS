@@ -3,23 +3,23 @@ import {
   serviceContextFromDefaults,
   storageContextFromDefaults,
   TextNode,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 export async function createIndex() {
   // set up vector store index with two vector stores, one for text, the other for images
   const serviceContext = serviceContextFromDefaults({
     chunkSize: 512,
-    chunkOverlap: 20,
+    chunkOverlap: 20
   });
   const storageContext = await storageContextFromDefaults({
     persistDir: "storage",
-    storeImages: true,
+    storeImages: true
   });
   return await VectorStoreIndex.init({
     nodes: [],
     storageContext,
-    serviceContext,
+    serviceContext
   });
 }
 
@@ -28,7 +28,7 @@ async function main() {
   const index = await createIndex();
   const retriever = index.asRetriever({ similarityTopK: 3 });
   const results = await retriever.retrieve(
-    "what are Vincent van Gogh's famous paintings",
+    "what are Vincent van Gogh's famous paintings"
   );
   for (const result of results) {
     const node = result.node;

@@ -4,7 +4,7 @@ import {
   PGVectorStore,
   SimpleDirectoryReader,
   storageContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 async function getSourceFilenames(sourceDir: string) {
@@ -17,7 +17,7 @@ function callback(
   category: string,
   name: string,
   status: any,
-  message: string = "",
+  message: string = ""
 ): boolean {
   console.log(category, name, status, message);
   return true;
@@ -48,19 +48,19 @@ async function main(args: any) {
 
     console.debug("  - creating vector store");
     const index = await VectorStoreIndex.fromDocuments(docs, {
-      storageContext: ctx,
+      storageContext: ctx
     });
     console.debug("  - done.");
   } catch (err) {
     console.error(fileName, err);
     console.log(
-      "If your PGVectorStore init failed, make sure to set env vars for PGUSER or USER, PGHOST, PGPORT and PGPASSWORD as needed.",
+      "If your PGVectorStore init failed, make sure to set env vars for PGUSER or USER, PGHOST, PGPORT and PGPASSWORD as needed."
     );
     process.exit(1);
   }
 
   console.log(
-    "Done. Try running query.ts to ask questions against the imported embeddings.",
+    "Done. Try running query.ts to ask questions against the imported embeddings."
   );
   process.exit(0);
 }

@@ -2,7 +2,7 @@ import {
   serviceContextFromDefaults,
   SimpleDirectoryReader,
   storageContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 import * as dotenv from "dotenv";
@@ -11,7 +11,7 @@ import {
   CHUNK_OVERLAP,
   CHUNK_SIZE,
   STORAGE_CACHE_DIR,
-  STORAGE_DIR,
+  STORAGE_DIR
 } from "./constants.mjs";
 
 // Load environment variables from local .env file
@@ -29,14 +29,14 @@ async function generateDatasource(serviceContext) {
   // Split documents, create embeddings and store them in the storage context
   const ms = await getRuntime(async () => {
     const storageContext = await storageContextFromDefaults({
-      persistDir: STORAGE_CACHE_DIR,
+      persistDir: STORAGE_CACHE_DIR
     });
     const documents = await new SimpleDirectoryReader().loadData({
-      directoryPath: STORAGE_DIR,
+      directoryPath: STORAGE_DIR
     });
     await VectorStoreIndex.fromDocuments(documents, {
       storageContext,
-      serviceContext,
+      serviceContext
     });
   });
   console.log(`Storage context successfully generated in ${ms / 1000}s.`);
@@ -45,7 +45,7 @@ async function generateDatasource(serviceContext) {
 (async () => {
   const serviceContext = serviceContextFromDefaults({
     chunkSize: CHUNK_SIZE,
-    chunkOverlap: CHUNK_OVERLAP,
+    chunkOverlap: CHUNK_OVERLAP
   });
 
   await generateDatasource(serviceContext);

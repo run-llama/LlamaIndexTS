@@ -7,7 +7,7 @@ import {
   Document,
   ResponseSynthesizer,
   serviceContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 async function main() {
@@ -23,20 +23,17 @@ async function main() {
   const serviceContext = serviceContextFromDefaults({ llm: new Anthropic() });
 
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(
-      serviceContext,
-      anthropicTextQaPrompt,
-    ),
+    responseBuilder: new CompactAndRefine(serviceContext, anthropicTextQaPrompt)
   });
 
   const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
+    serviceContext
   });
 
   // Query the index
   const queryEngine = index.asQueryEngine({ responseSynthesizer });
   const response = await queryEngine.query({
-    query: "What did the author do in college?",
+    query: "What did the author do in college?"
   });
 
   // Output response

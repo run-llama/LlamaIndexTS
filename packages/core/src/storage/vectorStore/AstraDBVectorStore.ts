@@ -23,7 +23,7 @@ export class AstraDBVectorStore implements VectorStore {
         token: string;
         endpoint: string;
       };
-    },
+    }
   ) {
     if (init?.astraDBClient) {
       this.astraDBClient = init.astraDBClient;
@@ -34,7 +34,7 @@ export class AstraDBVectorStore implements VectorStore {
 
       if (!token) {
         throw new Error(
-          "Must specify ASTRA_DB_APPLICATION_TOKEN via env variable.",
+          "Must specify ASTRA_DB_APPLICATION_TOKEN via env variable."
         );
       }
       if (!endpoint) {
@@ -58,7 +58,7 @@ export class AstraDBVectorStore implements VectorStore {
    */
   async create(
     collection: string,
-    options: CreateCollectionOptions,
+    options: CreateCollectionOptions
   ): Promise<void> {
     await this.astraDBClient.createCollection(collection, options);
     console.debug("Created Astra DB collection");
@@ -107,7 +107,7 @@ export class AstraDBVectorStore implements VectorStore {
         _id: node.id_,
         $vector: node.getEmbedding(),
         content: node.getContent(MetadataMode.ALL),
-        metadata: node.metadata,
+        metadata: node.metadata
       };
     });
 
@@ -146,9 +146,9 @@ export class AstraDBVectorStore implements VectorStore {
 
     await collection.deleteOne(
       {
-        _id: refDocId,
+        _id: refDocId
       },
-      deleteOptions,
+      deleteOptions
     );
   }
 
@@ -160,7 +160,7 @@ export class AstraDBVectorStore implements VectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: any
   ): Promise<VectorStoreQueryResult> {
     if (!this.collection) {
       throw new Error("Must connect to collection before querying.");
@@ -177,7 +177,7 @@ export class AstraDBVectorStore implements VectorStore {
         ? { $vector: query.queryEmbedding }
         : undefined,
       limit: query.similarityTopK,
-      includeSimilarity: true,
+      includeSimilarity: true
     });
 
     const nodes: BaseNode[] = [];
@@ -204,7 +204,7 @@ export class AstraDBVectorStore implements VectorStore {
         id_: id,
         text: content,
         metadata: metadata ?? {},
-        embedding: embedding,
+        embedding: embedding
       });
 
       ids.push(id);
@@ -215,7 +215,7 @@ export class AstraDBVectorStore implements VectorStore {
     return {
       similarities,
       ids,
-      nodes,
+      nodes
     };
   }
 }

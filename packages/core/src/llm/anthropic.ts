@@ -1,7 +1,7 @@
 import Anthropic, {
   AI_PROMPT,
   ClientOptions,
-  HUMAN_PROMPT,
+  HUMAN_PROMPT
 } from "@anthropic-ai/sdk";
 import _ from "lodash";
 

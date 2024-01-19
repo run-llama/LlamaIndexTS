@@ -6,7 +6,7 @@ import {
   MistralAI,
   MistralAIEmbedding,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "llamaindex";
 
 async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
@@ -22,7 +22,7 @@ async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
   const serviceContext = serviceContextFromDefaults({ llm, embedModel });
 
   const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
+    serviceContext
   });
 
   // Query the index
@@ -35,25 +35,25 @@ async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
   // embeddings
   const embedding = new MistralAIEmbedding();
   const embeddingsResponse = await embedding.getTextEmbedding(
-    "What is the best French cheese?",
+    "What is the best French cheese?"
   );
   console.log(
-    `MistralAI embeddings are ${embeddingsResponse.length} numbers long\n`,
+    `MistralAI embeddings are ${embeddingsResponse.length} numbers long\n`
   );
 
   // chat api (non-streaming)
   const llm = new MistralAI({ model: "mistral-tiny" });
   const response = await llm.chat({
-    messages: [{ content: "What is the best French cheese?", role: "user" }],
+    messages: [{ content: "What is the best French cheese?", role: "user" }]
   });
   console.log(response.message.content);
 
   // chat api (streaming)
   const stream = await llm.chat({
     messages: [
-      { content: "Who is the most renowned French painter?", role: "user" },
+      { content: "Who is the most renowned French painter?", role: "user" }
     ],
-    stream: true,
+    stream: true
   });
   for await (const chunk of stream) {
     process.stdout.write(chunk.delta);
@@ -63,7 +63,7 @@ async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
   const ragResponse = await rag(
     llm,
     embedding,
-    "What did the author do in college?",
+    "What did the author do in college?"
   );
   console.log(ragResponse);
 })();

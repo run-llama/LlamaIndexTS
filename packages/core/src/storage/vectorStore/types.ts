@@ -15,7 +15,7 @@ export enum VectorStoreQueryMode {
   LOGISTIC_REGRESSION = "logistic_regression",
   LINEAR_REGRESSION = "linear_regression",
   // maximum marginal relevance
-  MMR = "mmr",
+  MMR = "mmr"
 }
 
 export interface ExactMatchFilter {
@@ -64,6 +64,6 @@ export interface VectorStore {
   delete(refDocId: string, deleteOptions?: any): Promise<void>;
   query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: any
   ): Promise<VectorStoreQueryResult>;
 }

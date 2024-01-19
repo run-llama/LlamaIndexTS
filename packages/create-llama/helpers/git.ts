@@ -44,7 +44,7 @@ export function tryGitInit(root: string): boolean {
 
     execSync("git add -A", { stdio: "ignore" });
     execSync('git commit -m "Initial commit from Create Llama"', {
-      stdio: "ignore",
+      stdio: "ignore"
     });
     return true;
   } catch (e) {

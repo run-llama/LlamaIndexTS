@@ -4,11 +4,11 @@ module.exports = {
   extends: ["custom"],
   settings: {
     next: {
-      rootDir: ["apps/*/"],
-    },
+      rootDir: ["apps/*/"]
+    }
   },
   rules: {
-    "max-params": ["error", 4],
+    "max-params": ["error", 4]
   },
-  ignorePatterns: ["dist/"],
+  ignorePatterns: ["dist/"]
 };

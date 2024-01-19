@@ -4,7 +4,7 @@ import { BaseNode } from "../../Node";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
-  getTopKMMREmbeddings,
+  getTopKMMREmbeddings
 } from "../../embeddings";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_FS, DEFAULT_PERSIST_DIR } from "../constants";
@@ -12,13 +12,13 @@ import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
-  VectorStoreQueryResult,
+  VectorStoreQueryResult
 } from "./types";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
   VectorStoreQueryMode.LINEAR_REGRESSION,
-  VectorStoreQueryMode.LOGISTIC_REGRESSION,
+  VectorStoreQueryMode.LOGISTIC_REGRESSION
 ]);
 
 const MMR_MODE = VectorStoreQueryMode.MMR;
@@ -41,7 +41,7 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = DEFAULT_FS
   ): Promise<SimpleVectorStore> {
     let persistPath = `${persistDir}/vector_store.json`;
     return await SimpleVectorStore.fromPersistPath(persistPath, fs);
@@ -76,7 +76,7 @@ export class SimpleVectorStore implements VectorStore {
 
   async delete(refDocId: string): Promise<void> {
     let textIdsToDelete = Object.keys(this.data.textIdToRefDocId).filter(
-      (textId) => this.data.textIdToRefDocId[textId] === refDocId,
+      (textId) => this.data.textIdToRefDocId[textId] === refDocId
     );
     for (let textId of textIdsToDelete) {
       delete this.data.embeddingDict[textId];
@@ -88,7 +88,7 @@ export class SimpleVectorStore implements VectorStore {
   async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
     if (!_.isNil(query.filters)) {
       throw new Error(
-        "Metadata filters not implemented for SimpleVectorStore yet.",
+        "Metadata filters not implemented for SimpleVectorStore yet."
       );
     }
 
@@ -114,7 +114,7 @@ export class SimpleVectorStore implements VectorStore {
         queryEmbedding,
         embeddings,
         query.similarityTopK,
-        nodeIds,
+        nodeIds
       );
     } else if (query.mode === MMR_MODE) {
       let mmrThreshold = query.mmrThreshold;
@@ -124,14 +124,14 @@ export class SimpleVectorStore implements VectorStore {
         null,
         query.similarityTopK,
         nodeIds,
-        mmrThreshold,
+        mmrThreshold
       );
     } else if (query.mode === VectorStoreQueryMode.DEFAULT) {
       [topSimilarities, topIds] = getTopKEmbeddings(
         queryEmbedding,
         embeddings,
         query.similarityTopK,
-        nodeIds,
+        nodeIds
       );
     } else {
       throw new Error(`Invalid query mode: ${query.mode}`);
@@ -139,13 +139,13 @@ export class SimpleVectorStore implements VectorStore {
 
     return Promise.resolve({
       similarities: topSimilarities,
-      ids: topIds,
+      ids: topIds
     });
   }
 
   async persist(
     persistPath: string = `${DEFAULT_PERSIST_DIR}/vector_store.json`,
-    fs?: GenericFileSystem,
+    fs?: GenericFileSystem
   ): Promise<void> {
     fs = fs || this.fs;
     let dirPath = path.dirname(persistPath);
@@ -158,7 +158,7 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs?: GenericFileSystem,
+    fs?: GenericFileSystem
   ): Promise<SimpleVectorStore> {
     fs = fs || DEFAULT_FS;
 
@@ -173,7 +173,7 @@ export class SimpleVectorStore implements VectorStore {
       dataDict = JSON.parse(fileData.toString());
     } catch (e) {
       console.error(
-        `No valid data found at path: ${persistPath} starting new store.`,
+        `No valid data found at path: ${persistPath} starting new store.`
       );
     }
 
@@ -196,7 +196,7 @@ export class SimpleVectorStore implements VectorStore {
   toDict(): SimpleVectorStoreData {
     return {
       embeddingDict: this.data.embeddingDict,
-      textIdToRefDocId: this.data.textIdToRefDocId,
+      textIdToRefDocId: this.data.textIdToRefDocId
     };
   }
 }

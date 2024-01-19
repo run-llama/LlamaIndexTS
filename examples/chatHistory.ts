@@ -18,7 +18,7 @@ async function main() {
     const stream = await chatEngine.chat({
       message: query,
       chatHistory,
-      stream: true,
+      stream: true
     });
     if (chatHistory.getLastSummary()) {
       // Print the summary of the conversation so far that is produced by the SummaryChatHistory

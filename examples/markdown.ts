@@ -12,7 +12,7 @@ async function main() {
   const queryEngine = index.asQueryEngine();
 
   const response = await queryEngine.query({
-    query: "What does the example code do?",
+    query: "What does the example code do?"
   });
 
   // Output response

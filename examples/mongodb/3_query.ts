@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import {
   MongoDBAtlasVectorSearch,
   serviceContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 import { MongoClient } from "mongodb";
 
@@ -17,7 +17,7 @@ async function query() {
     mongodbClient: client,
     dbName: process.env.MONGODB_DATABASE!,
     collectionName: process.env.MONGODB_VECTORS!,
-    indexName: process.env.MONGODB_VECTOR_INDEX!,
+    indexName: process.env.MONGODB_VECTOR_INDEX!
   });
 
   const index = await VectorStoreIndex.fromVectorStore(store, serviceContext);
@@ -25,7 +25,7 @@ async function query() {
   const retriever = index.asRetriever({ similarityTopK: 20 });
   const queryEngine = index.asQueryEngine({ retriever });
   const result = await queryEngine.query({
-    query: "What does the author think of web frameworks?",
+    query: "What does the author think of web frameworks?"
   });
   console.log(result.response);
   await client.close();

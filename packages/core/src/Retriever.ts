@@ -9,7 +9,7 @@ export interface BaseRetriever {
   retrieve(
     query: string,
     parentEvent?: Event,
-    preFilters?: unknown,
+    preFilters?: unknown
   ): Promise<NodeWithScore[]>;
   getServiceContext(): ServiceContext;
 }

@@ -34,16 +34,16 @@ export async function createApp({
   communityProjectPath,
   vectorDb,
   externalPort,
-  installDependencies,
+  installDependencies
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
   if (!(await isWriteable(path.dirname(root)))) {
     console.error(
-      "The application path is not writable, please check folder permissions and try again.",
+      "The application path is not writable, please check folder permissions and try again."
     );
     console.error(
-      "It is likely you do not have write permissions for this folder.",
+      "It is likely you do not have write permissions for this folder."
     );
     process.exit(1);
   }
@@ -76,7 +76,7 @@ export async function createApp({
     communityProjectPath,
     vectorDb,
     externalPort,
-    installDependencies,
+    installDependencies
   };
 
   if (frontend) {
@@ -92,12 +92,12 @@ export async function createApp({
       root: frontendRoot,
       framework: "nextjs",
       customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
-      backend: false,
+      backend: false
     });
     // copy readme for fullstack
     await fs.promises.copyFile(
       path.join(__dirname, "..", "templates", "README-fullstack.md"),
-      path.join(root, "README.md"),
+      path.join(root, "README.md")
     );
   } else {
     await installTemplate({ ...args, backend: true, forBackend: framework });
@@ -114,8 +114,8 @@ export async function createApp({
   console.log(
     `Now have a look at the ${terminalLink(
       "README.md",
-      `file://${root}/README.md`,
-    )} and learn how to get started.`,
+      `file://${root}/README.md`
+    )} and learn how to get started.`
   );
   console.log();
 }

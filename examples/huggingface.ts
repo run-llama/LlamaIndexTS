@@ -5,7 +5,7 @@ import {
   HuggingFaceEmbedding,
   HuggingFaceEmbeddingModelType,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "llamaindex";
 
 async function main() {
@@ -19,22 +19,22 @@ async function main() {
 
   // Use Local embedding from HuggingFace
   const embedModel = new HuggingFaceEmbedding({
-    modelType: HuggingFaceEmbeddingModelType.XENOVA_ALL_MPNET_BASE_V2,
+    modelType: HuggingFaceEmbeddingModelType.XENOVA_ALL_MPNET_BASE_V2
   });
   const serviceContext = serviceContextFromDefaults({
-    embedModel,
+    embedModel
   });
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
+    serviceContext
   });
 
   // Query the index
   const queryEngine = index.asQueryEngine();
   const stream = await queryEngine.query({
     query: "What did the author do in college?",
-    stream: true,
+    stream: true
   });
 
   // Output response

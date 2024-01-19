@@ -10,12 +10,12 @@ export default defineConfig({
   timeout: 1000 * 60 * 5,
   reporter: "html",
   use: {
-    trace: "on-first-retry",
+    trace: "on-first-retry"
   },
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-  ],
+      use: { ...devices["Desktop Chrome"] }
+    }
+  ]
 });

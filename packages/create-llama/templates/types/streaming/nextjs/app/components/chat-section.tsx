@@ -14,12 +14,12 @@ export default function ChatSection() {
     handleInputChange,
     reload,
     stop,
-    data,
+    data
   } = useChat({
     api: process.env.NEXT_PUBLIC_CHAT_API,
     headers: {
-      "Content-Type": "application/json", // using JSON because of vercel/ai 2.2.26
-    },
+      "Content-Type": "application/json" // using JSON because of vercel/ai 2.2.26
+    }
   });
 
   const transformedMessages = useMemo(() => {

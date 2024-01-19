@@ -20,14 +20,14 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
     case "mongo": {
       dependencies.push({
         name: "pymongo",
-        version: "^4.6.1",
+        version: "^4.6.1"
       });
       break;
     }
     case "pg": {
       dependencies.push({
         name: "llama-index",
-        extras: ["postgres"],
+        extras: ["postgres"]
       });
     }
   }
@@ -37,7 +37,7 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
 
 const mergePoetryDependencies = (
   dependencies: Dependency[],
-  existingDependencies: any,
+  existingDependencies: any
 ) => {
   for (const dependency of dependencies) {
     let value = existingDependencies[dependency.name] ?? {};
@@ -52,7 +52,7 @@ const mergePoetryDependencies = (
 
     if (value.version === undefined) {
       throw new Error(
-        `Dependency "${dependency.name}" is missing attribute "version"!`,
+        `Dependency "${dependency.name}" is missing attribute "version"!`
       );
     }
 
@@ -62,7 +62,7 @@ const mergePoetryDependencies = (
 
 export const addDependencies = async (
   projectDir: string,
-  dependencies: Dependency[],
+  dependencies: Dependency[]
 ) => {
   if (dependencies.length === 0) return;
 
@@ -87,7 +87,7 @@ export const addDependencies = async (
   } catch (error) {
     console.log(
       `Error while updating dependencies for Poetry project file ${FILENAME}\n`,
-      error,
+      error
     );
   }
 };
@@ -98,7 +98,7 @@ export const installPythonTemplate = async ({
   framework,
   engine,
   vectorDb,
-  installDependencies,
+  installDependencies
 }: Pick<
   InstallTemplateArgs,
   | "root"
@@ -115,7 +115,7 @@ export const installPythonTemplate = async ({
     "templates",
     "types",
     template,
-    framework,
+    framework
   );
   await copy("**", root, {
     parents: true,
@@ -134,7 +134,7 @@ export const installPythonTemplate = async ({
           return name;
         }
       }
-    },
+    }
   });
 
   if (engine === "context") {
@@ -143,11 +143,11 @@ export const installPythonTemplate = async ({
       compPath,
       "vectordbs",
       "python",
-      vectorDb || "none",
+      vectorDb || "none"
     );
     await copy("**", path.join(root, "app", "engine"), {
       parents: true,
-      cwd: VectorDBPath,
+      cwd: VectorDBPath
     });
   }
 
@@ -158,12 +158,12 @@ export const installPythonTemplate = async ({
   if (installDependencies) {
     if (isPoetryAvailable()) {
       console.log(
-        `Installing python dependencies using poetry. This may take a while...`,
+        `Installing python dependencies using poetry. This may take a while...`
       );
       const installSuccessful = tryPoetryInstall();
       if (!installSuccessful) {
         console.warn(
-          yellow("Install failed. Please install dependencies manually."),
+          yellow("Install failed. Please install dependencies manually.")
         );
       }
     } else {
@@ -172,9 +172,9 @@ export const installPythonTemplate = async ({
           `Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
 Please check ${terminalLink(
             "Poetry Installation",
-            `https://python-poetry.org/docs/#installation`,
-          )} to install poetry first, then install the dependencies manually.`,
-        ),
+            `https://python-poetry.org/docs/#installation`
+          )} to install poetry first, then install the dependencies manually.`
+        )
       );
     }
   }

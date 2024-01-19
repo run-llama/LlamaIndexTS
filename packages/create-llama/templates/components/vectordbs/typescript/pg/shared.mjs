@@ -14,11 +14,11 @@ export function checkRequiredEnvVars() {
   if (missingEnvVars.length > 0) {
     console.log(
       `The following environment variables are required but missing: ${missingEnvVars.join(
-        ", ",
-      )}`,
+        ", "
+      )}`
     );
     throw new Error(
-      `Missing environment variables: ${missingEnvVars.join(", ")}`,
+      `Missing environment variables: ${missingEnvVars.join(", ")}`
     );
   }
 }

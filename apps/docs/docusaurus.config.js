@@ -44,8 +44,8 @@ const config = {
       "pl",
       "nl",
       "vi",
-      "th",
-    ], // "fa", "ru", "ro", "sv", "hu", "cs", "el", "da", "fi", "he", "no", "hi", "in", "sl", "se", "sk", "uk", "bg", "hr", "lt", "lv", "et", "cat"
+      "th"
+    ] // "fa", "ru", "ro", "sv", "hu", "cs", "el", "da", "fi", "he", "no", "hi", "in", "sl", "se", "sk", "uk", "bg", "hr", "lt", "lv", "et", "cat"
   },
 
   presets: [
@@ -61,16 +61,16 @@ const config = {
           // editUrl:
           //   "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
           remarkPlugins: [
-            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
-          ],
+            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }]
+          ]
         },
         blog: false,
         gtag: {
           trackingID: "G-NB9B8LW9W5",
-          anonymizeIP: true,
-        },
-      }),
-    ],
+          anonymizeIP: true
+        }
+      })
+    ]
   ],
 
   themeConfig:
@@ -82,25 +82,25 @@ const config = {
         title: "LlamaIndex.TS",
         logo: {
           alt: "LlamaIndex.TS",
-          src: "img/favicon.png",
+          src: "img/favicon.png"
         },
         items: [
           {
             type: "docSidebar",
             sidebarId: "mySidebar",
             position: "left",
-            label: "Docs",
+            label: "Docs"
           },
           {
             type: "localeDropdown",
-            position: "left",
+            position: "left"
           },
           {
             href: "https://github.com/run-llama/LlamaIndexTS",
             label: "GitHub",
-            position: "right",
-          },
-        ],
+            position: "right"
+          }
+        ]
       },
       footer: {
         style: "dark",
@@ -110,38 +110,38 @@ const config = {
             items: [
               {
                 label: "API",
-                to: "/api",
-              },
-            ],
+                to: "/api"
+              }
+            ]
           },
           {
             title: "Community",
             items: [
               {
                 label: "Discord",
-                href: "https://discord.com/invite/eN6D2HQ4aX",
+                href: "https://discord.com/invite/eN6D2HQ4aX"
               },
               {
                 label: "Twitter",
-                href: "https://twitter.com/LlamaIndex",
-              },
-            ],
+                href: "https://twitter.com/LlamaIndex"
+              }
+            ]
           },
           {
             title: "More",
             items: [
               {
                 label: "GitHub",
-                href: "https://github.com/run-llama/LlamaIndexTS",
-              },
-            ],
-          },
+                href: "https://github.com/run-llama/LlamaIndexTS"
+              }
+            ]
+          }
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} LlamaIndex. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} LlamaIndex. Built with Docusaurus.`
       },
       prism: {
         theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        darkTheme: darkCodeTheme
       },
       algolia: {
         // The application ID provided by Algolia
@@ -153,8 +153,8 @@ const config = {
         indexName: "ts-llamaindex",
 
         // Optional: see doc section below
-        contextualSearch: true,
-      },
+        contextualSearch: true
+      }
     }),
   plugins: [
     [
@@ -166,11 +166,11 @@ const config = {
         sourceLinkTemplate:
           "https://github.com/run-llama/LlamaIndexTS/blob/{gitRevision}/{path}#L{line}",
         sidebar: {
-          position: 6,
-        },
-      },
-    ],
-  ],
+          position: 6
+        }
+      }
+    ]
+  ]
 };
 
 module.exports = config;

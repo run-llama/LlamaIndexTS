@@ -7,7 +7,7 @@ import {
   BaseSynthesizer,
   ResponseBuilder,
   SynthesizeParamsNonStreaming,
-  SynthesizeParamsStreaming,
+  SynthesizeParamsStreaming
 } from "./types";
 
 /**
@@ -21,7 +21,7 @@ export class ResponseSynthesizer implements BaseSynthesizer {
   constructor({
     responseBuilder,
     serviceContext,
-    metadataMode = MetadataMode.NONE,
+    metadataMode = MetadataMode.NONE
   }: {
     responseBuilder?: ResponseBuilder;
     serviceContext?: ServiceContext;
@@ -34,19 +34,19 @@ export class ResponseSynthesizer implements BaseSynthesizer {
   }
 
   synthesize(
-    params: SynthesizeParamsStreaming,
+    params: SynthesizeParamsStreaming
   ): Promise<AsyncIterable<Response>>;
   synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
   async synthesize({
     query,
     nodesWithScore,
     parentEvent,
-    stream,
+    stream
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
   > {
     const textChunks: string[] = nodesWithScore.map(({ node }) =>
-      node.getContent(this.metadataMode),
+      node.getContent(this.metadataMode)
     );
     const nodes = nodesWithScore.map(({ node }) => node);
     if (stream) {
@@ -54,14 +54,14 @@ export class ResponseSynthesizer implements BaseSynthesizer {
         query,
         textChunks,
         parentEvent,
-        stream,
+        stream
       });
       return streamConverter(response, (chunk) => new Response(chunk, nodes));
     }
     const response = await this.responseBuilder.getResponse({
       query,
       textChunks,
-      parentEvent,
+      parentEvent
     });
     return new Response(response, nodes);
   }

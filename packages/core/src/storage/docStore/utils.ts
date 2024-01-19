@@ -6,7 +6,7 @@ const DATA_KEY = "__data__";
 export function docToJson(doc: BaseNode): Record<string, any> {
   return {
     [DATA_KEY]: JSON.stringify(doc),
-    [TYPE_KEY]: doc.getType(),
+    [TYPE_KEY]: doc.getType()
   };
 }
 
@@ -21,14 +21,14 @@ export function jsonToDoc(docDict: Record<string, any>): BaseNode {
       id_: dataDict.id_,
       embedding: dataDict.embedding,
       hash: dataDict.hash,
-      metadata: dataDict.metadata,
+      metadata: dataDict.metadata
     });
   } else if (docType === ObjectType.TEXT) {
     doc = new TextNode({
       text: dataDict.text,
       id_: dataDict.id_,
       hash: dataDict.hash,
-      metadata: dataDict.metadata,
+      metadata: dataDict.metadata
     });
   } else {
     throw new Error(`Unknown doc type: ${docType}`);

@@ -3,7 +3,7 @@ import {
   serviceContextFromDefaults,
   SimpleDirectoryReader,
   storageContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 import * as path from "path";
 
@@ -19,15 +19,15 @@ async function generateDatasource(serviceContext: ServiceContext) {
   // Split documents, create embeddings and store them in the storage context
   const ms = await getRuntime(async () => {
     const documents = await new SimpleDirectoryReader().loadData({
-      directoryPath: path.join("multimodal", "data"),
+      directoryPath: path.join("multimodal", "data")
     });
     const storageContext = await storageContextFromDefaults({
       persistDir: "storage",
-      storeImages: true,
+      storeImages: true
     });
     await VectorStoreIndex.fromDocuments(documents, {
       serviceContext,
-      storageContext,
+      storageContext
     });
   });
   console.log(`Storage successfully generated in ${ms / 1000}s.`);
@@ -36,7 +36,7 @@ async function generateDatasource(serviceContext: ServiceContext) {
 async function main() {
   const serviceContext = serviceContextFromDefaults({
     chunkSize: 512,
-    chunkOverlap: 20,
+    chunkOverlap: 20
   });
 
   await generateDatasource(serviceContext);

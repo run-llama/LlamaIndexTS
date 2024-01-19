@@ -4,7 +4,7 @@ import {
   PineconeVectorStore,
   SimpleDirectoryReader,
   storageContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 async function getSourceFilenames(sourceDir: string) {
@@ -17,7 +17,7 @@ function callback(
   category: string,
   name: string,
   status: any,
-  message: string = "",
+  message: string = ""
 ): boolean {
   console.log(category, name, status, message);
   return true;
@@ -46,19 +46,19 @@ async function main(args: any) {
 
     console.debug("  - creating vector store");
     const index = await VectorStoreIndex.fromDocuments(docs, {
-      storageContext: ctx,
+      storageContext: ctx
     });
     console.debug("  - done.");
   } catch (err) {
     console.error(fileName, err);
     console.log(
-      "If your PineconeVectorStore connection failed, make sure to set env vars for PINECONE_API_KEY and PINECONE_ENVIRONMENT.  If the upserts failed, try setting PINECONE_CHUNK_SIZE to limit the content sent per chunk",
+      "If your PineconeVectorStore connection failed, make sure to set env vars for PINECONE_API_KEY and PINECONE_ENVIRONMENT.  If the upserts failed, try setting PINECONE_CHUNK_SIZE to limit the content sent per chunk"
     );
     process.exit(1);
   }
 
   console.log(
-    "Done. Try running query.ts to ask questions against the imported embeddings.",
+    "Done. Try running query.ts to ask questions against the imported embeddings."
   );
   process.exit(0);
 }

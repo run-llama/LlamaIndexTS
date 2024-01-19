@@ -2,7 +2,7 @@ import {
   ChromaVectorStore,
   PapaCSVReader,
   storageContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 
 const collectionName = "movie_reviews";
@@ -13,7 +13,7 @@ async function main() {
   try {
     console.log(`Loading data from ${sourceFile}`);
     const reader = new PapaCSVReader(false, ", ", "\n", {
-      header: true,
+      header: true
     });
     const docs = await reader.loadData(sourceFile);
 
@@ -23,13 +23,13 @@ async function main() {
 
     console.log("Embedding documents and adding to index");
     const index = await VectorStoreIndex.fromDocuments(docs, {
-      storageContext: ctx,
+      storageContext: ctx
     });
 
     console.log("Querying index");
     const queryEngine = index.asQueryEngine();
     const response = await queryEngine.query({
-      query: "Tell me about Godfrey Cheshire's rating of La Sapienza.",
+      query: "Tell me about Godfrey Cheshire's rating of La Sapienza."
     });
     console.log(response.toString());
   } catch (e) {

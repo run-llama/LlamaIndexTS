@@ -13,7 +13,7 @@ export async function runApp(
   name: string,
   appType: AppType,
   port: number,
-  externalPort: number,
+  externalPort: number
 ): Promise<ChildProcess[]> {
   const cps: ChildProcess[] = [];
 
@@ -24,20 +24,20 @@ export async function runApp(
           await createProcess(
             "npm run dev",
             path.join(cwd, name, "backend"),
-            externalPort,
-          ),
+            externalPort
+          )
         );
         cps.push(
           await createProcess(
             "npm run dev",
             path.join(cwd, name, "frontend"),
-            port,
-          ),
+            port
+          )
         );
         break;
       default:
         cps.push(
-          await createProcess("npm run dev", path.join(cwd, name), port),
+          await createProcess("npm run dev", path.join(cwd, name), port)
         );
         break;
     }
@@ -53,15 +53,15 @@ async function createProcess(command: string, cwd: string, port: number) {
     cwd,
     env: {
       ...process.env,
-      PORT: `${port}`,
-    },
+      PORT: `${port}`
+    }
   });
   if (!cp) throw new Error(`Can't start process ${command} in ${cwd}`);
 
   await waitPort({
     host: "localhost",
     port,
-    timeout: 1000 * 60,
+    timeout: 1000 * 60
   });
   return cp;
 }
@@ -74,7 +74,7 @@ export function runCreateLlama(
   templateEngine: string,
   templateUI: string,
   appType: AppType,
-  externalPort: number,
+  externalPort: number
 ) {
   const createLlama = path.join(__dirname, "..", "dist", "index.js");
 
@@ -83,7 +83,7 @@ export function runCreateLlama(
     templateFramework,
     templateEngine,
     templateUI,
-    appType,
+    appType
   ].join("-");
   const command = [
     "node",
@@ -106,12 +106,12 @@ export function runCreateLlama(
     "--use-npm",
     "--external-port",
     externalPort,
-    "--install-dependencies",
+    "--install-dependencies"
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
   execSync(command, {
     stdio: "inherit",
-    cwd,
+    cwd
   });
   return name;
 }

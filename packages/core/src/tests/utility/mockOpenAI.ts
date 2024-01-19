@@ -6,7 +6,7 @@ import { LLMChatParamsBase } from "../../llm/types";
 
 export function mockLlmGeneration({
   languageModel,
-  callbackManager,
+  callbackManager
 }: {
   languageModel: OpenAI;
   callbackManager: CallbackManager;
@@ -18,7 +18,7 @@ export function mockLlmGeneration({
         const text = "MOCK_TOKEN_1-MOCK_TOKEN_2";
         const event = globalsHelper.createEvent({
           parentEvent,
-          type: "llmPredict",
+          type: "llmPredict"
         });
         if (callbackManager?.onLLMStream) {
           const chunks = text.split("-");
@@ -36,29 +36,29 @@ export function mockLlmGeneration({
                   {
                     index: 0,
                     delta: {
-                      content: chunk,
+                      content: chunk
                     },
-                    finish_reason: null,
-                  },
-                ],
-              },
+                    finish_reason: null
+                  }
+                ]
+              }
             });
           }
           callbackManager?.onLLMStream({
             event,
             index: chunks.length,
-            isDone: true,
+            isDone: true
           });
         }
         return new Promise((resolve) => {
           resolve({
             message: {
               content: text,
-              role: "assistant",
-            },
+              role: "assistant"
+            }
           });
         });
-      },
+      }
     );
 }
 

@@ -4,7 +4,7 @@ import {
   MongoDBAtlasVectorSearch,
   SimpleMongoReader,
   storageContextFromDefaults,
-  VectorStoreIndex,
+  VectorStoreIndex
 } from "llamaindex";
 import { MongoClient } from "mongodb";
 
@@ -25,7 +25,7 @@ async function loadAndIndex() {
   // it pulls every object in a given collection
   const reader = new SimpleMongoReader(client);
   const documents = await reader.loadData(databaseName, collectionName, [
-    "full_text",
+    "full_text"
   ]);
 
   // create Atlas as a vector store
@@ -33,14 +33,14 @@ async function loadAndIndex() {
     mongodbClient: client,
     dbName: databaseName,
     collectionName: vectorCollectionName, // this is where your embeddings will be stored
-    indexName: indexName, // this is the name of the index you will need to create
+    indexName: indexName // this is the name of the index you will need to create
   });
 
   // now create an index from all the Documents and store them in Atlas
   const storageContext = await storageContextFromDefaults({ vectorStore });
   await VectorStoreIndex.fromDocuments(documents, { storageContext });
   console.log(
-    `Successfully created embeddings in the MongoDB collection ${vectorCollectionName}.`,
+    `Successfully created embeddings in the MongoDB collection ${vectorCollectionName}.`
   );
   await client.close();
 }
@@ -66,11 +66,11 @@ async function createSearchIndex() {
             type: "vector",
             path: "embedding",
             numDimensions: 1536,
-            similarity: "cosine",
-          },
-        ],
-      },
-    },
+            similarity: "cosine"
+          }
+        ]
+      }
+    }
   };
   // run the helper method
   const result = await collection.createSearchIndex(index);

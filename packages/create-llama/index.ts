@@ -33,98 +33,98 @@ const program = new Commander.Command(packageJson.name)
     `
 
   Initialize with eslint config.
-`,
+`
   )
   .option(
     "--use-npm",
     `
 
   Explicitly tell the CLI to bootstrap the application using npm
-`,
+`
   )
   .option(
     "--use-pnpm",
     `
 
   Explicitly tell the CLI to bootstrap the application using pnpm
-`,
+`
   )
   .option(
     "--use-yarn",
     `
 
   Explicitly tell the CLI to bootstrap the application using Yarn
-`,
+`
   )
   .option(
     "--reset-preferences",
     `
 
   Explicitly tell the CLI to reset any stored preferences
-`,
+`
   )
   .option(
     "--template <template>",
     `
 
   Select a template to bootstrap the application with.
-`,
+`
   )
   .option(
     "--engine <engine>",
     `
 
   Select a chat engine to bootstrap the application with.
-`,
+`
   )
   .option(
     "--framework <framework>",
     `
 
   Select a framework to bootstrap the application with.
-`,
+`
   )
   .option(
     "--open-ai-key <key>",
     `
 
   Provide an OpenAI API key.
-`,
+`
   )
   .option(
     "--ui <ui>",
     `
 
   Select a UI to bootstrap the application with.
-`,
+`
   )
   .option(
     "--frontend",
     `
 
   Whether to generate a frontend for your backend.
-`,
+`
   )
   .option(
     "--model <model>",
     `
 
   Select OpenAI model to use. E.g. gpt-3.5-turbo.
-`,
+`
   )
   .option(
     "--external-port <external>",
     `
 
 Select external port.
-`,
+`
   )
   .option(
     "--install-dependencies",
     `
 
 Whether install dependencies (backend/frontend) automatically or not.
-`,
+`
   )
   .allowUnknownOption()
   .parse(process.argv);
@@ -169,7 +169,7 @@ async function run(): Promise<void> {
           return true;
         }
         return "Invalid project name: " + validation.problems![0];
-      },
+      }
     });
 
     if (typeof res.path === "string") {
@@ -183,7 +183,7 @@ async function run(): Promise<void> {
         `  ${cyan(program.name())} ${green("<project-directory>")}\n` +
         "For example:\n" +
         `  ${cyan(program.name())} ${green("my-app")}\n\n` +
-        `Run ${cyan(`${program.name()} --help`)} to see all options.`,
+        `Run ${cyan(`${program.name()} --help`)} to see all options.`
     );
     process.exit(1);
   }
@@ -195,8 +195,8 @@ async function run(): Promise<void> {
   if (!valid) {
     console.error(
       `Could not create a project called ${red(
-        `"${projectName}"`,
-      )} because of npm naming restrictions:`,
+        `"${projectName}"`
+      )} because of npm naming restrictions:`
     );
 
     problems!.forEach((p) => console.error(`    ${red(bold("*"))} ${p}`));
@@ -231,7 +231,7 @@ async function run(): Promise<void> {
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
-    installDependencies: program.installDependencies,
+    installDependencies: program.installDependencies
   });
   conf.set("preferences", preferences);
 }
@@ -254,7 +254,7 @@ async function notifyUpdate(): Promise<void> {
           "\n" +
           "You can update by running: " +
           cyan(updateMessage) +
-          "\n",
+          "\n"
       );
     }
     process.exit();
@@ -273,7 +273,7 @@ run()
     } else {
       console.log(
         red("Unexpected error. Please report it as a bug:") + "\n",
-        reason,
+        reason
       );
     }
     console.log();

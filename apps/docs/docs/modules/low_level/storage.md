@@ -12,12 +12,12 @@ Right now, only saving and loading from disk is supported, with future integrati
 import { Document, VectorStoreIndex, storageContextFromDefaults } from "./src";
 
 const storageContext = await storageContextFromDefaults({
-  persistDir: "./storage",
+  persistDir: "./storage"
 });
 
 const document = new Document({ text: "Test Text" });
 const index = await VectorStoreIndex.fromDocuments([document], {
-  storageContext,
+  storageContext
 });
 ```
 

@@ -2,20 +2,20 @@ import { ChatHistory, getHistory } from "../../ChatHistory";
 import {
   CondenseQuestionPrompt,
   defaultCondenseQuestionPrompt,
-  messagesToHistoryStr,
+  messagesToHistoryStr
 } from "../../Prompt";
 import { BaseQueryEngine } from "../../QueryEngine";
 import { Response } from "../../Response";
 import {
   ServiceContext,
-  serviceContextFromDefaults,
+  serviceContextFromDefaults
 } from "../../ServiceContext";
 import { ChatMessage, LLM } from "../../llm";
 import { extractText, streamReducer } from "../../llm/utils";
 import {
   ChatEngine,
   ChatEngineParamsNonStreaming,
-  ChatEngineParamsStreaming,
+  ChatEngineParamsStreaming
 } from "./types";
 
 /**
@@ -50,21 +50,21 @@ export class CondenseQuestionChatEngine implements ChatEngine {
 
   private async condenseQuestion(chatHistory: ChatHistory, question: string) {
     const chatHistoryStr = messagesToHistoryStr(
-      await chatHistory.requestMessages(),
+      await chatHistory.requestMessages()
     );
 
     return this.llm.complete({
       prompt: defaultCondenseQuestionPrompt({
         question: question,
-        chatHistory: chatHistoryStr,
-      }),
+        chatHistory: chatHistoryStr
+      })
     });
   }
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
   async chat(
-    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
+    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming
   ): Promise<Response | AsyncIterable<Response>> {
     const { message, stream } = params;
     const chatHistory = params.chatHistory
@@ -79,7 +79,7 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     if (stream) {
       const stream = await this.queryEngine.query({
         query: condensedQuestion,
-        stream: true,
+        stream: true
       });
       return streamReducer({
         stream,
@@ -87,11 +87,11 @@ export class CondenseQuestionChatEngine implements ChatEngine {
         reducer: (accumulator, part) => (accumulator += part.response),
         finished: (accumulator) => {
           chatHistory.addMessage({ content: accumulator, role: "assistant" });
-        },
+        }
       });
     }
     const response = await this.queryEngine.query({
-      query: condensedQuestion,
+      query: condensedQuestion
     });
     chatHistory.addMessage({ content: response.response, role: "assistant" });
 

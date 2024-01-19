@@ -4,7 +4,7 @@ import {
   Document,
   ImageDocument,
   NodeRelationship,
-  TextNode,
+  TextNode
 } from "../Node";
 
 type TextSplitter = (s: string) => string[];
@@ -17,7 +17,7 @@ type TextSplitter = (s: string) => string[];
  */
 function getTextSplitsFromDocument(
   document: Document,
-  textSplitter: TextSplitter,
+  textSplitter: TextSplitter
 ) {
   const text = document.getText();
   return textSplitter(text);
@@ -35,7 +35,7 @@ export function getNodesFromDocument(
   doc: BaseNode,
   textSplitter: TextSplitter,
   includeMetadata: boolean = true,
-  includePrevNextRel: boolean = true,
+  includePrevNextRel: boolean = true
 ): TextNode[] {
   if (doc instanceof ImageDocument) {
     // TODO: use text splitter on text of image documents
@@ -54,9 +54,9 @@ export function getNodesFromDocument(
       text: textSplit,
       metadata: includeMetadata ? _.cloneDeep(document.metadata) : {},
       excludedEmbedMetadataKeys: _.cloneDeep(
-        document.excludedEmbedMetadataKeys,
+        document.excludedEmbedMetadataKeys
       ),
-      excludedLlmMetadataKeys: _.cloneDeep(document.excludedLlmMetadataKeys),
+      excludedLlmMetadataKeys: _.cloneDeep(document.excludedLlmMetadataKeys)
     });
     node.relationships[NodeRelationship.SOURCE] = document.asRelatedNodeInfo();
     nodes.push(node);

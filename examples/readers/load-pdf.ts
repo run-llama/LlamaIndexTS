@@ -11,7 +11,7 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query({
-    query: "What mistakes did they make?",
+    query: "What mistakes did they make?"
   });
 
   // Output response

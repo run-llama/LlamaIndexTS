@@ -20,7 +20,7 @@ export class SimpleMongoReader implements BaseReader {
   private flatten(texts: Array<string | string[]>): string[] {
     return texts.reduce<string[]>(
       (result, text) => result.concat(text instanceof Array ? text : [text]),
-      [],
+      []
     );
   }
 
@@ -44,7 +44,7 @@ export class SimpleMongoReader implements BaseReader {
     separator: string = "",
     filterQuery: Record<string, any> = {},
     maxDocs: number = 0,
-    metadataNames?: string[],
+    metadataNames?: string[]
   ): Promise<Document[]> {
     const db = this.client.db(dbName);
     // Get items from collection
@@ -58,7 +58,7 @@ export class SimpleMongoReader implements BaseReader {
     for await (const item of cursor) {
       try {
         const texts: Array<string | string[]> = fieldNames.map(
-          (name) => item[name],
+          (name) => item[name]
         );
         const flattenedTexts = this.flatten(texts);
         const text = flattenedTexts.join(separator);
@@ -67,14 +67,14 @@ export class SimpleMongoReader implements BaseReader {
         if (metadataNames) {
           // extract metadata if fields are specified
           metadata = Object.fromEntries(
-            metadataNames.map((name) => [name, item[name]]),
+            metadataNames.map((name) => [name, item[name]])
           );
         }
 
         documents.push(new Document({ text, metadata }));
       } catch (err) {
         throw new Error(
-          `Field not found in Mongo document: ${(err as Error).message}`,
+          `Field not found in Mongo document: ${(err as Error).message}`
         );
       }
     }

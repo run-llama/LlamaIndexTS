@@ -51,10 +51,10 @@ module.exports = {
           "npm_config_user_agent",
           "NEXT_PUBLIC_CHAT_API",
           "MODEL",
-          "NEXT_PUBLIC_MODEL",
-        ],
-      },
-    ],
+          "NEXT_PUBLIC_MODEL"
+        ]
+      }
+    ]
   },
   // NOTE I think because we've temporarily removed all of the NextJS stuff
   // from the turborepo not having next in the devDeps causes an error on only
@@ -64,7 +64,7 @@ module.exports = {
   // Anyways, planning to add back a Next.JS example soon
   parserOptions: {
     babelOptions: {
-      presets: [require.resolve("next/babel")],
-    },
-  },
+      presets: [require.resolve("next/babel")]
+    }
+  }
 };
