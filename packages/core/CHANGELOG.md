@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.48
+
+### Patch Changes
+
+- 34a26e5: Remove HistoryChatEngine and use ChatHistory for all chat engines
+
 ## 0.0.47
 
 ### Patch Changes
