@@ -6,7 +6,11 @@ import {
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
 import { OpenAIEmbedding } from "../embeddings";
-import { KeywordExtractor, TitleExtractor } from "../extractors";
+import {
+  KeywordExtractor,
+  QuestionsAnsweredExtractor,
+  TitleExtractor,
+} from "../extractors";
 import { OpenAI } from "../llm/LLM";
 import { SimpleNodeParser } from "../nodeParsers";
 import {
@@ -22,7 +26,7 @@ jest.mock("../llm/openai", () => {
   };
 });
 
-describe("CallbackManager: onLLMStream and onRetrieve", () => {
+describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   let serviceContext: ServiceContext;
   let streamCallbackData: StreamCallbackResponse[] = [];
   let retrieveCallbackData: RetrievalCallbackResponse[] = [];
@@ -92,6 +96,26 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
 
     expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
       documentTitle: DEFAULT_LLM_TEXT_OUTPUT,
+    });
+  });
+
+  test("[MetadataExtractor] QuestionsAnswered returns questionsThisExcerptCanAnswer metadata", async () => {
+    const nodeParser = new SimpleNodeParser();
+
+    const nodes = nodeParser.getNodesFromDocuments([
+      new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
+    ]);
+
+    const questionsAnsweredExtractor = new QuestionsAnsweredExtractor(
+      serviceContext.llm,
+      5,
+    );
+
+    const nodesWithKeywordMetadata =
+      await questionsAnsweredExtractor.processNodes(nodes);
+
+    expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
+      questionsThisExcerptCanAnswer: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });
 });
