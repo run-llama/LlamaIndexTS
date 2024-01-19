@@ -13,6 +13,9 @@ const defaultKeywordExtractorPromptTemplate = ({
   document. Format as comma separated. Keywords:
 `;
 
+/**
+ * Extract keywords from a list of nodes.
+ */
 export class KeywordExtractor extends BaseExtractor {
   llm: LLM;
   keywords: number = 5;
@@ -25,6 +28,11 @@ export class KeywordExtractor extends BaseExtractor {
     this.keywords = keywords;
   }
 
+  /**
+   *
+   * @param node Node to extract keywords from.
+   * @returns Keywords extracted from the node.
+   */
   async extractKeywordsFromNodes(
     node: BaseNode,
   ): Promise<Record<string, string>> {
@@ -44,6 +52,11 @@ export class KeywordExtractor extends BaseExtractor {
     };
   }
 
+  /**
+   *
+   * @param nodes Nodes to extract keywords from.
+   * @returns Keywords extracted from the nodes.
+   */
   async extract(nodes: BaseNode[]): Promise<Record<string, any>[]> {
     const results = await Promise.all(
       nodes.map((node) => this.extractKeywordsFromNodes(node)),

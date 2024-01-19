@@ -19,6 +19,13 @@ export abstract class BaseExtractor {
 
   abstract extract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
 
+  /**
+   *
+   * @param nodes Nodes to extract metadata from.
+   * @param excludedEmbedMetadataKeys Metadata keys to exclude from the embedding.
+   * @param excludedLlmMetadataKeys Metadata keys to exclude from the LLM.
+   * @returns Metadata extracted from the nodes.
+   */
   async processNodes(
     nodes: BaseNode[],
     excludedEmbedMetadataKeys: string[] | undefined = undefined,
