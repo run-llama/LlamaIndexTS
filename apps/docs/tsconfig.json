@@ -6,6 +6,6 @@
     "composite": true,
     "incremental": true,
     "outDir": "./lib",
-    "tsBuildInfoFile": "./lib/.tsbuildinfo"
-  }
+    "tsBuildInfoFile": "./lib/.tsbuildinfo",
+  },
 }
