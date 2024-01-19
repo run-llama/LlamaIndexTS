@@ -6,7 +6,7 @@ import {
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager";
 import { OpenAIEmbedding } from "../embeddings";
-import { KeywordExtractor } from "../extractors";
+import { KeywordExtractor, TitleExtractor } from "../extractors";
 import { OpenAI } from "../llm/LLM";
 import { SimpleNodeParser } from "../nodeParsers";
 import {
@@ -76,6 +76,22 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
 
     expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
       excerptKeywords: DEFAULT_LLM_TEXT_OUTPUT,
+    });
+  });
+
+  test("[MetadataExtractor] TitleExtractor returns documentTitle metadata", async () => {
+    const nodeParser = new SimpleNodeParser();
+
+    const nodes = nodeParser.getNodesFromDocuments([
+      new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
+    ]);
+
+    const titleExtractor = new TitleExtractor(serviceContext.llm, 5);
+
+    const nodesWithKeywordMetadata = await titleExtractor.processNodes(nodes);
+
+    expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
+      documentTitle: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });
 });

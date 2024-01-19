@@ -194,7 +194,7 @@ export class TitleExtractor extends BaseExtractor {
     }
 
     return nodes.map((_) => ({
-      document_title: title.trim().replace(/(\r\n|\n|\r)/gm, ""),
+      documentTitle: title.trim().replace(/(\r\n|\n|\r)/gm, ""),
     }));
   }
 }
