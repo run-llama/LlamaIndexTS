@@ -32,12 +32,19 @@ export abstract class BaseEmbedding {
   async getTextEmbeddingBatch(texts: string[]): Promise<Array<Embedding>> {
     const resultEmbeddings: Array<Embedding> = [];
 
-    const queueWithProgress = texts;
+    const queue = texts;
+    let batchIndex = 0;
 
     await BlueBird.map(
-      queueWithProgress,
+      queue,
       async (text) => {
         const embedding = await this.getTextEmbedding(text);
+        batchIndex++;
+
+        process.stdout.write(
+          `Embedding batch ${batchIndex} of ${queue.length}\r`,
+        );
+
         return embedding;
       },
       { concurrency: this.embedBatchSize },
