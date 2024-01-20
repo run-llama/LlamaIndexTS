@@ -22,5 +22,5 @@ import {
 
   const embeddings = await openAIEmbedding.getTextEmbeddingBatch(textSplits);
 
-  process.stdout.write(embeddings);
+  process.stdout.write(JSON.stringify(embeddings));
 })();

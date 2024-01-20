@@ -1,4 +1,3 @@
-import BlueBird from "bluebird";
 import { similarity } from "./utils";
 
 /**
@@ -31,26 +30,28 @@ export abstract class BaseEmbedding {
 
   async getTextEmbeddingBatch(texts: string[]): Promise<Array<Embedding>> {
     const resultEmbeddings: Array<Embedding> = [];
+    const chunkSize = this.embedBatchSize;
 
-    const queue = texts;
-    let batchIndex = 0;
+    const queue: string[] = texts;
+    const totalChunks = Math.ceil(queue.length / chunkSize);
 
-    await BlueBird.map(
-      queue,
-      async (text) => {
-        const embedding = await this.getTextEmbedding(text);
-        batchIndex++;
+    const processChunk = async (chunk: string[], chunkIndex: number) => {
+      const embeddings = await Promise.all(
+        chunk.map(async (text) => {
+          return await this.getTextEmbedding(text);
+        }),
+      );
 
-        process.stdout.write(
-          `Embedding batch ${batchIndex} of ${queue.length}\r`,
-        );
-
-        return embedding;
-      },
-      { concurrency: this.embedBatchSize },
-    ).then((embeddings) => {
       resultEmbeddings.push(...embeddings);
-    });
+      process.stdout.write(
+        `Processing chunk ${chunkIndex + 1} of ${totalChunks}.\r`,
+      );
+    };
+
+    for (let i = 0; i < queue.length; i += chunkSize) {
+      const chunk = queue.slice(i, i + chunkSize);
+      await processChunk(chunk, i / chunkSize);
+    }
 
     return resultEmbeddings;
   }

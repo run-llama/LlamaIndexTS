@@ -10,7 +10,6 @@
     "@pinecone-database/pinecone": "^1.1.2",
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
-    "bluebird": "^3.7.2",
     "chromadb": "^1.7.3",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.8",
