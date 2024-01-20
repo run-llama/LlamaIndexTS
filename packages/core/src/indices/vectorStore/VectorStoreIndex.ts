@@ -233,7 +233,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
   static async fromVectorStore(
     vectorStore: VectorStore,
-    serviceContext: ServiceContext,
+    nodes?: BaseNode[],
+    serviceContext?: ServiceContext,
     imageVectorStore?: VectorStore,
   ) {
     if (!vectorStore.storesText) {
@@ -248,7 +249,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     });
 
     const index = await this.init({
-      nodes: [],
+      nodes: nodes ?? [],
       storageContext,
       serviceContext,
     });
