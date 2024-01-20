@@ -72,7 +72,7 @@ export const defaultNodeTextTemplate = ({
 }: {
   metadataStr?: string;
   content?: string;
-}) => `[Excerpt from document]
+} = {}) => `[Excerpt from document]
 ${metadataStr}
 Excerpt:
 -----
