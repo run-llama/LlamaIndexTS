@@ -1,8 +1,8 @@
 import { BaseNode } from "../../Node";
-import { VectorStore, VectorStoreQuery } from "./types";
+import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { nodeToMetadata } from "./utils";
+import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 type PointStruct = {
   id: string;
@@ -16,6 +16,14 @@ type QdrantParams = {
   url?: string;
   apiKey?: string;
   batchSize?: number;
+};
+
+type QuerySearchResult = {
+  id: string;
+  score: number;
+  payload: Record<string, unknown>;
+  vector: number[] | null;
+  version: number;
 };
 
 /**
@@ -104,6 +112,18 @@ export class QdrantVectorStore implements VectorStore {
   }
 
   /**
+   * Initializes the collection in Qdrant.
+   * @param vectorSize Dimensionality of the vectors
+   */
+  private async initializeCollection(vectorSize: number) {
+    const exists = await this.collectionExists(this.collectionName);
+    if (!exists) {
+      await this.createCollection(this.collectionName, vectorSize);
+    }
+    this._collectionInitialized = true;
+  }
+
+  /**
    * Builds a list of points from the given nodes.
    * @param nodes
    * @returns
@@ -149,18 +169,6 @@ export class QdrantVectorStore implements VectorStore {
       points: points,
       ids: ids,
     };
-  }
-
-  /**
-   * Initializes the collection in Qdrant.
-   * @param vectorSize Dimensionality of the vectors
-   */
-  private async initializeCollection(vectorSize: number) {
-    const exists = await this.collectionExists(this.collectionName);
-    if (!exists) {
-      await this.createCollection(this.collectionName, vectorSize);
-    }
-    this._collectionInitialized = true;
   }
 
   /**
@@ -213,24 +221,57 @@ export class QdrantVectorStore implements VectorStore {
   }
 
   /**
+   * Converts the result of a query to a VectorStoreQueryResult.
+   * @param response Query response
+   * @returns VectorStoreQueryResult
+   */
+  private parseToQueryResult(
+    response: Array<QuerySearchResult>,
+  ): VectorStoreQueryResult {
+    const nodes = [];
+    const similarities = [];
+    const ids = [];
+
+    for (let i = 0; i < response.length; i++) {
+      const item = response[i];
+      const payload = item.payload;
+      const node = metadataDictToNode(payload);
+
+      ids.push(item.id);
+      nodes.push(node);
+      similarities.push(item.score);
+    }
+
+    return {
+      nodes: nodes,
+      similarities: similarities,
+      ids: ids,
+    };
+  }
+
+  /**
    * Queries the vector store for the closest matching data to the query embeddings.
    * @param query The VectorStoreQuery to be used
    * @param options Required by VectorStore interface.  Currently ignored.
    * @returns Zero or more Document instances with data from the vector store.
    */
-  async query(query: VectorStoreQuery, options?: any): Promise<any> {
+  async query(
+    query: VectorStoreQuery,
+    options?: any,
+  ): Promise<VectorStoreQueryResult> {
     const qdrantFilters = options?.qdrant_filters ?? [];
-    const queryFilters = qdrantFilters ?? query.filters ?? [];
+    const queryFilters = qdrantFilters ?? query.filters ?? undefined;
 
-    const result = await this.db.search(this.collectionName, {
-      vector: {
-        name: "vector",
-        vector: query.queryEmbedding ?? [],
-      },
+    if (!query.queryEmbedding) {
+      throw new Error("No query embedding provided");
+    }
+
+    const result = (await this.db.search(this.collectionName, {
+      vector: query.queryEmbedding,
       limit: query.similarityTopK,
-      filter: queryFilters,
-    });
+      ...(queryFilters && { filter: queryFilters }),
+    })) as Array<QuerySearchResult>;
 
-    return result;
+    return this.parseToQueryResult(result);
   }
 }
