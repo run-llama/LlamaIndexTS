@@ -102,7 +102,7 @@ export class QdrantVectorStore implements VectorStore {
    * @param collectionName Qdrant collection name
    * @returns
    */
-  private async collectionExists(collectionName: string): Promise<boolean> {
+  async collectionExists(collectionName: string): Promise<boolean> {
     try {
       await this.db.getCollection(collectionName);
       return true;
@@ -115,7 +115,7 @@ export class QdrantVectorStore implements VectorStore {
    * Initializes the collection in Qdrant.
    * @param vectorSize Dimensionality of the vectors
    */
-  private async initializeCollection(vectorSize: number) {
+  async initializeCollection(vectorSize: number) {
     const exists = await this.collectionExists(this.collectionName);
     if (!exists) {
       await this.createCollection(this.collectionName, vectorSize);
@@ -128,7 +128,7 @@ export class QdrantVectorStore implements VectorStore {
    * @param nodes
    * @returns
    */
-  private async buildPoints(nodes: BaseNode[]): Promise<{
+  async buildPoints(nodes: BaseNode[]): Promise<{
     points: PointStruct[];
     ids: string[];
   }> {
@@ -235,6 +235,7 @@ export class QdrantVectorStore implements VectorStore {
     for (let i = 0; i < response.length; i++) {
       const item = response[i];
       const payload = item.payload;
+
       const node = metadataDictToNode(payload);
 
       ids.push(item.id);
