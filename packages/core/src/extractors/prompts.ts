@@ -12,6 +12,11 @@ export interface DefaultQuestionAnswerPromptTemplate
   numQuestions: number;
 }
 
+export interface DefaultNodeTextTemplate {
+  metadataStr: string;
+  content: string;
+}
+
 export const defaultKeywordExtractorPromptTemplate = ({
   contextStr = "",
   keywords = 5,
@@ -20,23 +25,29 @@ export const defaultKeywordExtractorPromptTemplate = ({
   document. Format as comma separated. Keywords:
 `;
 
-export const defaultTitleExtractorPromptTemplate = ({
-  contextStr = "",
-}: DefaultPromptTemplate) => `
+export const defaultTitleExtractorPromptTemplate = (
+  { contextStr = "" }: DefaultPromptTemplate = {
+    contextStr: "",
+  },
+) => `
   ${contextStr}. Give a title that summarizes all of the unique entities, titles or themes found in the context. Title:
 `;
 
-export const defaultTitleCombinePromptTemplate = ({
-  contextStr = "",
-}: DefaultPromptTemplate) => `
+export const defaultTitleCombinePromptTemplate = (
+  { contextStr = "" }: DefaultPromptTemplate = {
+    contextStr: "",
+  },
+) => `
   ${contextStr}. Based on the above candidate titles and content,s
   what is the comprehensive title for this document? Title:
 `;
 
-export const defaultQuestionAnswerPromptTemplate = ({
-  contextStr,
-  numQuestions,
-}: DefaultQuestionAnswerPromptTemplate) => `
+export const defaultQuestionAnswerPromptTemplate = (
+  { contextStr = "", numQuestions = 5 }: DefaultQuestionAnswerPromptTemplate = {
+    contextStr: "",
+    numQuestions: 5,
+  },
+) => `
   ${contextStr}. Given the contextual information,s
   generate ${numQuestions} questions this context can provides
   specific answers to which are unlikely to be found elsewhere.
@@ -46,9 +57,11 @@ export const defaultQuestionAnswerPromptTemplate = ({
   that this context can answer.
 `;
 
-export const defaultSummaryExtractorPromptTemplate = ({
-  contextStr,
-}: DefaultPromptTemplate) => `
+export const defaultSummaryExtractorPromptTemplate = (
+  { contextStr = "" }: DefaultPromptTemplate = {
+    contextStr: "",
+  },
+) => `
   ${contextStr}. Summarize the key topics and entities of the section.s
   Summary:
 `;
@@ -59,11 +72,10 @@ export const defaultNodeTextTemplate = ({
 }: {
   metadataStr?: string;
   content?: string;
-}) => `
-  [Excerpt from document]
-  ${metadataStr}
-  Excerpt:
-  -----
-  ${content}
-  -----
+}) => `[Excerpt from document]
+${metadataStr}
+Excerpt:
+-----
+${content}
+-----
 `;

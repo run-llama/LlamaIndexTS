@@ -112,20 +112,14 @@ export class TitleExtractor extends BaseExtractor {
   /**
    * The prompt template to use for the title extractor.
    * @type {string}
-   * @default "{title}"
    */
-  nodeTemplate: string = defaultTitleExtractorPromptTemplate({
-    contextStr: "{title}",
-  });
+  nodeTemplate: string;
 
   /**
    * The prompt template to merge title with..
    * @type {string}
-   * @default "{title}"
    */
-  combineTemplate: string = defaultTitleCombinePromptTemplate({
-    contextStr: "{title}",
-  });
+  combineTemplate: string;
 
   /**
    * Constructor for the TitleExtractor class.
@@ -137,19 +131,17 @@ export class TitleExtractor extends BaseExtractor {
   constructor(
     llm: LLM,
     nodes: number = 5,
-    node_template: string = defaultTitleExtractorPromptTemplate({
-      contextStr: "{title}",
-    }),
-    combine_template: string = defaultTitleCombinePromptTemplate({
-      contextStr: "{title}",
-    }),
+    node_template?: string,
+    combine_template?: string,
   ) {
     super();
 
     this.llm = llm;
     this.nodes = nodes;
-    this.nodeTemplate = node_template;
-    this.combineTemplate = combine_template;
+
+    this.nodeTemplate = node_template ?? defaultTitleExtractorPromptTemplate();
+    this.combineTemplate =
+      combine_template ?? defaultTitleCombinePromptTemplate();
   }
 
   /**
@@ -229,12 +221,8 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
   /**
    * The prompt template to use for the question extractor.
    * @type {string}
-   * @default "{context}"
    */
-  promptTemplate: string = defaultQuestionAnswerPromptTemplate({
-    contextStr: "{context}",
-    numQuestions: this.questions,
-  });
+  promptTemplate: string;
 
   /**
    * Wheter to use metadata for embeddings only
@@ -253,10 +241,7 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
   constructor(
     llm: LLM,
     questions: number = 5,
-    promptTemplate: string = defaultQuestionAnswerPromptTemplate({
-      contextStr: "{context}",
-      numQuestions: questions,
-    }),
+    promptTemplate?: string,
     embeddingOnly: boolean = false,
   ) {
     if (questions < 1) throw new Error("Questions must be greater than 0");
@@ -265,7 +250,12 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
 
     this.llm = llm;
     this.questions = questions;
-    this.promptTemplate = promptTemplate;
+    this.promptTemplate =
+      promptTemplate ??
+      defaultQuestionAnswerPromptTemplate({
+        numQuestions: questions,
+        contextStr: "",
+      });
     this.embeddingOnly = embeddingOnly;
   }
 
@@ -338,11 +328,8 @@ export class SummaryExtractor extends BaseExtractor {
   /**
    * The prompt template to use for the summary extractor.
    * @type {string}
-   * @default "{context}"
    */
-  promptTemplate: string = defaultSummaryExtractorPromptTemplate({
-    contextStr: "{context}",
-  });
+  promptTemplate: string;
 
   private _selfSummary: boolean;
   private _prevSummary: boolean;
@@ -351,9 +338,7 @@ export class SummaryExtractor extends BaseExtractor {
   constructor(
     llm: LLM,
     summaries: string[] = ["self"],
-    promptTemplate: string = defaultSummaryExtractorPromptTemplate({
-      contextStr: "{context}",
-    }),
+    promptTemplate?: string,
   ) {
     if (!summaries.some((s) => ["self", "prev", "next"].includes(s)))
       throw new Error("Summaries must be one of 'self', 'prev', 'next'");
@@ -362,7 +347,8 @@ export class SummaryExtractor extends BaseExtractor {
 
     this.llm = llm;
     this.summaries = summaries;
-    this.promptTemplate = promptTemplate;
+    this.promptTemplate =
+      promptTemplate ?? defaultSummaryExtractorPromptTemplate();
 
     this._selfSummary = summaries.includes("self");
     this._prevSummary = summaries.includes("prev");

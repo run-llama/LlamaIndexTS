@@ -8,7 +8,6 @@ export abstract class BaseExtractor {
   isTextNodeOnly: boolean = true;
   showProgress: boolean = true;
   metadataMode: MetadataMode = MetadataMode.ALL;
-  nodeTextTemplate: string = defaultNodeTextTemplate({});
   disableTemplateRewrite: boolean = false;
   inPlace: boolean = true;
   numWorkers: number = 4;
@@ -54,7 +53,7 @@ export abstract class BaseExtractor {
         if (newNodes[idx] instanceof TextNode) {
           newNodes[idx] = new TextNode({
             ...newNodes[idx],
-            textTemplate: this.nodeTextTemplate,
+            textTemplate: defaultNodeTextTemplate(),
           });
         }
       }
