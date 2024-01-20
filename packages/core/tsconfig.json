@@ -14,6 +14,12 @@
     "target": "ES2015",
     "resolveJsonModule": true,
   },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+    },
+    "files": true,
+  },
   "include": ["./src"],
   "exclude": ["node_modules"],
 }

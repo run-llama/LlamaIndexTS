@@ -16,6 +16,8 @@ export enum OpenAIEmbeddingModelType {
 export class OpenAIEmbedding extends BaseEmbedding {
   model: OpenAIEmbeddingModelType | string;
 
+  embedBatchSize: number;
+
   // OpenAI session params
   apiKey?: string = undefined;
   maxRetries: number;
@@ -32,7 +34,9 @@ export class OpenAIEmbedding extends BaseEmbedding {
 
     this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
 
+    this.embedBatchSize = init?.embedBatchSize ?? 10;
     this.maxRetries = init?.maxRetries ?? 10;
+
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalSessionOptions = init?.additionalSessionOptions;
 
