@@ -49,6 +49,7 @@ export interface VectorStoreQuery {
   queryEmbedding?: number[];
   similarityTopK: number;
   docIds?: string[];
+  nodeIds?: string[];
   queryStr?: string;
   mode: VectorStoreQueryMode;
   alpha?: number;

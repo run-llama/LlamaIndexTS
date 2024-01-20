@@ -259,11 +259,18 @@ export class QdrantVectorStore implements VectorStore {
     query: VectorStoreQuery,
     options?: any,
   ): Promise<VectorStoreQueryResult> {
-    const qdrantFilters = options?.qdrant_filters ?? [];
-    const queryFilters = qdrantFilters ?? query.filters ?? undefined;
+    const qdrantFilters = options?.qdrant_filters;
+
+    let queryFilters;
 
     if (!query.queryEmbedding) {
       throw new Error("No query embedding provided");
+    }
+
+    if (qdrantFilters) {
+      queryFilters = qdrantFilters;
+    } else {
+      queryFilters = await this.buildQueryFilter(query);
     }
 
     const result = (await this.db.search(this.collectionName, {
@@ -273,5 +280,45 @@ export class QdrantVectorStore implements VectorStore {
     })) as Array<QuerySearchResult>;
 
     return this.parseToQueryResult(result);
+  }
+
+  /**
+   * Qdrant filter builder
+   * @param query The VectorStoreQuery to be used
+   */
+  private async buildQueryFilter(query: VectorStoreQuery) {
+    if (!query.docIds && !query.queryStr) {
+      return null;
+    }
+
+    const mustConditions = [];
+
+    if (query.docIds) {
+      mustConditions.push({
+        key: "doc_id",
+        match: {
+          any: query.docIds,
+        },
+      });
+    }
+
+    if (query.nodeIds) {
+      mustConditions.push({
+        key: "id",
+        match: {
+          any: query.nodeIds,
+        },
+      });
+    }
+
+    if (!query.filters) {
+      return {
+        must: mustConditions,
+      };
+    }
+
+    return {
+      must: mustConditions,
+    };
   }
 }
