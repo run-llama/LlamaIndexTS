@@ -1,5 +1,5 @@
 {
-  "name": "llamaindex",
+  "name": "@llamaindex/monorepo",
   "private": true,
   "scripts": {
     "build": "turbo run build",
