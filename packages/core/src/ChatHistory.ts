@@ -129,6 +129,11 @@ export class SummaryChatHistory extends ChatHistory {
     return this.messages.length - 1 - index;
   }
 
+  public getLastSummary(): ChatMessage | null {
+    const lastSummaryIndex = this.getLastSummaryIndex();
+    return lastSummaryIndex ? this.messages[lastSummaryIndex] : null;
+  }
+
   private get systemMessages() {
     // get array of all system messages
     return this.messages.filter((message) => message.role === "system");
