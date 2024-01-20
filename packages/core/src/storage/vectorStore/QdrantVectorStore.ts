@@ -193,14 +193,14 @@ export class QdrantVectorStore implements VectorStore {
 
   /**
    * Deletes the given nodes from the vector store.
-   * @param ids List of node IDs
+   * @param refDocId Node ID
    */
-  async delete(id: string): Promise<void> {
+  async delete(refDocId: string): Promise<void> {
     const mustFilter = [
       {
         key: "doc_id",
         match: {
-          value: id,
+          value: refDocId,
         },
       },
     ];
@@ -212,6 +212,12 @@ export class QdrantVectorStore implements VectorStore {
     });
   }
 
+  /**
+   * Queries the vector store for the closest matching data to the query embeddings.
+   * @param query The VectorStoreQuery to be used
+   * @param options Required by VectorStore interface.  Currently ignored.
+   * @returns Zero or more Document instances with data from the vector store.
+   */
   async query(query: VectorStoreQuery, options?: any): Promise<any> {
     const qdrantFilters = options?.qdrant_filters ?? [];
     const queryFilters = qdrantFilters ?? query.filters ?? [];
