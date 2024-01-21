@@ -4,21 +4,32 @@ import {
   QueryEngineParamsStreaming,
 } from "../QueryEngine";
 import { Response } from "../Response";
-import { SimpleChatEngine } from "../engines/chat";
+import {
+  ChatEngine,
+  ChatEngineParamsNonStreaming,
+  ChatEngineParamsStreaming,
+} from "../engines/chat";
 
 /**
  * BaseAgent is the base class for all agents.
  */
-export abstract class BaseAgent
-  extends SimpleChatEngine
-  implements BaseQueryEngine
-{
+export abstract class BaseAgent implements BaseQueryEngine, ChatEngine {
   protected _getPrompts(): string[] {
     return [];
   }
 
   protected _getPromptModules(): string[] {
     return [];
+  }
+
+  chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
+  chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  chat(params: any): Promise<AsyncIterable<Response>> | Promise<Response> {
+    throw new Error("Method not implemented.");
+  }
+
+  reset(): void {
+    throw new Error("Method not implemented.");
   }
 
   /**
@@ -56,26 +67,40 @@ export abstract class BaseAgent
   }
 }
 
-export abstract class Task {
+type TaskParams = {
+  taskId: string;
+  input: string;
+  memory: any;
+  extraState: Record<string, any>;
+};
+
+export class Task {
   taskId!: string;
   input!: string;
 
   memory: any;
-  extraState!: Record<string, unknown>;
+  extraState!: Record<string, any>;
+
+  constructor({ taskId, input, memory, extraState }: TaskParams) {
+    this.taskId = taskId;
+    this.input = input;
+    this.memory = memory;
+    this.extraState = extraState;
+  }
 }
 
 interface ITaskStep {
   taskId: string;
   stepId: string;
   input?: string;
-  stepState: Record<string, unknown>;
+  stepState: Record<string, any>;
   nextSteps: Record<string, TaskStep>;
   prevSteps: Record<string, TaskStep>;
   isReady: boolean;
   getNextStep(
     stepId: string,
     input?: string,
-    stepState?: Record<string, unknown>,
+    stepState?: Record<string, any>,
   ): TaskStep;
   linkStep(nextStep: TaskStep): void;
 }
@@ -84,7 +109,7 @@ export class TaskStep implements ITaskStep {
   taskId: string;
   stepId: string;
   input?: string;
-  stepState: Record<string, unknown> = {};
+  stepState: Record<string, any> = {};
   nextSteps: Record<string, TaskStep> = {};
   prevSteps: Record<string, TaskStep> = {};
   isReady: boolean = true;
@@ -93,7 +118,7 @@ export class TaskStep implements ITaskStep {
     taskId: string,
     stepId: string,
     input?: string,
-    stepState?: Record<string, unknown>,
+    stepState?: Record<string, any>,
   ) {
     this.taskId = taskId;
     this.stepId = stepId;
@@ -141,4 +166,11 @@ export class TaskStepOutput {
   toString(): string {
     return String(this.output);
   }
+}
+
+export abstract class AgentWorker {
+  abstract initializeStep(task: Task, kwargs?: any): TaskStep;
+  abstract runStep(step: TaskStep, task: Task, kwargs?: any): TaskStepOutput;
+  abstract streamStep(step: TaskStep, task: Task, kwargs?: any): TaskStepOutput;
+  abstract finalizeTask(task: Task, kwargs?: any): void;
 }
