@@ -52,7 +52,7 @@ export class ChromaVectorStore implements VectorStore {
 
   async getCollection(): Promise<Collection> {
     if (!this.collection) {
-      const coll = await this.chromaClient.createCollection({
+      const coll = await this.chromaClient.getOrCreateCollection({
         name: this.collectionName,
       });
       this.collection = coll;
