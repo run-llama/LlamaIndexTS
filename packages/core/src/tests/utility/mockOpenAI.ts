@@ -4,6 +4,8 @@ import { globalsHelper } from "../../GlobalsHelper";
 import { OpenAI } from "../../llm/LLM";
 import { LLMChatParamsBase } from "../../llm/types";
 
+export const DEFAULT_LLM_TEXT_OUTPUT = "MOCK_TOKEN_1-MOCK_TOKEN_2";
+
 export function mockLlmGeneration({
   languageModel,
   callbackManager,
@@ -15,7 +17,7 @@ export function mockLlmGeneration({
     .spyOn(languageModel, "chat")
     .mockImplementation(
       async ({ messages, parentEvent }: LLMChatParamsBase) => {
-        const text = "MOCK_TOKEN_1-MOCK_TOKEN_2";
+        const text = DEFAULT_LLM_TEXT_OUTPUT;
         const event = globalsHelper.createEvent({
           parentEvent,
           type: "llmPredict",
