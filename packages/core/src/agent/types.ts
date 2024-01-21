@@ -1,19 +1,19 @@
-import {
-  BaseQueryEngine,
-  QueryEngineParamsNonStreaming,
-  QueryEngineParamsStreaming,
-} from "../QueryEngine";
-import { Response } from "../Response";
-import {
-  ChatEngine,
-  ChatEngineParamsNonStreaming,
-  ChatEngineParamsStreaming,
-} from "../engines/chat";
+import { QueryEngineParamsNonStreaming } from "../QueryEngine";
+
+import { AgentChatResponse, ChatEngineAgentParams } from "../engines/chat";
+
+interface BaseChatEngine {
+  chat(params: ChatEngineAgentParams): Promise<AgentChatResponse>;
+}
+
+interface BaseQueryEngine {
+  query(params: QueryEngineParamsNonStreaming): Promise<AgentChatResponse>;
+}
 
 /**
  * BaseAgent is the base class for all agents.
  */
-export abstract class BaseAgent implements BaseQueryEngine, ChatEngine {
+export abstract class BaseAgent implements BaseChatEngine, BaseQueryEngine {
   protected _getPrompts(): string[] {
     return [];
   }
@@ -22,48 +22,24 @@ export abstract class BaseAgent implements BaseQueryEngine, ChatEngine {
     return [];
   }
 
-  chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
-  chat(params: any): Promise<AsyncIterable<Response>> | Promise<Response> {
-    throw new Error("Method not implemented.");
-  }
-
-  reset(): void {
-    throw new Error("Method not implemented.");
-  }
+  abstract chat(params: ChatEngineAgentParams): Promise<AgentChatResponse>;
+  abstract reset(): void;
 
   /**
    * query is the main entrypoint for the agent. It takes a query and returns a response.
    * @param params
    * @returns
    */
-  async query(params: QueryEngineParamsNonStreaming): Promise<Response>;
   async query(
-    params: QueryEngineParamsStreaming,
-  ): Promise<AsyncIterable<Response>>;
-  async query(
-    params: QueryEngineParamsNonStreaming | QueryEngineParamsStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
-    if ("stream" in params && params.stream) {
-      // Handle streaming query
-      const streamResponse = this.handleStreamingQuery(params);
-      return streamResponse;
-    } else {
-      // Handle non-streaming query
-      const agentResponse = await this.chat({
-        message: params.query,
-        stream: false,
-        chatHistory: [],
-      });
+    params: QueryEngineParamsNonStreaming,
+  ): Promise<AgentChatResponse> {
+    // Handle non-streaming query
+    const agentResponse = await this.chat({
+      message: params.query,
+      chatHistory: [],
+    });
 
-      return agentResponse;
-    }
-  }
-
-  private async *handleStreamingQuery(
-    params: QueryEngineParamsStreaming,
-  ): AsyncIterable<Response> {
-    throw new Error("Not implemented yet");
+    return agentResponse;
   }
 }
 

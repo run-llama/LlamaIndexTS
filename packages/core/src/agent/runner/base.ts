@@ -1,5 +1,9 @@
 import { CallbackManager } from "../../callbacks/CallbackManager";
-import { AgentChatResponse, ChatResponseMode } from "../../engines/chat";
+import {
+  AgentChatResponse,
+  ChatEngineAgentParams,
+  ChatResponseMode,
+} from "../../engines/chat";
 import { ChatMessage, LLM } from "../../llm";
 import {
   AgentWorker,
@@ -137,7 +141,7 @@ export abstract class AgentRunner extends BaseAgentRunner {
     this.callbackManager = params.callbackManager ?? new CallbackManager();
     this.initTaskStateKwargs = params.initTaskStateKwargs ?? {};
     this.deleteTaskOnFinish = params.deleteTaskOnFinish ?? false;
-    this.defaultToolChoice = params.defaultToolChoice ?? "default";
+    this.defaultToolChoice = params.defaultToolChoice ?? "auto";
   }
 
   /**
@@ -145,7 +149,7 @@ export abstract class AgentRunner extends BaseAgentRunner {
    * @param input
    * @param kwargs
    */
-  createTask(input: string, kwargs: any): Task {
+  createTask(input: string, kwargs?: any): Task {
     let extraState = kwargs["extraState"] ?? {};
 
     if (!this.initTaskStateKwargs) {
@@ -298,7 +302,7 @@ export abstract class AgentRunner extends BaseAgentRunner {
   async finalizeResponse(
     taskId: string,
     stepOutput: TaskStepOutput,
-    kwargs: any,
+    kwargs?: any,
   ): Promise<AgentChatResponse> {
     if (!stepOutput) {
       stepOutput =
@@ -325,5 +329,53 @@ export abstract class AgentRunner extends BaseAgentRunner {
     }
 
     return stepOutput.output;
+  }
+
+  protected _chat({
+    message,
+    toolChoice,
+  }: ChatEngineAgentParams & { mode: ChatResponseMode }) {
+    const task = this.createTask(message as string);
+
+    let resultOutput;
+
+    while (true) {
+      const curStepOutput = this._runStep(task.taskId);
+
+      if (curStepOutput.isLast) {
+        resultOutput = curStepOutput;
+        break;
+      }
+
+      toolChoice = "auto";
+    }
+
+    return this.finalizeResponse(task.taskId, resultOutput);
+  }
+
+  /**
+   * Sends a message to the LLM and returns the response.
+   * @param message
+   * @param chatHistory
+   * @param toolChoice
+   * @returns
+   */
+  async chat({
+    message,
+    chatHistory,
+    toolChoice,
+  }: ChatEngineAgentParams): Promise<AgentChatResponse> {
+    if (!toolChoice) {
+      toolChoice = this.defaultToolChoice;
+    }
+
+    const chatResponse = await this._chat({
+      message,
+      chatHistory,
+      toolChoice,
+      mode: ChatResponseMode.WAIT,
+    });
+
+    return chatResponse;
   }
 }

@@ -25,6 +25,10 @@ export interface ChatEngineParamsNonStreaming extends ChatEngineParamsBase {
   stream?: false | null;
 }
 
+export interface ChatEngineAgentParams extends ChatEngineParamsBase {
+  toolChoice?: string | Record<string, any>;
+}
+
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
  */
