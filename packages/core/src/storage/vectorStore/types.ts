@@ -25,7 +25,7 @@ export interface ExactMatchFilter {
 }
 
 export interface MetadataFilters {
-  filters?: ExactMatchFilter[];
+  filters: ExactMatchFilter[];
 }
 
 export interface VectorStoreQuerySpec {
