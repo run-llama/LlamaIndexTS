@@ -12,7 +12,7 @@ export class Response {
     this.sourceNodes = sourceNodes || [];
   }
 
-  getFormattedSources() {
+  protected _getFormattedSources() {
     throw new Error("Not implemented yet");
   }
 
