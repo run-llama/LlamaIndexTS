@@ -6,6 +6,7 @@ import { Event } from "../../callbacks/CallbackManager";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants";
 import { BaseEmbedding } from "../../embeddings";
 import {
+  MetadataFilters,
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
@@ -40,7 +41,7 @@ export class VectorIndexRetriever implements BaseRetriever {
   async retrieve(
     query: string,
     parentEvent?: Event,
-    preFilters?: unknown,
+    preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
     let nodesWithScores = await this.textRetrieve(query, preFilters);
     nodesWithScores = nodesWithScores.concat(
@@ -52,18 +53,23 @@ export class VectorIndexRetriever implements BaseRetriever {
 
   protected async textRetrieve(
     query: string,
-    preFilters?: unknown,
+    preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
+    const options = {};
     const q = await this.buildVectorStoreQuery(
       this.index.embedModel,
       query,
       this.similarityTopK,
+      preFilters,
     );
-    const result = await this.index.vectorStore.query(q, preFilters);
+    const result = await this.index.vectorStore.query(q, options);
     return this.buildNodeListFromQueryResult(result);
   }
 
-  private async textToImageRetrieve(query: string, preFilters?: unknown) {
+  private async textToImageRetrieve(
+    query: string,
+    preFilters?: MetadataFilters,
+  ) {
     if (!this.index.imageEmbedModel || !this.index.imageVectorStore) {
       // no-op if image embedding and vector store are not set
       return [];
@@ -72,6 +78,7 @@ export class VectorIndexRetriever implements BaseRetriever {
       this.index.imageEmbedModel,
       query,
       this.imageSimilarityTopK,
+      preFilters,
     );
     const result = await this.index.imageVectorStore.query(q, preFilters);
     return this.buildNodeListFromQueryResult(result);
@@ -98,6 +105,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     embedModel: BaseEmbedding,
     query: string,
     similarityTopK: number,
+    preFilters?: MetadataFilters,
   ): Promise<VectorStoreQuery> {
     const queryEmbedding = await embedModel.getQueryEmbedding(query);
 
@@ -105,6 +113,7 @@ export class VectorIndexRetriever implements BaseRetriever {
       queryEmbedding: queryEmbedding,
       mode: VectorStoreQueryMode.DEFAULT,
       similarityTopK: similarityTopK,
+      filters: preFilters ?? undefined,
     };
   }
 

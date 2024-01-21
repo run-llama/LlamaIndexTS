@@ -107,7 +107,7 @@ export class ChromaVectorStore implements VectorStore {
     }
 
     const chromaWhere: { [x: string]: string | number | boolean } = {};
-    if (query.filters) {
+    if (query.filters?.filters) {
       query.filters.filters.map((filter) => {
         const filterKey = filter.key;
         const filterValue = filter.value;
