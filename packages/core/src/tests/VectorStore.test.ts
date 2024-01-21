@@ -1,8 +1,16 @@
+import { Client } from "pg";
 import { Document, MetadataMode } from "../Node";
+import { PGVectorStore } from "../storage";
 import {
   metadataDictToNode,
   nodeToMetadata,
 } from "../storage/vectorStore/utils";
+
+function getConnectionString(databaseName: string) {
+  return `postgresql://postgres:mark90@localhost:5432/${databaseName}`;
+}
+
+const DATABASE_NAME = "test_database";
 
 describe("Testing VectorStore utils", () => {
   let node: Document;
@@ -43,5 +51,33 @@ describe("Testing VectorStore utils", () => {
     expect(() => {
       metadataDictToNode(faultyMetadata);
     }).toThrow();
+  });
+});
+
+describe.skip("Testing VectorStore initialization", () => {
+  beforeAll(async () => {
+    const pgClient = new Client({
+      connectionString: getConnectionString("postgres"),
+    });
+    await pgClient.connect();
+    await pgClient.query(`DROP DATABASE IF EXISTS ${DATABASE_NAME};`);
+    await pgClient.query(`CREATE DATABASE ${DATABASE_NAME};`);
+  });
+
+  afterAll(async () => {
+    const pgClient = new Client({
+      connectionString: getConnectionString("postgres"),
+    });
+    await pgClient.connect();
+    await pgClient.query(`DROP DATABASE ${DATABASE_NAME};`);
+  });
+
+  test("PGVectorStore initialization", () => {
+    const vectorStore = new PGVectorStore({
+      connectionString: getConnectionString(DATABASE_NAME),
+      tableName: "test_table",
+      schemaName: "",
+    });
+    expect(vectorStore).toBeInstanceOf(PGVectorStore);
   });
 });
