@@ -13,7 +13,7 @@ function toMongoDBFilter(
   standardFilters: MetadataFilters,
 ): Record<string, any> {
   const filters: Record<string, any> = {};
-  for (const filter of standardFilters.filters) {
+  for (const filter of standardFilters?.filters ?? []) {
     filters[filter.key] = filter.value;
   }
   return filters;
