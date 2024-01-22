@@ -168,6 +168,8 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
  */
 export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
   text: string = "";
+  textTemplate: string = "";
+
   startCharIdx?: number;
   endCharIdx?: number;
   // textTemplate: NOTE write your own formatter if needed

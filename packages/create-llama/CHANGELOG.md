@@ -1,5 +1,13 @@
 # create-llama
 
+## 0.0.16
+
+### Patch Changes
+
+- a73942d: Fix: Bundle mongo dependency with NextJS
+- 9492cc6: Feat: Added option to automatically install dependencies (for Python and TS)
+- f74dea5: Feat: Show images in chat messages using GPT4 Vision (Express and NextJS only)
+
 ## 0.0.15
 
 ### Patch Changes

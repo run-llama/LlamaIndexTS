@@ -20,6 +20,7 @@ import {
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
   BaseIndexStore,
+  MetadataFilters,
   StorageContext,
   VectorStore,
   storageContextFromDefaults,
@@ -263,7 +264,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
-    preFilters?: unknown;
+    preFilters?: MetadataFilters;
     nodePostprocessors?: BaseNodePostprocessor[];
   }): BaseQueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
