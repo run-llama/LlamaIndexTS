@@ -1,4 +1,4 @@
-import { ChildProcess, exec, execSync } from "child_process";
+import { ChildProcess, exec } from "child_process";
 import crypto from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import * as path from "path";
@@ -13,6 +13,10 @@ import {
 
 export type AppType = "--frontend" | "--no-frontend" | "";
 const MODEL = "gpt-3.5-turbo";
+export type CreateLlamaResult = {
+  projectName: string;
+  appProcess: ChildProcess;
+};
 
 export async function runApp(
   cwd: string,
@@ -85,16 +89,58 @@ async function createProcess(command: string, cwd: string, port: number) {
   return cp;
 }
 
-export function runCreateLlama(
+export async function checkAppHasStarted(
+  frontend: boolean,
+  framework: TemplateFramework,
+  port: number,
+  externalPort: number,
+  timeout: number,
+) {
+  if (frontend) {
+    await Promise.all([
+      waitPort({
+        host: "localhost",
+        port: port,
+        timeout,
+      }),
+      waitPort({
+        host: "localhost",
+        port: externalPort,
+        timeout,
+      }),
+    ]).catch((err) => {
+      console.error(err);
+      throw err;
+    });
+  } else {
+    let wPort: number;
+    if (framework === "nextjs") {
+      wPort = port;
+    } else {
+      wPort = externalPort;
+    }
+    await waitPort({
+      host: "localhost",
+      port: wPort,
+      timeout,
+    }).catch((err) => {
+      console.error(err);
+      throw err;
+    });
+  }
+}
+
+export async function runCreateLlama(
   cwd: string,
   templateType: TemplateType,
   templateFramework: TemplateFramework,
   templateEngine: TemplateEngine,
   templateUI: TemplateUI,
   appType: AppType,
+  port: number,
   externalPort: number,
   postInstallAction: TemplatePostInstallAction,
-) {
+): Promise<CreateLlamaResult> {
   const createLlama = path.join(__dirname, "..", "dist", "index.js");
 
   const name = [
@@ -123,18 +169,43 @@ export function runCreateLlama(
     appType,
     "--eslint",
     "--use-npm",
+    "--port",
+    port,
     "--external-port",
     externalPort,
     "--post-install-action",
     postInstallAction,
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
-  execSync(command, {
-    stdio: "inherit",
+  let appProcess = exec(command, {
     cwd,
   });
-  return name;
+  appProcess.on("error", (err) => {
+    console.error(err);
+    appProcess.kill();
+  });
+  // Show log from cp
+  appProcess.stdout?.on("data", (data) => {
+    console.log(data.toString());
+  });
+
+  // Wait for app to start
+  if (postInstallAction === "runApp") {
+    await checkAppHasStarted(
+      appType === "--frontend",
+      templateFramework,
+      port,
+      externalPort,
+      1000 * 60 * 5,
+    );
+  }
+
+  return {
+    projectName: name,
+    appProcess,
+  };
 }
+
 export async function createTestDir() {
   const cwd = path.join(__dirname, ".cache", crypto.randomUUID());
   await mkdir(cwd, { recursive: true });

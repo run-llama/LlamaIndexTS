@@ -9,7 +9,7 @@ import type {
   TemplateType,
   TemplateUI,
 } from "../helpers";
-import { createTestDir, runApp, runCreateLlama, type AppType } from "./utils";
+import { createTestDir, runCreateLlama, type AppType } from "./utils";
 
 const templateTypes: TemplateType[] = ["streaming", "simple"];
 const templateFrameworks: TemplateFramework[] = [
@@ -47,33 +47,26 @@ for (const templateType of templateTypes) {
           let externalPort: number;
           let cwd: string;
           let name: string;
-          let cps: ChildProcess[] = [];
-          const postInstallAction = "dependencies";
+          let appProcess: ChildProcess;
+          const postInstallAction = "runApp";
 
           test.beforeAll(async () => {
             port = Math.floor(Math.random() * 10000) + 10000;
             externalPort = port + 1;
-
             cwd = await createTestDir();
-            name = runCreateLlama(
+            const result = await runCreateLlama(
               cwd,
               templateType,
               templateFramework,
               templateEngine,
               templateUI,
               appType,
+              port,
               externalPort,
               postInstallAction,
             );
-
-            cps = await runApp(
-              cwd,
-              name,
-              appType,
-              templateFramework,
-              port,
-              externalPort,
-            );
+            name = result.projectName;
+            appProcess = result.appProcess;
           });
 
           test("App folder should exist", async () => {
@@ -131,7 +124,7 @@ for (const templateType of templateTypes) {
 
           // clean processes
           test.afterAll(async () => {
-            cps.map((cp) => cp.kill());
+            appProcess.kill();
           });
         });
       }

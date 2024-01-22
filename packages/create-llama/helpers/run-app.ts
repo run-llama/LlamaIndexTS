@@ -3,17 +3,18 @@ import { log } from "console";
 import path from "path";
 import { TemplateFramework } from "./types";
 
-const frontendPort = 3000;
-const backendPort = 8000; // External port
-
 export async function runApp(
   appPath: string,
   frontend: boolean,
   framework: TemplateFramework,
+  port?: number,
   externalPort?: number,
-): Promise<void> {
+): Promise<any> {
   let backendAppProcess: ChildProcess;
   let frontendAppProcess: ChildProcess | undefined;
+  let frontendPort = port || 3000;
+  let backendPort = externalPort || 8000;
+
   // Callback to kill app processes
   const killAppProcesses = () => {
     log("Killing app processes...");
@@ -35,17 +36,21 @@ export async function runApp(
       "--host=0.0.0.0",
       "--port=" + (externalPort || backendPort),
     ];
+  } else if (framework === "nextjs") {
+    backendCommand = "npm";
+    backendArgs = ["run", "dev"];
+    backendPort = frontendPort;
   } else {
     backendCommand = "npm";
     backendArgs = ["run", "dev"];
   }
 
   if (frontend) {
-    await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       backendAppProcess = spawn(backendCommand, backendArgs, {
         stdio: "inherit",
         cwd: path.join(appPath, "backend"),
-        env: { ...process.env, PORT: `${externalPort || backendPort}` },
+        env: { ...process.env, PORT: `${backendPort}` },
       });
       frontendAppProcess = spawn("npm", ["run", "dev"], {
         stdio: "inherit",
@@ -57,11 +62,11 @@ export async function runApp(
       killAppProcesses();
     });
   } else {
-    await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       backendAppProcess = spawn(backendCommand, backendArgs, {
         stdio: "inherit",
         cwd: appPath,
-        env: { ...process.env, PORT: `${externalPort || backendPort}` },
+        env: { ...process.env, PORT: `${backendPort}` },
       });
     }).catch((err) => {
       console.log(err);

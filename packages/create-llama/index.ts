@@ -114,17 +114,24 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
+    "--port <port>",
+    `
+
+  Select UI port.
+`,
+  )
+  .option(
     "--external-port <external>",
     `
 
-Select external port.
+  Select external port.
 `,
   )
   .option(
     "--post-install-action <action>",
     `
 
-Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
+  Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
 `,
   )
   .allowUnknownOption()
@@ -242,6 +249,7 @@ async function run(): Promise<void> {
       root,
       program.frontend,
       program.framework,
+      program.port,
       program.externalPort,
     );
   }
