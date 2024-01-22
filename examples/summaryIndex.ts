@@ -5,7 +5,7 @@ import {
   SummaryRetrieverMode,
   serviceContextFromDefaults,
 } from "llamaindex";
-import essay from "./essay";
+import essay from "./essay.js";
 
 async function main() {
   const serviceContext = serviceContextFromDefaults({

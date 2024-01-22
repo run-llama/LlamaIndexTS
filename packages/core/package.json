@@ -35,7 +35,8 @@
     "@types/node": "^18.19.6",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.10.9",
-    "bunchee": "^4.3.3",
+    "bunchee": "^4.4.1",
+    "madge": "^6.1.0",
     "node-stdlib-browser": "^1.2.0",
     "typescript": "^5.3.3"
   },
@@ -47,10 +48,146 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
+      "edge-light": "./dist/index.edge-light.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./examples/*": "./examples/*"
+    "./storage/FileSystem": {
+      "types": "./dist/storage/FileSystem.d.mts",
+      "edge-light": "./dist/storage/FileSystem.edge-light.mjs",
+      "import": "./dist/storage/FileSystem.mjs",
+      "require": "./dist/storage/FileSystem.js"
+    },
+    "./ChatEngine": {
+      "types": "./dist/ChatEngine.d.mts",
+      "import": "./dist/ChatEngine.mjs",
+      "require": "./dist/ChatEngine.js"
+    },
+    "./ChatHistory": {
+      "types": "./dist/ChatHistory.d.mts",
+      "import": "./dist/ChatHistory.mjs",
+      "require": "./dist/ChatHistory.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.mts",
+      "import": "./dist/constants.mjs",
+      "require": "./dist/constants.js"
+    },
+    "./GlobalsHelper": {
+      "types": "./dist/GlobalsHelper.d.mts",
+      "import": "./dist/GlobalsHelper.mjs",
+      "require": "./dist/GlobalsHelper.js"
+    },
+    "./Node": {
+      "types": "./dist/Node.d.mts",
+      "import": "./dist/Node.mjs",
+      "require": "./dist/Node.js"
+    },
+    "./OutputParser": {
+      "types": "./dist/OutputParser.d.mts",
+      "import": "./dist/OutputParser.mjs",
+      "require": "./dist/OutputParser.js"
+    },
+    "./Prompt": {
+      "types": "./dist/Prompt.d.mts",
+      "import": "./dist/Prompt.mjs",
+      "require": "./dist/Prompt.js"
+    },
+    "./PromptHelper": {
+      "types": "./dist/PromptHelper.d.mts",
+      "import": "./dist/PromptHelper.mjs",
+      "require": "./dist/PromptHelper.js"
+    },
+    "./QueryEngine": {
+      "types": "./dist/QueryEngine.d.mts",
+      "import": "./dist/QueryEngine.mjs",
+      "require": "./dist/QueryEngine.js"
+    },
+    "./QuestionGenerator": {
+      "types": "./dist/QuestionGenerator.d.mts",
+      "import": "./dist/QuestionGenerator.mjs",
+      "require": "./dist/QuestionGenerator.js"
+    },
+    "./Response": {
+      "types": "./dist/Response.d.mts",
+      "import": "./dist/Response.mjs",
+      "require": "./dist/Response.js"
+    },
+    "./Retriever": {
+      "types": "./dist/Retriever.d.mts",
+      "import": "./dist/Retriever.mjs",
+      "require": "./dist/Retriever.js"
+    },
+    "./ServiceContext": {
+      "types": "./dist/ServiceContext.d.mts",
+      "import": "./dist/ServiceContext.mjs",
+      "require": "./dist/ServiceContext.js"
+    },
+    "./TextSplitter": {
+      "types": "./dist/TextSplitter.d.mts",
+      "import": "./dist/TextSplitter.mjs",
+      "require": "./dist/TextSplitter.js"
+    },
+    "./Tool": {
+      "types": "./dist/Tool.d.mts",
+      "import": "./dist/Tool.mjs",
+      "require": "./dist/Tool.js"
+    },
+    "./readers/AssemblyAI": {
+      "types": "./dist/readers/AssemblyAI.d.mts",
+      "import": "./dist/readers/AssemblyAI.mjs",
+      "require": "./dist/readers/AssemblyAI.js"
+    },
+    "./readers/base": {
+      "types": "./dist/readers/base.d.mts",
+      "import": "./dist/readers/base.mjs",
+      "require": "./dist/readers/base.js"
+    },
+    "./readers/CSVReader": {
+      "types": "./dist/readers/CSVReader.d.mts",
+      "import": "./dist/readers/CSVReader.mjs",
+      "require": "./dist/readers/CSVReader.js"
+    },
+    "./readers/DocxReader": {
+      "types": "./dist/readers/DocxReader.d.mts",
+      "import": "./dist/readers/DocxReader.mjs",
+      "require": "./dist/readers/DocxReader.js"
+    },
+    "./readers/HTMLReader": {
+      "types": "./dist/readers/HTMLReader.d.mts",
+      "import": "./dist/readers/HTMLReader.mjs",
+      "require": "./dist/readers/HTMLReader.js"
+    },
+    "./readers/ImageReader": {
+      "types": "./dist/readers/ImageReader.d.mts",
+      "import": "./dist/readers/ImageReader.mjs",
+      "require": "./dist/readers/ImageReader.js"
+    },
+    "./readers/MarkdownReader": {
+      "types": "./dist/readers/MarkdownReader.d.mts",
+      "import": "./dist/readers/MarkdownReader.mjs",
+      "require": "./dist/readers/MarkdownReader.js"
+    },
+    "./readers/NotionReader": {
+      "types": "./dist/readers/NotionReader.d.mts",
+      "import": "./dist/readers/NotionReader.mjs",
+      "require": "./dist/readers/NotionReader.js"
+    },
+    "./readers/PDFReader": {
+      "types": "./dist/readers/PDFReader.d.mts",
+      "import": "./dist/readers/PDFReader.mjs",
+      "require": "./dist/readers/PDFReader.js"
+    },
+    "./readers/SimpleDirectoryReader": {
+      "types": "./dist/readers/SimpleDirectoryReader.d.mts",
+      "import": "./dist/readers/SimpleDirectoryReader.mjs",
+      "require": "./dist/readers/SimpleDirectoryReader.js"
+    },
+    "./readers/SimpleMongoReader": {
+      "types": "./dist/readers/SimpleMongoReader.d.mts",
+      "import": "./dist/readers/SimpleMongoReader.mjs",
+      "require": "./dist/readers/SimpleMongoReader.js"
+    }
   },
   "files": [
     "dist",
@@ -68,6 +205,7 @@
     "lint": "eslint .",
     "test": "jest",
     "build": "bunchee",
-    "dev": "bunchee -w"
+    "dev": "bunchee -w",
+    "circular-check": "madge --circular ./src/*.ts"
   }
 }
