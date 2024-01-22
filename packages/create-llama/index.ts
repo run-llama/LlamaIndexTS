@@ -10,6 +10,7 @@ import checkForUpdate from "update-check";
 import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
+import { runApp } from "./helpers/run-app";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 import { QuestionArgs, askQuestions, onPromptState } from "./questions";
@@ -113,17 +114,24 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
-    "--external-port <external>",
+    "--port <port>",
     `
 
-Select external port.
+  Select UI port.
 `,
   )
   .option(
-    "--install-dependencies",
+    "--external-port <external>",
     `
 
-Whether install dependencies (backend/frontend) automatically or not.
+  Select external port.
+`,
+  )
+  .option(
+    "--post-install-action <action>",
+    `
+
+  Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
 `,
   )
   .allowUnknownOption()
@@ -231,9 +239,20 @@ async function run(): Promise<void> {
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
-    installDependencies: program.installDependencies,
+    postInstallAction: program.postInstallAction,
   });
   conf.set("preferences", preferences);
+
+  if (program.postInstallAction === "runApp") {
+    console.log("Running app...");
+    await runApp(
+      root,
+      program.frontend,
+      program.framework,
+      program.port,
+      program.externalPort,
+    );
+  }
 }
 
 const update = checkForUpdate(packageJson).catch(() => null);
