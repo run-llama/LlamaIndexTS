@@ -20,6 +20,7 @@ const defaults: QuestionArgs = {
   openAiKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
+  postInstallAction: "dependencies",
 };
 
 const handlers = {
@@ -39,9 +40,9 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
     { title: "PostgreSQL", value: "pg" },
   ];
 
-  const vectodbLang = framework === "fastapi" ? "python" : "typescript";
+  const vectordbLang = framework === "fastapi" ? "python" : "typescript";
   const compPath = path.join(__dirname, "..", "templates", "components");
-  const vectordbPath = path.join(compPath, "vectordbs", vectodbLang);
+  const vectordbPath = path.join(compPath, "vectordbs", vectordbLang);
 
   const availableChoices = fs
     .readdirSync(vectordbPath)
@@ -211,19 +212,6 @@ export const askQuestions = async (
     }
   }
 
-  if (program.installDependencies === undefined) {
-    const { installDependencies } = await prompts({
-      onState: onPromptState,
-      type: "toggle",
-      name: "installDependencies",
-      message: `Would you like to install dependencies automatically? This may take a while`,
-      initial: getPrefOrDefault("installDependencies"),
-      active: "Yes",
-      inactive: "No",
-    });
-    program.installDependencies = Boolean(installDependencies);
-  }
-
   if (!program.model) {
     if (ciInfo.isCI) {
       program.model = getPrefOrDefault("model");
@@ -323,6 +311,46 @@ export const askQuestions = async (
       });
       program.eslint = Boolean(eslint);
       preferences.eslint = Boolean(eslint);
+    }
+  }
+
+  // Ask for next action after installation
+  if (program.postInstallAction === undefined) {
+    if (ciInfo.isCI) {
+      program.postInstallAction = getPrefOrDefault("postInstallAction");
+    } else {
+      let actionChoices = [
+        {
+          title: "Just generate code (~1 sec)",
+          value: "none",
+        },
+        {
+          title: "Generate code and install dependencies (~2 min)",
+          value: "dependencies",
+        },
+      ];
+
+      const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
+      if (program.vectorDb === "none" && hasOpenAiKey) {
+        actionChoices.push({
+          title:
+            "Generate code, install dependencies, and run the app (~2 min)",
+          value: "runApp",
+        });
+      }
+
+      const { action } = await prompts(
+        {
+          type: "select",
+          name: "action",
+          message: "How would you like to proceed?",
+          choices: actionChoices,
+          initial: 1,
+        },
+        handlers,
+      );
+
+      program.postInstallAction = action;
     }
   }
 
