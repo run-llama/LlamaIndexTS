@@ -164,6 +164,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
     const embeddingResults = await this.embedModel.getTextEmbeddingBatch(
       nodes.map((node) => node.getContent(MetadataMode.EMBED)),
+      options,
     );
 
     for (let i = 0; i < nodes.length; ++i) {

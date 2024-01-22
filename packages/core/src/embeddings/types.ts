@@ -10,7 +10,7 @@ export enum SimilarityType {
   EUCLIDEAN = "euclidean",
 }
 
-type Embedding = number[];
+export type Embedding = number[];
 
 const DEFAULT_EMBED_BATCH_SIZE = 10;
 
@@ -18,17 +18,22 @@ export abstract class BaseEmbedding {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
 
   similarity(
-    embedding1: number[],
-    embedding2: number[],
+    embedding1: Embedding,
+    embedding2: Embedding,
     mode: SimilarityType = SimilarityType.DEFAULT,
   ): number {
     return similarity(embedding1, embedding2, mode);
   }
 
-  abstract getTextEmbedding(text: string): Promise<number[]>;
-  abstract getQueryEmbedding(query: string): Promise<number[]>;
+  abstract getTextEmbedding(text: string): Promise<Embedding>;
+  abstract getQueryEmbedding(query: string): Promise<Embedding>;
 
-  async getTextEmbeddingBatch(texts: string[]): Promise<Array<Embedding>> {
+  async getTextEmbeddingBatch(
+    texts: string[],
+    options?: {
+      logProgress?: boolean;
+    },
+  ): Promise<Array<Embedding>> {
     const resultEmbeddings: Array<Embedding> = [];
     const chunkSize = this.embedBatchSize;
 
@@ -43,9 +48,10 @@ export abstract class BaseEmbedding {
       );
 
       resultEmbeddings.push(...embeddings);
-      process.stdout.write(
-        `Processing chunk ${chunkIndex + 1} of ${totalChunks}.\r`,
-      );
+
+      if (options?.logProgress) {
+        console.log(`Processing chunk ${chunkIndex + 1} of ${totalChunks}.\r`);
+      }
     };
 
     for (let i = 0; i < queue.length; i += chunkSize) {
