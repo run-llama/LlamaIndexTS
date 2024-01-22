@@ -94,6 +94,10 @@ class AgentState {
 
   constructor(init?: Partial<AgentState>) {
     Object.assign(this, init);
+
+    if (!this.taskDict) {
+      this.taskDict = {};
+    }
   }
 
   getTask(taskId: string): Task {
@@ -101,18 +105,18 @@ class AgentState {
   }
 
   getCompletedSteps(taskId: string): TaskStepOutput[] {
-    return this.taskDict[taskId].completedSteps;
+    return this.taskDict[taskId].completedSteps || [];
   }
 
   getStepQueue(taskId: string): TaskStep[] {
-    return this.taskDict[taskId].stepQueue;
+    return this.taskDict[taskId].stepQueue || [];
   }
 }
 
 type AgentRunnerParams = {
   agentWorker: AgentWorker;
   chatHistory?: ChatMessage[];
-  state: AgentState;
+  state?: AgentState;
   memory?: any;
   llm?: LLM;
   callbackManager?: CallbackManager;
@@ -120,7 +124,7 @@ type AgentRunnerParams = {
   deleteTaskOnFinish?: boolean;
   defaultToolChoice?: string;
 };
-export abstract class AgentRunner extends BaseAgentRunner {
+export class AgentRunner extends BaseAgentRunner {
   agentWorker: AgentWorker;
   state: AgentState;
   memory: any;
@@ -150,12 +154,16 @@ export abstract class AgentRunner extends BaseAgentRunner {
    * @param kwargs
    */
   createTask(input: string, kwargs?: any): Task {
-    let extraState = kwargs["extraState"] ?? {};
+    let extraState;
 
     if (!this.initTaskStateKwargs) {
-      delete extraState["extraState"];
+      if (kwargs && "extraState" in kwargs) {
+        if (extraState) {
+          delete extraState["extraState"];
+        }
+      }
     } else {
-      if ("extraState" in kwargs) {
+      if (kwargs && "extraState" in kwargs) {
         throw new Error(
           "Cannot specify both `extraState` and `initTaskStateKwargs`",
         );
@@ -165,6 +173,7 @@ export abstract class AgentRunner extends BaseAgentRunner {
     }
 
     const task = new Task({
+      taskId: Math.random().toString(36).substr(2, 9),
       input,
       memory: this.memory,
       extraState,
@@ -176,6 +185,12 @@ export abstract class AgentRunner extends BaseAgentRunner {
     const taskState = new TaskState({
       task,
       stepQueue: [initialStep],
+    });
+
+    console.log({
+      state: this.state,
+      taskState,
+      id: task.taskId,
     });
 
     this.state.taskDict[task.taskId] = taskState;
@@ -225,12 +240,12 @@ export abstract class AgentRunner extends BaseAgentRunner {
     return this.state.taskDict[taskId].stepQueue;
   }
 
-  private _runStep(
+  private async _runStep(
     taskId: string,
     step?: TaskStep,
-    mode?: ChatResponseMode,
+    mode: ChatResponseMode = ChatResponseMode.WAIT,
     kwargs?: any,
-  ): TaskStepOutput {
+  ): Promise<TaskStepOutput> {
     const task = this.state.getTask(taskId);
     const stepQueue = this.state.getStepQueue(taskId);
     const curStep = step || stepQueue.shift();
@@ -242,17 +257,19 @@ export abstract class AgentRunner extends BaseAgentRunner {
     }
 
     if (mode === ChatResponseMode.WAIT) {
-      curStepOutput = this.agentWorker.runStep(curStep, task, kwargs);
+      curStepOutput = await this.agentWorker.runStep(curStep, task, kwargs);
     } else if (mode === ChatResponseMode.STREAM) {
-      curStepOutput = this.agentWorker.streamStep(curStep, task, kwargs);
+      curStepOutput = await this.agentWorker.streamStep(curStep, task, kwargs);
     } else {
       throw new Error(`Invalid mode: ${mode}`);
     }
 
     const nextSteps = curStepOutput.nextSteps;
+
     stepQueue.push(...nextSteps);
 
     const completedSteps = this.state.getCompletedSteps(taskId);
+
     completedSteps.push(curStepOutput);
 
     return curStepOutput;
@@ -331,7 +348,7 @@ export abstract class AgentRunner extends BaseAgentRunner {
     return stepOutput.output;
   }
 
-  protected _chat({
+  protected async _chat({
     message,
     toolChoice,
   }: ChatEngineAgentParams & { mode: ChatResponseMode }) {
@@ -340,7 +357,7 @@ export abstract class AgentRunner extends BaseAgentRunner {
     let resultOutput;
 
     while (true) {
-      const curStepOutput = this._runStep(task.taskId);
+      const curStepOutput = await this._runStep(task.taskId);
 
       if (curStepOutput.isLast) {
         resultOutput = curStepOutput;
@@ -360,7 +377,7 @@ export abstract class AgentRunner extends BaseAgentRunner {
    * @param toolChoice
    * @returns
    */
-  async chat({
+  public async chat({
     message,
     chatHistory,
     toolChoice,
@@ -378,4 +395,40 @@ export abstract class AgentRunner extends BaseAgentRunner {
 
     return chatResponse;
   }
+
+  protected _getPromptModules(): string[] {
+    return [];
+  }
+
+  protected _getPrompts(): string[] {
+    return [];
+  }
+
+  /**
+   * Resets the agent.
+   */
+  reset(): void {
+    this.state = new AgentState();
+  }
+
+  getCompletedStep(
+    taskId: string,
+    stepId: string,
+    kwargs: any,
+  ): TaskStepOutput {
+    const completedSteps = this.getCompletedSteps(taskId);
+    for (const stepOutput of completedSteps) {
+      if (stepOutput.taskStep.stepId === stepId) {
+        return stepOutput;
+      }
+    }
+
+    throw new Error(`Step ${stepId} not found in task ${taskId}`);
+  }
+
+  /**
+   * Undoes the step.
+   * @param taskId
+   */
+  undoStep(taskId: string): void {}
 }

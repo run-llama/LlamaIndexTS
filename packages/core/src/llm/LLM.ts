@@ -70,7 +70,14 @@ export class OpenAI extends BaseLLM {
   maxTokens?: number;
   additionalChatOptions?: Omit<
     Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
-    "max_tokens" | "messages" | "model" | "temperature" | "top_p" | "stream"
+    | "max_tokens"
+    | "messages"
+    | "model"
+    | "temperature"
+    | "top_p"
+    | "stream"
+    | "tools"
+    | "toolChoice"
   >;
 
   // OpenAI session params
@@ -194,11 +201,13 @@ export class OpenAI extends BaseLLM {
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream } = params;
+    const { messages, parentEvent, stream, tools, toolChoice } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
+      tools: tools,
+      tool_choice: toolChoice,
       messages: messages.map(
         (message) =>
           ({
@@ -209,14 +218,22 @@ export class OpenAI extends BaseLLM {
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
+
+    console.log({ tools, toolChoice });
+
     // Streaming
     if (stream) {
       return this.streamChat(params);
     }
+
     // Non-streaming
     const response = await this.session.openai.chat.completions.create({
       ...baseRequestParams,
       stream: false,
+    });
+
+    console.log({
+      response: response.choices[0].message?.tool_calls?.[0]?.function,
     });
 
     const content = response.choices[0].message?.content ?? "";

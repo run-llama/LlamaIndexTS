@@ -3,6 +3,7 @@ import { BaseQueryEngine } from "./QueryEngine";
 export interface ToolMetadata {
   description: string;
   name: string;
+  argsKwargs?: Record<string, any>;
 }
 
 /**

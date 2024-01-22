@@ -39,12 +39,14 @@ export type MessageType =
   | "system"
   | "generic"
   | "function"
-  | "memory";
+  | "memory"
+  | "tool";
 
 export interface ChatMessage {
   // TODO: use MessageContent
   content: any;
   role: MessageType;
+  additionalKwargs?: Record<string, any>;
 }
 
 export interface ChatResponse {
@@ -74,6 +76,8 @@ export interface LLMChatParamsBase {
   messages: ChatMessage[];
   parentEvent?: Event;
   extraParams?: Record<string, any>;
+  tools?: any;
+  toolChoice?: any;
 }
 
 export interface LLMChatParamsStreaming extends LLMChatParamsBase {

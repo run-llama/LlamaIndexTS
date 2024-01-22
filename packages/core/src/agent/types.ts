@@ -68,7 +68,7 @@ export class Task {
 interface ITaskStep {
   taskId: string;
   stepId: string;
-  input?: string;
+  input?: string | null;
   stepState: Record<string, any>;
   nextSteps: Record<string, TaskStep>;
   prevSteps: Record<string, TaskStep>;
@@ -84,7 +84,7 @@ interface ITaskStep {
 export class TaskStep implements ITaskStep {
   taskId: string;
   stepId: string;
-  input?: string;
+  input?: string | null;
   stepState: Record<string, any> = {};
   nextSteps: Record<string, TaskStep> = {};
   prevSteps: Record<string, TaskStep> = {};
@@ -93,8 +93,8 @@ export class TaskStep implements ITaskStep {
   constructor(
     taskId: string,
     stepId: string,
-    input?: string,
-    stepState?: Record<string, any>,
+    input?: string | null,
+    stepState?: Record<string, any> | null,
   ) {
     this.taskId = taskId;
     this.stepId = stepId;
@@ -146,7 +146,15 @@ export class TaskStepOutput {
 
 export abstract class AgentWorker {
   abstract initializeStep(task: Task, kwargs?: any): TaskStep;
-  abstract runStep(step: TaskStep, task: Task, kwargs?: any): TaskStepOutput;
-  abstract streamStep(step: TaskStep, task: Task, kwargs?: any): TaskStepOutput;
+  abstract runStep(
+    step: TaskStep,
+    task: Task,
+    kwargs?: any,
+  ): Promise<TaskStepOutput>;
+  abstract streamStep(
+    step: TaskStep,
+    task: Task,
+    kwargs?: any,
+  ): Promise<TaskStepOutput>;
   abstract finalizeTask(task: Task, kwargs?: any): void;
 }
