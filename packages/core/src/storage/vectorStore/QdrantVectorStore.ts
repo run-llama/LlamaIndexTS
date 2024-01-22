@@ -136,14 +136,14 @@ export class QdrantVectorStore implements VectorStore {
     const ids = [];
 
     for (let i = 0; i < nodes.length; i++) {
-      const node_ids = [];
+      const nodeIds = [];
       const vectors = [];
       const payloads = [];
 
       for (let j = 0; j < this.batchSize && i < nodes.length; j++, i++) {
         const node = nodes[i];
 
-        node_ids.push(node);
+        nodeIds.push(node);
 
         vectors.push(node.getEmbedding());
 
@@ -152,9 +152,9 @@ export class QdrantVectorStore implements VectorStore {
         payloads.push(metadata);
       }
 
-      for (let k = 0; k < node_ids.length; k++) {
+      for (let k = 0; k < nodeIds.length; k++) {
         const point: PointStruct = {
-          id: node_ids[k].id_,
+          id: nodeIds[k].id_,
           payload: payloads[k],
           vector: vectors[k],
         };
@@ -162,7 +162,7 @@ export class QdrantVectorStore implements VectorStore {
         points.push(point);
       }
 
-      ids.push(...node_ids.map((node) => node.id_));
+      ids.push(...nodeIds.map((node) => node.id_));
     }
 
     return {
