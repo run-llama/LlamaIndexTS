@@ -9,7 +9,7 @@ import type {
   TemplateType,
   TemplateUI,
 } from "../helpers";
-import { createTestDir, runApp, runCreateLlama, type AppType } from "./utils";
+import { createTestDir, runCreateLlama, type AppType } from "./utils";
 
 const templateTypes: TemplateType[] = ["streaming", "simple"];
 const templateFrameworks: TemplateFramework[] = [
@@ -47,27 +47,26 @@ for (const templateType of templateTypes) {
           let externalPort: number;
           let cwd: string;
           let name: string;
-          let cps: ChildProcess[] = [];
+          let appProcess: ChildProcess;
+          const postInstallAction = "runApp";
 
           test.beforeAll(async () => {
             port = Math.floor(Math.random() * 10000) + 10000;
             externalPort = port + 1;
-
             cwd = await createTestDir();
-            name = runCreateLlama(
+            const result = await runCreateLlama(
               cwd,
               templateType,
               templateFramework,
               templateEngine,
               templateUI,
               appType,
+              port,
               externalPort,
+              postInstallAction,
             );
-
-            if (templateFramework !== "fastapi") {
-              // don't run the app for fastapi for now (adds python dependency)
-              cps = await runApp(cwd, name, appType, port, externalPort);
-            }
+            name = result.projectName;
+            appProcess = result.appProcess;
           });
 
           test("App folder should exist", async () => {
@@ -75,9 +74,7 @@ for (const templateType of templateTypes) {
             expect(dirExists).toBeTruthy();
           });
           test("Frontend should have a title", async ({ page }) => {
-            test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
-            );
+            test.skip(appType === "--no-frontend");
             await page.goto(`http://localhost:${port}`);
             await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
           });
@@ -85,9 +82,7 @@ for (const templateType of templateTypes) {
           test("Frontend should be able to submit a message and receive a response", async ({
             page,
           }) => {
-            test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
-            );
+            test.skip(appType === "--no-frontend");
             await page.goto(`http://localhost:${port}`);
             await page.fill("form input", "hello");
             await page.click("form button[type=submit]");
@@ -107,11 +102,10 @@ for (const templateType of templateTypes) {
           test("Backend should response when calling API", async ({
             request,
           }) => {
-            test.skip(
-              appType !== "--no-frontend" || templateFramework === "fastapi",
-            );
+            test.skip(appType !== "--no-frontend");
+            const backendPort = appType === "" ? port : externalPort;
             const response = await request.post(
-              `http://localhost:${port}/api/chat`,
+              `http://localhost:${backendPort}/api/chat`,
               {
                 data: {
                   messages: [
@@ -130,7 +124,7 @@ for (const templateType of templateTypes) {
 
           // clean processes
           test.afterAll(async () => {
-            cps.map((cp) => cp.kill());
+            appProcess.kill();
           });
         });
       }

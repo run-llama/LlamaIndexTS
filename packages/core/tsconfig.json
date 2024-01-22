@@ -15,10 +15,10 @@
     "resolveJsonModule": true,
   },
   "ts-node": {
+    "files": true,
     "compilerOptions": {
       "module": "commonjs",
     },
-    "files": true,
   },
   "include": ["./src"],
   "exclude": ["node_modules"],
