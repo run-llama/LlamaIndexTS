@@ -4,7 +4,7 @@ import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
 
-const getLastMessageContent = (
+const convertMessageContent = (
   textMessage: string,
   imageUrl: string | undefined,
 ): MessageContent => {
@@ -26,8 +26,8 @@ const getLastMessageContent = (
 export const chat = async (req: Request, res: Response) => {
   try {
     const { messages, data }: { messages: ChatMessage[]; data: any } = req.body;
-    const lastMessage = messages.pop();
-    if (!messages || !lastMessage || lastMessage.role !== "user") {
+    const userMessage = messages.pop();
+    if (!messages || !userMessage || userMessage.role !== "user") {
       return res.status(400).json({
         error:
           "messages are required in the request body and the last message must be from the user",
@@ -35,26 +35,43 @@ export const chat = async (req: Request, res: Response) => {
     }
 
     const llm = new OpenAI({
-      model: process.env.MODEL || "gpt-3.5-turbo",
+      model: (process.env.MODEL as any) || "gpt-3.5-turbo",
     });
 
     const chatEngine = await createChatEngine(llm);
 
-    const lastMessageContent = getLastMessageContent(
-      lastMessage.content,
+    // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
+    const userMessageContent = convertMessageContent(
+      userMessage.content,
       data?.imageUrl,
     );
 
-    const response = await chatEngine.chat(
-      lastMessageContent as MessageContent,
-      messages,
-      true,
-    );
+    // Calling LlamaIndex's ChatEngine to get a streamed response
+    const response = await chatEngine.chat({
+      message: userMessageContent,
+      chatHistory: messages,
+      stream: true,
+    });
 
-    // Transform the response into a readable stream
-    const stream = LlamaIndexStream(response);
+    // Return a stream, which can be consumed by the Vercel/AI client
+    const { stream, data: streamData } = LlamaIndexStream(response, {
+      parserOptions: {
+        image_url: data?.imageUrl,
+      },
+    });
 
-    streamToResponse(stream, res);
+    // Pipe LlamaIndexStream to response
+    const processedStream = stream.pipeThrough(streamData.stream);
+    return streamToResponse(processedStream, res, {
+      headers: {
+        // response MUST have the `X-Experimental-Stream-Data: 'true'` header
+        // so that the client uses the correct parsing logic, see
+        // https://sdk.vercel.ai/docs/api-reference/stream-data#on-the-server
+        "X-Experimental-Stream-Data": "true",
+        "Content-Type": "text/plain; charset=utf-8",
+        "Access-Control-Expose-Headers": "X-Experimental-Stream-Data",
+      },
+    });
   } catch (error) {
     console.error("[LlamaIndex]", error);
     return res.status(500).json({

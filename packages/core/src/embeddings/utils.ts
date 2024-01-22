@@ -66,6 +66,7 @@ export function similarity(
  * @param similarityCutoff minimum similarity score
  * @returns
  */
+// eslint-disable-next-line max-params
 export function getTopKEmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -108,6 +109,7 @@ export function getTopKEmbeddings(
   return [resultSimilarities, resultIds];
 }
 
+// eslint-disable-next-line max-params
 export function getTopKEmbeddingsLearner(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -120,6 +122,7 @@ export function getTopKEmbeddingsLearner(
   // https://github.com/mljs/libsvm which itself hasn't been updated in a while
 }
 
+// eslint-disable-next-line max-params
 export function getTopKMMREmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],

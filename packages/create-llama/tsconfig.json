@@ -6,14 +6,14 @@
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": [
     "create-app.ts",
     "index.ts",
     "./helpers",
     "questions.ts",
-    "package.json"
+    "package.json",
   ],
-  "exclude": ["dist"]
+  "exclude": ["dist"],
 }

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
 import { createChatEngine } from "./engine";
 
-const getLastMessageContent = (
+const convertMessageContent = (
   textMessage: string,
   imageUrl: string | undefined,
 ): MessageContent => {
@@ -24,8 +24,8 @@ const getLastMessageContent = (
 export const chat = async (req: Request, res: Response) => {
   try {
     const { messages, data }: { messages: ChatMessage[]; data: any } = req.body;
-    const lastMessage = messages.pop();
-    if (!messages || !lastMessage || lastMessage.role !== "user") {
+    const userMessage = messages.pop();
+    if (!messages || !userMessage || userMessage.role !== "user") {
       return res.status(400).json({
         error:
           "messages are required in the request body and the last message must be from the user",
@@ -36,17 +36,20 @@ export const chat = async (req: Request, res: Response) => {
       model: process.env.MODEL || "gpt-3.5-turbo",
     });
 
-    const lastMessageContent = getLastMessageContent(
-      lastMessage.content,
+    // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
+    // Note: The non-streaming template does not need the Vercel/AI format, we're still using it for consistency with the streaming template
+    const userMessageContent = convertMessageContent(
+      userMessage.content,
       data?.imageUrl,
     );
 
     const chatEngine = await createChatEngine(llm);
 
-    const response = await chatEngine.chat(
-      lastMessageContent as MessageContent,
+    // Calling LlamaIndex's ChatEngine to get a response
+    const response = await chatEngine.chat({
+      message: userMessageContent,
       messages,
-    );
+    });
     const result: ChatMessage = {
       role: "assistant",
       content: response.response,

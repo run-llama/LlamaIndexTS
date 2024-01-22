@@ -61,6 +61,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
   serviceContext: ServiceContext;
 
+  // eslint-disable-next-line max-params
   constructor(
     index: SummaryIndex,
     choiceSelectPrompt?: ChoiceSelectPrompt,

@@ -18,6 +18,7 @@ export type CreateLlamaResult = {
   appProcess: ChildProcess;
 };
 
+// eslint-disable-next-line max-params
 export async function checkAppHasStarted(
   frontend: boolean,
   framework: TemplateFramework,
@@ -59,6 +60,7 @@ export async function checkAppHasStarted(
   }
 }
 
+// eslint-disable-next-line max-params
 export async function runCreateLlama(
   cwd: string,
   templateType: TemplateType,

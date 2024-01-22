@@ -12,8 +12,14 @@
     "strict": true,
     "lib": ["es2015", "dom"],
     "target": "ES2015",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+  },
+  "ts-node": {
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs",
+    },
   },
   "include": ["./src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

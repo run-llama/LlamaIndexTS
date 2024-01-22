@@ -9,24 +9,24 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true
+    "composite": true,
   },
   "files": [],
   "references": [
     {
-      "path": "./apps/docs/tsconfig.json"
+      "path": "./apps/docs/tsconfig.json",
     },
     {
-      "path": "./packages/core"
+      "path": "./packages/core",
     },
     {
-      "path": "./packages/create-llama"
+      "path": "./packages/create-llama",
     },
     {
-      "path": "./packages/create-llama/e2e"
+      "path": "./packages/create-llama/e2e",
     },
     {
-      "path": "./examples"
-    }
-  ]
+      "path": "./examples",
+    },
+  ],
 }

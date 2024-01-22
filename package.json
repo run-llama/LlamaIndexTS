@@ -1,7 +1,9 @@
 {
+  "name": "@llamaindex/monorepo",
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:release": "turbo run build lint test --filter=\"!docs\"",
     "dev": "turbo run dev",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
@@ -9,8 +11,9 @@
     "prepare": "husky install",
     "test": "turbo run test",
     "type-check": "tsc -b --diagnostics",
-    "new-version": "turbo run build lint test --filter=\"!docs\" && changeset version",
-    "new-snapshot": "turbo run build lint test --filter=\"!docs\" && changeset version --snapshot"
+    "release": "pnpm run build:release && changeset publish",
+    "new-version": "pnpm run build:release && changeset version",
+    "new-snapshot": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
@@ -21,7 +24,7 @@
     "husky": "^8.0.3",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1",
+    "prettier": "^3.2.4",
     "prettier-plugin-organize-imports": "^3.2.4",
     "ts-jest": "^29.1.1",
     "turbo": "^1.11.2",

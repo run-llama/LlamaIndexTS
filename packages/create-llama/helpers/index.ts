@@ -70,6 +70,7 @@ const copyTestData = async (
   engine?: TemplateEngine,
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
+  // eslint-disable-next-line max-params
 ) => {
   if (engine === "context") {
     const srcPath = path.join(

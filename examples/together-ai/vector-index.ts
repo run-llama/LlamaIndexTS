@@ -29,9 +29,9 @@ async function main() {
 
   const queryEngine = index.asQueryEngine();
 
-  const response = await queryEngine.query(
-    "What did the author do in college?",
-  );
+  const response = await queryEngine.query({
+    query: "What did the author do in college?",
+  });
 
   console.log(response.toString());
 }

@@ -10,9 +10,9 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(
-    "What were the notable changes in 18.1?",
-  );
+  const response = await queryEngine.query({
+    query: "What were the notable changes in 18.1?",
+  });
 
   // Output response
   console.log(response.toString());
