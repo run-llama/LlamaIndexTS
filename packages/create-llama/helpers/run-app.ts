@@ -3,6 +3,7 @@ import { log } from "console";
 import path from "path";
 import { TemplateFramework } from "./types";
 
+// eslint-disable-next-line max-params
 export async function runApp(
   appPath: string,
   frontend: boolean,
