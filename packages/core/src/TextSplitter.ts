@@ -1,4 +1,4 @@
-import { EOL } from "node:os";
+import { EOL } from "./env";
 // GitHub translated
 import { globalsHelper } from "./GlobalsHelper";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
