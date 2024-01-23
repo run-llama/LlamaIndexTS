@@ -1,7 +1,8 @@
 import { BaseNode, Document } from "../Node";
 import { BaseReader } from "../readers/base";
 import { BaseDocumentStore, VectorStore } from "../storage";
-import { DocstoreStrategy, TransformComponent } from "./types";
+import { DocStoreStrategy, createDocStoreStrategy } from "./strategies";
+import { TransformComponent } from "./types";
 
 interface IngestionRunArgs {
   documents?: Document[];
@@ -25,18 +26,25 @@ export async function runTransformations(
   return nodes;
 }
 
-// TODO: add caching, add concurrency, add docstrategy
+// TODO: add caching, add concurrency
 export class IngestionPipeline {
   transformations: TransformComponent[] = [];
   documents?: Document[];
   reader?: BaseReader;
   vectorStore?: VectorStore;
-  docstore?: BaseDocumentStore;
-  docstoreStrategy: DocstoreStrategy = DocstoreStrategy.UPSERTS;
+  docStore?: BaseDocumentStore;
+  docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
   disableCache: boolean = true;
+
+  private _docStoreStrategy?: TransformComponent;
 
   constructor(init?: Partial<IngestionPipeline>) {
     Object.assign(this, init);
+    this._docStoreStrategy = createDocStoreStrategy(
+      this.docStoreStrategy,
+      this.docStore,
+      this.vectorStore,
+    );
   }
 
   async prepareInput(
@@ -64,7 +72,13 @@ export class IngestionPipeline {
     transformOptions?: any,
   ): Promise<BaseNode[]> {
     const inputNodes = await this.prepareInput(args.documents, args.nodes);
-    const nodesToRun = inputNodes;
+    let nodesToRun;
+    if (this._docStoreStrategy) {
+      nodesToRun = await this._docStoreStrategy.transform(inputNodes);
+    } else {
+      nodesToRun = inputNodes;
+    }
+
     const nodes = await runTransformations(
       nodesToRun,
       this.transformations,

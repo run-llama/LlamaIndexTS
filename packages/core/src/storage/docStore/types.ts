@@ -40,6 +40,8 @@ export abstract class BaseDocumentStore {
 
   abstract getDocumentHash(docId: string): Promise<string | undefined>;
 
+  abstract getAllDocumentHashes(): Promise<Record<string, string>>;
+
   // Ref Docs
   abstract getAllRefDocInfo(): Promise<Record<string, RefDocInfo> | undefined>;
 
