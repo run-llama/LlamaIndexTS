@@ -14,6 +14,9 @@ export type Embedding = number[];
 
 const DEFAULT_EMBED_BATCH_SIZE = 10;
 
+/**
+ * Base embedding class
+ */
 export abstract class BaseEmbedding {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
 
@@ -25,9 +28,14 @@ export abstract class BaseEmbedding {
     return similarity(embedding1, embedding2, mode);
   }
 
-  abstract getTextEmbedding(text: string): Promise<Embedding>;
+  abstract getTextEmbedding(textS: string | string[]): Promise<Embedding>;
   abstract getQueryEmbedding(query: string): Promise<Embedding>;
 
+  /**
+   * Get embeddings for a batch of texts
+   * @param texts
+   * @param options
+   */
   async getTextEmbeddingBatch(
     texts: string[],
     options?: {
@@ -38,25 +46,22 @@ export abstract class BaseEmbedding {
     const chunkSize = this.embedBatchSize;
 
     const queue: string[] = texts;
-    const totalChunks = Math.ceil(queue.length / chunkSize);
 
-    const processChunk = async (chunk: string[], chunkIndex: number) => {
-      const embeddings = await Promise.all(
-        chunk.map(async (text) => {
-          return await this.getTextEmbedding(text);
-        }),
-      );
+    const curBatch = [];
 
-      resultEmbeddings.push(...embeddings);
+    for (let i = 0; i < queue.length; i++) {
+      curBatch.push(queue[i]);
+      if (i == queue.length - 1 || curBatch.length == chunkSize) {
+        const embeddings = await this.getTextEmbedding(curBatch);
 
-      if (options?.logProgress) {
-        console.log(`Processing chunk ${chunkIndex + 1} of ${totalChunks}.\r`);
+        resultEmbeddings.push(embeddings);
+
+        if (options?.logProgress) {
+          console.log(`Embedding progress: ${i} / ${queue.length}`);
+        }
+
+        curBatch.length = 0;
       }
-    };
-
-    for (let i = 0; i < queue.length; i += chunkSize) {
-      const chunk = queue.slice(i, i + chunkSize);
-      await processChunk(chunk, i / chunkSize);
     }
 
     return resultEmbeddings;

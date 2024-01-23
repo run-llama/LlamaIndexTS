@@ -77,7 +77,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
     }
   }
 
-  private async getOpenAIEmbedding(input: string) {
+  private async getOpenAIEmbedding(input: string | string[]) {
     const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       input,
@@ -86,8 +86,8 @@ export class OpenAIEmbedding extends BaseEmbedding {
     return data[0].embedding;
   }
 
-  async getTextEmbedding(text: string): Promise<number[]> {
-    return this.getOpenAIEmbedding(text);
+  async getTextEmbedding(texts: string | string[]): Promise<number[]> {
+    return this.getOpenAIEmbedding(texts);
   }
 
   async getQueryEmbedding(query: string): Promise<number[]> {
