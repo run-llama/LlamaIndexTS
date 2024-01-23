@@ -26,7 +26,7 @@ Create and load a vector index. Persistance to disk in LlamaIndex.TS happens aut
 
 ## [Customized Vector Index](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/vectorIndexCustomize.ts)
 
-Create a vector index and query it, while also configuring the the `LLM`, the `ServiceContext`, and the `similarity_top_k`.
+Create a vector index and query it, while also configuring the `LLM`, the `ServiceContext`, and the `similarity_top_k`.
 
 ## [OpenAI LLM](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/openai.ts)
 
