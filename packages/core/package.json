@@ -58,11 +58,6 @@
       "import": "./dist/storage/FileSystem.mjs",
       "require": "./dist/storage/FileSystem.js"
     },
-    "./ChatEngine": {
-      "types": "./dist/ChatEngine.d.mts",
-      "import": "./dist/ChatEngine.mjs",
-      "require": "./dist/ChatEngine.js"
-    },
     "./ChatHistory": {
       "types": "./dist/ChatHistory.d.mts",
       "import": "./dist/ChatHistory.mjs",
