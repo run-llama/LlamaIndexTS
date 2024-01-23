@@ -43,7 +43,7 @@ Monimutkaisempiin sovelluksiin tarjoamme matalamman tason API:t, jotka mahdollis
 
 Dokumentaatiostamme löydät [asennusohjeet](./installation.mdx) ja [aloitusopetusohjelman](./starter.md) ensimmäisen sovelluksesi rakentamiseen.
 
-Kun olet päässyt vauhtiin, [Korkean tason käsitteet](./concepts.md) antaa yleiskuvan LlamaIndexin modulaarisesta arkkitehtuurista. Lisää käytännön esimerkkejä löydät [Päästä päähän -opetusohjelmista](./end_to_end.md).
+Kun olet päässyt vauhtiin, [Korkean tason käsitteet](./getting_started/concepts.md) antaa yleiskuvan LlamaIndexin modulaarisesta arkkitehtuurista. Lisää käytännön esimerkkejä löydät [Päästä päähän -opetusohjelmista](./end_to_end.md).
 
 ## 🗺️ Ekosysteemi
 

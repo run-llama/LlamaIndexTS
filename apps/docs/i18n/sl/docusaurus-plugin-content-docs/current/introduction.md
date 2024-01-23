@@ -41,7 +41,7 @@ Pre zložitejšie aplikácie naša nižšia úroveň API umožňuje pokročilým
 
 Naša dokumentácia obsahuje [Inštalačné pokyny](./installation.mdx) a [Úvodný tutoriál](./starter.md) pre vytvorenie vašej prvej aplikácie.
 
-Keď už máte všetko pripravené, [Vysokoúrovňové koncepty](./concepts.md) poskytujú prehľad o modulárnej architektúre LlamaIndexu. Pre viac praktických príkladov si prečítajte naše [Tutoriály od začiatku do konca](./end_to_end.md).
+Keď už máte všetko pripravené, [Vysokoúrovňové koncepty](./getting_started/concepts.md) poskytujú prehľad o modulárnej architektúre LlamaIndexu. Pre viac praktických príkladov si prečítajte naše [Tutoriály od začiatku do konca](./end_to_end.md).
 
 ## 🗺️ Ekosystém
 

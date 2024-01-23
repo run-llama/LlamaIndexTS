@@ -41,7 +41,7 @@ API cấp cao của chúng tôi cho phép người dùng mới bắt đầu sử
 
 Tài liệu của chúng tôi bao gồm [Hướng dẫn cài đặt](./installation.mdx) và [Hướng dẫn bắt đầu](./starter.md) để xây dựng ứng dụng đầu tiên của bạn.
 
-Khi bạn đã sẵn sàng, [Khái niệm cấp cao](./concepts.md) cung cấp một cái nhìn tổng quan về kiến trúc mô-đun của LlamaIndex. Để có thêm ví dụ thực tế, hãy xem qua [Hướng dẫn từ đầu đến cuối](./end_to_end.md).
+Khi bạn đã sẵn sàng, [Khái niệm cấp cao](./getting_started/concepts.md) cung cấp một cái nhìn tổng quan về kiến trúc mô-đun của LlamaIndex. Để có thêm ví dụ thực tế, hãy xem qua [Hướng dẫn từ đầu đến cuối](./end_to_end.md).
 
 ## 🗺️ Hệ sinh thái
 
