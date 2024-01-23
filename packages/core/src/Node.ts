@@ -183,7 +183,7 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
     if (new.target === TextNode) {
       // Don't generate the hash repeatedly so only do it if this is
       // constructing the derived class
-      this.hash = this.generateHash();
+      this.hash = init?.hash ?? this.generateHash();
     }
   }
 
@@ -234,7 +234,6 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
 
   setContent(value: string) {
     this.text = value;
-
     this.hash = this.generateHash();
   }
 
@@ -255,7 +254,7 @@ export class IndexNode<T extends Metadata = Metadata> extends TextNode<T> {
     Object.assign(this, init);
 
     if (new.target === IndexNode) {
-      this.hash = this.generateHash();
+      this.hash = init?.hash ?? this.generateHash();
     }
   }
 
@@ -273,7 +272,7 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
     Object.assign(this, init);
 
     if (new.target === Document) {
-      this.hash = this.generateHash();
+      this.hash = init?.hash ?? this.generateHash();
     }
   }
 
@@ -334,7 +333,7 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
     super(init);
 
     if (new.target === ImageDocument) {
-      this.hash = this.generateHash();
+      this.hash = init?.hash ?? this.generateHash();
     }
   }
 
