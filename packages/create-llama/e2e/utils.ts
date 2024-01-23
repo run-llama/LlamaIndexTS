@@ -110,14 +110,17 @@ export async function runCreateLlama(
   console.log(`running command '${command}' in ${cwd}`);
   let appProcess = exec(command, {
     cwd,
+    env: {
+      ...process.env,
+    },
   });
-  appProcess.on("error", (err) => {
-    console.error(err);
-    appProcess.kill();
-  });
-  // Show log from cp
-  appProcess.stdout?.on("data", (data) => {
+  appProcess.stderr?.on("data", (data) => {
     console.log(data.toString());
+  });
+  appProcess.on("exit", (code) => {
+    if (code !== 0 && code !== null) {
+      throw new Error(`create-llama command was failed!`);
+    }
   });
 
   // Wait for app to start

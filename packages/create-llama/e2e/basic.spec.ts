@@ -124,7 +124,7 @@ for (const templateType of templateTypes) {
 
           // clean processes
           test.afterAll(async () => {
-            appProcess.kill();
+            appProcess?.kill();
           });
         });
       }
