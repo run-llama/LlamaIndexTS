@@ -52,6 +52,12 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
+    "./env": {
+      "types": "./dist/env.d.mts",
+      "edge-light": "./dist/env.edge-light.mjs",
+      "import": "./dist/env.mjs",
+      "require": "./dist/env.js"
+    },
     "./storage/FileSystem": {
       "types": "./dist/storage/FileSystem.d.mts",
       "edge-light": "./dist/storage/FileSystem.edge-light.mjs",
