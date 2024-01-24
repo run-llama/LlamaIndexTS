@@ -15,6 +15,7 @@ export interface InstallTemplateArgs {
   template: TemplateType;
   framework: TemplateFramework;
   engine: TemplateEngine;
+  contextFile?: string;
   ui: TemplateUI;
   eslint: boolean;
   customApiPath?: string;

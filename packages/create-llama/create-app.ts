@@ -35,6 +35,7 @@ export async function createApp({
   vectorDb,
   externalPort,
   postInstallAction,
+  contextFile,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -77,6 +78,7 @@ export async function createApp({
     vectorDb,
     externalPort,
     postInstallAction,
+    contextFile,
   };
 
   if (frontend) {
