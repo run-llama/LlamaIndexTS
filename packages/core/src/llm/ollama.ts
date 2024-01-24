@@ -1,6 +1,6 @@
-import { ok } from "node:assert";
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
 import { BaseEmbedding } from "../embeddings";
+import { ok } from "../env";
 import {
   ChatMessage,
   ChatResponse,

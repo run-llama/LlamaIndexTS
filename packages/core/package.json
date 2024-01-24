@@ -30,6 +30,7 @@
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.6",
@@ -52,16 +53,17 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
+    "./env": {
+      "types": "./dist/env.d.mts",
+      "edge-light": "./dist/env.edge-light.mjs",
+      "import": "./dist/env.mjs",
+      "require": "./dist/env.js"
+    },
     "./storage/FileSystem": {
       "types": "./dist/storage/FileSystem.d.mts",
       "edge-light": "./dist/storage/FileSystem.edge-light.mjs",
       "import": "./dist/storage/FileSystem.mjs",
       "require": "./dist/storage/FileSystem.js"
-    },
-    "./ChatEngine": {
-      "types": "./dist/ChatEngine.d.mts",
-      "import": "./dist/ChatEngine.mjs",
-      "require": "./dist/ChatEngine.js"
     },
     "./ChatHistory": {
       "types": "./dist/ChatHistory.d.mts",
