@@ -1,3 +1,5 @@
+import { ok } from "node:assert";
+import { randomUUID } from "node:crypto";
 import { EOL } from "node:os";
 
-export { EOL };
+export { EOL, ok, randomUUID };

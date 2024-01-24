@@ -1,6 +1,7 @@
 import _ from "lodash";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import path from "node:path";
+import { randomUUID } from "./env";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",

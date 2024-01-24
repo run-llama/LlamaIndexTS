@@ -1,8 +1,8 @@
-import { randomUUID } from "node:crypto";
 import { BaseNode, Document, jsonToNode } from "../Node";
 import { BaseQueryEngine } from "../QueryEngine";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext } from "../ServiceContext";
+import { randomUUID } from "../env";
 import { StorageContext } from "../storage/StorageContext";
 import { BaseDocumentStore } from "../storage/docStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";

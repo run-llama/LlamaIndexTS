@@ -1,9 +1,9 @@
-import { randomUUID } from "node:crypto";
 import { ChatHistory, getHistory } from "../../ChatHistory";
 import { ContextSystemPrompt } from "../../Prompt";
 import { Response } from "../../Response";
 import { BaseRetriever } from "../../Retriever";
 import { Event } from "../../callbacks/CallbackManager";
+import { randomUUID } from "../../env";
 import { ChatMessage, ChatResponseChunk, LLM, OpenAI } from "../../llm";
 import { MessageContent } from "../../llm/types";
 import { extractText, streamConverter, streamReducer } from "../../llm/utils";
