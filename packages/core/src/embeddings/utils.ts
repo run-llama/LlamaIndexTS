@@ -1,7 +1,8 @@
 import _ from "lodash";
 import { ImageType } from "../Node";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
-import { DEFAULT_FS, VectorStoreQueryMode } from "../storage";
+import { defaultFS } from "../env";
+import { VectorStoreQueryMode } from "../storage";
 import { SimilarityType } from "./types";
 
 /**
@@ -244,8 +245,7 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
     _.isString(input)
   ) {
     // string or file URL
-    const fs = DEFAULT_FS;
-    const dataBuffer = await fs.readFile(
+    const dataBuffer = await defaultFS.readFile(
       input instanceof URL ? input.pathname : input,
     );
     input = new Blob([dataBuffer]);

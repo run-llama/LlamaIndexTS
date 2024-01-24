@@ -1,5 +1,5 @@
 import { Document } from "../Node";
-import { DEFAULT_FS } from "../storage/constants";
+import { defaultFS } from "../env";
 import { GenericFileSystem } from "../storage/FileSystem";
 import { BaseReader } from "./base";
 
@@ -20,7 +20,7 @@ export class HTMLReader implements BaseReader {
    */
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file, "utf-8");
     const htmlOptions = this.getOptions();

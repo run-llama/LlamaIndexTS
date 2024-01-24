@@ -1,4 +1,5 @@
 import { Sha256 } from "@aws-crypto/sha256-js";
+import { CompleteFileSystem, InMemoryFileSystem } from "../storage";
 
 export interface SHA256 {
   update(data: string | Uint8Array): void;
@@ -7,6 +8,8 @@ export interface SHA256 {
 }
 
 export const EOL = "\n";
+
+export const defaultFS: CompleteFileSystem = new InMemoryFileSystem();
 
 export function ok(value: unknown, message?: string): asserts value {
   if (!value) {

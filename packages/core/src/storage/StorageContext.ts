@@ -1,10 +1,7 @@
 import path from "path";
+import { defaultFS } from "../env";
 import { GenericFileSystem } from "./FileSystem";
-import {
-  DEFAULT_FS,
-  DEFAULT_IMAGE_VECTOR_NAMESPACE,
-  DEFAULT_NAMESPACE,
-} from "./constants";
+import { DEFAULT_IMAGE_VECTOR_NAMESPACE, DEFAULT_NAMESPACE } from "./constants";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
 import { BaseDocumentStore } from "./docStore/types";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore";
@@ -19,14 +16,14 @@ export interface StorageContext {
   imageVectorStore?: VectorStore;
 }
 
-type BuilderParams = {
-  docStore?: BaseDocumentStore;
-  indexStore?: BaseIndexStore;
-  vectorStore?: VectorStore;
-  imageVectorStore?: VectorStore;
-  storeImages?: boolean;
-  persistDir?: string;
-  fs?: GenericFileSystem;
+export type BuilderParams = {
+  docStore: BaseDocumentStore;
+  indexStore: BaseIndexStore;
+  vectorStore: VectorStore;
+  imageVectorStore: VectorStore;
+  storeImages: boolean;
+  persistDir: string;
+  fs: GenericFileSystem;
 };
 
 export async function storageContextFromDefaults({
@@ -37,14 +34,14 @@ export async function storageContextFromDefaults({
   storeImages,
   persistDir,
   fs,
-}: BuilderParams): Promise<StorageContext> {
+}: Partial<BuilderParams>): Promise<StorageContext> {
   if (!persistDir) {
     docStore = docStore || new SimpleDocumentStore();
     indexStore = indexStore || new SimpleIndexStore();
     vectorStore = vectorStore || new SimpleVectorStore();
     imageVectorStore = storeImages ? new SimpleVectorStore() : imageVectorStore;
   } else {
-    fs = fs || DEFAULT_FS;
+    fs = fs || defaultFS;
     docStore =
       docStore ||
       (await SimpleDocumentStore.fromPersistDir(
