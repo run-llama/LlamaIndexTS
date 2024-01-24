@@ -136,6 +136,11 @@
       "import": "./dist/Tool.mjs",
       "require": "./dist/Tool.js"
     },
+    "./readers": {
+      "types": "./dist/readers.d.mts",
+      "import": "./dist/readers.mjs",
+      "require": "./dist/readers.js"
+    },
     "./readers/AssemblyAI": {
       "types": "./dist/readers/AssemblyAI.d.mts",
       "import": "./dist/readers/AssemblyAI.mjs",
@@ -146,10 +151,10 @@
       "import": "./dist/readers/base.mjs",
       "require": "./dist/readers/base.js"
     },
-    "./readers/CSVReader": {
-      "types": "./dist/readers/CSVReader.d.mts",
-      "import": "./dist/readers/CSVReader.mjs",
-      "require": "./dist/readers/CSVReader.js"
+    "./readers/PapaCSVReader": {
+      "types": "./dist/readers/PapaCSVReader.d.mts",
+      "import": "./dist/readers/PapaCSVReader.mjs",
+      "require": "./dist/readers/PapaCSVReader.js"
     },
     "./readers/DocxReader": {
       "types": "./dist/readers/DocxReader.d.mts",
@@ -207,8 +212,8 @@
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "build": "bunchee",
-    "dev": "bunchee -w",
+    "build": "NODE_OPTIONS=--max_old_space_size=8192 bunchee",
+    "dev": "NODE_OPTIONS=--max_old_space_size=8192 bunchee -w",
     "circular-check": "madge --circular ./src/*.ts"
   }
 }

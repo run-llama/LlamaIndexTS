@@ -2,12 +2,12 @@ import _ from "lodash";
 import { Document } from "../Node";
 import { defaultFS } from "../env";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
-import { PapaCSVReader } from "./CSVReader";
 import { DocxReader } from "./DocxReader";
 import { HTMLReader } from "./HTMLReader";
 import { ImageReader } from "./ImageReader";
 import { MarkdownReader } from "./MarkdownReader";
 import { PDFReader } from "./PDFReader";
+import { PapaCSVReader } from "./PapaCSVReader";
 import { BaseReader } from "./base";
 
 type ReaderCallback = (
