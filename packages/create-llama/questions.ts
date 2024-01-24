@@ -6,6 +6,7 @@ import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import { TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
+import { getAvailableLlamapackExamples } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
@@ -20,6 +21,7 @@ const defaults: QuestionArgs = {
   openAiKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
+  llamapack: "",
   postInstallAction: "dependencies",
 };
 
@@ -92,6 +94,10 @@ export const askQuestions = async (
               title: `Community template from ${styledRepo}`,
               value: "community",
             },
+            {
+              title: "Example using llama pack",
+              value: "llamapack",
+            },
           ],
           initial: 1,
         },
@@ -123,6 +129,26 @@ export const askQuestions = async (
     program.communityProjectPath = communityProjectPath;
     preferences.communityProjectPath = communityProjectPath;
     return; // early return - no further questions needed for community projects
+  }
+
+  if (program.template === "llamapack") {
+    const availableLlamaPacks = await getAvailableLlamapackExamples();
+    const { llamapack } = await prompts(
+      {
+        type: "select",
+        name: "llamapack",
+        message: "Select llama pack example",
+        choices: availableLlamaPacks.map((pack) => ({
+          title: pack.name,
+          value: pack.file_path,
+        })),
+        initial: 0,
+      },
+      handlers,
+    );
+    program.llamapack = llamapack;
+    preferences.llamapack = llamapack;
+    return; // early return - no further questions needed for llamapack projects
   }
 
   if (!program.framework) {

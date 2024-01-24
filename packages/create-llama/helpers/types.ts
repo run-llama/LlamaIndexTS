@@ -1,6 +1,6 @@
 import { PackageManager } from "../helpers/get-pkg-manager";
 
-export type TemplateType = "simple" | "streaming" | "community";
+export type TemplateType = "simple" | "streaming" | "community" | "llamapack";
 export type TemplateFramework = "nextjs" | "express" | "fastapi";
 export type TemplateEngine = "simple" | "context";
 export type TemplateUI = "html" | "shadcn";
@@ -22,6 +22,7 @@ export interface InstallTemplateArgs {
   forBackend?: string;
   model: string;
   communityProjectPath?: string;
+  llamapack?: string;
   vectorDb?: TemplateVectorDB;
   externalPort?: number;
   postInstallAction?: TemplatePostInstallAction;
