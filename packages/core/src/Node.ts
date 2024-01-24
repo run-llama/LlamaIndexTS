@@ -1,5 +1,5 @@
 import _ from "lodash";
-import path from "node:path";
+import path from "pathe";
 import { createSHA256, randomUUID } from "./env";
 
 export enum NodeRelationship {

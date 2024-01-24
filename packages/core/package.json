@@ -21,6 +21,7 @@
     "notion-md-crawler": "^0.0.2",
     "openai": "^4.20.1",
     "papaparse": "^5.4.1",
+    "pathe": "^1.1.2",
     "pdfjs-dist": "4.0.269",
     "pg": "^8.11.3",
     "pgvector": "^0.1.5",

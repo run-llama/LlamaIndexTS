@@ -1,4 +1,4 @@
-import path from "path";
+import path from "pathe";
 import { defaultFS } from "../../env";
 import { GenericFileSystem } from "../FileSystem";
 import {

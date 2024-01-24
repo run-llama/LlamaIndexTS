@@ -1,5 +1,5 @@
 import _ from "lodash";
-import path from "path";
+import path from "pathe";
 import { defaultFS } from "../../env";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_COLLECTION } from "../constants";
