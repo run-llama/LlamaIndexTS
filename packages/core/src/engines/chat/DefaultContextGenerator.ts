@@ -1,8 +1,8 @@
-import { randomUUID } from "node:crypto";
 import { NodeWithScore, TextNode } from "../../Node";
 import { ContextSystemPrompt, defaultContextSystemPrompt } from "../../Prompt";
 import { BaseRetriever } from "../../Retriever";
 import { Event } from "../../callbacks/CallbackManager";
+import { randomUUID } from "../../env";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import { Context, ContextGenerator } from "./types";
 

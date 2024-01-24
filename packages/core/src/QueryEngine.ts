@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { NodeWithScore, TextNode } from "./Node";
 import {
   BaseQuestionGenerator,
@@ -10,6 +9,7 @@ import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { QueryEngineTool, ToolMetadata } from "./Tool";
 import { Event } from "./callbacks/CallbackManager";
+import { randomUUID } from "./env";
 import { BaseNodePostprocessor } from "./postprocessors";
 import {
   BaseSynthesizer,
