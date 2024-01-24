@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { cyan, yellow } from "picocolors";
+import { cyan, red, yellow } from "picocolors";
 import { parse, stringify } from "smol-toml";
 import terminalLink from "terminal-link";
 import { copy } from "./copy";
@@ -92,13 +92,39 @@ export const addDependencies = async (
   }
 };
 
+export const installPythonDependencies = (root: string) => {
+  if (isPoetryAvailable()) {
+    console.log(
+      `Installing python dependencies using poetry. This may take a while...`,
+    );
+    const installSuccessful = tryPoetryInstall();
+    if (!installSuccessful) {
+      console.error(
+        red("Install failed. Please install dependencies manually."),
+      );
+      process.exit(1);
+    }
+  } else {
+    console.warn(
+      yellow(
+        `Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
+Please check ${terminalLink(
+          "Poetry Installation",
+          `https://python-poetry.org/docs/#installation`,
+        )} to install poetry first, then install the dependencies manually.`,
+      ),
+    );
+    process.exit(1);
+  }
+};
+
 export const installPythonTemplate = async ({
   root,
   template,
   framework,
   engine,
   vectorDb,
-  installDependencies,
+  postInstallAction,
 }: Pick<
   InstallTemplateArgs,
   | "root"
@@ -106,7 +132,7 @@ export const installPythonTemplate = async ({
   | "template"
   | "engine"
   | "vectorDb"
-  | "installDependencies"
+  | "postInstallAction"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(
@@ -154,28 +180,7 @@ export const installPythonTemplate = async ({
   const addOnDependencies = getAdditionalDependencies(vectorDb);
   await addDependencies(root, addOnDependencies);
 
-  // install python dependencies
-  if (installDependencies) {
-    if (isPoetryAvailable()) {
-      console.log(
-        `Installing python dependencies using poetry. This may take a while...`,
-      );
-      const installSuccessful = tryPoetryInstall();
-      if (!installSuccessful) {
-        console.warn(
-          yellow("Install failed. Please install dependencies manually."),
-        );
-      }
-    } else {
-      console.warn(
-        yellow(
-          `Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
-Please check ${terminalLink(
-            "Poetry Installation",
-            `https://python-poetry.org/docs/#installation`,
-          )} to install poetry first, then install the dependencies manually.`,
-        ),
-      );
-    }
+  if (postInstallAction !== "none") {
+    installPythonDependencies(root);
   }
 };

@@ -3,7 +3,7 @@ import {
   KeywordTableIndex,
   KeywordTableRetrieverMode,
 } from "llamaindex";
-import essay from "./essay";
+import essay from "./essay.js";
 
 async function main() {
   const document = new Document({ text: essay, id_: "essay" });

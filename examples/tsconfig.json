@@ -1,12 +1,10 @@
 {
   "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
+  "ts-node": {
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs",
+    },
   },
   "include": ["./**/*.ts"],
 }

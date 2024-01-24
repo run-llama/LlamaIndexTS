@@ -52,7 +52,7 @@ export class ChromaVectorStore implements VectorStore {
 
   async getCollection(): Promise<Collection> {
     if (!this.collection) {
-      const coll = await this.chromaClient.createCollection({
+      const coll = await this.chromaClient.getOrCreateCollection({
         name: this.collectionName,
       });
       this.collection = coll;
@@ -107,7 +107,7 @@ export class ChromaVectorStore implements VectorStore {
     }
 
     const chromaWhere: { [x: string]: string | number | boolean } = {};
-    if (query.filters) {
+    if (query.filters?.filters) {
       query.filters.filters.map((filter) => {
         const filterKey = filter.key;
         const filterValue = filter.value;

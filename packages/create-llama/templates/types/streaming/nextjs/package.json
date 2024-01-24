@@ -27,6 +27,9 @@
     "supports-color": "^9.4.0",
     "tailwind-merge": "^2.1.0"
   },
+  "overrides": {
+    "chromadb": "1.7.3"
+  },
   "devDependencies": {
     "@types/node": "^20.10.3",
     "@types/react": "^18.2.42",

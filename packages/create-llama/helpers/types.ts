@@ -5,6 +5,7 @@ export type TemplateFramework = "nextjs" | "express" | "fastapi";
 export type TemplateEngine = "simple" | "context";
 export type TemplateUI = "html" | "shadcn";
 export type TemplateVectorDB = "none" | "mongo" | "pg";
+export type TemplatePostInstallAction = "none" | "dependencies" | "runApp";
 
 export interface InstallTemplateArgs {
   appName: string;
@@ -23,5 +24,5 @@ export interface InstallTemplateArgs {
   communityProjectPath?: string;
   vectorDb?: TemplateVectorDB;
   externalPort?: number;
-  installDependencies?: boolean;
+  postInstallAction?: TemplatePostInstallAction;
 }
