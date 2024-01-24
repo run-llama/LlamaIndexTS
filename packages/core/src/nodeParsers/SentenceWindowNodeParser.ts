@@ -44,6 +44,10 @@ export class SentenceWindowNodeParser implements NodeParser {
     return new SentenceWindowNodeParser(init);
   }
 
+  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+    return this.getNodesFromDocuments(nodes);
+  }
+
   getNodesFromDocuments(documents: BaseNode[]) {
     return documents
       .map((document) => this.buildWindowNodesFromDocument(document))
