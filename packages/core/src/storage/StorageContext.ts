@@ -1,5 +1,4 @@
-import path from "path";
-import { defaultFS } from "../env";
+import { defaultFS, path } from "../env";
 import { GenericFileSystem } from "./FileSystem";
 import { DEFAULT_IMAGE_VECTOR_NAMESPACE, DEFAULT_NAMESPACE } from "./constants";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";

@@ -1,12 +1,11 @@
 import _ from "lodash";
-import path from "path";
 import { BaseNode } from "../../Node";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
 } from "../../embeddings";
-import { defaultFS } from "../../env";
+import { defaultFS, path } from "../../env";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_PERSIST_DIR } from "../constants";
 import {
