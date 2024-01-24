@@ -1,6 +1,8 @@
 import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
+import fs from "node:fs/promises";
 import { EOL } from "node:os";
+import type { CompleteFileSystem } from "../storage";
 import type { SHA256 } from "./index.edge-light";
 
 export function createSHA256(): SHA256 {
@@ -14,5 +16,7 @@ export function createSHA256(): SHA256 {
     },
   };
 }
+
+export const defaultFS: CompleteFileSystem = fs;
 
 export { EOL, ok, randomUUID };

@@ -6,8 +6,9 @@ import {
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
 } from "../../embeddings";
+import { defaultFS } from "../../env";
 import { GenericFileSystem, exists } from "../FileSystem";
-import { DEFAULT_FS, DEFAULT_PERSIST_DIR } from "../constants";
+import { DEFAULT_PERSIST_DIR } from "../constants";
 import {
   VectorStore,
   VectorStoreQuery,
@@ -31,17 +32,17 @@ class SimpleVectorStoreData {
 export class SimpleVectorStore implements VectorStore {
   storesText: boolean = false;
   private data: SimpleVectorStoreData = new SimpleVectorStoreData();
-  private fs: GenericFileSystem = DEFAULT_FS;
+  private fs: GenericFileSystem = defaultFS;
   private persistPath: string | undefined;
 
   constructor(data?: SimpleVectorStoreData, fs?: GenericFileSystem) {
     this.data = data || new SimpleVectorStoreData();
-    this.fs = fs || DEFAULT_FS;
+    this.fs = fs || defaultFS;
   }
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleVectorStore> {
     let persistPath = `${persistDir}/vector_store.json`;
     return await SimpleVectorStore.fromPersistPath(persistPath, fs);
@@ -160,7 +161,7 @@ export class SimpleVectorStore implements VectorStore {
     persistPath: string,
     fs?: GenericFileSystem,
   ): Promise<SimpleVectorStore> {
-    fs = fs || DEFAULT_FS;
+    fs = fs || defaultFS;
 
     let dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
