@@ -14,9 +14,12 @@ import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools/types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
-import { addUserStepToMemory } from "../utils";
+import {
+  addUserStepToMemory,
+  createParameterDescriptionFromZodSchema,
+} from "../utils";
 import { OpenAIToolCall } from "./types/chat";
-import { toOpenAiTool } from "./utils";
+import { OpenAiFunction, toOpenAiTool } from "./utils";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;
 
@@ -271,34 +274,25 @@ export class OpenAIAgentWorker implements AgentWorker {
     mode: ChatResponseMode = ChatResponseMode.WAIT,
     toolChoice: string | { [key: string]: any } = "auto",
   ): Promise<TaskStepOutput> {
+    const tools = this.getTools(task.input);
+
+    let openaiTools: OpenAiFunction[] = [];
+
     if (step.input) {
       addUserStepToMemory(step, task.extraState.newMemory, this._verbose);
     }
 
-    const tools = this.getTools(task.input);
-
-    const parameters = {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The first argument to sum",
-        },
-        b: {
-          type: "number",
-          description: "The second argument to sum",
-        },
-      },
-      required: ["a", "b"],
-    };
-
-    let openaiTools = tools.map((tool) =>
-      toOpenAiTool({
-        name: tool.metadata.name,
-        description: tool.metadata.description,
-        parameters,
-      }),
-    );
+    if (step.input) {
+      openaiTools = tools.map((tool) =>
+        toOpenAiTool({
+          name: tool.metadata.name,
+          description: tool.metadata.description,
+          parameters: createParameterDescriptionFromZodSchema(
+            tool.metadata.parameters,
+          ),
+        }),
+      );
+    }
 
     const llmChatKwargs = this._getLlmChatKwargs(task, openaiTools, toolChoice);
 

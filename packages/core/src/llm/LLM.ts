@@ -232,17 +232,10 @@ export class OpenAI extends BaseLLM {
 
     const content = response.choices[0].message?.content ?? "";
 
-    const additionalKwargs: {
-      toolCalls?: any;
-      functionCall?: any;
-    } = {};
+    const additionalKwargs: Record<string, any> = {};
 
     if (response.choices[0].message?.tool_calls) {
       additionalKwargs.toolCalls = response.choices[0].message.tool_calls;
-    }
-
-    if (response.choices[0].message?.function_call) {
-      additionalKwargs.functionCall = response.choices[0].message.function_call;
     }
 
     return {

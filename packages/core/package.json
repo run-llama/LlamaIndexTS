@@ -27,7 +27,8 @@
     "rake-modified": "^1.0.8",
     "replicate": "^0.21.1",
     "string-strip-html": "^13.4.3",
-    "wink-nlp": "^1.14.3"
+    "wink-nlp": "^1.14.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",

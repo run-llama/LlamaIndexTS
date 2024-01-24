@@ -1,8 +1,10 @@
+import { ZodTypeAny } from "zod";
 import { BaseQueryEngine } from "./QueryEngine";
 
 export interface ToolMetadata {
   description: string;
   name: string;
+  parameters?: ZodTypeAny;
   argsKwargs?: Record<string, any>;
 }
 

@@ -1,10 +1,21 @@
+import { ZodTypeAny } from "zod";
+
 type OpenAiTool = {
   name: string;
   description: string;
-  parameters: Record<string, any>;
+  parameters?: ZodTypeAny;
 };
 
-export const toOpenAiTool = ({ name, description, parameters }: OpenAiTool) => {
+export type OpenAiFunction = {
+  type: "function";
+  function: OpenAiTool;
+};
+
+export const toOpenAiTool = ({
+  name,
+  description,
+  parameters,
+}: OpenAiTool): OpenAiFunction => {
   return {
     type: "function",
     function: {
