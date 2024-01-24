@@ -30,6 +30,7 @@
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.6",
