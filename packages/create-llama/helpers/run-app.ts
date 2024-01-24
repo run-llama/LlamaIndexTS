@@ -1,7 +1,27 @@
-import { ChildProcess, spawn } from "child_process";
-import { log } from "console";
+import { ChildProcess, SpawnOptions, spawn } from "child_process";
 import path from "path";
 import { TemplateFramework } from "./types";
+
+const createProcess = (
+  command: string,
+  args: string[],
+  options: SpawnOptions,
+) => {
+  return spawn(command, args, {
+    ...options,
+    shell: true,
+  })
+    .on("exit", function (code) {
+      if (code !== 0) {
+        console.log(`Child process exited with code=${code}`);
+        process.exit(1);
+      }
+    })
+    .on("error", function (err) {
+      console.log("Error when running chill process: ", err);
+      process.exit(1);
+    });
+};
 
 // eslint-disable-next-line max-params
 export async function runApp(
@@ -17,13 +37,10 @@ export async function runApp(
   let backendPort = externalPort || 8000;
 
   // Callback to kill app processes
-  const killAppProcesses = () => {
-    log("Killing app processes...");
+  process.on("exit", () => {
+    console.log("Killing app processes...");
     backendAppProcess.kill();
     frontendAppProcess?.kill();
-  };
-  process.on("exit", () => {
-    killAppProcesses();
   });
 
   let backendCommand = "";
@@ -35,7 +52,7 @@ export async function runApp(
       "uvicorn",
       "main:app",
       "--host=0.0.0.0",
-      "--port=" + (externalPort || backendPort),
+      "--port=" + backendPort,
     ];
   } else if (framework === "nextjs") {
     backendCommand = "npm";
@@ -48,30 +65,24 @@ export async function runApp(
 
   if (frontend) {
     return new Promise((resolve, reject) => {
-      backendAppProcess = spawn(backendCommand, backendArgs, {
+      backendAppProcess = createProcess(backendCommand, backendArgs, {
         stdio: "inherit",
         cwd: path.join(appPath, "backend"),
         env: { ...process.env, PORT: `${backendPort}` },
       });
-      frontendAppProcess = spawn("npm", ["run", "dev"], {
+      frontendAppProcess = createProcess("npm", ["run", "dev"], {
         stdio: "inherit",
         cwd: path.join(appPath, "frontend"),
         env: { ...process.env, PORT: `${frontendPort}` },
       });
-    }).catch((err) => {
-      console.error(err);
-      killAppProcesses();
     });
   } else {
     return new Promise((resolve, reject) => {
-      backendAppProcess = spawn(backendCommand, backendArgs, {
+      backendAppProcess = createProcess(backendCommand, backendArgs, {
         stdio: "inherit",
-        cwd: appPath,
+        cwd: path.join(appPath),
         env: { ...process.env, PORT: `${backendPort}` },
       });
-    }).catch((err) => {
-      console.log(err);
-      killAppProcesses();
     });
   }
 }
