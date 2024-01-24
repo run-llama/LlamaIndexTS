@@ -1,7 +1,8 @@
+import { execSync } from "child_process";
 import ciInfo from "ci-info";
 import fs from "fs";
 import path from "path";
-import { blue, green } from "picocolors";
+import { blue, green, red } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import { TemplateFramework } from "./helpers";
@@ -9,6 +10,8 @@ import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { getRepoRootFolders } from "./helpers/repo";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
+const MACOS_FILE_SELECTION_SCRIPT =
+  "osascript -l JavaScript -e 'a=Application.currentApplication();a.includeStandardAdditions=true;a.chooseFile({withPrompt:\"Please select a file to process:\"}).toString()'"; // eslint-disable-line
 
 const defaults: QuestionArgs = {
   template: "streaming",
@@ -53,6 +56,33 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   );
 
   return displayedChoices;
+};
+
+const selectPDFFile = () => {
+  // Popup to select a PDF file
+  // We are only supporting macOS for now
+  if (process.platform !== "darwin") {
+    return;
+  }
+  try {
+    const stdout = execSync(MACOS_FILE_SELECTION_SCRIPT);
+    const selectedFilePath = stdout.toString().trim();
+    // Check is pdf file
+    if (!selectedFilePath.endsWith(".pdf")) {
+      console.log(
+        red("Unsupported file error! Please select a valid PDF file!"),
+      );
+      process.exit(1);
+    }
+    return selectedFilePath;
+  } catch (error) {
+    console.log(
+      red(
+        "Got error when trying to select file! Please try again or select other options.",
+      ),
+    );
+    process.exit(1);
+  }
 };
 
 export const onPromptState = (state: any) => {
@@ -243,24 +273,39 @@ export const askQuestions = async (
     if (ciInfo.isCI) {
       program.engine = getPrefOrDefault("engine");
     } else {
-      const { engine } = await prompts(
+      const { dataSource } = await prompts(
         {
           type: "select",
-          name: "engine",
+          name: "dataSource",
           message: "Which data source would you like to use?",
           choices: [
             {
               title: "No data, just a simple chat",
               value: "simple",
             },
-            { title: "Use an example PDF", value: "context" },
+            { title: "Use an example PDF", value: "exampleFile" },
+            {
+              title: "Select another PDF file",
+              value: "localFile",
+            },
           ],
           initial: 1,
         },
         handlers,
       );
-      program.engine = engine;
-      preferences.engine = engine;
+      switch (dataSource) {
+        case "simple":
+          program.engine = "simple";
+          break;
+        case "exampleFile":
+          program.engine = "context";
+          break;
+        case "localFile":
+          program.engine = "context";
+          // If the user selected the "pdf" option, ask them to select a file
+          program.contextFile = selectPDFFile();
+          break;
+      }
     }
     if (program.engine !== "simple" && !program.vectorDb) {
       if (ciInfo.isCI) {
