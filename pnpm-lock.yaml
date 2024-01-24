@@ -203,6 +203,9 @@ importers:
       papaparse:
         specifier: ^5.4.1
         version: 5.4.1
+      pathe:
+        specifier: ^1.1.2
+        version: 1.1.2
       pdfjs-dist:
         specifier: 4.0.269
         version: 4.0.269
@@ -12206,6 +12209,10 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /pathe@1.1.2:
+    resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
+    dev: false
 
   /pdfjs-dist@4.0.269:
     resolution: {integrity: sha512-jjWO56tcOjnmPqDf8PmXDeZ781AGvpHMYI3HhNtaFKTRXXPaD1ArSrhVe38/XsrIQJ0onISCND/vuXaWJkiDWw==}

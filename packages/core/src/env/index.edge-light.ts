@@ -1,5 +1,8 @@
 import { Sha256 } from "@aws-crypto/sha256-js";
+import pathe from "pathe";
 import { CompleteFileSystem, InMemoryFileSystem } from "../storage";
+
+export { pathe as path };
 
 export interface SHA256 {
   update(data: string | Uint8Array): void;

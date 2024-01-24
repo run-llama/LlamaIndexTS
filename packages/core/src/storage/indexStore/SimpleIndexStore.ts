@@ -1,5 +1,4 @@
-import path from "pathe";
-import { defaultFS } from "../../env";
+import { defaultFS, path } from "../../env";
 import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
