@@ -33,7 +33,7 @@ export async function storageContextFromDefaults({
   imageVectorStore,
   storeImages,
   persistDir,
-  fs = defaultFS,
+  fs,
 }: Partial<BuilderParams>): Promise<StorageContext> {
   if (!persistDir) {
     docStore = docStore || new SimpleDocumentStore();
@@ -41,6 +41,7 @@ export async function storageContextFromDefaults({
     vectorStore = vectorStore || new SimpleVectorStore();
     imageVectorStore = storeImages ? new SimpleVectorStore() : imageVectorStore;
   } else {
+    fs = fs || defaultFS;
     docStore =
       docStore ||
       (await SimpleDocumentStore.fromPersistDir(
