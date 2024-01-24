@@ -8,6 +8,7 @@
     "@mistralai/mistralai": "^0.0.7",
     "@notionhq/client": "^2.2.14",
     "@pinecone-database/pinecone": "^1.1.2",
+    "@qdrant/js-client-rest": "^1.7.0",
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
     "chromadb": "^1.7.3",
