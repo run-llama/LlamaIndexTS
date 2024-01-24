@@ -52,6 +52,7 @@ export interface ChatMessage {
 export interface ChatResponse {
   message: ChatMessage;
   raw?: Record<string, any>;
+  additionalKwargs?: Record<string, any>;
 }
 
 export interface ChatResponseChunk {

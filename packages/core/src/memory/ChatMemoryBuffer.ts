@@ -1,7 +1,14 @@
 import { ChatMessage } from "../llm";
-import { SimpleChatStore } from "../storage/chatStore/simpleChatStore";
+import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore";
 import { BaseChatStore } from "../storage/chatStore/types";
 import { BaseMemory } from "./types";
+
+type ChatMemoryBufferParams = {
+  tokenLimit?: number;
+  chatStore?: BaseChatStore;
+  chatStoreKey?: string;
+  chatHistory?: ChatMessage[];
+};
 
 /**
  * Chat memory buffer.
@@ -12,10 +19,14 @@ export class ChatMemoryBuffer implements BaseMemory {
   chatStore: BaseChatStore;
   chatStoreKey: string;
 
-  constructor(init?: Partial<ChatMemoryBuffer>) {
+  constructor(init?: Partial<ChatMemoryBufferParams>) {
     this.tokenLimit = init?.tokenLimit ?? 3000;
     this.chatStore = init?.chatStore ?? new SimpleChatStore();
     this.chatStoreKey = init?.chatStoreKey ?? "chat_history";
+
+    if (init?.chatHistory) {
+      this.chatStore.setMessages(this.chatStoreKey, init.chatHistory);
+    }
   }
 
   /**

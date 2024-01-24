@@ -51,17 +51,17 @@ type TaskParams = {
 };
 
 export class Task {
-  taskId!: string;
-  input!: string;
+  taskId: string;
+  input: string;
 
   memory: any;
-  extraState!: Record<string, any>;
+  extraState: Record<string, any>;
 
   constructor({ taskId, input, memory, extraState }: TaskParams) {
     this.taskId = taskId;
     this.input = input;
     this.memory = memory;
-    this.extraState = extraState;
+    this.extraState = extraState ?? {};
   }
 }
 

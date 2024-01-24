@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import {
   AgentChatResponse,
@@ -5,6 +6,8 @@ import {
   ChatResponseMode,
 } from "../../engines/chat";
 import { ChatMessage, LLM } from "../../llm";
+import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
+import { BaseMemory } from "../../memory/types";
 import {
   AgentWorker,
   BaseAgent,
@@ -117,17 +120,18 @@ type AgentRunnerParams = {
   agentWorker: AgentWorker;
   chatHistory?: ChatMessage[];
   state?: AgentState;
-  memory?: any;
+  memory?: BaseMemory;
   llm?: LLM;
   callbackManager?: CallbackManager;
   initTaskStateKwargs?: Record<string, any>;
   deleteTaskOnFinish?: boolean;
   defaultToolChoice?: string;
 };
+
 export class AgentRunner extends BaseAgentRunner {
   agentWorker: AgentWorker;
   state: AgentState;
-  memory: any;
+  memory: BaseMemory;
   callbackManager: CallbackManager;
   initTaskStateKwargs: Record<string, any>;
   deleteTaskOnFinish: boolean;
@@ -141,7 +145,11 @@ export class AgentRunner extends BaseAgentRunner {
 
     this.agentWorker = params.agentWorker;
     this.state = params.state ?? new AgentState();
-    this.memory = params.memory ?? {};
+    this.memory =
+      params.memory ??
+      new ChatMemoryBuffer({
+        chatHistory: params.chatHistory,
+      });
     this.callbackManager = params.callbackManager ?? new CallbackManager();
     this.initTaskStateKwargs = params.initTaskStateKwargs ?? {};
     this.deleteTaskOnFinish = params.deleteTaskOnFinish ?? false;
@@ -173,7 +181,7 @@ export class AgentRunner extends BaseAgentRunner {
     }
 
     const task = new Task({
-      taskId: Math.random().toString(36).substr(2, 9),
+      taskId: randomUUID(),
       input,
       memory: this.memory,
       extraState,

@@ -1,12 +1,20 @@
 // Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
 
+import { randomUUID } from "crypto";
 import { BaseTool } from "../../Tool";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { AgentChatResponse, ChatResponseMode } from "../../engines/chat";
-import { ChatMessage, ChatResponse, OpenAI } from "../../llm";
+import {
+  ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
+  OpenAI,
+} from "../../llm";
+import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools/types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
+import { addUserStepToMemory } from "../utils";
 import { OpenAIToolCall } from "./types/chat";
 import { toOpenAiTool } from "./utils";
 
@@ -32,7 +40,8 @@ async function callToolWithErrorHandling(
   raiseError: boolean = false,
 ): Promise<ToolOutput> {
   try {
-    return tool.call(inputDict);
+    const value = await tool.call(inputDict);
+    return new ToolOutput(value, tool.metadata.name, inputDict, value);
   } catch (e) {
     if (raiseError) {
       throw e;
@@ -76,7 +85,7 @@ async function callFunction(
 
   return [
     {
-      content: output,
+      content: String(output),
       role: "tool",
       additionalKwargs: {
         name,
@@ -138,17 +147,19 @@ export class OpenAIAgentWorker implements AgentWorker {
   public getAllMessages(task: Task): ChatMessage[] {
     return [
       ...this.prefixMessages,
-      //   ...task.memory.get(),
-      //   ...task.extraState.newMemory.get(),
+      ...task.memory.get(),
+      ...task.extraState.newMemory.get(),
     ];
   }
 
   public getLatestToolCalls(task: Task): OpenAIToolCall[] | null {
-    const chatHistory: ChatMessage[] = [];
+    const chatHistory: ChatMessage[] = task.extraState.newMemory.getAll();
 
-    return chatHistory.length > 0
-      ? chatHistory[chatHistory.length - 1].additionalKwargs?.toolCalls
-      : null;
+    if (chatHistory.length === 0) {
+      return null;
+    }
+
+    return chatHistory[chatHistory.length - 1].additionalKwargs?.toolCalls;
   }
 
   private _getLlmChatKwargs(
@@ -157,12 +168,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     toolChoice: string | { [key: string]: any } = "auto",
   ): { [key: string]: any } {
     const llmChatKwargs: { [key: string]: any } = {
-      messages: [
-        {
-          content: task.input,
-          role: "user",
-        },
-      ],
+      messages: this.getAllMessages(task),
     };
 
     if (openaiTools.length > 0) {
@@ -176,10 +182,9 @@ export class OpenAIAgentWorker implements AgentWorker {
   private _processMessage(
     task: Task,
     chatResponse: ChatResponse,
-  ): AgentChatResponse {
+  ): AgentChatResponse | AsyncIterable<ChatResponseChunk> {
     const aiMessage = chatResponse.message;
-    // task.extraState.newMemory.put(aiMessage);
-    console.log({ aiMessage });
+    task.extraState.newMemory.put(chatResponse.message);
     return new AgentChatResponse(aiMessage.content, task.extraState.sources);
   }
 
@@ -190,15 +195,8 @@ export class OpenAIAgentWorker implements AgentWorker {
   ): Promise<AgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
       const chatResponse = await this._llm.chat({
-        ...llmChatKwargs,
-        chatHistory: this.getAllMessages(task),
-        messages: [
-          {
-            content: task.input,
-            role: "user",
-          },
-        ],
         stream: false,
+        ...llmChatKwargs,
       });
 
       // @ts-ignore
@@ -211,7 +209,7 @@ export class OpenAIAgentWorker implements AgentWorker {
   async callFunction(
     tools: BaseTool[],
     toolCall: OpenAIToolCall,
-    memory: any,
+    memory: ChatMemoryBuffer,
     sources: ToolOutput[],
   ): Promise<void> {
     const functionCall = toolCall.function;
@@ -220,24 +218,24 @@ export class OpenAIAgentWorker implements AgentWorker {
       throw new Error("Invalid tool_call object");
     }
 
-    if (functionCall.type !== "function") {
-      throw new Error("Invalid tool type. Unsupported by OpenAI");
-    }
-
     const functionMessage = await callFunction(tools, toolCall, this._verbose);
 
-    const functionOutput = functionMessage[1];
-    const functionMessageContent = functionMessage[0].content;
+    const message = functionMessage[0];
+    const toolOutput = functionMessage[1];
 
-    sources.push(functionOutput);
-    // memory.put(functionMessageContent);
+    sources.push(toolOutput);
+    memory.put(message);
   }
 
   initializeStep(task: Task, kwargs?: any): TaskStep {
     const sources: ToolOutput[] = [];
+
+    const newMemory = new ChatMemoryBuffer();
+
     const taskState = {
       sources,
       nFunctionCalls: 0,
+      newMemory,
     };
 
     task.extraState = {
@@ -245,7 +243,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       ...taskState,
     };
 
-    return new TaskStep(task.taskId, Math.random().toString(), task.input);
+    return new TaskStep(task.taskId, randomUUID(), task.input);
   }
 
   private _shouldContinue(
@@ -256,11 +254,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       return false;
     }
 
-    if (!toolCalls) {
-      return false;
-    }
-
-    if (toolCalls.length === 0) {
+    if (!toolCalls || toolCalls.length === 0) {
       return false;
     }
 
@@ -277,35 +271,32 @@ export class OpenAIAgentWorker implements AgentWorker {
     mode: ChatResponseMode = ChatResponseMode.WAIT,
     toolChoice: string | { [key: string]: any } = "auto",
   ): Promise<TaskStepOutput> {
-    // if (step.input) {
-    //     addUserStepToMemory(
-    //         step,
-    //         task.extraState.newMemory,
-    //         this._verbose
-    //     );
-    // }
+    if (step.input) {
+      addUserStepToMemory(step, task.extraState.newMemory, this._verbose);
+    }
 
     const tools = this.getTools(task.input);
 
-    const openaiTools = tools.map((tool) =>
+    const parameters = {
+      type: "object",
+      properties: {
+        a: {
+          type: "number",
+          description: "The first argument to sum",
+        },
+        b: {
+          type: "number",
+          description: "The second argument to sum",
+        },
+      },
+      required: ["a", "b"],
+    };
+
+    let openaiTools = tools.map((tool) =>
       toOpenAiTool({
         name: tool.metadata.name,
         description: tool.metadata.description,
-        // parameters: {}
-        parameters: {
-          type: "object",
-          properties: {
-            a: {
-              type: "number",
-              description: "The first argument to sum",
-            },
-            b: {
-              type: "number",
-              description: "The second argument to sum",
-            },
-          },
-          required: ["a", "b"],
-        },
+        parameters,
       }),
     );
 
@@ -317,20 +308,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       llmChatKwargs,
     );
 
-    const latestToolCalls: OpenAIToolCall[] = [
-      {
-        function: {
-          arguments: JSON.stringify({
-            a: 2,
-            b: 2,
-          }),
-          name: "sumNumbers",
-          type: "function",
-        },
-        id: "1",
-        type: "function",
-      },
-    ];
+    const latestToolCalls = this.getLatestToolCalls(task) || [];
 
     let isDone: boolean;
     let newSteps: TaskStep[] = [];
@@ -339,10 +317,11 @@ export class OpenAIAgentWorker implements AgentWorker {
       !this._shouldContinue(latestToolCalls, task.extraState.nFunctionCalls)
     ) {
       isDone = true;
+      newSteps = [];
     } else {
       isDone = false;
       for (const toolCall of latestToolCalls) {
-        this.callFunction(
+        await this.callFunction(
           tools,
           toolCall,
           task.extraState.newMemory,
@@ -350,8 +329,12 @@ export class OpenAIAgentWorker implements AgentWorker {
         );
         task.extraState.nFunctionCalls += 1;
       }
+    }
 
-      newSteps = [new TaskStep(task.taskId, Math.random().toString(), null)];
+    if (!isDone) {
+      newSteps = [step.getNextStep(randomUUID(), undefined)];
+    } else {
+      newSteps = [];
     }
 
     return new TaskStepOutput(agentChatResponse, step, newSteps, isDone);
@@ -376,7 +359,7 @@ export class OpenAIAgentWorker implements AgentWorker {
   }
 
   finalizeTask(task: Task, kwargs?: any): void {
-    // task.memory.set(task.memory.get().concat(task.extraState.newMemory.get()));
-    // task.extraState.newMemory.reset();
+    task.memory.set(task.memory.get().concat(task.extraState.newMemory.get()));
+    task.extraState.newMemory.reset();
   }
 }

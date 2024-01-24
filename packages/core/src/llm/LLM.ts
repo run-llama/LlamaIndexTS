@@ -202,7 +202,7 @@ export class OpenAI extends BaseLLM {
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream, tools, toolChoice } = params;
-    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
+    let baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
@@ -219,8 +219,6 @@ export class OpenAI extends BaseLLM {
       ...this.additionalChatOptions,
     };
 
-    console.log({ tools, toolChoice });
-
     // Streaming
     if (stream) {
       return this.streamChat(params);
@@ -232,16 +230,27 @@ export class OpenAI extends BaseLLM {
       stream: false,
     });
 
-    console.log({ response });
-
-    console.log({
-      response: response.choices[0].message?.tool_calls?.[0]?.function,
-      response2: response.choices[0].message,
-    });
-
     const content = response.choices[0].message?.content ?? "";
+
+    const additionalKwargs: {
+      toolCalls?: any;
+      functionCall?: any;
+    } = {};
+
+    if (response.choices[0].message?.tool_calls) {
+      additionalKwargs.toolCalls = response.choices[0].message.tool_calls;
+    }
+
+    if (response.choices[0].message?.function_call) {
+      additionalKwargs.functionCall = response.choices[0].message.function_call;
+    }
+
     return {
-      message: { content, role: response.choices[0].message.role },
+      message: {
+        content,
+        role: response.choices[0].message.role,
+        additionalKwargs,
+      },
     };
   }
 

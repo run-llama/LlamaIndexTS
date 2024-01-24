@@ -70,8 +70,8 @@ export class AgentChatResponse {
 
   constructor(
     response: string,
-    sourceNodes?: BaseNode[],
     sources?: ToolOutput[],
+    sourceNodes?: BaseNode[],
   ) {
     this.response = response;
     this.sources = sources || [];
