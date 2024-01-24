@@ -303,19 +303,33 @@ export class QdrantVectorStore implements VectorStore {
       });
     }
 
-    if (query.nodeIds) {
-      mustConditions.push({
-        key: "id",
-        match: {
-          any: query.nodeIds,
-        },
-      });
-    }
-
     if (!query.filters) {
       return {
         must: mustConditions,
       };
+    }
+
+    const metadataFilters = query.filters.filters;
+
+    for (let i = 0; i < metadataFilters.length; i++) {
+      const filter = metadataFilters[i];
+
+      if (typeof filter.key === "number") {
+        mustConditions.push({
+          key: filter.key,
+          match: {
+            gt: filter.value,
+            lt: filter.value,
+          },
+        });
+      } else {
+        mustConditions.push({
+          key: filter.key,
+          match: {
+            value: filter.value,
+          },
+        });
+      }
     }
 
     return {
