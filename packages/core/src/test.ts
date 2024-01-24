@@ -8,7 +8,7 @@ function sumNumbers({ a, b }: { a: number; b: number }): number {
 async function main() {
   const functionTool = new FunctionTool(sumNumbers, {
     name: "sumNumbers",
-    description: "Sum two numbers",
+    description: "Use this function to sum numbers together",
   }) as BaseTool;
 
   const worker = new OpenAIAgent({
@@ -17,7 +17,7 @@ async function main() {
   });
 
   const response = await worker.chat({
-    message: "sum 2 + 2?",
+    message: "hi, I want to sum 2 and 3",
   });
 
   console.log({ response });

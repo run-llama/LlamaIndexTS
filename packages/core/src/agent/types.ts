@@ -144,17 +144,9 @@ export class TaskStepOutput {
   }
 }
 
-export abstract class AgentWorker {
-  abstract initializeStep(task: Task, kwargs?: any): TaskStep;
-  abstract runStep(
-    step: TaskStep,
-    task: Task,
-    kwargs?: any,
-  ): Promise<TaskStepOutput>;
-  abstract streamStep(
-    step: TaskStep,
-    task: Task,
-    kwargs?: any,
-  ): Promise<TaskStepOutput>;
-  abstract finalizeTask(task: Task, kwargs?: any): void;
+export interface AgentWorker {
+  initializeStep(task: Task, kwargs?: any): TaskStep;
+  runStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
+  streamStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
+  finalizeTask(task: Task, kwargs?: any): void;
 }

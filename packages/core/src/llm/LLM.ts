@@ -232,8 +232,11 @@ export class OpenAI extends BaseLLM {
       stream: false,
     });
 
+    console.log({ response });
+
     console.log({
       response: response.choices[0].message?.tool_calls?.[0]?.function,
+      response2: response.choices[0].message,
     });
 
     const content = response.choices[0].message?.content ?? "";

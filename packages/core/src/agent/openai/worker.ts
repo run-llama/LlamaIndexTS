@@ -3,7 +3,7 @@
 import { BaseTool } from "../../Tool";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { AgentChatResponse, ChatResponseMode } from "../../engines/chat";
-import { ChatMessage, ChatResponse, LLM, OpenAI } from "../../llm";
+import { ChatMessage, ChatResponse, OpenAI } from "../../llm";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools/types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
@@ -25,17 +25,14 @@ function getFunctionByName(tools: BaseTool[], name: string): BaseTool {
   return nameToTool[name];
 }
 
-function callToolWithErrorHandling(
+async function callToolWithErrorHandling(
   tool: BaseTool,
   inputDict: { [key: string]: any },
   errorMessage: string | null = null,
   raiseError: boolean = false,
-): ToolOutput {
+): Promise<ToolOutput> {
   try {
-    return {
-      ...tool,
-      ...(inputDict as ToolOutput),
-    };
+    return tool.call(inputDict);
   } catch (e) {
     if (raiseError) {
       throw e;
@@ -50,11 +47,11 @@ function callToolWithErrorHandling(
   }
 }
 
-function callFunction(
+async function callFunction(
   tools: BaseTool[],
   toolCall: OpenAIToolCall,
   verbose: boolean = false,
-): [ChatMessage, ToolOutput] {
+): Promise<[ChatMessage, ToolOutput]> {
   const id_ = toolCall.id;
   const functionCall = toolCall.function;
   const name = toolCall.function.name;
@@ -70,11 +67,11 @@ function callFunction(
 
   // Call tool
   // Use default error message
-  const output = callToolWithErrorHandling(tool, argumentDict, null);
+  const output = await callToolWithErrorHandling(tool, argumentDict, null);
 
   if (verbose) {
-    console.log(`Got output: ${output}`);
-    console.log("========================\n");
+    console.log(`Got output ${output}`);
+    console.log("==========================");
   }
 
   return [
@@ -100,12 +97,14 @@ type OpenAIAgentWorkerParams = {
   toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
-export class OpenAIAgentWorker extends AgentWorker {
+export class OpenAIAgentWorker implements AgentWorker {
   private _llm: OpenAI;
   private _verbose: boolean;
   private _maxFunctionCalls: number;
+
   public prefixMessages: ChatMessage[];
   public callbackManager: CallbackManager | undefined;
+
   private _getTools: (input: string) => BaseTool[];
 
   constructor({
@@ -117,9 +116,7 @@ export class OpenAIAgentWorker extends AgentWorker {
     callbackManager,
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
-    super();
-
-    this._llm = llm || new OpenAI({ model: "gpt-3.5-turbo" });
+    this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
     this._verbose = verbose || false;
     this._maxFunctionCalls = maxFunctionCalls;
     this.prefixMessages = prefixMessages || [];
@@ -135,64 +132,6 @@ export class OpenAIAgentWorker extends AgentWorker {
     } else {
       this._getTools = () => [];
     }
-  }
-
-  // Static method 'from_tools' would be a static method in TypeScript
-  fromTools(
-    tools: BaseTool[] | null = null,
-    toolRetriever: ObjectRetriever<BaseTool> | null = null,
-    llm: LLM | null = null,
-    verbose: boolean = false,
-    maxFunctionCalls: number = DEFAULT_MAX_FUNCTION_CALLS,
-    callbackManager: CallbackManager | null = null,
-    systemPrompt: string | null = null,
-    prefixMessages: ChatMessage[] | null = null,
-    ...args: any[]
-  ): OpenAIAgentWorker {
-    tools = tools || [];
-
-    llm =
-      llm ||
-      new OpenAI({
-        model: "gpt-3.5-turbo",
-      });
-
-    if (!(llm instanceof OpenAI)) {
-      throw new Error("llm must be an OpenAI instance");
-    }
-
-    if (callbackManager) {
-      llm.callbackManager = callbackManager;
-    }
-
-    // if (!llm.metadata.isFunctionCallingModel) {
-    //     throw new Error(`Model name ${llm.model} does not support function calling API.`);
-    // }
-
-    if (systemPrompt) {
-      if (prefixMessages) {
-        throw new Error("Cannot specify both systemPrompt and prefixMessages");
-      }
-      prefixMessages = [
-        {
-          content: systemPrompt,
-          role: "system",
-        },
-      ];
-    }
-
-    prefixMessages = prefixMessages || [];
-
-    return new OpenAIAgentWorker({
-      tools,
-      llm,
-      prefixMessages,
-      verbose,
-      maxFunctionCalls,
-      callbackManager: undefined,
-      //   toolRetriever:,
-      // callbackManager
-    });
   }
 
   // Other methods would be translated similarly. For instance:
@@ -239,7 +178,8 @@ export class OpenAIAgentWorker extends AgentWorker {
     chatResponse: ChatResponse,
   ): AgentChatResponse {
     const aiMessage = chatResponse.message;
-    task.extraState.newMemory.put(aiMessage);
+    // task.extraState.newMemory.put(aiMessage);
+    console.log({ aiMessage });
     return new AgentChatResponse(aiMessage.content, task.extraState.sources);
   }
 
@@ -249,12 +189,19 @@ export class OpenAIAgentWorker extends AgentWorker {
     llmChatKwargs: any,
   ): Promise<AgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
-      // TODO: Implement STREAM mode
+      const chatResponse = await this._llm.chat({
+        ...llmChatKwargs,
+        chatHistory: this.getAllMessages(task),
+        messages: [
+          {
+            content: task.input,
+            role: "user",
+          },
+        ],
+        stream: false,
+      });
+
       // @ts-ignore
-      const chatResponse: ChatResponse = await this._llm.chat(llmChatKwargs);
-
-      console.log({ chatResponse });
-
       return this._processMessage(task, chatResponse);
     } else {
       throw new Error("Not implemented");
@@ -277,13 +224,13 @@ export class OpenAIAgentWorker extends AgentWorker {
       throw new Error("Invalid tool type. Unsupported by OpenAI");
     }
 
-    const functionMessage = callFunction(tools, toolCall, this._verbose);
+    const functionMessage = await callFunction(tools, toolCall, this._verbose);
 
     const functionOutput = functionMessage[1];
     const functionMessageContent = functionMessage[0].content;
 
     sources.push(functionOutput);
-    memory.put(functionMessageContent);
+    // memory.put(functionMessageContent);
   }
 
   initializeStep(task: Task, kwargs?: any): TaskStep {
@@ -344,23 +291,23 @@ export class OpenAIAgentWorker extends AgentWorker {
       toOpenAiTool({
         name: tool.metadata.name,
         description: tool.metadata.description,
+        // parameters: {}
         parameters: {
           type: "object",
           properties: {
             a: {
               type: "number",
-              description: "The first argument",
+              description: "The first argument to sum",
             },
             b: {
               type: "number",
-              description: "The second argument",
+              description: "The second argument to sum",
             },
           },
+          required: ["a", "b"],
         },
       }),
     );
-
-    console.log({ openaiTools: openaiTools[0].function });
 
     const llmChatKwargs = this._getLlmChatKwargs(task, openaiTools, toolChoice);
 
@@ -370,7 +317,20 @@ export class OpenAIAgentWorker extends AgentWorker {
       llmChatKwargs,
     );
 
-    const latestToolCalls = this.getLatestToolCalls(task) || [];
+    const latestToolCalls: OpenAIToolCall[] = [
+      {
+        function: {
+          arguments: JSON.stringify({
+            a: 2,
+            b: 2,
+          }),
+          name: "sumNumbers",
+          type: "function",
+        },
+        id: "1",
+        type: "function",
+      },
+    ];
 
     let isDone: boolean;
     let newSteps: TaskStep[] = [];
@@ -416,7 +376,7 @@ export class OpenAIAgentWorker extends AgentWorker {
   }
 
   finalizeTask(task: Task, kwargs?: any): void {
-    task.memory.set(task.memory.get().concat(task.extraState.newMemory.get()));
-    task.extraState.newMemory.reset();
+    // task.memory.set(task.memory.get().concat(task.extraState.newMemory.get()));
+    // task.extraState.newMemory.reset();
   }
 }

@@ -187,12 +187,6 @@ export class AgentRunner extends BaseAgentRunner {
       stepQueue: [initialStep],
     });
 
-    console.log({
-      state: this.state,
-      taskState,
-      id: task.taskId,
-    });
-
     this.state.taskDict[task.taskId] = taskState;
 
     return task;
