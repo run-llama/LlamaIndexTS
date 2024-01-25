@@ -114,6 +114,22 @@ class AgentState {
   getStepQueue(taskId: string): TaskStep[] {
     return this.taskDict[taskId].stepQueue || [];
   }
+
+  addSteps(taskId: string, steps: TaskStep[]): void {
+    if (!this.taskDict[taskId].stepQueue) {
+      this.taskDict[taskId].stepQueue = [];
+    }
+
+    this.taskDict[taskId].stepQueue.push(...steps);
+  }
+
+  addCompletedStep(taskId: string, stepOutputs: TaskStepOutput[]): void {
+    if (!this.taskDict[taskId].completedSteps) {
+      this.taskDict[taskId].completedSteps = [];
+    }
+
+    this.taskDict[taskId].completedSteps.push(...stepOutputs);
+  }
 }
 
 type AgentRunnerParams = {
@@ -249,8 +265,7 @@ export class AgentRunner extends BaseAgentRunner {
     kwargs?: any,
   ): Promise<TaskStepOutput> {
     const task = this.state.getTask(taskId);
-    const stepQueue = this.state.getStepQueue(taskId);
-    const curStep = step || stepQueue.shift();
+    const curStep = step || this.state.getStepQueue(taskId).shift();
 
     let curStepOutput;
 
@@ -268,11 +283,8 @@ export class AgentRunner extends BaseAgentRunner {
 
     const nextSteps = curStepOutput.nextSteps;
 
-    stepQueue.push(...nextSteps);
-
-    const completedSteps = this.state.getCompletedSteps(taskId);
-
-    completedSteps.push(curStepOutput);
+    this.state.addSteps(taskId, nextSteps);
+    this.state.addCompletedStep(taskId, [curStepOutput]);
 
     return curStepOutput;
   }

@@ -231,7 +231,14 @@ describe("Agent Runner", () => {
 
   it("should be able to run a step", async () => {
     const task = agentRunner.createTask("hello world");
+
+    expect(agentRunner.getCompletedSteps(task.taskId)).toBeUndefined();
+
     const stepOutput = await agentRunner.runStep(task.taskId, task.input);
+
+    const completedSteps = agentRunner.getCompletedSteps(task.taskId);
+
+    expect(completedSteps.length).toEqual(1);
 
     expect(stepOutput.isLast).toEqual(true);
   });

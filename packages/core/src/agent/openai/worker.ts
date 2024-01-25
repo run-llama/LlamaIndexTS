@@ -16,7 +16,7 @@ import { ToolOutput } from "../../tools/types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
 import { addUserStepToMemory } from "../utils";
 import { OpenAIToolCall } from "./types/chat";
-import { OpenAiFunction, toOpenAiTool } from "./utils";
+import { toOpenAiTool } from "./utils";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;
 
@@ -273,21 +273,17 @@ export class OpenAIAgentWorker implements AgentWorker {
   ): Promise<TaskStepOutput> {
     const tools = this.getTools(task.input);
 
-    let openaiTools: OpenAiFunction[] = [];
-
     if (step.input) {
       addUserStepToMemory(step, task.extraState.newMemory, this._verbose);
     }
 
-    if (step.input) {
-      openaiTools = tools.map((tool) =>
-        toOpenAiTool({
-          name: tool.metadata.name,
-          description: tool.metadata.description,
-          parameters: tool.metadata.parameters,
-        }),
-      );
-    }
+    const openaiTools = tools.map((tool) =>
+      toOpenAiTool({
+        name: tool.metadata.name,
+        description: tool.metadata.description,
+        parameters: tool.metadata.parameters,
+      }),
+    );
 
     const llmChatKwargs = this._getLlmChatKwargs(task, openaiTools, toolChoice);
 
