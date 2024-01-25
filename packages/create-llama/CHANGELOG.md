@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.18
+
+### Patch Changes
+
+- 88d3b41: fix packaging
+
 ## 0.0.17
 
 ### Patch Changes
