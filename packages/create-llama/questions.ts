@@ -95,7 +95,7 @@ export const askQuestions = async (
               value: "community",
             },
             {
-              title: "Example using llama pack",
+              title: "Example using a LlamaPack",
               value: "llamapack",
             },
           ],
@@ -137,7 +137,7 @@ export const askQuestions = async (
       {
         type: "select",
         name: "llamapack",
-        message: "Select llama pack example",
+        message: "Select LlamaPack",
         choices: availableLlamaPacks.map((pack) => ({
           title: pack.name,
           value: pack.file_path,

@@ -1,6 +1,13 @@
 import got from "got";
-import { LLAMA_PACK_CONFIG_PATH } from "./constant";
-import { getRepoRawContent } from "./repo";
+import path from "path";
+import {
+  LLAMA_PACK_CONFIG_PATH,
+  LLAMA_PACK_OWNER,
+  LLAMA_PACK_REPO,
+} from "./constant";
+import { copy } from "./copy";
+import { downloadAndExtractRepo, getRepoRawContent } from "./repo";
+import { InstallTemplateArgs } from "./types";
 
 async function getLlamapackFolders(): Promise<string[]> {
   const libraryJson: any = await getRepoRawContent(LLAMA_PACK_CONFIG_PATH);
@@ -40,3 +47,38 @@ export async function getAvailableLlamapackExamples(): Promise<ExampleFile[]> {
 
   return result;
 }
+
+const copyLlamapackEmptyProject = async ({
+  root,
+}: Pick<InstallTemplateArgs, "root">) => {
+  const templatePath = path.join(
+    __dirname,
+    "..",
+    "templates/components/sample-projects/llamapack",
+  );
+  await copy("**", root, {
+    parents: true,
+    cwd: templatePath,
+  });
+};
+
+const installLlamapackExampleFile = async ({
+  root,
+  llamapack,
+}: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
+  console.log("\nInstalling Llamapack project:", llamapack!);
+  await downloadAndExtractRepo(root, {
+    username: LLAMA_PACK_OWNER,
+    name: LLAMA_PACK_REPO,
+    branch: "main",
+    filePath: llamapack!,
+  });
+};
+
+export const installLlamapackProject = async ({
+  root,
+  llamapack,
+}: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
+  await copyLlamapackEmptyProject({ root });
+  await installLlamapackExampleFile({ root, llamapack });
+};

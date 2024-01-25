@@ -5,13 +5,9 @@ import fs from "fs/promises";
 import path from "path";
 import { cyan } from "picocolors";
 
-import {
-  COMMUNITY_OWNER,
-  COMMUNITY_REPO,
-  LLAMA_PACK_OWNER,
-  LLAMA_PACK_REPO,
-} from "./constant";
+import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
 import { PackageManager } from "./get-pkg-manager";
+import { installLlamapackProject } from "./llama-pack";
 import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
 import { installPythonTemplate } from "./python";
 import { downloadAndExtractRepo } from "./repo";
@@ -138,33 +134,6 @@ const installCommunityProject = async ({
   });
 };
 
-const copyLlamapackEmptyProject = async ({
-  root,
-}: Pick<InstallTemplateArgs, "root">) => {
-  const templatePath = path.join(
-    __dirname,
-    "..",
-    "templates/components/sample-projects/llamapack",
-  );
-  await copy("**", root, {
-    parents: true,
-    cwd: templatePath,
-  });
-};
-
-const installLlamapackExampleFile = async ({
-  root,
-  llamapack,
-}: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
-  console.log("\nInstalling llamapack project:", llamapack!);
-  await downloadAndExtractRepo(root, {
-    username: LLAMA_PACK_OWNER,
-    name: LLAMA_PACK_REPO,
-    branch: "main",
-    filePath: llamapack!,
-  });
-};
-
 export const installTemplate = async (
   props: InstallTemplateArgs & { backend: boolean },
 ) => {
@@ -176,8 +145,7 @@ export const installTemplate = async (
   }
 
   if (props.template === "llamapack" && props.llamapack) {
-    await copyLlamapackEmptyProject(props);
-    await installLlamapackExampleFile(props);
+    await installLlamapackProject(props);
     return;
   }
 
