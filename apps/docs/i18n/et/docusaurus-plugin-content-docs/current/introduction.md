@@ -41,7 +41,7 @@ Täpsemate rakenduste jaoks võimaldavad meie madalama taseme API-d edasijõudnu
 
 Meie dokumentatsioonis on [paigaldusjuhised](./installation.mdx) ja [algõpetus](./starter.md) oma esimese rakenduse loomiseks.
 
-Kui olete valmis ja töötate, siis [kõrgtasemel kontseptsioonid](./concepts.md) annavad ülevaate LlamaIndexi moodularhitektuurist. Praktiliste näidete jaoks vaadake läbi meie [otsast lõpuni õpetused](./end_to_end.md).
+Kui olete valmis ja töötate, siis [kõrgtasemel kontseptsioonid](./getting_started/concepts.md) annavad ülevaate LlamaIndexi moodularhitektuurist. Praktiliste näidete jaoks vaadake läbi meie [otsast lõpuni õpetused](./end_to_end.md).
 
 ## 🗺️ Ökosüsteem
 

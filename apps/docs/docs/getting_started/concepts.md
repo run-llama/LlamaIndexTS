@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# High-Level Concepts
+# Concepts
 
 LlamaIndex.TS helps you build LLM-powered applications (e.g. Q&A, chatbot) over custom data.
 
@@ -18,7 +18,7 @@ LlamaIndex uses a two stage method when using an LLM with your data:
 1. **indexing stage**: preparing a knowledge base, and
 2. **querying stage**: retrieving relevant context from the knowledge to assist the LLM in responding to a question
 
-![](./_static/concepts/rag.jpg)
+![](../_static/concepts/rag.jpg)
 
 This process is also known as Retrieval Augmented Generation (RAG).
 
@@ -30,7 +30,7 @@ Let's explore each stage in detail.
 
 LlamaIndex.TS help you prepare the knowledge base with a suite of data connectors and indexes.
 
-![](./_static/concepts/indexing.jpg)
+![](../_static/concepts/indexing.jpg)
 
 [**Data Loaders**](./modules/high_level/data_loader.md):
 A data connector (i.e. `Reader`) ingest data from different data sources and data formats into a simple `Document` representation (text and simple metadata).
@@ -56,7 +56,7 @@ LlamaIndex provides composable modules that help you build and integrate RAG pip
 
 These building blocks can be customized to reflect ranking preferences, as well as composed to reason over multiple knowledge bases in a structured way.
 
-![](./_static/concepts/querying.jpg)
+![](../_static/concepts/querying.jpg)
 
 #### Building Blocks
 
