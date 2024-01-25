@@ -140,7 +140,7 @@ export const askQuestions = async (
         message: "Select LlamaPack",
         choices: availableLlamaPacks.map((pack) => ({
           title: pack.name,
-          value: pack.file_path,
+          value: pack.path,
         })),
         initial: 0,
       },

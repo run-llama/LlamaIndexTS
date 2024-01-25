@@ -17,7 +17,7 @@ async function getLlamapackFolders(): Promise<string[]> {
 
 interface ExampleFile {
   name: string;
-  file_path: string;
+  path: string;
   type: "file" | "dir";
 }
 
