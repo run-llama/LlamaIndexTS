@@ -10,8 +10,22 @@ import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { getRepoRootFolders } from "./helpers/repo";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
-const MACOS_FILE_SELECTION_SCRIPT =
-  "osascript -l JavaScript -e 'a=Application.currentApplication();a.includeStandardAdditions=true;a.chooseFile({withPrompt:\"Please select a file to process:\"}).toString()'"; // eslint-disable-line
+const MACOS_FILE_SELECTION_SCRIPT = `
+osascript -l JavaScript -e '
+  a = Application.currentApplication();
+  a.includeStandardAdditions = true;
+  a.chooseFile({ withPrompt: "Please select a file to process:" }).toString()
+'`;
+
+const WINDOWS_FILE_SELECTION_SCRIPT = `
+Add-Type -AssemblyName System.Windows.Forms
+$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+$openFileDialog.InitialDirectory = [Environment]::GetFolderPath('Desktop')
+$result = $openFileDialog.ShowDialog()
+if ($result -eq 'OK') {
+  $openFileDialog.FileName
+}
+`;
 
 const defaults: QuestionArgs = {
   template: "streaming",
@@ -58,15 +72,27 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   return displayedChoices;
 };
 
-const selectPDFFile = () => {
+const selectPDFFile = async () => {
   // Popup to select a PDF file
-  // We are only supporting macOS for now
-  if (process.platform !== "darwin") {
-    return;
-  }
   try {
-    const stdout = execSync(MACOS_FILE_SELECTION_SCRIPT);
-    const selectedFilePath = stdout.toString().trim();
+    let selectedFilePath: string = "";
+    switch (process.platform) {
+      case "win32": // Windows
+        selectedFilePath = execSync(WINDOWS_FILE_SELECTION_SCRIPT, {
+          shell: "powershell.exe",
+        })
+          .toString()
+          .trim();
+        break;
+      case "darwin": // MacOS
+        selectedFilePath = execSync(MACOS_FILE_SELECTION_SCRIPT)
+          .toString()
+          .trim();
+        break;
+      default: // Unsupported OS
+        console.log(red("Unsupported OS error!"));
+        process.exit(1);
+    }
     // Check is pdf file
     if (!selectedFilePath.endsWith(".pdf")) {
       console.log(
@@ -285,7 +311,7 @@ export const askQuestions = async (
             },
             { title: "Use an example PDF", value: "exampleFile" },
             {
-              title: "Select another PDF file",
+              title: "Select a local PDF file",
               value: "localFile",
             },
           ],
@@ -303,7 +329,7 @@ export const askQuestions = async (
         case "localFile":
           program.engine = "context";
           // If the user selected the "pdf" option, ask them to select a file
-          program.contextFile = selectPDFFile();
+          program.contextFile = await selectPDFFile();
           break;
       }
     }
