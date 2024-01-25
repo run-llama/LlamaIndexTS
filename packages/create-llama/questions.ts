@@ -299,22 +299,23 @@ export const askQuestions = async (
     if (ciInfo.isCI) {
       program.engine = getPrefOrDefault("engine");
     } else {
+      let choices = [
+        {
+          title: "No data, just a simple chat",
+          value: "simple",
+        },
+        { title: "Use an example PDF", value: "exampleFile" },
+      ];
+      if (process.platform === "win32" || process.platform === "darwin") {
+        choices.push({ title: "Use a local PDF file", value: "localFile" });
+      }
+
       const { dataSource } = await prompts(
         {
           type: "select",
           name: "dataSource",
           message: "Which data source would you like to use?",
-          choices: [
-            {
-              title: "No data, just a simple chat",
-              value: "simple",
-            },
-            { title: "Use an example PDF", value: "exampleFile" },
-            {
-              title: "Select a local PDF file",
-              value: "localFile",
-            },
-          ],
+          choices: choices,
           initial: 1,
         },
         handlers,
