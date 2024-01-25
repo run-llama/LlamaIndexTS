@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.1.0
+
+### Minor Changes
+
+- 3154f52: chore: add qdrant readme
+
+### Patch Changes
+
+- bb66cb7: add new OpenAI embeddings (with dimension reduction support)
+
 ## 0.0.51
 
 ### Patch Changes
