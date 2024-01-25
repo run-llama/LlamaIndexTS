@@ -23,7 +23,7 @@ const ALL_AZURE_OPENAI_CHAT_MODELS = {
   },
   "gpt-4-1106-preview": {
     contextWindow: 128000,
-    openAIModel: "gpt-4-vision-preview",
+    openAIModel: "gpt-4-1106-preview",
   },
 };
 
