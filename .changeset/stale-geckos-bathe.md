@@ -2,4 +2,4 @@
 "create-llama": patch
 ---
 
-add a new option to select local PDF file
+Add an option to select a local PDF file as data source
