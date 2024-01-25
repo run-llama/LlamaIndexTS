@@ -3,7 +3,7 @@ import {
   storageContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
-import essay from "./essay.js";
+import essay from "./essay";
 
 async function main() {
   // Create Document object with essay
