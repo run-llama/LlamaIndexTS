@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.51
+
+### Patch Changes
+
+- fda8024: revert: export conditions not working with moduleResolution `node`
+
 ## 0.0.50
 
 ### Patch Changes
