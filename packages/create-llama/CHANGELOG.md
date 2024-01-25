@@ -1,5 +1,12 @@
 # create-llama
 
+## 0.0.17
+
+### Patch Changes
+
+- fa17f7e: Add an option that allows the user to run the generated app
+- 9e5d8e1: Add an option to select a local PDF file as data source
+
 ## 0.0.16
 
 ### Patch Changes
