@@ -12,8 +12,9 @@
     "test": "turbo run test",
     "type-check": "tsc -b --diagnostics",
     "release": "pnpm run build:release && changeset publish",
-    "new-version": "pnpm run build:release && changeset version",
-    "new-snapshot": "pnpm run build:release && changeset version --snapshot"
+    "new-llamaindex": "pnpm run build:release && changeset version --ignore create-llama",
+    "new-create-llama": "pnpm run build:release && changeset version --ignore llamaindex",
+    "new-snapshots": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
