@@ -1,4 +1,4 @@
-# LlamaIndexTS Playground
+# LlamaIndexTS Examples
 
 Before running any of the code examples,
 make sure you have basic knowledge of the [LlamaIndexTS](https://ts.llamaindex.ai/).
