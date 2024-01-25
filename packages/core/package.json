@@ -8,6 +8,7 @@
     "@mistralai/mistralai": "^0.0.7",
     "@notionhq/client": "^2.2.14",
     "@pinecone-database/pinecone": "^1.1.2",
+    "@qdrant/js-client-rest": "^1.7.0",
     "@xenova/transformers": "^2.10.0",
     "assemblyai": "^4.0.0",
     "chromadb": "^1.7.3",
@@ -20,6 +21,7 @@
     "notion-md-crawler": "^0.0.2",
     "openai": "^4.20.1",
     "papaparse": "^5.4.1",
+    "pathe": "^1.1.2",
     "pdfjs-dist": "4.0.269",
     "pg": "^8.11.3",
     "pgvector": "^0.1.5",
@@ -38,7 +40,6 @@
     "@types/pg": "^8.10.9",
     "bunchee": "^4.4.1",
     "madge": "^6.1.0",
-    "node-stdlib-browser": "^1.2.0",
     "typescript": "^5.3.3"
   },
   "engines": {

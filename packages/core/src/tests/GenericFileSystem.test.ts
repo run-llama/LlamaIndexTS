@@ -1,10 +1,10 @@
+import nodeFS from "node:fs/promises";
 import os from "os";
 import path from "path";
 import {
   GenericFileSystem,
   InMemoryFileSystem,
   exists,
-  getNodeFS,
   walk,
 } from "../storage/FileSystem";
 
@@ -15,8 +15,6 @@ type FileSystemUnderTest = {
   implementation: GenericFileSystem;
   tempDir: string;
 };
-
-const nodeFS = getNodeFS() as GenericFileSystem & any;
 
 describe.each<FileSystemUnderTest>([
   {
@@ -102,14 +100,13 @@ describe.each<FileSystemUnderTest>([
 });
 
 describe("Test walk for Node.js fs", () => {
-  const fs = getNodeFS();
   let tempDir: string;
 
   beforeAll(async () => {
     tempDir = await nodeFS.mkdtemp(path.join(os.tmpdir(), "jest-"));
-    await fs.writeFile(`${tempDir}/test.txt`, "Hello, world!");
-    await fs.mkdir(`${tempDir}/subDir`);
-    await fs.writeFile(`${tempDir}/subDir/test2.txt`, "Hello, again!");
+    await nodeFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
+    await nodeFS.mkdir(`${tempDir}/subDir`);
+    await nodeFS.writeFile(`${tempDir}/subDir/test2.txt`, "Hello, again!");
   });
 
   it("walks directory", async () => {
@@ -119,7 +116,7 @@ describe("Test walk for Node.js fs", () => {
     ]);
 
     const actualFiles = new Set<string>();
-    for await (let file of walk(fs, tempDir)) {
+    for await (let file of walk(nodeFS, tempDir)) {
       expect(file).toBeTruthy();
       actualFiles.add(file);
     }

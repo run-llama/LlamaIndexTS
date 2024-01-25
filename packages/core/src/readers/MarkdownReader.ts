@@ -1,5 +1,6 @@
 import { Document } from "../Node";
-import { DEFAULT_FS, GenericFileSystem } from "../storage";
+import { defaultFS } from "../env";
+import { GenericFileSystem } from "../storage";
 import { BaseReader } from "./base";
 
 type MarkdownTuple = [string | null, string];
@@ -89,7 +90,7 @@ export class MarkdownReader implements BaseReader {
 
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const content = await fs.readFile(file, { encoding: "utf-8" });
     const tups = this.parseTups(content);
