@@ -1,32 +1,47 @@
 import { BaseNode, Document } from "../Node";
 import { BaseReader } from "../readers/base";
 import { BaseDocumentStore, VectorStore } from "../storage";
+import { IngestionCache, getTransformationHash } from "./IngestionCache";
 import { DocStoreStrategy, createDocStoreStrategy } from "./strategies";
 import { TransformComponent } from "./types";
 
-interface IngestionRunArgs {
+type IngestionRunArgs = {
   documents?: Document[];
   nodes?: BaseNode[];
+};
+
+type TransformRunArgs = {
   inPlace?: boolean;
-}
+  cache?: IngestionCache;
+};
 
 export async function runTransformations(
   nodesToRun: BaseNode[],
   transformations: TransformComponent[],
   transformOptions: any = {},
-  { inPlace = true }: IngestionRunArgs,
+  { inPlace = true, cache }: TransformRunArgs,
 ): Promise<BaseNode[]> {
   let nodes = nodesToRun;
   if (!inPlace) {
     nodes = [...nodesToRun];
   }
   for (const transform of transformations) {
-    nodes = await transform.transform(nodes, transformOptions);
+    if (cache) {
+      const hash = getTransformationHash(nodes, transform);
+      const cachedNodes = await cache.get(hash);
+      if (cachedNodes) {
+        nodes = cachedNodes;
+      } else {
+        nodes = await transform.transform(nodes, transformOptions);
+        await cache.put(hash, nodes);
+      }
+    } else {
+      nodes = await transform.transform(nodes, transformOptions);
+    }
   }
   return nodes;
 }
 
-// TODO: add caching, add concurrency
 export class IngestionPipeline {
   transformations: TransformComponent[] = [];
   documents?: Document[];
@@ -34,7 +49,8 @@ export class IngestionPipeline {
   vectorStore?: VectorStore;
   docStore?: BaseDocumentStore;
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
-  disableCache: boolean = true;
+  cache?: IngestionCache;
+  disableCache: boolean = false;
 
   private _docStoreStrategy?: TransformComponent;
 
@@ -45,6 +61,9 @@ export class IngestionPipeline {
       this.docStore,
       this.vectorStore,
     );
+    if (!this.disableCache) {
+      this.cache = new IngestionCache();
+    }
   }
 
   async prepareInput(
@@ -68,9 +87,10 @@ export class IngestionPipeline {
   }
 
   async run(
-    args: IngestionRunArgs = {},
+    args: IngestionRunArgs & TransformRunArgs = {},
     transformOptions?: any,
   ): Promise<BaseNode[]> {
+    args.cache = args.cache ?? this.cache;
     const inputNodes = await this.prepareInput(args.documents, args.nodes);
     let nodesToRun;
     if (this._docStoreStrategy) {
