@@ -1,4 +1,3 @@
-import got from "got";
 import path from "path";
 import {
   LLAMA_PACK_CONFIG_PATH,
@@ -9,43 +8,22 @@ import { copy } from "./copy";
 import { downloadAndExtractRepo, getRepoRawContent } from "./repo";
 import { InstallTemplateArgs } from "./types";
 
-async function getLlamapackFolders(): Promise<string[]> {
+export async function getAvailableLlamapackOptions(): Promise<
+  {
+    name: string;
+    folderPath: string;
+    example: boolean | undefined;
+  }[]
+> {
   const libraryJson: any = await getRepoRawContent(LLAMA_PACK_CONFIG_PATH);
-  const llamapackIds = Object.keys(libraryJson);
-  return llamapackIds.map((id) => libraryJson[id].id);
-}
-
-interface ExampleFile {
-  name: string;
-  path: string;
-  type: "file" | "dir";
-}
-
-/**
- * This function returns a list of available examples from the llama pack library.
- * They are returned as a list of ExampleFile objects. (valid when having example.py)
- */
-export async function getAvailableLlamapackExamples(): Promise<ExampleFile[]> {
-  const exampleFileName = "example.py";
-  const llamapackFolderPath = "run-llama/llama-hub/contents/llama_hub";
-  const result: ExampleFile[] = [];
-
-  const folders = await getLlamapackFolders();
-  for (const folder of folders) {
-    const url = `https://api.github.com/repos/${llamapackFolderPath}/${folder}`;
-    const response = await got(url, {
-      responseType: "json",
-    });
-    const data = response.body as ExampleFile[];
-    const exampleFile = data.find(
-      (item) => item.name === exampleFileName && item.type === "file",
-    );
-    if (exampleFile) {
-      result.push(exampleFile);
-    }
-  }
-
-  return result;
+  const llamapackKeys = Object.keys(libraryJson);
+  return llamapackKeys
+    .map((key) => ({
+      name: key,
+      folderPath: libraryJson[key].id,
+      example: libraryJson[key].example,
+    }))
+    .filter((item) => !!item.example);
 }
 
 const copyLlamapackEmptyProject = async ({
@@ -62,23 +40,36 @@ const copyLlamapackEmptyProject = async ({
   });
 };
 
-const installLlamapackExampleFile = async ({
+const installLlamapackExample = async ({
   root,
   llamapack,
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
-  console.log("\nInstalling Llamapack project:", llamapack!);
-  await downloadAndExtractRepo(root, {
-    username: LLAMA_PACK_OWNER,
-    name: LLAMA_PACK_REPO,
-    branch: "main",
-    filePath: llamapack!,
-  });
+  const exampleFile = "example.py";
+  const readmeFile = "README.md";
+
+  try {
+    await downloadAndExtractRepo(root, {
+      username: LLAMA_PACK_OWNER,
+      name: LLAMA_PACK_REPO,
+      branch: "main",
+      filePath: `${llamapack}/${exampleFile}`,
+    });
+    await downloadAndExtractRepo(root, {
+      username: LLAMA_PACK_OWNER,
+      name: LLAMA_PACK_REPO,
+      branch: "main",
+      filePath: `${llamapack}/${readmeFile}`,
+    });
+  } catch (error) {
+    console.log("Error downloading Llamapack example:", error);
+  }
 };
 
 export const installLlamapackProject = async ({
   root,
   llamapack,
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
+  console.log("\nInstalling Llamapack project:", llamapack!);
   await copyLlamapackEmptyProject({ root });
-  await installLlamapackExampleFile({ root, llamapack });
+  await installLlamapackExample({ root, llamapack });
 };
