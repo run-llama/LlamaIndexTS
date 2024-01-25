@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.0.50
+
+### Patch Changes
+
+- 8a729cd: fix bugs in Together.AI integration (thanks @Nutlope for reporting)
+
 ## 0.0.49
 
 ### Patch Changes
