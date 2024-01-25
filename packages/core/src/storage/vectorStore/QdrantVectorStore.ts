@@ -54,11 +54,9 @@ export class QdrantVectorStore implements VectorStore {
     apiKey,
     batchSize,
   }: QdrantParams) {
-    if (!client && (!url || !apiKey)) {
-      if (!url || !apiKey || !collectionName) {
-        throw new Error(
-          "QdrantVectorStore requires url, apiKey and collectionName",
-        );
+    if (!client && !url) {
+      if (!url || !collectionName) {
+        throw new Error("QdrantVectorStore requires url and collectionName");
       }
     }
 
