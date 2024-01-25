@@ -126,7 +126,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
     this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
-    this._verbose = verbose || false;
+    this._verbose = verbose || true;
     this._maxFunctionCalls = maxFunctionCalls;
     this.prefixMessages = prefixMessages || [];
     this.callbackManager = callbackManager || this._llm.callbackManager;
@@ -184,7 +184,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     chatResponse: ChatResponse,
   ): AgentChatResponse | AsyncIterable<ChatResponseChunk> {
     const aiMessage = chatResponse.message;
-    task.extraState.newMemory.put(chatResponse.message);
+    task.extraState.newMemory.put(aiMessage);
     return new AgentChatResponse(aiMessage.content, task.extraState.sources);
   }
 
@@ -272,6 +272,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     toolChoice: string | { [key: string]: any } = "auto",
   ): Promise<TaskStepOutput> {
     const tools = this.getTools(task.input);
+
     let openaiTools: OpenAiFunction[] = [];
 
     if (step.input) {
@@ -279,7 +280,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     }
 
     if (step.input) {
-      tools.map((tool) =>
+      openaiTools = tools.map((tool) =>
         toOpenAiTool({
           name: tool.metadata.name,
           description: tool.metadata.description,
@@ -317,12 +318,8 @@ export class OpenAIAgentWorker implements AgentWorker {
         );
         task.extraState.nFunctionCalls += 1;
       }
-    }
 
-    if (!isDone) {
       newSteps = [step.getNextStep(randomUUID(), undefined)];
-    } else {
-      newSteps = [];
     }
 
     return new TaskStepOutput(agentChatResponse, step, newSteps, isDone);
