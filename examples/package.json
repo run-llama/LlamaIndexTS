@@ -1,7 +1,6 @@
 {
-  "version": "0.0.3",
-  "private": true,
   "name": "examples",
+  "private": true,
   "dependencies": {
     "@datastax/astra-db-ts": "^0.1.2",
     "@notionhq/client": "^2.2.14",
