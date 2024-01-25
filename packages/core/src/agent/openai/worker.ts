@@ -14,10 +14,7 @@ import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools/types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
-import {
-  addUserStepToMemory,
-  createParameterDescriptionFromZodSchema,
-} from "../utils";
+import { addUserStepToMemory } from "../utils";
 import { OpenAIToolCall } from "./types/chat";
 import { OpenAiFunction, toOpenAiTool } from "./utils";
 
@@ -287,9 +284,7 @@ export class OpenAIAgentWorker implements AgentWorker {
         toOpenAiTool({
           name: tool.metadata.name,
           description: tool.metadata.description,
-          parameters: createParameterDescriptionFromZodSchema(
-            tool.metadata.parameters,
-          ),
+          parameters: tool.metadata.parameters,
         }),
       );
     }

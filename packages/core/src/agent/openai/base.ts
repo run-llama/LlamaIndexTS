@@ -5,9 +5,6 @@ import { ObjectRetriever } from "../../objects/base";
 import { AgentRunner } from "../runner/base";
 import { OpenAIAgentWorker } from "./worker";
 
-const DEFAULT_MAX_FUNCTION_CALLS = 100;
-const DEFAULT_MODEL_NAME = "gpt-3.5-turbo-0613";
-
 type OpenAIAgentParams = {
   tools: BaseTool[];
   llm?: OpenAI;

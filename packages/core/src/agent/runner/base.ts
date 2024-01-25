@@ -28,7 +28,7 @@ const validateStepFromArgs = (
     }
     return step;
   } else {
-    return new TaskStep(taskId, step, input, ...kwargs);
+    return new TaskStep(taskId, step, input, kwargs);
   }
 };
 
@@ -63,7 +63,7 @@ export abstract class BaseAgentRunner extends BaseAgent {
     taskId: string,
     input: string,
     step: TaskStep,
-    kwargs?: any,
+    kwargs: any,
   ): Promise<TaskStepOutput>;
 
   abstract streamStep(
@@ -288,7 +288,7 @@ export class AgentRunner extends BaseAgentRunner {
     taskId: string,
     input: string,
     step?: TaskStep,
-    kwargs?: any,
+    kwargs: any = {},
   ): Promise<TaskStepOutput> {
     const curStep = validateStepFromArgs(taskId, input, step, kwargs);
     return this._runStep(taskId, curStep, ChatResponseMode.WAIT, kwargs);

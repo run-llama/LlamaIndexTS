@@ -1,8 +1,10 @@
+import { ToolMetadata } from "../Tool";
 import { ChatMessage } from "../llm";
 import { ChatMemoryBuffer } from "../memory/ChatMemoryBuffer";
 import { TaskStep } from "./types";
 
-import { ZodTypeAny } from "zod";
+import { ZodTypeAny, z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
 export function addUserStepToMemory(
   step: TaskStep,
@@ -25,43 +27,30 @@ export function addUserStepToMemory(
   }
 }
 
-const mapZodTypeToGeneric = (zodType: any): string => {
-  switch (zodType) {
-    case "ZodString":
-      return "string";
-    case "ZodNumber":
-      return "number";
-    case "ZodBoolean":
-      return "boolean";
-    default:
-      return "any";
-  }
+export const isZodSchema = (schema: any): boolean => {
+  if (!schema) return false;
+
+  if (schema instanceof z.Schema) return true;
+
+  return false;
 };
 
-export const createParameterDescriptionFromZodSchema = <T extends ZodTypeAny>(
-  schema?: T,
-): ZodTypeAny | undefined => {
-  if (!schema) return undefined;
-
-  const shape = schema._def.shape();
-
-  const parameters: {
-    type: string;
+export const getProperties = (
+  zSchema: ZodTypeAny,
+): ToolMetadata["parameters"] => {
+  // # TODO: on current zod version it doesn't return the correct type, then having to force it
+  const schema = zodToJsonSchema(zSchema) as {
     properties: Record<string, { type: string; description?: string }>;
-    required: string[];
-  } = {
-    type: "object",
-    properties: {},
-    required: Object.keys(shape),
+    required?: string[];
   };
 
-  Object.entries(shape).forEach(([key, value]: any) => {
-    parameters.properties[key] = {
-      type: mapZodTypeToGeneric(value._def.typeName),
-      description: `The argument ${key}`, // Descrição padrão
-    };
-  });
+  if (!schema?.properties) {
+    throw new Error("Invalid properties");
+  }
 
-  // @ts-ignore
-  return parameters;
+  return {
+    type: "object",
+    properties: schema?.properties,
+    required: schema?.required,
+  } as ToolMetadata["parameters"];
 };
