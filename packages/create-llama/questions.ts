@@ -6,7 +6,7 @@ import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import { TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
-import { getAvailableLlamapackExamples } from "./helpers/llama-pack";
+import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
@@ -132,7 +132,7 @@ export const askQuestions = async (
   }
 
   if (program.template === "llamapack") {
-    const availableLlamaPacks = await getAvailableLlamapackExamples();
+    const availableLlamaPacks = await getAvailableLlamapackOptions();
     const { llamapack } = await prompts(
       {
         type: "select",
@@ -140,7 +140,7 @@ export const askQuestions = async (
         message: "Select LlamaPack",
         choices: availableLlamaPacks.map((pack) => ({
           title: pack.name,
-          value: pack.path,
+          value: pack.folderPath,
         })),
         initial: 0,
       },
