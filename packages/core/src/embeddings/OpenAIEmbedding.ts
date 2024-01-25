@@ -30,7 +30,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
   constructor(init?: Partial<OpenAIEmbedding> & { azure?: AzureOpenAIConfig }) {
     super();
 
-    this.model = OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
+    this.model = init?.model ?? OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002;
 
     this.maxRetries = init?.maxRetries ?? 10;
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
