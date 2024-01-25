@@ -70,22 +70,32 @@ const copyTestData = async (
   engine?: TemplateEngine,
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
+  contextFile?: string,
   // eslint-disable-next-line max-params
 ) => {
   if (engine === "context") {
-    const srcPath = path.join(
-      __dirname,
-      "..",
-      "templates",
-      "components",
-      "data",
-    );
     const destPath = path.join(root, "data");
-    console.log(`\nCopying test data to ${cyan(destPath)}\n`);
-    await copy("**", destPath, {
-      parents: true,
-      cwd: srcPath,
-    });
+    if (contextFile) {
+      console.log(`\nCopying provided file to ${cyan(destPath)}\n`);
+      await fs.mkdir(destPath, { recursive: true });
+      await fs.copyFile(
+        contextFile,
+        path.join(destPath, path.basename(contextFile)),
+      );
+    } else {
+      const srcPath = path.join(
+        __dirname,
+        "..",
+        "templates",
+        "components",
+        "data",
+      );
+      console.log(`\nCopying test data to ${cyan(destPath)}\n`);
+      await copy("**", destPath, {
+        parents: true,
+        cwd: srcPath,
+      });
+    }
   }
 
   if (packageManager && engine === "context") {
@@ -168,6 +178,7 @@ export const installTemplate = async (
       props.engine,
       props.openAiKey,
       props.vectorDb,
+      props.contextFile,
     );
   } else {
     // this is a frontend for a full-stack app, create .env file with model information

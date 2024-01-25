@@ -1,7 +1,8 @@
+import { execSync } from "child_process";
 import ciInfo from "ci-info";
 import fs from "fs";
 import path from "path";
-import { blue, green } from "picocolors";
+import { blue, green, red } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import { TemplateFramework } from "./helpers";
@@ -9,6 +10,22 @@ import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { getRepoRootFolders } from "./helpers/repo";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
+const MACOS_FILE_SELECTION_SCRIPT = `
+osascript -l JavaScript -e '
+  a = Application.currentApplication();
+  a.includeStandardAdditions = true;
+  a.chooseFile({ withPrompt: "Please select a file to process:" }).toString()
+'`;
+
+const WINDOWS_FILE_SELECTION_SCRIPT = `
+Add-Type -AssemblyName System.Windows.Forms
+$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+$openFileDialog.InitialDirectory = [Environment]::GetFolderPath('Desktop')
+$result = $openFileDialog.ShowDialog()
+if ($result -eq 'OK') {
+  $openFileDialog.FileName
+}
+`;
 
 const defaults: QuestionArgs = {
   template: "streaming",
@@ -53,6 +70,45 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   );
 
   return displayedChoices;
+};
+
+const selectPDFFile = async () => {
+  // Popup to select a PDF file
+  try {
+    let selectedFilePath: string = "";
+    switch (process.platform) {
+      case "win32": // Windows
+        selectedFilePath = execSync(WINDOWS_FILE_SELECTION_SCRIPT, {
+          shell: "powershell.exe",
+        })
+          .toString()
+          .trim();
+        break;
+      case "darwin": // MacOS
+        selectedFilePath = execSync(MACOS_FILE_SELECTION_SCRIPT)
+          .toString()
+          .trim();
+        break;
+      default: // Unsupported OS
+        console.log(red("Unsupported OS error!"));
+        process.exit(1);
+    }
+    // Check is pdf file
+    if (!selectedFilePath.endsWith(".pdf")) {
+      console.log(
+        red("Unsupported file error! Please select a valid PDF file!"),
+      );
+      process.exit(1);
+    }
+    return selectedFilePath;
+  } catch (error) {
+    console.log(
+      red(
+        "Got error when trying to select file! Please try again or select other options.",
+      ),
+    );
+    process.exit(1);
+  }
 };
 
 export const onPromptState = (state: any) => {
@@ -243,24 +299,40 @@ export const askQuestions = async (
     if (ciInfo.isCI) {
       program.engine = getPrefOrDefault("engine");
     } else {
-      const { engine } = await prompts(
+      let choices = [
+        {
+          title: "No data, just a simple chat",
+          value: "simple",
+        },
+        { title: "Use an example PDF", value: "exampleFile" },
+      ];
+      if (process.platform === "win32" || process.platform === "darwin") {
+        choices.push({ title: "Use a local PDF file", value: "localFile" });
+      }
+
+      const { dataSource } = await prompts(
         {
           type: "select",
-          name: "engine",
+          name: "dataSource",
           message: "Which data source would you like to use?",
-          choices: [
-            {
-              title: "No data, just a simple chat",
-              value: "simple",
-            },
-            { title: "Use an example PDF", value: "context" },
-          ],
+          choices: choices,
           initial: 1,
         },
         handlers,
       );
-      program.engine = engine;
-      preferences.engine = engine;
+      switch (dataSource) {
+        case "simple":
+          program.engine = "simple";
+          break;
+        case "exampleFile":
+          program.engine = "context";
+          break;
+        case "localFile":
+          program.engine = "context";
+          // If the user selected the "pdf" option, ask them to select a file
+          program.contextFile = await selectPDFFile();
+          break;
+      }
     }
     if (program.engine !== "simple" && !program.vectorDb) {
       if (ciInfo.isCI) {
