@@ -5,7 +5,7 @@ export class TogetherLLM extends OpenAI {
     const {
       apiKey = process.env.TOGETHER_API_KEY,
       additionalSessionOptions = {},
-      model = "togethercomputer/llama-2-7b",
+      model = "togethercomputer/llama-2-7b-chat",
       ...rest
     } = init ?? {};
 
