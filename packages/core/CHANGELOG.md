@@ -1,5 +1,9 @@
 # llamaindex
 
+## 0.1.1
+
+No changes for this release.
+
 ## 0.1.0
 
 ### Minor Changes

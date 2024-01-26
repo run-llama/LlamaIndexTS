@@ -1,7 +1,7 @@
 {
   "name": "llamaindex",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.9.1",
@@ -79,7 +79,7 @@
     "postbuild": "pnpm run copy && pnpm run modify-package-json",
     "copy": "cp -r package.json CHANGELOG.md ../../README.md ../../LICENSE examples src dist/",
     "modify-package-json": "node ./scripts/modify-package-json.mjs",
-    "prepublish": "echo \"please cd ./dist and run pnpm publish\" && exit 1",
+    "prepublish": "pnpm run modify-package-json && echo \"please cd ./dist and run pnpm publish\" && exit 1",
     "dev": "bunchee -w",
     "circular-check": "madge --circular ./src/*.ts"
   }
