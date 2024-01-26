@@ -86,6 +86,6 @@ export const installLlamapackProject = async ({
   await copyData({ root });
   await installLlamapackExample({ root, llamapack });
   if (postInstallAction !== "none") {
-    installPythonDependencies(root);
+    installPythonDependencies({ noRoot: true });
   }
 };
