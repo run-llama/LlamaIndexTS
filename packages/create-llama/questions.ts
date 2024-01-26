@@ -40,6 +40,10 @@ const defaults: QuestionArgs = {
   communityProjectPath: "",
   llamapack: "",
   postInstallAction: "dependencies",
+  dataSource: {
+    type: "none",
+    config: {},
+  },
 };
 
 const handlers = {
@@ -392,6 +396,7 @@ export const askQuestions = async (
         },
         handlers,
       );
+      program.dataSource = getPrefOrDefault("dataSource");
       switch (dataSource) {
         case "simple":
           program.engine = "simple";
@@ -401,19 +406,20 @@ export const askQuestions = async (
           break;
         case "localFile":
           program.engine = "context";
-          program.dataSource = "file";
+          program.dataSource.type = "file";
           // If the user selected the "pdf" option, ask them to select a file
-          program.dataSourceConfig = {
+          program.dataSource.config = {
             contextFile: await selectPDFFile(),
           };
           break;
         case "web":
           program.engine = "context";
-          program.dataSource = "web";
+          program.dataSource.type = "web";
           break;
       }
     }
-    if (program.dataSource === "web" && program.framework === "fastapi") {
+
+    if (program.dataSource.type === "web" && program.framework === "fastapi") {
       const { baseUrl } = await prompts(
         {
           type: "text",
@@ -423,7 +429,7 @@ export const askQuestions = async (
         },
         handlers,
       );
-      program.dataSourceConfig = {
+      program.dataSource.config = {
         baseUrl: baseUrl,
         depth: 2,
       };

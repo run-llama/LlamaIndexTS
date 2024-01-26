@@ -242,7 +242,6 @@ async function run(): Promise<void> {
     externalPort: program.externalPort,
     postInstallAction: program.postInstallAction,
     dataSource: program.dataSource,
-    dataSourceConfig: program.dataSourceConfig,
   });
   conf.set("preferences", preferences);
 
