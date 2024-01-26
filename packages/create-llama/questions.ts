@@ -378,6 +378,9 @@ export const askQuestions = async (
       if (process.platform === "win32" || process.platform === "darwin") {
         choices.push({ title: "Use a local PDF file", value: "localFile" });
       }
+      if (program.framework === "fastapi") {
+        choices.push({ title: "Use website content", value: "web" });
+      }
 
       const { dataSource } = await prompts(
         {
@@ -398,10 +401,32 @@ export const askQuestions = async (
           break;
         case "localFile":
           program.engine = "context";
+          program.dataSource = "file";
           // If the user selected the "pdf" option, ask them to select a file
-          program.contextFile = await selectPDFFile();
+          program.dataSourceConfig = {
+            contextFile: await selectPDFFile(),
+          };
+          break;
+        case "web":
+          program.engine = "context";
+          program.dataSource = "web";
           break;
       }
+    }
+    if (program.dataSource === "web" && program.framework === "fastapi") {
+      const { baseUrl } = await prompts(
+        {
+          type: "text",
+          name: "baseUrl",
+          message: "Please provide base URL of the website:",
+          initial: "https://ts.llamaindex.ai/modules/",
+        },
+        handlers,
+      );
+      program.dataSourceConfig = {
+        baseUrl: baseUrl,
+        depth: 2,
+      };
     }
     if (program.engine !== "simple" && !program.vectorDb) {
       if (ciInfo.isCI) {
