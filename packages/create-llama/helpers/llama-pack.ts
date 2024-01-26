@@ -38,6 +38,16 @@ const copyLlamapackEmptyProject = async ({
   });
 };
 
+const copyData = async ({
+  root,
+}: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
+  const dataPath = path.join(__dirname, "..", "templates/components/data");
+  await copy("**", path.join(root, "data"), {
+    parents: true,
+    cwd: dataPath,
+  });
+};
+
 const installLlamapackExample = async ({
   root,
   llamapack,
@@ -71,5 +81,6 @@ export const installLlamapackProject = async ({
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
   console.log("\nInstalling Llamapack project:", llamapack!);
   await copyLlamapackEmptyProject({ root });
+  await copyData({ root });
   await installLlamapackExample({ root, llamapack });
 };
