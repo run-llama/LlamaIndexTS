@@ -1,5 +1,25 @@
 # create-llama
 
+## 0.0.19
+
+### Patch Changes
+
+- 3a29a80: Add node_modules to gitignore in Express backends
+- fe03aaa: feat: generate llama pack example
+
+## 0.0.18
+
+### Patch Changes
+
+- 88d3b41: fix packaging
+
+## 0.0.17
+
+### Patch Changes
+
+- fa17f7e: Add an option that allows the user to run the generated app
+- 9e5d8e1: Add an option to select a local PDF file as data source
+
 ## 0.0.16
 
 ### Patch Changes

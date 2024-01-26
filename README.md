@@ -11,6 +11,10 @@ Use your own data with large language models (LLMs, OpenAI ChatGPT and others) i
 
 Documentation: https://ts.llamaindex.ai/
 
+Try examples online:
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples)
+
 ## What is LlamaIndex.TS?
 
 LlamaIndex.TS aims to be a lightweight, easy to use set of libraries to help you integrate large language models into your applications with your own data.

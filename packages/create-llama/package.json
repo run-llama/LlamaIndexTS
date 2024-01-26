@@ -1,6 +1,6 @@
 {
   "name": "create-llama",
-  "version": "0.0.16",
+  "version": "0.0.19",
   "keywords": [
     "rag",
     "llamaindex",
@@ -17,7 +17,7 @@
     "create-llama": "./dist/index.js"
   },
   "files": [
-    "./dist/index.js",
+    "dist",
     "./templates"
   ],
   "scripts": {

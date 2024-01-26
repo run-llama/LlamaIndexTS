@@ -41,7 +41,7 @@ A komplexebb alkalmazásokhoz a mélyebb szintű API-k lehetővé teszik a halad
 
 A dokumentációnk tartalmazza a [Telepítési utasításokat](./installation.mdx) és egy [Kezdő útmutatót](./starter.md) az első alkalmazás létrehozásához.
 
-Miután elindultál, a [Magas szintű fogalmak](./concepts.md) áttekintést ad a LlamaIndex moduláris architektúrájáról. További gyakorlati példákért tekintsd meg az [End-to-End útmutatóinkat](./end_to_end.md).
+Miután elindultál, a [Magas szintű fogalmak](./getting_started/concepts.md) áttekintést ad a LlamaIndex moduláris architektúrájáról. További gyakorlati példákért tekintsd meg az [End-to-End útmutatóinkat](./end_to_end.md).
 
 ## 🗺️ Ökoszisztéma
 

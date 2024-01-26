@@ -41,7 +41,7 @@ För mer komplexa applikationer tillåter våra lägre nivå-API:er avancerade a
 
 Vår dokumentation inkluderar [Installationsinstruktioner](./installation.mdx) och en [Starterhandledning](./starter.md) för att bygga din första applikation.
 
-När du är igång, ger [Högnivåkoncept](./concepts.md) en översikt över LlamaIndex modulära arkitektur. För mer praktiska exempel, titta igenom våra [Steg-för-steg handledningar](./end_to_end.md).
+När du är igång, ger [Högnivåkoncept](./getting_started/concepts.md) en översikt över LlamaIndex modulära arkitektur. För mer praktiska exempel, titta igenom våra [Steg-för-steg handledningar](./end_to_end.md).
 
 ## 🗺️ Ekosystem
 

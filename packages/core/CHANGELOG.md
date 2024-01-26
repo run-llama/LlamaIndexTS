@@ -1,5 +1,56 @@
 # llamaindex
 
+## 0.1.2
+
+- e4b807a: fix: invalid package.json
+
+## 0.1.1
+
+No changes for this release.
+
+## 0.1.0
+
+### Minor Changes
+
+- 3154f52: chore: add qdrant readme
+
+### Patch Changes
+
+- bb66cb7: add new OpenAI embeddings (with dimension reduction support)
+
+## 0.0.51
+
+### Patch Changes
+
+- fda8024: revert: export conditions not working with moduleResolution `node`
+
+## 0.0.50
+
+### Patch Changes
+
+- 8a729cd: fix bugs in Together.AI integration (thanks @Nutlope for reporting)
+
+## 0.0.49
+
+### Patch Changes
+
+- eee3922: feat(qdrant): Add Qdrant Vector DB
+- e2790da: Preview: Add ingestion pipeline (incl. different strategies to handle doc store duplicates)
+- bff40f2: feat: use conditional exports
+
+  The benefit of conditional exports is we split the llamaindex into different files. This will improve the tree shake if you are building web apps.
+
+  This also requires node16 (see https://nodejs.org/api/packages.html#conditional-exports).
+
+  If you are seeing typescript issue `TS2724`('llamaindex' has no exported member named XXX):
+
+  1. update `moduleResolution` to `bundler` in `tsconfig.json`, more for the web applications like Next.js, and vite, but still works for ts-node or tsx.
+  2. consider the ES module in your project, add `"type": "module"` into `package.json` and update `moduleResolution` to `node16` or `nodenext` in `tsconfig.json`.
+
+  We still support both cjs and esm, but you should update `tsconfig.json` to make the typescript happy.
+
+- 2d8845b: feat(extractors): add keyword extractor and base extractor
+
 ## 0.0.48
 
 ### Patch Changes

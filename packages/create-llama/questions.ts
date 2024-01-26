@@ -1,14 +1,32 @@
+import { execSync } from "child_process";
 import ciInfo from "ci-info";
 import fs from "fs";
 import path from "path";
-import { blue, green } from "picocolors";
+import { blue, green, red } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import { TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
+import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
 
 export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
+const MACOS_FILE_SELECTION_SCRIPT = `
+osascript -l JavaScript -e '
+  a = Application.currentApplication();
+  a.includeStandardAdditions = true;
+  a.chooseFile({ withPrompt: "Please select a file to process:" }).toString()
+'`;
+
+const WINDOWS_FILE_SELECTION_SCRIPT = `
+Add-Type -AssemblyName System.Windows.Forms
+$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+$openFileDialog.InitialDirectory = [Environment]::GetFolderPath('Desktop')
+$result = $openFileDialog.ShowDialog()
+if ($result -eq 'OK') {
+  $openFileDialog.FileName
+}
+`;
 
 const defaults: QuestionArgs = {
   template: "streaming",
@@ -20,6 +38,7 @@ const defaults: QuestionArgs = {
   openAiKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
+  llamapack: "",
   postInstallAction: "dependencies",
 };
 
@@ -55,6 +74,45 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   return displayedChoices;
 };
 
+const selectPDFFile = async () => {
+  // Popup to select a PDF file
+  try {
+    let selectedFilePath: string = "";
+    switch (process.platform) {
+      case "win32": // Windows
+        selectedFilePath = execSync(WINDOWS_FILE_SELECTION_SCRIPT, {
+          shell: "powershell.exe",
+        })
+          .toString()
+          .trim();
+        break;
+      case "darwin": // MacOS
+        selectedFilePath = execSync(MACOS_FILE_SELECTION_SCRIPT)
+          .toString()
+          .trim();
+        break;
+      default: // Unsupported OS
+        console.log(red("Unsupported OS error!"));
+        process.exit(1);
+    }
+    // Check is pdf file
+    if (!selectedFilePath.endsWith(".pdf")) {
+      console.log(
+        red("Unsupported file error! Please select a valid PDF file!"),
+      );
+      process.exit(1);
+    }
+    return selectedFilePath;
+  } catch (error) {
+    console.log(
+      red(
+        "Got error when trying to select file! Please try again or select other options.",
+      ),
+    );
+    process.exit(1);
+  }
+};
+
 export const onPromptState = (state: any) => {
   if (state.aborted) {
     // If we don't re-enable the terminal cursor before exiting
@@ -72,6 +130,48 @@ export const askQuestions = async (
   const getPrefOrDefault = <K extends keyof QuestionArgs>(
     field: K,
   ): QuestionArgs[K] => preferences[field] ?? defaults[field];
+
+  // Ask for next action after installation
+  async function askPostInstallAction() {
+    if (program.postInstallAction === undefined) {
+      if (ciInfo.isCI) {
+        program.postInstallAction = getPrefOrDefault("postInstallAction");
+      } else {
+        let actionChoices = [
+          {
+            title: "Just generate code (~1 sec)",
+            value: "none",
+          },
+          {
+            title: "Generate code and install dependencies (~2 min)",
+            value: "dependencies",
+          },
+        ];
+
+        const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
+        if (program.vectorDb === "none" && hasOpenAiKey) {
+          actionChoices.push({
+            title:
+              "Generate code, install dependencies, and run the app (~2 min)",
+            value: "runApp",
+          });
+        }
+
+        const { action } = await prompts(
+          {
+            type: "select",
+            name: "action",
+            message: "How would you like to proceed?",
+            choices: actionChoices,
+            initial: 1,
+          },
+          handlers,
+        );
+
+        program.postInstallAction = action;
+      }
+    }
+  }
 
   if (!program.template) {
     if (ciInfo.isCI) {
@@ -91,6 +191,10 @@ export const askQuestions = async (
             {
               title: `Community template from ${styledRepo}`,
               value: "community",
+            },
+            {
+              title: "Example using a LlamaPack",
+              value: "llamapack",
             },
           ],
           initial: 1,
@@ -123,6 +227,27 @@ export const askQuestions = async (
     program.communityProjectPath = communityProjectPath;
     preferences.communityProjectPath = communityProjectPath;
     return; // early return - no further questions needed for community projects
+  }
+
+  if (program.template === "llamapack") {
+    const availableLlamaPacks = await getAvailableLlamapackOptions();
+    const { llamapack } = await prompts(
+      {
+        type: "select",
+        name: "llamapack",
+        message: "Select LlamaPack",
+        choices: availableLlamaPacks.map((pack) => ({
+          title: pack.name,
+          value: pack.folderPath,
+        })),
+        initial: 0,
+      },
+      handlers,
+    );
+    program.llamapack = llamapack;
+    preferences.llamapack = llamapack;
+    await askPostInstallAction();
+    return; // early return - no further questions needed for llamapack projects
   }
 
   if (!program.framework) {
@@ -243,24 +368,40 @@ export const askQuestions = async (
     if (ciInfo.isCI) {
       program.engine = getPrefOrDefault("engine");
     } else {
-      const { engine } = await prompts(
+      let choices = [
+        {
+          title: "No data, just a simple chat",
+          value: "simple",
+        },
+        { title: "Use an example PDF", value: "exampleFile" },
+      ];
+      if (process.platform === "win32" || process.platform === "darwin") {
+        choices.push({ title: "Use a local PDF file", value: "localFile" });
+      }
+
+      const { dataSource } = await prompts(
         {
           type: "select",
-          name: "engine",
+          name: "dataSource",
           message: "Which data source would you like to use?",
-          choices: [
-            {
-              title: "No data, just a simple chat",
-              value: "simple",
-            },
-            { title: "Use an example PDF", value: "context" },
-          ],
+          choices: choices,
           initial: 1,
         },
         handlers,
       );
-      program.engine = engine;
-      preferences.engine = engine;
+      switch (dataSource) {
+        case "simple":
+          program.engine = "simple";
+          break;
+        case "exampleFile":
+          program.engine = "context";
+          break;
+        case "localFile":
+          program.engine = "context";
+          // If the user selected the "pdf" option, ask them to select a file
+          program.contextFile = await selectPDFFile();
+          break;
+      }
     }
     if (program.engine !== "simple" && !program.vectorDb) {
       if (ciInfo.isCI) {
@@ -314,45 +455,7 @@ export const askQuestions = async (
     }
   }
 
-  // Ask for next action after installation
-  if (program.postInstallAction === undefined) {
-    if (ciInfo.isCI) {
-      program.postInstallAction = getPrefOrDefault("postInstallAction");
-    } else {
-      let actionChoices = [
-        {
-          title: "Just generate code (~1 sec)",
-          value: "none",
-        },
-        {
-          title: "Generate code and install dependencies (~2 min)",
-          value: "dependencies",
-        },
-      ];
-
-      const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
-      if (program.vectorDb === "none" && hasOpenAiKey) {
-        actionChoices.push({
-          title:
-            "Generate code, install dependencies, and run the app (~2 min)",
-          value: "runApp",
-        });
-      }
-
-      const { action } = await prompts(
-        {
-          type: "select",
-          name: "action",
-          message: "How would you like to proceed?",
-          choices: actionChoices,
-          initial: 1,
-        },
-        handlers,
-      );
-
-      program.postInstallAction = action;
-    }
-  }
+  await askPostInstallAction();
 
   // TODO: consider using zod to validate the input (doesn't work like this as not every option is required)
   // templateUISchema.parse(program.ui);

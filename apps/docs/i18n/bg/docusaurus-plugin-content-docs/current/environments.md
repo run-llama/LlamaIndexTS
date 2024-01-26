@@ -15,4 +15,3 @@ LlamaIndex в момента официално поддържа NodeJS 18 и No
 ```js
 export const runtime = "nodejs"; // по подразбиране
 ```
-

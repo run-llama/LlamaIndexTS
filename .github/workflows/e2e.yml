@@ -21,6 +21,9 @@ jobs:
         node-version: [18, 20]
         python-version: ["3.11"]
         os: [macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

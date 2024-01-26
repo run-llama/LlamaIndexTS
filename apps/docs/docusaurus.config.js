@@ -1,8 +1,9 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const renderer = require("prism-react-renderer");
+const lightCodeTheme = renderer.themes.github;
+const darkCodeTheme = renderer.themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -50,10 +51,11 @@ const config = {
 
   presets: [
     [
-      "classic",
+      "@docusaurus/preset-classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: "docs",
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
@@ -171,6 +173,9 @@ const config = {
       },
     ],
   ],
+  markdown: {
+    format: "detect",
+  },
 };
 
 module.exports = config;

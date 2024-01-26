@@ -6,6 +6,4 @@ export const DEFAULT_CHUNK_OVERLAP = 20;
 export const DEFAULT_CHUNK_OVERLAP_RATIO = 0.1;
 export const DEFAULT_SIMILARITY_TOP_K = 2;
 
-// NOTE: for text-embedding-ada-002
-export const DEFAULT_EMBEDDING_DIM = 1536;
 export const DEFAULT_PADDING = 5;

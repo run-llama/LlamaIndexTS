@@ -1,3 +1,5 @@
+import { BaseNode, MetadataMode } from "../Node";
+import { TransformComponent } from "../ingestion";
 import { similarity } from "./utils";
 
 /**
@@ -10,7 +12,7 @@ export enum SimilarityType {
   EUCLIDEAN = "euclidean",
 }
 
-export abstract class BaseEmbedding {
+export abstract class BaseEmbedding implements TransformComponent {
   similarity(
     embedding1: number[],
     embedding2: number[],
@@ -21,4 +23,13 @@ export abstract class BaseEmbedding {
 
   abstract getTextEmbedding(text: string): Promise<number[]>;
   abstract getQueryEmbedding(query: string): Promise<number[]>;
+
+  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+    for (const node of nodes) {
+      node.embedding = await this.getTextEmbedding(
+        node.getContent(MetadataMode.EMBED),
+      );
+    }
+    return nodes;
+  }
 }

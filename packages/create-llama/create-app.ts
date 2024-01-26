@@ -32,9 +32,11 @@ export async function createApp({
   openAiKey,
   model,
   communityProjectPath,
+  llamapack,
   vectorDb,
   externalPort,
   postInstallAction,
+  contextFile,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -74,9 +76,11 @@ export async function createApp({
     openAiKey,
     model,
     communityProjectPath,
+    llamapack,
     vectorDb,
     externalPort,
     postInstallAction,
+    contextFile,
   };
 
   if (frontend) {

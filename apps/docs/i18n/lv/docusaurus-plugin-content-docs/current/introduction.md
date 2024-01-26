@@ -43,7 +43,7 @@ Lielākām un sarežģītākām lietojumprogrammām mūsu zemāka līmeņa API �
 
 Mūsu dokumentācijā ir iekļautas [Instalācijas instrukcijas](./installation.mdx) un [Sākuma pamācība](./starter.md), lai izveidotu savu pirmo lietojumprogrammu.
 
-Kad esat gatavs, [Augsta līmeņa koncepti](./concepts.md) sniedz pārskatu par LlamaIndex modulāro arhitektūru. Lai iegūtu vairāk praktisku piemēru, apskatiet mūsu [Galēji līdz galam pamācības](./end_to_end.md).
+Kad esat gatavs, [Augsta līmeņa koncepti](./getting_started/concepts.md) sniedz pārskatu par LlamaIndex modulāro arhitektūru. Lai iegūtu vairāk praktisku piemēru, apskatiet mūsu [Galēji līdz galam pamācības](./end_to_end.md).
 
 ## 🗺️ Ekosistēma
 

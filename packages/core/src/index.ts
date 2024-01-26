@@ -18,6 +18,7 @@ export * from "./embeddings";
 export * from "./engines/chat";
 export * from "./extractors";
 export * from "./indices";
+export * from "./ingestion";
 export * from "./llm";
 export * from "./nodeParsers";
 export * from "./postprocessors";

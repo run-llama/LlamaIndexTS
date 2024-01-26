@@ -41,7 +41,7 @@ Za bolj kompleksne aplikacije naša nizkonivojska API omogoča naprednim uporabn
 
 Naša dokumentacija vključuje [Navodila za namestitev](./installation.mdx) in [Vodič za začetek](./starter.md), ki vam pomagata zgraditi vašo prvo aplikacijo.
 
-Ko ste pripravljeni, [Visokonivojski koncepti](./concepts.md) ponujajo pregled modularne arhitekture LlamaIndex-a. Za več praktičnih primerov si oglejte naše [Vodiče od začetka do konca](./end_to_end.md).
+Ko ste pripravljeni, [Visokonivojski koncepti](./getting_started/concepts.md) ponujajo pregled modularne arhitekture LlamaIndex-a. Za več praktičnih primerov si oglejte naše [Vodiče od začetka do konca](./end_to_end.md).
 
 ## 🗺️ Ekosistem
 

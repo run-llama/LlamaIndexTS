@@ -41,7 +41,7 @@ Para aplicativos mais complexos, nossas APIs de nível inferior permitem que usu
 
 Nossa documentação inclui [Instruções de Instalação](./installation.mdx) e um [Tutorial Inicial](./starter.md) para construir seu primeiro aplicativo.
 
-Depois de estar pronto para começar, [Conceitos de Alto Nível](./concepts.md) oferece uma visão geral da arquitetura modular do LlamaIndex. Para exemplos práticos mais detalhados, consulte nossos [Tutoriais de Ponta a Ponta](./end_to_end.md).
+Depois de estar pronto para começar, [Conceitos de Alto Nível](./getting_started/concepts.md) oferece uma visão geral da arquitetura modular do LlamaIndex. Para exemplos práticos mais detalhados, consulte nossos [Tutoriais de Ponta a Ponta](./end_to_end.md).
 
 ## 🗺️ Ecossistema
 

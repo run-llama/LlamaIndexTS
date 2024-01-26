@@ -41,7 +41,7 @@ Dla bardziej zaawansowanych aplikacji nasze API na niższym poziomie umożliwia 
 
 Nasza dokumentacja zawiera [Instrukcje instalacji](./installation.mdx) oraz [Samouczek dla początkujących](./starter.md), który pomoże Ci zbudować swoją pierwszą aplikację.
 
-Gdy już będziesz gotowy, [Wysokopoziomowe koncepcje](./concepts.md) zawierają przegląd modułowej architektury LlamaIndex. Jeśli chcesz zobaczyć praktyczne przykłady, zapoznaj się z naszymi [Samouczkami od początku do końca](./end_to_end.md).
+Gdy już będziesz gotowy, [Wysokopoziomowe koncepcje](./getting_started/concepts.md) zawierają przegląd modułowej architektury LlamaIndex. Jeśli chcesz zobaczyć praktyczne przykłady, zapoznaj się z naszymi [Samouczkami od początku do końca](./end_to_end.md).
 
 ## 🗺️ Ekosystem
 

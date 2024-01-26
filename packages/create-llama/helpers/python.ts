@@ -92,12 +92,14 @@ export const addDependencies = async (
   }
 };
 
-export const installPythonDependencies = (root: string) => {
+export const installPythonDependencies = (
+  { noRoot }: { noRoot: boolean } = { noRoot: false },
+) => {
   if (isPoetryAvailable()) {
     console.log(
       `Installing python dependencies using poetry. This may take a while...`,
     );
-    const installSuccessful = tryPoetryInstall();
+    const installSuccessful = tryPoetryInstall(noRoot);
     if (!installSuccessful) {
       console.error(
         red("Install failed. Please install dependencies manually."),
@@ -181,6 +183,6 @@ export const installPythonTemplate = async ({
   await addDependencies(root, addOnDependencies);
 
   if (postInstallAction !== "none") {
-    installPythonDependencies(root);
+    installPythonDependencies();
   }
 };

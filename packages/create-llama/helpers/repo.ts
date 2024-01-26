@@ -61,3 +61,11 @@ export async function getRepoRootFolders(
   const folders = data.filter((item) => item.type === "dir");
   return folders.map((item) => item.name);
 }
+
+export async function getRepoRawContent(repoFilePath: string) {
+  const url = `https://raw.githubusercontent.com/${repoFilePath}`;
+  const response = await got(url, {
+    responseType: "text",
+  });
+  return response.body;
+}
