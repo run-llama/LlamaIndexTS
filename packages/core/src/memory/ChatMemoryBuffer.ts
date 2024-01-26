@@ -19,6 +19,9 @@ export class ChatMemoryBuffer implements BaseMemory {
   chatStore: BaseChatStore;
   chatStoreKey: string;
 
+  /**
+   * Initialize.
+   */
   constructor(init?: Partial<ChatMemoryBufferParams>) {
     this.tokenLimit = init?.tokenLimit ?? 3000;
     this.chatStore = init?.chatStore ?? new SimpleChatStore();
