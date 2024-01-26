@@ -1,11 +1,18 @@
 import { OpenAIAgentWorker } from "../../../agent";
 import { AgentRunner } from "../../../agent/runner/base";
 import { CallbackManager } from "../../../callbacks/CallbackManager";
-import { OpenAI } from "../../../llm";
+import { OpenAI } from "../../../llm/LLM";
+
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockLlmGeneration,
 } from "../../utility/mockOpenAI";
+
+jest.mock("../../../llm/openai", () => {
+  return {
+    getOpenAISession: jest.fn().mockImplementation(() => null),
+  };
+});
 
 describe("Agent Runner", () => {
   let agentRunner: AgentRunner;
@@ -24,6 +31,7 @@ describe("Agent Runner", () => {
     });
 
     agentRunner = new AgentRunner({
+      llm: languageModel,
       agentWorker: new OpenAIAgentWorker({
         llm: languageModel,
         tools: [],

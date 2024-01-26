@@ -18,6 +18,12 @@ const sumArgsSchema = z
   })
   .describe("the arguments");
 
+jest.mock("../../llm/openai", () => {
+  return {
+    getOpenAISession: jest.fn().mockImplementation(() => null),
+  };
+});
+
 describe("OpenAIAgent", () => {
   let openaiAgent: OpenAIAgent;
 
