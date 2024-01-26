@@ -1,5 +1,7 @@
 export * from "./FileSystem";
 export * from "./StorageContext";
+export { SimpleChatStore } from "./chatStore/SimpleChatStore";
+export * from "./chatStore/types";
 export * from "./constants";
 export { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
 export * from "./docStore/types";
@@ -15,5 +17,3 @@ export { PineconeVectorStore } from "./vectorStore/PineconeVectorStore";
 export { QdrantVectorStore } from "./vectorStore/QdrantVectorStore";
 export { SimpleVectorStore } from "./vectorStore/SimpleVectorStore";
 export * from "./vectorStore/types";
-export { SimpleChatStore } from "./chatStore/SimpleChatStore_";
-export * from "./chatStore/types";

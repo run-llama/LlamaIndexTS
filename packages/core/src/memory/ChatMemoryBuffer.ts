@@ -1,5 +1,5 @@
 import { ChatMessage } from "../llm";
-import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore_";
+import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore";
 import { BaseChatStore } from "../storage/chatStore/types";
 import { BaseMemory } from "./types";
 
