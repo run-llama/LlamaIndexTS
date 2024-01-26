@@ -73,6 +73,7 @@ export function mockLlmToolCallGeneration({
 }) {
   jest
     .spyOn(languageModel, "chat")
+    .mockImplementation()
     .mockReturnValueOnce(
       new Promise((resolve) =>
         resolve({
