@@ -1,4 +1,4 @@
-import { ToolMetadata } from "../Tool";
+import { BaseTool, ToolMetadata } from "../Tool";
 import { ChatMessage } from "../llm";
 import { ChatMemoryBuffer } from "../memory/ChatMemoryBuffer";
 import { TaskStep } from "./types";
@@ -6,6 +6,13 @@ import { TaskStep } from "./types";
 import { ZodTypeAny, z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
+/**
+ * Adds the user's input to the memory.
+ *
+ * @param step - The step to add to the memory.
+ * @param memory - The memory to add the step to.
+ * @param verbose - Whether to print debug messages.
+ */
 export function addUserStepToMemory(
   step: TaskStep,
   memory: ChatMemoryBuffer,
@@ -27,6 +34,25 @@ export function addUserStepToMemory(
   }
 }
 
+/**
+ * Get function by name.
+ * @param tools: tools
+ * @param name: name
+ * @returns: tool
+ */
+export function getFunctionByName(tools: BaseTool[], name: string): BaseTool {
+  const nameToTool: { [key: string]: BaseTool } = {};
+  tools.forEach((tool) => {
+    nameToTool[tool.metadata.name] = tool;
+  });
+
+  if (!(name in nameToTool)) {
+    throw new Error(`Tool with name ${name} not found`);
+  }
+
+  return nameToTool[name];
+}
+
 export const isZodSchema = (schema: any): boolean => {
   if (!schema) return false;
 
@@ -35,6 +61,11 @@ export const isZodSchema = (schema: any): boolean => {
   return false;
 };
 
+/**
+ * Converts a zod schema to a JSON schema.
+ * @param zSchema - The zod schema to convert.
+ * @returns The JSON schema.
+ */
 export const getProperties = (
   zSchema: ZodTypeAny,
 ): ToolMetadata["parameters"] => {

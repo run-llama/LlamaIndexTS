@@ -126,7 +126,7 @@ importers:
         version: 1.1.2
       chromadb:
         specifier: ^1.7.3
-        version: 1.7.3(openai@4.20.1)
+        version: 1.7.3(openai@4.26.0)
       commander:
         specifier: ^11.1.0
         version: 11.1.0
@@ -135,7 +135,7 @@ importers:
         version: 16.3.1
       llamaindex:
         specifier: latest
-        version: 0.0.50(typescript@5.3.3)
+        version: 0.1.2(typescript@5.3.3)
       mongodb:
         specifier: ^6.2.0
         version: 6.3.0
@@ -6341,6 +6341,28 @@ packages:
       - encoding
     dev: false
 
+  /chromadb@1.7.3(openai@4.26.0):
+    resolution: {integrity: sha512-3GgvQjpqgk5C89x5EuTDaXKbfrdqYDJ5UVyLQ3ZmwxnpetNc+HhRDGjkvXa5KSvpQ3lmKoyDoqnN4tZepfFkbw==}
+    engines: {node: '>=14.17.0'}
+    peerDependencies:
+      '@google/generative-ai': ^0.1.1
+      cohere-ai: ^5.0.0 || ^6.0.0 || ^7.0.0
+      openai: ^3.0.0 || ^4.0.0
+    peerDependenciesMeta:
+      '@google/generative-ai':
+        optional: true
+      cohere-ai:
+        optional: true
+      openai:
+        optional: true
+    dependencies:
+      cliui: 8.0.1
+      isomorphic-fetch: 3.0.0
+      openai: 4.26.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /chrome-trace-event@1.0.3:
     resolution: {integrity: sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==}
     engines: {node: '>=6.0'}
@@ -10996,8 +11018,8 @@ packages:
       wrap-ansi: 9.0.0
     dev: true
 
-  /llamaindex@0.0.50(typescript@5.3.3):
-    resolution: {integrity: sha512-xDduAoPHiFfO9aBdNCYvFL4ZA4Ua1Vy3AwsObguY1QSppWGiTscZcIZlQislLhgFPaLwtancjCxXzb0MYchAjQ==}
+  /llamaindex@0.1.2(typescript@5.3.3):
+    resolution: {integrity: sha512-dH9xn8dMYQ66ssqYuM/C4moRaOLIB7+OokQ11/px40rdBLieQrnsY5NyyMl/h1QLDwU+h4Miaj/L49gZoaXJNQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@anthropic-ai/sdk': 0.9.1
@@ -11008,7 +11030,7 @@ packages:
       '@qdrant/js-client-rest': 1.7.0(typescript@5.3.3)
       '@xenova/transformers': 2.10.0
       assemblyai: 4.0.0
-      chromadb: 1.7.3(openai@4.20.1)
+      chromadb: 1.7.3(openai@4.26.0)
       file-type: 18.7.0
       js-tiktoken: 1.0.8
       lodash: 4.17.21
@@ -11016,7 +11038,7 @@ packages:
       md-utils-ts: 2.0.0
       mongodb: 6.3.0
       notion-md-crawler: 0.0.2
-      openai: 4.20.1
+      openai: 4.26.0
       papaparse: 5.4.1
       pathe: 1.1.2
       pdfjs-dist: 4.0.269
@@ -12153,6 +12175,23 @@ packages:
 
   /openai@4.20.1:
     resolution: {integrity: sha512-Dd3q8EvINfganZFtg6V36HjrMaihqRgIcKiHua4Nq9aw/PxOP48dhbsk8x5klrxajt5Lpnc1KTOG5i1S6BKAJA==}
+    hasBin: true
+    dependencies:
+      '@types/node': 18.19.6
+      '@types/node-fetch': 2.6.9
+      abort-controller: 3.0.0
+      agentkeepalive: 4.5.0
+      digest-fetch: 1.3.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+      web-streams-polyfill: 3.2.1
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /openai@4.26.0:
+    resolution: {integrity: sha512-HPC7tgYdeP38F3uHA5WgnoXZyGbAp9jgcIo23p6It+q/07u4C+NZ8xHKlMShsPbDDmFRpPsa3vdbXYpbhJH3eg==}
     hasBin: true
     dependencies:
       '@types/node': 18.19.6

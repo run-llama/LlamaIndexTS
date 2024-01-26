@@ -17,6 +17,11 @@ type OpenAIAgentParams = {
   toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
+/**
+ * An agent that uses OpenAI's API to generate text.
+ *
+ * @category OpenAI
+ */
 export class OpenAIAgent extends AgentRunner {
   constructor({
     tools,

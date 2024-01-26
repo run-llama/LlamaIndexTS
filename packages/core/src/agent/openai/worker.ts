@@ -14,25 +14,20 @@ import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools/types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
-import { addUserStepToMemory } from "../utils";
+import { addUserStepToMemory, getFunctionByName } from "../utils";
 import { OpenAIToolCall } from "./types/chat";
 import { OpenAiFunction, toOpenAiTool } from "./utils";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;
 
-function getFunctionByName(tools: BaseTool[], name: string): BaseTool {
-  const nameToTool: { [key: string]: BaseTool } = {};
-  tools.forEach((tool) => {
-    nameToTool[tool.metadata.name] = tool;
-  });
-
-  if (!(name in nameToTool)) {
-    throw new Error(`Tool with name ${name} not found`);
-  }
-
-  return nameToTool[name];
-}
-
+/**
+ * Call tool with error handling.
+ * @param tool: tool
+ * @param inputDict: input dict
+ * @param errorMessage: error message
+ * @param raiseError: raise error
+ * @returns: tool output
+ */
 async function callToolWithErrorHandling(
   tool: BaseTool,
   inputDict: { [key: string]: any },
@@ -56,6 +51,13 @@ async function callToolWithErrorHandling(
   }
 }
 
+/**
+ * Call function.
+ * @param tools: tools
+ * @param toolCall: tool call
+ * @param verbose: verbose
+ * @returns: void
+ */
 async function callFunction(
   tools: BaseTool[],
   toolCall: OpenAIToolCall,
@@ -106,6 +108,10 @@ type OpenAIAgentWorkerParams = {
   toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
+/**
+ * OpenAI agent worker.
+ * This class is responsible for running the agent.
+ */
 export class OpenAIAgentWorker implements AgentWorker {
   private _llm: OpenAI;
   private _verbose: boolean;
@@ -116,6 +122,9 @@ export class OpenAIAgentWorker implements AgentWorker {
 
   private _getTools: (input: string) => BaseTool[];
 
+  /**
+   * Initialize.
+   */
   constructor({
     tools,
     llm,
@@ -143,7 +152,11 @@ export class OpenAIAgentWorker implements AgentWorker {
     }
   }
 
-  // Other methods would be translated similarly. For instance:
+  /**
+   * Get all messages.
+   * @param task: task
+   * @returns: messages
+   */
   public getAllMessages(task: Task): ChatMessage[] {
     return [
       ...this.prefixMessages,
@@ -152,6 +165,11 @@ export class OpenAIAgentWorker implements AgentWorker {
     ];
   }
 
+  /**
+   * Get latest tool calls.
+   * @param task: task
+   * @returns: tool calls
+   */
   public getLatestToolCalls(task: Task): OpenAIToolCall[] | null {
     const chatHistory: ChatMessage[] = task.extraState.newMemory.getAll();
 
@@ -162,6 +180,13 @@ export class OpenAIAgentWorker implements AgentWorker {
     return chatHistory[chatHistory.length - 1].additionalKwargs?.toolCalls;
   }
 
+  /**
+   *
+   * @param task
+   * @param openaiTools
+   * @param toolChoice
+   * @returns
+   */
   private _getLlmChatKwargs(
     task: Task,
     openaiTools: { [key: string]: any }[],
@@ -179,6 +204,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     return llmChatKwargs;
   }
 
+  /**
+   * Process message.
+   * @param task: task
+   * @param chatResponse: chat response
+   * @returns: agent chat response
+   */
   private _processMessage(
     task: Task,
     chatResponse: ChatResponse,
@@ -188,6 +219,13 @@ export class OpenAIAgentWorker implements AgentWorker {
     return new AgentChatResponse(aiMessage.content, task.extraState.sources);
   }
 
+  /**
+   * Get agent response.
+   * @param task: task
+   * @param mode: mode
+   * @param llmChatKwargs: llm chat kwargs
+   * @returns: agent chat response
+   */
   private async _getAgentResponse(
     task: Task,
     mode: ChatResponseMode,
@@ -206,6 +244,14 @@ export class OpenAIAgentWorker implements AgentWorker {
     }
   }
 
+  /**
+   * Call function.
+   * @param tools: tools
+   * @param toolCall: tool call
+   * @param memory: memory
+   * @param sources: sources
+   * @returns: void
+   */
   async callFunction(
     tools: BaseTool[],
     toolCall: OpenAIToolCall,
@@ -227,6 +273,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     memory.put(message);
   }
 
+  /**
+   * Initialize step.
+   * @param task: task
+   * @param kwargs: kwargs
+   * @returns: task step
+   */
   initializeStep(task: Task, kwargs?: any): TaskStep {
     const sources: ToolOutput[] = [];
 
@@ -246,6 +298,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     return new TaskStep(task.taskId, randomUUID(), task.input);
   }
 
+  /**
+   * Should continue.
+   * @param toolCalls: tool calls
+   * @param nFunctionCalls: number of function calls
+   * @returns: boolean
+   */
   private _shouldContinue(
     toolCalls: OpenAIToolCall[] | null,
     nFunctionCalls: number,
@@ -261,11 +319,16 @@ export class OpenAIAgentWorker implements AgentWorker {
     return true;
   }
 
+  /**
+   * Get tools.
+   * @param input: input
+   * @returns: tools
+   */
   getTools(input: string): BaseTool[] {
     return this._getTools(input);
   }
 
-  async _runStep(
+  private async _runStep(
     step: TaskStep,
     task: Task,
     mode: ChatResponseMode = ChatResponseMode.WAIT,
@@ -325,6 +388,13 @@ export class OpenAIAgentWorker implements AgentWorker {
     return new TaskStepOutput(agentChatResponse, step, newSteps, isDone);
   }
 
+  /**
+   * Run step.
+   * @param step: step
+   * @param task: task
+   * @param kwargs: kwargs
+   * @returns: task step output
+   */
   async runStep(
     step: TaskStep,
     task: Task,
@@ -334,6 +404,13 @@ export class OpenAIAgentWorker implements AgentWorker {
     return this._runStep(step, task, ChatResponseMode.WAIT, toolChoice);
   }
 
+  /**
+   * Stream step.
+   * @param step: step
+   * @param task: task
+   * @param kwargs: kwargs
+   * @returns: task step output
+   */
   async streamStep(
     step: TaskStep,
     task: Task,
@@ -343,6 +420,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     return this._runStep(step, task, ChatResponseMode.STREAM, toolChoice);
   }
 
+  /**
+   * Finalize task.
+   * @param task: task
+   * @param kwargs: kwargs
+   * @returns: void
+   */
   finalizeTask(task: Task, kwargs?: any): void {
     task.memory.set(task.memory.get().concat(task.extraState.newMemory.get()));
     task.extraState.newMemory.reset();

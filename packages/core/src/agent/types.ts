@@ -2,6 +2,13 @@ import { QueryEngineParamsNonStreaming } from "../QueryEngine";
 
 import { AgentChatResponse, ChatEngineAgentParams } from "../engines/chat";
 
+export interface AgentWorker {
+  initializeStep(task: Task, kwargs?: any): TaskStep;
+  runStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
+  streamStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
+  finalizeTask(task: Task, kwargs?: any): void;
+}
+
 interface BaseChatEngine {
   chat(params: ChatEngineAgentParams): Promise<AgentChatResponse>;
 }
@@ -50,6 +57,10 @@ type TaskParams = {
   extraState: Record<string, any>;
 };
 
+/**
+ * Task is a unit of work for the agent.
+ * @param taskId: taskId
+ */
 export class Task {
   taskId: string;
   input: string;
@@ -81,6 +92,13 @@ interface ITaskStep {
   linkStep(nextStep: TaskStep): void;
 }
 
+/**
+ * TaskStep is a unit of work for the agent.
+ * @param taskId: taskId
+ * @param stepId: stepId
+ * @param input: input
+ * @param stepState: stepState
+ */
 export class TaskStep implements ITaskStep {
   taskId: string;
   stepId: string;
@@ -102,6 +120,13 @@ export class TaskStep implements ITaskStep {
     this.stepState = stepState ?? this.stepState;
   }
 
+  /*
+   * getNextStep is a function that returns the next step.
+   * @param stepId: stepId
+   * @param input: input
+   * @param stepState: stepState
+   * @returns: TaskStep
+   */
   getNextStep(
     stepId: string,
     input?: string,
@@ -115,12 +140,24 @@ export class TaskStep implements ITaskStep {
     );
   }
 
+  /*
+   * linkStep is a function that links the next step.
+   * @param nextStep: nextStep
+   * @returns: void
+   */
   linkStep(nextStep: TaskStep): void {
     this.nextSteps[nextStep.stepId] = nextStep;
     nextStep.prevSteps[this.stepId] = this;
   }
 }
 
+/**
+ * TaskStepOutput is a unit of work for the agent.
+ * @param output: output
+ * @param taskStep: taskStep
+ * @param nextSteps: nextSteps
+ * @param isLast: isLast
+ */
 export class TaskStepOutput {
   output: unknown;
   taskStep: TaskStep;
@@ -142,11 +179,4 @@ export class TaskStepOutput {
   toString(): string {
     return String(this.output);
   }
-}
-
-export interface AgentWorker {
-  initializeStep(task: Task, kwargs?: any): TaskStep;
-  runStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
-  streamStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
-  finalizeTask(task: Task, kwargs?: any): void;
 }
