@@ -37,7 +37,6 @@ export async function createApp({
   externalPort,
   postInstallAction,
   dataSource,
-  dataSourceConfig,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -82,7 +81,6 @@ export async function createApp({
     externalPort,
     postInstallAction,
     dataSource,
-    dataSourceConfig,
   };
 
   if (frontend) {

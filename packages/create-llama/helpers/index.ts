@@ -14,7 +14,6 @@ import { downloadAndExtractRepo } from "./repo";
 import {
   InstallTemplateArgs,
   TemplateDataSource,
-  TemplateDataSourceConfig,
   TemplateFramework,
   TemplateVectorDB,
   WebSourceConfig,
@@ -29,7 +28,6 @@ const createEnvLocalFile = async (
     model?: string;
     framework?: TemplateFramework;
     dataSource?: TemplateDataSource;
-    dataSourceConfig?: TemplateDataSourceConfig;
   },
 ) => {
   const envFileName = ".env";
@@ -62,9 +60,9 @@ const createEnvLocalFile = async (
     }
   }
 
-  switch (opts?.dataSource) {
+  switch (opts?.dataSource?.type) {
     case "web": {
-      let webConfig = opts?.dataSourceConfig as WebSourceConfig;
+      let webConfig = opts?.dataSource.config as WebSourceConfig;
       content += `# web loader config\n`;
       content += `BASE_URL=${webConfig.baseUrl}\n`;
       content += `URL_PREFIX=${webConfig.baseUrl}\n`;
@@ -186,13 +184,11 @@ export const installTemplate = async (
       model: props.model,
       framework: props.framework,
       dataSource: props.dataSource,
-      dataSourceConfig: props.dataSourceConfig,
     });
 
     if (props.engine === "context") {
-      if (props.dataSource === "file") {
+      if (props.dataSource.type === "file") {
         // Copy test pdf file
-        // let dataSourceConfig = props.dataSourceConfig as FileSourceConfig;
         await copyTestData(props.root, props.framework);
       }
       installDependencies(
