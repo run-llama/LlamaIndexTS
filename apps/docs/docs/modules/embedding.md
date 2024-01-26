@@ -15,6 +15,15 @@ const openaiEmbeds = new OpenAIEmbedding();
 
 const serviceContext = serviceContextFromDefaults({ embedModel: openaiEmbeds });
 ```
+You can use local embedding services based on OpenAI, such as Ollama or Llama.cpp by changing baseURL property:
+
+```typescript
+const openaiEmbeds = new OpenAIEmbedding({
+  additionalSessionOptions: {
+    baseURL: "http://127.0.0.1:8080/v1"
+  }
+});
+```
 
 ## API Reference
 
