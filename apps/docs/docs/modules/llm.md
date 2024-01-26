@@ -16,7 +16,7 @@ const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 const serviceContext = serviceContextFromDefaults({ llm: openaiLLM });
 ```
 
-## Ollama
+## Local LLM
 
 You can use local services based on OpenAI, such as Ollama or Llama.cpp by changing baseURL property:
 
