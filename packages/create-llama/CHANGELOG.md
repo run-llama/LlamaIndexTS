@@ -1,5 +1,12 @@
 # create-llama
 
+## 0.0.19
+
+### Patch Changes
+
+- 3a29a80: Add node_modules to gitignore in Express backends
+- fe03aaa: feat: generate llama pack example
+
 ## 0.0.18
 
 ### Patch Changes
