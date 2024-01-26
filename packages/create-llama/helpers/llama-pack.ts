@@ -79,10 +79,13 @@ const installLlamapackExample = async ({
 export const installLlamapackProject = async ({
   root,
   llamapack,
-}: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
+  postInstallAction,
+}: Pick<InstallTemplateArgs, "root" | "llamapack" | "postInstallAction">) => {
   console.log("\nInstalling Llamapack project:", llamapack!);
   await copyLlamapackEmptyProject({ root });
   await copyData({ root });
   await installLlamapackExample({ root, llamapack });
-  installPythonDependencies(root);
+  if (postInstallAction !== "none") {
+    installPythonDependencies(root);
+  }
 };

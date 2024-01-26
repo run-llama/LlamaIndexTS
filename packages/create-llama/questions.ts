@@ -75,6 +75,48 @@ export const askQuestions = async (
     field: K,
   ): QuestionArgs[K] => preferences[field] ?? defaults[field];
 
+  // Ask for next action after installation
+  async function askPostInstallAction() {
+    if (program.postInstallAction === undefined) {
+      if (ciInfo.isCI) {
+        program.postInstallAction = getPrefOrDefault("postInstallAction");
+      } else {
+        let actionChoices = [
+          {
+            title: "Just generate code (~1 sec)",
+            value: "none",
+          },
+          {
+            title: "Generate code and install dependencies (~2 min)",
+            value: "dependencies",
+          },
+        ];
+
+        const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
+        if (program.vectorDb === "none" && hasOpenAiKey) {
+          actionChoices.push({
+            title:
+              "Generate code, install dependencies, and run the app (~2 min)",
+            value: "runApp",
+          });
+        }
+
+        const { action } = await prompts(
+          {
+            type: "select",
+            name: "action",
+            message: "How would you like to proceed?",
+            choices: actionChoices,
+            initial: 1,
+          },
+          handlers,
+        );
+
+        program.postInstallAction = action;
+      }
+    }
+  }
+
   if (!program.template) {
     if (ciInfo.isCI) {
       program.template = getPrefOrDefault("template");
@@ -148,6 +190,7 @@ export const askQuestions = async (
     );
     program.llamapack = llamapack;
     preferences.llamapack = llamapack;
+    await askPostInstallAction();
     return; // early return - no further questions needed for llamapack projects
   }
 
@@ -340,45 +383,7 @@ export const askQuestions = async (
     }
   }
 
-  // Ask for next action after installation
-  if (program.postInstallAction === undefined) {
-    if (ciInfo.isCI) {
-      program.postInstallAction = getPrefOrDefault("postInstallAction");
-    } else {
-      let actionChoices = [
-        {
-          title: "Just generate code (~1 sec)",
-          value: "none",
-        },
-        {
-          title: "Generate code and install dependencies (~2 min)",
-          value: "dependencies",
-        },
-      ];
-
-      const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
-      if (program.vectorDb === "none" && hasOpenAiKey) {
-        actionChoices.push({
-          title:
-            "Generate code, install dependencies, and run the app (~2 min)",
-          value: "runApp",
-        });
-      }
-
-      const { action } = await prompts(
-        {
-          type: "select",
-          name: "action",
-          message: "How would you like to proceed?",
-          choices: actionChoices,
-          initial: 1,
-        },
-        handlers,
-      );
-
-      program.postInstallAction = action;
-    }
-  }
+  await askPostInstallAction();
 
   // TODO: consider using zod to validate the input (doesn't work like this as not every option is required)
   // templateUISchema.parse(program.ui);
