@@ -237,6 +237,7 @@ async function run(): Promise<void> {
     openAiKey: program.openAiKey,
     model: program.model,
     communityProjectPath: program.communityProjectPath,
+    llamapack: program.llamapack,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
     postInstallAction: program.postInstallAction,

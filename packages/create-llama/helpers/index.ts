@@ -7,6 +7,7 @@ import { cyan } from "picocolors";
 
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
 import { PackageManager } from "./get-pkg-manager";
+import { installLlamapackProject } from "./llama-pack";
 import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
 import { installPythonTemplate } from "./python";
 import { downloadAndExtractRepo } from "./repo";
@@ -150,6 +151,11 @@ export const installTemplate = async (
 
   if (props.template === "community" && props.communityProjectPath) {
     await installCommunityProject(props);
+    return;
+  }
+
+  if (props.template === "llamapack" && props.llamapack) {
+    await installLlamapackProject(props);
     return;
   }
 
