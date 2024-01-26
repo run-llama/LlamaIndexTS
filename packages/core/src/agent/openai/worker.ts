@@ -13,43 +13,13 @@ import {
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools/types";
+import { callToolWithErrorHandling } from "../../tools/utils";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
 import { addUserStepToMemory, getFunctionByName } from "../utils";
 import { OpenAIToolCall } from "./types/chat";
 import { OpenAiFunction, toOpenAiTool } from "./utils";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;
-
-/**
- * Call tool with error handling.
- * @param tool: tool
- * @param inputDict: input dict
- * @param errorMessage: error message
- * @param raiseError: raise error
- * @returns: tool output
- */
-async function callToolWithErrorHandling(
-  tool: BaseTool,
-  inputDict: { [key: string]: any },
-  errorMessage: string | null = null,
-  raiseError: boolean = false,
-): Promise<ToolOutput> {
-  try {
-    const value = await tool.call(inputDict);
-    return new ToolOutput(value, tool.metadata.name, inputDict, value);
-  } catch (e) {
-    if (raiseError) {
-      throw e;
-    }
-    errorMessage = errorMessage || `Error: ${e}`;
-    return new ToolOutput(
-      errorMessage,
-      tool.metadata.name,
-      { kwargs: inputDict },
-      e,
-    );
-  }
-}
 
 /**
  * Call function.
@@ -135,7 +105,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
     this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
-    this._verbose = verbose || true;
+    this._verbose = verbose || false;
     this._maxFunctionCalls = maxFunctionCalls;
     this.prefixMessages = prefixMessages || [];
     this.callbackManager = callbackManager || this._llm.callbackManager;
