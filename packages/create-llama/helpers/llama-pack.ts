@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import { LLAMA_HUB_FOLDER_PATH, LLAMA_PACK_CONFIG_PATH } from "./constant";
 import { copy } from "./copy";
+import { installPythonDependencies } from "./python";
 import { getRepoRawContent } from "./repo";
 import { InstallTemplateArgs } from "./types";
 
@@ -83,4 +84,5 @@ export const installLlamapackProject = async ({
   await copyLlamapackEmptyProject({ root });
   await copyData({ root });
   await installLlamapackExample({ root, llamapack });
+  installPythonDependencies(root);
 };
