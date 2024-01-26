@@ -65,7 +65,7 @@ export async function getRepoRootFolders(
 export async function getRepoRawContent(repoFilePath: string) {
   const url = `https://raw.githubusercontent.com/${repoFilePath}`;
   const response = await got(url, {
-    responseType: "json",
+    responseType: "text",
   });
   return response.body;
 }

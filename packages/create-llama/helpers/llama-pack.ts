@@ -1,11 +1,8 @@
+import fs from "fs/promises";
 import path from "path";
-import {
-  LLAMA_PACK_CONFIG_PATH,
-  LLAMA_PACK_OWNER,
-  LLAMA_PACK_REPO,
-} from "./constant";
+import { LLAMA_HUB_FOLDER_PATH, LLAMA_PACK_CONFIG_PATH } from "./constant";
 import { copy } from "./copy";
-import { downloadAndExtractRepo, getRepoRawContent } from "./repo";
+import { getRepoRawContent } from "./repo";
 import { InstallTemplateArgs } from "./types";
 
 export async function getAvailableLlamapackOptions(): Promise<
@@ -15,7 +12,8 @@ export async function getAvailableLlamapackOptions(): Promise<
     example: boolean | undefined;
   }[]
 > {
-  const libraryJson: any = await getRepoRawContent(LLAMA_PACK_CONFIG_PATH);
+  const libraryJsonRaw = await getRepoRawContent(LLAMA_PACK_CONFIG_PATH);
+  const libraryJson = JSON.parse(libraryJsonRaw);
   const llamapackKeys = Object.keys(libraryJson);
   return llamapackKeys
     .map((key) => ({
@@ -44,25 +42,27 @@ const installLlamapackExample = async ({
   root,
   llamapack,
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
-  const exampleFile = "example.py";
-  const readmeFile = "README.md";
+  const exampleFileName = "example.py";
+  const readmeFileName = "README.md";
+  const exampleFilePath = `${LLAMA_HUB_FOLDER_PATH}/${llamapack}/${exampleFileName}`;
+  const readmeFilePath = `${LLAMA_HUB_FOLDER_PATH}/${llamapack}/${readmeFileName}`;
 
-  try {
-    await downloadAndExtractRepo(root, {
-      username: LLAMA_PACK_OWNER,
-      name: LLAMA_PACK_REPO,
-      branch: "main",
-      filePath: `${llamapack}/${exampleFile}`,
-    });
-    await downloadAndExtractRepo(root, {
-      username: LLAMA_PACK_OWNER,
-      name: LLAMA_PACK_REPO,
-      branch: "main",
-      filePath: `${llamapack}/${readmeFile}`,
-    });
-  } catch (error) {
-    console.log("Error downloading Llamapack example:", error);
-  }
+  // Download example.py from llamapack and save to root
+  const exampleContent = await getRepoRawContent(exampleFilePath);
+  await fs.writeFile(path.join(root, exampleFileName), exampleContent);
+
+  // Download README.md from llamapack and combine with README-template.md,
+  // save to root and then delete template file
+  const readmeContent = await getRepoRawContent(readmeFilePath);
+  const readmeTemplateContent = await fs.readFile(
+    path.join(root, "README-template.md"),
+    "utf-8",
+  );
+  await fs.writeFile(
+    path.join(root, readmeFileName),
+    `${readmeContent}\n${readmeTemplateContent}`,
+  );
+  await fs.unlink(path.join(root, "README-template.md"));
 };
 
 export const installLlamapackProject = async ({
