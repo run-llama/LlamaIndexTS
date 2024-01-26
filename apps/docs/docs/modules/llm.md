@@ -19,12 +19,12 @@ const serviceContext = serviceContextFromDefaults({ llm: openaiLLM });
 You can use local services based on OpenAI, such as Ollama or Llama.cpp by changing baseURL property:
 
 ```typescript
-const openaiLLM = new OpenAI({ 
-  model: "gpt-3.5-turbo", 
-  temperature: 0, 
+const openaiLLM = new OpenAI({
+  model: "gpt-3.5-turbo",
+  temperature: 0,
   additionalSessionOptions: {
-    baseURL: "http://127.0.0.1:8080/v1"
-  }
+    baseURL: "http://127.0.0.1:8080/v1",
+  },
 });
 ```
 
