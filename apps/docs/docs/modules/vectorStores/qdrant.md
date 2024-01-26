@@ -25,8 +25,7 @@ const essay = await fs.readFile(path, "utf-8");
 
 ```ts
 const vectorStore = new QdrantVectorStore({
-  url: "http://localhost:6333",
-  port: 6333,
+  url: "http://localhost:6333"
 });
 ```
 
@@ -64,8 +63,7 @@ async function main() {
   const essay = await fs.readFile(path, "utf-8");
 
   const vectorStore = new QdrantVectorStore({
-    url: "http://localhost:6333",
-    port: 6333,
+    url: "http://localhost:6333"
   });
 
   const document = new Document({ text: essay, id_: path });
@@ -85,4 +83,19 @@ async function main() {
 }
 
 main().catch(console.error);
+```
+
+## Known issues
+
+### Wrong input: Vector inserting error: expected dim: 1536, got 384
+If you not mention the collection name, the database store created the collection name `default` each time you make query.
+If you change the embedding model, you will get error at the database like: `Wrong input: Vector inserting error: expected dim: 1536, got 384`
+It because, first time it is using the OpenAI embedding (dimension 1536) and then the next time query, you're using another embedding model with dimension 384.
+
+Solution: add new collection by give the collection name and the dimension will auto create include with new collection for the first time will fix this error.
+```
+const vectorStore = new QdrantVectorStore({
+    url: "http://localhost:6333",
+    collectionName: 'qdrant-test' <--- new name to create new collection to fix error
+});
 ```
