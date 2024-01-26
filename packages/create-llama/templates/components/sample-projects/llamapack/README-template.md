@@ -2,23 +2,15 @@
 
 ## Quickstart
 
-1. Check above instructions for setting up your environment
-2. Export required environment variables (please check above instructions or example.py file for more details).
-   For example, if you are using bash, you can run the following command
+1. Check above instructions for setting up your environment and export required environment variables
+   For example, if you are using bash, you can run the following command to set up OpenAI API key
 
 ```bash
 export OPENAI_API_KEY=your_api_key
 ```
 
-3. Install dependencies and activate virtual environment
+2. Run the example
 
 ```
-poetry install
-poetry shell
-```
-
-4. Run the example
-
-```
-python example.py
+poetry run python example.py
 ```
