@@ -15,3 +15,5 @@ export { PineconeVectorStore } from "./vectorStore/PineconeVectorStore";
 export { QdrantVectorStore } from "./vectorStore/QdrantVectorStore";
 export { SimpleVectorStore } from "./vectorStore/SimpleVectorStore";
 export * from "./vectorStore/types";
+export { SimpleChatStore } from "./chatStore/SimpleChatStore_";
+export * from "./chatStore/types";
