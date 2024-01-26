@@ -184,9 +184,14 @@ export class QdrantVectorStore implements VectorStore {
     const { points, ids } = await this.buildPoints(embeddingResults);
 
     const batchUpsert = async (points: PointStruct[]) => {
-      await this.db.upsert(this.collectionName, {
-        points: points,
-      });
+      try {
+        await this.db.upsert(this.collectionName, {
+          points: points,
+        });
+      } catch (error: any) {
+        console.error(error);
+        throw new Error("QdrantVectorStore upsert error: " + error.message);
+      }
     };
 
     for (let i = 0; i < points.length; i += this.batchSize) {
