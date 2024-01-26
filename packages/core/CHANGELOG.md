@@ -1,5 +1,9 @@
 # llamaindex
 
+## 0.1.2
+
+- e4b807a: fix: invalid package.json
+
 ## 0.1.1
 
 No changes for this release.
