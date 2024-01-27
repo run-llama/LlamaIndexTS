@@ -75,7 +75,10 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const keywordExtractor = new KeywordExtractor(serviceContext.llm, 5);
+    const keywordExtractor = new KeywordExtractor({
+      llm: serviceContext.llm,
+      keywords: 5,
+    });
 
     const nodesWithKeywordMetadata = await keywordExtractor.processNodes(nodes);
 
@@ -91,7 +94,10 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const titleExtractor = new TitleExtractor(serviceContext.llm, 5);
+    const titleExtractor = new TitleExtractor({
+      llm: serviceContext.llm,
+      nodes: 5,
+    });
 
     const nodesWithKeywordMetadata = await titleExtractor.processNodes(nodes);
 
@@ -107,10 +113,10 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const questionsAnsweredExtractor = new QuestionsAnsweredExtractor(
-      serviceContext.llm,
-      5,
-    );
+    const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
+      llm: serviceContext.llm,
+      questions: 5,
+    });
 
     const nodesWithKeywordMetadata =
       await questionsAnsweredExtractor.processNodes(nodes);
@@ -127,7 +133,9 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
     ]);
 
-    const summaryExtractor = new SummaryExtractor(serviceContext.llm);
+    const summaryExtractor = new SummaryExtractor({
+      llm: serviceContext.llm,
+    });
 
     const nodesWithKeywordMetadata = await summaryExtractor.processNodes(nodes);
 
