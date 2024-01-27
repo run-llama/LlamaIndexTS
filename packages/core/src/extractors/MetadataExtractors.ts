@@ -355,22 +355,24 @@ export class SummaryExtractor extends BaseExtractor {
   private _nextSummary: boolean;
 
   constructor(options?: SummaryExtractArgs) {
+    const summaries = options?.summaries ?? ["self"];
+
     if (
-      options?.summaries &&
-      !options.summaries.some((s) => ["self", "prev", "next"].includes(s))
+      summaries &&
+      !summaries.some((s) => ["self", "prev", "next"].includes(s))
     )
       throw new Error("Summaries must be one of 'self', 'prev', 'next'");
 
     super();
 
     this.llm = options?.llm ?? new OpenAI();
-    this.summaries = options?.summaries ?? ["self", "prev", "next"];
+    this.summaries = summaries;
     this.promptTemplate =
       options?.promptTemplate ?? defaultSummaryExtractorPromptTemplate();
 
-    this._selfSummary = options?.summaries?.includes("self") ?? false;
-    this._prevSummary = options?.summaries?.includes("prev") ?? false;
-    this._nextSummary = options?.summaries?.includes("next") ?? false;
+    this._selfSummary = summaries?.includes("self") ?? false;
+    this._prevSummary = summaries?.includes("prev") ?? false;
+    this._nextSummary = summaries?.includes("next") ?? false;
   }
 
   /**
