@@ -21,12 +21,12 @@ import {
 } from "llamaindex";
 
 async function main() {
-  const openAILLM = new OpenAI({ model: "gpt-3.5-turbo" });
-
   const pipeline = new IngestionPipeline({
     transformations: [
-      new TitleExtractor(openAILLM),
-      new QuestionsAnsweredExtractor(openAILLM),
+      new TitleExtractor(),
+      new QuestionsAnsweredExtractor({
+        questions: 5,
+      }),
     ],
   });
 
