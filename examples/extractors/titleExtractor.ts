@@ -11,7 +11,10 @@ import { Document, OpenAI, SimpleNodeParser, TitleExtractor } from "llamaindex";
     }),
   ]);
 
-  const titleExtractor = new TitleExtractor(openaiLLM, 1);
+  const titleExtractor = new TitleExtractor({
+    llm: openaiLLM,
+    nodes: 5,
+  });
 
   const nodesWithTitledMetadata = await titleExtractor.processNodes(nodes);
 

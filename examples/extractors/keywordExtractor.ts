@@ -16,7 +16,10 @@ import {
 
   console.log(nodes);
 
-  const keywordExtractor = new KeywordExtractor(openaiLLM, 5);
+  const keywordExtractor = new KeywordExtractor({
+    llm: openaiLLM,
+    keywords: 5,
+  });
 
   const nodesWithKeywordMetadata = await keywordExtractor.processNodes(nodes);
 
