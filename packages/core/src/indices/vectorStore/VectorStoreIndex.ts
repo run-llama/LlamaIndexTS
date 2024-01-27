@@ -6,7 +6,7 @@ import {
   ObjectType,
   splitNodesByType,
 } from "../../Node";
-import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
+import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
@@ -26,6 +26,7 @@ import {
   storageContextFromDefaults,
 } from "../../storage";
 import { BaseSynthesizer } from "../../synthesizers";
+import { BaseQueryEngine } from "../../types";
 import {
   BaseIndex,
   BaseIndexInit,

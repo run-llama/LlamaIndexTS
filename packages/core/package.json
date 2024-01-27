@@ -81,6 +81,6 @@
     "modify-package-json": "node ./scripts/modify-package-json.mjs",
     "prepublish": "pnpm run modify-package-json && echo \"please cd ./dist and run pnpm publish\" && exit 1",
     "dev": "bunchee -w",
-    "circular-check": "madge --circular ./src/*.ts"
+    "circular-check": "madge -c ./src/index.ts"
   }
 }

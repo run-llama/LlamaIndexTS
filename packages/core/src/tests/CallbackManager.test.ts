@@ -13,7 +13,7 @@ import { ResponseSynthesizer, SimpleResponseBuilder } from "../synthesizers";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
 
 // Mock the OpenAI getOpenAISession function during testing
-jest.mock("../llm/openai", () => {
+jest.mock("../llm/open_ai", () => {
   return {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };

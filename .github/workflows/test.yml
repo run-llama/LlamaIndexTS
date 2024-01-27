@@ -36,3 +36,6 @@ jobs:
         working-directory: ./packages/core
       - name: Run Type Check
         run: pnpm run type-check
+      - name: Run Circular Dependency Check
+        run: pnpm run circular-check
+        working-directory: ./packages/core

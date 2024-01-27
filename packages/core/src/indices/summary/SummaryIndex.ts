@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { BaseNode, Document } from "../../Node";
-import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
+import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
@@ -18,6 +18,7 @@ import {
   CompactAndRefine,
   ResponseSynthesizer,
 } from "../../synthesizers";
+import { BaseQueryEngine } from "../../types";
 import {
   BaseIndex,
   BaseIndexInit,
