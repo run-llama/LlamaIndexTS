@@ -47,3 +47,6 @@ playwright/.cache/
 
 # intellij
 **/.idea
+
+# pyenv config file
+**/.python-version
