@@ -1,5 +1,4 @@
 import { BaseNode, Document, jsonToNode } from "../Node";
-import { BaseQueryEngine } from "../QueryEngine";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext } from "../ServiceContext";
 import { randomUUID } from "../env";
@@ -8,6 +7,7 @@ import { BaseDocumentStore } from "../storage/docStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
 import { VectorStore } from "../storage/vectorStore/types";
 import { BaseSynthesizer } from "../synthesizers";
+import { BaseQueryEngine } from "../types";
 
 /**
  * The underlying structure of each index.
