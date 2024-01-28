@@ -54,13 +54,13 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs",
-      "edge-light": "./dist/index.mjs",
+      "edge-light": "./dist/index.edge-light.mjs",
       "require": "./dist/index.js"
     },
     "./env": {
       "types": "./dist/env.d.mts",
       "import": "./dist/env.mjs",
-      "edge-light": "./dist/env.mjs",
+      "edge-light": "./dist/env.edge-light.mjs",
       "require": "./dist/env.js"
     }
   },
