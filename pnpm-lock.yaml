@@ -134,7 +134,7 @@ importers:
         specifier: ^16.4.1
         version: 16.4.1
       llamaindex:
-        specifier: workspace:^
+        specifier: latest
         version: link:../packages/core
       mongodb:
         specifier: ^6.2.0

@@ -9,7 +9,7 @@
     "chromadb": "^1.8.1",
     "commander": "^11.1.0",
     "dotenv": "^16.4.1",
-    "llamaindex": "workspace:^",
+    "llamaindex": "latest",
     "mongodb": "^6.2.0"
   },
   "devDependencies": {
