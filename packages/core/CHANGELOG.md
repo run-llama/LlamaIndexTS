@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.1.3
+
+### Patch Changes
+
+- 9ce7d3d: update dependencies
+- 7d50196: fix: output target causes not implemented error
+
 ## 0.1.2
 
 - e4b807a: fix: invalid package.json

@@ -1,5 +1,0 @@
----
-"llamaindex": patch
----
-
-update dependencies
