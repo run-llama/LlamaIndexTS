@@ -1,5 +1,11 @@
 # create-llama
 
+## 0.0.20
+
+### Patch Changes
+
+- 27d55fd: Add an option to provide an URL and chat with the website data
+
 ## 0.0.19
 
 ### Patch Changes
