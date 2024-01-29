@@ -126,7 +126,6 @@ export const installPythonTemplate = async ({
   framework,
   engine,
   vectorDb,
-  dataSource,
   postInstallAction,
 }: Pick<
   InstallTemplateArgs,
@@ -135,7 +134,6 @@ export const installPythonTemplate = async ({
   | "template"
   | "engine"
   | "vectorDb"
-  | "dataSource"
   | "postInstallAction"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
@@ -175,24 +173,10 @@ export const installPythonTemplate = async ({
       "python",
       vectorDb || "none",
     );
-    const enginePath = path.join(root, "app", "engine");
-
     await copy("**", path.join(root, "app", "engine"), {
       parents: true,
       cwd: VectorDBPath,
     });
-    if (dataSource?.type !== "none" && dataSource?.type !== undefined) {
-      const loaderPath = path.join(
-        compPath,
-        "loaders",
-        "python",
-        dataSource.type,
-      );
-      await copy("**", enginePath, {
-        parents: true,
-        cwd: loaderPath,
-      });
-    }
   }
 
   const addOnDependencies = getAdditionalDependencies(vectorDb);

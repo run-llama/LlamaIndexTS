@@ -241,7 +241,7 @@ async function run(): Promise<void> {
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
     postInstallAction: program.postInstallAction,
-    dataSource: program.dataSource,
+    contextFile: program.contextFile,
   });
   conf.set("preferences", preferences);
 

@@ -6,7 +6,6 @@ import logging
 from app.engine.constants import DATA_DIR
 from app.engine.context import create_service_context
 from app.engine.utils import init_pg_vector_store_from_env
-from app.engine.loader import get_documents
 
 from llama_index import (
     SimpleDirectoryReader,
@@ -21,7 +20,7 @@ logger = logging.getLogger()
 def generate_datasource(service_context):
     logger.info("Creating new index")
     # load the documents and create the index
-    documents = get_documents()
+    documents = SimpleDirectoryReader(DATA_DIR).load_data()
     store = init_pg_vector_store_from_env()
     storage_context = StorageContext.from_defaults(vector_store=store)
     VectorStoreIndex.from_documents(

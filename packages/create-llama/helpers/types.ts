@@ -6,18 +6,6 @@ export type TemplateEngine = "simple" | "context";
 export type TemplateUI = "html" | "shadcn";
 export type TemplateVectorDB = "none" | "mongo" | "pg";
 export type TemplatePostInstallAction = "none" | "dependencies" | "runApp";
-export type TemplateDataSource = {
-  type: "none" | "file" | "web";
-  config: TemplateDataSourceConfig;
-};
-export type FileSourceConfig = {
-  contextFile?: string;
-};
-export type WebSourceConfig = {
-  baseUrl?: string;
-  depth?: number;
-};
-export type TemplateDataSourceConfig = FileSourceConfig | WebSourceConfig;
 
 export interface InstallTemplateArgs {
   appName: string;
@@ -27,8 +15,8 @@ export interface InstallTemplateArgs {
   template: TemplateType;
   framework: TemplateFramework;
   engine: TemplateEngine;
+  contextFile?: string;
   ui: TemplateUI;
-  dataSource?: TemplateDataSource;
   eslint: boolean;
   customApiPath?: string;
   openAiKey?: string;

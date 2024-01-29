@@ -7,7 +7,6 @@ from llama_index.vector_stores import MongoDBAtlasVectorSearch
 
 from app.engine.constants import DATA_DIR
 from app.engine.context import create_service_context
-from app.engine.loader import get_documents
 
 
 from llama_index import (
@@ -23,7 +22,7 @@ logger = logging.getLogger()
 def generate_datasource(service_context):
     logger.info("Creating new index")
     # load the documents and create the index
-    documents = get_documents()
+    documents = SimpleDirectoryReader(DATA_DIR).load_data()
     store = MongoDBAtlasVectorSearch(
         db_name=os.environ["MONGODB_DATABASE"],
         collection_name=os.environ["MONGODB_VECTORS"],

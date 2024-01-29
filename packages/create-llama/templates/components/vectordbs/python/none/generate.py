@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 from app.engine.constants import DATA_DIR, STORAGE_DIR
 from app.engine.context import create_service_context
-from app.engine.loader import get_documents
 
 load_dotenv()
 
@@ -20,7 +19,7 @@ logger = logging.getLogger()
 def generate_datasource(service_context):
     logger.info("Creating new index")
     # load the documents and create the index
-    documents = get_documents()
+    documents = SimpleDirectoryReader(DATA_DIR).load_data()
     index = VectorStoreIndex.from_documents(documents, service_context=service_context)
     # store it for later
     index.storage_context.persist(STORAGE_DIR)
