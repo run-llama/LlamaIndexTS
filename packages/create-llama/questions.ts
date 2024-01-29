@@ -40,6 +40,10 @@ const defaults: QuestionArgs = {
   communityProjectPath: "",
   llamapack: "",
   postInstallAction: "dependencies",
+  dataSource: {
+    type: "none",
+    config: {},
+  },
 };
 
 const handlers = {
@@ -378,6 +382,9 @@ export const askQuestions = async (
       if (process.platform === "win32" || process.platform === "darwin") {
         choices.push({ title: "Use a local PDF file", value: "localFile" });
       }
+      if (program.framework === "fastapi") {
+        choices.push({ title: "Use website content", value: "web" });
+      }
 
       const { dataSource } = await prompts(
         {
@@ -389,19 +396,46 @@ export const askQuestions = async (
         },
         handlers,
       );
-      switch (dataSource) {
-        case "simple":
-          program.engine = "simple";
-          break;
-        case "exampleFile":
-          program.engine = "context";
-          break;
-        case "localFile":
-          program.engine = "context";
-          // If the user selected the "pdf" option, ask them to select a file
-          program.contextFile = await selectPDFFile();
-          break;
+      // Initialize with default config
+      program.dataSource = getPrefOrDefault("dataSource");
+      if (program.dataSource) {
+        switch (dataSource) {
+          case "simple":
+            program.engine = "simple";
+            break;
+          case "exampleFile":
+            program.engine = "context";
+            break;
+          case "localFile":
+            program.engine = "context";
+            program.dataSource.type = "file";
+            // If the user selected the "pdf" option, ask them to select a file
+            program.dataSource.config = {
+              contextFile: await selectPDFFile(),
+            };
+            break;
+          case "web":
+            program.engine = "context";
+            program.dataSource.type = "web";
+            break;
+        }
       }
+    }
+
+    if (program.dataSource?.type === "web" && program.framework === "fastapi") {
+      const { baseUrl } = await prompts(
+        {
+          type: "text",
+          name: "baseUrl",
+          message: "Please provide base URL of the website:",
+          initial: "https://ts.llamaindex.ai/modules/",
+        },
+        handlers,
+      );
+      program.dataSource.config = {
+        baseUrl: baseUrl,
+        depth: 2,
+      };
     }
     if (program.engine !== "simple" && !program.vectorDb) {
       if (ciInfo.isCI) {
