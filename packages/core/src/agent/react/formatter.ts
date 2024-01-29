@@ -1,12 +1,13 @@
 import { BaseTool } from "../../Tool";
 import { ChatMessage } from "../../llm";
+import { getReactChatSystemHeader } from "./prompts";
 import { BaseReasoningStep, ObservationReasoningStep } from "./types";
 
 function getReactToolDescriptions(tools: BaseTool[]): string[] {
   const toolDescs: string[] = [];
   for (const tool of tools) {
     // @ts-ignore
-    const toolDesc = `> Tool Name: ${tool.metadata.name}\nTool Description: ${tool.metadata.description}\nTool Args: ${tool?.metadata?.fn_schema_str}\n`;
+    const toolDesc = `> Tool Name: ${tool.metadata.name}\nTool Description: ${tool.metadata.description}\nTool Args: ${JSON.stringify(tool?.metadata?.parameters?.properties)}\n`;
     toolDescs.push(toolDesc);
   }
   return toolDescs;
@@ -36,16 +37,14 @@ export class ReActChatFormatter implements BaseAgentChatFormatter {
     currentReasoning = currentReasoning ?? [];
 
     const formatArgs = {
-      toolDesc: "",
-      toolNames: "",
+      toolDesc: getReactToolDescriptions(tools).join("\n"),
+      toolNames: tools.map((tool) => tool.metadata.name).join(", "),
       context: "",
     };
 
     if (this.context) {
       formatArgs["context"] = this.context;
     }
-
-    const fmtSysHeader = null;
 
     const reasoningHistory = [];
 
@@ -67,9 +66,14 @@ export class ReActChatFormatter implements BaseAgentChatFormatter {
       reasoningHistory.push(message);
     }
 
+    const systemContent = getReactChatSystemHeader({
+      toolDesc: formatArgs.toolDesc,
+      toolNames: formatArgs.toolNames,
+    });
+
     return [
       {
-        content: this.systemHeader,
+        content: systemContent,
         role: "system",
       },
       ...reasoningHistory,

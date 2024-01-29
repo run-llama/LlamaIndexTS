@@ -33,7 +33,7 @@ export class ActionReasoningStep implements BaseReasoningStep {
   }
 
   getContent(): string {
-    return `Thought: ${this.thought}\nAction: ${this.action}\nAction Input: ${this.actionInput}`;
+    return `Thought: ${this.thought}\nAction: ${this.action}\nAction Input: ${JSON.stringify(this.actionInput)}`;
   }
 
   isDone(): boolean {

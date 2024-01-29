@@ -9,6 +9,7 @@ import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
+import { printStep } from "../utils";
 import { ReActChatFormatter } from "./formatter";
 import { ReActOutputParser } from "./outputParser";
 import {
@@ -21,7 +22,7 @@ import {
 type ReActAgentWorkerParams = {
   tools: BaseTool[];
   llm?: LLM;
-  maxIteractions?: number;
+  maxInteractions?: number;
   reactChatFormatter?: ReActChatFormatter | undefined;
   outputParser?: ReActOutputParser | undefined;
   callbackManager?: CallbackManager | undefined;
@@ -76,7 +77,7 @@ export class ReActAgentWorker implements AgentWorker {
   constructor({
     tools,
     llm,
-    maxIteractions,
+    maxInteractions,
     reactChatFormatter,
     outputParser,
     callbackManager,
@@ -86,7 +87,7 @@ export class ReActAgentWorker implements AgentWorker {
     this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
     this.callbackManager = callbackManager || new CallbackManager();
 
-    this._maxInteractions = maxIteractions ?? 10;
+    this._maxInteractions = maxInteractions ?? 10;
     this._reactChatFormatter = reactChatFormatter ?? new ReActChatFormatter();
     this._outputParser = outputParser ?? new ReActOutputParser();
     this._verbose = verbose || false;
@@ -147,7 +148,18 @@ export class ReActAgentWorker implements AgentWorker {
     const messageContent = output.message.content;
     const currentReasoning: BaseReasoningStep[] = [];
 
-    const reasoningStep = this._outputParser.parse(messageContent, isStreaming);
+    let reasoningStep;
+
+    try {
+      reasoningStep = this._outputParser.parse(
+        messageContent,
+        isStreaming,
+      ) as ActionReasoningStep;
+    } catch (e) {
+      throw new Error(`Could not parse output: ${e}`);
+    }
+
+    printStep(`${reasoningStep.getContent()}\n`);
 
     currentReasoning.push(reasoningStep);
 
@@ -157,6 +169,8 @@ export class ReActAgentWorker implements AgentWorker {
 
     const actionReasoningStep = new ActionReasoningStep({
       thought: reasoningStep.getContent(),
+      action: reasoningStep.action,
+      actionInput: reasoningStep.actionInput,
     });
 
     if (!(actionReasoningStep instanceof ActionReasoningStep)) {
@@ -174,12 +188,12 @@ export class ReActAgentWorker implements AgentWorker {
    * @param isStreaming - whether the chat response is streaming
    * @returns - [reasoning steps, is done]
    */
-  _processActions(
+  async _processActions(
     task: Task,
     tools: BaseTool[],
     output: ChatResponse,
     isStreaming: boolean = false,
-  ): [BaseReasoningStep[], boolean] {
+  ): Promise<[BaseReasoningStep[], boolean]> {
     const toolsDict: Record<string, BaseTool> = {};
 
     for (const tool of tools) {
@@ -195,20 +209,38 @@ export class ReActAgentWorker implements AgentWorker {
       return [currentReasoning, true];
     }
 
-    const reasoningStep = currentReasoning[currentReasoning.length - 1];
+    const reasoningStep = currentReasoning[
+      currentReasoning.length - 1
+    ] as ActionReasoningStep;
+
     const actionReasoningStep = new ActionReasoningStep({
       thought: reasoningStep.getContent(),
+      action: reasoningStep.action,
+      actionInput: reasoningStep.actionInput,
     });
 
     const tool = toolsDict[actionReasoningStep.action];
-    const toolOutput = tool.call?.(actionReasoningStep.actionInput);
 
-    task.extraState.sources.push(toolOutput);
+    const toolOutput = await tool?.call?.(actionReasoningStep.actionInput);
+
+    task.extraState.sources.push(
+      new ToolOutput(
+        toolOutput,
+        tool.metadata.name,
+        actionReasoningStep.actionInput,
+        toolOutput,
+      ),
+    );
 
     const observationStep = new ObservationReasoningStep({
       observation: toolOutput,
     });
+
     currentReasoning.push(observationStep);
+
+    if (this._verbose) {
+      printStep(`${observationStep.getContent()}`);
+    }
 
     return [currentReasoning, false];
   }
@@ -298,7 +330,7 @@ export class ReActAgentWorker implements AgentWorker {
       messages: inputChat,
     });
 
-    const [reasoningSteps, isDone] = this._processActions(
+    const [reasoningSteps, isDone] = await this._processActions(
       task,
       tools,
       chatResponse,

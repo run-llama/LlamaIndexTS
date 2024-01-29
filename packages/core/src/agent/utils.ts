@@ -85,3 +85,7 @@ export const getProperties = (
     required: schema?.required,
   } as ToolMetadata["parameters"];
 };
+
+export const printStep = (text: string): void => {
+  console.log(text);
+};
