@@ -2,6 +2,7 @@ import { BaseNode, Document, jsonToNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext } from "../ServiceContext";
 import { randomUUID } from "../env";
+import { runTransformations } from "../ingestion";
 import { StorageContext } from "../storage/StorageContext";
 import { BaseDocumentStore } from "../storage/docStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
@@ -188,9 +189,10 @@ export abstract class BaseIndex<T> {
    * @param document
    */
   async insert(document: Document) {
-    const nodes = this.serviceContext.nodeParser.getNodesFromDocuments([
-      document,
-    ]);
+    const nodes = await runTransformations(
+      [document],
+      [this.serviceContext.nodeParser],
+    );
     await this.insertNodes(nodes);
     this.docStore.setDocumentHash(document.id_, document.hash);
   }

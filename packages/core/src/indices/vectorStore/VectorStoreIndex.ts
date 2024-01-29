@@ -17,6 +17,7 @@ import {
   ClipEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings";
+import { runTransformations } from "../../ingestion";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
   BaseIndexStore,
@@ -225,8 +226,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (args.logProgress) {
       console.log("Using node parser on documents...");
     }
-    args.nodes =
-      args.serviceContext.nodeParser.getNodesFromDocuments(documents);
+    args.nodes = await runTransformations(documents, [
+      args.serviceContext.nodeParser,
+    ]);
     if (args.logProgress) {
       console.log("Finished parsing documents.");
     }

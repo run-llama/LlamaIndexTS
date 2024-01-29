@@ -19,7 +19,7 @@ export async function runTransformations(
   nodesToRun: BaseNode[],
   transformations: TransformComponent[],
   transformOptions: any = {},
-  { inPlace = true, cache }: TransformRunArgs,
+  { inPlace = true, cache }: TransformRunArgs = {},
 ): Promise<BaseNode[]> {
   let nodes = nodesToRun;
   if (!inPlace) {
