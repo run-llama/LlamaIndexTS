@@ -398,28 +398,27 @@ export const askQuestions = async (
       );
       // Initialize with default config
       program.dataSource = getPrefOrDefault("dataSource");
-        type: "none",
-        config: {},
-      };
-      switch (dataSource) {
-        case "simple":
-          program.engine = "simple";
-          break;
-        case "exampleFile":
-          program.engine = "context";
-          break;
-        case "localFile":
-          program.engine = "context";
-          program.dataSource.type = "file";
-          // If the user selected the "pdf" option, ask them to select a file
-          program.dataSource.config = {
-            contextFile: await selectPDFFile(),
-          };
-          break;
-        case "web":
-          program.engine = "context";
-          program.dataSource.type = "web";
-          break;
+      if (program.dataSource) {
+        switch (dataSource) {
+          case "simple":
+            program.engine = "simple";
+            break;
+          case "exampleFile":
+            program.engine = "context";
+            break;
+          case "localFile":
+            program.engine = "context";
+            program.dataSource.type = "file";
+            // If the user selected the "pdf" option, ask them to select a file
+            program.dataSource.config = {
+              contextFile: await selectPDFFile(),
+            };
+            break;
+          case "web":
+            program.engine = "context";
+            program.dataSource.type = "web";
+            break;
+        }
       }
     }
 
