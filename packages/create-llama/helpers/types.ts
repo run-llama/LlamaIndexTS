@@ -7,11 +7,12 @@ export type TemplateUI = "html" | "shadcn";
 export type TemplateVectorDB = "none" | "mongo" | "pg";
 export type TemplatePostInstallAction = "none" | "dependencies" | "runApp";
 export type TemplateDataSource = {
-  type: "none" | "file" | "web";
+  type: "none" | "file" | "folder" | "web";
   config: TemplateDataSourceConfig;
 };
+// Config for both file and folder
 export type FileSourceConfig = {
-  contextFile?: string;
+  path?: string;
 };
 export type WebSourceConfig = {
   baseUrl?: string;

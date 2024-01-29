@@ -86,6 +86,13 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
+    "--files <path>",
+    `
+  
+    Specify the path to a local file or folder for chatting.
+`,
+  )
+  .option(
     "--open-ai-key <key>",
     `
 

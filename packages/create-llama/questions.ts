@@ -5,19 +5,36 @@ import path from "path";
 import { blue, green, red } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
-import { TemplateFramework } from "./helpers";
+import { TemplateDataSource, TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
 
-export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
+export type QuestionArgs = Omit<
+  InstallAppArgs,
+  "appPath" | "packageManager"
+> & { files?: string };
+const supportedContextFileTypes = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".ppt",
+  ".pptx",
+  ".csv",
+  ".txt",
+];
 const MACOS_FILE_SELECTION_SCRIPT = `
 osascript -l JavaScript -e '
   a = Application.currentApplication();
   a.includeStandardAdditions = true;
   a.chooseFile({ withPrompt: "Please select a file to process:" }).toString()
 '`;
-
+const MACOS_FOLDER_SELECTION_SCRIPT = `
+osascript -l JavaScript -e '
+  a = Application.currentApplication();
+  a.includeStandardAdditions = true;
+  a.chooseFolder({ withPrompt: "Please select a folder to process:" }).toString()
+'`;
 const WINDOWS_FILE_SELECTION_SCRIPT = `
 Add-Type -AssemblyName System.Windows.Forms
 $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
@@ -25,6 +42,15 @@ $openFileDialog.InitialDirectory = [Environment]::GetFolderPath('Desktop')
 $result = $openFileDialog.ShowDialog()
 if ($result -eq 'OK') {
   $openFileDialog.FileName
+}
+`;
+const WINDOWS_FOLDER_SELECTION_SCRIPT = `
+Add-Type -AssemblyName System.windows.forms
+$folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+$dialogResult = $folderBrowser.ShowDialog()
+if ($dialogResult -eq [System.Windows.Forms.DialogResult]::OK)
+{
+    $folderBrowser.SelectedPath
 }
 `;
 
@@ -78,39 +104,46 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   return displayedChoices;
 };
 
-const selectPDFFile = async () => {
-  // Popup to select a PDF file
+const selectLocalContextData = async (dataSource: TemplateDataSource) => {
   try {
-    let selectedFilePath: string = "";
+    let selectedPath: string = "";
+    let execScript: string;
+    let execOpts: any = {};
     switch (process.platform) {
       case "win32": // Windows
-        selectedFilePath = execSync(WINDOWS_FILE_SELECTION_SCRIPT, {
-          shell: "powershell.exe",
-        })
-          .toString()
-          .trim();
+        execScript =
+          dataSource.type === "file"
+            ? WINDOWS_FILE_SELECTION_SCRIPT
+            : WINDOWS_FOLDER_SELECTION_SCRIPT;
+        execOpts = { shell: "powershell.exe" };
         break;
       case "darwin": // MacOS
-        selectedFilePath = execSync(MACOS_FILE_SELECTION_SCRIPT)
-          .toString()
-          .trim();
+        execScript =
+          dataSource.type === "file"
+            ? MACOS_FILE_SELECTION_SCRIPT
+            : MACOS_FOLDER_SELECTION_SCRIPT;
         break;
       default: // Unsupported OS
         console.log(red("Unsupported OS error!"));
         process.exit(1);
     }
-    // Check is pdf file
-    if (!selectedFilePath.endsWith(".pdf")) {
-      console.log(
-        red("Unsupported file error! Please select a valid PDF file!"),
-      );
-      process.exit(1);
+    selectedPath = execSync(execScript, execOpts).toString().trim();
+    if (dataSource.type === "file") {
+      let fileType = path.extname(selectedPath);
+      if (!supportedContextFileTypes.includes(fileType)) {
+        console.log(
+          red(
+            `Please select a supported file type: ${supportedContextFileTypes}`,
+          ),
+        );
+        process.exit(1);
+      }
     }
-    return selectedFilePath;
+    return selectedPath;
   } catch (error) {
     console.log(
       red(
-        "Got error when trying to select file! Please try again or select other options.",
+        "Got error when trying to select local context data! Please try again or select other options.",
       ),
     );
     process.exit(1);
@@ -373,107 +406,155 @@ export const askQuestions = async (
     if (ciInfo.isCI) {
       program.engine = getPrefOrDefault("engine");
     } else {
-      let choices = [
-        {
-          title: "No data, just a simple chat",
-          value: "simple",
-        },
-        { title: "Use an example PDF", value: "exampleFile" },
-      ];
-      if (process.platform === "win32" || process.platform === "darwin") {
-        choices.push({ title: "Use a local PDF file", value: "localFile" });
-      }
-      if (program.framework === "fastapi") {
-        choices.push({ title: "Use website content", value: "web" });
-      }
-
-      const { dataSource } = await prompts(
-        {
-          type: "select",
-          name: "dataSource",
-          message: "Which data source would you like to use?",
-          choices: choices,
-          initial: 1,
-        },
-        handlers,
-      );
-      // Initialize with default config
-      program.dataSource = getPrefOrDefault("dataSource");
-      if (program.dataSource) {
-        switch (dataSource) {
-          case "simple":
-            program.engine = "simple";
-            break;
-          case "exampleFile":
-            program.engine = "context";
-            // example file is a context app with dataSource.type = file but has no config
-            program.dataSource = { type: "file", config: {} };
-            break;
-          case "localFile":
-            program.engine = "context";
-            program.dataSource.type = "file";
-            // If the user selected the "pdf" option, ask them to select a file
-            program.dataSource.config = {
-              contextFile: await selectPDFFile(),
-            };
-            break;
-          case "web":
-            program.engine = "context";
-            program.dataSource.type = "web";
-            break;
+      if (program.files) {
+        program.engine = "context";
+        let filePath = program.files;
+        // Check the path is exist
+        if (!fs.existsSync(filePath)) {
+          console.log("File or folder not found");
+          process.exit(1);
+        } else {
+          program.dataSource = {
+            type: fs.lstatSync(filePath).isDirectory() ? "folder" : "file",
+            config: {
+              path: filePath,
+            },
+          };
         }
-      }
-    }
-
-    if (program.dataSource?.type === "web" && program.framework === "fastapi") {
-      let { baseUrl } = await prompts(
-        {
-          type: "text",
-          name: "baseUrl",
-          message: "Please provide base URL of the website:",
-          initial: "https://www.llamaindex.ai",
-        },
-        handlers,
-      );
-      try {
-        if (!baseUrl.includes("://")) {
-          baseUrl = `https://${baseUrl}`;
-        }
-        let checkUrl = new URL(baseUrl);
-        if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
-          throw new Error("Invalid protocol");
-        }
-      } catch (error) {
-        console.log(
-          red(
-            "Invalid URL provided! Please provide a valid URL (e.g. https://www.llamaindex.ai)",
-          ),
-        );
-        process.exit(1);
-      }
-      program.dataSource.config = {
-        baseUrl: baseUrl,
-        depth: 1,
-      };
-    }
-
-    if (program.engine !== "simple" && !program.vectorDb) {
-      if (ciInfo.isCI) {
-        program.vectorDb = getPrefOrDefault("vectorDb");
       } else {
-        const { vectorDb } = await prompts(
+        let choices = [
+          {
+            title: "No data, just a simple chat",
+            value: "simple",
+          },
+          { title: "Use an example PDF", value: "exampleFile" },
+        ];
+        if (process.platform === "win32" || process.platform === "darwin") {
+          if (process.platform === "win32" || process.platform === "darwin") {
+            choices.push({
+              title: `Use a local file, supported types: ${supportedContextFileTypes}`,
+              value: "localFile",
+            });
+            choices.push({
+              title: `Use a local folder`,
+              value: "localFolder",
+            });
+          }
+        }
+        if (program.framework === "fastapi") {
+          choices.push({ title: "Use website content", value: "web" });
+        }
+
+        const { dataSource } = await prompts(
           {
             type: "select",
-            name: "vectorDb",
-            message: "Would you like to use a vector database?",
-            choices: getVectorDbChoices(program.framework),
-            initial: 0,
+            name: "dataSource",
+            message: "Which data source would you like to use?",
+            choices: choices,
+            initial: 1,
           },
           handlers,
         );
-        program.vectorDb = vectorDb;
-        preferences.vectorDb = vectorDb;
+        // Initialize with default config
+        program.dataSource = getPrefOrDefault("dataSource");
+        if (program.dataSource) {
+          switch (dataSource) {
+            case "simple":
+              program.engine = "simple";
+              break;
+            case "exampleFile":
+              program.engine = "context";
+              // example file is a context app with dataSource.type = file but has no config
+              program.dataSource = { type: "file", config: {} };
+              break;
+            case "localFile":
+              program.engine = "context";
+              program.dataSource.type = "file";
+              program.dataSource.config = {
+                path: await selectLocalContextData(program.dataSource),
+              };
+              break;
+            case "localFolder":
+              program.engine = "context";
+              program.dataSource.type = "folder";
+              // If the user selected the "pdf" option, ask them to select a file
+              program.dataSource.config = {
+                path: await selectLocalContextData(program.dataSource),
+              };
+              break;
+            case "web":
+              program.engine = "context";
+              program.dataSource.type = "web";
+              break;
+          }
+        }
       }
+
+      if (
+        program.dataSource?.type === "web" &&
+        program.framework === "fastapi"
+      ) {
+        let { baseUrl } = await prompts(
+          {
+            type: "text",
+            name: "baseUrl",
+            message: "Please provide base URL of the website:",
+            initial: "https://www.llamaindex.ai",
+          },
+          handlers,
+        );
+        try {
+          if (!baseUrl.includes("://")) {
+            baseUrl = `https://${baseUrl}`;
+          }
+          let checkUrl = new URL(baseUrl);
+          if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
+            throw new Error("Invalid protocol");
+          }
+        } catch (error) {
+          console.log(
+            red(
+              "Invalid URL provided! Please provide a valid URL (e.g. https://www.llamaindex.ai)",
+            ),
+          );
+          process.exit(1);
+        }
+        program.dataSource.config = {
+          baseUrl: baseUrl,
+          depth: 1,
+        };
+      }
+
+      if (program.engine !== "simple" && !program.vectorDb) {
+        if (ciInfo.isCI) {
+          program.vectorDb = getPrefOrDefault("vectorDb");
+        } else {
+          const { vectorDb } = await prompts(
+            {
+              type: "select",
+              name: "vectorDb",
+              message: "Would you like to use a vector database?",
+              choices: getVectorDbChoices(program.framework),
+              initial: 0,
+            },
+            handlers,
+          );
+          program.vectorDb = vectorDb;
+          preferences.vectorDb = vectorDb;
+        }
+      }
+    }
+  } else {
+    if (program.engine === "context") {
+      program.dataSource = {
+        type: "file",
+        config: {},
+      };
+    } else if (program.engine === "simple") {
+      program.dataSource = {
+        type: "none",
+        config: {},
+      };
     }
   }
 
