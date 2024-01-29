@@ -397,7 +397,7 @@ export const askQuestions = async (
         handlers,
       );
       // Initialize with default config
-      program.dataSource = {
+      program.dataSource = getPrefOrDefault("dataSource");
         type: "none",
         config: {},
       };
