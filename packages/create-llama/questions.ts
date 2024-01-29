@@ -153,7 +153,10 @@ export const askQuestions = async (
         ];
 
         const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
-        if (program.vectorDb === "none" && hasOpenAiKey) {
+        if (
+          (program.vectorDb === "none" || program.vectorDb === undefined) &&
+          hasOpenAiKey
+        ) {
           actionChoices.push({
             title:
               "Generate code, install dependencies, and run the app (~2 min)",
@@ -405,6 +408,7 @@ export const askQuestions = async (
             break;
           case "exampleFile":
             program.engine = "context";
+            program.dataSource = { type: "file", config: {} };
             break;
           case "localFile":
             program.engine = "context";
@@ -423,18 +427,35 @@ export const askQuestions = async (
     }
 
     if (program.dataSource?.type === "web" && program.framework === "fastapi") {
-      const { baseUrl } = await prompts(
+      let { baseUrl } = await prompts(
         {
           type: "text",
           name: "baseUrl",
           message: "Please provide base URL of the website:",
-          initial: "https://ts.llamaindex.ai/modules/",
+          initial: "https://www.llamaindex.ai",
         },
         handlers,
       );
+      try {
+        if (!baseUrl.includes("://")) {
+          baseUrl = `https://${baseUrl}`;
+        }
+        let checkUrl = new URL(baseUrl);
+        if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
+          throw new Error("Invalid protocol");
+        }
+      } catch (error) {
+        console.log(
+          red(
+            "Invalid URL provided! Please provide a valid URL (e.g. https://ts.llamaindex.ai)",
+          ),
+        );
+        process.exit(1);
+      }
+      console.log("baseUrl: ", baseUrl);
       program.dataSource.config = {
         baseUrl: baseUrl,
-        depth: 2,
+        depth: 1,
       };
     }
     if (program.engine !== "simple" && !program.vectorDb) {
