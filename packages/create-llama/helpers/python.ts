@@ -181,7 +181,7 @@ export const installPythonTemplate = async ({
       parents: true,
       cwd: VectorDBPath,
     });
-    if (dataSource.type !== "none") {
+    if (dataSource?.type !== "none" && dataSource?.type !== undefined) {
       const loaderPath = path.join(
         compPath,
         "loaders",

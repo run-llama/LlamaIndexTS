@@ -396,7 +396,11 @@ export const askQuestions = async (
         },
         handlers,
       );
-      program.dataSource = getPrefOrDefault("dataSource");
+      // Initialize with default config
+      program.dataSource = {
+        type: "none",
+        config: {},
+      };
       switch (dataSource) {
         case "simple":
           program.engine = "simple";
@@ -419,7 +423,7 @@ export const askQuestions = async (
       }
     }
 
-    if (program.dataSource.type === "web" && program.framework === "fastapi") {
+    if (program.dataSource?.type === "web" && program.framework === "fastapi") {
       const { baseUrl } = await prompts(
         {
           type: "text",
