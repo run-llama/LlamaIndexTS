@@ -28,10 +28,6 @@ for (const templateType of templateTypes) {
           // nextjs doesn't support simple templates - skip tests
           continue;
         }
-        if (templateEngine === "context") {
-          // we don't test context templates because it needs OPEN_AI_KEY
-          continue;
-        }
         const appType: AppType =
           templateFramework === "express" || templateFramework === "fastapi"
             ? templateType === "simple"
