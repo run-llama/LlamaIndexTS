@@ -1,11 +1,11 @@
 import {
   CompactAndRefine,
   OpenAI,
-  PapaCSVReader,
   ResponseSynthesizer,
   serviceContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
+import { PapaCSVReader } from "llamaindex/readers/CSVReader";
 
 async function main() {
   // Load CSV

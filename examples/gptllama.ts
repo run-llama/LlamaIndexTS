@@ -1,6 +1,4 @@
 import { stdin as input, stdout as output } from "node:process";
-// readline/promises is still experimental so not in @types/node yet
-// @ts-ignore
 import readline from "node:readline/promises";
 
 import { ChatMessage, LlamaDeuce, OpenAI } from "llamaindex";
