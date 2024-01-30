@@ -134,6 +134,13 @@ const program = new Commander.Command(packageJson.name)
   Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
 `,
   )
+  .option(
+    "--vector-db <vectorDb>",
+    `
+
+  Select which vector database you would like to use, such as 'none', 'pg' or 'mongo'. The default option is not to use a vector database and use the local filesystem instead ('none').
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
 if (process.argv.includes("--no-frontend")) {
