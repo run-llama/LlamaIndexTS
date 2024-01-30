@@ -169,11 +169,12 @@ export const installPythonTemplate = async ({
 
   if (engine === "context") {
     const compPath = path.join(__dirname, "..", "templates", "components");
+    let vectorDbDirName = vectorDb ?? "none";
     const VectorDBPath = path.join(
       compPath,
       "vectordbs",
       "python",
-      vectorDb || "none",
+      vectorDbDirName,
     );
     const enginePath = path.join(root, "app", "engine");
 
@@ -181,18 +182,12 @@ export const installPythonTemplate = async ({
       parents: true,
       cwd: VectorDBPath,
     });
-    if (dataSource?.type !== undefined) {
-      const loaderPath = path.join(
-        compPath,
-        "loaders",
-        "python",
-        dataSource.type,
-      );
-      await copy("**", enginePath, {
-        parents: true,
-        cwd: loaderPath,
-      });
-    }
+    let dataSourceDir = dataSource?.type ?? "file";
+    const loaderPath = path.join(compPath, "loaders", "python", dataSourceDir);
+    await copy("**", enginePath, {
+      parents: true,
+      cwd: loaderPath,
+    });
   }
 
   const addOnDependencies = getAdditionalDependencies(vectorDb);
