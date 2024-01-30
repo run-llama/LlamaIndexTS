@@ -12,8 +12,7 @@ export class AstraDBVectorStore implements VectorStore {
 
   astraDBClient: AstraDB;
   idKey: string;
-  contentKey: string | undefined; // if undefined the entirety of the node aside from the id and embedding will be stored as content
-  metadataKey: string;
+  contentKey: string;
 
   private collection: Collection | undefined;
 
@@ -22,6 +21,7 @@ export class AstraDBVectorStore implements VectorStore {
       params?: {
         token: string;
         endpoint: string;
+        namespace: string;
       };
     },
   ) {
@@ -40,12 +40,15 @@ export class AstraDBVectorStore implements VectorStore {
       if (!endpoint) {
         throw new Error("Must specify ASTRA_DB_ENDPOINT via env variable.");
       }
-      this.astraDBClient = new AstraDB(token, endpoint);
+      const namespace =
+        init?.params?.namespace ??
+        process.env.ASTRA_DB_NAMESPACE ??
+        "default_keyspace";
+      this.astraDBClient = new AstraDB(token, endpoint, namespace);
     }
 
     this.idKey = init?.idKey ?? "_id";
-    this.contentKey = init?.contentKey;
-    this.metadataKey = init?.metadataKey ?? "metadata";
+    this.contentKey = init?.contentKey ?? "text";
   }
 
   /**
@@ -102,12 +105,13 @@ export class AstraDBVectorStore implements VectorStore {
     if (!nodes || nodes.length === 0) {
       return [];
     }
+
     const dataToInsert = nodes.map((node) => {
       return {
-        _id: node.id_,
-        $vector: node.getEmbedding(),
-        content: node.getContent(MetadataMode.ALL),
-        metadata: node.metadata,
+        $vector: node.embedding,
+        [this.idKey]: node.id_,
+        [this.contentKey]: node.getContent(MetadataMode.NONE),
+        ...node.metadata,
       };
     });
 
@@ -122,8 +126,7 @@ export class AstraDBVectorStore implements VectorStore {
 
     for (const batch of batchData) {
       console.debug(`Inserting batch of size ${batch.length}`);
-
-      const result = await collection.insertMany(batch);
+      await collection.insertMany(batch);
     }
 
     return dataToInsert.map((node) => node._id);
@@ -185,26 +188,19 @@ export class AstraDBVectorStore implements VectorStore {
     const similarities: number[] = [];
 
     await cursor.forEach(async (row: Record<string, any>) => {
-      const id = row[this.idKey];
-      const embedding = row.$vector;
-      const similarity = row.$similarity;
-      const metadata = row[this.metadataKey];
-
-      // Remove fields from content
-      delete row[this.idKey];
-      delete row.$similarity;
-      delete row.$vector;
-      delete row[this.metadataKey];
-
-      const content = this.contentKey
-        ? row[this.contentKey]
-        : JSON.stringify(row);
+      const {
+        [this.idKey]: id,
+        [this.contentKey]: content,
+        $vector: embedding,
+        $similarity: similarity,
+        ...metadata
+      } = row;
 
       const node = new Document({
         id_: id,
         text: content,
-        metadata: metadata ?? {},
-        embedding: embedding,
+        metadata,
+        embedding,
       });
 
       ids.push(id);

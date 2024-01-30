@@ -8,7 +8,7 @@ const collectionName = "movie_reviews";
 
 async function main() {
   try {
-    const astraVS = new AstraDBVectorStore();
+    const astraVS = new AstraDBVectorStore({ contentKey: "reviewtext" });
     await astraVS.connect(collectionName);
 
     const ctx = serviceContextFromDefaults();

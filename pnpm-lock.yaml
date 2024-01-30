@@ -116,8 +116,8 @@ importers:
   examples:
     dependencies:
       '@datastax/astra-db-ts':
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^0.1.4
+        version: 0.1.4
       '@notionhq/client':
         specifier: ^2.2.14
         version: 2.2.14
@@ -135,7 +135,7 @@ importers:
         version: 16.3.1
       llamaindex:
         specifier: latest
-        version: 0.1.2(typescript@5.3.3)
+        version: link:../packages/core
       mongodb:
         specifier: ^6.2.0
         version: 6.3.0
@@ -555,22 +555,6 @@ packages:
 
   /@anthropic-ai/sdk@0.12.4:
     resolution: {integrity: sha512-KIho+Di8LZvtyLph1TKI1GiujApjryi+B5gXrRfmFsUmwDGJjzlFO/MKyvuJJVUyxCjYyoFLT53k/WweL1TsiQ==}
-    dependencies:
-      '@types/node': 18.19.9
-      '@types/node-fetch': 2.6.9
-      abort-controller: 3.0.0
-      agentkeepalive: 4.5.0
-      digest-fetch: 1.3.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0(encoding@0.1.13)
-      web-streams-polyfill: 3.2.1
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@anthropic-ai/sdk@0.9.1:
-    resolution: {integrity: sha512-wa1meQ2WSfoY8Uor3EdrJq0jTiZJoKoSii2ZVWRY1oN4Tlr5s59pADg9T79FTbPe1/se5c3pBeZgJL63wmuoBA==}
     dependencies:
       '@types/node': 18.19.9
       '@types/node-fetch': 2.6.9
@@ -2257,19 +2241,6 @@ packages:
       kuler: 2.0.0
     dev: false
 
-  /@datastax/astra-db-ts@0.1.2:
-    resolution: {integrity: sha512-JfgQCjNuyqJ4ki38pWBBz9oR/UJHJDruqjSLAZp0sjFr17asr2QMNsNTiW30otNqjA+mWBy9lS6x+mFXESvr0Q==}
-    engines: {node: '>=14.0.0'}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      axios: 1.6.2
-      bson: 6.2.0
-      winston: 3.11.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /@datastax/astra-db-ts@0.1.4:
     resolution: {integrity: sha512-EG/7UUuEdxpeyGV1fkGIUX5jjUcESToCtohoti0rNMEm01T1E4NXOPHXMnkyXo71zqrlUoTlGn5du+acnlbslQ==}
     engines: {node: '>=14.0.0'}
@@ -3551,15 +3522,6 @@ packages:
       node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
-    dev: false
-
-  /@mistralai/mistralai@0.0.7:
-    resolution: {integrity: sha512-47FiV/GBnt6gug99ZfDBcBofYuYvqT5AyhUDdtktUbCN+gq52tmiAbtwc88k7hlyUWHzJ28VpHRDfNTRfaWKxA==}
-    dependencies:
-      axios: 1.6.2
-      axios-retry: 4.0.0(axios@1.6.2)
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /@mongodb-js/saslprep@1.1.1:
@@ -5647,19 +5609,10 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /axios-retry@4.0.0(axios@1.6.2):
-    resolution: {integrity: sha512-F6P4HVGITD/v4z9Lw2mIA24IabTajvpDZmKa6zq/gGwn57wN5j1P3uWrAV0+diqnW6kTM2fTqmWNfgYWGmMuiA==}
-    peerDependencies:
-      axios: 0.x || 1.x
-    dependencies:
-      axios: 1.6.2
-      is-retry-allowed: 2.2.0
-    dev: false
-
   /axios@1.6.2:
     resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
     dependencies:
-      follow-redirects: 1.15.3
+      follow-redirects: 1.15.5
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -8648,16 +8601,6 @@ packages:
     resolution: {integrity: sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==}
     dev: false
 
-  /follow-redirects@1.15.3:
-    resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dev: false
-
   /follow-redirects@1.15.5:
     resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
     engines: {node: '>=4.0'}
@@ -10101,11 +10044,6 @@ packages:
     resolution: {integrity: sha512-i1h+y50g+0hRbBD+dbnInl3JlJ702aar58snAeX+MxBAPvzXGej7sYoPMhlnykabt0ZzCJNBEyzMlekuQZN7fA==}
     dev: true
 
-  /is-retry-allowed@2.2.0:
-    resolution: {integrity: sha512-XVm7LOeLpTW4jV19QSH38vkswxoLud8sQ57YwJVTPWdiaI9I8keEhGFpBlslyVsgdQy4Opg8QOLb8YRgsyZiQg==}
-    engines: {node: '>=10'}
-    dev: false
-
   /is-root@2.1.0:
     resolution: {integrity: sha512-AGOriNp96vNBd3HtU+RzFEc75FfR5ymiYv8E553I71SCeXBiMsVDUtdio1OEFvrPyLIQ9tVR5RxXIFe5PUFjMg==}
     engines: {node: '>=6'}
@@ -10941,56 +10879,6 @@ packages:
       rfdc: 1.3.1
       wrap-ansi: 9.0.0
     dev: true
-
-  /llamaindex@0.1.2(typescript@5.3.3):
-    resolution: {integrity: sha512-dH9xn8dMYQ66ssqYuM/C4moRaOLIB7+OokQ11/px40rdBLieQrnsY5NyyMl/h1QLDwU+h4Miaj/L49gZoaXJNQ==}
-    engines: {node: '>=18.0.0'}
-    dependencies:
-      '@anthropic-ai/sdk': 0.9.1
-      '@datastax/astra-db-ts': 0.1.4
-      '@mistralai/mistralai': 0.0.7
-      '@notionhq/client': 2.2.14
-      '@pinecone-database/pinecone': 1.1.3
-      '@qdrant/js-client-rest': 1.7.0(typescript@5.3.3)
-      '@xenova/transformers': 2.14.1
-      assemblyai: 4.2.1
-      chromadb: 1.7.3(openai@4.26.0)
-      file-type: 18.7.0
-      js-tiktoken: 1.0.8
-      lodash: 4.17.21
-      mammoth: 1.6.0
-      md-utils-ts: 2.0.0
-      mongodb: 6.3.0
-      notion-md-crawler: 0.0.2
-      openai: 4.26.0
-      papaparse: 5.4.1
-      pathe: 1.1.2
-      pdfjs-dist: 4.0.269
-      pg: 8.11.3
-      pgvector: 0.1.7
-      portkey-ai: 0.1.16
-      rake-modified: 1.0.8
-      replicate: 0.21.1
-      string-strip-html: 13.4.5
-      wink-nlp: 1.14.3
-    transitivePeerDependencies:
-      - '@aws-sdk/credential-providers'
-      - '@google/generative-ai'
-      - '@mongodb-js/zstd'
-      - bufferutil
-      - cohere-ai
-      - debug
-      - encoding
-      - gcp-metadata
-      - kerberos
-      - mongodb-client-encryption
-      - pg-native
-      - snappy
-      - socks
-      - supports-color
-      - typescript
-      - utf-8-validate
-    dev: false
 
   /load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
@@ -14375,11 +14263,6 @@ packages:
       htmlparser2: 6.1.0
       lodash: 4.17.21
       strip-ansi: 6.0.1
-
-  /replicate@0.21.1:
-    resolution: {integrity: sha512-ftR416+tuD55u6Rz0s5QsxoC2ZasslyFg9jxytirPhqFQwTQy9arU0vF29811t4iws8cMc+neL0IUzyq0pFlkQ==}
-    engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
-    dev: false
 
   /replicate@0.25.2:
     resolution: {integrity: sha512-c5otBJ5E66XLS0X196pBCsyy85b03ZBLeV/lbKfU8cqfkt3Qd6NGEiPwTtxtsQ4AznggMJNn2Qq68t/bV85M2w==}
