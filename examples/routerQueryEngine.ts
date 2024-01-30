@@ -36,7 +36,7 @@ async function main() {
   });
 
   // Create query engines
-  const listQueryEngine = vectorIndex.asQueryEngine();
+  const vectorQueryEngine = vectorIndex.asQueryEngine();
   const summaryQueryEngine = summaryIndex.asQueryEngine();
 
   // Create a router query engine
@@ -46,9 +46,9 @@ async function main() {
     }),
     queryEngineTools: [
       {
-        queryEngine: listQueryEngine,
+        queryEngine: vectorQueryEngine,
         metadata: {
-          name: "list_query_engine",
+          name: "vector_query_engine",
           description: "Useful for summarization questions related to Abramov",
         },
       },

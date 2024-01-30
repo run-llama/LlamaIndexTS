@@ -209,15 +209,20 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     }
   }
 }
+
 async function combineResponses(
   summarizer: TreeSummarize,
   responses: Response[],
   queryBundle: QueryBundle,
+  verbose: boolean = false,
 ): Promise<Response> {
-  console.log("Combining responses from multiple query engines.");
+  if (verbose) {
+    console.log("Combining responses from multiple query engines.");
+  }
 
   const responseStrs = [];
   const sourceNodes = [];
+
   for (const response of responses) {
     if (response?.sourceNodes) {
       sourceNodes.push(...response.sourceNodes);
@@ -288,7 +293,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
       for (let i = 0; i < result.selections.length; i++) {
         const engineInd = result.selections[i];
         const logStr = `Selecting query engine ${engineInd}: ${result.selections[i]}.`;
-        console.log(logStr);
+
         if (this._verbose) {
           console.log(logStr + "\n");
         }
@@ -306,7 +311,9 @@ export class RouterQueryEngine implements BaseQueryEngine {
           this._summarizer,
           responses,
           queryBundle,
+          this._verbose,
         );
+
         return finalResponse;
       } else {
         return responses[0];
