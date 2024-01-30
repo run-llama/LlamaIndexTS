@@ -138,7 +138,7 @@ const program = new Commander.Command(packageJson.name)
     "--vector-db <vectorDb>",
     `
 
-  Select where you would like to save vector database. For example 'pg' or 'none', 'mongo'. The default option is 'none'.
+  Select which vector database you would like to use, such as 'none', 'pg' or 'mongo'. The default option is not to use a vector database and use the local filesystem instead ('none').
 `,
   )
   .allowUnknownOption()
