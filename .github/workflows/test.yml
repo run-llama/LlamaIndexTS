@@ -54,7 +54,7 @@ jobs:
       - name: Build
         run: pnpm run build --filter llamaindex
       - name: Copy examples
-        run: cp -r ./examples ${{ runner.temp }}
+        run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
       - name: Pack
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core
