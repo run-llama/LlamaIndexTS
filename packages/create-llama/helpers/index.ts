@@ -120,7 +120,7 @@ const installDependencies = async (
   }
 };
 
-const copyTestData = async (root: string, contextFile?: string) => {
+const copyContextData = async (root: string, contextFile?: string) => {
   const destPath = path.join(root, "data");
   if (contextFile) {
     console.log(`\nCopying provided file to ${cyan(destPath)}\n`);
@@ -192,9 +192,13 @@ export const installTemplate = async (
     });
 
     if (props.engine === "context") {
-      if (props.dataSource?.type === "file") {
-        // Copy test pdf file
-        await copyTestData(props.root, props.framework);
+      if (
+        props.dataSource?.type === "file" &&
+        "contextFile" in props.dataSource.config
+      ) {
+        await copyContextData(props.root, props.dataSource.config.contextFile);
+      } else {
+        copyContextData(props.root);
       }
       await installDependencies(
         props.framework,

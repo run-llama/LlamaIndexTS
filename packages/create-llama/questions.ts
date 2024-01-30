@@ -406,6 +406,8 @@ export const askQuestions = async (
             break;
           case "exampleFile":
             program.engine = "context";
+            // example file is a context app with dataSource.type = file but has no config
+            program.dataSource = { type: "file", config: {} };
             break;
           case "localFile":
             program.engine = "context";
