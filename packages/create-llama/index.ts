@@ -241,7 +241,7 @@ async function run(): Promise<void> {
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
     postInstallAction: program.postInstallAction,
-    contextFile: program.contextFile,
+    dataSource: program.dataSource,
   });
   conf.set("preferences", preferences);
 
@@ -278,7 +278,6 @@ async function notifyUpdate(): Promise<void> {
           "\n",
       );
     }
-    process.exit();
   } catch {
     // ignore error
   }

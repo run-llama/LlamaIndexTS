@@ -13,9 +13,10 @@ import { installPythonTemplate } from "./python";
 import { downloadAndExtractRepo } from "./repo";
 import {
   InstallTemplateArgs,
-  TemplateEngine,
+  TemplateDataSource,
   TemplateFramework,
   TemplateVectorDB,
+  WebSourceConfig,
 } from "./types";
 import { installTSTemplate } from "./typescript";
 
@@ -26,6 +27,7 @@ const createEnvLocalFile = async (
     vectorDb?: TemplateVectorDB;
     model?: string;
     framework?: TemplateFramework;
+    dataSource?: TemplateDataSource;
   },
 ) => {
   const envFileName = ".env";
@@ -58,48 +60,30 @@ const createEnvLocalFile = async (
     }
   }
 
+  switch (opts?.dataSource?.type) {
+    case "web": {
+      let webConfig = opts?.dataSource.config as WebSourceConfig;
+      content += `# web loader config\n`;
+      content += `BASE_URL=${webConfig.baseUrl}\n`;
+      content += `URL_PREFIX=${webConfig.baseUrl}\n`;
+      content += `MAX_DEPTH=${webConfig.depth}\n`;
+      break;
+    }
+  }
+
   if (content) {
     await fs.writeFile(path.join(root, envFileName), content);
     console.log(`Created '${envFileName}' file. Please check the settings.`);
   }
 };
 
-const copyTestData = async (
-  root: string,
+const installDependencies = async (
   framework: TemplateFramework,
   packageManager?: PackageManager,
-  engine?: TemplateEngine,
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
-  contextFile?: string,
-  // eslint-disable-next-line max-params
 ) => {
-  if (engine === "context") {
-    const destPath = path.join(root, "data");
-    if (contextFile) {
-      console.log(`\nCopying provided file to ${cyan(destPath)}\n`);
-      await fs.mkdir(destPath, { recursive: true });
-      await fs.copyFile(
-        contextFile,
-        path.join(destPath, path.basename(contextFile)),
-      );
-    } else {
-      const srcPath = path.join(
-        __dirname,
-        "..",
-        "templates",
-        "components",
-        "data",
-      );
-      console.log(`\nCopying test data to ${cyan(destPath)}\n`);
-      await copy("**", destPath, {
-        parents: true,
-        cwd: srcPath,
-      });
-    }
-  }
-
-  if (packageManager && engine === "context") {
+  if (packageManager) {
     const runGenerate = `${cyan(
       framework === "fastapi"
         ? "poetry run python app/engine/generate.py"
@@ -108,9 +92,14 @@ const copyTestData = async (
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
     const hasVectorDb = vectorDb && vectorDb !== "none";
     if (framework === "fastapi") {
-      if (hasOpenAiKey && vectorDb === "none" && isHavingPoetryLockFile()) {
+      if (hasOpenAiKey && !hasVectorDb && isHavingPoetryLockFile()) {
         console.log(`Running ${runGenerate} to generate the context data.`);
-        tryPoetryRun("python app/engine/generate.py");
+        let result = tryPoetryRun("python app/engine/generate.py");
+        if (!result) {
+          console.log(`Failed to run ${runGenerate}.`);
+          process.exit(1);
+        }
+        console.log(`Generated context data`);
         return;
       }
     } else {
@@ -128,6 +117,31 @@ const copyTestData = async (
       settings.length > 0 ? `After setting ${settings.join(" and ")}, ` : "";
     const generateMessage = `run ${runGenerate} to generate the context data.`;
     console.log(`\n${settingsMessage}${generateMessage}\n\n`);
+  }
+};
+
+const copyContextData = async (root: string, contextFile?: string) => {
+  const destPath = path.join(root, "data");
+  if (contextFile) {
+    console.log(`\nCopying provided file to ${cyan(destPath)}\n`);
+    await fs.mkdir(destPath, { recursive: true });
+    await fs.copyFile(
+      contextFile,
+      path.join(destPath, path.basename(contextFile)),
+    );
+  } else {
+    const srcPath = path.join(
+      __dirname,
+      "..",
+      "templates",
+      "components",
+      "data",
+    );
+    console.log(`\nCopying test data to ${cyan(destPath)}\n`);
+    await copy("**", destPath, {
+      parents: true,
+      cwd: srcPath,
+    });
   }
 };
 
@@ -174,18 +188,26 @@ export const installTemplate = async (
       vectorDb: props.vectorDb,
       model: props.model,
       framework: props.framework,
+      dataSource: props.dataSource,
     });
 
-    // Copy test pdf file
-    await copyTestData(
-      props.root,
-      props.framework,
-      props.packageManager,
-      props.engine,
-      props.openAiKey,
-      props.vectorDb,
-      props.contextFile,
-    );
+    if (props.engine === "context") {
+      if (
+        props.dataSource?.type === "file" &&
+        "contextFile" in props.dataSource.config
+      ) {
+        await copyContextData(props.root, props.dataSource.config.contextFile);
+      } else {
+        await copyContextData(props.root);
+      }
+      await installDependencies(
+        props.framework,
+        props.packageManager,
+        props.openAiKey,
+        props.vectorDb,
+      );
+      console.log("installed Dependencies");
+    }
   } else {
     // this is a frontend for a full-stack app, create .env file with model information
     const content = `MODEL=${props.model}\nNEXT_PUBLIC_MODEL=${props.model}\n`;
