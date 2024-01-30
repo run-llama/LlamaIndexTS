@@ -94,7 +94,11 @@ const installDependencies = async (
     if (framework === "fastapi") {
       if (hasOpenAiKey && vectorDb === "none" && isHavingPoetryLockFile()) {
         console.log(`Running ${runGenerate} to generate the context data.`);
-        tryPoetryRun("python app/engine/generate.py");
+        let result = tryPoetryRun("python app/engine/generate.py");
+        if (!result) {
+          console.log(`Failed to run ${runGenerate}.`);
+          process.exit(1);
+        }
         return;
       }
     } else {
@@ -194,7 +198,7 @@ export const installTemplate = async (
           await copyTestData(props.root);
         }
       }
-      installDependencies(
+      await installDependencies(
         props.framework,
         props.packageManager,
         props.openAiKey,
