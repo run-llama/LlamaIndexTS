@@ -278,7 +278,6 @@ async function notifyUpdate(): Promise<void> {
           "\n",
       );
     }
-    process.exit();
   } catch {
     // ignore error
   }
