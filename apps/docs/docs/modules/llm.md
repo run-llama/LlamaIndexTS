@@ -16,6 +16,18 @@ const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 const serviceContext = serviceContextFromDefaults({ llm: openaiLLM });
 ```
 
+## Azure OpenAI
+
+To use Azure OpenAI, you only need to set a few environment variables.
+
+For example:
+
+```
+export AZURE_OPENAI_KEY="<YOUR KEY HERE>"
+export AZURE_OPENAI_ENDPOINT="<YOUR ENDPOINT, see https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart?tabs=command-line%2Cpython&pivots=rest-api>"
+export AZURE_OPENAI_DEPLOYMENT="gpt-4" # or some other deployment name
+```
+
 ## API Reference
 
 - [OpenAI](../../api/classes/OpenAI.md)
