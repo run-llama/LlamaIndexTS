@@ -191,7 +191,7 @@ export const installTemplate = async (
         // Copy test pdf file
         await copyTestData(props.root, props.framework);
       }
-      installDependencies(
+      await installDependencies(
         props.framework,
         props.packageManager,
         props.openAiKey,
