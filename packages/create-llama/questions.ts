@@ -426,20 +426,37 @@ export const askQuestions = async (
     }
 
     if (program.dataSource?.type === "web" && program.framework === "fastapi") {
-      const { baseUrl } = await prompts(
+      let { baseUrl } = await prompts(
         {
           type: "text",
           name: "baseUrl",
           message: "Please provide base URL of the website:",
-          initial: "https://ts.llamaindex.ai/modules/",
+          initial: "https://www.llamaindex.ai",
         },
         handlers,
       );
+      try {
+        if (!baseUrl.includes("://")) {
+          baseUrl = `https://${baseUrl}`;
+        }
+        let checkUrl = new URL(baseUrl);
+        if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
+          throw new Error("Invalid protocol");
+        }
+      } catch (error) {
+        console.log(
+          red(
+            "Invalid URL provided! Please provide a valid URL (e.g. https://www.llamaindex.ai)",
+          ),
+        );
+        process.exit(1);
+      }
       program.dataSource.config = {
         baseUrl: baseUrl,
-        depth: 2,
+        depth: 1,
       };
     }
+
     if (program.engine !== "simple" && !program.vectorDb) {
       if (ciInfo.isCI) {
         program.vectorDb = getPrefOrDefault("vectorDb");
