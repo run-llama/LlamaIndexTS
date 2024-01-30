@@ -261,6 +261,25 @@ export class RouterQueryEngine implements BaseQueryEngine {
     this._verbose = init.verbose ?? false;
   }
 
+  static fromDefaults(init: {
+    queryEngineTools: QueryEngineTool[];
+    selector: BaseSelector;
+    serviceContext?: ServiceContext;
+    summarizer?: TreeSummarize;
+    verbose?: boolean;
+  }) {
+    const serviceContext =
+      init.serviceContext ?? serviceContextFromDefaults({});
+
+    return new RouterQueryEngine({
+      selector: init.selector,
+      queryEngineTools: init.queryEngineTools,
+      serviceContext,
+      summarizer: init.summarizer,
+      verbose: init.verbose,
+    });
+  }
+
   async _query(queryBundle: QueryBundle): Promise<Response> {
     const result = await this._selector.select(this._metadatas, queryBundle);
 

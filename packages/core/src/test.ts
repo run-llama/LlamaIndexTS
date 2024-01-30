@@ -7,7 +7,7 @@ import {
   SummaryIndex,
   VectorStoreIndex,
   serviceContextFromDefaults,
-} from "llamaindex";
+} from "./index";
 
 async function main() {
   // Load documents from a directory

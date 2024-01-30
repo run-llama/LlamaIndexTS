@@ -30,6 +30,7 @@ export * from "./readers/PDFReader";
 export * from "./readers/SimpleDirectoryReader";
 export * from "./readers/SimpleMongoReader";
 export * from "./readers/base";
+export * from "./selectors";
 export * from "./storage";
 export * from "./synthesizers";
 export type * from "./types";
