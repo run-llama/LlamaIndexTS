@@ -37,7 +37,7 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
 
 const mergePoetryDependencies = (
   dependencies: Dependency[],
-  existingDependencies: any,
+  existingDependencies: Record<string, Omit<Dependency, "name">>,
 ) => {
   for (const dependency of dependencies) {
     let value = existingDependencies[dependency.name] ?? {};
@@ -75,7 +75,7 @@ export const addDependencies = async (
 
     // Modify toml dependencies
     const tool = fileParsed.tool as any;
-    const existingDependencies = tool.poetry.dependencies as any;
+    const existingDependencies = tool.poetry.dependencies;
     mergePoetryDependencies(dependencies, existingDependencies);
 
     // Write toml file
