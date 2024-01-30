@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.1.5
+
+### Patch Changes
+
+- 8a9b78a: chore: split readers into different files
+
 ## 0.1.4
 
 ### Patch Changes
