@@ -59,10 +59,7 @@ jobs:
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core
       - name: Install llamaindex
-        run: pnpm add ${{ runner.temp }}/*.tgz
-        working-directory: ${{ runner.temp }}/examples
-      - name: Install dependencies
-        run: npm install
+        run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}/examples
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
