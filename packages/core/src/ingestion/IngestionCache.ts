@@ -1,7 +1,8 @@
 import { BaseNode, MetadataMode } from "../Node";
 import { createSHA256 } from "../env";
-import { BaseKVStore, SimpleKVStore } from "../storage";
 import { docToJson, jsonToDoc } from "../storage/docStore/utils";
+import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore";
+import { BaseKVStore } from "../storage/kvStore/types";
 import { TransformComponent } from "./types";
 
 export function getTransformationHash(
