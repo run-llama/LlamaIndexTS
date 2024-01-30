@@ -153,7 +153,8 @@ export const askQuestions = async (
         ];
 
         const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
-        if (program.vectorDb === "none" && hasOpenAiKey) {
+        const hasVectorDb = program.vectorDb && program.vectorDb !== "none";
+        if (!hasVectorDb && hasOpenAiKey) {
           actionChoices.push({
             title:
               "Generate code, install dependencies, and run the app (~2 min)",

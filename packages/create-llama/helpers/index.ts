@@ -92,9 +92,14 @@ const installDependencies = async (
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
     const hasVectorDb = vectorDb && vectorDb !== "none";
     if (framework === "fastapi") {
-      if (hasOpenAiKey && vectorDb === "none" && isHavingPoetryLockFile()) {
+      if (hasOpenAiKey && !hasVectorDb && isHavingPoetryLockFile()) {
         console.log(`Running ${runGenerate} to generate the context data.`);
-        tryPoetryRun("python app/engine/generate.py");
+        let result = tryPoetryRun("python app/engine/generate.py");
+        if (!result) {
+          console.log(`Failed to run ${runGenerate}.`);
+          process.exit(1);
+        }
+        console.log(`Generated context data`);
         return;
       }
     } else {
@@ -197,6 +202,7 @@ export const installTemplate = async (
         props.openAiKey,
         props.vectorDb,
       );
+      console.log("installed Dependencies");
     }
   } else {
     // this is a frontend for a full-stack app, create .env file with model information
