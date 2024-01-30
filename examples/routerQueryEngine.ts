@@ -12,7 +12,7 @@ import {
 async function main() {
   // Load documents from a directory
   const documents = await new SimpleDirectoryReader().loadData({
-    directoryPath: "../examples",
+    directoryPath: "node_modules/llamaindex/examples/abramov.txt",
   });
 
   // Parse the documents into nodes
