@@ -1,11 +1,5 @@
 import { IndexStruct } from "../../indices/BaseIndex";
 import { GenericFileSystem } from "../FileSystem";
-import {
-  DEFAULT_INDEX_STORE_PERSIST_FILENAME,
-  DEFAULT_PERSIST_DIR,
-} from "../constants";
-
-const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_INDEX_STORE_PERSIST_FILENAME}`;
 
 export abstract class BaseIndexStore {
   abstract getIndexStructs(): Promise<IndexStruct[]>;
@@ -16,10 +10,5 @@ export abstract class BaseIndexStore {
 
   abstract getIndexStruct(structId?: string): Promise<IndexStruct | undefined>;
 
-  async persist(
-    persistPath: string = defaultPersistPath,
-    fs?: GenericFileSystem,
-  ): Promise<void> {
-    // Persist the index store to disk.
-  }
+  abstract persist(persistPath: string, fs?: GenericFileSystem): Promise<void>;
 }

@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import rake from "rake-modified";
 
 // Get subtokens from a list of tokens., filtering for stopwords.
