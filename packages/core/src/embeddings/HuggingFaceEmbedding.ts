@@ -39,7 +39,7 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
   async getTextEmbedding(text: string): Promise<number[]> {
     const extractor = await this.getExtractor();
     const output = await extractor(text, { pooling: "mean", normalize: true });
-    return output.data;
+    return Array.from(output.data);
   }
 
   async getQueryEmbedding(query: string): Promise<number[]> {

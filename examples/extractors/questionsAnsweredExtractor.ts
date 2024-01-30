@@ -19,10 +19,10 @@ import {
     }),
   ]);
 
-  const questionsAnsweredExtractor = new QuestionsAnsweredExtractor(
-    openaiLLM,
-    5,
-  );
+  const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
+    llm: openaiLLM,
+    questions: 5,
+  });
 
   const nodesWithQuestionsMetadata =
     await questionsAnsweredExtractor.processNodes(nodes);

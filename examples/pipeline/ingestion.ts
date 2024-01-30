@@ -19,7 +19,6 @@ async function main() {
   const pipeline = new IngestionPipeline({
     transformations: [
       new SimpleNodeParser({ chunkSize: 1024, chunkOverlap: 20 }),
-      // new TitleExtractor(llm),
       new OpenAIEmbedding(),
     ],
   });

@@ -1,5 +1,32 @@
 # llamaindex
 
+## 0.1.4
+
+### Patch Changes
+
+- 88696e1: refactor: use `pdf2json` instead of `pdfjs-dist`
+
+  Please add `pdf2json` to `serverComponentsExternalPackages` if you have to parse pdf in runtime.
+
+  ```js
+  // next.config.js
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    experimental: {
+      serverComponentsExternalPackages: ["pdf2json"],
+    },
+  };
+
+  module.exports = nextConfig;
+  ```
+
+## 0.1.3
+
+### Patch Changes
+
+- 9ce7d3d: update dependencies
+- 7d50196: fix: output target causes not implemented error
+
 ## 0.1.2
 
 - e4b807a: fix: invalid package.json

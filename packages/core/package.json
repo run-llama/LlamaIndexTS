@@ -1,7 +1,7 @@
 {
   "name": "llamaindex",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.4",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.12.4",
@@ -23,7 +23,7 @@
     "openai": "^4.26.0",
     "papaparse": "^5.4.1",
     "pathe": "^1.1.2",
-    "pdfjs-dist": "4.0.269",
+    "pdf2json": "^3.0.5",
     "pg": "^8.11.3",
     "pgvector": "^0.1.7",
     "portkey-ai": "^0.1.16",
@@ -37,10 +37,10 @@
     "@types/edit-json-file": "^1.7.3",
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^18.19.9",
+    "@types/node": "^18.19.10",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.0",
-    "bunchee": "^4.4.2",
+    "bunchee": "^4.4.3",
     "edit-json-file": "^1.8.0",
     "madge": "^6.1.0",
     "typescript": "^5.3.3"
@@ -54,14 +54,64 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs",
-      "edge-light": "./dist/index.mjs",
+      "edge-light": "./dist/index.edge-light.mjs",
       "require": "./dist/index.js"
     },
     "./env": {
       "types": "./dist/env.d.mts",
       "import": "./dist/env.mjs",
-      "edge-light": "./dist/env.mjs",
+      "edge-light": "./dist/env.edge-light.mjs",
       "require": "./dist/env.js"
+    },
+    "./readers/AssemblyAIReader": {
+      "types": "./dist/readers/AssemblyAIReader.d.mts",
+      "import": "./dist/readers/AssemblyAIReader.mjs",
+      "require": "./dist/readers/AssemblyAIReader.js"
+    },
+    "./readers/CSVReader": {
+      "types": "./dist/readers/CSVReader.d.mts",
+      "import": "./dist/readers/CSVReader.mjs",
+      "require": "./dist/readers/CSVReader.js"
+    },
+    "./readers/DocxReader": {
+      "types": "./dist/readers/DocxReader.d.mts",
+      "import": "./dist/readers/DocxReader.mjs",
+      "require": "./dist/readers/DocxReader.js"
+    },
+    "./readers/HTMLReader": {
+      "types": "./dist/readers/HTMLReader.d.mts",
+      "import": "./dist/readers/HTMLReader.mjs",
+      "require": "./dist/readers/HTMLReader.js"
+    },
+    "./readers/ImageReader": {
+      "types": "./dist/readers/ImageReader.d.mts",
+      "import": "./dist/readers/ImageReader.mjs",
+      "require": "./dist/readers/ImageReader.js"
+    },
+    "./readers/MarkdownReader": {
+      "types": "./dist/readers/MarkdownReader.d.mts",
+      "import": "./dist/readers/MarkdownReader.mjs",
+      "require": "./dist/readers/MarkdownReader.js"
+    },
+    "./readers/NotionReader": {
+      "types": "./dist/readers/NotionReader.d.mts",
+      "import": "./dist/readers/NotionReader.mjs",
+      "require": "./dist/readers/NotionReader.js"
+    },
+    "./readers/PDFReader": {
+      "types": "./dist/readers/PDFReader.d.mts",
+      "import": "./dist/readers/PDFReader.mjs",
+      "require": "./dist/readers/PDFReader.js"
+    },
+    "./readers/SimpleDirectoryReader": {
+      "types": "./dist/readers/SimpleDirectoryReader.d.mts",
+      "import": "./dist/readers/SimpleDirectoryReader.mjs",
+      "require": "./dist/readers/SimpleDirectoryReader.js"
+    },
+    "./readers/SimpleMongoReader": {
+      "types": "./dist/readers/SimpleMongoReader.d.mts",
+      "import": "./dist/readers/SimpleMongoReader.mjs",
+      "require": "./dist/readers/SimpleMongoReader.js"
     }
   },
   "files": [
@@ -81,6 +131,6 @@
     "modify-package-json": "node ./scripts/modify-package-json.mjs",
     "prepublish": "pnpm run modify-package-json && echo \"please cd ./dist and run pnpm publish\" && exit 1",
     "dev": "bunchee -w",
-    "circular-check": "madge --circular ./src/*.ts"
+    "circular-check": "madge -c ./src/index.ts"
   }
 }

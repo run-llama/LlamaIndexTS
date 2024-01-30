@@ -1,13 +1,8 @@
 import { NodeWithScore, TextNode } from "./Node";
-import {
-  BaseQuestionGenerator,
-  LLMQuestionGenerator,
-  SubQuestion,
-} from "./QuestionGenerator";
+import { LLMQuestionGenerator } from "./QuestionGenerator";
 import { Response } from "./Response";
 import { BaseRetriever } from "./Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
-import { QueryEngineTool, ToolMetadata } from "./Tool";
 import { Event } from "./callbacks/CallbackManager";
 import { randomUUID } from "./env";
 import { BaseNodePostprocessor } from "./postprocessors";
@@ -16,34 +11,15 @@ import {
   CompactAndRefine,
   ResponseSynthesizer,
 } from "./synthesizers";
-
-/**
- * Parameters for sending a query.
- */
-export interface QueryEngineParamsBase {
-  query: string;
-  parentEvent?: Event;
-}
-
-export interface QueryEngineParamsStreaming extends QueryEngineParamsBase {
-  stream: true;
-}
-
-export interface QueryEngineParamsNonStreaming extends QueryEngineParamsBase {
-  stream?: false | null;
-}
-
-/**
- * A query engine is a question answerer that can use one or more steps.
- */
-export interface BaseQueryEngine {
-  /**
-   * Query the query engine and get a response.
-   * @param params
-   */
-  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
-}
+import {
+  BaseQueryEngine,
+  BaseQuestionGenerator,
+  QueryEngineParamsNonStreaming,
+  QueryEngineParamsStreaming,
+  QueryEngineTool,
+  SubQuestion,
+  ToolMetadata,
+} from "./types";
 
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.
