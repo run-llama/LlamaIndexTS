@@ -32,10 +32,35 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build
-        working-directory: ./packages/core
+        run: pnpm run build --filter llamaindex
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
         run: pnpm run circular-check
         working-directory: ./packages/core
+  typecheck-examples:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build --filter llamaindex
+      - name: Copy examples
+        run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
+      - name: Pack
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/core
+      - name: Install llamaindex
+        run: npm add ${{ runner.temp }}/*.tgz
+        working-directory: ${{ runner.temp }}/examples
+      - name: Run Type Check
+        run: npx tsc --project ./tsconfig.json
+        working-directory: ${{ runner.temp }}/examples

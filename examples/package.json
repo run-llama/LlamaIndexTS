@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "@types/node": "^18.19.10",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "lint": "eslint ."

@@ -1,4 +1,5 @@
-import { PDFReader, VectorStoreIndex } from "llamaindex";
+import { VectorStoreIndex } from "llamaindex";
+import { PDFReader } from "llamaindex/readers/PDFReader";
 import { resolve } from "node:path";
 
 async function main() {
