@@ -63,6 +63,7 @@ jobs:
         working-directory: ${{ runner.temp }}/examples
       - name: Install dependencies
         run: npm install
+        working-directory: ${{ runner.temp }}/examples
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
         working-directory: ${{ runner.temp }}/examples
