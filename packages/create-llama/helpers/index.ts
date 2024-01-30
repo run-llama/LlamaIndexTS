@@ -187,12 +187,12 @@ export const installTemplate = async (
     });
 
     if (props.engine === "context") {
-      if (
-        props.dataSource?.type === "file" &&
-        "contextFile" in props.dataSource?.config
-      ) {
-        // Copy test pdf file
-        await copyTestData(props.root, props.dataSource?.config?.contextFile);
+      if (props.dataSource?.type === "file") {
+        if ("contextFile" in props.dataSource.config) {
+          await copyTestData(props.root, props.dataSource.config.contextFile);
+        } else {
+          await copyTestData(props.root);
+        }
       }
       installDependencies(
         props.framework,
