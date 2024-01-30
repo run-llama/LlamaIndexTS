@@ -80,3 +80,15 @@ export interface ToolMetadata {
 export interface BaseQuestionGenerator {
   generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]>;
 }
+
+export class QueryBundle {
+  queryStr: string;
+
+  constructor(queryStr: string) {
+    this.queryStr = queryStr;
+  }
+
+  toString(): string {
+    return this.queryStr;
+  }
+}

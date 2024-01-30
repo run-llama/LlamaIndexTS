@@ -6,14 +6,17 @@ import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
 import { randomUUID } from "./env";
 import { BaseNodePostprocessor } from "./postprocessors";
+import { BaseSelector } from "./selectors/base";
 import {
   BaseSynthesizer,
   CompactAndRefine,
   ResponseSynthesizer,
+  TreeSummarize,
 } from "./synthesizers";
 import {
   BaseQueryEngine,
   BaseQuestionGenerator,
+  QueryBundle,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
   QueryEngineTool,
@@ -204,5 +207,135 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     } catch (error) {
       return null;
     }
+  }
+}
+async function combineResponses(
+  summarizer: TreeSummarize,
+  responses: Response[],
+  queryBundle: QueryBundle,
+): Promise<Response> {
+  console.log("Combining responses from multiple query engines.");
+
+  const responseStrs = [];
+  const sourceNodes = [];
+  for (const response of responses) {
+    if (response?.sourceNodes) {
+      sourceNodes.push(...response.sourceNodes);
+    }
+
+    responseStrs.push(response.response);
+  }
+
+  const summary = await summarizer.getResponse({
+    query: queryBundle.queryStr,
+    textChunks: responseStrs,
+  });
+
+  return new Response(summary, sourceNodes);
+}
+
+/**
+ * A query engine that uses multiple query engines and selects the best one.
+ */
+export class RouterQueryEngine implements BaseQueryEngine {
+  _selector: BaseSelector;
+  _queryEngines: BaseQueryEngine[];
+  serviceContext: ServiceContext;
+  _metadatas: ToolMetadata[];
+  _summarizer: TreeSummarize;
+  _verbose: boolean;
+
+  constructor(init: {
+    selector: BaseSelector;
+    queryEngineTools: QueryEngineTool[];
+    serviceContext?: ServiceContext;
+    summarizer?: TreeSummarize;
+    verbose?: boolean;
+  }) {
+    this.serviceContext = init.serviceContext || serviceContextFromDefaults({});
+    this._selector = init.selector;
+    this._queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
+    this._metadatas = init.queryEngineTools.map((tool) => tool.metadata);
+    this._summarizer =
+      init.summarizer || new TreeSummarize(this.serviceContext);
+    this._verbose = init.verbose ?? false;
+  }
+
+  async _query(queryBundle: QueryBundle): Promise<Response> {
+    const result = await this._selector.select(this._metadatas, queryBundle);
+
+    if (result.selections.length > 1) {
+      const responses = [];
+      for (let i = 0; i < result.selections.length; i++) {
+        const engineInd = result.selections[i];
+        const logStr = `Selecting query engine ${engineInd}: ${result.selections[i]}.`;
+        console.log(logStr);
+        if (this._verbose) {
+          console.log(logStr + "\n");
+        }
+
+        const selectedQueryEngine = this._queryEngines[engineInd.index];
+        responses.push(
+          await selectedQueryEngine.query({
+            query: queryBundle.queryStr,
+          }),
+        );
+      }
+
+      if (responses.length > 1) {
+        const finalResponse = await combineResponses(
+          this._summarizer,
+          responses,
+          queryBundle,
+        );
+        return finalResponse;
+      } else {
+        return responses[0];
+      }
+    } else {
+      let selectedQueryEngine;
+
+      try {
+        selectedQueryEngine = this._queryEngines[result.selections[0].index];
+
+        const logStr = `Selecting query engine ${result.selections[0].index}: ${result.selections[0].reason}`;
+        console.log(logStr);
+        if (this._verbose) {
+          console.log(logStr + "\n");
+        }
+      } catch (e) {
+        throw new Error("Failed to select query engine");
+      }
+
+      if (!selectedQueryEngine) {
+        throw new Error("Selected query engine is null");
+      }
+
+      const finalResponse = await selectedQueryEngine.query({
+        query: queryBundle.queryStr,
+      });
+
+      // add selected result
+      finalResponse.metadata = finalResponse.metadata || {};
+      finalResponse.metadata["selectorResult"] = result;
+
+      return finalResponse;
+    }
+  }
+
+  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
+  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  async query(
+    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+  ): Promise<Response | AsyncIterable<Response>> {
+    const { query, stream } = params;
+
+    const response = await this._query({ queryStr: query });
+
+    if (stream) {
+      return response;
+    }
+
+    return response;
   }
 }
