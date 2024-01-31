@@ -5,8 +5,8 @@ import fs from "fs/promises";
 import path from "path";
 import { cyan } from "picocolors";
 
-import { fileURLToPath } from "url";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
+import { templatesDir } from "./dir";
 import { PackageManager } from "./get-pkg-manager";
 import { installLlamapackProject } from "./llama-pack";
 import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
@@ -131,14 +131,7 @@ const copyContextData = async (root: string, contextFile?: string) => {
       path.join(destPath, path.basename(contextFile)),
     );
   } else {
-    const srcPath = path.join(
-      fileURLToPath(import.meta.url),
-      "..",
-      "..",
-      "templates",
-      "components",
-      "data",
-    );
+    const srcPath = path.join(templatesDir, "components", "data");
     console.log(`\nCopying test data to ${cyan(destPath)}\n`);
     await copy("**", destPath, {
       parents: true,
