@@ -54,12 +54,13 @@ async function combineResponses(
  * A query engine that uses multiple query engines and selects the best one.
  */
 export class RouterQueryEngine implements BaseQueryEngine {
-  _selector: BaseSelector;
-  _queryEngines: BaseQueryEngine[];
   serviceContext: ServiceContext;
-  _metadatas: RouterQueryEngineMetadata[];
-  _summarizer: TreeSummarize;
-  _verbose: boolean;
+
+  private selector: BaseSelector;
+  private queryEngines: BaseQueryEngine[];
+  private metadatas: RouterQueryEngineMetadata[];
+  private summarizer: TreeSummarize;
+  private verbose: boolean;
 
   constructor(init: {
     selector: BaseSelector;
@@ -69,14 +70,13 @@ export class RouterQueryEngine implements BaseQueryEngine {
     verbose?: boolean;
   }) {
     this.serviceContext = init.serviceContext || serviceContextFromDefaults({});
-    this._selector = init.selector;
-    this._queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
-    this._metadatas = init.queryEngineTools.map((tool) => ({
+    this.selector = init.selector;
+    this.queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
+    this.metadatas = init.queryEngineTools.map((tool) => ({
       description: tool.description,
     }));
-    this._summarizer =
-      init.summarizer || new TreeSummarize(this.serviceContext);
-    this._verbose = init.verbose ?? false;
+    this.summarizer = init.summarizer || new TreeSummarize(this.serviceContext);
+    this.verbose = init.verbose ?? false;
   }
 
   static fromDefaults(init: {
@@ -116,7 +116,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
   }
 
   private async queryRoute(queryBundle: QueryBundle): Promise<Response> {
-    const result = await this._selector.select(this._metadatas, queryBundle);
+    const result = await this.selector.select(this.metadatas, queryBundle);
 
     if (result.selections.length > 1) {
       const responses = [];
@@ -124,11 +124,11 @@ export class RouterQueryEngine implements BaseQueryEngine {
         const engineInd = result.selections[i];
         const logStr = `Selecting query engine ${engineInd}: ${result.selections[i]}.`;
 
-        if (this._verbose) {
+        if (this.verbose) {
           console.log(logStr + "\n");
         }
 
-        const selectedQueryEngine = this._queryEngines[engineInd.index];
+        const selectedQueryEngine = this.queryEngines[engineInd.index];
         responses.push(
           await selectedQueryEngine.query({
             query: queryBundle.queryStr,
@@ -138,10 +138,10 @@ export class RouterQueryEngine implements BaseQueryEngine {
 
       if (responses.length > 1) {
         const finalResponse = await combineResponses(
-          this._summarizer,
+          this.summarizer,
           responses,
           queryBundle,
-          this._verbose,
+          this.verbose,
         );
 
         return finalResponse;
@@ -152,11 +152,11 @@ export class RouterQueryEngine implements BaseQueryEngine {
       let selectedQueryEngine;
 
       try {
-        selectedQueryEngine = this._queryEngines[result.selections[0].index];
+        selectedQueryEngine = this.queryEngines[result.selections[0].index];
 
         const logStr = `Selecting query engine ${result.selections[0].index}: ${result.selections[0].reason}`;
         console.log(logStr);
-        if (this._verbose) {
+        if (this.verbose) {
           console.log(logStr + "\n");
         }
       } catch (e) {
