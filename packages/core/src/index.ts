@@ -4,7 +4,6 @@ export * from "./Node";
 export * from "./OutputParser";
 export * from "./Prompt";
 export * from "./PromptHelper";
-export * from "./QueryEngine";
 export * from "./QuestionGenerator";
 export * from "./Response";
 export * from "./Retriever";
