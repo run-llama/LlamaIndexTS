@@ -13,6 +13,7 @@ import {
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
+  MetadataFilters,
 } from "./types";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
@@ -22,6 +23,22 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 ]);
 
 const MMR_MODE = VectorStoreQueryMode.MMR;
+
+function _buildMetadataFilterFn(
+  metadataLookupFn: (nodeId: string) => Record<string, any>,
+  metadataFilters: MetadataFilters
+): (nodeId: string) => boolean {
+  return function filterFn(nodeId: string): boolean {
+    const metadata = metadataLookupFn(nodeId);
+    for (const filter of metadataFilters.filters) {
+      const metadataValue = metadata[filter.key];
+      if (metadataValue === undefined || metadataValue !== filter.value) {
+        return false;
+      }
+    }
+    return true;
+  };
+}
 
 class SimpleVectorStoreData {
   embeddingDict: Record<string, number[]> = {};
@@ -86,22 +103,28 @@ export class SimpleVectorStore implements VectorStore {
   }
 
   async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
-    if (!_.isNil(query.filters)) {
-      throw new Error(
-        "Metadata filters not implemented for SimpleVectorStore yet.",
-      );
-    }
-
     let items = Object.entries(this.data.embeddingDict);
 
+    if (query.filters && query.filters.length > 0) {
+      if (!this.data.metadataDict) {
+        throw new Error("Metadata dictionary is not defined.");
+      }
+
+      const metadataFilterFn = _buildMetadataFilterFn(
+        (nodeId) => this.data.metadataDict[nodeId],
+        { filters: query.filters }
+      );
+
+      items = items.filter(([nodeId]) => metadataFilterFn(nodeId));
+    }
+
     let nodeIds: string[], embeddings: number[][];
-    if (query.docIds) {
+    if (query.docIds && query.docIds.length > 0) {
       let availableIds = new Set(query.docIds);
       const queriedItems = items.filter((item) => availableIds.has(item[0]));
       nodeIds = queriedItems.map((item) => item[0]);
       embeddings = queriedItems.map((item) => item[1]);
     } else {
-      // No docIds specified, so use all available items
       nodeIds = items.map((item) => item[0]);
       embeddings = items.map((item) => item[1]);
     }
@@ -137,11 +160,12 @@ export class SimpleVectorStore implements VectorStore {
       throw new Error(`Invalid query mode: ${query.mode}`);
     }
 
-    return Promise.resolve({
+    return {
       similarities: topSimilarities,
       ids: topIds,
-    });
+    };
   }
+
 
   async persist(
     persistPath: string = `${DEFAULT_PERSIST_DIR}/vector_store.json`,
