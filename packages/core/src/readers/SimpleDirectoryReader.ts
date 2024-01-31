@@ -30,7 +30,7 @@ export class TextFileReader implements BaseReader {
     file: string,
     fs: CompleteFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
+    const dataBuffer = await fs.readFile(file);
     return [new Document({ text: dataBuffer, id_: file })];
   }
 }
