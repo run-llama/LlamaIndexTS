@@ -1,28 +1,30 @@
 import _ from "lodash";
 import { BaseNode, Document } from "../../Node";
-import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
+import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { BaseNodePostprocessor } from "../../postprocessors";
 import {
+  BaseDocumentStore,
+  RefDocInfo,
   StorageContext,
   storageContextFromDefaults,
-} from "../../storage/StorageContext";
-import { BaseDocumentStore, RefDocInfo } from "../../storage/docStore/types";
+} from "../../storage";
 import {
   BaseSynthesizer,
   CompactAndRefine,
   ResponseSynthesizer,
 } from "../../synthesizers";
+import { BaseQueryEngine } from "../../types";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexList,
   IndexStructType,
 } from "../BaseIndex";
-import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import {
   SummaryIndexLLMRetriever,
   SummaryIndexRetriever,

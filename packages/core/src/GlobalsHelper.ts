@@ -1,7 +1,7 @@
 import { encodingForModel } from "js-tiktoken";
 
-import { v4 as uuidv4 } from "uuid";
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
+import { randomUUID } from "./env";
 
 export enum Tokenizers {
   CL100K_BASE = "cl100k_base",
@@ -64,7 +64,7 @@ class GlobalsHelper {
     tags?: EventTag[];
   }): Event {
     return {
-      id: uuidv4(),
+      id: randomUUID(),
       type,
       // inherit parent tags if tags not set
       tags: tags || parentEvent?.tags,

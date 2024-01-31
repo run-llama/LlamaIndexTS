@@ -1,13 +1,14 @@
-import { v4 as uuidv4 } from "uuid";
 import { BaseNode, Document, jsonToNode } from "../Node";
-import { BaseQueryEngine } from "../QueryEngine";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext } from "../ServiceContext";
+import { randomUUID } from "../env";
+import { runTransformations } from "../ingestion";
 import { StorageContext } from "../storage/StorageContext";
 import { BaseDocumentStore } from "../storage/docStore/types";
 import { BaseIndexStore } from "../storage/indexStore/types";
 import { VectorStore } from "../storage/vectorStore/types";
 import { BaseSynthesizer } from "../synthesizers";
+import { BaseQueryEngine } from "../types";
 
 /**
  * The underlying structure of each index.
@@ -16,7 +17,7 @@ export abstract class IndexStruct {
   indexId: string;
   summary?: string;
 
-  constructor(indexId = uuidv4(), summary = undefined) {
+  constructor(indexId = randomUUID(), summary = undefined) {
     this.indexId = indexId;
     this.summary = summary;
   }
@@ -188,9 +189,10 @@ export abstract class BaseIndex<T> {
    * @param document
    */
   async insert(document: Document) {
-    const nodes = this.serviceContext.nodeParser.getNodesFromDocuments([
-      document,
-    ]);
+    const nodes = await runTransformations(
+      [document],
+      [this.serviceContext.nodeParser],
+    );
     await this.insertNodes(nodes);
     this.docStore.setDocumentHash(document.id_, document.hash);
   }

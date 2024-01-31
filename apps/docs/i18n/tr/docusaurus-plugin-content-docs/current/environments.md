@@ -15,17 +15,3 @@ Eğer NextJS Uygulama Yönlendirici rota işleyicileri/sunucusuz fonksiyonlar ku
 ```js
 export const runtime = "nodejs"; // varsayılan
 ```
-
-ve next.config.js dosyanıza pdf-parse için bir istisna eklemeniz gerekecektir:
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // pdf-parse'ı NextJS Uygulama Yönlendirici ile gerçek NodeJS modunda kullanır
-  },
-};
-
-module.exports = nextConfig;
-```

@@ -1,8 +1,18 @@
 import _ from "lodash";
 import { ImageType } from "../Node";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
-import { DEFAULT_FS, VectorStoreQueryMode } from "../storage";
-import { SimilarityType } from "./types";
+import { defaultFS } from "../env";
+import { VectorStoreQueryMode } from "../storage/vectorStore/types";
+
+/**
+ * Similarity type
+ * Default is cosine similarity. Dot product and negative Euclidean distance are also supported.
+ */
+export enum SimilarityType {
+  DEFAULT = "cosine",
+  DOT_PRODUCT = "dot_product",
+  EUCLIDEAN = "euclidean",
+}
 
 /**
  * The similarity between two embeddings.
@@ -66,6 +76,7 @@ export function similarity(
  * @param similarityCutoff minimum similarity score
  * @returns
  */
+// eslint-disable-next-line max-params
 export function getTopKEmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -108,6 +119,7 @@ export function getTopKEmbeddings(
   return [resultSimilarities, resultIds];
 }
 
+// eslint-disable-next-line max-params
 export function getTopKEmbeddingsLearner(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -120,6 +132,7 @@ export function getTopKEmbeddingsLearner(
   // https://github.com/mljs/libsvm which itself hasn't been updated in a while
 }
 
+// eslint-disable-next-line max-params
 export function getTopKMMREmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -241,8 +254,7 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
     _.isString(input)
   ) {
     // string or file URL
-    const fs = DEFAULT_FS;
-    const dataBuffer = await fs.readFile(
+    const dataBuffer = await defaultFS.readFile(
       input instanceof URL ? input.pathname : input,
     );
     input = new Blob([dataBuffer]);

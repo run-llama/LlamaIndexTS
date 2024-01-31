@@ -189,7 +189,9 @@ async function main() {
     },
   });
 
-  const response = await queryEngine.query("How many results do you have?");
+  const response = await queryEngine.query({
+    query: "How many results do you have?",
+  });
 
   console.log(response.toString());
 }

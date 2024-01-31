@@ -61,6 +61,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
   serviceContext: ServiceContext;
 
+  // eslint-disable-next-line max-params
   constructor(
     index: SummaryIndex,
     choiceSelectPrompt?: ChoiceSelectPrompt,
@@ -89,8 +90,10 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
       const input = { context: fmtBatchStr, query: query };
       const rawResponse = (
-        await this.serviceContext.llm.complete(this.choiceSelectPrompt(input))
-      ).message.content;
+        await this.serviceContext.llm.complete({
+          prompt: this.choiceSelectPrompt(input),
+        })
+      ).text;
 
       // parseResult is a map from doc number to relevance score
       const parseResult = this.parseChoiceSelectAnswerFn(

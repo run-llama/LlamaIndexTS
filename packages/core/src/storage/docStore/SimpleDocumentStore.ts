@@ -1,9 +1,8 @@
 import _ from "lodash";
-import * as path from "path";
+import { defaultFS, path } from "../../env";
 import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
-  DEFAULT_FS,
   DEFAULT_NAMESPACE,
   DEFAULT_PERSIST_DIR,
 } from "../constants";
@@ -43,7 +42,7 @@ export class SimpleDocumentStore extends KVDocumentStore {
     namespace?: string,
     fs?: GenericFileSystem,
   ): Promise<SimpleDocumentStore> {
-    fs = fs || DEFAULT_FS;
+    fs = fs || defaultFS;
     const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
     return new SimpleDocumentStore(simpleKVStore, namespace);
   }

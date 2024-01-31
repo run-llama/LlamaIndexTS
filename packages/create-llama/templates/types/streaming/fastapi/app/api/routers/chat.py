@@ -49,11 +49,11 @@ async def chat(
     ]
 
     # query chat engine
-    response = chat_engine.stream_chat(lastMessage.content, messages)
+    response = await chat_engine.astream_chat(lastMessage.content, messages)
 
     # stream response
     async def event_generator():
-        for token in response.response_gen:
+        async for token in response.async_response_gen():
             # If client closes connection, stop sending events
             if await request.is_disconnected():
                 break

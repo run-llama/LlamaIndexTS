@@ -1,34 +1,51 @@
 import _ from "lodash";
+import type nodeFS from "node:fs/promises";
+
 /**
  * A filesystem interface that is meant to be compatible with
  * the 'fs' module from Node.js.
  * Allows for the use of similar inteface implementation on
  * browsers.
  */
-
-export interface GenericFileSystem {
-  writeFile(path: string, content: string, options?: any): Promise<void>;
-  readFile(path: string, options?: any): Promise<string>;
+export type GenericFileSystem = {
+  writeFile(
+    path: string,
+    content: string,
+    options?: Parameters<typeof nodeFS.writeFile>[2],
+  ): Promise<void>;
+  readFile(
+    path: string,
+    options?: Parameters<typeof nodeFS.readFile>[1],
+  ): Promise<string>;
   access(path: string): Promise<void>;
-  mkdir(path: string, options?: any): Promise<void>;
-}
+  mkdir(
+    path: string,
+    options?: Parameters<typeof nodeFS.mkdir>[1],
+  ): Promise<void>;
+};
 
-export interface WalkableFileSystem {
+export type WalkableFileSystem = {
   readdir(path: string): Promise<string[]>;
   stat(path: string): Promise<any>;
-}
+};
+
+export type CompleteFileSystem = GenericFileSystem & WalkableFileSystem;
 
 /**
  * A filesystem implementation that stores files in memory.
  */
-export class InMemoryFileSystem implements GenericFileSystem {
+export class InMemoryFileSystem implements CompleteFileSystem {
   private files: Record<string, any> = {};
 
-  async writeFile(path: string, content: string, options?: any): Promise<void> {
+  async writeFile(
+    path: string,
+    content: string,
+    options?: unknown,
+  ): Promise<void> {
     this.files[path] = _.cloneDeep(content);
   }
 
-  async readFile(path: string, options?: any): Promise<string> {
+  async readFile(path: string, options?: unknown): Promise<string> {
     if (!(path in this.files)) {
       throw new Error(`File ${path} does not exist`);
     }
@@ -41,26 +58,18 @@ export class InMemoryFileSystem implements GenericFileSystem {
     }
   }
 
-  async mkdir(path: string, options?: any): Promise<void> {
+  async mkdir(path: string, options?: unknown): Promise<void> {
     this.files[path] = _.get(this.files, path, null);
   }
-}
 
-export type CompleteFileSystem = GenericFileSystem & WalkableFileSystem;
+  async readdir(path: string): Promise<string[]> {
+    throw new Error("Not implemented");
+  }
 
-export function getNodeFS(): CompleteFileSystem {
-  const fs = require("fs/promises");
-  return fs;
+  async stat(path: string): Promise<any> {
+    throw new Error("Not implemented");
+  }
 }
-
-let fs = null;
-try {
-  fs = getNodeFS();
-} catch (e) {
-  fs = new InMemoryFileSystem();
-}
-export const DEFAULT_FS: GenericFileSystem | CompleteFileSystem =
-  fs as GenericFileSystem;
 
 // FS utility functions
 
@@ -92,12 +101,6 @@ export async function* walk(
   fs: WalkableFileSystem,
   dirPath: string,
 ): AsyncIterable<string> {
-  if (fs instanceof InMemoryFileSystem) {
-    throw new Error(
-      "The InMemoryFileSystem does not support directory traversal.",
-    );
-  }
-
   const entries = await fs.readdir(dirPath);
   for (const entry of entries) {
     const fullPath = `${dirPath}/${entry}`;

@@ -39,7 +39,7 @@ LlamaIndex.TS 提供了一套核心工具，对于任何使用JavaScript和TypeS
 
 我们的文档包括[安装说明](./installation.mdx)和一个[入门教程](./starter.md)，帮助你构建第一个应用程序。
 
-一旦你开始运行，[高级概念](./concepts.md)有一个LlamaIndex模块化架构的概览。更多实践例子，请浏览我们的[端到端教程](./end_to_end.md)。
+一旦你开始运行，[高级概念](./getting_started/concepts.md)有一个LlamaIndex模块化架构的概览。更多实践例子，请浏览我们的[端到端教程](./end_to_end.md)。
 
 ## 🗺️ 生态系统
 

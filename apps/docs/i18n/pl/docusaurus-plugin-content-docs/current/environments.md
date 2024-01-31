@@ -15,17 +15,3 @@ Jeśli korzystasz z obsługi trasowania NextJS App Router lub funkcji bezserwero
 ```js
 export const runtime = "nodejs"; // domyślnie
 ```
-
-i będziesz musiał dodać wyjątek dla pdf-parse w pliku next.config.js
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // Umieszcza pdf-parse w rzeczywistym trybie NodeJS z NextJS App Router
-  },
-};
-
-module.exports = nextConfig;
-```

@@ -1,5 +1,59 @@
 # create-llama
 
+## 0.0.20
+
+### Patch Changes
+
+- 27d55fd: Add an option to provide an URL and chat with the website data
+
+## 0.0.19
+
+### Patch Changes
+
+- 3a29a80: Add node_modules to gitignore in Express backends
+- fe03aaa: feat: generate llama pack example
+
+## 0.0.18
+
+### Patch Changes
+
+- 88d3b41: fix packaging
+
+## 0.0.17
+
+### Patch Changes
+
+- fa17f7e: Add an option that allows the user to run the generated app
+- 9e5d8e1: Add an option to select a local PDF file as data source
+
+## 0.0.16
+
+### Patch Changes
+
+- a73942d: Fix: Bundle mongo dependency with NextJS
+- 9492cc6: Feat: Added option to automatically install dependencies (for Python and TS)
+- f74dea5: Feat: Show images in chat messages using GPT4 Vision (Express and NextJS only)
+
+## 0.0.15
+
+### Patch Changes
+
+- 8e124e5: feat: support showing image on chat message
+
+## 0.0.14
+
+### Patch Changes
+
+- 2e6b36e: fix: re-organize file structure
+- 2b356c8: fix: relative path incorrect
+
+## 0.0.13
+
+### Patch Changes
+
+- Added PostgreSQL vector store (for Typescript and Python)
+- Improved async handling in FastAPI
+
 ## 0.0.12
 
 ### Patch Changes

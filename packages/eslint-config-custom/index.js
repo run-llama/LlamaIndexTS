@@ -10,6 +10,7 @@ module.exports = {
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",
           "ASSEMBLYAI_API_KEY",
+          "TOGETHER_API_KEY",
 
           "ASTRA_DB_APPLICATION_TOKEN",
           "ASTRA_DB_ENDPOINT",
@@ -43,6 +44,8 @@ module.exports = {
 
           "NOTION_TOKEN",
           "MONGODB_URI",
+
+          "PG_CONNECTION_STRING",
 
           "https_proxy",
           "npm_config_user_agent",

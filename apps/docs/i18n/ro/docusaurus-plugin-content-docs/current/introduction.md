@@ -41,7 +41,7 @@ Pentru aplicații mai complexe, API-urile noastre de nivel inferior permit utili
 
 Documentația noastră include [Instrucțiuni de instalare](./installation.mdx) și un [Tutorial de pornire](./starter.md) pentru a construi prima ta aplicație.
 
-Odată ce ai început, [Concepte de nivel înalt](./concepts.md) oferă o prezentare generală a arhitecturii modulare a LlamaIndex. Pentru mai multe exemple practice, consultă [Tutorialele de la cap la coadă](./end_to_end.md).
+Odată ce ai început, [Concepte de nivel înalt](./getting_started/concepts.md) oferă o prezentare generală a arhitecturii modulare a LlamaIndex. Pentru mai multe exemple practice, consultă [Tutorialele de la cap la coadă](./end_to_end.md).
 
 ## 🗺️ Ecosistem
 

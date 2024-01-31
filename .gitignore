@@ -37,9 +37,7 @@ yarn-error.log*
 .vercel
 
 dist/
-
-# vs code
-.vscode/launch.json
+lib/
 
 .cache
 test-results/

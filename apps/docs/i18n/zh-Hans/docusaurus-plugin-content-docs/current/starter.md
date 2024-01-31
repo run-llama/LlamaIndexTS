@@ -51,4 +51,4 @@ main();
 npx ts-node example.ts
 ```
 
-准备好了解更多吗？请查看我们的NextJS游乐场 https://llama-playground.vercel.app/。源代码可在 https://github.com/run-llama/ts-playground 获取。
+准备好了解更多吗？请查看我们的NextJS游乐场 https://llama-playground.vercel.app/ 。源代码可在 https://github.com/run-llama/ts-playground 获取。

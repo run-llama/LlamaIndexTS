@@ -15,17 +15,3 @@ LlamaIndex כרגע תומך באופן רשמי ב-NodeJS 18 ו-NodeJS 20.
 ```js
 export const runtime = "nodejs"; // ברירת מחדל
 ```
-
-ועליך להוסיף יוצאת דופן עבור pdf-parse בקובץ next.config.js שלך
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"], // מעביר את pdf-parse למצב NodeJS האמיתי עם מסלולי הראוטר של NextJS App
-  },
-};
-
-module.exports = nextConfig;
-```

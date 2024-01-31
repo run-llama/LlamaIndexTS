@@ -7,7 +7,9 @@ describe("SentenceSplitter", () => {
   });
 
   test("splits paragraphs w/o effective chunk size", () => {
-    const sentenceSplitter = new SentenceSplitter({});
+    const sentenceSplitter = new SentenceSplitter({
+      paragraphSeparator: "\n\n\n",
+    });
     // generate the same line as above but correct syntax errors
     let splits = sentenceSplitter.getParagraphSplits(
       "This is a paragraph.\n\n\nThis is another paragraph.",

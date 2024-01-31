@@ -1,27 +1,18 @@
-import {
-  BaseOutputParser,
-  StructuredOutput,
-  SubQuestionOutputParser,
-} from "./OutputParser";
+import { SubQuestionOutputParser } from "./OutputParser";
 import {
   SubQuestionPrompt,
   buildToolsText,
   defaultSubQuestionPrompt,
 } from "./Prompt";
-import { ToolMetadata } from "./Tool";
-import { LLM, OpenAI } from "./llm/LLM";
-
-export interface SubQuestion {
-  subQuestion: string;
-  toolName: string;
-}
-
-/**
- * QuestionGenerators generate new questions for the LLM using tools and a user query.
- */
-export interface BaseQuestionGenerator {
-  generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]>;
-}
+import { OpenAI } from "./llm/LLM";
+import { LLM } from "./llm/types";
+import {
+  BaseOutputParser,
+  BaseQuestionGenerator,
+  StructuredOutput,
+  SubQuestion,
+  ToolMetadata,
+} from "./types";
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.
@@ -41,13 +32,13 @@ export class LLMQuestionGenerator implements BaseQuestionGenerator {
     const toolsStr = buildToolsText(tools);
     const queryStr = query;
     const prediction = (
-      await this.llm.complete(
-        this.prompt({
+      await this.llm.complete({
+        prompt: this.prompt({
           toolsStr,
           queryStr,
         }),
-      )
-    ).message.content;
+      })
+    ).text;
 
     const structuredOutput = this.outputParser.parse(prediction);
 

@@ -1,7 +1,7 @@
 import { CallbackManager } from "./callbacks/CallbackManager";
 import { BaseEmbedding, OpenAIEmbedding } from "./embeddings";
-import { LLM, OpenAI } from "./llm/LLM";
-import { NodeParser, SimpleNodeParser } from "./NodeParser";
+import { LLM, OpenAI } from "./llm";
+import { NodeParser, SimpleNodeParser } from "./nodeParsers";
 import { PromptHelper } from "./PromptHelper";
 
 /**

@@ -1,21 +1,25 @@
 import { BaseNode, Document, MetadataMode } from "../../Node";
 import { defaultKeywordExtractPrompt } from "../../Prompt";
-import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
+import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
-import { StorageContext, storageContextFromDefaults } from "../../storage";
-import { BaseDocumentStore } from "../../storage/docStore/types";
+import { BaseNodePostprocessor } from "../../postprocessors";
+import {
+  BaseDocumentStore,
+  StorageContext,
+  storageContextFromDefaults,
+} from "../../storage";
 import { BaseSynthesizer } from "../../synthesizers";
+import { BaseQueryEngine } from "../../types";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexStructType,
   KeywordTable,
 } from "../BaseIndex";
-import { BaseNodePostprocessor } from "../BaseNodePostprocessor";
 import {
   KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,
@@ -146,12 +150,12 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     text: string,
     serviceContext: ServiceContext,
   ): Promise<Set<string>> {
-    const response = await serviceContext.llm.complete(
-      defaultKeywordExtractPrompt({
+    const response = await serviceContext.llm.complete({
+      prompt: defaultKeywordExtractPrompt({
         context: text,
       }),
-    );
-    return extractKeywordsGivenResponse(response.message.content, "KEYWORDS:");
+    });
+    return extractKeywordsGivenResponse(response.text, "KEYWORDS:");
   }
 
   /**

@@ -31,7 +31,7 @@ async function main() {
       }
 
       try {
-        const answer = await queryEngine.query(question);
+        const answer = await queryEngine.query({ query: question });
         console.log(answer.response);
       } catch (error) {
         console.error("Error:", error);
