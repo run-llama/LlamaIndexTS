@@ -14,18 +14,21 @@ async function main() {
         text: "AstraDB is built on Apache Cassandra",
         metadata: {
           id: 123,
+          foo: "bar",
         },
       }),
       new Document({
         text: "AstraDB is a NoSQL DB",
         metadata: {
           id: 456,
+          foo: "baz",
         },
       }),
       new Document({
         text: "AstraDB supports vector search",
         metadata: {
           id: 789,
+          foo: "qux",
         },
       }),
     ];

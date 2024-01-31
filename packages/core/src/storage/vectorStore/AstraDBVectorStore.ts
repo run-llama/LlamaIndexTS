@@ -1,8 +1,9 @@
 import { AstraDB } from "@datastax/astra-db-ts";
 import { Collection } from "@datastax/astra-db-ts/dist/collections";
 import { CreateCollectionOptions } from "@datastax/astra-db-ts/dist/collections/options";
-import { BaseNode, Document, MetadataMode } from "../../Node";
+import { BaseNode, MetadataMode } from "../../Node";
 import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
+import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 const MAX_INSERT_BATCH_SIZE = 20;
 
@@ -13,6 +14,7 @@ export class AstraDBVectorStore implements VectorStore {
   astraDBClient: AstraDB;
   idKey: string;
   contentKey: string;
+  metadataKey: string;
 
   private collection: Collection | undefined;
 
@@ -49,6 +51,7 @@ export class AstraDBVectorStore implements VectorStore {
 
     this.idKey = init?.idKey ?? "_id";
     this.contentKey = init?.contentKey ?? "text";
+    this.metadataKey = init?.metadataKey ?? "metadata";
   }
 
   /**
@@ -107,11 +110,18 @@ export class AstraDBVectorStore implements VectorStore {
     }
 
     const dataToInsert = nodes.map((node) => {
+      const metadata = nodeToMetadata(
+        node,
+        true,
+        this.contentKey,
+        this.flatMetadata,
+      );
+
       return {
-        $vector: node.embedding,
+        $vector: node.getEmbedding(),
         [this.idKey]: node.id_,
         [this.contentKey]: node.getContent(MetadataMode.NONE),
-        ...node.metadata,
+        [this.metadataKey]: metadata,
       };
     });
 
@@ -129,7 +139,7 @@ export class AstraDBVectorStore implements VectorStore {
       await collection.insertMany(batch);
     }
 
-    return dataToInsert.map((node) => node._id);
+    return dataToInsert.map((node) => node?.[this.idKey] as string);
   }
 
   /**
@@ -189,19 +199,25 @@ export class AstraDBVectorStore implements VectorStore {
 
     await cursor.forEach(async (row: Record<string, any>) => {
       const {
-        [this.idKey]: id,
-        [this.contentKey]: content,
         $vector: embedding,
         $similarity: similarity,
-        ...metadata
+        [this.idKey]: id,
+        [this.contentKey]: content,
+        [this.metadataKey]: metadata = {},
+        ...rest
       } = row;
 
-      const node = new Document({
-        id_: id,
-        text: content,
-        metadata,
-        embedding,
-      });
+      if (!metadata?.["_node_content"]) {
+        metadata["_node_content"] = JSON.stringify({
+          id,
+          text: content,
+          metadata,
+          ...rest,
+        });
+      }
+
+      const node = metadataDictToNode(metadata);
+      node.setContent(content);
 
       ids.push(id);
       similarities.push(similarity);
