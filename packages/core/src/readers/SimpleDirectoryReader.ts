@@ -64,6 +64,10 @@ export class SimpleDirectoryReader implements BaseReader {
   constructor(private observer?: ReaderCallback) {}
 
   async loadData(
+    params: SimpleDirectoryReaderLoadDataParams,
+  ): Promise<Document[]>;
+  async loadData(directoryPath: string): Promise<Document[]>;
+  async loadData(
     params: SimpleDirectoryReaderLoadDataParams | string,
   ): Promise<Document[]> {
     if (typeof params === "string") {

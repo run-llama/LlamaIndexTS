@@ -2,15 +2,14 @@
 sidebar_position: 3
 ---
 
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../examples/loader";
+
 # Reader / Loader
 
 LlamaIndex.TS supports easy loading of files from folders using the `SimpleDirectoryReader` class. Currently, `.txt`, `.pdf`, `.csv`, `.md` and `.docx` files are supported, with more planned in the future!
 
-```typescript
-import { SimpleDirectoryReader } from "llamaindex";
-
-documents = new SimpleDirectoryReader().loadData("./data");
-```
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
 
 ## API Reference
 
