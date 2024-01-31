@@ -44,7 +44,12 @@ const copyLlamapackEmptyProject = async ({
 const copyData = async ({
   root,
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
-  const dataPath = path.join(__dirname, "..", "templates/components/data");
+  const dataPath = path.join(
+    fileURLToPath(import.meta.url),
+    "..",
+    "..",
+    "templates/components/data",
+  );
   await copy("**", path.join(root, "data"), {
     parents: true,
     cwd: dataPath,

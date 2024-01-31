@@ -113,7 +113,13 @@ export const installTSTemplate = async ({
    * Copy the selected chat engine files to the target directory and reference it.
    */
   let relativeEngineDestPath;
-  const compPath = path.join(__dirname, "..", "templates", "components");
+  const compPath = path.join(
+    fileURLToPath(import.meta.url),
+    "..",
+    "..",
+    "templates",
+    "components",
+  );
   if (engine && (framework === "express" || framework === "nextjs")) {
     console.log("\nUsing chat engine:", engine, "\n");
 

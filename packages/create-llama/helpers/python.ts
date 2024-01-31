@@ -170,7 +170,13 @@ export const installPythonTemplate = async ({
   });
 
   if (engine === "context") {
-    const compPath = path.join(__dirname, "..", "templates", "components");
+    const compPath = path.join(
+      fileURLToPath(import.meta.url),
+      "..",
+      "..",
+      "templates",
+      "components",
+    );
     let vectorDbDirName = vectorDb ?? "none";
     const VectorDBPath = path.join(
       compPath,

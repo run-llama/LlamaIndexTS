@@ -19,6 +19,7 @@ import {
   WebSourceConfig,
 } from "./types";
 import { installTSTemplate } from "./typescript";
+import { fileURLToPath } from "url";
 
 const createEnvLocalFile = async (
   root: string,
@@ -131,7 +132,8 @@ const copyContextData = async (root: string, contextFile?: string) => {
     );
   } else {
     const srcPath = path.join(
-      __dirname,
+      fileURLToPath(import.meta.url),
+      "..",
       "..",
       "templates",
       "components",
