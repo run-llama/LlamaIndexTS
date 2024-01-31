@@ -21,7 +21,6 @@ const supportedContextFileTypes = [
   ".ppt",
   ".pptx",
   ".csv",
-  ".txt",
 ];
 const MACOS_FILE_SELECTION_SCRIPT = `
 osascript -l JavaScript -e '
@@ -432,7 +431,7 @@ export const askQuestions = async (
         if (process.platform === "win32" || process.platform === "darwin") {
           if (process.platform === "win32" || process.platform === "darwin") {
             choices.push({
-              title: `Use a local file, supported types: ${supportedContextFileTypes}`,
+              title: `Use a local file (${supportedContextFileTypes})`,
               value: "localFile",
             });
             choices.push({
@@ -477,7 +476,6 @@ export const askQuestions = async (
             case "localFolder":
               program.engine = "context";
               program.dataSource.type = "folder";
-              // If the user selected the "pdf" option, ask them to select a file
               program.dataSource.config = {
                 path: await selectLocalContextData(program.dataSource),
               };
