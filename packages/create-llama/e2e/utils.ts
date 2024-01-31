@@ -9,6 +9,7 @@ import {
   TemplatePostInstallAction,
   TemplateType,
   TemplateUI,
+  TemplateVectorDB,
 } from "../helpers";
 
 export type AppType = "--frontend" | "--no-frontend" | "";
@@ -67,6 +68,7 @@ export async function runCreateLlama(
   templateFramework: TemplateFramework,
   templateEngine: TemplateEngine,
   templateUI: TemplateUI,
+  vectorDb: TemplateVectorDB,
   appType: AppType,
   port: number,
   externalPort: number,
@@ -93,6 +95,8 @@ export async function runCreateLlama(
     templateEngine,
     "--ui",
     templateUI,
+    "--vector-db",
+    vectorDb,
     "--model",
     MODEL,
     "--open-ai-key",

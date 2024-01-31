@@ -540,7 +540,7 @@ export const askQuestions = async (
     };
   }
 
-  if (!program.engine && program.engine !== "simple" && !program.vectorDb) {
+  if (program.engine !== "simple" && !program.vectorDb) {
     if (ciInfo.isCI) {
       program.vectorDb = getPrefOrDefault("vectorDb");
     } else {

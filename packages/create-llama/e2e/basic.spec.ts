@@ -50,6 +50,8 @@ for (const templateType of templateTypes) {
             let cwd: string;
             let name: string;
             let appProcess: ChildProcess;
+            // Only test without using vector db for now
+            const vectorDb = "none";
 
             test.beforeAll(async () => {
               port = Math.floor(Math.random() * 10000) + 10000;
@@ -61,6 +63,7 @@ for (const templateType of templateTypes) {
                 templateFramework,
                 templateEngine,
                 templateUI,
+                vectorDb,
                 appType,
                 port,
                 externalPort,
