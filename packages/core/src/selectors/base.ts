@@ -1,38 +1,8 @@
 import { QueryBundle, ToolMetadataOnlyDescription } from "../types";
 
-export class SingleSelection {
-  index!: number;
-  reason!: string;
-}
-
-export class MultiSelection {
-  selections!: SingleSelection[];
-
-  constructor(selections: SingleSelection[]) {
-    this.selections = selections;
-  }
-
-  get ind(): number {
-    if (this.selections.length !== 1) {
-      throw new Error(
-        `There are ${this.selections.length} selections, please use .inds.`,
-      );
-    }
-    return this.selections[0].index;
-  }
-
-  get reasons(): string[] {
-    if (this.selections.length !== 1) {
-      throw new Error(
-        `There are ${this.selections.length} selections, please use .reasons.`,
-      );
-    }
-    return this.selections.map((x) => x.reason);
-  }
-
-  get inds(): number[] {
-    return this.selections.map((x) => x.index);
-  }
+export interface SingleSelection {
+  index: number;
+  reason: string;
 }
 
 export type SelectorResult = {
