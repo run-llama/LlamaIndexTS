@@ -3,6 +3,7 @@
     "target": "es2017",
     "module": "esnext",
     "moduleResolution": "node16",
+    "types": ["node"],
   },
-  "include": ["./**/*.ts"],
+  "include": ["./src/**/*.ts"],
 }
