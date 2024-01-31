@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.1.7
+
+### Patch Changes
+
+- d687c11: feat(router): add router query engine
+
 ## 0.1.6
 
 ### Patch Changes
