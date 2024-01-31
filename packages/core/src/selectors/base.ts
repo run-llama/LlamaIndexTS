@@ -32,7 +32,7 @@ function wrapQuery(query: QueryType): QueryBundle {
 type MetadataType = string | ToolMetadataOnlyDescription;
 
 export abstract class BaseSelector {
-  async select(choices: MetadataType[], query: QueryBundle) {
+  async select(choices: MetadataType[], query: QueryType) {
     const metadatas = choices.map((choice) => wrapChoice(choice));
     const queryBundle = wrapQuery(query);
     return await this._select(metadatas, queryBundle);
@@ -42,5 +42,4 @@ export abstract class BaseSelector {
     choices: ToolMetadataOnlyDescription[],
     query: QueryBundle,
   ): Promise<SelectorResult>;
-  abstract asQueryComponent(): unknown;
 }
