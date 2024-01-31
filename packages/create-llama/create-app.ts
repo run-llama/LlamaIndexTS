@@ -104,7 +104,6 @@ export async function createApp({
       path.join(
         fileURLToPath(import.meta.url),
         "..",
-        "..",
         "templates",
         "README-fullstack.md",
       ),
