@@ -10,6 +10,12 @@ export type GenericFileSystem = {
   writeFile(path: string, content: string): Promise<void>;
   readFile(path: string): Promise<string>;
   access(path: string): Promise<void>;
+  mkdir(
+    path: string,
+    options: {
+      recursive: boolean;
+    },
+  ): Promise<string | undefined>;
   mkdir(path: string): Promise<void>;
 };
 
@@ -47,8 +53,9 @@ export class InMemoryFileSystem implements CompleteFileSystem {
     }
   }
 
-  async mkdir(path: string, options?: unknown): Promise<void> {
+  async mkdir(path: string) {
     this.files[path] = _.get(this.files, path, null);
+    return undefined;
   }
 
   async readdir(path: string): Promise<string[]> {
