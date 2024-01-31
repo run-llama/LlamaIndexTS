@@ -81,7 +81,8 @@ export async function runCreateLlama(
   ].join("-");
   const command = [
     "npm",
-    "run create",
+    "run",
+    "create",
     name,
     "--template",
     templateType,

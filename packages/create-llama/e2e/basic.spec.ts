@@ -11,14 +11,10 @@ import type {
 } from "../helpers";
 import { createTestDir, runCreateLlama, type AppType } from "./utils";
 
-const templateTypes: TemplateType[] = ["streaming", "simple"];
-const templateFrameworks: TemplateFramework[] = [
-  "nextjs",
-  "express",
-  "fastapi",
-];
-const templateEngines: TemplateEngine[] = ["simple", "context"];
-const templateUIs: TemplateUI[] = ["shadcn", "html"];
+const templateTypes: TemplateType[] = ["streaming"];
+const templateFrameworks: TemplateFramework[] = ["nextjs"];
+const templateEngines: TemplateEngine[] = ["simple"];
+const templateUIs: TemplateUI[] = ["shadcn"];
 
 for (const templateType of templateTypes) {
   for (const templateFramework of templateFrameworks) {
