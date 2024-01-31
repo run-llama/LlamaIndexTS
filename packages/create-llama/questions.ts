@@ -5,7 +5,7 @@ import path from "path";
 import { blue, green, red } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
-import { TemplateDataSource, TemplateFramework } from "./helpers";
+import { TemplateDataSourceType, TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
@@ -18,8 +18,8 @@ const supportedContextFileTypes = [
   ".pdf",
   ".doc",
   ".docx",
-  ".ppt",
-  ".pptx",
+  ".xls",
+  ".xlsx",
   ".csv",
 ];
 const MACOS_FILE_SELECTION_SCRIPT = `
@@ -103,7 +103,31 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   return displayedChoices;
 };
 
-const selectLocalContextData = async (dataSource: TemplateDataSource) => {
+const getDataSourceChoices = (framework: TemplateFramework) => {
+  let choices = [
+    {
+      title: "No data, just a simple chat",
+      value: "simple",
+    },
+    { title: "Use an example PDF", value: "exampleFile" },
+  ];
+  if (process.platform === "win32" || process.platform === "darwin") {
+    choices.push({
+      title: `Use a local file (${supportedContextFileTypes})`,
+      value: "localFile",
+    });
+    choices.push({
+      title: `Use a local folder`,
+      value: "localFolder",
+    });
+  }
+  if (framework === "fastapi") {
+    choices.push({ title: "Use website content", value: "web" });
+  }
+  return choices;
+};
+
+const selectLocalContextData = async (type: TemplateDataSourceType) => {
   try {
     let selectedPath: string = "";
     let execScript: string;
@@ -111,14 +135,14 @@ const selectLocalContextData = async (dataSource: TemplateDataSource) => {
     switch (process.platform) {
       case "win32": // Windows
         execScript =
-          dataSource.type === "file"
+          type === "file"
             ? WINDOWS_FILE_SELECTION_SCRIPT
             : WINDOWS_FOLDER_SELECTION_SCRIPT;
         execOpts = { shell: "powershell.exe" };
         break;
       case "darwin": // MacOS
         execScript =
-          dataSource.type === "file"
+          type === "file"
             ? MACOS_FILE_SELECTION_SCRIPT
             : MACOS_FOLDER_SELECTION_SCRIPT;
         break;
@@ -127,7 +151,7 @@ const selectLocalContextData = async (dataSource: TemplateDataSource) => {
         process.exit(1);
     }
     selectedPath = execSync(execScript, execOpts).toString().trim();
-    if (dataSource.type === "file") {
+    if (type === "file") {
       let fileType = path.extname(selectedPath);
       if (!supportedContextFileTypes.includes(fileType)) {
         console.log(
@@ -142,7 +166,7 @@ const selectLocalContextData = async (dataSource: TemplateDataSource) => {
   } catch (error) {
     console.log(
       red(
-        "Got error when trying to select local context data! Please try again or select other options.",
+        "Got an error when trying to select local context data! Please try again or select another data source option.",
       ),
     );
     process.exit(1);
@@ -401,148 +425,76 @@ export const askQuestions = async (
     }
   }
 
+  if (program.files) {
+    // If user specified files option, then the program should use context engine
+    program.engine == "context";
+    if (!fs.existsSync(program.files)) {
+      console.log("File or folder not found");
+      process.exit(1);
+    } else {
+      program.dataSource = {
+        type: fs.lstatSync(program.files).isDirectory() ? "folder" : "file",
+        config: {
+          path: program.files,
+        },
+      };
+    }
+  }
+
   if (!program.engine) {
     if (ciInfo.isCI) {
       program.engine = getPrefOrDefault("engine");
     } else {
-      if (program.files) {
-        program.engine = "context";
-        let filePath = program.files;
-        // Check the path is exist
-        if (!fs.existsSync(filePath)) {
-          console.log("File or folder not found");
-          process.exit(1);
-        } else {
-          program.dataSource = {
-            type: fs.lstatSync(filePath).isDirectory() ? "folder" : "file",
-            config: {
-              path: filePath,
-            },
-          };
-        }
-      } else {
-        let choices = [
-          {
-            title: "No data, just a simple chat",
-            value: "simple",
-          },
-          { title: "Use an example PDF", value: "exampleFile" },
-        ];
-        if (process.platform === "win32" || process.platform === "darwin") {
-          if (process.platform === "win32" || process.platform === "darwin") {
-            choices.push({
-              title: `Use a local file (${supportedContextFileTypes})`,
-              value: "localFile",
-            });
-            choices.push({
-              title: `Use a local folder`,
-              value: "localFolder",
-            });
-          }
-        }
-        if (program.framework === "fastapi") {
-          choices.push({ title: "Use website content", value: "web" });
-        }
-
-        const { dataSource } = await prompts(
-          {
-            type: "select",
-            name: "dataSource",
-            message: "Which data source would you like to use?",
-            choices: choices,
-            initial: 1,
-          },
-          handlers,
-        );
-        // Initialize with default config
-        program.dataSource = getPrefOrDefault("dataSource");
-        if (program.dataSource) {
-          switch (dataSource) {
-            case "simple":
-              program.engine = "simple";
-              break;
-            case "exampleFile":
-              program.engine = "context";
-              // example file is a context app with dataSource.type = file but has no config
-              program.dataSource = { type: "file", config: {} };
-              break;
-            case "localFile":
-              program.engine = "context";
-              program.dataSource.type = "file";
-              program.dataSource.config = {
-                path: await selectLocalContextData(program.dataSource),
-              };
-              break;
-            case "localFolder":
-              program.engine = "context";
-              program.dataSource.type = "folder";
-              program.dataSource.config = {
-                path: await selectLocalContextData(program.dataSource),
-              };
-              break;
-            case "web":
-              program.engine = "context";
-              program.dataSource.type = "web";
-              break;
-          }
-        }
-      }
-
-      if (
-        program.dataSource?.type === "web" &&
-        program.framework === "fastapi"
-      ) {
-        let { baseUrl } = await prompts(
-          {
-            type: "text",
-            name: "baseUrl",
-            message: "Please provide base URL of the website:",
-            initial: "https://www.llamaindex.ai",
-          },
-          handlers,
-        );
-        try {
-          if (!baseUrl.includes("://")) {
-            baseUrl = `https://${baseUrl}`;
-          }
-          let checkUrl = new URL(baseUrl);
-          if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
-            throw new Error("Invalid protocol");
-          }
-        } catch (error) {
-          console.log(
-            red(
-              "Invalid URL provided! Please provide a valid URL (e.g. https://www.llamaindex.ai)",
-            ),
-          );
-          process.exit(1);
-        }
-        program.dataSource.config = {
-          baseUrl: baseUrl,
-          depth: 1,
-        };
-      }
-
-      if (program.engine !== "simple" && !program.vectorDb) {
-        if (ciInfo.isCI) {
-          program.vectorDb = getPrefOrDefault("vectorDb");
-        } else {
-          const { vectorDb } = await prompts(
-            {
-              type: "select",
-              name: "vectorDb",
-              message: "Would you like to use a vector database?",
-              choices: getVectorDbChoices(program.framework),
-              initial: 0,
-            },
-            handlers,
-          );
-          program.vectorDb = vectorDb;
-          preferences.vectorDb = vectorDb;
+      const { dataSource } = await prompts(
+        {
+          type: "select",
+          name: "dataSource",
+          message: "Which data source would you like to use?",
+          choices: getDataSourceChoices(program.framework),
+          initial: 1,
+        },
+        handlers,
+      );
+      // Initialize with default config
+      program.dataSource = getPrefOrDefault("dataSource");
+      if (program.dataSource) {
+        switch (dataSource) {
+          case "simple":
+            program.engine = "simple";
+            program.dataSource = { type: "none", config: {} };
+            break;
+          case "exampleFile":
+            program.engine = "context";
+            // example file is a context app with dataSource.type = file but has no config
+            program.dataSource = { type: "file", config: {} };
+            break;
+          case "localFile":
+            program.engine = "context";
+            program.dataSource = {
+              type: "file",
+              config: {
+                path: await selectLocalContextData("file"),
+              },
+            };
+            break;
+          case "localFolder":
+            program.engine = "context";
+            program.dataSource = {
+              type: "folder",
+              config: {
+                path: await selectLocalContextData("folder"),
+              },
+            };
+            break;
+          case "web":
+            program.engine = "context";
+            program.dataSource.type = "web";
+            break;
         }
       }
     }
-  } else {
+  } else if (!program.dataSource) {
+    // Handle a case when engine is specified but dataSource is not
     if (program.engine === "context") {
       program.dataSource = {
         type: "file",
@@ -553,6 +505,57 @@ export const askQuestions = async (
         type: "none",
         config: {},
       };
+    }
+  }
+
+  if (program.dataSource?.type === "web" && program.framework === "fastapi") {
+    let { baseUrl } = await prompts(
+      {
+        type: "text",
+        name: "baseUrl",
+        message: "Please provide base URL of the website:",
+        initial: "https://www.llamaindex.ai",
+      },
+      handlers,
+    );
+    try {
+      if (!baseUrl.includes("://")) {
+        baseUrl = `https://${baseUrl}`;
+      }
+      let checkUrl = new URL(baseUrl);
+      if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
+        throw new Error("Invalid protocol");
+      }
+    } catch (error) {
+      console.log(
+        red(
+          "Invalid URL provided! Please provide a valid URL (e.g. https://www.llamaindex.ai)",
+        ),
+      );
+      process.exit(1);
+    }
+    program.dataSource.config = {
+      baseUrl: baseUrl,
+      depth: 1,
+    };
+  }
+
+  if (program.engine !== "simple" && !program.vectorDb) {
+    if (ciInfo.isCI) {
+      program.vectorDb = getPrefOrDefault("vectorDb");
+    } else {
+      const { vectorDb } = await prompts(
+        {
+          type: "select",
+          name: "vectorDb",
+          message: "Would you like to use a vector database?",
+          choices: getVectorDbChoices(program.framework),
+          initial: 0,
+        },
+        handlers,
+      );
+      program.vectorDb = vectorDb;
+      preferences.vectorDb = vectorDb;
     }
   }
 

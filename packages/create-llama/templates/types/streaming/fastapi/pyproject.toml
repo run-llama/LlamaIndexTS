@@ -13,11 +13,6 @@ llama-index = "^0.9.19"
 pypdf = "^3.17.0"
 python-dotenv = "^1.0.0"
 docx2txt = "^0.8"
-python-pptx = "^0.6.23"
-torch = [
-    { version = "^2.0.1", source = "PyPI" },
-]
-transformers = "^4.37.2"
 
 [build-system]
 requires = ["poetry-core"]
