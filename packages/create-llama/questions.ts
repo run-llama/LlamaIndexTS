@@ -465,8 +465,8 @@ export const askQuestions = async (
             break;
           case "exampleFile":
             program.engine = "context";
-            // example file is a context app with dataSource.type = file but has no config
-            program.dataSource = { type: "file", config: {} };
+            // Treat example as a folder data source with no config
+            program.dataSource = { type: "folder", config: {} };
             break;
           case "localFile":
             program.engine = "context";
@@ -497,7 +497,7 @@ export const askQuestions = async (
     // Handle a case when engine is specified but dataSource is not
     if (program.engine === "context") {
       program.dataSource = {
-        type: "file",
+        type: "folder",
         config: {},
       };
     } else if (program.engine === "simple") {
@@ -540,7 +540,7 @@ export const askQuestions = async (
     };
   }
 
-  if (program.engine !== "simple" && !program.vectorDb) {
+  if (!program.engine && program.engine !== "simple" && !program.vectorDb) {
     if (ciInfo.isCI) {
       program.vectorDb = getPrefOrDefault("vectorDb");
     } else {
