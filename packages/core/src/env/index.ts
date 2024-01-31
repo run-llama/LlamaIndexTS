@@ -1,4 +1,3 @@
-import * as Buffer from "buffer";
 import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
