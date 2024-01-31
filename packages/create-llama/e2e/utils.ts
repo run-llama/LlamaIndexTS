@@ -72,8 +72,6 @@ export async function runCreateLlama(
   externalPort: number,
   postInstallAction: TemplatePostInstallAction,
 ): Promise<CreateLlamaResult> {
-  const createLlama = path.join(__dirname, "..", "package", "dist", "index.js");
-
   const name = [
     templateType,
     templateFramework,
@@ -82,8 +80,8 @@ export async function runCreateLlama(
     appType,
   ].join("-");
   const command = [
-    "node",
-    createLlama,
+    "npm",
+    "run create",
     name,
     "--template",
     templateType,
