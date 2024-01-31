@@ -10,7 +10,7 @@ export class DocxReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const dataBuffer = Buffer.from(await fs.readFile(file), "utf-8");
+    const dataBuffer = await fs.readRawFile(file);
     const { value } = await mammoth.extractRawText({ buffer: dataBuffer });
     return [new Document({ text: value, id_: file })];
   }

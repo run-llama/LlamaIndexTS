@@ -8,6 +8,7 @@ import _ from "lodash";
  */
 export type GenericFileSystem = {
   writeFile(path: string, content: string): Promise<void>;
+  readRawFile(path: string): Promise<Buffer>;
   readFile(path: string): Promise<string>;
   access(path: string): Promise<void>;
   mkdir(
@@ -40,7 +41,7 @@ export class InMemoryFileSystem implements CompleteFileSystem {
     this.files[path] = _.cloneDeep(content);
   }
 
-  async readFile(path: string, options?: unknown): Promise<string> {
+  async readFile(path: string): Promise<string> {
     if (!(path in this.files)) {
       throw new Error(`File ${path} does not exist`);
     }
@@ -63,6 +64,10 @@ export class InMemoryFileSystem implements CompleteFileSystem {
   }
 
   async stat(path: string): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  async readRawFile(path: string): Promise<Buffer> {
     throw new Error("Not implemented");
   }
 }
