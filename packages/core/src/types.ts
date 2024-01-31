@@ -47,11 +47,6 @@ export interface QueryEngineTool extends BaseTool {
   queryEngine: BaseQueryEngine;
 }
 
-export interface SubQuestion {
-  subQuestion: string;
-  toolName: string;
-}
-
 /**
  * An OutputParser is used to extract structured data from the raw output of the LLM.
  */
@@ -74,9 +69,16 @@ export interface ToolMetadata {
   name: string;
 }
 
-/**
- * QuestionGenerators generate new questions for the LLM using tools and a user query.
- */
-export interface BaseQuestionGenerator {
-  generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]>;
+export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
+
+export class QueryBundle {
+  queryStr: string;
+
+  constructor(queryStr: string) {
+    this.queryStr = queryStr;
+  }
+
+  toString(): string {
+    return this.queryStr;
+  }
 }

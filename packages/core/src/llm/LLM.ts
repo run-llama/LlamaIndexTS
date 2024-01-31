@@ -216,6 +216,7 @@ export class OpenAI extends BaseLLM {
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
+
     // Streaming
     if (stream) {
       return this.streamChat(params);

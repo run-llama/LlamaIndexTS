@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { BaseNode, Document } from "../../Node";
-import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { RetrieverQueryEngine } from "../../engines/query";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
   BaseDocumentStore,
