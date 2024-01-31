@@ -1,9 +1,10 @@
 import { DefaultPromptTemplate } from "../extractors/prompts";
 import { LLM } from "../llm";
-import { SelectionOutputParser } from "../outputParsers/selectors";
+import { Answer, SelectionOutputParser } from "../outputParsers/selectors";
 import {
   BaseOutputParser,
   QueryBundle,
+  StructuredOutput,
   ToolMetadataOnlyDescription,
 } from "../types";
 import { BaseSelector, SelectorResult } from "./base";
@@ -19,7 +20,9 @@ function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   return texts.join("");
 }
 
-function _structuredOutputToSelectorResult(output: any): SelectorResult {
+function _structuredOutputToSelectorResult(
+  output: StructuredOutput<Answer[]>,
+): SelectorResult {
   const structuredOutput = output;
   const answers = structuredOutput.parsedOutput;
 

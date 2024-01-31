@@ -1,7 +1,7 @@
 import { parseJsonMarkdown } from "../OutputParser";
 import { BaseOutputParser, StructuredOutput } from "../types";
 
-type Answer = {
+export type Answer = {
   choice: number;
   reason: string;
 };
