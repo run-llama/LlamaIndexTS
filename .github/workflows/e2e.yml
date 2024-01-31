@@ -58,7 +58,7 @@ jobs:
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}
       - name: Run Playwright tests
-        run: pnpm exec playwright test
+        run: npx playwright test
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         working-directory: ${{ runner.temp }}
