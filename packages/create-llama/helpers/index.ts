@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import path from "path";
 import { cyan } from "picocolors";
 
+import { fileURLToPath } from "url";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
 import { PackageManager } from "./get-pkg-manager";
 import { installLlamapackProject } from "./llama-pack";
@@ -19,7 +20,6 @@ import {
   WebSourceConfig,
 } from "./types";
 import { installTSTemplate } from "./typescript";
-import { fileURLToPath } from "url";
 
 const createEnvLocalFile = async (
   root: string,
