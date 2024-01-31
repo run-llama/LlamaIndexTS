@@ -8,7 +8,7 @@ import {
   ToolMetadataOnlyDescription,
 } from "../types";
 import { BaseSelector, SelectorResult } from "./base";
-import { getDefaultSingleSelectPrompt } from "./prompts";
+import { defaultSingleSelectPrompt } from "./prompts";
 
 function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   const texts: string[] = [];
@@ -82,7 +82,7 @@ export class LLMMultiSelector extends BaseSelector {
 
     const prompt =
       this._prompt?.contextStr ??
-      getDefaultSingleSelectPrompt(
+      defaultSingleSelectPrompt(
         choicesText.length,
         choicesText,
         query.queryStr,
@@ -145,11 +145,12 @@ export class LLMSingleSelector extends BaseSelector {
 
     const prompt =
       this._prompt?.contextStr ??
-      getDefaultSingleSelectPrompt(
+      defaultSingleSelectPrompt(
         choicesText.length,
         choicesText,
         query.queryStr,
       );
+
     const formattedPrompt = this._outputParser?.format(prompt);
 
     const prediction = await this._llm.complete({

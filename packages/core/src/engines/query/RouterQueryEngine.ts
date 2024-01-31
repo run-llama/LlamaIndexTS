@@ -155,7 +155,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
         selectedQueryEngine = this.queryEngines[result.selections[0].index];
 
         const logStr = `Selecting query engine ${result.selections[0].index}: ${result.selections[0].reason}`;
-        console.log(logStr);
+
         if (this.verbose) {
           console.log(logStr + "\n");
         }

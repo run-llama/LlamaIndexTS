@@ -6,8 +6,7 @@ export type Answer = {
   reason: string;
 };
 
-const formatStr = `
-The output should be ONLY JSON formatted as a JSON instance.
+const formatStr = `The output should be ONLY JSON formatted as a JSON instance.
 
 Here is an example:
 [

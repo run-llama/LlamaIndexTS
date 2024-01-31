@@ -7,17 +7,13 @@ export const getSelectorFromContext = (
   isMulti: boolean = false,
 ): BaseSelector => {
   let selector: BaseSelector | null = null;
+
   const llm = serviceContext.llm;
 
   if (isMulti) {
-    selector = new LLMMultiSelector({
-      llm,
-      maxOutputs: 5,
-    });
+    selector = new LLMMultiSelector({ llm });
   } else {
-    selector = new LLMSingleSelector({
-      llm,
-    });
+    selector = new LLMSingleSelector({ llm });
   }
 
   if (selector === null) {
