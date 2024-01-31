@@ -55,7 +55,6 @@ export class SimpleKVStore extends BaseKVStore {
   ): Promise<boolean> {
     if (key in this.data[collection]) {
       delete this.data[collection][key];
-
       return true;
     }
     return false;
