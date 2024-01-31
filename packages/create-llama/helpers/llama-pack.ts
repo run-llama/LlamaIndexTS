@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { fileURLToPath } from "url";
 import { LLAMA_HUB_FOLDER_PATH, LLAMA_PACK_CONFIG_PATH } from "./constant";
 import { copy } from "./copy";
 import { installPythonDependencies } from "./python";
@@ -29,7 +30,8 @@ const copyLlamapackEmptyProject = async ({
   root,
 }: Pick<InstallTemplateArgs, "root">) => {
   const templatePath = path.join(
-    __dirname,
+    fileURLToPath(import.meta.url),
+    "..",
     "..",
     "templates/components/sample-projects/llamapack",
   );

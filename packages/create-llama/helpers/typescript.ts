@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { bold, cyan } from "picocolors";
+import { fileURLToPath } from "url";
 import { version } from "../../core/package.json";
 import { copy } from "../helpers/copy";
 import { callPackageManager } from "../helpers/install";
@@ -71,7 +72,8 @@ export const installTSTemplate = async ({
    */
   console.log("\nInitializing project with template:", template, "\n");
   const templatePath = path.join(
-    __dirname,
+    fileURLToPath(import.meta.url),
+    "..",
     "..",
     "templates",
     "types",

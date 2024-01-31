@@ -3,6 +3,7 @@ import path from "path";
 import { cyan, red, yellow } from "picocolors";
 import { parse, stringify } from "smol-toml";
 import terminalLink from "terminal-link";
+import { fileURLToPath } from "url";
 import { copy } from "./copy";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
@@ -140,7 +141,8 @@ export const installPythonTemplate = async ({
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
   const templatePath = path.join(
-    __dirname,
+    fileURLToPath(import.meta.url),
+    "..",
     "..",
     "templates",
     "types",
