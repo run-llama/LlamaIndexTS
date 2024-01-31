@@ -19,7 +19,7 @@ async function main() {
     const queryEngine = await index.asQueryEngine({ retriever });
 
     const results = await queryEngine.query({
-      query: "What is the best reviewed movie?",
+      query: 'How was "La Sapienza" reviewed?',
     });
 
     console.log(results.response);
