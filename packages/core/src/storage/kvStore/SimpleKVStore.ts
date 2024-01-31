@@ -56,10 +56,6 @@ export class SimpleKVStore extends BaseKVStore {
     if (key in this.data[collection]) {
       delete this.data[collection][key];
 
-      if (this.persistPath) {
-        await this.persist(this.persistPath, this.fs); // Save the data after deleting the key
-      }
-
       return true;
     }
     return false;
