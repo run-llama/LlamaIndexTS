@@ -8,7 +8,13 @@ import _ from "lodash";
  */
 export type GenericFileSystem = {
   writeFile(path: string, content: string): Promise<void>;
+  /**
+   * Reads a file and returns its content as a raw buffer.
+   */
   readRawFile(path: string): Promise<Buffer>;
+  /**
+   * Reads a file and returns its content as an utf-8 string.
+   */
   readFile(path: string): Promise<string>;
   access(path: string): Promise<void>;
   mkdir(
