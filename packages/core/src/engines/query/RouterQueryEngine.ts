@@ -99,7 +99,23 @@ export class RouterQueryEngine implements BaseQueryEngine {
     });
   }
 
-  async _query(queryBundle: QueryBundle): Promise<Response> {
+  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
+  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  async query(
+    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+  ): Promise<Response | AsyncIterable<Response>> {
+    const { query, stream } = params;
+
+    const response = await this.queryRoute({ queryStr: query });
+
+    if (stream) {
+      return response;
+    }
+
+    return response;
+  }
+
+  private async queryRoute(queryBundle: QueryBundle): Promise<Response> {
     const result = await this._selector.select(this._metadatas, queryBundle);
 
     if (result.selections.length > 1) {
@@ -161,21 +177,5 @@ export class RouterQueryEngine implements BaseQueryEngine {
 
       return finalResponse;
     }
-  }
-
-  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
-  async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
-    const { query, stream } = params;
-
-    const response = await this._query({ queryStr: query });
-
-    if (stream) {
-      return response;
-    }
-
-    return response;
   }
 }
