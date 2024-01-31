@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.1.6
+
+### Patch Changes
+
+- cf44640: fix: `instanceof` issue
+
+  This will fix QueryEngine cannot run.
+
+- 7231ddb: feat: allow `SimpleDirectoryReader` to get a string
+
 ## 0.1.5
 
 ### Patch Changes
