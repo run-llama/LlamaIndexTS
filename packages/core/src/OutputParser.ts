@@ -1,4 +1,5 @@
-import { BaseOutputParser, StructuredOutput, SubQuestion } from "./types";
+import { SubQuestion } from "./engines/query/types";
+import { BaseOutputParser, StructuredOutput } from "./types";
 
 /**
  * Error class for output parsing. Due to the nature of LLMs, anytime we use LLM

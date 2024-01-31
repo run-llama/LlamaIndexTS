@@ -1,11 +1,11 @@
 import { BaseNode, Document, MetadataMode } from "../../Node";
 import { defaultKeywordExtractPrompt } from "../../Prompt";
-import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { RetrieverQueryEngine } from "../../engines/query";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
   BaseDocumentStore,

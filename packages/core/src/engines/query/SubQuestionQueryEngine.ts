@@ -14,13 +14,12 @@ import {
 } from "../../synthesizers";
 import {
   BaseQueryEngine,
-  BaseQuestionGenerator,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
   QueryEngineTool,
-  SubQuestion,
   ToolMetadata,
 } from "../../types";
+import { BaseQuestionGenerator, SubQuestion } from "./types";
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then

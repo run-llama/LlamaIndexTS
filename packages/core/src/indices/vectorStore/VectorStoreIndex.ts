@@ -6,7 +6,6 @@ import {
   ObjectType,
   splitNodesByType,
 } from "../../Node";
-import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
@@ -17,6 +16,7 @@ import {
   ClipEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings";
+import { RetrieverQueryEngine } from "../../engines/query";
 import { runTransformations } from "../../ingestion";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
