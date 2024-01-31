@@ -1,5 +1,3 @@
-// from typing import Any, Dict, List, Optional, Sequence, cast
-
 import { DefaultPromptTemplate } from "../extractors/prompts";
 import { LLM } from "../llm";
 import { SelectionOutputParser } from "../outputParsers/selectors";
