@@ -54,7 +54,7 @@ jobs:
         working-directory: ./packages/create-llama
       - name: Install create-llama
         run: npm add ${{ runner.temp }}/*.tgz
-        working-directory: ./packages/create-llama
+        working-directory: ${{ runner.temp }}
       - name: Run Playwright tests
         run: pnpm exec playwright test
         env:
