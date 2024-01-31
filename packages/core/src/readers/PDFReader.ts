@@ -11,7 +11,7 @@ export class PDFReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const content = Buffer.from(await fs.readFile(file), "utf-8");
+    const content = await fs.readRawFile(file);
     const text = await readPDF(content);
     return text.map((text) => {
       const sha256 = createSHA256();
