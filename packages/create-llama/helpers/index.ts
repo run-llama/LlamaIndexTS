@@ -12,6 +12,7 @@ import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
 import { installPythonTemplate } from "./python";
 import { downloadAndExtractRepo } from "./repo";
 import {
+  FileSourceConfig,
   InstallTemplateArgs,
   TemplateDataSource,
   TemplateFramework,
@@ -120,28 +121,41 @@ const installDependencies = async (
   }
 };
 
-const copyContextData = async (root: string, contextFile?: string) => {
+const copyContextData = async (
+  root: string,
+  dataSource?: TemplateDataSource,
+) => {
   const destPath = path.join(root, "data");
-  if (contextFile) {
-    console.log(`\nCopying provided file to ${cyan(destPath)}\n`);
-    await fs.mkdir(destPath, { recursive: true });
-    await fs.copyFile(
-      contextFile,
-      path.join(destPath, path.basename(contextFile)),
-    );
-  } else {
-    const srcPath = path.join(
-      __dirname,
-      "..",
-      "templates",
-      "components",
-      "data",
-    );
-    console.log(`\nCopying test data to ${cyan(destPath)}\n`);
+
+  let dataSourceConfig = dataSource?.config as FileSourceConfig;
+
+  // Copy file
+  if (dataSource?.type === "file") {
+    if (dataSourceConfig.path) {
+      console.log(`\nCopying file to ${cyan(destPath)}\n`);
+      await fs.mkdir(destPath, { recursive: true });
+      await fs.copyFile(
+        dataSourceConfig.path,
+        path.join(destPath, path.basename(dataSourceConfig.path)),
+      );
+    } else {
+      console.log("Missing file path in config");
+      process.exit(1);
+    }
+    return;
+  }
+
+  // Copy folder
+  if (dataSource?.type === "folder") {
+    let srcPath =
+      dataSourceConfig.path ??
+      path.join(__dirname, "..", "templates", "components", "data");
+    console.log(`\nCopying data to ${cyan(destPath)}\n`);
     await copy("**", destPath, {
       parents: true,
       cwd: srcPath,
     });
+    return;
   }
 };
 
@@ -192,14 +206,7 @@ export const installTemplate = async (
     });
 
     if (props.engine === "context") {
-      if (
-        props.dataSource?.type === "file" &&
-        "contextFile" in props.dataSource.config
-      ) {
-        await copyContextData(props.root, props.dataSource.config.contextFile);
-      } else {
-        await copyContextData(props.root);
-      }
+      await copyContextData(props.root, props.dataSource);
       await installDependencies(
         props.framework,
         props.packageManager,
