@@ -1,7 +1,5 @@
 ---
-"docs": minor
-"examples": minor
-"llamaindex": minor
+"llamaindex": patch
 ---
 
 feat(router): add router query engine
