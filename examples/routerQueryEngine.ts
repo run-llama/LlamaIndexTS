@@ -12,7 +12,7 @@ import {
 async function main() {
   // Load documents from a directory
   const documents = await new SimpleDirectoryReader().loadData({
-    directoryPath: "node_modules/llamaindex/examples/abramov.txt",
+    directoryPath: "node_modules/llamaindex/examples",
   });
 
   // Parse the documents into nodes
@@ -47,17 +47,11 @@ async function main() {
     queryEngineTools: [
       {
         queryEngine: vectorQueryEngine,
-        metadata: {
-          name: "vector_query_engine",
-          description: "Useful for summarization questions related to Abramov",
-        },
+        description: "Useful for summarization questions related to Abramov",
       },
       {
         queryEngine: summaryQueryEngine,
-        metadata: {
-          name: "summary_query_engine",
-          description: "Useful for retrieving specific context from Abramov",
-        },
+        description: "Useful for retrieving specific context from Abramov",
       },
     ],
     serviceContext,

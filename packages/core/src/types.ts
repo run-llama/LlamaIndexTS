@@ -74,6 +74,8 @@ export interface ToolMetadata {
   name: string;
 }
 
+export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
+
 /**
  * QuestionGenerators generate new questions for the LLM using tools and a user query.
  */

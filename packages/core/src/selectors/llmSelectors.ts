@@ -3,11 +3,15 @@
 import { DefaultPromptTemplate } from "../extractors/prompts";
 import { LLM } from "../llm";
 import { SelectionOutputParser } from "../outputParsers/selectors";
-import { BaseOutputParser, QueryBundle, ToolMetadata } from "../types";
+import {
+  BaseOutputParser,
+  QueryBundle,
+  ToolMetadataOnlyDescription,
+} from "../types";
 import { BaseSelector, SelectorResult } from "./base";
 import { getDefaultSingleSelectPrompt } from "./prompts";
 
-function _buildChoicesText(choices: ToolMetadata[]): string {
+function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   const texts: string[] = [];
   for (const [ind, choice] of choices.entries()) {
     let text = choice.description.split("\n").join(" ");
@@ -70,10 +74,10 @@ export class LLMMultiSelector extends BaseSelector {
    * @param query
    */
   async _select(
-    choices: ToolMetadata[],
+    choices: ToolMetadataOnlyDescription[],
     query: QueryBundle,
   ): Promise<SelectorResult> {
-    const choicesText = _buildChoicesText(choices);
+    const choicesText = buildChoicesText(choices);
 
     const prompt =
       this._prompt?.contextStr ??
@@ -133,10 +137,10 @@ export class LLMSingleSelector extends BaseSelector {
    * @param query
    */
   async _select(
-    choices: ToolMetadata[],
+    choices: ToolMetadataOnlyDescription[],
     query: QueryBundle,
   ): Promise<SelectorResult> {
-    const choicesText = _buildChoicesText(choices);
+    const choicesText = buildChoicesText(choices);
 
     const prompt =
       this._prompt?.contextStr ??

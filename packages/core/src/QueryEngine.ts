@@ -239,6 +239,15 @@ async function combineResponses(
   return new Response(summary, sourceNodes);
 }
 
+type RouterQueryEngineTool = {
+  queryEngine: BaseQueryEngine;
+  description: string;
+};
+
+type RouterQueryEngineMetadata = {
+  description: string;
+};
+
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
@@ -246,13 +255,13 @@ export class RouterQueryEngine implements BaseQueryEngine {
   _selector: BaseSelector;
   _queryEngines: BaseQueryEngine[];
   serviceContext: ServiceContext;
-  _metadatas: ToolMetadata[];
+  _metadatas: RouterQueryEngineMetadata[];
   _summarizer: TreeSummarize;
   _verbose: boolean;
 
   constructor(init: {
     selector: BaseSelector;
-    queryEngineTools: QueryEngineTool[];
+    queryEngineTools: RouterQueryEngineTool[];
     serviceContext?: ServiceContext;
     summarizer?: TreeSummarize;
     verbose?: boolean;
@@ -260,14 +269,16 @@ export class RouterQueryEngine implements BaseQueryEngine {
     this.serviceContext = init.serviceContext || serviceContextFromDefaults({});
     this._selector = init.selector;
     this._queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
-    this._metadatas = init.queryEngineTools.map((tool) => tool.metadata);
+    this._metadatas = init.queryEngineTools.map((tool) => ({
+      description: tool.description,
+    }));
     this._summarizer =
       init.summarizer || new TreeSummarize(this.serviceContext);
     this._verbose = init.verbose ?? false;
   }
 
   static fromDefaults(init: {
-    queryEngineTools: QueryEngineTool[];
+    queryEngineTools: RouterQueryEngineTool[];
     selector: BaseSelector;
     serviceContext?: ServiceContext;
     summarizer?: TreeSummarize;

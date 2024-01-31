@@ -1,4 +1,4 @@
-import { QueryBundle, ToolMetadata } from "../types";
+import { QueryBundle, ToolMetadataOnlyDescription } from "../types";
 
 export class SingleSelection {
   index!: number;
@@ -41,9 +41,11 @@ export type SelectorResult = {
 
 type QueryType = string | QueryBundle;
 
-function wrapChoice(choice: string | ToolMetadata): ToolMetadata {
+function wrapChoice(
+  choice: string | ToolMetadataOnlyDescription,
+): ToolMetadataOnlyDescription {
   if (typeof choice === "string") {
-    return { description: choice, name: choice };
+    return { description: choice };
   } else {
     return choice;
   }
@@ -57,7 +59,7 @@ function wrapQuery(query: QueryType): QueryBundle {
   return query;
 }
 
-type MetadataType = string | ToolMetadata;
+type MetadataType = string | ToolMetadataOnlyDescription;
 
 export abstract class BaseSelector {
   async select(choices: MetadataType[], query: QueryBundle) {
@@ -67,7 +69,7 @@ export abstract class BaseSelector {
   }
 
   abstract _select(
-    choices: ToolMetadata[],
+    choices: ToolMetadataOnlyDescription[],
     query: QueryBundle,
   ): Promise<SelectorResult>;
   abstract asQueryComponent(): unknown;
