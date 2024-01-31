@@ -109,7 +109,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
     const response = await this.queryRoute({ queryStr: query });
 
     if (stream) {
-      return response;
+      throw new Error("Streaming is not supported yet.");
     }
 
     return response;
