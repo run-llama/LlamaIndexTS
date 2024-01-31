@@ -14,6 +14,7 @@ export * from "./callbacks/CallbackManager";
 export * from "./constants";
 export * from "./embeddings";
 export * from "./engines/chat";
+export * from "./engines/query";
 export * from "./extractors";
 export * from "./indices";
 export * from "./ingestion";
