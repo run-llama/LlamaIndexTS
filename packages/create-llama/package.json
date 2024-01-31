@@ -26,8 +26,7 @@
     "build": "npm run clean && ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
     "lint": "eslint . --ignore-pattern dist",
     "e2e": "playwright test",
-    "prepublishOnly": "cd ../../ && pnpm run build:release",
-    "create": "create-llama"
+    "prepublishOnly": "cd ../../ && pnpm run build:release"
   },
   "devDependencies": {
     "@playwright/test": "^1.41.1",
