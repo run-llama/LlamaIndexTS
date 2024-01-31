@@ -1,5 +1,4 @@
 import _ from "lodash";
-import type nodeFS from "node:fs/promises";
 
 /**
  * A filesystem interface that is meant to be compatible with
@@ -8,20 +7,10 @@ import type nodeFS from "node:fs/promises";
  * browsers.
  */
 export type GenericFileSystem = {
-  writeFile(
-    path: string,
-    content: string,
-    options?: Parameters<typeof nodeFS.writeFile>[2],
-  ): Promise<void>;
-  readFile(
-    path: string,
-    options?: Parameters<typeof nodeFS.readFile>[1],
-  ): Promise<string>;
+  writeFile(path: string, content: string): Promise<void>;
+  readFile(path: string): Promise<string>;
   access(path: string): Promise<void>;
-  mkdir(
-    path: string,
-    options?: Parameters<typeof nodeFS.mkdir>[1],
-  ): Promise<void>;
+  mkdir(path: string): Promise<void>;
 };
 
 export type WalkableFileSystem = {
