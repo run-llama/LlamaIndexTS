@@ -2,9 +2,9 @@ import mammoth from "mammoth";
 import { Document } from "../Node";
 import { defaultFS } from "../env";
 import { GenericFileSystem } from "../storage/FileSystem";
-import { BaseReader } from "./base";
+import { FileReader } from "./type";
 
-export class DocxReader implements BaseReader {
+export class DocxReader implements FileReader {
   /** DocxParser */
   async loadData(
     file: string,
