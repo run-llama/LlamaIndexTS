@@ -6,6 +6,7 @@ import { ServiceContext, serviceContextFromDefaults } from "./ServiceContext";
 import { Event } from "./callbacks/CallbackManager";
 import { randomUUID } from "./env";
 import { BaseNodePostprocessor } from "./postprocessors";
+import { LLMSingleSelector } from "./selectors";
 import { BaseSelector } from "./selectors/base";
 import {
   BaseSynthesizer,
@@ -279,7 +280,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
 
   static fromDefaults(init: {
     queryEngineTools: RouterQueryEngineTool[];
-    selector: BaseSelector;
+    selector?: BaseSelector;
     serviceContext?: ServiceContext;
     summarizer?: TreeSummarize;
     verbose?: boolean;
@@ -288,7 +289,8 @@ export class RouterQueryEngine implements BaseQueryEngine {
       init.serviceContext ?? serviceContextFromDefaults({});
 
     return new RouterQueryEngine({
-      selector: init.selector,
+      selector:
+        init.selector ?? new LLMSingleSelector({ llm: serviceContext.llm }),
       queryEngineTools: init.queryEngineTools,
       serviceContext,
       summarizer: init.summarizer,

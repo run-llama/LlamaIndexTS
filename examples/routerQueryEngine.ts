@@ -1,5 +1,4 @@
 import {
-  LLMSingleSelector,
   OpenAI,
   RouterQueryEngine,
   SimpleDirectoryReader,
@@ -41,9 +40,6 @@ async function main() {
 
   // Create a router query engine
   const queryEngine = RouterQueryEngine.fromDefaults({
-    selector: new LLMSingleSelector({
-      llm: serviceContext.llm,
-    }),
     queryEngineTools: [
       {
         queryEngine: vectorQueryEngine,
