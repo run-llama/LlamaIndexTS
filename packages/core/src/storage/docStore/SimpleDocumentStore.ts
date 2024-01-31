@@ -8,7 +8,6 @@ import {
   DEFAULT_PERSIST_DIR,
 } from "../constants";
 import { SimpleKVStore } from "../kvStore/SimpleKVStore";
-import { BaseInMemoryKVStore } from "../kvStore/types";
 import { KVDocumentStore } from "./KVDocumentStore";
 
 type SaveDict = Record<string, any>;
@@ -57,10 +56,7 @@ export class SimpleDocumentStore extends KVDocumentStore {
     fs?: GenericFileSystem,
   ): Promise<void> {
     fs = fs || DEFAULT_FS;
-    if (
-      _.isObject(this.kvStore) &&
-      this.kvStore instanceof BaseInMemoryKVStore
-    ) {
+    if (_.isObject(this.kvStore) && this.kvStore instanceof SimpleKVStore) {
       await this.kvStore.persist(persistPath, fs);
     }
   }
