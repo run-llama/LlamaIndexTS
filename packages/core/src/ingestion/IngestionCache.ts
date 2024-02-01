@@ -5,6 +5,25 @@ import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore";
 import { BaseKVStore } from "../storage/kvStore/types";
 import { TransformComponent } from "./types";
 
+const transformToJSON = (obj: TransformComponent) => {
+  let seen: any[] = [];
+
+  const replacer = (key: string, value: any) => {
+    if (value != null && typeof value == "object") {
+      if (seen.indexOf(value) >= 0) {
+        return;
+      }
+      seen.push(value);
+    }
+    return value;
+  };
+
+  // this is a custom replacer function that will allow us to handle circular references
+  const jsonStr = JSON.stringify(obj, replacer);
+
+  return jsonStr;
+};
+
 export function getTransformationHash(
   nodes: BaseNode[],
   transform: TransformComponent,
@@ -13,7 +32,8 @@ export function getTransformationHash(
     .map((node) => node.getContent(MetadataMode.ALL))
     .join("");
 
-  const transformString: string = JSON.stringify(transform);
+  const transformString: string = transformToJSON(transform);
+
   const hash = createSHA256();
   hash.update(nodesStr + transformString);
   return hash.digest();
