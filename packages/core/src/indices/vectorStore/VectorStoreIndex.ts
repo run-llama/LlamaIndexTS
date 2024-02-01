@@ -6,7 +6,6 @@ import {
   ObjectType,
   splitNodesByType,
 } from "../../Node";
-import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
@@ -17,6 +16,8 @@ import {
   ClipEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings";
+import { RetrieverQueryEngine } from "../../engines/query";
+import { runTransformations } from "../../ingestion";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
   BaseIndexStore,
@@ -26,6 +27,7 @@ import {
   storageContextFromDefaults,
 } from "../../storage";
 import { BaseSynthesizer } from "../../synthesizers";
+import { BaseQueryEngine } from "../../types";
 import {
   BaseIndex,
   BaseIndexInit,
@@ -224,8 +226,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (args.logProgress) {
       console.log("Using node parser on documents...");
     }
-    args.nodes =
-      args.serviceContext.nodeParser.getNodesFromDocuments(documents);
+    args.nodes = await runTransformations(documents, [
+      args.serviceContext.nodeParser,
+    ]);
     if (args.logProgress) {
       console.log("Finished parsing documents.");
     }

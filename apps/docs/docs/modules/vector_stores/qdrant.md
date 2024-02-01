@@ -26,7 +26,6 @@ const essay = await fs.readFile(path, "utf-8");
 ```ts
 const vectorStore = new QdrantVectorStore({
   url: "http://localhost:6333",
-  port: 6333,
 });
 ```
 
@@ -65,7 +64,6 @@ async function main() {
 
   const vectorStore = new QdrantVectorStore({
     url: "http://localhost:6333",
-    port: 6333,
   });
 
   const document = new Document({ text: essay, id_: path });

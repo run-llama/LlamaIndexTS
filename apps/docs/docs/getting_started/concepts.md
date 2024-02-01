@@ -32,12 +32,12 @@ LlamaIndex.TS help you prepare the knowledge base with a suite of data connector
 
 ![](../_static/concepts/indexing.jpg)
 
-[**Data Loaders**](./modules/high_level/data_loader.md):
+[**Data Loaders**](../modules/data_loader.md):
 A data connector (i.e. `Reader`) ingest data from different data sources and data formats into a simple `Document` representation (text and simple metadata).
 
-[**Documents / Nodes**](./modules/high_level/documents_and_nodes.md): A `Document` is a generic container around any data source - for instance, a PDF, an API output, or retrieved data from a database. A `Node` is the atomic unit of data in LlamaIndex and represents a "chunk" of a source `Document`. It's a rich representation that includes metadata and relationships (to other nodes) to enable accurate and expressive retrieval operations.
+[**Documents / Nodes**](../modules/documents_and_nodes.md): A `Document` is a generic container around any data source - for instance, a PDF, an API output, or retrieved data from a database. A `Node` is the atomic unit of data in LlamaIndex and represents a "chunk" of a source `Document`. It's a rich representation that includes metadata and relationships (to other nodes) to enable accurate and expressive retrieval operations.
 
-[**Data Indexes**](./modules/high_level/data_index.md):
+[**Data Indexes**](../modules/data_index.md):
 Once you've ingested your data, LlamaIndex helps you index data into a format that's easy to retrieve.
 
 Under the hood, LlamaIndex parses the raw documents into intermediate representations, calculates vector embeddings, and stores your data in-memory or to disk.
@@ -60,19 +60,19 @@ These building blocks can be customized to reflect ranking preferences, as well 
 
 #### Building Blocks
 
-[**Retrievers**](./modules/low_level/retriever.md):
+[**Retrievers**](../modules/retriever.md):
 A retriever defines how to efficiently retrieve relevant context from a knowledge base (i.e. index) when given a query.
 The specific retrieval logic differs for difference indices, the most popular being dense retrieval against a vector index.
 
-[**Response Synthesizers**](./modules/low_level/response_synthesizer.md):
+[**Response Synthesizers**](../modules/response_synthesizer.md):
 A response synthesizer generates a response from an LLM, using a user query and a given set of retrieved text chunks.
 
 #### Pipelines
 
-[**Query Engines**](./modules/high_level/query_engine.md):
+[**Query Engines**](../modules/query_engine.md):
 A query engine is an end-to-end pipeline that allow you to ask question over your data.
 It takes in a natural language query, and returns a response, along with reference context retrieved and passed to the LLM.
 
-[**Chat Engines**](./modules/high_level/chat_engine.md):
+[**Chat Engines**](../modules/chat_engine.md):
 A chat engine is an end-to-end pipeline for having a conversation with your data
 (multiple back-and-forth instead of a single question & answer).

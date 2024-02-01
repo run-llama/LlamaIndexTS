@@ -1,5 +1,5 @@
 import { ZodSchema } from "zod";
-import { BaseTool, ToolMetadata } from "../Tool";
+import { BaseTool, ToolMetadata } from "../types";
 
 type IfZodSchema<T, True, False> = T extends ZodSchema ? True : False;
 

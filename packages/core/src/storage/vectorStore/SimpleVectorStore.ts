@@ -4,7 +4,7 @@ import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
-} from "../../embeddings";
+} from "../../embeddings/utils";
 import { defaultFS, path } from "../../env";
 import { GenericFileSystem, exists } from "../FileSystem";
 import { DEFAULT_PERSIST_DIR } from "../constants";

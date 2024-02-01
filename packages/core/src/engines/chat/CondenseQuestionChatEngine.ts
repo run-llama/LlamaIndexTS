@@ -4,7 +4,6 @@ import {
   defaultCondenseQuestionPrompt,
   messagesToHistoryStr,
 } from "../../Prompt";
-import { BaseQueryEngine } from "../../QueryEngine";
 import { Response } from "../../Response";
 import {
   ServiceContext,
@@ -12,6 +11,7 @@ import {
 } from "../../ServiceContext";
 import { ChatMessage, LLM } from "../../llm";
 import { extractText, streamReducer } from "../../llm/utils";
+import { BaseQueryEngine } from "../../types";
 import {
   ChatEngine,
   ChatEngineParamsNonStreaming,

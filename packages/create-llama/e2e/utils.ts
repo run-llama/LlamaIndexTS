@@ -9,6 +9,7 @@ import {
   TemplatePostInstallAction,
   TemplateType,
   TemplateUI,
+  TemplateVectorDB,
 } from "../helpers";
 
 export type AppType = "--frontend" | "--no-frontend" | "";
@@ -67,12 +68,20 @@ export async function runCreateLlama(
   templateFramework: TemplateFramework,
   templateEngine: TemplateEngine,
   templateUI: TemplateUI,
+  vectorDb: TemplateVectorDB,
   appType: AppType,
   port: number,
   externalPort: number,
   postInstallAction: TemplatePostInstallAction,
 ): Promise<CreateLlamaResult> {
-  const createLlama = path.join(__dirname, "..", "dist", "index.js");
+  const createLlama = path.join(
+    __dirname,
+    "..",
+    "output",
+    "package",
+    "dist",
+    "index.js",
+  );
 
   const name = [
     templateType,
@@ -93,6 +102,8 @@ export async function runCreateLlama(
     templateEngine,
     "--ui",
     templateUI,
+    "--vector-db",
+    vectorDb,
     "--model",
     MODEL,
     "--open-ai-key",
@@ -132,6 +143,23 @@ export async function runCreateLlama(
       externalPort,
       1000 * 60 * 5,
     );
+  } else {
+    // wait create-llama to exit
+    // we don't test install dependencies for now, so just set timeout for 10 seconds
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("create-llama timeout error"));
+      }, 1000 * 10);
+      appProcess.on("exit", (code) => {
+        if (code !== 0 && code !== null) {
+          clearTimeout(timeout);
+          reject(new Error("create-llama command was failed!"));
+        } else {
+          clearTimeout(timeout);
+          resolve(undefined);
+        }
+      });
+    });
   }
 
   return {
