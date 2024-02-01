@@ -1,5 +1,12 @@
 # create-llama
 
+## 0.0.22
+
+### Patch Changes
+
+- 6dd401e: Add an option to provide an URL and chat with the website data (FastAPI only)
+- e9b87ef: Select a folder as data source and support more file types (.pdf, .doc, .docx, .xls, .xlsx, .csv)
+
 ## 0.0.20
 
 ### Patch Changes
