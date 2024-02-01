@@ -1,26 +1,23 @@
-import { ZodSchema } from "zod";
 import { BaseTool, ToolMetadata } from "../types";
 
-type IfZodSchema<T, True, False> = T extends ZodSchema ? True : False;
-
-type Metadata<T = any> = {
+type Metadata = {
   name: string;
   description: string;
-  parameters: IfZodSchema<T, ZodSchema<{}>, ToolMetadata["parameters"]>;
+  parameters: ToolMetadata["parameters"];
 };
 
 export class FunctionTool<T = any> implements BaseTool {
   private _fn: (...args: any[]) => any;
   private _metadata: ToolMetadata;
 
-  constructor(fn: (...args: any[]) => any, metadata: Metadata<T>) {
+  constructor(fn: (...args: any[]) => any, metadata: Metadata) {
     this._fn = fn;
     this._metadata = metadata as ToolMetadata;
   }
 
   static fromDefaults<T = any>(
     fn: (...args: any[]) => any,
-    metadata?: Metadata<T>,
+    metadata?: Metadata,
   ): FunctionTool<T> {
     return new FunctionTool(fn, metadata!);
   }

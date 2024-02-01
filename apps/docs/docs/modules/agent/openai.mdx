@@ -77,38 +77,6 @@ const divideFunctionTool = new FunctionTool(divideNumbers, {
 });
 ```
 
-### Zod Schema
-
-```ts
-import { z } from "zod";
-
-const sumArgsSchema = z
-  .object({
-    a: z.number().describe("The argument a to sum"),
-    b: z.number().describe("The argument b to sum"),
-  })
-  .describe("the arguments");
-
-const dividArgsSchema = z
-  .object({
-    a: z.number().describe("The argument a to divide"),
-    b: z.number().describe("The argument b to divide"),
-  })
-  .describe("the arguments");
-
-const sumFunctionTool = new FunctionTool(sumNumbers, {
-  name: "sumNumbers",
-  description: "Use this function to sum numbers together",
-  parameters: sumArgsSchema,
-});
-
-const divideFunctionTool = new FunctionTool(divideNumbers, {
-  name: "divideNumbers",
-  description: "Use this function to divide numbers together",
-  parameters: dividArgsSchema,
-});
-```
-
 ## Create an OpenAIAgent
 
 Now we can create an OpenAIAgent with the function tools.

@@ -4,19 +4,25 @@ import { OpenAI } from "../../llm";
 import { FunctionTool } from "../../tools";
 import { mockLlmToolCallGeneration } from "../utility/mockOpenAI";
 
-import { z } from "zod";
-
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }): number {
   return a + b;
 }
 
-const sumArgsSchema = z
-  .object({
-    a: z.number().describe("The argument a to divide"),
-    b: z.number().describe("The argument b to divide"),
-  })
-  .describe("the arguments");
+const sumJSON = {
+  type: "object",
+  properties: {
+    a: {
+      type: "number",
+      description: "The argument a to sum",
+    },
+    b: {
+      type: "number",
+      description: "The argument b to sum",
+    },
+  },
+  required: ["a", "b"],
+};
 
 jest.mock("../../llm/open_ai", () => {
   return {
@@ -43,7 +49,7 @@ describe("OpenAIAgent", () => {
     const sumFunctionTool = new FunctionTool(sumNumbers, {
       name: "sumNumbers",
       description: "Use this function to sum numbers together",
-      parameters: sumArgsSchema,
+      parameters: sumJSON,
     });
 
     openaiAgent = new OpenAIAgent({

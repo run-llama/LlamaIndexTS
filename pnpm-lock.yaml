@@ -139,9 +139,6 @@ importers:
       mongodb:
         specifier: ^6.2.0
         version: 6.3.0
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@types/node':
         specifier: ^18.19.10
@@ -236,12 +233,6 @@ importers:
       wink-nlp:
         specifier: ^1.14.3
         version: 1.14.3
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-      zod-to-json-schema:
-        specifier: ^3.22.3
-        version: 3.22.4(zod@3.22.4)
     devDependencies:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
@@ -16474,18 +16465,6 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
-
-  /zod-to-json-schema@3.22.4(zod@3.22.4):
-    resolution: {integrity: sha512-2Ed5dJ+n/O3cU383xSY28cuVi0BCQhF8nYqWU5paEpl7fVdqdAmiLdqLyfblbNdfOFwFfi/mqU4O1pwc60iBhQ==}
-    peerDependencies:
-      zod: ^3.22.4
-    dependencies:
-      zod: 3.22.4
-    dev: false
-
-  /zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

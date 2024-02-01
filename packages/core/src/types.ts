@@ -1,7 +1,6 @@
 /**
  * Top level types to avoid circular dependencies
  */
-import { z, ZodSchema } from "zod";
 import { Event } from "./callbacks/CallbackManager";
 import { Response } from "./Response";
 
@@ -70,13 +69,6 @@ export type ToolParameters = {
   properties: Record<string, { type: string; description?: string }>;
   required?: string[];
 };
-
-export type ToolZodParameters = ZodSchema<typeof toolParametersSchema>;
-
-const toolParametersSchema = z.object({
-  type: z.any(),
-  description: z.any(),
-});
 
 export interface ToolMetadata {
   description: string;
