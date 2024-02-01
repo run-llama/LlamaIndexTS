@@ -1,13 +1,13 @@
 // """ReAct agent worker."""
 
 import { randomUUID } from "crypto";
-import { BaseTool } from "../../Tool";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { AgentChatResponse } from "../../engines/chat";
 import { ChatResponse, LLM, OpenAI } from "../../llm";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools";
+import { BaseTool } from "../../types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
 import { printStep } from "../utils";
 import { ReActChatFormatter } from "./formatter";

@@ -1,5 +1,5 @@
-import { BaseTool } from "../../Tool";
 import { ChatMessage } from "../../llm";
+import { BaseTool } from "../../types";
 import { getReactChatSystemHeader } from "./prompts";
 import { BaseReasoningStep, ObservationReasoningStep } from "./types";
 
