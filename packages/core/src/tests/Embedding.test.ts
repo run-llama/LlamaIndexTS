@@ -1,6 +1,13 @@
 import { OpenAIEmbedding, similarity, SimilarityType } from "../embeddings";
 import { mockEmbeddingModel } from "./utility/mockOpenAI";
 
+// Mock the OpenAI getOpenAISession function during testing
+jest.mock("../llm/open_ai", () => {
+  return {
+    getOpenAISession: jest.fn().mockImplementation(() => null),
+  };
+});
+
 describe("similarity", () => {
   test("throws error on mismatched lengths", () => {
     const embedding1 = [1, 2, 3];
