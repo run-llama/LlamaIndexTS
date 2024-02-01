@@ -207,13 +207,18 @@ export const installTemplate = async (
 
     if (props.engine === "context") {
       await copyContextData(props.root, props.dataSource);
-      await installDependencies(
-        props.framework,
-        props.packageManager,
-        props.openAiKey,
-        props.vectorDb,
-      );
-      console.log("installed Dependencies");
+      if (
+        props.postInstallAction === "runApp" ||
+        props.postInstallAction === "dependencies"
+      ) {
+        await installDependencies(
+          props.framework,
+          props.packageManager,
+          props.openAiKey,
+          props.vectorDb,
+        );
+        console.log("installed dependencies");
+      }
     }
   } else {
     // this is a frontend for a full-stack app, create .env file with model information
