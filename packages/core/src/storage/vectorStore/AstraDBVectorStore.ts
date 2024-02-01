@@ -50,7 +50,7 @@ export class AstraDBVectorStore implements VectorStore {
     }
 
     this.idKey = init?.idKey ?? "_id";
-    this.contentKey = init?.contentKey ?? "text";
+    this.contentKey = init?.contentKey ?? "content";
     this.metadataKey = init?.metadataKey ?? "metadata";
   }
 
