@@ -11,12 +11,7 @@ export class PDFReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    // todo: fix fs type
-    const content = (await fs.readFile(file)) as unknown;
-    if (!(content instanceof Buffer)) {
-      console.warn(`PDF File ${file} can only be loaded using the Node FS`);
-      return [];
-    }
+    const content = await fs.readRawFile(file);
     const text = await readPDF(content);
     return text.map((text) => {
       const sha256 = createSHA256();

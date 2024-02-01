@@ -43,7 +43,7 @@ export class PapaCSVReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const fileContent: string = await fs.readFile(file, "utf-8");
+    const fileContent = await fs.readFile(file);
     const result = Papa.parse(fileContent, this.papaConfig);
     const textList = result.data.map((row: any) => {
       // Compatible with header row mode
