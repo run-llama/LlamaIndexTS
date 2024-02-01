@@ -20,7 +20,7 @@ import {
 
   const openAIEmbedding = new OpenAIEmbedding();
 
-  const embeddings = await openAIEmbedding.getTextEmbeddingBatch(textSplits);
+  const embeddings = await openAIEmbedding.getTextEmbeddingsBatch(textSplits);
 
   process.stdout.write(JSON.stringify(embeddings));
 })();
