@@ -35,9 +35,9 @@ export class SimpleResponseBuilder implements ResponseBuilder {
   llm: LLM;
   textQATemplate: SimplePrompt;
 
-  constructor(serviceContext: ServiceContext) {
+  constructor(serviceContext: ServiceContext, textQATemplate?: SimplePrompt) {
     this.llm = serviceContext.llm;
-    this.textQATemplate = defaultTextQaPrompt;
+    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
   getResponse(
