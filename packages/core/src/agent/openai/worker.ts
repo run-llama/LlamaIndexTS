@@ -17,7 +17,7 @@ import { BaseTool } from "../../types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
 import { addUserStepToMemory, getFunctionByName } from "../utils";
 import { OpenAIToolCall } from "./types/chat";
-import { OpenAiFunction, toOpenAiTool } from "./utils";
+import { OpenAIFunction, toOpenAiTool } from "./utils";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;
 
@@ -306,7 +306,7 @@ export class OpenAIAgentWorker implements AgentWorker {
   ): Promise<TaskStepOutput> {
     const tools = this.getTools(task.input);
 
-    let openaiTools: OpenAiFunction[] = [];
+    let openaiTools: OpenAIFunction[] = [];
 
     if (step.input) {
       addUserStepToMemory(step, task.extraState.newMemory, this._verbose);

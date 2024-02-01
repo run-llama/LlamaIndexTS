@@ -1,6 +1,6 @@
 import { ToolMetadata } from "../../types";
 
-export type OpenAiFunction = {
+export type OpenAIFunction = {
   type: "function";
   function: ToolMetadata;
 };
@@ -15,7 +15,7 @@ export const toOpenAiTool = ({
   name,
   description,
   parameters,
-}: OpenAiTool): OpenAiFunction => {
+}: OpenAiTool): OpenAIFunction => {
   return {
     type: "function",
     function: {
