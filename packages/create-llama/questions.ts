@@ -113,7 +113,7 @@ const getDataSourceChoices = (framework: TemplateFramework) => {
   ];
   if (process.platform === "win32" || process.platform === "darwin") {
     choices.push({
-      title: `Use a local file (${supportedContextFileTypes})`,
+      title: `Use a local file (${supportedContextFileTypes.join(", ")})`,
       value: "localFile",
     });
     choices.push({
@@ -122,7 +122,10 @@ const getDataSourceChoices = (framework: TemplateFramework) => {
     });
   }
   if (framework === "fastapi") {
-    choices.push({ title: "Use website content", value: "web" });
+    choices.push({
+      title: "Use website content (requires Chrome)",
+      value: "web",
+    });
   }
   return choices;
 };

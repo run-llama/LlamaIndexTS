@@ -79,7 +79,7 @@ const createEnvLocalFile = async (
   }
 };
 
-const installDependencies = async (
+const generateContextData = async (
   framework: TemplateFramework,
   packageManager?: PackageManager,
   openAiKey?: string,
@@ -211,13 +211,12 @@ export const installTemplate = async (
         props.postInstallAction === "runApp" ||
         props.postInstallAction === "dependencies"
       ) {
-        await installDependencies(
+        await generateContextData(
           props.framework,
           props.packageManager,
           props.openAiKey,
           props.vectorDb,
         );
-        console.log("installed dependencies");
       }
     }
   } else {
