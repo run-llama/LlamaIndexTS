@@ -1,8 +1,8 @@
 // Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
 
-import { randomUUID } from "crypto";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { AgentChatResponse, ChatResponseMode } from "../../engines/chat";
+import { randomUUID } from "../../env";
 import {
   ChatMessage,
   ChatResponse,
