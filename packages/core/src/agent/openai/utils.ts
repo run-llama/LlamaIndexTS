@@ -1,5 +1,5 @@
 import { ZodSchema } from "zod";
-import { ToolMetadata } from "../../Tool";
+import { ToolMetadata } from "../../types";
 import { getProperties } from "../utils";
 
 export type OpenAiFunction = {

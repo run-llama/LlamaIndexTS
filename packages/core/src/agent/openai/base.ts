@@ -1,7 +1,7 @@
-import { BaseTool } from "../../Tool";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { ChatMessage, OpenAI } from "../../llm";
 import { ObjectRetriever } from "../../objects/base";
+import { BaseTool } from "../../types";
 import { AgentRunner } from "../runner/base";
 import { OpenAIAgentWorker } from "./worker";
 

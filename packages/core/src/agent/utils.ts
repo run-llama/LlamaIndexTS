@@ -1,6 +1,6 @@
-import { BaseTool, ToolMetadata } from "../Tool";
 import { ChatMessage } from "../llm";
 import { ChatMemoryBuffer } from "../memory/ChatMemoryBuffer";
+import { BaseTool, ToolMetadata } from "../types";
 import { TaskStep } from "./types";
 
 import { ZodTypeAny, z } from "zod";
