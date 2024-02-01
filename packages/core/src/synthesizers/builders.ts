@@ -33,9 +33,9 @@ enum ResponseMode {
  */
 export class SimpleResponseBuilder implements ResponseBuilder {
   llm: LLM;
-  textQATemplate: SimplePrompt;
+  textQATemplate: TextQaPrompt;
 
-  constructor(serviceContext: ServiceContext, textQATemplate?: SimplePrompt) {
+  constructor(serviceContext: ServiceContext, textQATemplate?: TextQaPrompt) {
     this.llm = serviceContext.llm;
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
