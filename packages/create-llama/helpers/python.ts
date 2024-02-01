@@ -4,6 +4,7 @@ import { cyan, red, yellow } from "picocolors";
 import { parse, stringify } from "smol-toml";
 import terminalLink from "terminal-link";
 import { copy } from "./copy";
+import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
@@ -139,14 +140,7 @@ export const installPythonTemplate = async ({
   | "postInstallAction"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
-  const templatePath = path.join(
-    __dirname,
-    "..",
-    "templates",
-    "types",
-    template,
-    framework,
-  );
+  const templatePath = path.join(templatesDir, "types", template, framework);
   await copy("**", root, {
     parents: true,
     cwd: templatePath,
@@ -168,9 +162,7 @@ export const installPythonTemplate = async ({
   });
 
   if (engine === "context") {
-    const compPath = path.join(__dirname, "..", "templates", "components");
-
-    // Copy engine code
+    const compPath = path.join(templatesDir, "components");
     let vectorDbDirName = vectorDb ?? "none";
     const VectorDBPath = path.join(
       compPath,

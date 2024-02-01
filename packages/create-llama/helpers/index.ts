@@ -6,6 +6,7 @@ import path from "path";
 import { cyan } from "picocolors";
 
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
+import { templatesDir } from "./dir";
 import { PackageManager } from "./get-pkg-manager";
 import { installLlamapackProject } from "./llama-pack";
 import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
@@ -148,8 +149,7 @@ const copyContextData = async (
   // Copy folder
   if (dataSource?.type === "folder") {
     let srcPath =
-      dataSourceConfig.path ??
-      path.join(__dirname, "..", "templates", "components", "data");
+      dataSourceConfig.path ?? path.join(templatesDir, "components", "data");
     console.log(`\nCopying data to ${cyan(destPath)}\n`);
     await copy("**", destPath, {
       parents: true,
