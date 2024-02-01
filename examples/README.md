@@ -1,29 +1,19 @@
-# Simple Examples
+# LlamaIndexTS Examples
 
-Before running any of the examples, make sure to set your OpenAI environment variable:
+Before running any of the code examples,
+make sure you have basic knowledge of the [LlamaIndexTS](https://ts.llamaindex.ai/).
 
-```bash
+## Usage
+
+```shell
+# export your API key
 export OPENAI_API_KEY="sk-..."
+
+npx ts-node ./chatEngine.ts
 ```
 
-There are two ways to run the examples, using the latest published version of `llamaindex` or using a local build.
+## Build your own RAG app
 
-## Using the latest published version
-
-Make sure to call `npm install` before running these examples:
-
-```bash
-npm install
+```shell
+npx create llama
 ```
-
-Then run the examples with `ts-node`, for example `npx ts-node vectorIndex.ts`
-
-## Using the local build
-
-```bash
-pnpm install
-pnpm --filter llamaindex build
-pnpm link ../packages/core
-```
-
-Then run the examples with `ts-node`, for example `pnpx ts-node vectorIndex.ts`

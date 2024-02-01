@@ -1,12 +1,7 @@
 import { program } from "commander";
-import {
-  AudioTranscriptReader,
-  TranscribeParams,
-  VectorStoreIndex,
-} from "llamaindex";
+import { TranscribeParams, VectorStoreIndex } from "llamaindex";
+import { AudioTranscriptReader } from "llamaindex/readers/AssemblyAIReader";
 import { stdin as input, stdout as output } from "node:process";
-// readline/promises is still experimental so not in @types/node yet
-// @ts-ignore
 import readline from "node:readline/promises";
 
 program

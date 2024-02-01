@@ -1,10 +1,11 @@
 import { BaseNode, MetadataMode, TextNode } from "../Node";
+import { TransformComponent } from "../ingestion";
 import { defaultNodeTextTemplate } from "./prompts";
 
 /*
  * Abstract class for all extractors.
  */
-export abstract class BaseExtractor {
+export abstract class BaseExtractor implements TransformComponent {
   isTextNodeOnly: boolean = true;
   showProgress: boolean = true;
   metadataMode: MetadataMode = MetadataMode.ALL;
@@ -13,6 +14,14 @@ export abstract class BaseExtractor {
   numWorkers: number = 4;
 
   abstract extract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
+
+  async transform(nodes: BaseNode[], options?: any): Promise<BaseNode[]> {
+    return this.processNodes(
+      nodes,
+      options?.excludedEmbedMetadataKeys,
+      options?.excludedLlmMetadataKeys,
+    );
+  }
 
   /**
    *
@@ -37,7 +46,10 @@ export abstract class BaseExtractor {
     let curMetadataList = await this.extract(newNodes);
 
     for (let idx in newNodes) {
-      newNodes[idx].metadata = curMetadataList[idx];
+      newNodes[idx].metadata = {
+        ...newNodes[idx].metadata,
+        ...curMetadataList[idx],
+      };
     }
 
     for (let idx in newNodes) {

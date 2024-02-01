@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { Document } from "../Node";
+import { defaultFS } from "../env";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
-import { DEFAULT_FS } from "../storage/constants";
 import { PapaCSVReader } from "./CSVReader";
 import { DocxReader } from "./DocxReader";
 import { HTMLReader } from "./HTMLReader";
@@ -28,9 +28,9 @@ enum ReaderStatus {
 export class TextFileReader implements BaseReader {
   async loadData(
     file: string,
-    fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem,
+    fs: CompleteFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
+    const dataBuffer = await fs.readFile(file);
     return [new Document({ text: dataBuffer, id_: file })];
   }
 }
@@ -49,7 +49,7 @@ export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   gif: new ImageReader(),
 };
 
-export type SimpleDirectoryReaderLoadDataProps = {
+export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
   fs?: CompleteFileSystem;
   defaultReader?: BaseReader | null;
@@ -64,12 +64,20 @@ export type SimpleDirectoryReaderLoadDataProps = {
 export class SimpleDirectoryReader implements BaseReader {
   constructor(private observer?: ReaderCallback) {}
 
-  async loadData({
-    directoryPath,
-    fs = DEFAULT_FS as CompleteFileSystem,
-    defaultReader = new TextFileReader(),
-    fileExtToReader = FILE_EXT_TO_READER,
-  }: SimpleDirectoryReaderLoadDataProps): Promise<Document[]> {
+  async loadData(
+    params: SimpleDirectoryReaderLoadDataParams | string,
+  ): Promise<Document[]> {
+    if (typeof params === "string") {
+      params = { directoryPath: params };
+    }
+
+    const {
+      directoryPath,
+      fs = defaultFS,
+      defaultReader = new TextFileReader(),
+      fileExtToReader = FILE_EXT_TO_READER,
+    } = params;
+
     // Observer can decide to skip the directory
     if (
       !this.doObserverCheck("directory", directoryPath, ReaderStatus.STARTED)

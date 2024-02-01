@@ -41,7 +41,7 @@ Voor complexere toepassingen stellen onze API's op lager niveau gevorderde gebru
 
 Onze documentatie bevat [Installatie-instructies](./installation.mdx) en een [Starterzelfstudie](./starter.md) om uw eerste toepassing te bouwen.
 
-Zodra u aan de slag bent, geeft [Hoog-niveau Concepten](./concepts.md) een overzicht van de modulaire architectuur van LlamaIndex. Voor meer praktische voorbeelden kunt u onze [End-to-End Tutorials](./end_to_end.md) bekijken.
+Zodra u aan de slag bent, geeft [Hoog-niveau Concepten](./getting_started/concepts.md) een overzicht van de modulaire architectuur van LlamaIndex. Voor meer praktische voorbeelden kunt u onze [End-to-End Tutorials](./end_to_end.md) bekijken.
 
 ## 🗺️ Ecosysteem
 

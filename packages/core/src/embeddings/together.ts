@@ -1,16 +1,26 @@
 import { OpenAIEmbedding } from "./OpenAIEmbedding";
 
 export class TogetherEmbedding extends OpenAIEmbedding {
-  override model: string;
   constructor(init?: Partial<OpenAIEmbedding>) {
+    const {
+      apiKey = process.env.TOGETHER_API_KEY,
+      additionalSessionOptions = {},
+      model = "togethercomputer/m2-bert-80M-32k-retrieval",
+      ...rest
+    } = init ?? {};
+
+    if (!apiKey) {
+      throw new Error("Set Together Key in TOGETHER_API_KEY env variable"); // Tell user to set correct env variable, and not OPENAI_API_KEY
+    }
+
+    additionalSessionOptions.baseURL =
+      additionalSessionOptions.baseURL ?? "https://api.together.xyz/v1";
+
     super({
-      apiKey: process.env.TOGETHER_API_KEY,
-      ...init,
-      additionalSessionOptions: {
-        ...init?.additionalSessionOptions,
-        baseURL: "https://api.together.xyz/v1",
-      },
+      apiKey,
+      additionalSessionOptions,
+      model,
+      ...rest,
     });
-    this.model = init?.model ?? "togethercomputer/m2-bert-80M-32k-retrieval";
   }
 }
