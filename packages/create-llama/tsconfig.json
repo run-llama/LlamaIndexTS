@@ -1,12 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es2019",
     "moduleResolution": "node",
     "strict": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
+    "declaration": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
   },
   "include": [
     "create-app.ts",
