@@ -1,4 +1,4 @@
-import { BaseTool } from "../Tool";
+import { BaseTool } from "../types";
 import { ToolOutput } from "./types";
 
 /**

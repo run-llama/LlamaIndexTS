@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import { LLAMA_HUB_FOLDER_PATH, LLAMA_PACK_CONFIG_PATH } from "./constant";
 import { copy } from "./copy";
+import { templatesDir } from "./dir";
 import { installPythonDependencies } from "./python";
 import { getRepoRawContent } from "./repo";
 import { InstallTemplateArgs } from "./types";
@@ -29,9 +30,8 @@ const copyLlamapackEmptyProject = async ({
   root,
 }: Pick<InstallTemplateArgs, "root">) => {
   const templatePath = path.join(
-    __dirname,
-    "..",
-    "templates/components/sample-projects/llamapack",
+    templatesDir,
+    "components/sample-projects/llamapack",
   );
   await copy("**", root, {
     parents: true,
@@ -42,7 +42,7 @@ const copyLlamapackEmptyProject = async ({
 const copyData = async ({
   root,
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
-  const dataPath = path.join(__dirname, "..", "templates/components/data");
+  const dataPath = path.join(templatesDir, "components/data");
   await copy("**", path.join(root, "data"), {
     parents: true,
     cwd: dataPath,

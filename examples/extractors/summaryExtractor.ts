@@ -16,7 +16,9 @@ import {
     }),
   ]);
 
-  const summaryExtractor = new SummaryExtractor(openaiLLM);
+  const summaryExtractor = new SummaryExtractor({
+    llm: openaiLLM,
+  });
 
   const nodesWithSummaryMetadata = await summaryExtractor.processNodes(nodes);
 

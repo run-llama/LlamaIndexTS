@@ -1,5 +1,4 @@
 import _ from "lodash";
-import type nodeFS from "node:fs/promises";
 
 /**
  * A filesystem interface that is meant to be compatible with
@@ -8,20 +7,23 @@ import type nodeFS from "node:fs/promises";
  * browsers.
  */
 export type GenericFileSystem = {
-  writeFile(
-    path: string,
-    content: string,
-    options?: Parameters<typeof nodeFS.writeFile>[2],
-  ): Promise<void>;
-  readFile(
-    path: string,
-    options?: Parameters<typeof nodeFS.readFile>[1],
-  ): Promise<string>;
+  writeFile(path: string, content: string): Promise<void>;
+  /**
+   * Reads a file and returns its content as a raw buffer.
+   */
+  readRawFile(path: string): Promise<Buffer>;
+  /**
+   * Reads a file and returns its content as an utf-8 string.
+   */
+  readFile(path: string): Promise<string>;
   access(path: string): Promise<void>;
   mkdir(
     path: string,
-    options?: Parameters<typeof nodeFS.mkdir>[1],
-  ): Promise<void>;
+    options: {
+      recursive: boolean;
+    },
+  ): Promise<string | undefined>;
+  mkdir(path: string): Promise<void>;
 };
 
 export type WalkableFileSystem = {
@@ -45,7 +47,7 @@ export class InMemoryFileSystem implements CompleteFileSystem {
     this.files[path] = _.cloneDeep(content);
   }
 
-  async readFile(path: string, options?: unknown): Promise<string> {
+  async readFile(path: string): Promise<string> {
     if (!(path in this.files)) {
       throw new Error(`File ${path} does not exist`);
     }
@@ -58,8 +60,9 @@ export class InMemoryFileSystem implements CompleteFileSystem {
     }
   }
 
-  async mkdir(path: string, options?: unknown): Promise<void> {
+  async mkdir(path: string) {
     this.files[path] = _.get(this.files, path, null);
+    return undefined;
   }
 
   async readdir(path: string): Promise<string[]> {
@@ -67,6 +70,10 @@ export class InMemoryFileSystem implements CompleteFileSystem {
   }
 
   async stat(path: string): Promise<any> {
+    throw new Error("Not implemented");
+  }
+
+  async readRawFile(path: string): Promise<Buffer> {
     throw new Error("Not implemented");
   }
 }

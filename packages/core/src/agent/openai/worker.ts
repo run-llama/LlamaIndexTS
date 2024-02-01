@@ -1,7 +1,6 @@
 // Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
 
 import { randomUUID } from "crypto";
-import { BaseTool } from "../../Tool";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { AgentChatResponse, ChatResponseMode } from "../../engines/chat";
 import {
@@ -14,6 +13,7 @@ import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools/types";
 import { callToolWithErrorHandling } from "../../tools/utils";
+import { BaseTool } from "../../types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
 import { addUserStepToMemory, getFunctionByName } from "../utils";
 import { OpenAIToolCall } from "./types/chat";

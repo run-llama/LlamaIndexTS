@@ -18,7 +18,7 @@ const sumArgsSchema = z
   })
   .describe("the arguments");
 
-jest.mock("../../llm/openai", () => {
+jest.mock("../../llm/open_ai", () => {
   return {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };

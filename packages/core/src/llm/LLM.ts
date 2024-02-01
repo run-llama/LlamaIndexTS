@@ -25,9 +25,9 @@ import {
   shouldUseAzure,
 } from "./azure";
 import { BaseLLM } from "./base";
-import { OpenAISession, getOpenAISession } from "./openai";
+import { OpenAISession, getOpenAISession } from "./open_ai";
 import { PortkeySession, getPortkeySession } from "./portkey";
-import { ReplicateSession } from "./replicate";
+import { ReplicateSession } from "./replicate_ai";
 import {
   ChatMessage,
   ChatResponse,

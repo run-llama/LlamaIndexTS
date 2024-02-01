@@ -8,7 +8,7 @@ import {
   mockLlmGeneration,
 } from "../../utility/mockOpenAI";
 
-jest.mock("../../../llm/openai", () => {
+jest.mock("../../../llm/open_ai", () => {
   return {
     getOpenAISession: jest.fn().mockImplementation(() => null),
   };

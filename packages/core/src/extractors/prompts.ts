@@ -20,26 +20,33 @@ export interface DefaultNodeTextTemplate {
 export const defaultKeywordExtractorPromptTemplate = ({
   contextStr = "",
   keywords = 5,
-}: DefaultKeywordExtractorPromptTemplate) => `
-  ${contextStr}. Give ${keywords} unique keywords for thiss
-  document. Format as comma separated. Keywords:
+}: DefaultKeywordExtractorPromptTemplate) => `${contextStr} 
+
+Give ${keywords} unique keywords for this document. 
+
+Format as comma separated. Keywords:
 `;
 
 export const defaultTitleExtractorPromptTemplate = (
   { contextStr = "" }: DefaultPromptTemplate = {
     contextStr: "",
   },
-) => `
-  ${contextStr}. Give a title that summarizes all of the unique entities, titles or themes found in the context. Title:
+) => `${contextStr}
+
+Give a title that summarizes all of the unique entities, titles or themes found in the context. 
+
+Title:
 `;
 
 export const defaultTitleCombinePromptTemplate = (
   { contextStr = "" }: DefaultPromptTemplate = {
     contextStr: "",
   },
-) => `
-  ${contextStr}. Based on the above candidate titles and content,s
-  what is the comprehensive title for this document? Title:
+) => `${contextStr} 
+
+Based on the above candidate titles and contents, what is the comprehensive title for this document? 
+
+Title:
 `;
 
 export const defaultQuestionAnswerPromptTemplate = (
@@ -47,23 +54,22 @@ export const defaultQuestionAnswerPromptTemplate = (
     contextStr: "",
     numQuestions: 5,
   },
-) => `
-  ${contextStr}. Given the contextual information,s
-  generate ${numQuestions} questions this context can provides
-  specific answers to which are unlikely to be found elsewhere.
+) => `${contextStr}
 
-  Higher-level summaries of surrounding context may be provideds
-  as well. Try using these summaries to generate better questionss
-  that this context can answer.
+Given the contextual informations, generate ${numQuestions} questions this context can provides specific answers to which are unlikely to be found elsewhere.Higher-level summaries of surrounding context may be provideds as well. 
+
+Try using these summaries to generate better questions that this context can answer.
 `;
 
 export const defaultSummaryExtractorPromptTemplate = (
   { contextStr = "" }: DefaultPromptTemplate = {
     contextStr: "",
   },
-) => `
-  ${contextStr}. Summarize the key topics and entities of the section.s
-  Summary:
+) => `${contextStr}
+
+Summarize the key topics and entities of the sections.
+
+Summary:
 `;
 
 export const defaultNodeTextTemplate = ({
