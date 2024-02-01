@@ -29,5 +29,5 @@ const textSplits = splitter.splitText("Hello World");
 
 ## API Reference
 
-- [SimpleNodeParser](../../api/classes/SimpleNodeParser.md)
-- [SentenceSplitter](../../api/classes/SentenceSplitter.md)
+- [SimpleNodeParser](../api/classes/SimpleNodeParser.md)
+- [SentenceSplitter](../api/classes/SentenceSplitter.md)
