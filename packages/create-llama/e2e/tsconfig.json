@@ -1,12 +1,16 @@
 {
-  "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./lib/.e2e.tsbuildinfo",
+    "target": "es2019",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declaration": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./lib/.tsbuildinfo",
   },
   "include": ["./**/*.ts"],
-  "references": [
-    {
-      "path": "..",
-    },
-  ],
 }

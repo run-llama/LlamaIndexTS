@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2019",
+    "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
     "resolveJsonModule": true,
@@ -9,6 +10,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
+    "tsBuildInfoFile": "./lib/.tsbuildinfo",
   },
   "include": [
     "create-app.ts",
