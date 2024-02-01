@@ -10,9 +10,11 @@ export function isPoetryAvailable(): boolean {
   return false;
 }
 
-export function tryPoetryInstall(): boolean {
+export function tryPoetryInstall(noRoot: boolean): boolean {
   try {
-    execSync("poetry install", { stdio: "inherit" });
+    execSync(`poetry install${noRoot ? " --no-root" : ""}`, {
+      stdio: "inherit",
+    });
     return true;
   } catch (_) {}
   return false;

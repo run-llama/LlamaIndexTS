@@ -23,6 +23,7 @@ const together = new TogetherLLM({
   for await (const message of generator) {
     process.stdout.write(message.delta);
   }
+  console.log();
   const embedding = new TogetherEmbedding();
   const vector = await embedding.getTextEmbedding("Hello world!");
   console.log("vector:", vector);

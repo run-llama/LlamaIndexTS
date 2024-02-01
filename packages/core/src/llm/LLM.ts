@@ -25,9 +25,9 @@ import {
   shouldUseAzure,
 } from "./azure";
 import { BaseLLM } from "./base";
-import { OpenAISession, getOpenAISession } from "./openai";
+import { OpenAISession, getOpenAISession } from "./open_ai";
 import { PortkeySession, getPortkeySession } from "./portkey";
-import { ReplicateSession } from "./replicate";
+import { ReplicateSession } from "./replicate_ai";
 import {
   ChatMessage,
   ChatResponse,
@@ -41,14 +41,21 @@ import {
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
   "gpt-4-32k": { contextWindow: 32768 },
+  "gpt-4-32k-0613": { contextWindow: 32768 },
+  "gpt-4-turbo-preview": { contextWindow: 128000 },
   "gpt-4-1106-preview": { contextWindow: 128000 },
-  "gpt-4-vision-preview": { contextWindow: 8192 },
+  "gpt-4-0125-preview": { contextWindow: 128000 },
+  "gpt-4-vision-preview": { contextWindow: 128000 },
 };
 
+// NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
 export const GPT35_MODELS = {
   "gpt-3.5-turbo": { contextWindow: 4096 },
+  "gpt-3.5-turbo-0613": { contextWindow: 4096 },
   "gpt-3.5-turbo-16k": { contextWindow: 16384 },
+  "gpt-3.5-turbo-16k-0613": { contextWindow: 16384 },
   "gpt-3.5-turbo-1106": { contextWindow: 16384 },
+  "gpt-3.5-turbo-0125": { contextWindow: 16384 },
 };
 
 /**
@@ -209,6 +216,7 @@ export class OpenAI extends BaseLLM {
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
+
     // Streaming
     if (stream) {
       return this.streamChat(params);

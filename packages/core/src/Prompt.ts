@@ -1,6 +1,6 @@
+import { SubQuestion } from "./engines/query/types";
 import { ChatMessage } from "./llm/types";
-import { SubQuestion } from "./QuestionGenerator";
-import { ToolMetadata } from "./Tool";
+import { ToolMetadata } from "./types";
 
 /**
  * A SimplePrompt is a function that takes a dictionary of inputs and returns a string.

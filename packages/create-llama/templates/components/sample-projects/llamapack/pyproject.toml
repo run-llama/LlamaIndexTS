@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Llama Pack Example"
+authors = ["Marcus Schiesser <mail@marcusschiesser.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11,<3.12"
+llama-index = "^0.9.19"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

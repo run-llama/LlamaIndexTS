@@ -1,6 +1,4 @@
 import { stdin as input, stdout as output } from "node:process";
-// readline/promises is still experimental so not in @types/node yet
-// @ts-ignore
 import readline from "node:readline/promises";
 
 import {
@@ -10,7 +8,7 @@ import {
   VectorStoreIndex,
 } from "llamaindex";
 
-import essay from "./essay.js";
+import essay from "./essay";
 
 async function main() {
   const document = new Document({ text: essay });

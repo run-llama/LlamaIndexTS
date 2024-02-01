@@ -6,7 +6,7 @@ import {
   SimilarityPostprocessor,
   VectorStoreIndex,
 } from "llamaindex";
-import essay from "./essay.js";
+import essay from "./essay";
 
 // Customize retrieval and query args
 async function main() {

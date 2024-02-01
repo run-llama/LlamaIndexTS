@@ -15,4 +15,3 @@ Jika Anda menggunakan penangan rute/handler serverless NextJS App Router, Anda p
 ```js
 export const runtime = "nodejs"; // default
 ```
-

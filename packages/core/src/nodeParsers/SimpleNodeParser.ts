@@ -38,6 +38,10 @@ export class SimpleNodeParser implements NodeParser {
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
   }
 
+  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+    return this.getNodesFromDocuments(nodes);
+  }
+
   static fromDefaults(init?: {
     chunkSize?: number;
     chunkOverlap?: number;

@@ -41,7 +41,7 @@ LlamaIndex.TS 提供了一組核心工具，對於使用 JavaScript 和 TypeScri
 
 我們的文檔包括[安裝說明](./installation.mdx)和[入門教程](./starter.md)，以構建您的第一個應用程序。
 
-一旦您開始運行，[高級概念](./concepts.md)提供了 LlamaIndex 模塊化架構的概述。如果需要更多實際的操作示例，請查看我們的[端到端教程](./end_to_end.md)。
+一旦您開始運行，[高級概念](./getting_started/concepts.md)提供了 LlamaIndex 模塊化架構的概述。如果需要更多實際的操作示例，請查看我們的[端到端教程](./end_to_end.md)。
 
 ## 🗺️ 生態系統
 

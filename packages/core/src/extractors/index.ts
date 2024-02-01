@@ -4,3 +4,4 @@ export {
   SummaryExtractor,
   TitleExtractor,
 } from "./MetadataExtractors";
+export { BaseExtractor } from "./types";

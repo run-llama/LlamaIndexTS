@@ -1,14 +1,57 @@
+import { execSync } from "child_process";
 import ciInfo from "ci-info";
 import fs from "fs";
 import path from "path";
-import { blue, green } from "picocolors";
+import { blue, green, red } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
-import { TemplateFramework } from "./helpers";
+import { TemplateDataSourceType, TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
+import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
 
-export type QuestionArgs = Omit<InstallAppArgs, "appPath" | "packageManager">;
+export type QuestionArgs = Omit<
+  InstallAppArgs,
+  "appPath" | "packageManager"
+> & { files?: string };
+const supportedContextFileTypes = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".csv",
+];
+const MACOS_FILE_SELECTION_SCRIPT = `
+osascript -l JavaScript -e '
+  a = Application.currentApplication();
+  a.includeStandardAdditions = true;
+  a.chooseFile({ withPrompt: "Please select a file to process:" }).toString()
+'`;
+const MACOS_FOLDER_SELECTION_SCRIPT = `
+osascript -l JavaScript -e '
+  a = Application.currentApplication();
+  a.includeStandardAdditions = true;
+  a.chooseFolder({ withPrompt: "Please select a folder to process:" }).toString()
+'`;
+const WINDOWS_FILE_SELECTION_SCRIPT = `
+Add-Type -AssemblyName System.Windows.Forms
+$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+$openFileDialog.InitialDirectory = [Environment]::GetFolderPath('Desktop')
+$result = $openFileDialog.ShowDialog()
+if ($result -eq 'OK') {
+  $openFileDialog.FileName
+}
+`;
+const WINDOWS_FOLDER_SELECTION_SCRIPT = `
+Add-Type -AssemblyName System.windows.forms
+$folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+$dialogResult = $folderBrowser.ShowDialog()
+if ($dialogResult -eq [System.Windows.Forms.DialogResult]::OK)
+{
+    $folderBrowser.SelectedPath
+}
+`;
 
 const defaults: QuestionArgs = {
   template: "streaming",
@@ -20,7 +63,12 @@ const defaults: QuestionArgs = {
   openAiKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
+  llamapack: "",
   postInstallAction: "dependencies",
+  dataSource: {
+    type: "none",
+    config: {},
+  },
 };
 
 const handlers = {
@@ -55,6 +103,79 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   return displayedChoices;
 };
 
+const getDataSourceChoices = (framework: TemplateFramework) => {
+  let choices = [
+    {
+      title: "No data, just a simple chat",
+      value: "simple",
+    },
+    { title: "Use an example PDF", value: "exampleFile" },
+  ];
+  if (process.platform === "win32" || process.platform === "darwin") {
+    choices.push({
+      title: `Use a local file (${supportedContextFileTypes.join(", ")})`,
+      value: "localFile",
+    });
+    choices.push({
+      title: `Use a local folder`,
+      value: "localFolder",
+    });
+  }
+  if (framework === "fastapi") {
+    choices.push({
+      title: "Use website content (requires Chrome)",
+      value: "web",
+    });
+  }
+  return choices;
+};
+
+const selectLocalContextData = async (type: TemplateDataSourceType) => {
+  try {
+    let selectedPath: string = "";
+    let execScript: string;
+    let execOpts: any = {};
+    switch (process.platform) {
+      case "win32": // Windows
+        execScript =
+          type === "file"
+            ? WINDOWS_FILE_SELECTION_SCRIPT
+            : WINDOWS_FOLDER_SELECTION_SCRIPT;
+        execOpts = { shell: "powershell.exe" };
+        break;
+      case "darwin": // MacOS
+        execScript =
+          type === "file"
+            ? MACOS_FILE_SELECTION_SCRIPT
+            : MACOS_FOLDER_SELECTION_SCRIPT;
+        break;
+      default: // Unsupported OS
+        console.log(red("Unsupported OS error!"));
+        process.exit(1);
+    }
+    selectedPath = execSync(execScript, execOpts).toString().trim();
+    if (type === "file") {
+      let fileType = path.extname(selectedPath);
+      if (!supportedContextFileTypes.includes(fileType)) {
+        console.log(
+          red(
+            `Please select a supported file type: ${supportedContextFileTypes}`,
+          ),
+        );
+        process.exit(1);
+      }
+    }
+    return selectedPath;
+  } catch (error) {
+    console.log(
+      red(
+        "Got an error when trying to select local context data! Please try again or select another data source option.",
+      ),
+    );
+    process.exit(1);
+  }
+};
+
 export const onPromptState = (state: any) => {
   if (state.aborted) {
     // If we don't re-enable the terminal cursor before exiting
@@ -72,6 +193,49 @@ export const askQuestions = async (
   const getPrefOrDefault = <K extends keyof QuestionArgs>(
     field: K,
   ): QuestionArgs[K] => preferences[field] ?? defaults[field];
+
+  // Ask for next action after installation
+  async function askPostInstallAction() {
+    if (program.postInstallAction === undefined) {
+      if (ciInfo.isCI) {
+        program.postInstallAction = getPrefOrDefault("postInstallAction");
+      } else {
+        let actionChoices = [
+          {
+            title: "Just generate code (~1 sec)",
+            value: "none",
+          },
+          {
+            title: "Generate code and install dependencies (~2 min)",
+            value: "dependencies",
+          },
+        ];
+
+        const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
+        const hasVectorDb = program.vectorDb && program.vectorDb !== "none";
+        if (!hasVectorDb && hasOpenAiKey) {
+          actionChoices.push({
+            title:
+              "Generate code, install dependencies, and run the app (~2 min)",
+            value: "runApp",
+          });
+        }
+
+        const { action } = await prompts(
+          {
+            type: "select",
+            name: "action",
+            message: "How would you like to proceed?",
+            choices: actionChoices,
+            initial: 1,
+          },
+          handlers,
+        );
+
+        program.postInstallAction = action;
+      }
+    }
+  }
 
   if (!program.template) {
     if (ciInfo.isCI) {
@@ -91,6 +255,10 @@ export const askQuestions = async (
             {
               title: `Community template from ${styledRepo}`,
               value: "community",
+            },
+            {
+              title: "Example using a LlamaPack",
+              value: "llamapack",
             },
           ],
           initial: 1,
@@ -123,6 +291,27 @@ export const askQuestions = async (
     program.communityProjectPath = communityProjectPath;
     preferences.communityProjectPath = communityProjectPath;
     return; // early return - no further questions needed for community projects
+  }
+
+  if (program.template === "llamapack") {
+    const availableLlamaPacks = await getAvailableLlamapackOptions();
+    const { llamapack } = await prompts(
+      {
+        type: "select",
+        name: "llamapack",
+        message: "Select LlamaPack",
+        choices: availableLlamaPacks.map((pack) => ({
+          title: pack.name,
+          value: pack.folderPath,
+        })),
+        initial: 0,
+      },
+      handlers,
+    );
+    program.llamapack = llamapack;
+    preferences.llamapack = llamapack;
+    await askPostInstallAction();
+    return; // early return - no further questions needed for llamapack projects
   }
 
   if (!program.framework) {
@@ -239,46 +428,137 @@ export const askQuestions = async (
     }
   }
 
+  if (program.files) {
+    // If user specified files option, then the program should use context engine
+    program.engine == "context";
+    if (!fs.existsSync(program.files)) {
+      console.log("File or folder not found");
+      process.exit(1);
+    } else {
+      program.dataSource = {
+        type: fs.lstatSync(program.files).isDirectory() ? "folder" : "file",
+        config: {
+          path: program.files,
+        },
+      };
+    }
+  }
+
   if (!program.engine) {
     if (ciInfo.isCI) {
       program.engine = getPrefOrDefault("engine");
     } else {
-      const { engine } = await prompts(
+      const { dataSource } = await prompts(
         {
           type: "select",
-          name: "engine",
+          name: "dataSource",
           message: "Which data source would you like to use?",
-          choices: [
-            {
-              title: "No data, just a simple chat",
-              value: "simple",
-            },
-            { title: "Use an example PDF", value: "context" },
-          ],
+          choices: getDataSourceChoices(program.framework),
           initial: 1,
         },
         handlers,
       );
-      program.engine = engine;
-      preferences.engine = engine;
-    }
-    if (program.engine !== "simple" && !program.vectorDb) {
-      if (ciInfo.isCI) {
-        program.vectorDb = getPrefOrDefault("vectorDb");
-      } else {
-        const { vectorDb } = await prompts(
-          {
-            type: "select",
-            name: "vectorDb",
-            message: "Would you like to use a vector database?",
-            choices: getVectorDbChoices(program.framework),
-            initial: 0,
-          },
-          handlers,
-        );
-        program.vectorDb = vectorDb;
-        preferences.vectorDb = vectorDb;
+      // Initialize with default config
+      program.dataSource = getPrefOrDefault("dataSource");
+      if (program.dataSource) {
+        switch (dataSource) {
+          case "simple":
+            program.engine = "simple";
+            program.dataSource = { type: "none", config: {} };
+            break;
+          case "exampleFile":
+            program.engine = "context";
+            // Treat example as a folder data source with no config
+            program.dataSource = { type: "folder", config: {} };
+            break;
+          case "localFile":
+            program.engine = "context";
+            program.dataSource = {
+              type: "file",
+              config: {
+                path: await selectLocalContextData("file"),
+              },
+            };
+            break;
+          case "localFolder":
+            program.engine = "context";
+            program.dataSource = {
+              type: "folder",
+              config: {
+                path: await selectLocalContextData("folder"),
+              },
+            };
+            break;
+          case "web":
+            program.engine = "context";
+            program.dataSource.type = "web";
+            break;
+        }
       }
+    }
+  } else if (!program.dataSource) {
+    // Handle a case when engine is specified but dataSource is not
+    if (program.engine === "context") {
+      program.dataSource = {
+        type: "folder",
+        config: {},
+      };
+    } else if (program.engine === "simple") {
+      program.dataSource = {
+        type: "none",
+        config: {},
+      };
+    }
+  }
+
+  if (program.dataSource?.type === "web" && program.framework === "fastapi") {
+    let { baseUrl } = await prompts(
+      {
+        type: "text",
+        name: "baseUrl",
+        message: "Please provide base URL of the website:",
+        initial: "https://www.llamaindex.ai",
+      },
+      handlers,
+    );
+    try {
+      if (!baseUrl.includes("://")) {
+        baseUrl = `https://${baseUrl}`;
+      }
+      let checkUrl = new URL(baseUrl);
+      if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
+        throw new Error("Invalid protocol");
+      }
+    } catch (error) {
+      console.log(
+        red(
+          "Invalid URL provided! Please provide a valid URL (e.g. https://www.llamaindex.ai)",
+        ),
+      );
+      process.exit(1);
+    }
+    program.dataSource.config = {
+      baseUrl: baseUrl,
+      depth: 1,
+    };
+  }
+
+  if (program.engine !== "simple" && !program.vectorDb) {
+    if (ciInfo.isCI) {
+      program.vectorDb = getPrefOrDefault("vectorDb");
+    } else {
+      const { vectorDb } = await prompts(
+        {
+          type: "select",
+          name: "vectorDb",
+          message: "Would you like to use a vector database?",
+          choices: getVectorDbChoices(program.framework),
+          initial: 0,
+        },
+        handlers,
+      );
+      program.vectorDb = vectorDb;
+      preferences.vectorDb = vectorDb;
     }
   }
 
@@ -314,45 +594,7 @@ export const askQuestions = async (
     }
   }
 
-  // Ask for next action after installation
-  if (program.postInstallAction === undefined) {
-    if (ciInfo.isCI) {
-      program.postInstallAction = getPrefOrDefault("postInstallAction");
-    } else {
-      let actionChoices = [
-        {
-          title: "Just generate code (~1 sec)",
-          value: "none",
-        },
-        {
-          title: "Generate code and install dependencies (~2 min)",
-          value: "dependencies",
-        },
-      ];
-
-      const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
-      if (program.vectorDb === "none" && hasOpenAiKey) {
-        actionChoices.push({
-          title:
-            "Generate code, install dependencies, and run the app (~2 min)",
-          value: "runApp",
-        });
-      }
-
-      const { action } = await prompts(
-        {
-          type: "select",
-          name: "action",
-          message: "How would you like to proceed?",
-          choices: actionChoices,
-          initial: 1,
-        },
-        handlers,
-      );
-
-      program.postInstallAction = action;
-    }
-  }
+  await askPostInstallAction();
 
   // TODO: consider using zod to validate the input (doesn't work like this as not every option is required)
   // templateUISchema.parse(program.ui);

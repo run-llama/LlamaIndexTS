@@ -4,6 +4,7 @@ import { cyan, red, yellow } from "picocolors";
 import { parse, stringify } from "smol-toml";
 import terminalLink from "terminal-link";
 import { copy } from "./copy";
+import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
@@ -37,7 +38,7 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
 
 const mergePoetryDependencies = (
   dependencies: Dependency[],
-  existingDependencies: any,
+  existingDependencies: Record<string, Omit<Dependency, "name">>,
 ) => {
   for (const dependency of dependencies) {
     let value = existingDependencies[dependency.name] ?? {};
@@ -75,7 +76,7 @@ export const addDependencies = async (
 
     // Modify toml dependencies
     const tool = fileParsed.tool as any;
-    const existingDependencies = tool.poetry.dependencies as any;
+    const existingDependencies = tool.poetry.dependencies;
     mergePoetryDependencies(dependencies, existingDependencies);
 
     // Write toml file
@@ -92,12 +93,14 @@ export const addDependencies = async (
   }
 };
 
-export const installPythonDependencies = (root: string) => {
+export const installPythonDependencies = (
+  { noRoot }: { noRoot: boolean } = { noRoot: false },
+) => {
   if (isPoetryAvailable()) {
     console.log(
       `Installing python dependencies using poetry. This may take a while...`,
     );
-    const installSuccessful = tryPoetryInstall();
+    const installSuccessful = tryPoetryInstall(noRoot);
     if (!installSuccessful) {
       console.error(
         red("Install failed. Please install dependencies manually."),
@@ -124,6 +127,7 @@ export const installPythonTemplate = async ({
   framework,
   engine,
   vectorDb,
+  dataSource,
   postInstallAction,
 }: Pick<
   InstallTemplateArgs,
@@ -132,17 +136,11 @@ export const installPythonTemplate = async ({
   | "template"
   | "engine"
   | "vectorDb"
+  | "dataSource"
   | "postInstallAction"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
-  const templatePath = path.join(
-    __dirname,
-    "..",
-    "templates",
-    "types",
-    template,
-    framework,
-  );
+  const templatePath = path.join(templatesDir, "types", template, framework);
   await copy("**", root, {
     parents: true,
     cwd: templatePath,
@@ -164,23 +162,37 @@ export const installPythonTemplate = async ({
   });
 
   if (engine === "context") {
-    const compPath = path.join(__dirname, "..", "templates", "components");
+    const compPath = path.join(templatesDir, "components");
+    let vectorDbDirName = vectorDb ?? "none";
     const VectorDBPath = path.join(
       compPath,
       "vectordbs",
       "python",
-      vectorDb || "none",
+      vectorDbDirName,
     );
+    const enginePath = path.join(root, "app", "engine");
     await copy("**", path.join(root, "app", "engine"), {
       parents: true,
       cwd: VectorDBPath,
     });
+
+    const dataSourceType = dataSource?.type;
+    if (dataSourceType !== undefined && dataSourceType !== "none") {
+      let loaderPath =
+        dataSourceType === "folder"
+          ? path.join(compPath, "loaders", "python", "file")
+          : path.join(compPath, "loaders", "python", dataSourceType);
+      await copy("**", enginePath, {
+        parents: true,
+        cwd: loaderPath,
+      });
+    }
   }
 
   const addOnDependencies = getAdditionalDependencies(vectorDb);
   await addDependencies(root, addOnDependencies);
 
   if (postInstallAction !== "none") {
-    installPythonDependencies(root);
+    installPythonDependencies();
   }
 };

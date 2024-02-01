@@ -20,6 +20,7 @@ export class PGVectorStore implements VectorStore {
   private schemaName: string = PGVECTOR_SCHEMA;
   private tableName: string = PGVECTOR_TABLE;
   private connectionString: string | undefined = undefined;
+  private dimensions: number = 1536;
 
   private db?: pg.Client;
 
@@ -38,15 +39,18 @@ export class PGVectorStore implements VectorStore {
    * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
    * @param {string} config.tableName - The name of the table (optional). Defaults to PGVECTOR_TABLE.
    * @param {string} config.connectionString - The connection string (optional).
+   * @param {number} config.dimensions - The dimensions of the embedding model.
    */
   constructor(config?: {
     schemaName?: string;
     tableName?: string;
     connectionString?: string;
+    dimensions?: number;
   }) {
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
     this.connectionString = config?.connectionString;
+    this.dimensions = config?.dimensions ?? 1536;
   }
 
   /**
@@ -108,7 +112,7 @@ export class PGVectorStore implements VectorStore {
       collection VARCHAR,
       document TEXT,
       metadata JSONB DEFAULT '{}',
-      embeddings VECTOR(1536)
+      embeddings VECTOR(${this.dimensions})
     )`;
     await db.query(tbl);
 

@@ -1,7 +1,7 @@
 import { encodingForModel } from "js-tiktoken";
 
-import { randomUUID } from "node:crypto";
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
+import { randomUUID } from "./env";
 
 export enum Tokenizers {
   CL100K_BASE = "cl100k_base",
