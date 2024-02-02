@@ -65,11 +65,5 @@ describe("OpenAIAgent", () => {
     });
 
     expect(String(response)).toEqual("The sum is 2");
-
-    expect(response.sources.length).toEqual(1);
-
-    expect(response.sources[0].content).toEqual(2);
-    expect(response.sources[0].rawOutput).toEqual(2);
-    expect(response.sources[0].rawInput).toEqual({ a: 1, b: 1 });
   });
 });

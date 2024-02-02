@@ -152,7 +152,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       return null;
     }
 
-    return chatHistory[chatHistory.length - 1].additionalKwargs?.tool_calls;
+    return chatHistory[chatHistory.length - 1].additionalKwargs?.toolCalls;
   }
 
   /**
@@ -207,13 +207,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     llmChatKwargs: any,
   ): Promise<AgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
-      const chatResponse = await this._llm.chat({
+      const chatResponse = (await this._llm.chat({
         stream: false,
         ...llmChatKwargs,
-      });
+      })) as unknown as ChatResponse;
 
-      // @ts-ignore
-      return this._processMessage(task, chatResponse);
+      return this._processMessage(task, chatResponse) as AgentChatResponse;
     } else {
       throw new Error("Not implemented");
     }

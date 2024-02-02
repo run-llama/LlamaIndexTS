@@ -203,6 +203,23 @@ export class OpenAI extends BaseLLM {
     }
   }
 
+  toOpenAIMessage(messages: ChatMessage[]) {
+    return messages.map((message) => {
+      const additionalKwargs = message.additionalKwargs ?? {};
+
+      if (message.additionalKwargs?.toolCalls) {
+        additionalKwargs.tool_calls = message.additionalKwargs.toolCalls;
+        delete additionalKwargs.toolCalls;
+      }
+
+      return {
+        role: this.mapMessageType(message.role),
+        content: message.content,
+        ...additionalKwargs,
+      };
+    });
+  }
+
   chat(
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
@@ -211,20 +228,14 @@ export class OpenAI extends BaseLLM {
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream, tools, toolChoice } = params;
+
     let baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
       tools: tools,
       tool_choice: toolChoice,
-      messages: messages.map(
-        (message) =>
-          ({
-            role: this.mapMessageType(message.role),
-            content: message.content,
-            ...message.additionalKwargs,
-          }) as ChatCompletionMessageParam,
-      ),
+      messages: this.toOpenAIMessage(messages) as ChatCompletionMessageParam[],
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
@@ -245,7 +256,7 @@ export class OpenAI extends BaseLLM {
     const kwargsOutput: Record<string, any> = {};
 
     if (response.choices[0].message?.tool_calls) {
-      kwargsOutput.tool_calls = response.choices[0].message.tool_calls;
+      kwargsOutput.toolCalls = response.choices[0].message.tool_calls;
     }
 
     return {
