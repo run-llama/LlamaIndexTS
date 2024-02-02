@@ -143,7 +143,7 @@ export class PineconeVectorStore implements VectorStore {
       vector: query.queryEmbedding,
       topK: query.similarityTopK,
       include_values: true,
-      include_metadara: true,
+      include_metadata: true,
       filter: filter,
     };
 
