@@ -6,7 +6,7 @@ Export your OpenAI API Key using `export OPEN_API_KEY=insert your api key here`
 
 If you haven't installed chromadb, run `pip install chromadb`. Start the server using `chroma run`.
 
-Now, open a new terminal window and inside `examples`, run `pnpx ts-node chromadb/test.ts`.
+Now, open a new terminal window and inside `examples`, run `pnpm dlx ts-node chromadb/test.ts`.
 
 Here's the output for the input query `Tell me about Godfrey Cheshire's rating of La Sapienza.`:
 

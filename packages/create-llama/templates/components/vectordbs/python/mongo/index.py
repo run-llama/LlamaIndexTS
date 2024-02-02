@@ -20,4 +20,4 @@ def get_chat_engine():
     )
     index = VectorStoreIndex.from_vector_store(store, service_context)
     logger.info("Finished connecting to index from MongoDB.")
-    return index.as_chat_engine(similarity_top_k=5)
+    return index.as_chat_engine(similarity_top_k=5, chat_mode="condense_plus_context")
