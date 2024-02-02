@@ -274,8 +274,6 @@ export class AgentRunner extends BaseAgentRunner {
           toolChoice,
         },
       );
-      
-      const curStepOutput = await this._runStep(task.taskId);
 
       if (curStepOutput.isLast) {
         resultOutput = curStepOutput;
