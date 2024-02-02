@@ -12,11 +12,11 @@ import {
   CompactAndRefine,
   ResponseSynthesizer,
 } from "../../synthesizers";
+import { QueryEngineToolParams } from "../../tools/QueryEngineTool";
 import {
   BaseQueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
-  QueryEngineTool,
   ToolMetadata,
 } from "../../types";
 import { BaseQuestionGenerator, SubQuestion } from "./types";
@@ -33,7 +33,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
   constructor(init: {
     questionGen: BaseQuestionGenerator;
     responseSynthesizer: BaseSynthesizer;
-    queryEngineTools: QueryEngineTool[];
+    queryEngineTools: QueryEngineToolParams[];
   }) {
     this.questionGen = init.questionGen;
     this.responseSynthesizer =
@@ -48,7 +48,7 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
   }
 
   static fromDefaults(init: {
-    queryEngineTools: QueryEngineTool[];
+    queryEngineTools: QueryEngineToolParams[];
     questionGen?: BaseQuestionGenerator;
     responseSynthesizer?: BaseSynthesizer;
     serviceContext?: ServiceContext;

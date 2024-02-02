@@ -41,13 +41,6 @@ export interface BaseTool {
 }
 
 /**
- * A Tool that uses a QueryEngine.
- */
-export interface QueryEngineTool extends BaseTool {
-  queryEngine: BaseQueryEngine;
-}
-
-/**
  * An OutputParser is used to extract structured data from the raw output of the LLM.
  */
 export interface BaseOutputParser<T> {
