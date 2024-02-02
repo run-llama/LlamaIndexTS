@@ -1,6 +1,6 @@
 {
   "name": "create-llama",
-  "version": "0.0.22",
+  "version": "0.0.24",
   "keywords": [
     "rag",
     "llamaindex",
@@ -17,8 +17,7 @@
     "create-llama": "./dist/index.js"
   },
   "files": [
-    "dist/index.js",
-    "./templates"
+    "dist"
   ],
   "scripts": {
     "clean": "rimraf --glob ./dist ./templates/**/__pycache__ ./templates/**/node_modules ./templates/**/poetry.lock",
@@ -37,7 +36,7 @@
     "@types/prompts": "2.0.1",
     "@types/tar": "6.1.5",
     "@types/validate-npm-package-name": "3.0.0",
-    "@vercel/ncc": "0.34.0",
+    "@vercel/ncc": "0.38.1",
     "async-retry": "1.3.1",
     "async-sema": "3.0.1",
     "ci-info": "github:watson/ci-info#f43f6a1cefff47fb361c88cf4b943fdbcaafe540",

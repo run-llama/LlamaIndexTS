@@ -16,11 +16,11 @@ const sumJSON = {
   properties: {
     a: {
       type: "number",
-      description: "The first number to sum",
+      description: "The first number",
     },
     b: {
       type: "number",
-      description: "The second number to su",
+      description: "The second number",
     },
   },
   required: ["a", "b"],
@@ -45,14 +45,14 @@ async function main() {
   // Create a function tool from the sum function
   const functionTool = new FunctionTool(sumNumbers, {
     name: "sumNumbers",
-    description: "Use this function to sum numbers together",
+    description: "Use this function to sum two numbers",
     parameters: sumJSON,
   });
 
   // Create a function tool from the divide function
   const functionTool2 = new FunctionTool(divideNumbers, {
     name: "divideNumbers",
-    description: "Use this function to divide numbers together",
+    description: "Use this function to divide two numbers",
     parameters: divideJSON,
   });
 

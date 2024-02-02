@@ -10,11 +10,11 @@ const sumJSON = {
   properties: {
     a: {
       type: "number",
-      description: "The argument a to sum",
+      description: "The first number",
     },
     b: {
       type: "number",
-      description: "The argument b to sum",
+      description: "The second number",
     },
   },
   required: ["a", "b"],
@@ -24,7 +24,7 @@ describe("Tools", () => {
   it("should be able to call a tool with a common JSON", async () => {
     const tool = new FunctionTool(sumNumbers, {
       name: "sumNumbers",
-      description: "Use this function to sum numbers together",
+      description: "Use this function to sum two numbers",
       parameters: sumJSON,
     });
 

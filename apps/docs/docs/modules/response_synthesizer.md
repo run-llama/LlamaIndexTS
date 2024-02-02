@@ -57,8 +57,8 @@ for await (const chunk of stream) {
 
 ## API Reference
 
-- [ResponseSynthesizer](../../api/classes/ResponseSynthesizer.md)
-- [Refine](../../api/classes/Refine.md)
-- [CompactAndRefine](../../api/classes/CompactAndRefine.md)
-- [TreeSummarize](../../api/classes/TreeSummarize.md)
-- [SimpleResponseBuilder](../../api/classes/SimpleResponseBuilder.md)
+- [ResponseSynthesizer](../api/classes/ResponseSynthesizer.md)
+- [Refine](../api/classes/Refine.md)
+- [CompactAndRefine](../api/classes/CompactAndRefine.md)
+- [TreeSummarize](../api/classes/TreeSummarize.md)
+- [SimpleResponseBuilder](../api/classes/SimpleResponseBuilder.md)

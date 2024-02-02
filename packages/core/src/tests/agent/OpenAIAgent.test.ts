@@ -14,11 +14,11 @@ const sumJSON = {
   properties: {
     a: {
       type: "number",
-      description: "The argument a to sum",
+      description: "The first number",
     },
     b: {
       type: "number",
-      description: "The argument b to sum",
+      description: "The second number",
     },
   },
   required: ["a", "b"],
@@ -48,7 +48,7 @@ describe("OpenAIAgent", () => {
 
     const sumFunctionTool = new FunctionTool(sumNumbers, {
       name: "sumNumbers",
-      description: "Use this function to sum numbers together",
+      description: "Use this function to sum two numbers",
       parameters: sumJSON,
     });
 
