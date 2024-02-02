@@ -74,9 +74,6 @@ export class SubQuestionOutputParser
 {
   parse(output: string): StructuredOutput<SubQuestion[]> {
     const parsed = parseJsonMarkdown(output);
-
-    // TODO add zod validation
-
     return { rawOutput: output, parsedOutput: parsed };
   }
 
