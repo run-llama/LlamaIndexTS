@@ -7,6 +7,7 @@ import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import { TemplateDataSourceType, TemplateFramework } from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
+import { templatesDir } from "./helpers/dir";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
 
@@ -89,7 +90,7 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
   ];
 
   const vectordbLang = framework === "fastapi" ? "python" : "typescript";
-  const compPath = path.join(__dirname, "..", "templates", "components");
+  const compPath = path.join(templatesDir, "components");
   const vectordbPath = path.join(compPath, "vectordbs", vectordbLang);
 
   const availableChoices = fs
