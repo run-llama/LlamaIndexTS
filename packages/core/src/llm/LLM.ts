@@ -186,7 +186,7 @@ export class OpenAI extends BaseLLM {
 
   mapMessageType(
     messageType: MessageType,
-  ): "user" | "assistant" | "system" | "function" {
+  ): "user" | "assistant" | "system" | "function" | "tool" {
     switch (messageType) {
       case "user":
         return "user";
@@ -196,6 +196,8 @@ export class OpenAI extends BaseLLM {
         return "system";
       case "function":
         return "function";
+      case "tool":
+        return "tool";
       default:
         return "user";
     }
@@ -220,6 +222,7 @@ export class OpenAI extends BaseLLM {
           ({
             role: this.mapMessageType(message.role),
             content: message.content,
+            ...message.additionalKwargs,
           }) as ChatCompletionMessageParam,
       ),
       top_p: this.topP,
@@ -239,17 +242,17 @@ export class OpenAI extends BaseLLM {
 
     const content = response.choices[0].message?.content ?? "";
 
-    const additionalKwargs: Record<string, any> = {};
+    const kwargsOutput: Record<string, any> = {};
 
     if (response.choices[0].message?.tool_calls) {
-      additionalKwargs.toolCalls = response.choices[0].message.tool_calls;
+      kwargsOutput.tool_calls = response.choices[0].message.tool_calls;
     }
 
     return {
       message: {
         content,
         role: response.choices[0].message.role,
-        additionalKwargs,
+        additionalKwargs: kwargsOutput,
       },
     };
   }
