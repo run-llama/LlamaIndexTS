@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.1.9
+
+### Patch Changes
+
+- 09464e6: add OpenAIAgent (thanks @EmanuelCampos)
+
 ## 0.1.8
 
 ### Patch Changes
