@@ -9,7 +9,6 @@ import { ObjectRetriever } from "../../objects/base";
 import { ToolOutput } from "../../tools";
 import { BaseTool } from "../../types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
-import { printStep } from "../utils";
 import { ReActChatFormatter } from "./formatter";
 import { ReActOutputParser } from "./outputParser";
 import {
@@ -159,7 +158,9 @@ export class ReActAgentWorker implements AgentWorker {
       throw new Error(`Could not parse output: ${e}`);
     }
 
-    printStep(`${reasoningStep.getContent()}\n`);
+    if (this._verbose) {
+      console.log(`${reasoningStep.getContent()}\n`);
+    }
 
     currentReasoning.push(reasoningStep);
 
@@ -239,7 +240,7 @@ export class ReActAgentWorker implements AgentWorker {
     currentReasoning.push(observationStep);
 
     if (this._verbose) {
-      printStep(`${observationStep.getContent()}`);
+      console.log(`${observationStep.getContent()}`);
     }
 
     return [currentReasoning, false];
