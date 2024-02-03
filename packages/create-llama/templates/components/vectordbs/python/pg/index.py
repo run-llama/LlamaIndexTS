@@ -13,4 +13,4 @@ def get_chat_engine():
     store = init_pg_vector_store_from_env()
     index = VectorStoreIndex.from_vector_store(store, service_context)
     logger.info("Finished connecting to index from PGVector.")
-    return index.as_chat_engine(similarity_top_k=5)
+    return index.as_chat_engine(similarity_top_k=5, chat_mode="condense_plus_context")

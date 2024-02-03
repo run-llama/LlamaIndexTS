@@ -1,5 +1,6 @@
+import { SubQuestion } from "./engines/query/types";
 import { ChatMessage } from "./llm/types";
-import { SubQuestion, ToolMetadata } from "./types";
+import { ToolMetadata } from "./types";
 
 /**
  * A SimplePrompt is a function that takes a dictionary of inputs and returns a string.
@@ -35,7 +36,10 @@ Answer:`;
 
 export type TextQaPrompt = typeof defaultTextQaPrompt;
 
-export const anthropicTextQaPrompt = ({ context = "", query = "" }) => {
+export const anthropicTextQaPrompt: TextQaPrompt = ({
+  context = "",
+  query = "",
+}) => {
   return `Context information:
 <context>
 ${context}
@@ -70,6 +74,16 @@ SUMMARY:"""
 };
 
 export type SummaryPrompt = typeof defaultSummaryPrompt;
+
+export const anthropicSummaryPrompt: SummaryPrompt = ({ context = "" }) => {
+  return `Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
+<original-text>
+${context}
+</original-text>
+
+SUMMARY:
+`;
+};
 
 /*
 DEFAULT_REFINE_PROMPT_TMPL = (

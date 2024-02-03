@@ -14,4 +14,4 @@ documents = new SimpleDirectoryReader().loadData("./data");
 
 ## API Reference
 
-- [SimpleDirectoryReader](../../api/classes/SimpleDirectoryReader.md)
+- [SimpleDirectoryReader](../api/classes/SimpleDirectoryReader.md)

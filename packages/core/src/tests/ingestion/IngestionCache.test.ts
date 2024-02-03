@@ -71,4 +71,11 @@ describe("getTransformationHash", () => {
     );
     expect(result1).not.toBe(result2);
   });
+
+  test("should not break with circular references", () => {
+    const obj: any = { a: 1, b: 2 };
+    obj["circular"] = obj;
+    const result = getTransformationHash(nodes, obj);
+    expect(typeof result).toBe("string");
+  });
 });

@@ -70,7 +70,7 @@ main();
 Then you can run it using
 
 ```bash
-pnpx ts-node example.ts
+pnpm dlx ts-node example.ts
 ```
 
 ## Playground
@@ -105,6 +105,9 @@ export const runtime = "nodejs"; // default
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ["pdf2json"],
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

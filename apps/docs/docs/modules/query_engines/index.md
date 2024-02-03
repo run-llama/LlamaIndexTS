@@ -1,7 +1,3 @@
----
-sidebar_position: 4
----
-
 # QueryEngine
 
 A query engine wraps a `Retriever` and a `ResponseSynthesizer` into a pipeline, that will use the query string to fetech nodes and then send them to the LLM to generate a response.
@@ -40,6 +36,6 @@ You can learn more about Tools by taking a look at the LlamaIndex Python documen
 
 ## API Reference
 
-- [RetrieverQueryEngine](../../api/classes/RetrieverQueryEngine.md)
-- [SubQuestionQueryEngine](../../api/classes/SubQuestionQueryEngine.md)
-- [QueryEngineTool](../../api/interfaces/QueryEngineTool.md)
+- [RetrieverQueryEngine](../api/classes/RetrieverQueryEngine.md)
+- [SubQuestionQueryEngine](../api/classes/SubQuestionQueryEngine.md)
+- [QueryEngineTool](../api/interfaces//QueryEngineTool.md)

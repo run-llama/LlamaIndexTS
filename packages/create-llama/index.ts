@@ -86,6 +86,13 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
+    "--files <path>",
+    `
+  
+    Specify the path to a local file or folder for chatting.
+`,
+  )
+  .option(
     "--open-ai-key <key>",
     `
 
@@ -132,6 +139,13 @@ const program = new Commander.Command(packageJson.name)
     `
 
   Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
+`,
+  )
+  .option(
+    "--vector-db <vectorDb>",
+    `
+
+  Select which vector database you would like to use, such as 'none', 'pg' or 'mongo'. The default option is not to use a vector database and use the local filesystem instead ('none').
 `,
   )
   .allowUnknownOption()
@@ -241,7 +255,7 @@ async function run(): Promise<void> {
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
     postInstallAction: program.postInstallAction,
-    contextFile: program.contextFile,
+    dataSource: program.dataSource,
   });
   conf.set("preferences", preferences);
 
@@ -278,7 +292,6 @@ async function notifyUpdate(): Promise<void> {
           "\n",
       );
     }
-    process.exit();
   } catch {
     // ignore error
   }

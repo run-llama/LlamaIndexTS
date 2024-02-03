@@ -64,6 +64,26 @@ export function mockLlmGeneration({
     );
 }
 
+export function mockLlmToolCallGeneration({
+  languageModel,
+  callbackManager,
+}: {
+  languageModel: OpenAI;
+  callbackManager: CallbackManager;
+}) {
+  jest.spyOn(languageModel, "chat").mockImplementation(
+    () =>
+      new Promise((resolve) =>
+        resolve({
+          message: {
+            content: "The sum is 2",
+            role: "assistant",
+          },
+        }),
+      ),
+  );
+}
+
 export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {
   jest.spyOn(embedModel, "getTextEmbedding").mockImplementation(async (x) => {
     return new Promise((resolve) => {
@@ -75,4 +95,69 @@ export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {
       resolve([0, 1, 0, 0, 0, 0]);
     });
   });
+}
+
+const structuredOutput = JSON.stringify([
+  {
+    choice: 1,
+    reason: "apple",
+  },
+]);
+
+export function mocStructuredkLlmGeneration({
+  languageModel,
+  callbackManager,
+}: {
+  languageModel: OpenAI;
+  callbackManager: CallbackManager;
+}) {
+  jest
+    .spyOn(languageModel, "chat")
+    .mockImplementation(
+      async ({ messages, parentEvent }: LLMChatParamsBase) => {
+        const text = structuredOutput;
+        const event = globalsHelper.createEvent({
+          parentEvent,
+          type: "llmPredict",
+        });
+        if (callbackManager?.onLLMStream) {
+          const chunks = text.split("-");
+          for (let i = 0; i < chunks.length; i++) {
+            const chunk = chunks[i];
+            callbackManager?.onLLMStream({
+              event,
+              index: i,
+              token: {
+                id: "id",
+                object: "object",
+                created: 1,
+                model: "model",
+                choices: [
+                  {
+                    index: 0,
+                    delta: {
+                      content: chunk,
+                    },
+                    finish_reason: null,
+                  },
+                ],
+              },
+            });
+          }
+          callbackManager?.onLLMStream({
+            event,
+            index: chunks.length,
+            isDone: true,
+          });
+        }
+        return new Promise((resolve) => {
+          resolve({
+            message: {
+              content: text,
+              role: "assistant",
+            },
+          });
+        });
+      },
+    );
 }

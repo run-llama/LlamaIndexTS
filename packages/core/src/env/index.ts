@@ -18,6 +18,20 @@ export function createSHA256(): SHA256 {
   };
 }
 
-export const defaultFS: CompleteFileSystem = fs;
+export const defaultFS: CompleteFileSystem = {
+  writeFile: function (path: string, content: string) {
+    return fs.writeFile(path, content, "utf-8");
+  },
+  readRawFile(path: string): Promise<Buffer> {
+    return fs.readFile(path);
+  },
+  readFile: function (path: string) {
+    return fs.readFile(path, "utf-8");
+  },
+  access: fs.access,
+  mkdir: fs.mkdir,
+  readdir: fs.readdir,
+  stat: fs.stat,
+};
 
 export { EOL, ok, path, randomUUID };

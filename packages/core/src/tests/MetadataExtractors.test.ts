@@ -50,6 +50,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     mockLlmGeneration({ languageModel, callbackManager });
 
     const embedModel = new OpenAIEmbedding();
+
     mockEmbeddingModel(embedModel);
 
     serviceContext = serviceContextFromDefaults({
