@@ -23,4 +23,4 @@ const index = await VectorStoreIndex.fromDocuments([document], {
 
 ## API Reference
 
-- [StorageContext](../../api/interfaces/StorageContext.md)
+- [StorageContext](../api/interfaces//StorageContext.md)

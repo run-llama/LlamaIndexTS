@@ -71,68 +71,17 @@ export function mockLlmToolCallGeneration({
   languageModel: OpenAI;
   callbackManager: CallbackManager;
 }) {
-  jest
-    .spyOn(languageModel, "chat")
-    .mockImplementation(
-      () =>
-        new Promise((resolve) =>
-          resolve({
-            message: {
-              content: 2,
-              role: "assistant",
-              additionalKwargs: {
-                toolCalls: [
-                  {
-                    id: "id",
-                    type: "function",
-                    function: {
-                      name: "sumNumbers",
-                      arguments: JSON.stringify({ a: 1, b: 1 }),
-                      finish_reason: "tool_calls",
-                    },
-                  },
-                ],
-              },
-            },
-          }),
-        ),
-    )
-    .mockImplementationOnce(
-      () =>
-        new Promise((resolve) =>
-          resolve({
-            message: {
-              content: 2,
-              role: "assistant",
-              additionalKwargs: {
-                toolCalls: [
-                  {
-                    id: "id",
-                    type: "function",
-                    function: {
-                      name: "sumNumbers",
-                      arguments: JSON.stringify({ a: 1, b: 1 }),
-                      finish_reason: "tool_calls",
-                    },
-                  },
-                ],
-              },
-            },
-          }),
-        ),
-    )
-    .mockImplementationOnce(
-      () =>
-        new Promise((resolve) =>
-          resolve({
-            message: {
-              content: "The sum is 2",
-              role: "assistant",
-              additionalKwargs: {},
-            },
-          }),
-        ),
-    );
+  jest.spyOn(languageModel, "chat").mockImplementation(
+    () =>
+      new Promise((resolve) =>
+        resolve({
+          message: {
+            content: "The sum is 2",
+            role: "assistant",
+          },
+        }),
+      ),
+  );
 }
 
 export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {

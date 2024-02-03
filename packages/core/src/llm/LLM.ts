@@ -186,7 +186,7 @@ export class OpenAI extends BaseLLM {
 
   mapMessageType(
     messageType: MessageType,
-  ): "user" | "assistant" | "system" | "function" {
+  ): "user" | "assistant" | "system" | "function" | "tool" {
     switch (messageType) {
       case "user":
         return "user";
@@ -196,9 +196,28 @@ export class OpenAI extends BaseLLM {
         return "system";
       case "function":
         return "function";
+      case "tool":
+        return "tool";
       default:
         return "user";
     }
+  }
+
+  toOpenAIMessage(messages: ChatMessage[]) {
+    return messages.map((message) => {
+      const additionalKwargs = message.additionalKwargs ?? {};
+
+      if (message.additionalKwargs?.toolCalls) {
+        additionalKwargs.tool_calls = message.additionalKwargs.toolCalls;
+        delete additionalKwargs.toolCalls;
+      }
+
+      return {
+        role: this.mapMessageType(message.role),
+        content: message.content,
+        ...additionalKwargs,
+      };
+    });
   }
 
   chat(
@@ -215,13 +234,7 @@ export class OpenAI extends BaseLLM {
       max_tokens: this.maxTokens,
       tools: tools,
       tool_choice: toolChoice,
-      messages: messages.map(
-        (message) =>
-          ({
-            role: this.mapMessageType(message.role),
-            content: message.content,
-          }) as ChatCompletionMessageParam,
-      ),
+      messages: this.toOpenAIMessage(messages) as ChatCompletionMessageParam[],
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
@@ -239,17 +252,17 @@ export class OpenAI extends BaseLLM {
 
     const content = response.choices[0].message?.content ?? "";
 
-    const additionalKwargs: Record<string, any> = {};
+    const kwargsOutput: Record<string, any> = {};
 
     if (response.choices[0].message?.tool_calls) {
-      additionalKwargs.toolCalls = response.choices[0].message.tool_calls;
+      kwargsOutput.toolCalls = response.choices[0].message.tool_calls;
     }
 
     return {
       message: {
         content,
         role: response.choices[0].message.role,
-        additionalKwargs,
+        additionalKwargs: kwargsOutput,
       },
     };
   }

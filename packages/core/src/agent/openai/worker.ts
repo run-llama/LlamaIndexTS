@@ -1,8 +1,8 @@
 // Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
 
-import { randomUUID } from "crypto";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { AgentChatResponse, ChatResponseMode } from "../../engines/chat";
+import { randomUUID } from "../../env";
 import {
   ChatMessage,
   ChatResponse,
@@ -17,7 +17,7 @@ import { BaseTool } from "../../types";
 import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
 import { addUserStepToMemory, getFunctionByName } from "../utils";
 import { OpenAIToolCall } from "./types/chat";
-import { OpenAiFunction, toOpenAiTool } from "./utils";
+import { toOpenAiTool } from "./utils";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;
 
@@ -78,6 +78,11 @@ type OpenAIAgentWorkerParams = {
   toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
+type CallFunctionOutput = {
+  message: ChatMessage;
+  toolOutput: ToolOutput;
+};
+
 /**
  * OpenAI agent worker.
  * This class is responsible for running the agent.
@@ -104,7 +109,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     callbackManager,
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
-    this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
+    this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
     this._verbose = verbose || false;
     this._maxFunctionCalls = maxFunctionCalls;
     this.prefixMessages = prefixMessages || [];
@@ -202,13 +207,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     llmChatKwargs: any,
   ): Promise<AgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
-      const chatResponse = await this._llm.chat({
+      const chatResponse = (await this._llm.chat({
         stream: false,
         ...llmChatKwargs,
-      });
+      })) as unknown as ChatResponse;
 
-      // @ts-ignore
-      return this._processMessage(task, chatResponse);
+      return this._processMessage(task, chatResponse) as AgentChatResponse;
     } else {
       throw new Error("Not implemented");
     }
@@ -225,9 +229,7 @@ export class OpenAIAgentWorker implements AgentWorker {
   async callFunction(
     tools: BaseTool[],
     toolCall: OpenAIToolCall,
-    memory: ChatMemoryBuffer,
-    sources: ToolOutput[],
-  ): Promise<void> {
+  ): Promise<CallFunctionOutput> {
     const functionCall = toolCall.function;
 
     if (!functionCall) {
@@ -239,8 +241,10 @@ export class OpenAIAgentWorker implements AgentWorker {
     const message = functionMessage[0];
     const toolOutput = functionMessage[1];
 
-    sources.push(toolOutput);
-    memory.put(message);
+    return {
+      message,
+      toolOutput,
+    };
   }
 
   /**
@@ -282,7 +286,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       return false;
     }
 
-    if (!toolCalls || toolCalls.length === 0) {
+    if (toolCalls?.length === 0) {
       return false;
     }
 
@@ -306,21 +310,17 @@ export class OpenAIAgentWorker implements AgentWorker {
   ): Promise<TaskStepOutput> {
     const tools = this.getTools(task.input);
 
-    let openaiTools: OpenAiFunction[] = [];
-
     if (step.input) {
       addUserStepToMemory(step, task.extraState.newMemory, this._verbose);
     }
 
-    if (step.input) {
-      openaiTools = tools.map((tool) =>
-        toOpenAiTool({
-          name: tool.metadata.name,
-          description: tool.metadata.description,
-          parameters: tool.metadata.parameters,
-        }),
-      );
-    }
+    const openaiTools = tools.map((tool) =>
+      toOpenAiTool({
+        name: tool.metadata.name,
+        description: tool.metadata.description,
+        parameters: tool.metadata.parameters,
+      }),
+    );
 
     const llmChatKwargs = this._getLlmChatKwargs(task, openaiTools, toolChoice);
 
@@ -343,12 +343,14 @@ export class OpenAIAgentWorker implements AgentWorker {
     } else {
       isDone = false;
       for (const toolCall of latestToolCalls) {
-        await this.callFunction(
+        const { message, toolOutput } = await this.callFunction(
           tools,
           toolCall,
-          task.extraState.newMemory,
-          task.extraState.sources,
         );
+
+        task.extraState.sources.push(toolOutput);
+        task.extraState.newMemory.put(message);
+
         task.extraState.nFunctionCalls += 1;
       }
 

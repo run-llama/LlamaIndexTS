@@ -25,5 +25,5 @@ for await (const chunk of stream) {
 
 ## Api References
 
-- [ContextChatEngine](../../api/classes/ContextChatEngine.md)
-- [CondenseQuestionChatEngine](../../api/classes/ContextChatEngine.md)
+- [ContextChatEngine](../api/classes/ContextChatEngine.md)
+- [CondenseQuestionChatEngine](../api/classes/ContextChatEngine.md)

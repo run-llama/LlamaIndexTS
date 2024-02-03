@@ -19,5 +19,5 @@ const index = await VectorStoreIndex.fromDocuments([document]);
 
 ## API Reference
 
-- [SummaryIndex](../../api/classes/SummaryIndex.md)
-- [VectorStoreIndex](../../api/classes/VectorStoreIndex.md)
+- [SummaryIndex](../api/classes/SummaryIndex.md)
+- [VectorStoreIndex](../api/classes/VectorStoreIndex.md)

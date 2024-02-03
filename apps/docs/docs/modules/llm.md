@@ -30,5 +30,5 @@ export AZURE_OPENAI_DEPLOYMENT="gpt-4" # or some other deployment name
 
 ## API Reference
 
-- [OpenAI](../../api/classes/OpenAI.md)
-- [ServiceContext](../../api/interfaces/ServiceContext.md)
+- [OpenAI](../api/classes/OpenAI.md)
+- [ServiceContext](../api/interfaces//ServiceContext.md)

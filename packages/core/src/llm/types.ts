@@ -79,6 +79,7 @@ export interface LLMChatParamsBase {
   extraParams?: Record<string, any>;
   tools?: any;
   toolChoice?: any;
+  additionalKwargs?: Record<string, any>;
 }
 
 export interface LLMChatParamsStreaming extends LLMChatParamsBase {

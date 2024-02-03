@@ -36,7 +36,10 @@ Answer:`;
 
 export type TextQaPrompt = typeof defaultTextQaPrompt;
 
-export const anthropicTextQaPrompt = ({ context = "", query = "" }) => {
+export const anthropicTextQaPrompt: TextQaPrompt = ({
+  context = "",
+  query = "",
+}) => {
   return `Context information:
 <context>
 ${context}
@@ -71,6 +74,16 @@ SUMMARY:"""
 };
 
 export type SummaryPrompt = typeof defaultSummaryPrompt;
+
+export const anthropicSummaryPrompt: SummaryPrompt = ({ context = "" }) => {
+  return `Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
+<original-text>
+${context}
+</original-text>
+
+SUMMARY:
+`;
+};
 
 /*
 DEFAULT_REFINE_PROMPT_TMPL = (

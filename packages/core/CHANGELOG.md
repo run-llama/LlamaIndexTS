@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.1.8
+
+### Patch Changes
+
+- d903da6: easier prompt customization for SimpleResponseBuilder
+- ab9d941: fix(cyclic): remove cyclic structures from transform hash
+- 177b446: chore: improve extractors prompt
+
 ## 0.1.7
 
 ### Patch Changes

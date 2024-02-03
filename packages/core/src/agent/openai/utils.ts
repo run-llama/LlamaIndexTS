@@ -1,8 +1,6 @@
-import { ZodSchema } from "zod";
 import { ToolMetadata } from "../../types";
-import { getProperties } from "../utils";
 
-export type OpenAiFunction = {
+export type OpenAIFunction = {
   type: "function";
   function: ToolMetadata;
 };
@@ -17,19 +15,13 @@ export const toOpenAiTool = ({
   name,
   description,
   parameters,
-}: OpenAiTool): OpenAiFunction => {
-  let params = parameters;
-
-  if (parameters instanceof ZodSchema) {
-    params = getProperties(parameters);
-  }
-
+}: OpenAiTool): OpenAIFunction => {
   return {
     type: "function",
     function: {
       name: name,
       description: description,
-      parameters: params,
+      parameters,
     },
   };
 };

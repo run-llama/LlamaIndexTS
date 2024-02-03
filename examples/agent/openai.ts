@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 import { FunctionTool, OpenAIAgent } from "llamaindex";
 
 // Define a function to sum two numbers
@@ -18,47 +16,54 @@ const sumJSON = {
   properties: {
     a: {
       type: "number",
-      description: "The argument a to sum",
+      description: "The first number",
     },
     b: {
       type: "number",
-      description: "The argument b to sum",
+      description: "The second number",
     },
   },
   required: ["a", "b"],
 };
 
-// Define the parameters of the divide function as a Zod schema
-const dividArgsSchema = z
-  .object({
-    a: z.number().describe("The argument a to divide"),
-    b: z.number().describe("The argument b to divide"),
-  })
-  .describe("the arguments");
+const divideJSON = {
+  type: "object",
+  properties: {
+    a: {
+      type: "number",
+      description: "The dividend a to divide",
+    },
+    b: {
+      type: "number",
+      description: "The divisor b to divide by",
+    },
+  },
+  required: ["a", "b"],
+};
 
 async function main() {
   // Create a function tool from the sum function
   const functionTool = new FunctionTool(sumNumbers, {
     name: "sumNumbers",
-    description: "Use this function to sum numbers together",
+    description: "Use this function to sum two numbers",
     parameters: sumJSON,
   });
 
   // Create a function tool from the divide function
   const functionTool2 = new FunctionTool(divideNumbers, {
     name: "divideNumbers",
-    description: "Use this function to divide numbers together",
-    parameters: dividArgsSchema,
+    description: "Use this function to divide two numbers",
+    parameters: divideJSON,
   });
 
   // Create an OpenAIAgent with the function tools
-  const worker = new OpenAIAgent({
+  const agent = new OpenAIAgent({
     tools: [functionTool, functionTool2],
     verbose: true,
   });
 
   // Chat with the agent
-  const response = await worker.chat({
+  const response = await agent.chat({
     message: "How much is 5 + 5? then divide by 2",
   });
 

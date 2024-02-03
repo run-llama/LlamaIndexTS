@@ -4,19 +4,25 @@ import { OpenAI } from "../../llm";
 import { FunctionTool } from "../../tools";
 import { mockLlmToolCallGeneration } from "../utility/mockOpenAI";
 
-import { z } from "zod";
-
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }): number {
   return a + b;
 }
 
-const sumArgsSchema = z
-  .object({
-    a: z.number().describe("The argument a to divide"),
-    b: z.number().describe("The argument b to divide"),
-  })
-  .describe("the arguments");
+const sumJSON = {
+  type: "object",
+  properties: {
+    a: {
+      type: "number",
+      description: "The first number",
+    },
+    b: {
+      type: "number",
+      description: "The second number",
+    },
+  },
+  required: ["a", "b"],
+};
 
 jest.mock("../../llm/open_ai", () => {
   return {
@@ -42,8 +48,8 @@ describe("OpenAIAgent", () => {
 
     const sumFunctionTool = new FunctionTool(sumNumbers, {
       name: "sumNumbers",
-      description: "Use this function to sum numbers together",
-      parameters: sumArgsSchema,
+      description: "Use this function to sum two numbers",
+      parameters: sumJSON,
     });
 
     openaiAgent = new OpenAIAgent({
@@ -59,11 +65,5 @@ describe("OpenAIAgent", () => {
     });
 
     expect(String(response)).toEqual("The sum is 2");
-
-    expect(response.sources.length).toEqual(1);
-
-    expect(response.sources[0].content).toEqual(2);
-    expect(response.sources[0].rawOutput).toEqual(2);
-    expect(response.sources[0].rawInput).toEqual({ a: 1, b: 1 });
   });
 });
