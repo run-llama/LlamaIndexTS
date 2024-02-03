@@ -1,5 +1,17 @@
 # create-llama
 
+## 0.0.24
+
+### Patch Changes
+
+- ba95ca3: Use condense plus context chat engine for FastAPI as default
+
+## 0.0.23
+
+### Patch Changes
+
+- c680af6: Fixed issues with locating templates path
+
 ## 0.0.22
 
 ### Patch Changes

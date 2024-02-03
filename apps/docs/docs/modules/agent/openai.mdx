@@ -1,0 +1,183 @@
+# OpenAI Agent
+
+OpenAI API that supports function calling, it’s never been easier to build your own agent!
+
+In this notebook tutorial, we showcase how to write your own OpenAI agent
+
+## Setup
+
+First, you need to install the `llamaindex` package. You can do this by running the following command in your terminal:
+
+```bash
+pnpm i llamaindex
+```
+
+Then we can define a function to sum two numbers and another function to divide two numbers.
+
+```ts
+function sumNumbers({ a, b }: { a: number; b: number }): number {
+  return a + b;
+}
+
+// Define a function to divide two numbers
+function divideNumbers({ a, b }: { a: number; b: number }): number {
+  return a / b;
+}
+```
+
+## Create a function tool
+
+Now we can create a function tool from the sum function and another function tool from the divide function.
+
+For the parameters of the sum function, we can define a JSON schema.
+
+### JSON Schema
+
+```ts
+const sumJSON = {
+  type: "object",
+  properties: {
+    a: {
+      type: "number",
+      description: "The first number",
+    },
+    b: {
+      type: "number",
+      description: "The second number",
+    },
+  },
+  required: ["a", "b"],
+};
+
+const divideJSON = {
+  type: "object",
+  properties: {
+    a: {
+      type: "number",
+      description: "The dividend a to divide",
+    },
+    b: {
+      type: "number",
+      description: "The divisor b to divide by",
+    },
+  },
+  required: ["a", "b"],
+};
+
+const sumFunctionTool = new FunctionTool(sumNumbers, {
+  name: "sumNumbers",
+  description: "Use this function to sum two numbers",
+  parameters: sumJSON,
+});
+
+const divideFunctionTool = new FunctionTool(divideNumbers, {
+  name: "divideNumbers",
+  description: "Use this function to divide two numbers",
+  parameters: divideJSON,
+});
+```
+
+## Create an OpenAIAgent
+
+Now we can create an OpenAIAgent with the function tools.
+
+```ts
+const worker = new OpenAIAgent({
+  tools: [sumFunctionTool, divideFunctionTool],
+  verbose: true,
+});
+```
+
+## Chat with the agent
+
+Now we can chat with the agent.
+
+```ts
+const response = await worker.chat({
+  message: "How much is 5 + 5? then divide by 2",
+});
+
+console.log(String(response));
+```
+
+## Full code
+
+```ts
+import { FunctionTool, OpenAIAgent } from "llamaindex";
+
+// Define a function to sum two numbers
+function sumNumbers({ a, b }: { a: number; b: number }): number {
+  return a + b;
+}
+
+// Define a function to divide two numbers
+function divideNumbers({ a, b }: { a: number; b: number }): number {
+  return a / b;
+}
+
+// Define the parameters of the sum function as a JSON schema
+const sumJSON = {
+  type: "object",
+  properties: {
+    a: {
+      type: "number",
+      description: "The first number",
+    },
+    b: {
+      type: "number",
+      description: "The second number",
+    },
+  },
+  required: ["a", "b"],
+};
+
+// Define the parameters of the divide function as a JSON schema
+const divideJSON = {
+  type: "object",
+  properties: {
+    a: {
+      type: "number",
+      description: "The argument a to divide",
+    },
+    b: {
+      type: "number",
+      description: "The argument b to divide",
+    },
+  },
+  required: ["a", "b"],
+};
+
+async function main() {
+  // Create a function tool from the sum function
+  const sumFunctionTool = new FunctionTool(sumNumbers, {
+    name: "sumNumbers",
+    description: "Use this function to sum two numbers",
+    parameters: sumJSON,
+  });
+
+  // Create a function tool from the divide function
+  const divideFunctionTool = new FunctionTool(divideNumbers, {
+    name: "divideNumbers",
+    description: "Use this function to divide two numbers",
+    parameters: divideJSON,
+  });
+
+  // Create an OpenAIAgent with the function tools
+  const agent = new OpenAIAgent({
+    tools: [sumFunctionTool, divideFunctionTool],
+    verbose: true,
+  });
+
+  // Chat with the agent
+  const response = await agent.chat({
+    message: "How much is 5 + 5? then divide by 2",
+  });
+
+  // Print the response
+  console.log(String(response));
+}
+
+main().then(() => {
+  console.log("Done");
+});
+```

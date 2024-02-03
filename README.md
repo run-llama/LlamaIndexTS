@@ -70,7 +70,7 @@ main();
 Then you can run it using
 
 ```bash
-pnpx ts-node example.ts
+pnpm dlx ts-node example.ts
 ```
 
 ## Playground
