@@ -126,7 +126,7 @@ export class ReActAgentWorker implements AgentWorker {
     };
 
     return new TaskStep(task.taskId, randomUUID(), task.input, {
-      is_first: true,
+      isFirst: true,
     });
   }
 
