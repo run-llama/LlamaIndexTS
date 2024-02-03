@@ -135,13 +135,10 @@ importers:
         version: 16.4.1
       llamaindex:
         specifier: latest
-        version: link:../packages/core
+        version: 0.1.9(typescript@5.3.3)
       mongodb:
         specifier: ^6.2.0
         version: 6.3.0
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@types/node':
         specifier: ^18.19.10
@@ -236,12 +233,6 @@ importers:
       wink-nlp:
         specifier: ^1.14.3
         version: 1.14.3
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-      zod-to-json-schema:
-        specifier: ^3.22.3
-        version: 3.22.4(zod@3.22.4)
     devDependencies:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
@@ -10547,6 +10538,55 @@ packages:
       wrap-ansi: 9.0.0
     dev: true
 
+  /llamaindex@0.1.9(typescript@5.3.3):
+    resolution: {integrity: sha512-MAMGV5MXXcJ4rSV2kqCZENf7B+q1zTwPnHpnHJgEiEzP5+djNdLmbz/zaCmxpB8wgNNLUem9iJt53iwDBJ4ZBA==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@anthropic-ai/sdk': 0.12.4
+      '@datastax/astra-db-ts': 0.1.4
+      '@mistralai/mistralai': 0.0.10
+      '@notionhq/client': 2.2.14
+      '@pinecone-database/pinecone': 1.1.3
+      '@qdrant/js-client-rest': 1.7.0(typescript@5.3.3)
+      '@xenova/transformers': 2.14.1
+      assemblyai: 4.2.1
+      chromadb: 1.7.3(openai@4.26.0)
+      file-type: 18.7.0
+      js-tiktoken: 1.0.8
+      lodash: 4.17.21
+      mammoth: 1.6.0
+      md-utils-ts: 2.0.0
+      mongodb: 6.3.0
+      notion-md-crawler: 0.0.2
+      openai: 4.26.0
+      papaparse: 5.4.1
+      pathe: 1.1.2
+      pdf2json: 3.0.5
+      pg: 8.11.3
+      pgvector: 0.1.7
+      portkey-ai: 0.1.16
+      rake-modified: 1.0.8
+      replicate: 0.25.2
+      string-strip-html: 13.4.5
+      wink-nlp: 1.14.3
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@google/generative-ai'
+      - '@mongodb-js/zstd'
+      - bufferutil
+      - cohere-ai
+      - debug
+      - encoding
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - pg-native
+      - snappy
+      - socks
+      - typescript
+      - utf-8-validate
+    dev: false
+
   /load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
     engines: {node: '>=6'}
@@ -16600,18 +16640,6 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
-
-  /zod-to-json-schema@3.22.4(zod@3.22.4):
-    resolution: {integrity: sha512-2Ed5dJ+n/O3cU383xSY28cuVi0BCQhF8nYqWU5paEpl7fVdqdAmiLdqLyfblbNdfOFwFfi/mqU4O1pwc60iBhQ==}
-    peerDependencies:
-      zod: ^3.22.4
-    dependencies:
-      zod: 3.22.4
-    dev: false
-
-  /zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

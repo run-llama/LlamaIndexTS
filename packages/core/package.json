@@ -30,9 +30,7 @@
     "rake-modified": "^1.0.8",
     "replicate": "^0.25.2",
     "string-strip-html": "^13.4.5",
-    "wink-nlp": "^1.14.3",
-    "zod": "^3.22.4",
-    "zod-to-json-schema": "^3.22.3"
+    "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
