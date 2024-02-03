@@ -323,7 +323,7 @@ export class ReActAgentWorker implements AgentWorker {
 
     const inputChat = this._reactChatFormatter.format(
       tools,
-      task.memory.get() + task.extraState.newMemory.get(),
+      [...task.memory.get(), ...task.extraState.newMemory.get()],
       task.extraState.currentReasoning,
     );
 
