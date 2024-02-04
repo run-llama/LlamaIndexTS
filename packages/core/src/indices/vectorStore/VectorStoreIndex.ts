@@ -263,7 +263,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return index;
   }
 
-  asRetriever(options?: VectorIndexRetrieverOptions): VectorIndexRetriever {
+  asRetriever(
+    options?: Omit<VectorIndexRetrieverOptions, "index">,
+  ): VectorIndexRetriever {
     return new VectorIndexRetriever({ index: this, ...options });
   }
 
