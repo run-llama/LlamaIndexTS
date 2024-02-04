@@ -13,7 +13,7 @@ import {
   });
 
   const documents = await reader.loadData({
-    directoryPath: "../packages/core/examples",
+    directoryPath: "node_modules/llamaindex/examples",
   });
 
   const textSplits = splitter.splitText(documents[0].text);
