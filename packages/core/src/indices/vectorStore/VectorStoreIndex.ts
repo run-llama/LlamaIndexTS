@@ -34,7 +34,10 @@ import {
   IndexDict,
   IndexStructType,
 } from "../BaseIndex";
-import { VectorIndexRetrieverOptions, VectorIndexRetriever } from "./VectorIndexRetriever";
+import {
+  VectorIndexRetriever,
+  VectorIndexRetrieverOptions,
+} from "./VectorIndexRetriever";
 
 interface IndexStructOptions {
   indexStruct?: IndexDict;
