@@ -34,7 +34,7 @@ import {
   IndexDict,
   IndexStructType,
 } from "../BaseIndex";
-import { VectorIndexRetriever } from "./VectorIndexRetriever";
+import { VectorIndexRetrieverOptions, VectorIndexRetriever } from "./VectorIndexRetriever";
 
 interface IndexStructOptions {
   indexStruct?: IndexDict;
@@ -260,7 +260,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return index;
   }
 
-  asRetriever(options?: any): VectorIndexRetriever {
+  asRetriever(options?: VectorIndexRetrieverOptions): VectorIndexRetriever {
     return new VectorIndexRetriever({ index: this, ...options });
   }
 
