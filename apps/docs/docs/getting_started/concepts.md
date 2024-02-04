@@ -69,7 +69,7 @@ A response synthesizer generates a response from an LLM, using a user query and 
 
 #### Pipelines
 
-[**Query Engines**](../modules/query_engine.md):
+[**Query Engines**](../modules/query_engines):
 A query engine is an end-to-end pipeline that allow you to ask question over your data.
 It takes in a natural language query, and returns a response, along with reference context retrieved and passed to the LLM.
 
