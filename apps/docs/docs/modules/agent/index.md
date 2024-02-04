@@ -11,4 +11,4 @@ An “agent” is an automated reasoning and decision engine. It takes in a user
 
 LlamaIndex.TS comes with a few built-in agents, but you can also create your own. The built-in agents include:
 
-- [OpenAI Agent](./openai.md)
+- [OpenAI Agent](./openai.mdx)
