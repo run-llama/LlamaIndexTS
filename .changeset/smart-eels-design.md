@@ -2,4 +2,4 @@
 "llamaindex": patch
 ---
 
-fix: add VectorIndexRetriever constructor parameters.
+fix: update `VectorIndexRetriever` constructor parameters' type.
