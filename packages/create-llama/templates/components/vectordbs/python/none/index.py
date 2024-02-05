@@ -1,20 +1,23 @@
 import logging
 import os
+import json
+
+from app.engine.constants import STORAGE_DIR
+from app.engine.context import create_service_context
+from app.engine.tools import ToolFactory
+from llama_index.agent import OpenAIAgent
 from llama_index import (
     StorageContext,
     load_index_from_storage,
 )
 
-from app.engine.constants import STORAGE_DIR
-from app.engine.context import create_service_context
-
 
 def get_chat_engine():
     service_context = create_service_context()
-    # check if storage already exists
-    if not os.path.exists(STORAGE_DIR):
-        raise Exception(
-            "StorageContext is empty - call 'python app/engine/generate.py' to generate the storage first"
+    if os.environ.get("TOOL", "") != "":
+        tools = ToolFactory.from_env().to_tool_list()
+        return OpenAIAgent.from_tools(
+            tools=tools, llm=service_context.llm, verbose=True
         )
     logger = logging.getLogger("uvicorn")
     # load the existing index
