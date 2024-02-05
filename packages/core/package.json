@@ -200,7 +200,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" bunchee",
+    "build": "rm -rf ./dist && NODE_OPTIONS=\"--max-old-space-size=8192\" bunchee",
     "postbuild": "pnpm run copy && pnpm run modify-package-json",
     "copy": "cp -r package.json CHANGELOG.md ../../README.md ../../LICENSE examples src dist/",
     "modify-package-json": "node ./scripts/modify-package-json.mjs",

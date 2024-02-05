@@ -17,6 +17,12 @@ import { VectorStoreIndex } from "./VectorStoreIndex";
  * VectorIndexRetriever retrieves nodes from a VectorIndex.
  */
 
+export type VectorIndexRetrieverOptions = {
+  index: VectorStoreIndex;
+  similarityTopK?: number;
+  imageSimilarityTopK?: number;
+};
+
 export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
   similarityTopK: number;
@@ -27,11 +33,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     index,
     similarityTopK,
     imageSimilarityTopK,
-  }: {
-    index: VectorStoreIndex;
-    similarityTopK?: number;
-    imageSimilarityTopK?: number;
-  }) {
+  }: VectorIndexRetrieverOptions) {
     this.index = index;
     this.serviceContext = this.index.serviceContext;
     this.similarityTopK = similarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
