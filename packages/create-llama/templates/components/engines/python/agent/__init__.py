@@ -1,0 +1,60 @@
+import logging
+import os
+import json
+
+from typing import Any, Optional
+from llama_index.llms import LLM
+from llama_index.agent import AgentRunner
+
+from app.engine.constants import STORAGE_DIR
+from app.engine.context import create_service_context
+from app.engine.tools import ToolFactory
+from app.engine.index import get_index
+from llama_index.agent import ReActAgent
+from llama_index.tools.query_engine import QueryEngineTool
+from llama_index import (
+    StorageContext,
+    load_index_from_storage,
+)
+
+
+def create_agent_from_llm(
+    llm: Optional[LLM] = None,
+    **kwargs: Any,
+) -> AgentRunner:
+    from llama_index.agent import OpenAIAgent, ReActAgent
+    from llama_index.llms.openai import OpenAI
+    from llama_index.llms.openai_utils import is_function_calling_model
+
+    if isinstance(llm, OpenAI) and is_function_calling_model(llm.model):
+        return OpenAIAgent.from_tools(
+            llm=llm,
+            **kwargs,
+        )
+    else:
+        return ReActAgent.from_tools(
+            llm=llm,
+            **kwargs,
+        )
+
+
+def get_chat_engine():
+    # Init query tool
+    index = get_index()
+    llm = index.service_context.llm
+    query_engine = index.as_query_engine(similarity_top_k=5)
+    query_engine_tool = QueryEngineTool.from_defaults(query_engine=query_engine)
+
+    tools = [query_engine_tool]
+
+    # Init additional tools
+    tool_specs = ToolFactory.from_env()
+    additional_tools = []
+    for tool_spec in tool_specs:
+        tools += tool_spec.to_tool_list()
+
+    return create_agent_from_llm(
+        llm=llm,
+        tools=tools,
+        verbose=True,
+    )

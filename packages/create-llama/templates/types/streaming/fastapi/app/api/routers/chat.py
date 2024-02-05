@@ -3,7 +3,7 @@ from typing import List
 from fastapi.responses import StreamingResponse
 from llama_index.chat_engine.types import BaseChatEngine
 
-from app.engine.index import get_chat_engine
+from app.engine import get_chat_engine
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from llama_index.llms.base import ChatMessage
 from llama_index.llms.types import MessageRole
