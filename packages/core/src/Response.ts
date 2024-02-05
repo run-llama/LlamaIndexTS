@@ -6,13 +6,14 @@ import { BaseNode } from "./Node";
 export class Response {
   response: string;
   sourceNodes?: BaseNode[];
+  metadata: Record<string, unknown> = {};
 
   constructor(response: string, sourceNodes?: BaseNode[]) {
     this.response = response;
     this.sourceNodes = sourceNodes || [];
   }
 
-  getFormattedSources() {
+  protected _getFormattedSources() {
     throw new Error("Not implemented yet");
   }
 

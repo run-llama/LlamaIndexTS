@@ -1,5 +1,7 @@
 export * from "./FileSystem";
 export * from "./StorageContext";
+export { SimpleChatStore } from "./chatStore/SimpleChatStore";
+export * from "./chatStore/types";
 export * from "./constants";
 export { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
 export * from "./docStore/types";

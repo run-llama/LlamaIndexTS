@@ -92,7 +92,7 @@ export class MarkdownReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const content = await fs.readFile(file, { encoding: "utf-8" });
+    const content = await fs.readFile(file);
     const tups = this.parseTups(content);
     const results: Document[] = [];
     for (const [header, value] of tups) {

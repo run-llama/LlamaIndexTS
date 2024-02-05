@@ -11,6 +11,7 @@ import fs from "fs";
 import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./helpers";
 import { installTemplate } from "./helpers";
+import { templatesDir } from "./helpers/dir";
 
 export type InstallAppArgs = Omit<
   InstallTemplateArgs,
@@ -100,7 +101,7 @@ export async function createApp({
     });
     // copy readme for fullstack
     await fs.promises.copyFile(
-      path.join(__dirname, "..", "templates", "README-fullstack.md"),
+      path.join(templatesDir, "README-fullstack.md"),
       path.join(root, "README.md"),
     );
   } else {

@@ -207,16 +207,14 @@ export class AstraDBVectorStore implements VectorStore {
         ...rest
       } = row;
 
-      if (!metadata?.["_node_content"]) {
-        metadata["_node_content"] = JSON.stringify({
+      const node = metadataDictToNode(metadata, {
+        fallback: {
           id,
           text: content,
           metadata,
           ...rest,
-        });
-      }
-
-      const node = metadataDictToNode(metadata);
+        },
+      });
       node.setContent(content);
 
       ids.push(id);

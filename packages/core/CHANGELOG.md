@@ -1,5 +1,35 @@
 # llamaindex
 
+## 0.1.8
+
+### Patch Changes
+
+- d903da6: easier prompt customization for SimpleResponseBuilder
+- ab9d941: fix(cyclic): remove cyclic structures from transform hash
+- 177b446: chore: improve extractors prompt
+
+## 0.1.7
+
+### Patch Changes
+
+- d687c11: feat(router): add router query engine
+
+## 0.1.6
+
+### Patch Changes
+
+- cf44640: fix: `instanceof` issue
+
+  This will fix QueryEngine cannot run.
+
+- 7231ddb: feat: allow `SimpleDirectoryReader` to get a string
+
+## 0.1.5
+
+### Patch Changes
+
+- 8a9b78a: chore: split readers into different files
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,7 +1,6 @@
 /**
  * Top level types to avoid circular dependencies
  */
-
 import { Event } from "./callbacks/CallbackManager";
 import { Response } from "./Response";
 
@@ -37,6 +36,7 @@ export interface BaseQueryEngine {
  * Simple Tool interface. Likely to change.
  */
 export interface BaseTool {
+  call?: (...args: any[]) => any;
   metadata: ToolMetadata;
 }
 
@@ -45,11 +45,6 @@ export interface BaseTool {
  */
 export interface QueryEngineTool extends BaseTool {
   queryEngine: BaseQueryEngine;
-}
-
-export interface SubQuestion {
-  subQuestion: string;
-  toolName: string;
 }
 
 /**
@@ -69,14 +64,29 @@ export interface StructuredOutput<T> {
   parsedOutput: T;
 }
 
+export type ToolParameters = {
+  type: string | "object";
+  properties: Record<string, { type: string; description?: string }>;
+  required?: string[];
+};
+
 export interface ToolMetadata {
   description: string;
   name: string;
+  parameters?: ToolParameters;
+  argsKwargs?: Record<string, any>;
 }
 
-/**
- * QuestionGenerators generate new questions for the LLM using tools and a user query.
- */
-export interface BaseQuestionGenerator {
-  generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]>;
+export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
+
+export class QueryBundle {
+  queryStr: string;
+
+  constructor(queryStr: string) {
+    this.queryStr = queryStr;
+  }
+
+  toString(): string {
+    return this.queryStr;
+  }
 }

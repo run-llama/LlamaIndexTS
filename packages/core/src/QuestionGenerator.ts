@@ -4,15 +4,10 @@ import {
   buildToolsText,
   defaultSubQuestionPrompt,
 } from "./Prompt";
+import { BaseQuestionGenerator, SubQuestion } from "./engines/query/types";
 import { OpenAI } from "./llm/LLM";
 import { LLM } from "./llm/types";
-import {
-  BaseOutputParser,
-  BaseQuestionGenerator,
-  StructuredOutput,
-  SubQuestion,
-  ToolMetadata,
-} from "./types";
+import { BaseOutputParser, StructuredOutput, ToolMetadata } from "./types";
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.

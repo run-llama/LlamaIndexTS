@@ -1,4 +1,5 @@
-import { BaseOutputParser, StructuredOutput, SubQuestion } from "./types";
+import { SubQuestion } from "./engines/query/types";
+import { BaseOutputParser, StructuredOutput } from "./types";
 
 /**
  * Error class for output parsing. Due to the nature of LLMs, anytime we use LLM
@@ -73,9 +74,6 @@ export class SubQuestionOutputParser
 {
   parse(output: string): StructuredOutput<SubQuestion[]> {
     const parsed = parseJsonMarkdown(output);
-
-    // TODO add zod validation
-
     return { rawOutput: output, parsedOutput: parsed };
   }
 

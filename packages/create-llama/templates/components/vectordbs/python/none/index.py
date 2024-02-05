@@ -22,4 +22,4 @@ def get_chat_engine():
     storage_context = StorageContext.from_defaults(persist_dir=STORAGE_DIR)
     index = load_index_from_storage(storage_context, service_context=service_context)
     logger.info(f"Finished loading index from {STORAGE_DIR}")
-    return index.as_chat_engine()
+    return index.as_chat_engine(similarity_top_k=5, chat_mode="condense_plus_context")

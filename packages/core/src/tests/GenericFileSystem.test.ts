@@ -1,6 +1,7 @@
 import nodeFS from "node:fs/promises";
 import os from "os";
 import path from "path";
+import { defaultFS } from "../env";
 import {
   GenericFileSystem,
   InMemoryFileSystem,
@@ -16,7 +17,7 @@ type FileSystemUnderTest = {
   tempDir: string;
 };
 
-describe.each<FileSystemUnderTest>([
+const cases: FileSystemUnderTest[] = [
   {
     name: "InMemoryFileSystem",
     prepare: async () => {},
@@ -27,17 +28,19 @@ describe.each<FileSystemUnderTest>([
     tempDir: "./",
   },
   {
-    name: "Node.js fs",
+    name: "Default fs",
     prepare: async function () {
       this.tempDir = await nodeFS.mkdtemp(path.join(os.tmpdir(), "jest-"));
     },
     cleanup: async function () {
       await nodeFS.rm(this.tempDir, { recursive: true });
     },
-    implementation: nodeFS,
+    implementation: defaultFS,
     tempDir: "./",
   },
-])("Test %s", (testParams) => {
+];
+
+describe.each<FileSystemUnderTest>(cases)("Test %s", (testParams) => {
   let testFS: GenericFileSystem;
   let tempDir: string;
 
@@ -58,7 +61,7 @@ describe.each<FileSystemUnderTest>([
   describe("writeFile", () => {
     it("writes file to memory", async () => {
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
-      expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe(
+      expect(await testFS.readFile(`${tempDir}/test.txt`)).toBe(
         "Hello, world!",
       );
     });
@@ -66,7 +69,7 @@ describe.each<FileSystemUnderTest>([
     it("overwrites existing file", async () => {
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, world!");
       await testFS.writeFile(`${tempDir}/test.txt`, "Hello, again!");
-      expect(await testFS.readFile(`${tempDir}/test.txt`, "utf-8")).toBe(
+      expect(await testFS.readFile(`${tempDir}/test.txt`)).toBe(
         "Hello, again!",
       );
     });
@@ -75,7 +78,7 @@ describe.each<FileSystemUnderTest>([
   describe("readFile", () => {
     it("throws error for non-existing file", async () => {
       await expect(
-        testFS.readFile(`${tempDir}/not_exist.txt`, "utf-8"),
+        testFS.readFile(`${tempDir}/not_exist.txt`),
       ).rejects.toThrow();
     });
   });

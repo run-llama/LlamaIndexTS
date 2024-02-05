@@ -22,7 +22,7 @@ export class HTMLReader implements BaseReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
+    const dataBuffer = await fs.readFile(file);
     const htmlOptions = this.getOptions();
     const content = await this.parseContent(dataBuffer, htmlOptions);
     return [new Document({ text: content, id_: file })];

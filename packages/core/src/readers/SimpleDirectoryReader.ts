@@ -30,7 +30,7 @@ export class TextFileReader implements BaseReader {
     file: string,
     fs: CompleteFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
+    const dataBuffer = await fs.readFile(file);
     return [new Document({ text: dataBuffer, id_: file })];
   }
 }
@@ -49,7 +49,7 @@ export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   gif: new ImageReader(),
 };
 
-export type SimpleDirectoryReaderLoadDataProps = {
+export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
   fs?: CompleteFileSystem;
   defaultReader?: BaseReader | null;
@@ -64,12 +64,20 @@ export type SimpleDirectoryReaderLoadDataProps = {
 export class SimpleDirectoryReader implements BaseReader {
   constructor(private observer?: ReaderCallback) {}
 
-  async loadData({
-    directoryPath,
-    fs = defaultFS,
-    defaultReader = new TextFileReader(),
-    fileExtToReader = FILE_EXT_TO_READER,
-  }: SimpleDirectoryReaderLoadDataProps): Promise<Document[]> {
+  async loadData(
+    params: SimpleDirectoryReaderLoadDataParams | string,
+  ): Promise<Document[]> {
+    if (typeof params === "string") {
+      params = { directoryPath: params };
+    }
+
+    const {
+      directoryPath,
+      fs = defaultFS,
+      defaultReader = new TextFileReader(),
+      fileExtToReader = FILE_EXT_TO_READER,
+    } = params;
+
     // Observer can decide to skip the directory
     if (
       !this.doObserverCheck("directory", directoryPath, ReaderStatus.STARTED)

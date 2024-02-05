@@ -6,7 +6,6 @@ import {
   ObjectType,
   splitNodesByType,
 } from "../../Node";
-import { RetrieverQueryEngine } from "../../QueryEngine";
 import { BaseRetriever } from "../../Retriever";
 import {
   ServiceContext,
@@ -17,6 +16,7 @@ import {
   ClipEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings";
+import { RetrieverQueryEngine } from "../../engines/query";
 import { runTransformations } from "../../ingestion";
 import { BaseNodePostprocessor } from "../../postprocessors";
 import {
@@ -34,7 +34,10 @@ import {
   IndexDict,
   IndexStructType,
 } from "../BaseIndex";
-import { VectorIndexRetriever } from "./VectorIndexRetriever";
+import {
+  VectorIndexRetriever,
+  VectorIndexRetrieverOptions,
+} from "./VectorIndexRetriever";
 
 interface IndexStructOptions {
   indexStruct?: IndexDict;
@@ -260,7 +263,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return index;
   }
 
-  asRetriever(options?: any): VectorIndexRetriever {
+  asRetriever(
+    options?: Omit<VectorIndexRetrieverOptions, "index">,
+  ): VectorIndexRetriever {
     return new VectorIndexRetriever({ index: this, ...options });
   }
 
