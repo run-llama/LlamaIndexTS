@@ -12,12 +12,12 @@ from llama_index import (
 )
 
 
-def get_chat_engine():
+def get_index():
     service_context = create_service_context()
-    if os.environ.get("TOOL", "") != "":
-        tools = ToolFactory.from_env().to_tool_list()
-        return OpenAIAgent.from_tools(
-            tools=tools, llm=service_context.llm, verbose=True
+    # check if storage already exists
+    if not os.path.exists(STORAGE_DIR):
+        raise Exception(
+            "StorageContext is empty - call 'python app/engine/generate.py' to generate the storage first"
         )
     logger = logging.getLogger("uvicorn")
     # load the existing index
@@ -25,4 +25,4 @@ def get_chat_engine():
     storage_context = StorageContext.from_defaults(persist_dir=STORAGE_DIR)
     index = load_index_from_storage(storage_context, service_context=service_context)
     logger.info(f"Finished loading index from {STORAGE_DIR}")
-    return index.as_chat_engine(similarity_top_k=5, chat_mode="condense_plus_context")
+    return index
