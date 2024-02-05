@@ -69,13 +69,13 @@ async function callFunction(
 }
 
 type OpenAIAgentWorkerParams = {
-  tools: BaseTool[];
+  tools?: BaseTool[];
   llm?: OpenAI;
   prefixMessages?: ChatMessage[];
   verbose?: boolean;
   maxFunctionCalls?: number;
   callbackManager?: CallbackManager | undefined;
-  toolRetriever?: ObjectRetriever<BaseTool>;
+  toolRetriever?: ObjectRetriever;
 };
 
 type CallFunctionOutput = {
@@ -95,13 +95,13 @@ export class OpenAIAgentWorker implements AgentWorker {
   public prefixMessages: ChatMessage[];
   public callbackManager: CallbackManager | undefined;
 
-  private _getTools: (input: string) => BaseTool[];
+  private _getTools: (input: string) => Promise<BaseTool[]> | BaseTool[];
 
   /**
    * Initialize.
    */
   constructor({
-    tools,
+    tools = [],
     llm,
     prefixMessages,
     verbose,
@@ -120,8 +120,11 @@ export class OpenAIAgentWorker implements AgentWorker {
     } else if (tools.length > 0) {
       this._getTools = () => tools;
     } else if (toolRetriever) {
-      // @ts-ignore
-      this._getTools = (message: string) => toolRetriever.retrieve(message);
+      this._getTools = async (message: string) => {
+        const tools = await toolRetriever.retrieve(message);
+        // @ts-ignore
+        return tools.map((tool: BaseTool) => tool.node);
+      };
     } else {
       this._getTools = () => [];
     }
@@ -298,7 +301,7 @@ export class OpenAIAgentWorker implements AgentWorker {
    * @param input: input
    * @returns: tools
    */
-  getTools(input: string): BaseTool[] {
+  async getTools(input: string): Promise<BaseTool[]> {
     return this._getTools(input);
   }
 
@@ -308,7 +311,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     mode: ChatResponseMode = ChatResponseMode.WAIT,
     toolChoice: string | { [key: string]: any } = "auto",
   ): Promise<TaskStepOutput> {
-    const tools = this.getTools(task.input);
+    const tools = (await this.getTools(task.input)) ?? [];
 
     if (step.input) {
       addUserStepToMemory(step, task.extraState.newMemory, this._verbose);
@@ -316,9 +319,9 @@ export class OpenAIAgentWorker implements AgentWorker {
 
     const openaiTools = tools.map((tool) =>
       toOpenAiTool({
-        name: tool.metadata.name,
-        description: tool.metadata.description,
-        parameters: tool.metadata.parameters,
+        name: tool?.metadata?.name ?? "",
+        description: tool?.metadata?.description ?? "",
+        parameters: tool?.metadata?.parameters,
       }),
     );
 
@@ -343,6 +346,8 @@ export class OpenAIAgentWorker implements AgentWorker {
     } else {
       isDone = false;
       for (const toolCall of latestToolCalls) {
+        console.log({ toolCall: toolCall.function });
+
         const { message, toolOutput } = await this.callFunction(
           tools,
           toolCall,
