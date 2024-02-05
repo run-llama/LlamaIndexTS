@@ -32,8 +32,6 @@ export class OpenAIEmbedding extends BaseEmbedding {
   /** number of dimensions of the resulting vector, for models that support choosing fewer dimensions. undefined will default to model default */
   dimensions: number | undefined;
 
-  embedBatchSize: number;
-
   // OpenAI session params
 
   /** api key */
