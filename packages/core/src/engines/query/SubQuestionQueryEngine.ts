@@ -126,12 +126,15 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
         return null;
       }
 
-      const response = await queryEngine?.call?.({
+      const responseText = await queryEngine?.call?.({
         query: question,
         parentEvent,
       });
 
-      const responseText = response;
+      if (!responseText) {
+        return null;
+      }
+
       const nodeText = `Sub question: ${question}\nResponse: ${responseText}`;
       const node = new TextNode({ text: nodeText });
       return { node, score: 0 };
