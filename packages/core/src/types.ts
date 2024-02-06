@@ -1,7 +1,6 @@
 /**
  * Top level types to avoid circular dependencies
  */
-
 import { Event } from "./callbacks/CallbackManager";
 import { Response } from "./Response";
 
@@ -37,6 +36,7 @@ export interface BaseQueryEngine {
  * Simple Tool interface. Likely to change.
  */
 export interface BaseTool {
+  call?: (...args: any[]) => any;
   metadata: ToolMetadata;
 }
 
@@ -64,9 +64,17 @@ export interface StructuredOutput<T> {
   parsedOutput: T;
 }
 
+export type ToolParameters = {
+  type: string | "object";
+  properties: Record<string, { type: string; description?: string }>;
+  required?: string[];
+};
+
 export interface ToolMetadata {
   description: string;
   name: string;
+  parameters?: ToolParameters;
+  argsKwargs?: Record<string, any>;
 }
 
 export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;

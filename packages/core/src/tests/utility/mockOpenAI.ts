@@ -64,6 +64,26 @@ export function mockLlmGeneration({
     );
 }
 
+export function mockLlmToolCallGeneration({
+  languageModel,
+  callbackManager,
+}: {
+  languageModel: OpenAI;
+  callbackManager: CallbackManager;
+}) {
+  jest.spyOn(languageModel, "chat").mockImplementation(
+    () =>
+      new Promise((resolve) =>
+        resolve({
+          message: {
+            content: "The sum is 2",
+            role: "assistant",
+          },
+        }),
+      ),
+  );
+}
+
 export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {
   jest.spyOn(embedModel, "getTextEmbedding").mockImplementation(async (x) => {
     return new Promise((resolve) => {

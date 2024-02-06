@@ -1,8 +1,9 @@
 import { AstraDB } from "@datastax/astra-db-ts";
 import { Collection } from "@datastax/astra-db-ts/dist/collections";
 import { CreateCollectionOptions } from "@datastax/astra-db-ts/dist/collections/options";
-import { BaseNode, Document, MetadataMode } from "../../Node";
+import { BaseNode, MetadataMode } from "../../Node";
 import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
+import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 const MAX_INSERT_BATCH_SIZE = 20;
 
@@ -12,7 +13,7 @@ export class AstraDBVectorStore implements VectorStore {
 
   astraDBClient: AstraDB;
   idKey: string;
-  contentKey: string | undefined; // if undefined the entirety of the node aside from the id and embedding will be stored as content
+  contentKey: string;
   metadataKey: string;
 
   private collection: Collection | undefined;
@@ -22,6 +23,7 @@ export class AstraDBVectorStore implements VectorStore {
       params?: {
         token: string;
         endpoint: string;
+        namespace: string;
       };
     },
   ) {
@@ -40,11 +42,15 @@ export class AstraDBVectorStore implements VectorStore {
       if (!endpoint) {
         throw new Error("Must specify ASTRA_DB_ENDPOINT via env variable.");
       }
-      this.astraDBClient = new AstraDB(token, endpoint);
+      const namespace =
+        init?.params?.namespace ??
+        process.env.ASTRA_DB_NAMESPACE ??
+        "default_keyspace";
+      this.astraDBClient = new AstraDB(token, endpoint, namespace);
     }
 
     this.idKey = init?.idKey ?? "_id";
-    this.contentKey = init?.contentKey;
+    this.contentKey = init?.contentKey ?? "content";
     this.metadataKey = init?.metadataKey ?? "metadata";
   }
 
@@ -102,12 +108,20 @@ export class AstraDBVectorStore implements VectorStore {
     if (!nodes || nodes.length === 0) {
       return [];
     }
+
     const dataToInsert = nodes.map((node) => {
+      const metadata = nodeToMetadata(
+        node,
+        true,
+        this.contentKey,
+        this.flatMetadata,
+      );
+
       return {
-        _id: node.id_,
         $vector: node.getEmbedding(),
-        content: node.getContent(MetadataMode.ALL),
-        metadata: node.metadata,
+        [this.idKey]: node.id_,
+        [this.contentKey]: node.getContent(MetadataMode.NONE),
+        [this.metadataKey]: metadata,
       };
     });
 
@@ -122,11 +136,10 @@ export class AstraDBVectorStore implements VectorStore {
 
     for (const batch of batchData) {
       console.debug(`Inserting batch of size ${batch.length}`);
-
-      const result = await collection.insertMany(batch);
+      await collection.insertMany(batch);
     }
 
-    return dataToInsert.map((node) => node._id);
+    return dataToInsert.map((node) => node?.[this.idKey] as string);
   }
 
   /**
@@ -185,27 +198,24 @@ export class AstraDBVectorStore implements VectorStore {
     const similarities: number[] = [];
 
     await cursor.forEach(async (row: Record<string, any>) => {
-      const id = row[this.idKey];
-      const embedding = row.$vector;
-      const similarity = row.$similarity;
-      const metadata = row[this.metadataKey];
+      const {
+        $vector: embedding,
+        $similarity: similarity,
+        [this.idKey]: id,
+        [this.contentKey]: content,
+        [this.metadataKey]: metadata = {},
+        ...rest
+      } = row;
 
-      // Remove fields from content
-      delete row[this.idKey];
-      delete row.$similarity;
-      delete row.$vector;
-      delete row[this.metadataKey];
-
-      const content = this.contentKey
-        ? row[this.contentKey]
-        : JSON.stringify(row);
-
-      const node = new Document({
-        id_: id,
-        text: content,
-        metadata: metadata ?? {},
-        embedding: embedding,
+      const node = metadataDictToNode(metadata, {
+        fallback: {
+          id,
+          text: content,
+          metadata,
+          ...rest,
+        },
       });
+      node.setContent(content);
 
       ids.push(id);
       similarities.push(similarity);

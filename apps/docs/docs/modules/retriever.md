@@ -16,6 +16,6 @@ const nodesWithScore = await retriever.retrieve("query string");
 
 ## API Reference
 
-- [SummaryIndexRetriever](../../api/classes/SummaryIndexRetriever.md)
-- [SummaryIndexLLMRetriever](../../api/classes/SummaryIndexLLMRetriever.md)
-- [VectorIndexRetriever](../../api/classes/VectorIndexRetriever.md)
+- [SummaryIndexRetriever](../api/classes/SummaryIndexRetriever.md)
+- [SummaryIndexLLMRetriever](../api/classes/SummaryIndexLLMRetriever.md)
+- [VectorIndexRetriever](../api/classes/VectorIndexRetriever.md)

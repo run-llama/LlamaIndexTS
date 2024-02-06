@@ -77,7 +77,14 @@ export class OpenAI extends BaseLLM {
   maxTokens?: number;
   additionalChatOptions?: Omit<
     Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
-    "max_tokens" | "messages" | "model" | "temperature" | "top_p" | "stream"
+    | "max_tokens"
+    | "messages"
+    | "model"
+    | "temperature"
+    | "top_p"
+    | "stream"
+    | "tools"
+    | "toolChoice"
   >;
 
   // OpenAI session params
@@ -179,7 +186,7 @@ export class OpenAI extends BaseLLM {
 
   mapMessageType(
     messageType: MessageType,
-  ): "user" | "assistant" | "system" | "function" {
+  ): "user" | "assistant" | "system" | "function" | "tool" {
     switch (messageType) {
       case "user":
         return "user";
@@ -189,9 +196,28 @@ export class OpenAI extends BaseLLM {
         return "system";
       case "function":
         return "function";
+      case "tool":
+        return "tool";
       default:
         return "user";
     }
+  }
+
+  toOpenAIMessage(messages: ChatMessage[]) {
+    return messages.map((message) => {
+      const additionalKwargs = message.additionalKwargs ?? {};
+
+      if (message.additionalKwargs?.toolCalls) {
+        additionalKwargs.tool_calls = message.additionalKwargs.toolCalls;
+        delete additionalKwargs.toolCalls;
+      }
+
+      return {
+        role: this.mapMessageType(message.role),
+        content: message.content,
+        ...additionalKwargs,
+      };
+    });
   }
 
   chat(
@@ -201,18 +227,15 @@ export class OpenAI extends BaseLLM {
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream } = params;
-    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
+    const { messages, parentEvent, stream, tools, toolChoice } = params;
+
+    let baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
-      messages: messages.map(
-        (message) =>
-          ({
-            role: this.mapMessageType(message.role),
-            content: message.content,
-          }) as ChatCompletionMessageParam,
-      ),
+      tools: tools,
+      tool_choice: toolChoice,
+      messages: this.toOpenAIMessage(messages) as ChatCompletionMessageParam[],
       top_p: this.topP,
       ...this.additionalChatOptions,
     };
@@ -221,6 +244,7 @@ export class OpenAI extends BaseLLM {
     if (stream) {
       return this.streamChat(params);
     }
+
     // Non-streaming
     const response = await this.session.openai.chat.completions.create({
       ...baseRequestParams,
@@ -228,8 +252,19 @@ export class OpenAI extends BaseLLM {
     });
 
     const content = response.choices[0].message?.content ?? "";
+
+    const kwargsOutput: Record<string, any> = {};
+
+    if (response.choices[0].message?.tool_calls) {
+      kwargsOutput.toolCalls = response.choices[0].message.tool_calls;
+    }
+
     return {
-      message: { content, role: response.choices[0].message.role },
+      message: {
+        content,
+        role: response.choices[0].message.role,
+        additionalKwargs: kwargsOutput,
+      },
     };
   }
 
