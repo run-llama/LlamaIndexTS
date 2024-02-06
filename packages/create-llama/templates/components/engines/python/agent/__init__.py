@@ -31,19 +31,17 @@ def create_agent_from_llm(
 
 
 def get_chat_engine():
-    # Init query tool
+    tools = []
+
+    # Add query tool
     index = get_index()
     llm = index.service_context.llm
     query_engine = index.as_query_engine(similarity_top_k=5)
     query_engine_tool = QueryEngineTool.from_defaults(query_engine=query_engine)
+    tools.append(query_engine_tool)
 
-    tools = [query_engine_tool]
-
-    # Init additional tools
-    tool_specs = ToolFactory.from_env()
-    additional_tools = []
-    for tool_spec in tool_specs:
-        tools += tool_spec.to_tool_list()
+    # Add additional tools
+    tools += ToolFactory.from_env()
 
     return create_agent_from_llm(
         llm=llm,
