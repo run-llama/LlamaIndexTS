@@ -42,7 +42,11 @@ export class NotionReader implements BaseReader {
   toDocuments(pages: Pages): Document[] {
     return Object.values(pages).map((page) => {
       const text = pageToString(page);
-      return new Document({ text, metadata: page.metadata });
+      return new Document({
+        id_: page.metadata.id, // Use the Notion-provided UUID for the document
+        text,
+        metadata: page.metadata,
+      });
     });
   }
 
