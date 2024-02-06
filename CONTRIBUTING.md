@@ -84,27 +84,9 @@ Any changes you make should be reflected in the browser. If you need to regenera
 To publish a new version of the library, run
 
 ```shell
-pnpm release # will run the build command, run the tests, and create a new version commit
-pnpm new-llamaindex # only release the llamaindex package
-pnpm new-create-llama # only release the create-llama package
-```
-
-### Release `llamaindex`
-
-```shell
-cd packages/core/dist
-pnpm publish
-```
-
-### Release `create-llama`
-
-```shell
-cd packages/create-llama
-pnpm publish
-```
-
-### Push new changes to the repository
-
-```shell
-git push
+pnpm new-llamaindex
+pnpm new-create-llama
+pnpm release
+git push # push to the main branch
+git push --tags
 ```
