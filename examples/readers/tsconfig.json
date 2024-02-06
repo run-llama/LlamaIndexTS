@@ -5,7 +5,7 @@
     "moduleResolution": "node16",
     "outDir": "./dist",
     "types": ["node"],
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts"]
 }
