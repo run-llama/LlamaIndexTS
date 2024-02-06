@@ -266,7 +266,14 @@ export class AgentRunner extends BaseAgentRunner {
     let resultOutput;
 
     while (true) {
-      const curStepOutput = await this._runStep(task.taskId);
+      const curStepOutput = await this._runStep(
+        task.taskId,
+        undefined,
+        ChatResponseMode.WAIT,
+        {
+          toolChoice,
+        },
+      );
 
       if (curStepOutput.isLast) {
         resultOutput = curStepOutput;
