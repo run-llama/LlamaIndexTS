@@ -70,6 +70,11 @@ export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {
       resolve([1, 0, 0, 0, 0, 0]);
     });
   });
+  jest.spyOn(embedModel, "getTextEmbeddings").mockImplementation(async (x) => {
+    return new Promise((resolve) => {
+      resolve([[1, 0, 0, 0, 0, 0]]);
+    });
+  });
   jest.spyOn(embedModel, "getQueryEmbedding").mockImplementation(async (x) => {
     return new Promise((resolve) => {
       resolve([0, 1, 0, 0, 0, 0]);
