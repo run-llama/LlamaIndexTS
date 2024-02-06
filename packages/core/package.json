@@ -128,10 +128,10 @@
       "import": "./dist/TextSplitter.mjs",
       "require": "./dist/TextSplitter.js"
     },
-    "./Tool": {
-      "types": "./dist/Tool.d.mts",
-      "import": "./dist/Tool.mjs",
-      "require": "./dist/Tool.js"
+    "./tools": {
+      "types": "./dist/tools.d.mts",
+      "import": "./dist/tools.mjs",
+      "require": "./dist/tools.js"
     },
     "./readers/AssemblyAIReader": {
       "types": "./dist/readers/AssemblyAIReader.d.mts",
