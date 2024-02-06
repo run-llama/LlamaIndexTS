@@ -10,6 +10,7 @@ import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { templatesDir } from "./helpers/dir";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
+import { supportedTools, toolsRequireConfig } from "./helpers/tools";
 
 export type QuestionArgs = Omit<
   InstallAppArgs,
@@ -70,6 +71,7 @@ const defaults: QuestionArgs = {
     type: "none",
     config: {},
   },
+  tools: [],
 };
 
 const handlers = {
@@ -214,7 +216,12 @@ export const askQuestions = async (
 
         const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
         const hasVectorDb = program.vectorDb && program.vectorDb !== "none";
-        if (!hasVectorDb && hasOpenAiKey) {
+        // Can run the app if all tools do not require configuration
+        if (
+          !hasVectorDb &&
+          hasOpenAiKey &&
+          !toolsRequireConfig(program.tools)
+        ) {
           actionChoices.push({
             title:
               "Generate code, install dependencies, and run the app (~2 min)",
@@ -560,6 +567,29 @@ export const askQuestions = async (
       );
       program.vectorDb = vectorDb;
       preferences.vectorDb = vectorDb;
+    }
+  }
+
+  if (
+    !program.tools &&
+    program.framework === "fastapi" &&
+    program.engine === "context"
+  ) {
+    if (ciInfo.isCI) {
+      program.tools = getPrefOrDefault("tools");
+    } else {
+      const toolChoices = supportedTools.map((tool) => ({
+        title: tool.display,
+        value: tool.name,
+      }));
+      const { tools } = await prompts({
+        type: "multiselect",
+        name: "tools",
+        message: "Which tools would you like to use?",
+        choices: toolChoices,
+      });
+      program.tools = tools;
+      preferences.tools = tools;
     }
   }
 

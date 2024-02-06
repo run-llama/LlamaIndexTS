@@ -6,6 +6,7 @@ import terminalLink from "terminal-link";
 import { copy } from "./copy";
 import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
+import { getToolConfig } from "./tools";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
 interface Dependency {
@@ -128,6 +129,7 @@ export const installPythonTemplate = async ({
   engine,
   vectorDb,
   dataSource,
+  tools,
   postInstallAction,
 }: Pick<
   InstallTemplateArgs,
@@ -137,6 +139,7 @@ export const installPythonTemplate = async ({
   | "engine"
   | "vectorDb"
   | "dataSource"
+  | "tools"
   | "postInstallAction"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
@@ -162,19 +165,43 @@ export const installPythonTemplate = async ({
   });
 
   if (engine === "context") {
+    const enginePath = path.join(root, "app", "engine");
     const compPath = path.join(templatesDir, "components");
-    let vectorDbDirName = vectorDb ?? "none";
+
+    const vectorDbDirName = vectorDb ?? "none";
     const VectorDBPath = path.join(
       compPath,
       "vectordbs",
       "python",
       vectorDbDirName,
     );
-    const enginePath = path.join(root, "app", "engine");
-    await copy("**", path.join(root, "app", "engine"), {
+    await copy("**", enginePath, {
       parents: true,
       cwd: VectorDBPath,
     });
+
+    // Copy engine code
+    if (tools !== undefined && tools.length > 0) {
+      await copy("**", enginePath, {
+        parents: true,
+        cwd: path.join(compPath, "engines", "python", "agent"),
+      });
+      // Write tools_config.json
+      const configContent: Record<string, any> = {};
+      tools.forEach((tool) => {
+        configContent[tool] = getToolConfig(tool) ?? {};
+      });
+      const configFilePath = path.join(root, "tools_config.json");
+      await fs.writeFile(
+        configFilePath,
+        JSON.stringify(configContent, null, 2),
+      );
+    } else {
+      await copy("**", enginePath, {
+        parents: true,
+        cwd: path.join(compPath, "engines", "python", "chat"),
+      });
+    }
 
     const dataSourceType = dataSource?.type;
     if (dataSourceType !== undefined && dataSourceType !== "none") {

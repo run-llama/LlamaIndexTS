@@ -1,4 +1,9 @@
-import { Document, SubQuestionQueryEngine, VectorStoreIndex } from "llamaindex";
+import {
+  Document,
+  QueryEngineTool,
+  SubQuestionQueryEngine,
+  VectorStoreIndex,
+} from "llamaindex";
 
 import essay from "./essay";
 
@@ -6,16 +11,18 @@ import essay from "./essay";
   const document = new Document({ text: essay, id_: essay });
   const index = await VectorStoreIndex.fromDocuments([document]);
 
-  const queryEngine = SubQuestionQueryEngine.fromDefaults({
-    queryEngineTools: [
-      {
-        queryEngine: index.asQueryEngine(),
-        metadata: {
-          name: "pg_essay",
-          description: "Paul Graham essay on What I Worked On",
-        },
+  const queryEngineTools = [
+    new QueryEngineTool({
+      queryEngine: index.asQueryEngine(),
+      metadata: {
+        name: "pg_essay",
+        description: "Paul Graham essay on What I Worked On",
       },
-    ],
+    }),
+  ];
+
+  const queryEngine = SubQuestionQueryEngine.fromDefaults({
+    queryEngineTools,
   });
 
   const response = await queryEngine.query({
