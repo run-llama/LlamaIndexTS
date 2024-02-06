@@ -14,6 +14,7 @@ module.exports = {
 
           "ASTRA_DB_APPLICATION_TOKEN",
           "ASTRA_DB_ENDPOINT",
+          "ASTRA_DB_NAMESPACE",
 
           "AZURE_OPENAI_KEY",
           "AZURE_OPENAI_ENDPOINT",

@@ -9,7 +9,7 @@ from llama_index.vector_stores import MongoDBAtlasVectorSearch
 from app.engine.context import create_service_context
 
 
-def get_chat_engine():
+def get_index():
     service_context = create_service_context()
     logger = logging.getLogger("uvicorn")
     logger.info("Connecting to index from MongoDB...")
@@ -20,4 +20,4 @@ def get_chat_engine():
     )
     index = VectorStoreIndex.from_vector_store(store, service_context)
     logger.info("Finished connecting to index from MongoDB.")
-    return index.as_chat_engine(similarity_top_k=5, chat_mode="condense_plus_context")
+    return index
