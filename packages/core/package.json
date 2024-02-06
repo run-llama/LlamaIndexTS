@@ -43,8 +43,12 @@
     "@types/pg": "^8.11.0",
     "bunchee": "^4.4.6",
     "edit-json-file": "^1.8.0",
+    "form-data": "^4.0.0",
+    "js-base64": "^3.7.6",
     "madge": "^6.1.0",
-    "typescript": "^5.3.3"
+    "qs": "^6.11.2",
+    "typescript": "^5.3.3",
+    "url-join": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -193,6 +197,11 @@
       "types": "./dist/readers/SimpleMongoReader.d.mts",
       "import": "./dist/readers/SimpleMongoReader.mjs",
       "require": "./dist/readers/SimpleMongoReader.js"
+    },
+    "./platform": {
+      "types": "./dist/platform.d.mts",
+      "import": "./dist/platform.mjs",
+      "require": "./dist/platform.js"
     }
   },
   "files": [

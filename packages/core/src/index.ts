@@ -21,6 +21,7 @@ export * from "./ingestion";
 export * from "./llm";
 export * from "./nodeParsers";
 export * from "./objects";
+export * from "./platform";
 export * from "./postprocessors";
 export * from "./prompts";
 export * from "./readers";

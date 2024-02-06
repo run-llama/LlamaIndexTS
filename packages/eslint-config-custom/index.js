@@ -55,6 +55,7 @@ module.exports = {
           "NEXT_PUBLIC_CHAT_API",
           "MODEL",
           "NEXT_PUBLIC_MODEL",
+          "PLATFORM_API_KEY",
         ],
       },
     ],
