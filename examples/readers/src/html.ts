@@ -4,7 +4,7 @@ import { HTMLReader } from "llamaindex/readers/HTMLReader";
 async function main() {
   // Load page
   const reader = new HTMLReader();
-  const documents = await reader.loadData("./data/llamaindex.html");
+  const documents = await reader.loadData("../data/llamaindex.html");
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments(documents);

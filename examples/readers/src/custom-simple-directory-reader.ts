@@ -13,7 +13,7 @@ class ZipReader implements BaseReader {
 
 const reader = new SimpleDirectoryReader();
 const documents = await reader.loadData({
-  directoryPath: "./data",
+  directoryPath: "../data",
   defaultReader: new TextFileReader(),
   fileExtToReader: {
     ...FILE_EXT_TO_READER,
