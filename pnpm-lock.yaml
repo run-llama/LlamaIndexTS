@@ -256,8 +256,8 @@ importers:
         specifier: ^8.11.0
         version: 8.11.0
       bunchee:
-        specifier: ^4.4.3
-        version: 4.4.3(typescript@5.3.3)
+        specifier: ^4.4.6
+        version: 4.4.6(typescript@5.3.3)
       edit-json-file:
         specifier: ^1.8.0
         version: 1.8.0
@@ -3538,20 +3538,7 @@ packages:
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
-      magic-string: 0.30.5
-      rollup: 4.9.5
-    dev: true
-
-  /@rollup/plugin-esm-shim@0.1.5(rollup@4.9.5):
-    resolution: {integrity: sha512-xnIjDm/0EbqAw0/rR1UE7eAo9db0ftGPqT8RUCFtkFxtCuspbbmj+wutoyxm32jBytyO3SgkxSG17OR893fV7A==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      magic-string: 0.30.5
+      magic-string: 0.30.7
       rollup: 4.9.5
     dev: true
 
@@ -3596,7 +3583,7 @@ packages:
         optional: true
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.9.5)
-      magic-string: 0.30.5
+      magic-string: 0.30.7
       rollup: 4.9.5
     dev: true
 
@@ -5644,8 +5631,8 @@ packages:
       semver: 7.5.4
     dev: true
 
-  /bunchee@4.4.3(typescript@5.3.3):
-    resolution: {integrity: sha512-N67vxbBzdBOpbgwQtynvfKfM5mlvNw+f0IYFkrM0AL9/GFw/Zl6YB+4A/ph71A2OUvTLjWf4IRJIlQbBeR2xsg==}
+  /bunchee@4.4.6(typescript@5.3.3):
+    resolution: {integrity: sha512-sRYDasLVGtxv/KmnRrlFpCCt23l3tZHi2ZhBlzJLmuT7c5ULorf2iJfFJzoH0g5hCgtgwkvPuO49EGFCVCVlWQ==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
@@ -5657,7 +5644,6 @@ packages:
         optional: true
     dependencies:
       '@rollup/plugin-commonjs': 25.0.7(rollup@4.9.5)
-      '@rollup/plugin-esm-shim': 0.1.5(rollup@4.9.5)
       '@rollup/plugin-json': 6.1.0(rollup@4.9.5)
       '@rollup/plugin-node-resolve': 15.2.3(rollup@4.9.5)
       '@rollup/plugin-replace': 5.0.5(rollup@4.9.5)
@@ -5667,6 +5653,7 @@ packages:
       '@swc/helpers': 0.5.3
       arg: 5.0.2
       clean-css: 5.3.3
+      magic-string: 0.30.7
       pretty-bytes: 5.6.0
       rimraf: 5.0.5
       rollup: 4.9.5
@@ -10582,8 +10569,8 @@ packages:
       - supports-color
     dev: true
 
-  /magic-string@0.30.5:
-    resolution: {integrity: sha512-7xlpfBaQaP/T6Vh8MO/EqXSW5En6INHEvEXQiuff7Gku0PWjU3uf6w/j9o7O+SpB5fOAkrI5HeoNgwjEO0pFsA==}
+  /magic-string@0.30.7:
+    resolution: {integrity: sha512-8vBuFF/I/+OSLRmdf2wwFCJCz+nSn0m6DPvGH1fS/KiQoSaR+sETbov0eIk9KhEKy8CYqIkIAnbohxT/4H0kuA==}
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
@@ -13826,7 +13813,7 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: ^4.5 || ^5.0
     dependencies:
-      magic-string: 0.30.5
+      magic-string: 0.30.7
       rollup: 4.9.5
       typescript: 5.3.3
     optionalDependencies:
@@ -13853,7 +13840,7 @@ packages:
     peerDependencies:
       rollup: ^2.0.0 || ^3.0.0 || ^4.0.0
     dependencies:
-      magic-string: 0.30.5
+      magic-string: 0.30.7
       rollup: 4.9.5
     dev: true
 

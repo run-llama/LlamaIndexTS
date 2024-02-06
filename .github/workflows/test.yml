@@ -41,7 +41,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: typecheck-build-dits
+          name: typecheck-build-dist
           path: ./packages/core/dist
           if-no-files-found: error
   typecheck-examples:

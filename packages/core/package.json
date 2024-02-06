@@ -40,7 +40,7 @@
     "@types/node": "^18.19.10",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.0",
-    "bunchee": "^4.4.3",
+    "bunchee": "^4.4.6",
     "edit-json-file": "^1.8.0",
     "madge": "^6.1.0",
     "typescript": "^5.3.3"
