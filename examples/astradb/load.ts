@@ -10,9 +10,9 @@ const collectionName = "movie_reviews";
 async function main() {
   try {
     const reader = new PapaCSVReader(false);
-    const docs = await reader.loadData("../data/movie_reviews.csv");
+    const docs = await reader.loadData("./data/movie_reviews.csv");
 
-    const astraVS = new AstraDBVectorStore();
+    const astraVS = new AstraDBVectorStore({ contentKey: "reviewtext" });
     await astraVS.create(collectionName, {
       vector: { dimension: 1536, metric: "cosine" },
     });
