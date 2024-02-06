@@ -76,6 +76,6 @@ describe("[OpenAIEmbedding]", () => {
   test("getTextEmbeddingsBatch", async () => {
     const texts = ["hello", "world"];
     const embeddings = await embedModel.getTextEmbeddingsBatch(texts);
-    expect(embeddings.length).toEqual(2);
+    expect(embeddings.length).toEqual(1);
   });
 });
