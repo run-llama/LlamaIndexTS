@@ -20,20 +20,16 @@ const DEFAULT_PARAMETERS = {
 };
 
 export class QueryEngineTool implements BaseTool {
-  private _queryEngine: BaseQueryEngine;
-  private _metadata: ToolMetadata;
+  private queryEngine: BaseQueryEngine;
+  metadata: ToolMetadata;
 
   constructor({ queryEngine, metadata }: QueryEngineToolParams) {
-    this._queryEngine = queryEngine;
-    this._metadata = {
+    this.queryEngine = queryEngine;
+    this.metadata = {
       name: metadata?.name ?? DEFAULT_NAME,
       description: metadata?.description ?? DEFAULT_DESCRIPTION,
       parameters: metadata?.parameters ?? DEFAULT_PARAMETERS,
     };
-  }
-
-  get metadata() {
-    return this._metadata;
   }
 
   async call(...args: any[]): Promise<any> {
@@ -47,7 +43,7 @@ export class QueryEngineTool implements BaseTool {
       );
     }
 
-    const response = await this._queryEngine.query({ query: queryStr });
+    const response = await this.queryEngine.query({ query: queryStr });
 
     return response.response;
   }
