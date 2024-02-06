@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@turbo/gen": "^1.11.3",
+    "@turbo/gen": "^1.12.2",
     "@types/jest": "^29.5.11",
     "eslint": "^8.56.0",
     "eslint-config-custom": "workspace:*",
@@ -28,10 +28,10 @@
     "prettier": "^3.2.4",
     "prettier-plugin-organize-imports": "^3.2.4",
     "ts-jest": "^29.1.2",
-    "turbo": "^1.11.3",
+    "turbo": "^1.12.2",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@8.14.3+sha256.2d0363bb6c314daa67087ef07743eea1ba2e2d360c835e8fec6b5575e4ed9484",
+  "packageManager": "pnpm@8.15.1",
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",

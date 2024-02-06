@@ -40,7 +40,7 @@
     "@types/node": "^18.19.10",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.0",
-    "bunchee": "^4.4.3",
+    "bunchee": "^4.4.6",
     "edit-json-file": "^1.8.0",
     "madge": "^6.1.0",
     "typescript": "^5.3.3"
@@ -118,11 +118,6 @@
       "import": "./dist/Response.mjs",
       "require": "./dist/Response.js"
     },
-    "./Retriever": {
-      "types": "./dist/Retriever.d.mts",
-      "import": "./dist/Retriever.mjs",
-      "require": "./dist/Retriever.js"
-    },
     "./ServiceContext": {
       "types": "./dist/ServiceContext.d.mts",
       "import": "./dist/ServiceContext.mjs",
@@ -133,10 +128,10 @@
       "import": "./dist/TextSplitter.mjs",
       "require": "./dist/TextSplitter.js"
     },
-    "./Tool": {
-      "types": "./dist/Tool.d.mts",
-      "import": "./dist/Tool.mjs",
-      "require": "./dist/Tool.js"
+    "./tools": {
+      "types": "./dist/tools.d.mts",
+      "import": "./dist/tools.mjs",
+      "require": "./dist/tools.js"
     },
     "./readers/AssemblyAIReader": {
       "types": "./dist/readers/AssemblyAIReader.d.mts",

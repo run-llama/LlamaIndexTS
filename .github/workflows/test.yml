@@ -38,6 +38,12 @@ jobs:
       - name: Run Circular Dependency Check
         run: pnpm run circular-check
         working-directory: ./packages/core
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: typecheck-build-dist
+          path: ./packages/core/dist
+          if-no-files-found: error
   typecheck-examples:
     runs-on: ubuntu-latest
 
