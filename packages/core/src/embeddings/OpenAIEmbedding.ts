@@ -59,7 +59,9 @@ export class OpenAIEmbedding extends BaseEmbedding {
     this.model = init?.model ?? "text-embedding-ada-002";
     this.dimensions = init?.dimensions; // if no dimensions provided, will be undefined/not sent to OpenAI
 
+    this.embedBatchSize = init?.embedBatchSize ?? 10;
     this.maxRetries = init?.maxRetries ?? 10;
+
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalSessionOptions = init?.additionalSessionOptions;
 
@@ -100,7 +102,9 @@ export class OpenAIEmbedding extends BaseEmbedding {
     }
   }
 
-  private async getOpenAIEmbedding(input: string) {
+  private async getOpenAIEmbedding(
+    input: string | string[],
+  ): Promise<number[]> {
     const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       dimensions: this.dimensions, // only sent to OpenAI if set by user
@@ -108,6 +112,11 @@ export class OpenAIEmbedding extends BaseEmbedding {
     });
 
     return data[0].embedding;
+  }
+
+  async getTextEmbeddings(texts: string[]): Promise<number[][]> {
+    const embeddings = await this.getOpenAIEmbedding(texts);
+    return Array(embeddings);
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {
