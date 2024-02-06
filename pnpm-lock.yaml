@@ -135,7 +135,7 @@ importers:
         version: 16.4.1
       llamaindex:
         specifier: latest
-        version: 0.1.9(typescript@5.3.3)
+        version: link:../packages/core
       mongodb:
         specifier: ^6.2.0
         version: 6.3.0
