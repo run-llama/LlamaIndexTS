@@ -11,7 +11,7 @@ import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { runApp } from "./helpers/run-app";
-import { supportingTools } from "./helpers/tools";
+import { supportedTools } from "./helpers/tools";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 import { QuestionArgs, askQuestions, onPromptState } from "./questions";
@@ -169,8 +169,8 @@ if (process.argv.includes("--tools")) {
     program.tools = [];
   } else {
     program.tools = program.tools.split(",");
-    // Check tools is supported
-    const toolsName = supportingTools.map((tool) => tool.name);
+    // Check if tools are available
+    const toolsName = supportedTools.map((tool) => tool.name);
     program.tools.forEach((tool: string) => {
       if (!toolsName.includes(tool)) {
         console.error(

@@ -10,7 +10,7 @@ import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { templatesDir } from "./helpers/dir";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
-import { isRequireConfig, supportingTools } from "./helpers/tools";
+import { supportedTools, toolsRequireConfig } from "./helpers/tools";
 
 export type QuestionArgs = Omit<
   InstallAppArgs,
@@ -217,10 +217,11 @@ export const askQuestions = async (
         const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
         const hasVectorDb = program.vectorDb && program.vectorDb !== "none";
         // Can run the app if all tools do not require configuration
-        const instantRunAbleTools = !isRequireConfig(
-          (program.tools as string[]) || [],
-        );
-        if (!hasVectorDb && hasOpenAiKey && instantRunAbleTools) {
+        if (
+          !hasVectorDb &&
+          hasOpenAiKey &&
+          !toolsRequireConfig(program.tools)
+        ) {
           actionChoices.push({
             title:
               "Generate code, install dependencies, and run the app (~2 min)",
@@ -577,7 +578,7 @@ export const askQuestions = async (
     if (ciInfo.isCI) {
       program.tools = getPrefOrDefault("tools");
     } else {
-      const toolChoices = supportingTools.map((tool) => ({
+      const toolChoices = supportedTools.map((tool) => ({
         title: tool.display,
         value: tool.name,
       }));

@@ -12,7 +12,7 @@ import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./helpers";
 import { installTemplate } from "./helpers";
 import { templatesDir } from "./helpers/dir";
-import { isRequireConfig } from "./helpers/tools";
+import { toolsRequireConfig } from "./helpers/tools";
 
 export type InstallAppArgs = Omit<
   InstallTemplateArgs,
@@ -117,7 +117,7 @@ export async function createApp({
     console.log();
   }
 
-  if (isRequireConfig((tools as string[]) || [])) {
+  if (toolsRequireConfig(tools)) {
     console.log(
       yellow(
         `You have selected tools that require configuration. Please configure them in the ${terminalLink(

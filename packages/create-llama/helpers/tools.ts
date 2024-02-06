@@ -1,14 +1,18 @@
 export type Tool = {
   display: string;
   name: string;
-  config?: any;
+  config?: Record<string, any>;
 };
 
-export const supportingTools: Tool[] = [
+export const supportedTools: Tool[] = [
   {
-    display: "Google Search",
+    display: "Google Search (configuration required)",
     name: "google_search",
-    config: { engine: "", key: "", num: 2 },
+    config: {
+      engine: "Your search engine id",
+      key: "Your search api key",
+      num: 2,
+    },
   },
   {
     display: "Wikipedia",
@@ -16,10 +20,13 @@ export const supportingTools: Tool[] = [
   },
 ];
 
-export const getToolConfig = (name: string): Tool | undefined => {
-  return supportingTools.find((tool) => tool.name === name)?.config;
+export const getToolConfig = (name: string) => {
+  return supportedTools.find((tool) => tool.name === name)?.config;
 };
 
-export const isRequireConfig = (tools: string[]): boolean => {
-  return tools.some((tool) => getToolConfig(tool));
+export const toolsRequireConfig = (tools?: string[]): boolean => {
+  if (tools) {
+    return tools.some((tool) => getToolConfig(tool));
+  }
+  return false;
 };
