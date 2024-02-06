@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from "path";
-import { green } from "picocolors";
+import { green, yellow } from "picocolors";
 import { tryGitInit } from "./helpers/git";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { getOnline } from "./helpers/is-online";
@@ -12,6 +12,7 @@ import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./helpers";
 import { installTemplate } from "./helpers";
 import { templatesDir } from "./helpers/dir";
+import { isRequireConfig } from "./helpers/tools";
 
 export type InstallAppArgs = Omit<
   InstallTemplateArgs,
@@ -116,6 +117,17 @@ export async function createApp({
     console.log();
   }
 
+  if (isRequireConfig((tools as string[]) || [])) {
+    console.log(
+      yellow(
+        `You have selected tools that require configuration. Please configure them in the ${terminalLink(
+          "tools_config.json",
+          `file://${root}/tools_config.json`,
+        )} file.`,
+      ),
+    );
+  }
+  console.log("");
   console.log(`${green("Success!")} Created ${appName} at ${appPath}`);
 
   console.log(

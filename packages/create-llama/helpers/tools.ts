@@ -19,3 +19,7 @@ export const supportingTools: Tool[] = [
 export const getToolConfig = (name: string): Tool | undefined => {
   return supportingTools.find((tool) => tool.name === name)?.config;
 };
+
+export const isRequireConfig = (tools: string[]): boolean => {
+  return tools.some((tool) => getToolConfig(tool));
+};

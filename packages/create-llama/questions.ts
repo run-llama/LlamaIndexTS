@@ -10,7 +10,7 @@ import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { templatesDir } from "./helpers/dir";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
 import { getRepoRootFolders } from "./helpers/repo";
-import { getToolConfig, supportingTools } from "./helpers/tools";
+import { isRequireConfig, supportingTools } from "./helpers/tools";
 
 export type QuestionArgs = Omit<
   InstallAppArgs,
@@ -217,9 +217,9 @@ export const askQuestions = async (
         const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
         const hasVectorDb = program.vectorDb && program.vectorDb !== "none";
         // Can run the app if all tools do not require configuration
-        const instantRunAbleTools = program.tools
-          ? program.tools.every((tool) => getToolConfig(tool) !== undefined)
-          : true;
+        const instantRunAbleTools = !isRequireConfig(
+          (program.tools as string[]) || [],
+        );
         if (!hasVectorDb && hasOpenAiKey && instantRunAbleTools) {
           actionChoices.push({
             title:
