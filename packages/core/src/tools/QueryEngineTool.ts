@@ -5,6 +5,10 @@ export type QueryEngineToolParams = {
   metadata: ToolMetadata;
 };
 
+type QueryEngineCallParams = {
+  query: string;
+};
+
 const DEFAULT_NAME = "query_engine_tool";
 const DEFAULT_DESCRIPTION =
   "Useful for running a natural language query against a knowledge base and get back a natural language response.";
@@ -32,7 +36,7 @@ export class QueryEngineTool implements BaseTool {
     };
   }
 
-  async call(...args: any[]): Promise<any> {
+  async call(...args: QueryEngineCallParams[]): Promise<any> {
     let queryStr: string;
 
     if (args && args.length > 0) {
