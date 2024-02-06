@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.1.10
+
+### Patch Changes
+
+- b6c1500: feat(embedBatchSize): add batching for embeddings
+- 6cc3a36: fix: update `VectorIndexRetriever` constructor parameters' type.
+- cd82947: feat(queryEngineTool): add query engine tool to agents
+
 ## 0.1.9
 
 ### Patch Changes
