@@ -1,5 +1,3 @@
-// from typing import TYPE_CHECKING, Any, Optional
-
 import { BaseQueryEngine, BaseTool, ToolMetadata } from "../types";
 
 export type QueryEngineToolParams = {
