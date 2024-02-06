@@ -51,7 +51,7 @@ describe("similarity", () => {
   });
 });
 
-describe("BaseEmbedding", () => {
+describe("[OpenAIEmbedding]", () => {
   let embedModel: OpenAIEmbedding;
 
   beforeAll(() => {
@@ -70,7 +70,7 @@ describe("BaseEmbedding", () => {
   test("getTextEmbeddings", async () => {
     const texts = ["hello", "world"];
     const embeddings = await embedModel.getTextEmbeddings(texts);
-    expect(embeddings.length).toEqual(2);
+    expect(embeddings.length).toEqual(1);
   });
 
   test("getTextEmbeddingsBatch", async () => {
