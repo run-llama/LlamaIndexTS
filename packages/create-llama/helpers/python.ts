@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { cyan, red, yellow } from "picocolors";
+import { cyan, red } from "picocolors";
 import { parse, stringify } from "smol-toml";
 import terminalLink from "terminal-link";
 import { copy } from "./copy";
@@ -104,18 +104,19 @@ export const installPythonDependencies = (
     const installSuccessful = tryPoetryInstall(noRoot);
     if (!installSuccessful) {
       console.error(
-        red("Install failed. Please install dependencies manually."),
+        red(
+          "Installing dependencies using poetry failed. Please check error log above and try running create-llama again.",
+        ),
       );
       process.exit(1);
     }
   } else {
-    console.warn(
-      yellow(
-        `Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
-Please check ${terminalLink(
+    console.error(
+      red(
+        `Poetry is not available in the current environment. Please check ${terminalLink(
           "Poetry Installation",
           `https://python-poetry.org/docs/#installation`,
-        )} to install poetry first, then install the dependencies manually.`,
+        )} to install poetry first, then run create-llama again.`,
       ),
     );
     process.exit(1);
