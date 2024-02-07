@@ -1,5 +1,12 @@
 import { Client } from "@notionhq/client";
-import { crawler, Crawler, Pages, pageToString } from "notion-md-crawler";
+import {
+  Crawler,
+  DatabaseCrawler,
+  Pages,
+  crawler,
+  dbCrawler,
+  pageToString,
+} from "notion-md-crawler";
 import { Document } from "../Node";
 import { BaseReader } from "./base";
 
@@ -25,6 +32,7 @@ type NotionReaderOptions = {
  */
 export class NotionReader implements BaseReader {
   private crawl: ReturnType<Crawler>;
+  private dbCrawl: ReturnType<DatabaseCrawler>;
 
   /**
    * Constructor for the NotionReader class
@@ -32,6 +40,7 @@ export class NotionReader implements BaseReader {
    */
   constructor({ client, serializers }: NotionReaderOptions) {
     this.crawl = crawler({ client, serializers });
+    this.dbCrawl = dbCrawler({ client, serializers });
   }
 
   /**
@@ -42,11 +51,7 @@ export class NotionReader implements BaseReader {
   toDocuments(pages: Pages): Document[] {
     return Object.values(pages).map((page) => {
       const text = pageToString(page);
-      return new Document({
-        id_: page.metadata.id, // Use the Notion-provided UUID for the document
-        text,
-        metadata: page.metadata,
-      });
+      return new Document({ text, metadata: page.metadata });
     });
   }
 
@@ -60,12 +65,31 @@ export class NotionReader implements BaseReader {
   }
 
   /**
+   * Loads recursively the Notion database with the specified database ID.
+   * @param {string} databaseId - The Notion database ID from which to start the crawl
+   * @returns {Promise<Pages>} A Promise that resolves to a Pages object(Convertible with the `toDocuments` method)
+   */
+  async loadDatabasePages(databaseId: string): Promise<Pages> {
+    return this.dbCrawl(databaseId);
+  }
+
+  /**
    * Loads recursively Notion pages and converts them to an array of Document objects
    * @param {string} rootPageId - The root Notion page ID
+   * @param {Object} [options] - Options for loading data
+   * @param {"page" | "database"} [options.mode="page"] - The mode to use when loading data. "page" to load a page, "database" to load a database
    * @returns {Promise<Document[]>} A Promise that resolves to an array of Document objects
    */
-  async loadData(rootPageId: string): Promise<Document[]> {
-    const pages = await this.loadPages(rootPageId);
+  async loadData(
+    rootPageId: string,
+    { mode }: { mode: "page" | "database" } = { mode: "page" },
+  ): Promise<Document[]> {
+    let pages: Pages;
+    if (mode === "page") {
+      pages = await this.loadPages(rootPageId);
+    } else {
+      pages = await this.loadDatabasePages(rootPageId);
+    }
     return this.toDocuments(pages);
   }
 }
