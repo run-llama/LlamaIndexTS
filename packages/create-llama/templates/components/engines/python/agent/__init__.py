@@ -36,7 +36,7 @@ def get_chat_engine():
     # Add query tool
     index = get_index()
     llm = index.service_context.llm
-    query_engine = index.as_query_engine(similarity_top_k=5)
+    query_engine = index.as_query_engine(similarity_top_k=3)
     query_engine_tool = QueryEngineTool.from_defaults(query_engine=query_engine)
     tools.append(query_engine_tool)
 
