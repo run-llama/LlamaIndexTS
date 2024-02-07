@@ -11,6 +11,7 @@ import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { runApp } from "./helpers/run-app";
+import { supportedTools } from "./helpers/tools";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 import { QuestionArgs, askQuestions, onPromptState } from "./questions";
@@ -148,6 +149,13 @@ const program = new Commander.Command(packageJson.name)
   Select which vector database you would like to use, such as 'none', 'pg' or 'mongo'. The default option is not to use a vector database and use the local filesystem instead ('none').
 `,
   )
+  .option(
+    "--tools <tools>",
+    `
+
+  Specify the tools you want to use by providing a comma-separated list. For example, 'google_search,wikipedia'. Use 'none' to not using any tools.
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
 if (process.argv.includes("--no-frontend")) {
@@ -155,6 +163,25 @@ if (process.argv.includes("--no-frontend")) {
 }
 if (process.argv.includes("--no-eslint")) {
   program.eslint = false;
+}
+if (process.argv.includes("--tools")) {
+  if (program.tools === "none") {
+    program.tools = [];
+  } else {
+    program.tools = program.tools.split(",");
+    // Check if tools are available
+    const toolsName = supportedTools.map((tool) => tool.name);
+    program.tools.forEach((tool: string) => {
+      if (!toolsName.includes(tool)) {
+        console.error(
+          `Error: Tool '${tool}' is not supported. Supported tools are: ${toolsName.join(
+            ", ",
+          )}`,
+        );
+        process.exit(1);
+      }
+    });
+  }
 }
 
 const packageManager = !!program.useNpm
@@ -256,6 +283,7 @@ async function run(): Promise<void> {
     externalPort: program.externalPort,
     postInstallAction: program.postInstallAction,
     dataSource: program.dataSource,
+    tools: program.tools,
   });
   conf.set("preferences", preferences);
 

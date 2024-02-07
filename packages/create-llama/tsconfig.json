@@ -10,14 +10,14 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "tsBuildInfoFile": "./lib/.tsbuildinfo",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
   "include": [
     "create-app.ts",
     "index.ts",
     "./helpers",
     "questions.ts",
-    "package.json",
+    "package.json"
   ],
-  "exclude": ["dist"],
+  "exclude": ["dist"]
 }

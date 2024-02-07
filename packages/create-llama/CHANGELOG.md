@@ -1,5 +1,12 @@
 # create-llama
 
+## 0.0.25
+
+### Patch Changes
+
+- d06a85b: Add option to create an agent by selecting tools (Google, Wikipedia)
+- 7b7329b: Added latest turbo models for GPT-3.5 and GPT 4
+
 ## 0.0.24
 
 ### Patch Changes

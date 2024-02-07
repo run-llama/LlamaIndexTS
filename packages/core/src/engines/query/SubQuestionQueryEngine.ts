@@ -12,13 +12,15 @@ import {
   CompactAndRefine,
   ResponseSynthesizer,
 } from "../../synthesizers";
-import { QueryEngineToolParams } from "../../tools/QueryEngineTool";
+
 import {
   BaseQueryEngine,
+  BaseTool,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
   ToolMetadata,
 } from "../../types";
+
 import { BaseQuestionGenerator, SubQuestion } from "./types";
 
 /**
@@ -27,28 +29,23 @@ import { BaseQuestionGenerator, SubQuestion } from "./types";
 export class SubQuestionQueryEngine implements BaseQueryEngine {
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
-  queryEngines: Record<string, BaseQueryEngine>;
+  queryEngines: BaseTool[];
   metadatas: ToolMetadata[];
 
   constructor(init: {
     questionGen: BaseQuestionGenerator;
     responseSynthesizer: BaseSynthesizer;
-    queryEngineTools: QueryEngineToolParams[];
+    queryEngineTools: BaseTool[];
   }) {
     this.questionGen = init.questionGen;
     this.responseSynthesizer =
       init.responseSynthesizer ?? new ResponseSynthesizer();
-    this.queryEngines = init.queryEngineTools.reduce<
-      Record<string, BaseQueryEngine>
-    >((acc, tool) => {
-      acc[tool.metadata.name] = tool.queryEngine;
-      return acc;
-    }, {});
+    this.queryEngines = init.queryEngineTools;
     this.metadatas = init.queryEngineTools.map((tool) => tool.metadata);
   }
 
   static fromDefaults(init: {
-    queryEngineTools: QueryEngineToolParams[];
+    queryEngineTools: BaseTool[];
     questionGen?: BaseQuestionGenerator;
     responseSynthesizer?: BaseSynthesizer;
     serviceContext?: ServiceContext;
@@ -122,13 +119,24 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
   ): Promise<NodeWithScore | null> {
     try {
       const question = subQ.subQuestion;
-      const queryEngine = this.queryEngines[subQ.toolName];
 
-      const response = await queryEngine.query({
+      const queryEngine = this.queryEngines.find(
+        (tool) => tool.metadata.name === subQ.toolName,
+      );
+
+      if (!queryEngine) {
+        return null;
+      }
+
+      const responseText = await queryEngine?.call?.({
         query: question,
         parentEvent,
       });
-      const responseText = response.response;
+
+      if (!responseText) {
+        return null;
+      }
+
       const nodeText = `Sub question: ${question}\nResponse: ${responseText}`;
       const node = new TextNode({ text: nodeText });
       return { node, score: 0 };

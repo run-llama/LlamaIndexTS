@@ -10,13 +10,13 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true,
+    "composite": true
   },
   "ts-node": {
     "files": true,
     "compilerOptions": {
-      "module": "commonjs",
-    },
+      "module": "commonjs"
+    }
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts"]
 }

@@ -41,4 +41,5 @@ export interface InstallTemplateArgs {
   vectorDb?: TemplateVectorDB;
   externalPort?: number;
   postInstallAction?: TemplatePostInstallAction;
+  tools?: string[];
 }

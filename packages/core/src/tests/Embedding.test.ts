@@ -1,4 +1,12 @@
-import { similarity, SimilarityType } from "../embeddings";
+import { OpenAIEmbedding, similarity, SimilarityType } from "../embeddings";
+import { mockEmbeddingModel } from "./utility/mockOpenAI";
+
+// Mock the OpenAI getOpenAISession function during testing
+jest.mock("../llm/open_ai", () => {
+  return {
+    getOpenAISession: jest.fn().mockImplementation(() => null),
+  };
+});
 
 describe("similarity", () => {
   test("throws error on mismatched lengths", () => {
@@ -40,5 +48,34 @@ describe("similarity", () => {
     ).toBeLessThan(
       similarity(queryEmbedding, docEmbedding2, SimilarityType.EUCLIDEAN),
     );
+  });
+});
+
+describe("[OpenAIEmbedding]", () => {
+  let embedModel: OpenAIEmbedding;
+
+  beforeAll(() => {
+    let openAIEmbedding = new OpenAIEmbedding();
+
+    mockEmbeddingModel(openAIEmbedding);
+
+    embedModel = openAIEmbedding;
+  });
+
+  test("getTextEmbedding", async () => {
+    const embedding = await embedModel.getTextEmbedding("hello");
+    expect(embedding.length).toEqual(6);
+  });
+
+  test("getTextEmbeddings", async () => {
+    const texts = ["hello", "world"];
+    const embeddings = await embedModel.getTextEmbeddings(texts);
+    expect(embeddings.length).toEqual(1);
+  });
+
+  test("getTextEmbeddingsBatch", async () => {
+    const texts = ["hello", "world"];
+    const embeddings = await embedModel.getTextEmbeddingsBatch(texts);
+    expect(embeddings.length).toEqual(1);
   });
 });
