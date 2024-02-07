@@ -116,7 +116,6 @@ export async function createApp({
       });
     } catch (error) {
       installationErrors.push(error);
-      console.log(red(`${error}`));
     }
 
     // copy readme for fullstack
@@ -125,7 +124,11 @@ export async function createApp({
       path.join(root, "README.md"),
     );
   } else {
-    await installTemplate({ ...args, backend: true, forBackend: framework });
+    try {
+      await installTemplate({ ...args, backend: true, forBackend: framework });
+    } catch (error) {
+      installationErrors.push(error);
+    }
   }
 
   process.chdir(root);
