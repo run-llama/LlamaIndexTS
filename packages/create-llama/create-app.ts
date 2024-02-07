@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from "path";
-import { green, yellow } from "picocolors";
+import { green, red } from "picocolors";
 import { tryGitInit } from "./helpers/git";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { getOnline } from "./helpers/is-online";
@@ -87,28 +87,48 @@ export async function createApp({
     tools,
   };
 
+  let installationErrors = [];
+
   if (frontend) {
     // install backend
     const backendRoot = path.join(root, "backend");
     await makeDir(backendRoot);
-    await installTemplate({ ...args, root: backendRoot, backend: true });
+    try {
+      await installTemplate({
+        ...args,
+        root: backendRoot,
+        backend: true,
+      });
+    } catch (error) {
+      installationErrors.push(error);
+      console.log(red(`${error}`));
+    }
     // install frontend
     const frontendRoot = path.join(root, "frontend");
     await makeDir(frontendRoot);
-    await installTemplate({
-      ...args,
-      root: frontendRoot,
-      framework: "nextjs",
-      customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
-      backend: false,
-    });
+    try {
+      await installTemplate({
+        ...args,
+        root: frontendRoot,
+        framework: "nextjs",
+        customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
+        backend: false,
+      });
+    } catch (error) {
+      installationErrors.push(error);
+    }
+
     // copy readme for fullstack
     await fs.promises.copyFile(
       path.join(templatesDir, "README-fullstack.md"),
       path.join(root, "README.md"),
     );
   } else {
-    await installTemplate({ ...args, backend: true, forBackend: framework });
+    try {
+      await installTemplate({ ...args, backend: true, forBackend: framework });
+    } catch (error) {
+      installationErrors.push(error);
+    }
   }
 
   process.chdir(root);
@@ -119,7 +139,7 @@ export async function createApp({
 
   if (toolsRequireConfig(tools)) {
     console.log(
-      yellow(
+      red(
         `You have selected tools that require configuration. Please configure them in the ${terminalLink(
           "tools_config.json",
           `file://${root}/tools_config.json`,
@@ -127,14 +147,24 @@ export async function createApp({
       ),
     );
   }
-  console.log("");
-  console.log(`${green("Success!")} Created ${appName} at ${appPath}`);
 
-  console.log(
-    `Now have a look at the ${terminalLink(
-      "README.md",
-      `file://${root}/README.md`,
-    )} and learn how to get started.`,
-  );
   console.log();
+  if (installationErrors.length > 0) {
+    for (const error of installationErrors) {
+      console.log(red(`${error}`));
+    }
+    console.log(
+      "\nExiting installation. Please check the generated code or try create app again!",
+    );
+    process.exit(1);
+  } else {
+    console.log(`${green("Success!")} Created ${appName} at ${appPath}`);
+    console.log(
+      `Now have a look at the ${terminalLink(
+        "README.md",
+        `file://${root}/README.md`,
+      )} and learn how to get started.`,
+    );
+    console.log();
+  }
 }

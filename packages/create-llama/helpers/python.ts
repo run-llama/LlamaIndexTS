@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { cyan, red, yellow } from "picocolors";
+import { cyan } from "picocolors";
 import { parse, stringify } from "smol-toml";
 import terminalLink from "terminal-link";
 import { copy } from "./copy";
@@ -103,22 +103,16 @@ export const installPythonDependencies = (
     );
     const installSuccessful = tryPoetryInstall(noRoot);
     if (!installSuccessful) {
-      console.error(
-        red("Install failed. Please install dependencies manually."),
+      throw new Error(
+        "Poetry installation failed. Please install dependencies manually.",
       );
-      process.exit(1);
     }
   } else {
-    console.warn(
-      yellow(
-        `Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
+    throw new Error(`Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
 Please check ${terminalLink(
-          "Poetry Installation",
-          `https://python-poetry.org/docs/#installation`,
-        )} to install poetry first, then install the dependencies manually.`,
-      ),
-    );
-    process.exit(1);
+      "Poetry Installation",
+      `https://python-poetry.org/docs/#installation`,
+    )} to install poetry first, then install the dependencies manually.`);
   }
 };
 
@@ -222,4 +216,5 @@ export const installPythonTemplate = async ({
   if (postInstallAction !== "none") {
     installPythonDependencies();
   }
+  console.log("\nFastAPI project initialized successfully!\n");
 };
