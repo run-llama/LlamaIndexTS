@@ -2,4 +2,4 @@
 "create-llama": patch
 ---
 
-fix: continue install frontend template if the fastapi backend has failed
+fix: continue installing the frontend if the backend installation has failed
