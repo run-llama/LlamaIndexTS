@@ -1,12 +1,12 @@
 import { Document, ImageDocument } from "../Node";
 import { defaultFS } from "../env";
 import { GenericFileSystem } from "../storage/FileSystem";
-import { BaseReader } from "./base";
+import { FileReader } from "./type";
 
 /**
  * Reads the content of an image file into a Document object (which stores the image file as a Blob).
  */
-export class ImageReader implements BaseReader {
+export class ImageReader implements FileReader {
   /**
    * Public method for this reader.
    * Required by BaseReader interface.

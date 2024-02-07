@@ -1,7 +1,7 @@
 import { Document } from "../Node";
 import { defaultFS } from "../env";
 import { GenericFileSystem } from "../storage/FileSystem";
-import { BaseReader } from "./base";
+import { FileReader } from "./type";
 
 /**
  * Extract the significant text from an arbitrary HTML document.
@@ -10,7 +10,7 @@ import { BaseReader } from "./base";
  * All other tags are removed, and the inner text is kept intact.
  * Html entities (e.g., &amp;) are not decoded.
  */
-export class HTMLReader implements BaseReader {
+export class HTMLReader implements FileReader {
   /**
    * Public method for this reader.
    * Required by BaseReader interface.

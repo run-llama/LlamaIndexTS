@@ -28,6 +28,9 @@
     },
     {
       "path": "./examples"
+    },
+    {
+      "path": "./examples/readers"
     }
   ]
 }
