@@ -87,9 +87,9 @@ export async function createApp({
     tools,
   };
 
-  if (frontend) {
-    let successfulInstallation = true;
+  let installationErrors = [];
 
+  if (frontend) {
     // install backend
     const backendRoot = path.join(root, "backend");
     await makeDir(backendRoot);
@@ -100,8 +100,8 @@ export async function createApp({
         backend: true,
       });
     } catch (error) {
-      successfulInstallation = false;
-      console.log(error);
+      installationErrors.push(error);
+      console.log(red(`${error}`));
     }
     // install frontend
     const frontendRoot = path.join(root, "frontend");
@@ -115,12 +115,8 @@ export async function createApp({
         backend: false,
       });
     } catch (error) {
-      successfulInstallation = false;
-      console.log(error);
-    }
-    if (!successfulInstallation) {
-      console.log(red("\nOne or more installations failed. Exiting...\n"));
-      process.exit(1);
+      installationErrors.push(error);
+      console.log(red(`${error}`));
     }
 
     // copy readme for fullstack
@@ -148,14 +144,24 @@ export async function createApp({
       ),
     );
   }
-  console.log("");
-  console.log(`${green("Success!")} Created ${appName} at ${appPath}`);
 
-  console.log(
-    `Now have a look at the ${terminalLink(
-      "README.md",
-      `file://${root}/README.md`,
-    )} and learn how to get started.`,
-  );
   console.log();
+  if (installationErrors.length > 0) {
+    for (const error of installationErrors) {
+      console.log(red(`${error}`));
+    }
+    console.log(
+      "\nExiting installation. Please check the generated code or try create app again!",
+    );
+    process.exit(1);
+  } else {
+    console.log(`${green("Success!")} Created ${appName} at ${appPath}`);
+    console.log(
+      `Now have a look at the ${terminalLink(
+        "README.md",
+        `file://${root}/README.md`,
+      )} and learn how to get started.`,
+    );
+    console.log();
+  }
 }
