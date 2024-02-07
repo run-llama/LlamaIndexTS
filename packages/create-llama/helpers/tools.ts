@@ -9,7 +9,8 @@ export const supportedTools: Tool[] = [
     display: "Google Search (configuration required after installation)",
     name: "google_search",
     config: {
-      engine: "Your search engine id",
+      engine:
+        "Your search engine id, see https://developers.google.com/custom-search/v1/overview#prerequisites",
       key: "Your search api key",
       num: 2,
     },
