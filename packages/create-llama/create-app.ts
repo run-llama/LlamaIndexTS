@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from "path";
-import { green, yellow } from "picocolors";
+import { green, red } from "picocolors";
 import { tryGitInit } from "./helpers/git";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { getOnline } from "./helpers/is-online";
@@ -88,20 +88,41 @@ export async function createApp({
   };
 
   if (frontend) {
+    let successfulInstallation = true;
+
     // install backend
     const backendRoot = path.join(root, "backend");
     await makeDir(backendRoot);
-    await installTemplate({ ...args, root: backendRoot, backend: true });
+    try {
+      await installTemplate({
+        ...args,
+        root: backendRoot,
+        backend: true,
+      });
+    } catch (error) {
+      successfulInstallation = false;
+      console.log(error);
+    }
     // install frontend
     const frontendRoot = path.join(root, "frontend");
     await makeDir(frontendRoot);
-    await installTemplate({
-      ...args,
-      root: frontendRoot,
-      framework: "nextjs",
-      customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
-      backend: false,
-    });
+    try {
+      await installTemplate({
+        ...args,
+        root: frontendRoot,
+        framework: "nextjs",
+        customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
+        backend: false,
+      });
+    } catch (error) {
+      successfulInstallation = false;
+      console.log(error);
+    }
+    if (!successfulInstallation) {
+      console.log(red("\nOne or more installations failed. Exiting...\n"));
+      process.exit(1);
+    }
+
     // copy readme for fullstack
     await fs.promises.copyFile(
       path.join(templatesDir, "README-fullstack.md"),
@@ -119,7 +140,7 @@ export async function createApp({
 
   if (toolsRequireConfig(tools)) {
     console.log(
-      yellow(
+      red(
         `You have selected tools that require configuration. Please configure them in the ${terminalLink(
           "tools_config.json",
           `file://${root}/tools_config.json`,

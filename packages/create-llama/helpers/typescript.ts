@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
-import { bold, cyan } from "picocolors";
+import { bold, cyan, green } from "picocolors";
 import { version } from "../../core/package.json";
 import { copy } from "../helpers/copy";
 import { callPackageManager } from "../helpers/install";
@@ -231,4 +231,6 @@ export const installTSTemplate = async ({
   if (postInstallAction !== "none") {
     await installTSDependencies(packageJson, packageManager, isOnline);
   }
+
+  console.log(green(`${framework} project is initialized successfully.`));
 };
