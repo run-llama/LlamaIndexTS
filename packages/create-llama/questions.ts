@@ -419,9 +419,9 @@ export const askQuestions = async (
           name: "model",
           message: "Which model would you like to use?",
           choices: [
-            { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+            { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo-0125" },
+            { title: "gpt-4-turbo-preview", value: "gpt-4-turbo-preview" },
             { title: "gpt-4", value: "gpt-4" },
-            { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
             {
               title: "gpt-4-vision-preview",
               value: "gpt-4-vision-preview",
@@ -585,7 +585,8 @@ export const askQuestions = async (
       const { tools } = await prompts({
         type: "multiselect",
         name: "tools",
-        message: "Which tools would you like to use?",
+        message:
+          "Would you like to build an agent using tools? If so, select the tools here, otherwise just press enter",
         choices: toolChoices,
       });
       program.tools = tools;

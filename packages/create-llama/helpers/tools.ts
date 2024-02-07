@@ -6,7 +6,7 @@ export type Tool = {
 
 export const supportedTools: Tool[] = [
   {
-    display: "Google Search (configuration required)",
+    display: "Google Search (configuration required after installation)",
     name: "google_search",
     config: {
       engine: "Your search engine id",
