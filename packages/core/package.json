@@ -143,6 +143,11 @@
       "import": "./dist/objects.mjs",
       "require": "./dist/objects.js"
     },
+    "./readers": {
+      "types": "./dist/readers.d.mts",
+      "import": "./dist/readers.mjs",
+      "require": "./dist/readers.js"
+    },
     "./readers/AssemblyAIReader": {
       "types": "./dist/readers/AssemblyAIReader.d.mts",
       "import": "./dist/readers/AssemblyAIReader.mjs",

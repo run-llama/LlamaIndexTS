@@ -1,0 +1,35 @@
+---
+sidebar_position: 3
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../examples/readers/src/simple-directory-reader";
+import CodeSource2 from "!raw-loader!../../../../examples/readers/src/custom-simple-directory-reader";
+
+# Loader
+
+Before you can start indexing your documents, you need to load them into memory.
+
+### SimpleDirectoryReader
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples/readers?file=src/simple-directory-reader.ts&title=Simple%20Directory%20Reader)
+
+LlamaIndex.TS supports easy loading of files from folders using the `SimpleDirectoryReader` class.
+
+It is a simple reader that reads all files from a directory and its subdirectories.
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+Currently, it supports reading `.csv`, `.docx`, `.html`, `.md` and `.pdf` files,
+but support for other file types is planned.
+
+Also, you can provide a `defaultReader` as a fallback for files with unsupported extensions.
+Or pass new readers for `fileExtToReader` to support more file types.
+
+<CodeBlock language="ts" showLineNumbers metastring="{8-12,17-21}">
+  {CodeSource2}
+</CodeBlock>
+
+## API Reference
+
+- [SimpleDirectoryReader](../api/classes/SimpleDirectoryReader.md)

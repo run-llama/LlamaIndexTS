@@ -1,0 +1,21 @@
+{
+  "name": "llamaindex-loader-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --loader ts-node/esm ./src/simple-directory-reader.ts",
+    "start:csv": "node --loader ts-node/esm ./src/csv.ts",
+    "start:docx": "node --loader ts-node/esm ./src/docx.ts",
+    "start:html": "node --loader ts-node/esm ./src/html.ts",
+    "start:markdown": "node --loader ts-node/esm ./src/markdown.ts",
+    "start:pdf": "node --loader ts-node/esm ./src/pdf.ts"
+  },
+  "dependencies": {
+    "llamaindex": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

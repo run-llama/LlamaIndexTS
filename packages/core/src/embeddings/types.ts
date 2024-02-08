@@ -19,7 +19,7 @@ export abstract class BaseEmbedding implements TransformComponent {
   abstract getQueryEmbedding(query: string): Promise<number[]>;
 
   /**
-   * Get embeddings for a batch of texts
+   * Optionally override this method to retrieve multiple embeddings in a single request
    * @param texts
    */
   async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
@@ -59,7 +59,7 @@ export abstract class BaseEmbedding implements TransformComponent {
         resultEmbeddings.push(...embeddings);
 
         if (options?.logProgress) {
-          console.log(`number[] progress: ${i} / ${queue.length}`);
+          console.log(`getting embedding progress: ${i} / ${queue.length}`);
         }
 
         curBatch.length = 0;

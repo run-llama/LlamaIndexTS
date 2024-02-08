@@ -166,20 +166,14 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     nodes: BaseNode[],
     options?: { logProgress?: boolean },
   ): Promise<BaseNode[]> {
-    const nodesWithEmbeddings: BaseNode[] = [];
-
-    for (let i = 0; i < nodes.length; ++i) {
-      const node = nodes[i];
-      if (options?.logProgress) {
-        console.log(`Getting embedding for node ${i + 1}/${nodes.length}`);
-      }
-      node.embedding = await this.embedModel.getTextEmbedding(
-        node.getContent(MetadataMode.EMBED),
-      );
-      nodesWithEmbeddings.push(node);
-    }
-
-    return nodesWithEmbeddings;
+    const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
+    const embeddings = await this.embedModel.getTextEmbeddingsBatch(texts, {
+      logProgress: options?.logProgress,
+    });
+    return nodes.map((node, i) => {
+      node.embedding = embeddings[i];
+      return node;
+    });
   }
 
   /**

@@ -2,7 +2,7 @@ import { program } from "commander";
 import { TranscribeParams, VectorStoreIndex } from "llamaindex";
 import { AudioTranscriptReader } from "llamaindex/readers/AssemblyAIReader";
 import { stdin as input, stdout as output } from "node:process";
-import readline from "node:readline/promises";
+import { createInterface } from "node:readline/promises";
 
 program
   .option("-a, --audio [string]", "URL or path of the audio file to transcribe")
@@ -35,7 +35,7 @@ program
     // Create query engine
     const queryEngine = index.asQueryEngine();
 
-    const rl = readline.createInterface({ input, output });
+    const rl = createInterface({ input, output });
     while (true) {
       const query = await rl.question("Ask a question: ");
 

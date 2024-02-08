@@ -1,5 +1,5 @@
 import { CallbackManager, Event } from "../callbacks/CallbackManager";
-import { BaseEmbedding } from "../embeddings";
+import { BaseEmbedding } from "../embeddings/types";
 import { ok } from "../env";
 import {
   ChatMessage,
