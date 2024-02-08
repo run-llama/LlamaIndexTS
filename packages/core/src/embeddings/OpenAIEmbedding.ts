@@ -102,28 +102,43 @@ export class OpenAIEmbedding extends BaseEmbedding {
     }
   }
 
-  private async getOpenAIEmbedding(
-    input: string | string[],
-  ): Promise<number[]> {
+  /**
+   * Get embeddings for a batch of texts
+   * @param texts
+   * @param options
+   */
+  private async getOpenAIEmbedding(input: string[]): Promise<number[][]> {
     const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       dimensions: this.dimensions, // only sent to OpenAI if set by user
       input,
     });
 
-    return data[0].embedding;
+    return data.map((d) => d.embedding);
   }
 
+  /**
+   * Get embeddings for a batch of texts
+   * @param texts
+   */
   async getTextEmbeddings(texts: string[]): Promise<number[][]> {
-    const embeddings = await this.getOpenAIEmbedding(texts);
-    return Array(embeddings);
+    return await this.getOpenAIEmbedding(texts);
   }
 
+  /**
+   * Get embeddings for a single text
+   * @param texts
+   */
   async getTextEmbedding(text: string): Promise<number[]> {
-    return this.getOpenAIEmbedding(text);
+    return (await this.getOpenAIEmbedding([text]))[0];
   }
 
+  /**
+   * Get embeddings for a query
+   * @param texts
+   * @param options
+   */
   async getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getOpenAIEmbedding(query);
+    return (await this.getOpenAIEmbedding([query]))[0];
   }
 }
