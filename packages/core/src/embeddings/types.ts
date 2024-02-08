@@ -22,7 +22,7 @@ export abstract class BaseEmbedding implements TransformComponent {
    * Optionally override this method to retrieve multiple embeddings in a single request
    * @param texts
    */
-  protected async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
+  async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
     const embeddings: number[][] = [];
 
     for (const text of texts) {
