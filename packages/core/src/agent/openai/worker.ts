@@ -318,9 +318,9 @@ export class OpenAIAgentWorker implements AgentWorker {
 
     const openaiTools = tools.map((tool) =>
       toOpenAiTool({
-        name: tool?.metadata?.name ?? "",
-        description: tool?.metadata?.description ?? "",
-        parameters: tool?.metadata?.parameters,
+        name: tool.metadata.name,
+        description: tool.metadata.description,
+        parameters: tool.metadata.parameters,
       }),
     );
 
