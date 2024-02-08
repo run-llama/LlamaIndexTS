@@ -162,7 +162,7 @@ async function main() {
   });
 
   const response = await top_agent.chat({
-    message: "The official language of Canadá?",
+    message: "Tell me the differences between Brazil and Canada population?",
   });
 
   console.log({
