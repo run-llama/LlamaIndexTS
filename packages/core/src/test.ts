@@ -167,12 +167,19 @@ async function main() {
     toolRetriever: toolRetriever,
     llm,
     verbose: true,
+    prefixMessages: [
+      {
+        content:
+          "You are an agent designed to answer queries about a set of given cities. Please always use the tools provided to answer a question. Do not rely on prior knowledge.",
+        role: "system",
+      },
+    ],
   });
 
   console.log("chatting with top agent");
 
   const response = await top_agent.chat({
-    message: "Summarize Canada.",
+    message: "The official language of Brazil?",
   });
 
   console.log({

@@ -39,6 +39,8 @@ export class QueryEngineTool implements BaseTool {
   async call(...args: QueryEngineCallParams[]): Promise<any> {
     let queryStr: string;
 
+    console.log("args", args);
+
     if (args && args.length > 0) {
       queryStr = String(args[0].query);
     } else {

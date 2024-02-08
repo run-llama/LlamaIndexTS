@@ -16,9 +16,9 @@
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "commonjs",
+      "module": "commonjs"
     },
-    "files": true,
+    "files": true
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

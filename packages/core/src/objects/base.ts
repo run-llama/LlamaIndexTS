@@ -1,5 +1,6 @@
 import { BaseNode, Metadata, TextNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
+import { randomUUID } from "../env";
 import { BaseTool } from "../types";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
@@ -68,7 +69,12 @@ export class ObjectRetriever {
   // Translating the retrieve method
   async retrieve(strOrQueryBundle: QueryType): Promise<any> {
     const nodes = await this._retriever.retrieve(strOrQueryBundle);
-    return nodes;
+    console.log({ topNodes: nodes });
+    // @ts-ignore
+    const objs = nodes.map((node) => this._objectNodeMapping.fromNode(node));
+
+    console.log({ objs });
+    return objs;
   }
 }
 
@@ -124,7 +130,8 @@ export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
     if (node.metadata === null) {
       throw new Error("Metadata must be set");
     }
-    return this._tools[node.metadata.name];
+    console.log({ ux: node.metadata });
+    return this._tools[randomUUID()];
   }
 
   persist(persistDir: string, objNodeMappingFilename: string): void {

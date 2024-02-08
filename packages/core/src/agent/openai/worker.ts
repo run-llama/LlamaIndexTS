@@ -11,6 +11,7 @@ import {
 } from "../../llm";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
 import { ObjectRetriever } from "../../objects/base";
+import { QueryEngineTool } from "../../tools";
 import { ToolOutput } from "../../tools/types";
 import { callToolWithErrorHandling } from "../../tools/utils";
 import { BaseTool } from "../../types";
@@ -46,9 +47,13 @@ async function callFunction(
   const tool = getFunctionByName(tools, name);
   const argumentDict = JSON.parse(argumentsStr);
 
+  console.log({ tool, argumentDict });
+
   // Call tool
   // Use default error message
   const output = await callToolWithErrorHandling(tool, argumentDict, null);
+
+  console.log({ output });
 
   if (verbose) {
     console.log(`Got output ${output}`);
@@ -122,8 +127,11 @@ export class OpenAIAgentWorker implements AgentWorker {
     } else if (toolRetriever) {
       this._getTools = async (message: string) => {
         const tools = await toolRetriever.retrieve(message);
+
+        const nodesToTool = tools.map((tool: any) => new QueryEngineTool(tool));
+
         // @ts-ignore
-        return tools.map((tool: BaseTool) => tool.node);
+        return nodesToTool;
       };
     } else {
       this._getTools = () => [];
@@ -320,8 +328,18 @@ export class OpenAIAgentWorker implements AgentWorker {
     const openaiTools = tools.map((tool) =>
       toOpenAiTool({
         name: tool?.metadata?.name ?? "",
-        description: tool?.metadata?.description ?? "",
-        parameters: tool?.metadata?.parameters,
+        description:
+          "Use this tool to answer any questions or summarize anything related to Brasilia or canada.",
+        parameters: {
+          type: "object",
+          properties: {
+            query: {
+              type: "string",
+              description: "The query to ask the tool",
+            },
+          },
+          required: ["query"],
+        },
       }),
     );
 
@@ -346,8 +364,6 @@ export class OpenAIAgentWorker implements AgentWorker {
     } else {
       isDone = false;
       for (const toolCall of latestToolCalls) {
-        console.log({ toolCall: toolCall.function });
-
         const { message, toolOutput } = await this.callFunction(
           tools,
           toolCall,
