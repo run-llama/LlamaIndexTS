@@ -24,7 +24,7 @@ async function main() {
   const countryDocs: any = {};
 
   for (const title of wikiTitles) {
-    const path = `./tmp_data/${title}.txt`;
+    const path = `./agent/helpers/tmp_data/${title}.txt`;
 
     const text = await fs.readFile(path, "utf-8");
 
