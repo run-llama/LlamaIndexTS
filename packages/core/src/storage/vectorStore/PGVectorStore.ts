@@ -107,17 +107,17 @@ export class PGVectorStore implements VectorStore {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
     const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
-      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+                                                                                  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       external_id VARCHAR,
       collection VARCHAR,
       document TEXT,
       metadata JSONB DEFAULT '{}',
       embeddings VECTOR(${this.dimensions})
-    )`;
+      )`;
     await db.query(tbl);
 
     const idxs = `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_external_id ON ${this.schemaName}.${this.tableName} (external_id);
-      CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
+    CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
     await db.query(idxs);
 
     // TODO add IVFFlat or HNSW indexing?
@@ -140,8 +140,8 @@ export class PGVectorStore implements VectorStore {
    * @returns The result of the delete query.
    */
   async clearCollection() {
-    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName} 
-      WHERE collection = $1`;
+    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
+                         WHERE collection = $1`;
 
     const db = (await this.getDb()) as pg.Client;
     const ret = await db.query(sql, [this.collection]);
@@ -184,9 +184,9 @@ export class PGVectorStore implements VectorStore {
       return Promise.resolve([]);
     }
 
-    const sql: string = `INSERT INTO ${this.schemaName}.${this.tableName} 
-      (id, external_id, collection, document, metadata, embeddings) 
-      VALUES ($1, $2, $3, $4, $5, $6)`;
+    const sql: string = `INSERT INTO ${this.schemaName}.${this.tableName}
+                           (id, external_id, collection, document, metadata, embeddings)
+                         VALUES ($1, $2, $3, $4, $5, $6)`;
 
     const db = (await this.getDb()) as pg.Client;
     const data = this.getDataToInsert(embeddingResults);
@@ -220,8 +220,8 @@ export class PGVectorStore implements VectorStore {
     const collectionCriteria = this.collection.length
       ? "AND collection = $2"
       : "";
-    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName} 
-      WHERE id = $1 ${collectionCriteria}`;
+    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
+                         WHERE id = $1 ${collectionCriteria}`;
 
     const db = (await this.getDb()) as pg.Client;
     const params = this.collection.length
@@ -248,8 +248,21 @@ export class PGVectorStore implements VectorStore {
 
     const embedding = "[" + query.queryEmbedding?.join(",") + "]";
     const max = query.similarityTopK ?? 2;
-    const where = this.collection.length ? "WHERE collection = $2" : "";
-    // TODO Add collection filter if set
+    const whereClauses = this.collection.length ? ["collection = $2"] : [];
+
+    const params: Array<string | number> = this.collection.length
+      ? [embedding, this.collection]
+      : [embedding];
+
+    query.filters?.filters.forEach((filter, index) => {
+      const paramIndex = params.length + 1;
+      whereClauses.push(`metadata->>'${filter.key}' = $${paramIndex}`);
+      params.push(filter.value);
+    });
+
+    const where =
+      whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
     const sql = `SELECT 
         v.*, 
         embeddings <-> $1 s 
@@ -260,9 +273,6 @@ export class PGVectorStore implements VectorStore {
     `;
 
     const db = (await this.getDb()) as pg.Client;
-    const params = this.collection.length
-      ? [embedding, this.collection]
-      : [embedding];
     const results = await db.query(sql, params);
 
     const nodes = results.rows.map((row) => {
