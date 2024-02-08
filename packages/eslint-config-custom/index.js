@@ -6,6 +6,7 @@ module.exports = {
       "error",
       {
         allowList: [
+          "LLAMA_CLOUD_API_KEY",
           "OPENAI_API_KEY",
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",
