@@ -16,9 +16,6 @@ export async function callToolWithErrorHandling(
   raiseError: boolean = false,
 ): Promise<ToolOutput> {
   try {
-    console.log({
-      toolWithErrorHandling: tool,
-    });
     const value = await tool.call?.(inputDict);
     return new ToolOutput(value, tool.metadata.name, inputDict, value);
   } catch (e) {

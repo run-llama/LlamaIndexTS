@@ -259,12 +259,6 @@ export class OpenAI extends BaseLLM {
       kwargsOutput.toolCalls = response.choices[0].message.tool_calls;
     }
 
-    console.log({
-      content,
-      role: response.choices[0].message.role,
-      additionalKwargs: kwargsOutput,
-    });
-
     return {
       message: {
         content,

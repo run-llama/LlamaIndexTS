@@ -20,6 +20,7 @@ export * from "./indices";
 export * from "./ingestion";
 export * from "./llm";
 export * from "./nodeParsers";
+export * from "./objects";
 export * from "./postprocessors";
 export * from "./readers/AssemblyAIReader";
 export * from "./readers/CSVReader";

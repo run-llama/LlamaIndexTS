@@ -1,6 +1,5 @@
 import { BaseNode, Metadata, TextNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
-import { randomUUID } from "../env";
 import { BaseTool } from "../types";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
@@ -24,7 +23,7 @@ export abstract class BaseObjectNodeMapping {
   }
 
   // Abstract method for internal add object logic
-  protected abstract _addObj(obj: any): void;
+  abstract _addObj(obj: any): void;
 
   // Implementing toNodes method
   toNodes(objs: any[]): TextNode[] {
@@ -32,7 +31,7 @@ export abstract class BaseObjectNodeMapping {
   }
 
   // Abstract method for internal from node logic
-  protected abstract _fromNode(node: BaseNode): any;
+  abstract _fromNode(node: BaseNode): any;
 
   // Implementing fromNode method
   fromNode(node: BaseNode): any {
@@ -50,8 +49,8 @@ export abstract class BaseObjectNodeMapping {
 type QueryType = string;
 
 export class ObjectRetriever {
-  private _retriever: BaseRetriever;
-  private _objectNodeMapping: BaseObjectNodeMapping;
+  _retriever: BaseRetriever;
+  _objectNodeMapping: BaseObjectNodeMapping;
 
   constructor(
     retriever: BaseRetriever,
@@ -68,30 +67,11 @@ export class ObjectRetriever {
 
   // Translating the retrieve method
   async retrieve(strOrQueryBundle: QueryType): Promise<any> {
-    const nodes = await this._retriever.retrieve(strOrQueryBundle);
-    console.log({ topNodes: nodes });
-    // @ts-ignore
-    const objs = nodes.map((node) => this._objectNodeMapping.fromNode(node));
-
-    console.log({ objs });
+    const nodes = await this.retriever.retrieve(strOrQueryBundle);
+    const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
     return objs;
   }
 }
-
-// def convert_tool_to_node(tool: BaseTool) -> TextNode:
-//     """Function convert Tool to node."""
-//     node_text = (
-//         f"Tool name: {tool.metadata.name}\n"
-//         f"Tool description: {tool.metadata.description}\n"
-//     )
-//     if tool.metadata.fn_schema is not None:
-//         node_text += f"Tool schema: {tool.metadata.fn_schema.schema()}\n"
-//     return TextNode(
-//         text=node_text,
-//         metadata={"name": tool.metadata.name},
-//         excluded_embed_metadata_keys=["name"],
-//         excluded_llm_metadata_keys=["name"],
-//     )
 
 const convertToolToNode = (tool: BaseTool): TextNode => {
   const nodeText = `Tool name: ${tool.metadata.name}\nTool description: ${tool.metadata.description}\n`;
@@ -127,11 +107,10 @@ export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
   }
 
   _fromNode(node: BaseNode): BaseTool {
-    if (node.metadata === null) {
+    if (!node.metadata) {
       throw new Error("Metadata must be set");
     }
-    console.log({ ux: node.metadata });
-    return this._tools[randomUUID()];
+    return this._tools[node.metadata.name];
   }
 
   persist(persistDir: string, objNodeMappingFilename: string): void {
