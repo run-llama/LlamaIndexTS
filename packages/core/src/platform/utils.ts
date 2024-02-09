@@ -1,9 +1,5 @@
 import { PlatformApiClient } from "./client";
-
-export const DEFAULT_PROJECT_NAME = "default";
-const DEFAULT_BASE_URL = "https://api.cloud.llamaindex.ai";
-
-export type ClientParams = { apiKey?: string; baseUrl?: string };
+import { ClientParams, DEFAULT_BASE_URL } from "./types";
 
 export function getClient({
   apiKey,

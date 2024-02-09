@@ -1,23 +1,23 @@
 import { NodeWithScore, jsonToNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
-import { ServiceContext } from "../ServiceContext";
+import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { Event } from "../callbacks/CallbackManager";
 import { PlatformApiClient } from "./client";
 import { RetrievalParams, TextNodeWithScore } from "./client/api";
-import { ClientParams, DEFAULT_PROJECT_NAME, getClient } from "./utils";
+import { CloudConstructorParams, DEFAULT_PROJECT_NAME } from "./types";
+import { getClient } from "./utils";
 
-type SearchParams = Omit<
+export type RetrieveParams = Omit<
   RetrievalParams,
   "query" | "searchFilters" | "pipelineId" | "className"
 >;
-type RetrieverParams = { name: string; projectName?: string } & ClientParams &
-  SearchParams;
 
 export class LlamaCloudRetriever implements BaseRetriever {
   client: PlatformApiClient;
-  searchParams: SearchParams;
+  retrieveParams: RetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
+  serviceContext: ServiceContext;
 
   private resultNodesToNodeWithScore(
     nodes: TextNodeWithScore[],
@@ -30,14 +30,15 @@ export class LlamaCloudRetriever implements BaseRetriever {
     });
   }
 
-  constructor(params: RetrieverParams) {
+  constructor(params: CloudConstructorParams & RetrieveParams) {
     const { apiKey, baseUrl } = params;
     this.client = getClient({ apiKey, baseUrl });
-    this.searchParams = params;
+    this.retrieveParams = params;
     this.pipelineName = params.name;
     if (params.projectName) {
       this.projectName = params.projectName;
     }
+    this.serviceContext = params.serviceContext ?? serviceContextFromDefaults();
   }
 
   async retrieve(
@@ -56,7 +57,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
     const results = await this.client.retrieval.runSearch({
-      ...this.searchParams,
+      ...this.retrieveParams,
       pipelineId: pipelines[0].id,
       query,
       searchFilters: preFilters as Record<string, unknown[]>,
@@ -66,6 +67,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
   }
 
   getServiceContext(): ServiceContext {
-    throw new Error("Method not implemented.");
+    return this.serviceContext;
   }
 }
