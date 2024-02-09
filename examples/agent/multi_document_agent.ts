@@ -107,10 +107,6 @@ async function main() {
 
     console.log(`Creating tool for ${title}`);
 
-    console.log({
-      documentAgent: documentAgents[title],
-    });
-
     const docTool = new QueryEngineTool({
       queryEngine: documentAgents[title],
       metadata: {
