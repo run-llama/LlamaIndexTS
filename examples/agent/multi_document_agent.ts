@@ -21,31 +21,26 @@ const wikiTitles = ["Brazil", "Canada"];
 async function main() {
   await extractWikipedia(wikiTitles);
 
-  const countryDocs: any = {};
+  const countryDocs: Record<string, Document> = {};
 
   for (const title of wikiTitles) {
     const path = `./agent/helpers/tmp_data/${title}.txt`;
-
     const text = await fs.readFile(path, "utf-8");
-
-    const documents = new Document({ text: text, id_: path });
-
-    countryDocs[title] = [documents];
+    const document = new Document({ text: text, id_: path });
+    countryDocs[title] = document;
   }
 
   const llm = new OpenAI({
     model: "gpt-4",
   });
 
-  const ctx = serviceContextFromDefaults({ llm });
-
+  const serviceContext = serviceContextFromDefaults({ llm });
   const storageContext = await storageContextFromDefaults({
     persistDir: "./storage",
   });
 
-  const allNodes: any = [];
-
-  const agents: any = {};
+  // TODO: fix any
+  const documentAgents: any = {};
   const queryEngines: any = {};
 
   for (const title of wikiTitles) {
@@ -54,20 +49,18 @@ async function main() {
     const nodes = new SimpleNodeParser({
       chunkSize: 200,
       chunkOverlap: 20,
-    }).getNodesFromDocuments(countryDocs[title]);
-
-    allNodes.push(...nodes);
+    }).getNodesFromDocuments([countryDocs[title]]);
 
     console.log(`Creating index for ${title}`);
 
     const vectorIndex = await VectorStoreIndex.init({
-      nodes,
-      serviceContext: ctx,
+      serviceContext: serviceContext,
       storageContext: storageContext,
+      nodes,
     });
 
     const summaryIndex = await SummaryIndex.init({
-      serviceContext: ctx,
+      serviceContext: serviceContext,
       nodes,
     });
 
@@ -101,7 +94,7 @@ async function main() {
       verbose: true,
     });
 
-    agents[title] = agent;
+    documentAgents[title] = agent;
     queryEngines[title] = vectorIndex.asQueryEngine();
   }
 
@@ -114,8 +107,12 @@ async function main() {
 
     console.log(`Creating tool for ${title}`);
 
+    console.log({
+      documentAgent: documentAgents[title],
+    });
+
     const docTool = new QueryEngineTool({
-      queryEngine: agents[title],
+      queryEngine: documentAgents[title],
       metadata: {
         name: `tool_${title}`,
         description: wikiSummary,
@@ -129,27 +126,18 @@ async function main() {
 
   const toolMapping = SimpleToolNodeMapping.fromObjects(allTools);
 
-  console.log("creating vector store index");
-
   const index = await VectorStoreIndex.init({
     storageContext,
   });
 
-  console.log("creating object index");
-
-  const obj_index = await new ObjectIndex(index, toolMapping).fromObjects(
+  const objectIndex = await new ObjectIndex(index, toolMapping).fromObjects(
     allTools,
     toolMapping,
     VectorStoreIndex,
-    {},
   );
 
-  console.log("creating top agent");
-
-  const toolRetriever = await obj_index.asRetriever({});
-
-  const top_agent = new OpenAIAgent({
-    toolRetriever: toolRetriever,
+  const topAgent = new OpenAIAgent({
+    toolRetriever: await objectIndex.asRetriever({}),
     llm,
     verbose: true,
     prefixMessages: [
@@ -161,8 +149,8 @@ async function main() {
     ],
   });
 
-  const response = await top_agent.chat({
-    message: "Tell me the differences between Brazil and Canada population?",
+  const response = await topAgent.chat({
+    message: "Tell me the differences between Brazil and Canada economics?",
   });
 
   console.log({

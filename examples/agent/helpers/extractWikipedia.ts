@@ -35,7 +35,7 @@ const extractWikipediaTitle = async (title: string) => {
         resolve(title);
         return;
       }
-      console.log(`Arquivo salvo para o título: ${title}`);
+      console.log(`${title} stored!`);
 
       resolve(title);
     });

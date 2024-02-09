@@ -74,7 +74,10 @@ export class ObjectRetriever {
 }
 
 const convertToolToNode = (tool: BaseTool): TextNode => {
-  const nodeText = `Tool name: ${tool.metadata.name}\nTool description: ${tool.metadata.description}\n`;
+  const nodeText = `
+    Tool name: ${tool.metadata.name}
+    Tool description: ${tool.metadata.description}
+  `;
   return new TextNode({
     text: nodeText,
     metadata: { name: tool.metadata.name },
