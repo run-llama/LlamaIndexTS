@@ -45,8 +45,9 @@ export class LlamaParseReader implements FileReader {
 
     // Load data, set the mime type
     const data = await fs.readRawFile(file);
+    const mimeType = await this.getMimeType(data);
     const body = new FormData();
-    body.set("file", new Blob([data], { type: "application/pdf" }), file);
+    body.set("file", new Blob([data], { type: mimeType }), file);
 
     const headers = {
       Authorization: `Bearer ${this.apiKey}`,
@@ -106,5 +107,14 @@ export class LlamaParseReader implements FileReader {
         }),
       ];
     }
+  }
+
+  private async getMimeType(data: Buffer): Promise<string> {
+    const { fileTypeFromBuffer } = await import("file-type");
+    const type = await fileTypeFromBuffer(data);
+    if (type?.mime !== "application/pdf") {
+      throw new Error("Currently, only PDF files are supported.");
+    }
+    return type.mime;
   }
 }
