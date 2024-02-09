@@ -4,12 +4,20 @@ import { ServiceContext } from "../ServiceContext";
 import { Event } from "../callbacks/CallbackManager";
 import { PlatformApiClient } from "./client";
 import { RetrievalParams, TextNodeWithScore } from "./client/api";
+import { ClientParams, DEFAULT_PROJECT_NAME, getClient } from "./utils";
 
-type RetrieverParams = Omit<RetrievalParams, "query" | "searchFilters">;
+type SearchParams = Omit<
+  RetrievalParams,
+  "query" | "searchFilters" | "pipelineId" | "className"
+>;
+type RetrieverParams = { name: string; projectName?: string } & ClientParams &
+  SearchParams;
 
 export class LlamaCloudRetriever implements BaseRetriever {
   client: PlatformApiClient;
-  params: RetrieverParams;
+  searchParams: SearchParams;
+  projectName: string = DEFAULT_PROJECT_NAME;
+  pipelineName: string;
 
   private resultNodesToNodeWithScore(
     nodes: TextNodeWithScore[],
@@ -22,9 +30,14 @@ export class LlamaCloudRetriever implements BaseRetriever {
     });
   }
 
-  constructor(client: PlatformApiClient, params: RetrieverParams) {
-    this.client = client;
-    this.params = params;
+  constructor(params: RetrieverParams) {
+    const { apiKey, baseUrl } = params;
+    this.client = getClient({ apiKey, baseUrl });
+    this.searchParams = params;
+    this.pipelineName = params.name;
+    if (params.projectName) {
+      this.projectName = params.projectName;
+    }
   }
 
   async retrieve(
@@ -33,8 +46,18 @@ export class LlamaCloudRetriever implements BaseRetriever {
     preFilters?: unknown,
   ): Promise<NodeWithScore[]> {
     // TODO: add event
+    const pipelines = await this.client.pipeline.searchPipelines({
+      projectName: this.projectName,
+      pipelineName: this.pipelineName,
+    });
+    if (pipelines.length !== 1 && !pipelines[0].id) {
+      throw new Error(
+        `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
+      );
+    }
     const results = await this.client.retrieval.runSearch({
-      ...this.params,
+      ...this.searchParams,
+      pipelineId: pipelines[0].id,
       query,
       searchFilters: preFilters as Record<string, unknown[]>,
     });

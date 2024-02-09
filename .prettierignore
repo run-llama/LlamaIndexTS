@@ -4,3 +4,4 @@ pnpm-lock.yaml
 lib/
 dist/
 .docusaurus/
+packages/core/src/platform/client/

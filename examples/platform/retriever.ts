@@ -1,19 +1,14 @@
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
-import {
-  ContextChatEngine,
-  PlatformApiClient,
-  PlatformRetriever,
-} from "llamaindex";
+import { ContextChatEngine, LlamaCloudRetriever } from "llamaindex";
 
 async function main() {
-  const client = new PlatformApiClient({
-    token: process.env.PLATFORM_API_KEY,
-    environment: "https://api.staging.llamaindex.ai/",
-  });
-  const retriever = new PlatformRetriever(client, {
-    pipelineId: "a158351c-69ce-4f7c-8372-e8610c8c9579",
+  const retriever = new LlamaCloudRetriever({
+    name: "test",
+    projectName: "default",
+    baseUrl: "https://api.staging.llamaindex.ai/",
+    apiKey: process.env.LLAMA_CLOUD_API_KEY,
     sparseSimilarityTopK: 5,
   });
   const chatEngine = new ContextChatEngine({ retriever });
