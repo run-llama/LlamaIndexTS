@@ -3,6 +3,7 @@ export * from "./CSVReader";
 export * from "./DocxReader";
 export * from "./HTMLReader";
 export * from "./ImageReader";
+export * from "./LlamaParseReader";
 export * from "./MarkdownReader";
 export * from "./NotionReader";
 export * from "./PDFReader";

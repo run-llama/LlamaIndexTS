@@ -8,7 +8,8 @@
     "start:docx": "node --loader ts-node/esm ./src/docx.ts",
     "start:html": "node --loader ts-node/esm ./src/html.ts",
     "start:markdown": "node --loader ts-node/esm ./src/markdown.ts",
-    "start:pdf": "node --loader ts-node/esm ./src/pdf.ts"
+    "start:pdf": "node --loader ts-node/esm ./src/pdf.ts",
+    "start:llamaparse": "node --loader ts-node/esm ./src/llamaparse.ts"
   },
   "dependencies": {
     "llamaindex": "latest"
