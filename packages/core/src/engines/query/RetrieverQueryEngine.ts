@@ -36,11 +36,17 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
     this.nodePostprocessors = nodePostprocessors || [];
   }
 
-  private applyNodePostprocessors(nodes: NodeWithScore[]) {
-    return this.nodePostprocessors.reduce(
-      (nodes, nodePostprocessor) => nodePostprocessor.postprocessNodes(nodes),
-      nodes,
-    );
+  private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {
+    let nodesWithScore = nodes;
+
+    for (const postprocessor of this.nodePostprocessors) {
+      nodesWithScore = await postprocessor.postprocessNodes(
+        nodesWithScore,
+        query,
+      );
+    }
+
+    return nodesWithScore;
   }
 
   private async retrieve(query: string, parentEvent: Event) {
@@ -50,7 +56,7 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
       this.preFilters,
     );
 
-    return this.applyNodePostprocessors(nodes);
+    return await this.applyNodePostprocessors(nodes, query);
   }
 
   query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
