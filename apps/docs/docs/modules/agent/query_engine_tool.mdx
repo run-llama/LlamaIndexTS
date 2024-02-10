@@ -1,0 +1,128 @@
+# OpenAI Agent + QueryEngineTool
+
+QueryEngineTool is a tool that allows you to query a vector index. In this example, we will create a vector index from a set of documents and then create a QueryEngineTool from the vector index. We will then create an OpenAIAgent with the QueryEngineTool and chat with the agent.
+
+## Setup
+
+First, you need to install the `llamaindex` package. You can do this by running the following command in your terminal:
+
+```bash
+pnpm i llamaindex
+```
+
+Then you can import the necessary classes and functions.
+
+```ts
+import {
+  OpenAIAgent,
+  SimpleDirectoryReader,
+  VectorStoreIndex,
+  QueryEngineTool,
+} from "llamaindex";
+```
+
+## Create a vector index
+
+Now we can create a vector index from a set of documents.
+
+```ts
+// Load the documents
+const documents = await new SimpleDirectoryReader().loadData({
+  directoryPath: "node_modules/llamaindex/examples/",
+});
+
+// Create a vector index from the documents
+const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
+```
+
+## Create a QueryEngineTool
+
+Now we can create a QueryEngineTool from the vector index.
+
+```ts
+// Create a query engine from the vector index
+const abramovQueryEngine = vectorIndex.asQueryEngine();
+
+// Create a QueryEngineTool with the query engine
+const queryEngineTool = new QueryEngineTool({
+  queryEngine: abramovQueryEngine,
+  metadata: {
+    name: "abramov_query_engine",
+    description: "A query engine for the Abramov documents",
+  },
+});
+```
+
+## Create an OpenAIAgent
+
+```ts
+// Create an OpenAIAgent with the query engine tool tools
+
+const agent = new OpenAIAgent({
+  tools: [queryEngineTool],
+  verbose: true,
+});
+```
+
+## Chat with the agent
+
+Now we can chat with the agent.
+
+```ts
+const response = await agent.chat({
+  message: "What was his salary?",
+});
+
+console.log(String(response));
+```
+
+## Full code
+
+```ts
+import {
+  OpenAIAgent,
+  SimpleDirectoryReader,
+  VectorStoreIndex,
+  QueryEngineTool,
+} from "llamaindex";
+
+async function main() {
+  // Load the documents
+  const documents = await new SimpleDirectoryReader().loadData({
+    directoryPath: "node_modules/llamaindex/examples/",
+  });
+
+  // Create a vector index from the documents
+  const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
+
+  // Create a query engine from the vector index
+  const abramovQueryEngine = vectorIndex.asQueryEngine();
+
+  // Create a QueryEngineTool with the query engine
+  const queryEngineTool = new QueryEngineTool({
+    queryEngine: abramovQueryEngine,
+    metadata: {
+      name: "abramov_query_engine",
+      description: "A query engine for the Abramov documents",
+    },
+  });
+
+  // Create an OpenAIAgent with the function tools
+  const agent = new OpenAIAgent({
+    tools: [queryEngineTool],
+    verbose: true,
+  });
+
+  // Chat with the agent
+  const response = await agent.chat({
+    message: "What was his salary?",
+  });
+
+  // Print the response
+  console.log(String(response));
+}
+
+main().then(() => {
+  console.log("Done");
+});
+```

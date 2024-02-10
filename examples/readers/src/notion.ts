@@ -3,7 +3,7 @@ import { program } from "commander";
 import { VectorStoreIndex } from "llamaindex";
 import { NotionReader } from "llamaindex/readers/NotionReader";
 import { stdin as input, stdout as output } from "node:process";
-import readline from "node:readline/promises";
+import { createInterface } from "node:readline/promises";
 
 program
   .argument("[page]", "Notion page id (must be provided)")
@@ -70,7 +70,7 @@ program
     // Create query engine
     const queryEngine = index.asQueryEngine();
 
-    const rl = readline.createInterface({ input, output });
+    const rl = createInterface({ input, output });
     while (true) {
       const query = await rl.question("Query: ");
 

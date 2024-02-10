@@ -2,14 +2,14 @@ import Papa, { ParseConfig } from "papaparse";
 import { Document } from "../Node";
 import { defaultFS } from "../env";
 import { GenericFileSystem } from "../storage/FileSystem";
-import { BaseReader } from "./base";
+import { FileReader } from "./type";
 
 /**
  * papaparse-based csv parser
  * @class CSVReader
  * @implements BaseReader
  */
-export class PapaCSVReader implements BaseReader {
+export class PapaCSVReader implements FileReader {
   private concatRows: boolean;
   private colJoiner: string;
   private rowJoiner: string;

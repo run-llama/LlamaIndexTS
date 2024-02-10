@@ -8,7 +8,7 @@ export class MetadataReplacementPostProcessor implements BaseNodePostprocessor {
     this.targetMetadataKey = targetMetadataKey;
   }
 
-  postprocessNodes(nodes: NodeWithScore[]): NodeWithScore[] {
+  async postprocessNodes(nodes: NodeWithScore[]): Promise<NodeWithScore[]> {
     for (let n of nodes) {
       n.node.setContent(
         n.node.metadata[this.targetMetadataKey] ??

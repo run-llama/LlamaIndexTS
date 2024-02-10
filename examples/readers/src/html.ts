@@ -1,13 +1,10 @@
 import { VectorStoreIndex } from "llamaindex";
-import { PDFReader } from "llamaindex/readers/PDFReader";
-import { resolve } from "node:path";
+import { HTMLReader } from "llamaindex/readers/HTMLReader";
 
 async function main() {
-  // Load PDF
-  const reader = new PDFReader();
-  const documents = await reader.loadData(
-    resolve(__dirname, "../data/brk-2022.pdf"),
-  );
+  // Load page
+  const reader = new HTMLReader();
+  const documents = await reader.loadData("../data/llamaindex.html");
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments(documents);
@@ -15,7 +12,7 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query({
-    query: "What mistakes did Warren E. Buffett make?",
+    query: "What can I do with LlamaIndex?",
   });
 
   // Output response

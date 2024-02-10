@@ -1,11 +1,12 @@
 import fs from "fs/promises";
 import path from "path";
-import { cyan, red, yellow } from "picocolors";
+import { cyan, red } from "picocolors";
 import { parse, stringify } from "smol-toml";
 import terminalLink from "terminal-link";
 import { copy } from "./copy";
 import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
+import { getToolConfig } from "./tools";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
 interface Dependency {
@@ -103,18 +104,19 @@ export const installPythonDependencies = (
     const installSuccessful = tryPoetryInstall(noRoot);
     if (!installSuccessful) {
       console.error(
-        red("Install failed. Please install dependencies manually."),
+        red(
+          "Installing dependencies using poetry failed. Please check error log above and try running create-llama again.",
+        ),
       );
       process.exit(1);
     }
   } else {
-    console.warn(
-      yellow(
-        `Poetry is not available in the current environment. The Python dependencies will not be installed automatically.
-Please check ${terminalLink(
+    console.error(
+      red(
+        `Poetry is not available in the current environment. Please check ${terminalLink(
           "Poetry Installation",
           `https://python-poetry.org/docs/#installation`,
-        )} to install poetry first, then install the dependencies manually.`,
+        )} to install poetry first, then run create-llama again.`,
       ),
     );
     process.exit(1);
@@ -128,6 +130,7 @@ export const installPythonTemplate = async ({
   engine,
   vectorDb,
   dataSource,
+  tools,
   postInstallAction,
 }: Pick<
   InstallTemplateArgs,
@@ -137,6 +140,7 @@ export const installPythonTemplate = async ({
   | "engine"
   | "vectorDb"
   | "dataSource"
+  | "tools"
   | "postInstallAction"
 >) => {
   console.log("\nInitializing Python project with template:", template, "\n");
@@ -162,19 +166,43 @@ export const installPythonTemplate = async ({
   });
 
   if (engine === "context") {
+    const enginePath = path.join(root, "app", "engine");
     const compPath = path.join(templatesDir, "components");
-    let vectorDbDirName = vectorDb ?? "none";
+
+    const vectorDbDirName = vectorDb ?? "none";
     const VectorDBPath = path.join(
       compPath,
       "vectordbs",
       "python",
       vectorDbDirName,
     );
-    const enginePath = path.join(root, "app", "engine");
-    await copy("**", path.join(root, "app", "engine"), {
+    await copy("**", enginePath, {
       parents: true,
       cwd: VectorDBPath,
     });
+
+    // Copy engine code
+    if (tools !== undefined && tools.length > 0) {
+      await copy("**", enginePath, {
+        parents: true,
+        cwd: path.join(compPath, "engines", "python", "agent"),
+      });
+      // Write tools_config.json
+      const configContent: Record<string, any> = {};
+      tools.forEach((tool) => {
+        configContent[tool] = getToolConfig(tool) ?? {};
+      });
+      const configFilePath = path.join(root, "tools_config.json");
+      await fs.writeFile(
+        configFilePath,
+        JSON.stringify(configContent, null, 2),
+      );
+    } else {
+      await copy("**", enginePath, {
+        parents: true,
+        cwd: path.join(compPath, "engines", "python", "chat"),
+      });
+    }
 
     const dataSourceType = dataSource?.type;
     if (dataSourceType !== undefined && dataSourceType !== "none") {

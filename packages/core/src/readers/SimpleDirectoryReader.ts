@@ -1,6 +1,5 @@
-import _ from "lodash";
 import { Document } from "../Node";
-import { defaultFS } from "../env";
+import { defaultFS, path } from "../env";
 import { CompleteFileSystem, walk } from "../storage/FileSystem";
 import { PapaCSVReader } from "./CSVReader";
 import { DocxReader } from "./DocxReader";
@@ -8,7 +7,7 @@ import { HTMLReader } from "./HTMLReader";
 import { ImageReader } from "./ImageReader";
 import { MarkdownReader } from "./MarkdownReader";
 import { PDFReader } from "./PDFReader";
-import { BaseReader } from "./base";
+import { BaseReader } from "./type";
 
 type ReaderCallback = (
   category: "file" | "directory",
@@ -57,13 +56,17 @@ export type SimpleDirectoryReaderLoadDataParams = {
 };
 
 /**
- * Read all of the documents in a directory.
+ * Read all the documents in a directory.
  * By default, supports the list of file types
  * in the FILE_EXT_TO_READER map.
  */
 export class SimpleDirectoryReader implements BaseReader {
   constructor(private observer?: ReaderCallback) {}
 
+  async loadData(
+    params: SimpleDirectoryReaderLoadDataParams,
+  ): Promise<Document[]>;
+  async loadData(directoryPath: string): Promise<Document[]>;
   async loadData(
     params: SimpleDirectoryReaderLoadDataParams | string,
   ): Promise<Document[]> {
@@ -88,7 +91,7 @@ export class SimpleDirectoryReader implements BaseReader {
     let docs: Document[] = [];
     for await (const filePath of walk(fs, directoryPath)) {
       try {
-        const fileExt = _.last(filePath.split(".")) || "";
+        const fileExt = path.extname(filePath).slice(1).toLowerCase();
 
         // Observer can decide to skip each file
         if (!this.doObserverCheck("file", filePath, ReaderStatus.STARTED)) {
@@ -96,11 +99,11 @@ export class SimpleDirectoryReader implements BaseReader {
           continue;
         }
 
-        let reader = null;
+        let reader: BaseReader;
 
         if (fileExt in fileExtToReader) {
           reader = fileExtToReader[fileExt];
-        } else if (!_.isNil(defaultReader)) {
+        } else if (defaultReader != null) {
           reader = defaultReader;
         } else {
           const msg = `No reader for file extension of ${filePath}`;

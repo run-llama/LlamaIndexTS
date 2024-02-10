@@ -1,7 +1,7 @@
 import { Document } from "../Node";
 import { createSHA256, defaultFS } from "../env";
 import { GenericFileSystem } from "../storage/FileSystem";
-import { BaseReader } from "./base";
+import { BaseReader } from "./type";
 
 /**
  * Read the text of a PDF

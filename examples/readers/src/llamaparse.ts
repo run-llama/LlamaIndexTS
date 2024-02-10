@@ -1,10 +1,9 @@
-import { VectorStoreIndex } from "llamaindex";
-import { HTMLReader } from "llamaindex/readers/HTMLReader";
+import { LlamaParseReader, VectorStoreIndex } from "llamaindex";
 
 async function main() {
-  // Load page
-  const reader = new HTMLReader();
-  const documents = await reader.loadData("data/18-1_Changelog.html");
+  // Load PDF using LlamaParse
+  const reader = new LlamaParseReader({ resultType: "markdown" });
+  const documents = await reader.loadData("../data/TOS.pdf");
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments(documents);
@@ -12,7 +11,7 @@ async function main() {
   // Query the index
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query({
-    query: "What were the notable changes in 18.1?",
+    query: "What is the license grant in the TOS?",
   });
 
   // Output response

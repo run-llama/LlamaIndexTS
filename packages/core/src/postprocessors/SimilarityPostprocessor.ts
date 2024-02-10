@@ -8,7 +8,7 @@ export class SimilarityPostprocessor implements BaseNodePostprocessor {
     this.similarityCutoff = options?.similarityCutoff;
   }
 
-  postprocessNodes(nodes: NodeWithScore[]) {
+  async postprocessNodes(nodes: NodeWithScore[]) {
     if (this.similarityCutoff === undefined) return nodes;
 
     const cutoff = this.similarityCutoff || 0;

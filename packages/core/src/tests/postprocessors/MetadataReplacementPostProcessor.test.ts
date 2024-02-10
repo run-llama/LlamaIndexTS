@@ -18,15 +18,15 @@ describe("MetadataReplacementPostProcessor", () => {
     ];
   });
 
-  test("Replaces the content of each node with specified metadata key if it exists", () => {
+  test("Replaces the content of each node with specified metadata key if it exists", async () => {
     nodes[0].node.metadata = { targetKey: "NewContent" };
-    const newNodes = postProcessor.postprocessNodes(nodes);
+    const newNodes = await postProcessor.postprocessNodes(nodes);
     // Check if node content was replaced correctly
     expect(newNodes[0].node.getContent(MetadataMode.NONE)).toBe("NewContent");
   });
 
-  test("Retains the original content of each node if no metadata key is found", () => {
-    const newNodes = postProcessor.postprocessNodes(nodes);
+  test("Retains the original content of each node if no metadata key is found", async () => {
+    const newNodes = await postProcessor.postprocessNodes(nodes);
     // Check if node content remained unchanged
     expect(newNodes[0].node.getContent(MetadataMode.NONE)).toBe("OldContent");
   });

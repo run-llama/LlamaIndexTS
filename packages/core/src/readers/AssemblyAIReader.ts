@@ -7,7 +7,7 @@ import {
   TranscriptSentence,
 } from "assemblyai";
 import { Document } from "../Node";
-import { BaseReader } from "./base";
+import { BaseReader } from "./type";
 
 type AssemblyAIOptions = Partial<BaseServiceParams>;
 
@@ -39,7 +39,7 @@ abstract class AssemblyAIReader implements BaseReader {
     this.client = new AssemblyAI(options as BaseServiceParams);
   }
 
-  abstract loadData(...args: any[]): Promise<Document[]>;
+  abstract loadData(params: TranscribeParams | string): Promise<Document[]>;
 
   protected async transcribeOrGetTranscript(params: TranscribeParams | string) {
     if (typeof params === "string") {

@@ -1,5 +1,5 @@
 import { BaseNode, Document } from "../Node";
-import { BaseReader } from "../readers/base";
+import { BaseReader } from "../readers/type";
 import { BaseDocumentStore, VectorStore } from "../storage";
 import { IngestionCache, getTransformationHash } from "./IngestionCache";
 import { DocStoreStrategy, createDocStoreStrategy } from "./strategies";

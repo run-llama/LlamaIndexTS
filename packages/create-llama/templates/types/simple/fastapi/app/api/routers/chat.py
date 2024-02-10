@@ -5,7 +5,7 @@ from llama_index.chat_engine.types import BaseChatEngine
 from llama_index.llms.base import ChatMessage
 from llama_index.llms.types import MessageRole
 from pydantic import BaseModel
-from app.engine.index import get_chat_engine
+from app.engine import get_chat_engine
 
 chat_router = r = APIRouter()
 

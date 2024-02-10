@@ -117,6 +117,8 @@ export async function runCreateLlama(
     externalPort,
     "--post-install-action",
     postInstallAction,
+    "--tools",
+    "none",
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
   let appProcess = exec(command, {

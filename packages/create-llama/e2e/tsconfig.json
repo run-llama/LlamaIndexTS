@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "tsBuildInfoFile": "./lib/.tsbuildinfo",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts"]
 }

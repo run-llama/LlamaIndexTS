@@ -6,6 +6,7 @@ module.exports = {
       "error",
       {
         allowList: [
+          "LLAMA_CLOUD_API_KEY",
           "OPENAI_API_KEY",
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",
@@ -14,6 +15,7 @@ module.exports = {
 
           "ASTRA_DB_APPLICATION_TOKEN",
           "ASTRA_DB_ENDPOINT",
+          "ASTRA_DB_NAMESPACE",
 
           "AZURE_OPENAI_KEY",
           "AZURE_OPENAI_ENDPOINT",

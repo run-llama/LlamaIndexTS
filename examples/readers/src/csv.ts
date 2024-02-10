@@ -10,7 +10,7 @@ import { PapaCSVReader } from "llamaindex/readers/CSVReader";
 async function main() {
   // Load CSV
   const reader = new PapaCSVReader();
-  const path = "data/titanic_train.csv";
+  const path = "../data/titanic_train.csv";
   const documents = await reader.loadData(path);
 
   const serviceContext = serviceContextFromDefaults({
