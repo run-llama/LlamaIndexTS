@@ -122,14 +122,14 @@ async function main() {
 
   const toolMapping = SimpleToolNodeMapping.fromObjects(allTools);
 
-  const index = await VectorStoreIndex.init({
-    storageContext,
-  });
-
-  const objectIndex = await new ObjectIndex(index, toolMapping).fromObjects(
+  const objectIndex = await ObjectIndex.fromObjects(
     allTools,
     toolMapping,
     VectorStoreIndex,
+    {
+      serviceContext,
+      storageContext,
+    },
   );
 
   const topAgent = new OpenAIAgent({

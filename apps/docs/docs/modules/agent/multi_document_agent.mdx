@@ -272,16 +272,15 @@ Our top level agent will use this document agents as tools and use toolRetriever
 // map the tools to nodes
 const toolMapping = SimpleToolNodeMapping.fromObjects(allTools);
 
-// create the index for the tools
-const index = await VectorStoreIndex.init({
-  storageContext,
-});
-
-// define the object index
-const objectIndex = await new ObjectIndex(index, toolMapping).fromObjects(
+// create the object index
+const objectIndex = await ObjectIndex.fromObjects(
   allTools,
   toolMapping,
   VectorStoreIndex,
+  {
+    serviceContext,
+    storageContext,
+  },
 );
 
 // create the top agent

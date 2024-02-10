@@ -1,5 +1,6 @@
 import { BaseNode, Metadata, TextNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
+import { VectorStoreIndex } from "../indices";
 import { BaseTool } from "../types";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
@@ -142,25 +143,29 @@ export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
 }
 
 export class ObjectIndex {
-  private _index: any;
+  private _index: VectorStoreIndex;
   private _objectNodeMapping: BaseObjectNodeMapping;
 
-  constructor(index: any, objectNodeMapping: BaseObjectNodeMapping) {
+  private constructor(index: any, objectNodeMapping: BaseObjectNodeMapping) {
     this._index = index;
     this._objectNodeMapping = objectNodeMapping;
   }
 
-  async fromObjects(
+  static async fromObjects(
     objects: any,
     objectMapping: BaseObjectNodeMapping,
+    // TODO: fix any (bundling issue)
     indexCls: any,
-    indexKwargs?: any,
+    indexKwargs?: Record<string, any>,
   ): Promise<ObjectIndex> {
     if (objectMapping === null) {
       objectMapping = SimpleToolNodeMapping.fromObjects(objects, {});
     }
+
     const nodes = objectMapping.toNodes(objects);
+
     const index = await indexCls.init({ nodes, ...indexKwargs });
+
     return new ObjectIndex(index, objectMapping);
   }
 
@@ -168,6 +173,10 @@ export class ObjectIndex {
     this._objectNodeMapping.addObj(obj);
     const node = this._objectNodeMapping.toNode(obj);
     this._index.insertNodes([node]);
+  }
+
+  get tools(): Record<string, BaseTool> {
+    return this._objectNodeMapping.objNodeMapping();
   }
 
   async asRetriever(kwargs: any): Promise<ObjectRetriever> {

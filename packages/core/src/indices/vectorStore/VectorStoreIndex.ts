@@ -84,7 +84,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    * @param options
    * @returns
    */
-  static async init(options: VectorIndexOptions): Promise<VectorStoreIndex> {
+  public static async init(
+    options: VectorIndexOptions,
+  ): Promise<VectorStoreIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
     const serviceContext =

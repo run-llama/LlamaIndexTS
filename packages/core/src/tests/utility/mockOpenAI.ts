@@ -11,7 +11,7 @@ export function mockLlmGeneration({
   callbackManager,
 }: {
   languageModel: OpenAI;
-  callbackManager: CallbackManager;
+  callbackManager?: CallbackManager;
 }) {
   jest
     .spyOn(languageModel, "chat")
@@ -84,7 +84,10 @@ export function mockLlmToolCallGeneration({
   );
 }
 
-export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {
+export function mockEmbeddingModel(
+  embedModel: OpenAIEmbedding,
+  embeddingsLength: number = 1,
+) {
   jest.spyOn(embedModel, "getTextEmbedding").mockImplementation(async (x) => {
     return new Promise((resolve) => {
       resolve([1, 0, 0, 0, 0, 0]);
@@ -92,6 +95,9 @@ export function mockEmbeddingModel(embedModel: OpenAIEmbedding) {
   });
   jest.spyOn(embedModel, "getTextEmbeddings").mockImplementation(async (x) => {
     return new Promise((resolve) => {
+      if (x.length > 1) {
+        resolve(Array(x.length).fill([1, 0, 0, 0, 0, 0]));
+      }
       resolve([[1, 0, 0, 0, 0, 0]]);
     });
   });
