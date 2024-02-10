@@ -22,11 +22,17 @@ export class DefaultContextGenerator implements ContextGenerator {
     this.nodePostprocessors = init.nodePostprocessors || [];
   }
 
-  private applyNodePostprocessors(nodes: NodeWithScore[]) {
-    return this.nodePostprocessors.reduce(
-      (nodes, nodePostprocessor) => nodePostprocessor.postprocessNodes(nodes),
-      nodes,
-    );
+  private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {
+    let nodesWithScore = nodes;
+
+    for (const postprocessor of this.nodePostprocessors) {
+      nodesWithScore = await postprocessor.postprocessNodes(
+        nodesWithScore,
+        query,
+      );
+    }
+
+    return nodesWithScore;
   }
 
   async generate(message: string, parentEvent?: Event): Promise<Context> {
@@ -42,7 +48,10 @@ export class DefaultContextGenerator implements ContextGenerator {
       parentEvent,
     );
 
-    const nodes = this.applyNodePostprocessors(sourceNodesWithScore);
+    const nodes = await this.applyNodePostprocessors(
+      sourceNodesWithScore,
+      message,
+    );
 
     return {
       message: {

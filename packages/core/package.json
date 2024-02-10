@@ -13,6 +13,7 @@
     "@xenova/transformers": "^2.15.0",
     "assemblyai": "^4.2.2",
     "chromadb": "~1.7.3",
+    "cohere-ai": "^7.7.5",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.10",
     "lodash": "^4.17.21",
