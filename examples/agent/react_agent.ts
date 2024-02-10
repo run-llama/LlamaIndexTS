@@ -31,11 +31,11 @@ const divideJSON = {
   properties: {
     a: {
       type: "number",
-      description: "The dividend a to divide",
+      description: "The dividend",
     },
     b: {
       type: "number",
-      description: "The divisor b to divide by",
+      description: "The divisor",
     },
   },
   required: ["a", "b"],
@@ -64,7 +64,8 @@ async function main() {
 
   // Chat with the agent
   const response = await agent.chat({
-    message: "I want to sum 3 and 4",
+    message: "I want to sum 5 and 5 and divide by 2",
+    toolChoice: "auto",
   });
 
   // Print the response
