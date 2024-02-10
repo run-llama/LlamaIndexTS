@@ -95,7 +95,7 @@ export class OpenAIAgentWorker implements AgentWorker {
   public prefixMessages: ChatMessage[];
   public callbackManager: CallbackManager | undefined;
 
-  private _getTools: (input: string) => BaseTool[];
+  private _getTools: (input: string) => Promise<BaseTool[]>;
 
   /**
    * Initialize.
@@ -118,12 +118,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     if (tools.length > 0 && toolRetriever) {
       throw new Error("Cannot specify both tools and tool_retriever");
     } else if (tools.length > 0) {
-      this._getTools = () => tools;
+      this._getTools = async () => tools;
     } else if (toolRetriever) {
-      // @ts-ignore
-      this._getTools = (message: string) => toolRetriever.retrieve(message);
+      this._getTools = async (message: string) =>
+        toolRetriever.retrieve(message);
     } else {
-      this._getTools = () => [];
+      this._getTools = async () => [];
     }
   }
 
@@ -298,7 +298,7 @@ export class OpenAIAgentWorker implements AgentWorker {
    * @param input: input
    * @returns: tools
    */
-  getTools(input: string): BaseTool[] {
+  async getTools(input: string): Promise<BaseTool[]> {
     return this._getTools(input);
   }
 
@@ -308,7 +308,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     mode: ChatResponseMode = ChatResponseMode.WAIT,
     toolChoice: string | { [key: string]: any } = "auto",
   ): Promise<TaskStepOutput> {
-    const tools = this.getTools(task.input);
+    const tools = await this.getTools(task.input);
 
     if (step.input) {
       addUserStepToMemory(step, task.extraState.newMemory, this._verbose);

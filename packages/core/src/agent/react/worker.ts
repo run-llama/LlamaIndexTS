@@ -61,15 +61,16 @@ function addUserStepToReasoning(
  * ReAct agent worker.
  */
 export class ReActAgentWorker implements AgentWorker {
-  _llm: LLM;
-  _verbose: boolean;
+  llm: LLM;
+  verbose: boolean;
 
-  _maxInteractions: number = 10;
-  _reactChatFormatter: ReActChatFormatter;
-  _outputParser: ReActOutputParser;
+  maxInteractions: number = 10;
+  reactChatFormatter: ReActChatFormatter;
+  outputParser: ReActOutputParser;
 
   callbackManager: CallbackManager;
-  _getTools: (message: string) => BaseTool[];
+
+  _getTools: (message: string) => Promise<BaseTool[]>;
 
   constructor({
     tools,
@@ -81,23 +82,23 @@ export class ReActAgentWorker implements AgentWorker {
     verbose,
     toolRetriever,
   }: ReActAgentWorkerParams) {
-    this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
+    this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
     this.callbackManager = callbackManager || new CallbackManager();
 
-    this._maxInteractions = maxInteractions ?? 10;
-    this._reactChatFormatter = reactChatFormatter ?? new ReActChatFormatter();
-    this._outputParser = outputParser ?? new ReActOutputParser();
-    this._verbose = verbose || false;
+    this.maxInteractions = maxInteractions ?? 10;
+    this.reactChatFormatter = reactChatFormatter ?? new ReActChatFormatter();
+    this.outputParser = outputParser ?? new ReActOutputParser();
+    this.verbose = verbose || false;
 
     if (tools.length > 0 && toolRetriever) {
       throw new Error("Cannot specify both tools and tool_retriever");
     } else if (tools.length > 0) {
-      this._getTools = () => tools;
+      this._getTools = async () => tools;
     } else if (toolRetriever) {
-      // @ts-ignore
-      this._getTools = (message: string) => toolRetriever.retrieve(message);
+      this._getTools = async (message: string) =>
+        toolRetriever.retrieve(message);
     } else {
-      this._getTools = () => [];
+      this._getTools = async () => [];
     }
   }
 
@@ -148,7 +149,7 @@ export class ReActAgentWorker implements AgentWorker {
     let reasoningStep;
 
     try {
-      reasoningStep = this._outputParser.parse(
+      reasoningStep = this.outputParser.parse(
         messageContent,
         isStreaming,
       ) as ActionReasoningStep;
@@ -156,7 +157,7 @@ export class ReActAgentWorker implements AgentWorker {
       throw new Error(`Could not parse output: ${e}`);
     }
 
-    if (this._verbose) {
+    if (this.verbose) {
       console.log(`${reasoningStep.getContent()}\n`);
     }
 
@@ -237,7 +238,7 @@ export class ReActAgentWorker implements AgentWorker {
 
     currentReasoning.push(observationStep);
 
-    if (this._verbose) {
+    if (this.verbose) {
       console.log(`${observationStep.getContent()}`);
     }
 
@@ -256,7 +257,7 @@ export class ReActAgentWorker implements AgentWorker {
   ): AgentChatResponse {
     if (currentReasoning.length === 0) {
       throw new Error("No reasoning steps were taken.");
-    } else if (currentReasoning.length === this._maxInteractions) {
+    } else if (currentReasoning.length === this.maxInteractions) {
       throw new Error("Reached max iterations.");
     }
 
@@ -313,19 +314,19 @@ export class ReActAgentWorker implements AgentWorker {
         step,
         task.extraState.newMemory,
         task.extraState.currentReasoning,
-        this._verbose,
+        this.verbose,
       );
     }
 
-    const tools = this._getTools(task.input);
+    const tools = await this._getTools(task.input);
 
-    const inputChat = this._reactChatFormatter.format(
+    const inputChat = this.reactChatFormatter.format(
       tools,
       [...task.memory.get(), ...task.extraState.newMemory.get()],
       task.extraState.currentReasoning,
     );
 
-    const chatResponse = await this._llm.chat({
+    const chatResponse = await this.llm.chat({
       messages: inputChat,
     });
 
