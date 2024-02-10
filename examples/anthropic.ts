@@ -1,7 +1,9 @@
 import { Anthropic } from "llamaindex";
 
 (async () => {
-  const anthropic = new Anthropic();
+  const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+  });
   const result = await anthropic.chat({
     messages: [
       { content: "You want to talk in rhymes.", role: "system" },
