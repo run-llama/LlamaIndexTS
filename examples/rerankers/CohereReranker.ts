@@ -2,7 +2,6 @@ import {
   CohereRerank,
   Document,
   OpenAI,
-  RetrieverQueryEngine,
   VectorStoreIndex,
   serviceContextFromDefaults,
 } from "llamaindex";
@@ -21,38 +20,36 @@ async function main() {
   });
 
   const retriever = index.asRetriever();
+
   retriever.similarityTopK = 5;
 
   const nodePostprocessor = new CohereRerank({
-    apiKey: "OYRUf7ZnaHXGdLjHbEw32F936DqQZFZyaWpy6MLW",
-    topN: 4,
+    apiKey: "<COHERE_API_KEY>",
+    topN: 5,
   });
 
-  // TODO: cannot pass responseSynthesizer into retriever query engine
-  const queryEngine = new RetrieverQueryEngine(
+  const queryEngine = index.asQueryEngine({
     retriever,
-    undefined,
-    undefined,
-    [nodePostprocessor],
-  );
+    nodePostprocessors: [nodePostprocessor],
+  });
 
-  const cohereResponse = await queryEngine.query({
+  const baseQueryEngine = index.asQueryEngine({
+    retriever,
+  });
+
+  const response = await queryEngine.query({
     query: "What did the author do growing up?",
   });
 
-  console.log("==== cohere engine ====");
-  console.log(cohereResponse.response);
-  console.log("=======================");
+  // cohere response
+  console.log(response.response);
 
-  const baseEngine = index.asQueryEngine();
-
-  const baseResponse = await baseEngine.query({
+  const baseResponse = await baseQueryEngine.query({
     query: "What did the author do growing up?",
   });
 
-  console.log("==== base engine ====");
+  // response without cohere
   console.log(baseResponse.response);
-  console.log("=======================");
 }
 
 main().catch(console.error);
