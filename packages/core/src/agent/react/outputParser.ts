@@ -1,6 +1,3 @@
-// class ReActOutputParser(BaseOutputParser):
-//     """ReAct Output parser."""
-
 import {
   ActionReasoningStep,
   BaseOutputParser,
