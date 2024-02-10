@@ -1,5 +1,3 @@
-// """ReAct agent worker."""
-
 import { randomUUID } from "crypto";
 import { CallbackManager } from "../../callbacks/CallbackManager";
 import { AgentChatResponse } from "../../engines/chat";
