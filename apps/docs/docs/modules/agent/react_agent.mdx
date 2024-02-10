@@ -1,8 +1,8 @@
-# OpenAI Agent
+# ReAct Agent
 
-OpenAI API that supports function calling, it’s never been easier to build your own agent!
+The ReAct agent is an AI agent that can reason over the next action, construct an action command, execute the action, and repeat these steps in an iterative loop until the task is complete.
 
-In this notebook tutorial, we showcase how to write your own OpenAI agent
+In this notebook tutorial, we showcase how to write your ReAct agent using the `llamaindex` package.
 
 ## Setup
 
@@ -10,6 +10,12 @@ First, you need to install the `llamaindex` package. You can do this by running 
 
 ```bash
 pnpm i llamaindex
+```
+
+And then you can import the `OpenAIAgent` and `FunctionTool` from the `llamaindex` package.
+
+```ts
+import { FunctionTool, OpenAIAgent } from "llamaindex";
 ```
 
 Then we can define a function to sum two numbers and another function to divide two numbers.
@@ -77,12 +83,12 @@ const divideFunctionTool = new FunctionTool(divideNumbers, {
 });
 ```
 
-## Create an OpenAIAgent
+## Create an ReAct
 
 Now we can create an OpenAIAgent with the function tools.
 
 ```ts
-const agent = new OpenAIAgent({
+const agent = new ReActAgent({
   tools: [sumFunctionTool, divideFunctionTool],
   verbose: true,
 });
@@ -100,10 +106,24 @@ const response = await agent.chat({
 console.log(String(response));
 ```
 
+The output will be:
+
+```bash
+Thought: I need to use a tool to help me answer the question.
+Action: sumNumbers
+Action Input: {"a":5,"b":5}
+
+Observation: 10
+Thought: I can answer without using any more tools.
+Answer: The sum of 5 and 5 is 10, and when divided by 2, the result is 5.
+
+The sum of 5 and 5 is 10, and when divided by 2, the result is 5.
+```
+
 ## Full code
 
 ```ts
-import { FunctionTool, OpenAIAgent } from "llamaindex";
+import { FunctionTool, ReActAgent } from "llamaindex";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }): number {
@@ -170,7 +190,7 @@ async function main() {
 
   // Chat with the agent
   const response = await agent.chat({
-    message: "How much is 5 + 5? then divide by 2",
+    message: "I want to sum 5 and 5 and then divide by 2",
   });
 
   // Print the response
