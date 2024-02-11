@@ -28,6 +28,10 @@ export AZURE_OPENAI_ENDPOINT="<YOUR ENDPOINT, see https://learn.microsoft.com/en
 export AZURE_OPENAI_DEPLOYMENT="gpt-4" # or some other deployment name
 ```
 
+## Local LLM
+
+For local LLMs, currently we recommend the use of [Ollama](./available_llms/ollama.md) LLM.
+
 ## API Reference
 
 - [OpenAI](../api/classes/OpenAI.md)
