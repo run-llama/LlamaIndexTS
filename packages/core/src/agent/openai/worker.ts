@@ -88,9 +88,9 @@ type CallFunctionOutput = {
  * This class is responsible for running the agent.
  */
 export class OpenAIAgentWorker implements AgentWorker {
-  private _llm: OpenAI;
-  private _verbose: boolean;
-  private _maxFunctionCalls: number;
+  private llm: OpenAI;
+  private verbose: boolean;
+  private maxFunctionCalls: number;
 
   public prefixMessages: ChatMessage[];
   public callbackManager: CallbackManager | undefined;
@@ -109,11 +109,11 @@ export class OpenAIAgentWorker implements AgentWorker {
     callbackManager,
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
-    this._llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
-    this._verbose = verbose || false;
-    this._maxFunctionCalls = maxFunctionCalls;
+    this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
+    this.verbose = verbose || false;
+    this.maxFunctionCalls = maxFunctionCalls;
     this.prefixMessages = prefixMessages || [];
-    this.callbackManager = callbackManager || this._llm.callbackManager;
+    this.callbackManager = callbackManager || this.llm.callbackManager;
 
     if (tools.length > 0 && toolRetriever) {
       throw new Error("Cannot specify both tools and tool_retriever");
@@ -207,7 +207,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     llmChatKwargs: any,
   ): Promise<AgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
-      const chatResponse = (await this._llm.chat({
+      const chatResponse = (await this.llm.chat({
         stream: false,
         ...llmChatKwargs,
       })) as unknown as ChatResponse;
@@ -236,7 +236,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       throw new Error("Invalid tool_call object");
     }
 
-    const functionMessage = await callFunction(tools, toolCall, this._verbose);
+    const functionMessage = await callFunction(tools, toolCall, this.verbose);
 
     const message = functionMessage[0];
     const toolOutput = functionMessage[1];
@@ -282,7 +282,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     toolCalls: OpenAIToolCall[] | null,
     nFunctionCalls: number,
   ): boolean {
-    if (nFunctionCalls > this._maxFunctionCalls) {
+    if (nFunctionCalls > this.maxFunctionCalls) {
       return false;
     }
 
@@ -311,7 +311,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     const tools = await this.getTools(task.input);
 
     if (step.input) {
-      addUserStepToMemory(step, task.extraState.newMemory, this._verbose);
+      addUserStepToMemory(step, task.extraState.newMemory, this.verbose);
     }
 
     const openaiTools = tools.map((tool) =>

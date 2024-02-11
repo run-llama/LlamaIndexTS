@@ -15,6 +15,7 @@ type OpenAIAgentParams = {
   defaultToolChoice?: string;
   callbackManager?: CallbackManager;
   toolRetriever?: ObjectRetriever<BaseTool>;
+  systemPrompt?: string;
 };
 
 /**
@@ -33,7 +34,29 @@ export class OpenAIAgent extends AgentRunner {
     defaultToolChoice = "auto",
     callbackManager,
     toolRetriever,
+    systemPrompt,
   }: OpenAIAgentParams) {
+    prefixMessages = prefixMessages || [];
+
+    llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
+
+    if (systemPrompt) {
+      if (prefixMessages) {
+        throw new Error("Cannot provide both systemPrompt and prefixMessages");
+      }
+
+      prefixMessages = [
+        {
+          content: systemPrompt,
+          role: "system",
+        },
+      ];
+    }
+
+    if (!llm?.metadata.isFunctionCallingModel) {
+      throw new Error("LLM model must be a function-calling model");
+    }
+
     const stepEngine = new OpenAIAgentWorker({
       tools,
       callbackManager,
