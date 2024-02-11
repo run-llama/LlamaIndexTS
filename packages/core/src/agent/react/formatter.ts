@@ -76,8 +76,8 @@ export class ReActChatFormatter implements BaseAgentChatFormatter {
         content: systemContent,
         role: "system",
       },
-      ...reasoningHistory,
       ...chatHistory,
+      ...reasoningHistory,
     ];
   }
 }
