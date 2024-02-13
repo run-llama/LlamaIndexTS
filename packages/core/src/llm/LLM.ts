@@ -26,6 +26,7 @@ import {
 } from "./azure";
 import { BaseLLM } from "./base";
 import { OpenAISession, getOpenAISession } from "./open_ai";
+import { isFunctionCallingModel } from "./openai/utils";
 import { PortkeySession, getPortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate_ai";
 import {
@@ -166,6 +167,7 @@ export class OpenAI extends BaseLLM {
       maxTokens: this.maxTokens,
       contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
+      isFunctionCallingModel: isFunctionCallingModel(this.model),
     };
   }
 
