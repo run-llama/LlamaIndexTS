@@ -1,6 +1,6 @@
 import { OpenAI } from "./LLM";
 
-export class TogetherLLM {
+export class TogetherLLM extends OpenAI {
   constructor(init?: Partial<OpenAI>) {
     const {
       apiKey = process.env.TOGETHER_API_KEY,
@@ -16,11 +16,11 @@ export class TogetherLLM {
     additionalSessionOptions.baseURL =
       additionalSessionOptions.baseURL ?? "https://api.together.xyz/v1";
 
-    // super({
-    //   apiKey,
-    //   additionalSessionOptions,
-    //   model,
-    //   ...rest,
-    // });
+    super({
+      apiKey,
+      additionalSessionOptions,
+      model,
+      ...rest,
+    });
   }
 }
