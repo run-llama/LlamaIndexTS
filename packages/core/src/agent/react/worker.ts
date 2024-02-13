@@ -82,7 +82,7 @@ export class ReActAgentWorker implements AgentWorker {
     verbose,
     toolRetriever,
   }: ReActAgentWorkerParams) {
-    this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-1106" });
+    this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
     this.callbackManager = callbackManager || new CallbackManager();
 
     this.maxInteractions = maxInteractions ?? 10;
@@ -322,7 +322,7 @@ export class ReActAgentWorker implements AgentWorker {
 
     const inputChat = this.reactChatFormatter.format(
       tools,
-      [...task.memory.get(), ...task.extraState.newMemory.get()],
+      [...task.memory.getAll(), ...task.extraState.newMemory.getAll()],
       task.extraState.currentReasoning,
     );
 
