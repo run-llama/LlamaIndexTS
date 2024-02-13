@@ -37,17 +37,15 @@ async function main() {
     responseSynthesizer,
   });
 
-  const prompts = queryEngine.getPrompts();
-
-  console.log({ prompts });
-
-  queryEngine.updatePrompts({
-    "responseSynthesizer:treeSummarize": treeSummarizePrompt,
+  console.log({
+    promptsToUse: queryEngine.getPrompts(),
   });
 
-  const prompts2 = queryEngine.getPrompts();
+  queryEngine.updatePrompts({
+    "responseSynthesizer:summaryTemplate": treeSummarizePrompt,
+  });
 
-  console.log({ prompts2 });
+  await queryEngine.query({ query });
 }
 
 main();
