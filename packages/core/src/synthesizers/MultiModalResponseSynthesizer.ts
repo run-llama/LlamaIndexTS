@@ -3,6 +3,7 @@ import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { imageToDataUrl } from "../embeddings";
 import { MessageContentDetail } from "../llm/types";
+import { PromptMixin } from "../prompts";
 import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
 import {
   BaseSynthesizer,
@@ -10,7 +11,7 @@ import {
   SynthesizeParamsStreaming,
 } from "./types";
 
-export class MultiModalResponseSynthesizer implements BaseSynthesizer {
+export class MultiModalResponseSynthesizer extends PromptMixin implements BaseSynthesizer {
   serviceContext: ServiceContext;
   metadataMode: MetadataMode;
   textQATemplate: TextQaPrompt;
@@ -20,9 +21,23 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
     textQATemplate,
     metadataMode,
   }: Partial<MultiModalResponseSynthesizer> = {}) {
+    super()
+
     this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.metadataMode = metadataMode ?? MetadataMode.NONE;
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
+  }
+
+  protected _getPrompts(): { [x: string]: TextQaPrompt } {
+    return {
+      textQATemplate: this.textQATemplate
+    }
+  }
+
+  protected _updatePrompts(promptsDict: { [x: string]: TextQaPrompt; }): void {
+    if(promptsDict.textQATemplate) {
+      this.textQATemplate = promptsDict.textQATemplate;
+    }
   }
 
   synthesize(
