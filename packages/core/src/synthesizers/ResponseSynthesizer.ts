@@ -3,7 +3,7 @@ import { Response } from "../Response";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { streamConverter } from "../llm/utils";
 import { PromptMixin } from "../prompts";
-import { getResponseBuilder } from "./builders";
+import { ResponseBuilderPrompts, getResponseBuilder } from "./builders";
 import {
   BaseSynthesizer,
   ResponseBuilder,
@@ -43,14 +43,16 @@ export class ResponseSynthesizer
     return {};
   }
 
-  protected _getPrompts(): { [x: string]: any } {
+  protected _getPrompts(): { [x: string]: ResponseBuilderPrompts } {
     const prompts = this.responseBuilder.getPrompts?.();
     return {
       ...prompts,
     };
   }
 
-  protected _updatePrompts(promptsDict: { [x: string]: unknown }): void {
+  protected _updatePrompts(promptsDict: {
+    [x: string]: ResponseBuilderPrompts;
+  }): void {
     this.responseBuilder.updatePrompts?.(promptsDict);
   }
 

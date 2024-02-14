@@ -90,10 +90,6 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
     };
   }
 
-  protected _getPrompts(): { [x: string]: any } {
-    return {};
-  }
-
   static fromDefaults(init: {
     queryEngineTools: RouterQueryEngineTool[];
     selector?: BaseSelector;

@@ -63,11 +63,11 @@ export class LLMMultiSelector extends BaseSelector {
     this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, any> {
+  _getPrompts(): Record<string, MultiSelectPrompt> {
     return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, any>): void {
+  _updatePrompts(prompts: Record<string, MultiSelectPrompt>): void {
     if ("prompt" in prompts) {
       this.prompt = prompts.prompt;
     }
@@ -130,11 +130,11 @@ export class LLMSingleSelector extends BaseSelector {
     this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, any> {
+  _getPrompts(): Record<string, SingleSelectPrompt> {
     return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, any>): void {
+  _updatePrompts(prompts: Record<string, SingleSelectPrompt>): void {
     if ("prompt" in prompts) {
       this.prompt = prompts.prompt;
     }

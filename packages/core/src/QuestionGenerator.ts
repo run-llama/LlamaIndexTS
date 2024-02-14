@@ -29,13 +29,15 @@ export class LLMQuestionGenerator
     this.outputParser = init?.outputParser ?? new SubQuestionOutputParser();
   }
 
-  protected _getPrompts(): { [x: string]: any } {
+  protected _getPrompts(): { [x: string]: SubQuestionPrompt } {
     return {
       subQuestion: this.prompt,
     };
   }
 
-  protected _updatePrompts(promptsDict: { [x: string]: any }): void {
+  protected _updatePrompts(promptsDict: {
+    [x: string]: SubQuestionPrompt;
+  }): void {
     if ("subQuestion" in promptsDict) {
       this.prompt = promptsDict.subQuestion;
     }

@@ -8,21 +8,26 @@ type MockPrompt = {
 const mockPrompt = ({ context, query }: MockPrompt) =>
   `context: ${context} query: ${query}`;
 
+const mockPrompt2 = ({ context, query }: MockPrompt) =>
+  `query: ${query} context: ${context}`;
+
+type MockPromptFunction = typeof mockPrompt;
+
 class MockObject2 extends PromptMixin {
-  _prompt_dict_2: string;
+  _prompt_dict_2: MockPromptFunction;
 
   constructor() {
     super();
-    this._prompt_dict_2 = mockPrompt({ context: "{abc}", query: "{def}" });
+    this._prompt_dict_2 = mockPrompt;
   }
 
-  protected _getPrompts(): { [x: string]: any } {
+  protected _getPrompts(): { [x: string]: MockPromptFunction } {
     return {
       abc: this._prompt_dict_2,
     };
   }
 
-  _updatePrompts(promptsDict: { [x: string]: any }): void {
+  _updatePrompts(promptsDict: { [x: string]: MockPromptFunction }): void {
     if ("abc" in promptsDict) {
       this._prompt_dict_2 = promptsDict["abc"];
     }
@@ -32,17 +37,14 @@ class MockObject2 extends PromptMixin {
 class MockObject1 extends PromptMixin {
   mockObject2: MockObject2;
 
-  fooPrompt: string;
-  barPrompt: string;
+  fooPrompt: MockPromptFunction;
+  barPrompt: MockPromptFunction;
 
   constructor() {
     super();
     this.mockObject2 = new MockObject2();
-    this.fooPrompt = mockPrompt({ context: "{foo}", query: "{foo}" });
-    this.barPrompt = mockPrompt({
-      context: "{foo} {bar}",
-      query: "{foo} {bar}",
-    });
+    this.fooPrompt = mockPrompt;
+    this.barPrompt = mockPrompt;
   }
 
   protected _getPrompts(): { [x: string]: any } {
@@ -69,36 +71,68 @@ class MockObject1 extends PromptMixin {
 describe("PromptMixin", () => {
   it("should return prompts", () => {
     const mockObj1 = new MockObject1();
-    const prompts = mockObj1.getPrompts();
-    expect(prompts).toEqual({
-      bar: mockPrompt({ context: "{foo} {bar}", query: "{foo} {bar}" }),
-      foo: mockPrompt({ context: "{foo}", query: "{foo}" }),
-      "mock_object_2:abc": mockPrompt({ context: "{abc}", query: "{def}" }),
-    });
 
-    expect(mockObj1.mockObject2.getPrompts()).toEqual({
-      abc: mockPrompt({ context: "{abc}", query: "{def}" }),
+    const prompts = mockObj1.getPrompts();
+
+    expect(
+      mockObj1.fooPrompt({
+        context: "{foo}",
+        query: "{foo}",
+      }),
+    ).toEqual("context: {foo} query: {foo}");
+
+    expect(
+      mockObj1.barPrompt({
+        context: "{foo} {bar}",
+        query: "{foo} {bar}",
+      }),
+    ).toEqual("context: {foo} {bar} query: {foo} {bar}");
+
+    expect(mockObj1.fooPrompt).toEqual(prompts.foo);
+    expect(mockObj1.barPrompt).toEqual(prompts.bar);
+
+    expect(mockObj1.getPrompts()).toEqual({
+      bar: mockPrompt,
+      foo: mockPrompt,
+      "mock_object_2:abc": mockPrompt,
     });
   });
 
   it("should update prompts", () => {
     const mockObj1 = new MockObject1();
 
-    mockObj1.updatePrompts({
-      bar: mockPrompt({ context: "{bar} testing", query: "{bar} testing" }),
-      "mock_object_2:abc": mockPrompt({
-        context: "{abc} {def} ghi",
-        query: "{abc} {def} ghi",
+    expect(
+      mockObj1.barPrompt({
+        context: "{foo} {bar}",
+        query: "{foo} {bar}",
       }),
+    ).toEqual(mockPrompt({ context: "{foo} {bar}", query: "{foo} {bar}" }));
+
+    expect(
+      mockObj1.mockObject2._prompt_dict_2({
+        context: "{bar} testing",
+        query: "{bar} testing",
+      }),
+    ).toEqual(mockPrompt({ context: "{bar} testing", query: "{bar} testing" }));
+
+    mockObj1.updatePrompts({
+      bar: mockPrompt2,
+      "mock_object_2:abc": mockPrompt2,
     });
 
-    expect(mockObj1.getPrompts()).toEqual({
-      bar: mockPrompt({ context: "{bar} testing", query: "{bar} testing" }),
-      foo: mockPrompt({ context: "{foo}", query: "{foo}" }),
-      "mock_object_2:abc": mockPrompt({
-        context: "{abc} {def} ghi",
-        query: "{abc} {def} ghi",
+    expect(
+      mockObj1.barPrompt({
+        context: "{foo} {bar}",
+        query: "{bar} {foo}",
       }),
-    });
+    ).toEqual(mockPrompt2({ context: "{foo} {bar}", query: "{bar} {foo}" }));
+    expect(
+      mockObj1.mockObject2._prompt_dict_2({
+        context: "{bar} testing",
+        query: "{bar} testing",
+      }),
+    ).toEqual(
+      mockPrompt2({ context: "{bar} testing", query: "{bar} testing" }),
+    );
   });
 });

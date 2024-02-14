@@ -388,3 +388,8 @@ export function getResponseBuilder(
       return new CompactAndRefine(serviceContext);
   }
 }
+
+export type ResponseBuilderPrompts =
+  | TextQaPrompt
+  | TreeSummarizePrompt
+  | RefinePrompt;
