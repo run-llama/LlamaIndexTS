@@ -1,3 +1,4 @@
+import { BaseNode } from "../../Node";
 import { Response } from "../../Response";
 import {
   ServiceContext,
@@ -31,8 +32,8 @@ async function combineResponses(
     console.log("Combining responses from multiple query engines.");
   }
 
-  const responseStrs = [];
-  const sourceNodes = [];
+  const responseStrs: string[] = [];
+  const sourceNodes: BaseNode[] = [];
 
   for (const response of responses) {
     if (response?.sourceNodes) {
@@ -119,7 +120,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
     const result = await this.selector.select(this.metadatas, queryBundle);
 
     if (result.selections.length > 1) {
-      const responses = [];
+      const responses: Response[] = [];
       for (let i = 0; i < result.selections.length; i++) {
         const engineInd = result.selections[i];
         const logStr = `Selecting query engine ${engineInd}: ${result.selections[i]}.`;
