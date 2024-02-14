@@ -74,7 +74,7 @@ export class CondenseQuestionChatEngine
     );
 
     return this.llm.complete({
-      prompt: defaultCondenseQuestionPrompt({
+      prompt: this.condenseMessagePrompt({
         question: question,
         chatHistory: chatHistoryStr,
       }),
