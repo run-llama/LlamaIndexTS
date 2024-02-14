@@ -7,6 +7,7 @@ import {
 } from "../../ServiceContext";
 import { Event } from "../../callbacks/CallbackManager";
 import { randomUUID } from "../../env";
+import { PromptMixin } from "../../prompts";
 import {
   BaseSynthesizer,
   CompactAndRefine,
@@ -24,7 +25,10 @@ import { BaseQuestionGenerator, SubQuestion } from "./types";
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
-export class SubQuestionQueryEngine implements BaseQueryEngine {
+export class SubQuestionQueryEngine
+  extends PromptMixin
+  implements BaseQueryEngine
+{
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: BaseTool[];
@@ -35,11 +39,20 @@ export class SubQuestionQueryEngine implements BaseQueryEngine {
     responseSynthesizer: BaseSynthesizer;
     queryEngineTools: BaseTool[];
   }) {
+    super();
+
     this.questionGen = init.questionGen;
     this.responseSynthesizer =
       init.responseSynthesizer ?? new ResponseSynthesizer();
     this.queryEngines = init.queryEngineTools;
     this.metadatas = init.queryEngineTools.map((tool) => tool.metadata);
+  }
+
+  protected _getPromptModules(): Record<string, any> {
+    return {
+      questionGen: this.questionGen,
+      responseSynthesizer: this.responseSynthesizer,
+    };
   }
 
   static fromDefaults(init: {
