@@ -56,15 +56,7 @@ export class PromptMixin {
 
     for (let key in promptsDict) {
       if (key.includes(":")) {
-        let [module_name, sub_key, sec_sub_key] = key.split(":");
-
-        console.log({
-          subPromptDicts,
-          module_name,
-          sub_key,
-          sec_sub_key,
-          key,
-        });
+        let [module_name, sub_key] = key.split(":");
 
         if (!subPromptDicts[module_name]) {
           subPromptDicts[module_name] = {};

@@ -23,7 +23,6 @@ class MockObject2 extends PromptMixin {
   }
 
   _updatePrompts(promptsDict: { [x: string]: any }): void {
-    console.log({ promptsDict });
     if ("abc" in promptsDict) {
       this._prompt_dict_2 = promptsDict["abc"];
     }
