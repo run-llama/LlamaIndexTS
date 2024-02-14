@@ -18,5 +18,5 @@ For local embeddings, you can use the [HuggingFace](./available_embeddings/huggi
 
 ## API Reference
 
-- [OpenAIEmbedding](../api/classes/OpenAIEmbedding.md)
-- [ServiceContext](../api/interfaces//ServiceContext.md)
+- [OpenAIEmbedding](../../api/classes/OpenAIEmbedding.md)
+- [ServiceContext](../../api/interfaces//ServiceContext.md)
