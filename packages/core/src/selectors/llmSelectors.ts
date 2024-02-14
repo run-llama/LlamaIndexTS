@@ -8,7 +8,7 @@ import {
   ToolMetadataOnlyDescription,
 } from "../types";
 import { BaseSelector, SelectorResult } from "./base";
-import { defaultSingleSelectPrompt } from "./prompts";
+import { SingleSelectPrompt, defaultSingleSelectPrompt } from "./prompts";
 
 function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   const texts: string[] = [];
@@ -108,17 +108,17 @@ export class LLMMultiSelector extends BaseSelector {
  */
 export class LLMSingleSelector extends BaseSelector {
   _llm: LLMPredictorType;
-  _prompt: DefaultPromptTemplate | undefined;
+  _prompt: SingleSelectPrompt;
   _outputParser: BaseOutputParser<any> | null;
 
   constructor(init: {
     llm: LLMPredictorType;
-    prompt?: DefaultPromptTemplate;
+    prompt?: SingleSelectPrompt;
     outputParser?: BaseOutputParser<any>;
   }) {
     super();
     this._llm = init.llm;
-    this._prompt = init.prompt;
+    this._prompt = init.prompt ?? defaultSingleSelectPrompt;
     this._outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
@@ -143,13 +143,11 @@ export class LLMSingleSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt =
-      this._prompt?.contextStr ??
-      defaultSingleSelectPrompt(
-        choicesText.length,
-        choicesText,
-        query.queryStr,
-      );
+    const prompt = this._prompt(
+      choicesText.length,
+      choicesText,
+      query.queryStr,
+    );
 
     const formattedPrompt = this._outputParser?.format(prompt);
 

@@ -4,6 +4,7 @@ import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { PromptMixin } from "../../prompts";
 import { BaseSelector, LLMSingleSelector } from "../../selectors";
 import { TreeSummarize } from "../../synthesizers";
 import {
@@ -54,7 +55,7 @@ async function combineResponses(
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
-export class RouterQueryEngine implements BaseQueryEngine {
+export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   serviceContext: ServiceContext;
 
   private selector: BaseSelector;
@@ -70,6 +71,8 @@ export class RouterQueryEngine implements BaseQueryEngine {
     summarizer?: TreeSummarize;
     verbose?: boolean;
   }) {
+    super();
+
     this.serviceContext = init.serviceContext || serviceContextFromDefaults({});
     this.selector = init.selector;
     this.queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
@@ -78,6 +81,17 @@ export class RouterQueryEngine implements BaseQueryEngine {
     }));
     this.summarizer = init.summarizer || new TreeSummarize(this.serviceContext);
     this.verbose = init.verbose ?? false;
+  }
+
+  _getPromptModules(): Record<string, any> {
+    return {
+      selector: this.selector,
+      summarizer: this.summarizer,
+    };
+  }
+
+  protected _getPrompts(): { [x: string]: any } {
+    return {};
   }
 
   static fromDefaults(init: {
