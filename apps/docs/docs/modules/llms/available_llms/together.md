@@ -40,7 +40,7 @@ const results = await queryEngine.query({
 
 ```ts
 import {
-  Anthropic,
+  TogetherLLM,
   Document,
   VectorStoreIndex,
   serviceContextFromDefaults,
@@ -61,6 +61,9 @@ async function main() {
   const index = await VectorStoreIndex.fromDocuments([document], {
     serviceContext,
   });
+
+  // get retriever
+  const retriever = index.asRetriever();
 
   // Create a query engine
   const queryEngine = index.asQueryEngine({
