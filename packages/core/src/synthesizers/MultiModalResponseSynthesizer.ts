@@ -11,7 +11,10 @@ import {
   SynthesizeParamsStreaming,
 } from "./types";
 
-export class MultiModalResponseSynthesizer extends PromptMixin implements BaseSynthesizer {
+export class MultiModalResponseSynthesizer
+  extends PromptMixin
+  implements BaseSynthesizer
+{
   serviceContext: ServiceContext;
   metadataMode: MetadataMode;
   textQATemplate: TextQaPrompt;
@@ -21,7 +24,7 @@ export class MultiModalResponseSynthesizer extends PromptMixin implements BaseSy
     textQATemplate,
     metadataMode,
   }: Partial<MultiModalResponseSynthesizer> = {}) {
-    super()
+    super();
 
     this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.metadataMode = metadataMode ?? MetadataMode.NONE;
@@ -30,12 +33,12 @@ export class MultiModalResponseSynthesizer extends PromptMixin implements BaseSy
 
   protected _getPrompts(): { [x: string]: TextQaPrompt } {
     return {
-      textQATemplate: this.textQATemplate
-    }
+      textQATemplate: this.textQATemplate,
+    };
   }
 
-  protected _updatePrompts(promptsDict: { [x: string]: TextQaPrompt; }): void {
-    if(promptsDict.textQATemplate) {
+  protected _updatePrompts(promptsDict: { [x: string]: TextQaPrompt }): void {
+    if (promptsDict.textQATemplate) {
       this.textQATemplate = promptsDict.textQATemplate;
     }
   }
