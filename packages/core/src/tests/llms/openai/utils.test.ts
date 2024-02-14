@@ -1,5 +1,7 @@
-import { ALL_AVAILABLE_OPENAI_MODELS } from "../../../llm";
-import { isFunctionCallingModel } from "../../../llm/openai/utils";
+import {
+  ALL_AVAILABLE_OPENAI_MODELS,
+  isFunctionCallingModel,
+} from "../../../llm";
 
 describe("openai/utils", () => {
   test("shouldn't be a old model", () => {
