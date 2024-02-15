@@ -1,29 +1,70 @@
 import fs from "fs/promises";
+import got from "got";
 import path from "path";
-import { LLAMA_HUB_FOLDER_PATH, LLAMA_PACK_CONFIG_PATH } from "./constant";
+import {
+  LLAMA_HUB_FOLDER_PATH,
+  LLAMA_PACK_FOLDER,
+  LLAMA_PACK_OWNER,
+  LLAMA_PACK_REPO,
+} from "./constant";
 import { copy } from "./copy";
 import { templatesDir } from "./dir";
 import { installPythonDependencies } from "./python";
 import { getRepoRawContent } from "./repo";
 import { InstallTemplateArgs } from "./types";
 
+const getLlamaPackFolderSHA = async () => {
+  const url = `https://api.github.com/repos/${LLAMA_PACK_OWNER}/${LLAMA_PACK_REPO}/contents`;
+  const response = await got(url, {
+    responseType: "json",
+  });
+  const data = response.body as any[];
+  const llamaPackFolder = data.find((item) => item.name === LLAMA_PACK_FOLDER);
+  return llamaPackFolder.sha;
+};
+
+const getLLamaPackFolderTree = async (
+  sha: string,
+): Promise<
+  Array<{
+    path: string;
+  }>
+> => {
+  const url = `https://api.github.com/repos/${LLAMA_PACK_OWNER}/${LLAMA_PACK_REPO}/git/trees/${sha}?recursive=1`;
+  const response = await got(url, {
+    responseType: "json",
+  });
+  return (response.body as any).tree;
+};
+
 export async function getAvailableLlamapackOptions(): Promise<
   {
     name: string;
     folderPath: string;
-    example: boolean | undefined;
   }[]
 > {
-  const libraryJsonRaw = await getRepoRawContent(LLAMA_PACK_CONFIG_PATH);
-  const libraryJson = JSON.parse(libraryJsonRaw);
-  const llamapackKeys = Object.keys(libraryJson);
-  return llamapackKeys
-    .map((key) => ({
-      name: key,
-      folderPath: libraryJson[key].id,
-      example: libraryJson[key].example,
-    }))
-    .filter((item) => !!item.example);
+  const EXAMPLE_RELATIVE_PATH = "/examples/example.py";
+  const PACK_FOLDER_SUBFIX = "llama-index-packs";
+
+  const llamaPackFolderSHA = await getLlamaPackFolderSHA();
+  const llamaPackTree = await getLLamaPackFolderTree(llamaPackFolderSHA);
+
+  // Return options that have example files
+  const exampleFiles = llamaPackTree.filter((item) =>
+    item.path.endsWith(EXAMPLE_RELATIVE_PATH),
+  );
+  const options = exampleFiles.map((file) => {
+    const packFolder = file.path.substring(
+      0,
+      file.path.indexOf(EXAMPLE_RELATIVE_PATH),
+    );
+    const packName = packFolder.substring(PACK_FOLDER_SUBFIX.length + 1);
+    return {
+      name: packName,
+      folderPath: packFolder,
+    };
+  });
+  return options;
 }
 
 const copyLlamapackEmptyProject = async ({
@@ -55,7 +96,7 @@ const installLlamapackExample = async ({
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
   const exampleFileName = "example.py";
   const readmeFileName = "README.md";
-  const exampleFilePath = `${LLAMA_HUB_FOLDER_PATH}/${llamapack}/${exampleFileName}`;
+  const exampleFilePath = `${LLAMA_HUB_FOLDER_PATH}/${llamapack}/examples/${exampleFileName}`;
   const readmeFilePath = `${LLAMA_HUB_FOLDER_PATH}/${llamapack}/${readmeFileName}`;
 
   // Download example.py from llamapack and save to root
