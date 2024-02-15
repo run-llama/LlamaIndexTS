@@ -2,8 +2,8 @@ import fs from "fs/promises";
 import got from "got";
 import path from "path";
 import {
-  LLAMA_HUB_FOLDER_PATH,
   LLAMA_PACK_FOLDER,
+  LLAMA_PACK_FOLDER_PATH,
   LLAMA_PACK_OWNER,
   LLAMA_PACK_REPO,
 } from "./constant";
@@ -96,8 +96,8 @@ const installLlamapackExample = async ({
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
   const exampleFileName = "example.py";
   const readmeFileName = "README.md";
-  const exampleFilePath = `${LLAMA_HUB_FOLDER_PATH}/${llamapack}/examples/${exampleFileName}`;
-  const readmeFilePath = `${LLAMA_HUB_FOLDER_PATH}/${llamapack}/${readmeFileName}`;
+  const exampleFilePath = `${LLAMA_PACK_FOLDER_PATH}/${llamapack}/examples/${exampleFileName}`;
+  const readmeFilePath = `${LLAMA_PACK_FOLDER_PATH}/${llamapack}/${readmeFileName}`;
 
   // Download example.py from llamapack and save to root
   const exampleContent = await getRepoRawContent(exampleFilePath);
