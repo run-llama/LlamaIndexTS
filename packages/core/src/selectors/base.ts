@@ -1,3 +1,4 @@
+import { PromptMixin } from "../prompts";
 import { QueryBundle, ToolMetadataOnlyDescription } from "../types";
 
 export interface SingleSelection {
@@ -31,7 +32,7 @@ function wrapQuery(query: QueryType): QueryBundle {
 
 type MetadataType = string | ToolMetadataOnlyDescription;
 
-export abstract class BaseSelector {
+export abstract class BaseSelector extends PromptMixin {
   async select(choices: MetadataType[], query: QueryType) {
     const metadatas = choices.map((choice) => wrapChoice(choice));
     const queryBundle = wrapQuery(query);

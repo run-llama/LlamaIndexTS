@@ -1,5 +1,6 @@
 import { Event } from "../callbacks/CallbackManager";
 import { NodeWithScore } from "../Node";
+import { PromptMixin } from "../prompts";
 import { Response } from "../Response";
 
 export interface SynthesizeParamsBase {
@@ -46,7 +47,7 @@ export interface ResponseBuilderParamsNonStreaming
 /**
  * A ResponseBuilder is used in a response synthesizer to generate a response from multiple response chunks.
  */
-export interface ResponseBuilder {
+export interface ResponseBuilder extends Partial<PromptMixin> {
   /**
    * Get the response from a query and a list of text chunks.
    * @param params

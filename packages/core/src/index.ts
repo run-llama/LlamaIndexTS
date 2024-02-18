@@ -22,6 +22,7 @@ export * from "./llm";
 export * from "./nodeParsers";
 export * from "./objects";
 export * from "./postprocessors";
+export * from "./prompts";
 export * from "./readers";
 export * from "./selectors";
 export * from "./storage";

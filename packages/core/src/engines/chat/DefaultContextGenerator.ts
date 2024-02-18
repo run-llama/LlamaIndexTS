@@ -4,9 +4,13 @@ import { BaseRetriever } from "../../Retriever";
 import { Event } from "../../callbacks/CallbackManager";
 import { randomUUID } from "../../env";
 import { BaseNodePostprocessor } from "../../postprocessors";
+import { PromptMixin } from "../../prompts";
 import { Context, ContextGenerator } from "./types";
 
-export class DefaultContextGenerator implements ContextGenerator {
+export class DefaultContextGenerator
+  extends PromptMixin
+  implements ContextGenerator
+{
   retriever: BaseRetriever;
   contextSystemPrompt: ContextSystemPrompt;
   nodePostprocessors: BaseNodePostprocessor[];
@@ -16,10 +20,26 @@ export class DefaultContextGenerator implements ContextGenerator {
     contextSystemPrompt?: ContextSystemPrompt;
     nodePostprocessors?: BaseNodePostprocessor[];
   }) {
+    super();
+
     this.retriever = init.retriever;
     this.contextSystemPrompt =
       init?.contextSystemPrompt ?? defaultContextSystemPrompt;
     this.nodePostprocessors = init.nodePostprocessors || [];
+  }
+
+  protected _getPrompts(): { contextSystemPrompt: ContextSystemPrompt } {
+    return {
+      contextSystemPrompt: this.contextSystemPrompt,
+    };
+  }
+
+  protected _updatePrompts(promptsDict: {
+    contextSystemPrompt: ContextSystemPrompt;
+  }): void {
+    if (promptsDict.contextSystemPrompt) {
+      this.contextSystemPrompt = promptsDict.contextSystemPrompt;
+    }
   }
 
   private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {

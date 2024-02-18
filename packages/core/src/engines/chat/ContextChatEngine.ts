@@ -8,6 +8,7 @@ import { ChatMessage, ChatResponseChunk, LLM, OpenAI } from "../../llm";
 import { MessageContent } from "../../llm/types";
 import { extractText, streamConverter, streamReducer } from "../../llm/utils";
 import { BaseNodePostprocessor } from "../../postprocessors";
+import { PromptMixin } from "../../prompts";
 import { DefaultContextGenerator } from "./DefaultContextGenerator";
 import {
   ChatEngine,
@@ -21,7 +22,7 @@ import {
  * The context is stored in the system prompt, and the chat history is preserved,
  * ideally allowing the appropriate context to be surfaced for each query.
  */
-export class ContextChatEngine implements ChatEngine {
+export class ContextChatEngine extends PromptMixin implements ChatEngine {
   chatModel: LLM;
   chatHistory: ChatHistory;
   contextGenerator: ContextGenerator;
@@ -33,6 +34,8 @@ export class ContextChatEngine implements ChatEngine {
     contextSystemPrompt?: ContextSystemPrompt;
     nodePostprocessors?: BaseNodePostprocessor[];
   }) {
+    super();
+
     this.chatModel =
       init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
     this.chatHistory = getHistory(init?.chatHistory);
@@ -41,6 +44,12 @@ export class ContextChatEngine implements ChatEngine {
       contextSystemPrompt: init?.contextSystemPrompt,
       nodePostprocessors: init?.nodePostprocessors,
     });
+  }
+
+  protected _getPromptModules(): Record<string, ContextGenerator> {
+    return {
+      contextGenerator: this.contextGenerator,
+    };
   }
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;

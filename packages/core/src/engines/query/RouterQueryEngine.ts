@@ -1,8 +1,10 @@
+import { BaseNode } from "../../Node";
 import { Response } from "../../Response";
 import {
   ServiceContext,
   serviceContextFromDefaults,
 } from "../../ServiceContext";
+import { PromptMixin } from "../../prompts";
 import { BaseSelector, LLMSingleSelector } from "../../selectors";
 import { TreeSummarize } from "../../synthesizers";
 import {
@@ -31,8 +33,8 @@ async function combineResponses(
     console.log("Combining responses from multiple query engines.");
   }
 
-  const responseStrs = [];
-  const sourceNodes = [];
+  const responseStrs: string[] = [];
+  const sourceNodes: BaseNode[] = [];
 
   for (const response of responses) {
     if (response?.sourceNodes) {
@@ -53,7 +55,7 @@ async function combineResponses(
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
-export class RouterQueryEngine implements BaseQueryEngine {
+export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   serviceContext: ServiceContext;
 
   private selector: BaseSelector;
@@ -69,6 +71,8 @@ export class RouterQueryEngine implements BaseQueryEngine {
     summarizer?: TreeSummarize;
     verbose?: boolean;
   }) {
+    super();
+
     this.serviceContext = init.serviceContext || serviceContextFromDefaults({});
     this.selector = init.selector;
     this.queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
@@ -77,6 +81,13 @@ export class RouterQueryEngine implements BaseQueryEngine {
     }));
     this.summarizer = init.summarizer || new TreeSummarize(this.serviceContext);
     this.verbose = init.verbose ?? false;
+  }
+
+  _getPromptModules(): Record<string, any> {
+    return {
+      selector: this.selector,
+      summarizer: this.summarizer,
+    };
   }
 
   static fromDefaults(init: {
@@ -119,7 +130,7 @@ export class RouterQueryEngine implements BaseQueryEngine {
     const result = await this.selector.select(this.metadatas, queryBundle);
 
     if (result.selections.length > 1) {
-      const responses = [];
+      const responses: Response[] = [];
       for (let i = 0; i < result.selections.length; i++) {
         const engineInd = result.selections[i];
         const logStr = `Selecting query engine ${engineInd}: ${result.selections[i]}.`;

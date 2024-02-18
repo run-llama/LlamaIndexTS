@@ -5,6 +5,7 @@ import { ServiceContext } from "../../ServiceContext";
 import { Event } from "../../callbacks/CallbackManager";
 import { randomUUID } from "../../env";
 import { BaseNodePostprocessor } from "../../postprocessors";
+import { PromptMixin } from "../../prompts";
 import { BaseSynthesizer, ResponseSynthesizer } from "../../synthesizers";
 import {
   BaseQueryEngine,
@@ -15,7 +16,10 @@ import {
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.
  */
-export class RetrieverQueryEngine implements BaseQueryEngine {
+export class RetrieverQueryEngine
+  extends PromptMixin
+  implements BaseQueryEngine
+{
   retriever: BaseRetriever;
   responseSynthesizer: BaseSynthesizer;
   nodePostprocessors: BaseNodePostprocessor[];
@@ -27,6 +31,8 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
     preFilters?: unknown,
     nodePostprocessors?: BaseNodePostprocessor[],
   ) {
+    super();
+
     this.retriever = retriever;
     const serviceContext: ServiceContext | undefined =
       this.retriever.getServiceContext();
@@ -34,6 +40,12 @@ export class RetrieverQueryEngine implements BaseQueryEngine {
       responseSynthesizer || new ResponseSynthesizer({ serviceContext });
     this.preFilters = preFilters;
     this.nodePostprocessors = nodePostprocessors || [];
+  }
+
+  _getPromptModules() {
+    return {
+      responseSynthesizer: this.responseSynthesizer,
+    };
   }
 
   private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {

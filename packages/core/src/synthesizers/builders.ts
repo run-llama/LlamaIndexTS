@@ -11,6 +11,7 @@ import {
   TreeSummarizePrompt,
 } from "../Prompt";
 import { getBiggestPrompt, PromptHelper } from "../PromptHelper";
+import { PromptMixin } from "../prompts";
 import { ServiceContext } from "../ServiceContext";
 import {
   ResponseBuilder,
@@ -73,7 +74,7 @@ export class SimpleResponseBuilder implements ResponseBuilder {
 /**
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
  */
-export class Refine implements ResponseBuilder {
+export class Refine extends PromptMixin implements ResponseBuilder {
   llm: LLM;
   promptHelper: PromptHelper;
   textQATemplate: TextQaPrompt;
@@ -84,10 +85,35 @@ export class Refine implements ResponseBuilder {
     textQATemplate?: TextQaPrompt,
     refineTemplate?: RefinePrompt,
   ) {
+    super();
+
     this.llm = serviceContext.llm;
     this.promptHelper = serviceContext.promptHelper;
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
+  }
+
+  protected _getPrompts(): {
+    textQATemplate: RefinePrompt;
+    refineTemplate: RefinePrompt;
+  } {
+    return {
+      textQATemplate: this.textQATemplate,
+      refineTemplate: this.refineTemplate,
+    };
+  }
+
+  protected _updatePrompts(prompts: {
+    textQATemplate: RefinePrompt;
+    refineTemplate: RefinePrompt;
+  }): void {
+    if (prompts.textQATemplate) {
+      this.textQATemplate = prompts.textQATemplate;
+    }
+
+    if (prompts.refineTemplate) {
+      this.refineTemplate = prompts.refineTemplate;
+    }
   }
 
   getResponse(
@@ -258,7 +284,7 @@ export class CompactAndRefine extends Refine {
 /**
  * TreeSummarize repacks the text chunks into the smallest possible number of chunks and then summarizes them, then recursively does so until there's one chunk left.
  */
-export class TreeSummarize implements ResponseBuilder {
+export class TreeSummarize extends PromptMixin implements ResponseBuilder {
   llm: LLM;
   promptHelper: PromptHelper;
   summaryTemplate: TreeSummarizePrompt;
@@ -267,9 +293,25 @@ export class TreeSummarize implements ResponseBuilder {
     serviceContext: ServiceContext,
     summaryTemplate?: TreeSummarizePrompt,
   ) {
+    super();
+
     this.llm = serviceContext.llm;
     this.promptHelper = serviceContext.promptHelper;
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
+  }
+
+  protected _getPrompts(): { summaryTemplate: TreeSummarizePrompt } {
+    return {
+      summaryTemplate: this.summaryTemplate,
+    };
+  }
+
+  protected _updatePrompts(prompts: {
+    summaryTemplate: TreeSummarizePrompt;
+  }): void {
+    if (prompts.summaryTemplate) {
+      this.summaryTemplate = prompts.summaryTemplate;
+    }
   }
 
   getResponse(
@@ -352,3 +394,8 @@ export function getResponseBuilder(
       return new CompactAndRefine(serviceContext);
   }
 }
+
+export type ResponseBuilderPrompts =
+  | TextQaPrompt
+  | TreeSummarizePrompt
+  | RefinePrompt;

@@ -11,6 +11,7 @@ import {
 } from "../../ServiceContext";
 import { ChatMessage, LLM } from "../../llm";
 import { extractText, streamReducer } from "../../llm/utils";
+import { PromptMixin } from "../../prompts";
 import { BaseQueryEngine } from "../../types";
 import {
   ChatEngine,
@@ -29,7 +30,10 @@ import {
  * data, or are very referential to previous context.
  */
 
-export class CondenseQuestionChatEngine implements ChatEngine {
+export class CondenseQuestionChatEngine
+  extends PromptMixin
+  implements ChatEngine
+{
   queryEngine: BaseQueryEngine;
   chatHistory: ChatHistory;
   llm: LLM;
@@ -41,11 +45,27 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     serviceContext?: ServiceContext;
     condenseMessagePrompt?: CondenseQuestionPrompt;
   }) {
+    super();
+
     this.queryEngine = init.queryEngine;
     this.chatHistory = getHistory(init?.chatHistory);
     this.llm = init?.serviceContext?.llm ?? serviceContextFromDefaults().llm;
     this.condenseMessagePrompt =
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
+  }
+
+  protected _getPrompts(): { condenseMessagePrompt: CondenseQuestionPrompt } {
+    return {
+      condenseMessagePrompt: this.condenseMessagePrompt,
+    };
+  }
+
+  protected _updatePrompts(promptsDict: {
+    condenseMessagePrompt: CondenseQuestionPrompt;
+  }): void {
+    if (promptsDict.condenseMessagePrompt) {
+      this.condenseMessagePrompt = promptsDict.condenseMessagePrompt;
+    }
   }
 
   private async condenseQuestion(chatHistory: ChatHistory, question: string) {
@@ -54,7 +74,7 @@ export class CondenseQuestionChatEngine implements ChatEngine {
     );
 
     return this.llm.complete({
-      prompt: defaultCondenseQuestionPrompt({
+      prompt: this.condenseMessagePrompt({
         question: question,
         chatHistory: chatHistoryStr,
       }),

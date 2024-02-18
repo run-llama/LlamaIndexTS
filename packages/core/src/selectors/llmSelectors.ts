@@ -1,4 +1,3 @@
-import { DefaultPromptTemplate } from "../extractors/prompts";
 import { LLM } from "../llm";
 import { Answer, SelectionOutputParser } from "../outputParsers/selectors";
 import {
@@ -8,7 +7,12 @@ import {
   ToolMetadataOnlyDescription,
 } from "../types";
 import { BaseSelector, SelectorResult } from "./base";
-import { defaultSingleSelectPrompt } from "./prompts";
+import {
+  MultiSelectPrompt,
+  SingleSelectPrompt,
+  defaultMultiSelectPrompt,
+  defaultSingleSelectPrompt,
+} from "./prompts";
 
 function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   const texts: string[] = [];
@@ -20,7 +24,7 @@ function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   return texts.join("");
 }
 
-function _structuredOutputToSelectorResult(
+function structuredOutputToSelectorResult(
   output: StructuredOutput<Answer[]>,
 ): SelectorResult {
   const structuredOutput = output;
@@ -40,32 +44,32 @@ type LLMPredictorType = LLM;
  * A selector that uses the LLM to select a single or multiple choices from a list of choices.
  */
 export class LLMMultiSelector extends BaseSelector {
-  _llm: LLMPredictorType;
-  _prompt: DefaultPromptTemplate | undefined;
-  _maxOutputs: number | null;
-  _outputParser: BaseOutputParser<any> | null;
+  llm: LLMPredictorType;
+  prompt: MultiSelectPrompt;
+  maxOutputs: number;
+  outputParser: BaseOutputParser<StructuredOutput<Answer[]>> | null;
 
   constructor(init: {
     llm: LLMPredictorType;
-    prompt?: DefaultPromptTemplate;
+    prompt?: MultiSelectPrompt;
     maxOutputs?: number;
-    outputParser?: BaseOutputParser<any>;
+    outputParser?: BaseOutputParser<StructuredOutput<Answer[]>>;
   }) {
     super();
-    this._llm = init.llm;
-    this._prompt = init.prompt;
-    this._maxOutputs = init.maxOutputs ?? null;
+    this.llm = init.llm;
+    this.prompt = init.prompt ?? defaultMultiSelectPrompt;
+    this.maxOutputs = init.maxOutputs ?? 10;
 
-    this._outputParser = init.outputParser ?? new SelectionOutputParser();
+    this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, any> {
-    return { prompt: this._prompt };
+  _getPrompts(): Record<string, MultiSelectPrompt> {
+    return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, any>): void {
+  _updatePrompts(prompts: Record<string, MultiSelectPrompt>): void {
     if ("prompt" in prompts) {
-      this._prompt = prompts.prompt;
+      this.prompt = prompts.prompt;
     }
   }
 
@@ -80,22 +84,26 @@ export class LLMMultiSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt =
-      this._prompt?.contextStr ??
-      defaultSingleSelectPrompt(
-        choicesText.length,
-        choicesText,
-        query.queryStr,
-      );
-    const formattedPrompt = this._outputParser?.format(prompt);
+    const prompt = this.prompt(
+      choicesText.length,
+      choicesText,
+      query.queryStr,
+      this.maxOutputs,
+    );
 
-    const prediction = await this._llm.complete({
+    const formattedPrompt = this.outputParser?.format(prompt);
+
+    const prediction = await this.llm.complete({
       prompt: formattedPrompt,
     });
 
-    const parsed = this._outputParser?.parse(prediction.text);
+    const parsed = this.outputParser?.parse(prediction.text);
 
-    return _structuredOutputToSelectorResult(parsed);
+    if (!parsed) {
+      throw new Error("Parsed output is undefined");
+    }
+
+    return structuredOutputToSelectorResult(parsed);
   }
 
   asQueryComponent(): unknown {
@@ -107,28 +115,28 @@ export class LLMMultiSelector extends BaseSelector {
  * A selector that uses the LLM to select a single choice from a list of choices.
  */
 export class LLMSingleSelector extends BaseSelector {
-  _llm: LLMPredictorType;
-  _prompt: DefaultPromptTemplate | undefined;
-  _outputParser: BaseOutputParser<any> | null;
+  llm: LLMPredictorType;
+  prompt: SingleSelectPrompt;
+  outputParser: BaseOutputParser<StructuredOutput<Answer[]>> | null;
 
   constructor(init: {
     llm: LLMPredictorType;
-    prompt?: DefaultPromptTemplate;
-    outputParser?: BaseOutputParser<any>;
+    prompt?: SingleSelectPrompt;
+    outputParser?: BaseOutputParser<StructuredOutput<Answer[]>>;
   }) {
     super();
-    this._llm = init.llm;
-    this._prompt = init.prompt;
-    this._outputParser = init.outputParser ?? new SelectionOutputParser();
+    this.llm = init.llm;
+    this.prompt = init.prompt ?? defaultSingleSelectPrompt;
+    this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, any> {
-    return { prompt: this._prompt };
+  _getPrompts(): Record<string, SingleSelectPrompt> {
+    return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, any>): void {
+  _updatePrompts(prompts: Record<string, SingleSelectPrompt>): void {
     if ("prompt" in prompts) {
-      this._prompt = prompts.prompt;
+      this.prompt = prompts.prompt;
     }
   }
 
@@ -143,23 +151,21 @@ export class LLMSingleSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt =
-      this._prompt?.contextStr ??
-      defaultSingleSelectPrompt(
-        choicesText.length,
-        choicesText,
-        query.queryStr,
-      );
+    const prompt = this.prompt(choicesText.length, choicesText, query.queryStr);
 
-    const formattedPrompt = this._outputParser?.format(prompt);
+    const formattedPrompt = this.outputParser?.format(prompt);
 
-    const prediction = await this._llm.complete({
+    const prediction = await this.llm.complete({
       prompt: formattedPrompt,
     });
 
-    const parsed = this._outputParser?.parse(prediction.text);
+    const parsed = this.outputParser?.parse(prediction.text);
 
-    return _structuredOutputToSelectorResult(parsed);
+    if (!parsed) {
+      throw new Error("Parsed output is undefined");
+    }
+
+    return structuredOutputToSelectorResult(parsed);
   }
 
   asQueryComponent(): unknown {
