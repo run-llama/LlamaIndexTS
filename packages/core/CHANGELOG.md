@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.1.11
+
+### Patch Changes
+
+- 255ae7d: chore: update example (perfoms better with default model)
+- cf3b757: feat: add filtering of metadata to PGVectorStore
+- ee9f3f3: chore: refactor openai agent utils
+- e78e9f4: feat(reranker): cohere reranker
+- f205358: feat: markdown node parser
+- dd05413: feat: use batching in vector store index
+- 383933a: Add reader for LlamaParse
+
 ## 0.1.10
 
 ### Patch Changes
