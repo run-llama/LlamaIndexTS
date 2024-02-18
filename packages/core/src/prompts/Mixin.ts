@@ -1,4 +1,5 @@
 type PromptsDict = Record<string, any>;
+type ModuleDict = Record<string, any>;
 
 export class PromptMixin {
   /**
@@ -6,10 +7,7 @@ export class PromptMixin {
    * @param promptsDict
    * @param moduleDict
    */
-  validatePrompts(
-    promptsDict: PromptsDict,
-    moduleDict: Record<string, any>,
-  ): void {
+  validatePrompts(promptsDict: PromptsDict, moduleDict: ModuleDict): void {
     for (let key in promptsDict) {
       if (key.includes(":")) {
         throw new Error(`Prompt key ${key} cannot contain ':'.`);
