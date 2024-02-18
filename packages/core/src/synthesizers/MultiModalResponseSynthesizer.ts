@@ -31,13 +31,15 @@ export class MultiModalResponseSynthesizer
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
-  protected _getPrompts(): { [x: string]: TextQaPrompt } {
+  protected _getPrompts(): { textQATemplate: TextQaPrompt } {
     return {
       textQATemplate: this.textQATemplate,
     };
   }
 
-  protected _updatePrompts(promptsDict: { [x: string]: TextQaPrompt }): void {
+  protected _updatePrompts(promptsDict: {
+    textQATemplate: TextQaPrompt;
+  }): void {
     if (promptsDict.textQATemplate) {
       this.textQATemplate = promptsDict.textQATemplate;
     }

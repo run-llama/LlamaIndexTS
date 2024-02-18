@@ -54,14 +54,14 @@ export class CondenseQuestionChatEngine
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
   }
 
-  protected _getPrompts(): { [x: string]: CondenseQuestionPrompt } {
+  protected _getPrompts(): { condenseMessagePrompt: CondenseQuestionPrompt } {
     return {
       condenseMessagePrompt: this.condenseMessagePrompt,
     };
   }
 
   protected _updatePrompts(promptsDict: {
-    [x: string]: CondenseQuestionPrompt;
+    condenseMessagePrompt: CondenseQuestionPrompt;
   }): void {
     if (promptsDict.condenseMessagePrompt) {
       this.condenseMessagePrompt = promptsDict.condenseMessagePrompt;

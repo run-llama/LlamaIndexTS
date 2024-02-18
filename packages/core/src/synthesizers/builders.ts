@@ -93,14 +93,20 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
 
-  protected _getPrompts(): { [x: string]: RefinePrompt } {
+  protected _getPrompts(): {
+    textQATemplate: RefinePrompt;
+    refineTemplate: RefinePrompt;
+  } {
     return {
       textQATemplate: this.textQATemplate,
       refineTemplate: this.refineTemplate,
     };
   }
 
-  protected _updatePrompts(prompts: { [x: string]: RefinePrompt }): void {
+  protected _updatePrompts(prompts: {
+    textQATemplate: RefinePrompt;
+    refineTemplate: RefinePrompt;
+  }): void {
     if (prompts.textQATemplate) {
       this.textQATemplate = prompts.textQATemplate;
     }
@@ -294,14 +300,14 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
-  protected _getPrompts(): { [x: string]: TreeSummarizePrompt } {
+  protected _getPrompts(): { summaryTemplate: TreeSummarizePrompt } {
     return {
       summaryTemplate: this.summaryTemplate,
     };
   }
 
   protected _updatePrompts(prompts: {
-    [x: string]: TreeSummarizePrompt;
+    summaryTemplate: TreeSummarizePrompt;
   }): void {
     if (prompts.summaryTemplate) {
       this.summaryTemplate = prompts.summaryTemplate;

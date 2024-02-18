@@ -36,7 +36,7 @@ export class LLMQuestionGenerator
   }
 
   protected _updatePrompts(promptsDict: {
-    [x: string]: SubQuestionPrompt;
+    subQuestion: SubQuestionPrompt;
   }): void {
     if ("subQuestion" in promptsDict) {
       this.prompt = promptsDict.subQuestion;

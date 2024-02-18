@@ -28,14 +28,14 @@ export class DefaultContextGenerator
     this.nodePostprocessors = init.nodePostprocessors || [];
   }
 
-  protected _getPrompts(): { [x: string]: ContextSystemPrompt } {
+  protected _getPrompts(): { contextSystemPrompt: ContextSystemPrompt } {
     return {
       contextSystemPrompt: this.contextSystemPrompt,
     };
   }
 
   protected _updatePrompts(promptsDict: {
-    [x: string]: ContextSystemPrompt;
+    contextSystemPrompt: ContextSystemPrompt;
   }): void {
     if (promptsDict.contextSystemPrompt) {
       this.contextSystemPrompt = promptsDict.contextSystemPrompt;
