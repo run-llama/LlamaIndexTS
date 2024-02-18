@@ -14,7 +14,7 @@ type ReActAgentParams = {
   maxInteractions?: number;
   defaultToolChoice?: string;
   callbackManager?: CallbackManager;
-  toolRetriever?: ObjectRetriever<BaseTool>;
+  toolRetriever?: ObjectRetriever;
 };
 
 /**

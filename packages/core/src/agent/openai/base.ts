@@ -6,7 +6,7 @@ import { AgentRunner } from "../runner/base";
 import { OpenAIAgentWorker } from "./worker";
 
 type OpenAIAgentParams = {
-  tools: BaseTool[];
+  tools?: BaseTool[];
   llm?: OpenAI;
   memory?: any;
   prefixMessages?: ChatMessage[];
@@ -14,7 +14,7 @@ type OpenAIAgentParams = {
   maxFunctionCalls?: number;
   defaultToolChoice?: string;
   callbackManager?: CallbackManager;
-  toolRetriever?: ObjectRetriever<BaseTool>;
+  toolRetriever?: ObjectRetriever;
   systemPrompt?: string;
 };
 

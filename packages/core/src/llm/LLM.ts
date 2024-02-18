@@ -26,7 +26,6 @@ import {
 } from "./azure";
 import { BaseLLM } from "./base";
 import { OpenAISession, getOpenAISession } from "./open_ai";
-import { isFunctionCallingModel } from "./openai/utils";
 import { PortkeySession, getPortkeySession } from "./portkey";
 import { ReplicateSession } from "./replicate_ai";
 import {
@@ -65,6 +64,12 @@ export const GPT35_MODELS = {
 export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
+};
+
+export const isFunctionCallingModel = (model: string): boolean => {
+  const isChatModel = Object.keys(ALL_AVAILABLE_OPENAI_MODELS).includes(model);
+  const isOld = model.includes("0314") || model.includes("0301");
+  return isChatModel && !isOld;
 };
 
 /**

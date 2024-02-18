@@ -69,13 +69,13 @@ async function callFunction(
 }
 
 type OpenAIAgentWorkerParams = {
-  tools: BaseTool[];
+  tools?: BaseTool[];
   llm?: OpenAI;
   prefixMessages?: ChatMessage[];
   verbose?: boolean;
   maxFunctionCalls?: number;
   callbackManager?: CallbackManager | undefined;
-  toolRetriever?: ObjectRetriever<BaseTool>;
+  toolRetriever?: ObjectRetriever;
 };
 
 type CallFunctionOutput = {
@@ -101,7 +101,7 @@ export class OpenAIAgentWorker implements AgentWorker {
    * Initialize.
    */
   constructor({
-    tools,
+    tools = [],
     llm,
     prefixMessages,
     verbose,
@@ -191,6 +191,7 @@ export class OpenAIAgentWorker implements AgentWorker {
   ): AgentChatResponse | AsyncIterable<ChatResponseChunk> {
     const aiMessage = chatResponse.message;
     task.extraState.newMemory.put(aiMessage);
+
     return new AgentChatResponse(aiMessage.content, task.extraState.sources);
   }
 

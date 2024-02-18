@@ -134,6 +134,11 @@
       "import": "./dist/tools.mjs",
       "require": "./dist/tools.js"
     },
+    "./objects": {
+      "types": "./dist/objects.d.mts",
+      "import": "./dist/objects.mjs",
+      "require": "./dist/objects.js"
+    },
     "./readers": {
       "types": "./dist/readers.d.mts",
       "import": "./dist/readers.mjs",

@@ -60,7 +60,6 @@ export class SimpleVectorStore implements VectorStore {
       this.data.embeddingDict[node.id_] = node.getEmbedding();
 
       if (!node.sourceNode) {
-        console.error("Missing source node from TextNode.");
         continue;
       }
 

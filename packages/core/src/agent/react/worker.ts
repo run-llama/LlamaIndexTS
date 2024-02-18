@@ -24,7 +24,7 @@ type ReActAgentWorkerParams = {
   outputParser?: ReActOutputParser | undefined;
   callbackManager?: CallbackManager | undefined;
   verbose?: boolean | undefined;
-  toolRetriever?: ObjectRetriever<BaseTool> | undefined;
+  toolRetriever?: ObjectRetriever | undefined;
 };
 
 /**

@@ -70,12 +70,12 @@ describe("[OpenAIEmbedding]", () => {
   test("getTextEmbeddings", async () => {
     const texts = ["hello", "world"];
     const embeddings = await embedModel.getTextEmbeddings(texts);
-    expect(embeddings.length).toEqual(1);
+    expect(embeddings.length).toEqual(2);
   });
 
   test("getTextEmbeddingsBatch", async () => {
     const texts = ["hello", "world"];
     const embeddings = await embedModel.getTextEmbeddingsBatch(texts);
-    expect(embeddings.length).toEqual(1);
+    expect(embeddings.length).toEqual(2);
   });
 });

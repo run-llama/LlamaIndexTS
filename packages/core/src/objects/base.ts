@@ -1,42 +1,41 @@
-import { BaseNode, TextNode } from "../Node";
+import { BaseNode, Metadata, TextNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
+import { VectorStoreIndex } from "../indices";
+import { BaseTool } from "../types";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
 // Import statements (e.g., for TextNode, BaseNode) should be added based on your project's structure
 
-export abstract class BaseObjectNodeMapping<OT> {
+export abstract class BaseObjectNodeMapping {
   // TypeScript doesn't support Python's classmethod directly, but we can use static methods as an alternative
-  abstract fromObjects<OT>(
-    objs: OT[],
-    ...args: any[]
-  ): BaseObjectNodeMapping<OT>;
+  abstract fromObjects<OT>(objs: OT[], ...args: any[]): BaseObjectNodeMapping;
 
   // Abstract methods in TypeScript
   abstract objNodeMapping(): Record<any, any>;
-  abstract toNode(obj: OT): TextNode;
+  abstract toNode(obj: any): TextNode;
 
   // Concrete methods can be defined as usual
-  validateObject(obj: OT): void {}
+  validateObject(obj: any): void {}
 
   // Implementing the add object logic
-  addObj(obj: OT): void {
+  addObj(obj: any): void {
     this.validateObject(obj);
     this._addObj(obj);
   }
 
   // Abstract method for internal add object logic
-  protected abstract _addObj(obj: OT): void;
+  abstract _addObj(obj: any): void;
 
   // Implementing toNodes method
-  toNodes(objs: OT[]): TextNode[] {
+  toNodes(objs: any[]): TextNode[] {
     return objs.map((obj) => this.toNode(obj));
   }
 
   // Abstract method for internal from node logic
-  protected abstract _fromNode(node: BaseNode): OT;
+  abstract _fromNode(node: BaseNode): any;
 
   // Implementing fromNode method
-  fromNode(node: BaseNode): OT {
+  fromNode(node: BaseNode): any {
     const obj = this._fromNode(node);
     this.validateObject(obj);
     return obj;
@@ -50,13 +49,13 @@ export abstract class BaseObjectNodeMapping<OT> {
 
 type QueryType = string;
 
-export class ObjectRetriever<OT> {
-  private _retriever: BaseRetriever;
-  private _objectNodeMapping: BaseObjectNodeMapping<OT>;
+export class ObjectRetriever {
+  _retriever: BaseRetriever;
+  _objectNodeMapping: BaseObjectNodeMapping;
 
   constructor(
     retriever: BaseRetriever,
-    objectNodeMapping: BaseObjectNodeMapping<OT>,
+    objectNodeMapping: BaseObjectNodeMapping,
   ) {
     this._retriever = retriever;
     this._objectNodeMapping = objectNodeMapping;
@@ -68,13 +67,126 @@ export class ObjectRetriever<OT> {
   }
 
   // Translating the retrieve method
-  async retrieve(strOrQueryBundle: QueryType): Promise<OT[]> {
-    const nodes = await this._retriever.retrieve(strOrQueryBundle);
-    return nodes.map((node) => this._objectNodeMapping.fromNode(node.node));
+  async retrieve(strOrQueryBundle: QueryType): Promise<any> {
+    const nodes = await this.retriever.retrieve(strOrQueryBundle);
+    const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
+    return objs;
+  }
+}
+
+const convertToolToNode = (tool: BaseTool): TextNode => {
+  const nodeText = `
+    Tool name: ${tool.metadata.name}
+    Tool description: ${tool.metadata.description}
+  `;
+  return new TextNode({
+    text: nodeText,
+    metadata: { name: tool.metadata.name },
+    excludedEmbedMetadataKeys: ["name"],
+    excludedLlmMetadataKeys: ["name"],
+  });
+};
+
+export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
+  private _tools: Record<string, BaseTool>;
+
+  private constructor(objs: BaseTool[] = []) {
+    super();
+    this._tools = {};
+    for (const tool of objs) {
+      this._tools[tool.metadata.name] = tool;
+    }
   }
 
-  // // Translating the _asQueryComponent method
-  // public asQueryComponent(kwargs: any): any {
-  //     return new ObjectRetrieverComponent(this);
-  // }
+  objNodeMapping(): Record<any, any> {
+    return this._tools;
+  }
+
+  toNode(tool: BaseTool): TextNode {
+    return convertToolToNode(tool);
+  }
+
+  _addObj(tool: BaseTool): void {
+    this._tools[tool.metadata.name] = tool;
+  }
+
+  _fromNode(node: BaseNode): BaseTool {
+    if (!node.metadata) {
+      throw new Error("Metadata must be set");
+    }
+    return this._tools[node.metadata.name];
+  }
+
+  persist(persistDir: string, objNodeMappingFilename: string): void {
+    // Implement the persist method
+  }
+
+  toNodes(objs: BaseTool[]): TextNode<Metadata>[] {
+    return objs.map((obj) => this.toNode(obj));
+  }
+
+  addObj(obj: BaseTool): void {
+    this._addObj(obj);
+  }
+
+  fromNode(node: BaseNode): BaseTool {
+    return this._fromNode(node);
+  }
+
+  static fromObjects(objs: any, ...args: any[]): BaseObjectNodeMapping {
+    return new SimpleToolNodeMapping(objs);
+  }
+
+  fromObjects<OT>(objs: any, ...args: any[]): BaseObjectNodeMapping {
+    return new SimpleToolNodeMapping(objs);
+  }
+}
+
+export class ObjectIndex {
+  private _index: VectorStoreIndex;
+  private _objectNodeMapping: BaseObjectNodeMapping;
+
+  private constructor(index: any, objectNodeMapping: BaseObjectNodeMapping) {
+    this._index = index;
+    this._objectNodeMapping = objectNodeMapping;
+  }
+
+  static async fromObjects(
+    objects: any,
+    objectMapping: BaseObjectNodeMapping,
+    // TODO: fix any (bundling issue)
+    indexCls: any,
+    indexKwargs?: Record<string, any>,
+  ): Promise<ObjectIndex> {
+    if (objectMapping === null) {
+      objectMapping = SimpleToolNodeMapping.fromObjects(objects, {});
+    }
+
+    const nodes = objectMapping.toNodes(objects);
+
+    const index = await indexCls.init({ nodes, ...indexKwargs });
+
+    return new ObjectIndex(index, objectMapping);
+  }
+
+  insertObject(obj: any): void {
+    this._objectNodeMapping.addObj(obj);
+    const node = this._objectNodeMapping.toNode(obj);
+    this._index.insertNodes([node]);
+  }
+
+  get tools(): Record<string, BaseTool> {
+    return this._objectNodeMapping.objNodeMapping();
+  }
+
+  async asRetriever(kwargs: any): Promise<ObjectRetriever> {
+    return new ObjectRetriever(
+      this._index.asRetriever(kwargs),
+      this._objectNodeMapping,
+    );
+  }
+
+  asNodeRetriever(kwargs: any): any {
+    return this._index.asRetriever(kwargs);
+  }
 }
