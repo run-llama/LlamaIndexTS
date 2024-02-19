@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import got from "got";
 import path from "path";
+import { parse } from "smol-toml";
 import {
   LLAMA_PACK_FOLDER,
   LLAMA_PACK_FOLDER_PATH,
@@ -9,7 +10,7 @@ import {
 } from "./constant";
 import { copy } from "./copy";
 import { templatesDir } from "./dir";
-import { installPythonDependencies } from "./python";
+import { addDependencies, installPythonDependencies } from "./python";
 import { getRepoRawContent } from "./repo";
 import { InstallTemplateArgs } from "./types";
 
@@ -96,8 +97,10 @@ const installLlamapackExample = async ({
 }: Pick<InstallTemplateArgs, "root" | "llamapack">) => {
   const exampleFileName = "example.py";
   const readmeFileName = "README.md";
+  const projectTomlFileName = "pyproject.toml";
   const exampleFilePath = `${LLAMA_PACK_FOLDER_PATH}/${llamapack}/examples/${exampleFileName}`;
   const readmeFilePath = `${LLAMA_PACK_FOLDER_PATH}/${llamapack}/${readmeFileName}`;
+  const projectTomlFilePath = `${LLAMA_PACK_FOLDER_PATH}/${llamapack}/${projectTomlFileName}`;
 
   // Download example.py from llamapack and save to root
   const exampleContent = await getRepoRawContent(exampleFilePath);
@@ -110,15 +113,24 @@ const installLlamapackExample = async ({
     path.join(root, "README-template.md"),
     "utf-8",
   );
-  const content = readmeTemplateContent.replaceAll(
-    "[llama_pack_package_name]",
-    llamapack!,
-  );
   await fs.writeFile(
     path.join(root, readmeFileName),
-    `${readmeContent}\n${content}`,
+    `${readmeContent}\n${readmeTemplateContent}`,
   );
   await fs.unlink(path.join(root, "README-template.md"));
+
+  // Download pyproject.toml from llamapack, parse it to get package name and version,
+  // then add it as a dependency to current toml file in the project
+  const projectTomlContent = await getRepoRawContent(projectTomlFilePath);
+  const fileParsed = parse(projectTomlContent) as any;
+  const packageName = fileParsed.tool.poetry.name;
+  const packageVersion = fileParsed.tool.poetry.version;
+  await addDependencies(root, [
+    {
+      name: packageName,
+      version: packageVersion,
+    },
+  ]);
 };
 
 export const installLlamapackProject = async ({
