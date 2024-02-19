@@ -2,4 +2,4 @@
 "create-llama": patch
 ---
 
-feat(create-llama-pack): generate llama pack project from llama index
+feat: generate llama pack project from llama index

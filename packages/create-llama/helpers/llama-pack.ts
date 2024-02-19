@@ -110,9 +110,13 @@ const installLlamapackExample = async ({
     path.join(root, "README-template.md"),
     "utf-8",
   );
+  const content = readmeTemplateContent.replaceAll(
+    "[llama_pack_package_name]",
+    llamapack!,
+  );
   await fs.writeFile(
     path.join(root, readmeFileName),
-    `${readmeContent}\n${readmeTemplateContent}`,
+    `${readmeContent}\n${content}`,
   );
   await fs.unlink(path.join(root, "README-template.md"));
 };
