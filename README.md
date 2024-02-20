@@ -127,6 +127,7 @@ module.exports = nextConfig;
 - Anthropic Claude Instant and Claude 2
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
 - MistralAI Chat LLMs
+- Fireworks Chat LLMs
 
 ## Contributing:
 

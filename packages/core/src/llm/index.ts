@@ -1,4 +1,5 @@
 export * from "./LLM";
+export { FireworksLLM } from "./fireworks";
 export {
   ALL_AVAILABLE_MISTRAL_MODELS,
   MistralAI,

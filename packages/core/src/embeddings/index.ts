@@ -4,6 +4,7 @@ export * from "./MistralAIEmbedding";
 export * from "./MultiModalEmbedding";
 export { OllamaEmbedding } from "./OllamaEmbedding";
 export * from "./OpenAIEmbedding";
+export { FireworksEmbedding } from "./fireworks";
 export { TogetherEmbedding } from "./together";
 export * from "./types";
 export * from "./utils";
