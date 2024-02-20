@@ -1,5 +1,5 @@
 import os
-from llama_index import VectorStoreIndex, download_loader
+from llama_index.core.readers.download import download_loader
 
 
 def get_documents():
