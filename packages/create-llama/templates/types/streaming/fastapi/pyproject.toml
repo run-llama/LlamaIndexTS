@@ -9,10 +9,7 @@ readme = "README.md"
 python = "^3.11,<3.12"
 fastapi = "^0.109.1"
 uvicorn = { extras = ["standard"], version = "^0.23.2" }
-pypdf = "^4.0.2"
 python-dotenv = "^1.0.0"
-docx2txt = "^0.8"
-wikipedia = "^1.4.0"
 llama-index = "^0.10.7"
 
 [build-system]

@@ -6,7 +6,7 @@ import terminalLink from "terminal-link";
 import { copy } from "./copy";
 import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
-import { getToolConfig } from "./tools";
+import { Tool } from "./tools";
 import { InstallTemplateArgs, TemplateVectorDB } from "./types";
 
 interface Dependency {
@@ -15,7 +15,10 @@ interface Dependency {
   extras?: string[];
 }
 
-const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
+const getAdditionalDependencies = (
+  vectorDb?: TemplateVectorDB,
+  tools?: Tool[],
+) => {
   const dependencies: Dependency[] = [];
 
   switch (vectorDb) {
@@ -33,6 +36,13 @@ const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
       });
     }
   }
+
+  // Add tools dependencies
+  tools?.forEach((tool) => {
+    tool.dependencies?.forEach((dep) => {
+      dependencies.push(dep);
+    });
+  });
 
   return dependencies;
 };
@@ -190,7 +200,7 @@ export const installPythonTemplate = async ({
       // Write tools_config.json
       const configContent: Record<string, any> = {};
       tools.forEach((tool) => {
-        configContent[tool] = getToolConfig(tool) ?? {};
+        configContent[tool.name] = tool.config ?? {};
       });
       const configFilePath = path.join(root, "tools_config.json");
       await fs.writeFile(
@@ -217,7 +227,7 @@ export const installPythonTemplate = async ({
     }
   }
 
-  const addOnDependencies = getAdditionalDependencies(vectorDb);
+  const addOnDependencies = getAdditionalDependencies(vectorDb, tools);
   await addDependencies(root, addOnDependencies);
 
   if (postInstallAction !== "none") {

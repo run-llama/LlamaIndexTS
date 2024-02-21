@@ -1,4 +1,5 @@
 import { PackageManager } from "../helpers/get-pkg-manager";
+import { Tool } from "./tools";
 
 export type TemplateType = "simple" | "streaming" | "community" | "llamapack";
 export type TemplateFramework = "nextjs" | "express" | "fastapi";
@@ -41,5 +42,5 @@ export interface InstallTemplateArgs {
   vectorDb?: TemplateVectorDB;
   externalPort?: number;
   postInstallAction?: TemplatePostInstallAction;
-  tools?: string[];
+  tools?: Tool[];
 }
