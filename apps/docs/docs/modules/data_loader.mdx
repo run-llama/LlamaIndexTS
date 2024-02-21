@@ -5,6 +5,7 @@ sidebar_position: 4
 import CodeBlock from "@theme/CodeBlock";
 import CodeSource from "!raw-loader!../../../../examples/readers/src/simple-directory-reader";
 import CodeSource2 from "!raw-loader!../../../../examples/readers/src/custom-simple-directory-reader";
+import CodeSource3 from "!raw-loader!../../../../examples/readers/src/llamaparse";
 
 # Loader
 
@@ -29,6 +30,18 @@ Or pass new readers for `fileExtToReader` to support more file types.
 <CodeBlock language="ts" showLineNumbers metastring="{8-12,17-21}">
   {CodeSource2}
 </CodeBlock>
+
+### LlamaParse
+
+LlamaParse is an API created by LlamaIndex to efficiently parse files, e.g. it's great at converting PDF tables into markdown.
+
+To use it, first login and get an API key from https://cloud.llamaindex.ai. Make sure to store the key in the environment variable `LLAMA_CLOUD_API_KEY`.
+
+Then, you can use the `LlamaParseReader` class to read a local PDF file and convert it into a markdown document that can be used by LlamaIndex:
+
+<CodeBlock language="ts">{CodeSource3}</CodeBlock>
+
+Alternatively, you can set the [`resultType`](../api/classes/LlamaParseReader.md#resulttype) option to `text` to get the parsed document as a text string.
 
 ## API Reference
 
