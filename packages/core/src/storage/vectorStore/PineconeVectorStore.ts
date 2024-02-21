@@ -6,7 +6,7 @@ import {
   VectorStoreQueryResult,
 } from "./types";
 
-import { BaseNode, Document, Metadata } from "../../Node";
+import { BaseNode, Metadata } from "../../Node";
 import { GenericFileSystem } from "../FileSystem";
 
 import {
@@ -15,7 +15,7 @@ import {
   Pinecone,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
-import { nodeToMetadata } from "./utils";
+import { metadataDictToNode, nodeToMetadata } from "./utils";
 
 type PineconeParams = {
   indexName?: string;
@@ -156,12 +156,18 @@ export class PineconeVectorStore implements VectorStore {
     const rows = Object.values(records.records);
 
     const nodes = rows.map((row) => {
-      return new Document({
-        id_: row.id,
-        text: this.textFromResultRow(row),
-        metadata: this.metaWithoutText(row.metadata),
-        embedding: row.values,
+      const metadata = this.metaWithoutText(row.metadata);
+      const text = this.textFromResultRow(row);
+      const node = metadataDictToNode(metadata, {
+        fallback: {
+          id: row.id,
+          text,
+          metadata,
+          embedding: row.values,
+        },
       });
+      node.setContent(text);
+      return node;
     });
 
     const ret = {
