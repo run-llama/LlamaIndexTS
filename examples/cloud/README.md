@@ -1,4 +1,4 @@
-# Llama Cloud Integration
+# LlamaCloud Integration
 
 ## Getting started
 
@@ -10,24 +10,24 @@ And make sure, you're setting your `LLAMA_CLOUD_API_KEY` in your environment var
 export LLAMA_CLOUD_API_KEY=your-api-key
 ```
 
-For using the staging environment, also set the base `LLAMA_CLOUD_BASE_URL`:
+For using another environment, also set the `LLAMA_CLOUD_BASE_URL` environment variable:
 
-````shell
+```shell
 export LLAMA_CLOUD_BASE_URL="https://api.staging.llamaindex.ai"
 ```
 
 ## Chat Engine
 
-This example is using the managed index to create a chat engine.
+This example is using the managed index named `test` from the project `default` to create a chat engine.
 
 ```shell
-pnpx ts-node platform/chat.ts
-````
+pnpx ts-node cloud/chat.ts
+```
 
 ## Query Engine
 
 This example shows how to use the managed index with a query engine.
 
 ```shell
-pnpx ts-node platform/query.ts
+pnpx ts-node cloud/query.ts
 ```

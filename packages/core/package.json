@@ -195,10 +195,10 @@
       "import": "./dist/readers/SimpleMongoReader.mjs",
       "require": "./dist/readers/SimpleMongoReader.js"
     },
-    "./platform": {
-      "types": "./dist/platform.d.mts",
-      "import": "./dist/platform.mjs",
-      "require": "./dist/platform.js"
+    "./cloud": {
+      "types": "./dist/cloud.d.mts",
+      "import": "./dist/cloud.mjs",
+      "require": "./dist/cloud.js"
     }
   },
   "files": [
