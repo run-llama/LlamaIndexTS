@@ -1,5 +1,4 @@
 ---
-"llamaindex": patch
 "create-llama": patch
 ---
 
