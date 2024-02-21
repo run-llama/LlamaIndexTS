@@ -10,5 +10,5 @@ module.exports = {
   rules: {
     "max-params": ["error", 4],
   },
-  ignorePatterns: ["dist/", "client/"],
+  ignorePatterns: ["dist/"],
 };

@@ -1,28 +1,32 @@
+import { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
 import { NodeWithScore, jsonToNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { Event } from "../callbacks/CallbackManager";
-import { PlatformApiClient } from "./client";
-import { RetrievalParams, TextNodeWithScore } from "./client/api";
-import { CloudConstructorParams, DEFAULT_PROJECT_NAME } from "./types";
+import {
+  ClientParams,
+  CloudConstructorParams,
+  DEFAULT_PROJECT_NAME,
+} from "./types";
 import { getClient } from "./utils";
 
 export type RetrieveParams = Omit<
-  RetrievalParams,
+  PlatformApi.RetrievalParams,
   "query" | "searchFilters" | "pipelineId" | "className"
 >;
 
 export class LlamaCloudRetriever implements BaseRetriever {
-  client: PlatformApiClient;
+  client?: PlatformApiClient;
+  clientParams: ClientParams;
   retrieveParams: RetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
   serviceContext: ServiceContext;
 
   private resultNodesToNodeWithScore(
-    nodes: TextNodeWithScore[],
+    nodes: PlatformApi.TextNodeWithScore[],
   ): NodeWithScore[] {
-    return nodes.map((node: TextNodeWithScore) => {
+    return nodes.map((node: PlatformApi.TextNodeWithScore) => {
       return {
         node: jsonToNode(node.node),
         score: node.score,
@@ -31,8 +35,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
   }
 
   constructor(params: CloudConstructorParams & RetrieveParams) {
-    const { apiKey, baseUrl } = params;
-    this.client = getClient({ apiKey, baseUrl });
+    this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
     this.retrieveParams = params;
     this.pipelineName = params.name;
     if (params.projectName) {
@@ -41,13 +44,22 @@ export class LlamaCloudRetriever implements BaseRetriever {
     this.serviceContext = params.serviceContext ?? serviceContextFromDefaults();
   }
 
+  private async getClient(): Promise<PlatformApiClient> {
+    if (!this.client) {
+      this.client = await getClient(this.clientParams);
+    }
+    return this.client;
+  }
+
   async retrieve(
     query: string,
     parentEvent?: Event | undefined,
     preFilters?: unknown,
   ): Promise<NodeWithScore[]> {
     // TODO: add event
-    const pipelines = await this.client.pipeline.searchPipelines({
+    const pipelines = await (
+      await this.getClient()
+    ).pipeline.searchPipelines({
       projectName: this.projectName,
       pipelineName: this.pipelineName,
     });
@@ -56,9 +68,10 @@ export class LlamaCloudRetriever implements BaseRetriever {
         `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
       );
     }
-    const results = await this.client.retrieval.runSearch({
+    const results = await (
+      await this.getClient()
+    ).pipeline.runSearch(pipelines[0].id, {
       ...this.retrieveParams,
-      pipelineId: pipelines[0].id,
       query,
       searchFilters: preFilters as Record<string, unknown[]>,
     });

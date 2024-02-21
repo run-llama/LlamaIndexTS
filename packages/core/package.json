@@ -6,6 +6,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.13.0",
     "@datastax/astra-db-ts": "^0.1.4",
+    "@llamaindex/cloud": "^0.0.1",
     "@mistralai/mistralai": "^0.0.10",
     "@notionhq/client": "^2.2.14",
     "@pinecone-database/pinecone": "^2.0.1",
@@ -43,12 +44,8 @@
     "@types/pg": "^8.11.0",
     "bunchee": "^4.4.6",
     "edit-json-file": "^1.8.0",
-    "form-data": "^4.0.0",
-    "js-base64": "^3.7.6",
     "madge": "^6.1.0",
-    "qs": "^6.11.2",
-    "typescript": "^5.3.3",
-    "url-join": "^5.0.0"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"
