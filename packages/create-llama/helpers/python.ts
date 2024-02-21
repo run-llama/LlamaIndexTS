@@ -24,8 +24,8 @@ const getAdditionalDependencies = (
   switch (vectorDb) {
     case "mongo": {
       dependencies.push({
-        name: "pymongo",
-        version: "^4.6.1",
+        name: "llama-index-vector-stores-mongodb",
+        version: "^0.1.3",
       });
       break;
     }
