@@ -31,8 +31,8 @@ const getAdditionalDependencies = (
     }
     case "pg": {
       dependencies.push({
-        name: "llama-index",
-        extras: ["postgres"],
+        name: "llama-index-vector-stores-postgres",
+        version: "^0.1.1",
       });
     }
   }

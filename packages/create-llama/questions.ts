@@ -590,7 +590,7 @@ export const askQuestions = async (
           "Would you like to build an agent using tools? If so, select the tools here, otherwise just press enter",
         choices: toolChoices,
       });
-      const tools = toolsName.map((tool: string) =>
+      const tools = toolsName?.map((tool: string) =>
         supportedTools.find((t) => t.name === tool),
       );
       program.tools = tools;
