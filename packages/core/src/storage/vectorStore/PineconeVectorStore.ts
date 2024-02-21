@@ -6,7 +6,7 @@ import {
   VectorStoreQueryResult,
 } from "./types";
 
-import { BaseNode, Document, Metadata, MetadataMode } from "../../Node";
+import { BaseNode, Document, Metadata } from "../../Node";
 import { GenericFileSystem } from "../FileSystem";
 
 import {
@@ -15,6 +15,7 @@ import {
   Pinecone,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
+import { nodeToMetadata } from "./utils";
 
 type PineconeParams = {
   indexName?: string;
@@ -207,14 +208,10 @@ export class PineconeVectorStore implements VectorStore {
 
   nodeToRecord(node: BaseNode<Metadata>) {
     let id: any = node.id_.length ? node.id_ : null;
-    let meta: any = node.metadata || {};
-    meta.create_date = new Date();
-    meta.text = node.getContent(MetadataMode.EMBED);
-
     return {
       id: id,
       values: node.getEmbedding(),
-      metadata: meta,
+      metadata: nodeToMetadata(node),
     };
   }
 }
