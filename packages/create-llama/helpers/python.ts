@@ -41,6 +41,13 @@ const getAdditionalDependencies = (
         version: "^0.1.1",
       });
     }
+    case "pinecone": {
+      dependencies.push({
+        name: "llama-index-vector-stores-pinecone",
+        version: "^0.1.3",
+      });
+      break;
+    }
   }
 
   // Add data source dependencies

@@ -60,6 +60,12 @@ const createEnvLocalFile = async (
       content += `PG_CONNECTION_STRING=\n`;
       break;
     }
+    case "pinecone": {
+      content += `PINECONE_API_KEY=\n`;
+      content += `PINECONE_ENVIRONMENT=\n`;
+      content += `PINECONE_INDEX_NAME=\n`;
+      break;
+    }
   }
 
   switch (opts?.dataSource?.type) {
