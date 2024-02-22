@@ -6,9 +6,9 @@ import logging
 from llama_index.core.indices import (
     VectorStoreIndex,
 )
-from app.engine.constants import DATA_DIR, STORAGE_DIR
+from app.engine.constants import STORAGE_DIR
 from app.engine.loader import get_documents
-from app.engine.settings import init_settings
+from app.settings import init_settings
 
 
 logging.basicConfig(level=logging.INFO)

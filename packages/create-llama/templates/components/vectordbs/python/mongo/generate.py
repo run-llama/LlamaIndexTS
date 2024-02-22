@@ -7,8 +7,7 @@ import logging
 from llama_index.core.storage import StorageContext
 from llama_index.core.indices import VectorStoreIndex
 from llama_index.vector_stores.mongodb import MongoDBAtlasVectorSearch
-from app.engine.settings import init_settings
-from app.engine.constants import DATA_DIR
+from app.settings import init_settings
 from app.engine.loader import get_documents
 
 logging.basicConfig(level=logging.INFO)
