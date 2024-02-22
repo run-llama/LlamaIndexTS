@@ -71,11 +71,6 @@
       "types": "./dist/type/*.d.ts",
       "import": "./dist/esm/*.js",
       "require": "./dist/cjs/*.js"
-    },
-    "./readers/*": {
-      "types": "./dist/type/readers/*.d.ts",
-      "import": "./dist/esm/readers/*.js",
-      "require": "./dist/cjs/readers/*.js"
     }
   },
   "files": [
