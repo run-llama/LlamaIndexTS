@@ -1,3 +1,5 @@
+import { red } from "picocolors";
+
 export type Tool = {
   display: string;
   name: string;
@@ -37,6 +39,29 @@ export const supportedTools: Tool[] = [
     ],
   },
 ];
+
+export const getTool = (toolName: string): Tool | undefined => {
+  return supportedTools.find((tool) => tool.name === toolName);
+};
+
+export const getTools = (toolsName: string[]): Tool[] => {
+  let tools: Tool[] = [];
+  for (const toolName of toolsName) {
+    const tool = getTool(toolName);
+    if (!tool) {
+      console.log(
+        red(
+          `Error: Tool '${toolName}' is not supported. Supported tools are: ${supportedTools
+            .map((t) => t.name)
+            .join(", ")}`,
+        ),
+      );
+      process.exit(1);
+    }
+    tools.push(tool);
+  }
+  return tools;
+};
 
 export const toolsRequireConfig = (tools?: Tool[]): boolean => {
   if (tools) {
