@@ -6,8 +6,12 @@ import terminalLink from "terminal-link";
 import { copy } from "./copy";
 import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
-import { getToolConfig } from "./tools";
-import { InstallTemplateArgs, TemplateVectorDB } from "./types";
+import { Tool } from "./tools";
+import {
+  InstallTemplateArgs,
+  TemplateDataSource,
+  TemplateVectorDB,
+} from "./types";
 
 interface Dependency {
   name: string;
@@ -15,24 +19,58 @@ interface Dependency {
   extras?: string[];
 }
 
-const getAdditionalDependencies = (vectorDb?: TemplateVectorDB) => {
+const getAdditionalDependencies = (
+  vectorDb?: TemplateVectorDB,
+  dataSource?: TemplateDataSource,
+  tools?: Tool[],
+) => {
   const dependencies: Dependency[] = [];
 
+  // Add vector db dependencies
   switch (vectorDb) {
     case "mongo": {
       dependencies.push({
-        name: "pymongo",
-        version: "^4.6.1",
+        name: "llama-index-vector-stores-mongodb",
+        version: "^0.1.3",
       });
       break;
     }
     case "pg": {
       dependencies.push({
-        name: "llama-index",
-        extras: ["postgres"],
+        name: "llama-index-vector-stores-postgres",
+        version: "^0.1.1",
       });
     }
+    case "pinecone": {
+      dependencies.push({
+        name: "llama-index-vector-stores-pinecone",
+        version: "^0.1.3",
+      });
+      break;
+    }
   }
+
+  // Add data source dependencies
+  const dataSourceType = dataSource?.type;
+  if (dataSourceType === "file" || dataSourceType === "folder") {
+    // llama-index-readers-file (pdf, excel, csv) is already included in llama_index package
+    dependencies.push({
+      name: "docx2txt",
+      version: "^0.8",
+    });
+  } else if (dataSourceType === "web") {
+    dependencies.push({
+      name: "llama-index-readers-web",
+      version: "^0.1.6",
+    });
+  }
+
+  // Add tools dependencies
+  tools?.forEach((tool) => {
+    tool.dependencies?.forEach((dep) => {
+      dependencies.push(dep);
+    });
+  });
 
   return dependencies;
 };
@@ -190,7 +228,7 @@ export const installPythonTemplate = async ({
       // Write tools_config.json
       const configContent: Record<string, any> = {};
       tools.forEach((tool) => {
-        configContent[tool] = getToolConfig(tool) ?? {};
+        configContent[tool.name] = tool.config ?? {};
       });
       const configFilePath = path.join(root, "tools_config.json");
       await fs.writeFile(
@@ -217,7 +255,11 @@ export const installPythonTemplate = async ({
     }
   }
 
-  const addOnDependencies = getAdditionalDependencies(vectorDb);
+  const addOnDependencies = getAdditionalDependencies(
+    vectorDb,
+    dataSource,
+    tools,
+  );
   await addDependencies(root, addOnDependencies);
 
   if (postInstallAction !== "none") {

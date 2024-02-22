@@ -9,12 +9,8 @@ readme = "README.md"
 python = "^3.11,<3.12"
 fastapi = "^0.109.1"
 uvicorn = { extras = ["standard"], version = "^0.23.2" }
-llama-index = "^0.9.19"
-pypdf = "^3.17.0"
 python-dotenv = "^1.0.0"
-docx2txt = "^0.8"
-llama-hub = "^0.0.77"
-wikipedia = "^1.4.0"
+llama-index = "^0.10.7"
 
 [build-system]
 requires = ["poetry-core"]

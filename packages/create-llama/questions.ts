@@ -583,13 +583,16 @@ export const askQuestions = async (
         title: tool.display,
         value: tool.name,
       }));
-      const { tools } = await prompts({
+      const { toolsName } = await prompts({
         type: "multiselect",
-        name: "tools",
+        name: "toolsName",
         message:
           "Would you like to build an agent using tools? If so, select the tools here, otherwise just press enter",
         choices: toolChoices,
       });
+      const tools = toolsName?.map((tool: string) =>
+        supportedTools.find((t) => t.name === tool),
+      );
       program.tools = tools;
       preferences.tools = tools;
     }

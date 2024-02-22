@@ -1,10 +1,8 @@
 from typing import List
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from llama_index.chat_engine.types import BaseChatEngine
-from llama_index.llms.base import ChatMessage
-from llama_index.llms.types import MessageRole
 from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException, status
+from llama_index.core.chat_engine.types import BaseChatEngine
+from llama_index.core.llms import ChatMessage, MessageRole
 from app.engine import get_chat_engine
 
 chat_router = r = APIRouter()

@@ -1,8 +1,8 @@
 import json
 import importlib
 
-from llama_index.tools.tool_spec.base import BaseToolSpec
-from llama_index.tools.function_tool import FunctionTool
+from llama_index.core.tools.tool_spec.base import BaseToolSpec
+from llama_index.core.tools.function_tool import FunctionTool
 
 
 class ToolFactory:
@@ -10,9 +10,9 @@ class ToolFactory:
     @staticmethod
     def create_tool(tool_name: str, **kwargs) -> list[FunctionTool]:
         try:
-            module_name = f"llama_hub.tools.{tool_name}.base"
+            tool_package, tool_cls_name = tool_name.split(".")
+            module_name = f"llama_index.tools.{tool_package}"
             module = importlib.import_module(module_name)
-            tool_cls_name = tool_name.title().replace("_", "") + "ToolSpec"
             tool_class = getattr(module, tool_cls_name)
             tool_spec: BaseToolSpec = tool_class(**kwargs)
             return tool_spec.to_tool_list()

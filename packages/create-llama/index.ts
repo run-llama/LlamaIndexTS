@@ -11,7 +11,7 @@ import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { runApp } from "./helpers/run-app";
-import { supportedTools } from "./helpers/tools";
+import { getTools } from "./helpers/tools";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 import { QuestionArgs, askQuestions, onPromptState } from "./questions";
@@ -153,7 +153,7 @@ const program = new Commander.Command(packageJson.name)
     "--tools <tools>",
     `
 
-  Specify the tools you want to use by providing a comma-separated list. For example, 'google_search,wikipedia'. Use 'none' to not using any tools.
+  Specify the tools you want to use by providing a comma-separated list. For example, 'wikipedia.WikipediaToolSpec,google.GoogleSearchToolSpec'. Use 'none' to not using any tools.
 `,
   )
   .allowUnknownOption()
@@ -168,19 +168,7 @@ if (process.argv.includes("--tools")) {
   if (program.tools === "none") {
     program.tools = [];
   } else {
-    program.tools = program.tools.split(",");
-    // Check if tools are available
-    const toolsName = supportedTools.map((tool) => tool.name);
-    program.tools.forEach((tool: string) => {
-      if (!toolsName.includes(tool)) {
-        console.error(
-          `Error: Tool '${tool}' is not supported. Supported tools are: ${toolsName.join(
-            ", ",
-          )}`,
-        );
-        process.exit(1);
-      }
-    });
+    program.tools = getTools(program.tools.split(","));
   }
 }
 
