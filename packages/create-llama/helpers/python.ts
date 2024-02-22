@@ -45,7 +45,13 @@ const getAdditionalDependencies = (
 
   // Add data source dependencies
   const dataSourceType = dataSource?.type;
-  if (dataSourceType === "web") {
+  if (dataSourceType === "file" || dataSourceType === "folder") {
+    // llama-index-readers-file (pdf, excel, csv) is already included in llama_index package
+    dependencies.push({
+      name: "docx2txt",
+      version: "^0.8",
+    });
+  } else if (dataSourceType === "web") {
     dependencies.push({
       name: "llama-index-readers-web",
       version: "^0.1.6",
