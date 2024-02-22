@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./lib/",
+    "rootDir": "./src",
+    "outDir": "./dist/type",
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
