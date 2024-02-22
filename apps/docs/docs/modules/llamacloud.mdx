@@ -1,0 +1,32 @@
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../examples/cloud/chat.ts";
+
+# LlamaCloud
+
+LlamaCloud is a new generation of managed parsing, ingestion, and retrieval services, designed to bring production-grade context-augmentation to your LLM and RAG applications.
+
+Currently, LlamaCloud supports
+
+- Managed Ingestion API, handling parsing and document management
+- Managed Retrieval API, configuring optimal retrieval for your RAG system
+
+## Access
+
+We are opening up a private beta to a limited set of enterprise partners for the managed ingestion and retrieval API. If you’re interested in centralizing your data pipelines and spending more time working on your actual RAG use cases, come [talk to us.](https://www.llamaindex.ai/contact)
+
+If you have access to LlamaCloud, you can visit [LlamaCloud](https://cloud.llamaindex.ai) to sign in and get an API key.
+
+## Create a Managed Index
+
+Currently, you can't create a managed index on LlamaCloud using LlamaIndexTS, but you can use an existing managed index for retrieval that was created by the Python version of LlamaIndex. See [the LlamaCloudIndex documentation](https://docs.llamaindex.ai/en/stable/module_guides/indexing/llama_cloud_index.html#usage) for more information on how to create a managed index.
+
+## Use a Managed Index
+
+Here's an example of how to use a managed index together with a chat engine:
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+## API Reference
+
+- [LlamaCloudIndex](../api/classes/LlamaCloudIndex.md)
+- [LlamaCloudRetriever](../api/classes/LlamaCloudRetriever.md)

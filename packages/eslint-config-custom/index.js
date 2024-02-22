@@ -7,6 +7,7 @@ module.exports = {
       {
         allowList: [
           "LLAMA_CLOUD_API_KEY",
+          "LLAMA_CLOUD_BASE_URL",
           "OPENAI_API_KEY",
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",

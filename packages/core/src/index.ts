@@ -11,6 +11,7 @@ export * from "./ServiceContext";
 export * from "./TextSplitter";
 export * from "./agent";
 export * from "./callbacks/CallbackManager";
+export * from "./cloud";
 export * from "./constants";
 export * from "./embeddings";
 export * from "./engines/chat";
