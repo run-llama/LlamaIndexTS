@@ -145,6 +145,11 @@
       "import": "./dist/readers.mjs",
       "require": "./dist/readers.js"
     },
+    "./evaluation": {
+      "types": "./dist/evaluation.d.mts",
+      "import": "./dist/evaluation.mjs",
+      "require": "./dist/evaluation.js"
+    },
     "./readers/AssemblyAIReader": {
       "types": "./dist/readers/AssemblyAIReader.d.mts",
       "import": "./dist/readers/AssemblyAIReader.mjs",

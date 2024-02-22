@@ -16,6 +16,7 @@ export * from "./constants";
 export * from "./embeddings";
 export * from "./engines/chat";
 export * from "./engines/query";
+export * from "./evaluation";
 export * from "./extractors";
 export * from "./indices";
 export * from "./ingestion";
