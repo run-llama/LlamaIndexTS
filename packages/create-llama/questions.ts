@@ -221,7 +221,8 @@ export const askQuestions = async (
         if (
           !hasVectorDb &&
           hasOpenAiKey &&
-          !toolsRequireConfig(program.tools)
+          !toolsRequireConfig(program.tools) &&
+          !program.llamapack
         ) {
           actionChoices.push({
             title:

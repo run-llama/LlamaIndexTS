@@ -276,7 +276,7 @@ async function run(): Promise<void> {
   conf.set("preferences", preferences);
 
   if (program.postInstallAction === "runApp") {
-    console.log("Running app...");
+    console.log(`Running app in ${root}...`);
     await runApp(
       root,
       program.frontend,
