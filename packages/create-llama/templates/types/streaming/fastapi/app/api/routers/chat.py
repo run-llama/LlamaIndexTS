@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from llama_index.core.chat_engine.types import BaseChatEngine
 from llama_index.core.llms import ChatMessage, MessageRole
 from app.engine import get_chat_engine
-from app.settings import init_settings
 
 chat_router = r = APIRouter()
 
@@ -23,8 +22,6 @@ class _ChatData(BaseModel):
 async def chat(
     request: Request,
     data: _ChatData,
-    # TODO: @lee ensure that init_settings is called before get_chat_engine
-    settings=Depends(init_settings),
     chat_engine: BaseChatEngine = Depends(get_chat_engine),
 ):
     # check preconditions and get last message
