@@ -57,20 +57,44 @@
   "exports": {
     ".": {
       "types": "./dist/type/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "edge-light": "./dist/esm/index.edge-light.js",
-      "require": "./dist/cjs/index.js"
+      "import": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "edge-light": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/esm/index.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     },
     "./env": {
       "types": "./dist/type/env.d.ts",
-      "import": "./dist/esm/env.js",
-      "edge-light": "./dist/esm/env.edge-light.js",
-      "require": "./dist/cjs/env.js"
+      "import": {
+        "types": "./dist/type/env.d.ts",
+        "default": "./dist/esm/env.js"
+      },
+      "edge-light": {
+        "types": "./dist/type/env.d.ts",
+        "default": "./dist/esm/env.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/type/env.d.ts",
+        "default": "./dist/cjs/env.js"
+      }
     },
     "./*": {
       "types": "./dist/type/*.d.ts",
-      "import": "./dist/esm/*.js",
-      "require": "./dist/cjs/*.js"
+      "import": {
+        "types": "./dist/type/*.d.ts",
+        "default": "./dist/esm/*.js"
+      },
+      "require": {
+        "types": "./dist/type/*.d.ts",
+        "default": "./dist/cjs/*.js"
+      }
     }
   },
   "files": [
