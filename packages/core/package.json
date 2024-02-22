@@ -56,7 +56,6 @@
   "main": "./dist/cjs/index.js",
   "exports": {
     ".": {
-      "types": "./dist/type/index.d.ts",
       "import": {
         "types": "./dist/type/index.d.ts",
         "default": "./dist/esm/index.js"
@@ -71,7 +70,6 @@
       }
     },
     "./env": {
-      "types": "./dist/type/env.d.ts",
       "import": {
         "types": "./dist/type/env.d.ts",
         "default": "./dist/esm/env.js"
@@ -86,7 +84,6 @@
       }
     },
     "./*": {
-      "types": "./dist/type/*.d.ts",
       "import": {
         "types": "./dist/type/*.d.ts",
         "default": "./dist/esm/*.js"
