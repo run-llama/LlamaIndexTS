@@ -65,7 +65,7 @@ export const getTools = (toolsName: string[]): Tool[] => {
 
 export const toolsRequireConfig = (tools?: Tool[]): boolean => {
   if (tools) {
-    return tools?.some((tool) => tool.config?.length > 0);
+    return tools?.some((tool) => Object.keys(tool.config || {}).length > 0);
   }
   return false;
 };
