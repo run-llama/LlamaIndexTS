@@ -11,7 +11,7 @@ async function main() {
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
   });
   const retriever = index.asRetriever({
-    denseSimilarityTopK: 5,
+    similarityTopK: 5,
   });
   const chatEngine = new ContextChatEngine({ retriever });
   const rl = readline.createInterface({ input, output });

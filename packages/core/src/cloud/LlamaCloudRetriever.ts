@@ -1,5 +1,6 @@
 import { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
-import { NodeWithScore, jsonToNode } from "../Node";
+import { globalsHelper } from "../GlobalsHelper";
+import { NodeWithScore, ObjectType, jsonToNode } from "../Node";
 import { BaseRetriever } from "../Retriever";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { Event } from "../callbacks/CallbackManager";
@@ -13,7 +14,7 @@ import { getClient } from "./utils";
 export type RetrieveParams = Omit<
   PlatformApi.RetrievalParams,
   "query" | "searchFilters" | "pipelineId" | "className"
->;
+> & { similarityTopK?: number };
 
 export class LlamaCloudRetriever implements BaseRetriever {
   client?: PlatformApiClient;
@@ -28,7 +29,8 @@ export class LlamaCloudRetriever implements BaseRetriever {
   ): NodeWithScore[] {
     return nodes.map((node: PlatformApi.TextNodeWithScore) => {
       return {
-        node: jsonToNode(node.node),
+        // Currently LlamaCloud only supports text nodes
+        node: jsonToNode(node.node, ObjectType.TEXT),
         score: node.score,
       };
     });
@@ -36,6 +38,8 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
   constructor(params: CloudConstructorParams & RetrieveParams) {
     this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
+    params.denseSimilarityTopK =
+      params.similarityTopK ?? params.denseSimilarityTopK;
     this.retrieveParams = params;
     this.pipelineName = params.name;
     if (params.projectName) {
@@ -56,7 +60,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
     parentEvent?: Event | undefined,
     preFilters?: unknown,
   ): Promise<NodeWithScore[]> {
-    // TODO: add event
     const pipelines = await (
       await this.getClient()
     ).pipeline.searchPipelines({
@@ -76,7 +79,19 @@ export class LlamaCloudRetriever implements BaseRetriever {
       searchFilters: preFilters as Record<string, unknown[]>,
     });
 
-    return this.resultNodesToNodeWithScore(results.retrievalNodes);
+    const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
+
+    if (this.serviceContext.callbackManager.onRetrieve) {
+      this.serviceContext.callbackManager.onRetrieve({
+        query,
+        nodes,
+        event: globalsHelper.createEvent({
+          parentEvent,
+          type: "retrieve",
+        }),
+      });
+    }
+    return nodes;
   }
 
   getServiceContext(): ServiceContext {

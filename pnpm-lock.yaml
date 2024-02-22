@@ -171,9 +171,6 @@ importers:
       '@datastax/astra-db-ts':
         specifier: ^0.1.4
         version: 0.1.4
-      '@llamaindex/cloud':
-        specifier: ^0.0.1
-        version: 0.0.1
       '@mistralai/mistralai':
         specifier: ^0.0.10
         version: 0.0.10
@@ -256,6 +253,9 @@ importers:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
         version: 5.2.0
+      '@llamaindex/cloud':
+        specifier: ^0.0.1
+        version: 0.0.1
       '@types/edit-json-file':
         specifier: ^1.7.3
         version: 1.7.3
@@ -3250,7 +3250,7 @@ packages:
 
   /@llamaindex/cloud@0.0.1:
     resolution: {integrity: sha512-7FrLAbY459B4rcG4NaqANatDT5zKvZxIRyrY+nnTSXqu9ZMzkm1Co8IIRYx2/9feps/OLOhXsv7VKGGUr7scNQ==}
-    dev: false
+    dev: true
 
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
