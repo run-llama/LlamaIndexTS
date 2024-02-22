@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.1.12
+
+### Patch Changes
+
+- a5e4e6d: Add using a managed index from LlamaCloud
+- cfdd6db: fix: update pinecone vector store
+- 59f9fb6: Add Fireworks to LlamaIndex
+- 95add73: feat: multi-document agent
+
 ## 0.1.11
 
 ### Patch Changes
