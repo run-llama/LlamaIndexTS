@@ -7,7 +7,11 @@ import { copy } from "./copy";
 import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
 import { Tool } from "./tools";
-import { InstallTemplateArgs, TemplateVectorDB } from "./types";
+import {
+  InstallTemplateArgs,
+  TemplateDataSource,
+  TemplateVectorDB,
+} from "./types";
 
 interface Dependency {
   name: string;
@@ -17,10 +21,12 @@ interface Dependency {
 
 const getAdditionalDependencies = (
   vectorDb?: TemplateVectorDB,
+  dataSource?: TemplateDataSource,
   tools?: Tool[],
 ) => {
   const dependencies: Dependency[] = [];
 
+  // Add vector db dependencies
   switch (vectorDb) {
     case "mongo": {
       dependencies.push({
@@ -35,6 +41,15 @@ const getAdditionalDependencies = (
         version: "^0.1.1",
       });
     }
+  }
+
+  // Add data source dependencies
+  const dataSourceType = dataSource?.type;
+  if (dataSourceType === "web") {
+    dependencies.push({
+      name: "llama-index-readers-web",
+      version: "^0.1.6",
+    });
   }
 
   // Add tools dependencies
@@ -227,7 +242,11 @@ export const installPythonTemplate = async ({
     }
   }
 
-  const addOnDependencies = getAdditionalDependencies(vectorDb, tools);
+  const addOnDependencies = getAdditionalDependencies(
+    vectorDb,
+    dataSource,
+    tools,
+  );
   await addDependencies(root, addOnDependencies);
 
   if (postInstallAction !== "none") {
