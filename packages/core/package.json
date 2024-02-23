@@ -48,7 +48,6 @@
     "concurrently": "^8.2.2",
     "edit-json-file": "^1.8.0",
     "madge": "^6.1.0",
-    "tsimp": "^2.0.11",
     "typescript": "^5.3.3"
   },
   "engines": {
