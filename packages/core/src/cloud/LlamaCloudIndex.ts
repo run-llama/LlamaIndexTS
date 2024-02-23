@@ -13,7 +13,7 @@ export class LlamaCloudIndex {
     this.params = params;
   }
 
-  asRetriever(params: RetrieveParams): BaseRetriever {
+  asRetriever(params: RetrieveParams = {}): BaseRetriever {
     return new LlamaCloudRetriever({ ...this.params, ...params });
   }
 

@@ -38,8 +38,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
   constructor(params: CloudConstructorParams & RetrieveParams) {
     this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
-    params.denseSimilarityTopK =
-      params.similarityTopK ?? params.denseSimilarityTopK;
+    if (params.similarityTopK) {
+      params.denseSimilarityTopK = params.similarityTopK;
+    }
     this.retrieveParams = params;
     this.pipelineName = params.name;
     if (params.projectName) {
