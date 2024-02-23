@@ -79,11 +79,13 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
       },
     ];
 
-    let evalResponse = await this.serviceContext.llm.chat({
+    const evalResponse = await this.serviceContext.llm.chat({
       messages,
     });
 
-    let [score, reasoning] = this.parserFunction(evalResponse.message.content);
+    const [score, reasoning] = this.parserFunction(
+      evalResponse.message.content,
+    );
 
     return {
       query: query,
