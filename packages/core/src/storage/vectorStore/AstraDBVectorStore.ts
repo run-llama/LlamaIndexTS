@@ -1,7 +1,11 @@
 import { AstraDB } from "@datastax/astra-db-ts";
 import { Collection } from "@datastax/astra-db-ts/dist/collections";
 import { BaseNode, MetadataMode } from "../../Node.js";
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types.js";
+import {
+  VectorStore,
+  VectorStoreQuery,
+  VectorStoreQueryResult,
+} from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 const MAX_INSERT_BATCH_SIZE = 20;

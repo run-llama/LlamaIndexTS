@@ -1,4 +1,5 @@
-import { PromptMixin } from "../../prompts";
+import { PromptMixin } from "llamaindex/prompts/index";
+import { describe, expect, it } from "vitest";
 
 type MockPrompt = {
   context: string;

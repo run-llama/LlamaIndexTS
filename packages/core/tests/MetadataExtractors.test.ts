@@ -1,29 +1,41 @@
-import { Document } from "../Node";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
+import { Document } from "llamaindex/Node";
+import {
+  ServiceContext,
+  serviceContextFromDefaults,
+} from "llamaindex/ServiceContext";
 import {
   CallbackManager,
   RetrievalCallbackResponse,
   StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
-import { OpenAIEmbedding } from "../embeddings";
+} from "llamaindex/callbacks/CallbackManager";
+import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import {
   KeywordExtractor,
   QuestionsAnsweredExtractor,
   SummaryExtractor,
   TitleExtractor,
-} from "../extractors";
-import { OpenAI } from "../llm/LLM";
-import { SimpleNodeParser } from "../nodeParsers";
+} from "llamaindex/extractors/index";
+import { OpenAI } from "llamaindex/llm/LLM";
+import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vi,
+} from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockEmbeddingModel,
   mockLlmGeneration,
-} from "./utility/mockOpenAI";
+} from "./utility/mockOpenAI.js";
 
 // Mock the OpenAI getOpenAISession function during testing
-jest.mock("../llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", () => {
   return {
-    getOpenAISession: jest.fn().mockImplementation(() => null),
+    getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
 
@@ -66,7 +78,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   });
 
   afterAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("[MetadataExtractor] KeywordExtractor returns excerptKeywords metadata", async () => {

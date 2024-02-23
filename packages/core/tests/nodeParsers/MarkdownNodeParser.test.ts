@@ -1,5 +1,6 @@
-import { Document, MetadataMode } from "../../Node";
-import { MarkdownNodeParser } from "../../nodeParsers";
+import { Document, MetadataMode } from "llamaindex/Node";
+import { MarkdownNodeParser } from "llamaindex/nodeParsers/index";
+import { describe, expect, test } from "vitest";
 
 describe("MarkdownNodeParser", () => {
   test("test_header_splits", () => {

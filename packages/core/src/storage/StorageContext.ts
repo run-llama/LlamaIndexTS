@@ -1,6 +1,9 @@
 import { defaultFS, path } from "llamaindex/env";
 import { GenericFileSystem } from "./FileSystem.js";
-import { DEFAULT_IMAGE_VECTOR_NAMESPACE, DEFAULT_NAMESPACE } from "./constants.js";
+import {
+  DEFAULT_IMAGE_VECTOR_NAMESPACE,
+  DEFAULT_NAMESPACE,
+} from "./constants.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 import { BaseDocumentStore } from "./docStore/types.js";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";

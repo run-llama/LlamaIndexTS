@@ -1,7 +1,8 @@
 import {
   rakeExtractKeywords,
   simpleExtractKeywords,
-} from "../indices/keyword/utils";
+} from "llamaindex/indices/keyword/utils";
+import { describe, expect, test } from "vitest";
 describe("SimpleExtractKeywords", () => {
   test("should extract unique keywords", () => {
     const text = "apple banana apple cherry";

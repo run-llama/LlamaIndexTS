@@ -1,16 +1,17 @@
-import { OpenAIAgentWorker } from "../../../agent";
-import { AgentRunner } from "../../../agent/runner/base";
-import { CallbackManager } from "../../../callbacks/CallbackManager";
-import { OpenAI } from "../../../llm/LLM";
+import { OpenAIAgentWorker } from "llamaindex/agent/index";
+import { AgentRunner } from "llamaindex/agent/runner/base";
+import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
+import { OpenAI } from "llamaindex/llm/LLM";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockLlmGeneration,
-} from "../../utility/mockOpenAI";
+} from "../../utility/mockOpenAI.js";
 
-jest.mock("../../../llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", () => {
   return {
-    getOpenAISession: jest.fn().mockImplementation(() => null),
+    getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
 

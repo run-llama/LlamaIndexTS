@@ -1,17 +1,18 @@
-import { BaseNode, TextNode } from "../../Node";
+import { BaseNode, TextNode } from "llamaindex/Node";
+import { Mocked, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { VectorStoreQueryMode } from "../../storage";
-import { TestableQdrantVectorStore } from "../mocks/TestableQdrantVectorStore";
+import { VectorStoreQueryMode } from "llamaindex/storage/index";
+import { TestableQdrantVectorStore } from "../mocks/TestableQdrantVectorStore.js";
 
-jest.mock("@qdrant/js-client-rest");
+vi.mock("@qdrant/js-client-rest");
 
 describe("QdrantVectorStore", () => {
   let store: TestableQdrantVectorStore;
-  let mockQdrantClient: jest.Mocked<QdrantClient>;
+  let mockQdrantClient: Mocked<QdrantClient>;
 
   beforeEach(() => {
-    mockQdrantClient = new QdrantClient() as jest.Mocked<QdrantClient>;
+    mockQdrantClient = new QdrantClient() as Mocked<QdrantClient>;
     store = new TestableQdrantVectorStore({
       client: mockQdrantClient,
       collectionName: "testCollection",
@@ -41,11 +42,11 @@ describe("QdrantVectorStore", () => {
     describe("[QdrantVectorStore] add", () => {
       it("should add nodes to the vector store", async () => {
         // Mocking the dependent methods and Qdrant client responses
-        const mockInitializeCollection = jest
+        const mockInitializeCollection = vi
           .spyOn(store, "initializeCollection")
           .mockResolvedValue();
 
-        const mockBuildPoints = jest
+        const mockBuildPoints = vi
           .spyOn(store, "buildPoints")
           .mockResolvedValue({
             points: [{ id: "1", payload: {}, vector: [0.1, 0.2] }],
@@ -78,9 +79,9 @@ describe("QdrantVectorStore", () => {
 
     describe("[QdrantVectorStore] delete", () => {
       it("should delete from the vector store", async () => {
-        jest.spyOn(store, "initializeCollection").mockResolvedValue();
+        vi.spyOn(store, "initializeCollection").mockResolvedValue();
 
-        jest.spyOn(store, "buildPoints").mockResolvedValue({
+        vi.spyOn(store, "buildPoints").mockResolvedValue({
           points: [{ id: "1", payload: {}, vector: [0.1, 0.2] }],
           ids: ["1"],
         });

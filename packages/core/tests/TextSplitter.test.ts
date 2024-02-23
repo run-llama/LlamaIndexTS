@@ -1,4 +1,8 @@
-import { cjkSentenceTokenizer, SentenceSplitter } from "../TextSplitter";
+import {
+  SentenceSplitter,
+  cjkSentenceTokenizer,
+} from "llamaindex/TextSplitter";
+import { describe, expect, test } from "vitest";
 
 describe("SentenceSplitter", () => {
   test("initializes", () => {

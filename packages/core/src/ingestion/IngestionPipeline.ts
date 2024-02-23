@@ -2,7 +2,10 @@ import { BaseNode, Document } from "../Node.js";
 import { BaseReader } from "../readers/type.js";
 import { BaseDocumentStore, VectorStore } from "../storage/index.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
-import { DocStoreStrategy, createDocStoreStrategy } from "./strategies/index.js";
+import {
+  DocStoreStrategy,
+  createDocStoreStrategy,
+} from "./strategies/index.js";
 import { TransformComponent } from "./types.js";
 
 type IngestionRunArgs = {

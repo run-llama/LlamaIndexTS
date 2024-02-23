@@ -1,7 +1,8 @@
-import { OpenAIAgent } from "../../agent/index.js";
-import { CallbackManager } from "../../callbacks/CallbackManager.js";
-import { OpenAI } from "llamaindex/llm";
-import { FunctionTool } from "../../tools/index.js";
+import { OpenAIAgent } from "llamaindex/agent/index";
+import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
+import { OpenAI } from "llamaindex/llm/index";
+import { FunctionTool } from "llamaindex/tools/index";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockLlmToolCallGeneration } from "../utility/mockOpenAI.js";
 
 // Define a function to sum two numbers
@@ -24,9 +25,9 @@ const sumJSON = {
   required: ["a", "b"],
 };
 
-jest.mock("../../llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", () => {
   return {
-    getOpenAISession: jest.fn().mockImplementation(() => null),
+    getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
 

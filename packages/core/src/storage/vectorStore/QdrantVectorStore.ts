@@ -1,5 +1,9 @@
 import { BaseNode } from "../../Node.js";
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types.js";
+import {
+  VectorStore,
+  VectorStoreQuery,
+  VectorStoreQueryResult,
+} from "./types.js";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";

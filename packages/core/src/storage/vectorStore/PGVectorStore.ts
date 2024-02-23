@@ -1,7 +1,11 @@
 import pg from "pg";
 import pgvector from "pgvector/pg";
 
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types.js";
+import {
+  VectorStore,
+  VectorStoreQuery,
+  VectorStoreQueryResult,
+} from "./types.js";
 
 import { BaseNode, Document, Metadata, MetadataMode } from "../../Node.js";
 import { GenericFileSystem } from "../FileSystem.js";

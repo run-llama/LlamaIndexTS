@@ -1,5 +1,6 @@
-import { Document } from "../../Node";
-import { SimpleNodeParser } from "../../nodeParsers";
+import { Document } from "llamaindex/Node";
+import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
+import { beforeEach, describe, expect, test } from "vitest";
 
 describe("SimpleNodeParser", () => {
   let simpleNodeParser: SimpleNodeParser;

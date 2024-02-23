@@ -7,12 +7,16 @@ import {
   SimpleToolNodeMapping,
   VectorStoreIndex,
   serviceContextFromDefaults,
-} from "../../index";
-import { mockEmbeddingModel, mockLlmGeneration } from "../utility/mockOpenAI";
+} from "llamaindex";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+import {
+  mockEmbeddingModel,
+  mockLlmGeneration,
+} from "../utility/mockOpenAI.js";
 
-jest.mock("../../llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", () => {
   return {
-    getOpenAISession: jest.fn().mockImplementation(() => null),
+    getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
 

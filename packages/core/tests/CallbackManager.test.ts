@@ -1,21 +1,37 @@
-import { Document } from "../Node";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vi,
+} from "vitest";
+
+import { Document } from "llamaindex/Node";
+import {
+  ServiceContext,
+  serviceContextFromDefaults,
+} from "llamaindex/ServiceContext";
 import {
   CallbackManager,
   RetrievalCallbackResponse,
   StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
-import { OpenAIEmbedding } from "../embeddings";
-import { SummaryIndex } from "../indices/summary";
-import { VectorStoreIndex } from "../indices/vectorStore/VectorStoreIndex";
-import { OpenAI } from "../llm/LLM";
-import { ResponseSynthesizer, SimpleResponseBuilder } from "../synthesizers";
-import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI";
+} from "llamaindex/callbacks/CallbackManager";
+import { OpenAIEmbedding } from "llamaindex/embeddings/index";
+import { SummaryIndex } from "llamaindex/indices/summary/index";
+import { VectorStoreIndex } from "llamaindex/indices/vectorStore/VectorStoreIndex";
+import { OpenAI } from "llamaindex/llm/LLM";
+import {
+  ResponseSynthesizer,
+  SimpleResponseBuilder,
+} from "llamaindex/synthesizers/index";
+import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI.js";
 
 // Mock the OpenAI getOpenAISession function during testing
-jest.mock("../llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", () => {
   return {
-    getOpenAISession: jest.fn().mockImplementation(() => null),
+    getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
 
@@ -58,7 +74,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   });
 
   afterAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("For VectorStoreIndex w/ a SimpleResponseBuilder", async () => {

@@ -1,11 +1,12 @@
-import { existsSync, rmSync } from "fs";
-import { storageContextFromDefaults } from "../storage/StorageContext";
+import { storageContextFromDefaults } from "llamaindex/storage/StorageContext";
+import { existsSync, rmSync } from "node:fs";
+import { describe, expect, test, vi, vitest } from "vitest";
 
-jest.spyOn(console, "error");
+vitest.spyOn(console, "error");
 
 describe("StorageContext", () => {
   test("initializes", async () => {
-    jest.mocked(console.error).mockImplementation(() => {}); // silence console.error
+    vi.mocked(console.error).mockImplementation(() => {}); // silence console.error
 
     const storageContext = await storageContextFromDefaults({
       persistDir: "/tmp/test_dir",

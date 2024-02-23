@@ -1,4 +1,7 @@
-import { AgentChatResponse, ChatEngineAgentParams } from "../engines/chat/index.js";
+import {
+  AgentChatResponse,
+  ChatEngineAgentParams,
+} from "../engines/chat/index.js";
 import { QueryEngineParamsNonStreaming } from "../types.js";
 
 export interface AgentWorker {

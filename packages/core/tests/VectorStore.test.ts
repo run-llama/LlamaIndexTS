@@ -1,8 +1,9 @@
-import { Document, MetadataMode } from "../Node";
+import { Document, MetadataMode } from "llamaindex/Node";
 import {
   metadataDictToNode,
   nodeToMetadata,
-} from "../storage/vectorStore/utils";
+} from "llamaindex/storage/vectorStore/utils";
+import { beforeEach, describe, expect, test } from "vitest";
 
 describe("Testing VectorStore utils", () => {
   let node: Document;

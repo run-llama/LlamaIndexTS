@@ -1,5 +1,6 @@
-import { FunctionTool, ToolOutput } from "../../tools";
-import { callToolWithErrorHandling } from "../../tools/utils";
+import { FunctionTool, ToolOutput } from "llamaindex/tools/index";
+import { callToolWithErrorHandling } from "llamaindex/tools/utils";
+import { describe, expect, it } from "vitest";
 
 function sumNumbers({ a, b }: { a: number; b: number }): number {
   return a + b;

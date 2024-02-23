@@ -25,12 +25,12 @@ import fs from "node:fs/promises";
 }
 
 const esmModule = {
-  type: 'module'
-}
+  type: "module",
+};
 {
   await fs.writeFile(
-    './dist/esm/package.json',
+    "./dist/esm/package.json",
     JSON.stringify(esmModule, null, 2),
-    'utf8',
+    "utf8",
   );
 }

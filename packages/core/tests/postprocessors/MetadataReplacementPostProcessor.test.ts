@@ -1,5 +1,6 @@
-import { MetadataMode, NodeWithScore, TextNode } from "../../Node";
-import { MetadataReplacementPostProcessor } from "../../postprocessors";
+import { MetadataMode, NodeWithScore, TextNode } from "llamaindex/Node";
+import { MetadataReplacementPostProcessor } from "llamaindex/postprocessors/index";
+import { beforeEach, describe, expect, test } from "vitest";
 
 describe("MetadataReplacementPostProcessor", () => {
   let postProcessor: MetadataReplacementPostProcessor;

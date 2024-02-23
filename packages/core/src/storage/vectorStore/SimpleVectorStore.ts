@@ -1,3 +1,4 @@
+import { defaultFS, path } from "llamaindex/env";
 import _ from "lodash";
 import { BaseNode } from "../../Node.js";
 import {
@@ -5,7 +6,6 @@ import {
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
 } from "../../embeddings/utils.js";
-import { defaultFS, path } from "llamaindex/env";
 import { GenericFileSystem, exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {

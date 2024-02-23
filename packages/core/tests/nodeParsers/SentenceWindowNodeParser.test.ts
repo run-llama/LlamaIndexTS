@@ -1,8 +1,9 @@
-import { Document, MetadataMode } from "../../Node";
+import { Document, MetadataMode } from "llamaindex/Node";
 import {
   DEFAULT_WINDOW_METADATA_KEY,
   SentenceWindowNodeParser,
-} from "../../nodeParsers";
+} from "llamaindex/nodeParsers/index";
+import { describe, expect, test } from "vitest";
 
 describe("Tests for the SentenceWindowNodeParser class", () => {
   test("testing the constructor", () => {

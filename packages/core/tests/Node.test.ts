@@ -1,4 +1,5 @@
-import { TextNode } from "../Node";
+import { TextNode } from "llamaindex/Node";
+import { beforeEach, describe, expect, test } from "vitest";
 
 describe("TextNode", () => {
   let node: TextNode;

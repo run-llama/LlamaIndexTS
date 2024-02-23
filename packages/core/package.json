@@ -40,7 +40,6 @@
     "@swc/cli": "^0.3.9",
     "@swc/core": "^1.4.2",
     "@types/edit-json-file": "^1.7.3",
-    "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.14",
     "@types/papaparse": "^5.3.14",
@@ -48,6 +47,7 @@
     "concurrently": "^8.2.2",
     "edit-json-file": "^1.8.0",
     "madge": "^6.1.0",
+    "tsimp": "^2.0.11",
     "typescript": "^5.3.3"
   },
   "engines": {
@@ -105,7 +105,6 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "jest",
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
     "build:esm": "swc src -d dist/esm --strip-leading-paths --config-file .swcrc",
     "build:cjs": "swc src -d dist --strip-leading-paths --config-file .cjs.swcrc",

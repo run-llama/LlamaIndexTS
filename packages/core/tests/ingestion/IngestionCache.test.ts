@@ -1,10 +1,11 @@
-import { BaseNode, TextNode } from "../../Node";
-import { TransformComponent } from "../../ingestion";
+import { BaseNode, TextNode } from "llamaindex/Node";
 import {
   IngestionCache,
   getTransformationHash,
-} from "../../ingestion/IngestionCache";
-import { SimpleNodeParser } from "../../nodeParsers";
+} from "llamaindex/ingestion/IngestionCache";
+import { TransformComponent } from "llamaindex/ingestion/index";
+import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
+import { beforeAll, describe, expect, test } from "vitest";
 
 describe("IngestionCache", () => {
   let cache: IngestionCache;

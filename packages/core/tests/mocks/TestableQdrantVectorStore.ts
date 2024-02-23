@@ -1,5 +1,5 @@
-import { BaseNode } from "../../Node";
-import { QdrantVectorStore } from "../../storage";
+import { BaseNode } from "llamaindex/Node";
+import { QdrantVectorStore } from "llamaindex/storage/index";
 
 export class TestableQdrantVectorStore extends QdrantVectorStore {
   public nodes: BaseNode[] = [];

@@ -1,6 +1,9 @@
 import { ImageNode, MetadataMode, splitNodesByType } from "../Node.js";
 import { Response } from "../Response.js";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext.js";
+import {
+  ServiceContext,
+  serviceContextFromDefaults,
+} from "../ServiceContext.js";
 import { imageToDataUrl } from "../embeddings/index.js";
 import { MessageContentDetail } from "../llm/types.js";
 import { PromptMixin } from "../prompts/Mixin.js";

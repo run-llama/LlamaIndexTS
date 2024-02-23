@@ -2,7 +2,10 @@ import { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
 import { globalsHelper } from "../GlobalsHelper.js";
 import { NodeWithScore, ObjectType, jsonToNode } from "../Node.js";
 import { BaseRetriever } from "../Retriever.js";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext.js";
+import {
+  ServiceContext,
+  serviceContextFromDefaults,
+} from "../ServiceContext.js";
 import { Event } from "../callbacks/CallbackManager.js";
 import {
   ClientParams,

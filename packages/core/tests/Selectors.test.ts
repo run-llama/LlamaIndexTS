@@ -1,13 +1,14 @@
+import { describe, expect, test, vi } from "vitest";
 // from unittest.mock import patch
 
-import { serviceContextFromDefaults } from "../ServiceContext";
-import { OpenAI } from "../llm";
-import { LLMSingleSelector } from "../selectors";
-import { mocStructuredkLlmGeneration } from "./utility/mockOpenAI";
+import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
+import { OpenAI } from "llamaindex/llm/index";
+import { LLMSingleSelector } from "llamaindex/selectors/index";
+import { mocStructuredkLlmGeneration } from "./utility/mockOpenAI.js";
 
-jest.mock("../llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", () => {
   return {
-    getOpenAISession: jest.fn().mockImplementation(() => null),
+    getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
 
