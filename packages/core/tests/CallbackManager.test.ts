@@ -20,7 +20,7 @@ import {
 } from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import { SummaryIndex } from "llamaindex/indices/summary/index";
-import { VectorStoreIndex } from "llamaindex/indices/vectorStore/VectorStoreIndex";
+import { VectorStoreIndex } from "llamaindex/indices/vectorStore/index";
 import { OpenAI } from "llamaindex/llm/LLM";
 import {
   ResponseSynthesizer,
