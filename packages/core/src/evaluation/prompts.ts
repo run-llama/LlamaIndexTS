@@ -115,32 +115,33 @@ Answer:
 export type FaithfulnessTextQAPrompt = typeof defaultFaithfulnessTextQaPrompt;
 
 export const defaultRelevancyEvalPrompt = ({
-  queryStr,
-  contextStr,
+  query,
+  context,
 }: {
-  queryStr: string;
-  contextStr: string;
+  query: string;
+  context: string;
 }) => `Your task is to evaluate if the response for the query is in line with the context information provided.
 You have two options to answer. Either YES/ NO.
-Answer - YES, if the response for the query 
-is in line with context information otherwise NO.
-Query and Response: ${queryStr}
-Context: ${contextStr}
+Answer - YES, if the response for the query is in line with context information otherwise NO.
+Query and Response: ${query}
+Context: ${context}
 Answer: `;
 
 export type RelevancyEvalPrompt = typeof defaultRelevancyEvalPrompt;
 
 export const defaultRelevancyRefinePrompt = ({
-  queryStr,
+  query,
   existingAnswer,
   contextMsg,
 }: {
-  queryStr: string;
+  query: string;
   existingAnswer: string;
   contextMsg: string;
 }) => `We want to understand if the following query and response is
-in line with the context information: ${queryStr}
-We have provided an existing YES/NO answer: ${existingAnswer}
+in line with the context information: 
+${query}
+We have provided an existing YES/NO answer: 
+${existingAnswer}
 We have the opportunity to refine the existing answer
 (only if needed) with some more context below.
 ------------
