@@ -1,6 +1,6 @@
-import { defaultFS } from "llamaindex/env";
 import mammoth from "mammoth";
 import { Document } from "../Node.js";
+import { defaultFS } from "../env/index.js";
 import { GenericFileSystem } from "../storage/FileSystem.js";
 import { FileReader } from "./type.js";
 

@@ -1,4 +1,4 @@
-import { defaultFS, path } from "llamaindex/env";
+import { defaultFS, path } from "../env/index.js";
 import { GenericFileSystem } from "./FileSystem.js";
 import {
   DEFAULT_IMAGE_VECTOR_NAMESPACE,

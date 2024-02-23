@@ -1,4 +1,4 @@
-import { createSHA256 } from "llamaindex/env";
+import { createSHA256 } from "../env/index.js";
 import { BaseNode, MetadataMode } from "../Node.js";
 import { docToJson, jsonToDoc } from "../storage/docStore/utils.js";
 import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore.js";

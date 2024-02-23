@@ -54,44 +54,33 @@
     "node": ">=18.0.0"
   },
   "types": "./dist/type/index.d.ts",
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "imports": {
+    "llamaindex/env": "./dist/env/index.js"
+  },
   "exports": {
     ".": {
       "import": {
         "types": "./dist/type/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "edge-light": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/esm/index.edge-light.js"
-      },
-      "require": {
-        "types": "./dist/type/index.d.ts",
         "default": "./dist/index.js"
-      }
-    },
-    "./env": {
-      "import": {
-        "types": "./dist/type/env/index.d.ts",
-        "default": "./dist/esm/env/index.js"
       },
       "edge-light": {
-        "types": "./dist/type/env/index.d.ts",
-        "default": "./dist/esm/env/index.edge-light.js"
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.edge-light.js"
       },
       "require": {
-        "types": "./dist/type/env/index.d.ts",
-        "default": "./dist/env/index.js"
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/cjs/index.js"
       }
     },
     "./*": {
       "import": {
         "types": "./dist/type/*.d.ts",
-        "default": "./dist/esm/*.js"
+        "default": "./dist/*.js"
       },
       "require": {
         "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
+        "default": "./dist/cjs/*.js"
       }
     }
   },
@@ -106,8 +95,8 @@
   "scripts": {
     "lint": "eslint .",
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist/esm --strip-leading-paths --config-file .swcrc",
-    "build:cjs": "swc src -d dist --strip-leading-paths --config-file .cjs.swcrc",
+    "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
+    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
     "build:type": "tsc -p tsconfig.json",
     "postbuild": "pnpm run copy && pnpm run modify-package-json",
     "copy": "cp -r package.json CHANGELOG.md ../../README.md ../../LICENSE examples src dist/",

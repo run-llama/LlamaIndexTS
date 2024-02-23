@@ -1,4 +1,4 @@
-import { createSHA256, defaultFS } from "llamaindex/env";
+import { createSHA256, defaultFS } from "../env/index.js";
 import { Document } from "../Node.js";
 import { GenericFileSystem } from "../storage/FileSystem.js";
 import { BaseReader } from "./type.js";

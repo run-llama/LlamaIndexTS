@@ -1,4 +1,3 @@
-import { randomUUID } from "llamaindex/env";
 import { NodeWithScore, TextNode } from "../../Node.js";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
 import { Response } from "../../Response.js";
@@ -7,6 +6,7 @@ import {
   serviceContextFromDefaults,
 } from "../../ServiceContext.js";
 import { Event } from "../../callbacks/CallbackManager.js";
+import { randomUUID } from "../../env/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
 import {
   BaseSynthesizer,

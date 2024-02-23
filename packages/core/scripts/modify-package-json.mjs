@@ -25,11 +25,11 @@ import fs from "node:fs/promises";
 }
 
 const esmModule = {
-  type: "module",
+  type: "commonjs",
 };
 {
   await fs.writeFile(
-    "./dist/esm/package.json",
+    "./dist/cjs/package.json",
     JSON.stringify(esmModule, null, 2),
     "utf8",
   );

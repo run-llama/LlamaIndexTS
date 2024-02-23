@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import { EOL } from "node:os";
 import path from "node:path";
 import type { CompleteFileSystem } from "../storage/FileSystem.js";
-import type { SHA256 } from "./index.edge-light.js";
+import type { SHA256 } from "./index.polyfill.js";
 
 export function createSHA256(): SHA256 {
   const hash = createHash("sha256");
