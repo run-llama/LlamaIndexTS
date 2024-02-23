@@ -50,3 +50,66 @@ but it is not as concise.
 `;
 
 export type CorrectnessSystemPrompt = typeof defaultCorrectnessSystemPrompt;
+
+export const defaultFaithfulnessRefinePrompt = ({
+  query,
+  context,
+  existingAnswer,
+}: {
+  query: string;
+  context: string;
+  existingAnswer: string;
+}) => `
+We want to understand if the following information is present
+in the context information: ${query}
+We have provided an existing YES/NO answer: ${existingAnswer}
+We have the opportunity to refine the existing answer
+(only if needed) with some more context below.
+------------
+${context}
+------------
+If the existing answer was already YES, still answer YES.
+If the information is present in the new context, answer YES.
+Otherwise answer NO.
+`;
+
+export type FaithfulnessRefinePrompt = typeof defaultFaithfulnessRefinePrompt;
+
+export const defaultFaithfulnessTextQaPrompt = ({
+  query,
+  context,
+}: {
+  query: string;
+  context: string;
+}) => `
+Please tell if a given piece of information
+is supported by the context.
+You need to answer with either YES or NO.
+Answer YES if any of the context supports the information, even
+if most of the context is unrelated.
+Some examples are provided below.
+
+Information: Apple pie is generally double-crusted.
+Context: An apple pie is a fruit pie in which the principal filling
+ingredient is apples.
+Apple pie is often served with whipped cream, ice cream
+('apple pie à la mode'), custard or cheddar cheese.
+It is generally double-crusted, with pastry both above
+and below the filling; the upper crust may be solid or
+latticed (woven of crosswise strips).
+Answer: YES
+Information: Apple pies tastes bad.
+Context: An apple pie is a fruit pie in which the principal filling
+ingredient is apples.
+Apple pie is often served with whipped cream, ice cream
+('apple pie à la mode'), custard or cheddar cheese.
+It is generally double-crusted, with pastry both above
+and below the filling; the upper crust may be solid or
+latticed (woven of crosswise strips).
+Answer: NO
+Information: ${query}
+Context: ${context}
+Answer:
+`;
+
+export type FaithfulnessTextQAPrompt = typeof defaultFaithfulnessTextQaPrompt;

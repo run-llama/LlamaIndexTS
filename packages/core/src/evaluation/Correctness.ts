@@ -1,3 +1,4 @@
+import { MetadataMode } from "../Node";
 import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
 import { ChatMessage } from "../llm";
 import { PromptMixin } from "../prompts";
@@ -6,7 +7,12 @@ import {
   defaultCorrectnessSystemPrompt,
   defaultUserPrompt,
 } from "./prompts";
-import { BaseEvaluator, EvaluationResult } from "./types";
+import {
+  BaseEvaluator,
+  EvaluationResult,
+  EvaluatorParams,
+  EvaluatorResponseParams,
+} from "./types";
 import { defaultEvaluationParser } from "./utils";
 
 type CorrectnessParams = {
@@ -48,12 +54,12 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
    * @param contexts Array of contexts
    * @param reference  Reference response
    */
-  async evaluate(
-    query: string,
-    response: string,
-    contexts?: string[],
-    reference?: string,
-  ): Promise<EvaluationResult> {
+  async evaluate({
+    query,
+    response,
+    contexts,
+    reference,
+  }: EvaluatorParams): Promise<EvaluationResult> {
     if (query === null || response === null) {
       throw new Error("query, and response must be provided");
     }
@@ -92,10 +98,23 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
    * @param query Query to evaluate
    * @param response  Response to evaluate
    */
-  async evaluateResponse(
-    query: string,
-    response: Response,
-  ): Promise<EvaluationResult> {
-    return await this.evaluate(query, response.toString(), []);
+  async evaluateResponse({
+    query,
+    response,
+  }: EvaluatorResponseParams): Promise<EvaluationResult> {
+    const responseStr = response?.response;
+    const contexts = [];
+
+    if (response) {
+      for (const node of response.sourceNodes || []) {
+        contexts.push(node.getContent(MetadataMode.ALL));
+      }
+    }
+
+    return this.evaluate({
+      query,
+      response: responseStr,
+      contexts,
+    });
   }
 }
