@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.1.13
+
+### Patch Changes
+
+- b8be4c0: build: use ESM as default
+- 65d8346: feat: abstract `@llamaindex/env` package
+
 ## 0.1.12
 
 ### Patch Changes
