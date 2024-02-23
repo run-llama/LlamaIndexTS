@@ -18,7 +18,6 @@
     "chromadb": "~1.7.3",
     "cohere-ai": "^7.7.5",
     "file-type": "^18.7.0",
-    "glob": "^10.3.10",
     "js-tiktoken": "^1.0.10",
     "lodash": "^4.17.21",
     "mammoth": "^1.6.0",
@@ -47,6 +46,7 @@
     "@types/pg": "^8.11.0",
     "concurrently": "^8.2.2",
     "edit-json-file": "^1.8.0",
+    "glob": "^10.3.10",
     "madge": "^6.1.0",
     "typescript": "^5.3.3"
   },
