@@ -244,7 +244,7 @@ export const installPythonTemplate = async ({
 
     const dataSourceType = dataSource?.type;
     if (dataSourceType !== undefined && dataSourceType !== "none") {
-      let loaderPath =
+      const loaderPath =
         dataSourceType === "folder"
           ? path.join(compPath, "loaders", "python", "file")
           : path.join(compPath, "loaders", "python", dataSourceType);

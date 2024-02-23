@@ -87,8 +87,8 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
       this.indexStruct.table.has(keyword),
     );
 
-    for (let keyword of filteredKeywords) {
-      for (let nodeId of this.indexStruct.table.get(keyword) || []) {
+    for (const keyword of filteredKeywords) {
+      for (const nodeId of this.indexStruct.table.get(keyword) || []) {
         chunkIndicesCount[nodeId] = (chunkIndicesCount[nodeId] ?? 0) + 1;
       }
     }
@@ -161,7 +161,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
-    let indexStructs = (await indexStore.getIndexStructs()) as KeywordTable[];
+    const indexStructs = (await indexStore.getIndexStructs()) as KeywordTable[];
     let indexStruct: KeywordTable | null;
 
     if (options.indexStruct && indexStructs.length > 0) {
@@ -315,7 +315,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   }
 
   async insertNodes(nodes: BaseNode[]) {
-    for (let node of nodes) {
+    for (const node of nodes) {
       const keywords = await KeywordTableIndex.extractKeywords(
         node.getContent(MetadataMode.LLM),
         this.serviceContext,

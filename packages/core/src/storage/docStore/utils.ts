@@ -11,8 +11,8 @@ export function docToJson(doc: BaseNode): Record<string, any> {
 }
 
 export function jsonToDoc(docDict: Record<string, any>): BaseNode {
-  let docType = docDict[TYPE_KEY];
-  let dataDict = JSON.parse(docDict[DATA_KEY]);
+  const docType = docDict[TYPE_KEY];
+  const dataDict = JSON.parse(docDict[DATA_KEY]);
   let doc: BaseNode;
 
   if (docType === ObjectType.DOCUMENT) {

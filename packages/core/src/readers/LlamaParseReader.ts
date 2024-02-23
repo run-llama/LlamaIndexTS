@@ -74,7 +74,7 @@ export class LlamaParseReader implements FileReader {
 
     const resultUrl = `${this.baseUrl}/job/${jobId}/result/${this.resultType}`;
 
-    let start = Date.now();
+    const start = Date.now();
     let tries = 0;
     while (true) {
       await new Promise((resolve) =>

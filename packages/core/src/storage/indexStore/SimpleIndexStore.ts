@@ -32,7 +32,7 @@ export class SimpleIndexStore extends KVIndexStore {
     persistPath: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleIndexStore> {
-    let simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
+    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
     return new SimpleIndexStore(simpleKVStore);
   }
 
@@ -44,7 +44,7 @@ export class SimpleIndexStore extends KVIndexStore {
   }
 
   static fromDict(saveDict: DataType): SimpleIndexStore {
-    let simpleKVStore = SimpleKVStore.fromDict(saveDict);
+    const simpleKVStore = SimpleKVStore.fromDict(saveDict);
     return new SimpleIndexStore(simpleKVStore);
   }
 

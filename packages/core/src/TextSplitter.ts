@@ -130,7 +130,7 @@ export class SentenceSplitter {
 
   getParagraphSplits(text: string, effectiveChunkSize?: number): string[] {
     // get paragraph splits
-    let paragraphSplits: string[] = text.split(this.paragraphSeparator);
+    const paragraphSplits: string[] = text.split(this.paragraphSeparator);
     let idx = 0;
     if (effectiveChunkSize == undefined) {
       return paragraphSplits;
@@ -155,9 +155,9 @@ export class SentenceSplitter {
   }
 
   getSentenceSplits(text: string, effectiveChunkSize?: number): string[] {
-    let paragraphSplits = this.getParagraphSplits(text, effectiveChunkSize);
+    const paragraphSplits = this.getParagraphSplits(text, effectiveChunkSize);
     // Next we split the text using the chunk tokenizer fn/
-    let splits = [];
+    const splits = [];
     for (const parText of paragraphSplits) {
       const sentenceSplits = this.chunkingTokenizerFn(parText);
 
@@ -194,9 +194,9 @@ export class SentenceSplitter {
       }));
     }
 
-    let newSplits: SplitRep[] = [];
+    const newSplits: SplitRep[] = [];
     for (const split of sentenceSplits) {
-      let splitTokens = this.tokenizer(split);
+      const splitTokens = this.tokenizer(split);
       const splitLen = splitTokens.length;
       if (splitLen <= effectiveChunkSize) {
         newSplits.push({ text: split, numTokens: splitLen });
@@ -219,7 +219,7 @@ export class SentenceSplitter {
     // go through sentence splits, combine to chunks that are within the chunk size
 
     // docs represents final list of text chunks
-    let docs: TextSplit[] = [];
+    const docs: TextSplit[] = [];
     // curChunkSentences represents the current list of sentence splits (that)
     // will be merged into a chunk
     let curChunkSentences: SplitRep[] = [];
@@ -287,18 +287,18 @@ export class SentenceSplitter {
       return [];
     }
 
-    let effectiveChunkSize = this.getEffectiveChunkSize(extraInfoStr);
-    let sentenceSplits = this.getSentenceSplits(text, effectiveChunkSize);
+    const effectiveChunkSize = this.getEffectiveChunkSize(extraInfoStr);
+    const sentenceSplits = this.getSentenceSplits(text, effectiveChunkSize);
 
     // Check if any sentences exceed the chunk size. If they don't,
     // force split by tokenizer
-    let newSentenceSplits = this.processSentenceSplits(
+    const newSentenceSplits = this.processSentenceSplits(
       sentenceSplits,
       effectiveChunkSize,
     );
 
     // combine sentence splits into chunks of text that can then be returned
-    let combinedTextSplits = this.combineTextSplits(
+    const combinedTextSplits = this.combineTextSplits(
       newSentenceSplits,
       effectiveChunkSize,
     );

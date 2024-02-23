@@ -40,7 +40,7 @@ export class PortkeySession {
   }
 }
 
-let defaultPortkeySession: {
+const defaultPortkeySession: {
   session: PortkeySession;
   options: PortkeyOptions;
 }[] = [];

@@ -8,13 +8,13 @@ export class PromptMixin {
    * @param moduleDict
    */
   validatePrompts(promptsDict: PromptsDict, moduleDict: ModuleDict): void {
-    for (let key in promptsDict) {
+    for (const key in promptsDict) {
       if (key.includes(":")) {
         throw new Error(`Prompt key ${key} cannot contain ':'.`);
       }
     }
 
-    for (let key in moduleDict) {
+    for (const key in moduleDict) {
       if (key.includes(":")) {
         throw new Error(`Module key ${key} cannot contain ':'.`);
       }
@@ -25,16 +25,16 @@ export class PromptMixin {
    * Returns all prompts from the mixin and its modules
    */
   getPrompts(): PromptsDict {
-    let promptsDict: PromptsDict = this._getPrompts();
+    const promptsDict: PromptsDict = this._getPrompts();
 
-    let moduleDict = this._getPromptModules();
+    const moduleDict = this._getPromptModules();
 
     this.validatePrompts(promptsDict, moduleDict);
 
-    let allPrompts: PromptsDict = { ...promptsDict };
+    const allPrompts: PromptsDict = { ...promptsDict };
 
-    for (let [module_name, prompt_module] of Object.entries(moduleDict)) {
-      for (let [key, prompt] of Object.entries(prompt_module.getPrompts())) {
+    for (const [module_name, prompt_module] of Object.entries(moduleDict)) {
+      for (const [key, prompt] of Object.entries(prompt_module.getPrompts())) {
         allPrompts[`${module_name}:${key}`] = prompt;
       }
     }
@@ -46,15 +46,15 @@ export class PromptMixin {
    * @param promptsDict
    */
   updatePrompts(promptsDict: PromptsDict): void {
-    let promptModules = this._getPromptModules();
+    const promptModules = this._getPromptModules();
 
     this._updatePrompts(promptsDict);
 
-    let subPromptDicts: Record<string, PromptsDict> = {};
+    const subPromptDicts: Record<string, PromptsDict> = {};
 
-    for (let key in promptsDict) {
+    for (const key in promptsDict) {
       if (key.includes(":")) {
-        let [module_name, sub_key] = key.split(":");
+        const [module_name, sub_key] = key.split(":");
 
         if (!subPromptDicts[module_name]) {
           subPromptDicts[module_name] = {};
@@ -63,12 +63,12 @@ export class PromptMixin {
       }
     }
 
-    for (let [module_name, subPromptDict] of Object.entries(subPromptDicts)) {
+    for (const [module_name, subPromptDict] of Object.entries(subPromptDicts)) {
       if (!promptModules[module_name]) {
         throw new Error(`Module ${module_name} not found.`);
       }
 
-      let moduleToUpdate = promptModules[module_name];
+      const moduleToUpdate = promptModules[module_name];
 
       moduleToUpdate.updatePrompts(subPromptDict);
     }

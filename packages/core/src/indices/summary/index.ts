@@ -61,7 +61,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
-    let indexStructs = (await indexStore.getIndexStructs()) as IndexList[];
+    const indexStructs = (await indexStore.getIndexStructs()) as IndexList[];
     let indexStruct: IndexList | null;
 
     if (options.indexStruct && indexStructs.length > 0) {
@@ -170,7 +170,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     }
 
     if (!responseSynthesizer) {
-      let responseBuilder = new CompactAndRefine(this.serviceContext);
+      const responseBuilder = new CompactAndRefine(this.serviceContext);
       responseSynthesizer = new ResponseSynthesizer({
         serviceContext: this.serviceContext,
         responseBuilder,

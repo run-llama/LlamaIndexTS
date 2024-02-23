@@ -32,7 +32,7 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
   const lineTokens: string[][] = answer
     .split("\n")
     .map((line: string) => {
-      let lineTokens = line.split(",");
+      const lineTokens = line.split(",");
       if (lineTokens.length !== 2) {
         if (raiseErr) {
           throw new Error(
@@ -50,8 +50,8 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
   return lineTokens.reduce(
     (parseResult: ChoiceSelectParseResult, lineToken: string[]) => {
       try {
-        let docNum = parseInt(lineToken[0].split(":")[1].trim());
-        let answerRelevance = parseFloat(lineToken[1].split(":")[1].trim());
+        const docNum = parseInt(lineToken[0].split(":")[1].trim());
+        const answerRelevance = parseFloat(lineToken[1].split(":")[1].trim());
         if (docNum < 1 || docNum > numChoices) {
           if (raiseErr) {
             throw new Error(

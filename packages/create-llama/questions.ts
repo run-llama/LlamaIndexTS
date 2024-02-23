@@ -108,7 +108,7 @@ const getVectorDbChoices = (framework: TemplateFramework) => {
 };
 
 const getDataSourceChoices = (framework: TemplateFramework) => {
-  let choices = [
+  const choices = [
     {
       title: "No data, just a simple chat",
       value: "simple",
@@ -159,7 +159,7 @@ const selectLocalContextData = async (type: TemplateDataSourceType) => {
     }
     selectedPath = execSync(execScript, execOpts).toString().trim();
     if (type === "file") {
-      let fileType = path.extname(selectedPath);
+      const fileType = path.extname(selectedPath);
       if (!supportedContextFileTypes.includes(fileType)) {
         console.log(
           red(
@@ -204,7 +204,7 @@ export const askQuestions = async (
       if (ciInfo.isCI) {
         program.postInstallAction = getPrefOrDefault("postInstallAction");
       } else {
-        let actionChoices = [
+        const actionChoices = [
           {
             title: "Just generate code (~1 sec)",
             value: "none",
@@ -535,7 +535,7 @@ export const askQuestions = async (
       if (!baseUrl.includes("://")) {
         baseUrl = `https://${baseUrl}`;
       }
-      let checkUrl = new URL(baseUrl);
+      const checkUrl = new URL(baseUrl);
       if (checkUrl.protocol !== "https:" && checkUrl.protocol !== "http:") {
         throw new Error("Invalid protocol");
       }

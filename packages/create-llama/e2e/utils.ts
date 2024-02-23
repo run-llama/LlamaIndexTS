@@ -121,7 +121,7 @@ export async function runCreateLlama(
     "none",
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
-  let appProcess = exec(command, {
+  const appProcess = exec(command, {
     cwd,
     env: {
       ...process.env,

@@ -85,7 +85,7 @@ export class MultiModalResponseSynthesizer
       { type: "text", text: textPrompt },
       ...images,
     ];
-    let response = await this.serviceContext.llm.complete({
+    const response = await this.serviceContext.llm.complete({
       prompt,
       parentEvent,
     });

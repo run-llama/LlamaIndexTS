@@ -353,10 +353,10 @@ export function splitNodesByType(nodes: BaseNode[]): {
   imageNodes: ImageNode[];
   textNodes: TextNode[];
 } {
-  let imageNodes: ImageNode[] = [];
-  let textNodes: TextNode[] = [];
+  const imageNodes: ImageNode[] = [];
+  const textNodes: TextNode[] = [];
 
-  for (let node of nodes) {
+  for (const node of nodes) {
     if (node instanceof ImageNode) {
       imageNodes.push(node);
     } else if (node instanceof TextNode) {

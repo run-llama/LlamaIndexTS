@@ -83,7 +83,7 @@ class AudioTranscriptParagraphsReader extends AssemblyAIReader {
    * @returns A promise that resolves to an array of documents, each containing a paragraph of the transcript.
    */
   async loadData(params: TranscribeParams | string): Promise<Document[]> {
-    let transcriptId = await this.getTranscriptId(params);
+    const transcriptId = await this.getTranscriptId(params);
     const paragraphsResponse =
       await this.client.transcripts.paragraphs(transcriptId);
     return paragraphsResponse.paragraphs.map(
@@ -102,7 +102,7 @@ class AudioTranscriptSentencesReader extends AssemblyAIReader {
    * @returns A promise that resolves to an array of documents, each containing a sentence of the transcript.
    */
   async loadData(params: TranscribeParams | string): Promise<Document[]> {
-    let transcriptId = await this.getTranscriptId(params);
+    const transcriptId = await this.getTranscriptId(params);
     const sentencesResponse =
       await this.client.transcripts.sentences(transcriptId);
     return sentencesResponse.sentences.map(
@@ -125,7 +125,7 @@ class AudioSubtitlesReader extends AssemblyAIReader {
     params: TranscribeParams | string,
     subtitleFormat: SubtitleFormat = "srt",
   ): Promise<Document[]> {
-    let transcriptId = await this.getTranscriptId(params);
+    const transcriptId = await this.getTranscriptId(params);
     const subtitles = await this.client.transcripts.subtitles(
       transcriptId,
       subtitleFormat,

@@ -130,7 +130,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     indexStore: BaseIndexStore,
     options: IndexStructOptions,
   ) {
-    let indexStructs = (await indexStore.getIndexStructs()) as IndexDict[];
+    const indexStructs = (await indexStore.getIndexStructs()) as IndexDict[];
     let indexStruct: IndexDict | undefined;
 
     if (options.indexStruct && indexStructs.length > 0) {
@@ -504,7 +504,7 @@ export class VectorIndexRetriever implements BaseRetriever {
   }
 
   protected buildNodeListFromQueryResult(result: VectorStoreQueryResult) {
-    let nodesWithScores: NodeWithScore[] = [];
+    const nodesWithScores: NodeWithScore[] = [];
     for (let i = 0; i < result.ids.length; i++) {
       const nodeFromResult = result.nodes?.[i];
       if (!this.index.indexStruct.nodesDict[result.ids[i]] && nodeFromResult) {
