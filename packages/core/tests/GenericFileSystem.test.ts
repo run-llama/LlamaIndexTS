@@ -1,4 +1,4 @@
-import { defaultFS } from "llamaindex/env";
+import { defaultFS } from "llamaindex/env/index";
 import {
   GenericFileSystem,
   InMemoryFileSystem,
