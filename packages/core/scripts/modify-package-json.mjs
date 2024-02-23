@@ -26,6 +26,28 @@ import { relative } from "node:path";
   );
 }
 
+// replace the require("#llamaindex/env") with require("path/to/env")
+// because CJS module does not support subpath import
+// Refs: https://nodejs.org/docs/latest-v20.x/api/packages.html#subpath-imports
+
+/**
+ * subpath import will allow downstream users to replace the env module
+ *  by providing their own implementation.
+ *
+ * @example
+ * ```json
+ * {
+ *  "name": "my-module",
+ *  "type": "module",
+ *  "dependencies": {
+ *    "llamaindex": "latest"
+ *  },
+ *  "imports": {
+ *    "#llamaindex/env": "./my-env.js"
+ *  }
+ * }
+ * ```
+ */
 {
   const envFileTarget = "./dist/cjs/env/index.js";
   const files = await glob("./dist/cjs/**/*.js");
@@ -40,13 +62,15 @@ import { relative } from "node:path";
   }
 }
 
-const esmModule = {
+const cjsModule = {
   type: "commonjs",
 };
 {
+  // set the nearest package.json to the cjs module
+  // Refs: https://nodejs.org/docs/latest-v20.x/api/packages.html#type
   await fs.writeFile(
     "./dist/cjs/package.json",
-    JSON.stringify(esmModule, null, 2),
+    JSON.stringify(cjsModule, null, 2),
     "utf8",
   );
 }

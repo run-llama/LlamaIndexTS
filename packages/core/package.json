@@ -6,7 +6,9 @@
   "type": "module",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.13.0",
+    "@aws-crypto/sha256-js": "^5.2.0",
     "@datastax/astra-db-ts": "^0.1.4",
+    "@llamaindex/cloud": "^0.0.1",
     "@mistralai/mistralai": "^0.0.10",
     "@notionhq/client": "^2.2.14",
     "@pinecone-database/pinecone": "^2.0.1",
@@ -36,8 +38,6 @@
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
-    "@aws-crypto/sha256-js": "^5.2.0",
-    "@llamaindex/cloud": "^0.0.1",
     "@swc/cli": "^0.3.9",
     "@swc/core": "^1.4.2",
     "@types/edit-json-file": "^1.7.3",

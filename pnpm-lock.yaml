@@ -159,9 +159,15 @@ importers:
       '@anthropic-ai/sdk':
         specifier: ^0.13.0
         version: 0.13.0
+      '@aws-crypto/sha256-js':
+        specifier: ^5.2.0
+        version: 5.2.0
       '@datastax/astra-db-ts':
         specifier: ^0.1.4
         version: 0.1.4
+      '@llamaindex/cloud':
+        specifier: ^0.0.1
+        version: 0.0.1
       '@mistralai/mistralai':
         specifier: ^0.0.10
         version: 0.0.10
@@ -244,12 +250,6 @@ importers:
         specifier: ^1.14.3
         version: 1.14.3
     devDependencies:
-      '@aws-crypto/sha256-js':
-        specifier: ^5.2.0
-        version: 5.2.0
-      '@llamaindex/cloud':
-        specifier: ^0.0.1
-        version: 0.0.1
       '@swc/cli':
         specifier: ^0.3.9
         version: 0.3.9(@swc/core@1.4.2)
@@ -573,7 +573,7 @@ packages:
       '@aws-crypto/util': 5.2.0
       '@aws-sdk/types': 3.496.0
       tslib: 2.6.2
-    dev: true
+    dev: false
 
   /@aws-crypto/util@5.2.0:
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
@@ -581,7 +581,7 @@ packages:
       '@aws-sdk/types': 3.496.0
       '@smithy/util-utf8': 2.1.1
       tslib: 2.6.2
-    dev: true
+    dev: false
 
   /@aws-sdk/types@3.496.0:
     resolution: {integrity: sha512-umkGadK4QuNQaMoDICMm7NKRI/mYSXiyPjcn3d53BhsuArYU/52CebGQKdt4At7SwwsiVJZw9RNBHyN5Mm0HVw==}
@@ -589,7 +589,7 @@ packages:
     dependencies:
       '@smithy/types': 2.9.1
       tslib: 2.6.2
-    dev: true
+    dev: false
 
   /@babel/code-frame@7.23.5:
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
@@ -3248,7 +3248,7 @@ packages:
 
   /@llamaindex/cloud@0.0.1:
     resolution: {integrity: sha512-7FrLAbY459B4rcG4NaqANatDT5zKvZxIRyrY+nnTSXqu9ZMzkm1Co8IIRYx2/9feps/OLOhXsv7VKGGUr7scNQ==}
-    dev: true
+    dev: false
 
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -3734,14 +3734,14 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.6.2
-    dev: true
+    dev: false
 
   /@smithy/types@2.9.1:
     resolution: {integrity: sha512-vjXlKNXyprDYDuJ7UW5iobdmyDm6g8dDG+BFUncAg/3XJaN45Gy5RWWWUVgrzIK7S4R1KWgIX5LeJcfvSI24bw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.6.2
-    dev: true
+    dev: false
 
   /@smithy/util-buffer-from@2.1.1:
     resolution: {integrity: sha512-clhNjbyfqIv9Md2Mg6FffGVrJxw7bgK7s3Iax36xnfVj6cg0fUG7I4RH0XgXJF8bxi+saY5HR21g2UPKSxVCXg==}
@@ -3749,7 +3749,7 @@ packages:
     dependencies:
       '@smithy/is-array-buffer': 2.1.1
       tslib: 2.6.2
-    dev: true
+    dev: false
 
   /@smithy/util-utf8@2.1.1:
     resolution: {integrity: sha512-BqTpzYEcUMDwAKr7/mVRUtHDhs6ZoXDi9NypMvMfOr/+u1NW7JgqodPDECiiLboEm6bobcPcECxzjtQh865e9A==}
@@ -3757,7 +3757,7 @@ packages:
     dependencies:
       '@smithy/util-buffer-from': 2.1.1
       tslib: 2.6.2
-    dev: true
+    dev: false
 
   /@svgr/babel-plugin-add-jsx-attribute@6.5.1(@babel/core@7.23.9):
     resolution: {integrity: sha512-9PYGcXrAxitycIjRmZB+Q0JaN07GZIWaTBIGQzfaZv+qr1n8X1XUEJ5rZ/vx6OVD9RRYlrNnXWExQXcmZeD/BQ==}
