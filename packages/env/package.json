@@ -41,7 +41,8 @@
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
     "build:type": "tsc -p tsconfig.json",
     "postbuild": "pnpm run modify-package-json",
-    "modify-package-json": "node ./scripts/modify-package-json.mjs"
+    "modify-package-json": "node ./scripts/modify-package-json.mjs",
+    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
   },
   "devDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
