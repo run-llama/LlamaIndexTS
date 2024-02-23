@@ -1,6 +1,7 @@
-import { defaultFS, path } from "#llamaindex/env";
+import { defaultFS, path } from "@llamaindex/env";
+import { CompleteFileSystem } from "@llamaindex/env/type";
 import { Document } from "../Node.js";
-import { CompleteFileSystem, walk } from "../storage/FileSystem.js";
+import { walk } from "../storage/FileSystem.js";
 import { PapaCSVReader } from "./CSVReader.js";
 import { DocxReader } from "./DocxReader.js";
 import { HTMLReader } from "./HTMLReader.js";

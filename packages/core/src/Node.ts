@@ -1,4 +1,4 @@
-import { createSHA256, path, randomUUID } from "#llamaindex/env";
+import { createSHA256, path, randomUUID } from "@llamaindex/env";
 import _ from "lodash";
 
 export enum NodeRelationship {

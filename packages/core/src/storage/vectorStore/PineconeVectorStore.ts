@@ -6,15 +6,14 @@ import {
   VectorStoreQueryResult,
 } from "./types.js";
 
-import { BaseNode, Metadata } from "../../Node.js";
-import { GenericFileSystem } from "../FileSystem.js";
-
+import { GenericFileSystem } from "@llamaindex/env/type";
 import {
   FetchResponse,
   Index,
   Pinecone,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
+import { BaseNode, Metadata } from "../../Node.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {

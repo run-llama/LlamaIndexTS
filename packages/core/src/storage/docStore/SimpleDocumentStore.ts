@@ -1,6 +1,6 @@
-import { defaultFS, path } from "#llamaindex/env";
+import { defaultFS, path } from "@llamaindex/env";
+import { GenericFileSystem } from "@llamaindex/env/type";
 import _ from "lodash";
-import { GenericFileSystem } from "../FileSystem.js";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_NAMESPACE,

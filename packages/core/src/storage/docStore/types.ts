@@ -1,9 +1,9 @@
+import { GenericFileSystem } from "@llamaindex/env/type";
 import { BaseNode } from "../../Node.js";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,
 } from "../constants.js";
-import { GenericFileSystem } from "../FileSystem.js";
 
 const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_DOC_STORE_PERSIST_FILENAME}`;
 

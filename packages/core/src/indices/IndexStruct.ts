@@ -1,4 +1,4 @@
-import { randomUUID } from "#llamaindex/env";
+import { randomUUID } from "@llamaindex/env";
 
 /**
  * The underlying structure of each index.

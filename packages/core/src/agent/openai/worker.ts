@@ -1,6 +1,6 @@
 // Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
 
-import { randomUUID } from "#llamaindex/env";
+import { randomUUID } from "@llamaindex/env";
 import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import {
   AgentChatResponse,

@@ -1,6 +1,7 @@
-import { defaultFS, path } from "#llamaindex/env";
+import { defaultFS, path } from "@llamaindex/env";
+import { GenericFileSystem } from "@llamaindex/env/type";
 import _ from "lodash";
-import { GenericFileSystem, exists } from "../FileSystem.js";
+import { exists } from "../FileSystem.js";
 import { DEFAULT_COLLECTION } from "../constants.js";
 import { BaseKVStore } from "./types.js";
 

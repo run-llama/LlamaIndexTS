@@ -7,8 +7,8 @@ import {
   VectorStoreQueryResult,
 } from "./types.js";
 
+import { GenericFileSystem } from "@llamaindex/env/type";
 import { BaseNode, Document, Metadata, MetadataMode } from "../../Node.js";
-import { GenericFileSystem } from "../FileSystem.js";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";

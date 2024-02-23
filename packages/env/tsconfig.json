@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "strict": true,
     "lib": ["ESNext", "dom"],
+    "types": ["node"],
     "target": "ESNext"
   },
   "include": ["./src"],

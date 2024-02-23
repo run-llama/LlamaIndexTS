@@ -1,4 +1,4 @@
-import { EOL } from "#llamaindex/env";
+import { EOL } from "@llamaindex/env";
 // GitHub translated
 import { globalsHelper } from "./GlobalsHelper.js";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants.js";

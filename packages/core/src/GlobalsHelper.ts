@@ -1,6 +1,6 @@
 import { encodingForModel } from "js-tiktoken";
 
-import { randomUUID } from "#llamaindex/env";
+import { randomUUID } from "@llamaindex/env";
 import { Event, EventTag, EventType } from "./callbacks/CallbackManager.js";
 
 export enum Tokenizers {

@@ -1,4 +1,4 @@
-import { randomUUID } from "#llamaindex/env";
+import { randomUUID } from "@llamaindex/env";
 import { ChatHistory, getHistory } from "../../ChatHistory.js";
 import { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";

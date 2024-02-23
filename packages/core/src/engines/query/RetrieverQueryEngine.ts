@@ -1,4 +1,4 @@
-import { randomUUID } from "#llamaindex/env";
+import { randomUUID } from "@llamaindex/env";
 import { NodeWithScore } from "../../Node.js";
 import { Response } from "../../Response.js";
 import { BaseRetriever } from "../../Retriever.js";

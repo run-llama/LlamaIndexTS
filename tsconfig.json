@@ -24,6 +24,9 @@
       "path": "./packages/core/tests/tsconfig.json"
     },
     {
+      "path": "./packages/env/tsconfig.json"
+    },
+    {
       "path": "./packages/create-llama"
     },
     {

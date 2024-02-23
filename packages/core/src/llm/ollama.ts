@@ -1,4 +1,4 @@
-import { ok } from "#llamaindex/env";
+import { ok } from "@llamaindex/env";
 import { CallbackManager, Event } from "../callbacks/CallbackManager.js";
 import { BaseEmbedding } from "../embeddings/types.js";
 import {

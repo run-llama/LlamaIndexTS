@@ -3,8 +3,8 @@ import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import { EOL } from "node:os";
 import path from "node:path";
-import type { CompleteFileSystem } from "../storage/FileSystem.js";
 import type { SHA256 } from "./index.polyfill.js";
+import type { CompleteFileSystem } from "./type.js";
 
 export function createSHA256(): SHA256 {
   const hash = createHash("sha256");

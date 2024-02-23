@@ -9,6 +9,7 @@
     "@aws-crypto/sha256-js": "^5.2.0",
     "@datastax/astra-db-ts": "^0.1.4",
     "@llamaindex/cloud": "^0.0.1",
+    "@llamaindex/env": "workspace:*",
     "@mistralai/mistralai": "^0.0.10",
     "@notionhq/client": "^2.2.14",
     "@pinecone-database/pinecone": "^2.0.1",
@@ -39,13 +40,11 @@
   "devDependencies": {
     "@swc/cli": "^0.3.9",
     "@swc/core": "^1.4.2",
-    "@types/edit-json-file": "^1.7.3",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.14",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.0",
     "concurrently": "^8.2.2",
-    "edit-json-file": "^1.8.0",
     "glob": "^10.3.10",
     "madge": "^6.1.0",
     "typescript": "^5.3.3"
@@ -55,13 +54,6 @@
   },
   "types": "./dist/type/index.d.ts",
   "main": "./dist/cjs/index.js",
-  "imports": {
-    "#llamaindex/env": {
-      "edge-light": "./dist/env/index.polyfill.js",
-      "require": "./dist/cjs/env/index.js",
-      "default": "./dist/env/index.js"
-    }
-  },
   "exports": {
     ".": {
       "import": {
@@ -102,10 +94,9 @@
     "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
     "build:type": "tsc -p tsconfig.json",
-    "postbuild": "pnpm run copy && pnpm run modify-package-json",
+    "postbuild": "pnpm run modify-package-json",
     "copy": "cp -r package.json CHANGELOG.md ../../README.md ../../LICENSE examples src dist/",
     "modify-package-json": "node ./scripts/modify-package-json.mjs",
-    "prepublish": "pnpm run modify-package-json && echo \"please cd ./dist and run pnpm publish\" && exit 1",
     "circular-check": "madge -c ./src/index.ts"
   }
 }

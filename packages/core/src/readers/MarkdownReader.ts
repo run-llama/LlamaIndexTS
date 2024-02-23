@@ -1,6 +1,6 @@
-import { defaultFS } from "#llamaindex/env";
+import { defaultFS } from "@llamaindex/env";
+import { GenericFileSystem } from "@llamaindex/env/type";
 import { Document } from "../Node.js";
-import { GenericFileSystem } from "../storage/index.js";
 import { FileReader } from "./type.js";
 
 type MarkdownTuple = [string | null, string];
