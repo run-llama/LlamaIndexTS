@@ -36,7 +36,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/himself65/LlamaIndexTS.git"
+    "url": "https://github.com/himself65/LlamaIndexTS.git",
+    "directory": "packages/env"
   },
   "scripts": {
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
