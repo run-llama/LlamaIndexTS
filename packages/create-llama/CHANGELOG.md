@@ -1,5 +1,14 @@
 # create-llama
 
+## 0.0.26
+
+### Patch Changes
+
+- 09d532e: feat: generate llama pack project from llama index
+- cfdd6db: feat: add pinecone support to create llama
+- ef25d69: upgrade llama-index package to version v0.10.7 for create-llama app
+- 50dfd7b: update fastapi for CVE-2024-24762
+
 ## 0.0.25
 
 ### Patch Changes
