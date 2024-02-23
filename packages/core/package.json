@@ -53,7 +53,7 @@
     "node": ">=18.0.0"
   },
   "types": "./dist/type/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/index.js",
   "exports": {
     ".": {
       "import": {
@@ -66,7 +66,7 @@
       },
       "require": {
         "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "default": "./dist/index.js"
       }
     },
     "./env": {
@@ -80,7 +80,7 @@
       },
       "require": {
         "types": "./dist/type/env.d.ts",
-        "default": "./dist/cjs/env.js"
+        "default": "./dist/env.js"
       }
     },
     "./*": {
@@ -90,7 +90,7 @@
       },
       "require": {
         "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
+        "default": "./dist/*.js"
       }
     }
   },
@@ -107,7 +107,7 @@
     "test": "jest",
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
     "build:esm": "swc src -d dist/esm --strip-leading-paths --config-file .swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
+    "build:cjs": "swc src -d dist --strip-leading-paths --config-file .cjs.swcrc",
     "build:type": "tsc -p tsconfig.json",
     "postbuild": "pnpm run copy && pnpm run modify-package-json",
     "copy": "cp -r package.json CHANGELOG.md ../../README.md ../../LICENSE examples src dist/",
