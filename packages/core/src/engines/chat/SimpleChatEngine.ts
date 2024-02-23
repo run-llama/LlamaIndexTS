@@ -1,12 +1,12 @@
-import { ChatHistory, getHistory } from "../../ChatHistory";
-import { Response } from "../../Response";
-import { ChatResponseChunk, LLM, OpenAI } from "../../llm";
-import { streamConverter, streamReducer } from "../../llm/utils";
+import { ChatHistory, getHistory } from "../../ChatHistory.js";
+import { Response } from "../../Response.js";
+import { ChatResponseChunk, LLM, OpenAI } from "../../llm/index.js";
+import { streamConverter, streamReducer } from "../../llm/utils.js";
 import {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 /**
  * SimpleChatEngine is the simplest possible chat engine. Useful for using your own custom prompts.

@@ -1,7 +1,7 @@
-import { BaseDocumentStore, VectorStore } from "../../storage";
-import { TransformComponent } from "../types";
-import { DuplicatesStrategy } from "./DuplicatesStrategy";
-import { UpsertsStrategy } from "./UpsertsStrategy";
+import { BaseDocumentStore, VectorStore } from "../../storage/index.js";
+import { TransformComponent } from "../types.js";
+import { DuplicatesStrategy } from "./DuplicatesStrategy.js";
+import { UpsertsStrategy } from "./UpsertsStrategy.js";
 
 export enum DocStoreStrategy {
   UPSERTS = "upserts",

@@ -1,31 +1,31 @@
-import { BaseNode, Document, MetadataMode } from "../../Node";
-import { defaultKeywordExtractPrompt } from "../../Prompt";
-import { BaseRetriever } from "../../Retriever";
+import { BaseNode, Document, MetadataMode } from "../../Node.js";
+import { defaultKeywordExtractPrompt } from "../../Prompt.js";
+import { BaseRetriever } from "../../Retriever.js";
 import {
   ServiceContext,
   serviceContextFromDefaults,
-} from "../../ServiceContext";
-import { RetrieverQueryEngine } from "../../engines/query";
-import { BaseNodePostprocessor } from "../../postprocessors";
+} from "../../ServiceContext.js";
+import { RetrieverQueryEngine } from "../../engines/query/index.js";
+import { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import {
   BaseDocumentStore,
   StorageContext,
   storageContextFromDefaults,
-} from "../../storage";
-import { BaseSynthesizer } from "../../synthesizers";
-import { BaseQueryEngine } from "../../types";
+} from "../../storage/index.js";
+import { BaseSynthesizer } from "../../synthesizers/types.js";
+import { BaseQueryEngine } from "../../types.js";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexStructType,
   KeywordTable,
-} from "../BaseIndex";
+} from "../BaseIndex.js";
 import {
   KeywordTableLLMRetriever,
   KeywordTableRAKERetriever,
   KeywordTableSimpleRetriever,
-} from "./KeywordTableIndexRetriever";
-import { extractKeywordsGivenResponse } from "./utils";
+} from "./KeywordTableIndexRetriever.js";
+import { extractKeywordsGivenResponse } from "./utils.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];

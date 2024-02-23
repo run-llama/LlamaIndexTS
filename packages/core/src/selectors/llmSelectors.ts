@@ -1,18 +1,18 @@
-import { LLM } from "../llm";
-import { Answer, SelectionOutputParser } from "../outputParsers/selectors";
+import { LLM } from "../llm/index.js";
+import { Answer, SelectionOutputParser } from "../outputParsers/selectors.js";
 import {
   BaseOutputParser,
   QueryBundle,
   StructuredOutput,
   ToolMetadataOnlyDescription,
-} from "../types";
-import { BaseSelector, SelectorResult } from "./base";
+} from "../types.js";
+import { BaseSelector, SelectorResult } from "./base.js";
 import {
   MultiSelectPrompt,
   SingleSelectPrompt,
   defaultMultiSelectPrompt,
   defaultSingleSelectPrompt,
-} from "./prompts";
+} from "./prompts.js";
 
 function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   const texts: string[] = [];

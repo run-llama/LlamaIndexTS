@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.12",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.13.0",
     "@datastax/astra-db-ts": "^0.1.4",
@@ -71,16 +72,16 @@
     },
     "./env": {
       "import": {
-        "types": "./dist/type/env.d.ts",
-        "default": "./dist/esm/env.js"
+        "types": "./dist/type/env/index.d.ts",
+        "default": "./dist/esm/env/index.js"
       },
       "edge-light": {
-        "types": "./dist/type/env.d.ts",
-        "default": "./dist/esm/env.edge-light.js"
+        "types": "./dist/type/env/index.d.ts",
+        "default": "./dist/esm/env/index.edge-light.js"
       },
       "require": {
-        "types": "./dist/type/env.d.ts",
-        "default": "./dist/env.js"
+        "types": "./dist/type/env/index.d.ts",
+        "default": "./dist/env/index.js"
       }
     },
     "./*": {

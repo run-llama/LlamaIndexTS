@@ -1,8 +1,8 @@
-import { OpenAIAgent } from "../../agent";
-import { CallbackManager } from "../../callbacks/CallbackManager";
-import { OpenAI } from "../../llm";
-import { FunctionTool } from "../../tools";
-import { mockLlmToolCallGeneration } from "../utility/mockOpenAI";
+import { OpenAIAgent } from "../../agent/index.js";
+import { CallbackManager } from "../../callbacks/CallbackManager.js";
+import { OpenAI } from "llamaindex/llm";
+import { FunctionTool } from "../../tools/index.js";
+import { mockLlmToolCallGeneration } from "../utility/mockOpenAI.js";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }): number {

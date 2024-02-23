@@ -1,17 +1,17 @@
 import _ from "lodash";
-import { globalsHelper } from "../../GlobalsHelper";
-import { NodeWithScore } from "../../Node";
-import { ChoiceSelectPrompt, defaultChoiceSelectPrompt } from "../../Prompt";
-import { BaseRetriever } from "../../Retriever";
-import { ServiceContext } from "../../ServiceContext";
-import { Event } from "../../callbacks/CallbackManager";
-import { SummaryIndex } from "./SummaryIndex";
+import { globalsHelper } from "../../GlobalsHelper.js";
+import { NodeWithScore } from "../../Node.js";
+import { ChoiceSelectPrompt, defaultChoiceSelectPrompt } from "../../Prompt.js";
+import { BaseRetriever } from "../../Retriever.js";
+import { ServiceContext } from "../../ServiceContext.js";
+import { Event } from "../../callbacks/CallbackManager.js";
+import { SummaryIndex } from "./SummaryIndex.js";
 import {
   ChoiceSelectParserFunction,
   NodeFormatterFunction,
   defaultFormatNodeBatchFn,
   defaultParseChoiceSelectAnswerFn,
-} from "./utils";
+} from "./utils.js";
 
 /**
  * Simple retriever for SummaryIndex that returns all nodes

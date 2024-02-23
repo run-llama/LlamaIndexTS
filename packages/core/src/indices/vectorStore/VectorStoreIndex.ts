@@ -5,39 +5,39 @@ import {
   MetadataMode,
   ObjectType,
   splitNodesByType,
-} from "../../Node";
-import { BaseRetriever } from "../../Retriever";
+} from "../../Node.js";
+import { BaseRetriever } from "../../Retriever.js";
 import {
   ServiceContext,
   serviceContextFromDefaults,
-} from "../../ServiceContext";
+} from "../../ServiceContext.js";
 import {
   BaseEmbedding,
   ClipEmbedding,
   MultiModalEmbedding,
-} from "../../embeddings";
-import { RetrieverQueryEngine } from "../../engines/query";
-import { runTransformations } from "../../ingestion";
-import { BaseNodePostprocessor } from "../../postprocessors";
+} from "../../embeddings/index.js";
+import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
+import { runTransformations } from "../../ingestion/index.js";
+import { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import {
   BaseIndexStore,
   MetadataFilters,
   StorageContext,
   VectorStore,
   storageContextFromDefaults,
-} from "../../storage";
-import { BaseSynthesizer } from "../../synthesizers";
-import { BaseQueryEngine } from "../../types";
+} from "../../storage/index.js";
+import { BaseSynthesizer } from "../../synthesizers/types.js";
+import { BaseQueryEngine } from "../../types.js";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexDict,
   IndexStructType,
-} from "../BaseIndex";
+} from "../BaseIndex.js";
 import {
   VectorIndexRetriever,
   VectorIndexRetrieverOptions,
-} from "./VectorIndexRetriever";
+} from "./VectorIndexRetriever.js";
 
 interface IndexStructOptions {
   indexStruct?: IndexDict;

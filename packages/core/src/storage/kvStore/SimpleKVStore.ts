@@ -1,8 +1,8 @@
 import _ from "lodash";
-import { defaultFS, path } from "../../env";
-import { GenericFileSystem, exists } from "../FileSystem";
-import { DEFAULT_COLLECTION } from "../constants";
-import { BaseKVStore } from "./types";
+import { defaultFS, path } from "llamaindex/env";
+import { GenericFileSystem, exists } from "../FileSystem.js";
+import { DEFAULT_COLLECTION } from "../constants.js";
+import { BaseKVStore } from "./types.js";
 
 export type DataType = Record<string, Record<string, any>>;
 

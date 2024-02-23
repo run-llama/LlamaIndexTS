@@ -1,4 +1,4 @@
-import { MessageContent, MessageContentDetail } from "./types";
+import { MessageContent, MessageContentDetail } from "./types.js";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,

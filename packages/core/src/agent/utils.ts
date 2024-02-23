@@ -1,7 +1,7 @@
-import { ChatMessage } from "../llm";
-import { ChatMemoryBuffer } from "../memory/ChatMemoryBuffer";
-import { BaseTool } from "../types";
-import { TaskStep } from "./types";
+import { ChatMessage } from "../llm/index.js";
+import { ChatMemoryBuffer } from "../memory/ChatMemoryBuffer.js";
+import { BaseTool } from "../types.js";
+import { TaskStep } from "./types.js";
 
 /**
  * Adds the user's input to the memory.

@@ -23,3 +23,14 @@ import fs from "node:fs/promises";
     "utf8",
   );
 }
+
+const esmModule = {
+  type: 'module'
+}
+{
+  await fs.writeFile(
+    './dist/esm/package.json',
+    JSON.stringify(esmModule, null, 2),
+    'utf8',
+  );
+}

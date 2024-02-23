@@ -1,9 +1,9 @@
-import { BaseNode, Document } from "../Node";
-import { BaseReader } from "../readers/type";
-import { BaseDocumentStore, VectorStore } from "../storage";
-import { IngestionCache, getTransformationHash } from "./IngestionCache";
-import { DocStoreStrategy, createDocStoreStrategy } from "./strategies";
-import { TransformComponent } from "./types";
+import { BaseNode, Document } from "../Node.js";
+import { BaseReader } from "../readers/type.js";
+import { BaseDocumentStore, VectorStore } from "../storage/index.js";
+import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
+import { DocStoreStrategy, createDocStoreStrategy } from "./strategies/index.js";
+import { TransformComponent } from "./types.js";
 
 type IngestionRunArgs = {
   documents?: Document[];

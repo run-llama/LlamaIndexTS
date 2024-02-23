@@ -1,10 +1,10 @@
-import { ChatHistory } from "../../ChatHistory";
-import { BaseNode, NodeWithScore } from "../../Node";
-import { Response } from "../../Response";
-import { Event } from "../../callbacks/CallbackManager";
-import { ChatMessage } from "../../llm";
-import { MessageContent } from "../../llm/types";
-import { ToolOutput } from "../../tools/types";
+import { ChatHistory } from "../../ChatHistory.js";
+import { BaseNode, NodeWithScore } from "../../Node.js";
+import { Response } from "../../Response.js";
+import { Event } from "../../callbacks/CallbackManager.js";
+import { ChatMessage } from "../../llm/index.js";
+import { MessageContent } from "../../llm/types.js";
+import { ToolOutput } from "../../tools/types.js";
 
 /**
  * Represents the base parameters for ChatEngine.

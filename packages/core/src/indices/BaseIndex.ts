@@ -1,14 +1,14 @@
-import { BaseNode, Document, jsonToNode } from "../Node";
-import { BaseRetriever } from "../Retriever";
-import { ServiceContext } from "../ServiceContext";
-import { randomUUID } from "../env";
-import { runTransformations } from "../ingestion";
-import { StorageContext } from "../storage/StorageContext";
-import { BaseDocumentStore } from "../storage/docStore/types";
-import { BaseIndexStore } from "../storage/indexStore/types";
-import { VectorStore } from "../storage/vectorStore/types";
-import { BaseSynthesizer } from "../synthesizers";
-import { BaseQueryEngine } from "../types";
+import { BaseNode, Document, jsonToNode } from "../Node.js";
+import { BaseRetriever } from "../Retriever.js";
+import { ServiceContext } from "../ServiceContext.js";
+import { randomUUID } from "llamaindex/env";
+import { runTransformations } from "../ingestion/index.js";
+import { StorageContext } from "../storage/StorageContext.js";
+import { BaseDocumentStore } from "../storage/docStore/types.js";
+import { BaseIndexStore } from "../storage/indexStore/types.js";
+import { VectorStore } from "../storage/vectorStore/types.js";
+import { BaseSynthesizer } from "../synthesizers/types.js";
+import { BaseQueryEngine } from "../types.js";
 
 /**
  * The underlying structure of each index.

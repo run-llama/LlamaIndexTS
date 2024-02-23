@@ -1,5 +1,5 @@
-import { MetadataMode, NodeWithScore } from "../Node";
-import { BaseNodePostprocessor } from "./types";
+import { MetadataMode, NodeWithScore } from "../Node.js";
+import { BaseNodePostprocessor } from "./types.js";
 
 export class MetadataReplacementPostProcessor implements BaseNodePostprocessor {
   targetMetadataKey: string;

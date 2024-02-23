@@ -1,17 +1,17 @@
-import { globalsHelper } from "../../GlobalsHelper";
-import { ImageNode, Metadata, NodeWithScore } from "../../Node";
-import { BaseRetriever } from "../../Retriever";
-import { ServiceContext } from "../../ServiceContext";
-import { Event } from "../../callbacks/CallbackManager";
-import { DEFAULT_SIMILARITY_TOP_K } from "../../constants";
-import { BaseEmbedding } from "../../embeddings";
+import { globalsHelper } from "../../GlobalsHelper.js";
+import { ImageNode, Metadata, NodeWithScore } from "../../Node.js";
+import { BaseRetriever } from "../../Retriever.js";
+import { ServiceContext } from "../../ServiceContext.js";
+import { Event } from "../../callbacks/CallbackManager.js";
+import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
+import { BaseEmbedding } from "../../embeddings/index.js";
 import {
   MetadataFilters,
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
-} from "../../storage/vectorStore/types";
-import { VectorStoreIndex } from "./VectorStoreIndex";
+} from "../../storage/vectorStore/types.js";
+import { VectorStoreIndex } from "./VectorStoreIndex.js";
 
 /**
  * VectorIndexRetriever retrieves nodes from a VectorIndex.

@@ -3,5 +3,5 @@ export {
   QuestionsAnsweredExtractor,
   SummaryExtractor,
   TitleExtractor,
-} from "./MetadataExtractors";
-export { BaseExtractor } from "./types";
+} from "./MetadataExtractors.js";
+export { BaseExtractor } from "./types.js";

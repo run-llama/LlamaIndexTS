@@ -1,19 +1,19 @@
 import _ from "lodash";
-import { BaseNode } from "../../Node";
+import { BaseNode } from "../../Node.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
-} from "../../embeddings/utils";
-import { defaultFS, path } from "../../env";
-import { GenericFileSystem, exists } from "../FileSystem";
-import { DEFAULT_PERSIST_DIR } from "../constants";
+} from "../../embeddings/utils.js";
+import { defaultFS, path } from "llamaindex/env";
+import { GenericFileSystem, exists } from "../FileSystem.js";
+import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
-} from "./types";
+} from "./types.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,

@@ -1,12 +1,12 @@
 import { BulkWriteOptions, Collection, MongoClient } from "mongodb";
-import { BaseNode, MetadataMode } from "../../Node";
+import { BaseNode, MetadataMode } from "../../Node.js";
 import {
   MetadataFilters,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
-} from "./types";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+} from "./types.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 // Utility function to convert metadata filters to MongoDB filter
 function toMongoDBFilter(

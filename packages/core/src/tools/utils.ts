@@ -1,5 +1,5 @@
-import { BaseTool } from "../types";
-import { ToolOutput } from "./types";
+import { BaseTool } from "../types.js";
+import { ToolOutput } from "./types.js";
 
 /**
  * Call tool with error handling.

@@ -1,7 +1,7 @@
-import { ChatMessage } from "../llm";
+import { ChatMessage } from "../llm/index.js";
 
 export interface BaseMemory {
-  /* 
+  /*
    Get chat history.
   */
   get(...args: any): ChatMessage[];

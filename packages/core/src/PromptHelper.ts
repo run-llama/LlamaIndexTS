@@ -1,12 +1,12 @@
-import { globalsHelper } from "./GlobalsHelper";
-import { SimplePrompt } from "./Prompt";
-import { SentenceSplitter } from "./TextSplitter";
+import { globalsHelper } from "./GlobalsHelper.js";
+import { SimplePrompt } from "./Prompt.js";
+import { SentenceSplitter } from "./TextSplitter.js";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
   DEFAULT_PADDING,
-} from "./constants";
+} from "./constants.js";
 
 export function getEmptyPromptTxt(prompt: SimplePrompt) {
   return prompt({});

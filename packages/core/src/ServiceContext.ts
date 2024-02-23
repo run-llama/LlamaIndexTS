@@ -1,8 +1,8 @@
-import { CallbackManager } from "./callbacks/CallbackManager";
-import { BaseEmbedding, OpenAIEmbedding } from "./embeddings";
-import { LLM, OpenAI } from "./llm";
-import { NodeParser, SimpleNodeParser } from "./nodeParsers";
-import { PromptHelper } from "./PromptHelper";
+import { CallbackManager } from "./callbacks/CallbackManager.js";
+import { BaseEmbedding, OpenAIEmbedding } from "./embeddings/index.js";
+import { LLM, OpenAI } from "./llm/index.js";
+import { NodeParser, SimpleNodeParser } from "./nodeParsers/index.js";
+import { PromptHelper } from "./PromptHelper.js";
 
 /**
  * The ServiceContext is a collection of components that are used in different parts of the application.

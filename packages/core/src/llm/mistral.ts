@@ -3,15 +3,15 @@ import {
   Event,
   EventType,
   StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
-import { BaseLLM } from "./base";
+} from "../callbacks/CallbackManager.js";
+import { BaseLLM } from "./base.js";
 import {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },

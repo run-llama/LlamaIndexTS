@@ -1,6 +1,6 @@
 import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
-import { CompleteFileSystem, InMemoryFileSystem } from "../storage";
+import { CompleteFileSystem, InMemoryFileSystem } from "../storage/index.js";
 
 export { pathe as path };
 

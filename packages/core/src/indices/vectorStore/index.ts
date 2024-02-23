@@ -1,2 +1,2 @@
-export { VectorIndexRetriever } from "./VectorIndexRetriever";
-export { VectorStoreIndex } from "./VectorStoreIndex";
+export { VectorIndexRetriever } from "./VectorIndexRetriever.js";
+export { VectorStoreIndex } from "./VectorStoreIndex.js";

@@ -1,4 +1,4 @@
-import { BaseNode } from "./Node";
+import { BaseNode } from "./Node.js";
 
 /**
  * Response is the output of a LLM

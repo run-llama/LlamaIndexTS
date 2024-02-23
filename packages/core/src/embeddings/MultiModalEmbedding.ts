@@ -1,5 +1,5 @@
-import { ImageType } from "../Node";
-import { BaseEmbedding } from "./types";
+import { ImageType } from "../Node.js";
+import { BaseEmbedding } from "./types.js";
 
 /*
  * Base class for Multi Modal embeddings.

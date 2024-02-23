@@ -1,34 +1,34 @@
 import _ from "lodash";
-import { BaseNode, Document } from "../../Node";
-import { BaseRetriever } from "../../Retriever";
+import { BaseNode, Document } from "../../Node.js";
+import { BaseRetriever } from "../../Retriever.js";
 import {
   ServiceContext,
   serviceContextFromDefaults,
-} from "../../ServiceContext";
-import { RetrieverQueryEngine } from "../../engines/query";
-import { BaseNodePostprocessor } from "../../postprocessors";
+} from "../../ServiceContext.js";
+import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
+import { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import {
   BaseDocumentStore,
   RefDocInfo,
   StorageContext,
   storageContextFromDefaults,
-} from "../../storage";
+} from "../../storage/index.js";
 import {
   BaseSynthesizer,
   CompactAndRefine,
   ResponseSynthesizer,
-} from "../../synthesizers";
-import { BaseQueryEngine } from "../../types";
+} from "../../synthesizers/index.js";
+import { BaseQueryEngine } from "../../types.js";
 import {
   BaseIndex,
   BaseIndexInit,
   IndexList,
   IndexStructType,
-} from "../BaseIndex";
+} from "../BaseIndex.js";
 import {
   SummaryIndexLLMRetriever,
   SummaryIndexRetriever,
-} from "./SummaryIndexRetriever";
+} from "./SummaryIndexRetriever.js";
 
 export enum SummaryRetrieverMode {
   DEFAULT = "default",

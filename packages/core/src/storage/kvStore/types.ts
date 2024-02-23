@@ -1,4 +1,4 @@
-import { GenericFileSystem } from "../FileSystem";
+import { GenericFileSystem } from "../FileSystem.js";
 const defaultCollection = "data";
 
 type StoredValue = Record<string, any> | null;

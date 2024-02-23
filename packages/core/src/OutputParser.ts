@@ -1,5 +1,5 @@
-import { SubQuestion } from "./engines/query/types";
-import { BaseOutputParser, StructuredOutput } from "./types";
+import { SubQuestion } from "./engines/query/types.js";
+import { BaseOutputParser, StructuredOutput } from "./types.js";
 
 /**
  * Error class for output parsing. Due to the nature of LLMs, anytime we use LLM

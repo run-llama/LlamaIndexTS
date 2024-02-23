@@ -1,8 +1,8 @@
 /**
  * Top level types to avoid circular dependencies
  */
-import { Event } from "./callbacks/CallbackManager";
-import { Response } from "./Response";
+import { Event } from "./callbacks/CallbackManager.js";
+import { Response } from "./Response.js";
 
 /**
  * Parameters for sending a query.

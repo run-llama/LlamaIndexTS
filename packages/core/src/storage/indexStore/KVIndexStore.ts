@@ -1,8 +1,8 @@
 import _ from "lodash";
-import { IndexStruct, jsonToIndexStruct } from "../../indices/BaseIndex";
-import { DEFAULT_NAMESPACE } from "../constants";
-import { BaseKVStore } from "../kvStore/types";
-import { BaseIndexStore } from "./types";
+import { IndexStruct, jsonToIndexStruct } from "../../indices/BaseIndex.js";
+import { DEFAULT_NAMESPACE } from "../constants.js";
+import { BaseKVStore } from "../kvStore/types.js";
+import { BaseIndexStore } from "./types.js";
 
 export class KVIndexStore extends BaseIndexStore {
   private _kvStore: BaseKVStore;

@@ -1,20 +1,20 @@
-import { NodeWithScore } from "../../Node";
+import { NodeWithScore } from "../../Node.js";
 import {
   defaultKeywordExtractPrompt,
   defaultQueryKeywordExtractPrompt,
   KeywordExtractPrompt,
   QueryKeywordExtractPrompt,
-} from "../../Prompt";
-import { BaseRetriever } from "../../Retriever";
-import { ServiceContext } from "../../ServiceContext";
-import { BaseDocumentStore } from "../../storage/docStore/types";
-import { KeywordTable } from "../BaseIndex";
-import { KeywordTableIndex } from "./KeywordTableIndex";
+} from "../../Prompt.js";
+import { BaseRetriever } from "../../Retriever.js";
+import { ServiceContext } from "../../ServiceContext.js";
+import { BaseDocumentStore } from "../../storage/docStore/types.js";
+import { KeywordTable } from "../BaseIndex.js";
+import { KeywordTableIndex } from "./KeywordTableIndex.js";
 import {
   extractKeywordsGivenResponse,
   rakeExtractKeywords,
   simpleExtractKeywords,
-} from "./utils";
+} from "./utils.js";
 
 // Base Keyword Table Retriever
 abstract class BaseKeywordTableRetriever implements BaseRetriever {

@@ -1,13 +1,13 @@
-import { BaseNode, MetadataMode, TextNode } from "../Node";
-import { LLM, OpenAI } from "../llm";
+import { BaseNode, MetadataMode, TextNode } from "../Node.js";
+import { LLM, OpenAI } from "../llm/index.js";
 import {
   defaultKeywordExtractorPromptTemplate,
   defaultQuestionAnswerPromptTemplate,
   defaultSummaryExtractorPromptTemplate,
   defaultTitleCombinePromptTemplate,
   defaultTitleExtractorPromptTemplate,
-} from "./prompts";
-import { BaseExtractor } from "./types";
+} from "./prompts.js";
+import { BaseExtractor } from "./types.js";
 
 const STRIP_REGEX = /(\r\n|\n|\r)/gm;
 
