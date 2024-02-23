@@ -6,28 +6,28 @@ import {
   EventType,
   OpenAIStreamToken,
   StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
+} from "../callbacks/CallbackManager.js";
 
-import { ChatCompletionMessageParam } from "openai/resources";
+import { ChatCompletionMessageParam } from "openai/resources/index.js";
 import { LLMOptions } from "portkey-ai";
-import { Tokenizers, globalsHelper } from "../GlobalsHelper";
+import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
 import {
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
   AnthropicSession,
   getAnthropicSession,
-} from "./anthropic";
+} from "./anthropic.js";
 import {
   AzureOpenAIConfig,
   getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
-} from "./azure";
-import { BaseLLM } from "./base";
-import { OpenAISession, getOpenAISession } from "./open_ai";
-import { PortkeySession, getPortkeySession } from "./portkey";
-import { ReplicateSession } from "./replicate_ai";
+} from "./azure.js";
+import { BaseLLM } from "./base.js";
+import { OpenAISession, getOpenAISession } from "./open_ai.js";
+import { PortkeySession, getPortkeySession } from "./portkey.js";
+import { ReplicateSession } from "./replicate_ai.js";
 import {
   ChatMessage,
   ChatResponse,
@@ -36,7 +36,7 @@ import {
   LLMChatParamsStreaming,
   LLMMetadata,
   MessageType,
-} from "./types";
+} from "./types.js";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },

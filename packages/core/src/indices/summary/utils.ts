@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { BaseNode, MetadataMode } from "../../Node";
+import { BaseNode, MetadataMode } from "../../Node.js";
 
 export type NodeFormatterFunction = (summaryNodes: BaseNode[]) => string;
 export const defaultFormatNodeBatchFn: NodeFormatterFunction = (

@@ -1,6 +1,6 @@
-import { BaseNode } from "../../Node";
-import { BaseDocumentStore, VectorStore } from "../../storage";
-import { classify } from "./classify";
+import { BaseNode } from "../../Node.js";
+import { BaseDocumentStore, VectorStore } from "../../storage/index.js";
+import { classify } from "./classify.js";
 
 /**
  * Handle docstore upserts by checking hashes and ids.

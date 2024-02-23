@@ -1,18 +1,16 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./lib/",
+    "rootDir": "./src",
+    "outDir": "./dist/type",
+    "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "preserveWatchOutput": true,
+    "module": "node16",
+    "moduleResolution": "node16",
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["es2015", "dom"],
-    "target": "ES2015",
-    "resolveJsonModule": true
+    "lib": ["ESNext", "dom"],
+    "target": "ESNext"
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

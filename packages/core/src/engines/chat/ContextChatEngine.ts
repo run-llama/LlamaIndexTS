@@ -1,21 +1,30 @@
-import { ChatHistory, getHistory } from "../../ChatHistory";
-import { ContextSystemPrompt } from "../../Prompt";
-import { Response } from "../../Response";
-import { BaseRetriever } from "../../Retriever";
-import { Event } from "../../callbacks/CallbackManager";
-import { randomUUID } from "../../env";
-import { ChatMessage, ChatResponseChunk, LLM, OpenAI } from "../../llm";
-import { MessageContent } from "../../llm/types";
-import { extractText, streamConverter, streamReducer } from "../../llm/utils";
-import { BaseNodePostprocessor } from "../../postprocessors";
-import { PromptMixin } from "../../prompts";
-import { DefaultContextGenerator } from "./DefaultContextGenerator";
+import { randomUUID } from "@llamaindex/env";
+import { ChatHistory, getHistory } from "../../ChatHistory.js";
+import { ContextSystemPrompt } from "../../Prompt.js";
+import { Response } from "../../Response.js";
+import { BaseRetriever } from "../../Retriever.js";
+import { Event } from "../../callbacks/CallbackManager.js";
+import {
+  ChatMessage,
+  ChatResponseChunk,
+  LLM,
+  OpenAI,
+} from "../../llm/index.js";
+import { MessageContent } from "../../llm/types.js";
+import {
+  extractText,
+  streamConverter,
+  streamReducer,
+} from "../../llm/utils.js";
+import { BaseNodePostprocessor } from "../../postprocessors/index.js";
+import { PromptMixin } from "../../prompts/Mixin.js";
+import { DefaultContextGenerator } from "./DefaultContextGenerator.js";
 import {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
   ContextGenerator,
-} from "./types";
+} from "./types.js";
 
 /**
  * ContextChatEngine uses the Index to get the appropriate context for each query.

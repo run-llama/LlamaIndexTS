@@ -3,7 +3,7 @@ import {
   BaseOutputParser,
   BaseReasoningStep,
   ResponseReasoningStep,
-} from "./types";
+} from "./types.js";
 
 function extractJsonStr(text: string): string {
   const pattern = /\{.*\}/s;

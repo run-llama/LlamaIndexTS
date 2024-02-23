@@ -1,5 +1,5 @@
-import { parseJsonMarkdown } from "../OutputParser";
-import { BaseOutputParser, StructuredOutput } from "../types";
+import { parseJsonMarkdown } from "../OutputParser.js";
+import { BaseOutputParser, StructuredOutput } from "../types.js";
 
 export type Answer = {
   choice: number;

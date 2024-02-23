@@ -1,19 +1,20 @@
+import { defaultFS, path } from "@llamaindex/env";
+import { GenericFileSystem } from "@llamaindex/env/type";
 import _ from "lodash";
-import { BaseNode } from "../../Node";
+import { BaseNode } from "../../Node.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
-} from "../../embeddings/utils";
-import { defaultFS, path } from "../../env";
-import { GenericFileSystem, exists } from "../FileSystem";
-import { DEFAULT_PERSIST_DIR } from "../constants";
+} from "../../embeddings/utils.js";
+import { exists } from "../FileSystem.js";
+import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
-} from "./types";
+} from "./types.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -157,10 +158,8 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs?: GenericFileSystem,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleVectorStore> {
-    fs = fs || defaultFS;
-
     const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });

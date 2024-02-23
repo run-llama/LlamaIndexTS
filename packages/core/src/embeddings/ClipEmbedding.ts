@@ -1,6 +1,6 @@
-import { ImageType } from "../Node";
-import { MultiModalEmbedding } from "./MultiModalEmbedding";
-import { readImage } from "./utils";
+import { ImageType } from "../Node.js";
+import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
+import { readImage } from "./utils.js";
 
 export enum ClipEmbeddingModelType {
   XENOVA_CLIP_VIT_BASE_PATCH32 = "Xenova/clip-vit-base-patch32",

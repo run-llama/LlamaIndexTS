@@ -1,23 +1,23 @@
-import { ChatHistory, getHistory } from "../../ChatHistory";
+import { ChatHistory, getHistory } from "../../ChatHistory.js";
 import {
   CondenseQuestionPrompt,
   defaultCondenseQuestionPrompt,
   messagesToHistoryStr,
-} from "../../Prompt";
-import { Response } from "../../Response";
+} from "../../Prompt.js";
+import { Response } from "../../Response.js";
 import {
   ServiceContext,
   serviceContextFromDefaults,
-} from "../../ServiceContext";
-import { ChatMessage, LLM } from "../../llm";
-import { extractText, streamReducer } from "../../llm/utils";
-import { PromptMixin } from "../../prompts";
-import { BaseQueryEngine } from "../../types";
+} from "../../ServiceContext.js";
+import { ChatMessage, LLM } from "../../llm/index.js";
+import { extractText, streamReducer } from "../../llm/utils.js";
+import { PromptMixin } from "../../prompts/index.js";
+import { BaseQueryEngine } from "../../types.js";
 import {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 /**
  * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorStoreIndex).

@@ -1,5 +1,5 @@
 import { PlatformApiClient } from "@llamaindex/cloud";
-import { ClientParams, DEFAULT_BASE_URL } from "./types";
+import { ClientParams, DEFAULT_BASE_URL } from "./types.js";
 
 export async function getClient({
   apiKey,

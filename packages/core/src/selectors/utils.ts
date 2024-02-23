@@ -1,6 +1,6 @@
-import { ServiceContext } from "../ServiceContext";
-import { BaseSelector } from "./base";
-import { LLMMultiSelector, LLMSingleSelector } from "./llmSelectors";
+import { ServiceContext } from "../ServiceContext.js";
+import { BaseSelector } from "./base.js";
+import { LLMMultiSelector, LLMSingleSelector } from "./llmSelectors.js";
 
 export const getSelectorFromContext = (
   serviceContext: ServiceContext,

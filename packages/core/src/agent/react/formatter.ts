@@ -1,7 +1,7 @@
-import { ChatMessage } from "../../llm";
-import { BaseTool } from "../../types";
-import { getReactChatSystemHeader } from "./prompts";
-import { BaseReasoningStep, ObservationReasoningStep } from "./types";
+import { ChatMessage } from "../../llm/index.js";
+import { BaseTool } from "../../types.js";
+import { getReactChatSystemHeader } from "./prompts.js";
+import { BaseReasoningStep, ObservationReasoningStep } from "./types.js";
 
 function getReactToolDescriptions(tools: BaseTool[]): string[] {
   const toolDescs: string[] = [];

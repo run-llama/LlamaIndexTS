@@ -1,11 +1,14 @@
-import { NodeWithScore, TextNode } from "../../Node";
-import { ContextSystemPrompt, defaultContextSystemPrompt } from "../../Prompt";
-import { BaseRetriever } from "../../Retriever";
-import { Event } from "../../callbacks/CallbackManager";
-import { randomUUID } from "../../env";
-import { BaseNodePostprocessor } from "../../postprocessors";
-import { PromptMixin } from "../../prompts";
-import { Context, ContextGenerator } from "./types";
+import { randomUUID } from "@llamaindex/env";
+import { NodeWithScore, TextNode } from "../../Node.js";
+import {
+  ContextSystemPrompt,
+  defaultContextSystemPrompt,
+} from "../../Prompt.js";
+import { BaseRetriever } from "../../Retriever.js";
+import { Event } from "../../callbacks/CallbackManager.js";
+import { BaseNodePostprocessor } from "../../postprocessors/index.js";
+import { PromptMixin } from "../../prompts/index.js";
+import { Context, ContextGenerator } from "./types.js";
 
 export class DefaultContextGenerator
   extends PromptMixin

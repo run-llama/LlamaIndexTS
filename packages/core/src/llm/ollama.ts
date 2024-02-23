@@ -1,6 +1,6 @@
-import { CallbackManager, Event } from "../callbacks/CallbackManager";
-import { BaseEmbedding } from "../embeddings/types";
-import { ok } from "../env";
+import { ok } from "@llamaindex/env";
+import { CallbackManager, Event } from "../callbacks/CallbackManager.js";
+import { BaseEmbedding } from "../embeddings/types.js";
 import {
   ChatMessage,
   ChatResponse,
@@ -12,7 +12,7 @@ import {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
-} from "./types";
+} from "./types.js";
 
 const messageAccessor = (data: any): ChatResponseChunk => {
   return {

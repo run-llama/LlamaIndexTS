@@ -1,20 +1,20 @@
 import { randomUUID } from "crypto";
-import { CallbackManager } from "../../callbacks/CallbackManager";
-import { AgentChatResponse } from "../../engines/chat";
-import { ChatResponse, LLM, OpenAI } from "../../llm";
-import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer";
-import { ObjectRetriever } from "../../objects/base";
-import { ToolOutput } from "../../tools";
-import { BaseTool } from "../../types";
-import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types";
-import { ReActChatFormatter } from "./formatter";
-import { ReActOutputParser } from "./outputParser";
+import { CallbackManager } from "../../callbacks/CallbackManager.js";
+import { AgentChatResponse } from "../../engines/chat/index.js";
+import { ChatResponse, LLM, OpenAI } from "../../llm/index.js";
+import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
+import { ObjectRetriever } from "../../objects/base.js";
+import { ToolOutput } from "../../tools/index.js";
+import { BaseTool } from "../../types.js";
+import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types.js";
+import { ReActChatFormatter } from "./formatter.js";
+import { ReActOutputParser } from "./outputParser.js";
 import {
   ActionReasoningStep,
   BaseReasoningStep,
   ObservationReasoningStep,
   ResponseReasoningStep,
-} from "./types";
+} from "./types.js";
 
 type ReActAgentWorkerParams = {
   tools: BaseTool[];

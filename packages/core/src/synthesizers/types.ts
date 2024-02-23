@@ -1,7 +1,7 @@
-import { Event } from "../callbacks/CallbackManager";
-import { NodeWithScore } from "../Node";
-import { PromptMixin } from "../prompts";
-import { Response } from "../Response";
+import { Event } from "../callbacks/CallbackManager.js";
+import { NodeWithScore } from "../Node.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import { Response } from "../Response.js";
 
 export interface SynthesizeParamsBase {
   query: string;

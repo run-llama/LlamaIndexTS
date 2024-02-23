@@ -1,5 +1,5 @@
-import { BaseNode } from "../../Node";
-import { BaseDocumentStore } from "../../storage";
+import { BaseNode } from "../../Node.js";
+import { BaseDocumentStore } from "../../storage/docStore/types.js";
 
 export async function classify(docStore: BaseDocumentStore, nodes: BaseNode[]) {
   const existingDocIds = Object.values(await docStore.getAllDocumentHashes());

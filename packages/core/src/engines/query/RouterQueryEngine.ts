@@ -1,18 +1,18 @@
-import { BaseNode } from "../../Node";
-import { Response } from "../../Response";
+import { BaseNode } from "../../Node.js";
+import { Response } from "../../Response.js";
 import {
   ServiceContext,
   serviceContextFromDefaults,
-} from "../../ServiceContext";
-import { PromptMixin } from "../../prompts";
-import { BaseSelector, LLMSingleSelector } from "../../selectors";
-import { TreeSummarize } from "../../synthesizers";
+} from "../../ServiceContext.js";
+import { PromptMixin } from "../../prompts/index.js";
+import { BaseSelector, LLMSingleSelector } from "../../selectors/index.js";
+import { TreeSummarize } from "../../synthesizers/index.js";
 import {
   BaseQueryEngine,
   QueryBundle,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
-} from "../../types";
+} from "../../types.js";
 
 type RouterQueryEngineTool = {
   queryEngine: BaseQueryEngine;

@@ -1,4 +1,4 @@
-import { BaseEmbedding } from "./types";
+import { BaseEmbedding } from "./types.js";
 
 export enum HuggingFaceEmbeddingModelType {
   XENOVA_ALL_MINILM_L6_V2 = "Xenova/all-MiniLM-L6-v2",

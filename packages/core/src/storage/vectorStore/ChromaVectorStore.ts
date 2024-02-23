@@ -8,14 +8,14 @@ import {
   Where,
   WhereDocument,
 } from "chromadb";
-import { BaseNode, MetadataMode } from "../../Node";
+import { BaseNode, MetadataMode } from "../../Node.js";
 import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryMode,
   VectorStoreQueryResult,
-} from "./types";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+} from "./types.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type ChromaDeleteOptions = {
   where?: Where;

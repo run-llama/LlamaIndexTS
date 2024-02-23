@@ -1,6 +1,6 @@
-import { Event } from "../callbacks/CallbackManager";
-import { LLM } from "../llm";
-import { streamConverter } from "../llm/utils";
+import { Event } from "../callbacks/CallbackManager.js";
+import { LLM } from "../llm/index.js";
+import { streamConverter } from "../llm/utils.js";
 import {
   defaultRefinePrompt,
   defaultTextQaPrompt,
@@ -9,15 +9,15 @@ import {
   SimplePrompt,
   TextQaPrompt,
   TreeSummarizePrompt,
-} from "../Prompt";
-import { getBiggestPrompt, PromptHelper } from "../PromptHelper";
-import { PromptMixin } from "../prompts";
-import { ServiceContext } from "../ServiceContext";
+} from "../Prompt.js";
+import { getBiggestPrompt, PromptHelper } from "../PromptHelper.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import { ServiceContext } from "../ServiceContext.js";
 import {
   ResponseBuilder,
   ResponseBuilderParamsNonStreaming,
   ResponseBuilderParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 /**
  * Response modes of the response synthesizer

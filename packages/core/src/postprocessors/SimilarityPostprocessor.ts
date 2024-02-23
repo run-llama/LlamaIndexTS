@@ -1,5 +1,5 @@
-import { NodeWithScore } from "../Node";
-import { BaseNodePostprocessor } from "./types";
+import { NodeWithScore } from "../Node.js";
+import { BaseNodePostprocessor } from "./types.js";
 
 export class SimilarityPostprocessor implements BaseNodePostprocessor {
   similarityCutoff?: number;

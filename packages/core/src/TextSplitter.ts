@@ -1,7 +1,7 @@
-import { EOL } from "./env";
+import { EOL } from "@llamaindex/env";
 // GitHub translated
-import { globalsHelper } from "./GlobalsHelper";
-import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
+import { globalsHelper } from "./GlobalsHelper.js";
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants.js";
 
 class TextSplit {
   textChunk: string;

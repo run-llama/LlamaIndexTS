@@ -1,14 +1,14 @@
-import { SubQuestionOutputParser } from "./OutputParser";
+import { SubQuestionOutputParser } from "./OutputParser.js";
 import {
   SubQuestionPrompt,
   buildToolsText,
   defaultSubQuestionPrompt,
-} from "./Prompt";
-import { BaseQuestionGenerator, SubQuestion } from "./engines/query/types";
-import { OpenAI } from "./llm/LLM";
-import { LLM } from "./llm/types";
-import { PromptMixin } from "./prompts";
-import { BaseOutputParser, StructuredOutput, ToolMetadata } from "./types";
+} from "./Prompt.js";
+import { BaseQuestionGenerator, SubQuestion } from "./engines/query/types.js";
+import { OpenAI } from "./llm/LLM.js";
+import { LLM } from "./llm/types.js";
+import { PromptMixin } from "./prompts/index.js";
+import { BaseOutputParser, StructuredOutput, ToolMetadata } from "./types.js";
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.

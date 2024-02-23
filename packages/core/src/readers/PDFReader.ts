@@ -1,7 +1,7 @@
-import { Document } from "../Node";
-import { createSHA256, defaultFS } from "../env";
-import { GenericFileSystem } from "../storage/FileSystem";
-import { BaseReader } from "./type";
+import { createSHA256, defaultFS } from "@llamaindex/env";
+import { GenericFileSystem } from "@llamaindex/env/type";
+import { Document } from "../Node.js";
+import { BaseReader } from "./type.js";
 
 /**
  * Read the text of a PDF

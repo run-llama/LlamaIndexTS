@@ -1,5 +1,5 @@
-import { Ollama } from "../llm/ollama";
-import { BaseEmbedding } from "./types";
+import { Ollama } from "../llm/ollama.js";
+import { BaseEmbedding } from "./types.js";
 
 /**
  * OllamaEmbedding is an alias for Ollama that implements the BaseEmbedding interface.

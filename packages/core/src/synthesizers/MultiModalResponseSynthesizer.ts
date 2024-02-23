@@ -1,15 +1,18 @@
-import { ImageNode, MetadataMode, splitNodesByType } from "../Node";
-import { Response } from "../Response";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { imageToDataUrl } from "../embeddings";
-import { MessageContentDetail } from "../llm/types";
-import { PromptMixin } from "../prompts";
-import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
+import { ImageNode, MetadataMode, splitNodesByType } from "../Node.js";
+import { Response } from "../Response.js";
+import {
+  ServiceContext,
+  serviceContextFromDefaults,
+} from "../ServiceContext.js";
+import { imageToDataUrl } from "../embeddings/index.js";
+import { MessageContentDetail } from "../llm/types.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt.js";
 import {
   BaseSynthesizer,
   SynthesizeParamsNonStreaming,
   SynthesizeParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 export class MultiModalResponseSynthesizer
   extends PromptMixin

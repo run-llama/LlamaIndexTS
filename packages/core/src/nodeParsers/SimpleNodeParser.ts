@@ -1,8 +1,8 @@
-import { BaseNode } from "../Node";
-import { SentenceSplitter } from "../TextSplitter";
-import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants";
-import { NodeParser } from "./types";
-import { getNodesFromDocument } from "./utils";
+import { BaseNode } from "../Node.js";
+import { SentenceSplitter } from "../TextSplitter.js";
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants.js";
+import { NodeParser } from "./types.js";
+import { getNodesFromDocument } from "./utils.js";
 
 /**
  * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter

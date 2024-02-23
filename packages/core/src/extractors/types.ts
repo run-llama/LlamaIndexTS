@@ -1,6 +1,6 @@
-import { BaseNode, MetadataMode, TextNode } from "../Node";
-import { TransformComponent } from "../ingestion";
-import { defaultNodeTextTemplate } from "./prompts";
+import { BaseNode, MetadataMode, TextNode } from "../Node.js";
+import { TransformComponent } from "../ingestion/types.js";
+import { defaultNodeTextTemplate } from "./prompts.js";
 
 /*
  * Abstract class for all extractors.

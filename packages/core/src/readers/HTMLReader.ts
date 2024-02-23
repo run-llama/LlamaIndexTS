@@ -1,7 +1,7 @@
-import { Document } from "../Node";
-import { defaultFS } from "../env";
-import { GenericFileSystem } from "../storage/FileSystem";
-import { FileReader } from "./type";
+import { defaultFS } from "@llamaindex/env";
+import { GenericFileSystem } from "@llamaindex/env/type";
+import { Document } from "../Node.js";
+import { FileReader } from "./type.js";
 
 /**
  * Extract the significant text from an arbitrary HTML document.

@@ -1,9 +1,9 @@
 import _, * as lodash from "lodash";
-import { BaseNode, ObjectType } from "../../Node";
-import { DEFAULT_NAMESPACE } from "../constants";
-import { BaseKVStore } from "../kvStore/types";
-import { BaseDocumentStore, RefDocInfo } from "./types";
-import { docToJson, jsonToDoc } from "./utils";
+import { BaseNode, ObjectType } from "../../Node.js";
+import { DEFAULT_NAMESPACE } from "../constants.js";
+import { BaseKVStore } from "../kvStore/types.js";
+import { BaseDocumentStore, RefDocInfo } from "./types.js";
+import { docToJson, jsonToDoc } from "./utils.js";
 
 type DocMetaData = { docHash: string; refDocId?: string };
 

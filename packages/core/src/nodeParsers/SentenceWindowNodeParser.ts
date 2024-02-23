@@ -1,7 +1,7 @@
-import { BaseNode } from "../Node";
-import { SentenceSplitter } from "../TextSplitter";
-import { NodeParser } from "./types";
-import { getNodesFromDocument } from "./utils";
+import { BaseNode } from "../Node.js";
+import { SentenceSplitter } from "../TextSplitter.js";
+import { NodeParser } from "./types.js";
+import { getNodesFromDocument } from "./utils.js";
 
 export const DEFAULT_WINDOW_SIZE = 3;
 export const DEFAULT_WINDOW_METADATA_KEY = "window";

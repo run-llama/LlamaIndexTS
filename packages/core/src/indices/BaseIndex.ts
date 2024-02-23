@@ -1,112 +1,15 @@
-import { BaseNode, Document, jsonToNode } from "../Node";
-import { BaseRetriever } from "../Retriever";
-import { ServiceContext } from "../ServiceContext";
-import { randomUUID } from "../env";
-import { runTransformations } from "../ingestion";
-import { StorageContext } from "../storage/StorageContext";
-import { BaseDocumentStore } from "../storage/docStore/types";
-import { BaseIndexStore } from "../storage/indexStore/types";
-import { VectorStore } from "../storage/vectorStore/types";
-import { BaseSynthesizer } from "../synthesizers";
-import { BaseQueryEngine } from "../types";
-
-/**
- * The underlying structure of each index.
- */
-export abstract class IndexStruct {
-  indexId: string;
-  summary?: string;
-
-  constructor(indexId = randomUUID(), summary = undefined) {
-    this.indexId = indexId;
-    this.summary = summary;
-  }
-
-  toJson(): Record<string, unknown> {
-    return {
-      indexId: this.indexId,
-      summary: this.summary,
-    };
-  }
-
-  getSummary(): string {
-    if (this.summary === undefined) {
-      throw new Error("summary field of the index dict is not set");
-    }
-    return this.summary;
-  }
-}
-
-export enum IndexStructType {
-  SIMPLE_DICT = "simple_dict",
-  LIST = "list",
-  KEYWORD_TABLE = "keyword_table",
-}
-
-export class IndexDict extends IndexStruct {
-  nodesDict: Record<string, BaseNode> = {};
-  type: IndexStructType = IndexStructType.SIMPLE_DICT;
-
-  getSummary(): string {
-    if (this.summary === undefined) {
-      throw new Error("summary field of the index dict is not set");
-    }
-    return this.summary;
-  }
-
-  addNode(node: BaseNode, textId?: string) {
-    const vectorId = textId ?? node.id_;
-    this.nodesDict[vectorId] = node;
-  }
-
-  toJson(): Record<string, unknown> {
-    return {
-      ...super.toJson(),
-      nodesDict: this.nodesDict,
-      type: this.type,
-    };
-  }
-
-  delete(nodeId: string) {
-    delete this.nodesDict[nodeId];
-  }
-}
-
-export function jsonToIndexStruct(json: any): IndexStruct {
-  if (json.type === IndexStructType.LIST) {
-    const indexList = new IndexList(json.indexId, json.summary);
-    indexList.nodes = json.nodes;
-    return indexList;
-  } else if (json.type === IndexStructType.SIMPLE_DICT) {
-    const indexDict = new IndexDict(json.indexId, json.summary);
-    indexDict.nodesDict = Object.entries(json.nodesDict).reduce<
-      Record<string, BaseNode>
-    >((acc, [key, value]) => {
-      acc[key] = jsonToNode(value);
-      return acc;
-    }, {});
-    return indexDict;
-  } else {
-    throw new Error(`Unknown index struct type: ${json.type}`);
-  }
-}
-
-export class IndexList extends IndexStruct {
-  nodes: string[] = [];
-  type: IndexStructType = IndexStructType.LIST;
-
-  addNode(node: BaseNode) {
-    this.nodes.push(node.id_);
-  }
-
-  toJson(): Record<string, unknown> {
-    return {
-      ...super.toJson(),
-      nodes: this.nodes,
-      type: this.type,
-    };
-  }
-}
+import { BaseNode, Document } from "../Node.js";
+import { BaseRetriever } from "../Retriever.js";
+import { ServiceContext } from "../ServiceContext.js";
+import { runTransformations } from "../ingestion/IngestionPipeline.js";
+import { StorageContext } from "../storage/StorageContext.js";
+import { BaseDocumentStore } from "../storage/docStore/types.js";
+import { BaseIndexStore } from "../storage/indexStore/types.js";
+import { VectorStore } from "../storage/vectorStore/types.js";
+import { BaseSynthesizer } from "../synthesizers/types.js";
+import { BaseQueryEngine } from "../types.js";
+import { IndexStruct } from "./IndexStruct.js";
+import { IndexStructType } from "./json-to-index-struct.js";
 
 // A table of keywords mapping keywords to text chunks.
 export class KeywordTable extends IndexStruct {

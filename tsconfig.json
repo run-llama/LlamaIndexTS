@@ -18,7 +18,13 @@
       "path": "./apps/docs/tsconfig.json"
     },
     {
-      "path": "./packages/core"
+      "path": "./packages/core/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/tests/tsconfig.json"
+    },
+    {
+      "path": "./packages/env/tsconfig.json"
     },
     {
       "path": "./packages/create-llama"

@@ -9,8 +9,8 @@ import {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
-} from "./types";
-import { streamConverter } from "./utils";
+} from "./types.js";
+import { streamConverter } from "./utils.js";
 
 export abstract class BaseLLM implements LLM {
   abstract metadata: LLMMetadata;

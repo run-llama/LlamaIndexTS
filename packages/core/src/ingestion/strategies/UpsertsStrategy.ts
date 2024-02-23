@@ -1,7 +1,8 @@
-import { BaseNode } from "../../Node";
-import { BaseDocumentStore, VectorStore } from "../../storage";
-import { TransformComponent } from "../types";
-import { classify } from "./classify";
+import { BaseNode } from "../../Node.js";
+import { BaseDocumentStore } from "../../storage/docStore/types.js";
+import { VectorStore } from "../../storage/vectorStore/types.js";
+import { TransformComponent } from "../types.js";
+import { classify } from "./classify.js";
 
 /**
  * Handles doc store upserts by checking hashes and ids.

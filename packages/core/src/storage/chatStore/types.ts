@@ -1,4 +1,4 @@
-import { ChatMessage } from "../../llm";
+import { ChatMessage } from "../../llm/index.js";
 
 export interface BaseChatStore {
   setMessages(key: string, messages: ChatMessage[]): void;

@@ -6,8 +6,8 @@ import {
   TranscriptParagraph,
   TranscriptSentence,
 } from "assemblyai";
-import { Document } from "../Node";
-import { BaseReader } from "./type";
+import { Document } from "../Node.js";
+import { BaseReader } from "./type.js";
 
 type AssemblyAIOptions = Partial<BaseServiceParams>;
 

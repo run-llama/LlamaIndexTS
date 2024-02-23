@@ -1,18 +1,18 @@
-import { NodeWithScore, TextNode } from "../../Node";
-import { LLMQuestionGenerator } from "../../QuestionGenerator";
-import { Response } from "../../Response";
+import { randomUUID } from "@llamaindex/env";
+import { NodeWithScore, TextNode } from "../../Node.js";
+import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
+import { Response } from "../../Response.js";
 import {
   ServiceContext,
   serviceContextFromDefaults,
-} from "../../ServiceContext";
-import { Event } from "../../callbacks/CallbackManager";
-import { randomUUID } from "../../env";
-import { PromptMixin } from "../../prompts";
+} from "../../ServiceContext.js";
+import { Event } from "../../callbacks/CallbackManager.js";
+import { PromptMixin } from "../../prompts/Mixin.js";
 import {
   BaseSynthesizer,
   CompactAndRefine,
   ResponseSynthesizer,
-} from "../../synthesizers";
+} from "../../synthesizers/index.js";
 
 import {
   BaseQueryEngine,
@@ -20,9 +20,9 @@ import {
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
   ToolMetadata,
-} from "../../types";
+} from "../../types.js";
 
-import { BaseQuestionGenerator, SubQuestion } from "./types";
+import { BaseQuestionGenerator, SubQuestion } from "./types.js";
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then

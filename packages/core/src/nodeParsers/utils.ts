@@ -5,7 +5,7 @@ import {
   ImageDocument,
   NodeRelationship,
   TextNode,
-} from "../Node";
+} from "../Node.js";
 
 type TextSplitter = (s: string) => string[];
 

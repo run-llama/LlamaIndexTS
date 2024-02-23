@@ -1,4 +1,4 @@
-import { GenericFileSystem } from "../FileSystem";
+import { GenericFileSystem } from "@llamaindex/env/type";
 const defaultCollection = "data";
 
 type StoredValue = Record<string, any> | null;

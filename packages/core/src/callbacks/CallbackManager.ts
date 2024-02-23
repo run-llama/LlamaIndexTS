@@ -1,5 +1,5 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
-import { NodeWithScore } from "../Node";
+import { NodeWithScore } from "../Node.js";
 
 /*
   An event is a wrapper that groups related operations.

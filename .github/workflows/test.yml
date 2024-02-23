@@ -61,10 +61,13 @@ jobs:
         run: pnpm run build --filter llamaindex
       - name: Copy examples
         run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
-      - name: Pack
+      - name: Pack @llamaindex/env
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/env
+      - name: Pack llamaindex
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core
-      - name: Install llamaindex
+      - name: Install
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}/examples
       - name: Run Type Check

@@ -1,9 +1,9 @@
-import { BaseNode, MetadataMode } from "../Node";
-import { createSHA256 } from "../env";
-import { docToJson, jsonToDoc } from "../storage/docStore/utils";
-import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore";
-import { BaseKVStore } from "../storage/kvStore/types";
-import { TransformComponent } from "./types";
+import { createSHA256 } from "@llamaindex/env";
+import { BaseNode, MetadataMode } from "../Node.js";
+import { docToJson, jsonToDoc } from "../storage/docStore/utils.js";
+import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore.js";
+import { BaseKVStore } from "../storage/kvStore/types.js";
+import { TransformComponent } from "./types.js";
 
 const transformToJSON = (obj: TransformComponent) => {
   const seen: any[] = [];

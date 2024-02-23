@@ -1,4 +1,4 @@
-import { Ollama } from "llamaindex";
+import { Ollama } from "llamaindex/llm/ollama";
 
 (async () => {
   const llm = new Ollama({ model: "llama2", temperature: 0.75 });

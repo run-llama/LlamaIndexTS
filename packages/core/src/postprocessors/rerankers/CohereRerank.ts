@@ -1,7 +1,7 @@
 import { CohereClient } from "cohere-ai";
 
-import { MetadataMode, NodeWithScore } from "../../Node";
-import { BaseNodePostprocessor } from "../types";
+import { MetadataMode, NodeWithScore } from "../../Node.js";
+import { BaseNodePostprocessor } from "../types.js";
 
 type CohereRerankOptions = {
   topN?: number;

@@ -1,5 +1,5 @@
-import { Document } from "../Node";
-import { CompleteFileSystem } from "../storage";
+import { CompleteFileSystem } from "@llamaindex/env/type";
+import { Document } from "../Node.js";
 
 /**
  * A reader takes imports data into Document objects.

@@ -1,14 +1,14 @@
+import { defaultFS, path } from "@llamaindex/env";
+import { GenericFileSystem } from "@llamaindex/env/type";
 import _ from "lodash";
-import { defaultFS, path } from "../../env";
-import { GenericFileSystem } from "../FileSystem";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_NAMESPACE,
   DEFAULT_PERSIST_DIR,
-} from "../constants";
-import { SimpleKVStore } from "../kvStore/SimpleKVStore";
-import { BaseInMemoryKVStore } from "../kvStore/types";
-import { KVDocumentStore } from "./KVDocumentStore";
+} from "../constants.js";
+import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
+import { BaseInMemoryKVStore } from "../kvStore/types.js";
+import { KVDocumentStore } from "./KVDocumentStore.js";
 
 type SaveDict = Record<string, any>;
 

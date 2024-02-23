@@ -1,10 +1,10 @@
-import { OpenAI } from "./llm/LLM";
-import { ChatMessage, LLM, MessageType } from "./llm/types";
+import { OpenAI } from "./llm/LLM.js";
+import { ChatMessage, LLM, MessageType } from "./llm/types.js";
 import {
   defaultSummaryPrompt,
   messagesToHistoryStr,
   SummaryPrompt,
-} from "./Prompt";
+} from "./Prompt.js";
 
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages

@@ -4,18 +4,17 @@ import {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
-} from "./types";
+} from "./types.js";
 
-import { BaseNode, Metadata } from "../../Node";
-import { GenericFileSystem } from "../FileSystem";
-
+import { GenericFileSystem } from "@llamaindex/env/type";
 import {
   FetchResponse,
   Index,
   Pinecone,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+import { BaseNode, Metadata } from "../../Node.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {
   indexName?: string;

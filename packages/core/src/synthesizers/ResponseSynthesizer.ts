@@ -1,15 +1,18 @@
-import { MetadataMode } from "../Node";
-import { Response } from "../Response";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { streamConverter } from "../llm/utils";
-import { PromptMixin } from "../prompts";
-import { ResponseBuilderPrompts, getResponseBuilder } from "./builders";
+import { MetadataMode } from "../Node.js";
+import { Response } from "../Response.js";
+import {
+  ServiceContext,
+  serviceContextFromDefaults,
+} from "../ServiceContext.js";
+import { streamConverter } from "../llm/utils.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import { ResponseBuilderPrompts, getResponseBuilder } from "./builders.js";
 import {
   BaseSynthesizer,
   ResponseBuilder,
   SynthesizeParamsNonStreaming,
   SynthesizeParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 /**
  * A ResponseSynthesizer is used to generate a response from a query and a list of nodes.

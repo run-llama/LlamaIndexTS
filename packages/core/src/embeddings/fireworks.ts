@@ -1,4 +1,4 @@
-import { OpenAIEmbedding } from "./OpenAIEmbedding";
+import { OpenAIEmbedding } from "./OpenAIEmbedding.js";
 
 export class FireworksEmbedding extends OpenAIEmbedding {
   constructor(init?: Partial<OpenAIEmbedding>) {

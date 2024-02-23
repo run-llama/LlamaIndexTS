@@ -1,0 +1,61 @@
+{
+  "name": "@llamaindex/env",
+  "description": "environment wrapper",
+  "version": "0.0.1",
+  "type": "module",
+  "types": "dist/type/index.d.ts",
+  "main": "dist/cjs/index.cjs",
+  "exports": {
+    ".": {
+      "workerd": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.polyfill.js"
+      },
+      "edge-light": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.polyfill.js"
+      },
+      "import": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/cjs/index.cjs"
+      }
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/type/*.d.ts",
+        "default": "./dist/*.js"
+      },
+      "require": {
+        "types": "./dist/type/*.d.ts",
+        "default": "./dist/cjs/*.js"
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/himself65/LlamaIndexTS.git",
+    "directory": "packages/env"
+  },
+  "scripts": {
+    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
+    "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
+    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc --out-file-extension cjs",
+    "build:type": "tsc -p tsconfig.json",
+    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+  },
+  "devDependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
+    "@swc/cli": "^0.3.9",
+    "@swc/core": "^1.4.2",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^20.11.20",
+    "pathe": "^1.1.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
