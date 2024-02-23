@@ -53,7 +53,7 @@
     "node": ">=18.0.0"
   },
   "types": "./dist/type/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/cjs/index.cjs",
   "exports": {
     ".": {
       "import": {
@@ -66,7 +66,7 @@
       },
       "require": {
         "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "default": "./dist/cjs/index.cjs"
       }
     },
     "./*": {
@@ -76,7 +76,7 @@
       },
       "require": {
         "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
+        "default": "./dist/cjs/*.cjs"
       }
     }
   },
@@ -92,11 +92,8 @@
     "lint": "eslint .",
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
     "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
+    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc --out-file-extension cjs",
     "build:type": "tsc -p tsconfig.json",
-    "postbuild": "pnpm run modify-package-json",
-    "copy": "cp -r package.json CHANGELOG.md ../../README.md ../../LICENSE examples src dist/",
-    "modify-package-json": "node ./scripts/modify-package-json.mjs",
     "circular-check": "madge -c ./src/index.ts",
     "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
   }
