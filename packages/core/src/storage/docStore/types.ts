@@ -57,7 +57,7 @@ export abstract class BaseDocumentStore {
   }
 
   async getNode(nodeId: string, raiseError: boolean = true): Promise<BaseNode> {
-    let doc = await this.getDocument(nodeId, raiseError);
+    const doc = await this.getDocument(nodeId, raiseError);
     if (!(doc instanceof BaseNode)) {
       throw new Error(`Document ${nodeId} is not a Node.`);
     }
@@ -67,8 +67,8 @@ export abstract class BaseDocumentStore {
   async getNodeDict(nodeIdDict: {
     [index: number]: string;
   }): Promise<Record<number, BaseNode>> {
-    let result: Record<number, BaseNode> = {};
-    for (let index in nodeIdDict) {
+    const result: Record<number, BaseNode> = {};
+    for (const index in nodeIdDict) {
       result[index] = await this.getNode(nodeIdDict[index]);
     }
     return result;

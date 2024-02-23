@@ -119,7 +119,7 @@ describe("Test walk for Node.js fs", () => {
     ]);
 
     const actualFiles = new Set<string>();
-    for await (let file of walk(nodeFS, tempDir)) {
+    for await (const file of walk(nodeFS, tempDir)) {
       expect(file).toBeTruthy();
       actualFiles.add(file);
     }

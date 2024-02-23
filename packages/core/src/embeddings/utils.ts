@@ -46,7 +46,7 @@ export function similarity(
 
   switch (mode) {
     case SimilarityType.EUCLIDEAN: {
-      let difference = embedding1.map((x, i) => x - embedding2[i]);
+      const difference = embedding1.map((x, i) => x - embedding2[i]);
       return -norm(difference);
     }
     case SimilarityType.DOT_PRODUCT: {
@@ -94,7 +94,7 @@ export function getTopKEmbeddings(
     );
   }
 
-  let similarities: { similarity: number; id: number }[] = [];
+  const similarities: { similarity: number; id: number }[] = [];
 
   for (let i = 0; i < embeddings.length; i++) {
     const sim = similarity(queryEmbedding, embeddings[i]);
@@ -105,8 +105,8 @@ export function getTopKEmbeddings(
 
   similarities.sort((a, b) => b.similarity - a.similarity); // Reverse sort
 
-  let resultSimilarities: number[] = [];
-  let resultIds: any[] = [];
+  const resultSimilarities: number[] = [];
+  const resultIds: any[] = [];
 
   for (let i = 0; i < similarityTopK; i++) {
     if (i >= similarities.length) {
@@ -142,21 +142,21 @@ export function getTopKMMREmbeddings(
   _similarityCutoff: number | null = null,
   mmrThreshold: number | null = null,
 ): [number[], any[]] {
-  let threshold = mmrThreshold || 0.5;
+  const threshold = mmrThreshold || 0.5;
   similarityFn = similarityFn || similarity;
 
   if (embeddingIds === null || embeddingIds.length === 0) {
     embeddingIds = Array.from({ length: embeddings.length }, (_, i) => i);
   }
-  let fullEmbedMap = new Map(embeddingIds.map((value, i) => [value, i]));
-  let embedMap = new Map(fullEmbedMap);
-  let embedSimilarity: Map<any, number> = new Map();
+  const fullEmbedMap = new Map(embeddingIds.map((value, i) => [value, i]));
+  const embedMap = new Map(fullEmbedMap);
+  const embedSimilarity: Map<any, number> = new Map();
   let score: number = Number.NEGATIVE_INFINITY;
   let highScoreId: any | null = null;
 
   for (let i = 0; i < embeddings.length; i++) {
-    let emb = embeddings[i];
-    let similarity = similarityFn(queryEmbedding, emb);
+    const emb = embeddings[i];
+    const similarity = similarityFn(queryEmbedding, emb);
     embedSimilarity.set(embeddingIds[i], similarity);
     if (similarity * threshold > score) {
       highScoreId = embeddingIds[i];
@@ -164,18 +164,18 @@ export function getTopKMMREmbeddings(
     }
   }
 
-  let results: [number, any][] = [];
+  const results: [number, any][] = [];
 
-  let embeddingLength = embeddings.length;
-  let similarityTopKCount = similarityTopK || embeddingLength;
+  const embeddingLength = embeddings.length;
+  const similarityTopKCount = similarityTopK || embeddingLength;
 
   while (results.length < Math.min(similarityTopKCount, embeddingLength)) {
     results.push([score, highScoreId]);
     embedMap.delete(highScoreId!);
-    let recentEmbeddingId = highScoreId;
+    const recentEmbeddingId = highScoreId;
     score = Number.NEGATIVE_INFINITY;
-    for (let embedId of Array.from(embedMap.keys())) {
-      let overlapWithRecent = similarityFn(
+    for (const embedId of Array.from(embedMap.keys())) {
+      const overlapWithRecent = similarityFn(
         embeddings[embedMap.get(embedId)!],
         embeddings[fullEmbedMap.get(recentEmbeddingId!)!],
       );
@@ -192,8 +192,8 @@ export function getTopKMMREmbeddings(
     }
   }
 
-  let resultSimilarities = results.map(([s, _]) => s);
-  let resultIds = results.map(([_, n]) => n);
+  const resultSimilarities = results.map(([s, _]) => s);
+  const resultIds = results.map(([_, n]) => n);
 
   return [resultSimilarities, resultIds];
 }

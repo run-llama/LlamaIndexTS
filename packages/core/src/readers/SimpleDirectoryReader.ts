@@ -88,7 +88,7 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
-    let docs: Document[] = [];
+    const docs: Document[] = [];
     for await (const filePath of walk(fs, directoryPath)) {
       try {
         const fileExt = path.extname(filePath).slice(1).toLowerCase();

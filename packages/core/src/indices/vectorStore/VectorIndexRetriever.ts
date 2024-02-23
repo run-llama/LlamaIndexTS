@@ -120,7 +120,7 @@ export class VectorIndexRetriever implements BaseRetriever {
   }
 
   protected buildNodeListFromQueryResult(result: VectorStoreQueryResult) {
-    let nodesWithScores: NodeWithScore[] = [];
+    const nodesWithScores: NodeWithScore[] = [];
     for (let i = 0; i < result.ids.length; i++) {
       const nodeFromResult = result.nodes?.[i];
       if (!this.index.indexStruct.nodesDict[result.ids[i]] && nodeFromResult) {

@@ -172,7 +172,7 @@ export class TitleExtractor extends BaseExtractor {
 
     if (nodesToExtractTitle.length === 0) return [];
 
-    let titlesCandidates: string[] = [];
+    const titlesCandidates: string[] = [];
     let title: string = "";
 
     for (let i = 0; i < nodesToExtractTitle.length; i++) {
@@ -411,7 +411,7 @@ export class SummaryExtractor extends BaseExtractor {
       nodes.map((node) => this.generateNodeSummary(node)),
     );
 
-    let metadataList: any[] = nodes.map(() => ({}));
+    const metadataList: any[] = nodes.map(() => ({}));
 
     for (let i = 0; i < nodes.length; i++) {
       if (i > 0 && this._prevSummary && nodeSummaries[i - 1]) {

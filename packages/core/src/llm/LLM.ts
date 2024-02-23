@@ -235,7 +235,7 @@ export class OpenAI extends BaseLLM {
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream, tools, toolChoice } = params;
-    let baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
+    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,

@@ -130,7 +130,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     indexStore: BaseIndexStore,
     options: IndexStructOptions,
   ) {
-    let indexStructs = (await indexStore.getIndexStructs()) as IndexDict[];
+    const indexStructs = (await indexStore.getIndexStructs()) as IndexDict[];
     let indexStruct: IndexDict | undefined;
 
     if (options.indexStruct && indexStructs.length > 0) {

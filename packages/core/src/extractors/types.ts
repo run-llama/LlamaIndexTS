@@ -43,16 +43,16 @@ export abstract class BaseExtractor implements TransformComponent {
       newNodes = nodes.slice();
     }
 
-    let curMetadataList = await this.extract(newNodes);
+    const curMetadataList = await this.extract(newNodes);
 
-    for (let idx in newNodes) {
+    for (const idx in newNodes) {
       newNodes[idx].metadata = {
         ...newNodes[idx].metadata,
         ...curMetadataList[idx],
       };
     }
 
-    for (let idx in newNodes) {
+    for (const idx in newNodes) {
       if (excludedEmbedMetadataKeys) {
         newNodes[idx].excludedEmbedMetadataKeys.concat(
           excludedEmbedMetadataKeys,

@@ -63,8 +63,8 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
       this.indexStruct.table.has(keyword),
     );
 
-    for (let keyword of filteredKeywords) {
-      for (let nodeId of this.indexStruct.table.get(keyword) || []) {
+    for (const keyword of filteredKeywords) {
+      for (const nodeId of this.indexStruct.table.get(keyword) || []) {
         chunkIndicesCount[nodeId] = (chunkIndicesCount[nodeId] ?? 0) + 1;
       }
     }

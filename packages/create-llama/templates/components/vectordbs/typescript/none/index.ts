@@ -14,7 +14,7 @@ async function getDataSource(llm: LLM) {
     chunkSize: CHUNK_SIZE,
     chunkOverlap: CHUNK_OVERLAP,
   });
-  let storageContext = await storageContextFromDefaults({
+  const storageContext = await storageContextFromDefaults({
     persistDir: `${STORAGE_CACHE_DIR}`,
   });
 

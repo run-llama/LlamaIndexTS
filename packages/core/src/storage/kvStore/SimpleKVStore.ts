@@ -33,7 +33,7 @@ export class SimpleKVStore extends BaseKVStore {
     key: string,
     collection: string = DEFAULT_COLLECTION,
   ): Promise<any> {
-    let collectionData = this.data[collection];
+    const collectionData = this.data[collection];
     if (_.isNil(collectionData)) {
       return null;
     }
@@ -61,7 +61,7 @@ export class SimpleKVStore extends BaseKVStore {
   async persist(persistPath: string, fs?: GenericFileSystem): Promise<void> {
     fs = fs || defaultFS;
     // TODO: decide on a way to polyfill path
-    let dirPath = path.dirname(persistPath);
+    const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
@@ -73,14 +73,14 @@ export class SimpleKVStore extends BaseKVStore {
     fs?: GenericFileSystem,
   ): Promise<SimpleKVStore> {
     fs = fs || defaultFS;
-    let dirPath = path.dirname(persistPath);
+    const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
 
     let data: DataType = {};
     try {
-      let fileData = await fs.readFile(persistPath);
+      const fileData = await fs.readFile(persistPath);
       data = JSON.parse(fileData.toString());
     } catch (e) {
       console.error(

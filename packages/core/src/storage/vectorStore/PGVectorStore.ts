@@ -154,8 +154,8 @@ export class PGVectorStore implements VectorStore {
     for (let index = 0; index < embeddingResults.length; index++) {
       const row = embeddingResults[index];
 
-      let id: any = row.id_.length ? row.id_ : null;
-      let meta = row.metadata || {};
+      const id: any = row.id_.length ? row.id_ : null;
+      const meta = row.metadata || {};
       meta.create_date = new Date();
 
       const params = [
@@ -191,7 +191,7 @@ export class PGVectorStore implements VectorStore {
     const db = (await this.getDb()) as pg.Client;
     const data = this.getDataToInsert(embeddingResults);
 
-    let ret: string[] = [];
+    const ret: string[] = [];
     for (let index = 0; index < data.length; index++) {
       const params = data[index];
       try {

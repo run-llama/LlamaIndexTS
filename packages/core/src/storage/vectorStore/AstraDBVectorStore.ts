@@ -128,7 +128,7 @@ export class AstraDBVectorStore implements VectorStore {
     console.debug(`Adding ${dataToInsert.length} rows to table`);
 
     // Perform inserts in steps of MAX_INSERT_BATCH_SIZE
-    let batchData: any[] = [];
+    const batchData: any[] = [];
 
     for (let i = 0; i < dataToInsert.length; i += MAX_INSERT_BATCH_SIZE) {
       batchData.push(dataToInsert.slice(i, i + MAX_INSERT_BATCH_SIZE));

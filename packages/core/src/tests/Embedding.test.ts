@@ -55,7 +55,7 @@ describe("[OpenAIEmbedding]", () => {
   let embedModel: OpenAIEmbedding;
 
   beforeAll(() => {
-    let openAIEmbedding = new OpenAIEmbedding();
+    const openAIEmbedding = new OpenAIEmbedding();
 
     mockEmbeddingModel(openAIEmbedding);
 

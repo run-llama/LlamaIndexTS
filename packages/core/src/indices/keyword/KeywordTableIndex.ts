@@ -62,7 +62,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
-    let indexStructs = (await indexStore.getIndexStructs()) as KeywordTable[];
+    const indexStructs = (await indexStore.getIndexStructs()) as KeywordTable[];
     let indexStruct: KeywordTable | null;
 
     if (options.indexStruct && indexStructs.length > 0) {
@@ -216,7 +216,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   }
 
   async insertNodes(nodes: BaseNode[]) {
-    for (let node of nodes) {
+    for (const node of nodes) {
       const keywords = await KeywordTableIndex.extractKeywords(
         node.getContent(MetadataMode.LLM),
         this.serviceContext,

@@ -213,7 +213,7 @@ export class PineconeVectorStore implements VectorStore {
   }
 
   nodeToRecord(node: BaseNode<Metadata>) {
-    let id: any = node.id_.length ? node.id_ : null;
+    const id: any = node.id_.length ? node.id_ : null;
     return {
       id: id,
       values: node.getEmbedding(),

@@ -11,7 +11,7 @@ describe("SentenceSplitter", () => {
       paragraphSeparator: "\n\n\n",
     });
     // generate the same line as above but correct syntax errors
-    let splits = sentenceSplitter.getParagraphSplits(
+    const splits = sentenceSplitter.getParagraphSplits(
       "This is a paragraph.\n\n\nThis is another paragraph.",
       undefined,
     );
@@ -26,7 +26,7 @@ describe("SentenceSplitter", () => {
       paragraphSeparator: "\n",
     });
     // generate the same line as above but correct syntax errors
-    let splits = sentenceSplitter.getParagraphSplits(
+    const splits = sentenceSplitter.getParagraphSplits(
       "This is a paragraph.\nThis is another paragraph.",
       1000,
     );
@@ -37,7 +37,7 @@ describe("SentenceSplitter", () => {
 
   test("splits sentences", () => {
     const sentenceSplitter = new SentenceSplitter();
-    let splits = sentenceSplitter.getSentenceSplits(
+    const splits = sentenceSplitter.getSentenceSplits(
       "This is a sentence. This is another sentence.",
       undefined,
     );
@@ -68,11 +68,11 @@ describe("SentenceSplitter", () => {
   });
 
   test("doesn't split decimals", () => {
-    let sentenceSplitter = new SentenceSplitter({
+    const sentenceSplitter = new SentenceSplitter({
       chunkSize: 5,
       chunkOverlap: 0,
     });
-    let splits = sentenceSplitter.splitText(
+    const splits = sentenceSplitter.splitText(
       "This is a sentence. This is another sentence. 1.0",
     );
 
@@ -84,7 +84,7 @@ describe("SentenceSplitter", () => {
   });
 
   test("splits cjk", () => {
-    let sentenceSplitter = new SentenceSplitter({
+    const sentenceSplitter = new SentenceSplitter({
       chunkSize: 12,
       chunkOverlap: 0,
       chunkingTokenizerFn: cjkSentenceTokenizer,

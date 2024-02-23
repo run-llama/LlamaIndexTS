@@ -6,7 +6,7 @@ import { BaseKVStore } from "../storage/kvStore/types";
 import { TransformComponent } from "./types";
 
 const transformToJSON = (obj: TransformComponent) => {
-  let seen: any[] = [];
+  const seen: any[] = [];
 
   const replacer = (key: string, value: any) => {
     if (value != null && typeof value == "object") {
