@@ -1,4 +1,4 @@
-import { defaultFS } from "../env/index.js";
+import { defaultFS } from "#llamaindex/env";
 import { Document, ImageDocument } from "../Node.js";
 import { GenericFileSystem } from "../storage/FileSystem.js";
 import { FileReader } from "./type.js";

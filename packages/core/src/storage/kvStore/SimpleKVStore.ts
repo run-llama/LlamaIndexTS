@@ -1,5 +1,5 @@
+import { defaultFS, path } from "#llamaindex/env";
 import _ from "lodash";
-import { defaultFS, path } from "../../env/index.js";
 import { GenericFileSystem, exists } from "../FileSystem.js";
 import { DEFAULT_COLLECTION } from "../constants.js";
 import { BaseKVStore } from "./types.js";
@@ -58,8 +58,10 @@ export class SimpleKVStore extends BaseKVStore {
     return false;
   }
 
-  async persist(persistPath: string, fs?: GenericFileSystem): Promise<void> {
-    fs = fs || defaultFS;
+  async persist(
+    persistPath: string,
+    fs: GenericFileSystem = defaultFS,
+  ): Promise<void> {
     // TODO: decide on a way to polyfill path
     let dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
@@ -70,9 +72,8 @@ export class SimpleKVStore extends BaseKVStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs?: GenericFileSystem,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleKVStore> {
-    fs = fs || defaultFS;
     let dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);

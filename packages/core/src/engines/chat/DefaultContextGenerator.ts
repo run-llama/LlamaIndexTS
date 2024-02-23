@@ -1,3 +1,4 @@
+import { randomUUID } from "#llamaindex/env";
 import { NodeWithScore, TextNode } from "../../Node.js";
 import {
   ContextSystemPrompt,
@@ -5,7 +6,6 @@ import {
 } from "../../Prompt.js";
 import { BaseRetriever } from "../../Retriever.js";
 import { Event } from "../../callbacks/CallbackManager.js";
-import { randomUUID } from "../../env/index.js";
 import { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/index.js";
 import { Context, ContextGenerator } from "./types.js";

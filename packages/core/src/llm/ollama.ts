@@ -1,6 +1,6 @@
+import { ok } from "#llamaindex/env";
 import { CallbackManager, Event } from "../callbacks/CallbackManager.js";
 import { BaseEmbedding } from "../embeddings/types.js";
-import { ok } from "../env/index.js";
 import {
   ChatMessage,
   ChatResponse,

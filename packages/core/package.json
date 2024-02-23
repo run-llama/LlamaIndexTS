@@ -16,6 +16,7 @@
     "chromadb": "~1.7.3",
     "cohere-ai": "^7.7.5",
     "file-type": "^18.7.0",
+    "glob": "^10.3.10",
     "js-tiktoken": "^1.0.10",
     "lodash": "^4.17.21",
     "mammoth": "^1.6.0",
@@ -56,7 +57,11 @@
   "types": "./dist/type/index.d.ts",
   "main": "./dist/cjs/index.js",
   "imports": {
-    "llamaindex/env": "./dist/env/index.js"
+    "#llamaindex/env": {
+      "edge-light": "./dist/env/index.polyfill.js",
+      "require": "./dist/cjs/env/index.js",
+      "default": "./dist/env/index.js"
+    }
   },
   "exports": {
     ".": {

@@ -4,7 +4,9 @@
  * so that it can be published to npm.
  */
 import editJsonFile from "edit-json-file";
+import { glob } from "glob";
 import fs from "node:fs/promises";
+import { relative } from "node:path";
 
 {
   await fs.copyFile("./package.json", "./dist/package.json");
@@ -22,6 +24,20 @@ import fs from "node:fs/promises";
     JSON.stringify(JSON.parse(modifiedPackageJson), null, 2),
     "utf8",
   );
+}
+
+{
+  const envFileTarget = "./dist/cjs/env/index.js";
+  const files = await glob("./dist/cjs/**/*.js");
+  for (const filePath of files) {
+    const content = await fs.readFile(filePath, "utf8");
+    const r = relative(filePath, envFileTarget).replace("../", "./");
+    const replacedContent = content.replaceAll(
+      'require("#llamaindex/env")',
+      `require("${r}")`,
+    );
+    await fs.writeFile(filePath, replacedContent, "utf8");
+  }
 }
 
 const esmModule = {

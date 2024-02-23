@@ -1,7 +1,7 @@
+import { randomUUID } from "#llamaindex/env";
 import { BaseNode, Document, jsonToNode } from "../Node.js";
 import { BaseRetriever } from "../Retriever.js";
 import { ServiceContext } from "../ServiceContext.js";
-import { randomUUID } from "../env/index.js";
 import { runTransformations } from "../ingestion/index.js";
 import { StorageContext } from "../storage/StorageContext.js";
 import { BaseDocumentStore } from "../storage/docStore/types.js";

@@ -1,9 +1,9 @@
+import { randomUUID } from "#llamaindex/env";
 import { ChatHistory, getHistory } from "../../ChatHistory.js";
 import { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";
 import { BaseRetriever } from "../../Retriever.js";
 import { Event } from "../../callbacks/CallbackManager.js";
-import { randomUUID } from "../../env/index.js";
 import {
   ChatMessage,
   ChatResponseChunk,
