@@ -1,4 +1,4 @@
-import { IndexStruct } from "../../indices/BaseIndex.js";
+import { IndexStruct } from "../../indices/IndexStruct.js";
 import { GenericFileSystem } from "../FileSystem.js";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,

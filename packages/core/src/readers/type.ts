@@ -1,5 +1,5 @@
 import { Document } from "../Node.js";
-import { CompleteFileSystem } from "../storage/index.js";
+import { CompleteFileSystem } from "../storage/FileSystem.js";
 
 /**
  * A reader takes imports data into Document objects.

@@ -1,5 +1,6 @@
 import _ from "lodash";
-import { IndexStruct, jsonToIndexStruct } from "../../indices/BaseIndex.js";
+import { IndexStruct } from "../../indices/IndexStruct.js";
+import { jsonToIndexStruct } from "../../indices/json-to-index-struct.js";
 import { DEFAULT_NAMESPACE } from "../constants.js";
 import { BaseKVStore } from "../kvStore/types.js";
 import { BaseIndexStore } from "./types.js";

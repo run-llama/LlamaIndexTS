@@ -1,5 +1,5 @@
 import { BaseNode } from "../../Node.js";
-import { BaseDocumentStore } from "../../storage/index.js";
+import { BaseDocumentStore } from "../../storage/docStore/types.js";
 import { TransformComponent } from "../types.js";
 
 /**

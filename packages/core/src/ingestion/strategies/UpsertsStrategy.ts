@@ -1,5 +1,6 @@
 import { BaseNode } from "../../Node.js";
-import { BaseDocumentStore, VectorStore } from "../../storage/index.js";
+import { BaseDocumentStore } from "../../storage/docStore/types.js";
+import { VectorStore } from "../../storage/vectorStore/types.js";
 import { TransformComponent } from "../types.js";
 import { classify } from "./classify.js";
 

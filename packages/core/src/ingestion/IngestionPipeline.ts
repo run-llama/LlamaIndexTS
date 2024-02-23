@@ -1,6 +1,7 @@
 import { BaseNode, Document } from "../Node.js";
 import { BaseReader } from "../readers/type.js";
-import { BaseDocumentStore, VectorStore } from "../storage/index.js";
+import { BaseDocumentStore } from "../storage/docStore/types.js";
+import { VectorStore } from "../storage/vectorStore/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
   DocStoreStrategy,
