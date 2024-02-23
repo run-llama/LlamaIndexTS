@@ -107,7 +107,6 @@
     "copy": "cp -r package.json CHANGELOG.md ../../README.md ../../LICENSE examples src dist/",
     "modify-package-json": "node ./scripts/modify-package-json.mjs",
     "prepublish": "pnpm run modify-package-json && echo \"please cd ./dist and run pnpm publish\" && exit 1",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\" \"pnpm run test --watch\"",
     "circular-check": "madge -c ./src/index.ts"
   }
 }
