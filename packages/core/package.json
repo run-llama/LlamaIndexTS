@@ -52,7 +52,7 @@
     "node": ">=18.0.0"
   },
   "types": "./dist/type/index.d.ts",
-  "main": "./dist/cjs/index.cjs",
+  "main": "./dist/cjs/index.js",
   "exports": {
     ".": {
       "import": {
@@ -65,7 +65,7 @@
       },
       "require": {
         "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.cjs"
+        "default": "./dist/cjs/index.js"
       }
     },
     "./*": {
@@ -75,7 +75,7 @@
       },
       "require": {
         "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.cjs"
+        "default": "./dist/cjs/*.js"
       }
     }
   },
@@ -91,8 +91,9 @@
     "lint": "eslint .",
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
     "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc --out-file-extension cjs",
+    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
     "build:type": "tsc -p tsconfig.json",
+    "postbuild": "node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
     "circular-check": "madge -c ./src/index.ts",
     "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
   }
