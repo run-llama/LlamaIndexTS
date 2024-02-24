@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "license": "MIT",
   "type": "module",
   "dependencies": {
@@ -80,7 +80,9 @@
     }
   },
   "files": [
-    "**"
+    "dist",
+    "CHANGELOG.md",
+    "examples"
   ],
   "repository": {
     "type": "git",

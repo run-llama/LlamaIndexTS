@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/env",
   "description": "environment wrapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -35,6 +35,10 @@
       }
     }
   },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/himself65/LlamaIndexTS.git",

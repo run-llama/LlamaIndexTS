@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.1.16
+
+### Patch Changes
+
+- e8e21a0: build: set files in package.json
+- Updated dependencies [e8e21a0]
+  - @llamaindex/env@0.0.3
+
 ## 0.1.15
 
 ### Patch Changes
