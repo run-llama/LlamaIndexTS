@@ -1,5 +1,6 @@
-import { BaseNode, MetadataMode } from "../Node.js";
-import { TransformComponent } from "../ingestion/types.js";
+import type { BaseNode } from "../Node.js";
+import { MetadataMode } from "../Node.js";
+import type { TransformComponent } from "../ingestion/types.js";
 import { SimilarityType, similarity } from "./utils.js";
 
 const DEFAULT_EMBED_BATCH_SIZE = 10;

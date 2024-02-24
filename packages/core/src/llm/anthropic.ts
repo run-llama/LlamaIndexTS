@@ -1,8 +1,5 @@
-import Anthropic, {
-  AI_PROMPT,
-  ClientOptions,
-  HUMAN_PROMPT,
-} from "@anthropic-ai/sdk";
+import type { ClientOptions } from "@anthropic-ai/sdk";
+import Anthropic, { AI_PROMPT, HUMAN_PROMPT } from "@anthropic-ai/sdk";
 import _ from "lodash";
 
 export class AnthropicSession {

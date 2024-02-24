@@ -1,14 +1,15 @@
 import { randomUUID } from "crypto";
 import { CallbackManager } from "../../callbacks/CallbackManager.js";
+import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
   AgentChatResponse,
-  ChatEngineAgentParams,
   ChatResponseMode,
 } from "../../engines/chat/index.js";
-import { ChatMessage, LLM } from "../../llm/index.js";
+import type { ChatMessage, LLM } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
-import { BaseMemory } from "../../memory/types.js";
-import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types.js";
+import type { BaseMemory } from "../../memory/types.js";
+import type { AgentWorker, TaskStepOutput } from "../types.js";
+import { Task, TaskStep } from "../types.js";
 import { AgentState, BaseAgentRunner, TaskState } from "./types.js";
 
 const validateStepFromArgs = (

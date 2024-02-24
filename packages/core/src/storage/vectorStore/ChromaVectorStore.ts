@@ -1,20 +1,20 @@
-import {
+import type {
   AddParams,
-  ChromaClient,
   ChromaClientParams,
   Collection,
-  IncludeEnum,
   QueryResponse,
   Where,
   WhereDocument,
 } from "chromadb";
-import { BaseNode, MetadataMode } from "../../Node.js";
-import {
+import { ChromaClient, IncludeEnum } from "chromadb";
+import type { BaseNode } from "../../Node.js";
+import { MetadataMode } from "../../Node.js";
+import type {
   VectorStore,
   VectorStoreQuery,
-  VectorStoreQueryMode,
   VectorStoreQueryResult,
 } from "./types.js";
+import { VectorStoreQueryMode } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type ChromaDeleteOptions = {

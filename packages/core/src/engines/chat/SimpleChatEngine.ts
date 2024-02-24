@@ -1,8 +1,10 @@
-import { ChatHistory, getHistory } from "../../ChatHistory.js";
+import type { ChatHistory } from "../../ChatHistory.js";
+import { getHistory } from "../../ChatHistory.js";
 import { Response } from "../../Response.js";
-import { ChatResponseChunk, LLM, OpenAI } from "../../llm/index.js";
+import type { ChatResponseChunk, LLM } from "../../llm/index.js";
+import { OpenAI } from "../../llm/index.js";
 import { streamConverter, streamReducer } from "../../llm/utils.js";
-import {
+import type {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,

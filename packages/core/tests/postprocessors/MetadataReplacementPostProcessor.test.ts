@@ -1,4 +1,5 @@
-import { MetadataMode, NodeWithScore, TextNode } from "llamaindex/Node";
+import type { NodeWithScore } from "llamaindex/Node";
+import { MetadataMode, TextNode } from "llamaindex/Node";
 import { MetadataReplacementPostProcessor } from "llamaindex/postprocessors/index";
 import { beforeEach, describe, expect, test } from "vitest";
 

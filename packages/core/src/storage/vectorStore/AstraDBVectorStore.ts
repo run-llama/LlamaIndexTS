@@ -1,7 +1,8 @@
 import { AstraDB } from "@datastax/astra-db-ts";
-import { Collection } from "@datastax/astra-db-ts/dist/collections";
-import { BaseNode, MetadataMode } from "../../Node.js";
-import {
+import type { Collection } from "@datastax/astra-db-ts/dist/collections";
+import type { BaseNode } from "../../Node.js";
+import { MetadataMode } from "../../Node.js";
+import type {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,

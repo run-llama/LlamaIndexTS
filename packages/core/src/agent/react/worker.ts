@@ -1,17 +1,19 @@
 import { randomUUID } from "crypto";
 import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import { AgentChatResponse } from "../../engines/chat/index.js";
-import { ChatResponse, LLM, OpenAI } from "../../llm/index.js";
+import type { ChatResponse, LLM } from "../../llm/index.js";
+import { OpenAI } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
-import { ObjectRetriever } from "../../objects/base.js";
+import type { ObjectRetriever } from "../../objects/base.js";
 import { ToolOutput } from "../../tools/index.js";
-import { BaseTool } from "../../types.js";
-import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types.js";
+import type { BaseTool } from "../../types.js";
+import type { AgentWorker, Task } from "../types.js";
+import { TaskStep, TaskStepOutput } from "../types.js";
 import { ReActChatFormatter } from "./formatter.js";
 import { ReActOutputParser } from "./outputParser.js";
+import type { BaseReasoningStep } from "./types.js";
 import {
   ActionReasoningStep,
-  BaseReasoningStep,
   ObservationReasoningStep,
   ResponseReasoningStep,
 } from "./types.js";

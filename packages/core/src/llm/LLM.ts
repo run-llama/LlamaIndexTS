@@ -1,5 +1,6 @@
-import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
-import {
+import type OpenAILLM from "openai";
+import type { ClientOptions as OpenAIClientOptions } from "openai";
+import type {
   AnthropicStreamToken,
   CallbackManager,
   Event,
@@ -8,27 +9,29 @@ import {
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager.js";
 
-import { ChatCompletionMessageParam } from "openai/resources/index.js";
-import { LLMOptions } from "portkey-ai";
+import type { ChatCompletionMessageParam } from "openai/resources/index.js";
+import type { LLMOptions } from "portkey-ai";
 import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
+import type { AnthropicSession } from "./anthropic.js";
 import {
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
-  AnthropicSession,
   getAnthropicSession,
 } from "./anthropic.js";
+import type { AzureOpenAIConfig } from "./azure.js";
 import {
-  AzureOpenAIConfig,
   getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
 } from "./azure.js";
 import { BaseLLM } from "./base.js";
-import { OpenAISession, getOpenAISession } from "./open_ai.js";
-import { PortkeySession, getPortkeySession } from "./portkey.js";
+import type { OpenAISession } from "./open_ai.js";
+import { getOpenAISession } from "./open_ai.js";
+import type { PortkeySession } from "./portkey.js";
+import { getPortkeySession } from "./portkey.js";
 import { ReplicateSession } from "./replicate_ai.js";
-import {
+import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
@@ -313,7 +316,7 @@ export class OpenAI extends BaseLLM {
 
     // TODO: add callback to streamConverter and use streamConverter here
     //Indices
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of chunk_stream) {
       if (!part.choices.length) continue;
 
@@ -732,7 +735,7 @@ export class Anthropic extends BaseLLM {
         stream: true,
       });
 
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of stream) {
       //TODO: LLM Stream Callback, pending re-work.
 
@@ -821,7 +824,7 @@ export class Portkey extends BaseLLM {
         };
 
     //Indices
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of chunkStream) {
       //Increment
       part.choices[0].index = idx_counter;

@@ -1,13 +1,11 @@
 import { Document } from "llamaindex/Node";
-import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "llamaindex/ServiceContext";
-import {
-  CallbackManager,
+import type { ServiceContext } from "llamaindex/ServiceContext";
+import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
+import type {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "llamaindex/callbacks/CallbackManager";
+import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import {
   KeywordExtractor,

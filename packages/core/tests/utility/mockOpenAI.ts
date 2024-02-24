@@ -1,8 +1,8 @@
 import { globalsHelper } from "llamaindex/GlobalsHelper";
-import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
-import { OpenAIEmbedding } from "llamaindex/embeddings/index";
-import { OpenAI } from "llamaindex/llm/LLM";
-import { LLMChatParamsBase } from "llamaindex/llm/types";
+import type { CallbackManager } from "llamaindex/callbacks/CallbackManager";
+import type { OpenAIEmbedding } from "llamaindex/embeddings/index";
+import type { OpenAI } from "llamaindex/llm/LLM";
+import type { LLMChatParamsBase } from "llamaindex/llm/types";
 import { vi } from "vitest";
 
 export const DEFAULT_LLM_TEXT_OUTPUT = "MOCK_TOKEN_1-MOCK_TOKEN_2";

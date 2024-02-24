@@ -1,4 +1,4 @@
-import { ImageType } from "../Node.js";
+import type { ImageType } from "../Node.js";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 import { readImage } from "./utils.js";
 

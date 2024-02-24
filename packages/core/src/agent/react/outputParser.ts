@@ -1,7 +1,7 @@
+import type { BaseReasoningStep } from "./types.js";
 import {
   ActionReasoningStep,
   BaseOutputParser,
-  BaseReasoningStep,
   ResponseReasoningStep,
 } from "./types.js";
 

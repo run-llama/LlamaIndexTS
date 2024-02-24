@@ -24,7 +24,7 @@ export enum MetadataMode {
   NONE = "NONE",
 }
 
-export type Metadata = Record<string, any>;
+export type Metadata = Record<string, unknown>;
 
 export interface RelatedNodeInfo<T extends Metadata = Metadata> {
   nodeId: string;
@@ -40,7 +40,10 @@ export type RelatedNodeType<T extends Metadata = Metadata> =
 /**
  * Generic abstract class for retrievable nodes
  */
-export abstract class BaseNode<T extends Metadata = Metadata> {
+export abstract class BaseNode<
+  Content = string,
+  T extends Metadata = Metadata,
+> {
   /**
    * The unique ID of the Node/Document. The trailing underscore is here
    * to avoid collisions with the id keyword in Python.
@@ -65,7 +68,8 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 
   abstract getContent(metadataMode: MetadataMode): string;
   abstract getMetadataStr(metadataMode: MetadataMode): string;
-  abstract setContent(value: any): void;
+  // todo: set value as a generic type
+  abstract setContent(value: unknown): void;
 
   get sourceNode(): RelatedNodeInfo<T> | undefined {
     const relationship = this.relationships[NodeRelationship.SOURCE];

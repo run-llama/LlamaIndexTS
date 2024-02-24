@@ -1,13 +1,13 @@
-import { BaseNode, Document } from "../Node.js";
-import { BaseRetriever } from "../Retriever.js";
-import { ServiceContext } from "../ServiceContext.js";
+import type { BaseNode, Document } from "../Node.js";
+import type { BaseRetriever } from "../Retriever.js";
+import type { ServiceContext } from "../ServiceContext.js";
 import { runTransformations } from "../ingestion/IngestionPipeline.js";
-import { StorageContext } from "../storage/StorageContext.js";
-import { BaseDocumentStore } from "../storage/docStore/types.js";
-import { BaseIndexStore } from "../storage/indexStore/types.js";
-import { VectorStore } from "../storage/vectorStore/types.js";
-import { BaseSynthesizer } from "../synthesizers/types.js";
-import { BaseQueryEngine } from "../types.js";
+import type { StorageContext } from "../storage/StorageContext.js";
+import type { BaseDocumentStore } from "../storage/docStore/types.js";
+import type { BaseIndexStore } from "../storage/indexStore/types.js";
+import type { VectorStore } from "../storage/vectorStore/types.js";
+import type { BaseSynthesizer } from "../synthesizers/types.js";
+import type { BaseQueryEngine } from "../types.js";
 import { IndexStruct } from "./IndexStruct.js";
 import { IndexStructType } from "./json-to-index-struct.js";
 

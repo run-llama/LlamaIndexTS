@@ -1,6 +1,6 @@
-import { BaseNode } from "../Node.js";
+import type { BaseNode } from "../Node.js";
 import { SentenceSplitter } from "../TextSplitter.js";
-import { NodeParser } from "./types.js";
+import type { NodeParser } from "./types.js";
 import { getNodesFromDocument } from "./utils.js";
 
 export const DEFAULT_WINDOW_SIZE = 3;

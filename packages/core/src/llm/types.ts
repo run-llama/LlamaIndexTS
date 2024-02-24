@@ -1,5 +1,5 @@
-import { Tokenizers } from "../GlobalsHelper.js";
-import { Event } from "../callbacks/CallbackManager.js";
+import type { Tokenizers } from "../GlobalsHelper.js";
+import type { Event } from "../callbacks/CallbackManager.js";
 
 /**
  * Unified language model interface
@@ -44,7 +44,7 @@ export type MessageType =
 
 export interface ChatMessage {
   // TODO: use MessageContent
-  content: any;
+  content: MessageContent;
   role: MessageType;
   additionalKwargs?: Record<string, any>;
 }

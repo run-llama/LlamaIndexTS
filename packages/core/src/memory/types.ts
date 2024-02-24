@@ -1,4 +1,4 @@
-import { ChatMessage } from "../llm/index.js";
+import type { ChatMessage } from "../llm/index.js";
 
 export interface BaseMemory {
   /*

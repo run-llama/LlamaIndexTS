@@ -1,6 +1,6 @@
-import { BaseDocumentStore } from "../../storage/docStore/types.js";
-import { VectorStore } from "../../storage/vectorStore/types.js";
-import { TransformComponent } from "../types.js";
+import type { BaseDocumentStore } from "../../storage/docStore/types.js";
+import type { VectorStore } from "../../storage/vectorStore/types.js";
+import type { TransformComponent } from "../types.js";
 import { DuplicatesStrategy } from "./DuplicatesStrategy.js";
 import { UpsertsStrategy } from "./UpsertsStrategy.js";
 

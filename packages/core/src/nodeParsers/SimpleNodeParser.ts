@@ -1,7 +1,7 @@
-import { BaseNode } from "../Node.js";
+import type { BaseNode } from "../Node.js";
 import { SentenceSplitter } from "../TextSplitter.js";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants.js";
-import { NodeParser } from "./types.js";
+import type { NodeParser } from "./types.js";
 import { getNodesFromDocument } from "./utils.js";
 
 /**

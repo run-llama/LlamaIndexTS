@@ -1,5 +1,5 @@
 import { globalsHelper } from "./GlobalsHelper.js";
-import { SimplePrompt } from "./Prompt.js";
+import type { SimplePrompt } from "./Prompt.js";
 import { SentenceSplitter } from "./TextSplitter.js";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,

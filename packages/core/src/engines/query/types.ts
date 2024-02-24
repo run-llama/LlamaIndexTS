@@ -1,4 +1,4 @@
-import { ToolMetadata } from "../../types.js";
+import type { ToolMetadata } from "../../types.js";
 
 /**
  * QuestionGenerators generate new questions for the LLM using tools and a user query.

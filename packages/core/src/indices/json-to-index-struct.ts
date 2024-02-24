@@ -1,4 +1,5 @@
-import { BaseNode, jsonToNode } from "../Node.js";
+import type { BaseNode } from "../Node.js";
+import { jsonToNode } from "../Node.js";
 import { IndexStruct } from "./IndexStruct.js";
 
 export enum IndexStructType {

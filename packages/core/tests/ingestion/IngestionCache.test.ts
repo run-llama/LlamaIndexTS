@@ -1,9 +1,10 @@
-import { BaseNode, TextNode } from "llamaindex/Node";
+import type { BaseNode } from "llamaindex/Node";
+import { TextNode } from "llamaindex/Node";
 import {
   IngestionCache,
   getTransformationHash,
 } from "llamaindex/ingestion/IngestionCache";
-import { TransformComponent } from "llamaindex/ingestion/index";
+import type { TransformComponent } from "llamaindex/ingestion/index";
 import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
 import { beforeAll, describe, expect, test } from "vitest";
 

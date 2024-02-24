@@ -1,11 +1,11 @@
-import {
+import type {
   CallbackManager,
   Event,
   EventType,
   StreamCallbackResponse,
 } from "../callbacks/CallbackManager.js";
 import { BaseLLM } from "./base.js";
-import {
+import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
@@ -141,7 +141,7 @@ export class MistralAI extends BaseLLM {
         };
 
     //Indices
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of chunkStream) {
       if (!part.choices.length) continue;
 

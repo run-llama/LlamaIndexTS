@@ -1,8 +1,10 @@
 import _, * as lodash from "lodash";
-import { BaseNode, ObjectType } from "../../Node.js";
+import type { BaseNode } from "../../Node.js";
+import { ObjectType } from "../../Node.js";
 import { DEFAULT_NAMESPACE } from "../constants.js";
-import { BaseKVStore } from "../kvStore/types.js";
-import { BaseDocumentStore, RefDocInfo } from "./types.js";
+import type { BaseKVStore } from "../kvStore/types.js";
+import type { RefDocInfo } from "./types.js";
+import { BaseDocumentStore } from "./types.js";
 import { docToJson, jsonToDoc } from "./utils.js";
 
 type DocMetaData = { docHash: string; refDocId?: string };
@@ -34,7 +36,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     docs: BaseNode[],
     allowUpdate: boolean = true,
   ): Promise<void> {
-    for (var idx = 0; idx < docs.length; idx++) {
+    for (let idx = 0; idx < docs.length; idx++) {
       const doc = docs[idx];
       if (doc.id_ === null) {
         throw new Error("doc_id not set");

@@ -1,12 +1,13 @@
-import { ClientOptions as OpenAIClientOptions } from "openai";
+import type { ClientOptions as OpenAIClientOptions } from "openai";
+import type { AzureOpenAIConfig } from "../llm/azure.js";
 import {
-  AzureOpenAIConfig,
   getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
 } from "../llm/azure.js";
-import { OpenAISession, getOpenAISession } from "../llm/open_ai.js";
+import type { OpenAISession } from "../llm/open_ai.js";
+import { getOpenAISession } from "../llm/open_ai.js";
 import { BaseEmbedding } from "./types.js";
 
 export const ALL_OPENAI_EMBEDDING_MODELS = {

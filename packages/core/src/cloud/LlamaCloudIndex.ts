@@ -1,10 +1,11 @@
-import { BaseRetriever } from "../Retriever.js";
+import type { BaseRetriever } from "../Retriever.js";
 import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
-import { BaseNodePostprocessor } from "../postprocessors/types.js";
-import { BaseSynthesizer } from "../synthesizers/types.js";
-import { BaseQueryEngine } from "../types.js";
-import { LlamaCloudRetriever, RetrieveParams } from "./LlamaCloudRetriever.js";
-import { CloudConstructorParams } from "./types.js";
+import type { BaseNodePostprocessor } from "../postprocessors/types.js";
+import type { BaseSynthesizer } from "../synthesizers/types.js";
+import type { BaseQueryEngine } from "../types.js";
+import type { RetrieveParams } from "./LlamaCloudRetriever.js";
+import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
+import type { CloudConstructorParams } from "./types.js";
 
 export class LlamaCloudIndex {
   params: CloudConstructorParams;

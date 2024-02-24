@@ -1,8 +1,8 @@
 import { defaultFS } from "@llamaindex/env";
-import { GenericFileSystem } from "@llamaindex/env/type";
+import type { GenericFileSystem } from "@llamaindex/env/type";
 import mammoth from "mammoth";
 import { Document } from "../Node.js";
-import { FileReader } from "./type.js";
+import type { FileReader } from "./type.js";
 
 export class DocxReader implements FileReader {
   /** DocxParser */

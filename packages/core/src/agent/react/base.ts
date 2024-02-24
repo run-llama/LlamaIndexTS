@@ -1,7 +1,7 @@
-import { CallbackManager } from "../../callbacks/CallbackManager.js";
-import { ChatMessage, LLM } from "../../llm/index.js";
-import { ObjectRetriever } from "../../objects/base.js";
-import { BaseTool } from "../../types.js";
+import type { CallbackManager } from "../../callbacks/CallbackManager.js";
+import type { ChatMessage, LLM } from "../../llm/index.js";
+import type { ObjectRetriever } from "../../objects/base.js";
+import type { BaseTool } from "../../types.js";
 import { AgentRunner } from "../runner/base.js";
 import { ReActAgentWorker } from "./worker.js";
 

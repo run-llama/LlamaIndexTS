@@ -1,4 +1,4 @@
-import { BaseQueryEngine, BaseTool, ToolMetadata } from "../types.js";
+import type { BaseQueryEngine, BaseTool, ToolMetadata } from "../types.js";
 
 export type QueryEngineToolParams = {
   queryEngine: BaseQueryEngine;

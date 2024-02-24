@@ -1,7 +1,8 @@
 import { defaultFS } from "@llamaindex/env";
-import { GenericFileSystem } from "@llamaindex/env/type";
-import { Document, ImageDocument } from "../Node.js";
-import { FileReader } from "./type.js";
+import type { GenericFileSystem } from "@llamaindex/env/type";
+import type { Document } from "../Node.js";
+import { ImageDocument } from "../Node.js";
+import type { FileReader } from "./type.js";
 
 /**
  * Reads the content of an image file into a Document object (which stores the image file as a Blob).
