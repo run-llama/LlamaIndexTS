@@ -47,7 +47,7 @@ export class SimpleChatHistory extends ChatHistory {
   }
 
   async requestMessages(transientMessages?: ChatMessage[]) {
-    return Promise.resolve([...(transientMessages ?? []), ...this.messages]);
+    return [...(transientMessages ?? []), ...this.messages];
   }
 
   reset() {
