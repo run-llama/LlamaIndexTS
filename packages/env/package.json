@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/env",
   "description": "environment wrapper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",

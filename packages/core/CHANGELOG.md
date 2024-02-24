@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.1.14
+
+### Patch Changes
+
+- 7416a87: build: cjs file not found
+- Updated dependencies [7416a87]
+  - @llamaindex/env@0.0.2
+
 ## 0.1.13
 
 ### Patch Changes
