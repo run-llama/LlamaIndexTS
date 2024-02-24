@@ -44,7 +44,7 @@ export type MessageType =
 
 export interface ChatMessage {
   // TODO: use MessageContent
-  content: MessageContent;
+  content: any;
   role: MessageType;
   additionalKwargs?: Record<string, any>;
 }
