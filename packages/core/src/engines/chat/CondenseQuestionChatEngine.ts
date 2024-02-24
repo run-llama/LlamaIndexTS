@@ -1,19 +1,18 @@
-import { ChatHistory, getHistory } from "../../ChatHistory.js";
+import type { ChatHistory } from "../../ChatHistory.js";
+import { getHistory } from "../../ChatHistory.js";
+import type { CondenseQuestionPrompt } from "../../Prompt.js";
 import {
-  CondenseQuestionPrompt,
   defaultCondenseQuestionPrompt,
   messagesToHistoryStr,
 } from "../../Prompt.js";
-import { Response } from "../../Response.js";
-import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "../../ServiceContext.js";
-import { ChatMessage, LLM } from "../../llm/index.js";
+import type { Response } from "../../Response.js";
+import type { ServiceContext } from "../../ServiceContext.js";
+import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import type { ChatMessage, LLM } from "../../llm/index.js";
 import { extractText, streamReducer } from "../../llm/utils.js";
 import { PromptMixin } from "../../prompts/index.js";
-import { BaseQueryEngine } from "../../types.js";
-import {
+import type { BaseQueryEngine } from "../../types.js";
+import type {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,

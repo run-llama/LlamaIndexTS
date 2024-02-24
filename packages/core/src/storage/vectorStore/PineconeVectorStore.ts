@@ -1,4 +1,4 @@
-import {
+import type {
   ExactMatchFilter,
   MetadataFilters,
   VectorStore,
@@ -6,14 +6,14 @@ import {
   VectorStoreQueryResult,
 } from "./types.js";
 
-import { GenericFileSystem } from "@llamaindex/env/type";
-import {
+import type { GenericFileSystem } from "@llamaindex/env/type";
+import type {
   FetchResponse,
   Index,
-  Pinecone,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
-import { BaseNode, Metadata } from "../../Node.js";
+import { Pinecone } from "@pinecone-database/pinecone";
+import type { BaseNode, Metadata } from "../../Node.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {

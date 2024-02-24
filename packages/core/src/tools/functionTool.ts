@@ -1,4 +1,4 @@
-import { BaseTool, ToolMetadata } from "../types.js";
+import type { BaseTool, ToolMetadata } from "../types.js";
 
 type Metadata = {
   name: string;

@@ -1,9 +1,9 @@
+import type { ServiceContext } from "llamaindex";
 import {
   FunctionTool,
   ObjectIndex,
   OpenAI,
   OpenAIEmbedding,
-  ServiceContext,
   SimpleToolNodeMapping,
   VectorStoreIndex,
   serviceContextFromDefaults,

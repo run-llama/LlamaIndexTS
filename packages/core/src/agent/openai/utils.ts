@@ -1,4 +1,4 @@
-import { ToolMetadata } from "../../types.js";
+import type { ToolMetadata } from "../../types.js";
 
 export type OpenAIFunction = {
   type: "function";

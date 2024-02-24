@@ -1,5 +1,6 @@
-import { BaseNode, Metadata, MetadataMode, TextNode } from "../Node.js";
-import { NodeParser } from "./types.js";
+import type { BaseNode, Metadata } from "../Node.js";
+import { MetadataMode, TextNode } from "../Node.js";
+import type { NodeParser } from "./types.js";
 
 export class MarkdownNodeParser implements NodeParser {
   includeMetadata: boolean;

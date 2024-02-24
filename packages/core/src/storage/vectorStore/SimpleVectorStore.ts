@@ -1,7 +1,7 @@
 import { defaultFS, path } from "@llamaindex/env";
-import { GenericFileSystem } from "@llamaindex/env/type";
+import type { GenericFileSystem } from "@llamaindex/env/type";
 import _ from "lodash";
-import { BaseNode } from "../../Node.js";
+import type { BaseNode } from "../../Node.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
@@ -9,12 +9,12 @@ import {
 } from "../../embeddings/utils.js";
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
-import {
+import type {
   VectorStore,
   VectorStoreQuery,
-  VectorStoreQueryMode,
   VectorStoreQueryResult,
 } from "./types.js";
+import { VectorStoreQueryMode } from "./types.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,

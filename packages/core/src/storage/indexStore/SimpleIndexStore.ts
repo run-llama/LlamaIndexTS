@@ -1,11 +1,12 @@
 import { defaultFS, path } from "@llamaindex/env";
-import { GenericFileSystem } from "@llamaindex/env/type";
+import type { GenericFileSystem } from "@llamaindex/env/type";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,
 } from "../constants.js";
-import { DataType, SimpleKVStore } from "../kvStore/SimpleKVStore.js";
-import { BaseInMemoryKVStore } from "../kvStore/types.js";
+import type { DataType } from "../kvStore/SimpleKVStore.js";
+import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
+import type { BaseInMemoryKVStore } from "../kvStore/types.js";
 import { KVIndexStore } from "./KVIndexStore.js";
 
 export class SimpleIndexStore extends KVIndexStore {

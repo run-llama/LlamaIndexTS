@@ -1,5 +1,5 @@
-import { BaseNode } from "../Node.js";
-import { TransformComponent } from "../ingestion/types.js";
+import type { BaseNode } from "../Node.js";
+import type { TransformComponent } from "../ingestion/types.js";
 
 /**
  * A NodeParser generates Nodes from Documents

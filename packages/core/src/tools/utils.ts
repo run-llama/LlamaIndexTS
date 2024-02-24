@@ -1,4 +1,4 @@
-import { BaseTool } from "../types.js";
+import type { BaseTool } from "../types.js";
 import { ToolOutput } from "./types.js";
 
 /**

@@ -1,17 +1,13 @@
-import { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
+import type { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
 import { globalsHelper } from "../GlobalsHelper.js";
-import { NodeWithScore, ObjectType, jsonToNode } from "../Node.js";
-import { BaseRetriever } from "../Retriever.js";
-import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "../ServiceContext.js";
-import { Event } from "../callbacks/CallbackManager.js";
-import {
-  ClientParams,
-  CloudConstructorParams,
-  DEFAULT_PROJECT_NAME,
-} from "./types.js";
+import type { NodeWithScore } from "../Node.js";
+import { ObjectType, jsonToNode } from "../Node.js";
+import type { BaseRetriever } from "../Retriever.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { serviceContextFromDefaults } from "../ServiceContext.js";
+import type { Event } from "../callbacks/CallbackManager.js";
+import type { ClientParams, CloudConstructorParams } from "./types.js";
+import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
 
 export type RetrieveParams = Omit<

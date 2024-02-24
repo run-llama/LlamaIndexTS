@@ -11,5 +11,5 @@ module.exports = {
     "max-params": ["error", 4],
     "prefer-const": "error",
   },
-  ignorePatterns: ["dist/"],
+  ignorePatterns: ["dist/", "lib/"],
 };

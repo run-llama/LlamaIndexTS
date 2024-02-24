@@ -1,7 +1,7 @@
-import { ChatMessage } from "../llm/index.js";
+import type { ChatMessage } from "../llm/index.js";
 import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore.js";
-import { BaseChatStore } from "../storage/chatStore/types.js";
-import { BaseMemory } from "./types.js";
+import type { BaseChatStore } from "../storage/chatStore/types.js";
+import type { BaseMemory } from "./types.js";
 
 type ChatMemoryBufferParams = {
   tokenLimit?: number;

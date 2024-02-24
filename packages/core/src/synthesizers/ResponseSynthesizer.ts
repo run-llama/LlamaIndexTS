@@ -1,13 +1,12 @@
 import { MetadataMode } from "../Node.js";
 import { Response } from "../Response.js";
-import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "../ServiceContext.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
-import { ResponseBuilderPrompts, getResponseBuilder } from "./builders.js";
-import {
+import type { ResponseBuilderPrompts } from "./builders.js";
+import { getResponseBuilder } from "./builders.js";
+import type {
   BaseSynthesizer,
   ResponseBuilder,
   SynthesizeParamsNonStreaming,

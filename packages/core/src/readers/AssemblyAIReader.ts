@@ -1,13 +1,13 @@
-import {
-  AssemblyAI,
+import type {
   BaseServiceParams,
   SubtitleFormat,
   TranscribeParams,
   TranscriptParagraph,
   TranscriptSentence,
 } from "assemblyai";
+import { AssemblyAI } from "assemblyai";
 import { Document } from "../Node.js";
-import { BaseReader } from "./type.js";
+import type { BaseReader } from "./type.js";
 
 type AssemblyAIOptions = Partial<BaseServiceParams>;
 

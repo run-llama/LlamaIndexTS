@@ -1,6 +1,6 @@
 import _ from "lodash";
+import type { BaseNode } from "../Node.js";
 import {
-  BaseNode,
   Document,
   ImageDocument,
   NodeRelationship,

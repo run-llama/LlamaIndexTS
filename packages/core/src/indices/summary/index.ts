@@ -1,32 +1,34 @@
 import _ from "lodash";
 import { globalsHelper } from "../../GlobalsHelper.js";
-import { BaseNode, Document, NodeWithScore } from "../../Node.js";
-import { ChoiceSelectPrompt, defaultChoiceSelectPrompt } from "../../Prompt.js";
-import { BaseRetriever } from "../../Retriever.js";
-import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "../../ServiceContext.js";
-import { Event } from "../../callbacks/CallbackManager.js";
+import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
+import type { ChoiceSelectPrompt } from "../../Prompt.js";
+import { defaultChoiceSelectPrompt } from "../../Prompt.js";
+import type { BaseRetriever } from "../../Retriever.js";
+import type { ServiceContext } from "../../ServiceContext.js";
+import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import type { Event } from "../../callbacks/CallbackManager.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
-import { BaseNodePostprocessor } from "../../postprocessors/index.js";
-import {
+import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
+import type {
   BaseDocumentStore,
   RefDocInfo,
   StorageContext,
-  storageContextFromDefaults,
 } from "../../storage/index.js";
+import { storageContextFromDefaults } from "../../storage/index.js";
+import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import {
-  BaseSynthesizer,
   CompactAndRefine,
   ResponseSynthesizer,
 } from "../../synthesizers/index.js";
-import { BaseQueryEngine } from "../../types.js";
-import { BaseIndex, BaseIndexInit } from "../BaseIndex.js";
+import type { BaseQueryEngine } from "../../types.js";
+import type { BaseIndexInit } from "../BaseIndex.js";
+import { BaseIndex } from "../BaseIndex.js";
 import { IndexList, IndexStructType } from "../json-to-index-struct.js";
-import {
+import type {
   ChoiceSelectParserFunction,
   NodeFormatterFunction,
+} from "./utils.js";
+import {
   defaultFormatNodeBatchFn,
   defaultParseChoiceSelectAnswerFn,
 } from "./utils.js";

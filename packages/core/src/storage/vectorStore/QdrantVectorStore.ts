@@ -1,5 +1,5 @@
-import { BaseNode } from "../../Node.js";
-import {
+import type { BaseNode } from "../../Node.js";
+import type {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,

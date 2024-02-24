@@ -1,5 +1,5 @@
-import { SubQuestion } from "./engines/query/types.js";
-import { BaseOutputParser, StructuredOutput } from "./types.js";
+import type { SubQuestion } from "./engines/query/types.js";
+import type { BaseOutputParser, StructuredOutput } from "./types.js";
 
 /**
  * Error class for output parsing. Due to the nature of LLMs, anytime we use LLM
@@ -44,8 +44,8 @@ export function parseJsonMarkdown(text: string) {
   const left_square = text.indexOf("[");
   const left_brace = text.indexOf("{");
 
-  var left: number;
-  var right: number;
+  let left: number;
+  let right: number;
   if (left_square < left_brace && left_square != -1) {
     left = left_square;
     right = text.lastIndexOf("]");

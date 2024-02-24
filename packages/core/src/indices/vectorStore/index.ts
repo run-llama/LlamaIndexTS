@@ -1,42 +1,45 @@
 import { globalsHelper } from "../../GlobalsHelper.js";
-import {
+import type {
   BaseNode,
   Document,
-  ImageNode,
   Metadata,
-  MetadataMode,
   NodeWithScore,
+} from "../../Node.js";
+import {
+  ImageNode,
+  MetadataMode,
   ObjectType,
   splitNodesByType,
 } from "../../Node.js";
-import { BaseRetriever } from "../../Retriever.js";
-import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "../../ServiceContext.js";
-import { Event } from "../../callbacks/CallbackManager.js";
+import type { BaseRetriever } from "../../Retriever.js";
+import type { ServiceContext } from "../../ServiceContext.js";
+import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import type { Event } from "../../callbacks/CallbackManager.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
-import {
+import type {
   BaseEmbedding,
-  ClipEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings/index.js";
+import { ClipEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import { runTransformations } from "../../ingestion/index.js";
-import { BaseNodePostprocessor } from "../../postprocessors/types.js";
-import {
+import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
+import type {
   BaseIndexStore,
   MetadataFilters,
   StorageContext,
   VectorStore,
   VectorStoreQuery,
-  VectorStoreQueryMode,
   VectorStoreQueryResult,
+} from "../../storage/index.js";
+import {
+  VectorStoreQueryMode,
   storageContextFromDefaults,
 } from "../../storage/index.js";
-import { BaseSynthesizer } from "../../synthesizers/types.js";
-import { BaseQueryEngine } from "../../types.js";
-import { BaseIndex, BaseIndexInit } from "../BaseIndex.js";
+import type { BaseSynthesizer } from "../../synthesizers/types.js";
+import type { BaseQueryEngine } from "../../types.js";
+import type { BaseIndexInit } from "../BaseIndex.js";
+import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
 
 interface IndexStructOptions {
@@ -189,15 +192,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   ) {
     // Check if the index already has nodes with the same hash
     const newNodes = nodes.filter((node) =>
-      Object.entries(this.indexStruct!.nodesDict).reduce(
-        (acc, [key, value]) => {
-          if (value.hash === node.hash) {
-            acc = false;
-          }
-          return acc;
-        },
-        true,
-      ),
+      Object.entries(this.indexStruct.nodesDict).reduce((acc, [key, value]) => {
+        if (value.hash === node.hash) {
+          acc = false;
+        }
+        return acc;
+      }, true),
     );
 
     await this.insertNodes(newNodes, options);

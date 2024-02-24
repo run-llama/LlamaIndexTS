@@ -1,25 +1,24 @@
-import { BaseNode, Document, MetadataMode, NodeWithScore } from "../../Node.js";
-import {
+import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
+import { MetadataMode } from "../../Node.js";
+import type {
   KeywordExtractPrompt,
   QueryKeywordExtractPrompt,
+} from "../../Prompt.js";
+import {
   defaultKeywordExtractPrompt,
   defaultQueryKeywordExtractPrompt,
 } from "../../Prompt.js";
-import { BaseRetriever } from "../../Retriever.js";
-import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "../../ServiceContext.js";
+import type { BaseRetriever } from "../../Retriever.js";
+import type { ServiceContext } from "../../ServiceContext.js";
+import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
-import { BaseNodePostprocessor } from "../../postprocessors/index.js";
-import {
-  BaseDocumentStore,
-  StorageContext,
-  storageContextFromDefaults,
-} from "../../storage/index.js";
-import { BaseSynthesizer } from "../../synthesizers/index.js";
-import { BaseQueryEngine } from "../../types.js";
-import { BaseIndex, BaseIndexInit, KeywordTable } from "../BaseIndex.js";
+import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
+import type { BaseDocumentStore, StorageContext } from "../../storage/index.js";
+import { storageContextFromDefaults } from "../../storage/index.js";
+import type { BaseSynthesizer } from "../../synthesizers/index.js";
+import type { BaseQueryEngine } from "../../types.js";
+import type { BaseIndexInit } from "../BaseIndex.js";
+import { BaseIndex, KeywordTable } from "../BaseIndex.js";
 import { IndexStructType } from "../json-to-index-struct.js";
 import {
   extractKeywordsGivenResponse,

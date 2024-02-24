@@ -1,6 +1,6 @@
 import { defaultFS } from "@llamaindex/env";
 import _ from "lodash";
-import { ImageType } from "../Node.js";
+import type { ImageType } from "../Node.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants.js";
 import { VectorStoreQueryMode } from "../storage/vectorStore/types.js";
 
@@ -171,13 +171,13 @@ export function getTopKMMREmbeddings(
 
   while (results.length < Math.min(similarityTopKCount, embeddingLength)) {
     results.push([score, highScoreId]);
-    embedMap.delete(highScoreId!);
+    embedMap.delete(highScoreId);
     const recentEmbeddingId = highScoreId;
     score = Number.NEGATIVE_INFINITY;
     for (const embedId of Array.from(embedMap.keys())) {
       const overlapWithRecent = similarityFn(
         embeddings[embedMap.get(embedId)!],
-        embeddings[fullEmbedMap.get(recentEmbeddingId!)!],
+        embeddings[fullEmbedMap.get(recentEmbeddingId)!],
       );
       if (
         threshold * embedSimilarity.get(embedId)! -

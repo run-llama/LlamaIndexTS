@@ -1,5 +1,7 @@
-import { BaseNode, MetadataMode, TextNode } from "../Node.js";
-import { LLM, OpenAI } from "../llm/index.js";
+import type { BaseNode } from "../Node.js";
+import { MetadataMode, TextNode } from "../Node.js";
+import type { LLM } from "../llm/index.js";
+import { OpenAI } from "../llm/index.js";
 import {
   defaultKeywordExtractorPromptTemplate,
   defaultQuestionAnswerPromptTemplate,

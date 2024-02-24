@@ -1,8 +1,8 @@
-import {
+import type {
   AgentChatResponse,
   ChatEngineAgentParams,
 } from "../engines/chat/index.js";
-import { QueryEngineParamsNonStreaming } from "../types.js";
+import type { QueryEngineParamsNonStreaming } from "../types.js";
 
 export interface AgentWorker {
   initializeStep(task: Task, kwargs?: any): TaskStep;

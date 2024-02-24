@@ -1,6 +1,6 @@
-import { BaseNode } from "../../Node.js";
-import { BaseDocumentStore } from "../../storage/docStore/types.js";
-import { TransformComponent } from "../types.js";
+import type { BaseNode } from "../../Node.js";
+import type { BaseDocumentStore } from "../../storage/docStore/types.js";
+import type { TransformComponent } from "../types.js";
 
 /**
  * Handle doc store duplicates by checking all hashes.

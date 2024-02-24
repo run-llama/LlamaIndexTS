@@ -1,5 +1,5 @@
 import { PromptMixin } from "../prompts/Mixin.js";
-import { QueryBundle, ToolMetadataOnlyDescription } from "../types.js";
+import type { QueryBundle, ToolMetadataOnlyDescription } from "../types.js";
 
 export interface SingleSelection {
   index: number;

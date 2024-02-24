@@ -1,25 +1,26 @@
 // Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
 
 import { randomUUID } from "@llamaindex/env";
-import { CallbackManager } from "../../callbacks/CallbackManager.js";
+import type { CallbackManager } from "../../callbacks/CallbackManager.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
 } from "../../engines/chat/types.js";
-import {
+import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
-  OpenAI,
 } from "../../llm/index.js";
+import { OpenAI } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
-import { ObjectRetriever } from "../../objects/base.js";
-import { ToolOutput } from "../../tools/types.js";
+import type { ObjectRetriever } from "../../objects/base.js";
+import type { ToolOutput } from "../../tools/types.js";
 import { callToolWithErrorHandling } from "../../tools/utils.js";
-import { BaseTool } from "../../types.js";
-import { AgentWorker, Task, TaskStep, TaskStepOutput } from "../types.js";
+import type { BaseTool } from "../../types.js";
+import type { AgentWorker, Task } from "../types.js";
+import { TaskStep, TaskStepOutput } from "../types.js";
 import { addUserStepToMemory, getFunctionByName } from "../utils.js";
-import { OpenAIToolCall } from "./types/chat.js";
+import type { OpenAIToolCall } from "./types/chat.js";
 import { toOpenAiTool } from "./utils.js";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;

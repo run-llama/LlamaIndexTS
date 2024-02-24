@@ -1,4 +1,4 @@
-import { MessageContent, MessageContentDetail } from "./types.js";
+import type { MessageContent } from "./types.js";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
@@ -35,7 +35,7 @@ export function extractText(message: MessageContent): string {
   if (Array.isArray(message)) {
     // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
     // so we can pass them to the context generator
-    return (message as MessageContentDetail[])
+    return message
       .filter((c) => c.type === "text")
       .map((c) => c.text)
       .join("\n\n");

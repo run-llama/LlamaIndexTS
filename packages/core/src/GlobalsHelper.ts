@@ -1,7 +1,11 @@
 import { encodingForModel } from "js-tiktoken";
 
 import { randomUUID } from "@llamaindex/env";
-import { Event, EventTag, EventType } from "./callbacks/CallbackManager.js";
+import type {
+  Event,
+  EventTag,
+  EventType,
+} from "./callbacks/CallbackManager.js";
 
 export enum Tokenizers {
   CL100K_BASE = "cl100k_base",
@@ -32,7 +36,7 @@ class GlobalsHelper {
     };
   }
 
-  tokenizer(encoding?: string) {
+  tokenizer(encoding?: Tokenizers) {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
@@ -43,7 +47,7 @@ class GlobalsHelper {
     return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
   }
 
-  tokenizerDecoder(encoding?: string) {
+  tokenizerDecoder(encoding?: Tokenizers) {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }

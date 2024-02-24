@@ -65,7 +65,8 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 
   abstract getContent(metadataMode: MetadataMode): string;
   abstract getMetadataStr(metadataMode: MetadataMode): string;
-  abstract setContent(value: any): void;
+  // todo: set value as a generic type
+  abstract setContent(value: unknown): void;
 
   get sourceNode(): RelatedNodeInfo<T> | undefined {
     const relationship = this.relationships[NodeRelationship.SOURCE];

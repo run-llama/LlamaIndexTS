@@ -1,16 +1,14 @@
 import { randomUUID } from "@llamaindex/env";
-import { NodeWithScore } from "../../Node.js";
-import { Response } from "../../Response.js";
-import { BaseRetriever } from "../../Retriever.js";
-import { ServiceContext } from "../../ServiceContext.js";
-import { Event } from "../../callbacks/CallbackManager.js";
-import { BaseNodePostprocessor } from "../../postprocessors/index.js";
+import type { NodeWithScore } from "../../Node.js";
+import type { Response } from "../../Response.js";
+import type { BaseRetriever } from "../../Retriever.js";
+import type { ServiceContext } from "../../ServiceContext.js";
+import type { Event } from "../../callbacks/CallbackManager.js";
+import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
-import {
-  BaseSynthesizer,
-  ResponseSynthesizer,
-} from "../../synthesizers/index.js";
-import {
+import type { BaseSynthesizer } from "../../synthesizers/index.js";
+import { ResponseSynthesizer } from "../../synthesizers/index.js";
+import type {
   BaseQueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,

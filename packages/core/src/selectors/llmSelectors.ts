@@ -1,15 +1,16 @@
-import { LLM } from "../llm/index.js";
-import { Answer, SelectionOutputParser } from "../outputParsers/selectors.js";
-import {
+import type { LLM } from "../llm/index.js";
+import type { Answer } from "../outputParsers/selectors.js";
+import { SelectionOutputParser } from "../outputParsers/selectors.js";
+import type {
   BaseOutputParser,
   QueryBundle,
   StructuredOutput,
   ToolMetadataOnlyDescription,
 } from "../types.js";
-import { BaseSelector, SelectorResult } from "./base.js";
+import type { SelectorResult } from "./base.js";
+import { BaseSelector } from "./base.js";
+import type { MultiSelectPrompt, SingleSelectPrompt } from "./prompts.js";
 import {
-  MultiSelectPrompt,
-  SingleSelectPrompt,
   defaultMultiSelectPrompt,
   defaultSingleSelectPrompt,
 } from "./prompts.js";

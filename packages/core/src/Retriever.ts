@@ -1,6 +1,6 @@
-import { Event } from "./callbacks/CallbackManager.js";
-import { NodeWithScore } from "./Node.js";
-import { ServiceContext } from "./ServiceContext.js";
+import type { Event } from "./callbacks/CallbackManager.js";
+import type { NodeWithScore } from "./Node.js";
+import type { ServiceContext } from "./ServiceContext.js";
 
 /**
  * Retrievers retrieve the nodes that most closely match our query in similarity.

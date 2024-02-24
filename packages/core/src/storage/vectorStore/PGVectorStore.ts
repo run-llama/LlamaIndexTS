@@ -1,14 +1,15 @@
 import pg from "pg";
 import pgvector from "pgvector/pg";
 
-import {
+import type {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
 
-import { GenericFileSystem } from "@llamaindex/env/type";
-import { BaseNode, Document, Metadata, MetadataMode } from "../../Node.js";
+import type { GenericFileSystem } from "@llamaindex/env/type";
+import type { BaseNode, Metadata } from "../../Node.js";
+import { Document, MetadataMode } from "../../Node.js";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
@@ -147,7 +148,7 @@ export class PGVectorStore implements VectorStore {
     const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
                          WHERE collection = $1`;
 
-    const db = (await this.getDb()) as pg.Client;
+    const db = await this.getDb();
     const ret = await db.query(sql, [this.collection]);
 
     return ret;
@@ -192,7 +193,7 @@ export class PGVectorStore implements VectorStore {
                            (id, external_id, collection, document, metadata, embeddings)
                          VALUES ($1, $2, $3, $4, $5, $6)`;
 
-    const db = (await this.getDb()) as pg.Client;
+    const db = await this.getDb();
     const data = this.getDataToInsert(embeddingResults);
 
     const ret: string[] = [];
@@ -227,7 +228,7 @@ export class PGVectorStore implements VectorStore {
     const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
                          WHERE id = $1 ${collectionCriteria}`;
 
-    const db = (await this.getDb()) as pg.Client;
+    const db = await this.getDb();
     const params = this.collection.length
       ? [refDocId, this.collection]
       : [refDocId];
@@ -276,7 +277,7 @@ export class PGVectorStore implements VectorStore {
       LIMIT ${max}
     `;
 
-    const db = (await this.getDb()) as pg.Client;
+    const db = await this.getDb();
     const results = await db.query(sql, params);
 
     const nodes = results.rows.map((row) => {
