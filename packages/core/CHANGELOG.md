@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.1.15
+
+### Patch Changes
+
+- 3a6e287: build: improve tree-shake & reduce unused package import
+
 ## 0.1.14
 
 ### Patch Changes
