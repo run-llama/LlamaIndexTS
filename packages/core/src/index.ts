@@ -16,6 +16,7 @@ export * from "./constants.js";
 export * from "./embeddings/index.js";
 export * from "./engines/chat/index.js";
 export * from "./engines/query/index.js";
+export * from "./evaluation/index.js";
 export * from "./extractors/index.js";
 export * from "./indices/index.js";
 export * from "./ingestion/index.js";

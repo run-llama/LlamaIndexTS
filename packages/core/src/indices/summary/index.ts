@@ -165,7 +165,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
-  }): BaseQueryEngine {
+  }): BaseQueryEngine & RetrieverQueryEngine {
     let { retriever, responseSynthesizer } = options ?? {};
 
     if (!retriever) {
