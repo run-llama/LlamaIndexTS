@@ -27,6 +27,6 @@ These evaluation modules are in the following forms:
 
 ## Usage
 
-- [Correctness Evaluator](correctness.md)
-- [Faithfulness Evaluator](faithfulness.md)
-- [Relevancy Evaluator](relevancy.md)
+- [Correctness Evaluator](./modules/correctness.md)
+- [Faithfulness Evaluator](./modules/faithfulness.md)
+- [Relevancy Evaluator](./modules/relevancy.md)

@@ -162,7 +162,7 @@ const config = {
     [
       "docusaurus-plugin-typedoc",
       {
-        entryPoints: ["../../packages/core/src/index.ts"],
+        entryPoints: ["../../packages/core/src/index.js"],
         tsconfig: "../../packages/core/tsconfig.json",
         readme: "none",
         sourceLinkTemplate:
