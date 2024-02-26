@@ -1,47 +1,8 @@
-# Groq
+import fs from "node:fs/promises";
 
-## Usage
-
-```ts
-import { Groq, serviceContextFromDefaults } from "llamaindex";
-
-const groq = new Groq({
-  apiKey: "<YOUR_API_KEY>",
-});
-
-const serviceContext = serviceContextFromDefaults({ llm: groq });
-```
-
-## Load and index documents
-
-For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
-
-```ts
-const document = new Document({ text: essay, id_: "essay" });
-
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
-```
-
-## Query
-
-```ts
-const queryEngine = index.asQueryEngine();
-
-const query = "What is the meaning of life?";
-
-const results = await queryEngine.query({
-  query,
-});
-```
-
-## Full Example
-
-```ts
 import {
-  Groq,
   Document,
+  Groq,
   VectorStoreIndex,
   serviceContextFromDefaults,
 } from "llamaindex";
@@ -55,6 +16,9 @@ async function main() {
   // Create a service context
   const serviceContext = serviceContextFromDefaults({ llm: groq });
 
+  // Load essay from abramov.txt in Node
+  const path = "node_modules/llamaindex/examples/abramov.txt";
+  const essay = await fs.readFile(path, "utf-8");
   const document = new Document({ text: essay, id_: "essay" });
 
   // Load and index documents
@@ -80,4 +44,5 @@ async function main() {
   // Log the response
   console.log(response.response);
 }
-```
+
+await main();
