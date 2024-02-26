@@ -75,7 +75,8 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     if (options.indexStruct) {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
-      indexStruct = indexStructs[0];
+      indexStruct =
+        indexStructs[0].type === IndexStructType.LIST ? indexStructs[0] : null;
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
         options.indexId,
