@@ -48,6 +48,9 @@ importers:
       '@docusaurus/remark-plugin-npm2yarn':
         specifier: ^3.1.1
         version: 3.1.1
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../packages/env
       '@mdx-js/react':
         specifier: ^3.0.0
         version: 3.0.0(@types/react@18.2.55)(react@18.2.0)
