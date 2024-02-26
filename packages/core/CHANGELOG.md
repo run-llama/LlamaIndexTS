@@ -1,5 +1,16 @@
 # llamaindex
 
+## 0.1.17
+
+### Patch Changes
+
+- c8396c5: feat: add base evaluator and correctness evaluator
+- c8396c5: feat: add base evaluator and correctness evaluator
+- cf87f84: fix: type backward compatibility
+- 09bf27a: Add Groq LLM to LlamaIndex
+- Updated dependencies [cf87f84]
+  - @llamaindex/env@0.0.4
+
 ## 0.1.16
 
 ### Patch Changes

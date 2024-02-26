@@ -1,5 +1,13 @@
 # docs
 
+## 0.0.3
+
+### Patch Changes
+
+- 09bf27a: Add Groq LLM to LlamaIndex
+- Updated dependencies [cf87f84]
+  - @llamaindex/env@0.0.4
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.0.4
+
+### Patch Changes
+
+- cf87f84: fix: type backward compatibility
+
 ## 0.0.3
 
 ### Patch Changes
