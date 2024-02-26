@@ -29,12 +29,14 @@ async function main() {
 
   const queryEngine = vectorIndex.asQueryEngine();
 
+  const query = "How did New York City get its name?";
+
   const response = await queryEngine.query({
-    query: "How did New York City get its name?",
+    query,
   });
 
   const result = await evaluator.evaluateResponse({
-    query: "How did New York City get its name?",
+    query,
     response: response,
   });
 
