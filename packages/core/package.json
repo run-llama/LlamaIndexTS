@@ -94,7 +94,7 @@
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
     "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
-    "build:type": "tsc -p tsconfig.json",
+    "build:type": "pnpm run -w type-check",
     "postbuild": "node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
     "circular-check": "madge -c ./src/index.ts",
     "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
