@@ -392,6 +392,9 @@ importers:
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
+      concurrently:
+        specifier: ^8.2.2
+        version: 8.2.2
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
