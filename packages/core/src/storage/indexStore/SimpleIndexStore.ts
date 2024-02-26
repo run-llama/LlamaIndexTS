@@ -1,12 +1,13 @@
-import { defaultFS, path } from "../../env";
-import { GenericFileSystem } from "../FileSystem";
+import { defaultFS, path } from "@llamaindex/env";
+import type { GenericFileSystem } from "@llamaindex/env/type";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,
-} from "../constants";
-import { DataType, SimpleKVStore } from "../kvStore/SimpleKVStore";
-import { BaseInMemoryKVStore } from "../kvStore/types";
-import { KVIndexStore } from "./KVIndexStore";
+} from "../constants.js";
+import type { DataType } from "../kvStore/SimpleKVStore.js";
+import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
+import type { BaseInMemoryKVStore } from "../kvStore/types.js";
+import { KVIndexStore } from "./KVIndexStore.js";
 
 export class SimpleIndexStore extends KVIndexStore {
   private kvStore: BaseInMemoryKVStore;
@@ -32,7 +33,7 @@ export class SimpleIndexStore extends KVIndexStore {
     persistPath: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleIndexStore> {
-    let simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
+    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
     return new SimpleIndexStore(simpleKVStore);
   }
 
@@ -44,7 +45,7 @@ export class SimpleIndexStore extends KVIndexStore {
   }
 
   static fromDict(saveDict: DataType): SimpleIndexStore {
-    let simpleKVStore = SimpleKVStore.fromDict(saveDict);
+    const simpleKVStore = SimpleKVStore.fromDict(saveDict);
     return new SimpleIndexStore(simpleKVStore);
   }
 

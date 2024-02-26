@@ -1,8 +1,12 @@
-import { BaseNode } from "../../Node";
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
+import type { BaseNode } from "../../Node.js";
+import type {
+  VectorStore,
+  VectorStoreQuery,
+  VectorStoreQueryResult,
+} from "./types.js";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PointStruct = {
   id: string;

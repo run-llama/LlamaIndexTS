@@ -1,15 +1,14 @@
-import { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
-import { globalsHelper } from "../GlobalsHelper";
-import { NodeWithScore, ObjectType, jsonToNode } from "../Node";
-import { BaseRetriever } from "../Retriever";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { Event } from "../callbacks/CallbackManager";
-import {
-  ClientParams,
-  CloudConstructorParams,
-  DEFAULT_PROJECT_NAME,
-} from "./types";
-import { getClient } from "./utils";
+import type { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
+import { globalsHelper } from "../GlobalsHelper.js";
+import type { NodeWithScore } from "../Node.js";
+import { ObjectType, jsonToNode } from "../Node.js";
+import type { BaseRetriever } from "../Retriever.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { serviceContextFromDefaults } from "../ServiceContext.js";
+import type { Event } from "../callbacks/CallbackManager.js";
+import type { ClientParams, CloudConstructorParams } from "./types.js";
+import { DEFAULT_PROJECT_NAME } from "./types.js";
+import { getClient } from "./utils.js";
 
 export type RetrieveParams = Omit<
   PlatformApi.RetrievalParams,
@@ -38,8 +37,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
   constructor(params: CloudConstructorParams & RetrieveParams) {
     this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
-    params.denseSimilarityTopK =
-      params.similarityTopK ?? params.denseSimilarityTopK;
+    if (params.similarityTopK) {
+      params.denseSimilarityTopK = params.similarityTopK;
+    }
     this.retrieveParams = params;
     this.pipelineName = params.name;
     if (params.projectName) {

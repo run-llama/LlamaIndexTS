@@ -125,6 +125,7 @@ module.exports = nextConfig;
 
 - OpenAI GPT-3.5-turbo and GPT-4
 - Anthropic Claude Instant and Claude 2
+- Groq LLMs
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
 - MistralAI Chat LLMs
 - Fireworks Chat LLMs

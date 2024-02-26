@@ -1,13 +1,14 @@
-import { Document } from "../Node";
-import { defaultFS, path } from "../env";
-import { CompleteFileSystem, walk } from "../storage/FileSystem";
-import { PapaCSVReader } from "./CSVReader";
-import { DocxReader } from "./DocxReader";
-import { HTMLReader } from "./HTMLReader";
-import { ImageReader } from "./ImageReader";
-import { MarkdownReader } from "./MarkdownReader";
-import { PDFReader } from "./PDFReader";
-import { BaseReader } from "./type";
+import { defaultFS, path } from "@llamaindex/env";
+import type { CompleteFileSystem } from "@llamaindex/env/type";
+import { Document } from "../Node.js";
+import { walk } from "../storage/FileSystem.js";
+import { PapaCSVReader } from "./CSVReader.js";
+import { DocxReader } from "./DocxReader.js";
+import { HTMLReader } from "./HTMLReader.js";
+import { ImageReader } from "./ImageReader.js";
+import { MarkdownReader } from "./MarkdownReader.js";
+import { PDFReader } from "./PDFReader.js";
+import type { BaseReader } from "./type.js";
 
 type ReaderCallback = (
   category: "file" | "directory",
@@ -88,7 +89,7 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
-    let docs: Document[] = [];
+    const docs: Document[] = [];
     for await (const filePath of walk(fs, directoryPath)) {
       try {
         const fileExt = path.extname(filePath).slice(1).toLowerCase();

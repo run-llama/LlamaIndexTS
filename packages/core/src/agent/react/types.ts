@@ -1,4 +1,4 @@
-import { ChatMessage } from "../../llm";
+import type { ChatMessage } from "../../llm/index.js";
 
 export interface BaseReasoningStep {
   getContent(): string;

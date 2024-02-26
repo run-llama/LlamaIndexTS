@@ -1,9 +1,13 @@
 import { AstraDB } from "@datastax/astra-db-ts";
-import { Collection } from "@datastax/astra-db-ts/dist/collections";
-import { CreateCollectionOptions } from "@datastax/astra-db-ts/dist/collections/options";
-import { BaseNode, MetadataMode } from "../../Node";
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+import type { Collection } from "@datastax/astra-db-ts/dist/collections";
+import type { BaseNode } from "../../Node.js";
+import { MetadataMode } from "../../Node.js";
+import type {
+  VectorStore,
+  VectorStoreQuery,
+  VectorStoreQueryResult,
+} from "./types.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 const MAX_INSERT_BATCH_SIZE = 20;
 
@@ -64,7 +68,7 @@ export class AstraDBVectorStore implements VectorStore {
    */
   async create(
     collection: string,
-    options: CreateCollectionOptions,
+    options?: Parameters<AstraDB["createCollection"]>[1],
   ): Promise<void> {
     await this.astraDBClient.createCollection(collection, options);
     console.debug("Created Astra DB collection");
@@ -128,7 +132,7 @@ export class AstraDBVectorStore implements VectorStore {
     console.debug(`Adding ${dataToInsert.length} rows to table`);
 
     // Perform inserts in steps of MAX_INSERT_BATCH_SIZE
-    let batchData: any[] = [];
+    const batchData: any[] = [];
 
     for (let i = 0; i < dataToInsert.length; i += MAX_INSERT_BATCH_SIZE) {
       batchData.push(dataToInsert.slice(i, i + MAX_INSERT_BATCH_SIZE));

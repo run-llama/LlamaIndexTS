@@ -33,7 +33,7 @@ export async function runApp(
 ): Promise<any> {
   let backendAppProcess: ChildProcess;
   let frontendAppProcess: ChildProcess | undefined;
-  let frontendPort = port || 3000;
+  const frontendPort = port || 3000;
   let backendPort = externalPort || 8000;
 
   // Callback to kill app processes

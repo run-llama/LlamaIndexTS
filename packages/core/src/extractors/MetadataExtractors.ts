@@ -1,13 +1,15 @@
-import { BaseNode, MetadataMode, TextNode } from "../Node";
-import { LLM, OpenAI } from "../llm";
+import type { BaseNode } from "../Node.js";
+import { MetadataMode, TextNode } from "../Node.js";
+import type { LLM } from "../llm/index.js";
+import { OpenAI } from "../llm/index.js";
 import {
   defaultKeywordExtractorPromptTemplate,
   defaultQuestionAnswerPromptTemplate,
   defaultSummaryExtractorPromptTemplate,
   defaultTitleCombinePromptTemplate,
   defaultTitleExtractorPromptTemplate,
-} from "./prompts";
-import { BaseExtractor } from "./types";
+} from "./prompts.js";
+import { BaseExtractor } from "./types.js";
 
 const STRIP_REGEX = /(\r\n|\n|\r)/gm;
 
@@ -172,7 +174,7 @@ export class TitleExtractor extends BaseExtractor {
 
     if (nodesToExtractTitle.length === 0) return [];
 
-    let titlesCandidates: string[] = [];
+    const titlesCandidates: string[] = [];
     let title: string = "";
 
     for (let i = 0; i < nodesToExtractTitle.length; i++) {
@@ -411,7 +413,7 @@ export class SummaryExtractor extends BaseExtractor {
       nodes.map((node) => this.generateNodeSummary(node)),
     );
 
-    let metadataList: any[] = nodes.map(() => ({}));
+    const metadataList: any[] = nodes.map(() => ({}));
 
     for (let i = 0; i < nodes.length; i++) {
       if (i > 0 && this._prevSummary && nodeSummaries[i - 1]) {

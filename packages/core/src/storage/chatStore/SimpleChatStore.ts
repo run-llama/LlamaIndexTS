@@ -1,5 +1,5 @@
-import { ChatMessage } from "../../llm";
-import { BaseChatStore } from "./types";
+import type { ChatMessage } from "../../llm/index.js";
+import type { BaseChatStore } from "./types.js";
 
 /**
  * Simple chat store.

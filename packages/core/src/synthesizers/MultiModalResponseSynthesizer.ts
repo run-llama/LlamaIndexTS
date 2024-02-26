@@ -1,15 +1,18 @@
-import { ImageNode, MetadataMode, splitNodesByType } from "../Node";
-import { Response } from "../Response";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { imageToDataUrl } from "../embeddings";
-import { MessageContentDetail } from "../llm/types";
-import { PromptMixin } from "../prompts";
-import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
-import {
+import type { ImageNode } from "../Node.js";
+import { MetadataMode, splitNodesByType } from "../Node.js";
+import { Response } from "../Response.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { serviceContextFromDefaults } from "../ServiceContext.js";
+import { imageToDataUrl } from "../embeddings/index.js";
+import type { MessageContentDetail } from "../llm/types.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import type { TextQaPrompt } from "./../Prompt.js";
+import { defaultTextQaPrompt } from "./../Prompt.js";
+import type {
   BaseSynthesizer,
   SynthesizeParamsNonStreaming,
   SynthesizeParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 export class MultiModalResponseSynthesizer
   extends PromptMixin
@@ -82,7 +85,7 @@ export class MultiModalResponseSynthesizer
       { type: "text", text: textPrompt },
       ...images,
     ];
-    let response = await this.serviceContext.llm.complete({
+    const response = await this.serviceContext.llm.complete({
       prompt,
       parentEvent,
     });

@@ -1,34 +1,37 @@
-import OpenAILLM, { ClientOptions as OpenAIClientOptions } from "openai";
-import {
+import type OpenAILLM from "openai";
+import type { ClientOptions as OpenAIClientOptions } from "openai";
+import type {
   AnthropicStreamToken,
   CallbackManager,
   Event,
   EventType,
   OpenAIStreamToken,
   StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
+} from "../callbacks/CallbackManager.js";
 
-import { ChatCompletionMessageParam } from "openai/resources";
-import { LLMOptions } from "portkey-ai";
-import { Tokenizers, globalsHelper } from "../GlobalsHelper";
+import type { ChatCompletionMessageParam } from "openai/resources/index.js";
+import type { LLMOptions } from "portkey-ai";
+import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
+import type { AnthropicSession } from "./anthropic.js";
 import {
   ANTHROPIC_AI_PROMPT,
   ANTHROPIC_HUMAN_PROMPT,
-  AnthropicSession,
   getAnthropicSession,
-} from "./anthropic";
+} from "./anthropic.js";
+import type { AzureOpenAIConfig } from "./azure.js";
 import {
-  AzureOpenAIConfig,
   getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
-} from "./azure";
-import { BaseLLM } from "./base";
-import { OpenAISession, getOpenAISession } from "./open_ai";
-import { PortkeySession, getPortkeySession } from "./portkey";
-import { ReplicateSession } from "./replicate_ai";
-import {
+} from "./azure.js";
+import { BaseLLM } from "./base.js";
+import type { OpenAISession } from "./open_ai.js";
+import { getOpenAISession } from "./open_ai.js";
+import type { PortkeySession } from "./portkey.js";
+import { getPortkeySession } from "./portkey.js";
+import { ReplicateSession } from "./replicate_ai.js";
+import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
@@ -36,7 +39,7 @@ import {
   LLMChatParamsStreaming,
   LLMMetadata,
   MessageType,
-} from "./types";
+} from "./types.js";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
@@ -235,7 +238,7 @@ export class OpenAI extends BaseLLM {
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     const { messages, parentEvent, stream, tools, toolChoice } = params;
-    let baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
+    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
@@ -313,7 +316,7 @@ export class OpenAI extends BaseLLM {
 
     // TODO: add callback to streamConverter and use streamConverter here
     //Indices
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of chunk_stream) {
       if (!part.choices.length) continue;
 
@@ -732,7 +735,7 @@ export class Anthropic extends BaseLLM {
         stream: true,
       });
 
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of stream) {
       //TODO: LLM Stream Callback, pending re-work.
 
@@ -821,7 +824,7 @@ export class Portkey extends BaseLLM {
         };
 
     //Indices
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of chunkStream) {
       //Increment
       part.choices[0].index = idx_counter;

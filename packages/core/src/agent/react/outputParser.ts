@@ -1,9 +1,9 @@
+import type { BaseReasoningStep } from "./types.js";
 import {
   ActionReasoningStep,
   BaseOutputParser,
-  BaseReasoningStep,
   ResponseReasoningStep,
-} from "./types";
+} from "./types.js";
 
 function extractJsonStr(text: string): string {
   const pattern = /\{.*\}/s;

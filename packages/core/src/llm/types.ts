@@ -1,5 +1,5 @@
-import { Tokenizers } from "../GlobalsHelper";
-import { Event } from "../callbacks/CallbackManager";
+import type { Tokenizers } from "../GlobalsHelper.js";
+import type { Event } from "../callbacks/CallbackManager.js";
 
 /**
  * Unified language model interface

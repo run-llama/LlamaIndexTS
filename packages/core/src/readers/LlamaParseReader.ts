@@ -1,7 +1,7 @@
-import { Document } from "../Node";
-import { defaultFS } from "../env";
-import { GenericFileSystem } from "../storage/FileSystem";
-import { FileReader } from "./type";
+import { defaultFS } from "@llamaindex/env";
+import type { GenericFileSystem } from "@llamaindex/env/type";
+import { Document } from "../Node.js";
+import type { FileReader } from "./type.js";
 
 type ResultType = "text" | "markdown";
 
@@ -74,7 +74,7 @@ export class LlamaParseReader implements FileReader {
 
     const resultUrl = `${this.baseUrl}/job/${jobId}/result/${this.resultType}`;
 
-    let start = Date.now();
+    const start = Date.now();
     let tries = 0;
     while (true) {
       await new Promise((resolve) =>

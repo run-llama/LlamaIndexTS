@@ -1,28 +1,27 @@
-import { NodeWithScore, TextNode } from "../../Node";
-import { LLMQuestionGenerator } from "../../QuestionGenerator";
-import { Response } from "../../Response";
+import { randomUUID } from "@llamaindex/env";
+import type { NodeWithScore } from "../../Node.js";
+import { TextNode } from "../../Node.js";
+import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
+import type { Response } from "../../Response.js";
+import type { ServiceContext } from "../../ServiceContext.js";
+import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import type { Event } from "../../callbacks/CallbackManager.js";
+import { PromptMixin } from "../../prompts/Mixin.js";
+import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import {
-  ServiceContext,
-  serviceContextFromDefaults,
-} from "../../ServiceContext";
-import { Event } from "../../callbacks/CallbackManager";
-import { randomUUID } from "../../env";
-import { PromptMixin } from "../../prompts";
-import {
-  BaseSynthesizer,
   CompactAndRefine,
   ResponseSynthesizer,
-} from "../../synthesizers";
+} from "../../synthesizers/index.js";
 
-import {
+import type {
   BaseQueryEngine,
   BaseTool,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
   ToolMetadata,
-} from "../../types";
+} from "../../types.js";
 
-import { BaseQuestionGenerator, SubQuestion } from "./types";
+import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then

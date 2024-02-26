@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "ESNext"
+  },
+  "include": ["./**/*.ts"]
+}

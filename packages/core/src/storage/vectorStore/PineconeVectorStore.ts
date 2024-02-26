@@ -1,21 +1,20 @@
-import {
+import type {
   ExactMatchFilter,
   MetadataFilters,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
-} from "./types";
+} from "./types.js";
 
-import { BaseNode, Metadata } from "../../Node";
-import { GenericFileSystem } from "../FileSystem";
-
-import {
+import type { GenericFileSystem } from "@llamaindex/env/type";
+import type {
   FetchResponse,
   Index,
-  Pinecone,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+import { Pinecone } from "@pinecone-database/pinecone";
+import type { BaseNode, Metadata } from "../../Node.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {
   indexName?: string;
@@ -213,7 +212,7 @@ export class PineconeVectorStore implements VectorStore {
   }
 
   nodeToRecord(node: BaseNode<Metadata>) {
-    let id: any = node.id_.length ? node.id_ : null;
+    const id: any = node.id_.length ? node.id_ : null;
     return {
       id: id,
       values: node.getEmbedding(),

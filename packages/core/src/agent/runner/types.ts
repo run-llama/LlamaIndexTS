@@ -1,5 +1,6 @@
-import { AgentChatResponse } from "../../engines/chat";
-import { BaseAgent, Task, TaskStep, TaskStepOutput } from "../types";
+import type { AgentChatResponse } from "../../engines/chat/index.js";
+import type { Task, TaskStep, TaskStepOutput } from "../types.js";
+import { BaseAgent } from "../types.js";
 
 export class TaskState {
   task!: Task;

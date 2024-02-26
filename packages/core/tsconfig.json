@@ -1,18 +1,13 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./lib/",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "preserveWatchOutput": true,
+    "rootDir": "./src",
+    "outDir": "./dist/type",
+    "emitDeclarationOnly": true,
+    "module": "node16",
+    "moduleResolution": "node16",
     "skipLibCheck": true,
-    "strict": true,
-    "lib": ["es2015", "dom"],
-    "target": "ES2015",
-    "resolveJsonModule": true
+    "strict": true
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

@@ -1,6 +1,7 @@
-import { MongoClient } from "mongodb";
-import { Document, Metadata } from "../Node";
-import { BaseReader } from "./type";
+import type { MongoClient } from "mongodb";
+import type { Metadata } from "../Node.js";
+import { Document } from "../Node.js";
+import type { BaseReader } from "./type.js";
 
 /**
  * Read in from MongoDB

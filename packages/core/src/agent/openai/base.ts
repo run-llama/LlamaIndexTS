@@ -1,9 +1,10 @@
-import { CallbackManager } from "../../callbacks/CallbackManager";
-import { ChatMessage, OpenAI } from "../../llm";
-import { ObjectRetriever } from "../../objects/base";
-import { BaseTool } from "../../types";
-import { AgentRunner } from "../runner/base";
-import { OpenAIAgentWorker } from "./worker";
+import type { CallbackManager } from "../../callbacks/CallbackManager.js";
+import type { ChatMessage } from "../../llm/index.js";
+import { OpenAI } from "../../llm/index.js";
+import type { ObjectRetriever } from "../../objects/base.js";
+import type { BaseTool } from "../../types.js";
+import { AgentRunner } from "../runner/base.js";
+import { OpenAIAgentWorker } from "./worker.js";
 
 type OpenAIAgentParams = {
   tools?: BaseTool[];

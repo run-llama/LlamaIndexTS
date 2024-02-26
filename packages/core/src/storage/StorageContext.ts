@@ -1,12 +1,15 @@
-import { defaultFS, path } from "../env";
-import { GenericFileSystem } from "./FileSystem";
-import { DEFAULT_IMAGE_VECTOR_NAMESPACE, DEFAULT_NAMESPACE } from "./constants";
-import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore";
-import { BaseDocumentStore } from "./docStore/types";
-import { SimpleIndexStore } from "./indexStore/SimpleIndexStore";
-import { BaseIndexStore } from "./indexStore/types";
-import { SimpleVectorStore } from "./vectorStore/SimpleVectorStore";
-import { VectorStore } from "./vectorStore/types";
+import { defaultFS, path } from "@llamaindex/env";
+import type { GenericFileSystem } from "@llamaindex/env/type";
+import {
+  DEFAULT_IMAGE_VECTOR_NAMESPACE,
+  DEFAULT_NAMESPACE,
+} from "./constants.js";
+import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
+import type { BaseDocumentStore } from "./docStore/types.js";
+import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
+import type { BaseIndexStore } from "./indexStore/types.js";
+import { SimpleVectorStore } from "./vectorStore/SimpleVectorStore.js";
+import type { VectorStore } from "./vectorStore/types.js";
 
 export interface StorageContext {
   docStore: BaseDocumentStore;

@@ -1,4 +1,4 @@
-import { OpenAI } from "./LLM";
+import { OpenAI } from "./LLM.js";
 
 export class FireworksLLM extends OpenAI {
   constructor(init?: Partial<OpenAI>) {

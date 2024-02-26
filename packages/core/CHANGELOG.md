@@ -1,5 +1,34 @@
 # llamaindex
 
+## 0.1.16
+
+### Patch Changes
+
+- e8e21a0: build: set files in package.json
+- Updated dependencies [e8e21a0]
+  - @llamaindex/env@0.0.3
+
+## 0.1.15
+
+### Patch Changes
+
+- 3a6e287: build: improve tree-shake & reduce unused package import
+
+## 0.1.14
+
+### Patch Changes
+
+- 7416a87: build: cjs file not found
+- Updated dependencies [7416a87]
+  - @llamaindex/env@0.0.2
+
+## 0.1.13
+
+### Patch Changes
+
+- b8be4c0: build: use ESM as default
+- 65d8346: feat: abstract `@llamaindex/env` package
+
 ## 0.1.12
 
 ### Patch Changes

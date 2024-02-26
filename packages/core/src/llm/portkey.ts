@@ -1,5 +1,6 @@
 import _ from "lodash";
-import { LLMOptions, Portkey } from "portkey-ai";
+import type { LLMOptions } from "portkey-ai";
+import { Portkey } from "portkey-ai";
 
 export const readEnv = (
   env: string,
@@ -40,7 +41,7 @@ export class PortkeySession {
   }
 }
 
-let defaultPortkeySession: {
+const defaultPortkeySession: {
   session: PortkeySession;
   options: PortkeyOptions;
 }[] = [];

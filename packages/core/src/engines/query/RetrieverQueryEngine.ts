@@ -1,17 +1,18 @@
-import { NodeWithScore } from "../../Node";
-import { Response } from "../../Response";
-import { BaseRetriever } from "../../Retriever";
-import { ServiceContext } from "../../ServiceContext";
-import { Event } from "../../callbacks/CallbackManager";
-import { randomUUID } from "../../env";
-import { BaseNodePostprocessor } from "../../postprocessors";
-import { PromptMixin } from "../../prompts";
-import { BaseSynthesizer, ResponseSynthesizer } from "../../synthesizers";
-import {
+import { randomUUID } from "@llamaindex/env";
+import type { NodeWithScore } from "../../Node.js";
+import type { Response } from "../../Response.js";
+import type { BaseRetriever } from "../../Retriever.js";
+import type { ServiceContext } from "../../ServiceContext.js";
+import type { Event } from "../../callbacks/CallbackManager.js";
+import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
+import { PromptMixin } from "../../prompts/Mixin.js";
+import type { BaseSynthesizer } from "../../synthesizers/index.js";
+import { ResponseSynthesizer } from "../../synthesizers/index.js";
+import type {
   BaseQueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
-} from "../../types";
+} from "../../types.js";
 
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.

@@ -1,9 +1,10 @@
-import { BaseNode, jsonToNode, Metadata, ObjectType } from "../../Node";
+import type { BaseNode, Metadata } from "../../Node.js";
+import { ObjectType, jsonToNode } from "../../Node.js";
 
 const DEFAULT_TEXT_KEY = "text";
 
 export function validateIsFlat(obj: { [key: string]: any }): void {
-  for (let key in obj) {
+  for (const key in obj) {
     if (typeof obj[key] === "object" && obj[key] !== null) {
       throw new Error(`Value for metadata ${key} must not be another object`);
     }

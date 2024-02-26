@@ -70,7 +70,7 @@ const createEnvLocalFile = async (
 
   switch (opts?.dataSource?.type) {
     case "web": {
-      let webConfig = opts?.dataSource.config as WebSourceConfig;
+      const webConfig = opts?.dataSource.config as WebSourceConfig;
       content += `# web loader config\n`;
       content += `BASE_URL=${webConfig.baseUrl}\n`;
       content += `URL_PREFIX=${webConfig.baseUrl}\n`;
@@ -102,7 +102,7 @@ const generateContextData = async (
     if (framework === "fastapi") {
       if (hasOpenAiKey && !hasVectorDb && isHavingPoetryLockFile()) {
         console.log(`Running ${runGenerate} to generate the context data.`);
-        let result = tryPoetryRun("python app/engine/generate.py");
+        const result = tryPoetryRun("python app/engine/generate.py");
         if (!result) {
           console.log(`Failed to run ${runGenerate}.`);
           process.exit(1);
@@ -134,7 +134,7 @@ const copyContextData = async (
 ) => {
   const destPath = path.join(root, "data");
 
-  let dataSourceConfig = dataSource?.config as FileSourceConfig;
+  const dataSourceConfig = dataSource?.config as FileSourceConfig;
 
   // Copy file
   if (dataSource?.type === "file") {
@@ -154,7 +154,7 @@ const copyContextData = async (
 
   // Copy folder
   if (dataSource?.type === "folder") {
-    let srcPath =
+    const srcPath =
       dataSourceConfig.path ?? path.join(templatesDir, "components", "data");
     console.log(`\nCopying data to ${cyan(destPath)}\n`);
     await copy("**", destPath, {

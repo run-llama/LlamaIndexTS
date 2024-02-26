@@ -1,4 +1,4 @@
-import { NodeWithScore } from "../Node";
+import type { NodeWithScore } from "../Node.js";
 
 export interface BaseNodePostprocessor {
   /**

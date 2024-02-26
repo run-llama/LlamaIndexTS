@@ -1,7 +1,8 @@
-import { BaseNode, Metadata, TextNode } from "../Node";
-import { BaseRetriever } from "../Retriever";
-import { VectorStoreIndex } from "../indices";
-import { BaseTool } from "../types";
+import type { BaseNode, Metadata } from "../Node.js";
+import { TextNode } from "../Node.js";
+import type { BaseRetriever } from "../Retriever.js";
+import type { VectorStoreIndex } from "../indices/index.js";
+import type { BaseTool } from "../types.js";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
 // Import statements (e.g., for TextNode, BaseNode) should be added based on your project's structure

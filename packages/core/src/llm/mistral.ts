@@ -1,17 +1,17 @@
-import {
+import type {
   CallbackManager,
   Event,
   EventType,
   StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
-import { BaseLLM } from "./base";
-import {
+} from "../callbacks/CallbackManager.js";
+import { BaseLLM } from "./base.js";
+import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
-} from "./types";
+} from "./types.js";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },
@@ -141,7 +141,7 @@ export class MistralAI extends BaseLLM {
         };
 
     //Indices
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of chunkStream) {
       if (!part.choices.length) continue;
 

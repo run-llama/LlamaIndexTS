@@ -1,5 +1,5 @@
-import { MistralAISession } from "../llm/mistral";
-import { BaseEmbedding } from "./types";
+import { MistralAISession } from "../llm/mistral.js";
+import { BaseEmbedding } from "./types.js";
 
 export enum MistralAIEmbeddingModelType {
   MISTRAL_EMBED = "mistral-embed",

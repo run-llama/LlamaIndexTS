@@ -1,5 +1,5 @@
+import { createSHA256, path, randomUUID } from "@llamaindex/env";
 import _ from "lodash";
-import { createSHA256, path, randomUUID } from "./env";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -65,7 +65,8 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 
   abstract getContent(metadataMode: MetadataMode): string;
   abstract getMetadataStr(metadataMode: MetadataMode): string;
-  abstract setContent(value: any): void;
+  // todo: set value as a generic type
+  abstract setContent(value: unknown): void;
 
   get sourceNode(): RelatedNodeInfo<T> | undefined {
     const relationship = this.relationships[NodeRelationship.SOURCE];
@@ -353,10 +354,10 @@ export function splitNodesByType(nodes: BaseNode[]): {
   imageNodes: ImageNode[];
   textNodes: TextNode[];
 } {
-  let imageNodes: ImageNode[] = [];
-  let textNodes: TextNode[] = [];
+  const imageNodes: ImageNode[] = [];
+  const textNodes: TextNode[] = [];
 
-  for (let node of nodes) {
+  for (const node of nodes) {
     if (node instanceof ImageNode) {
       imageNodes.push(node);
     } else if (node instanceof TextNode) {

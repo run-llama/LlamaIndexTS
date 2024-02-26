@@ -1,4 +1,4 @@
-import { OpenAI } from "./LLM";
+import { OpenAI } from "./LLM.js";
 
 export class TogetherLLM extends OpenAI {
   constructor(init?: Partial<OpenAI>) {

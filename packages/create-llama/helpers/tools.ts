@@ -45,7 +45,7 @@ export const getTool = (toolName: string): Tool | undefined => {
 };
 
 export const getTools = (toolsName: string[]): Tool[] => {
-  let tools: Tool[] = [];
+  const tools: Tool[] = [];
   for (const toolName of toolsName) {
     const tool = getTool(toolName);
     if (!tool) {

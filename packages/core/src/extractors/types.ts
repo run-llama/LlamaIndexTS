@@ -1,6 +1,7 @@
-import { BaseNode, MetadataMode, TextNode } from "../Node";
-import { TransformComponent } from "../ingestion";
-import { defaultNodeTextTemplate } from "./prompts";
+import type { BaseNode } from "../Node.js";
+import { MetadataMode, TextNode } from "../Node.js";
+import type { TransformComponent } from "../ingestion/types.js";
+import { defaultNodeTextTemplate } from "./prompts.js";
 
 /*
  * Abstract class for all extractors.
@@ -43,16 +44,16 @@ export abstract class BaseExtractor implements TransformComponent {
       newNodes = nodes.slice();
     }
 
-    let curMetadataList = await this.extract(newNodes);
+    const curMetadataList = await this.extract(newNodes);
 
-    for (let idx in newNodes) {
+    for (const idx in newNodes) {
       newNodes[idx].metadata = {
         ...newNodes[idx].metadata,
         ...curMetadataList[idx],
       };
     }
 
-    for (let idx in newNodes) {
+    for (const idx in newNodes) {
       if (excludedEmbedMetadataKeys) {
         newNodes[idx].excludedEmbedMetadataKeys.concat(
           excludedEmbedMetadataKeys,

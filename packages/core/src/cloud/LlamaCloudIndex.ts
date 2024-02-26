@@ -1,10 +1,11 @@
-import { BaseRetriever } from "../Retriever";
-import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine";
-import { BaseNodePostprocessor } from "../postprocessors";
-import { BaseSynthesizer } from "../synthesizers";
-import { BaseQueryEngine } from "../types";
-import { LlamaCloudRetriever, RetrieveParams } from "./LlamaCloudRetriever";
-import { CloudConstructorParams } from "./types";
+import type { BaseRetriever } from "../Retriever.js";
+import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
+import type { BaseNodePostprocessor } from "../postprocessors/types.js";
+import type { BaseSynthesizer } from "../synthesizers/types.js";
+import type { BaseQueryEngine } from "../types.js";
+import type { RetrieveParams } from "./LlamaCloudRetriever.js";
+import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
+import type { CloudConstructorParams } from "./types.js";
 
 export class LlamaCloudIndex {
   params: CloudConstructorParams;
@@ -13,7 +14,7 @@ export class LlamaCloudIndex {
     this.params = params;
   }
 
-  asRetriever(params: RetrieveParams): BaseRetriever {
+  asRetriever(params: RetrieveParams = {}): BaseRetriever {
     return new LlamaCloudRetriever({ ...this.params, ...params });
   }
 

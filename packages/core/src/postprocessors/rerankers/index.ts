@@ -1,1 +1,1 @@
-export * from "./CohereRerank";
+export * from "./CohereRerank.js";
