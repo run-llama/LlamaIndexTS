@@ -1,19 +1,22 @@
-import { Document, MetadataMode } from "../Node";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { SummaryIndex } from "../indices";
-import { PromptMixin } from "../prompts";
-import {
+import { Document, MetadataMode } from "../Node.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { serviceContextFromDefaults } from "../ServiceContext.js";
+import { SummaryIndex } from "../indices/summary/index.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import type {
   FaithfulnessRefinePrompt,
   FaithfulnessTextQAPrompt,
+} from "./prompts.js";
+import {
   defaultFaithfulnessRefinePrompt,
   defaultFaithfulnessTextQaPrompt,
-} from "./prompts";
-import {
+} from "./prompts.js";
+import type {
   BaseEvaluator,
   EvaluationResult,
   EvaluatorParams,
   EvaluatorResponseParams,
-} from "./types";
+} from "./types.js";
 
 export class FaithfulnessEvaluator
   extends PromptMixin

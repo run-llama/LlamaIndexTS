@@ -1,19 +1,20 @@
-import { MetadataMode } from "../Node";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { ChatMessage } from "../llm";
-import { PromptMixin } from "../prompts";
+import { MetadataMode } from "../Node.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { serviceContextFromDefaults } from "../ServiceContext.js";
+import type { ChatMessage } from "../llm/types.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import type { CorrectnessSystemPrompt } from "./prompts.js";
 import {
-  CorrectnessSystemPrompt,
   defaultCorrectnessSystemPrompt,
   defaultUserPrompt,
-} from "./prompts";
-import {
+} from "./prompts.js";
+import type {
   BaseEvaluator,
   EvaluationResult,
   EvaluatorParams,
   EvaluatorResponseParams,
-} from "./types";
-import { defaultEvaluationParser } from "./utils";
+} from "./types.js";
+import { defaultEvaluationParser } from "./utils.js";
 
 type CorrectnessParams = {
   serviceContext?: ServiceContext;
