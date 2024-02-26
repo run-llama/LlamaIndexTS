@@ -1,4 +1,4 @@
-import type { CompleteFileSystem } from "@llamaindex/env/type";
+import type { CompleteFileSystem } from "@llamaindex/env";
 import type { Document } from "../Node.js";
 
 /**

@@ -1,7 +1,4 @@
-import type {
-  GenericFileSystem,
-  WalkableFileSystem,
-} from "@llamaindex/env/type";
+import type { GenericFileSystem, WalkableFileSystem } from "@llamaindex/env";
 // FS utility functions
 
 /**

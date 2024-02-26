@@ -1,4 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env/type";
+import type { GenericFileSystem } from "@llamaindex/env";
 import { BaseNode } from "../../Node.js";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,

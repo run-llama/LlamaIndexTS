@@ -1,5 +1,5 @@
+import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS, path } from "@llamaindex/env";
-import type { GenericFileSystem } from "@llamaindex/env/type";
 import {
   DEFAULT_IMAGE_VECTOR_NAMESPACE,
   DEFAULT_NAMESPACE,

@@ -1,5 +1,5 @@
+import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS } from "@llamaindex/env";
-import type { GenericFileSystem } from "@llamaindex/env/type";
 import type { Document } from "../Node.js";
 import { ImageDocument } from "../Node.js";
 import type { FileReader } from "./type.js";
