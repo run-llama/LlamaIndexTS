@@ -24,7 +24,7 @@ export class FaithfulnessEvaluator
 {
   private serviceContext: ServiceContext;
   private raiseError: boolean;
-  private textQATemplate: FaithfulnessTextQAPrompt;
+  private evalTemplate: FaithfulnessTextQAPrompt;
   private refineTemplate: FaithfulnessRefinePrompt;
 
   constructor(params: {
@@ -37,7 +37,7 @@ export class FaithfulnessEvaluator
     this.serviceContext = params.serviceContext || serviceContextFromDefaults();
     this.raiseError = params.raiseError || false;
 
-    this.textQATemplate =
+    this.evalTemplate =
       params.faithfulnessSystemPrompt || defaultFaithfulnessTextQaPrompt;
     this.refineTemplate =
       params.faithFulnessRefinePrompt || defaultFaithfulnessRefinePrompt;
@@ -45,7 +45,7 @@ export class FaithfulnessEvaluator
 
   protected _getPrompts(): { [x: string]: any } {
     return {
-      faithfulnessSystemPrompt: this.textQATemplate,
+      faithfulnessSystemPrompt: this.evalTemplate,
       faithFulnessRefinePrompt: this.refineTemplate,
     };
   }
@@ -55,7 +55,7 @@ export class FaithfulnessEvaluator
     faithFulnessRefinePrompt: FaithfulnessRefinePrompt;
   }): void {
     if (promptsDict.faithfulnessSystemPrompt) {
-      this.textQATemplate = promptsDict.faithfulnessSystemPrompt;
+      this.evalTemplate = promptsDict.faithfulnessSystemPrompt;
     }
 
     if (promptsDict.faithFulnessRefinePrompt) {
@@ -94,7 +94,7 @@ export class FaithfulnessEvaluator
     const queryEngine = index.asQueryEngine();
 
     queryEngine.updatePrompts({
-      "responseSynthesizer:textQATemplate": this.textQATemplate,
+      "responseSynthesizer:textQATemplate": this.evalTemplate,
       "responseSynthesizer:refineTemplate": this.refineTemplate,
     });
 
