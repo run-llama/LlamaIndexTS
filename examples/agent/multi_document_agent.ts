@@ -128,7 +128,6 @@ async function main() {
     VectorStoreIndex,
     {
       serviceContext,
-      storageContext,
     },
   );
 
