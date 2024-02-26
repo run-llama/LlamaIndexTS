@@ -37,7 +37,7 @@ For more complex applications, our lower-level APIs allow advanced users to cust
 
 `npm install llamaindex`
 
-Our documentation includes [Installation Instructions](./getting_started/installation.mdx) and a [Starter Tutorial](./getting_started/starter.md) to build your first application.
+Our documentation includes [Installation Instructions](./getting_started/installation.mdx) and a [Starter Tutorial](./getting_started/starter.mdx) to build your first application.
 
 Once you're up and running, [High-Level Concepts](./getting_started/concepts.md) has an overview of LlamaIndex's modular architecture. For more hands-on practical examples, look through our Examples section on the sidebar.
 
