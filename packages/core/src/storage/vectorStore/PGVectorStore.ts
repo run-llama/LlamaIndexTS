@@ -7,7 +7,7 @@ import type {
   VectorStoreQueryResult,
 } from "./types.js";
 
-import type { GenericFileSystem } from "@llamaindex/env/type";
+import type { GenericFileSystem } from "@llamaindex/env";
 import type { BaseNode, Metadata } from "../../Node.js";
 import { Document, MetadataMode } from "../../Node.js";
 

@@ -1,5 +1,5 @@
+import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS, path } from "@llamaindex/env";
-import type { GenericFileSystem } from "@llamaindex/env/type";
 import _ from "lodash";
 import type { BaseNode } from "../../Node.js";
 import {

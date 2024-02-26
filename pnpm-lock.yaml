@@ -376,6 +376,12 @@ importers:
 
   packages/env:
     dependencies:
+      '@types/lodash':
+        specifier: ^4.14.202
+        version: 4.14.202
+      '@types/node':
+        specifier: ^20.11.20
+        version: 20.11.20
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -389,12 +395,6 @@ importers:
       '@swc/core':
         specifier: ^1.4.2
         version: 1.4.2
-      '@types/lodash':
-        specifier: ^4.14.202
-        version: 4.14.202
-      '@types/node':
-        specifier: ^20.11.20
-        version: 20.11.20
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -4254,6 +4254,7 @@ packages:
 
   /@types/lodash@4.14.202:
     resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
+    dev: false
 
   /@types/long@4.0.2:
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
@@ -4327,7 +4328,7 @@ packages:
     resolution: {integrity: sha512-7/rR21OS+fq8IyHTgtLkDK949uzsa6n8BkziAKtPVpugIkO6D+/ooXMvzXxDnZrmtXVfjb1bKQafYpb8s89LOg==}
     dependencies:
       undici-types: 5.26.5
-    dev: true
+    dev: false
 
   /@types/node@20.11.7:
     resolution: {integrity: sha512-GPmeN1C3XAyV5uybAf4cMLWT9fDWcmQhZVtMFu7OR32WjrqGG+Wnk2V1d0bmtUyE/Zy1QJ9BxyiTih9z8Oks8A==}

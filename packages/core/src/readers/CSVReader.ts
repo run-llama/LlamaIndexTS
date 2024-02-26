@@ -1,5 +1,5 @@
+import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS } from "@llamaindex/env";
-import type { GenericFileSystem } from "@llamaindex/env/type";
 import type { ParseConfig } from "papaparse";
 import Papa from "papaparse";
 import { Document } from "../Node.js";

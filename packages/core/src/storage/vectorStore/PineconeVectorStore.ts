@@ -6,7 +6,7 @@ import type {
   VectorStoreQueryResult,
 } from "./types.js";
 
-import type { GenericFileSystem } from "@llamaindex/env/type";
+import type { GenericFileSystem } from "@llamaindex/env";
 import type {
   FetchResponse,
   Index,

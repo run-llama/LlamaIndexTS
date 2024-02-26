@@ -38,3 +38,4 @@ export function createSHA256(): SHA256 {
 export function randomUUID(): string {
   return crypto.randomUUID();
 }
+export * from "./type.js";

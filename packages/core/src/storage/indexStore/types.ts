@@ -1,4 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env/type";
+import type { GenericFileSystem } from "@llamaindex/env";
 import type { IndexStruct } from "../../indices/IndexStruct.js";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
