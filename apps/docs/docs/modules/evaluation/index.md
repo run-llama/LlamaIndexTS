@@ -25,18 +25,6 @@ These evaluation modules are in the following forms:
 
 - **Relevancy**: Evaluates if the response from a query engine matches any source nodes.
 
-## Retrieval Evaluation
-
-We also provide modules to help evaluate retrieval independently.
-
-The concept of retrieval evaluation is not new; given a dataset of questions and ground-truth rankings, we can evaluate retrievers using ranking metrics like mean-reciprocal rank (MRR), hit-rate, precision, and more.
-
-The core retrieval evaluation steps revolve around the following:
-
-- **Dataset generation**: Given an unstructured text corpus, synthetically generate (question, context) pairs.
-
-- **Retrieval Evaluation**: Given a retriever and a set of questions, evaluate retrieved results using ranking metrics.
-
 ## Usage
 
 - [Correctness Evaluator](correctness.md)
