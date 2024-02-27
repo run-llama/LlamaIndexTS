@@ -27,12 +27,14 @@ export class SimpleNodeParser implements NodeParser {
     includePrevNextRel?: boolean;
     chunkSize?: number;
     chunkOverlap?: number;
+    splitLongSentences?: boolean;
   }) {
     this.textSplitter =
       init?.textSplitter ??
       new SentenceSplitter({
         chunkSize: init?.chunkSize ?? DEFAULT_CHUNK_SIZE,
         chunkOverlap: init?.chunkOverlap ?? DEFAULT_CHUNK_OVERLAP,
+        splitLongSentences: init?.splitLongSentences ?? false,
       });
     this.includeMetadata = init?.includeMetadata ?? true;
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
