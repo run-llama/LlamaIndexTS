@@ -141,8 +141,8 @@ export class TitleExtractor extends BaseExtractor {
    * Constructor for the TitleExtractor class.
    * @param {LLM} llm LLM instance.
    * @param {number} nodes Number of nodes to extract titles from.
-   * @param {string} node_template The prompt template to use for the title extractor.
-   * @param {string} combine_template The prompt template to merge title with..
+   * @param {string} nodeTemplate The prompt template to use for the title extractor.
+   * @param {string} combineTemplate The prompt template to merge title with..
    */
   constructor(options?: TitleExtractorsArgs) {
     super();
