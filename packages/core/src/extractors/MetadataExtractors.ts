@@ -387,9 +387,9 @@ export class SummaryExtractor extends BaseExtractor {
    */
   promptTemplate: string;
 
-  private _selfSummary: boolean;
-  private _prevSummary: boolean;
-  private _nextSummary: boolean;
+  private selfSummary: boolean;
+  private prevSummary: boolean;
+  private nextSummary: boolean;
 
   constructor(options?: SummaryExtractArgs) {
     const summaries = options?.summaries ?? ["self"];
@@ -407,9 +407,9 @@ export class SummaryExtractor extends BaseExtractor {
     this.promptTemplate =
       options?.promptTemplate ?? defaultSummaryExtractorPromptTemplate();
 
-    this._selfSummary = summaries?.includes("self") ?? false;
-    this._prevSummary = summaries?.includes("prev") ?? false;
-    this._nextSummary = summaries?.includes("next") ?? false;
+    this.selfSummary = summaries?.includes("self") ?? false;
+    this.prevSummary = summaries?.includes("prev") ?? false;
+    this.nextSummary = summaries?.includes("next") ?? false;
   }
 
   /**
@@ -451,13 +451,13 @@ export class SummaryExtractor extends BaseExtractor {
     const metadataList: any[] = nodes.map(() => ({}));
 
     for (let i = 0; i < nodes.length; i++) {
-      if (i > 0 && this._prevSummary && nodeSummaries[i - 1]) {
+      if (i > 0 && this.prevSummary && nodeSummaries[i - 1]) {
         metadataList[i]["prevSectionSummary"] = nodeSummaries[i - 1];
       }
-      if (i < nodes.length - 1 && this._nextSummary && nodeSummaries[i + 1]) {
+      if (i < nodes.length - 1 && this.nextSummary && nodeSummaries[i + 1]) {
         metadataList[i]["nextSectionSummary"] = nodeSummaries[i + 1];
       }
-      if (this._selfSummary && nodeSummaries[i]) {
+      if (this.selfSummary && nodeSummaries[i]) {
         metadataList[i]["sectionSummary"] = nodeSummaries[i];
       }
     }
