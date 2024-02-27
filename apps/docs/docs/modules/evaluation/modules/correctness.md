@@ -53,10 +53,6 @@ const evaluator = new CorrectnessEvaluator({
   serviceContext: ctx,
 });
 
-const response = await queryEngine.query({
-  query,
-});
-
 const result = await evaluator.evaluateResponse({
   query,
   response,
