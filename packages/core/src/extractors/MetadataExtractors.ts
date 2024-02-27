@@ -141,8 +141,8 @@ export class TitleExtractor extends BaseExtractor {
    * Constructor for the TitleExtractor class.
    * @param {LLM} llm LLM instance.
    * @param {number} nodes Number of nodes to extract titles from.
-   * @param {string} node_template The prompt template to use for the title extractor.
-   * @param {string} combine_template The prompt template to merge title with..
+   * @param {string} nodeTemplate The prompt template to use for the title extractor.
+   * @param {string} combineTemplate The prompt template to merge title with..
    */
   constructor(options?: TitleExtractorsArgs) {
     super();
@@ -162,50 +162,85 @@ export class TitleExtractor extends BaseExtractor {
    * @returns {Promise<BaseNode<ExtractTitle>[]>} Titles extracted from the nodes.
    */
   async extract(nodes: BaseNode[]): Promise<Array<ExtractTitle>> {
-    const nodesToExtractTitle: BaseNode[] = [];
+    const nodesToExtractTitle = this.filterNodes(nodes);
 
-    for (let i = 0; i < this.nodes; i++) {
-      if (nodesToExtractTitle.length >= nodes.length) break;
-
-      if (this.isTextNodeOnly && !(nodes[i] instanceof TextNode)) continue;
-
-      nodesToExtractTitle.push(nodes[i]);
+    if (!nodesToExtractTitle.length) {
+      return [];
     }
 
-    if (nodesToExtractTitle.length === 0) return [];
+    const nodesByDocument = this.separateNodesByDocument(nodesToExtractTitle);
+    const titlesByDocument = await this.extractTitles(nodesByDocument);
 
-    const titlesCandidates: string[] = [];
-    let title: string = "";
+    return nodesToExtractTitle.map((node) => {
+      return {
+        documentTitle: titlesByDocument[node.sourceNode?.nodeId ?? ""],
+      };
+    });
+  }
 
-    for (let i = 0; i < nodesToExtractTitle.length; i++) {
-      const completion = await this.llm.complete({
-        prompt: defaultTitleExtractorPromptTemplate({
-          contextStr: nodesToExtractTitle[i].getContent(MetadataMode.ALL),
-        }),
-      });
+  private filterNodes(nodes: BaseNode[]): BaseNode[] {
+    return nodes.filter((node) => {
+      if (this.isTextNodeOnly && !(node instanceof TextNode)) {
+        return false;
+      }
+      return true;
+    });
+  }
 
-      titlesCandidates.push(completion.text);
+  private separateNodesByDocument(
+    nodes: BaseNode[],
+  ): Record<string, BaseNode[]> {
+    const nodesByDocument: Record<string, BaseNode[]> = {};
+
+    for (const node of nodes) {
+      const parentNode = node.sourceNode?.nodeId;
+
+      if (!parentNode) {
+        continue;
+      }
+
+      if (!nodesByDocument[parentNode]) {
+        nodesByDocument[parentNode] = [];
+      }
+
+      nodesByDocument[parentNode].push(node);
     }
 
-    if (nodesToExtractTitle.length > 1) {
-      const combinedTitles = titlesCandidates.join(",");
+    return nodesByDocument;
+  }
 
+  private async extractTitles(
+    nodesByDocument: Record<string, BaseNode[]>,
+  ): Promise<Record<string, string>> {
+    const titlesByDocument: Record<string, string> = {};
+
+    for (const [key, nodes] of Object.entries(nodesByDocument)) {
+      const titleCandidates = await this.getTitlesCandidates(nodes);
+      const combinedTitles = titleCandidates.join(", ");
       const completion = await this.llm.complete({
         prompt: defaultTitleCombinePromptTemplate({
           contextStr: combinedTitles,
         }),
       });
 
-      title = completion.text;
+      titlesByDocument[key] = completion.text;
     }
 
-    if (nodesToExtractTitle.length === 1) {
-      title = titlesCandidates[0];
-    }
+    return titlesByDocument;
+  }
 
-    return nodes.map((_) => ({
-      documentTitle: title.trim().replace(STRIP_REGEX, ""),
-    }));
+  private async getTitlesCandidates(nodes: BaseNode[]): Promise<string[]> {
+    const titleJobs = nodes.map(async (node) => {
+      const completion = await this.llm.complete({
+        prompt: defaultTitleExtractorPromptTemplate({
+          contextStr: node.getContent(MetadataMode.ALL),
+        }),
+      });
+
+      return completion.text;
+    });
+
+    return await Promise.all(titleJobs);
   }
 }
 
@@ -352,9 +387,9 @@ export class SummaryExtractor extends BaseExtractor {
    */
   promptTemplate: string;
 
-  private _selfSummary: boolean;
-  private _prevSummary: boolean;
-  private _nextSummary: boolean;
+  private selfSummary: boolean;
+  private prevSummary: boolean;
+  private nextSummary: boolean;
 
   constructor(options?: SummaryExtractArgs) {
     const summaries = options?.summaries ?? ["self"];
@@ -372,9 +407,9 @@ export class SummaryExtractor extends BaseExtractor {
     this.promptTemplate =
       options?.promptTemplate ?? defaultSummaryExtractorPromptTemplate();
 
-    this._selfSummary = summaries?.includes("self") ?? false;
-    this._prevSummary = summaries?.includes("prev") ?? false;
-    this._nextSummary = summaries?.includes("next") ?? false;
+    this.selfSummary = summaries?.includes("self") ?? false;
+    this.prevSummary = summaries?.includes("prev") ?? false;
+    this.nextSummary = summaries?.includes("next") ?? false;
   }
 
   /**
@@ -416,13 +451,13 @@ export class SummaryExtractor extends BaseExtractor {
     const metadataList: any[] = nodes.map(() => ({}));
 
     for (let i = 0; i < nodes.length; i++) {
-      if (i > 0 && this._prevSummary && nodeSummaries[i - 1]) {
+      if (i > 0 && this.prevSummary && nodeSummaries[i - 1]) {
         metadataList[i]["prevSectionSummary"] = nodeSummaries[i - 1];
       }
-      if (i < nodes.length - 1 && this._nextSummary && nodeSummaries[i + 1]) {
+      if (i < nodes.length - 1 && this.nextSummary && nodeSummaries[i + 1]) {
         metadataList[i]["nextSectionSummary"] = nodeSummaries[i + 1];
       }
-      if (this._selfSummary && nodeSummaries[i]) {
+      if (this.selfSummary && nodeSummaries[i]) {
         metadataList[i]["sectionSummary"] = nodeSummaries[i];
       }
     }
