@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.1.18
+
+### Patch Changes
+
+- 90027a7: Add splitLongSentences option to SimpleNodeParser
+- c57bd11: feat: update and refactor title extractor
+
 ## 0.1.17
 
 ### Patch Changes
