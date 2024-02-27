@@ -32,11 +32,17 @@ const defaultOutputProcessor = async ({
   const results: Record<string, unknown>[] = [];
 
   for (const expression of expressions) {
+    const key = expression.split(".").pop();
+
     try {
       const datums = jsonpath.query(jsonValue, expression);
 
-      if (datums) {
-        results.push(...datums);
+      if (!key) throw new Error(`Invalid JSON Path: ${expression}`);
+
+      for (const datum of datums) {
+        results.push({
+          [key]: datum,
+        });
       }
     } catch (err) {
       throw new Error(`Invalid JSON Path: ${expression}`);
