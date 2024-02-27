@@ -36,12 +36,11 @@ type QuerySearchResult = {
 export class QdrantVectorStore implements VectorStore {
   storesText: boolean = true;
 
-  db: QdrantClient;
-
-  collectionName: string;
   batchSize: number;
+  collectionName: string;
 
-  private _collectionInitialized: boolean = false;
+  private db: QdrantClient;
+  private collectionInitialized: boolean = false;
 
   /**
    * Creates a new QdrantVectorStore.
@@ -59,7 +58,7 @@ export class QdrantVectorStore implements VectorStore {
     batchSize,
   }: QdrantParams) {
     if (!client && !url) {
-      if (!url || !collectionName) {
+      if (!url) {
         throw new Error("QdrantVectorStore requires url and collectionName");
       }
     }
@@ -122,7 +121,7 @@ export class QdrantVectorStore implements VectorStore {
     if (!exists) {
       await this.createCollection(this.collectionName, vectorSize);
     }
-    this._collectionInitialized = true;
+    this.collectionInitialized = true;
   }
 
   /**
@@ -179,7 +178,7 @@ export class QdrantVectorStore implements VectorStore {
    * @returns List of node IDs
    */
   async add(embeddingResults: BaseNode[]): Promise<string[]> {
-    if (embeddingResults.length > 0 && !this._collectionInitialized) {
+    if (embeddingResults.length > 0 && !this.collectionInitialized) {
       await this.initializeCollection(
         embeddingResults[0].getEmbedding().length,
       );
