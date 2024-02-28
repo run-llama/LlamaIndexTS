@@ -293,7 +293,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     // NOTE: if the vector store keeps text,
     // we only need to add image and index nodes
     for (let i = 0; i < nodes.length; ++i) {
-      const type = nodes[i].getType();
+      const type = nodes[i].type;
       if (
         !vectorStore.storesText ||
         type === ObjectType.INDEX ||

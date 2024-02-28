@@ -5,6 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  llamaindex: workspace:*
   trim: 1.0.1
   '@babel/traverse': 7.23.2
 
@@ -125,7 +126,7 @@ importers:
         specifier: ^16.4.1
         version: 16.4.1
       llamaindex:
-        specifier: latest
+        specifier: workspace:*
         version: link:../packages/core
       mongodb:
         specifier: ^6.2.0
@@ -144,7 +145,7 @@ importers:
   examples/readers:
     dependencies:
       llamaindex:
-        specifier: latest
+        specifier: workspace:*
         version: link:../../packages/core
     devDependencies:
       '@types/node':

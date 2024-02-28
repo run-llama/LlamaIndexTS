@@ -51,7 +51,7 @@ export class KVDocumentStore extends BaseDocumentStore {
       await this.kvstore.put(nodeKey, data, this.nodeCollection);
       const metadata: DocMetaData = { docHash: doc.hash };
 
-      if (doc.getType() === ObjectType.TEXT && doc.sourceNode !== undefined) {
+      if (doc.type === ObjectType.TEXT && doc.sourceNode !== undefined) {
         const refDocInfo = (await this.getRefDocInfo(
           doc.sourceNode.nodeId,
         )) || {

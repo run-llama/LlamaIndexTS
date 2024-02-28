@@ -2,6 +2,7 @@ import type {
   AddParams,
   ChromaClientParams,
   Collection,
+  Metadata,
   QueryResponse,
   Where,
   WhereDocument,
@@ -10,6 +11,7 @@ import { ChromaClient, IncludeEnum } from "chromadb";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
 import type {
+  VectorMetadata,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
@@ -61,9 +63,10 @@ export class ChromaVectorStore implements VectorStore {
   }
 
   private getDataToInsert(nodes: BaseNode[]): AddParams {
-    const metadatas = nodes.map((node) =>
-      nodeToMetadata(node, true, this.textKey, this.flatMetadata),
-    );
+    const metadatas = nodes.map(
+      (node) => nodeToMetadata(node, true, this.textKey, this.flatMetadata),
+      // fixme: type inconsistency
+    ) as Metadata[];
     return {
       embeddings: nodes.map((node) => node.getEmbedding()),
       ids: nodes.map((node) => node.id_),
@@ -130,10 +133,11 @@ export class ChromaVectorStore implements VectorStore {
         IncludeEnum.Embeddings,
       ],
     });
-    const vectorStoreQueryResult: VectorStoreQueryResult = {
+    return {
       nodes: queryResponse.ids[0].map((id, index) => {
         const text = (queryResponse.documents as string[][])[0][index];
-        const metaData = queryResponse.metadatas[0][index] ?? {};
+        const metaData = (queryResponse.metadatas[0][index] ??
+          {}) as VectorMetadata;
         const node = metadataDictToNode(metaData);
         node.setContent(text);
         return node;
@@ -143,6 +147,5 @@ export class ChromaVectorStore implements VectorStore {
       ),
       ids: queryResponse.ids[0],
     };
-    return vectorStoreQueryResult;
   }
 }

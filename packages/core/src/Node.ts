@@ -24,7 +24,7 @@ export enum MetadataMode {
   NONE = "NONE",
 }
 
-export type Metadata = Record<string, any>;
+export type Metadata = Record<string, unknown>;
 
 export interface RelatedNodeInfo<T extends Metadata = Metadata> {
   nodeId: string;
@@ -40,7 +40,7 @@ export type RelatedNodeType<T extends Metadata = Metadata> =
 /**
  * Generic abstract class for retrievable nodes
  */
-export abstract class BaseNode<T extends Metadata = Metadata> {
+export abstract class BaseNode<V = unknown, T extends Metadata = Metadata> {
   /**
    * The unique ID of the Node/Document. The trailing underscore is here
    * to avoid collisions with the id keyword in Python.
@@ -51,22 +51,21 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   embedding?: number[];
 
   // Metadata fields
-  metadata: T = {} as T;
+  metadata: T = Object.create(null);
   excludedEmbedMetadataKeys: string[] = [];
   excludedLlmMetadataKeys: string[] = [];
   relationships: Partial<Record<NodeRelationship, RelatedNodeType<T>>> = {};
   hash: string = "";
 
-  constructor(init?: Partial<BaseNode<T>>) {
+  constructor(init?: Partial<BaseNode<V, T>>) {
     Object.assign(this, init);
   }
 
-  abstract getType(): ObjectType;
+  abstract get type(): ObjectType;
 
   abstract getContent(metadataMode: MetadataMode): string;
   abstract getMetadataStr(metadataMode: MetadataMode): string;
-  // todo: set value as a generic type
-  abstract setContent(value: unknown): void;
+  abstract setContent(value: V): void;
 
   get sourceNode(): RelatedNodeInfo<T> | undefined {
     const relationship = this.relationships[NodeRelationship.SOURCE];
@@ -146,11 +145,11 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * @see toMutableJSON - use to return a mutable JSON instead
    */
   toJSON(): Record<string, any> {
-    return { ...this, type: this.getType() };
+    return this;
   }
 
-  clone(): BaseNode {
-    return jsonToNode(this.toMutableJSON()) as BaseNode;
+  clone(): BaseNode<V, T> {
+    return jsonToNode(this.toMutableJSON()) as BaseNode<V, T>;
   }
 
   /**
@@ -166,7 +165,10 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 /**
  * TextNode is the default node type for text. Most common node type in LlamaIndex.TS
  */
-export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
+export class TextNode<T extends Metadata = Metadata> extends BaseNode<
+  string,
+  T
+> {
   text: string = "";
   textTemplate: string = "";
 
@@ -194,7 +196,7 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
    */
   generateHash() {
     const hashFunction = createSHA256();
-    hashFunction.update(`type=${this.getType()}`);
+    hashFunction.update(`type=${this.type}`);
     hashFunction.update(
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
     );
@@ -202,7 +204,7 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
     return hashFunction.digest();
   }
 
-  getType(): ObjectType {
+  get type(): ObjectType {
     return ObjectType.TEXT;
   }
 
@@ -258,7 +260,7 @@ export class IndexNode<T extends Metadata = Metadata> extends TextNode<T> {
     }
   }
 
-  getType(): ObjectType {
+  get type(): ObjectType {
     return ObjectType.INDEX;
   }
 }
@@ -276,7 +278,7 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
     }
   }
 
-  getType() {
+  get type() {
     return ObjectType.DOCUMENT;
   }
 }
@@ -317,7 +319,7 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
     this.image = init.image;
   }
 
-  getType(): ObjectType {
+  get type(): ObjectType {
     return ObjectType.IMAGE;
   }
 
@@ -337,7 +339,7 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
     }
   }
 
-  getType() {
+  get type() {
     return ObjectType.IMAGE_DOCUMENT;
   }
 }
@@ -345,8 +347,8 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
 /**
  * A node with a similarity score
  */
-export interface NodeWithScore<T extends Metadata = Metadata> {
-  node: BaseNode<T>;
+export interface NodeWithScore<V = unknown, T extends Metadata = Metadata> {
+  node: BaseNode<V, T>;
   score?: number;
 }
 

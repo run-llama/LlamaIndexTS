@@ -1,5 +1,6 @@
-import type { BaseNode, Metadata } from "../../Node.js";
+import type { BaseNode } from "../../Node.js";
 import { ObjectType, jsonToNode } from "../../Node.js";
+import type { VectorMetadata } from "./types.js";
 
 const DEFAULT_TEXT_KEY = "text";
 
@@ -16,7 +17,7 @@ export function nodeToMetadata(
   removeText: boolean = false,
   textField: string = DEFAULT_TEXT_KEY,
   flatMetadata: boolean = false,
-): Metadata {
+): VectorMetadata {
   const { metadata, embedding, ...rest } = node.toMutableJSON();
 
   if (flatMetadata) {
@@ -44,7 +45,7 @@ type MetadataDictToNodeOptions = {
 };
 
 export function metadataDictToNode(
-  metadata: Metadata,
+  metadata: VectorMetadata,
   options?: MetadataDictToNodeOptions,
 ): BaseNode {
   const {
