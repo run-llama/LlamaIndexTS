@@ -205,7 +205,10 @@ export class PineconeVectorStore implements VectorStore {
   }
 
   textFromResultRow(row: ScoredPineconeRecord<Metadata>): string {
-    return row.metadata?.text ?? "";
+    const nodeContent = row.metadata?._node_content;
+    if (!nodeContent) return "";
+    const parsedNodeContent = JSON.parse(nodeContent);
+    return parsedNodeContent.text || "";
   }
 
   metaWithoutText(meta: Metadata): any {
