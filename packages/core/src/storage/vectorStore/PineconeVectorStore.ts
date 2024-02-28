@@ -12,7 +12,7 @@ import type {
   Index,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
-import { Pinecone } from "@pinecone-database/pinecone";
+import { type Pinecone } from "@pinecone-database/pinecone";
 import type { BaseNode, Metadata } from "../../Node.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
@@ -52,6 +52,7 @@ export class PineconeVectorStore implements VectorStore {
 
   private async getDb(): Promise<Pinecone> {
     if (!this.db) {
+      const { Pinecone } = await import("@pinecone-database/pinecone");
       this.db = await new Pinecone();
     }
 
