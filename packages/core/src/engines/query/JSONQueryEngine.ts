@@ -18,6 +18,30 @@ import {
 
 export type JSONSchemaType = Record<string, unknown>;
 
+function removeExtraQuotes(expr: string) {
+  let startIndex = 0;
+  let endIndex = expr.length;
+
+  // Trim the leading backticks and single quotes
+  while (
+    startIndex < endIndex &&
+    (expr[startIndex] === "`" || expr[startIndex] === "'")
+  ) {
+    startIndex++;
+  }
+
+  // Trim the trailing backticks and single quotes
+  while (
+    endIndex > startIndex &&
+    (expr[endIndex - 1] === "`" || expr[endIndex - 1] === "'")
+  ) {
+    endIndex--;
+  }
+
+  // Return the trimmed substring
+  return expr.substring(startIndex, endIndex);
+}
+
 const defaultOutputProcessor = async ({
   llmOutput,
   jsonValue,
@@ -27,7 +51,7 @@ const defaultOutputProcessor = async ({
 }): Promise<Record<string, unknown>[]> => {
   const expressions = llmOutput
     .split(",")
-    .map((expr) => expr.trim().replace(/^[`']+|[`']+$/g, ""));
+    .map((expr) => removeExtraQuotes(expr.trim()));
 
   const results: Record<string, unknown>[] = [];
 
@@ -54,12 +78,14 @@ const defaultOutputProcessor = async ({
 
 type OutputProcessor = typeof defaultOutputProcessor;
 
+/**
+ * A JSON query engine that uses JSONPath to query a JSON object.
+ */
 export class JSONQueryEngine implements BaseQueryEngine {
   jsonValue: JSONSchemaType;
   jsonSchema: JSONSchemaType;
   serviceContext: ServiceContext;
   outputProcessor: OutputProcessor;
-  outputKwargs: Record<string, unknown>;
   verbose: boolean;
   jsonPathPrompt: JSONPathPrompt;
   synthesizeResponse: boolean;
@@ -71,7 +97,6 @@ export class JSONQueryEngine implements BaseQueryEngine {
     serviceContext?: ServiceContext;
     jsonPathPrompt?: JSONPathPrompt;
     outputProcessor?: OutputProcessor;
-    outputKwargs?: Record<string, unknown>;
     synthesizeResponse?: boolean;
     responseSynthesisPrompt?: ResponseSynthesisPrompt;
     verbose?: boolean;
@@ -81,7 +106,6 @@ export class JSONQueryEngine implements BaseQueryEngine {
     this.serviceContext = init.serviceContext ?? serviceContextFromDefaults({});
     this.jsonPathPrompt = init.jsonPathPrompt ?? defaultJsonPathPrompt;
     this.outputProcessor = init.outputProcessor ?? defaultOutputProcessor;
-    this.outputKwargs = init.outputKwargs ?? {};
     this.verbose = init.verbose ?? false;
     this.synthesizeResponse = init.synthesizeResponse ?? true;
     this.responseSynthesisPrompt =
@@ -141,7 +165,6 @@ export class JSONQueryEngine implements BaseQueryEngine {
     const jsonPathOutput = await this.outputProcessor({
       llmOutput: jsonPathResponseStr.text,
       jsonValue: this.jsonValue,
-      ...this.outputKwargs,
     });
 
     if (this.verbose) {
