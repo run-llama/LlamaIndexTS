@@ -42,7 +42,7 @@ function removeExtraQuotes(expr: string) {
   return expr.substring(startIndex, endIndex);
 }
 
-const defaultOutputProcessor = async ({
+export const defaultOutputProcessor = async ({
   llmOutput,
   jsonValue,
 }: {
@@ -56,6 +56,7 @@ const defaultOutputProcessor = async ({
   const results: Record<string, unknown>[] = [];
 
   for (const expression of expressions) {
+    // get the key for example content from $.content
     const key = expression.split(".").pop();
 
     try {
@@ -64,6 +65,12 @@ const defaultOutputProcessor = async ({
       if (!key) throw new Error(`Invalid JSON Path: ${expression}`);
 
       for (const datum of datums) {
+        // in case there is a filter like [?(@.username=='simon')] without a key ie: $..comments[?(@.username=='simon').content]
+        if (key.includes("==")) {
+          results.push(datum);
+          continue;
+        }
+
         results.push({
           [key]: datum,
         });

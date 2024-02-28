@@ -106,7 +106,7 @@ async function main() {
   });
 
   const response = await jsonQueryEngine.query({
-    query: "give me all simon comments",
+    query: "give to me the comment with id 1",
   });
 
   const rawResponse = await rawQueryEngine.query({
