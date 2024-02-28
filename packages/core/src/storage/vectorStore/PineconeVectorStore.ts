@@ -19,6 +19,7 @@ import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 type PineconeParams = {
   indexName?: string;
   chunkSize?: number;
+  namespace?: string;
 };
 
 /**
@@ -37,11 +38,13 @@ export class PineconeVectorStore implements VectorStore {
   */
   db?: Pinecone;
   indexName: string;
+  namespace: string;
   chunkSize: number;
 
   constructor(params?: PineconeParams) {
     this.indexName =
       params?.indexName ?? process.env.PINECONE_INDEX_NAME ?? "llama";
+    this.namespace = params?.namespace ?? process.env.PINECONE_NAMESPACE ?? "";
     this.chunkSize =
       params?.chunkSize ??
       Number.parseInt(process.env.PINECONE_CHUNK_SIZE ?? "100");
@@ -148,10 +151,12 @@ export class PineconeVectorStore implements VectorStore {
     };
 
     const idx = await this.index();
-    const results = await idx.query(options);
+    const results = await idx.namespace(this.namespace).query(options);
 
     const idList = results.matches.map((row) => row.id);
-    const records: FetchResponse<any> = await idx.fetch(idList);
+    const records: FetchResponse<any> = await idx
+      .namespace(this.namespace)
+      .fetch(idList);
     const rows = Object.values(records.records);
 
     const nodes = rows.map((row) => {

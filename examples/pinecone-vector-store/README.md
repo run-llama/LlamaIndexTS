@@ -7,8 +7,9 @@ There are two scripts available here: load-docs.ts and query.ts
 You'll need a Pinecone account, project, and index. Pinecone does not allow automatic creation of indexes on the free plan,
 so this vector store does not check and create the index (unlike, e.g., the PGVectorStore)
 
-Set the **PINECONE_API_KEY** and **PINECONE_ENVIRONMENT** environment variables to match your specific values. You will likely also need to set **PINECONE_INDEX_NAME**, unless your
-index is the default value "llama".
+Set the **PINECONE_API_KEY** and **PINECONE_ENVIRONMENT** environment variables to match your specific values.
+You will likely also need to set **PINECONE_INDEX_NAME**, unless your index is the default value "llama".
+By default, all operations take place inside the default namespace '', but you can set **PINECONE_NAMESPACE** to a different value if you need to.
 
 You'll also need a value for OPENAI_API_KEY in your environment.
 
