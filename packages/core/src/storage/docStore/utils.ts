@@ -7,7 +7,7 @@ const DATA_KEY = "__data__";
 export function docToJson(doc: BaseNode): Record<string, any> {
   return {
     [DATA_KEY]: JSON.stringify(doc),
-    [TYPE_KEY]: doc.getType(),
+    [TYPE_KEY]: doc.type,
   };
 }
 

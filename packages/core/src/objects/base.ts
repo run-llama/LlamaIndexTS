@@ -115,7 +115,11 @@ export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
     if (!node.metadata) {
       throw new Error("Metadata must be set");
     }
-    return this._tools[node.metadata.name];
+    const { name } = node.metadata;
+    if (!name || typeof name !== "string") {
+      throw new Error("Name must be set and must be a string");
+    }
+    return this._tools[name];
   }
 
   persist(persistDir: string, objNodeMappingFilename: string): void {

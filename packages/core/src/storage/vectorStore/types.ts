@@ -1,4 +1,12 @@
-import type { BaseNode } from "../../Node.js";
+import type { BaseNode, Metadata } from "../../Node.js";
+
+export type VectorMetadata = Metadata & {
+  _node_content: string;
+  _node_type: string;
+  document_id: string;
+  doc_id: string;
+  ref_doc_id: string;
+};
 
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];

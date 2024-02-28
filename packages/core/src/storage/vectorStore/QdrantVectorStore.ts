@@ -1,5 +1,6 @@
 import type { BaseNode } from "../../Node.js";
 import type {
+  VectorMetadata,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
@@ -10,7 +11,7 @@ import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PointStruct = {
   id: string;
-  payload: Record<string, string>;
+  payload: VectorMetadata;
   vector: number[];
 };
 
@@ -235,7 +236,7 @@ export class QdrantVectorStore implements VectorStore {
 
     for (let i = 0; i < response.length; i++) {
       const item = response[i];
-      const payload = item.payload;
+      const payload = item.payload as VectorMetadata;
 
       const node = metadataDictToNode(payload);
 

@@ -40,7 +40,7 @@ describe("Testing VectorStore utils", () => {
   test("metadataDictToNode should throw an error when node content not found in metadata", () => {
     const faultyMetadata = {
       _node_type: "IndexNode",
-    };
+    } as never;
     expect(() => {
       metadataDictToNode(faultyMetadata);
     }).toThrow();

@@ -1,6 +1,7 @@
 import type {
   ExactMatchFilter,
   MetadataFilters,
+  VectorMetadata,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
@@ -198,20 +199,20 @@ export class PineconeVectorStore implements VectorStore {
     }, {});
   }
 
-  textFromResultRow(row: ScoredPineconeRecord<Metadata>): string {
+  textFromResultRow(
+    row: ScoredPineconeRecord<{
+      text: string;
+    }>,
+  ): string {
     return row.metadata?.text ?? "";
   }
 
-  metaWithoutText(meta: Metadata): any {
-    return Object.keys(meta)
-      .filter((key) => key != "text")
-      .reduce((acc: any, key: string) => {
-        acc[key] = meta[key];
-        return acc;
-      }, {});
+  metaWithoutText(meta: VectorMetadata): VectorMetadata {
+    const { text, ...rest } = meta;
+    return rest;
   }
 
-  nodeToRecord(node: BaseNode<Metadata>) {
+  nodeToRecord(node: BaseNode) {
     const id: any = node.id_.length ? node.id_ : null;
     return {
       id: id,

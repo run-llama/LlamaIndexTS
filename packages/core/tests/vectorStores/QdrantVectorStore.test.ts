@@ -51,7 +51,19 @@ describe("QdrantVectorStore", () => {
         const mockBuildPoints = vi
           .spyOn(store, "buildPoints")
           .mockResolvedValue({
-            points: [{ id: "1", payload: {}, vector: [0.1, 0.2] }],
+            points: [
+              {
+                id: "1",
+                payload: {
+                  _node_content: JSON.stringify({ text: "hello world" }),
+                  _node_type: "TextNode",
+                  document_id: "1",
+                  doc_id: "1",
+                  ref_doc_id: "1",
+                },
+                vector: [0.1, 0.2],
+              },
+            ],
             ids: ["1"],
           });
 
@@ -84,7 +96,19 @@ describe("QdrantVectorStore", () => {
         vi.spyOn(store, "initializeCollection").mockResolvedValue();
 
         vi.spyOn(store, "buildPoints").mockResolvedValue({
-          points: [{ id: "1", payload: {}, vector: [0.1, 0.2] }],
+          points: [
+            {
+              id: "1",
+              payload: {
+                _node_content: JSON.stringify({ text: "hello world" }),
+                _node_type: "TextNode",
+                document_id: "1",
+                doc_id: "1",
+                ref_doc_id: "1",
+              },
+              vector: [0.1, 0.2],
+            },
+          ],
           ids: ["1"],
         });
 
