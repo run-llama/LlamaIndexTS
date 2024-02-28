@@ -1,5 +1,4 @@
-import pg from "pg";
-import pgvector from "pgvector/pg";
+import type pg from "pg";
 
 import type {
   VectorStore,
@@ -83,16 +82,18 @@ export class PGVectorStore implements VectorStore {
   private async getDb(): Promise<pg.Client> {
     if (!this.db) {
       try {
+        const { Client } = await import("pg");
+        const { registerType } = await import("pgvector/pg");
         // Create DB connection
         // Read connection params from env - see comment block above
-        const db = new pg.Client({
+        const db = new Client({
           connectionString: this.connectionString,
         });
         await db.connect();
 
         // Check vector extension
         db.query("CREATE EXTENSION IF NOT EXISTS vector");
-        await pgvector.registerType(db);
+        await registerType(db);
 
         // Check schema, table(s), index(es)
         await this.checkSchema(db);
