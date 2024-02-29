@@ -1,5 +1,6 @@
 import type { ServiceContext } from "../ServiceContext.js";
 
+export const DEFAULT_PIPELINE_NAME = "default";
 export const DEFAULT_PROJECT_NAME = "default";
 export const DEFAULT_BASE_URL = "https://api.cloud.llamaindex.ai";
 
