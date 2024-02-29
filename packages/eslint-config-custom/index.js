@@ -36,6 +36,7 @@ module.exports = {
           "PINECONE_INDEX_NAME",
           "PINECONE_CHUNK_SIZE",
           "PINECONE_INDEX_NAME",
+          "PINECONE_NAMESPACE",
 
           "AZURE_OPENAI_API_KEY",
           "AZURE_OPENAI_API_INSTANCE_NAME",

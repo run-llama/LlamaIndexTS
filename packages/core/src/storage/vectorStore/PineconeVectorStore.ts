@@ -12,13 +12,15 @@ import type {
   Index,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
-import { Pinecone } from "@pinecone-database/pinecone";
+import { type Pinecone } from "@pinecone-database/pinecone";
 import type { BaseNode, Metadata } from "../../Node.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {
   indexName?: string;
   chunkSize?: number;
+  namespace?: string;
+  textKey?: string;
 };
 
 /**
@@ -37,18 +39,23 @@ export class PineconeVectorStore implements VectorStore {
   */
   db?: Pinecone;
   indexName: string;
+  namespace: string;
   chunkSize: number;
+  textKey: string;
 
   constructor(params?: PineconeParams) {
     this.indexName =
       params?.indexName ?? process.env.PINECONE_INDEX_NAME ?? "llama";
+    this.namespace = params?.namespace ?? process.env.PINECONE_NAMESPACE ?? "";
     this.chunkSize =
       params?.chunkSize ??
       Number.parseInt(process.env.PINECONE_CHUNK_SIZE ?? "100");
+    this.textKey = params?.textKey ?? "text";
   }
 
   private async getDb(): Promise<Pinecone> {
     if (!this.db) {
+      const { Pinecone } = await import("@pinecone-database/pinecone");
       this.db = await new Pinecone();
     }
 
@@ -148,24 +155,23 @@ export class PineconeVectorStore implements VectorStore {
     };
 
     const idx = await this.index();
-    const results = await idx.query(options);
+    const results = await idx.namespace(this.namespace).query(options);
 
     const idList = results.matches.map((row) => row.id);
-    const records: FetchResponse<any> = await idx.fetch(idList);
+    const records: FetchResponse<any> = await idx
+      .namespace(this.namespace)
+      .fetch(idList);
     const rows = Object.values(records.records);
 
     const nodes = rows.map((row) => {
-      const metadata = this.metaWithoutText(row.metadata);
-      const text = this.textFromResultRow(row);
-      const node = metadataDictToNode(metadata, {
+      const node = metadataDictToNode(row.metadata, {
         fallback: {
           id: row.id,
-          text,
-          metadata,
+          text: this.textFromResultRow(row),
+          metadata: this.metaWithoutText(row.metadata),
           embedding: row.values,
         },
       });
-      node.setContent(text);
       return node;
     });
 
@@ -199,12 +205,12 @@ export class PineconeVectorStore implements VectorStore {
   }
 
   textFromResultRow(row: ScoredPineconeRecord<Metadata>): string {
-    return row.metadata?.text ?? "";
+    return row.metadata?.[this.textKey] ?? "";
   }
 
   metaWithoutText(meta: Metadata): any {
     return Object.keys(meta)
-      .filter((key) => key != "text")
+      .filter((key) => key != this.textKey)
       .reduce((acc: any, key: string) => {
         acc[key] = meta[key];
         return acc;
