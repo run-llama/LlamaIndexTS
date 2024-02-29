@@ -164,12 +164,11 @@ export class PineconeVectorStore implements VectorStore {
     const rows = Object.values(records.records);
 
     const nodes = rows.map((row) => {
-      const metadata = this.metaWithoutText(row.metadata);
-      const node = metadataDictToNode(metadata, {
+      const node = metadataDictToNode(row.metadata, {
         fallback: {
           id: row.id,
           text: this.textFromResultRow(row),
-          metadata,
+          metadata: this.metaWithoutText(row.metadata),
           embedding: row.values,
         },
       });
