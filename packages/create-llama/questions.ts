@@ -3,9 +3,13 @@ import ciInfo from "ci-info";
 import fs from "fs";
 import path from "path";
 import { blue, green, red } from "picocolors";
-import prompts from "prompts";
+import prompts, { PromptObject } from "prompts";
 import { InstallAppArgs } from "./create-app";
-import { TemplateDataSourceType, TemplateFramework } from "./helpers";
+import {
+  FileSourceConfig,
+  TemplateDataSourceType,
+  TemplateFramework,
+} from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { templatesDir } from "./helpers/dir";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
@@ -520,6 +524,49 @@ export const askQuestions = async (
       };
     }
   }
+
+  if (
+    program.dataSource?.type === "file" ||
+    (program.dataSource?.type === "folder" && program.framework === "fastapi")
+  ) {
+    // Asking for whether to use LlamaParse
+    if (ciInfo.isCI) {
+      //
+    } else {
+      const dataSourceConfig = program.dataSource.config as FileSourceConfig;
+      if (!dataSourceConfig.useLlamaParse) {
+        const llamaParseQuestions: PromptObject<string>[] = [
+          {
+            type: "toggle",
+            name: "useLlamaParse",
+            message: "Would you like to use LlamaParse?",
+            initial: true,
+            active: "yes",
+            inactive: "no",
+          },
+          {
+            type: (prev) => (prev ? "password" : null),
+            name: "llamaIndexCloudKey",
+            message: "Please provide your LlamaIndex Cloud API key:",
+            validate: (value) =>
+              value
+                ? true
+                : "LlamaIndex Cloud API key is required. You can get it from: https://cloud.llamaindex.ai/api-key",
+          },
+        ];
+        const { useLlamaParse, llamaIndexCloudKey } = await prompts(
+          llamaParseQuestions,
+          handlers,
+        );
+        dataSourceConfig.useLlamaParse = useLlamaParse;
+        if (llamaIndexCloudKey) {
+          program.llamaIndexCloudKey = llamaIndexCloudKey;
+        }
+      }
+    }
+  }
+
+  console.log("dataSource", program.dataSource);
 
   if (program.dataSource?.type === "web" && program.framework === "fastapi") {
     let { baseUrl } = await prompts(
