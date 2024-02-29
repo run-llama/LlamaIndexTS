@@ -37,14 +37,18 @@ export class Ollama extends BaseEmbedding implements LLM {
   additionalChatOptions?: Record<string, unknown>;
   callbackManager?: CallbackManager;
 
+  protected modelMetadata: Partial<LLMMetadata>;
+
   constructor(
     init: Partial<Ollama> & {
       // model is required
       model: string;
+      modelMetadata?: Partial<LLMMetadata>;
     },
   ) {
     super();
     this.model = init.model;
+    this.modelMetadata = init.modelMetadata ?? {};
     Object.assign(this, init);
   }
 
@@ -56,6 +60,7 @@ export class Ollama extends BaseEmbedding implements LLM {
       maxTokens: undefined,
       contextWindow: this.contextWindow,
       tokenizer: undefined,
+      ...this.modelMetadata,
     };
   }
 
