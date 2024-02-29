@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.1.19
+
+### Patch Changes
+
+- 026d068: feat: enhance pinecone usage
+
 ## 0.1.18
 
 ### Patch Changes
