@@ -68,7 +68,7 @@ async function main() {
   });
 
   // Print the response
-  console.log(String(response));
+  console.log(response);
 }
 
 main().then(() => {
