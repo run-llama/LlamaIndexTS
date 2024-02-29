@@ -95,7 +95,8 @@
     "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
     "build:type": "pnpm run -w type-check",
-    "postbuild": "node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
+    "copy": "cp -r ../../README.md ../../LICENSE .",
+    "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
     "circular-check": "madge -c ./src/index.ts",
     "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
   }
