@@ -536,8 +536,16 @@ export const askQuestions = async (
       const dataSourceConfig = program.dataSource.config as FileSourceConfig;
       dataSourceConfig.useLlamaParse = program.llamaParse;
 
+      // Is pdf file selected as data source or is it a folder data source
+      const askingLlamaParse =
+        dataSourceConfig.useLlamaParse === undefined &&
+        (program.dataSource.type === "folder"
+          ? true
+          : dataSourceConfig.path &&
+            path.extname(dataSourceConfig.path) === ".pdf");
+
       // Ask if user wants to use LlamaParse
-      if (dataSourceConfig.useLlamaParse === undefined) {
+      if (askingLlamaParse) {
         const { useLlamaParse } = await prompts(
           {
             type: "toggle",
