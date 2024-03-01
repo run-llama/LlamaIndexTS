@@ -169,8 +169,8 @@ importers:
         specifier: ^0.1.4
         version: 0.1.4
       '@llamaindex/cloud':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.0.2
+        version: 0.0.2
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
@@ -3258,8 +3258,19 @@ packages:
   /@leichtgewicht/ip-codec@2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
 
-  /@llamaindex/cloud@0.0.1:
-    resolution: {integrity: sha512-7FrLAbY459B4rcG4NaqANatDT5zKvZxIRyrY+nnTSXqu9ZMzkm1Co8IIRYx2/9feps/OLOhXsv7VKGGUr7scNQ==}
+  /@llamaindex/cloud@0.0.2:
+    resolution: {integrity: sha512-UF5RVyb3g1V25lPAkg3VvS8iGuKv0bSI10H8dS3LwUHzl8foPEqqpbNbSOoJt2VEQ1A7w1///5dyN8y+FDtkKA==}
+    requiresBuild: true
+    peerDependencies:
+      node-fetch: ^3.3.2
+    peerDependenciesMeta:
+      node-fetch:
+        optional: true
+    dependencies:
+      '@types/qs': 6.9.12
+      form-data: 4.0.0
+      js-base64: 3.7.7
+      qs: 6.11.2
     dev: false
 
   /@manypkg/find-root@1.1.0:
@@ -4372,6 +4383,10 @@ packages:
 
   /@types/qs@6.9.11:
     resolution: {integrity: sha512-oGk0gmhnEJK4Yyk+oI7EfXsLayXatCWPHary1MtcmbAifkobT9cM9yutG/hZKIseOU0MqbIwQ/u2nn/Gb+ltuQ==}
+
+  /@types/qs@6.9.12:
+    resolution: {integrity: sha512-bZcOkJ6uWrL0Qb2NAWKa7TBU+mJHPzhx9jjLL1KHF+XpzEcR7EXHvjbHlGtR/IsP1vyPrehuS6XqkmaePy//mg==}
+    dev: false
 
   /@types/range-parser@1.2.7:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
@@ -9393,6 +9408,10 @@ packages:
 
   /js-base64@3.7.2:
     resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+    dev: false
+
+  /js-base64@3.7.7:
+    resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
     dev: false
 
   /js-tiktoken@1.0.10:

@@ -11,7 +11,7 @@
     "@types/node": "^18.19.14",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.0",
-    "@llamaindex/cloud": "^0.0.1",
+    "@llamaindex/cloud": "^0.0.2",
     "@llamaindex/env": "workspace:*",
     "@mistralai/mistralai": "^0.0.10",
     "@notionhq/client": "^2.2.14",
