@@ -245,9 +245,9 @@ export const installPythonTemplate = async ({
 
     const dataSourceType = dataSource?.type;
     if (dataSourceType !== undefined && dataSourceType !== "none") {
-      const dataSourceConfig = dataSource?.config as FileSourceConfig;
       let loaderFolder: string;
       if (dataSourceType === "file" || dataSourceType === "folder") {
+        const dataSourceConfig = dataSource?.config as FileSourceConfig;
         loaderFolder = dataSourceConfig.useLlamaParse ? "llama_parse" : "file";
       } else {
         loaderFolder = dataSourceType;
