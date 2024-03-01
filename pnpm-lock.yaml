@@ -169,8 +169,8 @@ importers:
         specifier: ^0.1.4
         version: 0.1.4
       '@llamaindex/cloud':
-        specifier: ^0.0.2
-        version: 0.0.2
+        specifier: 0.0.4
+        version: 0.0.4
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
@@ -3258,9 +3258,8 @@ packages:
   /@leichtgewicht/ip-codec@2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
 
-  /@llamaindex/cloud@0.0.2:
-    resolution: {integrity: sha512-UF5RVyb3g1V25lPAkg3VvS8iGuKv0bSI10H8dS3LwUHzl8foPEqqpbNbSOoJt2VEQ1A7w1///5dyN8y+FDtkKA==}
-    requiresBuild: true
+  /@llamaindex/cloud@0.0.4:
+    resolution: {integrity: sha512-ufu8sASmttGQZBrDVt5XHF+Lf7ZFImMe/bCwqfoGiywJUchc88igxhP0xF5iUpthyQr2/0nAhH117owj5+GF3A==}
     peerDependencies:
       node-fetch: ^3.3.2
     peerDependenciesMeta:
@@ -4191,7 +4190,7 @@ packages:
     resolution: {integrity: sha512-ckM3jm2bf/MfB3+spLPWYPUH573plBFwpOhqQ2WottxYV85j1HQFlxmnTq57X1yHY9awZPig06hL/cLMgNWHIQ==}
     dependencies:
       '@types/node': 20.11.17
-      '@types/qs': 6.9.11
+      '@types/qs': 6.9.12
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
 
@@ -4200,7 +4199,7 @@ packages:
     dependencies:
       '@types/body-parser': 1.19.5
       '@types/express-serve-static-core': 4.17.42
-      '@types/qs': 6.9.11
+      '@types/qs': 6.9.12
       '@types/serve-static': 1.15.5
 
   /@types/gtag.js@0.0.12:
@@ -4381,12 +4380,8 @@ packages:
   /@types/prop-types@15.7.8:
     resolution: {integrity: sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==}
 
-  /@types/qs@6.9.11:
-    resolution: {integrity: sha512-oGk0gmhnEJK4Yyk+oI7EfXsLayXatCWPHary1MtcmbAifkobT9cM9yutG/hZKIseOU0MqbIwQ/u2nn/Gb+ltuQ==}
-
   /@types/qs@6.9.12:
     resolution: {integrity: sha512-bZcOkJ6uWrL0Qb2NAWKa7TBU+mJHPzhx9jjLL1KHF+XpzEcR7EXHvjbHlGtR/IsP1vyPrehuS6XqkmaePy//mg==}
-    dev: false
 
   /@types/range-parser@1.2.7:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
