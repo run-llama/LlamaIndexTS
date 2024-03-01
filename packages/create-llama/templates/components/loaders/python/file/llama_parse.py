@@ -1,8 +1,5 @@
-import nest_asyncio
 from llama_parse import LlamaParse
 from llama_index.core import SimpleDirectoryReader
-
-nest_asyncio.apply()
 
 DATA_DIR = "data"  # directory containing the documents
 
