@@ -1,4 +1,4 @@
-import _, * as lodash from "lodash";
+import _ from "lodash";
 import type { BaseNode } from "../../Node.js";
 import { ObjectType } from "../../Node.js";
 import { DEFAULT_NAMESPACE } from "../constants.js";
@@ -123,10 +123,10 @@ export class KVDocumentStore extends BaseDocumentStore {
 
     const refDocInfo = await this.kvstore.get(refDocId, this.refDocCollection);
     if (!_.isNil(refDocInfo)) {
-      lodash.pull(refDocInfo.docIds, docId);
+      !_.pull(refDocInfo.nodeIds, docId);
 
-      if (refDocInfo.docIds.length > 0) {
-        this.kvstore.put(refDocId, refDocInfo.toDict(), this.refDocCollection);
+      if (refDocInfo.nodeIds.length > 0) {
+        this.kvstore.put(refDocId, refDocInfo, this.refDocCollection);
       }
       this.kvstore.delete(refDocId, this.metadataCollection);
     }
