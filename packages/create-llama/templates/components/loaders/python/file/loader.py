@@ -1,6 +1,6 @@
 from llama_index.core.readers import SimpleDirectoryReader
 
-DATA_DIR = "data"  # directory to cache the generated index
+DATA_DIR = "data"  # directory containing the documents
 
 
 def get_documents():

@@ -8,6 +8,7 @@ import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
 import { Tool } from "./tools";
 import {
+  FileSourceConfig,
   InstallTemplateArgs,
   TemplateDataSource,
   TemplateVectorDB,
@@ -244,14 +245,26 @@ export const installPythonTemplate = async ({
 
     const dataSourceType = dataSource?.type;
     if (dataSourceType !== undefined && dataSourceType !== "none") {
-      const loaderPath =
-        dataSourceType === "folder"
-          ? path.join(compPath, "loaders", "python", "file")
-          : path.join(compPath, "loaders", "python", dataSourceType);
-      await copy("**", enginePath, {
-        parents: true,
-        cwd: loaderPath,
-      });
+      let loaderPath;
+      if (dataSourceType === "file" || dataSourceType === "folder") {
+        const loaderDir = path.join(compPath, "loaders", "python", "file");
+        const dataSourceConfig = dataSource?.config as FileSourceConfig;
+        if (dataSourceConfig.useLlamaParse) {
+          loaderPath = path.join(loaderDir, "llama_parse.py");
+        } else {
+          loaderPath = path.join(loaderDir, "loader.py");
+        }
+      } else {
+        loaderPath = path.join(
+          compPath,
+          "loaders",
+          "python",
+          dataSourceType,
+          "loader.py",
+        );
+      }
+      const loaderFilePath = path.join(enginePath, "loader.py");
+      await fs.copyFile(loaderPath, loaderFilePath);
     }
   }
 

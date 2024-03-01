@@ -546,7 +546,7 @@ export const askQuestions = async (
           },
           {
             type: (prev) => (prev ? "password" : null),
-            name: "llamaIndexCloudKey",
+            name: "llamaCloudKey",
             message: "Please provide your LlamaIndex Cloud API key:",
             validate: (value) =>
               value
@@ -554,19 +554,17 @@ export const askQuestions = async (
                 : "LlamaIndex Cloud API key is required. You can get it from: https://cloud.llamaindex.ai/api-key",
           },
         ];
-        const { useLlamaParse, llamaIndexCloudKey } = await prompts(
+        const { useLlamaParse, llamaCloudKey } = await prompts(
           llamaParseQuestions,
           handlers,
         );
         dataSourceConfig.useLlamaParse = useLlamaParse;
-        if (llamaIndexCloudKey) {
-          program.llamaIndexCloudKey = llamaIndexCloudKey;
+        if (llamaCloudKey) {
+          program.llamaCloudKey = llamaCloudKey;
         }
       }
     }
   }
-
-  console.log("dataSource", program.dataSource);
 
   if (program.dataSource?.type === "web" && program.framework === "fastapi") {
     let { baseUrl } = await prompts(

@@ -36,7 +36,7 @@ export interface InstallTemplateArgs {
   eslint: boolean;
   customApiPath?: string;
   openAiKey?: string;
-  llamaIndexCloudKey?: string;
+  llamaCloudKey?: string;
   forBackend?: string;
   model: string;
   communityProjectPath?: string;

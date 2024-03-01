@@ -264,6 +264,7 @@ async function run(): Promise<void> {
     eslint: program.eslint,
     frontend: program.frontend,
     openAiKey: program.openAiKey,
+    llamaCloudKey: program.llamaCloudKey,
     model: program.model,
     communityProjectPath: program.communityProjectPath,
     llamapack: program.llamapack,
