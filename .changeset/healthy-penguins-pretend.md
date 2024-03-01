@@ -2,4 +2,4 @@
 "llamaindex": patch
 ---
 
-fix: empty store bugs
+fixed removeRefDocNode and persist store on delete
