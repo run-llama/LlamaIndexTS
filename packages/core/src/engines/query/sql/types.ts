@@ -31,7 +31,7 @@ export abstract class BaseSQLTableQueryEngine implements BaseQueryEngine {
     serviceContext?: ServiceContext;
     verbose?: boolean;
   }) {
-    this.synthesizeResponse = init.synthesizeResponse || true;
+    this.synthesizeResponse = init.synthesizeResponse ?? true;
     this.responseSynthesisPrompt =
       init.responseSynthesisPrompt || defaultResponseSynthesisPrompt;
     this.serviceContext = init.serviceContext || serviceContextFromDefaults({});
@@ -71,26 +71,27 @@ export abstract class BaseSQLTableQueryEngine implements BaseQueryEngine {
       throw new Error("Streaming is not supported");
     }
 
-    const retrievedNodes = await this.sqlRetriever.retrieve(
-      query,
-      undefined,
-      {},
-    );
+    const [retrievedNodes, metadata] =
+      await this.sqlRetriever.retrieveWithMetadata({
+        queryStr: query,
+      });
 
-    console.log({ retrievedNodes: retrievedNodes.map((node) => node.node) });
+    const sqlQueryStr = metadata.sqlQuery;
 
-    const metadatas = retrievedNodes.map((node) => node.node.metadata);
+    console.log(`> SQL query: ${sqlQueryStr}`); // TODO: Remove
 
-    console.log({ metadatas });
-
-    const sqlQueryStr = retrievedNodes[0].node.metadata.sqlQuery;
+    console.log(`> Sythesize Response ${this.synthesizeResponse}`);
 
     if (this.synthesizeResponse) {
-      const responseBuilder = new CompactAndRefine(this.serviceContext);
-
-      responseBuilder.updatePrompts({
-        textQATemplate: this.responseSynthesisPrompt,
-      });
+      const responseBuilder = new CompactAndRefine(
+        this.serviceContext,
+        ({ query, context }) =>
+          this.responseSynthesisPrompt({
+            query,
+            context,
+            sqlQuery: sqlQueryStr,
+          }),
+      );
 
       const responseSynthesizer = new ResponseSynthesizer({
         serviceContext: this.serviceContext,
@@ -100,11 +101,6 @@ export abstract class BaseSQLTableQueryEngine implements BaseQueryEngine {
       const response = await responseSynthesizer.synthesize({
         query,
         nodesWithScore: retrievedNodes,
-        extraInput: {
-          sqlQuery: sqlQueryStr,
-          queryStr: query,
-          contextStr: "",
-        },
       });
 
       response.metadata.sqlQuery = sqlQueryStr;

@@ -1,7 +1,16 @@
 import knex from "knex";
-import { NLSQLQueryEngine, SQLDatabase } from "./index.js";
+import {
+  NLSQLQueryEngine,
+  OpenAI,
+  SQLDatabase,
+  serviceContextFromDefaults,
+} from "./index.js";
 
 async function main() {
+  const llm = new OpenAI({
+    model: "gpt-4",
+  });
+
   const engine = knex({
     client: "sqlite3", // or 'better-sqlite3'
     connection: {
@@ -25,7 +34,6 @@ async function main() {
 
   await engine.schema.createTable(tableName, async (table) => {
     table.increments("id");
-    table.string("name");
     table.string("comment");
     table.string("author");
 
@@ -43,20 +51,28 @@ async function main() {
     });
     await db.insertIntoTable(tableName, {
       comment: "this is a test4",
-      author: "logan ",
+      author: "alex",
+    });
+
+    const ctx = serviceContextFromDefaults({
+      llm,
     });
 
     const engine = new NLSQLQueryEngine({
       sqlDatabase: db,
       tables: ["test_table_1"],
       verbose: true,
+      serviceContext: ctx,
+      synthesizeResponse: true,
     });
 
-    const a = await engine.query({
-      query: "Who is the author of the first comment?",
+    const response = await engine.query({
+      query: "What's the comment from author yi and emanuel?",
     });
 
-    console.log({ a });
+    console.log({ response });
+
+    process.exit(0);
   });
 }
 

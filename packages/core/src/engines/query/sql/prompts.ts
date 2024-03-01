@@ -1,16 +1,16 @@
 export const defaultResponseSynthesisPrompt = ({
-  queryStr,
+  query,
+  context,
   sqlQuery,
-  contextStr,
 }: {
-  queryStr: string;
+  query?: string;
+  context?: string;
   sqlQuery: string;
-  contextStr: string;
 }) => `
 Given an input question, synthesize a response from the query results.
-Query: ${queryStr}
+Query: ${query}
 SQL: ${sqlQuery}
-SQL Response: ${contextStr}
+SQL Response: ${context}
 Response: 
 `;
 

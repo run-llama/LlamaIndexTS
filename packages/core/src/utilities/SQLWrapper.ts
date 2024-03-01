@@ -67,7 +67,7 @@ export class SQLDatabase {
 
     const columnStr = Object.keys(columns)
       .map((column) => {
-        return `${column} (${columns[column].type}) `;
+        return `${column} (${columns[column].type})`;
       })
       .join(", ");
 

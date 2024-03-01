@@ -169,16 +169,16 @@ export class NLSQLRetriever extends SQLRetriever implements BaseRetriever {
     [
       NodeWithScore[],
       {
-        sql_query: string;
+        sqlQuery: string;
       },
     ]
   > {
     const queryBundle =
-      strOrQueryBundle instanceof QueryBundle
-        ? strOrQueryBundle
-        : new QueryBundle(strOrQueryBundle);
+      typeof strOrQueryBundle === "string"
+        ? { queryStr: strOrQueryBundle }
+        : strOrQueryBundle;
+
     const tableDescStr = await this.getTableContext(queryBundle);
-    console.log(`> Table desc str: ${tableDescStr}`);
 
     if (this.verbose) {
       console.log(`> Table desc str: ${tableDescStr}`);
@@ -201,7 +201,6 @@ export class NLSQLRetriever extends SQLRetriever implements BaseRetriever {
       queryBundle,
     );
 
-    console.log(`> Predicted SQL query: ${sqlQueryStr}`);
     if (this.verbose) {
       console.log(`> Predicted SQL query: ${sqlQueryStr}`);
     }
@@ -231,7 +230,7 @@ export class NLSQLRetriever extends SQLRetriever implements BaseRetriever {
         }
       }
     }
-    return [retrievedNodes, { sql_query: sqlQueryStr, ...metadata }];
+    return [retrievedNodes, { sqlQuery: sqlQueryStr, ...metadata }];
   }
 
   async retrieve(query: string): Promise<NodeWithScore[]> {
@@ -240,8 +239,6 @@ export class NLSQLRetriever extends SQLRetriever implements BaseRetriever {
   }
 
   async getTableContext(queryBundle: QueryBundle) {
-    console.log(await this.getTables);
-
     const tableSchemaObjs = this.getTables(queryBundle.queryStr);
     const contextStrs = [];
     if (this.contextStrPrefix) {
@@ -252,7 +249,7 @@ export class NLSQLRetriever extends SQLRetriever implements BaseRetriever {
         tableSchemaObj.tableName,
       );
       if (tableSchemaObj.contextStr) {
-        const tableOptContext = ` The table description is: ${tableSchemaObj.contextStr}`;
+        const tableOptContext = `The table description is: ${tableSchemaObj.contextStr}`;
         tableInfo += tableOptContext;
       }
       contextStrs.push(tableInfo);
