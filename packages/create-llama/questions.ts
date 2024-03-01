@@ -3,7 +3,7 @@ import ciInfo from "ci-info";
 import fs from "fs";
 import path from "path";
 import { blue, green, red } from "picocolors";
-import prompts, { PromptObject } from "prompts";
+import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
 import {
   FileSourceConfig,
@@ -19,7 +19,7 @@ import { supportedTools, toolsRequireConfig } from "./helpers/tools";
 export type QuestionArgs = Omit<
   InstallAppArgs,
   "appPath" | "packageManager"
-> & { files?: string };
+> & { files?: string; llamaParse?: boolean };
 const supportedContextFileTypes = [
   ".pdf",
   ".doc",
@@ -67,6 +67,7 @@ const defaults: QuestionArgs = {
   eslint: true,
   frontend: false,
   openAiKey: "",
+  llamaCloudKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
   llamapack: "",
@@ -529,13 +530,15 @@ export const askQuestions = async (
     program.dataSource?.type === "file" ||
     (program.dataSource?.type === "folder" && program.framework === "fastapi")
   ) {
-    // Asking for whether to use LlamaParse
     if (ciInfo.isCI) {
-      //
+      program.llamaCloudKey = getPrefOrDefault("llamaCloudKey");
     } else {
       const dataSourceConfig = program.dataSource.config as FileSourceConfig;
-      if (!dataSourceConfig.useLlamaParse) {
-        const llamaParseQuestions: PromptObject<string>[] = [
+      dataSourceConfig.useLlamaParse = program.llamaParse;
+
+      // Ask if user wants to use LlamaParse
+      if (dataSourceConfig.useLlamaParse === undefined) {
+        const { useLlamaParse } = await prompts(
           {
             type: "toggle",
             name: "useLlamaParse",
@@ -544,8 +547,20 @@ export const askQuestions = async (
             active: "yes",
             inactive: "no",
           },
+          handlers,
+        );
+        dataSourceConfig.useLlamaParse = useLlamaParse;
+        program.dataSource.config = dataSourceConfig;
+      }
+
+      // Ask for LlamaCloud API key
+      if (
+        dataSourceConfig.useLlamaParse &&
+        program.llamaCloudKey === undefined
+      ) {
+        const { llamaCloudKey } = await prompts(
           {
-            type: (prev) => (prev ? "password" : null),
+            type: "text",
             name: "llamaCloudKey",
             message: "Please provide your LlamaIndex Cloud API key:",
             validate: (value) =>
@@ -553,15 +568,9 @@ export const askQuestions = async (
                 ? true
                 : "LlamaIndex Cloud API key is required. You can get it from: https://cloud.llamaindex.ai/api-key",
           },
-        ];
-        const { useLlamaParse, llamaCloudKey } = await prompts(
-          llamaParseQuestions,
           handlers,
         );
-        dataSourceConfig.useLlamaParse = useLlamaParse;
-        if (llamaCloudKey) {
-          program.llamaCloudKey = llamaCloudKey;
-        }
+        program.llamaCloudKey = llamaCloudKey;
       }
     }
   }
