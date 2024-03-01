@@ -263,8 +263,7 @@ export const installPythonTemplate = async ({
           "loader.py",
         );
       }
-      const loaderFilePath = path.join(enginePath, "loader.py");
-      await fs.copyFile(loaderPath, loaderFilePath);
+      await fs.copyFile(loaderPath, path.join(enginePath, "loader.py"));
     }
   }
 
