@@ -8,6 +8,7 @@ import { templatesDir } from "./dir";
 import { isPoetryAvailable, tryPoetryInstall } from "./poetry";
 import { Tool } from "./tools";
 import {
+  FileSourceConfig,
   InstallTemplateArgs,
   TemplateDataSource,
   TemplateVectorDB,
@@ -244,13 +245,16 @@ export const installPythonTemplate = async ({
 
     const dataSourceType = dataSource?.type;
     if (dataSourceType !== undefined && dataSourceType !== "none") {
-      const loaderPath =
-        dataSourceType === "folder"
-          ? path.join(compPath, "loaders", "python", "file")
-          : path.join(compPath, "loaders", "python", dataSourceType);
+      let loaderFolder: string;
+      if (dataSourceType === "file" || dataSourceType === "folder") {
+        const dataSourceConfig = dataSource?.config as FileSourceConfig;
+        loaderFolder = dataSourceConfig.useLlamaParse ? "llama_parse" : "file";
+      } else {
+        loaderFolder = dataSourceType;
+      }
       await copy("**", enginePath, {
         parents: true,
-        cwd: loaderPath,
+        cwd: path.join(compPath, "loaders", "python", loaderFolder),
       });
     }
   }
