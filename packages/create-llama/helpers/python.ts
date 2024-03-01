@@ -245,25 +245,21 @@ export const installPythonTemplate = async ({
 
     const dataSourceType = dataSource?.type;
     if (dataSourceType !== undefined && dataSourceType !== "none") {
-      let loaderPath;
+      let loaderPath = path.join(compPath, "loaders", "python");
+      const dataSourceConfig = dataSource?.config as FileSourceConfig;
       if (dataSourceType === "file" || dataSourceType === "folder") {
-        const loaderDir = path.join(compPath, "loaders", "python", "file");
-        const dataSourceConfig = dataSource?.config as FileSourceConfig;
         if (dataSourceConfig.useLlamaParse) {
-          loaderPath = path.join(loaderDir, "llama_parse.py");
+          loaderPath = path.join(loaderPath, "llama_parse");
         } else {
-          loaderPath = path.join(loaderDir, "loader.py");
+          loaderPath = path.join(loaderPath, "file");
         }
       } else {
-        loaderPath = path.join(
-          compPath,
-          "loaders",
-          "python",
-          dataSourceType,
-          "loader.py",
-        );
+        loaderPath = path.join(loaderPath, dataSourceType);
       }
-      await fs.copyFile(loaderPath, path.join(enginePath, "loader.py"));
+      await copy("**", enginePath, {
+        parents: true,
+        cwd: loaderPath,
+      });
     }
   }
 

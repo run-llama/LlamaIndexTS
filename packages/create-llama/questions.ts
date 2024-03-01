@@ -550,7 +550,8 @@ export const askQuestions = async (
           {
             type: "toggle",
             name: "useLlamaParse",
-            message: "Would you like to use LlamaParse?",
+            message:
+              "Would you like to use LlamaParse (improved parser for RAG - requires API key)?",
             initial: true,
             active: "yes",
             inactive: "no",
