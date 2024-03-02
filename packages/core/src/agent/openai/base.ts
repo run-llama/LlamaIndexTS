@@ -37,8 +37,6 @@ export class OpenAIAgent extends AgentRunner {
     toolRetriever,
     systemPrompt,
   }: OpenAIAgentParams) {
-    prefixMessages = prefixMessages || [];
-
     llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
 
     if (systemPrompt) {
