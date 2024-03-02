@@ -27,6 +27,7 @@ export interface ChatEngineParamsNonStreaming extends ChatEngineParamsBase {
 
 export interface ChatEngineAgentParams extends ChatEngineParamsBase {
   toolChoice?: string | Record<string, any>;
+  mode?: ChatResponseMode;
 }
 
 /**

@@ -1,6 +1,7 @@
 // Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
 
 import { randomUUID } from "@llamaindex/env";
+import { Response } from "../../Response.js";
 import type { CallbackManager } from "../../callbacks/CallbackManager.js";
 import {
   AgentChatResponse,
@@ -12,6 +13,7 @@ import type {
   ChatResponseChunk,
 } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
+import { streamConverter, streamReducer } from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { ToolOutput } from "../../tools/types.js";
@@ -199,6 +201,31 @@ export class OpenAIAgentWorker implements AgentWorker {
     return new AgentChatResponse(aiMessage.content, task.extraState.sources);
   }
 
+  private async _getStreamAiResponse(
+    task: Task,
+    llmChatKwargs: any,
+  ): Promise<AsyncIterable<Response>> {
+    const stream = await this.llm.chat({
+      stream: true,
+      ...llmChatKwargs,
+    });
+
+    return streamConverter(
+      streamReducer({
+        stream,
+        initialValue: "",
+        reducer: (accumulator, part) => (accumulator += part.delta),
+        finished: (accumulator) => {
+          task.extraState.newMemory.put({
+            content: accumulator,
+            role: "assistant",
+          });
+        },
+      }),
+      (r: ChatResponseChunk) => new Response(r.delta),
+    );
+  }
+
   /**
    * Get agent response.
    * @param task: task
@@ -210,7 +237,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     task: Task,
     mode: ChatResponseMode,
     llmChatKwargs: any,
-  ): Promise<AgentChatResponse> {
+  ): Promise<AgentChatResponse | AsyncIterable<Response>> {
     if (mode === ChatResponseMode.WAIT) {
       const chatResponse = (await this.llm.chat({
         stream: false,
@@ -218,9 +245,11 @@ export class OpenAIAgentWorker implements AgentWorker {
       })) as unknown as ChatResponse;
 
       return this._processMessage(task, chatResponse) as AgentChatResponse;
-    } else {
-      throw new Error("Not implemented");
+    } else if (mode === ChatResponseMode.STREAM) {
+      return this._getStreamAiResponse(task, llmChatKwargs);
     }
+
+    throw new Error("Invalid mode");
   }
 
   /**

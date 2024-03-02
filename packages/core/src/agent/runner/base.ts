@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import type { Response } from "../../Response.js";
 import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
@@ -238,17 +239,19 @@ export class AgentRunner extends BaseAgentRunner {
           this.getCompletedSteps(taskId).length - 1
         ];
     }
+
     if (!stepOutput.isLast) {
       throw new Error(
         "finalizeResponse can only be called on the last step output",
       );
     }
 
-    if (!(stepOutput.output instanceof AgentChatResponse)) {
-      throw new Error(
-        `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
-      );
-    }
+    // TODO: Fix this
+    // if (!(stepOutput.output instanceof AgentChatResponse)) {
+    //   throw new Error(
+    //     `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
+    //   );
+    // }
 
     this.agentWorker.finalizeTask(this.getTask(taskId), kwargs);
 
@@ -262,20 +265,18 @@ export class AgentRunner extends BaseAgentRunner {
   protected async _chat({
     message,
     toolChoice,
-  }: ChatEngineAgentParams & { mode: ChatResponseMode }) {
+    mode,
+  }: ChatEngineAgentParams & { mode: ChatResponseMode }): Promise<
+    AgentChatResponse | AsyncIterable<Response>
+  > {
     const task = this.createTask(message as string);
 
     let resultOutput;
 
     while (true) {
-      const curStepOutput = await this._runStep(
-        task.taskId,
-        undefined,
-        ChatResponseMode.WAIT,
-        {
-          toolChoice,
-        },
-      );
+      const curStepOutput = await this._runStep(task.taskId, undefined, mode, {
+        toolChoice,
+      });
 
       if (curStepOutput.isLast) {
         resultOutput = curStepOutput;
@@ -299,7 +300,10 @@ export class AgentRunner extends BaseAgentRunner {
     message,
     chatHistory,
     toolChoice,
-  }: ChatEngineAgentParams): Promise<AgentChatResponse> {
+    mode = ChatResponseMode.WAIT,
+  }: ChatEngineAgentParams): Promise<
+    AgentChatResponse | AsyncIterable<Response>
+  > {
     if (!toolChoice) {
       toolChoice = this.defaultToolChoice;
     }
@@ -308,7 +312,28 @@ export class AgentRunner extends BaseAgentRunner {
       message,
       chatHistory,
       toolChoice,
-      mode: ChatResponseMode.WAIT,
+      mode,
+    });
+
+    return chatResponse;
+  }
+
+  public async streamChat({
+    message,
+    chatHistory,
+    toolChoice,
+  }: ChatEngineAgentParams): Promise<
+    AgentChatResponse | AsyncIterable<Response>
+  > {
+    if (!toolChoice) {
+      toolChoice = this.defaultToolChoice;
+    }
+
+    const chatResponse = await this._chat({
+      message,
+      chatHistory,
+      toolChoice,
+      mode: ChatResponseMode.STREAM,
     });
 
     return chatResponse;

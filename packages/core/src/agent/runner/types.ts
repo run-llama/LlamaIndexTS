@@ -57,7 +57,7 @@ export abstract class BaseAgentRunner extends BaseAgent {
     taskId: string,
     stepOutput: TaskStepOutput,
     kwargs?: any,
-  ): Promise<AgentChatResponse>;
+  ): Promise<AgentChatResponse | AsyncIterable<AgentChatResponse>>;
 
   abstract undoStep(taskId: string): void;
 }
