@@ -58,9 +58,8 @@ export class InMemoryFileSystem implements CompleteFileSystem {
     }
   }
 
-  async mkdir(path: string) {
+  async mkdir(path: string): Promise<undefined> {
     this.files[path] = _.get(this.files, path, null);
-    return undefined;
   }
 
   async readdir(path: string): Promise<string[]> {
