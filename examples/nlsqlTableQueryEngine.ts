@@ -4,7 +4,7 @@ import {
   OpenAI,
   SQLDatabase,
   serviceContextFromDefaults,
-} from "./index.js";
+} from "llamaindex";
 
 async function main() {
   const llm = new OpenAI({
