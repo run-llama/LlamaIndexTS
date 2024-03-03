@@ -260,7 +260,7 @@ export class OpenAI extends BaseLLM {
       stream: false,
     });
 
-    const content = response.choices[0].message?.content ?? "";
+    const content = response.choices[0].message?.content ?? null;
 
     const kwargsOutput: Record<string, any> = {};
 

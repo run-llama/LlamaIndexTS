@@ -34,5 +34,6 @@ export const defaultFS: CompleteFileSystem = {
   stat: fs.stat,
 };
 
-export * from "./type.js";
+export type * from "./type.js";
+export { getEnv } from "./utils.js";
 export { EOL, ok, path, randomUUID };

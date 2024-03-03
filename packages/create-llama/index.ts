@@ -156,6 +156,18 @@ const program = new Commander.Command(packageJson.name)
   Specify the tools you want to use by providing a comma-separated list. For example, 'wikipedia.WikipediaToolSpec,google.GoogleSearchToolSpec'. Use 'none' to not using any tools.
 `,
   )
+  .option(
+    "--llama-parse",
+    `
+    Enable LlamaParse.
+`,
+  )
+  .option(
+    "--llama-cloud-key <key>",
+    `
+  Provide a LlamaCloud API key.
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
 if (process.argv.includes("--no-frontend")) {
@@ -170,6 +182,9 @@ if (process.argv.includes("--tools")) {
   } else {
     program.tools = getTools(program.tools.split(","));
   }
+}
+if (process.argv.includes("--no-llama-parse")) {
+  program.llamaParse = false;
 }
 
 const packageManager = !!program.useNpm
@@ -264,6 +279,7 @@ async function run(): Promise<void> {
     eslint: program.eslint,
     frontend: program.frontend,
     openAiKey: program.openAiKey,
+    llamaCloudKey: program.llamaCloudKey,
     model: program.model,
     communityProjectPath: program.communityProjectPath,
     llamapack: program.llamapack,

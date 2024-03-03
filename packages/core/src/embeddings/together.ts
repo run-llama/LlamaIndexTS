@@ -1,9 +1,10 @@
+import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "./OpenAIEmbedding.js";
 
 export class TogetherEmbedding extends OpenAIEmbedding {
   constructor(init?: Partial<OpenAIEmbedding>) {
     const {
-      apiKey = process.env.TOGETHER_API_KEY,
+      apiKey = getEnv("TOGETHER_API_KEY"),
       additionalSessionOptions = {},
       model = "togethercomputer/m2-bert-80M-32k-retrieval",
       ...rest

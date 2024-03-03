@@ -26,6 +26,7 @@ const createEnvLocalFile = async (
   root: string,
   opts?: {
     openAiKey?: string;
+    llamaCloudKey?: string;
     vectorDb?: TemplateVectorDB;
     model?: string;
     framework?: TemplateFramework;
@@ -44,6 +45,10 @@ const createEnvLocalFile = async (
 
   if (opts?.openAiKey) {
     content += `OPENAI_API_KEY=${opts?.openAiKey}\n`;
+  }
+
+  if (opts?.llamaCloudKey) {
+    content += `LLAMA_CLOUD_API_KEY=${opts?.llamaCloudKey}\n`;
   }
 
   switch (opts?.vectorDb) {
@@ -205,6 +210,7 @@ export const installTemplate = async (
     // Copy the environment file to the target directory.
     await createEnvLocalFile(props.root, {
       openAiKey: props.openAiKey,
+      llamaCloudKey: props.llamaCloudKey,
       vectorDb: props.vectorDb,
       model: props.model,
       framework: props.framework,

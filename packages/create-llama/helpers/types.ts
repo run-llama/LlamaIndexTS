@@ -15,6 +15,7 @@ export type TemplateDataSourceType = "none" | "file" | "folder" | "web";
 // Config for both file and folder
 export type FileSourceConfig = {
   path?: string;
+  useLlamaParse?: boolean;
 };
 export type WebSourceConfig = {
   baseUrl?: string;
@@ -35,6 +36,7 @@ export interface InstallTemplateArgs {
   eslint: boolean;
   customApiPath?: string;
   openAiKey?: string;
+  llamaCloudKey?: string;
   forBackend?: string;
   model: string;
   communityProjectPath?: string;

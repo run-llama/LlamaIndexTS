@@ -82,6 +82,9 @@ export class SimpleVectorStore implements VectorStore {
       delete this.data.embeddingDict[textId];
       delete this.data.textIdToRefDocId[textId];
     }
+    if (this.persistPath) {
+      await this.persist(this.persistPath, this.fs);
+    }
     return Promise.resolve();
   }
 

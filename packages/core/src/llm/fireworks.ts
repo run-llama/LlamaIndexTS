@@ -1,9 +1,10 @@
+import { getEnv } from "@llamaindex/env";
 import { OpenAI } from "./LLM.js";
 
 export class FireworksLLM extends OpenAI {
   constructor(init?: Partial<OpenAI>) {
     const {
-      apiKey = process.env.FIREWORKS_API_KEY,
+      apiKey = getEnv("FIREWORKS_API_KEY"),
       additionalSessionOptions = {},
       model = "accounts/fireworks/models/mixtral-8x7b-instruct",
       ...rest

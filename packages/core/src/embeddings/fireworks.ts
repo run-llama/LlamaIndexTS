@@ -1,9 +1,10 @@
+import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "./OpenAIEmbedding.js";
 
 export class FireworksEmbedding extends OpenAIEmbedding {
   constructor(init?: Partial<OpenAIEmbedding>) {
     const {
-      apiKey = process.env.FIREWORKS_API_KEY,
+      apiKey = getEnv("FIREWORKS_API_KEY"),
       additionalSessionOptions = {},
       model = "nomic-ai/nomic-embed-text-v1.5",
       ...rest

@@ -14,7 +14,7 @@ import { AgentState, BaseAgentRunner, TaskState } from "./types.js";
 
 const validateStepFromArgs = (
   taskId: string,
-  input: string,
+  input?: string | null,
   step?: any,
   kwargs?: any,
 ): TaskStep | undefined => {
@@ -24,6 +24,7 @@ const validateStepFromArgs = (
     }
     return step;
   } else {
+    if (!input) return;
     return new TaskStep(taskId, step, input, kwargs);
   }
 };
@@ -194,7 +195,7 @@ export class AgentRunner extends BaseAgentRunner {
    */
   async runStep(
     taskId: string,
-    input: string,
+    input?: string | null,
     step?: TaskStep,
     kwargs: any = {},
   ): Promise<TaskStepOutput> {

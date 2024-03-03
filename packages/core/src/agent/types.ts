@@ -161,13 +161,13 @@ export class TaskStep implements ITaskStep {
  * @param isLast: isLast
  */
 export class TaskStepOutput {
-  output: unknown;
+  output: any;
   taskStep: TaskStep;
   nextSteps: TaskStep[];
   isLast: boolean;
 
   constructor(
-    output: unknown,
+    output: any,
     taskStep: TaskStep,
     nextSteps: TaskStep[],
     isLast: boolean = false,

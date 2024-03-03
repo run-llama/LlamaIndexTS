@@ -6,5 +6,13 @@
     "moduleResolution": "node16",
     "target": "ESNext"
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts"],
+  "references": [
+    {
+      "path": "../../core/tsconfig.json"
+    },
+    {
+      "path": "../../env/tsconfig.json"
+    }
+  ]
 }

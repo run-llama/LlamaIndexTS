@@ -1,9 +1,10 @@
+import { getEnv } from "@llamaindex/env";
 import { OpenAI } from "./LLM.js";
 
 export class Groq extends OpenAI {
   constructor(init?: Partial<OpenAI>) {
     const {
-      apiKey = process.env.GROQ_API_KEY,
+      apiKey = getEnv("GROQ_API_KEY"),
       additionalSessionOptions = {},
       model = "mixtral-8x7b-32768",
       ...rest

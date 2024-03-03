@@ -1,5 +1,6 @@
 import { AstraDB } from "@datastax/astra-db-ts";
 import type { Collection } from "@datastax/astra-db-ts/dist/collections";
+import { getEnv } from "@llamaindex/env";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
 import type {
@@ -34,9 +35,8 @@ export class AstraDBVectorStore implements VectorStore {
     if (init?.astraDBClient) {
       this.astraDBClient = init.astraDBClient;
     } else {
-      const token =
-        init?.params?.token ?? process.env.ASTRA_DB_APPLICATION_TOKEN;
-      const endpoint = init?.params?.endpoint ?? process.env.ASTRA_DB_ENDPOINT;
+      const token = init?.params?.token ?? getEnv("ASTRA_DB_APPLICATION_TOKEN");
+      const endpoint = init?.params?.endpoint ?? getEnv("ASTRA_DB_ENDPOINT");
 
       if (!token) {
         throw new Error(
@@ -48,7 +48,7 @@ export class AstraDBVectorStore implements VectorStore {
       }
       const namespace =
         init?.params?.namespace ??
-        process.env.ASTRA_DB_NAMESPACE ??
+        getEnv("ASTRA_DB_NAMESPACE") ??
         "default_keyspace";
       this.astraDBClient = new AstraDB(token, endpoint, namespace);
     }

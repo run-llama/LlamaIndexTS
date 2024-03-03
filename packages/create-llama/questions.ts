@@ -5,7 +5,11 @@ import path from "path";
 import { blue, green, red } from "picocolors";
 import prompts from "prompts";
 import { InstallAppArgs } from "./create-app";
-import { TemplateDataSourceType, TemplateFramework } from "./helpers";
+import {
+  FileSourceConfig,
+  TemplateDataSourceType,
+  TemplateFramework,
+} from "./helpers";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./helpers/constant";
 import { templatesDir } from "./helpers/dir";
 import { getAvailableLlamapackOptions } from "./helpers/llama-pack";
@@ -15,7 +19,7 @@ import { supportedTools, toolsRequireConfig } from "./helpers/tools";
 export type QuestionArgs = Omit<
   InstallAppArgs,
   "appPath" | "packageManager"
-> & { files?: string };
+> & { files?: string; llamaParse?: boolean };
 const supportedContextFileTypes = [
   ".pdf",
   ".doc",
@@ -63,6 +67,7 @@ const defaults: QuestionArgs = {
   eslint: true,
   frontend: false,
   openAiKey: "",
+  llamaCloudKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
   llamapack: "",
@@ -518,6 +523,64 @@ export const askQuestions = async (
         type: "none",
         config: {},
       };
+    }
+  }
+
+  if (
+    program.dataSource?.type === "file" ||
+    (program.dataSource?.type === "folder" && program.framework === "fastapi")
+  ) {
+    if (ciInfo.isCI) {
+      program.llamaCloudKey = getPrefOrDefault("llamaCloudKey");
+    } else {
+      const dataSourceConfig = program.dataSource.config as FileSourceConfig;
+      dataSourceConfig.useLlamaParse = program.llamaParse;
+
+      // Is pdf file selected as data source or is it a folder data source
+      const askingLlamaParse =
+        dataSourceConfig.useLlamaParse === undefined &&
+        (program.dataSource.type === "folder"
+          ? true
+          : dataSourceConfig.path &&
+            path.extname(dataSourceConfig.path) === ".pdf");
+
+      // Ask if user wants to use LlamaParse
+      if (askingLlamaParse) {
+        const { useLlamaParse } = await prompts(
+          {
+            type: "toggle",
+            name: "useLlamaParse",
+            message:
+              "Would you like to use LlamaParse (improved parser for RAG - requires API key)?",
+            initial: true,
+            active: "yes",
+            inactive: "no",
+          },
+          handlers,
+        );
+        dataSourceConfig.useLlamaParse = useLlamaParse;
+        program.dataSource.config = dataSourceConfig;
+      }
+
+      // Ask for LlamaCloud API key
+      if (
+        dataSourceConfig.useLlamaParse &&
+        program.llamaCloudKey === undefined
+      ) {
+        const { llamaCloudKey } = await prompts(
+          {
+            type: "text",
+            name: "llamaCloudKey",
+            message: "Please provide your LlamaIndex Cloud API key:",
+            validate: (value) =>
+              value
+                ? true
+                : "LlamaIndex Cloud API key is required. You can get it from: https://cloud.llamaindex.ai/api-key",
+          },
+          handlers,
+        );
+        program.llamaCloudKey = llamaCloudKey;
+      }
     }
   }
 

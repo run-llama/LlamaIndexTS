@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.0.5
+
+### Patch Changes
+
+- 5116ad8: fix: compatibility issue with Deno
+
 ## 0.0.4
 
 ### Patch Changes
