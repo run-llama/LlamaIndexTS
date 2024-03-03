@@ -1,9 +1,10 @@
+import { getEnv } from "@llamaindex/env";
 import { OpenAI } from "./LLM.js";
 
 export class TogetherLLM extends OpenAI {
   constructor(init?: Partial<OpenAI>) {
     const {
-      apiKey = process.env.TOGETHER_API_KEY,
+      apiKey = getEnv("TOGETHER_API_KEY"),
       additionalSessionOptions = {},
       model = "togethercomputer/llama-2-7b-chat",
       ...rest

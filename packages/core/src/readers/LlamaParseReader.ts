@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS } from "@llamaindex/env";
+import { defaultFS, getEnv, type GenericFileSystem } from "@llamaindex/env";
 import { Document } from "../Node.js";
 import type { FileReader } from "./type.js";
 
@@ -24,7 +23,7 @@ export class LlamaParseReader implements FileReader {
 
   constructor(params: Partial<LlamaParseReader> = {}) {
     Object.assign(this, params);
-    params.apiKey = params.apiKey ?? process.env.LLAMA_CLOUD_API_KEY;
+    params.apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
     if (!params.apiKey) {
       throw new Error(
         "API Key is required for LlamaParseReader. Please pass the apiKey parameter or set the LLAMA_CLOUD_API_KEY environment variable.",

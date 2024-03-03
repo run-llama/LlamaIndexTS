@@ -1,3 +1,4 @@
+import { getEnv } from "@llamaindex/env";
 import type {
   BaseServiceParams,
   SubtitleFormat,
@@ -28,7 +29,7 @@ abstract class AssemblyAIReader implements BaseReader {
       options = {};
     }
     if (!options.apiKey) {
-      options.apiKey = process.env.ASSEMBLYAI_API_KEY;
+      options.apiKey = getEnv("ASSEMBLYAI_API_KEY");
     }
     if (!options.apiKey) {
       throw new Error(

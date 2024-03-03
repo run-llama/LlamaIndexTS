@@ -1,3 +1,4 @@
+import { getEnv } from "@llamaindex/env";
 import Replicate from "replicate";
 
 export class ReplicateSession {
@@ -7,8 +8,8 @@ export class ReplicateSession {
   constructor(replicateKey: string | null = null) {
     if (replicateKey) {
       this.replicateKey = replicateKey;
-    } else if (process.env.REPLICATE_API_TOKEN) {
-      this.replicateKey = process.env.REPLICATE_API_TOKEN;
+    } else if (getEnv("REPLICATE_API_TOKEN")) {
+      this.replicateKey = getEnv("REPLICATE_API_TOKEN") as string;
     } else {
       throw new Error(
         "Set Replicate token in REPLICATE_API_TOKEN env variable",

@@ -1,16 +1,7 @@
+import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 import type { LLMOptions } from "portkey-ai";
 import { Portkey } from "portkey-ai";
-
-export const readEnv = (
-  env: string,
-  default_val?: string,
-): string | undefined => {
-  if (typeof process !== "undefined") {
-    return process.env?.[env] ?? default_val;
-  }
-  return default_val;
-};
 
 interface PortkeyOptions {
   apiKey?: string;
@@ -24,11 +15,11 @@ export class PortkeySession {
 
   constructor(options: PortkeyOptions = {}) {
     if (!options.apiKey) {
-      options.apiKey = readEnv("PORTKEY_API_KEY");
+      options.apiKey = getEnv("PORTKEY_API_KEY");
     }
 
     if (!options.baseURL) {
-      options.baseURL = readEnv("PORTKEY_BASE_URL", "https://api.portkey.ai");
+      options.baseURL = getEnv("PORTKEY_BASE_URL") ?? "https://api.portkey.ai";
     }
 
     this.portkey = new Portkey({});

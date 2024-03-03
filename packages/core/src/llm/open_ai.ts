@@ -1,3 +1,4 @@
+import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 import type { ClientOptions } from "openai";
 import OpenAI from "openai";
@@ -13,9 +14,7 @@ export class OpenAISession {
 
   constructor(options: ClientOptions & { azure?: boolean } = {}) {
     if (!options.apiKey) {
-      if (typeof process !== undefined) {
-        options.apiKey = process.env.OPENAI_API_KEY;
-      }
+      options.apiKey = getEnv("OPENAI_API_KEY");
     }
 
     if (!options.apiKey) {

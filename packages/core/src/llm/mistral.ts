@@ -1,3 +1,4 @@
+import { getEnv } from "@llamaindex/env";
 import type {
   CallbackManager,
   Event,
@@ -27,9 +28,7 @@ export class MistralAISession {
     if (init?.apiKey) {
       this.apiKey = init?.apiKey;
     } else {
-      if (typeof process !== undefined) {
-        this.apiKey = process.env.MISTRAL_API_KEY;
-      }
+      this.apiKey = getEnv("MISTRAL_API_KEY");
     }
     if (!this.apiKey) {
       throw new Error("Set Mistral API key in MISTRAL_API_KEY env variable"); // Overriding MistralAI package's error message
