@@ -66,13 +66,11 @@ async function main() {
     message: "Divide 16 by 2 then add 20",
   });
 
-  console.log({ stream });
-
-  for await (const chunk of stream) {
-    console.log({ chunk: chunk.response, chunk2: chunk });
+  for await (const chunk of stream.response) {
+    process.stdout.write(chunk.response);
   }
 }
 
 main().then(() => {
-  console.log("Done");
+  console.log("\nDone");
 });

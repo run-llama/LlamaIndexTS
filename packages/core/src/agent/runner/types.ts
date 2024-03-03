@@ -1,4 +1,7 @@
-import type { AgentChatResponse } from "../../engines/chat/index.js";
+import type {
+  AgentChatResponse,
+  StreamingAgentChatResponse,
+} from "../../engines/chat/index.js";
 import type { Task, TaskStep, TaskStepOutput } from "../types.js";
 import { BaseAgent } from "../types.js";
 
@@ -57,7 +60,7 @@ export abstract class BaseAgentRunner extends BaseAgent {
     taskId: string,
     stepOutput: TaskStepOutput,
     kwargs?: any,
-  ): Promise<AgentChatResponse | AsyncIterable<AgentChatResponse>>;
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse>;
 
   abstract undoStep(taskId: string): void;
 }

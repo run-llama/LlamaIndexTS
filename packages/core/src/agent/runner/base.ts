@@ -1,10 +1,10 @@
 import { randomUUID } from "crypto";
-import type { Response } from "../../Response.js";
 import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
+  StreamingAgentChatResponse,
 } from "../../engines/chat/index.js";
 import type { ChatMessage, LLM } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
@@ -232,7 +232,7 @@ export class AgentRunner extends BaseAgentRunner {
     taskId: string,
     stepOutput: TaskStepOutput,
     kwargs?: any,
-  ): Promise<AgentChatResponse> {
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     if (!stepOutput) {
       stepOutput =
         this.getCompletedSteps(taskId)[
@@ -246,12 +246,13 @@ export class AgentRunner extends BaseAgentRunner {
       );
     }
 
-    // TODO: Fix this
-    // if (!(stepOutput.output instanceof AgentChatResponse)) {
-    //   throw new Error(
-    //     `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
-    //   );
-    // }
+    if (!(stepOutput.output instanceof StreamingAgentChatResponse)) {
+      if (!(stepOutput.output instanceof AgentChatResponse)) {
+        throw new Error(
+          `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
+        );
+      }
+    }
 
     this.agentWorker.finalizeTask(this.getTask(taskId), kwargs);
 
@@ -266,8 +267,8 @@ export class AgentRunner extends BaseAgentRunner {
     message,
     toolChoice,
     mode,
-  }: ChatEngineAgentParams & { mode: ChatResponseMode }): Promise<
-    AgentChatResponse | AsyncIterable<Response>
+  }: ChatEngineAgentParams): Promise<
+    AgentChatResponse | StreamingAgentChatResponse
   > {
     const task = this.createTask(message as string);
 
@@ -302,7 +303,7 @@ export class AgentRunner extends BaseAgentRunner {
     toolChoice,
     mode = ChatResponseMode.WAIT,
   }: ChatEngineAgentParams): Promise<
-    AgentChatResponse | AsyncIterable<Response>
+    AgentChatResponse | StreamingAgentChatResponse
   > {
     if (!toolChoice) {
       toolChoice = this.defaultToolChoice;
@@ -322,7 +323,7 @@ export class AgentRunner extends BaseAgentRunner {
     message,
     chatHistory,
     toolChoice,
-  }: ChatEngineAgentParams): Promise<AsyncIterable<Response>> {
+  }: ChatEngineAgentParams): Promise<StreamingAgentChatResponse> {
     if (!toolChoice) {
       toolChoice = this.defaultToolChoice;
     }
@@ -332,7 +333,7 @@ export class AgentRunner extends BaseAgentRunner {
       chatHistory,
       toolChoice,
       mode: ChatResponseMode.STREAM,
-    })) as AsyncIterable<Response>;
+    })) as StreamingAgentChatResponse;
 
     return chatResponse;
   }

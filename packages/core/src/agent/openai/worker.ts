@@ -6,6 +6,7 @@ import type { CallbackManager } from "../../callbacks/CallbackManager.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
+  StreamingAgentChatResponse,
 } from "../../engines/chat/types.js";
 import type {
   ChatMessage,
@@ -194,7 +195,7 @@ export class OpenAIAgentWorker implements AgentWorker {
   private _processMessage(
     task: Task,
     chatResponse: ChatResponse,
-  ): AgentChatResponse | AsyncIterable<ChatResponseChunk> {
+  ): AgentChatResponse {
     const aiMessage = chatResponse.message;
     task.extraState.newMemory.put(aiMessage);
 
@@ -204,13 +205,13 @@ export class OpenAIAgentWorker implements AgentWorker {
   private async _getStreamAiResponse(
     task: Task,
     llmChatKwargs: any,
-  ): Promise<AsyncIterable<Response>> {
+  ): Promise<StreamingAgentChatResponse> {
     const stream = await this.llm.chat({
       stream: true,
       ...llmChatKwargs,
     });
 
-    return streamConverter(
+    const iterator = streamConverter(
       streamReducer({
         stream,
         initialValue: "",
@@ -224,6 +225,8 @@ export class OpenAIAgentWorker implements AgentWorker {
       }),
       (r: ChatResponseChunk) => new Response(r.delta),
     );
+
+    return new StreamingAgentChatResponse(iterator, task.extraState.sources);
   }
 
   /**
@@ -237,7 +240,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     task: Task,
     mode: ChatResponseMode,
     llmChatKwargs: any,
-  ): Promise<AgentChatResponse | AsyncIterable<Response>> {
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
       const chatResponse = (await this.llm.chat({
         stream: false,
