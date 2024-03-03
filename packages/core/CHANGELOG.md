@@ -1,5 +1,16 @@
 # llamaindex
 
+## 0.1.20
+
+### Patch Changes
+
+- 64683a5: fix: prefix messages always true
+- 698cd9c: fix: step wise agent + examples
+- 7257751: fixed removeRefDocNode and persist store on delete
+- 5116ad8: fix: compatibility issue with Deno
+- Updated dependencies [5116ad8]
+  - @llamaindex/env@0.0.5
+
 ## 0.1.19
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # docs
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [5116ad8]
+  - @llamaindex/env@0.0.5
+
 ## 0.0.3
 
 ### Patch Changes
