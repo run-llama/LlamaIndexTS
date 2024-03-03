@@ -322,19 +322,17 @@ export class AgentRunner extends BaseAgentRunner {
     message,
     chatHistory,
     toolChoice,
-  }: ChatEngineAgentParams): Promise<
-    AgentChatResponse | AsyncIterable<Response>
-  > {
+  }: ChatEngineAgentParams): Promise<AsyncIterable<Response>> {
     if (!toolChoice) {
       toolChoice = this.defaultToolChoice;
     }
 
-    const chatResponse = await this._chat({
+    const chatResponse = (await this._chat({
       message,
       chatHistory,
       toolChoice,
       mode: ChatResponseMode.STREAM,
-    });
+    })) as AsyncIterable<Response>;
 
     return chatResponse;
   }
