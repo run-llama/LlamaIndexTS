@@ -1,5 +1,6 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import Anthropic, { AI_PROMPT, HUMAN_PROMPT } from "@anthropic-ai/sdk";
+import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 
 export class AnthropicSession {
@@ -7,9 +8,7 @@ export class AnthropicSession {
 
   constructor(options: ClientOptions = {}) {
     if (!options.apiKey) {
-      if (typeof process !== undefined) {
-        options.apiKey = process.env.ANTHROPIC_API_KEY;
-      }
+      options.apiKey = getEnv("ANTHROPIC_API_KEY");
     }
 
     if (!options.apiKey) {

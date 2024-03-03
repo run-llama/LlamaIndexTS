@@ -1,3 +1,5 @@
+import { getEnv } from "@llamaindex/env";
+
 export interface AzureOpenAIConfig {
   apiKey?: string;
   endpoint?: string;
@@ -67,24 +69,24 @@ export function getAzureConfigFromEnv(
   return {
     apiKey:
       init?.apiKey ??
-      process.env.AZURE_OPENAI_KEY ?? // From Azure docs
-      process.env.OPENAI_API_KEY ?? // Python compatible
-      process.env.AZURE_OPENAI_API_KEY, // LCJS compatible
+      getEnv("AZURE_OPENAI_KEY") ?? // From Azure docs
+      getEnv("OPENAI_API_KEY") ?? // Python compatible
+      getEnv("AZURE_OPENAI_API_KEY"), // LCJS compatible
     endpoint:
       init?.endpoint ??
-      process.env.AZURE_OPENAI_ENDPOINT ?? // From Azure docs
-      process.env.OPENAI_API_BASE ?? // Python compatible
-      process.env.AZURE_OPENAI_API_INSTANCE_NAME, // LCJS compatible
+      getEnv("AZURE_OPENAI_ENDPOINT") ?? // From Azure docs
+      getEnv("OPENAI_API_BASE") ?? // Python compatible
+      getEnv("AZURE_OPENAI_API_INSTANCE_NAME"), // LCJS compatible
     apiVersion:
       init?.apiVersion ??
-      process.env.AZURE_OPENAI_API_VERSION ?? // From Azure docs
-      process.env.OPENAI_API_VERSION ?? // Python compatible
-      process.env.AZURE_OPENAI_API_VERSION ?? // LCJS compatible
+      getEnv("AZURE_OPENAI_API_VERSION") ?? // From Azure docs
+      getEnv("OPENAI_API_VERSION") ?? // Python compatible
+      getEnv("AZURE_OPENAI_API_VERSION") ?? // LCJS compatible
       DEFAULT_API_VERSION,
     deploymentName:
       init?.deploymentName ??
-      process.env.AZURE_OPENAI_DEPLOYMENT ?? // From Azure docs
-      process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME ?? // LCJS compatible
+      getEnv("AZURE_OPENAI_DEPLOYMENT") ?? // From Azure docs
+      getEnv("AZURE_OPENAI_API_DEPLOYMENT_NAME") ?? // LCJS compatible
       init?.model, // Fall back to model name, Python compatible
   };
 }
@@ -113,8 +115,8 @@ export function getAzureModel(openAIModel: string) {
 
 export function shouldUseAzure() {
   return (
-    process.env.AZURE_OPENAI_ENDPOINT ||
-    process.env.AZURE_OPENAI_API_INSTANCE_NAME ||
-    process.env.OPENAI_API_TYPE === "azure"
+    getEnv("AZURE_OPENAI_ENDPOINT") ||
+    getEnv("AZURE_OPENAI_API_INSTANCE_NAME") ||
+    getEnv("OPENAI_API_TYPE") === "azure"
   );
 }

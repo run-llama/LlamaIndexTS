@@ -1,3 +1,4 @@
+import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import type { BaseNode } from "../../Node.js";
@@ -44,7 +45,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
     } else {
-      const mongoUri = process.env.MONGODB_URI;
+      const mongoUri = getEnv("MONGODB_URI");
       if (!mongoUri) {
         throw new Error(
           "Must specify MONGODB_URI via env variable if not directly passing in client.",

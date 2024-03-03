@@ -6,7 +6,7 @@ import type {
   VectorStoreQueryResult,
 } from "./types.js";
 
-import type { GenericFileSystem } from "@llamaindex/env";
+import { getEnv, type GenericFileSystem } from "@llamaindex/env";
 import type {
   FetchResponse,
   Index,
@@ -45,11 +45,11 @@ export class PineconeVectorStore implements VectorStore {
 
   constructor(params?: PineconeParams) {
     this.indexName =
-      params?.indexName ?? process.env.PINECONE_INDEX_NAME ?? "llama";
-    this.namespace = params?.namespace ?? process.env.PINECONE_NAMESPACE ?? "";
+      params?.indexName ?? getEnv("PINECONE_INDEX_NAME") ?? "llama";
+    this.namespace = params?.namespace ?? getEnv("PINECONE_NAMESPACE") ?? "";
     this.chunkSize =
       params?.chunkSize ??
-      Number.parseInt(process.env.PINECONE_CHUNK_SIZE ?? "100");
+      Number.parseInt(getEnv("PINECONE_CHUNK_SIZE") ?? "100");
     this.textKey = params?.textKey ?? "text";
   }
 

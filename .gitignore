@@ -44,6 +44,7 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+.tsbuildinfo
 
 # intellij
 **/.idea
