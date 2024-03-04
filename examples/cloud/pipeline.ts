@@ -19,7 +19,7 @@ async function main() {
     name: "pipeline",
     transformations: [
       new SimpleNodeParser({ chunkSize: 1024, chunkOverlap: 20 }),
-      new OpenAIEmbedding(),
+      new OpenAIEmbedding({ apiKey: "api-key" }),
     ],
   });
 

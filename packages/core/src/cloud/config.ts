@@ -1,5 +1,5 @@
 import type { PlatformApi } from "@llamaindex/cloud";
-import { BaseNode, TextNode } from "../Node.js";
+import { BaseNode, Document } from "../Node.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
@@ -16,10 +16,13 @@ function getTransformationConfig(
 ): PlatformApi.ConfiguredTransformationItem {
   if (transformation instanceof SimpleNodeParser) {
     return {
-      configurableTransformationType: "SIMPLE_FILE_NODE_PARSER",
+      configurableTransformationType: "SENTENCE_AWARE_NODE_PARSER",
       component: {
-        includeMetadata: transformation.includeMetadata,
-        includePrevNextRel: transformation.includePrevNextRel,
+        // TODO: API returns 422 if these parameters are included
+        // chunkSize: transformation.textSplitter.chunkSize, // TODO: set to public in SentenceSplitter
+        // chunkOverlap: transformation.textSplitter.chunkOverlap, // TODO: set to public in SentenceSplitter
+        // includeMetadata: transformation.includeMetadata,
+        // includePrevNextRel: transformation.includePrevNextRel,
       },
     };
   }
@@ -28,6 +31,7 @@ function getTransformationConfig(
       configurableTransformationType: "OPENAI_EMBEDDING",
       component: {
         modelName: transformation.model,
+        apiKey: transformation.apiKey,
         embedBatchSize: transformation.embedBatchSize,
         dimensions: transformation.dimensions,
       },
@@ -37,18 +41,21 @@ function getTransformationConfig(
 }
 
 function getDataSourceConfig(node: BaseNode): PlatformApi.DataSourceCreate {
-  if (node instanceof TextNode) {
-    return {
-      name: node.id_,
-      sourceType: "TEXT_NODE",
-      component: node.toMutableJSON(),
-    };
-  }
   if (node instanceof Document) {
     return {
       name: node.id_,
       sourceType: "DOCUMENT",
-      component: node.toMutableJSON(),
+      component: {
+        id: node.id_,
+        text: node.text,
+        textTemplate: node.textTemplate,
+        startCharIdx: node.startCharIdx,
+        endCharIdx: node.endCharIdx,
+        metadataSeparator: node.metadataSeparator,
+        excludedEmbedMetadataKeys: node.excludedEmbedMetadataKeys,
+        excludedLlmMetadataKeys: node.excludedLlmMetadataKeys,
+        extraInfo: node.metadata,
+      },
     };
   }
   throw new Error(`Unsupported node: ${typeof node}`);
