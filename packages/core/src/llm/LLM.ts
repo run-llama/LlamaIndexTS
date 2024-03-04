@@ -613,10 +613,23 @@ If a question does not make any sense, or is not factually coherent, explain why
   }
 }
 
+// Refs: https://docs.anthropic.com/claude/docs/models-overview#model-comparison
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
-  // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
-  "claude-2": { contextWindow: 200000 },
-  "claude-instant-1": { contextWindow: 100000 },
+  "claude-3-opus-20240229": {
+    contextWindow: 200_000,
+  },
+  "claude-3-sonnet-20240229": {
+    contextWindow: 200_000,
+  },
+  "claude-2.1": {
+    contextWindow: 200_000,
+  },
+  "claude-2.0": {
+    contextWindow: 100_000,
+  },
+  "claude-instant-1": {
+    contextWindow: 100_000,
+  },
 };
 
 /**
@@ -640,7 +653,7 @@ export class Anthropic extends BaseLLM {
 
   constructor(init?: Partial<Anthropic>) {
     super();
-    this.model = init?.model ?? "claude-2";
+    this.model = init?.model ?? "claude-2.1";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 0.999; // Per Ben Mann
     this.maxTokens = init?.maxTokens ?? undefined;

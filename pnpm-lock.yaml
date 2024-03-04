@@ -160,11 +160,8 @@ importers:
   packages/core:
     dependencies:
       '@anthropic-ai/sdk':
-        specifier: ^0.13.0
-        version: 0.13.0
-      '@aws-crypto/sha256-js':
-        specifier: ^5.2.0
-        version: 5.2.0
+        specifier: ^0.16.0
+        version: 0.16.0
       '@datastax/astra-db-ts':
         specifier: ^0.1.4
         version: 0.1.4
@@ -175,8 +172,8 @@ importers:
         specifier: workspace:*
         version: link:../env
       '@mistralai/mistralai':
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.1.3
+        version: 0.1.3
       '@notionhq/client':
         specifier: ^2.2.14
         version: 2.2.14
@@ -202,14 +199,14 @@ importers:
         specifier: ^2.15.0
         version: 2.15.0
       assemblyai:
-        specifier: ^4.2.2
-        version: 4.2.2
+        specifier: ^4.3.1
+        version: 4.3.1
       chromadb:
         specifier: ~1.7.3
-        version: 1.7.3(cohere-ai@7.7.5)(openai@4.26.1)
+        version: 1.7.3(cohere-ai@7.7.7)(openai@4.26.1)
       cohere-ai:
-        specifier: ^7.7.5
-        version: 7.7.5
+        specifier: ^7.7.7
+        version: 7.7.7
       file-type:
         specifier: ^18.7.0
         version: 18.7.0
@@ -574,8 +571,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.22
 
-  /@anthropic-ai/sdk@0.13.0:
-    resolution: {integrity: sha512-wn315W4tCfCO+Z6FMa/67HgdgaWbjs4ie0Zbx5A6lq8RPEA3sEDknYzw0gCIrSlnSgRHxvUP/bT9KncFmOrmTg==}
+  /@anthropic-ai/sdk@0.16.0:
+    resolution: {integrity: sha512-mrmWq/NgikD9IPyoSBQ02GrxyaxQA8T5l1mwmvfXx2aB+krdy5WmR7xsrlCdcH3J2MNf7BoRFw15FbiFdcMBHw==}
     dependencies:
       '@types/node': 18.19.14
       '@types/node-fetch': 2.6.9
@@ -597,6 +594,7 @@ packages:
       '@aws-crypto/util': 5.2.0
       '@aws-sdk/types': 3.496.0
       tslib: 2.6.2
+    dev: true
 
   /@aws-crypto/util@5.2.0:
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
@@ -604,6 +602,7 @@ packages:
       '@aws-sdk/types': 3.496.0
       '@smithy/util-utf8': 2.1.1
       tslib: 2.6.2
+    dev: true
 
   /@aws-sdk/types@3.496.0:
     resolution: {integrity: sha512-umkGadK4QuNQaMoDICMm7NKRI/mYSXiyPjcn3d53BhsuArYU/52CebGQKdt4At7SwwsiVJZw9RNBHyN5Mm0HVw==}
@@ -611,6 +610,7 @@ packages:
     dependencies:
       '@smithy/types': 2.9.1
       tslib: 2.6.2
+    dev: true
 
   /@babel/code-frame@7.23.5:
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
@@ -3213,7 +3213,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
       '@types/yargs': 17.0.32
       chalk: 4.1.2
 
@@ -3331,8 +3331,8 @@ packages:
       '@types/react': 18.2.55
       react: 18.2.0
 
-  /@mistralai/mistralai@0.0.10:
-    resolution: {integrity: sha512-fZOt7A32DcPSff58wTa44pKUBoJBH5toAuzNI9yoM7s5NjTupa1IYcSqqk2LigO8M5EtOEkFsD/XzdyWPnhaRA==}
+  /@mistralai/mistralai@0.1.3:
+    resolution: {integrity: sha512-WUHxC2xdeqX9PTXJEqdiNY54vT2ir72WSJrZTTBKRnkfhX6zIfCYA24faRlWjUB5WTpn+wfdGsTMl3ArijlXFA==}
     dependencies:
       node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
@@ -3757,12 +3757,14 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.6.2
+    dev: true
 
   /@smithy/types@2.9.1:
     resolution: {integrity: sha512-vjXlKNXyprDYDuJ7UW5iobdmyDm6g8dDG+BFUncAg/3XJaN45Gy5RWWWUVgrzIK7S4R1KWgIX5LeJcfvSI24bw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.6.2
+    dev: true
 
   /@smithy/util-buffer-from@2.1.1:
     resolution: {integrity: sha512-clhNjbyfqIv9Md2Mg6FffGVrJxw7bgK7s3Iax36xnfVj6cg0fUG7I4RH0XgXJF8bxi+saY5HR21g2UPKSxVCXg==}
@@ -3770,6 +3772,7 @@ packages:
     dependencies:
       '@smithy/is-array-buffer': 2.1.1
       tslib: 2.6.2
+    dev: true
 
   /@smithy/util-utf8@2.1.1:
     resolution: {integrity: sha512-BqTpzYEcUMDwAKr7/mVRUtHDhs6ZoXDi9NypMvMfOr/+u1NW7JgqodPDECiiLboEm6bobcPcECxzjtQh865e9A==}
@@ -3777,6 +3780,7 @@ packages:
     dependencies:
       '@smithy/util-buffer-from': 2.1.1
       tslib: 2.6.2
+    dev: true
 
   /@svgr/babel-plugin-add-jsx-attribute@6.5.1(@babel/core@7.23.9):
     resolution: {integrity: sha512-9PYGcXrAxitycIjRmZB+Q0JaN07GZIWaTBIGQzfaZv+qr1n8X1XUEJ5rZ/vx6OVD9RRYlrNnXWExQXcmZeD/BQ==}
@@ -4124,7 +4128,7 @@ packages:
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
 
   /@types/bonjour@3.5.13:
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
@@ -4153,7 +4157,7 @@ packages:
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
     dependencies:
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
 
   /@types/cross-spawn@6.0.0:
     resolution: {integrity: sha512-evp2ZGsFw9YKprDbg8ySgC9NA15g3YgiI8ANkGmKKvvi0P2aDGYLPxQIC5qfeKNUOe3TjABVGuah6omPRpIYhg==}
@@ -4189,7 +4193,7 @@ packages:
   /@types/express-serve-static-core@4.17.42:
     resolution: {integrity: sha512-ckM3jm2bf/MfB3+spLPWYPUH573plBFwpOhqQ2WottxYV85j1HQFlxmnTq57X1yHY9awZPig06hL/cLMgNWHIQ==}
     dependencies:
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
       '@types/qs': 6.9.12
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -4226,7 +4230,7 @@ packages:
   /@types/http-proxy@1.17.14:
     resolution: {integrity: sha512-SSrD0c1OQzlFX7pGu1eXxSEjemej64aaNPRhhVYUGqXh0BtldAAx37MG8btcumvpgKyZp1F5Gn3JkktdxiFv6w==}
     dependencies:
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
 
   /@types/istanbul-lib-coverage@2.0.6:
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
@@ -4301,7 +4305,7 @@ packages:
   /@types/node-forge@1.3.11:
     resolution: {integrity: sha512-FQx220y22OKNTqaByeBGqHWYz4cl94tpcxeFdvBo3wjG6XPBuZ0BNgNZRV5J5TFmmcsJ4IzsLkmGRiQbnYsBEQ==}
     dependencies:
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
 
   /@types/node@12.20.55:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
@@ -4338,7 +4342,6 @@ packages:
     resolution: {integrity: sha512-7/rR21OS+fq8IyHTgtLkDK949uzsa6n8BkziAKtPVpugIkO6D+/ooXMvzXxDnZrmtXVfjb1bKQafYpb8s89LOg==}
     dependencies:
       undici-types: 5.26.5
-    dev: false
 
   /@types/node@20.11.7:
     resolution: {integrity: sha512-GPmeN1C3XAyV5uybAf4cMLWT9fDWcmQhZVtMFu7OR32WjrqGG+Wnk2V1d0bmtUyE/Zy1QJ9BxyiTih9z8Oks8A==}
@@ -4447,7 +4450,7 @@ packages:
   /@types/sax@1.2.7:
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
     dependencies:
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
     dev: true
 
   /@types/scheduler@0.16.4:
@@ -4464,7 +4467,7 @@ packages:
     resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
 
   /@types/serve-index@1.9.4:
     resolution: {integrity: sha512-qLpGZ/c2fhSs5gnYsQxtDEq3Oy8SXPClIXkW5ghvAvsNuVSA8k+gCONcUCS/UjLEYvYps+e8uBtfgXgvhwfNug==}
@@ -5146,8 +5149,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /assemblyai@4.2.2:
-    resolution: {integrity: sha512-xEvM9kPC0+H2qeaXPe4Q79SHtn76cxMUtjMTNP/aOMrSjvHfO60I1KHQKy/illqLkEICxfEVP57WghIxleFMJw==}
+  /assemblyai@4.3.1:
+    resolution: {integrity: sha512-kA+EenZDiJWjD6D0mfdr6NzOEICo4eTcFcV98yUxenNXZbWOb7U9MP7xAgouSspDy4QpirVJ3XvX87enqGz/qg==}
     engines: {node: '>=18'}
     dependencies:
       ws: 8.16.0
@@ -5718,7 +5721,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /chromadb@1.7.3(cohere-ai@7.7.5)(openai@4.26.1):
+  /chromadb@1.7.3(cohere-ai@7.7.7)(openai@4.26.1):
     resolution: {integrity: sha512-3GgvQjpqgk5C89x5EuTDaXKbfrdqYDJ5UVyLQ3ZmwxnpetNc+HhRDGjkvXa5KSvpQ3lmKoyDoqnN4tZepfFkbw==}
     engines: {node: '>=14.17.0'}
     peerDependencies:
@@ -5734,7 +5737,7 @@ packages:
         optional: true
     dependencies:
       cliui: 8.0.1
-      cohere-ai: 7.7.5
+      cohere-ai: 7.7.7
       isomorphic-fetch: 3.0.0
       openai: 4.26.1
     transitivePeerDependencies:
@@ -5869,8 +5872,8 @@ packages:
       rfdc: 1.3.1
     dev: false
 
-  /cohere-ai@7.7.5:
-    resolution: {integrity: sha512-uKh4TzHpY/8nwuYprLKSz0vSKclL4zb8il/YNxfFuWgk9/Nhuw4ugzRuT+CE2f4miQG5dPtPfwXCYUJB60mfwQ==}
+  /cohere-ai@7.7.7:
+    resolution: {integrity: sha512-eLL/5lkAxFvqwV200bsBsS5ZnPHZZKur0WR3dXD5K47QT7C9r0OFv/ykJw/rCuoSsyyK3eoHm+znIi3W3QCwiQ==}
     dependencies:
       form-data: 4.0.0
       js-base64: 3.7.2
@@ -9365,7 +9368,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -12324,7 +12327,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 20.11.17
+      '@types/node': 20.11.20
       long: 4.0.0
     dev: false
 

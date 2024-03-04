@@ -1,5 +1,5 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
-import Anthropic, { AI_PROMPT, HUMAN_PROMPT } from "@anthropic-ai/sdk";
+import { AI_PROMPT, Anthropic, HUMAN_PROMPT } from "@anthropic-ai/sdk";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 
