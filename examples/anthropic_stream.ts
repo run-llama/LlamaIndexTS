@@ -7,6 +7,7 @@ import { Anthropic } from "llamaindex";
   });
   const stream = await anthropic.chat({
     messages: [
+      { content: "You want to talk in rhymes.", role: "system" },
       {
         content:
           "How much wood would a woodchuck chuck if a woodchuck could chuck wood?",

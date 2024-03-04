@@ -608,12 +608,27 @@ If a question does not make any sense, or is not factually coherent, explain why
   }
 }
 
-export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
-  // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
-  "claude-2": { contextWindow: 200000 },
-  "claude-instant-1": { contextWindow: 100000 },
+export const ALL_AVAILABLE_ANTHROPIC_V2_MODELS = {
+  "claude-2": {
+    contextWindow: 200000,
+  },
+  "claude-instant-1": {
+    contextWindow: 100000,
+  },
+};
+
+export const ALL_AVAILABLE_V3_MODELS = {
   "claude-3-opus-20240229": { contextWindow: 200000 },
   "claude-3-sonnet-20240229 ": { contextWindow: 200000 },
+};
+
+export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
+  ...ALL_AVAILABLE_ANTHROPIC_V2_MODELS,
+  ...ALL_AVAILABLE_V3_MODELS,
+};
+
+export const isV3Model = (model: string): boolean => {
+  return Object.keys(ALL_AVAILABLE_V3_MODELS).includes(model);
 };
 
 /**
@@ -632,13 +647,12 @@ export class Anthropic extends BaseLLM {
   maxRetries: number;
   timeout?: number;
   session: AnthropicSession;
-  systemPrompt?: string;
 
   callbackManager?: CallbackManager;
 
   constructor(init?: Partial<Anthropic>) {
     super();
-    this.model = init?.model ?? "claude-2";
+    this.model = init?.model ?? "claude-3-opus-20240229";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 0.999; // Per Ben Mann
     this.maxTokens = init?.maxTokens ?? undefined;
@@ -655,7 +669,6 @@ export class Anthropic extends BaseLLM {
       });
 
     this.callbackManager = init?.callbackManager;
-    this.systemPrompt = init?.systemPrompt;
   }
 
   tokens(messages: ChatMessage[]): number {
@@ -689,20 +702,36 @@ export class Anthropic extends BaseLLM {
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream } = params;
+    let { messages } = params;
+
+    const { parentEvent, stream } = params;
+
+    let systemPrompt: string | null = null;
+
+    const systemMessages = messages.filter(
+      (message) => message.role === "system",
+    );
+
+    if (systemMessages.length > 0) {
+      systemPrompt = systemMessages
+        .map((message) => message.content)
+        .join("\n");
+      messages = messages.filter((message) => message.role !== "system");
+    }
+
     //Streaming
     if (stream) {
-      return this.streamChat(messages, parentEvent);
+      return this.streamChat(messages, parentEvent, systemPrompt);
     }
 
     //Non-streaming
     const response = await this.session.anthropic.messages.create({
       model: this.model,
-      system: this.systemPrompt,
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
       top_p: this.topP,
+      ...(systemPrompt && { system: systemPrompt }),
     });
 
     return {
@@ -713,16 +742,16 @@ export class Anthropic extends BaseLLM {
   protected async *streamChat(
     messages: ChatMessage[],
     parentEvent?: Event | undefined,
+    systemPrompt?: string | null,
   ): AsyncIterable<ChatResponseChunk> {
-    // AsyncIterable<AnthropicStreamToken>
     const stream = await this.session.anthropic.messages.create({
       model: this.model,
-      system: this.systemPrompt,
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
       top_p: this.topP,
       stream: true,
+      ...(systemPrompt && { system: systemPrompt }),
     });
 
     let idx_counter: number = 0;
