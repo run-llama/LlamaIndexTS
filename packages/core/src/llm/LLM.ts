@@ -632,6 +632,7 @@ export class Anthropic extends BaseLLM {
   maxRetries: number;
   timeout?: number;
   session: AnthropicSession;
+  systemPrompt?: string;
 
   callbackManager?: CallbackManager;
 
@@ -654,6 +655,7 @@ export class Anthropic extends BaseLLM {
       });
 
     this.callbackManager = init?.callbackManager;
+    this.systemPrompt = init?.systemPrompt;
   }
 
   tokens(messages: ChatMessage[]): number {
@@ -696,6 +698,7 @@ export class Anthropic extends BaseLLM {
     //Non-streaming
     const response = await this.session.anthropic.messages.create({
       model: this.model,
+      system: this.systemPrompt,
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
@@ -714,6 +717,7 @@ export class Anthropic extends BaseLLM {
     // AsyncIterable<AnthropicStreamToken>
     const stream = await this.session.anthropic.messages.create({
       model: this.model,
+      system: this.systemPrompt,
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
