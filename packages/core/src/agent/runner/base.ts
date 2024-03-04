@@ -266,13 +266,27 @@ export class AgentRunner extends BaseAgentRunner {
   protected async _chat({
     message,
     toolChoice,
-    mode,
+    stream,
+  }: ChatEngineAgentParams): Promise<AgentChatResponse>;
+  protected async _chat({
+    message,
+    toolChoice,
+    stream,
+  }: ChatEngineAgentParams & {
+    stream: true;
+  }): Promise<StreamingAgentChatResponse>;
+  protected async _chat({
+    message,
+    toolChoice,
+    stream,
   }: ChatEngineAgentParams): Promise<
     AgentChatResponse | StreamingAgentChatResponse
   > {
     const task = this.createTask(message as string);
 
     let resultOutput;
+
+    const mode = stream ? ChatResponseMode.STREAM : ChatResponseMode.WAIT;
 
     while (true) {
       const curStepOutput = await this._runStep(task.taskId, undefined, mode, {
@@ -301,7 +315,23 @@ export class AgentRunner extends BaseAgentRunner {
     message,
     chatHistory,
     toolChoice,
-    mode = ChatResponseMode.WAIT,
+    stream,
+  }: ChatEngineAgentParams & {
+    stream?: false;
+  }): Promise<AgentChatResponse>;
+  public async chat({
+    message,
+    chatHistory,
+    toolChoice,
+    stream,
+  }: ChatEngineAgentParams & {
+    stream: true;
+  }): Promise<StreamingAgentChatResponse>;
+  public async chat({
+    message,
+    chatHistory,
+    toolChoice,
+    stream,
   }: ChatEngineAgentParams): Promise<
     AgentChatResponse | StreamingAgentChatResponse
   > {
@@ -313,27 +343,8 @@ export class AgentRunner extends BaseAgentRunner {
       message,
       chatHistory,
       toolChoice,
-      mode,
+      stream,
     });
-
-    return chatResponse;
-  }
-
-  public async streamChat({
-    message,
-    chatHistory,
-    toolChoice,
-  }: ChatEngineAgentParams): Promise<StreamingAgentChatResponse> {
-    if (!toolChoice) {
-      toolChoice = this.defaultToolChoice;
-    }
-
-    const chatResponse = (await this._chat({
-      message,
-      chatHistory,
-      toolChoice,
-      mode: ChatResponseMode.STREAM,
-    })) as StreamingAgentChatResponse;
 
     return chatResponse;
   }
