@@ -1,10 +1,12 @@
 import {
-  ContextChatEngine,
   LLM,
-  serviceContextFromDefaults,
+  OpenAI,
+  OpenAIAgent,
+  QueryEngineTool,
   SimpleDocumentStore,
-  storageContextFromDefaults,
   VectorStoreIndex,
+  serviceContextFromDefaults,
+  storageContextFromDefaults,
 } from "llamaindex";
 import { CHUNK_OVERLAP, CHUNK_SIZE, STORAGE_CACHE_DIR } from "./constants.mjs";
 
@@ -32,13 +34,22 @@ async function getDataSource(llm: LLM) {
   });
 }
 
-export async function createChatEngine(llm: LLM) {
+export async function createChatEngine(llm: OpenAI) {
   const index = await getDataSource(llm);
-  const retriever = index.asRetriever();
-  retriever.similarityTopK = 3;
-
-  return new ContextChatEngine({
-    chatModel: llm,
-    retriever,
+  const queryEngine = index.asQueryEngine();
+  const queryEngineTool = new QueryEngineTool({
+    queryEngine: queryEngine,
+    metadata: {
+      name: "data_query_engine",
+      description: `A query engine for documents in storage folder: ${STORAGE_CACHE_DIR}`,
+    },
   });
+
+  const agent = new OpenAIAgent({
+    tools: [queryEngineTool],
+    verbose: true,
+    llm,
+  });
+
+  return agent;
 }
