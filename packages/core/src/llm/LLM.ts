@@ -1,7 +1,6 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
 import type {
-  AnthropicStreamToken,
   CallbackManager,
   Event,
   EventType,
@@ -13,11 +12,7 @@ import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
 import type { AnthropicSession } from "./anthropic.js";
-import {
-  ANTHROPIC_AI_PROMPT,
-  ANTHROPIC_HUMAN_PROMPT,
-  getAnthropicSession,
-} from "./anthropic.js";
+import { getAnthropicSession } from "./anthropic.js";
 import type { AzureOpenAIConfig } from "./azure.js";
 import {
   getAzureBaseUrl,
@@ -617,6 +612,8 @@ export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
   "claude-2": { contextWindow: 200000 },
   "claude-instant-1": { contextWindow: 100000 },
+  "claude-3-opus-20240229": { contextWindow: 200000 },
+  "claude-3-sonnet-20240229 ": { contextWindow: 200000 },
 };
 
 /**
@@ -674,21 +671,13 @@ export class Anthropic extends BaseLLM {
     };
   }
 
-  mapMessagesToPrompt(messages: ChatMessage[]) {
-    return (
-      messages.reduce((acc, message) => {
-        return (
-          acc +
-          `${
-            message.role === "system"
-              ? ""
-              : message.role === "assistant"
-                ? ANTHROPIC_AI_PROMPT + " "
-                : ANTHROPIC_HUMAN_PROMPT + " "
-          }${message.content.trim()}`
-        );
-      }, "") + ANTHROPIC_AI_PROMPT
-    );
+  formatMessages(messages: ChatMessage[]) {
+    return messages.map((message) => {
+      return {
+        content: message.content,
+        role: message.role as "user" | "assistant",
+      };
+    });
   }
 
   chat(
@@ -705,18 +694,16 @@ export class Anthropic extends BaseLLM {
     }
 
     //Non-streaming
-    const response = await this.session.anthropic.completions.create({
+    const response = await this.session.anthropic.messages.create({
       model: this.model,
-      prompt: this.mapMessagesToPrompt(messages),
-      max_tokens_to_sample: this.maxTokens ?? 100000,
+      messages: this.formatMessages(messages),
+      max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
       top_p: this.topP,
     });
 
     return {
-      message: { content: response.completion.trimStart(), role: "assistant" },
-      //^ We're trimming the start because Anthropic often starts with a space in the response
-      // That space will be re-added when we generate the next prompt.
+      message: { content: response.content[0].text, role: "assistant" },
     };
   }
 
@@ -725,22 +712,24 @@ export class Anthropic extends BaseLLM {
     parentEvent?: Event | undefined,
   ): AsyncIterable<ChatResponseChunk> {
     // AsyncIterable<AnthropicStreamToken>
-    const stream: AsyncIterable<AnthropicStreamToken> =
-      await this.session.anthropic.completions.create({
-        model: this.model,
-        prompt: this.mapMessagesToPrompt(messages),
-        max_tokens_to_sample: this.maxTokens ?? 100000,
-        temperature: this.temperature,
-        top_p: this.topP,
-        stream: true,
-      });
+    const stream = await this.session.anthropic.messages.create({
+      model: this.model,
+      messages: this.formatMessages(messages),
+      max_tokens: this.maxTokens ?? 4096,
+      temperature: this.temperature,
+      top_p: this.topP,
+      stream: true,
+    });
 
     let idx_counter: number = 0;
     for await (const part of stream) {
-      //TODO: LLM Stream Callback, pending re-work.
+      const content =
+        part.type === "content_block_delta" ? part.delta.text : "";
+
+      if (typeof content !== "string") continue;
 
       idx_counter++;
-      yield { delta: part.completion };
+      yield { delta: content };
     }
     return;
   }

@@ -5,7 +5,7 @@ import { Anthropic } from "llamaindex";
     apiKey: process.env.ANTHROPIC_API_KEY,
     model: "claude-3-opus-20240229",
   });
-  const result = await anthropic.chat({
+  const stream = await anthropic.chat({
     messages: [
       {
         content:
@@ -13,6 +13,10 @@ import { Anthropic } from "llamaindex";
         role: "user",
       },
     ],
+    stream: true,
   });
-  console.log(result);
+
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.delta);
+  }
 })();
