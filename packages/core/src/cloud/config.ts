@@ -6,7 +6,7 @@ import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
 export type GetPipelineCreateParams = {
   pipelineName: string;
-  pipelineType: PlatformApi.PipelineType;
+  pipelineType: any; // TODO: PlatformApi.PipelineType is not exported
   transformations?: TransformComponent[];
   inputNodes?: BaseNode[];
 };

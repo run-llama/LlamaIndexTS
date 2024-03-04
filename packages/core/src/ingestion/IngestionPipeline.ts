@@ -6,7 +6,7 @@ import {
   DEFAULT_PROJECT_NAME,
   type ClientParams,
 } from "../cloud/types.js";
-import { getClient } from "../cloud/utils.js";
+import { getAppBaseUrl, getClient } from "../cloud/utils.js";
 import type { BaseReader } from "../readers/type.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type { VectorStore } from "../storage/vectorStore/types.js";
@@ -168,7 +168,7 @@ export class IngestionPipeline {
     // Print playground URL if not running remote
     if (params.verbose) {
       console.log(
-        `Pipeline available at: ${this.clientParams?.baseUrl}/project/${project.id}/playground/${pipeline.id}`,
+        `Pipeline available at: ${getAppBaseUrl(this.clientParams?.baseUrl)}/project/${project.id}/playground/${pipeline.id}`,
       );
     }
 
