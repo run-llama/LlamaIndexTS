@@ -34,8 +34,6 @@ export class NLSQLQueryEngine extends BaseSQLTableQueryEngine {
     sqlOnly = false,
     verbose = false,
   }: NLSQLQueryEngineParams) {
-    console.log({ synthesizeResponse });
-
     super({
       synthesizeResponse,
       responseSynthesisPrompt,
