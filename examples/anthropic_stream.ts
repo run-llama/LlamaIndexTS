@@ -3,7 +3,7 @@ import { Anthropic } from "llamaindex";
 (async () => {
   const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
-    model: "claude-3-opus-20240229",
+    model: "claude-3-opus",
   });
   const stream = await anthropic.chat({
     messages: [

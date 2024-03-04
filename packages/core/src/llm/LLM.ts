@@ -609,7 +609,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 }
 
 export const ALL_AVAILABLE_ANTHROPIC_V2_MODELS = {
-  "claude-2": {
+  "claude-2.1": {
     contextWindow: 200000,
   },
   "claude-instant-1": {
@@ -618,8 +618,8 @@ export const ALL_AVAILABLE_ANTHROPIC_V2_MODELS = {
 };
 
 export const ALL_AVAILABLE_V3_MODELS = {
-  "claude-3-opus-20240229": { contextWindow: 200000 },
-  "claude-3-sonnet-20240229 ": { contextWindow: 200000 },
+  "claude-3-opus": { contextWindow: 200000 },
+  "claude-3-sonnet": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
@@ -627,8 +627,9 @@ export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
   ...ALL_AVAILABLE_V3_MODELS,
 };
 
-export const isV3Model = (model: string): boolean => {
-  return Object.keys(ALL_AVAILABLE_V3_MODELS).includes(model);
+const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
+  "claude-3-opus": "claude-3-opus-20240229",
+  "claude-3-sonnet": "claude-3-sonnet-20240229",
 };
 
 /**
@@ -652,7 +653,7 @@ export class Anthropic extends BaseLLM {
 
   constructor(init?: Partial<Anthropic>) {
     super();
-    this.model = init?.model ?? "claude-3-opus-20240229";
+    this.model = init?.model ?? "claude-3-opus";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 0.999; // Per Ben Mann
     this.maxTokens = init?.maxTokens ?? undefined;
@@ -685,6 +686,13 @@ export class Anthropic extends BaseLLM {
       tokenizer: undefined,
     };
   }
+
+  getModelName = (model: string): string => {
+    if (Object.keys(AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE).includes(model)) {
+      return AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE[model];
+    }
+    return model;
+  };
 
   formatMessages(messages: ChatMessage[]) {
     return messages.map((message) => {
@@ -726,7 +734,7 @@ export class Anthropic extends BaseLLM {
 
     //Non-streaming
     const response = await this.session.anthropic.messages.create({
-      model: this.model,
+      model: this.getModelName(this.model),
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
@@ -745,7 +753,7 @@ export class Anthropic extends BaseLLM {
     systemPrompt?: string | null,
   ): AsyncIterable<ChatResponseChunk> {
     const stream = await this.session.anthropic.messages.create({
-      model: this.model,
+      model: this.getModelName(this.model),
       messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
