@@ -608,7 +608,7 @@ If a question does not make any sense, or is not factually coherent, explain why
   }
 }
 
-export const ALL_AVAILABLE_ANTHROPIC_V2_MODELS = {
+export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
   "claude-2.1": {
     contextWindow: 200000,
   },
@@ -623,14 +623,14 @@ export const ALL_AVAILABLE_V3_MODELS = {
 };
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
-  ...ALL_AVAILABLE_ANTHROPIC_V2_MODELS,
+  ...ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
   ...ALL_AVAILABLE_V3_MODELS,
 };
 
 const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-opus": "claude-3-opus-20240229",
   "claude-3-sonnet": "claude-3-sonnet-20240229",
-};
+} as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 /**
  * Anthropic LLM implementation
@@ -765,7 +765,7 @@ export class Anthropic extends BaseLLM {
     let idx_counter: number = 0;
     for await (const part of stream) {
       const content =
-        part.type === "content_block_delta" ? part.delta.text : "";
+        part.type === "content_block_delta" ? part.delta.text : null;
 
       if (typeof content !== "string") continue;
 
