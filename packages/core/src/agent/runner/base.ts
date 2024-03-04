@@ -244,10 +244,18 @@ export class AgentRunner extends BaseAgentRunner {
       );
     }
 
+    // if not an AgentChatResponse or an AsyncIterable<AgentChatResponse> throw an error
     if (!(stepOutput.output instanceof AgentChatResponse)) {
-      throw new Error(
-        `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
-      );
+      const { value, done } = await (
+        stepOutput.output as AsyncIterable<AgentChatResponse>
+      )
+        [Symbol.asyncIterator]()
+        .next();
+      if (!(value instanceof AgentChatResponse)) {
+        throw new Error(
+          `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
+        );
+      }
     }
 
     this.agentWorker.finalizeTask(this.getTask(taskId), kwargs);
@@ -262,20 +270,16 @@ export class AgentRunner extends BaseAgentRunner {
   protected async _chat({
     message,
     toolChoice,
+    mode,
   }: ChatEngineAgentParams & { mode: ChatResponseMode }) {
     const task = this.createTask(message as string);
 
     let resultOutput;
 
     while (true) {
-      const curStepOutput = await this._runStep(
-        task.taskId,
-        undefined,
-        ChatResponseMode.WAIT,
-        {
-          toolChoice,
-        },
-      );
+      const curStepOutput = await this._runStep(task.taskId, undefined, mode, {
+        toolChoice,
+      });
 
       if (curStepOutput.isLast) {
         resultOutput = curStepOutput;
@@ -299,7 +303,10 @@ export class AgentRunner extends BaseAgentRunner {
     message,
     chatHistory,
     toolChoice,
-  }: ChatEngineAgentParams): Promise<AgentChatResponse> {
+    mode = ChatResponseMode.WAIT,
+  }: ChatEngineAgentParams & {
+    mode?: ChatResponseMode;
+  }): Promise<AgentChatResponse> {
     if (!toolChoice) {
       toolChoice = this.defaultToolChoice;
     }
@@ -308,7 +315,7 @@ export class AgentRunner extends BaseAgentRunner {
       message,
       chatHistory,
       toolChoice,
-      mode: ChatResponseMode.WAIT,
+      mode,
     });
 
     return chatResponse;
