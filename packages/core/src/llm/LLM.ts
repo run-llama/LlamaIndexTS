@@ -696,9 +696,13 @@ export class Anthropic extends BaseLLM {
 
   formatMessages(messages: ChatMessage[]) {
     return messages.map((message) => {
+      if (message.role !== "user" && message.role !== "assistant") {
+        throw new Error("Unsupported Anthropic role");
+      }
+
       return {
         content: message.content,
-        role: message.role as "user" | "assistant",
+        role: message.role,
       };
     });
   }
