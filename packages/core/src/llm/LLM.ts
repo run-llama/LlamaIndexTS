@@ -612,7 +612,7 @@ export const ALL_AVAILABLE_ANTHROPIC_V2_MODELS = {
   "claude-2.1": {
     contextWindow: 200000,
   },
-  "claude-instant-1": {
+  "claude-instant-1.2": {
     contextWindow: 100000,
   },
 };
