@@ -1,7 +1,6 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
 import type {
-  AnthropicStreamToken,
   CallbackManager,
   Event,
   EventType,
@@ -13,11 +12,7 @@ import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
 import type { AnthropicSession } from "./anthropic.js";
-import {
-  ANTHROPIC_AI_PROMPT,
-  ANTHROPIC_HUMAN_PROMPT,
-  getAnthropicSession,
-} from "./anthropic.js";
+import { getAnthropicSession } from "./anthropic.js";
 import type { AzureOpenAIConfig } from "./azure.js";
 import {
   getAzureBaseUrl,
@@ -613,11 +608,29 @@ If a question does not make any sense, or is not factually coherent, explain why
   }
 }
 
-export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
-  // both models have 100k context window, see https://docs.anthropic.com/claude/reference/selecting-a-model
-  "claude-2": { contextWindow: 200000 },
-  "claude-instant-1": { contextWindow: 100000 },
+export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
+  "claude-2.1": {
+    contextWindow: 200000,
+  },
+  "claude-instant-1.2": {
+    contextWindow: 100000,
+  },
 };
+
+export const ALL_AVAILABLE_V3_MODELS = {
+  "claude-3-opus": { contextWindow: 200000 },
+  "claude-3-sonnet": { contextWindow: 200000 },
+};
+
+export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
+  ...ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
+  ...ALL_AVAILABLE_V3_MODELS,
+};
+
+const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
+  "claude-3-opus": "claude-3-opus-20240229",
+  "claude-3-sonnet": "claude-3-sonnet-20240229",
+} as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 /**
  * Anthropic LLM implementation
@@ -640,7 +653,7 @@ export class Anthropic extends BaseLLM {
 
   constructor(init?: Partial<Anthropic>) {
     super();
-    this.model = init?.model ?? "claude-2";
+    this.model = init?.model ?? "claude-3-opus";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 0.999; // Per Ben Mann
     this.maxTokens = init?.maxTokens ?? undefined;
@@ -674,21 +687,24 @@ export class Anthropic extends BaseLLM {
     };
   }
 
-  mapMessagesToPrompt(messages: ChatMessage[]) {
-    return (
-      messages.reduce((acc, message) => {
-        return (
-          acc +
-          `${
-            message.role === "system"
-              ? ""
-              : message.role === "assistant"
-                ? ANTHROPIC_AI_PROMPT + " "
-                : ANTHROPIC_HUMAN_PROMPT + " "
-          }${message.content.trim()}`
-        );
-      }, "") + ANTHROPIC_AI_PROMPT
-    );
+  getModelName = (model: string): string => {
+    if (Object.keys(AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE).includes(model)) {
+      return AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE[model];
+    }
+    return model;
+  };
+
+  formatMessages(messages: ChatMessage[]) {
+    return messages.map((message) => {
+      if (message.role !== "user" && message.role !== "assistant") {
+        throw new Error("Unsupported Anthropic role");
+      }
+
+      return {
+        content: message.content,
+        role: message.role,
+      };
+    });
   }
 
   chat(
@@ -698,49 +714,67 @@ export class Anthropic extends BaseLLM {
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream } = params;
+    let { messages } = params;
+
+    const { parentEvent, stream } = params;
+
+    let systemPrompt: string | null = null;
+
+    const systemMessages = messages.filter(
+      (message) => message.role === "system",
+    );
+
+    if (systemMessages.length > 0) {
+      systemPrompt = systemMessages
+        .map((message) => message.content)
+        .join("\n");
+      messages = messages.filter((message) => message.role !== "system");
+    }
+
     //Streaming
     if (stream) {
-      return this.streamChat(messages, parentEvent);
+      return this.streamChat(messages, parentEvent, systemPrompt);
     }
 
     //Non-streaming
-    const response = await this.session.anthropic.completions.create({
-      model: this.model,
-      prompt: this.mapMessagesToPrompt(messages),
-      max_tokens_to_sample: this.maxTokens ?? 100000,
+    const response = await this.session.anthropic.messages.create({
+      model: this.getModelName(this.model),
+      messages: this.formatMessages(messages),
+      max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
       top_p: this.topP,
+      ...(systemPrompt && { system: systemPrompt }),
     });
 
     return {
-      message: { content: response.completion.trimStart(), role: "assistant" },
-      //^ We're trimming the start because Anthropic often starts with a space in the response
-      // That space will be re-added when we generate the next prompt.
+      message: { content: response.content[0].text, role: "assistant" },
     };
   }
 
   protected async *streamChat(
     messages: ChatMessage[],
     parentEvent?: Event | undefined,
+    systemPrompt?: string | null,
   ): AsyncIterable<ChatResponseChunk> {
-    // AsyncIterable<AnthropicStreamToken>
-    const stream: AsyncIterable<AnthropicStreamToken> =
-      await this.session.anthropic.completions.create({
-        model: this.model,
-        prompt: this.mapMessagesToPrompt(messages),
-        max_tokens_to_sample: this.maxTokens ?? 100000,
-        temperature: this.temperature,
-        top_p: this.topP,
-        stream: true,
-      });
+    const stream = await this.session.anthropic.messages.create({
+      model: this.getModelName(this.model),
+      messages: this.formatMessages(messages),
+      max_tokens: this.maxTokens ?? 4096,
+      temperature: this.temperature,
+      top_p: this.topP,
+      stream: true,
+      ...(systemPrompt && { system: systemPrompt }),
+    });
 
     let idx_counter: number = 0;
     for await (const part of stream) {
-      //TODO: LLM Stream Callback, pending re-work.
+      const content =
+        part.type === "content_block_delta" ? part.delta.text : null;
+
+      if (typeof content !== "string") continue;
 
       idx_counter++;
-      yield { delta: part.completion };
+      yield { delta: content };
     }
     return;
   }
