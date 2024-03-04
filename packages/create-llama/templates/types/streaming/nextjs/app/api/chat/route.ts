@@ -1,5 +1,10 @@
 import { StreamingTextResponse } from "ai";
-import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
+import {
+  ChatMessage,
+  ChatResponseMode,
+  MessageContent,
+  OpenAI,
+} from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
@@ -54,11 +59,11 @@ export async function POST(request: NextRequest) {
       data?.imageUrl,
     );
 
-    // Calling LlamaIndex's ChatEngine to get a streamed response
+    // Calling chatEngine to get a streamed response
     const response = await chatEngine.chat({
       message: userMessageContent,
       chatHistory: messages,
-      stream: true,
+      mode: ChatResponseMode.STREAM,
     });
 
     // Transform LlamaIndex stream to Vercel/AI format
