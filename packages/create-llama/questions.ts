@@ -420,7 +420,6 @@ export const askQuestions = async (
   if (!program.model) {
     if (ciInfo.isCI) {
       program.model = getPrefOrDefault("model");
-      program.embeddingModel = getPrefOrDefault("embeddingModel");
     } else {
       const { model } = await prompts(
         {
