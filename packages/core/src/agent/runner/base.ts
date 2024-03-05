@@ -4,6 +4,7 @@ import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
+  StreamingAgentChatResponse,
 } from "../../engines/chat/index.js";
 import type { ChatMessage, LLM } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
@@ -231,23 +232,26 @@ export class AgentRunner extends BaseAgentRunner {
     taskId: string,
     stepOutput: TaskStepOutput,
     kwargs?: any,
-  ): Promise<AgentChatResponse> {
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     if (!stepOutput) {
       stepOutput =
         this.getCompletedSteps(taskId)[
           this.getCompletedSteps(taskId).length - 1
         ];
     }
+
     if (!stepOutput.isLast) {
       throw new Error(
         "finalizeResponse can only be called on the last step output",
       );
     }
 
-    if (!(stepOutput.output instanceof AgentChatResponse)) {
-      throw new Error(
-        `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
-      );
+    if (!(stepOutput.output instanceof StreamingAgentChatResponse)) {
+      if (!(stepOutput.output instanceof AgentChatResponse)) {
+        throw new Error(
+          `When \`isLast\` is True, cur_step_output.output must be AGENT_CHAT_RESPONSE_TYPE: ${stepOutput.output}`,
+        );
+      }
     }
 
     this.agentWorker.finalizeTask(this.getTask(taskId), kwargs);
@@ -262,20 +266,32 @@ export class AgentRunner extends BaseAgentRunner {
   protected async _chat({
     message,
     toolChoice,
-  }: ChatEngineAgentParams & { mode: ChatResponseMode }) {
+    stream,
+  }: ChatEngineAgentParams): Promise<AgentChatResponse>;
+  protected async _chat({
+    message,
+    toolChoice,
+    stream,
+  }: ChatEngineAgentParams & {
+    stream: true;
+  }): Promise<StreamingAgentChatResponse>;
+  protected async _chat({
+    message,
+    toolChoice,
+    stream,
+  }: ChatEngineAgentParams): Promise<
+    AgentChatResponse | StreamingAgentChatResponse
+  > {
     const task = this.createTask(message as string);
 
     let resultOutput;
 
+    const mode = stream ? ChatResponseMode.STREAM : ChatResponseMode.WAIT;
+
     while (true) {
-      const curStepOutput = await this._runStep(
-        task.taskId,
-        undefined,
-        ChatResponseMode.WAIT,
-        {
-          toolChoice,
-        },
-      );
+      const curStepOutput = await this._runStep(task.taskId, undefined, mode, {
+        toolChoice,
+      });
 
       if (curStepOutput.isLast) {
         resultOutput = curStepOutput;
@@ -299,7 +315,26 @@ export class AgentRunner extends BaseAgentRunner {
     message,
     chatHistory,
     toolChoice,
-  }: ChatEngineAgentParams): Promise<AgentChatResponse> {
+    stream,
+  }: ChatEngineAgentParams & {
+    stream?: false;
+  }): Promise<AgentChatResponse>;
+  public async chat({
+    message,
+    chatHistory,
+    toolChoice,
+    stream,
+  }: ChatEngineAgentParams & {
+    stream: true;
+  }): Promise<StreamingAgentChatResponse>;
+  public async chat({
+    message,
+    chatHistory,
+    toolChoice,
+    stream,
+  }: ChatEngineAgentParams): Promise<
+    AgentChatResponse | StreamingAgentChatResponse
+  > {
     if (!toolChoice) {
       toolChoice = this.defaultToolChoice;
     }
@@ -308,7 +343,7 @@ export class AgentRunner extends BaseAgentRunner {
       message,
       chatHistory,
       toolChoice,
-      mode: ChatResponseMode.WAIT,
+      stream,
     });
 
     return chatResponse;

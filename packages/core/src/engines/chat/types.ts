@@ -27,6 +27,7 @@ export interface ChatEngineParamsNonStreaming extends ChatEngineParamsBase {
 
 export interface ChatEngineAgentParams extends ChatEngineParamsBase {
   toolChoice?: string | Record<string, any>;
+  stream?: boolean;
 }
 
 /**
@@ -84,5 +85,22 @@ export class AgentChatResponse {
 
   toString() {
     return this.response ?? "";
+  }
+}
+
+export class StreamingAgentChatResponse {
+  response: AsyncIterable<Response>;
+
+  sources: ToolOutput[];
+  sourceNodes?: BaseNode[];
+
+  constructor(
+    response: AsyncIterable<Response>,
+    sources?: ToolOutput[],
+    sourceNodes?: BaseNode[],
+  ) {
+    this.response = response;
+    this.sources = sources ?? [];
+    this.sourceNodes = sourceNodes ?? [];
   }
 }

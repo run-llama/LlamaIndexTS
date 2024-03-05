@@ -1,6 +1,7 @@
 import type {
   AgentChatResponse,
   ChatEngineAgentParams,
+  StreamingAgentChatResponse,
 } from "../engines/chat/index.js";
 import type { QueryEngineParamsNonStreaming } from "../types.js";
 
@@ -12,11 +13,15 @@ export interface AgentWorker {
 }
 
 interface BaseChatEngine {
-  chat(params: ChatEngineAgentParams): Promise<AgentChatResponse>;
+  chat(
+    params: ChatEngineAgentParams,
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse>;
 }
 
 interface BaseQueryEngine {
-  query(params: QueryEngineParamsNonStreaming): Promise<AgentChatResponse>;
+  query(
+    params: QueryEngineParamsNonStreaming,
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse>;
 }
 
 /**
@@ -31,7 +36,10 @@ export abstract class BaseAgent implements BaseChatEngine, BaseQueryEngine {
     return [];
   }
 
-  abstract chat(params: ChatEngineAgentParams): Promise<AgentChatResponse>;
+  abstract chat(
+    params: ChatEngineAgentParams,
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse>;
+
   abstract reset(): void;
 
   /**
@@ -41,7 +49,7 @@ export abstract class BaseAgent implements BaseChatEngine, BaseQueryEngine {
    */
   async query(
     params: QueryEngineParamsNonStreaming,
-  ): Promise<AgentChatResponse> {
+  ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     // Handle non-streaming query
     const agentResponse = await this.chat({
       message: params.query,
