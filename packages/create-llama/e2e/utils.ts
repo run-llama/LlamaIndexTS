@@ -108,8 +108,6 @@ export async function runCreateLlama(
     MODEL,
     "--open-ai-key",
     process.env.OPENAI_API_KEY || "testKey",
-    "--llama-cloud-key",
-    process.env.LLAMA_CLOUD_API_KEY || "testKey",
     appType,
     "--eslint",
     "--use-npm",
