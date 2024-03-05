@@ -24,9 +24,15 @@ export class IndexDict extends IndexStruct {
   }
 
   toJson(): Record<string, unknown> {
+    const nodesDict: Record<string, unknown> = {};
+
+    for (const [key, node] of Object.entries(this.nodesDict)) {
+      nodesDict[key] = node.toJSON();
+    }
+
     return {
       ...super.toJson(),
-      nodesDict: this.nodesDict,
+      nodesDict,
       type: this.type,
     };
   }
