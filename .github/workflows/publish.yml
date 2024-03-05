@@ -21,4 +21,4 @@ jobs:
 
       - name: Publish @llamaindex/core
         run: npx jsr publish
-        working-directory: packages/core
+        working-directory: packages/core --allow-slow-types
