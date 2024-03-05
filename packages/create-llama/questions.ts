@@ -20,6 +20,7 @@ const defaults: QuestionArgs = {
   openAiKey: "",
   model: "gpt-3.5-turbo",
   communityProjectPath: "",
+  observability: false,
 };
 
 const handlers = {
@@ -209,6 +210,20 @@ export const askQuestions = async (
         preferences.ui = ui;
       }
     }
+  }
+
+  if (program.framework === "nextjs") {
+    const { observability } = await prompts({
+      type: "toggle",
+      name: "observability",
+      message: "Would you like to set up observability?",
+      initial: getPrefOrDefault("observability"),
+      active: "Yes",
+      inactive: "No",
+    });
+
+    program.observability = Boolean(observability);
+    preferences.observability = Boolean(observability);
   }
 
   if (!program.model) {

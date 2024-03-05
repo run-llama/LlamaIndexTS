@@ -39,6 +39,7 @@ export const installTSTemplate = async ({
   customApiPath,
   forBackend,
   vectorDb,
+  observability,
 }: InstallTemplateArgs) => {
   console.log(bold(`Using ${packageManager}.`));
 
@@ -61,19 +62,59 @@ export const installTSTemplate = async ({
    * If not, rename next.config.static.js to next.config.js
    */
   if (framework == "nextjs" && forBackend === "nextjs") {
-    const nextConfigAppPath = path.join(root, "next.config.app.js");
-    const nextConfigPath = path.join(root, "next.config.js");
-    await fs.rename(nextConfigAppPath, nextConfigPath);
-    // delete next.config.static.js
-    const nextConfigStaticPath = path.join(root, "next.config.static.js");
-    await fs.rm(nextConfigStaticPath);
+    if (observability) {
+      const nextConfigO11yPath = path.join(root, "next.config.o11y.js");
+      const nextConfigPath = path.join(root, "next.config.js");
+      await fs.rename(nextConfigO11yPath, nextConfigPath);
+      // delete other next.config files
+      const nextConfigAppPath = path.join(root, "next.config.app.js");
+      const nextConfigStaticPath = path.join(root, "next.config.static.js");
+      await Promise.all([
+        fs.rm(nextConfigAppPath),
+        fs.rm(nextConfigStaticPath),
+      ]);
+    } else {
+      const nextConfigAppPath = path.join(root, "next.config.app.js");
+      const nextConfigPath = path.join(root, "next.config.js");
+      await fs.rename(nextConfigAppPath, nextConfigPath);
+      // delete other next.config files
+      const nextConfigO11yPath = path.join(root, "next.config.o11y.js");
+      const nextConfigStaticPath = path.join(root, "next.config.static.js");
+      await Promise.all([
+        fs.rm(nextConfigO11yPath),
+        fs.rm(nextConfigStaticPath),
+      ]);
+    }
   } else if (framework == "nextjs" && typeof forBackend === "undefined") {
     const nextConfigStaticPath = path.join(root, "next.config.static.js");
     const nextConfigPath = path.join(root, "next.config.js");
     await fs.rename(nextConfigStaticPath, nextConfigPath);
-    // delete next.config.app.js
+    // delete other next.config files
+    const nextConfigO11yPath = path.join(root, "next.config.o11y.js");
     const nextConfigAppPath = path.join(root, "next.config.app.js");
-    await fs.rm(nextConfigAppPath);
+    await Promise.all([fs.rm(nextConfigO11yPath), fs.rm(nextConfigAppPath)]);
+  }
+
+  if (observability) {
+    const routeO11yPath = path.join(
+      root,
+      "app",
+      "api",
+      "chat",
+      "route.o11y.ts",
+    );
+    const routePath = path.join(root, "app", "api", "chat", "route.ts");
+    await fs.rm(routePath);
+    await fs.rename(routeO11yPath, routePath);
+  } else {
+    const routeO11yPath = path.join(
+      root,
+      "app",
+      "api",
+      "chat",
+      "route.o11y.ts",
+    );
+    await fs.rm(routeO11yPath);
   }
 
   /**
@@ -187,6 +228,18 @@ export const installTSTemplate = async ({
     packageJson.devDependencies = {
       ...packageJson.devDependencies,
       "@types/react-syntax-highlighter": undefined,
+    };
+  }
+
+  if (observability) {
+    packageJson.dependencies = {
+      ...packageJson.dependencies,
+      "@traceloop/node-server-sdk": "^0.5.8",
+    };
+
+    packageJson.devDependencies = {
+      ...packageJson.devDependencies,
+      "node-loader": "^2.0.0",
     };
   }
 

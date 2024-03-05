@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from "path";
-import { green } from "picocolors";
+import { green, yellow } from "picocolors";
 import { tryGitInit } from "./helpers/git";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { getOnline } from "./helpers/is-online";
@@ -34,6 +34,7 @@ export async function createApp({
   communityProjectPath,
   vectorDb,
   externalPort,
+  observability,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -75,6 +76,7 @@ export async function createApp({
     communityProjectPath,
     vectorDb,
     externalPort,
+    observability,
   };
 
   if (frontend) {
@@ -115,5 +117,15 @@ export async function createApp({
       `file://${root}/README.md`,
     )} and learn how to get started.`,
   );
+
+  if (args.observability) {
+    console.log(
+      `\n${yellow("Observability")}: Visit the ${terminalLink(
+        "documentation",
+        "https://traceloop.com/docs/openllmetry/integrations",
+      )} to set up the environment variables to start seeing execution traces.`,
+    );
+  }
+
   console.log();
 }

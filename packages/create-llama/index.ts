@@ -224,6 +224,7 @@ async function run(): Promise<void> {
     communityProjectPath: program.communityProjectPath,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
+    observability: program.observability,
   });
   conf.set("preferences", preferences);
 }
