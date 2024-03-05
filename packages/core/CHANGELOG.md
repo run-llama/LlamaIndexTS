@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.1.21
+
+### Patch Changes
+
+- 552a61a: Add quantized parameter to HuggingFaceEmbedding
+- d824876: Add support for Claude 3
+
 ## 0.1.20
 
 ### Patch Changes
