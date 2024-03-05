@@ -259,7 +259,8 @@ export const installTSTemplate = async ({
   if (observability) {
     packageJson.dependencies = {
       ...packageJson.dependencies,
-      "@traceloop/node-server-sdk": "^0.5.8",
+      "@traceloop/node-server-sdk": "^0.5.12",
+      "supports-color": "^8.1.1",
     };
 
     packageJson.devDependencies = {
