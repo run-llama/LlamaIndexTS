@@ -8,7 +8,7 @@ const collectionName = "movie_reviews";
 
 async function main() {
   try {
-    const astraVS = new AstraDBVectorStore();
+    const astraVS = new AstraDBVectorStore({ contentKey: "reviewtext" });
     await astraVS.connect(collectionName);
 
     const ctx = serviceContextFromDefaults();
@@ -18,7 +18,9 @@ async function main() {
 
     const queryEngine = await index.asQueryEngine({ retriever });
 
-    const results = await queryEngine.query("What is the best reviewed movie?");
+    const results = await queryEngine.query({
+      query: 'How was "La Sapienza" reviewed?',
+    });
 
     console.log(results.response);
   } catch (e) {

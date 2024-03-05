@@ -1,11 +1,11 @@
 import _ from "lodash";
+import type { BaseNode } from "../Node.js";
 import {
-  BaseNode,
   Document,
   ImageDocument,
   NodeRelationship,
   TextNode,
-} from "../Node";
+} from "../Node.js";
 
 type TextSplitter = (s: string) => string[];
 

@@ -78,3 +78,15 @@ pnpm start
 That should start a webserver which will serve the docs on https://localhost:3000
 
 Any changes you make should be reflected in the browser. If you need to regenerate the API docs and find that your TSDoc isn't getting the updates, feel free to remove apps/docs/api. It will automatically regenerate itself when you run pnpm start again.
+
+## Publishing
+
+To publish a new version of the library, run
+
+```shell
+pnpm new-llamaindex
+pnpm new-create-llama
+pnpm release
+git push # push to the main branch
+git push --tags
+```

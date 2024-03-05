@@ -1,6 +1,7 @@
-import { MongoClient } from "mongodb";
-import { Document, Metadata } from "../Node";
-import { BaseReader } from "./base";
+import type { MongoClient } from "mongodb";
+import type { Metadata } from "../Node.js";
+import { Document } from "../Node.js";
+import type { BaseReader } from "./type.js";
 
 /**
  * Read in from MongoDB
@@ -36,6 +37,7 @@ export class SimpleMongoReader implements BaseReader {
    * @returns {Promise<Document[]>}
    * @throws If a field specified in fieldNames or metadataNames is not found in a MongoDB document.
    */
+  // eslint-disable-next-line max-params
   public async loadData(
     dbName: string,
     collectionName: string,

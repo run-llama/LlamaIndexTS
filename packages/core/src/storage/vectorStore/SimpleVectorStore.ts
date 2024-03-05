@@ -1,19 +1,20 @@
+import type { GenericFileSystem } from "@llamaindex/env";
+import { defaultFS, path } from "@llamaindex/env";
 import _ from "lodash";
-import * as path from "path";
-import { BaseNode } from "../../Node";
+import type { BaseNode } from "../../Node.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
-} from "../../embeddings";
-import { GenericFileSystem, exists } from "../FileSystem";
-import { DEFAULT_FS, DEFAULT_PERSIST_DIR } from "../constants";
-import {
+} from "../../embeddings/utils.js";
+import { exists } from "../FileSystem.js";
+import { DEFAULT_PERSIST_DIR } from "../constants.js";
+import type {
   VectorStore,
   VectorStoreQuery,
-  VectorStoreQueryMode,
   VectorStoreQueryResult,
-} from "./types";
+} from "./types.js";
+import { VectorStoreQueryMode } from "./types.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -31,19 +32,19 @@ class SimpleVectorStoreData {
 export class SimpleVectorStore implements VectorStore {
   storesText: boolean = false;
   private data: SimpleVectorStoreData = new SimpleVectorStoreData();
-  private fs: GenericFileSystem = DEFAULT_FS;
+  private fs: GenericFileSystem = defaultFS;
   private persistPath: string | undefined;
 
   constructor(data?: SimpleVectorStoreData, fs?: GenericFileSystem) {
     this.data = data || new SimpleVectorStoreData();
-    this.fs = fs || DEFAULT_FS;
+    this.fs = fs || defaultFS;
   }
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleVectorStore> {
-    let persistPath = `${persistDir}/vector_store.json`;
+    const persistPath = `${persistDir}/vector_store.json`;
     return await SimpleVectorStore.fromPersistPath(persistPath, fs);
   }
 
@@ -56,11 +57,10 @@ export class SimpleVectorStore implements VectorStore {
   }
 
   async add(embeddingResults: BaseNode[]): Promise<string[]> {
-    for (let node of embeddingResults) {
+    for (const node of embeddingResults) {
       this.data.embeddingDict[node.id_] = node.getEmbedding();
 
       if (!node.sourceNode) {
-        console.error("Missing source node from TextNode.");
         continue;
       }
 
@@ -75,12 +75,15 @@ export class SimpleVectorStore implements VectorStore {
   }
 
   async delete(refDocId: string): Promise<void> {
-    let textIdsToDelete = Object.keys(this.data.textIdToRefDocId).filter(
+    const textIdsToDelete = Object.keys(this.data.textIdToRefDocId).filter(
       (textId) => this.data.textIdToRefDocId[textId] === refDocId,
     );
-    for (let textId of textIdsToDelete) {
+    for (const textId of textIdsToDelete) {
       delete this.data.embeddingDict[textId];
       delete this.data.textIdToRefDocId[textId];
+    }
+    if (this.persistPath) {
+      await this.persist(this.persistPath, this.fs);
     }
     return Promise.resolve();
   }
@@ -92,11 +95,11 @@ export class SimpleVectorStore implements VectorStore {
       );
     }
 
-    let items = Object.entries(this.data.embeddingDict);
+    const items = Object.entries(this.data.embeddingDict);
 
     let nodeIds: string[], embeddings: number[][];
     if (query.docIds) {
-      let availableIds = new Set(query.docIds);
+      const availableIds = new Set(query.docIds);
       const queriedItems = items.filter((item) => availableIds.has(item[0]));
       nodeIds = queriedItems.map((item) => item[0]);
       embeddings = queriedItems.map((item) => item[1]);
@@ -106,7 +109,7 @@ export class SimpleVectorStore implements VectorStore {
       embeddings = items.map((item) => item[1]);
     }
 
-    let queryEmbedding = query.queryEmbedding!;
+    const queryEmbedding = query.queryEmbedding!;
 
     let topSimilarities: number[], topIds: string[];
     if (LEARNER_MODES.has(query.mode)) {
@@ -117,7 +120,7 @@ export class SimpleVectorStore implements VectorStore {
         nodeIds,
       );
     } else if (query.mode === MMR_MODE) {
-      let mmrThreshold = query.mmrThreshold;
+      const mmrThreshold = query.mmrThreshold;
       [topSimilarities, topIds] = getTopKMMREmbeddings(
         queryEmbedding,
         embeddings,
@@ -148,7 +151,7 @@ export class SimpleVectorStore implements VectorStore {
     fs?: GenericFileSystem,
   ): Promise<void> {
     fs = fs || this.fs;
-    let dirPath = path.dirname(persistPath);
+    const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
@@ -158,18 +161,16 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs?: GenericFileSystem,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleVectorStore> {
-    fs = fs || DEFAULT_FS;
-
-    let dirPath = path.dirname(persistPath);
+    const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });
     }
 
     let dataDict: any = {};
     try {
-      let fileData = await fs.readFile(persistPath);
+      const fileData = await fs.readFile(persistPath);
       dataDict = JSON.parse(fileData.toString());
     } catch (e) {
       console.error(
@@ -177,7 +178,7 @@ export class SimpleVectorStore implements VectorStore {
       );
     }
 
-    let data = new SimpleVectorStoreData();
+    const data = new SimpleVectorStoreData();
     data.embeddingDict = dataDict.embeddingDict ?? {};
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
     const store = new SimpleVectorStore(data);
@@ -187,7 +188,7 @@ export class SimpleVectorStore implements VectorStore {
   }
 
   static fromDict(saveDict: SimpleVectorStoreData): SimpleVectorStore {
-    let data = new SimpleVectorStoreData();
+    const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
     return new SimpleVectorStore(data);

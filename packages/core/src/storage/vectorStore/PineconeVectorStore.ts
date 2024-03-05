@@ -1,24 +1,26 @@
-import {
+import type {
   ExactMatchFilter,
   MetadataFilters,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
-} from "./types";
+} from "./types.js";
 
-import { BaseNode, Document, Metadata, MetadataMode } from "../../Node";
-import { GenericFileSystem } from "../FileSystem";
-
-import {
+import { getEnv, type GenericFileSystem } from "@llamaindex/env";
+import type {
   FetchResponse,
   Index,
-  Pinecone,
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
+import { type Pinecone } from "@pinecone-database/pinecone";
+import type { BaseNode, Metadata } from "../../Node.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {
   indexName?: string;
   chunkSize?: number;
+  namespace?: string;
+  textKey?: string;
 };
 
 /**
@@ -37,18 +39,23 @@ export class PineconeVectorStore implements VectorStore {
   */
   db?: Pinecone;
   indexName: string;
+  namespace: string;
   chunkSize: number;
+  textKey: string;
 
   constructor(params?: PineconeParams) {
     this.indexName =
-      params?.indexName ?? process.env.PINECONE_INDEX_NAME ?? "llama";
+      params?.indexName ?? getEnv("PINECONE_INDEX_NAME") ?? "llama";
+    this.namespace = params?.namespace ?? getEnv("PINECONE_NAMESPACE") ?? "";
     this.chunkSize =
       params?.chunkSize ??
-      Number.parseInt(process.env.PINECONE_CHUNK_SIZE ?? "100");
+      Number.parseInt(getEnv("PINECONE_CHUNK_SIZE") ?? "100");
+    this.textKey = params?.textKey ?? "text";
   }
 
   private async getDb(): Promise<Pinecone> {
     if (!this.db) {
+      const { Pinecone } = await import("@pinecone-database/pinecone");
       this.db = await new Pinecone();
     }
 
@@ -142,25 +149,30 @@ export class PineconeVectorStore implements VectorStore {
     var options: any = {
       vector: query.queryEmbedding,
       topK: query.similarityTopK,
-      include_values: true,
-      include_metadara: true,
+      includeValues: true,
+      includeMetadata: true,
       filter: filter,
     };
 
     const idx = await this.index();
-    const results = await idx.query(options);
+    const results = await idx.namespace(this.namespace).query(options);
 
     const idList = results.matches.map((row) => row.id);
-    const records: FetchResponse<any> = await idx.fetch(idList);
+    const records: FetchResponse<any> = await idx
+      .namespace(this.namespace)
+      .fetch(idList);
     const rows = Object.values(records.records);
 
     const nodes = rows.map((row) => {
-      return new Document({
-        id_: row.id,
-        text: this.textFromResultRow(row),
-        metadata: this.metaWithoutText(row.metadata),
-        embedding: row.values,
+      const node = metadataDictToNode(row.metadata, {
+        fallback: {
+          id: row.id,
+          text: this.textFromResultRow(row),
+          metadata: this.metaWithoutText(row.metadata),
+          embedding: row.values,
+        },
       });
+      return node;
     });
 
     const ret = {
@@ -193,12 +205,12 @@ export class PineconeVectorStore implements VectorStore {
   }
 
   textFromResultRow(row: ScoredPineconeRecord<Metadata>): string {
-    return row.metadata?.text ?? "";
+    return row.metadata?.[this.textKey] ?? "";
   }
 
   metaWithoutText(meta: Metadata): any {
     return Object.keys(meta)
-      .filter((key) => key != "text")
+      .filter((key) => key != this.textKey)
       .reduce((acc: any, key: string) => {
         acc[key] = meta[key];
         return acc;
@@ -206,15 +218,11 @@ export class PineconeVectorStore implements VectorStore {
   }
 
   nodeToRecord(node: BaseNode<Metadata>) {
-    let id: any = node.id_.length ? node.id_ : null;
-    let meta: any = node.metadata || {};
-    meta.create_date = new Date();
-    meta.text = node.getContent(MetadataMode.EMBED);
-
+    const id: any = node.id_.length ? node.id_ : null;
     return {
       id: id,
       values: node.getEmbedding(),
-      metadata: meta,
+      metadata: nodeToMetadata(node),
     };
   }
 }

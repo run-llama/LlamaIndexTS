@@ -1,9 +1,10 @@
-import { BaseNode, jsonToNode, Metadata, ObjectType } from "../../Node";
+import type { BaseNode, Metadata } from "../../Node.js";
+import { ObjectType, jsonToNode } from "../../Node.js";
 
 const DEFAULT_TEXT_KEY = "text";
 
 export function validateIsFlat(obj: { [key: string]: any }): void {
-  for (let key in obj) {
+  for (const key in obj) {
     if (typeof obj[key] === "object" && obj[key] !== null) {
       throw new Error(`Value for metadata ${key} must not be another object`);
     }
@@ -36,7 +37,16 @@ export function nodeToMetadata(
   return metadata;
 }
 
-export function metadataDictToNode(metadata: Metadata): BaseNode {
+type MetadataDictToNodeOptions = {
+  // If the metadata doesn't contain node content, use this object as a fallback, for usage see
+  // AstraDBVectorStore.ts
+  fallback: Record<string, any>;
+};
+
+export function metadataDictToNode(
+  metadata: Metadata,
+  options?: MetadataDictToNodeOptions,
+): BaseNode {
   const {
     _node_content: nodeContent,
     _node_type: nodeType,
@@ -45,11 +55,17 @@ export function metadataDictToNode(metadata: Metadata): BaseNode {
     ref_doc_id,
     ...rest
   } = metadata;
+  let nodeObj;
   if (!nodeContent) {
-    throw new Error("Node content not found in metadata.");
+    if (options?.fallback) {
+      nodeObj = options?.fallback;
+    } else {
+      throw new Error("Node content not found in metadata.");
+    }
+  } else {
+    nodeObj = JSON.parse(nodeContent);
+    nodeObj.metadata = rest;
   }
-  const nodeObj = JSON.parse(nodeContent);
-  nodeObj.metadata = rest;
 
   // Note: we're using the name of the class stored in `_node_type`
   // and not the type attribute to reconstruct

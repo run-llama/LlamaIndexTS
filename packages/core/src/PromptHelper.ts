@@ -1,12 +1,12 @@
-import { globalsHelper } from "./GlobalsHelper";
-import { SimplePrompt } from "./Prompt";
-import { SentenceSplitter } from "./TextSplitter";
+import { globalsHelper } from "./GlobalsHelper.js";
+import type { SimplePrompt } from "./Prompt.js";
+import { SentenceSplitter } from "./TextSplitter.js";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
   DEFAULT_PADDING,
-} from "./constants";
+} from "./constants.js";
 
 export function getEmptyPromptTxt(prompt: SimplePrompt) {
   return prompt({});
@@ -37,6 +37,7 @@ export class PromptHelper {
   tokenizer: (text: string) => Uint32Array;
   separator = " ";
 
+  // eslint-disable-next-line max-params
   constructor(
     contextWindow = DEFAULT_CONTEXT_WINDOW,
     numOutput = DEFAULT_NUM_OUTPUTS,

@@ -1,57 +1,103 @@
 {
   "name": "llamaindex",
-  "version": "0.0.44",
+  "version": "0.1.21",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.9.1",
-    "@datastax/astra-db-ts": "^0.1.2",
-    "@mistralai/mistralai": "^0.0.7",
+    "@anthropic-ai/sdk": "^0.15.0",
+    "@aws-crypto/sha256-js": "^5.2.0",
+    "@datastax/astra-db-ts": "^0.1.4",
+    "@llamaindex/cloud": "0.0.4",
+    "@llamaindex/env": "workspace:*",
+    "@mistralai/mistralai": "^0.0.10",
     "@notionhq/client": "^2.2.14",
-    "@pinecone-database/pinecone": "^1.1.2",
-    "@xenova/transformers": "^2.10.0",
-    "assemblyai": "^4.0.0",
-    "chromadb": "^1.7.3",
+    "@pinecone-database/pinecone": "^2.0.1",
+    "@qdrant/js-client-rest": "^1.7.0",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^18.19.14",
+    "@types/papaparse": "^5.3.14",
+    "@types/pg": "^8.11.0",
+    "@xenova/transformers": "^2.15.0",
+    "assemblyai": "^4.2.2",
+    "chromadb": "~1.7.3",
+    "cohere-ai": "^7.7.5",
     "file-type": "^18.7.0",
-    "js-tiktoken": "^1.0.8",
+    "js-tiktoken": "^1.0.10",
     "lodash": "^4.17.21",
     "mammoth": "^1.6.0",
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.3.0",
     "notion-md-crawler": "^0.0.2",
-    "openai": "^4.20.1",
+    "openai": "^4.26.1",
     "papaparse": "^5.4.1",
-    "pdfjs-dist": "4.0.269",
+    "pathe": "^1.1.2",
+    "pdf2json": "^3.0.5",
     "pg": "^8.11.3",
-    "pgvector": "^0.1.5",
+    "pgvector": "^0.1.7",
     "portkey-ai": "^0.1.16",
     "rake-modified": "^1.0.8",
-    "replicate": "^0.21.1",
-    "string-strip-html": "^13.4.3",
-    "uuid": "^9.0.1",
+    "replicate": "^0.25.2",
+    "string-strip-html": "^13.4.6",
     "wink-nlp": "^1.14.3"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.11",
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^18.19.2",
-    "@types/papaparse": "^5.3.14",
-    "@types/pg": "^8.10.9",
-    "@types/uuid": "^9.0.7",
-    "node-stdlib-browser": "^1.2.0",
-    "tsup": "^7.2.0",
-    "typescript": "^5.3.2"
+    "@swc/cli": "^0.3.9",
+    "@swc/core": "^1.4.2",
+    "concurrently": "^8.2.2",
+    "glob": "^10.3.10",
+    "madge": "^6.1.0",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "repository": "run-llama/LlamaIndexTS",
+  "types": "./dist/type/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "edge-light": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "require": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/type/*.d.ts",
+        "default": "./dist/*.js"
+      },
+      "require": {
+        "types": "./dist/type/*.d.ts",
+        "default": "./dist/cjs/*.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "examples"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/core"
+  },
   "scripts": {
     "lint": "eslint .",
-    "test": "jest",
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
+    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
+    "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
+    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
+    "build:type": "pnpm run -w type-check",
+    "copy": "cp -r ../../README.md ../../LICENSE .",
+    "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
+    "circular-check": "madge -c ./src/index.ts",
+    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
   }
 }

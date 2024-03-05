@@ -1,8 +1,8 @@
-import { BaseNode } from "../Node";
-import { SentenceSplitter } from "../TextSplitter";
-import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants";
-import { NodeParser } from "./types";
-import { getNodesFromDocument } from "./utils";
+import type { BaseNode } from "../Node.js";
+import { SentenceSplitter } from "../TextSplitter.js";
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants.js";
+import type { NodeParser } from "./types.js";
+import { getNodesFromDocument } from "./utils.js";
 
 /**
  * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
@@ -27,15 +27,21 @@ export class SimpleNodeParser implements NodeParser {
     includePrevNextRel?: boolean;
     chunkSize?: number;
     chunkOverlap?: number;
+    splitLongSentences?: boolean;
   }) {
     this.textSplitter =
       init?.textSplitter ??
       new SentenceSplitter({
         chunkSize: init?.chunkSize ?? DEFAULT_CHUNK_SIZE,
         chunkOverlap: init?.chunkOverlap ?? DEFAULT_CHUNK_OVERLAP,
+        splitLongSentences: init?.splitLongSentences ?? false,
       });
     this.includeMetadata = init?.includeMetadata ?? true;
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
+  }
+
+  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+    return this.getNodesFromDocuments(nodes);
   }
 
   static fromDefaults(init?: {

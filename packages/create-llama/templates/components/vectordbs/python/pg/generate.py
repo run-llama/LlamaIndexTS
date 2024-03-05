@@ -1,31 +1,27 @@
 from dotenv import load_dotenv
 
 load_dotenv()
+
 import logging
+from llama_index.core.indices import VectorStoreIndex
+from llama_index.core.storage import StorageContext
 
-from app.engine.constants import DATA_DIR
-from app.engine.context import create_service_context
+from app.engine.loader import get_documents
+from app.settings import init_settings
 from app.engine.utils import init_pg_vector_store_from_env
-
-from llama_index import (
-    SimpleDirectoryReader,
-    VectorStoreIndex,
-    StorageContext,
-)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 
-def generate_datasource(service_context):
+def generate_datasource():
     logger.info("Creating new index")
     # load the documents and create the index
-    documents = SimpleDirectoryReader(DATA_DIR).load_data()
+    documents = get_documents()
     store = init_pg_vector_store_from_env()
     storage_context = StorageContext.from_defaults(vector_store=store)
     VectorStoreIndex.from_documents(
         documents,
-        service_context=service_context,
         storage_context=storage_context,
         show_progress=True,  # this will show you a progress bar as the embeddings are created
     )
@@ -35,4 +31,5 @@ def generate_datasource(service_context):
 
 
 if __name__ == "__main__":
-    generate_datasource(create_service_context())
+    init_settings()
+    generate_datasource()

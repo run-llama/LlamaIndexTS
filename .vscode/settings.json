@@ -5,8 +5,13 @@
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
   },
-  "jest.rootPath": "./packages/core",
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

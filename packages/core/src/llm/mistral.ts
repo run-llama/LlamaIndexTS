@@ -1,10 +1,18 @@
-import {
+import { getEnv } from "@llamaindex/env";
+import type {
   CallbackManager,
   Event,
   EventType,
   StreamCallbackResponse,
-} from "../callbacks/CallbackManager";
-import { ChatMessage, ChatResponse, LLM } from "./LLM";
+} from "../callbacks/CallbackManager.js";
+import { BaseLLM } from "./base.js";
+import type {
+  ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
+  LLMChatParamsNonStreaming,
+  LLMChatParamsStreaming,
+} from "./types.js";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },
@@ -20,9 +28,7 @@ export class MistralAISession {
     if (init?.apiKey) {
       this.apiKey = init?.apiKey;
     } else {
-      if (typeof process !== undefined) {
-        this.apiKey = process.env.MISTRAL_API_KEY;
-      }
+      this.apiKey = getEnv("MISTRAL_API_KEY");
     }
     if (!this.apiKey) {
       throw new Error("Set Mistral API key in MISTRAL_API_KEY env variable"); // Overriding MistralAI package's error message
@@ -41,9 +47,7 @@ export class MistralAISession {
 /**
  * MistralAI LLM implementation
  */
-export class MistralAI implements LLM {
-  hasStreaming: boolean = true;
-
+export class MistralAI extends BaseLLM {
   // Per completion MistralAI params
   model: keyof typeof ALL_AVAILABLE_MISTRAL_MODELS;
   temperature: number;
@@ -57,6 +61,7 @@ export class MistralAI implements LLM {
   private session: MistralAISession;
 
   constructor(init?: Partial<MistralAI>) {
+    super();
     this.model = init?.model ?? "mistral-small";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
@@ -94,16 +99,17 @@ export class MistralAI implements LLM {
     };
   }
 
-  async chat<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(messages: ChatMessage[], parentEvent?: Event, streaming?: T): Promise<R> {
+  chat(
+    params: LLMChatParamsStreaming,
+  ): Promise<AsyncIterable<ChatResponseChunk>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  async chat(
+    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
+  ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
+    const { messages, stream } = params;
     // Streaming
-    if (streaming) {
-      if (!this.hasStreaming) {
-        throw Error("No streaming support for this LLM.");
-      }
-      return this.streamChat(messages, parentEvent) as R;
+    if (stream) {
+      return this.streamChat(params);
     }
     // Non-streaming
     const client = await this.session.getClient();
@@ -111,24 +117,13 @@ export class MistralAI implements LLM {
     const message = response.choices[0].message;
     return {
       message,
-    } as R;
+    };
   }
 
-  async complete<
-    T extends boolean | undefined = undefined,
-    R = T extends true ? AsyncGenerator<string, void, unknown> : ChatResponse,
-  >(prompt: string, parentEvent?: Event, streaming?: T): Promise<R> {
-    return this.chat(
-      [{ content: prompt, role: "user" }],
-      parentEvent,
-      streaming,
-    );
-  }
-
-  protected async *streamChat(
-    messages: ChatMessage[],
-    parentEvent?: Event,
-  ): AsyncGenerator<string, void, unknown> {
+  protected async *streamChat({
+    messages,
+    parentEvent,
+  }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
     //Now let's wrap our stream in a callback
     const onLLMStream = this.callbackManager?.onLLMStream
       ? this.callbackManager.onLLMStream
@@ -145,7 +140,7 @@ export class MistralAI implements LLM {
         };
 
     //Indices
-    var idx_counter: number = 0;
+    let idx_counter: number = 0;
     for await (const part of chunkStream) {
       if (!part.choices.length) continue;
 
@@ -163,16 +158,10 @@ export class MistralAI implements LLM {
 
       idx_counter++;
 
-      yield part.choices[0].delta.content ?? "";
+      yield {
+        delta: part.choices[0].delta.content ?? "",
+      };
     }
     return;
-  }
-
-  //streamComplete doesn't need to be async because it's child function is already async
-  protected streamComplete(
-    query: string,
-    parentEvent?: Event,
-  ): AsyncGenerator<string, void, unknown> {
-    return this.streamChat([{ content: query, role: "user" }], parentEvent);
   }
 }

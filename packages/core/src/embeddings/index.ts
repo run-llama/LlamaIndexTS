@@ -1,7 +1,10 @@
-export * from "./ClipEmbedding";
-export * from "./HuggingFaceEmbedding";
-export * from "./MistralAIEmbedding";
-export * from "./MultiModalEmbedding";
-export * from "./OpenAIEmbedding";
-export * from "./types";
-export * from "./utils";
+export * from "./ClipEmbedding.js";
+export * from "./HuggingFaceEmbedding.js";
+export * from "./MistralAIEmbedding.js";
+export * from "./MultiModalEmbedding.js";
+export { OllamaEmbedding } from "./OllamaEmbedding.js";
+export * from "./OpenAIEmbedding.js";
+export { FireworksEmbedding } from "./fireworks.js";
+export { TogetherEmbedding } from "./together.js";
+export * from "./types.js";
+export * from "./utils.js";

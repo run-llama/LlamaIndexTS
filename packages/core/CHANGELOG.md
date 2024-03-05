@@ -1,5 +1,246 @@
 # llamaindex
 
+## 0.1.21
+
+### Patch Changes
+
+- 552a61a: Add quantized parameter to HuggingFaceEmbedding
+- d824876: Add support for Claude 3
+
+## 0.1.20
+
+### Patch Changes
+
+- 64683a5: fix: prefix messages always true
+- 698cd9c: fix: step wise agent + examples
+- 7257751: fixed removeRefDocNode and persist store on delete
+- 5116ad8: fix: compatibility issue with Deno
+- Updated dependencies [5116ad8]
+  - @llamaindex/env@0.0.5
+
+## 0.1.19
+
+### Patch Changes
+
+- 026d068: feat: enhance pinecone usage
+
+## 0.1.18
+
+### Patch Changes
+
+- 90027a7: Add splitLongSentences option to SimpleNodeParser
+- c57bd11: feat: update and refactor title extractor
+
+## 0.1.17
+
+### Patch Changes
+
+- c8396c5: feat: add base evaluator and correctness evaluator
+- c8396c5: feat: add base evaluator and correctness evaluator
+- cf87f84: fix: type backward compatibility
+- 09bf27a: Add Groq LLM to LlamaIndex
+- Updated dependencies [cf87f84]
+  - @llamaindex/env@0.0.4
+
+## 0.1.16
+
+### Patch Changes
+
+- e8e21a0: build: set files in package.json
+- Updated dependencies [e8e21a0]
+  - @llamaindex/env@0.0.3
+
+## 0.1.15
+
+### Patch Changes
+
+- 3a6e287: build: improve tree-shake & reduce unused package import
+
+## 0.1.14
+
+### Patch Changes
+
+- 7416a87: build: cjs file not found
+- Updated dependencies [7416a87]
+  - @llamaindex/env@0.0.2
+
+## 0.1.13
+
+### Patch Changes
+
+- b8be4c0: build: use ESM as default
+- 65d8346: feat: abstract `@llamaindex/env` package
+
+## 0.1.12
+
+### Patch Changes
+
+- a5e4e6d: Add using a managed index from LlamaCloud
+- cfdd6db: fix: update pinecone vector store
+- 59f9fb6: Add Fireworks to LlamaIndex
+- 95add73: feat: multi-document agent
+
+## 0.1.11
+
+### Patch Changes
+
+- 255ae7d: chore: update example (perfoms better with default model)
+- cf3b757: feat: add filtering of metadata to PGVectorStore
+- ee9f3f3: chore: refactor openai agent utils
+- e78e9f4: feat(reranker): cohere reranker
+- f205358: feat: markdown node parser
+- dd05413: feat: use batching in vector store index
+- 383933a: Add reader for LlamaParse
+
+## 0.1.10
+
+### Patch Changes
+
+- b6c1500: feat(embedBatchSize): add batching for embeddings
+- 6cc3a36: fix: update `VectorIndexRetriever` constructor parameters' type.
+- cd82947: feat(queryEngineTool): add query engine tool to agents
+
+## 0.1.9
+
+### Patch Changes
+
+- 09464e6: add OpenAIAgent (thanks @EmanuelCampos)
+
+## 0.1.8
+
+### Patch Changes
+
+- d903da6: easier prompt customization for SimpleResponseBuilder
+- ab9d941: fix(cyclic): remove cyclic structures from transform hash
+- 177b446: chore: improve extractors prompt
+
+## 0.1.7
+
+### Patch Changes
+
+- d687c11: feat(router): add router query engine
+
+## 0.1.6
+
+### Patch Changes
+
+- cf44640: fix: `instanceof` issue
+
+  This will fix QueryEngine cannot run.
+
+- 7231ddb: feat: allow `SimpleDirectoryReader` to get a string
+
+## 0.1.5
+
+### Patch Changes
+
+- 8a9b78a: chore: split readers into different files
+
+## 0.1.4
+
+### Patch Changes
+
+- 88696e1: refactor: use `pdf2json` instead of `pdfjs-dist`
+
+  Please add `pdf2json` to `serverComponentsExternalPackages` if you have to parse pdf in runtime.
+
+  ```js
+  // next.config.js
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    experimental: {
+      serverComponentsExternalPackages: ["pdf2json"],
+    },
+  };
+
+  module.exports = nextConfig;
+  ```
+
+## 0.1.3
+
+### Patch Changes
+
+- 9ce7d3d: update dependencies
+- 7d50196: fix: output target causes not implemented error
+
+## 0.1.2
+
+- e4b807a: fix: invalid package.json
+
+## 0.1.1
+
+No changes for this release.
+
+## 0.1.0
+
+### Minor Changes
+
+- 3154f52: chore: add qdrant readme
+
+### Patch Changes
+
+- bb66cb7: add new OpenAI embeddings (with dimension reduction support)
+
+## 0.0.51
+
+### Patch Changes
+
+- fda8024: revert: export conditions not working with moduleResolution `node`
+
+## 0.0.50
+
+### Patch Changes
+
+- 8a729cd: fix bugs in Together.AI integration (thanks @Nutlope for reporting)
+
+## 0.0.49
+
+### Patch Changes
+
+- eee3922: feat(qdrant): Add Qdrant Vector DB
+- e2790da: Preview: Add ingestion pipeline (incl. different strategies to handle doc store duplicates)
+- bff40f2: feat: use conditional exports
+
+  The benefit of conditional exports is we split the llamaindex into different files. This will improve the tree shake if you are building web apps.
+
+  This also requires node16 (see https://nodejs.org/api/packages.html#conditional-exports).
+
+  If you are seeing typescript issue `TS2724`('llamaindex' has no exported member named XXX):
+
+  1. update `moduleResolution` to `bundler` in `tsconfig.json`, more for the web applications like Next.js, and vite, but still works for ts-node or tsx.
+  2. consider the ES module in your project, add `"type": "module"` into `package.json` and update `moduleResolution` to `node16` or `nodenext` in `tsconfig.json`.
+
+  We still support both cjs and esm, but you should update `tsconfig.json` to make the typescript happy.
+
+- 2d8845b: feat(extractors): add keyword extractor and base extractor
+
+## 0.0.48
+
+### Patch Changes
+
+- 34a26e5: Remove HistoryChatEngine and use ChatHistory for all chat engines
+
+## 0.0.47
+
+### Patch Changes
+
+- 844029d: Add streaming support for QueryEngine (and unify streaming interface with ChatEngine)
+- 844029d: Breaking: Use parameter object for query and chat methods of ChatEngine and QueryEngine
+
+## 0.0.46
+
+### Patch Changes
+
+- 977f284: fixing import statement
+- 5d3bb66: fix: class SimpleKVStore might throw error in ES module
+- f18c9f6: refactor: Updated low-level streaming interface
+
+## 0.0.45
+
+### Patch Changes
+
+- 2e6b36e: feat: support together AI
+
 ## 0.0.44
 
 ### Patch Changes

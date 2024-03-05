@@ -41,7 +41,7 @@ Za složenije aplikacije, naše API-je niže razine omogućuju naprednim korisni
 
 Naša dokumentacija uključuje [Upute za instalaciju](./installation.mdx) i [Uvodni vodič](./starter.md) za izgradnju vaše prve aplikacije.
 
-Kada ste spremni za rad, [Visokorazinski koncepti](./concepts.md) pružaju pregled modularne arhitekture LlamaIndex-a. Za praktične primjere, pogledajte naše [Vodiče od početka do kraja](./end_to_end.md).
+Kada ste spremni za rad, [Visokorazinski koncepti](./getting_started/concepts.md) pružaju pregled modularne arhitekture LlamaIndex-a. Za praktične primjere, pogledajte naše [Vodiče od početka do kraja](./end_to_end.md).
 
 ## 🗺️ Ekosustav
 

@@ -1,14 +1,14 @@
-import _ from "lodash";
-import { Document } from "../Node";
-import { CompleteFileSystem, walk } from "../storage/FileSystem";
-import { DEFAULT_FS } from "../storage/constants";
-import { PapaCSVReader } from "./CSVReader";
-import { DocxReader } from "./DocxReader";
-import { HTMLReader } from "./HTMLReader";
-import { ImageReader } from "./ImageReader";
-import { MarkdownReader } from "./MarkdownReader";
-import { PDFReader } from "./PDFReader";
-import { BaseReader } from "./base";
+import type { CompleteFileSystem } from "@llamaindex/env";
+import { defaultFS, path } from "@llamaindex/env";
+import { Document } from "../Node.js";
+import { walk } from "../storage/FileSystem.js";
+import { PapaCSVReader } from "./CSVReader.js";
+import { DocxReader } from "./DocxReader.js";
+import { HTMLReader } from "./HTMLReader.js";
+import { ImageReader } from "./ImageReader.js";
+import { MarkdownReader } from "./MarkdownReader.js";
+import { PDFReader } from "./PDFReader.js";
+import type { BaseReader } from "./type.js";
 
 type ReaderCallback = (
   category: "file" | "directory",
@@ -28,9 +28,9 @@ enum ReaderStatus {
 export class TextFileReader implements BaseReader {
   async loadData(
     file: string,
-    fs: CompleteFileSystem = DEFAULT_FS as CompleteFileSystem,
+    fs: CompleteFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
+    const dataBuffer = await fs.readFile(file);
     return [new Document({ text: dataBuffer, id_: file })];
   }
 }
@@ -49,7 +49,7 @@ export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   gif: new ImageReader(),
 };
 
-export type SimpleDirectoryReaderLoadDataProps = {
+export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
   fs?: CompleteFileSystem;
   defaultReader?: BaseReader | null;
@@ -57,19 +57,31 @@ export type SimpleDirectoryReaderLoadDataProps = {
 };
 
 /**
- * Read all of the documents in a directory.
+ * Read all the documents in a directory.
  * By default, supports the list of file types
  * in the FILE_EXT_TO_READER map.
  */
 export class SimpleDirectoryReader implements BaseReader {
   constructor(private observer?: ReaderCallback) {}
 
-  async loadData({
-    directoryPath,
-    fs = DEFAULT_FS as CompleteFileSystem,
-    defaultReader = new TextFileReader(),
-    fileExtToReader = FILE_EXT_TO_READER,
-  }: SimpleDirectoryReaderLoadDataProps): Promise<Document[]> {
+  async loadData(
+    params: SimpleDirectoryReaderLoadDataParams,
+  ): Promise<Document[]>;
+  async loadData(directoryPath: string): Promise<Document[]>;
+  async loadData(
+    params: SimpleDirectoryReaderLoadDataParams | string,
+  ): Promise<Document[]> {
+    if (typeof params === "string") {
+      params = { directoryPath: params };
+    }
+
+    const {
+      directoryPath,
+      fs = defaultFS,
+      defaultReader = new TextFileReader(),
+      fileExtToReader = FILE_EXT_TO_READER,
+    } = params;
+
     // Observer can decide to skip the directory
     if (
       !this.doObserverCheck("directory", directoryPath, ReaderStatus.STARTED)
@@ -77,10 +89,10 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
-    let docs: Document[] = [];
+    const docs: Document[] = [];
     for await (const filePath of walk(fs, directoryPath)) {
       try {
-        const fileExt = _.last(filePath.split(".")) || "";
+        const fileExt = path.extname(filePath).slice(1).toLowerCase();
 
         // Observer can decide to skip each file
         if (!this.doObserverCheck("file", filePath, ReaderStatus.STARTED)) {
@@ -88,11 +100,11 @@ export class SimpleDirectoryReader implements BaseReader {
           continue;
         }
 
-        let reader = null;
+        let reader: BaseReader;
 
         if (fileExt in fileExtToReader) {
           reader = fileExtToReader[fileExt];
-        } else if (!_.isNil(defaultReader)) {
+        } else if (defaultReader != null) {
           reader = defaultReader;
         } else {
           const msg = `No reader for file extension of ${filePath}`;

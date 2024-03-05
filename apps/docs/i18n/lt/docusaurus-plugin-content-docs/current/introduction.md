@@ -41,7 +41,7 @@ Sudėtingesnėms programoms mūsų žemesnio lygio API leidžia pažengusiems na
 
 Mūsų dokumentacija apima [įdiegimo instrukcijas](./installation.mdx) ir [pradžios vadovą](./starter.md), skirtą sukurti pirmąją aplikaciją.
 
-Kai jau esate paleidę, [aukšto lygio konceptai](./concepts.md) pateikia apžvalgą apie LlamaIndex modularią architektūrą. Norėdami gauti daugiau praktinių pavyzdžių, peržiūrėkite mūsų [nuo pradžių iki pabaigos vadovus](./end_to_end.md).
+Kai jau esate paleidę, [aukšto lygio konceptai](./getting_started/concepts.md) pateikia apžvalgą apie LlamaIndex modularią architektūrą. Norėdami gauti daugiau praktinių pavyzdžių, peržiūrėkite mūsų [nuo pradžių iki pabaigos vadovus](./end_to_end.md).
 
 ## 🗺️ Ekosistema
 

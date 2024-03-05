@@ -5,11 +5,15 @@ load_dotenv()
 import logging
 import os
 import uvicorn
-from app.api.routers.chat import chat_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.routers.chat import chat_router
+from app.settings import init_settings
+
 
 app = FastAPI()
+
+init_settings()
 
 environment = os.getenv("ENVIRONMENT", "dev")  # Default to 'development' if not set
 

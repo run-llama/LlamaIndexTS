@@ -6,10 +6,11 @@ import path from "path";
 import type {
   TemplateEngine,
   TemplateFramework,
+  TemplatePostInstallAction,
   TemplateType,
   TemplateUI,
-} from "../templates";
-import { createTestDir, runApp, runCreateLlama, type AppType } from "./utils";
+} from "../helpers";
+import { createTestDir, runCreateLlama, type AppType } from "./utils";
 
 const templateTypes: TemplateType[] = ["streaming", "simple"];
 const templateFrameworks: TemplateFramework[] = [
@@ -19,120 +20,125 @@ const templateFrameworks: TemplateFramework[] = [
 ];
 const templateEngines: TemplateEngine[] = ["simple", "context"];
 const templateUIs: TemplateUI[] = ["shadcn", "html"];
+const templatePostInstallActions: TemplatePostInstallAction[] = [
+  "none",
+  "runApp",
+];
 
 for (const templateType of templateTypes) {
   for (const templateFramework of templateFrameworks) {
     for (const templateEngine of templateEngines) {
       for (const templateUI of templateUIs) {
-        if (templateFramework === "nextjs" && templateType === "simple") {
-          // nextjs doesn't support simple templates - skip tests
-          continue;
-        }
-        if (templateEngine === "context") {
-          // we don't test context templates because it needs OPEN_AI_KEY
-          continue;
-        }
-        const appType: AppType =
-          templateFramework === "express" || templateFramework === "fastapi"
-            ? templateType === "simple"
-              ? "--no-frontend" // simple templates don't have frontends
-              : "--frontend"
-            : "";
-        if (appType === "--no-frontend" && templateUI !== "html") {
-          // if there's no frontend, don't iterate over UIs
-          continue;
-        }
-        test.describe(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType}`, async () => {
-          let port: number;
-          let externalPort: number;
-          let cwd: string;
-          let name: string;
-          let cps: ChildProcess[] = [];
+        for (const templatePostInstallAction of templatePostInstallActions) {
+          if (templateFramework === "nextjs" && templateType === "simple") {
+            // nextjs doesn't support simple templates - skip tests
+            continue;
+          }
+          const appType: AppType =
+            templateFramework === "express" || templateFramework === "fastapi"
+              ? templateType === "simple"
+                ? "--no-frontend" // simple templates don't have frontends
+                : "--frontend"
+              : "";
+          if (appType === "--no-frontend" && templateUI !== "html") {
+            // if there's no frontend, don't iterate over UIs
+            continue;
+          }
+          test.describe(`try create-llama ${templateType} ${templateFramework} ${templateEngine} ${templateUI} ${appType} ${templatePostInstallAction}`, async () => {
+            let port: number;
+            let externalPort: number;
+            let cwd: string;
+            let name: string;
+            let appProcess: ChildProcess;
+            // Only test without using vector db for now
+            const vectorDb = "none";
 
-          test.beforeAll(async () => {
-            port = Math.floor(Math.random() * 10000) + 10000;
-            externalPort = port + 1;
+            test.beforeAll(async () => {
+              port = Math.floor(Math.random() * 10000) + 10000;
+              externalPort = port + 1;
+              cwd = await createTestDir();
+              const result = await runCreateLlama(
+                cwd,
+                templateType,
+                templateFramework,
+                templateEngine,
+                templateUI,
+                vectorDb,
+                appType,
+                port,
+                externalPort,
+                templatePostInstallAction,
+              );
+              name = result.projectName;
+              appProcess = result.appProcess;
+            });
 
-            cwd = await createTestDir();
-            name = runCreateLlama(
-              cwd,
-              templateType,
-              templateFramework,
-              templateEngine,
-              templateUI,
-              appType,
-              externalPort,
-            );
+            test("App folder should exist", async () => {
+              const dirExists = fs.existsSync(path.join(cwd, name));
+              expect(dirExists).toBeTruthy();
+            });
+            test("Frontend should have a title", async ({ page }) => {
+              test.skip(templatePostInstallAction !== "runApp");
+              test.skip(appType === "--no-frontend");
+              await page.goto(`http://localhost:${port}`);
+              await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
+            });
 
-            if (templateFramework !== "fastapi") {
-              // don't run the app for fastapi for now (adds python dependency)
-              cps = await runApp(cwd, name, appType, port, externalPort);
-            }
-          });
+            test("Frontend should be able to submit a message and receive a response", async ({
+              page,
+            }) => {
+              test.skip(templatePostInstallAction !== "runApp");
+              test.skip(appType === "--no-frontend");
+              await page.goto(`http://localhost:${port}`);
+              await page.fill("form input", "hello");
+              const [response] = await Promise.all([
+                page.waitForResponse(
+                  (res) => {
+                    return (
+                      res.url().includes("/api/chat") && res.status() === 200
+                    );
+                  },
+                  {
+                    timeout: 1000 * 60,
+                  },
+                ),
+                page.click("form button[type=submit]"),
+              ]);
+              const text = await response.text();
+              console.log("AI response when submitting message: ", text);
+              expect(response.ok()).toBeTruthy();
+            });
 
-          test("App folder should exist", async () => {
-            const dirExists = fs.existsSync(path.join(cwd, name));
-            expect(dirExists).toBeTruthy();
-          });
-          test("Frontend should have a title", async ({ page }) => {
-            test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
-            );
-            await page.goto(`http://localhost:${port}`);
-            await expect(page.getByText("Built by LlamaIndex")).toBeVisible();
-          });
-
-          test("Frontend should be able to submit a message and receive a response", async ({
-            page,
-          }) => {
-            test.skip(
-              appType === "--no-frontend" || templateFramework === "fastapi",
-            );
-            await page.goto(`http://localhost:${port}`);
-            await page.fill("form input", "hello");
-            await page.click("form button[type=submit]");
-            const response = await page.waitForResponse(
-              (res) => {
-                return res.url().includes("/api/chat") && res.status() === 200;
-              },
-              {
-                timeout: 1000 * 60,
-              },
-            );
-            const text = await response.text();
-            console.log("AI response when submitting message: ", text);
-            expect(response.ok()).toBeTruthy();
-          });
-
-          test("Backend should response when calling API", async ({
-            request,
-          }) => {
-            test.skip(
-              appType !== "--no-frontend" || templateFramework === "fastapi",
-            );
-            const response = await request.post(
-              `http://localhost:${port}/api/chat`,
-              {
-                data: {
-                  messages: [
-                    {
-                      role: "user",
-                      content: "Hello",
-                    },
-                  ],
+            test("Backend should response when calling API", async ({
+              request,
+            }) => {
+              test.skip(templatePostInstallAction !== "runApp");
+              test.skip(appType !== "--no-frontend");
+              const backendPort = appType === "" ? port : externalPort;
+              const response = await request.post(
+                `http://localhost:${backendPort}/api/chat`,
+                {
+                  data: {
+                    messages: [
+                      {
+                        role: "user",
+                        content: "Hello",
+                      },
+                    ],
+                  },
                 },
-              },
-            );
-            const text = await response.text();
-            console.log("AI response when calling API: ", text);
-            expect(response.ok()).toBeTruthy();
-          });
+              );
+              const text = await response.text();
+              console.log("AI response when calling API: ", text);
+              expect(response.ok()).toBeTruthy();
+            });
 
-          // clean processes
-          test.afterAll(async () => {
-            cps.map((cp) => cp.kill());
+            // clean processes
+            test.afterAll(async () => {
+              appProcess?.kill();
+            });
           });
-        });
+        }
       }
     }
   }

@@ -1,12 +1,13 @@
-import { Document, ImageDocument } from "../Node";
-import { DEFAULT_FS } from "../storage/constants";
-import { GenericFileSystem } from "../storage/FileSystem";
-import { BaseReader } from "./base";
+import type { GenericFileSystem } from "@llamaindex/env";
+import { defaultFS } from "@llamaindex/env";
+import type { Document } from "../Node.js";
+import { ImageDocument } from "../Node.js";
+import type { FileReader } from "./type.js";
 
 /**
  * Reads the content of an image file into a Document object (which stores the image file as a Blob).
  */
-export class ImageReader implements BaseReader {
+export class ImageReader implements FileReader {
   /**
    * Public method for this reader.
    * Required by BaseReader interface.
@@ -16,7 +17,7 @@ export class ImageReader implements BaseReader {
    */
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file);
     const blob = new Blob([dataBuffer]);

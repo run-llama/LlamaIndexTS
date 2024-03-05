@@ -1,11 +1,23 @@
 {
   "compilerOptions": {
     "target": "es2019",
+    "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declaration": false,
     "esModuleInterop": true,
-    "skipLibCheck": false
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
-  "exclude": ["templates", "dist"]
+  "include": [
+    "create-app.ts",
+    "index.ts",
+    "./helpers",
+    "questions.ts",
+    "package.json"
+  ],
+  "exclude": ["dist"]
 }

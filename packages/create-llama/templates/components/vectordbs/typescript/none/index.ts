@@ -14,7 +14,7 @@ async function getDataSource(llm: LLM) {
     chunkSize: CHUNK_SIZE,
     chunkOverlap: CHUNK_OVERLAP,
   });
-  let storageContext = await storageContextFromDefaults({
+  const storageContext = await storageContextFromDefaults({
     persistDir: `${STORAGE_CACHE_DIR}`,
   });
 
@@ -35,7 +35,7 @@ async function getDataSource(llm: LLM) {
 export async function createChatEngine(llm: LLM) {
   const index = await getDataSource(llm);
   const retriever = index.asRetriever();
-  retriever.similarityTopK = 5;
+  retriever.similarityTopK = 3;
 
   return new ContextChatEngine({
     chatModel: llm,

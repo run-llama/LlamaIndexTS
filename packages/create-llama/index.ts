@@ -10,6 +10,8 @@ import checkForUpdate from "update-check";
 import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
+import { runApp } from "./helpers/run-app";
+import { getTools } from "./helpers/tools";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
 import { QuestionArgs, askQuestions, onPromptState } from "./questions";
@@ -85,6 +87,13 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
+    "--files <path>",
+    `
+  
+    Specify the path to a local file or folder for chatting.
+`,
+  )
+  .option(
     "--open-ai-key <key>",
     `
 
@@ -113,10 +122,56 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
+    "--embedding-model <embeddingModel>",
+    `
+  Select OpenAI embedding model to use. E.g. text-embedding-ada-002.
+`,
+  )
+  .option(
+    "--port <port>",
+    `
+
+  Select UI port.
+`,
+  )
+  .option(
     "--external-port <external>",
     `
 
-Select external port.
+  Select external port.
+`,
+  )
+  .option(
+    "--post-install-action <action>",
+    `
+
+  Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
+`,
+  )
+  .option(
+    "--vector-db <vectorDb>",
+    `
+
+  Select which vector database you would like to use, such as 'none', 'pg' or 'mongo'. The default option is not to use a vector database and use the local filesystem instead ('none').
+`,
+  )
+  .option(
+    "--tools <tools>",
+    `
+
+  Specify the tools you want to use by providing a comma-separated list. For example, 'wikipedia.WikipediaToolSpec,google.GoogleSearchToolSpec'. Use 'none' to not using any tools.
+`,
+  )
+  .option(
+    "--llama-parse",
+    `
+    Enable LlamaParse.
+`,
+  )
+  .option(
+    "--llama-cloud-key <key>",
+    `
+  Provide a LlamaCloud API key.
 `,
   )
   .allowUnknownOption()
@@ -126,6 +181,16 @@ if (process.argv.includes("--no-frontend")) {
 }
 if (process.argv.includes("--no-eslint")) {
   program.eslint = false;
+}
+if (process.argv.includes("--tools")) {
+  if (program.tools === "none") {
+    program.tools = [];
+  } else {
+    program.tools = getTools(program.tools.split(","));
+  }
+}
+if (process.argv.includes("--no-llama-parse")) {
+  program.llamaParse = false;
 }
 
 const packageManager = !!program.useNpm
@@ -220,13 +285,30 @@ async function run(): Promise<void> {
     eslint: program.eslint,
     frontend: program.frontend,
     openAiKey: program.openAiKey,
+    llamaCloudKey: program.llamaCloudKey,
     model: program.model,
+    embeddingModel: program.embeddingModel,
     communityProjectPath: program.communityProjectPath,
+    llamapack: program.llamapack,
     vectorDb: program.vectorDb,
     externalPort: program.externalPort,
+    postInstallAction: program.postInstallAction,
+    dataSource: program.dataSource,
+    tools: program.tools,
     observability: program.observability,
   });
   conf.set("preferences", preferences);
+
+  if (program.postInstallAction === "runApp") {
+    console.log(`Running app in ${root}...`);
+    await runApp(
+      root,
+      program.frontend,
+      program.framework,
+      program.port,
+      program.externalPort,
+    );
+  }
 }
 
 const update = checkForUpdate(packageJson).catch(() => null);
@@ -250,7 +332,6 @@ async function notifyUpdate(): Promise<void> {
           "\n",
       );
     }
-    process.exit();
   } catch {
     // ignore error
   }

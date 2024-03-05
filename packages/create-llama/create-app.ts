@@ -9,8 +9,10 @@ import { makeDir } from "./helpers/make-dir";
 
 import fs from "fs";
 import terminalLink from "terminal-link";
-import type { InstallTemplateArgs } from "./templates";
-import { installTemplate } from "./templates";
+import type { InstallTemplateArgs } from "./helpers";
+import { installTemplate } from "./helpers";
+import { templatesDir } from "./helpers/dir";
+import { toolsRequireConfig } from "./helpers/tools";
 
 export type InstallAppArgs = Omit<
   InstallTemplateArgs,
@@ -30,10 +32,16 @@ export async function createApp({
   eslint,
   frontend,
   openAiKey,
+  llamaCloudKey,
   model,
+  embeddingModel,
   communityProjectPath,
+  llamapack,
   vectorDb,
   externalPort,
+  postInstallAction,
+  dataSource,
+  tools,
   observability,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
@@ -72,10 +80,16 @@ export async function createApp({
     isOnline,
     eslint,
     openAiKey,
+    llamaCloudKey,
     model,
+    embeddingModel,
     communityProjectPath,
+    llamapack,
     vectorDb,
     externalPort,
+    postInstallAction,
+    dataSource,
+    tools,
     observability,
   };
 
@@ -96,7 +110,7 @@ export async function createApp({
     });
     // copy readme for fullstack
     await fs.promises.copyFile(
-      path.join(__dirname, "templates", "README-fullstack.md"),
+      path.join(templatesDir, "README-fullstack.md"),
       path.join(root, "README.md"),
     );
   } else {
@@ -109,6 +123,17 @@ export async function createApp({
     console.log();
   }
 
+  if (toolsRequireConfig(tools)) {
+    console.log(
+      yellow(
+        `You have selected tools that require configuration. Please configure them in the ${terminalLink(
+          "tools_config.json",
+          `file://${root}/tools_config.json`,
+        )} file.`,
+      ),
+    );
+  }
+  console.log("");
   console.log(`${green("Success!")} Created ${appName} at ${appPath}`);
 
   console.log(

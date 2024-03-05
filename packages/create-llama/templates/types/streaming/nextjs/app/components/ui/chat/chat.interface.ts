@@ -1,8 +1,4 @@
-export interface Message {
-  id: string;
-  content: string;
-  role: string;
-}
+import { Message } from "ai";
 
 export interface ChatHandler {
   messages: Message[];

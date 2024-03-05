@@ -7,4 +7,9 @@ module.exports = {
       rootDir: ["apps/*/"],
     },
   },
+  rules: {
+    "max-params": ["error", 4],
+    "prefer-const": "error",
+  },
+  ignorePatterns: ["dist/", "lib/"],
 };

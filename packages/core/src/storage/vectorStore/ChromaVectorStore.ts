@@ -1,21 +1,21 @@
-import {
+import type {
   AddParams,
-  ChromaClient,
   ChromaClientParams,
   Collection,
-  IncludeEnum,
   QueryResponse,
   Where,
   WhereDocument,
 } from "chromadb";
-import { BaseNode, MetadataMode } from "../../Node";
-import {
+import { ChromaClient, IncludeEnum } from "chromadb";
+import type { BaseNode } from "../../Node.js";
+import { MetadataMode } from "../../Node.js";
+import type {
   VectorStore,
   VectorStoreQuery,
-  VectorStoreQueryMode,
   VectorStoreQueryResult,
-} from "./types";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+} from "./types.js";
+import { VectorStoreQueryMode } from "./types.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type ChromaDeleteOptions = {
   where?: Where;
@@ -52,7 +52,7 @@ export class ChromaVectorStore implements VectorStore {
 
   async getCollection(): Promise<Collection> {
     if (!this.collection) {
-      const coll = await this.chromaClient.createCollection({
+      const coll = await this.chromaClient.getOrCreateCollection({
         name: this.collectionName,
       });
       this.collection = coll;
@@ -107,7 +107,7 @@ export class ChromaVectorStore implements VectorStore {
     }
 
     const chromaWhere: { [x: string]: string | number | boolean } = {};
-    if (query.filters) {
+    if (query.filters?.filters) {
       query.filters.filters.map((filter) => {
         const filterKey = filter.key;
         const filterValue = filter.value;

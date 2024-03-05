@@ -6,11 +6,11 @@ export function expandTokensWithSubtokens(tokens: Set<string>): Set<string> {
   const results: Set<string> = new Set();
   const regex: RegExp = /\w+/g;
 
-  for (let token of tokens) {
+  for (const token of tokens) {
     results.add(token);
     const subTokens: RegExpMatchArray | null = token.match(regex);
     if (subTokens && subTokens.length > 1) {
-      for (let w of subTokens) {
+      for (const w of subTokens) {
         results.add(w);
       }
     }
@@ -31,7 +31,7 @@ export function extractKeywordsGivenResponse(
   }
 
   const keywords: string[] = response.split(",");
-  for (let k of keywords) {
+  for (const k of keywords) {
     let rk: string = k;
     if (lowercase) {
       rk = rk.toLowerCase();
@@ -47,13 +47,13 @@ export function simpleExtractKeywords(
   maxKeywords?: number,
 ): Set<string> {
   const regex: RegExp = /\w+/g;
-  let tokens: string[] = [...textChunk.matchAll(regex)].map((token) =>
+  const tokens: string[] = [...textChunk.matchAll(regex)].map((token) =>
     token[0].toLowerCase().trim(),
   );
 
   // Creating a frequency map
   const valueCounts: { [key: string]: number } = {};
-  for (let token of tokens) {
+  for (const token of tokens) {
     valueCounts[token] = (valueCounts[token] || 0) + 1;
   }
 

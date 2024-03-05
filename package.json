@@ -1,31 +1,33 @@
 {
+  "name": "@llamaindex/monorepo",
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:release": "turbo run build lint test --filter=\"!docs\"",
     "dev": "turbo run dev",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
     "lint": "turbo run lint",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "turbo run test",
-    "new-version": "turbo run build lint test --filter=\"!docs\" && changeset version",
-    "new-snapshot": "turbo run build lint test --filter=\"!docs\" && changeset version --snapshot"
+    "type-check": "tsc -b --diagnostics",
+    "release": "pnpm run build:release && changeset publish",
+    "new-llamaindex": "pnpm run build:release && changeset version --ignore create-llama",
+    "new-create-llama": "pnpm run build:release && changeset version --ignore llamaindex",
+    "new-snapshots": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@turbo/gen": "^1.11.2",
-    "@types/jest": "^29.5.11",
     "eslint": "^8.56.0",
     "eslint-config-custom": "workspace:*",
-    "husky": "^8.0.3",
-    "jest": "^29.7.0",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1",
+    "husky": "^9.0.10",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "ts-jest": "^29.1.1",
-    "turbo": "^1.11.2"
+    "turbo": "^1.12.3",
+    "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@8.10.5+sha256.a4bd9bb7b48214bbfcd95f264bd75bb70d100e5d4b58808f5cd6ab40c6ac21c5",
+  "packageManager": "pnpm@8.15.1",
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",

@@ -1,3 +1,4 @@
-export * from "./MetadataReplacementPostProcessor";
-export * from "./SimilarityPostprocessor";
-export * from "./types";
+export * from "./MetadataReplacementPostProcessor.js";
+export * from "./SimilarityPostprocessor.js";
+export * from "./rerankers/index.js";
+export * from "./types.js";

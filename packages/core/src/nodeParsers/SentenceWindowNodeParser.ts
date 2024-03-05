@@ -1,7 +1,7 @@
-import { BaseNode } from "../Node";
-import { SentenceSplitter } from "../TextSplitter";
-import { NodeParser } from "./types";
-import { getNodesFromDocument } from "./utils";
+import type { BaseNode } from "../Node.js";
+import { SentenceSplitter } from "../TextSplitter.js";
+import type { NodeParser } from "./types.js";
+import { getNodesFromDocument } from "./utils.js";
 
 export const DEFAULT_WINDOW_SIZE = 3;
 export const DEFAULT_WINDOW_METADATA_KEY = "window";
@@ -42,6 +42,10 @@ export class SentenceWindowNodeParser implements NodeParser {
     init?: Partial<SentenceWindowNodeParser>,
   ): SentenceWindowNodeParser {
     return new SentenceWindowNodeParser(init);
+  }
+
+  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+    return this.getNodesFromDocuments(nodes);
   }
 
   getNodesFromDocuments(documents: BaseNode[]) {

@@ -1,18 +1,23 @@
-import { MessageContentDetail } from "../ChatEngine";
-import {
-  ImageNode,
-  MetadataMode,
-  NodeWithScore,
-  splitNodesByType,
-} from "../Node";
-import { Response } from "../Response";
-import { ServiceContext, serviceContextFromDefaults } from "../ServiceContext";
-import { Event } from "../callbacks/CallbackManager";
-import { imageToDataUrl } from "../embeddings";
-import { TextQaPrompt, defaultTextQaPrompt } from "./../Prompt";
-import { BaseSynthesizer } from "./types";
+import type { ImageNode } from "../Node.js";
+import { MetadataMode, splitNodesByType } from "../Node.js";
+import { Response } from "../Response.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { serviceContextFromDefaults } from "../ServiceContext.js";
+import { imageToDataUrl } from "../embeddings/index.js";
+import type { MessageContentDetail } from "../llm/types.js";
+import { PromptMixin } from "../prompts/Mixin.js";
+import type { TextQaPrompt } from "./../Prompt.js";
+import { defaultTextQaPrompt } from "./../Prompt.js";
+import type {
+  BaseSynthesizer,
+  SynthesizeParamsNonStreaming,
+  SynthesizeParamsStreaming,
+} from "./types.js";
 
-export class MultiModalResponseSynthesizer implements BaseSynthesizer {
+export class MultiModalResponseSynthesizer
+  extends PromptMixin
+  implements BaseSynthesizer
+{
   serviceContext: ServiceContext;
   metadataMode: MetadataMode;
   textQATemplate: TextQaPrompt;
@@ -22,16 +27,42 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
     textQATemplate,
     metadataMode,
   }: Partial<MultiModalResponseSynthesizer> = {}) {
+    super();
+
     this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.metadataMode = metadataMode ?? MetadataMode.NONE;
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
-  async synthesize(
-    query: string,
-    nodesWithScore: NodeWithScore[],
-    parentEvent?: Event,
-  ): Promise<Response> {
+  protected _getPrompts(): { textQATemplate: TextQaPrompt } {
+    return {
+      textQATemplate: this.textQATemplate,
+    };
+  }
+
+  protected _updatePrompts(promptsDict: {
+    textQATemplate: TextQaPrompt;
+  }): void {
+    if (promptsDict.textQATemplate) {
+      this.textQATemplate = promptsDict.textQATemplate;
+    }
+  }
+
+  synthesize(
+    params: SynthesizeParamsStreaming,
+  ): Promise<AsyncIterable<Response>>;
+  synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
+  async synthesize({
+    query,
+    nodesWithScore,
+    parentEvent,
+    stream,
+  }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
+    AsyncIterable<Response> | Response
+  > {
+    if (stream) {
+      throw new Error("streaming not implemented");
+    }
     const nodes = nodesWithScore.map(({ node }) => node);
     const { imageNodes, textNodes } = splitNodesByType(nodes);
     const textChunks = textNodes.map((node) =>
@@ -54,7 +85,10 @@ export class MultiModalResponseSynthesizer implements BaseSynthesizer {
       { type: "text", text: textPrompt },
       ...images,
     ];
-    let response = await this.serviceContext.llm.complete(prompt, parentEvent);
-    return new Response(response.message.content, nodes);
+    const response = await this.serviceContext.llm.complete({
+      prompt,
+      parentEvent,
+    });
+    return new Response(response.text, nodes);
   }
 }

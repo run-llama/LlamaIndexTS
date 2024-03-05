@@ -6,13 +6,19 @@ module.exports = {
       "error",
       {
         allowList: [
+          "LLAMA_CLOUD_API_KEY",
+          "LLAMA_CLOUD_BASE_URL",
           "OPENAI_API_KEY",
           "REPLICATE_API_TOKEN",
           "ANTHROPIC_API_KEY",
           "ASSEMBLYAI_API_KEY",
+          "TOGETHER_API_KEY",
+          "FIREWORKS_API_KEY",
+          "GROQ_API_KEY",
 
           "ASTRA_DB_APPLICATION_TOKEN",
           "ASTRA_DB_ENDPOINT",
+          "ASTRA_DB_NAMESPACE",
 
           "AZURE_OPENAI_KEY",
           "AZURE_OPENAI_ENDPOINT",
@@ -30,6 +36,7 @@ module.exports = {
           "PINECONE_INDEX_NAME",
           "PINECONE_CHUNK_SIZE",
           "PINECONE_INDEX_NAME",
+          "PINECONE_NAMESPACE",
 
           "AZURE_OPENAI_API_KEY",
           "AZURE_OPENAI_API_INSTANCE_NAME",

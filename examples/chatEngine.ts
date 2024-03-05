@@ -1,6 +1,4 @@
 import { stdin as input, stdout as output } from "node:process";
-// readline/promises is still experimental so not in @types/node yet
-// @ts-ignore
 import readline from "node:readline/promises";
 
 import {
@@ -25,8 +23,11 @@ async function main() {
 
   while (true) {
     const query = await rl.question("Query: ");
-    const response = await chatEngine.chat(query);
-    console.log(response.toString());
+    const stream = await chatEngine.chat({ message: query, stream: true });
+    console.log();
+    for await (const chunk of stream) {
+      process.stdout.write(chunk.response);
+    }
   }
 }
 

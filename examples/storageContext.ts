@@ -20,9 +20,9 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(
-    "What did the author do in college?",
-  );
+  const response = await queryEngine.query({
+    query: "What did the author do in college?",
+  });
 
   // Output response
   console.log(response.toString());
@@ -35,9 +35,9 @@ async function main() {
     storageContext: secondStorageContext,
   });
   const loadedQueryEngine = loadedIndex.asQueryEngine();
-  const loadedResponse = await loadedQueryEngine.query(
-    "What did the author do growing up?",
-  );
+  const loadedResponse = await loadedQueryEngine.query({
+    query: "What did the author do growing up?",
+  });
   console.log(loadedResponse.toString());
 }
 

@@ -37,15 +37,14 @@ yarn-error.log*
 .vercel
 
 dist/
-
-# vs code
-.vscode/launch.json
+lib/
 
 .cache
 test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+.tsbuildinfo
 
 # intellij
 **/.idea
