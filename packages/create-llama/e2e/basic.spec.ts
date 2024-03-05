@@ -91,17 +91,19 @@ for (const templateType of templateTypes) {
               test.skip(appType === "--no-frontend");
               await page.goto(`http://localhost:${port}`);
               await page.fill("form input", "hello");
-              await page.click("form button[type=submit]");
-              const response = await page.waitForResponse(
-                (res) => {
-                  return (
-                    res.url().includes("/api/chat") && res.status() === 200
-                  );
-                },
-                {
-                  timeout: 1000 * 60,
-                },
-              );
+              const [response] = await Promise.all([
+                page.waitForResponse(
+                  (res) => {
+                    return (
+                      res.url().includes("/api/chat") && res.status() === 200
+                    );
+                  },
+                  {
+                    timeout: 1000 * 60,
+                  },
+                ),
+                page.click("form button[type=submit]"),
+              ]);
               const text = await response.text();
               console.log("AI response when submitting message: ", text);
               expect(response.ok()).toBeTruthy();

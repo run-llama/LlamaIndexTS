@@ -119,6 +119,7 @@ export async function runCreateLlama(
     postInstallAction,
     "--tools",
     "none",
+    "--no-llama-parse",
   ].join(" ");
   console.log(`running command '${command}' in ${cwd}`);
   const appProcess = exec(command, {
