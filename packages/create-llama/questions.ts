@@ -444,7 +444,7 @@ export const askQuestions = async (
     }
   }
 
-  if (!program.embeddingModel) {
+  if (!program.embeddingModel && program.framework === "fastapi") {
     if (ciInfo.isCI) {
       program.embeddingModel = getPrefOrDefault("embeddingModel");
     } else {
