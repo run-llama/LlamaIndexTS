@@ -69,6 +69,7 @@ const defaults: QuestionArgs = {
   openAiKey: "",
   llamaCloudKey: "",
   model: "gpt-3.5-turbo",
+  embeddingModel: "text-embedding-ada-002",
   communityProjectPath: "",
   llamapack: "",
   postInstallAction: "dependencies",
@@ -419,6 +420,7 @@ export const askQuestions = async (
   if (!program.model) {
     if (ciInfo.isCI) {
       program.model = getPrefOrDefault("model");
+      program.embeddingModel = getPrefOrDefault("embeddingModel");
     } else {
       const { model } = await prompts(
         {
@@ -440,6 +442,38 @@ export const askQuestions = async (
       );
       program.model = model;
       preferences.model = model;
+    }
+  }
+
+  if (!program.embeddingModel) {
+    if (ciInfo.isCI) {
+      program.embeddingModel = getPrefOrDefault("embeddingModel");
+    } else {
+      const { embeddingModel } = await prompts(
+        {
+          type: "select",
+          name: "embeddingModel",
+          message: "Which embedding model would you like to use?",
+          choices: [
+            {
+              title: "text-embedding-ada-002",
+              value: "text-embedding-ada-002",
+            },
+            {
+              title: "text-embedding-3-small",
+              value: "text-embedding-3-small",
+            },
+            {
+              title: "text-embedding-3-large",
+              value: "text-embedding-3-large",
+            },
+          ],
+          initial: 0,
+        },
+        handlers,
+      );
+      program.embeddingModel = embeddingModel;
+      preferences.embeddingModel = embeddingModel;
     }
   }
 

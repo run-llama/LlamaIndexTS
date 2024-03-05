@@ -122,6 +122,12 @@ const program = new Commander.Command(packageJson.name)
 `,
   )
   .option(
+    "--embedding-model <embeddingModel>",
+    `
+  Select OpenAI embedding model to use. E.g. text-embedding-ada-002.
+`,
+  )
+  .option(
     "--port <port>",
     `
 
@@ -281,6 +287,7 @@ async function run(): Promise<void> {
     openAiKey: program.openAiKey,
     llamaCloudKey: program.llamaCloudKey,
     model: program.model,
+    embeddingModel: program.embeddingModel,
     communityProjectPath: program.communityProjectPath,
     llamapack: program.llamapack,
     vectorDb: program.vectorDb,

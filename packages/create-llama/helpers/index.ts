@@ -29,6 +29,7 @@ const createEnvLocalFile = async (
     llamaCloudKey?: string;
     vectorDb?: TemplateVectorDB;
     model?: string;
+    embeddingModel?: string;
     framework?: TemplateFramework;
     dataSource?: TemplateDataSource;
   },
@@ -45,6 +46,10 @@ const createEnvLocalFile = async (
 
   if (opts?.openAiKey) {
     content += `OPENAI_API_KEY=${opts?.openAiKey}\n`;
+  }
+
+  if (opts?.embeddingModel) {
+    content += `EMBEDDING_MODEL=${opts?.embeddingModel}\n`;
   }
 
   if (opts?.llamaCloudKey) {
@@ -213,6 +218,7 @@ export const installTemplate = async (
       llamaCloudKey: props.llamaCloudKey,
       vectorDb: props.vectorDb,
       model: props.model,
+      embeddingModel: props.embeddingModel,
       framework: props.framework,
       dataSource: props.dataSource,
     });
