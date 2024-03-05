@@ -64,6 +64,7 @@ async function main() {
 
   const stream = await agent.chat({
     message: "Divide 16 by 2 then add 20",
+    stream: true,
   });
 
   for await (const chunk of stream.response) {
