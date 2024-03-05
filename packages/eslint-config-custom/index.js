@@ -14,4 +14,9 @@ module.exports = {
       presets: [require.resolve("next/babel")],
     },
   },
+  settings: {
+    react: {
+      version: "999.999.999",
+    },
+  },
 };
