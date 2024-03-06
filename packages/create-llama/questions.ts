@@ -78,7 +78,7 @@ const defaults: QuestionArgs = {
     config: {},
   },
   tools: [],
-  observability: false,
+  observability: "OpenTelemetry",
 };
 
 const handlers = {
@@ -420,16 +420,18 @@ export const askQuestions = async (
 
   if (program.framework === "nextjs") {
     const { observability } = await prompts({
-      type: "toggle",
+      type: "select",
       name: "observability",
       message: "Would you like to set up observability?",
-      initial: getPrefOrDefault("observability"),
-      active: "Yes",
-      inactive: "No",
+      choices: [
+        { title: "No", value: "none" },
+        { title: "OpenTelemetry", value: "OpenTelemetry" },
+      ],
+      initial: 1,
     });
 
-    program.observability = Boolean(observability);
-    preferences.observability = Boolean(observability);
+    program.observability = observability;
+    preferences.observability = observability;
   }
 
   if (!program.model) {

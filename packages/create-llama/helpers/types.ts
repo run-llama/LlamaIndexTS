@@ -12,6 +12,7 @@ export type TemplateDataSource = {
   config: TemplateDataSourceConfig;
 };
 export type TemplateDataSourceType = "none" | "file" | "folder" | "web";
+export type TemplateObservability = "none" | "OpenTelemetry";
 // Config for both file and folder
 export type FileSourceConfig = {
   path?: string;
@@ -46,5 +47,5 @@ export interface InstallTemplateArgs {
   externalPort?: number;
   postInstallAction?: TemplatePostInstallAction;
   tools?: Tool[];
-  observability?: boolean;
+  observability?: TemplateObservability;
 }

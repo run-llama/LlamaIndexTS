@@ -143,12 +143,12 @@ export async function createApp({
     )} and learn how to get started.`,
   );
 
-  if (args.observability) {
+  if (args.observability === "OpenTelemetry") {
     console.log(
       `\n${yellow("Observability")}: Visit the ${terminalLink(
         "documentation",
         "https://traceloop.com/docs/openllmetry/integrations",
-      )} to set up the environment variables to start seeing execution traces.`,
+      )} to set up the environment variables and start seeing execution traces.`,
     );
   }
 

@@ -87,7 +87,7 @@ export const installTSTemplate = async ({
    * If not, rename next.config.static.js to next.config.js
    */
   if (framework == "nextjs" && forBackend === "nextjs") {
-    if (observability) {
+    if (observability === "OpenTelemetry") {
       const nextConfigO11yPath = path.join(root, "next.config.o11y.js");
       const nextConfigPath = path.join(root, "next.config.js");
       await fs.rename(nextConfigO11yPath, nextConfigPath);
@@ -120,26 +120,19 @@ export const installTSTemplate = async ({
     await Promise.all([fs.rm(nextConfigO11yPath), fs.rm(nextConfigAppPath)]);
   }
 
-  if (observability) {
-    const routeO11yPath = path.join(
-      root,
-      "app",
-      "api",
-      "chat",
-      "route.o11y.ts",
+  if (observability === "OpenTelemetry") {
+    const openLLMetryPath = path.join(
+      templatesDir,
+      "components",
+      "observability",
+      "typescript",
+      "openllmetry",
+      "observability.ts",
     );
-    const routePath = path.join(root, "app", "api", "chat", "route.ts");
-    await fs.rm(routePath);
-    await fs.rename(routeO11yPath, routePath);
-  } else {
-    const routeO11yPath = path.join(
-      root,
-      "app",
-      "api",
-      "chat",
-      "route.o11y.ts",
-    );
-    await fs.rm(routeO11yPath);
+    const observabilityPath = path.join(root, "shared", "observability.ts");
+
+    await fs.rm(observabilityPath);
+    await fs.copyFile(openLLMetryPath, observabilityPath);
   }
 
   /**
@@ -256,7 +249,7 @@ export const installTSTemplate = async ({
     };
   }
 
-  if (observability) {
+  if (observability === "OpenTelemetry") {
     packageJson.dependencies = {
       ...packageJson.dependencies,
       "@traceloop/node-server-sdk": "^0.5.12",
