@@ -222,11 +222,15 @@ export const askQuestions = async (
         ];
 
         const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
+        const hasLlamaCloudKey =
+          (program.dataSource?.config as FileSourceConfig)?.useLlamaParse &&
+          (program.llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]);
         const hasVectorDb = program.vectorDb && program.vectorDb !== "none";
         // Can run the app if all tools do not require configuration
         if (
           !hasVectorDb &&
           hasOpenAiKey &&
+          hasLlamaCloudKey &&
           !toolsRequireConfig(program.tools) &&
           !program.llamapack
         ) {
@@ -605,11 +609,8 @@ export const askQuestions = async (
           {
             type: "text",
             name: "llamaCloudKey",
-            message: "Please provide your LlamaIndex Cloud API key:",
-            validate: (value) =>
-              value
-                ? true
-                : "LlamaIndex Cloud API key is required. You can get it from: https://cloud.llamaindex.ai/api-key",
+            message:
+              "Please provide your LlamaIndex Cloud API key (leave blank to skip):",
           },
           handlers,
         );

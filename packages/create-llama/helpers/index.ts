@@ -95,12 +95,15 @@ const createEnvLocalFile = async (
   }
 };
 
-const generateContextData = async (
+// eslint-disable-next-line max-params
+async function generateContextData(
   framework: TemplateFramework,
   packageManager?: PackageManager,
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
-) => {
+  dataSource?: TemplateDataSource,
+  llamaCloudKey?: string,
+) {
   if (packageManager) {
     const runGenerate = `${cyan(
       framework === "fastapi"
@@ -108,9 +111,17 @@ const generateContextData = async (
         : `${packageManager} run generate`,
     )}`;
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
+    const hasLlamaCloudKey =
+      (dataSource?.config as FileSourceConfig)?.useLlamaParse &&
+      (llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]);
     const hasVectorDb = vectorDb && vectorDb !== "none";
     if (framework === "fastapi") {
-      if (hasOpenAiKey && !hasVectorDb && isHavingPoetryLockFile()) {
+      if (
+        hasOpenAiKey &&
+        hasLlamaCloudKey &&
+        !hasVectorDb &&
+        isHavingPoetryLockFile()
+      ) {
         console.log(`Running ${runGenerate} to generate the context data.`);
         const result = tryPoetryRun("python app/engine/generate.py");
         if (!result) {
@@ -121,7 +132,7 @@ const generateContextData = async (
         return;
       }
     } else {
-      if (hasOpenAiKey && vectorDb === "none") {
+      if (hasOpenAiKey && hasLlamaCloudKey && vectorDb === "none") {
         console.log(`Running ${runGenerate} to generate the context data.`);
         await callPackageManager(packageManager, true, ["run", "generate"]);
         return;
@@ -130,13 +141,14 @@ const generateContextData = async (
 
     const settings = [];
     if (!hasOpenAiKey) settings.push("your OpenAI key");
+    if (!hasLlamaCloudKey) settings.push("your Llama Cloud key");
     if (hasVectorDb) settings.push("your Vector DB environment variables");
     const settingsMessage =
       settings.length > 0 ? `After setting ${settings.join(" and ")}, ` : "";
     const generateMessage = `run ${runGenerate} to generate the context data.`;
     console.log(`\n${settingsMessage}${generateMessage}\n\n`);
   }
-};
+}
 
 const copyContextData = async (
   root: string,
@@ -234,6 +246,8 @@ export const installTemplate = async (
           props.packageManager,
           props.openAiKey,
           props.vectorDb,
+          props.dataSource,
+          props.llamaCloudKey,
         );
       }
     }
