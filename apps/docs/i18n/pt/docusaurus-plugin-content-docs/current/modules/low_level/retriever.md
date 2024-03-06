@@ -13,7 +13,7 @@ const recuperador = vector_index.asRetriever();
 recuperador.similarityTopK = 3;
 
 // Buscar nós!
-const nósComPontuação = await recuperador.retrieve("string de consulta");
+const nósComPontuação = await recuperador.retrieve({ query: "string de consulta" });
 ```
 
 ## Referência da API

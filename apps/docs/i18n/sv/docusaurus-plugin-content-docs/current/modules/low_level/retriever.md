@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Hämta noder!
-const nodesWithScore = await retriever.retrieve("frågesträng");
+const nodesWithScore = await retriever.retrieve({ query: "frågesträng" });
 ```
 
 ## API-referens

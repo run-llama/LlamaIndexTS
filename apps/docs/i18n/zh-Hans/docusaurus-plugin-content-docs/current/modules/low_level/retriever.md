@@ -11,7 +11,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // 获取节点！
-const nodesWithScore = await retriever.retrieve("查询字符串");
+const nodesWithScore = await retriever.retrieve({ query: "查询字符串" });
 ```
 
 ## API 参考
