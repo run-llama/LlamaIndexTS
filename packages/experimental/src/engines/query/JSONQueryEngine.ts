@@ -2,10 +2,7 @@ import jsonpath from "jsonpath";
 
 import { Response } from "llamaindex";
 
-import {
-  serviceContextFromDefaults,
-  type ServiceContext,
-} from "llamaindex";
+import { serviceContextFromDefaults, type ServiceContext } from "llamaindex";
 
 import type {
   BaseQueryEngine,
@@ -13,7 +10,12 @@ import type {
   QueryEngineParamsStreaming,
 } from "llamaindex";
 
-import { JSONPathPrompt, ResponseSynthesisPrompt, defaultJsonPathPrompt, defaultResponseSynthesizePrompt } from "./prompt.js";
+import {
+  JSONPathPrompt,
+  ResponseSynthesisPrompt,
+  defaultJsonPathPrompt,
+  defaultResponseSynthesizePrompt,
+} from "./prompt.js";
 
 export type JSONSchemaType = Record<string, unknown>;
 

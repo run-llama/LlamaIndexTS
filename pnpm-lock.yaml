@@ -50,7 +50,7 @@ importers:
         version: 3.1.1
       '@llamaindex/env':
         specifier: workspace:*
-        version: link:../../packages/experiemental
+        version: link:../../packages/experimental
       '@mdx-js/react':
         specifier: ^3.0.0
         version: 3.0.0(@types/react@18.2.61)(react@18.2.0)
@@ -173,7 +173,7 @@ importers:
         version: 0.0.4
       '@llamaindex/env':
         specifier: workspace:*
-        version: link:../experiemental
+        version: link:../experimental
       '@mistralai/mistralai':
         specifier: ^0.0.10
         version: 0.0.10
@@ -421,7 +421,7 @@ importers:
         specifier: ^13.5.6
         version: 13.5.6(react-dom@18.2.0)(react@18.2.0)
 
-  packages/experiemental:
+  packages/experimental:
     dependencies:
       '@types/lodash':
         specifier: ^4.14.202

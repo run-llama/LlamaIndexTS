@@ -1,6 +1,6 @@
 {
-  "name": "@llamaindex/experiemental",
-  "description": "environment wrapper",
+  "name": "@llamaindex/experimental",
+  "description": "Experimental package for LlamaIndexTS",
   "version": "0.0.1",
   "type": "module",
   "types": "dist/type/index.d.ts",

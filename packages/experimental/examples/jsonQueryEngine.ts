@@ -1,11 +1,6 @@
-import {
-  JSONQueryEngine,
-} from "../dist/index.js";
+import { JSONQueryEngine } from "../dist/index.js";
 
-import {
-  OpenAI,
-  serviceContextFromDefaults,
-} from "llamaindex"
+import { OpenAI, serviceContextFromDefaults } from "llamaindex";
 
 const jsonValue = {
   blogPosts: [
