@@ -54,6 +54,10 @@ const createEnvLocalFile = async (
 
   if (opts?.llamaCloudKey) {
     content += `LLAMA_CLOUD_API_KEY=${opts?.llamaCloudKey}\n`;
+  } else {
+    content += `# Please obtain the Llama Cloud API key from https://cloud.llamaindex.ai/api-key 
+# and set it to the LLAMA_CLOUD_API_KEY variable below.
+# LLAMA_CLOUD_API_KEY=`;
   }
 
   switch (opts?.vectorDb) {
@@ -110,16 +114,16 @@ async function generateContextData(
         ? "poetry run python app/engine/generate.py"
         : `${packageManager} run generate`,
     )}`;
-    const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
-    const hasLlamaCloudKey = (dataSource?.config as FileSourceConfig)
+    const openAiKeyConfigured = openAiKey || process.env["OPENAI_API_KEY"];
+    const llamaCloudKeyConfigured = (dataSource?.config as FileSourceConfig)
       ?.useLlamaParse
       ? llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]
       : true;
     const hasVectorDb = vectorDb && vectorDb !== "none";
     if (framework === "fastapi") {
       if (
-        hasOpenAiKey &&
-        hasLlamaCloudKey &&
+        openAiKeyConfigured &&
+        llamaCloudKeyConfigured &&
         !hasVectorDb &&
         isHavingPoetryLockFile()
       ) {
@@ -133,7 +137,7 @@ async function generateContextData(
         return;
       }
     } else {
-      if (hasOpenAiKey && vectorDb === "none") {
+      if (openAiKeyConfigured && vectorDb === "none") {
         console.log(`Running ${runGenerate} to generate the context data.`);
         await callPackageManager(packageManager, true, ["run", "generate"]);
         return;
@@ -141,8 +145,8 @@ async function generateContextData(
     }
 
     const settings = [];
-    if (!hasOpenAiKey) settings.push("your OpenAI key");
-    if (!hasLlamaCloudKey) settings.push("your Llama Cloud key");
+    if (!openAiKeyConfigured) settings.push("your OpenAI key");
+    if (!llamaCloudKeyConfigured) settings.push("your Llama Cloud key");
     if (hasVectorDb) settings.push("your Vector DB environment variables");
     const settingsMessage =
       settings.length > 0 ? `After setting ${settings.join(" and ")}, ` : "";
