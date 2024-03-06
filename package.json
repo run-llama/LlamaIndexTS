@@ -13,7 +13,7 @@
     "type-check": "tsc -b --diagnostics",
     "release": "pnpm run build:release && changeset publish",
     "new-llamaindex": "pnpm run build:release && changeset version --ignore create-llama",
-    "new-create-llama": "pnpm run build:release && changeset version --ignore llamaindex",
+    "new-create-llama": "pnpm run build:release && changeset version --ignore llamaindex --ignore @llamaindex/core-test",
     "new-snapshots": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {
