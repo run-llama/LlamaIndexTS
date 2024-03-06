@@ -52,12 +52,14 @@ const createEnvLocalFile = async (
     content += `EMBEDDING_MODEL=${opts?.embeddingModel}\n`;
   }
 
-  if (opts?.llamaCloudKey) {
-    content += `LLAMA_CLOUD_API_KEY=${opts?.llamaCloudKey}\n`;
-  } else {
-    content += `# Please obtain the Llama Cloud API key from https://cloud.llamaindex.ai/api-key 
+  if ((opts?.dataSource?.config as FileSourceConfig).useLlamaParse) {
+    if (opts?.llamaCloudKey) {
+      content += `LLAMA_CLOUD_API_KEY=${opts?.llamaCloudKey}\n`;
+    } else {
+      content += `# Please obtain the Llama Cloud API key from https://cloud.llamaindex.ai/api-key 
 # and set it to the LLAMA_CLOUD_API_KEY variable below.
 # LLAMA_CLOUD_API_KEY=`;
+    }
   }
 
   switch (opts?.vectorDb) {
