@@ -133,7 +133,7 @@ async function generateContextData(
         return;
       }
     } else {
-      if (hasOpenAiKey && hasLlamaCloudKey && vectorDb === "none") {
+      if (hasOpenAiKey && vectorDb === "none") {
         console.log(`Running ${runGenerate} to generate the context data.`);
         await callPackageManager(packageManager, true, ["run", "generate"]);
         return;
