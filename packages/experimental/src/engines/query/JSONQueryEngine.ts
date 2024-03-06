@@ -11,10 +11,10 @@ import type {
 } from "llamaindex";
 
 import {
-  JSONPathPrompt,
-  ResponseSynthesisPrompt,
   defaultJsonPathPrompt,
   defaultResponseSynthesizePrompt,
+  type JSONPathPrompt,
+  type ResponseSynthesisPrompt,
 } from "./prompt.js";
 
 export type JSONSchemaType = Record<string, unknown>;

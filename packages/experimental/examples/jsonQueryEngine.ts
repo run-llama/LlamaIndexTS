@@ -1,4 +1,4 @@
-import { JSONQueryEngine } from "../dist/index.js";
+import { JSONQueryEngine } from "@llamaindex/experimental";
 
 import { OpenAI, serviceContextFromDefaults } from "llamaindex";
 
