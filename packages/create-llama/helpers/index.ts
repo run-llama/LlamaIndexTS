@@ -111,9 +111,10 @@ async function generateContextData(
         : `${packageManager} run generate`,
     )}`;
     const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
-    const hasLlamaCloudKey =
-      (dataSource?.config as FileSourceConfig)?.useLlamaParse &&
-      (llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]);
+    const hasLlamaCloudKey = (dataSource?.config as FileSourceConfig)
+      ?.useLlamaParse
+      ? llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]
+      : true;
     const hasVectorDb = vectorDb && vectorDb !== "none";
     if (framework === "fastapi") {
       if (

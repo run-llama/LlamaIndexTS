@@ -222,9 +222,12 @@ export const askQuestions = async (
         ];
 
         const hasOpenAiKey = program.openAiKey || process.env["OPENAI_API_KEY"];
-        const hasLlamaCloudKey =
-          (program.dataSource?.config as FileSourceConfig)?.useLlamaParse &&
-          (program.llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]);
+        // If using LlamaParse, require LlamaCloud API key
+        const hasLlamaCloudKey = (
+          program.dataSource?.config as FileSourceConfig
+        )?.useLlamaParse
+          ? program.llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]
+          : true;
         const hasVectorDb = program.vectorDb && program.vectorDb !== "none";
         // Can run the app if all tools do not require configuration
         if (
