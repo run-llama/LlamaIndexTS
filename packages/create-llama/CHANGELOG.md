@@ -1,5 +1,12 @@
 # create-llama
 
+## 0.0.27
+
+### Patch Changes
+
+- 2d29350: Add LlamaParse option when selecting a pdf file or a folder (FastAPI only)
+- b354f23: Add embedding model option to create-llama (FastAPI only)
+
 ## 0.0.26
 
 ### Patch Changes
