@@ -6,14 +6,15 @@
       {
         "allowList": [
           "OPENAI_API_KEY",
+          "LLAMA_CLOUD_API_KEY",
           "npm_config_user_agent",
           "http_proxy",
           "https_proxy",
           "MODEL",
           "NEXT_PUBLIC_CHAT_API",
-          "NEXT_PUBLIC_MODEL"
-        ]
-      }
-    ]
-  }
+          "NEXT_PUBLIC_MODEL",
+        ],
+      },
+    ],
+  },
 }
