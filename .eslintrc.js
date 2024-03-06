@@ -11,5 +11,13 @@ module.exports = {
     "max-params": ["error", 4],
     "prefer-const": "error",
   },
+  overrides: [
+    {
+      files: ["examples/**/*.ts"],
+      rules: {
+        "turbo/no-undeclared-env-vars": "off",
+      },
+    },
+  ],
   ignorePatterns: ["dist/", "lib/"],
 };

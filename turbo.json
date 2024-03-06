@@ -6,7 +6,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]
     },
-    "lint": {},
+    "lint": {
+      "inputs": ["packages/eslint-config-custom"]
+    },
     "test": {
       "dependsOn": ["^build"]
     },
