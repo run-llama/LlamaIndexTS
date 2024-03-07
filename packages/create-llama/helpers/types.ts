@@ -6,7 +6,11 @@ export type TemplateFramework = "nextjs" | "express" | "fastapi";
 export type TemplateEngine = "simple" | "context";
 export type TemplateUI = "html" | "shadcn";
 export type TemplateVectorDB = "none" | "mongo" | "pg" | "pinecone";
-export type TemplatePostInstallAction = "none" | "dependencies" | "runApp";
+export type TemplatePostInstallAction =
+  | "none"
+  | "VSCode"
+  | "dependencies"
+  | "runApp";
 export type TemplateDataSource = {
   type: TemplateDataSourceType;
   config: TemplateDataSourceConfig;

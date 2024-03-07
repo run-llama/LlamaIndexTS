@@ -5,16 +5,33 @@
     "ghcr.io/devcontainers-contrib/features/typescript:2": {},
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.11",
-      "toolsToInstall": [
-        "flake8",
-        "black",
-        "mypy",
-        "poetry"
-      ]
+      "toolsToInstall": ["flake8", "black", "mypy", "poetry"]
     }
   },
-  "forwardPorts": [
-    3000,
-    8000
-  ]
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md"]
+    },
+    "vscode": {
+      "extensions": [
+        "ms-vscode.typescript-language-features",
+        "esbenp.prettier-vscode",
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.vscode-flake8",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.linting.mypyEnabled": true,
+        "python.formatting.provider": "black",
+        "python.languageServer": "Pylance",
+        "python.venvFolders": [".venv", "venv"],
+        "python.venvPathSeparator": "/",
+        "python.venvFoldersSeparator": "/"
+      }
+    }
+  },
+  "forwardPorts": [3000, 8000]
 }
