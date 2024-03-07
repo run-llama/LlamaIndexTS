@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // เรียกคืนโหนด!
-const nodesWithScore = await retriever.retrieve("query string");
+const nodesWithScore = await retriever.retrieve({ query: "query string" });
 ```
 
 ## API Reference (การอ้างอิง API)

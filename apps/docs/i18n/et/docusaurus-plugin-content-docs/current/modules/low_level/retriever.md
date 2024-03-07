@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Too sõlmed!
-const nodesWithScore = await retriever.retrieve("päringu string");
+const nodesWithScore = await retriever.retrieve({ query: "päringu string" });
 ```
 
 ## API viide

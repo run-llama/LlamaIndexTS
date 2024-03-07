@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Dohvati čvorove!
-const nodesWithScore = await retriever.retrieve("upitni niz");
+const nodesWithScore = await retriever.retrieve({ query: "upitni niz" });
 ```
 
 ## API Referenca

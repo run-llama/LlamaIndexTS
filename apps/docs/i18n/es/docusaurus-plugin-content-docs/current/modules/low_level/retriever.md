@@ -13,7 +13,7 @@ const recuperador = vector_index.asRetriever();
 recuperador.similarityTopK = 3;
 
 // ¡Obtener nodos!
-const nodosConPuntuación = await recuperador.retrieve("cadena de consulta");
+const nodosConPuntuación = await recuperador.retrieve({ query: "cadena de consulta" });
 ```
 
 ## Referencia de la API
