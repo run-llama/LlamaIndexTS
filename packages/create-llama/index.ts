@@ -303,8 +303,9 @@ async function run(): Promise<void> {
   if (program.postInstallAction === "VSCode") {
     console.log(`Starting VSCode in ${root}...`);
     try {
-      execSync(`code ${root} --new-window --goto README.md`, {
+      execSync(`code . --new-window --goto README.md`, {
         stdio: "inherit",
+        cwd: root,
       });
     } catch (error) {
       console.log(
