@@ -120,19 +120,21 @@ export const installTSTemplate = async ({
     await Promise.all([fs.rm(nextConfigO11yPath), fs.rm(nextConfigAppPath)]);
   }
 
-  if (observability === "OpenTelemetry") {
-    const openLLMetryPath = path.join(
+  if (observability && observability !== "none") {
+    const chosenObservabilityPath = path.join(
       templatesDir,
       "components",
       "observability",
       "typescript",
-      "openllmetry",
-      "observability.ts",
+      observability.toLowerCase(),
     );
-    const observabilityPath = path.join(root, "shared", "observability.ts");
+    const relativeObservabilityPath = framework === "nextjs" ? "app" : "src";
 
-    await fs.rm(observabilityPath);
-    await fs.copyFile(openLLMetryPath, observabilityPath);
+    await copy(
+      "**",
+      path.join(root, relativeObservabilityPath, "observability"),
+      { cwd: chosenObservabilityPath },
+    );
   }
 
   /**

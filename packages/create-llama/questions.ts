@@ -418,7 +418,7 @@ export const askQuestions = async (
     }
   }
 
-  if (program.framework === "nextjs") {
+  if (program.framework === "express" || program.framework === "nextjs") {
     const { observability } = await prompts({
       type: "select",
       name: "observability",

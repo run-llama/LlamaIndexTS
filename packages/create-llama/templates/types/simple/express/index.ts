@@ -2,6 +2,7 @@
 import cors from "cors";
 import "dotenv/config";
 import express, { Express, Request, Response } from "express";
+import { initObservability } from "./src/observability";
 import chatRouter from "./src/routes/chat.route";
 
 const app: Express = express();
@@ -10,6 +11,8 @@ const port = parseInt(process.env.PORT || "8000");
 const env = process.env["NODE_ENV"];
 const isDevelopment = !env || env === "development";
 const prodCorsOrigin = process.env["PROD_CORS_ORIGIN"];
+
+initObservability();
 
 app.use(express.json());
 
