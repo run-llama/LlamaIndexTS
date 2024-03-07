@@ -13,7 +13,7 @@ const dohvatnik = vector_index.asRetriever();
 dohvatnik.similarityTopK = 3;
 
 // Dohvati čvorove!
-const čvoroviSaRezultatom = await dohvatnik.retrieve("upitni niz");
+const čvoroviSaRezultatom = await dohvatnik.retrieve({ query: "upitni niz" });
 ```
 
 ## API Referenca

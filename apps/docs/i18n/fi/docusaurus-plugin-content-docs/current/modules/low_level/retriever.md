@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Hae solmut!
-const nodesWithScore = await retriever.retrieve("kyselymerkkijono");
+const nodesWithScore = await retriever.retrieve({ query: "kyselymerkkijono" });
 ```
 
 ## API-viite

@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 /* eslint-disable import/no-extraneous-dependencies */
+import { execSync } from "child_process";
 import Commander from "commander";
 import Conf from "conf";
 import fs from "fs";
 import path from "path";
 import { bold, cyan, green, red, yellow } from "picocolors";
 import prompts from "prompts";
+import terminalLink from "terminal-link";
 import checkForUpdate from "update-check";
 import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
@@ -298,7 +300,31 @@ async function run(): Promise<void> {
   });
   conf.set("preferences", preferences);
 
-  if (program.postInstallAction === "runApp") {
+  if (program.postInstallAction === "VSCode") {
+    console.log(`Starting VSCode in ${root}...`);
+    try {
+      execSync(`code . --new-window --goto README.md`, {
+        stdio: "inherit",
+        cwd: root,
+      });
+    } catch (error) {
+      console.log(
+        red(
+          `Failed to start VSCode in ${root}. 
+Got error: ${(error as Error).message}.\n`,
+        ),
+      );
+      console.log(
+        `Make sure you have VSCode installed and added to your PATH. 
+Please check ${cyan(
+          terminalLink(
+            "This documentation",
+            `https://code.visualstudio.com/docs/setup/setup-overview`,
+          ),
+        )} for more information.`,
+      );
+    }
+  } else if (program.postInstallAction === "runApp") {
     console.log(`Running app in ${root}...`);
     await runApp(
       root,

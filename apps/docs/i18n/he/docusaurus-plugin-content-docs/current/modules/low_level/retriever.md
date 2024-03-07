@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // אחזור צמתים!
-const nodesWithScore = await retriever.retrieve("מחרוזת שאילתה");
+const nodesWithScore = await retriever.retrieve({ query: "מחרוזת שאילתה" });
 ```
 
 ## מדריך לממשק API

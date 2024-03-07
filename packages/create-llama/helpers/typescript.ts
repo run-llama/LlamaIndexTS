@@ -228,7 +228,7 @@ export const installTSTemplate = async ({
     JSON.stringify(packageJson, null, 2) + os.EOL,
   );
 
-  if (postInstallAction !== "none") {
+  if (postInstallAction === "runApp" || postInstallAction === "dependencies") {
     await installTSDependencies(packageJson, packageManager, isOnline);
   }
 };

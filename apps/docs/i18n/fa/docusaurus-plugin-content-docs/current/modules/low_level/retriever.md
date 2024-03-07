@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // بازیابی گره ها!
-const nodesWithScore = await retriever.retrieve("رشته پرس و جو");
+const nodesWithScore = await retriever.retrieve({ query: "رشته پرس و جو" });
 ```
 
 ## مرجع API

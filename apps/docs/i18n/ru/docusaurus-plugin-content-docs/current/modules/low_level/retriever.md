@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Получение узлов!
-const nodesWithScore = await retriever.retrieve("строка запроса");
+const nodesWithScore = await retriever.retrieve({ query: "строка запроса" });
 ```
 
 ## Справочник по API

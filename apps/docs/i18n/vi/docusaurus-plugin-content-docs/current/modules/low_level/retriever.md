@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Lấy các node!
-const nodesWithScore = await retriever.retrieve("chuỗi truy vấn");
+const nodesWithScore = await retriever.retrieve({ query: "chuỗi truy vấn" });
 ```
 
 ## Tài liệu tham khảo API

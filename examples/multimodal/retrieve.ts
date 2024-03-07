@@ -27,9 +27,9 @@ async function main() {
   // retrieve documents using the index
   const index = await createIndex();
   const retriever = index.asRetriever({ similarityTopK: 3 });
-  const results = await retriever.retrieve(
-    "what are Vincent van Gogh's famous paintings",
-  );
+  const results = await retriever.retrieve({
+    query: "what are Vincent van Gogh's famous paintings",
+  });
   for (const result of results) {
     const node = result.node;
     if (!node) {

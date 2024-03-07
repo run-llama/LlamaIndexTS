@@ -13,7 +13,7 @@ const pridobitelj = vector_index.asRetriever();
 pridobitelj.similarityTopK = 3;
 
 // Pridobivanje vozlišč!
-const vozliščaZRezultatom = await pridobitelj.retrieve("poizvedbeni niz");
+const vozliščaZRezultatom = await pridobitelj.retrieve({ query: "poizvedbeni niz" });
 ```
 
 ## API Sklic

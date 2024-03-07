@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // ノードを取得します！
-const nodesWithScore = await retriever.retrieve("クエリ文字列");
+const nodesWithScore = await retriever.retrieve({ query: "クエリ文字列" });
 ```
 
 ## API リファレンス

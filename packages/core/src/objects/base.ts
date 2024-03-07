@@ -69,7 +69,7 @@ export class ObjectRetriever {
 
   // Translating the retrieve method
   async retrieve(strOrQueryBundle: QueryType): Promise<any> {
-    const nodes = await this.retriever.retrieve(strOrQueryBundle);
+    const nodes = await this.retriever.retrieve({ query: strOrQueryBundle });
     const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
     return objs;
   }

@@ -11,6 +11,7 @@ import fs from "fs";
 import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./helpers";
 import { installTemplate } from "./helpers";
+import { writeDevcontainer } from "./helpers/devcontainer";
 import { templatesDir } from "./helpers/dir";
 import { toolsRequireConfig } from "./helpers/tools";
 
@@ -120,6 +121,8 @@ export async function createApp({
     console.log("Initialized a git repository.");
     console.log();
   }
+
+  await writeDevcontainer(root, templatesDir, framework, frontend);
 
   if (toolsRequireConfig(tools)) {
     console.log(

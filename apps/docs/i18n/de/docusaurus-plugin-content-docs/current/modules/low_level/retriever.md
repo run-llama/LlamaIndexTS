@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Knoten abrufen!
-const nodesWithScore = await retriever.retrieve("Abfragezeichenfolge");
+const nodesWithScore = await retriever.retrieve({ query: "Abfragezeichenfolge" });
 ```
 
 ## API-Referenz

@@ -64,10 +64,10 @@ export class DefaultContextGenerator
         tags: ["final"],
       };
     }
-    const sourceNodesWithScore = await this.retriever.retrieve(
-      message,
+    const sourceNodesWithScore = await this.retriever.retrieve({
+      query: message,
       parentEvent,
-    );
+    });
 
     const nodes = await this.applyNodePostprocessors(
       sourceNodesWithScore,

@@ -216,6 +216,10 @@ export const askQuestions = async (
             value: "none",
           },
           {
+            title: "Start in VSCode (~1 sec)",
+            value: "VSCode",
+          },
+          {
             title: "Generate code and install dependencies (~2 min)",
             value: "dependencies",
           },
