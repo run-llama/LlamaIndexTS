@@ -23,12 +23,14 @@
       ],
       "settings": {
         "python.formatting.provider": "black",
-        "python.languageServer": "Pylance"
+        "python.languageServer": "Pylance",
+        "python.analysis.typeCheckingMode": "basic"
       }
     }
   },
   "containerEnv": {
-    "POETRY_VIRTUALENVS_CREATE": "false"
+    "POETRY_VIRTUALENVS_CREATE": "false",
+    "PYTHONPATH": "${PYTHONPATH}:${workspaceFolder}/backend"
   },
   "forwardPorts": [3000, 8000]
 }
