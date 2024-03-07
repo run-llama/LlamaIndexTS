@@ -18,5 +18,5 @@
       "module": "commonjs"
     }
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts", "assembly-tools/add.mjs"]
 }
