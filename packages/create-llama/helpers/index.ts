@@ -3,10 +3,8 @@ import { callPackageManager } from "./install";
 
 import fs from "fs/promises";
 import path from "path";
-import { cyan, red } from "picocolors";
+import { cyan } from "picocolors";
 
-import { execSync } from "child_process";
-import terminalLink from "terminal-link";
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
 import { templatesDir } from "./dir";
 import { PackageManager } from "./get-pkg-manager";
@@ -264,30 +262,6 @@ export const installTemplate = async (
     // this is a frontend for a full-stack app, create .env file with model information
     const content = `MODEL=${props.model}\nNEXT_PUBLIC_MODEL=${props.model}\n`;
     await fs.writeFile(path.join(props.root, ".env"), content);
-  }
-
-  if (props.postInstallAction === "VSCode") {
-    console.log(`Starting VSCode in ${props.root}...`);
-    try {
-      execSync(`code ${props.root} --new-window --goto README.md`, {
-        stdio: "inherit",
-      });
-    } catch (error) {
-      console.log(
-        red(
-          `Failed to start VSCode in ${props.root}. Got error: ${(error as Error).message}.\n`,
-        ),
-      );
-      console.log(
-        `Make sure you have VSCode installed and added to your PATH. 
-Please check ${cyan(
-          terminalLink(
-            "This documentation",
-            `https://code.visualstudio.com/docs/setup/setup-overview`,
-          ),
-        )} for more information.`,
-      );
-    }
   }
 };
 
