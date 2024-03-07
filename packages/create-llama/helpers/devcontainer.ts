@@ -11,6 +11,7 @@ function renderDevcontainerContent(
     fs.readFileSync(path.join(templatesDir, "devcontainer.json"), "utf8"),
   );
 
+  // Modify postCreateCommand
   if (frontend) {
     devcontainerJson.postCreateCommand =
       framework === "fastapi"
@@ -20,6 +21,22 @@ function renderDevcontainerContent(
     devcontainerJson.postCreateCommand =
       framework === "fastapi" ? "poetry install" : "npm install";
   }
+
+  // Modify containerEnv
+  if (framework === "fastapi") {
+    if (frontend) {
+      devcontainerJson.containerEnv = {
+        ...devcontainerJson.containerEnv,
+        PYTHONPATH: "${PYTHONPATH}:${workspaceFolder}/backend",
+      };
+    } else {
+      devcontainerJson.containerEnv = {
+        ...devcontainerJson.containerEnv,
+        PYTHONPATH: "${PYTHONPATH}:${workspaceFolder}",
+      };
+    }
+  }
+
   return JSON.stringify(devcontainerJson, null, 2);
 }
 

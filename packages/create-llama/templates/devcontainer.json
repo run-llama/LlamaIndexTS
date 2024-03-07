@@ -29,8 +29,7 @@
     }
   },
   "containerEnv": {
-    "POETRY_VIRTUALENVS_CREATE": "false",
-    "PYTHONPATH": "${PYTHONPATH}:${workspaceFolder}/backend"
+    "POETRY_VIRTUALENVS_CREATE": "false"
   },
   "forwardPorts": [3000, 8000]
 }
