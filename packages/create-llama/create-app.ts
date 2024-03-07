@@ -11,6 +11,7 @@ import fs from "fs";
 import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./helpers";
 import { installTemplate } from "./helpers";
+import { copy } from "./helpers/copy";
 import { templatesDir } from "./helpers/dir";
 import { toolsRequireConfig } from "./helpers/tools";
 
@@ -111,8 +112,26 @@ export async function createApp({
       path.join(templatesDir, "README-fullstack.md"),
       path.join(root, "README.md"),
     );
+    // copy dev container for fullstack
+    const devContainerPath =
+      framework === "fastapi"
+        ? path.join(templatesDir, "devcontainers", "fullstack-python-be")
+        : path.join(templatesDir, "devcontainers", "fullstack-node-be");
+    await copy("**", path.join(root, ".devcontainer"), {
+      parents: true,
+      cwd: devContainerPath,
+    });
   } else {
     await installTemplate({ ...args, backend: true, forBackend: framework });
+    // copy dev container for backend
+    const devContainerPath =
+      framework === "fastapi"
+        ? path.join(templatesDir, "devcontainers", "python")
+        : path.join(templatesDir, "devcontainers", "node");
+    await copy("**", path.join(root, ".devcontainer"), {
+      parents: true,
+      cwd: devContainerPath,
+    });
   }
 
   process.chdir(root);

@@ -1,0 +1,27 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "toolsToInstall": ["flake8", "black", "mypy", "poetry"]
+    }
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md"]
+    },
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.vscode-flake8",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.formatting.provider": "black",
+        "python.languageServer": "Pylance"
+      }
+    }
+  },
+  "forwardPorts": [8000],
+  "postCreateCommand": "poetry install"
+}
