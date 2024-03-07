@@ -27,6 +27,5 @@
       }
     }
   },
-  "forwardPorts": [3000, 8000],
-  "postCreateCommand": "cd backend && poetry install && cd ../frontend && npm install"
+  "forwardPorts": [3000, 8000]
 }
