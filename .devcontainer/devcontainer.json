@@ -1,9 +1,20 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:dev-20-bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers-contrib/features/turborepo-npm:1": {},
     "ghcr.io/devcontainers-contrib/features/typescript:2": {},
-    "ghcr.io/devcontainers-contrib/features/pnpm:2": {}
-  }
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11",
+      "toolsToInstall": [
+        "flake8",
+        "black",
+        "mypy",
+        "poetry"
+      ]
+    }
+  },
+  "forwardPorts": [
+    3000,
+    8000
+  ]
 }
