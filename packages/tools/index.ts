@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import asc from "assemblyscript/bin/asc";
 import fs from "fs";
 import { BaseTool } from "./assembly/base";
 
@@ -28,13 +28,19 @@ export default class ToolFactory implements IToolFactory {
   }
 
   async downloadTool(toolId: string, storageDir: string = "build") {
-    try {
-      execSync(
-        `asc assembly/tools/${toolId}/index.ts -o ${storageDir}/${toolId}.wasm -t ${storageDir}/${toolId}.wat --target release`,
-      );
-      console.log(`Module ${toolId} downloaded successfully.`);
-    } catch (error) {
-      console.error(`Error downloading module ${toolId}:`, error.message);
+    const { error, stdout, stderr } = await asc.main([
+      `assembly/tools/${toolId}/index.ts`,
+      "--outFile",
+      `${storageDir}/${toolId}.wasm`,
+      "--optimize",
+      "--sourceMap",
+      "--stats",
+    ]);
+    if (error) {
+      console.log("Download failed: " + error.message);
+      console.log(stderr.toString());
+    } else {
+      console.log(stdout.toString());
     }
   }
 
