@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "@llamaindex/env";
 import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import { AgentChatResponse } from "../../engines/chat/index.js";
 import type { ChatResponse, LLM } from "../../llm/index.js";
@@ -17,7 +17,6 @@ import {
   ObservationReasoningStep,
   ResponseReasoningStep,
 } from "./types.js";
-
 type ReActAgentWorkerParams = {
   tools: BaseTool[];
   llm?: LLM;

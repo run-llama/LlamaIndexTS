@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "@llamaindex/env";
 import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
@@ -12,7 +12,6 @@ import type { BaseMemory } from "../../memory/types.js";
 import type { AgentWorker, TaskStepOutput } from "../types.js";
 import { Task, TaskStep } from "../types.js";
 import { AgentState, BaseAgentRunner, TaskState } from "./types.js";
-
 const validateStepFromArgs = (
   taskId: string,
   input?: string | null,
