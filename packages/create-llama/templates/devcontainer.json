@@ -27,5 +27,8 @@
       }
     }
   },
+  "containerEnv": {
+    "POETRY_VIRTUALENVS_CREATE": "false"
+  },
   "forwardPorts": [3000, 8000]
 }
