@@ -7,6 +7,7 @@ import { cyan } from "picocolors";
 
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
 import { templatesDir } from "./dir";
+import { createEnvLocalFile } from "./env-variables";
 import { PackageManager } from "./get-pkg-manager";
 import { installLlamapackProject } from "./llama-pack";
 import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
@@ -18,88 +19,8 @@ import {
   TemplateDataSource,
   TemplateFramework,
   TemplateVectorDB,
-  WebSourceConfig,
 } from "./types";
 import { installTSTemplate } from "./typescript";
-
-const createEnvLocalFile = async (
-  root: string,
-  opts?: {
-    openAiKey?: string;
-    llamaCloudKey?: string;
-    vectorDb?: TemplateVectorDB;
-    model?: string;
-    embeddingModel?: string;
-    framework?: TemplateFramework;
-    dataSource?: TemplateDataSource;
-  },
-) => {
-  const envFileName = ".env";
-  let content = "";
-
-  const model = opts?.model || "gpt-3.5-turbo";
-  content += `MODEL=${model}\n`;
-  if (opts?.framework === "nextjs") {
-    content += `NEXT_PUBLIC_MODEL=${model}\n`;
-  }
-  console.log("\nUsing OpenAI model: ", model, "\n");
-
-  if (opts?.openAiKey) {
-    content += `OPENAI_API_KEY=${opts?.openAiKey}\n`;
-  }
-
-  if (opts?.embeddingModel) {
-    content += `EMBEDDING_MODEL=${opts?.embeddingModel}\n`;
-  }
-
-  if ((opts?.dataSource?.config as FileSourceConfig).useLlamaParse) {
-    if (opts?.llamaCloudKey) {
-      content += `LLAMA_CLOUD_API_KEY=${opts?.llamaCloudKey}\n`;
-    } else {
-      content += `# Please obtain the Llama Cloud API key from https://cloud.llamaindex.ai/api-key 
-# and set it to the LLAMA_CLOUD_API_KEY variable below.
-# LLAMA_CLOUD_API_KEY=`;
-    }
-  }
-
-  switch (opts?.vectorDb) {
-    case "mongo": {
-      content += `# For generating a connection URI, see https://www.mongodb.com/docs/guides/atlas/connection-string\n`;
-      content += `MONGO_URI=\n`;
-      content += `MONGODB_DATABASE=\n`;
-      content += `MONGODB_VECTORS=\n`;
-      content += `MONGODB_VECTOR_INDEX=\n`;
-      break;
-    }
-    case "pg": {
-      content += `# For generating a connection URI, see https://docs.timescale.com/use-timescale/latest/services/create-a-service\n`;
-      content += `PG_CONNECTION_STRING=\n`;
-      break;
-    }
-    case "pinecone": {
-      content += `PINECONE_API_KEY=\n`;
-      content += `PINECONE_ENVIRONMENT=\n`;
-      content += `PINECONE_INDEX_NAME=\n`;
-      break;
-    }
-  }
-
-  switch (opts?.dataSource?.type) {
-    case "web": {
-      const webConfig = opts?.dataSource.config as WebSourceConfig;
-      content += `# web loader config\n`;
-      content += `BASE_URL=${webConfig.baseUrl}\n`;
-      content += `URL_PREFIX=${webConfig.baseUrl}\n`;
-      content += `MAX_DEPTH=${webConfig.depth}\n`;
-      break;
-    }
-  }
-
-  if (content) {
-    await fs.writeFile(path.join(root, envFileName), content);
-    console.log(`Created '${envFileName}' file. Please check the settings.`);
-  }
-};
 
 // eslint-disable-next-line max-params
 async function generateContextData(
@@ -240,6 +161,7 @@ export const installTemplate = async (
       embeddingModel: props.embeddingModel,
       framework: props.framework,
       dataSource: props.dataSource,
+      tools: props.tools ?? [],
     });
 
     if (props.engine === "context") {
