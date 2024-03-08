@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // 노드를 가져옵니다!
-const nodesWithScore = await retriever.retrieve("쿼리 문자열");
+const nodesWithScore = await retriever.retrieve({ query: "쿼리 문자열" });
 ```
 
 ## API 참조

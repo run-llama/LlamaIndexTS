@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Node-ok lekérése!
-const nodesWithScore = await retriever.retrieve("lekérdezési karakterlánc");
+const nodesWithScore = await retriever.retrieve({ query: "lekérdezési karakterlánc" });
 ```
 
 ## API Referencia

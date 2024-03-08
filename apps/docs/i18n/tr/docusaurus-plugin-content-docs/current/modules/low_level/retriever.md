@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Düğümleri getir!
-const nodesWithScore = await retriever.retrieve("sorgu dizesi");
+const nodesWithScore = await retriever.retrieve({ query: "sorgu dizesi" });
 ```
 
 ## API Referansı

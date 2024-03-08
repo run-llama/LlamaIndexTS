@@ -11,7 +11,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Récupérer les nœuds !
-const nodesWithScore = await retriever.retrieve("chaîne de requête");
+const nodesWithScore = await retriever.retrieve({ query: "chaîne de requête" });
 ```
 
 ## Référence de l'API

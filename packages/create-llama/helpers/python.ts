@@ -266,7 +266,7 @@ export const installPythonTemplate = async ({
   );
   await addDependencies(root, addOnDependencies);
 
-  if (postInstallAction !== "none") {
+  if (postInstallAction === "runApp" || postInstallAction === "dependencies") {
     installPythonDependencies();
   }
 };

@@ -100,7 +100,7 @@ const response = await queryEngine.query("<user_query>");
 ```ts
 import { SimilarityPostprocessor } from "llamaindex";
 
-nodes = await index.asRetriever().retrieve("test query str");
+nodes = await index.asRetriever().retrieve({ query: "test query str" });
 
 const processor = new SimilarityPostprocessor({
   similarityCutoff: 0.7,

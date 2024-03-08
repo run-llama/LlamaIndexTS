@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Pobierz węzły!
-const nodesWithScore = await retriever.retrieve("ciąg zapytania");
+const nodesWithScore = await retriever.retrieve({ query: "ciąg zapytania" });
 ```
 
 ## Dokumentacja interfejsu API

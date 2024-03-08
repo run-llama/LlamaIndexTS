@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // नोड्स प्राप्त करें!
-const nodesWithScore = await retriever.retrieve("क्वेरी स्ट्रिंग");
+const nodesWithScore = await retriever.retrieve({ query: "क्वेरी स्ट्रिंग" });
 ```
 
 ## एपीआई संदर्भ (API Reference)

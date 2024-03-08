@@ -63,11 +63,11 @@ export class RetrieverQueryEngine
   }
 
   private async retrieve(query: string, parentEvent: Event) {
-    const nodes = await this.retriever.retrieve(
+    const nodes = await this.retriever.retrieve({
       query,
       parentEvent,
-      this.preFilters,
-    );
+      preFilters: this.preFilters,
+    });
 
     return await this.applyNodePostprocessors(nodes, query);
   }

@@ -3,10 +3,9 @@ import { globalsHelper } from "../../GlobalsHelper.js";
 import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
 import type { ChoiceSelectPrompt } from "../../Prompt.js";
 import { defaultChoiceSelectPrompt } from "../../Prompt.js";
-import type { BaseRetriever } from "../../Retriever.js";
+import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
-import type { Event } from "../../callbacks/CallbackManager.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type {
@@ -281,7 +280,10 @@ export class SummaryIndexRetriever implements BaseRetriever {
     this.index = index;
   }
 
-  async retrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]> {
+  async retrieve({
+    query,
+    parentEvent,
+  }: RetrieveParams): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const nodes = await this.index.docStore.getNodes(nodeIds);
     const result = nodes.map((node) => ({
@@ -337,7 +339,10 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
     this.serviceContext = serviceContext || index.serviceContext;
   }
 
-  async retrieve(query: string, parentEvent?: Event): Promise<NodeWithScore[]> {
+  async retrieve({
+    query,
+    parentEvent,
+  }: RetrieveParams): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const results: NodeWithScore[] = [];
 

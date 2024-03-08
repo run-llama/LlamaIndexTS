@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // 提取節點！
-const nodesWithScore = await retriever.retrieve("查詢字串");
+const nodesWithScore = await retriever.retrieve({ query: "查詢字串" });
 ```
 
 ## API 參考

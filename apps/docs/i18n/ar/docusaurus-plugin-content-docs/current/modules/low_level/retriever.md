@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // جلب العقد!
-const nodesWithScore = await retriever.retrieve("سلسلة الاستعلام");
+const nodesWithScore = await retriever.retrieve({ query: "سلسلة الاستعلام" });
 ```
 
 ## مرجع الواجهة البرمجية (API Reference)

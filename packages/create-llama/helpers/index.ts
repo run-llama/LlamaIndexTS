@@ -52,8 +52,14 @@ const createEnvLocalFile = async (
     content += `EMBEDDING_MODEL=${opts?.embeddingModel}\n`;
   }
 
-  if (opts?.llamaCloudKey) {
-    content += `LLAMA_CLOUD_API_KEY=${opts?.llamaCloudKey}\n`;
+  if ((opts?.dataSource?.config as FileSourceConfig).useLlamaParse) {
+    if (opts?.llamaCloudKey) {
+      content += `LLAMA_CLOUD_API_KEY=${opts?.llamaCloudKey}\n`;
+    } else {
+      content += `# Please obtain the Llama Cloud API key from https://cloud.llamaindex.ai/api-key 
+# and set it to the LLAMA_CLOUD_API_KEY variable below.
+# LLAMA_CLOUD_API_KEY=`;
+    }
   }
 
   switch (opts?.vectorDb) {
@@ -95,22 +101,34 @@ const createEnvLocalFile = async (
   }
 };
 
-const generateContextData = async (
+// eslint-disable-next-line max-params
+async function generateContextData(
   framework: TemplateFramework,
   packageManager?: PackageManager,
   openAiKey?: string,
   vectorDb?: TemplateVectorDB,
-) => {
+  dataSource?: TemplateDataSource,
+  llamaCloudKey?: string,
+) {
   if (packageManager) {
     const runGenerate = `${cyan(
       framework === "fastapi"
         ? "poetry run python app/engine/generate.py"
         : `${packageManager} run generate`,
     )}`;
-    const hasOpenAiKey = openAiKey || process.env["OPENAI_API_KEY"];
+    const openAiKeyConfigured = openAiKey || process.env["OPENAI_API_KEY"];
+    const llamaCloudKeyConfigured = (dataSource?.config as FileSourceConfig)
+      ?.useLlamaParse
+      ? llamaCloudKey || process.env["LLAMA_CLOUD_API_KEY"]
+      : true;
     const hasVectorDb = vectorDb && vectorDb !== "none";
     if (framework === "fastapi") {
-      if (hasOpenAiKey && !hasVectorDb && isHavingPoetryLockFile()) {
+      if (
+        openAiKeyConfigured &&
+        llamaCloudKeyConfigured &&
+        !hasVectorDb &&
+        isHavingPoetryLockFile()
+      ) {
         console.log(`Running ${runGenerate} to generate the context data.`);
         const result = tryPoetryRun("python app/engine/generate.py");
         if (!result) {
@@ -121,7 +139,7 @@ const generateContextData = async (
         return;
       }
     } else {
-      if (hasOpenAiKey && vectorDb === "none") {
+      if (openAiKeyConfigured && vectorDb === "none") {
         console.log(`Running ${runGenerate} to generate the context data.`);
         await callPackageManager(packageManager, true, ["run", "generate"]);
         return;
@@ -129,14 +147,15 @@ const generateContextData = async (
     }
 
     const settings = [];
-    if (!hasOpenAiKey) settings.push("your OpenAI key");
+    if (!openAiKeyConfigured) settings.push("your OpenAI key");
+    if (!llamaCloudKeyConfigured) settings.push("your Llama Cloud key");
     if (hasVectorDb) settings.push("your Vector DB environment variables");
     const settingsMessage =
       settings.length > 0 ? `After setting ${settings.join(" and ")}, ` : "";
     const generateMessage = `run ${runGenerate} to generate the context data.`;
     console.log(`\n${settingsMessage}${generateMessage}\n\n`);
   }
-};
+}
 
 const copyContextData = async (
   root: string,
@@ -234,6 +253,8 @@ export const installTemplate = async (
           props.packageManager,
           props.openAiKey,
           props.vectorDb,
+          props.dataSource,
+          props.llamaCloudKey,
         );
       }
     }

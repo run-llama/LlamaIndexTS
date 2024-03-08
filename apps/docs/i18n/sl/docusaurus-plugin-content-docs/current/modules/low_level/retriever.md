@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Získajte uzly!
-const nodesWithScore = await retriever.retrieve("reťazec dotazu");
+const nodesWithScore = await retriever.retrieve({ query: "reťazec dotazu" });
 ```
 
 ## API Referencia

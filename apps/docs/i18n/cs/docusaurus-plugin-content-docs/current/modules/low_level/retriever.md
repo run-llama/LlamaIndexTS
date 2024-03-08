@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Získání uzlů!
-const nodesWithScore = await retriever.retrieve("dotazovací řetězec");
+const nodesWithScore = await retriever.retrieve({ query: "dotazovací řetězec" });
 ```
 
 ## API Reference (Odkazy na rozhraní)

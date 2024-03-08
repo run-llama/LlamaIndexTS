@@ -92,9 +92,9 @@
   "scripts": {
     "lint": "eslint .",
     "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist --strip-leading-paths --config-file .swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file .cjs.swcrc",
-    "build:type": "pnpm run -w type-check",
+    "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
+    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
+    "build:type": "tsc -p tsconfig.json",
     "copy": "cp -r ../../README.md ../../LICENSE .",
     "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
     "circular-check": "madge -c ./src/index.ts",

@@ -8,7 +8,7 @@ import {
   defaultKeywordExtractPrompt,
   defaultQueryKeywordExtractPrompt,
 } from "../../Prompt.js";
-import type { BaseRetriever } from "../../Retriever.js";
+import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
@@ -79,7 +79,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
 
   abstract getKeywords(query: string): Promise<string[]>;
 
-  async retrieve(query: string): Promise<NodeWithScore[]> {
+  async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
     const keywords = await this.getKeywords(query);
     const chunkIndicesCount: { [key: string]: number } = {};
     const filteredKeywords = keywords.filter((keyword) =>
