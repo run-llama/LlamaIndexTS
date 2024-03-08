@@ -1,8 +1,9 @@
 ## Usage
 
 ```ts
-import ToolFactory from "@llamaindex/tools";
-const TestTool = ToolFactory.toClass("test-tool");
+import { TestTool } from "@llamaindex/tools";
+
 const testTool = new TestTool();
-testTool.call("Some query string here.");
+console.log(testTool.metadata);
+console.log(testTool.call("Some query string here."));
 ```

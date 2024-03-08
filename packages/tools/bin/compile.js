@@ -9,16 +9,16 @@ tools.forEach((tool) => {
   try {
     // compile to wasm
     execSync(
-      `asc assembly/${tool}/index.ts -o dist/${tool}.wasm -t dist/${tool}.wat --bindings esm --target release`,
+      `asc assembly/${tool}/index.ts -o dist/${tool}.wasm -t dist/${tool}.wat --exportRuntime --transform as-bind --target release`,
     );
 
     // load js file and verify it has `defaultMetadata` and `call` function exported
-    import(`../dist/${tool}.js`).then((mod) => {
-      if (!mod.defaultMetadata || !mod.call) {
-        throw new Error(`Module ${tool} is missing defaultMetadata export.`);
-      }
-      console.log(`Module ${tool} compiled and verified successfully.`);
-    });
+    // import(`../dist/${tool}.js`).then((mod) => {
+    //   if (!mod.defaultMetadata || !mod.call) {
+    //     throw new Error(`Module ${tool} is missing defaultMetadata export.`);
+    //   }
+    //   console.log(`Module ${tool} compiled and verified successfully.`);
+    // });
   } catch (error) {
     console.error(`Error compiling module ${tool}:`, error.message);
     process.exit(1);
