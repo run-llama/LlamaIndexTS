@@ -458,6 +458,28 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
 
+  packages/tools:
+    dependencies:
+      '@assemblyscript/loader':
+        specifier: ^0.27.24
+        version: 0.27.24
+      '@types/node':
+        specifier: ^18.19.14
+        version: 18.19.14
+    devDependencies:
+      '@swc/cli':
+        specifier: ^0.3.9
+        version: 0.3.9(@swc/core@1.4.2)
+      '@swc/core':
+        specifier: ^1.4.2
+        version: 1.4.2
+      assemblyscript:
+        specifier: ^0.27.24
+        version: 0.27.24
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
   packages/tsconfig: {}
 
 packages:
@@ -625,6 +647,10 @@ packages:
       web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@assemblyscript/loader@0.27.24:
+    resolution: {integrity: sha512-KBVtw5QcNeI8rhUw0fOnWYa6sjUQwo69T5ek+zaaUUqtUomfALTTGH47j6XWf4xgOXCnPai9hATSSKJnujxWzw==}
     dev: false
 
   /@aws-crypto/sha256-js@5.2.0:
@@ -5206,6 +5232,15 @@ packages:
       - utf-8-validate
     dev: false
 
+  /assemblyscript@0.27.24:
+    resolution: {integrity: sha512-TWQVwAqBJ3akkeDhUnknQbQietiEKSw5kAIiGTqoJFGiHTDeB9LdMDhZLnashxrJuG4jR/p57DhzN8biyC1/gg==}
+    engines: {node: '>=16', npm: '>=7'}
+    hasBin: true
+    dependencies:
+      binaryen: 116.0.0-nightly.20240114
+      long: 5.2.3
+    dev: true
+
   /assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
     dev: true
@@ -5413,6 +5448,11 @@ packages:
   /binary-extensions@2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
+
+  /binaryen@116.0.0-nightly.20240114:
+    resolution: {integrity: sha512-0GZrojJnuhoe+hiwji7QFaL3tBlJoA+KFUN7ouYSDGZLSo9CKM8swQX8n/UcbR0d1VuZKU+nhogNzv423JEu5A==}
+    hasBin: true
+    dev: true
 
   /bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -6167,7 +6207,7 @@ packages:
     peerDependencies:
       webpack: ^5.1.0
     dependencies:
-      fast-glob: 3.3.2
+      fast-glob: 3.3.1
       glob-parent: 6.0.2
       globby: 13.2.2
       normalize-path: 3.0.0
@@ -6285,7 +6325,7 @@ packages:
       postcss-modules-scope: 3.1.1(postcss@8.4.33)
       postcss-modules-values: 4.0.0(postcss@8.4.33)
       postcss-value-parser: 4.2.0
-      semver: 7.5.4
+      semver: 7.6.0
       webpack: 5.90.0
 
   /css-minimizer-webpack-plugin@4.2.2(clean-css@5.3.3)(webpack@5.90.0):
@@ -7371,7 +7411,7 @@ packages:
       eslint: 8.57.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.19.1)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.19.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
-      fast-glob: 3.3.2
+      fast-glob: 3.3.1
       get-tsconfig: 4.7.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -7907,16 +7947,6 @@ packages:
 
   /fast-glob@3.3.1:
     resolution: {integrity: sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==}
-    engines: {node: '>=8.6.0'}
-    dependencies:
-      '@nodelib/fs.stat': 2.0.5
-      '@nodelib/fs.walk': 1.2.8
-      glob-parent: 5.1.2
-      merge2: 1.4.1
-      micromatch: 4.0.5
-
-  /fast-glob@3.3.2:
-    resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
     engines: {node: '>=8.6.0'}
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -8512,7 +8542,7 @@ packages:
     dependencies:
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.3.2
+      fast-glob: 3.3.1
       ignore: 5.3.1
       merge2: 1.4.1
       slash: 3.0.0
@@ -9905,6 +9935,10 @@ packages:
   /long@4.0.0:
     resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}
     dev: false
+
+  /long@5.2.3:
+    resolution: {integrity: sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==}
+    dev: true
 
   /longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -11921,7 +11955,7 @@ packages:
       cosmiconfig: 8.3.6(typescript@5.3.3)
       jiti: 1.21.0
       postcss: 8.4.33
-      semver: 7.5.4
+      semver: 7.6.0
       webpack: 5.90.0
     transitivePeerDependencies:
       - typescript
@@ -14964,7 +14998,7 @@ packages:
       is-yarn-global: 0.4.1
       latest-version: 7.0.0
       pupa: 3.1.0
-      semver: 7.5.4
+      semver: 7.6.0
       semver-diff: 4.0.0
       xdg-basedir: 5.1.0
 
