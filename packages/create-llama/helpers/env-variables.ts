@@ -70,17 +70,14 @@ export const createEnvLocalFile = async (
       {
         name: "EMBEDDING_DIM",
         description: "Dimension of the embedding model to use.",
-        value: "768",
       },
       {
         name: "LLM_TEMPERATURE",
         description: "Temperature for sampling from the model.",
-        value: "0.7",
       },
       {
         name: "LLM_MAX_TOKENS",
         description: "Maximum number of tokens to generate.",
-        value: "100",
       },
       {
         name: "SYSTEM_PROMPT",
