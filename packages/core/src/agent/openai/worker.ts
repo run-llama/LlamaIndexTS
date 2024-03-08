@@ -1,5 +1,3 @@
-// Assuming that the necessary interfaces and classes (like BaseTool, OpenAI, ChatMessage, CallbackManager, etc.) are defined elsewhere
-
 import { randomUUID } from "@llamaindex/env";
 import { Response } from "../../Response.js";
 import type { CallbackManager } from "../../callbacks/CallbackManager.js";
