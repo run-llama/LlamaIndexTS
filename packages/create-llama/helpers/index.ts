@@ -161,7 +161,6 @@ export const installTemplate = async (
       embeddingModel: props.embeddingModel,
       framework: props.framework,
       dataSource: props.dataSource,
-      tools: props.tools ?? [],
     });
 
     if (props.engine === "context") {

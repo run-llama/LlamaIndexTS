@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import path from "path";
-import { Tool } from "./tools";
 import {
   FileSourceConfig,
   TemplateDataSource,
@@ -34,7 +33,6 @@ export const createEnvLocalFile = async (
     embeddingModel?: string;
     framework?: TemplateFramework;
     dataSource?: TemplateDataSource;
-    tools?: Tool[];
   },
 ) => {
   const envFileName = ".env";
@@ -84,34 +82,24 @@ export const createEnvLocalFile = async (
         description: "Maximum number of tokens to generate.",
         value: "100",
       },
+      {
+        name: "SYSTEM_PROMPT",
+        description: `Custom system prompt.
+Example:
+SYSTEM_PROMPT="
+We have provided context information below.
+---------------------
+{context_str}
+---------------------
+Given this information, please answer the question: {query_str}
+"`,
+      },
     ];
 
     // Add the default environment variables for FastAPI
     defaultEnvs.forEach((env) => {
       content += renderEnvVar(env.name, env.description, env.value);
     });
-
-    if (!opts?.tools || opts?.tools.length === 0) {
-      content += renderEnvVar(
-        "SYSTEM_PROMPT",
-        `Customize prompt for chat mode.
-Make sure you understand how the system prompt works before changing it.
-Please check this documentation for more information: https://docs.llamaindex.ai/en/stable/examples/customization/prompts/chat_prompts.html#chat-prompts-customization
-Example: 
-CONTEXT_CHAT_PROMPT="We have provided context information below.
----------------------
-{context_str}
----------------------
-Given this information, please answer the question: {query_str}"`,
-      );
-    } else {
-      content += renderEnvVar(
-        "SYSTEM_PROMPT",
-        `Customize prompt for ReAct Agent.
-Make sure you understand how the system prompt works before changing it.
-Please check the default prompt at https://github.com/run-llama/llama_index/blob/477e0495778388b6c20c5b7aa62fb72dada18fe9/llama-index-core/llama_index/core/agent/react/prompts.py#L7`,
-      );
-    }
 
     if ((opts?.dataSource?.config as FileSourceConfig).useLlamaParse) {
       content += renderEnvVar(
