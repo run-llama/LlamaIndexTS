@@ -80,6 +80,12 @@ export const createEnvLocalFile = async (
         description: "Maximum number of tokens to generate.",
       },
       {
+        name: "TOP_K",
+        description:
+          "The number of similar embeddings to return when retrieving documents.",
+        value: "3",
+      },
+      {
         name: "SYSTEM_PROMPT",
         description: `Custom system prompt.
 Example:

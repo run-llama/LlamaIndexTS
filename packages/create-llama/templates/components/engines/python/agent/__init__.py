@@ -7,18 +7,18 @@ from app.engine.index import get_index
 
 
 def get_chat_engine():
+    system_prompt = os.getenv("SYSTEM_PROMPT")
+    top_k = os.getenv("TOP_K")
     tools = []
 
     # Add query tool
     index = get_index()
-    query_engine = index.as_query_engine(similarity_top_k=3)
+    query_engine = index.as_query_engine(similarity_top_k=top_k)
     query_engine_tool = QueryEngineTool.from_defaults(query_engine=query_engine)
     tools.append(query_engine_tool)
 
     # Add additional tools
     tools += ToolFactory.from_env()
-
-    system_prompt = os.getenv("SYSTEM_PROMPT")
 
     return AgentRunner.from_llm(
         llm=Settings.llm,
