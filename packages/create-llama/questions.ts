@@ -437,7 +437,7 @@ export const askQuestions = async (
       message: "Would you like to set up observability?",
       choices: [
         { title: "No", value: "none" },
-        { title: "OpenTelemetry", value: "OpenTelemetry" },
+        { title: "OpenTelemetry", value: "opentelemetry" },
       ],
       initial: 0,
     });

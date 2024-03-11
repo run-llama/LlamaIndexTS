@@ -146,7 +146,7 @@ export async function createApp({
     )} and learn how to get started.`,
   );
 
-  if (args.observability === "OpenTelemetry") {
+  if (args.observability === "opentelemetry") {
     console.log(
       `\n${yellow("Observability")}: Visit the ${terminalLink(
         "documentation",

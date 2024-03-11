@@ -99,6 +99,27 @@ export const installTSTemplate = async ({
     );
   }
 
+  if (observability === "opentelemetry") {
+    const nextConfigJsonFile = path.join(root, "next.config.json");
+    const nextConfigJson: any = JSON.parse(
+      await fs.readFile(nextConfigJsonFile, "utf8"),
+    );
+
+    nextConfigJson.webpack.modules = {
+      rules: [
+        {
+          test: ".node$",
+          loader: "node-loader",
+        },
+      ],
+    };
+
+    await fs.writeFile(
+      nextConfigJsonFile,
+      JSON.stringify(nextConfigJson, null, 2) + os.EOL,
+    );
+  }
+
   /**
    * Copy the selected chat engine files to the target directory and reference it.
    */
