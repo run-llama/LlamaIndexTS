@@ -4,6 +4,12 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.9.1",
+    "@gxl/epub-parser": "2.0.4",
+    "@notionhq/client": "^2.2.13",
+    "@xenova/transformers": "^2.8.0",
+    "crypto-js": "^4.2.0",
+    "js-tiktoken": "^1.0.8",
     "@anthropic-ai/sdk": "^0.15.0",
     "@aws-crypto/sha256-js": "^5.2.0",
     "@datastax/astra-db-ts": "^0.1.4",

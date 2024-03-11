@@ -4,6 +4,7 @@ import { Document } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { PapaCSVReader } from "./CSVReader.js";
 import { DocxReader } from "./DocxReader.js";
+import { EpubReader } from "./EpubReader.js";
 import { HTMLReader } from "./HTMLReader.js";
 import { ImageReader } from "./ImageReader.js";
 import { MarkdownReader } from "./MarkdownReader.js";
@@ -43,6 +44,7 @@ export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
   docx: new DocxReader(),
   htm: new HTMLReader(),
   html: new HTMLReader(),
+  epub: new EpubReader(),
   jpg: new ImageReader(),
   jpeg: new ImageReader(),
   png: new ImageReader(),

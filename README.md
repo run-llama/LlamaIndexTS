@@ -106,7 +106,7 @@ export const runtime = "nodejs"; // default
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf2json"],
+    serverComponentsExternalPackages: ["pdf2json", "@gxl/epub-parser"],
   },
   webpack: (config) => {
     config.resolve.alias = {
