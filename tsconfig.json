@@ -16,7 +16,9 @@
       "llamaindex": ["./packages/core/src/index.ts"],
       "llamaindex/*": ["./packages/core/src/*.ts"],
       "@llamaindex/env": ["./packages/env/src/index.ts"],
-      "@llamaindex/env/*": ["./packages/env/src/*.ts"]
+      "@llamaindex/env/*": ["./packages/env/src/*.ts"],
+      "@llamaindex/experimental": ["./packages/experimental/src/index.ts"],
+      "@llamaindex/experimental/*": ["./packages/experimental/src/*.ts"]
     }
   },
   "files": [],
@@ -44,6 +46,9 @@
     },
     {
       "path": "./examples/readers"
+    },
+    {
+      "path": "./packages/experimental/tsconfig.json"
     }
   ]
 }

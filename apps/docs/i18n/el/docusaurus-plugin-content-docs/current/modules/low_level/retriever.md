@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Ανάκτηση κόμβων!
-const nodesWithScore = await retriever.retrieve("συμβολοσειρά ερωτήματος");
+const nodesWithScore = await retriever.retrieve({ query: "συμβολοσειρά ερωτήματος" });
 ```
 
 ## Αναφορά API

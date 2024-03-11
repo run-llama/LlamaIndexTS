@@ -61,11 +61,11 @@ export const installTSTemplate = async ({
   ui,
   eslint,
   customApiPath,
-  forBackend,
   vectorDb,
   postInstallAction,
+  backend,
   observability,
-}: InstallTemplateArgs) => {
+}: InstallTemplateArgs & { backend: boolean }) => {
   console.log(bold(`Using ${packageManager}.`));
 
   /**
@@ -83,57 +83,19 @@ export const installTSTemplate = async ({
   });
 
   /**
-   * If the backend is next.js, rename next.config.app.js to next.config.js
-   * If not, rename next.config.static.js to next.config.js
+   * If next.js is not used as a backend, update next.config.js to use static site generation.
    */
-  if (framework == "nextjs" && forBackend === "nextjs") {
-    if (observability === "OpenTelemetry") {
-      const nextConfigO11yPath = path.join(root, "next.config.o11y.js");
-      const nextConfigPath = path.join(root, "next.config.js");
-      await fs.rename(nextConfigO11yPath, nextConfigPath);
-      // delete other next.config files
-      const nextConfigAppPath = path.join(root, "next.config.app.js");
-      const nextConfigStaticPath = path.join(root, "next.config.static.js");
-      await Promise.all([
-        fs.rm(nextConfigAppPath),
-        fs.rm(nextConfigStaticPath),
-      ]);
-    } else {
-      const nextConfigAppPath = path.join(root, "next.config.app.js");
-      const nextConfigPath = path.join(root, "next.config.js");
-      await fs.rename(nextConfigAppPath, nextConfigPath);
-      // delete other next.config files
-      const nextConfigO11yPath = path.join(root, "next.config.o11y.js");
-      const nextConfigStaticPath = path.join(root, "next.config.static.js");
-      await Promise.all([
-        fs.rm(nextConfigO11yPath),
-        fs.rm(nextConfigStaticPath),
-      ]);
-    }
-  } else if (framework == "nextjs" && typeof forBackend === "undefined") {
-    const nextConfigStaticPath = path.join(root, "next.config.static.js");
-    const nextConfigPath = path.join(root, "next.config.js");
-    await fs.rename(nextConfigStaticPath, nextConfigPath);
-    // delete other next.config files
-    const nextConfigO11yPath = path.join(root, "next.config.o11y.js");
-    const nextConfigAppPath = path.join(root, "next.config.app.js");
-    await Promise.all([fs.rm(nextConfigO11yPath), fs.rm(nextConfigAppPath)]);
-  }
-
-  if (observability && observability !== "none") {
-    const chosenObservabilityPath = path.join(
-      templatesDir,
-      "components",
-      "observability",
-      "typescript",
-      observability,
+  if (framework === "nextjs" && !backend) {
+    // update next.config.json for static site generation
+    const nextConfigJsonFile = path.join(root, "next.config.json");
+    const nextConfigJson: any = JSON.parse(
+      await fs.readFile(nextConfigJsonFile, "utf8"),
     );
-    const relativeObservabilityPath = framework === "nextjs" ? "app" : "src";
-
-    await copy(
-      "**",
-      path.join(root, relativeObservabilityPath, "observability"),
-      { cwd: chosenObservabilityPath },
+    nextConfigJson.output = "export";
+    nextConfigJson.images = { unoptimized: true };
+    await fs.writeFile(
+      nextConfigJsonFile,
+      JSON.stringify(nextConfigJson, null, 2) + os.EOL,
     );
   }
 
@@ -251,7 +213,7 @@ export const installTSTemplate = async ({
     };
   }
 
-  if (observability === "OpenTelemetry") {
+  if (observability === "opentelemetry") {
     packageJson.dependencies = {
       ...packageJson.dependencies,
       "@traceloop/node-server-sdk": "^0.5.12",
@@ -276,7 +238,7 @@ export const installTSTemplate = async ({
     JSON.stringify(packageJson, null, 2) + os.EOL,
   );
 
-  if (postInstallAction !== "none") {
+  if (postInstallAction === "runApp" || postInstallAction === "dependencies") {
     await installTSDependencies(packageJson, packageManager, isOnline);
   }
 };

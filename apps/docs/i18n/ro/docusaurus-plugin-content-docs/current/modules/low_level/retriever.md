@@ -13,7 +13,7 @@ const recuperator = vector_index.asRetriever();
 recuperator.similarityTopK = 3;
 
 // Preia nodurile!
-const noduriCuScor = await recuperator.retrieve("șir de interogare");
+const noduriCuScor = await recuperator.retrieve({ query: "șir de interogare" });
 ```
 
 ## Referință API

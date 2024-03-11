@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Отримати вузли!
-const nodesWithScore = await retriever.retrieve("рядок запиту");
+const nodesWithScore = await retriever.retrieve({ query: "рядок запиту" });
 ```
 
 ## Довідник API

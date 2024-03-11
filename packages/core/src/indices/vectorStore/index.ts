@@ -11,7 +11,7 @@ import {
   ObjectType,
   splitNodesByType,
 } from "../../Node.js";
-import type { BaseRetriever } from "../../Retriever.js";
+import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import type { Event } from "../../callbacks/CallbackManager.js";
@@ -426,14 +426,17 @@ export class VectorIndexRetriever implements BaseRetriever {
     this.imageSimilarityTopK = imageSimilarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
   }
 
-  async retrieve(
-    query: string,
-    parentEvent?: Event,
-    preFilters?: MetadataFilters,
-  ): Promise<NodeWithScore[]> {
-    let nodesWithScores = await this.textRetrieve(query, preFilters);
+  async retrieve({
+    query,
+    parentEvent,
+    preFilters,
+  }: RetrieveParams): Promise<NodeWithScore[]> {
+    let nodesWithScores = await this.textRetrieve(
+      query,
+      preFilters as MetadataFilters,
+    );
     nodesWithScores = nodesWithScores.concat(
-      await this.textToImageRetrieve(query, preFilters),
+      await this.textToImageRetrieve(query, preFilters as MetadataFilters),
     );
     this.sendEvent(query, nodesWithScores, parentEvent);
     return nodesWithScores;

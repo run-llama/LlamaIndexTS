@@ -3,7 +3,7 @@ import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
 import type { BaseNodePostprocessor } from "../postprocessors/types.js";
 import type { BaseSynthesizer } from "../synthesizers/types.js";
 import type { BaseQueryEngine } from "../types.js";
-import type { RetrieveParams } from "./LlamaCloudRetriever.js";
+import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
 import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
 import type { CloudConstructorParams } from "./types.js";
 
@@ -14,7 +14,7 @@ export class LlamaCloudIndex {
     this.params = params;
   }
 
-  asRetriever(params: RetrieveParams = {}): BaseRetriever {
+  asRetriever(params: CloudRetrieveParams = {}): BaseRetriever {
     return new LlamaCloudRetriever({ ...this.params, ...params });
   }
 
@@ -23,7 +23,7 @@ export class LlamaCloudIndex {
       responseSynthesizer?: BaseSynthesizer;
       preFilters?: unknown;
       nodePostprocessors?: BaseNodePostprocessor[];
-    } & RetrieveParams,
+    } & CloudRetrieveParams,
   ): BaseQueryEngine {
     const retriever = new LlamaCloudRetriever({
       ...this.params,

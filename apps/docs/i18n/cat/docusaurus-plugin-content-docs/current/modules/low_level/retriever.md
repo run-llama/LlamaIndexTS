@@ -13,7 +13,7 @@ const recuperador = vector_index.asRetriever();
 recuperador.similarityTopK = 3;
 
 // Obteniu els nodes!
-const nodesAmbPuntuació = await recuperador.retrieve("cadena de consulta");
+const nodesAmbPuntuació = await recuperador.retrieve({ query: "cadena de consulta" });
 ```
 
 ## Referència de l'API

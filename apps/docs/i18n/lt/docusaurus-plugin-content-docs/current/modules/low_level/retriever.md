@@ -13,7 +13,7 @@ const gavėjas = vector_index.asRetriever();
 gavėjas.similarityTopK = 3;
 
 // Išgaunami mazgai!
-const mazgaiSuRezultatu = await gavėjas.retrieve("užklausos eilutė");
+const mazgaiSuRezultatu = await gavėjas.retrieve({ query: "užklausos eilutė" });
 ```
 
 ## API nuorodos (API Reference)

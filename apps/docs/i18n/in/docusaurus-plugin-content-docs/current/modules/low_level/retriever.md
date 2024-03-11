@@ -13,7 +13,7 @@ const retriever = vector_index.asRetriever();
 retriever.similarityTopK = 3;
 
 // Mengambil node!
-const nodesWithScore = await retriever.retrieve("string query");
+const nodesWithScore = await retriever.retrieve({ query: "string query" });
 ```
 
 ## Referensi API

@@ -11,6 +11,7 @@ import fs from "fs";
 import terminalLink from "terminal-link";
 import type { InstallTemplateArgs } from "./helpers";
 import { installTemplate } from "./helpers";
+import { writeDevcontainer } from "./helpers/devcontainer";
 import { templatesDir } from "./helpers/dir";
 import { toolsRequireConfig } from "./helpers/tools";
 
@@ -114,7 +115,7 @@ export async function createApp({
       path.join(root, "README.md"),
     );
   } else {
-    await installTemplate({ ...args, backend: true, forBackend: framework });
+    await installTemplate({ ...args, backend: true });
   }
 
   process.chdir(root);
@@ -122,6 +123,8 @@ export async function createApp({
     console.log("Initialized a git repository.");
     console.log();
   }
+
+  await writeDevcontainer(root, templatesDir, framework, frontend);
 
   if (toolsRequireConfig(tools)) {
     console.log(
