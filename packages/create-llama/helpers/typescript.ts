@@ -61,10 +61,10 @@ export const installTSTemplate = async ({
   ui,
   eslint,
   customApiPath,
-  forBackend,
   vectorDb,
   postInstallAction,
-}: InstallTemplateArgs) => {
+  backend,
+}: InstallTemplateArgs & { backend: boolean }) => {
   console.log(bold(`Using ${packageManager}.`));
 
   /**
@@ -82,23 +82,20 @@ export const installTSTemplate = async ({
   });
 
   /**
-   * If the backend is next.js, rename next.config.app.js to next.config.js
-   * If not, rename next.config.static.js to next.config.js
+   * If next.js is not used as a backend, update next.config.js to use static site generation.
    */
-  if (framework == "nextjs" && forBackend === "nextjs") {
-    const nextConfigAppPath = path.join(root, "next.config.app.js");
-    const nextConfigPath = path.join(root, "next.config.js");
-    await fs.rename(nextConfigAppPath, nextConfigPath);
-    // delete next.config.static.js
-    const nextConfigStaticPath = path.join(root, "next.config.static.js");
-    await fs.rm(nextConfigStaticPath);
-  } else if (framework == "nextjs" && typeof forBackend === "undefined") {
-    const nextConfigStaticPath = path.join(root, "next.config.static.js");
-    const nextConfigPath = path.join(root, "next.config.js");
-    await fs.rename(nextConfigStaticPath, nextConfigPath);
-    // delete next.config.app.js
-    const nextConfigAppPath = path.join(root, "next.config.app.js");
-    await fs.rm(nextConfigAppPath);
+  if (framework === "nextjs" && !backend) {
+    // update next.config.json for static site generation
+    const nextConfigJsonFile = path.join(root, "next.config.json");
+    const nextConfigJson: any = JSON.parse(
+      await fs.readFile(nextConfigJsonFile, "utf8"),
+    );
+    nextConfigJson.output = "export";
+    nextConfigJson.images = { unoptimized: true };
+    await fs.writeFile(
+      nextConfigJsonFile,
+      JSON.stringify(nextConfigJson, null, 2) + os.EOL,
+    );
   }
 
   /**
