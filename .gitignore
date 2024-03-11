@@ -45,6 +45,7 @@ playwright-report/
 blob-report/
 playwright/.cache/
 .tsbuildinfo
+packages/create-llama/e2e/cache
 
 # intellij
 **/.idea
