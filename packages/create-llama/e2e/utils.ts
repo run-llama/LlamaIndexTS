@@ -175,7 +175,7 @@ export async function runCreateLlama(
 }
 
 export async function createTestDir() {
-  const cwd = path.join(__dirname, ".cache", crypto.randomUUID());
+  const cwd = path.join(__dirname, "cache", crypto.randomUUID());
   await mkdir(cwd, { recursive: true });
   return cwd;
 }
