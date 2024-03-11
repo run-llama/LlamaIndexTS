@@ -113,7 +113,7 @@ export async function createApp({
       path.join(root, "README.md"),
     );
   } else {
-    await installTemplate({ ...args, backend: true, forBackend: framework });
+    await installTemplate({ ...args, backend: true });
   }
 
   process.chdir(root);

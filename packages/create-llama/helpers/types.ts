@@ -41,7 +41,6 @@ export interface InstallTemplateArgs {
   customApiPath?: string;
   openAiKey?: string;
   llamaCloudKey?: string;
-  forBackend?: string;
   model: string;
   embeddingModel: string;
   communityProjectPath?: string;
