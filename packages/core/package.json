@@ -57,6 +57,18 @@
   "types": "./dist/type/index.d.ts",
   "main": "./dist/cjs/index.js",
   "exports": {
+    "./readers": {
+      "edge-light": {
+        "types": "./dist/type/readers/index.d.ts",
+        "default": "./dist/readers/index.edge-light.js"
+      }
+    },
+    "./storage": {
+      "edge-light": {
+        "types": "./dist/type/storage/index.d.ts",
+        "default": "./dist/storage/index.edge-light.js"
+      }
+    },
     ".": {
       "import": {
         "types": "./dist/type/index.d.ts",
