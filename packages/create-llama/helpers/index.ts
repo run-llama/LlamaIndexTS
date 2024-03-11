@@ -7,7 +7,7 @@ import { cyan } from "picocolors";
 
 import { COMMUNITY_OWNER, COMMUNITY_REPO } from "./constant";
 import { templatesDir } from "./dir";
-import { createEnvLocalFile } from "./env-variables";
+import { createBackendEnvFile, createFrontendEnvFile } from "./env-variables";
 import { PackageManager } from "./get-pkg-manager";
 import { installLlamapackProject } from "./llama-pack";
 import { isHavingPoetryLockFile, tryPoetryRun } from "./poetry";
@@ -153,7 +153,7 @@ export const installTemplate = async (
     // This is a backend, so we need to copy the test data and create the env file.
 
     // Copy the environment file to the target directory.
-    await createEnvLocalFile(props.root, {
+    await createBackendEnvFile(props.root, {
       openAiKey: props.openAiKey,
       llamaCloudKey: props.llamaCloudKey,
       vectorDb: props.vectorDb,
@@ -161,6 +161,7 @@ export const installTemplate = async (
       embeddingModel: props.embeddingModel,
       framework: props.framework,
       dataSource: props.dataSource,
+      port: props.externalPort,
     });
 
     if (props.engine === "context") {
@@ -181,8 +182,10 @@ export const installTemplate = async (
     }
   } else {
     // this is a frontend for a full-stack app, create .env file with model information
-    const content = `MODEL=${props.model}\nNEXT_PUBLIC_MODEL=${props.model}\n`;
-    await fs.writeFile(path.join(props.root, ".env"), content);
+    createFrontendEnvFile(props.root, {
+      model: props.model,
+      customApiPath: props.customApiPath,
+    });
   }
 };
 

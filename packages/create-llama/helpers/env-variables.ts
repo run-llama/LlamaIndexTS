@@ -23,9 +23,9 @@ const renderEnvVar = (
   return content;
 };
 
-export const createEnvLocalFile = async (
+export const createBackendEnvFile = async (
   root: string,
-  opts?: {
+  opts: {
     openAiKey?: string;
     llamaCloudKey?: string;
     vectorDb?: TemplateVectorDB;
@@ -33,23 +33,24 @@ export const createEnvLocalFile = async (
     embeddingModel?: string;
     framework?: TemplateFramework;
     dataSource?: TemplateDataSource;
+    port?: number;
   },
 ) => {
   const envFileName = ".env";
   let content = "";
 
-  const model = opts?.model || "gpt-3.5-turbo";
+  const model = opts.model || "gpt-3.5-turbo";
   content += `MODEL=${model}\n`;
-  if (opts?.framework === "nextjs") {
+  if (opts.framework === "nextjs") {
     content += `NEXT_PUBLIC_MODEL=${model}\n`;
   }
   console.log("\nUsing OpenAI model: ", model, "\n");
 
-  if (opts?.openAiKey) {
+  if (opts.openAiKey) {
     content += `OPENAI_API_KEY=${opts?.openAiKey}\n`;
   }
 
-  if (opts?.framework === "fastapi") {
+  if (opts.framework === "fastapi") {
     //  Default environment variables for FastAPI
     const defaultEnvs = [
       {
@@ -60,12 +61,12 @@ export const createEnvLocalFile = async (
       {
         name: "APP_PORT",
         description: "The port to start the backend app.",
-        value: "8000",
+        value: opts.port?.toString() || "8000",
       },
       {
         name: "EMBEDDING_MODEL",
         description: "Name of the embedding model to use.",
-        value: opts?.embeddingModel,
+        value: opts.embeddingModel,
       },
       {
         name: "EMBEDDING_DIM",
@@ -109,12 +110,12 @@ Given this information, please answer the question: {query_str}
         "LLAMA_CLOUD_API_KEY",
         `Please obtain the Llama Cloud API key from https://cloud.llamaindex.ai/api-key 
 and set it to the LLAMA_CLOUD_API_KEY variable below. `,
-        opts?.llamaCloudKey,
+        opts.llamaCloudKey,
       );
     }
   }
 
-  switch (opts?.vectorDb) {
+  switch (opts.vectorDb) {
     case "mongo": {
       content += `# For generating a connection URI, see https://www.mongodb.com/docs/guides/atlas/connection-string\n`;
       content += `MONGO_URI=\n`;
@@ -136,9 +137,9 @@ and set it to the LLAMA_CLOUD_API_KEY variable below. `,
     }
   }
 
-  switch (opts?.dataSource?.type) {
+  switch (opts.dataSource?.type) {
     case "web": {
-      const webConfig = opts?.dataSource.config as WebSourceConfig;
+      const webConfig = opts.dataSource.config as WebSourceConfig;
       content += `# web loader config\n`;
       content += `BASE_URL=${webConfig.baseUrl}\n`;
       content += `URL_PREFIX=${webConfig.baseUrl}\n`;
@@ -151,4 +152,38 @@ and set it to the LLAMA_CLOUD_API_KEY variable below. `,
     await fs.writeFile(path.join(root, envFileName), content);
     console.log(`Created '${envFileName}' file. Please check the settings.`);
   }
+};
+
+export const createFrontendEnvFile = async (
+  root: string,
+  opts: {
+    customApiPath?: string;
+    model?: string;
+  },
+) => {
+  const defaultFrontendEnv = [
+    {
+      name: "MODEL",
+      description: "The OpenAI model to use.",
+      value: opts.model,
+    },
+    {
+      name: "NEXT_PUBLIC_MODEL",
+      description: "The OpenAI model to use (hardcode to front-end artifact).",
+      value: opts.model,
+    },
+    {
+      name: "NEXT_PUBLIC_CHAT_API",
+      description: "The backend API for chat endpoint.",
+      value: opts.customApiPath
+        ? opts.customApiPath
+        : "http://localhost:8000/api/chat",
+    },
+  ];
+  const content = defaultFrontendEnv.reduce(
+    (acc, env) => acc + renderEnvVar(env.name, env.description, env.value),
+    "",
+  );
+
+  await fs.writeFile(path.join(root, ".env"), content);
 };
