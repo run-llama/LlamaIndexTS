@@ -5,6 +5,7 @@ import {
   ToolParameterPropertyRecord,
   ToolParameters,
 } from "../base";
+import { http } from "../libs";
 
 export const defaultMetadata: ToolMetadata = new ToolMetadata(
   "Test Tool",
@@ -29,12 +30,24 @@ export class Tool extends BaseTool {
   }
 
   call(query: string): string {
+    const headers = new Map<string, string>();
+
+    let result: string = "";
+    http.get(
+      "https://jsonplaceholder.typicode.com/todos/1",
+      headers,
+      (res: string) => {
+        result += res;
+      },
+    );
+
     return (
       "Tool: " +
       this.metadata.name +
       "\nQuery: " +
       query +
-      " \n>> Result show here..."
+      " \n>> Result: " +
+      result
     );
   }
 }

@@ -1,6 +1,8 @@
 // @ts-ignore
 import AsBind from "as-bind/dist/as-bind.cjs.js";
 import fs from "fs";
+// @ts-ignore
+import HTTPImport from "./libs/http-import.js"; // TODO: test with js first then convert to ts
 
 type ToolParameters = {
   type: string | "object";
@@ -144,11 +146,21 @@ export default class ToolFactory {
     };
   }
 
-  private static getToolConfigs = (toolFilePath: string): BaseTool => {
+  private static initWasmInstanceFromFile = (filePath: string) => {
     const wasmFile = fs.readFileSync(
-      `node_modules/@llamaindex/tools/dist/${toolFilePath}.wasm`,
+      `node_modules/@llamaindex/tools/dist/${filePath}.wasm`,
     );
-    const wasmInstance = AsBind.instantiateSync(wasmFile);
+    const http = new HTTPImport();
+    const imports = {
+      ...http.wasmImports,
+    };
+    const wasmInstance = AsBind.instantiateSync(wasmFile, imports);
+    http.wasmExports = wasmInstance.exports;
+    return wasmInstance;
+  };
+
+  private static getToolConfigs = (filePath: string): BaseTool => {
+    const wasmInstance = this.initWasmInstanceFromFile(filePath);
     const toolConfigs = this.wasmInstanceToConfigs(wasmInstance);
     return toolConfigs;
   };

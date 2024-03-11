@@ -8,7 +8,7 @@ const tools = readdirSync("assembly").filter((dir) => !dir.includes("."));
 tools.forEach((tool) => {
   try {
     execSync(
-      `asc assembly/${tool}/index.ts -o dist/${tool}.wasm -t dist/${tool}.wat --exportRuntime --transform as-bind --target release`,
+      `asc assembly/${tool}/index.ts -o dist/${tool}.wasm -t dist/${tool}.wat --exportTable --exportRuntime --transform as-bind --target release`,
     );
   } catch (error) {
     console.error(`Error compiling module ${tool}:`, error.message);
