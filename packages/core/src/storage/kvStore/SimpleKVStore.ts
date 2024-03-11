@@ -1,19 +1,18 @@
-import * as _ from "lodash";
-import * as path from "path";
-import { GenericFileSystem, exists } from "../FileSystem";
-import { DEFAULT_COLLECTION, DEFAULT_FS } from "../constants";
-import { BaseKVStore } from "./types";
+import type { GenericFileSystem } from "@llamaindex/env";
+import { defaultFS, path } from "@llamaindex/env";
+import _ from "lodash";
+import { exists } from "../FileSystem.js";
+import { DEFAULT_COLLECTION } from "../constants.js";
+import { BaseKVStore } from "./types.js";
 
 export type DataType = Record<string, Record<string, any>>;
 
 export class SimpleKVStore extends BaseKVStore {
-  private data: DataType;
   private persistPath: string | undefined;
   private fs: GenericFileSystem | undefined;
 
-  constructor(data?: DataType) {
+  constructor(private data: DataType = {}) {
     super();
-    this.data = data || {};
   }
 
   async put(
@@ -35,7 +34,7 @@ export class SimpleKVStore extends BaseKVStore {
     key: string,
     collection: string = DEFAULT_COLLECTION,
   ): Promise<any> {
-    let collectionData = this.data[collection];
+    const collectionData = this.data[collection];
     if (_.isNil(collectionData)) {
       return null;
     }
@@ -55,15 +54,20 @@ export class SimpleKVStore extends BaseKVStore {
   ): Promise<boolean> {
     if (key in this.data[collection]) {
       delete this.data[collection][key];
+      if (this.persistPath) {
+        await this.persist(this.persistPath, this.fs);
+      }
       return true;
     }
     return false;
   }
 
-  async persist(persistPath: string, fs?: GenericFileSystem): Promise<void> {
-    fs = fs || DEFAULT_FS;
+  async persist(
+    persistPath: string,
+    fs: GenericFileSystem = defaultFS,
+  ): Promise<void> {
     // TODO: decide on a way to polyfill path
-    let dirPath = path.dirname(persistPath);
+    const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
@@ -72,17 +76,16 @@ export class SimpleKVStore extends BaseKVStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs?: GenericFileSystem,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleKVStore> {
-    fs = fs || DEFAULT_FS;
-    let dirPath = path.dirname(persistPath);
+    const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
     }
 
     let data: DataType = {};
     try {
-      let fileData = await fs.readFile(persistPath);
+      const fileData = await fs.readFile(persistPath);
       data = JSON.parse(fileData.toString());
     } catch (e) {
       console.error(

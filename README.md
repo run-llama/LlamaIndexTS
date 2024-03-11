@@ -1,10 +1,19 @@
 # LlamaIndex.TS
 
+[![NPM Version](https://img.shields.io/npm/v/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![NPM License](https://img.shields.io/npm/l/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![NPM Downloads](https://img.shields.io/npm/dm/llamaindex)](https://www.npmjs.com/package/llamaindex)
+[![Discord](https://img.shields.io/discord/1059199217496772688)](https://discord.com/invite/eN6D2HQ4aX)
+
 LlamaIndex is a data framework for your LLM application.
 
 Use your own data with large language models (LLMs, OpenAI ChatGPT and others) in Typescript and Javascript.
 
 Documentation: https://ts.llamaindex.ai/
+
+Try examples online:
+
+[![Open in Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples)
 
 ## What is LlamaIndex.TS?
 
@@ -12,7 +21,7 @@ LlamaIndex.TS aims to be a lightweight, easy to use set of libraries to help you
 
 ## Getting started with an example:
 
-LlamaIndex.TS requries Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
+LlamaIndex.TS requires Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
 
 In a new folder:
 
@@ -47,9 +56,9 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(
-    "What did the author do in college?",
-  );
+  const response = await queryEngine.query({
+    query: "What did the author do in college?",
+  });
 
   // Output response
   console.log(response.toString());
@@ -61,7 +70,7 @@ main();
 Then you can run it using
 
 ```bash
-pnpx ts-node example.ts
+pnpm dlx ts-node example.ts
 ```
 
 ## Playground
@@ -86,7 +95,7 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 ## Note: NextJS:
 
-If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the follow config to your next.config.js to have it use imports/exports in the same way Node does.
+If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the following config to your next.config.js to have it use imports/exports in the same way Node does.
 
 ```js
 export const runtime = "nodejs"; // default
@@ -97,7 +106,15 @@ export const runtime = "nodejs"; // default
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse", "@gxl/epub-parser"], // Puts pdf-parse and @gxl/epub-parser in actual NodeJS mode with NextJS App Router
+    serverComponentsExternalPackages: ["pdf2json", "@gxl/epub-parser"],
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      sharp$: false,
+      "onnxruntime-node$": false,
+    };
+    return config;
   },
 };
 
@@ -108,7 +125,10 @@ module.exports = nextConfig;
 
 - OpenAI GPT-3.5-turbo and GPT-4
 - Anthropic Claude Instant and Claude 2
+- Groq LLMs
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
+- MistralAI Chat LLMs
+- Fireworks Chat LLMs
 
 ## Contributing:
 

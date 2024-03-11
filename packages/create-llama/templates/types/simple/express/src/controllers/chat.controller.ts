@@ -1,12 +1,31 @@
-import { NextFunction, Request, Response } from "express";
-import { ChatMessage, OpenAI } from "llamaindex";
+import { Request, Response } from "express";
+import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
 import { createChatEngine } from "./engine";
 
-export const chat = async (req: Request, res: Response, next: NextFunction) => {
+const convertMessageContent = (
+  textMessage: string,
+  imageUrl: string | undefined,
+): MessageContent => {
+  if (!imageUrl) return textMessage;
+  return [
+    {
+      type: "text",
+      text: textMessage,
+    },
+    {
+      type: "image_url",
+      image_url: {
+        url: imageUrl,
+      },
+    },
+  ];
+};
+
+export const chat = async (req: Request, res: Response) => {
   try {
-    const { messages }: { messages: ChatMessage[] } = JSON.parse(req.body);
-    const lastMessage = messages.pop();
-    if (!messages || !lastMessage || lastMessage.role !== "user") {
+    const { messages, data }: { messages: ChatMessage[]; data: any } = req.body;
+    const userMessage = messages.pop();
+    if (!messages || !userMessage || userMessage.role !== "user") {
       return res.status(400).json({
         error:
           "messages are required in the request body and the last message must be from the user",
@@ -14,12 +33,23 @@ export const chat = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const llm = new OpenAI({
-      model: "gpt-3.5-turbo",
+      model: process.env.MODEL || "gpt-3.5-turbo",
     });
+
+    // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
+    // Note: The non-streaming template does not need the Vercel/AI format, we're still using it for consistency with the streaming template
+    const userMessageContent = convertMessageContent(
+      userMessage.content,
+      data?.imageUrl,
+    );
 
     const chatEngine = await createChatEngine(llm);
 
-    const response = await chatEngine.chat(lastMessage.content, messages);
+    // Calling LlamaIndex's ChatEngine to get a response
+    const response = await chatEngine.chat({
+      message: userMessageContent,
+      messages,
+    });
     const result: ChatMessage = {
       role: "assistant",
       content: response.response,

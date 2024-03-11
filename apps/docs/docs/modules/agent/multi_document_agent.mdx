@@ -1,0 +1,314 @@
+# Multi-Document Agent
+
+In this guide, you learn towards setting up an agent that can effectively answer different types of questions over a larger set of documents.
+
+These questions include the following
+
+- QA over a specific doc
+- QA comparing different docs
+- Summaries over a specific doc
+- Comparing summaries between different docs
+
+We do this with the following architecture:
+
+- setup a “document agent” over each Document: each doc agent can do QA/summarization within its doc
+- setup a top-level agent over this set of document agents. Do tool retrieval and then do CoT over the set of tools to answer a question.
+
+## Setup and Download Data
+
+We first start by installing the necessary libraries and downloading the data.
+
+```bash
+pnpm i llamaindex
+```
+
+```ts
+import {
+  Document,
+  ObjectIndex,
+  OpenAI,
+  OpenAIAgent,
+  QueryEngineTool,
+  SimpleNodeParser,
+  SimpleToolNodeMapping,
+  SummaryIndex,
+  VectorStoreIndex,
+  serviceContextFromDefaults,
+  storageContextFromDefaults,
+} from "llamaindex";
+```
+
+And then for the data we will run through a list of countries and download the wikipedia page for each country.
+
+```ts
+import fs from "fs";
+import path from "path";
+
+const dataPath = path.join(__dirname, "tmp_data");
+
+const extractWikipediaTitle = async (title: string) => {
+  const fileExists = fs.existsSync(path.join(dataPath, `${title}.txt`));
+
+  if (fileExists) {
+    console.log(`File already exists for the title: ${title}`);
+    return;
+  }
+
+  const queryParams = new URLSearchParams({
+    action: "query",
+    format: "json",
+    titles: title,
+    prop: "extracts",
+    explaintext: "true",
+  });
+
+  const url = `https://en.wikipedia.org/w/api.php?${queryParams}`;
+
+  const response = await fetch(url);
+  const data: any = await response.json();
+
+  const pages = data.query.pages;
+  const page = pages[Object.keys(pages)[0]];
+  const wikiText = page.extract;
+
+  await new Promise((resolve) => {
+    fs.writeFile(path.join(dataPath, `${title}.txt`), wikiText, (err: any) => {
+      if (err) {
+        console.error(err);
+        resolve(title);
+        return;
+      }
+      console.log(`${title} stored in file!`);
+
+      resolve(title);
+    });
+  });
+};
+```
+
+```ts
+export const extractWikipedia = async (titles: string[]) => {
+  if (!fs.existsSync(dataPath)) {
+    fs.mkdirSync(dataPath);
+  }
+
+  for await (const title of titles) {
+    await extractWikipediaTitle(title);
+  }
+
+  console.log("Extration finished!");
+```
+
+These files will be saved in the `tmp_data` folder.
+
+Now we can call the function to download the data for each country.
+
+```ts
+await extractWikipedia([
+  "Brazil",
+  "United States",
+  "Canada",
+  "Mexico",
+  "Argentina",
+  "Chile",
+  "Colombia",
+  "Peru",
+  "Venezuela",
+  "Ecuador",
+  "Bolivia",
+  "Paraguay",
+  "Uruguay",
+  "Guyana",
+  "Suriname",
+  "French Guiana",
+  "Falkland Islands",
+]);
+```
+
+## Load the data
+
+Now that we have the data, we can load it into the LlamaIndex and store as a document.
+
+```ts
+import { Document } from "llamaindex";
+
+const countryDocs: Record<string, Document> = {};
+
+for (const title of wikiTitles) {
+  const path = `./agent/helpers/tmp_data/${title}.txt`;
+  const text = await fs.readFile(path, "utf-8");
+  const document = new Document({ text: text, id_: path });
+  countryDocs[title] = document;
+}
+```
+
+## Setup LLM and StorageContext
+
+We will be using gpt-4 for this example and we will use the `StorageContext` to store the documents in-memory.
+
+```ts
+const llm = new OpenAI({
+  model: "gpt-4",
+});
+
+const ctx = serviceContextFromDefaults({ llm });
+
+const storageContext = await storageContextFromDefaults({
+  persistDir: "./storage",
+});
+```
+
+## Building Multi-Document Agents
+
+In this section we show you how to construct the multi-document agent. We first build a document agent for each document, and then define the top-level parent agent with an object index.
+
+```ts
+const documentAgents: Record<string, any> = {};
+const queryEngines: Record<string, any> = {};
+```
+
+Now we iterate over each country and create a document agent for each one.
+
+### Build Agent for each Document
+
+In this section we define “document agents” for each document.
+
+We define both a vector index (for semantic search) and summary index (for summarization) for each document. The two query engines are then converted into tools that are passed to an OpenAI function calling agent.
+
+This document agent can dynamically choose to perform semantic search or summarization within a given document.
+
+We create a separate document agent for each coutnry.
+
+```ts
+for (const title of wikiTitles) {
+  // parse the document into nodes
+  const nodes = new SimpleNodeParser({
+    chunkSize: 200,
+    chunkOverlap: 20,
+  }).getNodesFromDocuments([countryDocs[title]]);
+
+  // create the vector index for specific search
+  const vectorIndex = await VectorStoreIndex.init({
+    serviceContext: serviceContext,
+    storageContext: storageContext,
+    nodes,
+  });
+
+  // create the summary index for broader search
+  const summaryIndex = await SummaryIndex.init({
+    serviceContext: serviceContext,
+    nodes,
+  });
+
+  const vectorQueryEngine = summaryIndex.asQueryEngine();
+  const summaryQueryEngine = summaryIndex.asQueryEngine();
+
+  // create the query engines for each task
+  const queryEngineTools = [
+    new QueryEngineTool({
+      queryEngine: vectorQueryEngine,
+      metadata: {
+        name: "vector_tool",
+        description: `Useful for questions related to specific aspects of ${title} (e.g. the history, arts and culture, sports, demographics, or more).`,
+      },
+    }),
+    new QueryEngineTool({
+      queryEngine: summaryQueryEngine,
+      metadata: {
+        name: "summary_tool",
+        description: `Useful for any requests that require a holistic summary of EVERYTHING about ${title}. For questions about more specific sections, please use the vector_tool.`,
+      },
+    }),
+  ];
+
+  // create the document agent
+  const agent = new OpenAIAgent({
+    tools: queryEngineTools,
+    llm,
+    verbose: true,
+  });
+
+  documentAgents[title] = agent;
+  queryEngines[title] = vectorIndex.asQueryEngine();
+}
+```
+
+## Build Top-Level Agent
+
+Now we define the top-level agent that can answer questions over the set of document agents.
+
+This agent takes in all document agents as tools. This specific agent RetrieverOpenAIAgent performs tool retrieval before tool use (unlike a default agent that tries to put all tools in the prompt).
+
+Here we use a top-k retriever, but we encourage you to customize the tool retriever method!
+
+Firstly, we create a tool for each document agent
+
+```ts
+const allTools: QueryEngineTool[] = [];
+```
+
+```ts
+for (const title of wikiTitles) {
+  const wikiSummary = `
+    This content contains Wikipedia articles about ${title}.
+    Use this tool if you want to answer any questions about ${title}
+  `;
+
+  const docTool = new QueryEngineTool({
+    queryEngine: documentAgents[title],
+    metadata: {
+      name: `tool_${title}`,
+      description: wikiSummary,
+    },
+  });
+
+  allTools.push(docTool);
+}
+```
+
+Our top level agent will use this document agents as tools and use toolRetriever to retrieve the best tool to answer a question.
+
+```ts
+// map the tools to nodes
+const toolMapping = SimpleToolNodeMapping.fromObjects(allTools);
+
+// create the object index
+const objectIndex = await ObjectIndex.fromObjects(
+  allTools,
+  toolMapping,
+  VectorStoreIndex,
+  {
+    serviceContext,
+    storageContext,
+  },
+);
+
+// create the top agent
+const topAgent = new OpenAIAgent({
+  toolRetriever: await objectIndex.asRetriever({}),
+  llm,
+  verbose: true,
+  prefixMessages: [
+    {
+      content:
+        "You are an agent designed to answer queries about a set of given countries. Please always use the tools provided to answer a question. Do not rely on prior knowledge.",
+      role: "system",
+    },
+  ],
+});
+```
+
+## Use the Agent
+
+Now we can use the agent to answer questions.
+
+```ts
+const response = await topAgent.chat({
+  message: "Tell me the differences between Brazil and Canada economics?",
+});
+
+// print output
+console.log(response);
+```
+
+You can find the full code for this example [here](https://github.com/run-llama/LlamaIndexTS/tree/main/examples/agent/multi-document-agent.ts)

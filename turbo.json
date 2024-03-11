@@ -6,8 +6,12 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]
     },
-    "lint": {},
-    "test": {},
+    "lint": {
+      "inputs": ["packages/eslint-config-custom"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

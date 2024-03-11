@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "./lib",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo",
+    "incremental": true,
+    "composite": true,
+    "paths": {
+      "llamaindex": ["./packages/core/src/index.ts"],
+      "llamaindex/*": ["./packages/core/src/*.ts"],
+      "@llamaindex/env": ["./packages/env/src/index.ts"],
+      "@llamaindex/env/*": ["./packages/env/src/*.ts"],
+      "@llamaindex/experimental": ["./packages/experimental/src/index.ts"],
+      "@llamaindex/experimental/*": ["./packages/experimental/src/*.ts"]
+    }
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/docs/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/tests/tsconfig.json"
+    },
+    {
+      "path": "./packages/env/tsconfig.json"
+    },
+    {
+      "path": "./packages/create-llama"
+    },
+    {
+      "path": "./packages/create-llama/e2e"
+    },
+    {
+      "path": "./examples"
+    },
+    {
+      "path": "./examples/readers"
+    },
+    {
+      "path": "./packages/experimental/tsconfig.json"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ Right now there are two packages of importance:
 
 packages/core which is the main NPM library llamaindex
 
-apps/simple is where the demo code lives
+examples is where the demo code lives
 
 ### Turborepo docs
 
@@ -47,7 +47,7 @@ We use Jest https://jestjs.io/ to write our test cases. Jest comes with a bunch 
 
 ### Demo applications
 
-There is an existing ["simple"](/apps/simple/README.md) demos folder with mainly NodeJS scripts. Feel free to add additional demos to that folder. If you would like to try out your changes in the core package with a new demo, you need to run the build command in the README.
+There is an existing ["example"](/examples/README.md) demos folder with mainly NodeJS scripts. Feel free to add additional demos to that folder. If you would like to try out your changes in the core package with a new demo, you need to run the build command in the README.
 
 You can create new demo applications in the apps folder. Just run pnpm init in the folder after you create it to create its own package.json
 
@@ -56,7 +56,7 @@ You can create new demo applications in the apps folder. Just run pnpm init in t
 To install packages for a specific package or demo application, run
 
 ```
-pnpm add [NPM Package] --filter [package or application i.e. core or simple]
+pnpm add [NPM Package] --filter [package or application i.e. core or docs]
 ```
 
 To install packages for every package or application run
@@ -78,3 +78,15 @@ pnpm start
 That should start a webserver which will serve the docs on https://localhost:3000
 
 Any changes you make should be reflected in the browser. If you need to regenerate the API docs and find that your TSDoc isn't getting the updates, feel free to remove apps/docs/api. It will automatically regenerate itself when you run pnpm start again.
+
+## Publishing
+
+To publish a new version of the library, run
+
+```shell
+pnpm new-llamaindex
+pnpm new-create-llama
+pnpm release
+git push # push to the main branch
+git push --tags
+```

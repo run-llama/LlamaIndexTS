@@ -1,7 +1,11 @@
 import { encodingForModel } from "js-tiktoken";
 
-import { v4 as uuidv4 } from "uuid";
-import { Event, EventTag, EventType } from "./callbacks/CallbackManager";
+import { randomUUID } from "@llamaindex/env";
+import type {
+  Event,
+  EventTag,
+  EventType,
+} from "./callbacks/CallbackManager.js";
 
 export enum Tokenizers {
   CL100K_BASE = "cl100k_base",
@@ -32,7 +36,7 @@ class GlobalsHelper {
     };
   }
 
-  tokenizer(encoding?: string) {
+  tokenizer(encoding?: Tokenizers) {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
@@ -43,7 +47,7 @@ class GlobalsHelper {
     return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
   }
 
-  tokenizerDecoder(encoding?: string) {
+  tokenizerDecoder(encoding?: Tokenizers) {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
@@ -64,7 +68,7 @@ class GlobalsHelper {
     tags?: EventTag[];
   }): Event {
     return {
-      id: uuidv4(),
+      id: randomUUID(),
       type,
       // inherit parent tags if tags not set
       tags: tags || parentEvent?.tags,

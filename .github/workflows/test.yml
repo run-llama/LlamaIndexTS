@@ -7,18 +7,69 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
-
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
       - name: Install dependencies
-        run: |
-          npm i -g pnpm
-          pnpm install
-
+        run: pnpm install
       - name: Run tests
         run: pnpm run test
+  typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build --filter llamaindex
+      - name: Run Type Check
+        run: pnpm run type-check
+      - name: Run Circular Dependency Check
+        run: pnpm run circular-check
+        working-directory: ./packages/core
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: typecheck-build-dist
+          path: ./packages/core/dist
+          if-no-files-found: error
+  typecheck-examples:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build --filter llamaindex
+      - name: Copy examples
+        run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
+      - name: Pack @llamaindex/env
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/env
+      - name: Pack llamaindex
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/core
+      - name: Install
+        run: npm add ${{ runner.temp }}/*.tgz
+        working-directory: ${{ runner.temp }}/examples
+      - name: Run Type Check
+        run: npx tsc --project ./tsconfig.json
+        working-directory: ${{ runner.temp }}/examples

@@ -1,7 +1,18 @@
+import { defaultFS } from "@llamaindex/env";
 import _ from "lodash";
-import { DEFAULT_SIMILARITY_TOP_K } from "../constants";
-import { VectorStoreQueryMode } from "../storage";
-import { SimilarityType } from "./types";
+import type { ImageType } from "../Node.js";
+import { DEFAULT_SIMILARITY_TOP_K } from "../constants.js";
+import { VectorStoreQueryMode } from "../storage/vectorStore/types.js";
+
+/**
+ * Similarity type
+ * Default is cosine similarity. Dot product and negative Euclidean distance are also supported.
+ */
+export enum SimilarityType {
+  DEFAULT = "cosine",
+  DOT_PRODUCT = "dot_product",
+  EUCLIDEAN = "euclidean",
+}
 
 /**
  * The similarity between two embeddings.
@@ -35,7 +46,7 @@ export function similarity(
 
   switch (mode) {
     case SimilarityType.EUCLIDEAN: {
-      let difference = embedding1.map((x, i) => x - embedding2[i]);
+      const difference = embedding1.map((x, i) => x - embedding2[i]);
       return -norm(difference);
     }
     case SimilarityType.DOT_PRODUCT: {
@@ -65,6 +76,7 @@ export function similarity(
  * @param similarityCutoff minimum similarity score
  * @returns
  */
+// eslint-disable-next-line max-params
 export function getTopKEmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -82,7 +94,7 @@ export function getTopKEmbeddings(
     );
   }
 
-  let similarities: { similarity: number; id: number }[] = [];
+  const similarities: { similarity: number; id: number }[] = [];
 
   for (let i = 0; i < embeddings.length; i++) {
     const sim = similarity(queryEmbedding, embeddings[i]);
@@ -93,8 +105,8 @@ export function getTopKEmbeddings(
 
   similarities.sort((a, b) => b.similarity - a.similarity); // Reverse sort
 
-  let resultSimilarities: number[] = [];
-  let resultIds: any[] = [];
+  const resultSimilarities: number[] = [];
+  const resultIds: any[] = [];
 
   for (let i = 0; i < similarityTopK; i++) {
     if (i >= similarities.length) {
@@ -107,6 +119,7 @@ export function getTopKEmbeddings(
   return [resultSimilarities, resultIds];
 }
 
+// eslint-disable-next-line max-params
 export function getTopKEmbeddingsLearner(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -119,6 +132,7 @@ export function getTopKEmbeddingsLearner(
   // https://github.com/mljs/libsvm which itself hasn't been updated in a while
 }
 
+// eslint-disable-next-line max-params
 export function getTopKMMREmbeddings(
   queryEmbedding: number[],
   embeddings: number[][],
@@ -128,21 +142,21 @@ export function getTopKMMREmbeddings(
   _similarityCutoff: number | null = null,
   mmrThreshold: number | null = null,
 ): [number[], any[]] {
-  let threshold = mmrThreshold || 0.5;
+  const threshold = mmrThreshold || 0.5;
   similarityFn = similarityFn || similarity;
 
   if (embeddingIds === null || embeddingIds.length === 0) {
     embeddingIds = Array.from({ length: embeddings.length }, (_, i) => i);
   }
-  let fullEmbedMap = new Map(embeddingIds.map((value, i) => [value, i]));
-  let embedMap = new Map(fullEmbedMap);
-  let embedSimilarity: Map<any, number> = new Map();
+  const fullEmbedMap = new Map(embeddingIds.map((value, i) => [value, i]));
+  const embedMap = new Map(fullEmbedMap);
+  const embedSimilarity: Map<any, number> = new Map();
   let score: number = Number.NEGATIVE_INFINITY;
   let highScoreId: any | null = null;
 
   for (let i = 0; i < embeddings.length; i++) {
-    let emb = embeddings[i];
-    let similarity = similarityFn(queryEmbedding, emb);
+    const emb = embeddings[i];
+    const similarity = similarityFn(queryEmbedding, emb);
     embedSimilarity.set(embeddingIds[i], similarity);
     if (similarity * threshold > score) {
       highScoreId = embeddingIds[i];
@@ -150,20 +164,20 @@ export function getTopKMMREmbeddings(
     }
   }
 
-  let results: [number, any][] = [];
+  const results: [number, any][] = [];
 
-  let embeddingLength = embeddings.length;
-  let similarityTopKCount = similarityTopK || embeddingLength;
+  const embeddingLength = embeddings.length;
+  const similarityTopKCount = similarityTopK || embeddingLength;
 
   while (results.length < Math.min(similarityTopKCount, embeddingLength)) {
     results.push([score, highScoreId]);
-    embedMap.delete(highScoreId!);
-    let recentEmbeddingId = highScoreId;
+    embedMap.delete(highScoreId);
+    const recentEmbeddingId = highScoreId;
     score = Number.NEGATIVE_INFINITY;
-    for (let embedId of Array.from(embedMap.keys())) {
-      let overlapWithRecent = similarityFn(
+    for (const embedId of Array.from(embedMap.keys())) {
+      const overlapWithRecent = similarityFn(
         embeddings[embedMap.get(embedId)!],
-        embeddings[fullEmbedMap.get(recentEmbeddingId!)!],
+        embeddings[fullEmbedMap.get(recentEmbeddingId)!],
       );
       if (
         threshold * embedSimilarity.get(embedId)! -
@@ -178,11 +192,22 @@ export function getTopKMMREmbeddings(
     }
   }
 
-  let resultSimilarities = results.map(([s, _]) => s);
-  let resultIds = results.map(([_, n]) => n);
+  const resultSimilarities = results.map(([s, _]) => s);
+  const resultIds = results.map(([_, n]) => n);
 
   return [resultSimilarities, resultIds];
 }
+
+async function blobToDataUrl(input: Blob) {
+  const { fileTypeFromBuffer } = await import("file-type");
+  const buffer = Buffer.from(await input.arrayBuffer());
+  const type = await fileTypeFromBuffer(buffer);
+  if (!type) {
+    throw new Error("Unsupported image type");
+  }
+  return "data:" + type.mime + ";base64," + buffer.toString("base64");
+}
+
 export async function readImage(input: ImageType) {
   const { RawImage } = await import("@xenova/transformers");
   if (input instanceof Blob) {
@@ -193,4 +218,52 @@ export async function readImage(input: ImageType) {
     throw new Error(`Unsupported input type: ${typeof input}`);
   }
 }
-export type ImageType = string | Blob | URL;
+
+export async function imageToString(input: ImageType): Promise<string> {
+  if (input instanceof Blob) {
+    // if the image is a Blob, convert it to a base64 data URL
+    return await blobToDataUrl(input);
+  } else if (_.isString(input)) {
+    return input;
+  } else if (input instanceof URL) {
+    return input.toString();
+  } else {
+    throw new Error(`Unsupported input type: ${typeof input}`);
+  }
+}
+
+export function stringToImage(input: string): ImageType {
+  if (input.startsWith("data:")) {
+    // if the input is a base64 data URL, convert it back to a Blob
+    const base64Data = input.split(",")[1];
+    const byteArray = Buffer.from(base64Data, "base64");
+    return new Blob([byteArray]);
+  } else if (input.startsWith("http://") || input.startsWith("https://")) {
+    return new URL(input);
+  } else if (_.isString(input)) {
+    return input;
+  } else {
+    throw new Error(`Unsupported input type: ${typeof input}`);
+  }
+}
+
+export async function imageToDataUrl(input: ImageType): Promise<string> {
+  // first ensure, that the input is a Blob
+  if (
+    (input instanceof URL && input.protocol === "file:") ||
+    _.isString(input)
+  ) {
+    // string or file URL
+    const dataBuffer = await defaultFS.readFile(
+      input instanceof URL ? input.pathname : input,
+    );
+    input = new Blob([dataBuffer]);
+  } else if (!(input instanceof Blob)) {
+    if (input instanceof URL) {
+      throw new Error(`Unsupported URL with protocol: ${input.protocol}`);
+    } else {
+      throw new Error(`Unsupported input type: ${typeof input}`);
+    }
+  }
+  return await blobToDataUrl(input);
+}

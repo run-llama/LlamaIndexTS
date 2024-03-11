@@ -1,19 +1,22 @@
-import { BulkWriteOptions, Collection, MongoClient } from "mongodb";
-import { BaseNode, MetadataMode } from "../../Node";
-import {
+import { getEnv } from "@llamaindex/env";
+import type { BulkWriteOptions, Collection } from "mongodb";
+import { MongoClient } from "mongodb";
+import type { BaseNode } from "../../Node.js";
+import { MetadataMode } from "../../Node.js";
+import type {
   MetadataFilters,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
-} from "./types";
-import { metadataDictToNode, nodeToMetadata } from "./utils";
+} from "./types.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 // Utility function to convert metadata filters to MongoDB filter
 function toMongoDBFilter(
   standardFilters: MetadataFilters,
 ): Record<string, any> {
   const filters: Record<string, any> = {};
-  for (const filter of standardFilters.filters) {
+  for (const filter of standardFilters?.filters ?? []) {
     filters[filter.key] = filter.value;
   }
   return filters;
@@ -42,7 +45,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
     } else {
-      const mongoUri = process.env.MONGODB_URI;
+      const mongoUri = getEnv("MONGODB_URI");
       if (!mongoUri) {
         throw new Error(
           "Must specify MONGODB_URI via env variable if not directly passing in client.",

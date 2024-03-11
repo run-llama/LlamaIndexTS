@@ -1,42 +1,43 @@
-import { ChatMessage, LLM, MessageType, OpenAI } from "./llm/LLM";
-import {
-  defaultSummaryPrompt,
-  messagesToHistoryStr,
-  SummaryPrompt,
-} from "./Prompt";
+import { OpenAI } from "./llm/LLM.js";
+import type { ChatMessage, LLM, MessageType } from "./llm/types.js";
+import type { SummaryPrompt } from "./Prompt.js";
+import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
 
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages
  */
-export interface ChatHistory {
-  messages: ChatMessage[];
+export abstract class ChatHistory {
+  abstract get messages(): ChatMessage[];
   /**
    * Adds a message to the chat history.
    * @param message
    */
-  addMessage(message: ChatMessage): void;
+  abstract addMessage(message: ChatMessage): void;
 
   /**
    * Returns the messages that should be used as input to the LLM.
    */
-  requestMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]>;
+  abstract requestMessages(
+    transientMessages?: ChatMessage[],
+  ): Promise<ChatMessage[]>;
 
   /**
    * Resets the chat history so that it's empty.
    */
-  reset(): void;
+  abstract reset(): void;
 
   /**
    * Returns the new messages since the last call to this function (or since calling the constructor)
    */
-  newMessages(): ChatMessage[];
+  abstract newMessages(): ChatMessage[];
 }
 
-export class SimpleChatHistory implements ChatHistory {
+export class SimpleChatHistory extends ChatHistory {
   messages: ChatMessage[];
   private messagesBefore: number;
 
   constructor(init?: Partial<SimpleChatHistory>) {
+    super();
     this.messages = init?.messages ?? [];
     this.messagesBefore = this.messages.length;
   }
@@ -60,7 +61,7 @@ export class SimpleChatHistory implements ChatHistory {
   }
 }
 
-export class SummaryChatHistory implements ChatHistory {
+export class SummaryChatHistory extends ChatHistory {
   tokensToSummarize: number;
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
@@ -68,6 +69,7 @@ export class SummaryChatHistory implements ChatHistory {
   private messagesBefore: number;
 
   constructor(init?: Partial<SummaryChatHistory>) {
+    super();
     this.messages = init?.messages ?? [];
     this.messagesBefore = this.messages.length;
     this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
@@ -79,6 +81,11 @@ export class SummaryChatHistory implements ChatHistory {
     }
     this.tokensToSummarize =
       this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
+    if (this.tokensToSummarize < this.llm.metadata.contextWindow * 0.25) {
+      throw new Error(
+        "The number of tokens that trigger the summarize process are less than 25% of the context window. Try lowering maxTokens or use a model with a larger context window.",
+      );
+    }
   }
 
   private async summarize(): Promise<ChatMessage> {
@@ -99,7 +106,7 @@ export class SummaryChatHistory implements ChatHistory {
       messagesToSummarize.shift();
     } while (this.llm.tokens(promptMessages) > this.tokensToSummarize);
 
-    const response = await this.llm.chat(promptMessages);
+    const response = await this.llm.chat({ messages: promptMessages });
     return { content: response.message.content, role: "memory" };
   }
 
@@ -117,6 +124,11 @@ export class SummaryChatHistory implements ChatHistory {
       return null;
     }
     return this.messages.length - 1 - index;
+  }
+
+  public getLastSummary(): ChatMessage | null {
+    const lastSummaryIndex = this.getLastSummaryIndex();
+    return lastSummaryIndex ? this.messages[lastSummaryIndex] : null;
   }
 
   private get systemMessages() {
@@ -197,4 +209,13 @@ export class SummaryChatHistory implements ChatHistory {
     this.messagesBefore = this.messages.length;
     return newMessages;
   }
+}
+
+export function getHistory(
+  chatHistory?: ChatMessage[] | ChatHistory,
+): ChatHistory {
+  if (chatHistory instanceof ChatHistory) {
+    return chatHistory;
+  }
+  return new SimpleChatHistory({ messages: chatHistory });
 }

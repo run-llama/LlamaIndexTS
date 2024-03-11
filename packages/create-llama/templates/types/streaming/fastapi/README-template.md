@@ -9,15 +9,21 @@ poetry install
 poetry shell
 ```
 
-By default, we use the OpenAI LLM (though you can customize, see app/api/routers/chat.py). As a result you need to specify an `OPENAI_API_KEY` in an .env file in this directory.
+By default, we use the OpenAI LLM (though you can customize, see `app/context.py`). As a result you need to specify an `OPENAI_API_KEY` in an .env file in this directory.
 
-Example `backend/.env` file:
+Example `.env` file:
 
 ```
 OPENAI_API_KEY=<openai_api_key>
 ```
 
-Second, run the development server:
+Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
+
+```
+python app/engine/generate.py
+```
+
+Third, run the development server:
 
 ```
 python main.py

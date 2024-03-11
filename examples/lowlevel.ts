@@ -27,9 +27,12 @@ import {
     },
   ];
 
-  const response = await responseSynthesizer.synthesize(
-    "What age am I?",
+  const stream = await responseSynthesizer.synthesize({
+    query: "What age am I?",
     nodesWithScore,
-  );
-  console.log(response.response);
+    stream: true,
+  });
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.response);
+  }
 })();

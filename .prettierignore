@@ -1,0 +1,7 @@
+apps/docs/i18n
+apps/docs/docs/api
+pnpm-lock.yaml
+lib/
+dist/
+.docusaurus/
+packages/create-llama/e2e/cache/

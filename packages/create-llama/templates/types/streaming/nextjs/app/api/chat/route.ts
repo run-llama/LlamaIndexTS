@@ -1,6 +1,5 @@
-import { MODEL } from "@/constants";
-import { Message, StreamingTextResponse } from "ai";
-import { MessageContent, OpenAI } from "llamaindex";
+import { StreamingTextResponse } from "ai";
+import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine";
 import { LlamaIndexStream } from "./llamaindex-stream";
@@ -8,7 +7,7 @@ import { LlamaIndexStream } from "./llamaindex-stream";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const getLastMessageContent = (
+const convertMessageContent = (
   textMessage: string,
   imageUrl: string | undefined,
 ): MessageContent => {
@@ -30,9 +29,9 @@ const getLastMessageContent = (
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { messages, data }: { messages: Message[]; data: any } = body;
-    const lastMessage = messages.pop();
-    if (!messages || !lastMessage || lastMessage.role !== "user") {
+    const { messages, data }: { messages: ChatMessage[]; data: any } = body;
+    const userMessage = messages.pop();
+    if (!messages || !userMessage || userMessage.role !== "user") {
       return NextResponse.json(
         {
           error:
@@ -43,28 +42,34 @@ export async function POST(request: NextRequest) {
     }
 
     const llm = new OpenAI({
-      model: MODEL,
-      maxTokens: 4096,
+      model: (process.env.MODEL as any) ?? "gpt-3.5-turbo",
+      maxTokens: 512,
     });
 
     const chatEngine = await createChatEngine(llm);
 
-    const lastMessageContent = getLastMessageContent(
-      lastMessage.content,
+    // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
+    const userMessageContent = convertMessageContent(
+      userMessage.content,
       data?.imageUrl,
     );
 
-    const response = await chatEngine.chat(
-      lastMessageContent as MessageContent,
-      messages,
-      true,
-    );
+    // Calling LlamaIndex's ChatEngine to get a streamed response
+    const response = await chatEngine.chat({
+      message: userMessageContent,
+      chatHistory: messages,
+      stream: true,
+    });
 
-    // Transform the response into a readable stream
-    const stream = LlamaIndexStream(response);
+    // Transform LlamaIndex stream to Vercel/AI format
+    const { stream, data: streamData } = LlamaIndexStream(response, {
+      parserOptions: {
+        image_url: data?.imageUrl,
+      },
+    });
 
-    // Return a StreamingTextResponse, which can be consumed by the client
-    return new StreamingTextResponse(stream);
+    // Return a StreamingTextResponse, which can be consumed by the Vercel/AI client
+    return new StreamingTextResponse(stream, {}, streamData);
   } catch (error) {
     console.error("[LlamaIndex]", error);
     return NextResponse.json(

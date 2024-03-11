@@ -1,8 +1,6 @@
-import Anthropic, {
-  AI_PROMPT,
-  ClientOptions,
-  HUMAN_PROMPT,
-} from "@anthropic-ai/sdk";
+import type { ClientOptions } from "@anthropic-ai/sdk";
+import Anthropic, { AI_PROMPT, HUMAN_PROMPT } from "@anthropic-ai/sdk";
+import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 
 export class AnthropicSession {
@@ -10,9 +8,7 @@ export class AnthropicSession {
 
   constructor(options: ClientOptions = {}) {
     if (!options.apiKey) {
-      if (typeof process !== undefined) {
-        options.apiKey = process.env.ANTHROPIC_API_KEY;
-      }
+      options.apiKey = getEnv("ANTHROPIC_API_KEY");
     }
 
     if (!options.apiKey) {
@@ -26,7 +22,7 @@ export class AnthropicSession {
 // I'm not 100% sure this is necessary vs. just starting a new session
 // every time we make a call. They say they try to reuse connections
 // so in theory this is more efficient, but we should test it in the future.
-let defaultAnthropicSession: {
+const defaultAnthropicSession: {
   session: AnthropicSession;
   options: ClientOptions;
 }[] = [];

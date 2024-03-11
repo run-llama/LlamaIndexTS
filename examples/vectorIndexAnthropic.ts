@@ -35,9 +35,9 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine({ responseSynthesizer });
-  const response = await queryEngine.query(
-    "What did the author do in college?",
-  );
+  const response = await queryEngine.query({
+    query: "What did the author do in college?",
+  });
 
   // Output response
   console.log(response.toString());

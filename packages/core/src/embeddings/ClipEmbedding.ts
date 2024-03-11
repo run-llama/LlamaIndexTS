@@ -1,5 +1,6 @@
-import { MultiModalEmbedding } from "./MultiModalEmbedding";
-import { ImageType, readImage } from "./utils";
+import type { ImageType } from "../Node.js";
+import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
+import { readImage } from "./utils.js";
 
 export enum ClipEmbeddingModelType {
   XENOVA_CLIP_VIT_BASE_PATCH32 = "Xenova/clip-vit-base-patch32",
@@ -61,7 +62,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
     const loadedImage = await readImage(image);
     const imageInputs = await (await this.getProcessor())(loadedImage);
     const { image_embeds } = await (await this.getVisionModel())(imageInputs);
-    return image_embeds.data;
+    return Array.from(image_embeds.data);
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {

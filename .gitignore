@@ -37,9 +37,15 @@ yarn-error.log*
 .vercel
 
 dist/
+lib/
 
-# vs code
-.vscode/launch.json
+.cache
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+.tsbuildinfo
+packages/create-llama/e2e/cache
 
-# jetbrains ide
-.idea/
+# intellij
+**/.idea

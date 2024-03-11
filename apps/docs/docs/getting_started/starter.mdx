@@ -1,0 +1,51 @@
+---
+sidebar_position: 1
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../examples/vectorIndex";
+import TSConfigSource from "!!raw-loader!../../../../examples/tsconfig.json";
+
+# Starter Tutorial
+
+Make sure you have installed LlamaIndex.TS and have an OpenAI key. If you haven't, check out the [installation](installation) guide.
+
+## From scratch(node.js + TypeScript):
+
+In a new folder:
+
+```bash npm2yarn
+npm init
+npm install -D typescript @types/node
+```
+
+Create the file `example.ts`. This code will load some example data, create a document, index it (which creates embeddings using OpenAI), and then creates query engine to answer questions about the data.
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+Create a `tsconfig.json` file in the same folder:
+
+<CodeBlock language="json">{TSConfigSource}</CodeBlock>
+
+Now you can run the code with
+
+```bash
+npx tsx example.ts
+```
+
+Also, you can clone our examples and try them out:
+
+```bash npm2yarn
+npx degit run-llama/LlamaIndexTS/examples my-new-project
+cd my-new-project
+npm install
+npx tsx ./vectorIndex.ts
+```
+
+## From scratch (Next.js + TypeScript):
+
+You just need one command to create a new Next.js project:
+
+```bash npm2yarn
+npx create-llama@latest
+```

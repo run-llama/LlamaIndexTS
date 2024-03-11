@@ -1,20 +1,5 @@
-import { SubQuestion } from "./QuestionGenerator";
-
-/**
- * An OutputParser is used to extract structured data from the raw output of the LLM.
- */
-export interface BaseOutputParser<T> {
-  parse(output: string): T;
-  format(output: string): string;
-}
-
-/**
- * StructuredOutput is just a combo of the raw output and the parsed output.
- */
-export interface StructuredOutput<T> {
-  rawOutput: string;
-  parsedOutput: T;
-}
+import type { SubQuestion } from "./engines/query/types.js";
+import type { BaseOutputParser, StructuredOutput } from "./types.js";
 
 /**
  * Error class for output parsing. Due to the nature of LLMs, anytime we use LLM
@@ -59,8 +44,8 @@ export function parseJsonMarkdown(text: string) {
   const left_square = text.indexOf("[");
   const left_brace = text.indexOf("{");
 
-  var left: number;
-  var right: number;
+  let left: number;
+  let right: number;
   if (left_square < left_brace && left_square != -1) {
     left = left_square;
     right = text.lastIndexOf("]");
@@ -89,9 +74,6 @@ export class SubQuestionOutputParser
 {
   parse(output: string): StructuredOutput<SubQuestion[]> {
     const parsed = parseJsonMarkdown(output);
-
-    // TODO add zod validation
-
     return { rawOutput: output, parsedOutput: parsed };
   }
 

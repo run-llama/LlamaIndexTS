@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 /* eslint-disable import/no-extraneous-dependencies */
-import ciInfo from "ci-info";
+import { execSync } from "child_process";
 import Commander from "commander";
 import Conf from "conf";
 import fs from "fs";
 import path from "path";
-import { blue, bold, cyan, green, red, yellow } from "picocolors";
+import { bold, cyan, green, red, yellow } from "picocolors";
 import prompts from "prompts";
+import terminalLink from "terminal-link";
 import checkForUpdate from "update-check";
-import { InstallAppArgs, createApp } from "./create-app";
+import { createApp } from "./create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
+import { runApp } from "./helpers/run-app";
+import { getTools } from "./helpers/tools";
 import { validateNpmName } from "./helpers/validate-pkg";
 import packageJson from "./package.json";
+import { QuestionArgs, askQuestions, onPromptState } from "./questions";
 
 let projectPath: string = "";
 
@@ -20,16 +24,6 @@ const handleSigTerm = () => process.exit(0);
 
 process.on("SIGINT", handleSigTerm);
 process.on("SIGTERM", handleSigTerm);
-
-const onPromptState = (state: any) => {
-  if (state.aborted) {
-    // If we don't re-enable the terminal cursor before exiting
-    // the program, the cursor will remain hidden
-    process.stdout.write("\x1B[?25h");
-    process.stdout.write("\n");
-    process.exit(1);
-  }
-};
 
 const program = new Commander.Command(packageJson.name)
   .version(packageJson.version)
@@ -73,8 +67,133 @@ const program = new Commander.Command(packageJson.name)
   Explicitly tell the CLI to reset any stored preferences
 `,
   )
+  .option(
+    "--template <template>",
+    `
+
+  Select a template to bootstrap the application with.
+`,
+  )
+  .option(
+    "--engine <engine>",
+    `
+
+  Select a chat engine to bootstrap the application with.
+`,
+  )
+  .option(
+    "--framework <framework>",
+    `
+
+  Select a framework to bootstrap the application with.
+`,
+  )
+  .option(
+    "--files <path>",
+    `
+  
+    Specify the path to a local file or folder for chatting.
+`,
+  )
+  .option(
+    "--open-ai-key <key>",
+    `
+
+  Provide an OpenAI API key.
+`,
+  )
+  .option(
+    "--ui <ui>",
+    `
+
+  Select a UI to bootstrap the application with.
+`,
+  )
+  .option(
+    "--frontend",
+    `
+
+  Whether to generate a frontend for your backend.
+`,
+  )
+  .option(
+    "--model <model>",
+    `
+
+  Select OpenAI model to use. E.g. gpt-3.5-turbo.
+`,
+  )
+  .option(
+    "--embedding-model <embeddingModel>",
+    `
+  Select OpenAI embedding model to use. E.g. text-embedding-ada-002.
+`,
+  )
+  .option(
+    "--port <port>",
+    `
+
+  Select UI port.
+`,
+  )
+  .option(
+    "--external-port <external>",
+    `
+
+  Select external port.
+`,
+  )
+  .option(
+    "--post-install-action <action>",
+    `
+
+  Choose an action after installation. For example, 'runApp' or 'dependencies'. The default option is just to generate the app.
+`,
+  )
+  .option(
+    "--vector-db <vectorDb>",
+    `
+
+  Select which vector database you would like to use, such as 'none', 'pg' or 'mongo'. The default option is not to use a vector database and use the local filesystem instead ('none').
+`,
+  )
+  .option(
+    "--tools <tools>",
+    `
+
+  Specify the tools you want to use by providing a comma-separated list. For example, 'wikipedia.WikipediaToolSpec,google.GoogleSearchToolSpec'. Use 'none' to not using any tools.
+`,
+  )
+  .option(
+    "--llama-parse",
+    `
+    Enable LlamaParse.
+`,
+  )
+  .option(
+    "--llama-cloud-key <key>",
+    `
+  Provide a LlamaCloud API key.
+`,
+  )
   .allowUnknownOption()
   .parse(process.argv);
+if (process.argv.includes("--no-frontend")) {
+  program.frontend = false;
+}
+if (process.argv.includes("--no-eslint")) {
+  program.eslint = false;
+}
+if (process.argv.includes("--tools")) {
+  if (program.tools === "none") {
+    program.tools = [];
+  } else {
+    program.tools = getTools(program.tools.split(","));
+  }
+}
+if (process.argv.includes("--no-llama-parse")) {
+  program.llamaParse = false;
+}
 
 const packageManager = !!program.useNpm
   ? "npm"
@@ -123,7 +242,7 @@ async function run(): Promise<void> {
       "\nPlease specify the project directory:\n" +
         `  ${cyan(program.name())} ${green("<project-directory>")}\n` +
         "For example:\n" +
-        `  ${cyan(program.name())} ${green("my-next-app")}\n\n` +
+        `  ${cyan(program.name())} ${green("my-app")}\n\n` +
         `Run ${cyan(`${program.name()} --help`)} to see all options.`,
     );
     process.exit(1);
@@ -155,220 +274,8 @@ async function run(): Promise<void> {
     process.exit(1);
   }
 
-  // TODO: use Args also for program
-  type Args = Omit<InstallAppArgs, "appPath" | "packageManager">;
-
-  const preferences = (conf.get("preferences") || {}) as Args;
-
-  const defaults: Args = {
-    template: "streaming",
-    framework: "nextjs",
-    engine: "simple",
-    ui: "html",
-    eslint: true,
-    frontend: false,
-    openAIKey: "",
-    model: "gpt-3.5-turbo",
-  };
-  const getPrefOrDefault = (field: keyof Args) =>
-    preferences[field] ?? defaults[field];
-
-  const handlers = {
-    onCancel: () => {
-      console.error("Exiting.");
-      process.exit(1);
-    },
-  };
-
-  if (!program.framework) {
-    if (ciInfo.isCI) {
-      program.framework = getPrefOrDefault("framework");
-    } else {
-      const { framework } = await prompts(
-        {
-          type: "select",
-          name: "framework",
-          message: "Which framework would you like to use?",
-          choices: [
-            { title: "NextJS", value: "nextjs" },
-            { title: "Express", value: "express" },
-            { title: "FastAPI (Python)", value: "fastapi" },
-          ],
-          initial: 0,
-        },
-        handlers,
-      );
-      program.framework = framework;
-      preferences.framework = framework;
-    }
-  }
-
-  if (program.framework === "nextjs") {
-    program.template = "streaming";
-  }
-  if (!program.template) {
-    if (ciInfo.isCI) {
-      program.template = getPrefOrDefault("template");
-    } else {
-      const { template } = await prompts(
-        {
-          type: "select",
-          name: "template",
-          message: "Which template would you like to use?",
-          choices: [
-            { title: "Chat without streaming", value: "simple" },
-            { title: "Chat with streaming", value: "streaming" },
-          ],
-          initial: 1,
-        },
-        handlers,
-      );
-      program.template = template;
-      preferences.template = template;
-    }
-  }
-
-  if (program.framework === "express" || program.framework === "fastapi") {
-    // if a backend-only framework is selected, ask whether we should create a frontend
-    if (!program.frontend) {
-      if (ciInfo.isCI) {
-        program.frontend = getPrefOrDefault("frontend");
-      } else {
-        const styledNextJS = blue("NextJS");
-        const styledBackend = green(
-          program.framework === "express"
-            ? "Express "
-            : program.framework === "fastapi"
-              ? "FastAPI (Python) "
-              : "",
-        );
-        const { frontend } = await prompts({
-          onState: onPromptState,
-          type: "toggle",
-          name: "frontend",
-          message: `Would you like to generate a ${styledNextJS} frontend for your ${styledBackend}backend?`,
-          initial: getPrefOrDefault("frontend"),
-          active: "Yes",
-          inactive: "No",
-        });
-        program.frontend = Boolean(frontend);
-        preferences.frontend = Boolean(frontend);
-      }
-    }
-  }
-
-  if (program.framework === "nextjs" || program.frontend) {
-    if (!program.ui) {
-      if (ciInfo.isCI) {
-        program.ui = getPrefOrDefault("ui");
-      } else {
-        const { ui } = await prompts(
-          {
-            type: "select",
-            name: "ui",
-            message: "Which UI would you like to use?",
-            choices: [
-              { title: "Just HTML", value: "html" },
-              { title: "Shadcn", value: "shadcn" },
-            ],
-            initial: 0,
-          },
-          handlers,
-        );
-        program.ui = ui;
-        preferences.ui = ui;
-      }
-    }
-  }
-
-  if (program.framework === "nextjs") {
-    if (!program.model) {
-      if (ciInfo.isCI) {
-        program.model = getPrefOrDefault("model");
-      } else {
-        const { model } = await prompts(
-          {
-            type: "select",
-            name: "model",
-            message: "Which model would you like to use?",
-            choices: [
-              { title: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
-              { title: "gpt-4", value: "gpt-4" },
-              { title: "gpt-4-1106-preview", value: "gpt-4-1106-preview" },
-              { title: "gpt-4-vision-preview", value: "gpt-4-vision-preview" },
-            ],
-            initial: 0,
-          },
-          handlers,
-        );
-        program.model = model;
-        preferences.model = model;
-      }
-    }
-  }
-
-  if (program.framework === "express" || program.framework === "nextjs") {
-    if (!program.engine) {
-      if (ciInfo.isCI) {
-        program.engine = getPrefOrDefault("engine");
-      } else {
-        const { engine } = await prompts(
-          {
-            type: "select",
-            name: "engine",
-            message: "Which chat engine would you like to use?",
-            choices: [
-              { title: "ContextChatEngine", value: "context" },
-              {
-                title: "SimpleChatEngine (no data, just chat)",
-                value: "simple",
-              },
-            ],
-            initial: 0,
-          },
-          handlers,
-        );
-        program.engine = engine;
-        preferences.engine = engine;
-      }
-    }
-  }
-
-  if (!program.openAIKey) {
-    const { key } = await prompts(
-      {
-        type: "text",
-        name: "key",
-        message: "Please provide your OpenAI API key (leave blank to skip):",
-      },
-      handlers,
-    );
-    program.openAIKey = key;
-    preferences.openAIKey = key;
-  }
-
-  if (
-    program.framework !== "fastapi" &&
-    !process.argv.includes("--eslint") &&
-    !process.argv.includes("--no-eslint")
-  ) {
-    if (ciInfo.isCI) {
-      program.eslint = getPrefOrDefault("eslint");
-    } else {
-      const styledEslint = blue("ESLint");
-      const { eslint } = await prompts({
-        onState: onPromptState,
-        type: "toggle",
-        name: "eslint",
-        message: `Would you like to use ${styledEslint}?`,
-        initial: getPrefOrDefault("eslint"),
-        active: "Yes",
-        inactive: "No",
-      });
-      program.eslint = Boolean(eslint);
-      preferences.eslint = Boolean(eslint);
-    }
-  }
+  const preferences = (conf.get("preferences") || {}) as QuestionArgs;
+  await askQuestions(program as unknown as QuestionArgs, preferences);
 
   await createApp({
     template: program.template,
@@ -379,10 +286,54 @@ async function run(): Promise<void> {
     packageManager,
     eslint: program.eslint,
     frontend: program.frontend,
-    openAIKey: program.openAIKey,
+    openAiKey: program.openAiKey,
+    llamaCloudKey: program.llamaCloudKey,
     model: program.model,
+    embeddingModel: program.embeddingModel,
+    communityProjectPath: program.communityProjectPath,
+    llamapack: program.llamapack,
+    vectorDb: program.vectorDb,
+    externalPort: program.externalPort,
+    postInstallAction: program.postInstallAction,
+    dataSource: program.dataSource,
+    tools: program.tools,
   });
   conf.set("preferences", preferences);
+
+  if (program.postInstallAction === "VSCode") {
+    console.log(`Starting VSCode in ${root}...`);
+    try {
+      execSync(`code . --new-window --goto README.md`, {
+        stdio: "inherit",
+        cwd: root,
+      });
+    } catch (error) {
+      console.log(
+        red(
+          `Failed to start VSCode in ${root}. 
+Got error: ${(error as Error).message}.\n`,
+        ),
+      );
+      console.log(
+        `Make sure you have VSCode installed and added to your PATH. 
+Please check ${cyan(
+          terminalLink(
+            "This documentation",
+            `https://code.visualstudio.com/docs/setup/setup-overview`,
+          ),
+        )} for more information.`,
+      );
+    }
+  } else if (program.postInstallAction === "runApp") {
+    console.log(`Running app in ${root}...`);
+    await runApp(
+      root,
+      program.frontend,
+      program.framework,
+      program.port,
+      program.externalPort,
+    );
+  }
 }
 
 const update = checkForUpdate(packageJson).catch(() => null);
@@ -406,7 +357,6 @@ async function notifyUpdate(): Promise<void> {
           "\n",
       );
     }
-    process.exit();
   } catch {
     // ignore error
   }

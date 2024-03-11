@@ -1,9 +1,19 @@
-# Simple Examples
+# LlamaIndexTS Examples
 
-Make sure to run `npm install` and set your OpenAI environment variable before running these examples.
+Before running any of the code examples,
+make sure you have basic knowledge of the [LlamaIndexTS](https://ts.llamaindex.ai/).
 
-```
-npm install
+## Usage
+
+```shell
+# export your API key
 export OPENAI_API_KEY="sk-..."
-npx ts-node vectorIndex.ts
+
+npx ts-node ./chatEngine.ts
+```
+
+## Build your own RAG app
+
+```shell
+npx create llama
 ```

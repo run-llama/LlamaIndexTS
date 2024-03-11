@@ -1,0 +1,56 @@
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../../../examples/groq.ts";
+
+# Groq
+
+## Usage
+
+First, create an API key at the [Groq Console](https://console.groq.com/keys). Then save it in your environment:
+
+```bash
+export GROQ_API_KEY=<your-api-key>
+```
+
+The initialize the Groq module.
+
+```ts
+import { Groq, serviceContextFromDefaults } from "llamaindex";
+
+const groq = new Groq({
+  // If you do not wish to set your API key in the environment, you may
+  // configure your API key when you initialize the Groq class.
+  // apiKey: "<your-api-key>",
+});
+
+const serviceContext = serviceContextFromDefaults({ llm: groq });
+```
+
+## Load and index documents
+
+For this example, we will use a single document. In a real-world scenario, you would have multiple documents to index.
+
+```ts
+const document = new Document({ text: essay, id_: "essay" });
+
+const index = await VectorStoreIndex.fromDocuments([document], {
+  serviceContext,
+});
+```
+
+## Query
+
+```ts
+const queryEngine = index.asQueryEngine();
+
+const query = "What is the meaning of life?";
+
+const results = await queryEngine.query({
+  query,
+});
+```
+
+## Full Example
+
+<CodeBlock language="ts" showLineNumbers>
+  {CodeSource}
+</CodeBlock>

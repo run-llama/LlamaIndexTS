@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from "path";
-import { green } from "picocolors";
+import { green, yellow } from "picocolors";
 import { tryGitInit } from "./helpers/git";
 import { isFolderEmpty } from "./helpers/is-folder-empty";
 import { getOnline } from "./helpers/is-online";
@@ -9,8 +9,11 @@ import { makeDir } from "./helpers/make-dir";
 
 import fs from "fs";
 import terminalLink from "terminal-link";
-import type { InstallTemplateArgs } from "./templates";
-import { installTemplate } from "./templates";
+import type { InstallTemplateArgs } from "./helpers";
+import { installTemplate } from "./helpers";
+import { writeDevcontainer } from "./helpers/devcontainer";
+import { templatesDir } from "./helpers/dir";
+import { toolsRequireConfig } from "./helpers/tools";
 
 export type InstallAppArgs = Omit<
   InstallTemplateArgs,
@@ -29,8 +32,17 @@ export async function createApp({
   packageManager,
   eslint,
   frontend,
-  openAIKey,
+  openAiKey,
+  llamaCloudKey,
   model,
+  embeddingModel,
+  communityProjectPath,
+  llamapack,
+  vectorDb,
+  externalPort,
+  postInstallAction,
+  dataSource,
+  tools,
 }: InstallAppArgs): Promise<void> {
   const root = path.resolve(appPath);
 
@@ -67,8 +79,17 @@ export async function createApp({
     packageManager,
     isOnline,
     eslint,
-    openAIKey,
+    openAiKey,
+    llamaCloudKey,
     model,
+    embeddingModel,
+    communityProjectPath,
+    llamapack,
+    vectorDb,
+    externalPort,
+    postInstallAction,
+    dataSource,
+    tools,
   };
 
   if (frontend) {
@@ -83,16 +104,16 @@ export async function createApp({
       ...args,
       root: frontendRoot,
       framework: "nextjs",
-      customApiPath: "http://localhost:8000/api/chat",
+      customApiPath: `http://localhost:${externalPort ?? 8000}/api/chat`,
       backend: false,
     });
     // copy readme for fullstack
     await fs.promises.copyFile(
-      path.join(__dirname, "templates", "README-fullstack.md"),
+      path.join(templatesDir, "README-fullstack.md"),
       path.join(root, "README.md"),
     );
   } else {
-    await installTemplate({ ...args, backend: true, forBackend: framework });
+    await installTemplate({ ...args, backend: true });
   }
 
   process.chdir(root);
@@ -101,12 +122,25 @@ export async function createApp({
     console.log();
   }
 
+  await writeDevcontainer(root, templatesDir, framework, frontend);
+
+  if (toolsRequireConfig(tools)) {
+    console.log(
+      yellow(
+        `You have selected tools that require configuration. Please configure them in the ${terminalLink(
+          "tools_config.json",
+          `file://${root}/tools_config.json`,
+        )} file.`,
+      ),
+    );
+  }
+  console.log("");
   console.log(`${green("Success!")} Created ${appName} at ${appPath}`);
 
   console.log(
     `Now have a look at the ${terminalLink(
       "README.md",
-      `file://${appName}/README.md`,
+      `file://${root}/README.md`,
     )} and learn how to get started.`,
   );
   console.log();

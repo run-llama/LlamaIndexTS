@@ -1,43 +1,61 @@
-import pg from "pg";
-import pgvector from "pgvector/pg";
+import type pg from "pg";
 
-import { VectorStore, VectorStoreQuery, VectorStoreQueryResult } from "./types";
+import type {
+  VectorStore,
+  VectorStoreQuery,
+  VectorStoreQueryResult,
+} from "./types.js";
 
-import { BaseNode, Document, Metadata, MetadataMode } from "../../Node";
-import { GenericFileSystem } from "../FileSystem";
+import type { GenericFileSystem } from "@llamaindex/env";
+import type { BaseNode, Metadata } from "../../Node.js";
+import { Document, MetadataMode } from "../../Node.js";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
 
 /**
  * Provides support for writing and querying vector data in Postgres.
+ * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
  */
 export class PGVectorStore implements VectorStore {
   storesText: boolean = true;
 
   private collection: string = "";
+  private schemaName: string = PGVECTOR_SCHEMA;
+  private tableName: string = PGVECTOR_TABLE;
+  private connectionString: string | undefined = undefined;
+  private dimensions: number = 1536;
 
-  /*
-    FROM pg LIBRARY:
-    type Config = {
-      user?: string, // default process.env.PGUSER || process.env.USER
-      password?: string or function, //default process.env.PGPASSWORD
-      host?: string, // default process.env.PGHOST
-      database?: string, // default process.env.PGDATABASE || user
-      port?: number, // default process.env.PGPORT
-      connectionString?: string, // e.g. postgres://user:password@host:5432/database
-      ssl?: any, // passed directly to node.TLSSocket, supports all tls.connect options
-      types?: any, // custom type parsers
-      statement_timeout?: number, // number of milliseconds before a statement in query will time out, default is no timeout
-      query_timeout?: number, // number of milliseconds before a query call will timeout, default is no timeout
-      application_name?: string, // The name of the application that created this Client instance
-      connectionTimeoutMillis?: number, // number of milliseconds to wait for connection, default is no timeout
-      idle_in_transaction_session_timeout?: number // number of milliseconds before terminating any session with an open idle transaction, default is no timeout
-    }  
-  */
-  db?: pg.Client;
+  private db?: pg.Client;
 
-  constructor() {}
+  /**
+   * Constructs a new instance of the PGVectorStore
+   *
+   * If the `connectionString` is not provided the following env variables are
+   * used to connect to the DB:
+   * PGHOST=your database host
+   * PGUSER=your database user
+   * PGPASSWORD=your database password
+   * PGDATABASE=your database name
+   * PGPORT=your database port
+   *
+   * @param {object} config - The configuration settings for the instance.
+   * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
+   * @param {string} config.tableName - The name of the table (optional). Defaults to PGVECTOR_TABLE.
+   * @param {string} config.connectionString - The connection string (optional).
+   * @param {number} config.dimensions - The dimensions of the embedding model.
+   */
+  constructor(config?: {
+    schemaName?: string;
+    tableName?: string;
+    connectionString?: string;
+    dimensions?: number;
+  }) {
+    this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
+    this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+    this.connectionString = config?.connectionString;
+    this.dimensions = config?.dimensions ?? 1536;
+  }
 
   /**
    * Setter for the collection property.
@@ -64,14 +82,18 @@ export class PGVectorStore implements VectorStore {
   private async getDb(): Promise<pg.Client> {
     if (!this.db) {
       try {
+        const { Client } = await import("pg");
+        const { registerType } = await import("pgvector/pg");
         // Create DB connection
         // Read connection params from env - see comment block above
-        const db = new pg.Client();
+        const db = new Client({
+          connectionString: this.connectionString,
+        });
         await db.connect();
 
         // Check vector extension
         db.query("CREATE EXTENSION IF NOT EXISTS vector");
-        await pgvector.registerType(db);
+        await registerType(db);
 
         // Check schema, table(s), index(es)
         await this.checkSchema(db);
@@ -88,27 +110,25 @@ export class PGVectorStore implements VectorStore {
   }
 
   private async checkSchema(db: pg.Client) {
-    await db.query(`CREATE SCHEMA IF NOT EXISTS ${PGVECTOR_SCHEMA}`);
+    await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
-    const tbl = `CREATE TABLE IF NOT EXISTS ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE}(
-      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
+                                                                                  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       external_id VARCHAR,
       collection VARCHAR,
       document TEXT,
       metadata JSONB DEFAULT '{}',
-      embeddings VECTOR(1536)
-    )`;
+      embeddings VECTOR(${this.dimensions})
+      )`;
     await db.query(tbl);
 
-    const idxs = `CREATE INDEX IF NOT EXISTS idx_${PGVECTOR_TABLE}_external_id ON ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} (external_id);
-      CREATE INDEX IF NOT EXISTS idx_${PGVECTOR_TABLE}_collection ON ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} (collection);`;
+    const idxs = `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_external_id ON ${this.schemaName}.${this.tableName} (external_id);
+    CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
     await db.query(idxs);
 
     // TODO add IVFFlat or HNSW indexing?
     return db;
   }
-
-  // isEmbeddingQuery?: boolean | undefined;
 
   /**
    * Connects to the database specified in environment vars.
@@ -126,13 +146,36 @@ export class PGVectorStore implements VectorStore {
    * @returns The result of the delete query.
    */
   async clearCollection() {
-    const sql: string = `DELETE FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
-      WHERE collection = $1`;
+    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
+                         WHERE collection = $1`;
 
-    const db = (await this.getDb()) as pg.Client;
+    const db = await this.getDb();
     const ret = await db.query(sql, [this.collection]);
 
     return ret;
+  }
+
+  private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
+    const result = [];
+    for (let index = 0; index < embeddingResults.length; index++) {
+      const row = embeddingResults[index];
+
+      const id: any = row.id_.length ? row.id_ : null;
+      const meta = row.metadata || {};
+      meta.create_date = new Date();
+
+      const params = [
+        id,
+        "",
+        this.collection,
+        row.getContent(MetadataMode.EMBED),
+        meta,
+        "[" + row.getEmbedding().join(",") + "]",
+      ];
+
+      result.push(params);
+    }
+    return result;
   }
 
   /**
@@ -147,34 +190,20 @@ export class PGVectorStore implements VectorStore {
       return Promise.resolve([]);
     }
 
-    const sql: string = `INSERT INTO ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
-      (id, external_id, collection, document, metadata, embeddings) 
-      VALUES ($1, $2, $3, $4, $5, $6)`;
+    const sql: string = `INSERT INTO ${this.schemaName}.${this.tableName}
+                           (id, external_id, collection, document, metadata, embeddings)
+                         VALUES ($1, $2, $3, $4, $5, $6)`;
 
-    const db = (await this.getDb()) as pg.Client;
+    const db = await this.getDb();
+    const data = this.getDataToInsert(embeddingResults);
 
-    let ret: string[] = [];
-    for (let index = 0; index < embeddingResults.length; index++) {
-      const row = embeddingResults[index];
-
-      let id: any = row.id_.length ? row.id_ : null;
-      let meta = row.metadata || {};
-      meta.create_date = new Date();
-
-      const params = [
-        id,
-        "",
-        this.collection,
-        row.getContent(MetadataMode.EMBED),
-        meta,
-        "[" + row.getEmbedding().join(",") + "]",
-      ];
-
+    const ret: string[] = [];
+    for (let index = 0; index < data.length; index++) {
+      const params = data[index];
       try {
         const result = await db.query(sql, params);
-
         if (result.rows.length) {
-          id = result.rows[0].id as string;
+          const id = result.rows[0].id as string;
           ret.push(id);
         }
       } catch (err) {
@@ -197,10 +226,10 @@ export class PGVectorStore implements VectorStore {
     const collectionCriteria = this.collection.length
       ? "AND collection = $2"
       : "";
-    const sql: string = `DELETE FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} 
-      WHERE id = $1 ${collectionCriteria}`;
+    const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
+                         WHERE id = $1 ${collectionCriteria}`;
 
-    const db = (await this.getDb()) as pg.Client;
+    const db = await this.getDb();
     const params = this.collection.length
       ? [refDocId, this.collection]
       : [refDocId];
@@ -225,21 +254,31 @@ export class PGVectorStore implements VectorStore {
 
     const embedding = "[" + query.queryEmbedding?.join(",") + "]";
     const max = query.similarityTopK ?? 2;
-    const where = this.collection.length ? "WHERE collection = $2" : "";
-    // TODO Add collection filter if set
+    const whereClauses = this.collection.length ? ["collection = $2"] : [];
+
+    const params: Array<string | number> = this.collection.length
+      ? [embedding, this.collection]
+      : [embedding];
+
+    query.filters?.filters.forEach((filter, index) => {
+      const paramIndex = params.length + 1;
+      whereClauses.push(`metadata->>'${filter.key}' = $${paramIndex}`);
+      params.push(filter.value);
+    });
+
+    const where =
+      whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
     const sql = `SELECT 
         v.*, 
         embeddings <-> $1 s 
-      FROM ${PGVECTOR_SCHEMA}.${PGVECTOR_TABLE} v
+      FROM ${this.schemaName}.${this.tableName} v
       ${where}
       ORDER BY s 
       LIMIT ${max}
     `;
 
-    const db = (await this.getDb()) as pg.Client;
-    const params = this.collection.length
-      ? [embedding, this.collection]
-      : [embedding];
+    const db = await this.getDb();
     const results = await db.query(sql, params);
 
     const nodes = results.rows.map((row) => {

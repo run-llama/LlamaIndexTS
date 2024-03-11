@@ -1,15 +1,15 @@
 import { parseEpub } from "@gxl/epub-parser";
-import { Document } from "../Node";
-import { GenericFileSystem } from "../storage/FileSystem";
-import { DEFAULT_FS } from "../storage/constants";
-import { BaseReader } from "./base";
+import type { GenericFileSystem } from "@llamaindex/env";
+import { defaultFS } from "@llamaindex/env";
+import { Document } from "../Node.js";
+import type { BaseReader } from "./type.js";
 /**
  * Read the text of a Epub file
  */
 export class EpubReader implements BaseReader {
   async loadData(
     file: string,
-    fs: GenericFileSystem = DEFAULT_FS,
+    fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const dataBuffer = (await fs.readFile(file)) as any;
     const book = await parseEpub(dataBuffer, {

@@ -1,8 +1,9 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const renderer = require("prism-react-renderer");
+const lightCodeTheme = renderer.themes.github;
+const darkCodeTheme = renderer.themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -29,15 +30,32 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
-    locales: ["en"],
+    locales: [
+      "en",
+      "zh-Hans",
+      "es",
+      "fr",
+      "de",
+      "ja",
+      "ko",
+      "pt",
+      "ar",
+      "it",
+      "tr",
+      "pl",
+      "nl",
+      "vi",
+      "th",
+    ], // "fa", "ru", "ro", "sv", "hu", "cs", "el", "da", "fi", "he", "no", "hi", "in", "sl", "se", "sk", "uk", "bg", "hr", "lt", "lv", "et", "cat"
   },
 
   presets: [
     [
-      "classic",
+      "@docusaurus/preset-classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: "docs",
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
@@ -49,6 +67,10 @@ const config = {
           ],
         },
         blog: false,
+        gtag: {
+          trackingID: "G-NB9B8LW9W5",
+          anonymizeIP: true,
+        },
       }),
     ],
   ],
@@ -70,6 +92,10 @@ const config = {
             sidebarId: "mySidebar",
             position: "left",
             label: "Docs",
+          },
+          {
+            type: "localeDropdown",
+            position: "left",
           },
           {
             href: "https://github.com/run-llama/LlamaIndexTS",
@@ -147,6 +173,9 @@ const config = {
       },
     ],
   ],
+  markdown: {
+    format: "detect",
+  },
 };
 
 module.exports = config;

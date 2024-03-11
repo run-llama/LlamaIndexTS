@@ -1,7 +1,7 @@
+import { EOL } from "@llamaindex/env";
 // GitHub translated
-
-import { globalsHelper } from "./GlobalsHelper";
-import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
+import { globalsHelper } from "./GlobalsHelper.js";
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants.js";
 
 class TextSplit {
   textChunk: string;
@@ -18,34 +18,44 @@ class TextSplit {
 
 type SplitRep = { text: string; numTokens: number };
 
-/**
- * Tokenizes sentences. Suitable for English and most European languages.
- * @param text
- * @returns
- */
-export const englishSentenceTokenizer = (text: string) => {
-  // The first part is a lazy match for any character.
-  return text.match(/.+?[.?!]+[\])'"`’”]*(?:\s|$)|.+/g);
+const defaultregex = /[.?!][\])'"`’”]*(?:\s|$)/g;
+export const defaultSentenceTokenizer = (text: string): string[] => {
+  const slist = [];
+  const iter = text.matchAll(defaultregex);
+  let lastIdx = 0;
+  for (const match of iter) {
+    slist.push(text.slice(lastIdx, match.index! + 1));
+    lastIdx = match.index! + 1;
+  }
+  slist.push(text.slice(lastIdx));
+  return slist.filter((s) => s.length > 0);
 };
 
+// Refs: https://github.com/fxsjy/jieba/issues/575#issuecomment-359637511
+const resentencesp =
+  /([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))/;
 /**
- * Tokenizes sentences. Suitable for Chinese, Japanese, and Korean.
+ * Tokenizes sentences. Suitable for Chinese, Japanese, and Korean. Use instead of `defaultSentenceTokenizer`.
  * @param text
- * @returns
+ * @returns string[]
  */
-export const cjkSentenceTokenizer = (text: string) => {
-  // Accepts english style sentence endings with space and
-  // CJK style sentence endings with no space.
-  return text.match(
-    /.+?[.?!]+[\])'"`’”]*(?:\s|$)|.+?[。？！]+[\])'"`’”]*(?:\s|$)?|.+/g,
-  );
-};
+export function cjkSentenceTokenizer(sentence: string): string[] {
+  const slist = [];
+  const parts = sentence.split(resentencesp);
 
-export const unixLineSeparator = "\n";
-export const windowsLineSeparator = "\r\n";
-export const unixParagraphSeparator = unixLineSeparator + unixLineSeparator;
-export const windowsParagraphSeparator =
-  windowsLineSeparator + windowsLineSeparator;
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (resentencesp.test(part) && slist.length > 0) {
+      slist[slist.length - 1] += part;
+    } else if (part) {
+      slist.push(part);
+    }
+  }
+
+  return slist.filter((s) => s.length > 0);
+}
+
+export const defaultParagraphSeparator = EOL + EOL + EOL;
 
 // In theory there's also Mac style \r only, but it's pre-OSX and I don't think
 // many documents will use it.
@@ -61,7 +71,7 @@ export class SentenceSplitter {
   private tokenizer: any;
   private tokenizerDecoder: any;
   private paragraphSeparator: string;
-  private chunkingTokenizerFn: (text: string) => RegExpMatchArray | null;
+  private chunkingTokenizerFn: (text: string) => string[];
   private splitLongSentences: boolean;
 
   constructor(options?: {
@@ -70,7 +80,7 @@ export class SentenceSplitter {
     tokenizer?: any;
     tokenizerDecoder?: any;
     paragraphSeparator?: string;
-    chunkingTokenizerFn?: (text: string) => RegExpMatchArray | null;
+    chunkingTokenizerFn?: (text: string) => string[];
     splitLongSentences?: boolean;
   }) {
     const {
@@ -78,8 +88,8 @@ export class SentenceSplitter {
       chunkOverlap = DEFAULT_CHUNK_OVERLAP,
       tokenizer = null,
       tokenizerDecoder = null,
-      paragraphSeparator = unixParagraphSeparator,
-      chunkingTokenizerFn = undefined,
+      paragraphSeparator = defaultParagraphSeparator,
+      chunkingTokenizerFn,
       splitLongSentences = false,
     } = options ?? {};
 
@@ -97,7 +107,7 @@ export class SentenceSplitter {
       tokenizerDecoder ?? globalsHelper.tokenizerDecoder();
 
     this.paragraphSeparator = paragraphSeparator;
-    this.chunkingTokenizerFn = chunkingTokenizerFn ?? englishSentenceTokenizer;
+    this.chunkingTokenizerFn = chunkingTokenizerFn ?? defaultSentenceTokenizer;
     this.splitLongSentences = splitLongSentences;
   }
 
@@ -120,7 +130,7 @@ export class SentenceSplitter {
 
   getParagraphSplits(text: string, effectiveChunkSize?: number): string[] {
     // get paragraph splits
-    let paragraphSplits: string[] = text.split(this.paragraphSeparator);
+    const paragraphSplits: string[] = text.split(this.paragraphSeparator);
     let idx = 0;
     if (effectiveChunkSize == undefined) {
       return paragraphSplits;
@@ -145,9 +155,9 @@ export class SentenceSplitter {
   }
 
   getSentenceSplits(text: string, effectiveChunkSize?: number): string[] {
-    let paragraphSplits = this.getParagraphSplits(text, effectiveChunkSize);
+    const paragraphSplits = this.getParagraphSplits(text, effectiveChunkSize);
     // Next we split the text using the chunk tokenizer fn/
-    let splits = [];
+    const splits = [];
     for (const parText of paragraphSplits) {
       const sentenceSplits = this.chunkingTokenizerFn(parText);
 
@@ -184,9 +194,9 @@ export class SentenceSplitter {
       }));
     }
 
-    let newSplits: SplitRep[] = [];
+    const newSplits: SplitRep[] = [];
     for (const split of sentenceSplits) {
-      let splitTokens = this.tokenizer(split);
+      const splitTokens = this.tokenizer(split);
       const splitLen = splitTokens.length;
       if (splitLen <= effectiveChunkSize) {
         newSplits.push({ text: split, numTokens: splitLen });
@@ -209,7 +219,7 @@ export class SentenceSplitter {
     // go through sentence splits, combine to chunks that are within the chunk size
 
     // docs represents final list of text chunks
-    let docs: TextSplit[] = [];
+    const docs: TextSplit[] = [];
     // curChunkSentences represents the current list of sentence splits (that)
     // will be merged into a chunk
     let curChunkSentences: SplitRep[] = [];
@@ -222,15 +232,17 @@ export class SentenceSplitter {
         curChunkTokens + newSentenceSplits[i].numTokens >
         effectiveChunkSize
       ) {
-        // push curent doc list to docs
-        docs.push(
-          new TextSplit(
-            curChunkSentences
-              .map((sentence) => sentence.text)
-              .join(" ")
-              .trim(),
-          ),
-        );
+        if (curChunkSentences.length > 0) {
+          // push curent doc list to docs
+          docs.push(
+            new TextSplit(
+              curChunkSentences
+                .map((sentence) => sentence.text)
+                .join(" ")
+                .trim(),
+            ),
+          );
+        }
 
         const lastChunkSentences = curChunkSentences;
 
@@ -275,18 +287,18 @@ export class SentenceSplitter {
       return [];
     }
 
-    let effectiveChunkSize = this.getEffectiveChunkSize(extraInfoStr);
-    let sentenceSplits = this.getSentenceSplits(text, effectiveChunkSize);
+    const effectiveChunkSize = this.getEffectiveChunkSize(extraInfoStr);
+    const sentenceSplits = this.getSentenceSplits(text, effectiveChunkSize);
 
     // Check if any sentences exceed the chunk size. If they don't,
     // force split by tokenizer
-    let newSentenceSplits = this.processSentenceSplits(
+    const newSentenceSplits = this.processSentenceSplits(
       sentenceSplits,
       effectiveChunkSize,
     );
 
     // combine sentence splits into chunks of text that can then be returned
-    let combinedTextSplits = this.combineTextSplits(
+    const combinedTextSplits = this.combineTextSplits(
       newSentenceSplits,
       effectiveChunkSize,
     );
