@@ -126,7 +126,7 @@ export const installTSTemplate = async ({
       "components",
       "observability",
       "typescript",
-      observability.toLowerCase(),
+      observability,
     );
     const relativeObservabilityPath = framework === "nextjs" ? "app" : "src";
 

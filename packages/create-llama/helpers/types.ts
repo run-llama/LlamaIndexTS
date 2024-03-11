@@ -12,7 +12,7 @@ export type TemplateDataSource = {
   config: TemplateDataSourceConfig;
 };
 export type TemplateDataSourceType = "none" | "file" | "folder" | "web";
-export type TemplateObservability = "none" | "OpenTelemetry";
+export type TemplateObservability = "none" | "opentelemetry";
 // Config for both file and folder
 export type FileSourceConfig = {
   path?: string;

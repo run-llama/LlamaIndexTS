@@ -427,7 +427,7 @@ export const askQuestions = async (
         { title: "No", value: "none" },
         { title: "OpenTelemetry", value: "OpenTelemetry" },
       ],
-      initial: 1,
+      initial: 0,
     });
 
     program.observability = observability;
