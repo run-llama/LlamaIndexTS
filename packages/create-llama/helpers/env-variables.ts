@@ -20,9 +20,11 @@ const renderEnvVar = (envVars: EnvVar[]): string => {
       (env.description
         ? `# ${env.description.replaceAll("\n", "\n# ")}\n`
         : "") +
-      (env.name && env.value
-        ? `${env.name}=${env.value}\n\n`
-        : `# ${env.name}=\n\n`),
+      (env.name
+        ? env.value
+          ? `${env.name}=${env.value}\n\n`
+          : `# ${env.name}=\n\n`
+        : ""),
     "",
   );
 };
