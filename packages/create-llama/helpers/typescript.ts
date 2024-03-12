@@ -83,7 +83,7 @@ export const installTSTemplate = async ({
   });
 
   /**
-   * If next.js is not used as a backend, update next.config.js to use static site generation.
+   * If next.js is used, update its configuration if necessary
    */
   if (framework === "nextjs") {
     if (!backend) {
