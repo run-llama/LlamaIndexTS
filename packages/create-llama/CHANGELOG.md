@@ -1,5 +1,13 @@
 # create-llama
 
+## 0.0.28
+
+### Patch Changes
+
+- 89a49f4: Add more config variables to .env file
+- fdf48dd: Add "Start in VSCode" option to postInstallAction
+- fdf48dd: Add devcontainers to generated code
+
 ## 0.0.27
 
 ### Patch Changes

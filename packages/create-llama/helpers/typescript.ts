@@ -193,10 +193,6 @@ export const installTSTemplate = async ({
     const apiPath = path.join(root, "app", "api");
     await fs.rm(apiPath, { recursive: true });
     // modify the dev script to use the custom api path
-    packageJson.scripts = {
-      ...packageJson.scripts,
-      dev: `cross-env NEXT_PUBLIC_CHAT_API=${customApiPath} next dev`,
-    };
   }
 
   if (engine === "context" && relativeEngineDestPath) {
