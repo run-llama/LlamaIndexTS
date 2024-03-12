@@ -116,13 +116,13 @@ export async function createApp({
     await installTemplate({ ...args, backend: true });
   }
 
+  await writeDevcontainer(root, templatesDir, framework, frontend);
+
   process.chdir(root);
   if (tryGitInit(root)) {
     console.log("Initialized a git repository.");
     console.log();
   }
-
-  await writeDevcontainer(root, templatesDir, framework, frontend);
 
   if (toolsRequireConfig(tools)) {
     console.log(
