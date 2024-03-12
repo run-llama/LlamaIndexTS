@@ -4,6 +4,7 @@ import fs from "fs";
 // @ts-ignore
 import HTTPImport from "./libs/http-import.js"; // TODO: test with js first then convert to ts
 import type { BaseTool, ToolMetadata } from "./types.js";
+import { arrayKVtoObject, transformObject } from "./utils/object.js";
 
 export default class ToolFactory {
   /**
@@ -21,30 +22,6 @@ export default class ToolFactory {
       const object = classWrapper.wrap(__pin(address));
       __unpin(address);
       return object;
-    };
-
-    const transformObject = (
-      obj: any,
-      transfomer: Record<string, (value: any) => any>,
-    ) => {
-      const newObj: Record<string, any> = {};
-      for (const key in transfomer) {
-        newObj[key] = transfomer[key](obj[key]);
-      }
-      return newObj;
-    };
-
-    const arrayKVtoObject = (
-      array: {
-        key: string;
-        value: any;
-      }[],
-    ) => {
-      const obj: Record<string, any> = {};
-      for (const item of array) {
-        obj[item.key] = item.value;
-      }
-      return obj;
     };
 
     const {
