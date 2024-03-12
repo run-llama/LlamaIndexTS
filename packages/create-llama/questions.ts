@@ -429,6 +429,19 @@ export const askQuestions = async (
     }
   }
 
+  if (!program.openAiKey) {
+    const { key } = await prompts(
+      {
+        type: "text",
+        name: "key",
+        message: "Please provide your OpenAI API key (leave blank to skip):",
+      },
+      handlers,
+    );
+    program.openAiKey = key;
+    preferences.openAiKey = key;
+  }
+
   if (!program.model) {
     if (ciInfo.isCI) {
       program.model = getPrefOrDefault("model");
@@ -703,19 +716,6 @@ export const askQuestions = async (
       program.tools = tools;
       preferences.tools = tools;
     }
-  }
-
-  if (!program.openAiKey) {
-    const { key } = await prompts(
-      {
-        type: "text",
-        name: "key",
-        message: "Please provide your OpenAI API key (leave blank to skip):",
-      },
-      handlers,
-    );
-    program.openAiKey = key;
-    preferences.openAiKey = key;
   }
 
   if (program.framework !== "fastapi" && program.eslint === undefined) {
