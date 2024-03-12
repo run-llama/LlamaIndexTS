@@ -3,13 +3,5 @@
     "outputFileTracingIncludes": {
       "/*": ["./cache/**/*"]
     }
-  },
-  "webpack": {
-    "resolve": {
-      "alias": {
-        "sharp$": false,
-        "onnxruntime-node$": false
-      }
-    }
   }
 }
