@@ -20,7 +20,6 @@ export const defaultMetadata: ToolMetadata = new ToolMetadata(
     ],
     ["query"],
   ),
-  null,
 );
 
 export class Tool extends BaseTool {

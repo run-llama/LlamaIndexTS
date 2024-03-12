@@ -38,33 +38,19 @@ export class ToolParameters {
   }
 }
 
-// AssemblyScript does not support any type yet, so we use string and parse it in the application
-export class ArgsKwargsRecord {
-  key: string;
-  value: string;
-
-  constructor(key: string, value: string) {
-    this.key = key;
-    this.value = value;
-  }
-}
-
 export class ToolMetadata {
   name: string;
   description: string;
   parameters: ToolParameters | null = null;
-  argsKwargs: ArgsKwargsRecord[] | null = null;
 
   constructor(
     name: string,
     description: string,
     parameters: ToolParameters | null = null,
-    argsKwargs: ArgsKwargsRecord[] | null = null,
   ) {
     this.name = name;
     this.description = description;
     this.parameters = parameters;
-    this.argsKwargs = argsKwargs;
   }
 }
 
