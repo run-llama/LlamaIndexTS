@@ -2,7 +2,9 @@ This is a [LlamaIndex](https://www.llamaindex.ai/) project using [FastAPI](https
 
 ## Getting Started
 
-First, setup the environment:
+First, setup the environment with poetry:
+
+> **_Note:_** This step is not needed if you are using the dev-container.
 
 ```
 poetry install
@@ -44,7 +46,7 @@ Open [http://localhost:8000/docs](http://localhost:8000/docs) with your browser 
 The API allows CORS for all origins to simplify development. You can change this behavior by setting the `ENVIRONMENT` environment variable to `prod`:
 
 ```
-ENVIRONMENT=prod uvicorn main:app
+ENVIRONMENT=prod python main.py
 ```
 
 ## Learn More

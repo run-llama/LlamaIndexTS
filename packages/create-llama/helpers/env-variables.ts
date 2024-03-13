@@ -199,6 +199,7 @@ Given this information, please answer the question: {query_str}
               name: "NEXT_PUBLIC_MODEL",
               description:
                 "The LLM model to use (hardcode to front-end artifact).",
+              value: opts.model || "gpt-3.5-turbo",
             }
           : {},
       ],

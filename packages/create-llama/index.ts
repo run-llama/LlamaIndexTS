@@ -315,7 +315,7 @@ Got error: ${(error as Error).message}.\n`,
         ),
       );
       console.log(
-        `Make sure you have VSCode installed and added to your PATH. 
+        `Make sure you have VSCode installed and added to your PATH (shell alias will not work). 
 Please check ${cyan(
           terminalLink(
             "This documentation",

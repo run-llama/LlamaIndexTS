@@ -34,5 +34,6 @@ app.include_router(chat_router, prefix="/api/chat")
 if __name__ == "__main__":
     app_host = os.getenv("APP_HOST", "0.0.0.0")
     app_port = int(os.getenv("APP_PORT", "8000"))
+    reload = True if environment == "dev" else False
 
-    uvicorn.run(app="main:app", host=app_host, port=app_port, reload=True)
+    uvicorn.run(app="main:app", host=app_host, port=app_port, reload=reload)
