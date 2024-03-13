@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@types/node": "^18.19.14",
-    "as-bind": "^0.8.0"
+    "@assemblyscript/loader": "^0.19.9"
   },
   "devDependencies": {
     "assemblyscript": "^0.19.9",

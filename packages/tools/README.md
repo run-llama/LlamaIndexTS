@@ -2,8 +2,6 @@
 
 ```ts
 import { TestTool } from "@llamaindex/tools";
-
 const testTool = new TestTool();
-console.log(testTool.metadata);
-console.log(testTool.call("Some query string here."));
+testTool.call("1"); // get post has id = 1 (url: https://jsonplaceholder.typicode.com/todos?id=1)
 ```

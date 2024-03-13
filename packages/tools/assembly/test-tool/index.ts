@@ -1,11 +1,11 @@
 import {
-  BaseTool,
   ToolMetadata,
   ToolParameterProperty,
   ToolParameterPropertyRecord,
   ToolParameters,
 } from "../base";
-import { http } from "../libs";
+import * as http from "../http";
+export * from "../base";
 
 export const defaultMetadata: ToolMetadata = new ToolMetadata(
   "Test Tool",
@@ -22,33 +22,6 @@ export const defaultMetadata: ToolMetadata = new ToolMetadata(
   ),
 );
 
-export class Tool extends BaseTool {
-  constructor(metadata: ToolMetadata | null) {
-    super();
-    this.metadata = metadata ? metadata : defaultMetadata;
-  }
-
-  call(query: string): string {
-    const headers = new Map<string, string>();
-
-    let result: string = "";
-    http.get(
-      "https://jsonplaceholder.typicode.com/todos/1",
-      headers,
-      (res: string) => {
-        result += res;
-      },
-    );
-
-    return (
-      "Tool: " +
-      this.metadata.name +
-      "\nQuery: " +
-      query +
-      " \n>> Result: " +
-      result
-    );
-  }
+export function call(id: string): void {
+  http.get(`https://jsonplaceholder.typicode.com/todos?id=${id}`, "");
 }
-
-export * from "../base";

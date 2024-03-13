@@ -1,8 +1,6 @@
 // @ts-ignore
-import AsBind from "as-bind/dist/as-bind.cjs.js";
+import loader from "@assemblyscript/loader";
 import fs from "fs";
-// @ts-ignore
-import HTTPImport from "./libs/http-import.js"; // TODO: test with js first then convert to ts
 import type { BaseTool, ToolMetadata } from "./types.js";
 import { arrayKVtoObject, transformObject } from "./utils/object.js";
 
@@ -25,16 +23,15 @@ export default class ToolFactory {
     };
 
     const {
-      Tool,
       ToolMetadata,
       ToolParameters,
       ToolParameterPropertyRecord,
       ToolParameterProperty,
     } = wasmInstance.exports;
 
-    const tool = new Tool();
+    const { defaultMetadata, call } = wasmInstance.exports;
     const metadata = transformObject(
-      getObjectByAddress(tool.metadata, ToolMetadata),
+      getObjectByAddress(defaultMetadata, ToolMetadata),
       {
         name: __getString,
         description: __getString,
@@ -74,9 +71,9 @@ export default class ToolFactory {
     ) as ToolMetadata;
 
     // Wrap assemblyscript function to a ts function
-    const callFunction = (...args: any[]): any => {
-      const argsString = args.map((arg) => __newString(arg.toString()));
-      return __getString(tool.call(...argsString));
+    const callFunction = (...args: string[]): string => {
+      const argsString = args.map((arg) => __pin(__newString(arg)));
+      return __getString(call(...argsString));
     };
 
     return {
@@ -89,12 +86,42 @@ export default class ToolFactory {
     const wasmFile = fs.readFileSync(
       `node_modules/@llamaindex/tools/dist/${filePath}.wasm`,
     );
-    const http = new HTTPImport();
-    const imports = {
-      ...http.wasmImports,
-    };
-    const wasmInstance = AsBind.instantiateSync(wasmFile, imports);
-    http.wasmExports = wasmInstance.exports;
+
+    const wasmInstance = loader.instantiateSync(wasmFile, {
+      http: {
+        // import fetch from JavaScript and use it in WebAssembly
+        get(url: string, headersString: string) {
+          const stringHeaders = wasmInstance.exports
+            .__getString(headersString)
+            .split(",,,,");
+
+          stringHeaders.pop();
+          const headers: Record<string, string> = {};
+          for (let i = 0; i < stringHeaders.length; i++) {
+            headers[stringHeaders[i]] = stringHeaders[i + 1];
+            i++;
+          }
+          fetch(wasmInstance.exports.__getString(url), {
+            headers: {
+              ...headers,
+            },
+            mode: "no-cors",
+            method: "GET",
+          })
+            .then((fetched) => {
+              fetched.json().then((data) => {
+                console.log("Response from API call: ", data);
+                // Add callback to handle data if needed
+                return wasmInstance.exports.__newString(JSON.stringify(data));
+              });
+            })
+            .catch((err) => {
+              console.error(wasmInstance.exports.__newString(err.message));
+            });
+        },
+      },
+    });
+
     return wasmInstance;
   };
 

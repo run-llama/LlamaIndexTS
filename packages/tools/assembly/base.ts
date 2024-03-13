@@ -53,10 +53,3 @@ export class ToolMetadata {
     this.parameters = parameters;
   }
 }
-
-export class BaseTool {
-  metadata!: ToolMetadata;
-  call(_args: Object): Object {
-    throw new Error("Not implemented");
-  }
-}
