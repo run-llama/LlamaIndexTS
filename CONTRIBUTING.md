@@ -84,8 +84,7 @@ Any changes you make should be reflected in the browser. If you need to regenera
 To publish a new version of the library, run
 
 ```shell
-pnpm new-llamaindex
-pnpm new-create-llama
+pnpm new-version
 pnpm release
 git push # push to the main branch
 git push --tags

@@ -4,4 +4,3 @@ pnpm-lock.yaml
 lib/
 dist/
 .docusaurus/
-packages/create-llama/e2e/cache/
