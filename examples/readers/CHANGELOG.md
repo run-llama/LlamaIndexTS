@@ -1,6 +1,6 @@
-# @llamaindex/experimental
+# llamaindex-loader-example
 
-## 0.0.3
+## null
 
 ### Patch Changes
 

@@ -1,9 +1,10 @@
-# @llamaindex/experimental
+# examples
 
-## 0.0.3
+## 0.0.4
 
 ### Patch Changes
 
+- d2e8d0c: add support for Milvus vector store
 - Updated dependencies [d2e8d0c]
 - Updated dependencies [aefc326]
 - Updated dependencies [484a710]

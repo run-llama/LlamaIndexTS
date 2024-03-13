@@ -1,7 +1,7 @@
 {
   "name": "examples",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
     "@datastax/astra-db-ts": "^0.1.4",
@@ -11,7 +11,7 @@
     "chromadb": "^1.8.1",
     "commander": "^11.1.0",
     "dotenv": "^16.4.1",
-    "llamaindex": "latest",
+    "llamaindex": "workspace:*",
     "mongodb": "^6.2.0",
     "pathe": "^1.1.2"
   },
