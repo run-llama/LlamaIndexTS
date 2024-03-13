@@ -8,7 +8,7 @@ import { PDFReader } from "./PDFReader.js";
 import {
   SimpleDirectoryReader as EdgeSimpleDirectoryReader,
   type SimpleDirectoryReaderLoadDataParams,
-} from "./SimpleDirectoryReader.edge-light.js";
+} from "./SimpleDirectoryReader.edge.js";
 import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader } from "./type.js";
 
