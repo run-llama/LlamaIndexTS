@@ -1,3 +1,4 @@
+import type { BasePromptTemplate } from "llamaindex";
 import type { Event } from "../callbacks/CallbackManager.js";
 import type { LLM } from "../llm/index.js";
 import { streamConverter } from "../llm/utils.js";
@@ -9,7 +10,9 @@ import type {
 } from "../Prompt.js";
 import {
   defaultRefinePrompt,
+  defaultRefinePromptTemplate,
   defaultTextQaPrompt,
+  defaultTextQaTemplate,
   defaultTreeSummarizePrompt,
 } from "../Prompt.js";
 import type { PromptHelper } from "../PromptHelper.js";
@@ -80,25 +83,25 @@ export class SimpleResponseBuilder implements ResponseBuilder {
 export class Refine extends PromptMixin implements ResponseBuilder {
   llm: LLM;
   promptHelper: PromptHelper;
-  textQATemplate: TextQaPrompt;
-  refineTemplate: RefinePrompt;
+  textQATemplate: BasePromptTemplate;
+  refineTemplate: BasePromptTemplate;
 
   constructor(
     serviceContext: ServiceContext,
-    textQATemplate?: TextQaPrompt,
-    refineTemplate?: RefinePrompt,
+    textQATemplate?: BasePromptTemplate,
+    refineTemplate?: BasePromptTemplate,
   ) {
     super();
 
     this.llm = serviceContext.llm;
     this.promptHelper = serviceContext.promptHelper;
-    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
-    this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
+    this.textQATemplate = textQATemplate ?? defaultTextQaTemplate;
+    this.refineTemplate = refineTemplate ?? defaultRefinePromptTemplate;
   }
 
   protected _getPrompts(): {
-    textQATemplate: RefinePrompt;
-    refineTemplate: RefinePrompt;
+    textQATemplate: BasePromptTemplate;
+    refineTemplate: BasePromptTemplate;
   } {
     return {
       textQATemplate: this.textQATemplate,
@@ -107,8 +110,8 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   protected _updatePrompts(prompts: {
-    textQATemplate: RefinePrompt;
-    refineTemplate: RefinePrompt;
+    textQATemplate: BasePromptTemplate;
+    refineTemplate: BasePromptTemplate;
   }): void {
     if (prompts.textQATemplate) {
       this.textQATemplate = prompts.textQATemplate;
@@ -167,7 +170,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     parentEvent?: Event,
   ) {
     const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate({ ...input, query: queryStr });
+      this.textQATemplate.format({ ...input, query: queryStr });
     const textChunks = this.promptHelper.repack(textQATemplate, [textChunk]);
 
     let response: AsyncIterable<string> | string | undefined = undefined;
@@ -206,7 +209,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     parentEvent?: Event,
   ) {
     const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate({ ...input, query: queryStr });
+      this.refineTemplate.format({ ...input, query: queryStr });
 
     const textChunks = this.promptHelper.repack(refineTemplate, [textChunk]);
 
@@ -262,9 +265,9 @@ export class CompactAndRefine extends Refine {
     AsyncIterable<string> | string
   > {
     const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate({ ...input, query: query });
+      this.textQATemplate.format({ ...input, query: query });
     const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate({ ...input, query: query });
+      this.refineTemplate.format({ ...input, query: query });
 
     const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
     const newTexts = this.promptHelper.repack(maxPrompt, textChunks);

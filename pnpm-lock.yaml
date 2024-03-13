@@ -228,6 +228,9 @@ importers:
       mongodb:
         specifier: ^6.3.0
         version: 6.3.0
+      mustache:
+        specifier: ^4.2.0
+        version: 4.2.0
       notion-md-crawler:
         specifier: ^0.0.2
         version: 0.0.2
@@ -271,6 +274,9 @@ importers:
       '@swc/core':
         specifier: ^1.4.2
         version: 1.4.2
+      '@types/mustache':
+        specifier: ^4.2.5
+        version: 4.2.5
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -4347,6 +4353,10 @@ packages:
   /@types/ms@0.7.34:
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
 
+  /@types/mustache@4.2.5:
+    resolution: {integrity: sha512-PLwiVvTBg59tGFL/8VpcGvqOu3L4OuveNvPi0EYbWchRdEVP++yRUXJPFl+CApKEq13017/4Nf7aQ5lTtHUNsA==}
+    dev: true
+
   /@types/node-fetch@2.6.9:
     resolution: {integrity: sha512-bQVlnMLFJ2d35DkPNjEPmd9ueO/rh5EiaZt2bhqiSarPjZIuIV6bPQVqcrEyvNo+AfTrRGVazle1tl597w3gfA==}
     dependencies:
@@ -4464,7 +4474,7 @@ packages:
     resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.2.48
+      '@types/react': 18.2.61
     dev: true
 
   /@types/react@18.2.48:
@@ -10902,6 +10912,11 @@ packages:
     dependencies:
       dns-packet: 5.6.1
       thunky: 1.1.0
+
+  /mustache@4.2.0:
+    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
+    hasBin: true
+    dev: false
 
   /mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}

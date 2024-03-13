@@ -31,3 +31,4 @@ export * from "./storage/index.js";
 export * from "./synthesizers/index.js";
 export * from "./tools/index.js";
 export * from "./types.js";
+export * from "./prompts/index.js";

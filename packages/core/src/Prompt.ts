@@ -1,5 +1,6 @@
 import type { SubQuestion } from "./engines/query/types.js";
 import type { ChatMessage } from "./llm/types.js";
+import { PromptTemplate } from "./prompts/types.js";
 import type { ToolMetadata } from "./types.js";
 
 /**
@@ -24,15 +25,15 @@ DEFAULT_TEXT_QA_PROMPT_TMPL = (
 )
 */
 
-export const defaultTextQaPrompt = ({ context = "", query = "" }) => {
-  return `Context information is below.
+export const defaultTextQaPrompt = () => `Context information is below.
 ---------------------
-${context}
+{{context}}
 ---------------------
 Given the context information and not prior knowledge, answer the query.
-Query: ${query}
+Query: {{query}}
 Answer:`;
-};
+
+export const defaultTextQaTemplate = new PromptTemplate(defaultTextQaPrompt, {})
 
 export type TextQaPrompt = typeof defaultTextQaPrompt;
 
@@ -101,20 +102,18 @@ DEFAULT_REFINE_PROMPT_TMPL = (
 )
 */
 
-export const defaultRefinePrompt = ({
-  query = "",
-  existingAnswer = "",
-  context = "",
-}) => {
-  return `The original query is as follows: ${query}
-We have provided an existing answer: ${existingAnswer}
+export const defaultRefinePrompt = () => {
+  return `The original query is as follows: {{query}}
+We have provided an existing answer: {{existingAnswer}}
 We have the opportunity to refine the existing answer (only if needed) with some more context below.
 ------------
-${context}
+{{context}}
 ------------
 Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
 Refined Answer:`;
 };
+
+export const defaultRefinePromptTemplate = new PromptTemplate(defaultRefinePrompt, {})
 
 export type RefinePrompt = typeof defaultRefinePrompt;
 
