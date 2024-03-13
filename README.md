@@ -141,12 +141,12 @@ const nextConfig = {
             {
               from: path.join(
                 __dirname,
-                "node_modules/@zilliz/milvus2-sdk-node/dist"
+                "node_modules/@zilliz/milvus2-sdk-node/dist",
               ),
               to: path.join(__dirname, ".next"),
             },
           ],
-        })
+        }),
       );
     }
     // Important: return the modified config
