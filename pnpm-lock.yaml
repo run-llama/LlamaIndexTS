@@ -219,9 +219,6 @@ importers:
       cohere-ai:
         specifier: ^7.7.5
         version: 7.7.5
-      crypto-js:
-        specifier: ^4.2.0
-        version: 4.2.0
       file-type:
         specifier: ^18.7.0
         version: 18.7.0
@@ -6322,10 +6319,6 @@ packages:
 
   /crypt@0.0.2:
     resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
-    dev: false
-
-  /crypto-js@4.2.0:
-    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: false
 
   /crypto-random-string@4.0.0:

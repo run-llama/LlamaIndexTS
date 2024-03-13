@@ -11,7 +11,7 @@ const collectionName = "movie_reviews";
 async function main() {
   try {
     const reader = new PapaCSVReader(false);
-    const docs = await reader.loadData("milvus/data/movie_reviews.csv");
+    const docs = await reader.loadData("./data/movie_reviews.csv");
 
     const vectorStore = new MilvusVectorStore({
       contentKey: "content",

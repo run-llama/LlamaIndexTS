@@ -23,7 +23,6 @@
     "assemblyai": "^4.2.2",
     "chromadb": "~1.7.3",
     "cohere-ai": "^7.7.5",
-    "crypto-js": "^4.2.0",
     "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.10",
     "lodash": "^4.17.21",
