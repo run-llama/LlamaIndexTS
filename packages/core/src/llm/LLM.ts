@@ -620,6 +620,7 @@ export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
 export const ALL_AVAILABLE_V3_MODELS = {
   "claude-3-opus": { contextWindow: 200000 },
   "claude-3-sonnet": { contextWindow: 200000 },
+  "claude-3-haiku": { contextWindow: 200000 },
 };
 
 export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
@@ -630,6 +631,7 @@ export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
 const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-opus": "claude-3-opus-20240229",
   "claude-3-sonnet": "claude-3-sonnet-20240229",
+  "claude-3-haiku": "claude-3-haiku-20240307",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
 /**
