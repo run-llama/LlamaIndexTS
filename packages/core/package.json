@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.15.0",
+    "@anthropic-ai/sdk": "^0.18.0",
     "@aws-crypto/sha256-js": "^5.2.0",
     "@datastax/astra-db-ts": "^0.1.4",
     "@grpc/grpc-js": "^1.10.2",
