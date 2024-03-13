@@ -1,5 +1,5 @@
 {
-  "name": "@llamaindex/tools",
+  "name": "@llamaindex/wasm-tools",
   "version": "0.0.1",
   "license": "MIT",
   "type": "module",
