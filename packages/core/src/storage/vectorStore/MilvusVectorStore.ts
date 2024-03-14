@@ -193,7 +193,7 @@ export class MilvusVectorStore implements VectorStore {
     const ids: string[] = [];
 
     found.results.forEach((result) => {
-      let node = metadataDictToNode(result.metadata);
+      const node = metadataDictToNode(result.metadata);
       node.setContent(result.content);
       nodes.push(node);
 
