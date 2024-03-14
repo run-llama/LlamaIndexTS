@@ -153,7 +153,7 @@ importers:
   examples/readers:
     dependencies:
       llamaindex:
-        specifier: latest
+        specifier: workspace:*
         version: link:../../packages/core
     devDependencies:
       '@types/node':
