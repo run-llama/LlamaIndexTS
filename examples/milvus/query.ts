@@ -9,7 +9,6 @@ const collectionName = "movie_reviews";
 async function main() {
   try {
     const milvus = new MilvusVectorStore({ collection: collectionName });
-    await milvus.connect();
 
     const ctx = serviceContextFromDefaults();
     const index = await VectorStoreIndex.fromVectorStore(milvus, ctx);

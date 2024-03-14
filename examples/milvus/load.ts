@@ -13,7 +13,6 @@ async function main() {
     const docs = await reader.loadData("./data/movie_reviews.csv");
 
     const vectorStore = new MilvusVectorStore({ collection: collectionName });
-    await vectorStore.connect();
 
     const ctx = await storageContextFromDefaults({ vectorStore });
     const index = await VectorStoreIndex.fromDocuments(docs, {

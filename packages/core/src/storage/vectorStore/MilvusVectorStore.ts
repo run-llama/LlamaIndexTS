@@ -7,13 +7,13 @@ import {
   type DeleteReq,
   type RowData,
 } from "@zilliz/milvus2-sdk-node";
-import { BaseNode, Document, MetadataMode, type Metadata } from "../../Node.js";
+import { BaseNode, MetadataMode, type Metadata } from "../../Node.js";
 import type {
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
-import { nodeToMetadata } from "./utils.js";
+import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 export class MilvusVectorStore implements VectorStore {
   public storesText: boolean = true;
@@ -188,19 +188,23 @@ export class MilvusVectorStore implements VectorStore {
       vector: query.queryEmbedding,
     });
 
+    const nodes: BaseNode<Metadata>[] = [];
+    const similarities: number[] = [];
+    const ids: string[] = [];
+
+    found.results.forEach((result) => {
+      let node = metadataDictToNode(result.metadata);
+      node.setContent(result.content);
+      nodes.push(node);
+
+      similarities.push(result.score);
+      ids.push(String(result.id));
+    });
+
     return {
-      nodes: found.results.map((result) => {
-        return new Document({
-          id_: result[this.idKey],
-          metadata: result[this.metadataKey] ?? {},
-          text: this.contentKey
-            ? result[this.contentKey]
-            : JSON.stringify(result),
-          embedding: result[this.embeddingKey],
-        });
-      }),
-      similarities: found.results.map((result) => result.score),
-      ids: found.results.map((result) => String(result.id)),
+      nodes,
+      similarities,
+      ids,
     };
   }
 
