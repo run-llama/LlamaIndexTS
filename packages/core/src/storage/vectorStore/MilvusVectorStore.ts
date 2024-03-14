@@ -21,7 +21,8 @@ export class MilvusVectorStore implements VectorStore {
   private flatMetadata: boolean = true;
 
   private milvusClient: MilvusClient;
-  private collection: string = "llamacollection";
+  private collection: string | null = null;
+  private collectionName: string;
 
   private idKey: string;
   private contentKey: string;
@@ -65,7 +66,7 @@ export class MilvusVectorStore implements VectorStore {
       );
     }
 
-    this.collection = init?.collection ?? this.collection;
+    this.collectionName = init?.collection ?? "llamacollection";
     this.idKey = init?.idKey ?? "id";
     this.contentKey = init?.contentKey ?? "content";
     this.metadataKey = init?.metadataKey ?? "metadata";
@@ -76,9 +77,9 @@ export class MilvusVectorStore implements VectorStore {
     return this.milvusClient;
   }
 
-  public async createCollection() {
+  private async createCollection() {
     await this.milvusClient.createCollection({
-      collection_name: this.collection,
+      collection_name: this.collectionName,
       fields: [
         {
           name: this.idKey,
@@ -103,36 +104,35 @@ export class MilvusVectorStore implements VectorStore {
       ],
     });
     await this.milvusClient.createIndex({
-      collection_name: this.collection,
+      collection_name: this.collectionName,
       field_name: this.embeddingKey,
     });
   }
 
-  public async connect(): Promise<void> {
-    await this.milvusClient.connectPromise;
+  private async ensureCollection(): Promise<void> {
+    if (!this.collection) {
+      await this.milvusClient.connectPromise;
 
-    // Check collection exists
-    const isCollectionExist = await this.milvusClient.hasCollection({
-      collection_name: this.collection,
-    });
-    if (!isCollectionExist.value) {
-      await this.createCollection();
+      // Check collection exists
+      const isCollectionExist = await this.milvusClient.hasCollection({
+        collection_name: this.collectionName,
+      });
+      if (!isCollectionExist.value) {
+        await this.createCollection();
+      }
+
+      await this.milvusClient.loadCollectionSync({
+        collection_name: this.collectionName,
+      });
+      this.collection = this.collectionName;
     }
-
-    await this.milvusClient.loadCollectionSync({
-      collection_name: this.collection,
-    });
-
-    this.collection = this.collection;
   }
 
   public async add(nodes: BaseNode<Metadata>[]): Promise<string[]> {
-    if (!this.collection) {
-      throw new Error("Must connect to collection before adding.");
-    }
+    await this.ensureCollection();
 
     const result = await this.milvusClient.insert({
-      collection_name: this.collection,
+      collection_name: this.collectionName,
       data: nodes.map((node) => {
         const metadata = nodeToMetadata(
           node,
@@ -167,9 +167,11 @@ export class MilvusVectorStore implements VectorStore {
     refDocId: string,
     deleteOptions?: Omit<DeleteReq, "ids">,
   ): Promise<void> {
+    this.ensureCollection();
+
     await this.milvusClient.delete({
       ids: [refDocId],
-      collection_name: this.collection,
+      collection_name: this.collectionName,
       ...deleteOptions,
     });
   }
@@ -178,12 +180,10 @@ export class MilvusVectorStore implements VectorStore {
     query: VectorStoreQuery,
     _options?: any,
   ): Promise<VectorStoreQueryResult> {
-    if (!this.collection) {
-      throw new Error("Must connect to collection before querying.");
-    }
+    await this.ensureCollection();
 
     const found = await this.milvusClient.search({
-      collection_name: this.collection,
+      collection_name: this.collectionName,
       limit: query.similarityTopK,
       vector: query.queryEmbedding,
     });
