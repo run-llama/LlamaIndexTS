@@ -1,5 +1,25 @@
 # llamaindex
 
+## 0.2.0
+
+### Minor Changes
+
+- bf583a7: Use parameter object for retrieve function of Retriever (to align usage with query function of QueryEngine)
+
+### Patch Changes
+
+- d2e8d0c: add support for Milvus vector store
+- aefc326: feat: experimental package + json query engine
+- 484a710: - Add missing exports:
+  - `IndexStructType`,
+  - `IndexDict`,
+  - `jsonToIndexStruct`,
+  - `IndexList`,
+  - `IndexStruct`
+  - Fix `IndexDict.toJson()` method
+- d766bd0: Add streaming to agents
+- dd95927: add Claude Haiku support and update anthropic SDK
+
 ## 0.1.21
 
 ### Patch Changes
