@@ -11,8 +11,9 @@
     "prepare": "husky",
     "test": "turbo run test",
     "type-check": "tsc -b --diagnostics",
-    "release": "pnpm run build:release && changeset publish",
-    "new-version": "pnpm run build:release && changeset version"
+    "release": "pnpm run check-minor-version && pnpm run build:release && changeset publish",
+    "check-minor-version": "node ./scripts/check-minor-version",
+    "new-version": "pnpm run build:release && changeset version && pnpm run check-minor-version"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
