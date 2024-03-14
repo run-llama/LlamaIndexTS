@@ -1,7 +1,5 @@
 # llamaindex-loader-example
 
-## null
-
 ### Patch Changes
 
 - Updated dependencies [d2e8d0c]
