@@ -1,6 +1,7 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import type { ChannelOptions } from "@grpc/grpc-js";
 import {
+  DataType,
   MilvusClient,
   type ClientConfig,
   type DeleteReq,
@@ -12,16 +13,18 @@ import type {
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
+import { nodeToMetadata } from "./utils.js";
 
 export class MilvusVectorStore implements VectorStore {
   public storesText: boolean = true;
   public isEmbeddingQuery?: boolean;
+  private flatMetadata: boolean = true;
 
   private milvusClient: MilvusClient;
-  private collection: string = "";
+  private collection: string = "llamacollection";
 
   private idKey: string;
-  private contentKey: string | undefined; // if undefined the entirety of the node aside from the id and embedding will be stored as content
+  private contentKey: string;
   private metadataKey: string;
   private embeddingKey: string;
 
@@ -34,6 +37,7 @@ export class MilvusVectorStore implements VectorStore {
         password?: string;
         channelOptions?: ChannelOptions;
       };
+      collection?: string;
       idKey?: string;
       contentKey?: string;
       metadataKey?: string;
@@ -61,8 +65,9 @@ export class MilvusVectorStore implements VectorStore {
       );
     }
 
+    this.collection = init?.collection ?? this.collection;
     this.idKey = init?.idKey ?? "id";
-    this.contentKey = init?.contentKey;
+    this.contentKey = init?.contentKey ?? "content";
     this.metadataKey = init?.metadataKey ?? "metadata";
     this.embeddingKey = init?.embeddingKey ?? "embedding";
   }
@@ -71,13 +76,54 @@ export class MilvusVectorStore implements VectorStore {
     return this.milvusClient;
   }
 
-  public async connect(collection: string): Promise<void> {
+  public async createCollection() {
+    await this.milvusClient.createCollection({
+      collection_name: this.collection,
+      fields: [
+        {
+          name: this.idKey,
+          data_type: DataType.VarChar,
+          is_primary_key: true,
+          max_length: 200,
+        },
+        {
+          name: this.embeddingKey,
+          data_type: DataType.FloatVector,
+          dim: 1536,
+        },
+        {
+          name: this.contentKey,
+          data_type: DataType.VarChar,
+          max_length: 9000,
+        },
+        {
+          name: this.metadataKey,
+          data_type: DataType.JSON,
+        },
+      ],
+    });
+    await this.milvusClient.createIndex({
+      collection_name: this.collection,
+      field_name: this.embeddingKey,
+    });
+  }
+
+  public async connect(): Promise<void> {
     await this.milvusClient.connectPromise;
+
+    // Check collection exists
+    const isCollectionExist = await this.milvusClient.hasCollection({
+      collection_name: this.collection,
+    });
+    if (!isCollectionExist.value) {
+      await this.createCollection();
+    }
+
     await this.milvusClient.loadCollectionSync({
-      collection_name: collection,
+      collection_name: this.collection,
     });
 
-    this.collection = collection;
+    this.collection = this.collection;
   }
 
   public async add(nodes: BaseNode<Metadata>[]): Promise<string[]> {
@@ -88,15 +134,19 @@ export class MilvusVectorStore implements VectorStore {
     const result = await this.milvusClient.insert({
       collection_name: this.collection,
       data: nodes.map((node) => {
+        const metadata = nodeToMetadata(
+          node,
+          true,
+          this.contentKey,
+          this.flatMetadata,
+        );
+
         const entry: RowData = {
           [this.idKey]: node.id_,
           [this.embeddingKey]: node.getEmbedding(),
-          [this.metadataKey]: node.metadata ?? {},
+          [this.contentKey]: node.getContent(MetadataMode.NONE),
+          [this.metadataKey]: metadata,
         };
-
-        if (this.contentKey) {
-          entry[this.contentKey] = String(node.getContent(MetadataMode.NONE));
-        }
 
         return entry;
       }),
