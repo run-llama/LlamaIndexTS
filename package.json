@@ -13,7 +13,8 @@
     "type-check": "tsc -b --diagnostics",
     "release": "pnpm run check-minor-version && pnpm run build:release && changeset publish",
     "check-minor-version": "node ./scripts/check-minor-version",
-    "new-version": "pnpm run build:release && changeset version && pnpm run check-minor-version"
+    "new-version": "pnpm run build:release && changeset version && pnpm run check-minor-version",
+    "new-snapshot": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
