@@ -4,8 +4,14 @@ import {
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
 import { mockServiceContext } from "../utility/mockServiceContext.js";
+
+vi.mock("llamaindex/llm/open_ai", () => {
+  return {
+    getOpenAISession: vi.fn().mockImplementation(() => null),
+  };
+});
 
 describe.sequential("VectorStoreIndex", () => {
   let serviceContext: ServiceContext;

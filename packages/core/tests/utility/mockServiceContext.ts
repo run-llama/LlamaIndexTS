@@ -9,15 +9,6 @@ import {
   mockLlmGeneration,
 } from "../utility/mockOpenAI.js";
 
-import { vi } from "vitest";
-
-// Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", () => {
-  return {
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
-
 export function mockServiceContext() {
   const embeddingModel = new OpenAIEmbedding();
   const llm = new OpenAI();

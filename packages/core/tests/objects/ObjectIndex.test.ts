@@ -5,7 +5,14 @@ import {
   SimpleToolNodeMapping,
   VectorStoreIndex,
 } from "llamaindex";
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+
+vi.mock("llamaindex/llm/open_ai", () => {
+  return {
+    getOpenAISession: vi.fn().mockImplementation(() => null),
+  };
+});
+
 import { mockServiceContext } from "../utility/mockServiceContext.js";
 
 describe("ObjectIndex", () => {

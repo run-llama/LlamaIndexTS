@@ -7,7 +7,14 @@ import {
   type StorageContext,
 } from "llamaindex";
 import { rmSync } from "node:fs";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+
+vi.mock("llamaindex/llm/open_ai", () => {
+  return {
+    getOpenAISession: vi.fn().mockImplementation(() => null),
+  };
+});
+
 import { mockServiceContext } from "../utility/mockServiceContext.js";
 
 describe("SummaryIndex", () => {
