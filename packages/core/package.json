@@ -41,7 +41,8 @@
     "rake-modified": "^1.0.8",
     "replicate": "^0.25.2",
     "string-strip-html": "^13.4.6",
-    "wink-nlp": "^1.14.3"
+    "wink-nlp": "^1.14.3",
+    "wikipedia": "^2.1.2"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.9",
