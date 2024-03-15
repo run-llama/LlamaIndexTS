@@ -21,7 +21,7 @@ export class MilvusVectorStore implements VectorStore {
   private flatMetadata: boolean = true;
 
   private milvusClient: MilvusClient;
-  private collection: string | null = null;
+  private collectionInitialized = false;
   private collectionName: string;
 
   private idKey: string;
@@ -110,7 +110,7 @@ export class MilvusVectorStore implements VectorStore {
   }
 
   private async ensureCollection(): Promise<void> {
-    if (!this.collection) {
+    if (!this.collectionInitialized) {
       await this.milvusClient.connectPromise;
 
       // Check collection exists
@@ -124,7 +124,7 @@ export class MilvusVectorStore implements VectorStore {
       await this.milvusClient.loadCollectionSync({
         collection_name: this.collectionName,
       });
-      this.collection = this.collectionName;
+      this.collectionInitialized = true;
     }
   }
 
