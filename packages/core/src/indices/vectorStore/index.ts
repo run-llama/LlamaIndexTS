@@ -25,17 +25,21 @@ import type {
 } from "../../embeddings/index.js";
 import { ClipEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
-import { runTransformations } from "../../ingestion/index.js";
+import { runTransformations } from "../../ingestion/IngestionPipeline.js";
+import {
+  DocStoreStrategy,
+  createDocStoreStrategy,
+} from "../../ingestion/strategies/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
-import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import type {
   MetadataFilters,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
-} from "../../storage/vectorStore/types.js";
+} from "../../storage/index.js";
+import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
 import type { BaseSynthesizer } from "../../synthesizers/types.js";
 import type { BaseQueryEngine } from "../../types.js";
@@ -195,17 +199,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     nodes: BaseNode[],
     options?: { logProgress?: boolean },
   ) {
-    // Check if the index already has nodes with the same hash
-    const newNodes = nodes.filter((node) =>
-      Object.entries(this.indexStruct.nodesDict).reduce((acc, [key, value]) => {
-        if (value.hash === node.hash) {
-          acc = false;
-        }
-        return acc;
-      }, true),
-    );
-
-    await this.insertNodes(newNodes, options);
+    await this.insertNodes(nodes, options);
   }
 
   /**
@@ -216,21 +210,28 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    */
   static async fromDocuments(
     documents: Document[],
-    args: VectorIndexOptions = {},
+    args: VectorIndexOptions & {
+      docStoreStrategy?: DocStoreStrategy;
+    } = {},
   ): Promise<VectorStoreIndex> {
+    args.docStoreStrategy = args.docStoreStrategy ?? DocStoreStrategy.UPSERTS;
     args.storageContext =
       args.storageContext ?? (await storageContextFromDefaults({}));
     args.serviceContext = args.serviceContext ?? serviceContextFromDefaults({});
     const docStore = args.storageContext.docStore;
 
-    for (const doc of documents) {
-      docStore.setDocumentHash(doc.id_, doc.hash);
-    }
-
     if (args.logProgress) {
       console.log("Using node parser on documents...");
     }
+
+    // run doc store strategy before other transformations
+    const docStoreStrategy = createDocStoreStrategy(
+      args.docStoreStrategy,
+      docStore,
+      args.vectorStore,
+    );
     args.nodes = await runTransformations(documents, [
+      ...(docStoreStrategy ? [docStoreStrategy] : []),
       args.serviceContext.nodeParser,
     ]);
     if (args.logProgress) {
