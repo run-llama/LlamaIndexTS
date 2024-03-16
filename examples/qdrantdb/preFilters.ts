@@ -1,8 +1,11 @@
 import * as dotenv from "dotenv";
 import {
+  CallbackManager,
   Document,
+  MetadataMode,
   QdrantVectorStore,
   VectorStoreIndex,
+  serviceContextFromDefaults,
   storageContextFromDefaults,
 } from "llamaindex";
 
@@ -35,10 +38,28 @@ async function main() {
     console.log("Embedding documents and adding to index");
     const index = await VectorStoreIndex.fromDocuments(docs, {
       storageContext: ctx,
+      serviceContext: serviceContextFromDefaults({
+        callbackManager: new CallbackManager({
+          onRetrieve: (data) => {
+            console.log(
+              "The retrieved nodes are:",
+              data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
+            );
+          },
+        }),
+      }),
     });
 
-    console.log("Querying index");
-    const queryEngine = index.asQueryEngine({
+    console.log(
+      "Querying index with no filters: Expected output: Brown probably",
+    );
+    const queryEngineNoFilters = index.asQueryEngine();
+    const noFilterResponse = await queryEngineNoFilters.query({
+      query: "What is the color of the dog?",
+    });
+    console.log("No filter response:", noFilterResponse.toString());
+    console.log("Querying index with dogId 2: Expected output: Red");
+    const queryEngineDogId2 = index.asQueryEngine({
       preFilters: {
         filters: [
           {
@@ -49,10 +70,10 @@ async function main() {
         ],
       },
     });
-    const response = await queryEngine.query({
+    const response = await queryEngineDogId2.query({
       query: "What is the color of the dog?",
     });
-    console.log(response.toString());
+    console.log("Filter with dogId 2 response:", response.toString());
   } catch (e) {
     console.error(e);
   }
