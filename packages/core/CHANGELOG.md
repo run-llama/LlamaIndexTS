@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.2.1
+
+### Patch Changes
+
+- 41210df: Add auto create milvus collection and add milvus node metadata
+- 137cf67: Use Pinecone namespaces for all operations
+- 259c842: Add support for edge runtime by using @llamaindex/edge
+
 ## 0.2.0
 
 ### Minor Changes
