@@ -1,11 +1,23 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
 import type { Event } from "../callbacks/CallbackManager.js";
+import type { BasePromptTemplate } from "../prompts/types.js";
 
 /**
  * Unified language model interface
  */
 export interface LLM {
   metadata: LLMMetadata;
+
+  /**
+   * Predict the next completion from the LLM
+   * *
+   * @param params
+   */
+  predict(
+    params: LLMCompletionParamsStreaming,
+  ): Promise<AsyncIterable<CompletionResponse>>;
+  predict(params: LLMCompletionParamsNonStreaming): Promise<CompletionResponse>;
+
   /**
    * Get a chat response from the LLM
    *
@@ -91,7 +103,7 @@ export interface LLMChatParamsNonStreaming extends LLMChatParamsBase {
 }
 
 export interface LLMCompletionParamsBase {
-  prompt: any;
+  prompt: BasePromptTemplate | string;
   parentEvent?: Event;
 }
 

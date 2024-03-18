@@ -37,10 +37,6 @@ async function main() {
     responseSynthesizer,
   });
 
-  console.log({
-    promptsToUse: queryEngine.getPrompts(),
-  });
-
   queryEngine.updatePrompts({
     "responseSynthesizer:summaryTemplate": treeSummarizePrompt,
   });

@@ -1,81 +1,117 @@
 import type { ChatMessage } from "../llm/types.js";
 
 import mustache from "mustache";
-import { messagesToPrompt } from "./utils.js";
 
-export interface BasePromptTemplate {  
-  templateVars: Record<string, any>;
+import { mapTemplateVars, messagesToPrompt } from "./utils.js";
 
-  partialFormat?: (vars: Record<string, any>) => PromptTemplate;
-  format: (metadata: Record<string, any>) => string;
-  formatMessages: (metadata: Record<string, any>) => ChatMessage[];
+export interface BasePromptTemplate<T extends object = {}> {
+  templateVars: Partial<T>;
+
+  partialFormat: (vars: Partial<T>) => PromptTemplate | ChatPromptTemplate;
+
+  format: (extraVars?: T) => string;
+  formatMessages: (extraVars?: T) => ChatMessage[];
 }
 
-export class PromptTemplate implements BasePromptTemplate {
-  templateVars: Record<string, any>;
+export class PromptTemplate<T extends object = {}>
+  implements BasePromptTemplate<T>
+{
   template: (...args: any) => string;
 
-  constructor(
-    template: (...args: any) => string,
-    templateVars: Record<string, any>,
-  ) {
+  templateVars: Partial<T> = {} as T;
+
+  constructor(template: (...args: any) => string, templateVars?: T) {
     this.template = template;
-    this.templateVars = templateVars;
+    this.templateVars = templateVars ?? ({} as T);
   }
 
-  partialFormat(vars: Record<string, any>): PromptTemplate {
+  mapTemplateVars(): Array<string> {
+    return mapTemplateVars(this.template());
+  }
+
+  partialFormat(vars: Partial<T>): PromptTemplate {
     const templateVars = {
-      ...vars
+      ...vars,
     };
 
-    const prompt = mustache.render(this.template(), templateVars);
+    this.templateVars = templateVars;
 
-    return new PromptTemplate(() => prompt, templateVars);
+    return new PromptTemplate(this.template, templateVars);
   }
 
-  format(metadata: Record<string, any>): string {
-    const prompt = mustache.render(this.template(), metadata);
+  format(extraVars?: Partial<T>): string {
+    const prompt = mustache.render(this.template(), {
+      ...this.templateVars,
+      ...extraVars,
+    });
     return prompt;
   }
 
-  formatMessages(metadata: Record<string, any>): ChatMessage[] {
-    const prompt = this.format(metadata);
+  formatMessages(extraVars?: Partial<T>): ChatMessage[] {
+    const prompt = this.format(extraVars);
 
     return [
       {
         content: prompt,
-        role: "user"
-      }
-    ]
+        role: "user",
+      },
+    ];
   }
 }
 
-export class ChatPromptTemplate implements BasePromptTemplate {
-  templateVars: Record<string, any>;
+export class ChatPromptTemplate<T extends object = {}>
+  implements BasePromptTemplate<T>
+{
   messageTemplates: (...args: any) => ChatMessage[];
+  templateVars: Partial<T> = {} as T;
 
   constructor(
     messageTemplates: (...args: any) => ChatMessage[],
-    templateVars: Record<string, any>,
+    templateVars?: T,
   ) {
     this.messageTemplates = messageTemplates;
+    this.templateVars = templateVars ?? ({} as T);
+  }
+
+  mapTemplateVars(): Array<string> {
+    const allVars: Array<string> = [];
+
+    const messages = this.messageTemplates();
+
+    for (const message of messages) {
+      allVars.push(...mapTemplateVars(message.content));
+    }
+
+    return allVars;
+  }
+
+  partialFormat(vars: Partial<T>): ChatPromptTemplate {
+    const templateVars = {
+      ...vars,
+    };
+
     this.templateVars = templateVars;
+
+    return new ChatPromptTemplate(this.messageTemplates, templateVars);
   }
 
-  format(metadata: Record<string, any>): string {
-     const messages = this.formatMessages(metadata);
-     return messagesToPrompt(messages);
+  format(extraVars?: T): string {
+    const messages = this.formatMessages(extraVars);
+    return messagesToPrompt(messages);
   }
 
-  formatMessages(metadata: Record<string, any>): ChatMessage[] {
+  formatMessages(extraVars?: Partial<T>): ChatMessage[] {
     const messages: ChatMessage[] = [];
 
     for (const message of this.messageTemplates()) {
-      const formattedMessage = mustache.render(message.content, metadata);
+      const formattedMessage = mustache.render(message.content, {
+        ...this.templateVars,
+        ...extraVars,
+      });
 
       messages.push({
         content: formattedMessage,
-        role: message.role
+        role: message.role,
       });
     }
 

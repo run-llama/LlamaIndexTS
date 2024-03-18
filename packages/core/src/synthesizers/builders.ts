@@ -1,24 +1,24 @@
 import type { BasePromptTemplate } from "llamaindex";
-import type { Event } from "../callbacks/CallbackManager.js";
-import type { LLM } from "../llm/index.js";
-import { streamConverter } from "../llm/utils.js";
 import type {
   RefinePrompt,
+  RefinePromptTemplate,
   SimplePrompt,
   TextQaPrompt,
+  TextQaPromptTemplate,
   TreeSummarizePrompt,
 } from "../Prompt.js";
 import {
-  defaultRefinePrompt,
   defaultRefinePromptTemplate,
-  defaultTextQaPrompt,
   defaultTextQaTemplate,
   defaultTreeSummarizePrompt,
 } from "../Prompt.js";
 import type { PromptHelper } from "../PromptHelper.js";
 import { getBiggestPrompt } from "../PromptHelper.js";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type { ServiceContext } from "../ServiceContext.js";
+import type { Event } from "../callbacks/CallbackManager.js";
+import type { LLM } from "../llm/index.js";
+import { streamConverter } from "../llm/utils.js";
+import { PromptMixin } from "../prompts/Mixin.js";
 import type {
   ResponseBuilder,
   ResponseBuilderParamsNonStreaming,
@@ -40,11 +40,14 @@ enum ResponseMode {
  */
 export class SimpleResponseBuilder implements ResponseBuilder {
   llm: LLM;
-  textQATemplate: TextQaPrompt;
+  textQATemplate: TextQaPromptTemplate;
 
-  constructor(serviceContext: ServiceContext, textQATemplate?: TextQaPrompt) {
+  constructor(
+    serviceContext: ServiceContext,
+    textQATemplate?: TextQaPromptTemplate,
+  ) {
     this.llm = serviceContext.llm;
-    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
+    this.textQATemplate = textQATemplate ?? defaultTextQaTemplate;
   }
 
   getResponse(
@@ -66,7 +69,8 @@ export class SimpleResponseBuilder implements ResponseBuilder {
       context: textChunks.join("\n\n"),
     };
 
-    const prompt = this.textQATemplate(input);
+    const prompt = this.textQATemplate.format(input);
+
     if (stream) {
       const response = await this.llm.complete({ prompt, parentEvent, stream });
       return streamConverter(response, (chunk) => chunk.text);
@@ -83,13 +87,14 @@ export class SimpleResponseBuilder implements ResponseBuilder {
 export class Refine extends PromptMixin implements ResponseBuilder {
   llm: LLM;
   promptHelper: PromptHelper;
-  textQATemplate: BasePromptTemplate;
-  refineTemplate: BasePromptTemplate;
+
+  textQATemplate: TextQaPromptTemplate;
+  refineTemplate: RefinePromptTemplate;
 
   constructor(
     serviceContext: ServiceContext,
-    textQATemplate?: BasePromptTemplate,
-    refineTemplate?: BasePromptTemplate,
+    textQATemplate?: TextQaPromptTemplate,
+    refineTemplate?: RefinePromptTemplate,
   ) {
     super();
 
@@ -100,8 +105,8 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   protected _getPrompts(): {
-    textQATemplate: BasePromptTemplate;
-    refineTemplate: BasePromptTemplate;
+    textQATemplate: TextQaPromptTemplate;
+    refineTemplate: RefinePromptTemplate;
   } {
     return {
       textQATemplate: this.textQATemplate,
@@ -110,8 +115,8 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   protected _updatePrompts(prompts: {
-    textQATemplate: BasePromptTemplate;
-    refineTemplate: BasePromptTemplate;
+    textQATemplate: TextQaPromptTemplate;
+    refineTemplate: RefinePromptTemplate;
   }): void {
     if (prompts.textQATemplate) {
       this.textQATemplate = prompts.textQATemplate;
@@ -169,20 +174,24 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     stream: boolean,
     parentEvent?: Event,
   ) {
-    const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate.format({ ...input, query: queryStr });
+    const textQATemplate: SimplePrompt = (input) => {
+      this.textQATemplate.partialFormat({ ...input, query: queryStr });
+      return this.textQATemplate.format();
+    };
+
     const textChunks = this.promptHelper.repack(textQATemplate, [textChunk]);
 
     let response: AsyncIterable<string> | string | undefined = undefined;
 
     for (let i = 0; i < textChunks.length; i++) {
       const chunk = textChunks[i];
+
+      this.textQATemplate.partialFormat({ context: chunk, query: queryStr });
+
       const lastChunk = i === textChunks.length - 1;
       if (!response) {
         response = await this.complete({
-          prompt: textQATemplate({
-            context: chunk,
-          }),
+          prompt: this.textQATemplate,
           parentEvent,
           stream: stream && lastChunk,
         });
@@ -208,8 +217,10 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     stream: boolean,
     parentEvent?: Event,
   ) {
-    const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate.format({ ...input, query: queryStr });
+    const refineTemplate: SimplePrompt = (input) => {
+      this.refineTemplate.partialFormat({ ...input, query: queryStr });
+      return this.refineTemplate.format();
+    };
 
     const textChunks = this.promptHelper.repack(refineTemplate, [textChunk]);
 
@@ -217,12 +228,16 @@ export class Refine extends PromptMixin implements ResponseBuilder {
 
     for (let i = 0; i < textChunks.length; i++) {
       const chunk = textChunks[i];
+
+      this.refineTemplate.partialFormat({
+        context: chunk,
+        existingAnswer: response as string,
+      });
+
       const lastChunk = i === textChunks.length - 1;
+
       response = await this.complete({
-        prompt: refineTemplate({
-          context: chunk,
-          existingAnswer: response as string,
-        }),
+        prompt: this.refineTemplate,
         parentEvent,
         stream: stream && lastChunk,
       });
@@ -231,15 +246,15 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   async complete(params: {
-    prompt: string;
+    prompt: BasePromptTemplate | string;
     stream: boolean;
     parentEvent?: Event;
   }): Promise<AsyncIterable<string> | string> {
     if (params.stream) {
-      const response = await this.llm.complete({ ...params, stream: true });
+      const response = await this.llm.predict({ ...params, stream: true });
       return streamConverter(response, (chunk) => chunk.text);
     } else {
-      const response = await this.llm.complete({ ...params, stream: false });
+      const response = await this.llm.predict({ ...params, stream: false });
       return response.text;
     }
   }
@@ -264,10 +279,8 @@ export class CompactAndRefine extends Refine {
     | ResponseBuilderParamsNonStreaming): Promise<
     AsyncIterable<string> | string
   > {
-    const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate.format({ ...input, query: query });
-    const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate.format({ ...input, query: query });
+    const textQATemplate: SimplePrompt = () => this.textQATemplate.format();
+    const refineTemplate: SimplePrompt = () => this.refineTemplate.format();
 
     const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
     const newTexts = this.promptHelper.repack(maxPrompt, textChunks);

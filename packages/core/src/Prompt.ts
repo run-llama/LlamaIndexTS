@@ -33,20 +33,22 @@ Given the context information and not prior knowledge, answer the query.
 Query: {{query}}
 Answer:`;
 
-export const defaultTextQaTemplate = new PromptTemplate(defaultTextQaPrompt, {})
+export const defaultTextQaTemplate = new PromptTemplate<{
+  context: string;
+  query: string;
+}>(defaultTextQaPrompt);
+
+export type TextQaPromptTemplate = typeof defaultTextQaTemplate;
 
 export type TextQaPrompt = typeof defaultTextQaPrompt;
 
-export const anthropicTextQaPrompt: TextQaPrompt = ({
-  context = "",
-  query = "",
-}) => {
+export const anthropicTextQaPrompt = () => {
   return `Context information:
 <context>
-${context}
+{{context}}
 </context>
 Given the context information and not prior knowledge, answer the query.
-Query: ${query}`;
+Query: {{query}}`;
 };
 
 /*
@@ -113,7 +115,13 @@ Given the new context, refine the original answer to better answer the query. If
 Refined Answer:`;
 };
 
-export const defaultRefinePromptTemplate = new PromptTemplate(defaultRefinePrompt, {})
+export const defaultRefinePromptTemplate = new PromptTemplate<{
+  query: string;
+  existingAnswer: string;
+  context: string;
+}>(defaultRefinePrompt);
+
+export type RefinePromptTemplate = typeof defaultRefinePromptTemplate;
 
 export type RefinePrompt = typeof defaultRefinePrompt;
 

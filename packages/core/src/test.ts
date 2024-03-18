@@ -1,96 +1,71 @@
-import { ChatPromptTemplate, Document, PromptTemplate, VectorStoreIndex, messagesToPrompt, type ChatMessage } from "./index.js"
+import {
+  ChatPromptTemplate,
+  PromptTemplate,
+  SimpleDirectoryReader,
+  VectorStoreIndex,
+  type ChatMessage,
+} from "./index.js";
 
-import mustache from "mustache";
-
-
-// "Context information is below.\n"
-// "---------------------\n"
-// "{context_str}\n"
-// "---------------------\n"
-// "Given the context information and not prior knowledge, "
-// "answer the query.\n"
-// "Query: {query_str}\n"
-// "Answer: "
-
-const textQaPromptFunction =  () => `Context information is below.
+// Define a default prompt template
+const defaultTextQaPromptTemplate = () => `Context information is below.
 ---------------------
 {{context}}
 ---------------------
 Given the context information and not prior knowledge, answer the query.
 Query: {{query}}
-Answer:`
+Answer:`;
 
-// const textQaPromptFunction = ({ context, query }: {
-//   context: string,
-//   query: string
-// }) => `Context information is below.
-// ---------------------
-// {{context}}
-// ---------------------
-// Given the context information and not prior knowledge, answer the query.
-// Query: {{query}}
-// Answer: `
+// Define a default chat prompt template
+const defaultChatPromtTemplate = (): ChatMessage[] => [
+  {
+    content: "Always answer the question, even if you don't know the answer.",
+    role: "system",
+  },
+  {
+    content: defaultTextQaPromptTemplate(),
+    role: "user",
+  },
+];
 
-// const textQaPrompt = `Context information is below.
-// ---------------------
-// {{context}}
-// ---------------------
-// Given the context information and not prior knowledge, answer the query.
-// Query: {{query}}
-// Answer: `
+// Instantiate the prompt templates
+const textQaPromptTemplate = new PromptTemplate(defaultTextQaPromptTemplate);
+const chatMessageTemplate = new ChatPromptTemplate(defaultChatPromtTemplate);
 
-// Serialize the function dynamically
+// Map the template variables (get from the prompt templates all text that includes {{text}})
+console.log({
+  textQaVars: textQaPromptTemplate.mapTemplateVars(),
+  chatTemplateVars: chatMessageTemplate.mapTemplateVars(),
+});
 
 async function main() {
-  // const message = new PromptTemplate(
-  //   textQaPromptFunction,
-  //   {
-  //     context: "This is the context",
-  //     query: "This is the query"
-  //   }
-  // )
+  const documents = await new SimpleDirectoryReader().loadData({
+    directoryPath: "../examples",
+  });
 
-  const messages: ChatMessage[] = [
-    {
-      content: "This is the context",
-      role: "system"
-    },
-    {
-      content: "This is the query",
-      role: "user"
-    }
-  ]
+  const index = await VectorStoreIndex.fromDocuments(documents);
 
-  const chatMessageTemplate = new ChatPromptTemplate(() => messages, {})
+  const retriever = await index.asRetriever({});
+  retriever.similarityTopK = 10;
 
-  // const newPrompt = new PromptTemplate(() => `
-  //   stop
-  //   {{context}}
-  //   hey
-  //   {{query}}
-  // `, {})
+  const queryEngine = index.asQueryEngine({
+    retriever,
+  });
 
-  const documents = [
-    new Document({ text: "An example of the context" }),
-  ]
-
-  const index = await VectorStoreIndex.fromDocuments(documents)
-
-  const queryEngine = index.asQueryEngine()
-
+  // Update the prompts
   queryEngine.updatePrompts({
-    "responseSynthesizer:textQATemplate": chatMessageTemplate
-  })
+    "responseSynthesizer:textQATemplate": chatMessageTemplate,
+  });
 
-  const query = "What is the answer to the question?"
+  // Query the engine
+  const query = "Tell me about abramov";
 
   const response = await queryEngine.query({
-    query
-  })
-  
+    query,
+  });
+
   console.log({
-    response
-  })
+    response,
+  });
 }
 
-main()
+main();
