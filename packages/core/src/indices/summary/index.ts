@@ -8,12 +8,12 @@ import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
+import type { StorageContext } from "../../storage/StorageContext.js";
+import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type {
   BaseDocumentStore,
   RefDocInfo,
-  StorageContext,
-} from "../../storage/index.js";
-import { storageContextFromDefaults } from "../../storage/index.js";
+} from "../../storage/docStore/types.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import {
   CompactAndRefine,

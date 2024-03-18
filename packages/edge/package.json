@@ -1,7 +1,6 @@
 {
-  "name": "llamaindex",
-  "version": "0.2.0",
-  "expectedMinorVersion": "2",
+  "name": "@llamaindex/edge",
+  "version": "0.1.21",
   "license": "MIT",
   "type": "module",
   "dependencies": {
@@ -43,60 +42,43 @@
     "string-strip-html": "^13.4.6",
     "wink-nlp": "^1.14.3"
   },
-  "devDependencies": {
-    "@swc/cli": "^0.3.9",
-    "@swc/core": "^1.4.2",
-    "concurrently": "^8.2.2",
-    "glob": "^10.3.10",
-    "madge": "^6.1.0",
-    "typescript": "^5.3.3"
-  },
   "engines": {
     "node": ">=18.0.0"
   },
-  "types": "./dist/type/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "types": "./dist/type/index.edge.d.ts",
+  "main": "./dist/index.edge.js",
   "exports": {
+    "./readers/SimpleDirectoryReader": {
+      "import": {
+        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
+        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
+      }
+    },
     ".": {
       "import": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "types": "./dist/type/index.edge.d.ts",
+        "default": "./dist/index.edge.js"
       }
     },
     "./*": {
       "import": {
         "types": "./dist/type/*.d.ts",
         "default": "./dist/*.js"
-      },
-      "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
       }
     }
   },
   "files": [
-    "dist",
-    "CHANGELOG.md",
-    "examples"
+    "dist"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/core"
+    "directory": "packages/edge"
   },
   "scripts": {
-    "lint": "eslint .",
-    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
-    "build:type": "tsc -p tsconfig.json",
     "copy": "cp -r ../../README.md ../../LICENSE .",
-    "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "circular-check": "madge -c ./src/index.ts",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+    "compare": "node scripts/compare-deps.js",
+    "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -fr dist/cjs",
+    "build": "pnpm run compare && pnpm run build:core && pnpm copy"
   }
 }

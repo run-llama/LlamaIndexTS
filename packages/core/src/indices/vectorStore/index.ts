@@ -24,15 +24,15 @@ import { ClipEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import { runTransformations } from "../../ingestion/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
+import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
+import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import type {
-  BaseIndexStore,
   MetadataFilters,
-  StorageContext,
   VectorStore,
   VectorStoreQuery,
   VectorStoreQueryResult,
-} from "../../storage/index.js";
+} from "../../storage/vectorStore/types.js";
 import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
 import type { BaseSynthesizer } from "../../synthesizers/types.js";
 import type { BaseQueryEngine } from "../../types.js";
