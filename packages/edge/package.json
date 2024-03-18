@@ -27,6 +27,7 @@
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
     "mammoth": "^1.6.0",
+    "mustache": "^4.2.0",
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.3.0",
     "notion-md-crawler": "^0.0.2",
