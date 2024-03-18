@@ -73,12 +73,24 @@
     },
     "./*": {
       "import": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
+        "types": [
+          "./dist/type/*.d.ts",
+          "./dist/type/*/index.d.ts"
+        ],
+        "default": [
+          "./dist/*.js",
+          "./dist/*/index.js"
+        ]
       },
       "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
+        "types": [
+          "./dist/type/*.d.ts",
+          "./dist/type/*/index.d.ts"
+        ],
+        "default": [
+          "./dist/cjs/*.js",
+          "./dist/cjs/*.js"
+        ]
       }
     }
   },
