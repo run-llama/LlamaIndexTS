@@ -6,8 +6,8 @@ import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { imageToDataUrl } from "../embeddings/index.js";
 import type { MessageContentDetail } from "../llm/types.js";
 import { PromptMixin } from "../prompts/Mixin.js";
-import type { TextQaPrompt } from "./../Prompt.js";
-import { defaultTextQaPrompt } from "./../Prompt.js";
+import type { TextQaPromptTemplate } from "./../Prompt.js";
+import { defaultTextQaTemplate } from "./../Prompt.js";
 import type {
   BaseSynthesizer,
   SynthesizeParamsNonStreaming,
@@ -20,7 +20,7 @@ export class MultiModalResponseSynthesizer
 {
   serviceContext: ServiceContext;
   metadataMode: MetadataMode;
-  textQATemplate: TextQaPrompt;
+  textQATemplate: TextQaPromptTemplate;
 
   constructor({
     serviceContext,
@@ -31,17 +31,17 @@ export class MultiModalResponseSynthesizer
 
     this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.metadataMode = metadataMode ?? MetadataMode.NONE;
-    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
+    this.textQATemplate = textQATemplate ?? defaultTextQaTemplate;
   }
 
-  protected _getPrompts(): { textQATemplate: TextQaPrompt } {
+  protected _getPrompts(): { textQATemplate: TextQaPromptTemplate } {
     return {
       textQATemplate: this.textQATemplate,
     };
   }
 
   protected _updatePrompts(promptsDict: {
-    textQATemplate: TextQaPrompt;
+    textQATemplate: TextQaPromptTemplate;
   }): void {
     if (promptsDict.textQATemplate) {
       this.textQATemplate = promptsDict.textQATemplate;
@@ -70,7 +70,7 @@ export class MultiModalResponseSynthesizer
     );
     // TODO: use builders to generate context
     const context = textChunks.join("\n\n");
-    const textPrompt = this.textQATemplate({ context, query });
+    const textPrompt = this.textQATemplate.format({ context, query });
     const images = await Promise.all(
       imageNodes.map(async (node: ImageNode) => {
         return {
@@ -85,8 +85,10 @@ export class MultiModalResponseSynthesizer
       { type: "text", text: textPrompt },
       ...images,
     ];
+
+    // TODO: Fix this
     const response = await this.serviceContext.llm.complete({
-      prompt,
+      prompt: textPrompt,
       parentEvent,
     });
     return new Response(response.text, nodes);

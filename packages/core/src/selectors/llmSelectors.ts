@@ -9,10 +9,13 @@ import type {
 } from "../types.js";
 import type { SelectorResult } from "./base.js";
 import { BaseSelector } from "./base.js";
-import type { MultiSelectPrompt, SingleSelectPrompt } from "./prompts.js";
+import type {
+  MultiSelectPromptTemplate,
+  SingleSelectPromptTemplate,
+} from "./prompts.js";
 import {
-  defaultMultiSelectPrompt,
-  defaultSingleSelectPrompt,
+  defaultMultiSelectPromptTemplate,
+  defaultSingleSelectPromptTemplate,
 } from "./prompts.js";
 
 function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
@@ -46,29 +49,29 @@ type LLMPredictorType = LLM;
  */
 export class LLMMultiSelector extends BaseSelector {
   llm: LLMPredictorType;
-  prompt: MultiSelectPrompt;
+  prompt: MultiSelectPromptTemplate;
   maxOutputs: number;
   outputParser: BaseOutputParser<StructuredOutput<Answer[]>> | null;
 
   constructor(init: {
     llm: LLMPredictorType;
-    prompt?: MultiSelectPrompt;
+    prompt?: MultiSelectPromptTemplate;
     maxOutputs?: number;
     outputParser?: BaseOutputParser<StructuredOutput<Answer[]>>;
   }) {
     super();
     this.llm = init.llm;
-    this.prompt = init.prompt ?? defaultMultiSelectPrompt;
+    this.prompt = init.prompt ?? defaultMultiSelectPromptTemplate;
     this.maxOutputs = init.maxOutputs ?? 10;
 
     this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, MultiSelectPrompt> {
+  _getPrompts(): Record<string, MultiSelectPromptTemplate> {
     return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, MultiSelectPrompt>): void {
+  _updatePrompts(prompts: Record<string, MultiSelectPromptTemplate>): void {
     if ("prompt" in prompts) {
       this.prompt = prompts.prompt;
     }
@@ -85,14 +88,18 @@ export class LLMMultiSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(
-      choicesText.length,
-      choicesText,
-      query.queryStr,
-      this.maxOutputs,
-    );
+    const prompt = this.prompt.format({
+      numChoices: choicesText.length,
+      contextList: choicesText,
+      queryStr: query.queryStr,
+      maxOutputs: this.maxOutputs,
+    });
 
     const formattedPrompt = this.outputParser?.format(prompt);
+
+    if (!formattedPrompt) {
+      throw new Error("Formatted prompt is undefined");
+    }
 
     const prediction = await this.llm.complete({
       prompt: formattedPrompt,
@@ -117,25 +124,25 @@ export class LLMMultiSelector extends BaseSelector {
  */
 export class LLMSingleSelector extends BaseSelector {
   llm: LLMPredictorType;
-  prompt: SingleSelectPrompt;
+  prompt: SingleSelectPromptTemplate;
   outputParser: BaseOutputParser<StructuredOutput<Answer[]>> | null;
 
   constructor(init: {
     llm: LLMPredictorType;
-    prompt?: SingleSelectPrompt;
+    prompt?: SingleSelectPromptTemplate;
     outputParser?: BaseOutputParser<StructuredOutput<Answer[]>>;
   }) {
     super();
     this.llm = init.llm;
-    this.prompt = init.prompt ?? defaultSingleSelectPrompt;
+    this.prompt = init.prompt ?? defaultSingleSelectPromptTemplate;
     this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, SingleSelectPrompt> {
+  _getPrompts(): Record<string, SingleSelectPromptTemplate> {
     return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, SingleSelectPrompt>): void {
+  _updatePrompts(prompts: Record<string, SingleSelectPromptTemplate>): void {
     if ("prompt" in prompts) {
       this.prompt = prompts.prompt;
     }
@@ -152,9 +159,17 @@ export class LLMSingleSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(choicesText.length, choicesText, query.queryStr);
+    const prompt = this.prompt.format({
+      numChoices: choicesText.length,
+      contextList: choicesText,
+      queryStr: query.queryStr,
+    });
 
     const formattedPrompt = this.outputParser?.format(prompt);
+
+    if (!formattedPrompt) {
+      throw new Error("Formatted prompt is undefined");
+    }
 
     const prediction = await this.llm.complete({
       prompt: formattedPrompt,

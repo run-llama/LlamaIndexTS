@@ -64,6 +64,16 @@ export class Ollama extends BaseEmbedding implements LLM {
     };
   }
 
+  predict(
+    params: LLMCompletionParamsStreaming,
+  ): Promise<AsyncIterable<CompletionResponse>>;
+  predict(params: LLMCompletionParamsNonStreaming): Promise<CompletionResponse>;
+  predict(
+    params: unknown,
+  ): Promise<AsyncIterable<CompletionResponse>> | Promise<CompletionResponse> {
+    throw new Error("TODO: method not implemented for OLLAMA.");
+  }
+
   chat(
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
