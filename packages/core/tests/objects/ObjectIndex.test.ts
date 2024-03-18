@@ -2,17 +2,10 @@ import type { ServiceContext } from "llamaindex";
 import {
   FunctionTool,
   ObjectIndex,
-  OpenAI,
-  OpenAIEmbedding,
   SimpleToolNodeMapping,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
 import { beforeAll, describe, expect, test, vi } from "vitest";
-import {
-  mockEmbeddingModel,
-  mockLlmGeneration,
-} from "../utility/mockOpenAI.js";
 
 vi.mock("llamaindex/llm/open_ai", () => {
   return {
@@ -20,22 +13,13 @@ vi.mock("llamaindex/llm/open_ai", () => {
   };
 });
 
+import { mockServiceContext } from "../utility/mockServiceContext.js";
+
 describe("ObjectIndex", () => {
   let serviceContext: ServiceContext;
 
   beforeAll(() => {
-    const embeddingModel = new OpenAIEmbedding();
-    const llm = new OpenAI();
-
-    mockEmbeddingModel(embeddingModel);
-    mockLlmGeneration({ languageModel: llm });
-
-    const ctx = serviceContextFromDefaults({
-      embedModel: embeddingModel,
-      llm,
-    });
-
-    serviceContext = ctx;
+    serviceContext = mockServiceContext();
   });
 
   test("test_object_with_tools", async () => {

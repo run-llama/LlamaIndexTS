@@ -1,12 +1,14 @@
 {
   "name": "llamaindex",
-  "version": "0.1.21",
+  "version": "0.2.1",
+  "expectedMinorVersion": "2",
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.15.0",
+    "@anthropic-ai/sdk": "^0.18.0",
     "@aws-crypto/sha256-js": "^5.2.0",
     "@datastax/astra-db-ts": "^0.1.4",
+    "@grpc/grpc-js": "^1.10.2",
     "@llamaindex/cloud": "0.0.4",
     "@llamaindex/env": "workspace:*",
     "@mistralai/mistralai": "^0.0.10",
@@ -18,12 +20,13 @@
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.0",
     "@xenova/transformers": "^2.15.0",
+    "@zilliz/milvus2-sdk-node": "^2.3.5",
     "assemblyai": "^4.2.2",
     "chromadb": "~1.7.3",
     "cohere-ai": "^7.7.5",
-    "file-type": "^18.7.0",
     "js-tiktoken": "^1.0.10",
     "lodash": "^4.17.21",
+    "magic-bytes.js": "^1.10.0",
     "mammoth": "^1.6.0",
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.3.0",
@@ -60,10 +63,6 @@
       "import": {
         "types": "./dist/type/index.d.ts",
         "default": "./dist/index.js"
-      },
-      "edge-light": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.edge-light.js"
       },
       "require": {
         "types": "./dist/type/index.d.ts",

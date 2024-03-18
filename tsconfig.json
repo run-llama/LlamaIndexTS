@@ -30,16 +30,13 @@
       "path": "./packages/core/tsconfig.json"
     },
     {
+      "path": "./packages/edge/e2e/test-edge-runtime/tsconfig.json"
+    },
+    {
       "path": "./packages/core/tests/tsconfig.json"
     },
     {
       "path": "./packages/env/tsconfig.json"
-    },
-    {
-      "path": "./packages/create-llama"
-    },
-    {
-      "path": "./packages/create-llama/e2e"
     },
     {
       "path": "./examples"

@@ -1,6 +1,6 @@
 # Transformations
 
-A transformation is something that takes a list of nodes as an input, and returns a list of nodes. Each component that implements the Transformatio class has both a `transform` definition responsible for transforming the nodes
+A transformation is something that takes a list of nodes as an input, and returns a list of nodes. Each component that implements the Transformation class has both a `transform` definition responsible for transforming the nodes.
 
 Currently, the following components are Transformation objects:
 

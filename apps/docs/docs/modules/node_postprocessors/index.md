@@ -36,7 +36,7 @@ const processor = new SimilarityPostprocessor({
   similarityCutoff: 0.7,
 });
 
-const filteredNodes = processor.postprocessNodes(nodes);
+const filteredNodes = await processor.postprocessNodes(nodes);
 
 // cohere rerank: rerank nodes given query using trained model
 const reranker = new CohereRerank({

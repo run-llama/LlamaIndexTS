@@ -1,5 +1,6 @@
 import { defaultFS } from "@llamaindex/env";
 import _ from "lodash";
+import { filetypemime } from "magic-bytes.js";
 import type { ImageType } from "../Node.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants.js";
 import { VectorStoreQueryMode } from "../storage/vectorStore/types.js";
@@ -199,13 +200,12 @@ export function getTopKMMREmbeddings(
 }
 
 async function blobToDataUrl(input: Blob) {
-  const { fileTypeFromBuffer } = await import("file-type");
   const buffer = Buffer.from(await input.arrayBuffer());
-  const type = await fileTypeFromBuffer(buffer);
-  if (!type) {
+  const mimes = filetypemime(buffer);
+  if (mimes.length < 1) {
     throw new Error("Unsupported image type");
   }
-  return "data:" + type.mime + ";base64," + buffer.toString("base64");
+  return "data:" + mimes[0] + ";base64," + buffer.toString("base64");
 }
 
 export async function readImage(input: ImageType) {

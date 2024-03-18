@@ -1,5 +1,6 @@
 import type { BaseNode } from "../../Node.js";
-import type { BaseDocumentStore, VectorStore } from "../../storage/index.js";
+import type { BaseDocumentStore } from "../../storage/docStore/types.js";
+import type { VectorStore } from "../../storage/vectorStore/types.js";
 import { classify } from "./classify.js";
 
 /**
