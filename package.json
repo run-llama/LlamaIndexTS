@@ -12,9 +12,11 @@
     "test": "turbo run test",
     "type-check": "tsc -b --diagnostics",
     "release": "pnpm run check-minor-version && pnpm run build:release && changeset publish",
+    "release-snapshot": "pnpm run check-minor-version && pnpm run build:release && changeset publish --tag snapshot",
     "check-minor-version": "node ./scripts/check-minor-version",
-    "new-version": "pnpm run build:release && changeset version && pnpm run check-minor-version",
-    "new-snapshot": "pnpm run build:release && changeset version --snapshot"
+    "update-version": "node ./scripts/update-version",
+    "new-version": "pnpm run build:release && changeset version && pnpm run check-minor-version && pnpm run update-version",
+    "new-snapshot": "pnpm run build:release && changeset version --snapshot && pnpm run update-version"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
