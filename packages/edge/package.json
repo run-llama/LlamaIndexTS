@@ -77,6 +77,8 @@
   },
   "scripts": {
     "copy": "cp -r ../../README.md ../../LICENSE .",
-    "build": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -fr dist/cjs && pnpm copy"
+    "compare": "node scripts/compare-deps.js",
+    "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -fr dist/cjs",
+    "build": "pnpm run compare && pnpm run build:core && pnpm copy"
   }
 }
