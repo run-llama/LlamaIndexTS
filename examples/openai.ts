@@ -1,17 +1,7 @@
 import { OpenAI, OpenAIEmbedding } from "llamaindex";
 
-import https from "https";
-
 (async () => {
-  const llm = new OpenAI({
-    model: "gpt-4-1106-preview",
-    temperature: 0.1,
-    additionalSessionOptions: {
-      httpAgent: new https.Agent({
-        rejectUnauthorized: false,
-      }),
-    },
-  });
+  const llm = new OpenAI({ model: "gpt-4-1106-preview", temperature: 0.1 });
 
   // complete api
   const response1 = await llm.complete({ prompt: "How are you?" });
