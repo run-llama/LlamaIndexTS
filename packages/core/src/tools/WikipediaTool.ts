@@ -49,6 +49,6 @@ export class WikipediaTool implements BaseTool {
   }: WikipediaCallParams): Promise<string> {
     const searchResult = await wiki.default.search(query);
     if (searchResult.results.length === 0) return "No search results.";
-    return await this.loadData(searchResult.results[0], lang);
+    return await this.loadData(searchResult.results[0].title, lang);
   }
 }
