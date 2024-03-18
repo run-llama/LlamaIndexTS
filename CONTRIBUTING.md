@@ -81,10 +81,15 @@ Any changes you make should be reflected in the browser. If you need to regenera
 
 ## Publishing
 
-To publish a new version of the library, run
+To publish a new version of the library, first create a new version:
 
 ```shell
 pnpm new-version
+```
+
+If everything looks good, commit the generated files and release the new version:
+
+```shell
 pnpm release
 git push # push to the main branch
 git push --tags
