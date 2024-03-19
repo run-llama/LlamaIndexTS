@@ -66,7 +66,13 @@ export class TiDBVectorStore implements VectorStore {
    * @param namespace Name for the namespace.
    */
   setNamespace(namespace: string) {
-    this.namespace = namespace;
+    const name = this.formatNamespace(namespace);
+    if (name.length > 64 || name.length == 0) {
+      throw new Error(
+        "Invalid namespace: " + name + ", must be 1-64 characters length.",
+      );
+    }
+    this.namespace = name;
   }
 
   /**
@@ -104,7 +110,7 @@ export class TiDBVectorStore implements VectorStore {
 
   private async checkSchema(db: mysql.Pool) {
     const tbl = `CREATE TABLE IF NOT EXISTS ${this.tableName}(
-      namespace VARCHAR(255),
+      namespace VARCHAR(64),
       id BINARY(16),
       external_id VARCHAR(100),
       document TEXT,
@@ -117,8 +123,10 @@ export class TiDBVectorStore implements VectorStore {
     );`;
     await db.query(tbl);
 
-    const partition = `ALTER TABLE ${this.tableName} ADD PARTITION IF NOT EXISTS (PARTITION p_${this.namespace} VALUES IN ('${this.namespace}'));`;
-    await db.query(partition);
+    if (this.namespace.length == 0) {
+      const partition = `ALTER TABLE ${this.tableName} ADD PARTITION IF NOT EXISTS (PARTITION p_${this.namespace} VALUES IN ('${this.namespace}'));`;
+      await db.query(partition);
+    }
 
     return db;
   }
@@ -294,5 +302,21 @@ export class TiDBVectorStore implements VectorStore {
    */
   vectorToSQL(vector?: number[]): string {
     return "[" + vector?.join(",") + "]";
+  }
+
+  /**
+   * Formats a namespace string to a valid SQL identifier.
+   * @param namespace
+   */
+  formatNamespace(namespace: string): string {
+    namespace = namespace.toLowerCase();
+
+    // Replace non-alphanumeric characters with underscores.
+    namespace = namespace.replace(/\W+/g, "_");
+
+    // Remove leading/trailing underscores.
+    namespace = namespace.replace(/^_+|_+$/g, "");
+
+    return namespace;
   }
 }
