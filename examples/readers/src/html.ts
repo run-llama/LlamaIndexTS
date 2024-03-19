@@ -1,5 +1,5 @@
-import { VectorStoreIndex } from "llamaindex";
-import { HTMLReader } from "llamaindex/readers/HTMLReader";
+import { VectorStoreIndex } from "llamaindex/indices";
+import { HTMLReader } from "llamaindex/readers";
 
 async function main() {
   // Load page
