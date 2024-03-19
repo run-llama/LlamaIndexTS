@@ -31,3 +31,11 @@ This example shows how to use the managed index with a query engine.
 ```shell
 pnpx ts-node cloud/query.ts
 ```
+
+## Pipeline
+
+This example shows how to create a managed index with a pipeline.
+
+```shell
+pnpx ts-node cloud/pipeline.ts
+```
