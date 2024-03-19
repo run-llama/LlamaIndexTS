@@ -421,6 +421,9 @@ importers:
       string-strip-html:
         specifier: ^13.4.6
         version: 13.4.6
+      wikipedia:
+        specifier: ^2.1.2
+        version: 2.1.2
       wink-nlp:
         specifier: ^1.14.3
         version: 1.14.3
