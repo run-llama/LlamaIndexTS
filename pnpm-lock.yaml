@@ -132,7 +132,7 @@ importers:
         version: 16.4.1
       llamaindex:
         specifier: latest
-        version: link:../packages/core
+        version: 0.2.1(typescript@5.3.3)
       mongodb:
         specifier: ^6.2.0
         version: 6.3.0
@@ -154,7 +154,7 @@ importers:
     dependencies:
       llamaindex:
         specifier: latest
-        version: link:../../packages/core
+        version: 0.2.1(typescript@5.3.3)
     devDependencies:
       '@types/node':
         specifier: ^20.11.14
@@ -243,6 +243,9 @@ importers:
       mongodb:
         specifier: ^6.3.0
         version: 6.3.0
+      mysql2:
+        specifier: ^3.9.2
+        version: 3.9.2
       notion-md-crawler:
         specifier: ^0.0.2
         version: 0.0.2
@@ -3325,6 +3328,19 @@ packages:
       form-data: 4.0.0
       js-base64: 3.7.7
       qs: 6.11.2
+    dev: false
+
+  /@llamaindex/env@0.0.5(@aws-crypto/sha256-js@5.2.0)(pathe@1.1.2):
+    resolution: {integrity: sha512-+Eepyl2o0ykyo5alryUwuXriLtrtkTIUKlemK5kPbzZ/RV1VD6WMd8gykrAQZgYeRT3jK7sNm/7PVi/u+3zw3Q==}
+    peerDependencies:
+      '@aws-crypto/sha256-js': ^5.2.0
+      pathe: ^1.1.2
+    dependencies:
+      '@aws-crypto/sha256-js': 5.2.0
+      '@types/lodash': 4.14.202
+      '@types/node': 20.11.20
+      lodash: 4.17.21
+      pathe: 1.1.2
     dev: false
 
   /@manypkg/find-root@1.1.0:
@@ -6604,6 +6620,11 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: false
 
+  /denque@2.1.0:
+    resolution: {integrity: sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==}
+    engines: {node: '>=0.10'}
+    dev: false
+
   /depd@1.1.2:
     resolution: {integrity: sha512-7emPTl6Dpo6JRXOXjLRxck+FlLRX5847cLKEn00PLAgc3g2hTZZgr+e4c2v6QpSmLeFP3n5yUo7ft6avBK/5jQ==}
     engines: {node: '>= 0.6'}
@@ -8290,6 +8311,12 @@ packages:
   /functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
+  /generate-function@2.3.1:
+    resolution: {integrity: sha512-eeB5GfMNeevm/GRYq20ShmsaGcmI81kIX2K9XQx5miC8KdHaC6Jm0qQ8ZNeGOi7wYB8OsdxKs+Y2oVuTFuVwKQ==}
+    dependencies:
+      is-property: 1.0.2
+    dev: false
+
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -9269,6 +9296,10 @@ packages:
     resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==}
     engines: {node: '>=0.10.0'}
 
+  /is-property@1.0.2:
+    resolution: {integrity: sha512-Ks/IoX00TtClbGQr4TWXemAnktAQvYB7HzcCxDGqEZU6oCmb2INHuOoKxbtR+HFkmYWBKv/dOZtGRiAjDhj92g==}
+    dev: false
+
   /is-reference@3.0.2:
     resolution: {integrity: sha512-v3rht/LgVcsdZa3O2Nqs+NMowLOxeOm7Ay9+/ARQ2F+qEoANRcqrjAZKGN0v8ymUetZGgkp26LTnGT7H0Qo9Pg==}
     dependencies:
@@ -9714,6 +9745,65 @@ packages:
       wrap-ansi: 9.0.0
     dev: true
 
+  /llamaindex@0.2.1(typescript@5.3.3):
+    resolution: {integrity: sha512-p1dg3o4zveFCTjYwWJmsww8Mvnh2feHlNEo0x85XwbDZoZ35zCWxc1Rep55duyAirguqLpIwT1UTacVBxSm+8A==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@anthropic-ai/sdk': 0.18.0
+      '@aws-crypto/sha256-js': 5.2.0
+      '@datastax/astra-db-ts': 0.1.4
+      '@grpc/grpc-js': 1.10.2
+      '@llamaindex/cloud': 0.0.4
+      '@llamaindex/env': 0.0.5(@aws-crypto/sha256-js@5.2.0)(pathe@1.1.2)
+      '@mistralai/mistralai': 0.0.10
+      '@notionhq/client': 2.2.14
+      '@pinecone-database/pinecone': 2.0.1
+      '@qdrant/js-client-rest': 1.7.0(typescript@5.3.3)
+      '@types/lodash': 4.14.202
+      '@types/node': 18.19.14
+      '@types/papaparse': 5.3.14
+      '@types/pg': 8.11.0
+      '@xenova/transformers': 2.15.0
+      '@zilliz/milvus2-sdk-node': 2.3.5
+      assemblyai: 4.2.2
+      chromadb: 1.7.3(cohere-ai@7.7.5)(openai@4.26.1)
+      cohere-ai: 7.7.5
+      js-tiktoken: 1.0.10
+      lodash: 4.17.21
+      magic-bytes.js: 1.10.0
+      mammoth: 1.6.0
+      md-utils-ts: 2.0.0
+      mongodb: 6.3.0
+      notion-md-crawler: 0.0.2
+      openai: 4.26.1
+      papaparse: 5.4.1
+      pathe: 1.1.2
+      pdf2json: 3.0.5
+      pg: 8.11.3
+      pgvector: 0.1.7
+      portkey-ai: 0.1.16
+      rake-modified: 1.0.8
+      replicate: 0.25.2
+      string-strip-html: 13.4.6
+      wink-nlp: 1.14.3
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@google/generative-ai'
+      - '@mongodb-js/zstd'
+      - bufferutil
+      - debug
+      - encoding
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - node-fetch
+      - pg-native
+      - snappy
+      - socks
+      - typescript
+      - utf-8-validate
+    dev: false
+
   /load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
     engines: {node: '>=6'}
@@ -9899,6 +9989,16 @@ packages:
     dependencies:
       yallist: 4.0.0
 
+  /lru-cache@7.18.3:
+    resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /lru-cache@8.0.5:
+    resolution: {integrity: sha512-MhWWlVnuab1RG5/zMRRcVGXZLCXrZTgfwMikgzCegsPnG62yDQo5JnqKkrK4jO5iKqDAZGItAqN5CtKBCBWRUA==}
+    engines: {node: '>=16.14'}
+    dev: false
+
   /lru-cache@9.1.2:
     resolution: {integrity: sha512-ERJq3FOzJTxBbFjZ7iDs+NiK4VI9Wz+RdrrAB8dio1oV+YvdPzUEE4QNiT2VD51DkIbCYRUUzCRkssXCHqSnKQ==}
     engines: {node: 14 || >=16.14}
@@ -9944,6 +10044,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /magic-bytes.js@1.10.0:
+    resolution: {integrity: sha512-/k20Lg2q8LE5xiaaSkMXk4sfvI+9EGEykFS4b0CHHGWqDYU0bGUFSwchNOMA56D7TCs9GwVTkqe9als1/ns8UQ==}
+    dev: false
 
   /magic-string@0.30.7:
     resolution: {integrity: sha512-8vBuFF/I/+OSLRmdf2wwFCJCz+nSn0m6DPvGH1fS/KiQoSaR+sETbov0eIk9KhEKy8CYqIkIAnbohxT/4H0kuA==}
@@ -10805,12 +10909,33 @@ packages:
       dns-packet: 5.6.1
       thunky: 1.1.0
 
+  /mysql2@3.9.2:
+    resolution: {integrity: sha512-3Cwg/UuRkAv/wm6RhtPE5L7JlPB877vwSF6gfLAS68H+zhH+u5oa3AieqEd0D0/kC3W7qIhYbH419f7O9i/5nw==}
+    engines: {node: '>= 8.0'}
+    dependencies:
+      denque: 2.1.0
+      generate-function: 2.3.1
+      iconv-lite: 0.6.3
+      long: 5.2.3
+      lru-cache: 8.0.5
+      named-placeholders: 1.1.3
+      seq-queue: 0.0.5
+      sqlstring: 2.3.3
+    dev: false
+
   /mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
     dependencies:
       any-promise: 1.3.0
       object-assign: 4.1.1
       thenify-all: 1.6.0
+    dev: false
+
+  /named-placeholders@1.1.3:
+    resolution: {integrity: sha512-eLoBxg6wE/rZkJPhU/xRX1WTpkFEwDJEN96oxFrTsqBdbT5ec295Q+CoHrL9IT0DipqKhmGcaZmwOt8OON5x1w==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      lru-cache: 7.18.3
     dev: false
 
   /nanoid@3.3.7:
@@ -12364,7 +12489,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 18.19.14
+      '@types/node': 20.11.20
       long: 4.0.0
     dev: false
 
@@ -13313,6 +13438,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /seq-queue@0.0.5:
+    resolution: {integrity: sha512-hr3Wtp/GZIc/6DAGPDcV4/9WoZhjrkXsi5B/07QgX8tsdc6ilr7BFM6PM6rbdAX1kFSDYeZGLipIZZKyQP0O5Q==}
+    dev: false
+
   /serialize-javascript@6.0.2:
     resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
     dependencies:
@@ -13671,6 +13800,11 @@ packages:
 
   /sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
+
+  /sqlstring@2.3.3:
+    resolution: {integrity: sha512-qC9iz2FlN7DQl3+wjwn3802RTyjCx7sDvfQEXchwa6CWOx07/WVfh91gBmQ9fahw8snwGEWU3xGzOt4tFyHLxg==}
+    engines: {node: '>= 0.6'}
+    dev: false
 
   /srcset@4.0.0:
     resolution: {integrity: sha512-wvLeHgcVHKO8Sc/H/5lkGreJQVeYMm9rlmt8PuR1xE31rIuXhuzznUUqAt8MqLhB3MqJdFzlNAfpcWnxiFUcPw==}
