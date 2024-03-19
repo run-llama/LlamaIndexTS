@@ -1,4 +1,4 @@
-import { SimpleDirectoryReader } from "llamaindex/readers/SimpleDirectoryReader";
+import { SimpleDirectoryReader } from "llamaindex/readers";
 // or
 // import { SimpleDirectoryReader } from 'llamaindex'
 

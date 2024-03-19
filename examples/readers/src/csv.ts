@@ -5,7 +5,7 @@ import {
   serviceContextFromDefaults,
   VectorStoreIndex,
 } from "llamaindex";
-import { PapaCSVReader } from "llamaindex/readers/CSVReader";
+import { PapaCSVReader } from "llamaindex/readers";
 
 async function main() {
   // Load CSV

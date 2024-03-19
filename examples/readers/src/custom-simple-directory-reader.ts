@@ -2,8 +2,8 @@ import type { BaseReader, Document, Metadata } from "llamaindex";
 import {
   FILE_EXT_TO_READER,
   SimpleDirectoryReader,
-} from "llamaindex/readers/SimpleDirectoryReader";
-import { TextFileReader } from "llamaindex/readers/TextFileReader";
+  TextFileReader,
+} from "llamaindex/readers";
 
 class ZipReader implements BaseReader {
   loadData(...args: any[]): Promise<Document<Metadata>[]> {
