@@ -276,6 +276,9 @@ importers:
       string-strip-html:
         specifier: ^13.4.6
         version: 13.4.6
+      wikipedia:
+        specifier: ^2.1.2
+        version: 2.1.2
       wink-nlp:
         specifier: ^1.14.3
         version: 1.14.3
@@ -418,6 +421,9 @@ importers:
       string-strip-html:
         specifier: ^13.4.6
         version: 13.4.6
+      wikipedia:
+        specifier: ^2.1.2
+        version: 2.1.2
       wink-nlp:
         specifier: ^1.14.3
         version: 1.14.3
@@ -5913,6 +5919,11 @@ packages:
       quick-lru: 4.0.1
     dev: true
 
+  /camelcase@4.1.0:
+    resolution: {integrity: sha512-FxAv7HpHrXbh3aPo4o2qxHay2lkLY3x5Mw3KeE4KQE8ysVfziWeRZDwcjauvwBSGEC/nXUPzZy8zeh4HokqOnw==}
+    engines: {node: '>=4'}
+    dev: false
+
   /camelcase@5.3.1:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
@@ -9263,6 +9274,12 @@ packages:
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
+
+  /infobox-parser@3.6.4:
+    resolution: {integrity: sha512-d2lTlxKZX7WsYxk9/UPt51nkmZv5tbC75SSw4hfHqZ3LpRAn6ug0oru9xI2X+S78va3aUAze3xl/UqMuwLmJUw==}
+    dependencies:
+      camelcase: 4.1.0
+    dev: false
 
   /inherits@2.0.3:
     resolution: {integrity: sha512-x00IRNXNy63jwGkJmzPigoySHbaqpNuzKbBOmzK+g2OdZpQ9w+sxCN+VSB3ja7IAge2OP2qpfxTjeNcyjmW1uw==}
@@ -15649,6 +15666,16 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       string-width: 5.1.2
+
+  /wikipedia@2.1.2:
+    resolution: {integrity: sha512-RAYaMpXC9/E873RaSEtlEa8dXK4e0p5k98GKOd210MtkE5emm6fcnwD+N6ZA4cuffjDWagvhaQKtp/mGp2BOVQ==}
+    engines: {node: '>=10'}
+    dependencies:
+      axios: 1.6.7
+      infobox-parser: 3.6.4
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /wildcard@2.0.1:
     resolution: {integrity: sha512-CC1bOL87PIWSBhDcTrdeLo6eGT7mCFtrg0uIJtqJUFyK+eJnzl8A1niH56uu7KMa5XFrtiV+AQuHO3n7DsHnLQ==}

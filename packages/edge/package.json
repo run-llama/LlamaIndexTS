@@ -40,7 +40,8 @@
     "rake-modified": "^1.0.8",
     "replicate": "^0.25.2",
     "string-strip-html": "^13.4.6",
-    "wink-nlp": "^1.14.3"
+    "wink-nlp": "^1.14.3",
+    "wikipedia": "^2.1.2"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -77,8 +78,8 @@
   },
   "scripts": {
     "copy": "cp -r ../../README.md ../../LICENSE .",
-    "compare": "node scripts/compare-deps.js",
+    "update:deps": "node scripts/update-deps.js",
     "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -fr dist/cjs",
-    "build": "pnpm run compare && pnpm run build:core && pnpm copy"
+    "build": "pnpm run update:deps && pnpm run build:core && pnpm copy"
   }
 }
