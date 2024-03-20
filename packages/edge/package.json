@@ -76,7 +76,7 @@
     "directory": "packages/edge"
   },
   "scripts": {
-    "copy": "cp -r ../../README.md ../../LICENSE .",
+    "copy": "cp -r ../../LICENSE .",
     "compare": "node scripts/compare-deps.js",
     "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -fr dist/cjs",
     "build": "pnpm run compare && pnpm run build:core && pnpm copy"
