@@ -13,8 +13,6 @@ import type {
 
 import { streamConverter } from "./utils.js";
 
-import { Prompt } from "../index.js";
-
 export abstract class BaseLLM implements LLM {
   abstract metadata: LLMMetadata;
 
@@ -27,13 +25,10 @@ export abstract class BaseLLM implements LLM {
   ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
     const { prompt, parentEvent, stream } = params;
 
-    const formattedPrompt =
-      prompt instanceof Prompt ? prompt.format({}) : prompt;
-
-    if (Array.isArray(formattedPrompt)) {
+    if (Array.isArray(prompt)) {
       if (stream) {
         const stream = await this.chat({
-          messages: formattedPrompt,
+          messages: prompt,
           parentEvent,
           stream: true,
         });
@@ -45,16 +40,16 @@ export abstract class BaseLLM implements LLM {
       }
 
       const chatResponse = await this.chat({
-        messages: prompt.formatMessages(),
+        messages: prompt,
         parentEvent,
       });
       return { text: chatResponse.message.content as string };
     }
 
-    if (typeof formattedPrompt === "string") {
+    if (typeof prompt === "string") {
       if (stream) {
         const stream = await this.complete({
-          prompt: formattedPrompt,
+          prompt,
           parentEvent,
           stream: true,
         });
@@ -63,14 +58,14 @@ export abstract class BaseLLM implements LLM {
       }
 
       return this.complete({
-        prompt: formattedPrompt,
+        prompt,
         parentEvent,
       });
     }
 
     if (stream) {
       const stream = await this.complete({
-        prompt: formattedPrompt,
+        prompt,
         parentEvent,
         stream: true,
       });
@@ -79,7 +74,7 @@ export abstract class BaseLLM implements LLM {
     }
 
     return this.complete({
-      prompt: formattedPrompt,
+      prompt,
       parentEvent,
     });
   }

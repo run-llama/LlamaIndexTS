@@ -1,5 +1,5 @@
 import type { Event } from "../callbacks/CallbackManager.js";
-import type { LLM } from "../llm/index.js";
+import type { ChatMessage, LLM } from "../llm/index.js";
 import { streamConverter } from "../llm/utils.js";
 import {
   defaultRefinePrompt,
@@ -173,14 +173,12 @@ export class Refine extends PromptMixin implements ResponseBuilder {
       const chunk = textChunks[i];
       const lastChunk = i === textChunks.length - 1;
 
-      const prompt = this.textQATemplate.partial({
-        context: chunk,
-        query: queryStr,
-      });
-
       if (!response) {
         response = await this.complete({
-          prompt: prompt,
+          prompt: this.textQATemplate.format({
+            context: chunk,
+            query: queryStr,
+          }),
           parentEvent,
           stream: stream && lastChunk,
         });
@@ -216,14 +214,12 @@ export class Refine extends PromptMixin implements ResponseBuilder {
       const chunk = textChunks[i];
       const lastChunk = i === textChunks.length - 1;
 
-      const prompt = this.refineTemplate.partial({
-        context: chunk,
-        existingAnswer: response as string,
-        query: queryStr,
-      });
-
       response = await this.complete({
-        prompt,
+        prompt: this.refineTemplate.format({
+          context: chunk,
+          existingAnswer: response as string,
+          query: queryStr,
+        }),
         parentEvent,
         stream: stream && lastChunk,
       });
@@ -232,7 +228,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   async complete(params: {
-    prompt: Prompt;
+    prompt: string | ChatMessage[];
     stream: boolean;
     parentEvent?: Event;
   }): Promise<AsyncIterable<string> | string> {

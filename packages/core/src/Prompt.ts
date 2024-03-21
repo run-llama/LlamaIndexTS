@@ -1,6 +1,6 @@
 import type { SubQuestion } from "./engines/query/types.js";
-import { Prompt } from "./index.edge.js";
 import type { ChatMessage } from "./llm/types.js";
+import { Prompt } from "./prompts/index.js";
 import type { ToolMetadata } from "./types.js";
 
 /**
@@ -26,7 +26,7 @@ DEFAULT_TEXT_QA_PROMPT_TMPL = (
 */
 
 export const defaultTextQaPrompt = new Prompt(`
-default:
+default: >
   Context information is below.
   ---------------------
   {{context}}
@@ -34,7 +34,7 @@ default:
   Given the context information and not prior knowledge, answer the query.
   Query: {{query}}
   Answer:
-llm-claude:
+llm-claude: >
   Context information:
   <context>
   {{context}}
@@ -83,7 +83,7 @@ DEFAULT_REFINE_PROMPT_TMPL = (
 */
 
 export const defaultRefinePrompt = new Prompt(`
-default:
+default: >
   The original query is as follows: {{query}}
   We have provided an existing answer: {{existingAnswer}}
   We have the opportunity to refine the existing answer (only if needed) with some more context below.
@@ -91,7 +91,8 @@ default:
   {{context}}
   ------------
   Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
-  Refined Answer:`);
+  Refined Answer:
+`);
 
 export type RefinePrompt = typeof defaultRefinePrompt;
 
@@ -109,7 +110,7 @@ DEFAULT_TREE_SUMMARIZE_TMPL = (
 */
 
 export const defaultTreeSummarizePrompt = new Prompt(`
-default:
+default: >
   Context information from multiple sources is below.
   ---------------------
   {{context}}
