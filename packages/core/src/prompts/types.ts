@@ -77,12 +77,11 @@ export class Prompt {
         });
       }
       return result;
-    } else {
-      const renderedResult = mustache.render(
-        yaml.stringify(templateSection),
-        inputs,
-      );
+    } else if (typeof templateSection === "string") {
+      const renderedResult = mustache.render(templateSection, inputs);
       return renderedResult;
+    } else {
+      throw new Error("Invalid template section");
     }
   }
 

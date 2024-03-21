@@ -6,8 +6,11 @@ import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { imageToDataUrl } from "../embeddings/index.js";
 import type { MessageContentDetail } from "../llm/types.js";
 import { PromptMixin } from "../prompts/Mixin.js";
-import type { TextQaPrompt } from "./../Prompt.js";
+
 import { defaultTextQaPrompt } from "./../Prompt.js";
+
+import { Prompt } from "./../prompts/index.js";
+
 import type {
   BaseSynthesizer,
   SynthesizeParamsNonStreaming,
@@ -20,7 +23,7 @@ export class MultiModalResponseSynthesizer
 {
   serviceContext: ServiceContext;
   metadataMode: MetadataMode;
-  textQATemplate: TextQaPrompt;
+  textQATemplate: Prompt;
 
   constructor({
     serviceContext,
@@ -34,15 +37,13 @@ export class MultiModalResponseSynthesizer
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
-  protected _getPrompts(): { textQATemplate: TextQaPrompt } {
+  protected _getPrompts(): { textQATemplate: Prompt } {
     return {
       textQATemplate: this.textQATemplate,
     };
   }
 
-  protected _updatePrompts(promptsDict: {
-    textQATemplate: TextQaPrompt;
-  }): void {
+  protected _updatePrompts(promptsDict: { textQATemplate: Prompt }): void {
     if (promptsDict.textQATemplate) {
       this.textQATemplate = promptsDict.textQATemplate;
     }
@@ -70,7 +71,9 @@ export class MultiModalResponseSynthesizer
     );
     // TODO: use builders to generate context
     const context = textChunks.join("\n\n");
-    const textPrompt = this.textQATemplate({ context, query });
+
+    const textQaPrompt = this.textQATemplate.format({ context, query });
+
     const images = await Promise.all(
       imageNodes.map(async (node: ImageNode) => {
         return {
@@ -81,11 +84,17 @@ export class MultiModalResponseSynthesizer
         } as MessageContentDetail;
       }),
     );
+
+    // TODO: handle chat message prompt
+    if (Array.isArray(textQaPrompt)) {
+      throw new Error("textQaPrompt must be a string");
+    }
+
     const prompt: MessageContentDetail[] = [
-      { type: "text", text: textPrompt },
+      { type: "text", text: textQaPrompt },
       ...images,
     ];
-    const response = await this.serviceContext.llm.complete({
+    const response = await this.serviceContext.llm.predict({
       prompt,
       parentEvent,
     });
