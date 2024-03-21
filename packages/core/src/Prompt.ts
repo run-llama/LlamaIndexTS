@@ -1,4 +1,5 @@
 import type { SubQuestion } from "./engines/query/types.js";
+import { Prompt } from "./index.edge.js";
 import type { ChatMessage } from "./llm/types.js";
 import type { ToolMetadata } from "./types.js";
 
@@ -24,43 +25,23 @@ DEFAULT_TEXT_QA_PROMPT_TMPL = (
 )
 */
 
-export const defaultTextQaPrompt = ({ context = "", query = "" }) => {
-  return `Context information is below.
----------------------
-${context}
----------------------
-Given the context information and not prior knowledge, answer the query.
-Query: ${query}
-Answer:`;
-};
-
-export type TextQaPrompt = typeof defaultTextQaPrompt;
-
-export const anthropicTextQaPrompt: TextQaPrompt = ({
-  context = "",
-  query = "",
-}) => {
-  return `Context information:
-<context>
-${context}
-</context>
-Given the context information and not prior knowledge, answer the query.
-Query: ${query}`;
-};
-
-/*
-DEFAULT_SUMMARY_PROMPT_TMPL = (
-    "Write a summary of the following. Try to use only the "
-    "information provided. "
-    "Try to include as many key details as possible.\n"
-    "\n"
-    "\n"
-    "{context_str}\n"
-    "\n"
-    "\n"
-    'SUMMARY:"""\n'
-)
-*/
+export const defaultTextQaPrompt = new Prompt(`
+default:
+  Context information is below.
+  ---------------------
+  {{context}}
+  ---------------------
+  Given the context information and not prior knowledge, answer the query.
+  Query: {{query}}
+  Answer:
+llm-claude:
+  Context information:
+  <context>
+  {{context}}
+  </context>
+  Given the context information and not prior knowledge, answer the query.
+  Query: {{query}};
+`);
 
 export const defaultSummaryPrompt = ({ context = "" }) => {
   return `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.

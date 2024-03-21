@@ -1,5 +1,4 @@
 import { globalsHelper } from "./GlobalsHelper.js";
-import type { SimplePrompt } from "./Prompt.js";
 import { SentenceSplitter } from "./TextSplitter.js";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
@@ -8,8 +7,16 @@ import {
   DEFAULT_PADDING,
 } from "./constants.js";
 
-export function getEmptyPromptTxt(prompt: SimplePrompt) {
-  return prompt({});
+import { Prompt, messagesToPrompt } from "./index.js";
+
+export function getEmptyPromptTxt(prompt: Prompt) {
+  const emptyPrompt = prompt.format({});
+
+  if (Array.isArray(emptyPrompt)) {
+    return messagesToPrompt(emptyPrompt);
+  }
+
+  return emptyPrompt;
 }
 
 /**
@@ -18,7 +25,7 @@ export function getEmptyPromptTxt(prompt: SimplePrompt) {
  * @param prompts
  * @returns
  */
-export function getBiggestPrompt(prompts: SimplePrompt[]) {
+export function getBiggestPrompt(prompts: Prompt[]) {
   const emptyPromptTexts = prompts.map(getEmptyPromptTxt);
   const emptyPromptLengths = emptyPromptTexts.map((text) => text.length);
   const maxEmptyPromptLength = Math.max(...emptyPromptLengths);
@@ -59,7 +66,7 @@ export class PromptHelper {
    * @param prompt
    * @returns
    */
-  private getAvailableContextSize(prompt: SimplePrompt) {
+  private getAvailableContextSize(prompt: Prompt) {
     const emptyPromptText = getEmptyPromptTxt(prompt);
     const promptTokens = this.tokenizer(emptyPromptText);
     const numPromptTokens = promptTokens.length;
@@ -74,11 +81,7 @@ export class PromptHelper {
    * @param padding
    * @returns
    */
-  private getAvailableChunkSize(
-    prompt: SimplePrompt,
-    numChunks = 1,
-    padding = 5,
-  ) {
+  private getAvailableChunkSize(prompt: Prompt, numChunks = 1, padding = 5) {
     const availableContextSize = this.getAvailableContextSize(prompt);
 
     const result = Math.floor(availableContextSize / numChunks) - padding;
@@ -98,7 +101,7 @@ export class PromptHelper {
    * @returns
    */
   getTextSplitterGivenPrompt(
-    prompt: SimplePrompt,
+    prompt: Prompt,
     numChunks = 1,
     padding = DEFAULT_PADDING,
   ) {
@@ -118,11 +121,7 @@ export class PromptHelper {
    * @param padding
    * @returns
    */
-  repack(
-    prompt: SimplePrompt,
-    textChunks: string[],
-    padding = DEFAULT_PADDING,
-  ) {
+  repack(prompt: Prompt, textChunks: string[], padding = DEFAULT_PADDING) {
     const textSplitter = this.getTextSplitterGivenPrompt(prompt, 1, padding);
     const combinedStr = textChunks.join("\n\n");
     return textSplitter.splitText(combinedStr);
