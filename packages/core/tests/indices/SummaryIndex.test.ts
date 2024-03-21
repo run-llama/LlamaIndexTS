@@ -7,7 +7,12 @@ import {
   type StorageContext,
 } from "llamaindex";
 import { rmSync } from "node:fs";
+import { mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+
+const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
 vi.mock("llamaindex/llm/open_ai", () => {
   return {
@@ -24,7 +29,7 @@ describe("SummaryIndex", () => {
   beforeAll(async () => {
     serviceContext = mockServiceContext();
     storageContext = await storageContextFromDefaults({
-      persistDir: "/tmp/test_dir",
+      persistDir: testDir,
     });
   });
 
@@ -43,6 +48,6 @@ describe("SummaryIndex", () => {
   });
 
   afterAll(() => {
-    rmSync("/tmp/test_dir", { recursive: true });
+    rmSync(testDir, { recursive: true });
   });
 });
