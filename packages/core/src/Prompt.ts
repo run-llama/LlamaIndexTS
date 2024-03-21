@@ -82,20 +82,16 @@ DEFAULT_REFINE_PROMPT_TMPL = (
 )
 */
 
-export const defaultRefinePrompt = ({
-  query = "",
-  existingAnswer = "",
-  context = "",
-}) => {
-  return `The original query is as follows: ${query}
-We have provided an existing answer: ${existingAnswer}
-We have the opportunity to refine the existing answer (only if needed) with some more context below.
-------------
-${context}
-------------
-Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
-Refined Answer:`;
-};
+export const defaultRefinePrompt = new Prompt(`
+default:
+  The original query is as follows: {{query}}
+  We have provided an existing answer: {{existingAnswer}}
+  We have the opportunity to refine the existing answer (only if needed) with some more context below.
+  ------------
+  {{context}}
+  ------------
+  Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
+  Refined Answer:`);
 
 export type RefinePrompt = typeof defaultRefinePrompt;
 
@@ -112,15 +108,16 @@ DEFAULT_TREE_SUMMARIZE_TMPL = (
 )
 */
 
-export const defaultTreeSummarizePrompt = ({ context = "", query = "" }) => {
-  return `Context information from multiple sources is below.
----------------------
-${context}
----------------------
-Given the information from multiple sources and not prior knowledge, answer the query.
-Query: ${query}
-Answer:`;
-};
+export const defaultTreeSummarizePrompt = new Prompt(`
+default:
+  Context information from multiple sources is below.
+  ---------------------
+  {{context}}
+  ---------------------
+  Given the information from multiple sources and not prior knowledge, answer the query.
+  Query: {{query}}
+  Answer:
+`);
 
 export type TreeSummarizePrompt = typeof defaultTreeSummarizePrompt;
 

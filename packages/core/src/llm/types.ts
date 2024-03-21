@@ -7,6 +7,15 @@ import type { Event } from "../callbacks/CallbackManager.js";
 export interface LLM {
   metadata: LLMMetadata;
   /**
+   * Predict the next completion from the LLM
+   * *
+   * @param params
+   */
+  predict(
+    params: LLMCompletionParamsStreaming,
+  ): Promise<AsyncIterable<CompletionResponse>>;
+  predict(params: LLMCompletionParamsNonStreaming): Promise<CompletionResponse>;
+  /**
    * Get a chat response from the LLM
    *
    * @param params
