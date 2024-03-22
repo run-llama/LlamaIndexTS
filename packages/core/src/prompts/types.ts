@@ -1,5 +1,7 @@
 import type { ChatMessage } from "../llm/types.js";
 
+import { Settings } from "../Settings.js";
+
 import mustache from "mustache";
 
 import * as yaml from "yaml";
@@ -30,9 +32,13 @@ export class Prompt {
     let templateSection = null;
     let defaultSection = null;
 
+    // Determine the language and LLM settings to use, either from the environment or the global settings.
+    const envLang = env?.lang || Settings?.prompt?.lang;
+    const envLlm = env?.llm || Settings?.prompt?.llm;
+
     // Regular expressions for matching language and LLM keys, including defaults.
-    const langRegex = new RegExp(`^lang-(${env?.lang}|default)$`, "i");
-    const llmRegex = new RegExp(`^llm-(${env?.llm}|default)$`, "i");
+    const langRegex = new RegExp(`^lang-(${envLang}|default)$`, "i");
+    const llmRegex = new RegExp(`^llm-(${envLlm}|default)$`, "i");
 
     // First, look for language matches or language defaults.
     Object.entries(parsedTemplate).forEach(([key, value]) => {
@@ -90,8 +96,9 @@ export class Prompt {
     return new Prompt(template);
   }
 
-  // serialize to JSON
-  toJSON(): string {
-    return this.template;
+  toJSON(): Record<string, any> {
+    return {
+      template: this.template,
+    };
   }
 }

@@ -1,20 +1,10 @@
-import { Prompt, SimpleDirectoryReader, VectorStoreIndex } from "./index.js";
+import { Settings, SimpleDirectoryReader, VectorStoreIndex } from "./index.js";
 
-const refineTemplate = `
-messages:
- - role: system
-   content: Write as an research scientist
- - role: user
-   content: >
-    The original query is as follows: {{query}}
-    We have provided an existing answer: {{existingAnswer}}
-    We have the opportunity to refine the existing answer (only if needed) with some more context below.
-    ------------
-    {{context}}
-    ------------
-    Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
-    Refined Answer:
-`;
+// Update llm and prompt
+Settings.prompt.llm = "claude";
+
+// Update lang
+Settings.prompt.lang = "en";
 
 async function main() {
   const documents = await new SimpleDirectoryReader().loadData({
@@ -29,10 +19,6 @@ async function main() {
 
   const queryEngine = index.asQueryEngine({
     retriever,
-  });
-
-  queryEngine.updatePrompts({
-    "responseSynthesizer:refineTemplate": new Prompt(refineTemplate),
   });
 
   // Query the engine
