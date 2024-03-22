@@ -60,7 +60,7 @@ export class ReActChatFormatter implements BaseAgentChatFormatter {
       } else {
         message = {
           content: reasoningStep.getContent(),
-          role: "system",
+          role: "assistant",
         };
       }
 
