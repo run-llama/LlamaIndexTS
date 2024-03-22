@@ -1,4 +1,5 @@
 import type { BaseTool } from "../types.js";
+import { WikipediaTool } from "./WikipediaTool.js";
 
 enum ExternalTool {
   Wikipedia = "wikipedia.WikipediaToolSpec",
@@ -12,7 +13,6 @@ export class ToolFactory {
     options: Record<string, any>,
   ): Promise<BaseTool> {
     if (key === ExternalTool.Wikipedia) {
-      const WikipediaTool = (await import("llamaindex")).WikipediaTool;
       const tool = new WikipediaTool();
       return tool;
     }
