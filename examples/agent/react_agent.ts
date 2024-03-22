@@ -1,4 +1,4 @@
-import { FunctionTool, ReActAgent } from "llamaindex";
+import { Anthropic, FunctionTool, ReActAgent } from "llamaindex";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }): number {
@@ -56,8 +56,14 @@ async function main() {
     parameters: divideJSON,
   });
 
-  // Create an OpenAIAgent with the function tools
+  const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    model: "claude-3-opus",
+  });
+
+  // Create an ReActAgent with the function tools
   const agent = new ReActAgent({
+    llm: anthropic,
     tools: [functionTool, functionTool2],
     verbose: true,
   });
