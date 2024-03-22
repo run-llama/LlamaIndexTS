@@ -1,18 +1,18 @@
 import type { BaseTool } from "../types.js";
 import { WikipediaTool } from "./WikipediaTool.js";
 
-enum ExternalTool {
+enum Tools {
   Wikipedia = "wikipedia.WikipediaToolSpec",
 }
 
-type ToolConfig = { [key in ExternalTool]: Record<string, any> };
+type ToolConfig = { [key in Tools]: Record<string, any> };
 
 export class ToolFactory {
   private static async createTool(
-    key: ExternalTool,
+    key: Tools,
     options: Record<string, any>,
   ): Promise<BaseTool> {
-    if (key === ExternalTool.Wikipedia) {
+    if (key === Tools.Wikipedia) {
       const tool = new WikipediaTool();
       return tool;
     }
@@ -25,7 +25,7 @@ export class ToolFactory {
   public static async createTools(config: ToolConfig): Promise<BaseTool[]> {
     const tools: BaseTool[] = [];
     for (const [key, value] of Object.entries(config as ToolConfig)) {
-      const tool = await ToolFactory.createTool(key as ExternalTool, value);
+      const tool = await ToolFactory.createTool(key as Tools, value);
       tools.push(tool);
     }
     return tools;
