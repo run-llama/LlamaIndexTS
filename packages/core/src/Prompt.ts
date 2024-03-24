@@ -43,28 +43,23 @@ llm-claude: >
   Query: {{query}};
 `);
 
-export const defaultSummaryPrompt = ({ context = "" }) => {
-  return `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
+export const defaultSummaryPrompt = new Prompt(`
+default: >  
+  Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
 
+  {{context}}
 
-${context}
+  SUMMARY:"""
+llm-claude: >
+  Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
+  <original-text>
+  {{context}}
+  </original-text>
 
-
-SUMMARY:"""
-`;
-};
+  SUMMARY:
+`);
 
 export type SummaryPrompt = typeof defaultSummaryPrompt;
-
-export const anthropicSummaryPrompt: SummaryPrompt = ({ context = "" }) => {
-  return `Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
-<original-text>
-${context}
-</original-text>
-
-SUMMARY:
-`;
-};
 
 /*
 DEFAULT_REFINE_PROMPT_TMPL = (
@@ -122,37 +117,38 @@ default: >
 
 export type TreeSummarizePrompt = typeof defaultTreeSummarizePrompt;
 
-export const defaultChoiceSelectPrompt = ({ context = "", query = "" }) => {
-  return `A list of documents is shown below. Each document has a number next to it along 
-with a summary of the document. A question is also provided.
-Respond with the numbers of the documents
-you should consult to answer the question, in order of relevance, as well
-as the relevance score. The relevance score is a number from 1-10 based on
-how relevant you think the document is to the question.
-Do not include any documents that are not relevant to the question.
-Example format:
-Document 1:
-<summary of document 1>
+export const defaultChoiceSelectPrompt = new Prompt(`
+default: >
+  A list of documents is shown below. Each document has a number next to it along 
+  with a summary of the document. A question is also provided.
+  Respond with the numbers of the documents
+  you should consult to answer the question, in order of relevance, as well
+  as the relevance score. The relevance score is a number from 1-10 based on
+  how relevant you think the document is to the question.
+  Do not include any documents that are not relevant to the question.
+  Example format:
+  Document 1:
+  <summary of document 1>
 
-Document 2:
-<summary of document 2>
+  Document 2:
+  <summary of document 2>
 
-...
+  ...
 
-Document 10:\n<summary of document 10>
+  Document 10:\n<summary of document 10>
 
-Question: <question>
-Answer:
-Doc: 9, Relevance: 7
-Doc: 3, Relevance: 4
-Doc: 7, Relevance: 3
+  Question: <question>
+  Answer:
+  Doc: 9, Relevance: 7
+  Doc: 3, Relevance: 4
+  Doc: 7, Relevance: 3
 
-Let's try this now:
+  Let's try this now:
 
-${context}
-Question: ${query}
-Answer:`;
-};
+  {{context}}
+  Question: {{query}}
+  Answer:
+`);
 
 export type ChoiceSelectPrompt = typeof defaultChoiceSelectPrompt;
 
