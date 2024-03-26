@@ -6,7 +6,8 @@ Settings.llm = new OpenAI({ model: "gpt-4" });
 
 async function main() {
   // Load essay from abramov.txt in Node
-  const path = "../packages/core/examples/abramov.txt";
+  const path = "node_modules/llamaindex/examples/abramov.txt";
+
   const essay = await fs.readFile(path, "utf-8");
 
   // Create Document object with essay
