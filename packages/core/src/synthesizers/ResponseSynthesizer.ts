@@ -1,7 +1,6 @@
 import { MetadataMode } from "../Node.js";
 import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { ResponseBuilderPrompts } from "./builders.js";
@@ -21,7 +20,7 @@ export class ResponseSynthesizer
   implements BaseSynthesizer
 {
   responseBuilder: ResponseBuilder;
-  serviceContext: ServiceContext;
+  serviceContext?: ServiceContext;
   metadataMode: MetadataMode;
 
   constructor({
@@ -35,7 +34,7 @@ export class ResponseSynthesizer
   } = {}) {
     super();
 
-    this.serviceContext = serviceContext ?? serviceContextFromDefaults();
+    this.serviceContext = serviceContext;
     this.responseBuilder =
       responseBuilder ?? getResponseBuilder(this.serviceContext);
     this.metadataMode = metadataMode;

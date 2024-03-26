@@ -16,7 +16,10 @@ import type { PromptHelper } from "../PromptHelper.js";
 import { getBiggestPrompt } from "../PromptHelper.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { llmFromSettingsOrContext, Settings } from "../Settings.js";
+import {
+  llmFromSettingsOrContext,
+  promptHelperFromSettingsOrContext,
+} from "../Settings.js";
 import type {
   ResponseBuilder,
   ResponseBuilderParamsNonStreaming,
@@ -92,7 +95,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     super();
 
     this.llm = llmFromSettingsOrContext(serviceContext);
-    this.promptHelper = serviceContext?.promptHelper || Settings.promptHelper;
+    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
@@ -300,7 +303,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
     super();
 
     this.llm = llmFromSettingsOrContext(serviceContext);
-    this.promptHelper = serviceContext?.promptHelper ?? Settings.promptHelper;
+    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 

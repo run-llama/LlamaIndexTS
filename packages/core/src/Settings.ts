@@ -172,3 +172,13 @@ export const embedModelFromSettingsOrContext = (
 
   return Settings.embedModel;
 };
+
+export const promptHelperFromSettingsOrContext = (
+  serviceContext?: ServiceContext,
+) => {
+  if (serviceContext?.promptHelper) {
+    return serviceContext.promptHelper;
+  }
+
+  return Settings.promptHelper;
+};
