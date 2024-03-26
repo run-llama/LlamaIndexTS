@@ -96,7 +96,7 @@ export class SummaryChatHistory extends ChatHistory {
     do {
       promptMessages = [
         {
-          content: this.summaryPrompt({
+          content: this.summaryPrompt.format({
             context: messagesToHistoryStr(messagesToSummarize),
           }),
           role: "user" as MessageType,

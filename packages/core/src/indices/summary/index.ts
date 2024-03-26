@@ -354,7 +354,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       const input = { context: fmtBatchStr, query: query };
       const rawResponse = (
         await this.serviceContext.llm.complete({
-          prompt: this.choiceSelectPrompt(input),
+          prompt: this.choiceSelectPrompt.format(input),
         })
       ).text;
 
