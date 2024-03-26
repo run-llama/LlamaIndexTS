@@ -124,7 +124,12 @@ export class GlobalSettings implements Config {
 }
 
 // Determine the global object based on the environment
-const globalObject: any = typeof window !== "undefined" ? window : global;
+const globalObject: any =
+  typeof window !== "undefined"
+    ? window
+    : typeof global !== "undefined"
+      ? global
+      : {};
 
 // Initialize or access a global config object
 const globalConfigKey = "__GLOBAL_LITS__";
