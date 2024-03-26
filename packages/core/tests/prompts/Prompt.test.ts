@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Prompt } from "../../src/prompts/types.js";
+import { Prompt } from "llamaindex/prompts/types";
 
 describe("Prompt", () => {
   it("should format messages prompt", () => {
