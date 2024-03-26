@@ -93,20 +93,28 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 - [SimplePrompt](/packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
-## Note: NextJS:
+## Using NextJS
 
-If you're using NextJS App Router, you'll need to use the NodeJS runtime (default) and add the following config to your next.config.js to have it use imports/exports in the same way Node does.
+If you're using the NextJS App Router, you can choose between the Node.js and the [Edge runtime](https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes#edge-runtime).
 
-```js
-export const runtime = "nodejs"; // default
+With NextJS 13 and 14, using the Node.js runtime is the default. You can explicitly set the Edge runtime in your [router handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) by adding this line:
+
+```typescript
+export const runtime = "edge";
 ```
+
+The following sections explain further differences in using the Node.js or Edge runtime.
+
+### Using the Node.js runtime
+
+Add the following config to your `next.config.js` to ignore specific packages in the server-side bundling:
 
 ```js
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf2json"],
+    serverComponentsExternalPackages: ["pdf2json", "@zilliz/milvus2-sdk-node"],
   },
   webpack: (config) => {
     config.resolve.alias = {
@@ -121,46 +129,59 @@ const nextConfig = {
 module.exports = nextConfig;
 ```
 
-### NextJS with Milvus:
+### Using the Edge runtime
 
-As proto files are not loaded per default in NextJS, you'll need to add the following to your next.config.js to have it load the proto files.
+We publish a dedicated package (`@llamaindex/edge` instead of `llamaindex`) for using the Edge runtime. To use it, first install the package:
 
-```js
-const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Copy the proto files to the server build directory
-      config.plugins.push(
-        new CopyWebpackPlugin({
-          patterns: [
-            {
-              from: path.join(
-                __dirname,
-                "node_modules/@zilliz/milvus2-sdk-node/dist",
-              ),
-              to: path.join(__dirname, ".next"),
-            },
-          ],
-        }),
-      );
-    }
-    // Important: return the modified config
-    return config;
-  },
-};
-
-module.exports = nextConfig;
+```shell
+pnpm install @llamaindex/edge
 ```
+
+> _Note_: Ensure that your `package.json` doesn't include the `llamaindex` package if you're using `@llamaindex/edge`.
+
+Then make sure to use the correct import statement in your code:
+
+```typescript
+// replace 'llamaindex' with '@llamaindex/edge'
+import {} from "@llamaindex/edge";
+```
+
+A further difference is that the `@llamaindex/edge` package doesn't export classes from the `readers` or `storage` folders. The reason is that most of these classes are not compatible with the Edge runtime.
+
+If you need any of those classes, you have to import them instead directly. Here's an example for importing the `PineconeVectorStore` class:
+
+```typescript
+import { PineconeVectorStore } from "@llamaindex/edge/storage/vectorStore/PineconeVectorStore";
+```
+
+As the `PDFReader` is not with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
+
+```typescript
+import { SimpleDirectoryReader } from "@llamaindex/edge/readers/SimpleDirectoryReader";
+import { LlamaParseReader } from "@llamaindex/edge/readers/LlamaParseReader";
+
+export const DATA_DIR = "./data";
+
+export async function getDocuments() {
+  const reader = new SimpleDirectoryReader();
+  // Load PDFs using LlamaParseReader
+  return await reader.loadData({
+    directoryPath: DATA_DIR,
+    fileExtToReader: {
+      pdf: new LlamaParseReader({ resultType: "markdown" }),
+    },
+  });
+}
+```
+
+> _Note_: Reader classes have to be added explictly to the `fileExtToReader` map in the Edge version of the `SimpleDirectoryReader`.
+
+You'll find a complete example of using the Edge runtime with LlamaIndexTS here: https://github.com/run-llama/create_llama_projects/tree/main/nextjs-edge-llamaparse
 
 ## Supported LLMs:
 
 - OpenAI GPT-3.5-turbo and GPT-4
-- Anthropic Claude Instant and Claude 2
+- Anthropic Claude 3 (Opus, Sonnet, and Haiku) and the legacy models (Claude 2 and Instant)
 - Groq LLMs
 - Llama2 Chat LLMs (70B, 13B, and 7B parameters)
 - MistralAI Chat LLMs

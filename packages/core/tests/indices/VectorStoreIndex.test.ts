@@ -4,14 +4,21 @@ import {
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
-import { beforeAll, describe, expect, test, vi } from "vitest";
-import { mockServiceContext } from "../utility/mockServiceContext.js";
+import { rmSync } from "node:fs";
+import { mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+
+const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
 vi.mock("llamaindex/llm/open_ai", () => {
   return {
     getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
+
+import { mockServiceContext } from "../utility/mockServiceContext.js";
 
 describe.sequential("VectorStoreIndex", () => {
   let serviceContext: ServiceContext;
@@ -24,7 +31,7 @@ describe.sequential("VectorStoreIndex", () => {
   beforeAll(async () => {
     serviceContext = mockServiceContext();
     storageContext = await storageContextFromDefaults({
-      persistDir: "/tmp/test_dir",
+      persistDir: testDir,
     });
     testStrategy = async (
       // strategy?: DocStoreStrategy,
@@ -55,7 +62,9 @@ describe.sequential("VectorStoreIndex", () => {
   //   expect(entries[0]).toBe(entries[1]);
   // });
 
-  // afterAll(() => {
-  //   rmSync("/tmp/test_dir", { recursive: true });
-  // });
+  afterAll(async () => {
+    // TODO: VectorStoreIndex.fromDocuments running twice is causing a cleanup issue
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    rmSync(testDir, { recursive: true });
+  });
 });
