@@ -7,6 +7,7 @@ import {
   type BaseEmbedding,
   type LLM,
   type NodeParser,
+  type ServiceContext,
 } from "./index.edge.js";
 
 type PromptConfig = {
@@ -24,8 +25,6 @@ interface Config {
   chunkSize?: number;
   chunkOverlap?: number;
 }
-
-// Global settings
 export class GlobalSettings implements Config {
   private _prompt: PromptConfig = {};
   private _llm: LLM | null = null;
@@ -135,3 +134,41 @@ if (!globalObject[globalConfigKey]) {
 }
 
 export const Settings = globalObject[globalConfigKey] as GlobalSettings;
+
+export const llmFromSettingsOrContext = (serviceContext?: ServiceContext) => {
+  if (serviceContext?.llm) {
+    return serviceContext.llm;
+  }
+
+  return Settings.llm;
+};
+
+export const callbackManagerFromSettingsOrContext = (
+  serviceContext?: ServiceContext,
+) => {
+  if (serviceContext?.callbackManager) {
+    return serviceContext.callbackManager;
+  }
+
+  return Settings.callbackManager;
+};
+
+export const nodeParserFromSettingsOrContext = (
+  serviceContext?: ServiceContext,
+) => {
+  if (serviceContext?.nodeParser) {
+    return serviceContext.nodeParser;
+  }
+
+  return Settings.nodeParser;
+};
+
+export const embedModelFromSettingsOrContext = (
+  serviceContext?: ServiceContext,
+) => {
+  if (serviceContext?.embedModel) {
+    return serviceContext.embedModel;
+  }
+
+  return Settings.embedModel;
+};

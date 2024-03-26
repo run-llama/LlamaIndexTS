@@ -1,7 +1,7 @@
+import { llmFromSettingsOrContext } from "llamaindex";
 import { MetadataMode } from "../Node.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
-import type { ChatMessage } from "../llm/types.js";
+import type { ChatMessage, LLM } from "../llm/types.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { CorrectnessSystemPrompt } from "./prompts.js";
 import {
@@ -24,9 +24,10 @@ type CorrectnessParams = {
 
 /** Correctness Evaluator */
 export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
-  private serviceContext: ServiceContext;
+  private serviceContext?: ServiceContext;
   private scoreThreshold: number;
   private parserFunction: (str: string) => [number, string];
+  private llm: LLM;
 
   private correctnessPrompt: CorrectnessSystemPrompt =
     defaultCorrectnessSystemPrompt;
@@ -34,7 +35,8 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
   constructor(params: CorrectnessParams) {
     super();
 
-    this.serviceContext = params.serviceContext || serviceContextFromDefaults();
+    this.serviceContext = params.serviceContext;
+    this.llm = llmFromSettingsOrContext(params.serviceContext);
     this.correctnessPrompt = defaultCorrectnessSystemPrompt;
     this.scoreThreshold = params.scoreThreshold || 4.0;
     this.parserFunction = params.parserFunction || defaultEvaluationParser;
@@ -80,7 +82,7 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
       },
     ];
 
-    const evalResponse = await this.serviceContext.llm.chat({
+    const evalResponse = await this.llm.chat({
       messages,
     });
 

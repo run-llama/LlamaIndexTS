@@ -1,7 +1,7 @@
 import type { BaseNode } from "../../Node.js";
 import { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import { llmFromSettingsOrContext } from "../../Settings.js";
 import { PromptMixin } from "../../prompts/index.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
@@ -55,7 +55,7 @@ async function combineResponses(
  * A query engine that uses multiple query engines and selects the best one.
  */
 export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
-  serviceContext: ServiceContext;
+  serviceContext?: ServiceContext;
 
   private selector: BaseSelector;
   private queryEngines: BaseQueryEngine[];
@@ -72,7 +72,7 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   }) {
     super();
 
-    this.serviceContext = init.serviceContext || serviceContextFromDefaults({});
+    this.serviceContext = init.serviceContext;
     this.selector = init.selector;
     this.queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
     this.metadatas = init.queryEngineTools.map((tool) => ({
@@ -96,12 +96,14 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
     summarizer?: TreeSummarize;
     verbose?: boolean;
   }) {
-    const serviceContext =
-      init.serviceContext ?? serviceContextFromDefaults({});
+    const serviceContext = init.serviceContext;
 
     return new RouterQueryEngine({
       selector:
-        init.selector ?? new LLMSingleSelector({ llm: serviceContext.llm }),
+        init.selector ??
+        new LLMSingleSelector({
+          llm: llmFromSettingsOrContext(serviceContext),
+        }),
       queryEngineTools: init.queryEngineTools,
       serviceContext,
       summarizer: init.summarizer,

@@ -1,6 +1,5 @@
 import { Document, MetadataMode } from "../Node.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { RelevancyEvalPrompt, RelevancyRefinePrompt } from "./prompts.js";
@@ -23,7 +22,7 @@ type RelevancyParams = {
 };
 
 export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
-  private serviceContext: ServiceContext;
+  private serviceContext?: ServiceContext;
   private raiseError: boolean;
 
   private evalTemplate: RelevancyEvalPrompt;
@@ -32,7 +31,7 @@ export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
   constructor(params: RelevancyParams) {
     super();
 
-    this.serviceContext = params.serviceContext ?? serviceContextFromDefaults();
+    this.serviceContext = params.serviceContext;
     this.raiseError = params.raiseError ?? false;
     this.evalTemplate = params.evalTemplate ?? defaultRelevancyEvalPrompt;
     this.refineTemplate = params.refineTemplate ?? defaultRelevancyRefinePrompt;

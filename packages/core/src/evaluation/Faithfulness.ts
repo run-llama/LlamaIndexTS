@@ -1,6 +1,5 @@
 import { Document, MetadataMode } from "../Node.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type {
@@ -22,7 +21,7 @@ export class FaithfulnessEvaluator
   extends PromptMixin
   implements BaseEvaluator
 {
-  private serviceContext: ServiceContext;
+  private serviceContext?: ServiceContext;
   private raiseError: boolean;
   private evalTemplate: FaithfulnessTextQAPrompt;
   private refineTemplate: FaithfulnessRefinePrompt;
@@ -34,7 +33,7 @@ export class FaithfulnessEvaluator
     faithFulnessRefinePrompt?: FaithfulnessRefinePrompt;
   }) {
     super();
-    this.serviceContext = params.serviceContext || serviceContextFromDefaults();
+    this.serviceContext = params.serviceContext;
     this.raiseError = params.raiseError || false;
 
     this.evalTemplate =
