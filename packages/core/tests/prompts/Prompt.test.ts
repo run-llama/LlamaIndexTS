@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Prompt } from "../../src/index.js";
+
+import { Prompt } from "../../src/prompts/types.js";
 
 describe("Prompt", () => {
   it("should format messages prompt", () => {
