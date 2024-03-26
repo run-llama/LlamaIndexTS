@@ -7,7 +7,9 @@ import {
   DEFAULT_PADDING,
 } from "./constants.js";
 
-import { Prompt, messagesToPrompt } from "./index.js";
+import { Prompt } from "./prompts/types.js";
+
+import { messagesToPrompt } from "./prompts/utils.js";
 
 export function getEmptyPromptTxt(prompt: Prompt) {
   const emptyPrompt = prompt.format({});

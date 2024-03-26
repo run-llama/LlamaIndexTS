@@ -1,4 +1,4 @@
-import type { ChatMessage } from "../index.js";
+import type { ChatMessage } from "../llm/types.js";
 
 export const messagesToPrompt = (messages: ChatMessage[]): string => {
   const stringMessages = [];

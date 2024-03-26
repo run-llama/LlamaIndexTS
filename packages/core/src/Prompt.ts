@@ -1,6 +1,8 @@
 import type { SubQuestion } from "./engines/query/types.js";
 import type { ChatMessage } from "./llm/types.js";
-import { Prompt } from "./prompts/index.js";
+
+import { Prompt } from "./prompts/types.js";
+
 import type { ToolMetadata } from "./types.js";
 
 /**

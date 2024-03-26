@@ -9,7 +9,7 @@ import { PromptMixin } from "../prompts/Mixin.js";
 
 import { defaultTextQaPrompt } from "./../Prompt.js";
 
-import { Prompt } from "./../prompts/index.js";
+import { Prompt } from "./../prompts/types.js";
 
 import type {
   BaseSynthesizer,

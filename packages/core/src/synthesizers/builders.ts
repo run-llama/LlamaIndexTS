@@ -16,7 +16,7 @@ import type {
   ResponseBuilderParamsStreaming,
 } from "./types.js";
 
-import { Prompt } from "../index.js";
+import { Prompt } from "../prompts/types.js";
 
 /**
  * Response modes of the response synthesizer

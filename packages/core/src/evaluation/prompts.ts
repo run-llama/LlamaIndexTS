@@ -1,4 +1,4 @@
-import { Prompt } from "./../prompts/index.js";
+import { Prompt } from "./../prompts/types.js";
 
 export const defaultUserPrompt = new Prompt(`
 default: >
