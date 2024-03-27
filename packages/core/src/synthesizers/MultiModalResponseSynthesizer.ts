@@ -1,8 +1,8 @@
-import { llmFromSettingsOrContext } from "llamaindex";
 import type { ImageNode } from "../Node.js";
 import { MetadataMode, splitNodesByType } from "../Node.js";
 import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
+import { llmFromSettingsOrContext } from "../Settings.js";
 import { imageToDataUrl } from "../embeddings/index.js";
 import type { MessageContentDetail } from "../llm/types.js";
 import { PromptMixin } from "../prompts/Mixin.js";
