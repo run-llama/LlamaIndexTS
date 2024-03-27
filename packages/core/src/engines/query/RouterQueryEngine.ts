@@ -55,8 +55,6 @@ async function combineResponses(
  * A query engine that uses multiple query engines and selects the best one.
  */
 export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
-  serviceContext?: ServiceContext;
-
   private selector: BaseSelector;
   private queryEngines: BaseQueryEngine[];
   private metadatas: RouterQueryEngineMetadata[];
@@ -72,13 +70,12 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   }) {
     super();
 
-    this.serviceContext = init.serviceContext;
     this.selector = init.selector;
     this.queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
     this.metadatas = init.queryEngineTools.map((tool) => ({
       description: tool.description,
     }));
-    this.summarizer = init.summarizer || new TreeSummarize(this.serviceContext);
+    this.summarizer = init.summarizer || new TreeSummarize(init.serviceContext);
     this.verbose = init.verbose ?? false;
   }
 

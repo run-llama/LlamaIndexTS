@@ -21,13 +21,13 @@ export class RetrieverQueryEngine
   extends PromptMixin
   implements BaseQueryEngine
 {
-  // serviceContext will be deprecae
   retriever: BaseRetriever;
   responseSynthesizer: BaseSynthesizer;
   nodePostprocessors: BaseNodePostprocessor[];
   preFilters?: unknown;
 
   constructor(
+    // serviceContext will be deprecated
     retriever: BaseRetriever & { serviceContext?: ServiceContext },
     responseSynthesizer?: BaseSynthesizer,
     preFilters?: unknown,

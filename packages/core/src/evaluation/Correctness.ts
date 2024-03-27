@@ -24,7 +24,6 @@ type CorrectnessParams = {
 
 /** Correctness Evaluator */
 export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
-  private serviceContext?: ServiceContext;
   private scoreThreshold: number;
   private parserFunction: (str: string) => [number, string];
   private llm: LLM;
@@ -35,7 +34,6 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
   constructor(params: CorrectnessParams) {
     super();
 
-    this.serviceContext = params.serviceContext;
     this.llm = llmFromSettingsOrContext(params.serviceContext);
     this.correctnessPrompt = defaultCorrectnessSystemPrompt;
     this.scoreThreshold = params.scoreThreshold || 4.0;

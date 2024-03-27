@@ -4,7 +4,6 @@ import { globalsHelper } from "../GlobalsHelper.js";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
-import type { ServiceContext } from "../ServiceContext.js";
 import type { CallbackManager } from "../callbacks/CallbackManager.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
@@ -21,7 +20,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
   retrieveParams: CloudRetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
-  serviceContext?: ServiceContext;
   callbackManager: CallbackManager;
 
   private resultNodesToNodeWithScore(
@@ -50,8 +48,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
     this.callbackManager = callbackManagerFromSettingsOrContext(
       params.serviceContext,
     );
-
-    this.serviceContext = params.serviceContext;
   }
 
   private async getClient(): Promise<PlatformApiClient> {
