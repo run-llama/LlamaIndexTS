@@ -13,7 +13,6 @@ Settings.nodeParser = new SimpleNodeParser({
   chunkOverlap: 20,
   splitLongSentences: true,
 });
-
 (async () => {
   // generate a document with a very long sentence (9000 words long)
   const longSentence = "is ".repeat(9000) + ".";
