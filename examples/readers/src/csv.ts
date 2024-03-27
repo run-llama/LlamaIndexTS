@@ -2,10 +2,13 @@ import {
   CompactAndRefine,
   OpenAI,
   ResponseSynthesizer,
-  serviceContextFromDefaults,
+  Settings,
   VectorStoreIndex,
 } from "llamaindex";
+
 import { PapaCSVReader } from "llamaindex/readers";
+
+Settings.llm = new OpenAI({ model: "gpt-4" });
 
 async function main() {
   // Load CSV
@@ -13,14 +16,8 @@ async function main() {
   const path = "../data/titanic_train.csv";
   const documents = await reader.loadData(path);
 
-  const serviceContext = serviceContextFromDefaults({
-    llm: new OpenAI({ model: "gpt-4" }),
-  });
-
   // Split text and create embeddings. Store them in a VectorStoreIndex
-  const index = await VectorStoreIndex.fromDocuments(documents, {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments(documents);
 
   const csvPrompt = ({ context = "", query = "" }) => {
     return `The following CSV file is loaded from ${path}
@@ -32,7 +29,7 @@ Given the CSV file, generate me Typescript code to answer the question: ${query}
   };
 
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(serviceContext, csvPrompt),
+    responseBuilder: new CompactAndRefine(csvPrompt),
   });
 
   const queryEngine = index.asQueryEngine({ responseSynthesizer });

@@ -1,6 +1,9 @@
 import { JSONQueryEngine } from "@llamaindex/experimental";
 
-import { OpenAI, serviceContextFromDefaults } from "llamaindex";
+import { OpenAI, Settings } from "llamaindex";
+
+// Update LLM
+Settings.llm = new OpenAI({ model: "gpt-4" });
 
 const jsonValue = {
   blogPosts: [
@@ -84,22 +87,14 @@ const jsonSchema = {
 };
 
 async function main() {
-  const llm = new OpenAI({ model: "gpt-4" });
-
-  const serviceContext = serviceContextFromDefaults({
-    llm,
-  });
-
   const jsonQueryEngine = new JSONQueryEngine({
     jsonValue,
     jsonSchema,
-    serviceContext,
   });
 
   const rawQueryEngine = new JSONQueryEngine({
     jsonValue,
     jsonSchema,
-    serviceContext,
     synthesizeResponse: false,
   });
 
