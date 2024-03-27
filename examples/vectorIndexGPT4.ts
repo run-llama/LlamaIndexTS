@@ -1,11 +1,8 @@
 import fs from "node:fs/promises";
 
-import {
-  Document,
-  OpenAI,
-  serviceContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { Document, OpenAI, Settings, VectorStoreIndex } from "llamaindex";
+
+Settings.llm = new OpenAI({ model: "gpt-4" });
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -15,13 +12,7 @@ async function main() {
   // Create Document object with essay
   const document = new Document({ text: essay, id_: path });
 
-  // Split text and create embeddings. Store them in a VectorStoreIndex
-  const serviceContext = serviceContextFromDefaults({
-    llm: new OpenAI({ model: "gpt-4" }),
-  });
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Query the index
   const queryEngine = index.asQueryEngine();

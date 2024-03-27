@@ -2,23 +2,21 @@ import {
   Document,
   OpenAI,
   RetrieverQueryEngine,
-  serviceContextFromDefaults,
+  Settings,
   SimilarityPostprocessor,
   VectorStoreIndex,
 } from "llamaindex";
+
 import essay from "./essay";
+
+// Update llm to use OpenAI
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
 
 // Customize retrieval and query args
 async function main() {
   const document = new Document({ text: essay, id_: "essay" });
 
-  const serviceContext = serviceContextFromDefaults({
-    llm: new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 }),
-  });
-
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   const retriever = index.asRetriever();
   retriever.similarityTopK = 5;

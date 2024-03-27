@@ -3,9 +3,15 @@ import fs from "node:fs/promises";
 import {
   Document,
   OpenAIEmbedding,
+  Settings,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
+
+// Update embed model
+Settings.embedModel = new OpenAIEmbedding({
+  model: "text-embedding-3-large",
+  dimensions: 1024,
+});
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -16,17 +22,8 @@ async function main() {
   // Create Document object with essay
   const document = new Document({ text: essay, id_: path });
 
-  // Create service context and specify text-embedding-3-large
-  const embedModel = new OpenAIEmbedding({
-    model: "text-embedding-3-large",
-    dimensions: 1024,
-  });
-  const serviceContext = serviceContextFromDefaults({ embedModel });
-
   // Split text and create embeddings. Store them in a VectorStoreIndex
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Query the index
   const queryEngine = index.asQueryEngine();

@@ -1,12 +1,20 @@
 import {
   OpenAI,
   RouterQueryEngine,
+  Settings,
   SimpleDirectoryReader,
   SimpleNodeParser,
   SummaryIndex,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
+
+// Update llm
+Settings.llm = new OpenAI();
+
+// Update node parser
+Settings.nodeParser = new SimpleNodeParser({
+  chunkSize: 1024,
+});
 
 async function main() {
   // Load documents from a directory
@@ -14,25 +22,10 @@ async function main() {
     directoryPath: "node_modules/llamaindex/examples",
   });
 
-  // Parse the documents into nodes
-  const nodeParser = new SimpleNodeParser({
-    chunkSize: 1024,
-  });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({
-    nodeParser,
-    llm: new OpenAI(),
-  });
-
   // Create indices
-  const vectorIndex = await VectorStoreIndex.fromDocuments(documents, {
-    serviceContext,
-  });
+  const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
 
-  const summaryIndex = await SummaryIndex.fromDocuments(documents, {
-    serviceContext,
-  });
+  const summaryIndex = await SummaryIndex.fromDocuments(document);
 
   // Create query engines
   const vectorQueryEngine = vectorIndex.asQueryEngine();

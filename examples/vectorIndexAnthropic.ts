@@ -2,13 +2,16 @@ import fs from "node:fs/promises";
 
 import {
   Anthropic,
-  anthropicTextQaPrompt,
   CompactAndRefine,
   Document,
   ResponseSynthesizer,
-  serviceContextFromDefaults,
+  Settings,
   VectorStoreIndex,
+  anthropicTextQaPrompt,
 } from "llamaindex";
+
+// Update llm to use Anthropic
+Settings.llm = new Anthropic();
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -20,18 +23,11 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
-  const serviceContext = serviceContextFromDefaults({ llm: new Anthropic() });
-
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(
-      serviceContext,
-      anthropicTextQaPrompt,
-    ),
+    responseBuilder: new CompactAndRefine(anthropicTextQaPrompt),
   });
 
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Query the index
   const queryEngine = index.asQueryEngine({ responseSynthesizer });
