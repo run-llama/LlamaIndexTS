@@ -99,8 +99,4 @@ export class LlamaCloudRetriever implements BaseRetriever {
     }
     return nodes;
   }
-
-  getServiceContext(): ServiceContext | undefined {
-    return this.serviceContext;
-  }
 }

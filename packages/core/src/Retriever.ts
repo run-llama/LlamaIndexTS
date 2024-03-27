@@ -1,6 +1,5 @@
 import type { Event } from "./callbacks/CallbackManager.js";
 import type { NodeWithScore } from "./Node.js";
-import type { ServiceContext } from "./ServiceContext.js";
 
 export type RetrieveParams = {
   query: string;
@@ -13,5 +12,4 @@ export type RetrieveParams = {
  */
 export interface BaseRetriever {
   retrieve(params: RetrieveParams): Promise<NodeWithScore[]>;
-  getServiceContext(): ServiceContext | undefined;
 }

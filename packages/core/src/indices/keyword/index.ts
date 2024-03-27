@@ -107,10 +107,6 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
 
     return sortedNodes.map((node) => ({ node }));
   }
-
-  getServiceContext(): ServiceContext | undefined {
-    return this.index.serviceContext;
-  }
 }
 
 // Extracts keywords using LLMs.

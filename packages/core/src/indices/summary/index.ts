@@ -315,10 +315,6 @@ export class SummaryIndexRetriever implements BaseRetriever {
 
     return result;
   }
-
-  getServiceContext(): ServiceContext | undefined {
-    return this.index.serviceContext;
-  }
 }
 
 /**
@@ -406,10 +402,6 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
     }
 
     return results;
-  }
-
-  getServiceContext(): ServiceContext | undefined {
-    return this.serviceContext;
   }
 }
 

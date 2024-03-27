@@ -1,8 +1,8 @@
 import { randomUUID } from "@llamaindex/env";
+import type { ServiceContext } from "llamaindex";
 import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
-import type { ServiceContext } from "../../ServiceContext.js";
 import type { Event } from "../../callbacks/CallbackManager.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
@@ -21,13 +21,14 @@ export class RetrieverQueryEngine
   extends PromptMixin
   implements BaseQueryEngine
 {
+  // serviceContext will be deprecae
   retriever: BaseRetriever;
   responseSynthesizer: BaseSynthesizer;
   nodePostprocessors: BaseNodePostprocessor[];
   preFilters?: unknown;
 
   constructor(
-    retriever: BaseRetriever,
+    retriever: BaseRetriever & { serviceContext?: ServiceContext },
     responseSynthesizer?: BaseSynthesizer,
     preFilters?: unknown,
     nodePostprocessors?: BaseNodePostprocessor[],
@@ -35,10 +36,11 @@ export class RetrieverQueryEngine
     super();
 
     this.retriever = retriever;
-    const serviceContext: ServiceContext | undefined =
-      this.retriever.getServiceContext();
     this.responseSynthesizer =
-      responseSynthesizer || new ResponseSynthesizer({ serviceContext });
+      responseSynthesizer ||
+      new ResponseSynthesizer({
+        serviceContext: retriever.serviceContext,
+      });
     this.preFilters = preFilters;
     this.nodePostprocessors = nodePostprocessors || [];
   }

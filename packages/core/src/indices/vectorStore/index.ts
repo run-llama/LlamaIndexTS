@@ -538,8 +538,4 @@ export class VectorIndexRetriever implements BaseRetriever {
 
     return nodesWithScores;
   }
-
-  getServiceContext(): ServiceContext | undefined {
-    return this.serviceContext;
-  }
 }
