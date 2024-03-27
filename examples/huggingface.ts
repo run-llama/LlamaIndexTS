@@ -4,9 +4,14 @@ import {
   Document,
   HuggingFaceEmbedding,
   HuggingFaceEmbeddingModelType,
+  Settings,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
+
+// Update embed model
+Settings.embedModel = new HuggingFaceEmbedding({
+  modelType: HuggingFaceEmbeddingModelType.XENOVA_ALL_MPNET_BASE_V2,
+});
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -17,18 +22,8 @@ async function main() {
   // Create Document object with essay
   const document = new Document({ text: essay, id_: path });
 
-  // Use Local embedding from HuggingFace
-  const embedModel = new HuggingFaceEmbedding({
-    modelType: HuggingFaceEmbeddingModelType.XENOVA_ALL_MPNET_BASE_V2,
-  });
-  const serviceContext = serviceContextFromDefaults({
-    embedModel,
-  });
-
   // Split text and create embeddings. Store them in a VectorStoreIndex
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Query the index
   const queryEngine = index.asQueryEngine();

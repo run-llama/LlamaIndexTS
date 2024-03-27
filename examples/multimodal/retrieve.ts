@@ -1,17 +1,17 @@
 import {
   ImageNode,
-  serviceContextFromDefaults,
-  storageContextFromDefaults,
+  Settings,
   TextNode,
   VectorStoreIndex,
+  storageContextFromDefaults,
 } from "llamaindex";
+
+// Update chunk size and overlap
+Settings.chunkSize = 512;
+Settings.chunkOverlap = 20;
 
 export async function createIndex() {
   // set up vector store index with two vector stores, one for text, the other for images
-  const serviceContext = serviceContextFromDefaults({
-    chunkSize: 512,
-    chunkOverlap: 20,
-  });
   const storageContext = await storageContextFromDefaults({
     persistDir: "storage",
     storeImages: true,
@@ -19,7 +19,6 @@ export async function createIndex() {
   return await VectorStoreIndex.init({
     nodes: [],
     storageContext,
-    serviceContext,
   });
 }
 

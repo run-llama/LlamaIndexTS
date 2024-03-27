@@ -4,7 +4,6 @@ import { TextNode } from "../../Node.js";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
 import type { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import type { Event } from "../../callbacks/CallbackManager.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
@@ -62,8 +61,7 @@ export class SubQuestionQueryEngine
     responseSynthesizer?: BaseSynthesizer;
     serviceContext?: ServiceContext;
   }) {
-    const serviceContext =
-      init.serviceContext ?? serviceContextFromDefaults({});
+    const serviceContext = init.serviceContext;
 
     const questionGen = init.questionGen ?? new LLMQuestionGenerator();
     const responseSynthesizer =

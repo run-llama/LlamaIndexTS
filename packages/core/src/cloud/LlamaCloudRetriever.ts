@@ -1,10 +1,10 @@
 import type { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
+import { callbackManagerFromSettingsOrContext } from "llamaindex";
 import { globalsHelper } from "../GlobalsHelper.js";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
-import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
+import type { CallbackManager } from "../callbacks/CallbackManager.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
@@ -20,7 +20,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
   retrieveParams: CloudRetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
-  serviceContext: ServiceContext;
+  callbackManager: CallbackManager;
 
   private resultNodesToNodeWithScore(
     nodes: PlatformApi.TextNodeWithScore[],
@@ -44,7 +44,10 @@ export class LlamaCloudRetriever implements BaseRetriever {
     if (params.projectName) {
       this.projectName = params.projectName;
     }
-    this.serviceContext = params.serviceContext ?? serviceContextFromDefaults();
+
+    this.callbackManager = callbackManagerFromSettingsOrContext(
+      params.serviceContext,
+    );
   }
 
   private async getClient(): Promise<PlatformApiClient> {
@@ -80,8 +83,8 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
     const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
-    if (this.serviceContext.callbackManager.onRetrieve) {
-      this.serviceContext.callbackManager.onRetrieve({
+    if (this.callbackManager.onRetrieve) {
+      this.callbackManager.onRetrieve({
         query,
         nodes,
         event: globalsHelper.createEvent({
@@ -91,9 +94,5 @@ export class LlamaCloudRetriever implements BaseRetriever {
       });
     }
     return nodes;
-  }
-
-  getServiceContext(): ServiceContext {
-    return this.serviceContext;
   }
 }

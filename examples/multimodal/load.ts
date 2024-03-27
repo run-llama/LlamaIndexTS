@@ -1,11 +1,15 @@
 import {
-  ServiceContext,
-  serviceContextFromDefaults,
+  Settings,
   SimpleDirectoryReader,
-  storageContextFromDefaults,
   VectorStoreIndex,
+  storageContextFromDefaults,
 } from "llamaindex";
+
 import * as path from "path";
+
+// Update chunk size and overlap
+Settings.chunkSize = 512;
+Settings.chunkOverlap = 20;
 
 async function getRuntime(func: any) {
   const start = Date.now();
@@ -14,7 +18,7 @@ async function getRuntime(func: any) {
   return end - start;
 }
 
-async function generateDatasource(serviceContext: ServiceContext) {
+async function generateDatasource() {
   console.log(`Generating storage...`);
   // Split documents, create embeddings and store them in the storage context
   const ms = await getRuntime(async () => {
@@ -26,7 +30,6 @@ async function generateDatasource(serviceContext: ServiceContext) {
       storeImages: true,
     });
     await VectorStoreIndex.fromDocuments(documents, {
-      serviceContext,
       storageContext,
     });
   });
@@ -34,12 +37,7 @@ async function generateDatasource(serviceContext: ServiceContext) {
 }
 
 async function main() {
-  const serviceContext = serviceContextFromDefaults({
-    chunkSize: 512,
-    chunkOverlap: 20,
-  });
-
-  await generateDatasource(serviceContext);
+  await generateDatasource();
   console.log("Finished generating storage.");
 }
 

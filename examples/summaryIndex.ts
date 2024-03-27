@@ -1,22 +1,21 @@
 import {
   Document,
+  Settings,
   SimpleNodeParser,
   SummaryIndex,
   SummaryRetrieverMode,
-  serviceContextFromDefaults,
 } from "llamaindex";
+
 import essay from "./essay";
 
+// Update node parser
+Settings.nodeParser = new SimpleNodeParser({
+  chunkSize: 40,
+});
+
 async function main() {
-  const serviceContext = serviceContextFromDefaults({
-    nodeParser: new SimpleNodeParser({
-      chunkSize: 40,
-    }),
-  });
   const document = new Document({ text: essay, id_: "essay" });
-  const index = await SummaryIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await SummaryIndex.fromDocuments([document]);
   const queryEngine = index.asQueryEngine({
     retriever: index.asRetriever({ mode: SummaryRetrieverMode.LLM }),
   });

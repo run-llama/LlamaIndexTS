@@ -4,18 +4,18 @@ import readline from "node:readline/promises";
 import {
   ContextChatEngine,
   Document,
-  serviceContextFromDefaults,
+  Settings,
   VectorStoreIndex,
 } from "llamaindex";
 
 import essay from "./essay";
 
+// Update chunk size
+Settings.chunkSize = 512;
+
 async function main() {
   const document = new Document({ text: essay });
-  const serviceContext = serviceContextFromDefaults({ chunkSize: 512 });
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
   const retriever = index.asRetriever();
   retriever.similarityTopK = 5;
   const chatEngine = new ContextChatEngine({ retriever });

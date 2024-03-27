@@ -4,7 +4,6 @@ import {
   TreeSummarize,
   TreeSummarizePrompt,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
 
 const treeSummarizePrompt: TreeSummarizePrompt = ({ context, query }) => {
@@ -27,10 +26,8 @@ async function main() {
 
   const query = "The quick brown fox jumps over the lazy dog";
 
-  const ctx = serviceContextFromDefaults({});
-
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new TreeSummarize(ctx),
+    responseBuilder: new TreeSummarize(),
   });
 
   const queryEngine = index.asQueryEngine({

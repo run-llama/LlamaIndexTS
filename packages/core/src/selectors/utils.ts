@@ -1,4 +1,5 @@
 import type { ServiceContext } from "../ServiceContext.js";
+import { llmFromSettingsOrContext } from "../Settings.js";
 import type { BaseSelector } from "./base.js";
 import { LLMMultiSelector, LLMSingleSelector } from "./llmSelectors.js";
 
@@ -8,7 +9,7 @@ export const getSelectorFromContext = (
 ): BaseSelector => {
   let selector: BaseSelector | null = null;
 
-  const llm = serviceContext.llm;
+  const llm = llmFromSettingsOrContext(serviceContext);
 
   if (isMulti) {
     selector = new LLMMultiSelector({ llm });

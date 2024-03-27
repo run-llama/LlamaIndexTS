@@ -13,5 +13,7 @@ export type RetrieveParams = {
  */
 export interface BaseRetriever {
   retrieve(params: RetrieveParams): Promise<NodeWithScore[]>;
-  getServiceContext(): ServiceContext;
+
+  // to be deprecated soon
+  serviceContext?: ServiceContext;
 }

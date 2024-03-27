@@ -16,6 +16,10 @@ import type { PromptHelper } from "../PromptHelper.js";
 import { getBiggestPrompt } from "../PromptHelper.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { ServiceContext } from "../ServiceContext.js";
+import {
+  llmFromSettingsOrContext,
+  promptHelperFromSettingsOrContext,
+} from "../Settings.js";
 import type {
   ResponseBuilder,
   ResponseBuilderParamsNonStreaming,
@@ -39,8 +43,8 @@ export class SimpleResponseBuilder implements ResponseBuilder {
   llm: LLM;
   textQATemplate: TextQaPrompt;
 
-  constructor(serviceContext: ServiceContext, textQATemplate?: TextQaPrompt) {
-    this.llm = serviceContext.llm;
+  constructor(serviceContext?: ServiceContext, textQATemplate?: TextQaPrompt) {
+    this.llm = llmFromSettingsOrContext(serviceContext);
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
@@ -84,14 +88,14 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   refineTemplate: RefinePrompt;
 
   constructor(
-    serviceContext: ServiceContext,
+    serviceContext?: ServiceContext,
     textQATemplate?: TextQaPrompt,
     refineTemplate?: RefinePrompt,
   ) {
     super();
 
-    this.llm = serviceContext.llm;
-    this.promptHelper = serviceContext.promptHelper;
+    this.llm = llmFromSettingsOrContext(serviceContext);
+    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
@@ -293,13 +297,13 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
   summaryTemplate: TreeSummarizePrompt;
 
   constructor(
-    serviceContext: ServiceContext,
+    serviceContext?: ServiceContext,
     summaryTemplate?: TreeSummarizePrompt,
   ) {
     super();
 
-    this.llm = serviceContext.llm;
-    this.promptHelper = serviceContext.promptHelper;
+    this.llm = llmFromSettingsOrContext(serviceContext);
+    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
@@ -383,7 +387,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
 }
 
 export function getResponseBuilder(
-  serviceContext: ServiceContext,
+  serviceContext?: ServiceContext,
   responseMode?: ResponseMode,
 ): ResponseBuilder {
   switch (responseMode) {

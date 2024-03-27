@@ -4,10 +4,20 @@ import {
   Document,
   MetadataMode,
   QdrantVectorStore,
+  Settings,
   VectorStoreIndex,
-  serviceContextFromDefaults,
   storageContextFromDefaults,
 } from "llamaindex";
+
+// Update callback manager
+Settings.callbackManager = new CallbackManager({
+  onRetrieve: (data) => {
+    console.log(
+      "The retrieved nodes are:",
+      data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
+    );
+  },
+});
 
 // Load environment variables from local .env file
 dotenv.config();
@@ -38,16 +48,6 @@ async function main() {
     console.log("Embedding documents and adding to index");
     const index = await VectorStoreIndex.fromDocuments(docs, {
       storageContext: ctx,
-      serviceContext: serviceContextFromDefaults({
-        callbackManager: new CallbackManager({
-          onRetrieve: (data) => {
-            console.log(
-              "The retrieved nodes are:",
-              data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
-            );
-          },
-        }),
-      }),
     });
 
     console.log(
