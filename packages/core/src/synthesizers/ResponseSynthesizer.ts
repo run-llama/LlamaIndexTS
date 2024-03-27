@@ -20,7 +20,6 @@ export class ResponseSynthesizer
   implements BaseSynthesizer
 {
   responseBuilder: ResponseBuilder;
-  serviceContext?: ServiceContext;
   metadataMode: MetadataMode;
 
   constructor({
@@ -34,9 +33,8 @@ export class ResponseSynthesizer
   } = {}) {
     super();
 
-    this.serviceContext = serviceContext;
     this.responseBuilder =
-      responseBuilder ?? getResponseBuilder(this.serviceContext);
+      responseBuilder ?? getResponseBuilder(serviceContext);
     this.metadataMode = metadataMode;
   }
 
