@@ -25,6 +25,7 @@ interface Config {
   chunkSize?: number;
   chunkOverlap?: number;
 }
+
 export class GlobalSettings implements Config {
   private _prompt: PromptConfig = {};
   private _llm: LLM | null = null;

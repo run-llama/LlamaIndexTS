@@ -1,6 +1,6 @@
-import { llmFromSettingsOrContext } from "llamaindex";
 import { MetadataMode } from "../Node.js";
 import type { ServiceContext } from "../ServiceContext.js";
+import { llmFromSettingsOrContext } from "../Settings.js";
 import type { ChatMessage, LLM } from "../llm/types.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { CorrectnessSystemPrompt } from "./prompts.js";

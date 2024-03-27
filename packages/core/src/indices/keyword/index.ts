@@ -27,7 +27,7 @@ import {
   simpleExtractKeywords,
 } from "./utils.js";
 
-import { llmFromSettingsOrContext } from "llamaindex";
+import { llmFromSettingsOrContext } from "../../Settings.js";
 import type { LLM } from "../../llm/types.js";
 
 export interface KeywordIndexOptions {
