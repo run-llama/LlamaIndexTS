@@ -1,5 +1,4 @@
 import { randomUUID } from "@llamaindex/env";
-import type { ServiceContext } from "llamaindex";
 import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
@@ -27,8 +26,7 @@ export class RetrieverQueryEngine
   preFilters?: unknown;
 
   constructor(
-    // serviceContext will be deprecated
-    retriever: BaseRetriever & { serviceContext?: ServiceContext },
+    retriever: BaseRetriever,
     responseSynthesizer?: BaseSynthesizer,
     preFilters?: unknown,
     nodePostprocessors?: BaseNodePostprocessor[],

@@ -25,7 +25,7 @@ async function main() {
   // Create indices
   const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
 
-  const summaryIndex = await SummaryIndex.fromDocuments(document);
+  const summaryIndex = await SummaryIndex.fromDocuments(documents);
 
   // Create query engines
   const vectorQueryEngine = vectorIndex.asQueryEngine();
@@ -43,7 +43,6 @@ async function main() {
         description: "Useful for retrieving specific context from Abramov",
       },
     ],
-    serviceContext,
   });
 
   // Query the router query engine

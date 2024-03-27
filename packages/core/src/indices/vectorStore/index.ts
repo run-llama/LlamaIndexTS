@@ -416,7 +416,8 @@ export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
   similarityTopK: number;
   imageSimilarityTopK: number;
-  private serviceContext?: ServiceContext;
+
+  serviceContext?: ServiceContext;
 
   constructor({
     index,

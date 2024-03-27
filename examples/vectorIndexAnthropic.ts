@@ -24,7 +24,7 @@ async function main() {
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(anthropicTextQaPrompt),
+    responseBuilder: new CompactAndRefine(undefined, anthropicTextQaPrompt),
   });
 
   const index = await VectorStoreIndex.fromDocuments([document]);

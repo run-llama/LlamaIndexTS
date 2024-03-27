@@ -29,7 +29,7 @@ Given the CSV file, generate me Typescript code to answer the question: ${query}
   };
 
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(csvPrompt),
+    responseBuilder: new CompactAndRefine(undefined, csvPrompt),
   });
 
   const queryEngine = index.asQueryEngine({ responseSynthesizer });

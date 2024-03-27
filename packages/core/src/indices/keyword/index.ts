@@ -49,7 +49,6 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
   protected index: KeywordTableIndex;
   protected indexStruct: KeywordTable;
   protected docstore: BaseDocumentStore;
-  protected serviceContext?: ServiceContext;
   protected llm: LLM;
 
   protected maxKeywordsPerQuery: number; // Maximum number of keywords to extract from query.
@@ -73,7 +72,6 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     this.index = index;
     this.indexStruct = index.indexStruct;
     this.docstore = index.docStore;
-    this.serviceContext = index.serviceContext;
     this.llm = llmFromSettingsOrContext(index.serviceContext);
 
     this.maxKeywordsPerQuery = maxKeywordsPerQuery;
