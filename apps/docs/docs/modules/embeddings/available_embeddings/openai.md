@@ -3,19 +3,13 @@
 To use OpenAI embeddings, you need to import `OpenAIEmbedding` from `llamaindex`.
 
 ```ts
-import { OpenAIEmbedding, serviceContextFromDefaults } from "llamaindex";
+import { OpenAIEmbedding, Settings } from "llamaindex";
 
-const openaiEmbedModel = new OpenAIEmbedding();
-
-const serviceContext = serviceContextFromDefaults({
-  embedModel: openaiEmbedModel,
-});
+Settings.embedModel = new OpenAIEmbedding();
 
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 
 const queryEngine = index.asQueryEngine();
 

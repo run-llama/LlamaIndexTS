@@ -18,7 +18,7 @@ import {
   Document,
   OpenAI,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  Settings,
 } from "llamaindex";
 ```
 
@@ -29,13 +29,9 @@ For this example, we will use a single document. In a real-world scenario, you w
 ```ts
 const document = new Document({ text: essay, id_: "essay" });
 
-const serviceContext = serviceContextFromDefaults({
-  llm: new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 }),
-});
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 ```
 
 ## Increase similarity topK to retrieve more results

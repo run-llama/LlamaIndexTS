@@ -18,7 +18,7 @@ import {
   SimpleNodeParser,
   SummaryIndex,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  Settings,
 } from "llamaindex";
 ```
 
@@ -34,16 +34,12 @@ const documents = await new SimpleDirectoryReader().loadData({
 
 ## Service Context
 
-Next, we need to define some basic rules and parse the documents into nodes. We will use the `SimpleNodeParser` to parse the documents into nodes and `ServiceContext` to define the rules (eg. LLM API key, chunk size, etc.):
+Next, we need to define some basic rules and parse the documents into nodes. We will use the `SimpleNodeParser` to parse the documents into nodes and `Settings` to define the rules (eg. LLM API key, chunk size, etc.):
 
 ```ts
-const nodeParser = new SimpleNodeParser({
+Settings.llm = new OpenAI();
+Settings.nodeParser = new SimpleNodeParser({
   chunkSize: 1024,
-});
-
-const serviceContext = serviceContextFromDefaults({
-  nodeParser,
-  llm: new OpenAI(),
 });
 ```
 
@@ -52,13 +48,8 @@ const serviceContext = serviceContextFromDefaults({
 Next, we need to create some indices. We will create a `VectorStoreIndex` and a `SummaryIndex`:
 
 ```ts
-const vectorIndex = await VectorStoreIndex.fromDocuments(documents, {
-  serviceContext,
-});
-
-const summaryIndex = await SummaryIndex.fromDocuments(documents, {
-  serviceContext,
-});
+const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
+const summaryIndex = await SummaryIndex.fromDocuments(documents);
 ```
 
 ## Creating Query Engines
@@ -88,7 +79,6 @@ const queryEngine = RouterQueryEngine.fromDefaults({
       description: "Useful for retrieving specific context from Abramov",
     },
   ],
-  serviceContext,
 });
 ```
 
@@ -117,8 +107,13 @@ import {
   SimpleNodeParser,
   SummaryIndex,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  Settings,
 } from "llamaindex";
+
+Settings.llm = new OpenAI();
+Settings.nodeParser = new SimpleNodeParser({
+  chunkSize: 1024,
+});
 
 async function main() {
   // Load documents from a directory
@@ -126,25 +121,9 @@ async function main() {
     directoryPath: "node_modules/llamaindex/examples",
   });
 
-  // Parse the documents into nodes
-  const nodeParser = new SimpleNodeParser({
-    chunkSize: 1024,
-  });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({
-    nodeParser,
-    llm: new OpenAI(),
-  });
-
   // Create indices
-  const vectorIndex = await VectorStoreIndex.fromDocuments(documents, {
-    serviceContext,
-  });
-
-  const summaryIndex = await SummaryIndex.fromDocuments(documents, {
-    serviceContext,
-  });
+  const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
+  const summaryIndex = await SummaryIndex.fromDocuments(documents);
 
   // Create query engines
   const vectorQueryEngine = vectorIndex.asQueryEngine();
@@ -162,7 +141,6 @@ async function main() {
         description: "Useful for retrieving specific context from Abramov",
       },
     ],
-    serviceContext,
   });
 
   // Query the router query engine

@@ -15,11 +15,9 @@ export AZURE_OPENAI_DEPLOYMENT="gpt-4" # or some other deployment name
 ## Usage
 
 ```ts
-import { OpenAI, serviceContextFromDefaults } from "llamaindex";
+import { OpenAI, Settings } from "llamaindex";
 
-const azureOpenaiLLM = new OpenAI({ model: "gpt-4", temperature: 0 });
-
-const serviceContext = serviceContextFromDefaults({ llm: azureOpenaiLLM });
+Settings.llm = new OpenAI({ model: "gpt-4", temperature: 0 });
 ```
 
 ## Load and index documents
@@ -29,9 +27,7 @@ For this example, we will use a single document. In a real-world scenario, you w
 ```ts
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 ```
 
 ## Query
@@ -49,26 +45,15 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  OpenAI,
-  Document,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { OpenAI, Document, VectorStoreIndex, Settings } from "llamaindex";
+
+Settings.llm = new OpenAI({ model: "gpt-4", temperature: 0 });
 
 async function main() {
-  // Create an instance of the LLM
-  const azureOpenaiLLM = new OpenAI({ model: "gpt-4", temperature: 0 });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({ llm: azureOpenaiLLM });
-
   const document = new Document({ text: essay, id_: "essay" });
 
   // Load and index documents
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // get retriever
   const retriever = index.asRetriever();

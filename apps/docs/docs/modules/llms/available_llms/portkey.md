@@ -3,13 +3,11 @@
 ## Usage
 
 ```ts
-import { Portkey, serviceContextFromDefaults } from "llamaindex";
+import { Portkey, Settings } from "llamaindex";
 
-const portkeyLLM = new Portkey({
+Settings.llm = new Portkey({
   apiKey: "<YOUR_API_KEY>",
 });
-
-const serviceContext = serviceContextFromDefaults({ llm: portkeyLLM });
 ```
 
 ## Load and index documents
@@ -19,9 +17,7 @@ For this example, we will use a single document. In a real-world scenario, you w
 ```ts
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 ```
 
 ## Query
@@ -39,28 +35,19 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  Portkey,
-  Document,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { Portkey, Document, VectorStoreIndex, Settings } from "llamaindex";
+
+// Use the Portkey LLM
+Settings.llm = new Portkey({
+  apiKey: "<YOUR_API_KEY>",
+});
 
 async function main() {
-  // Create an instance of the LLM
-  const portkeyLLM = new Portkey({
-    apiKey: "<YOUR_API_KEY>",
-  });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({ llm: portkeyLLM });
-
+  // Create a document
   const document = new Document({ text: essay, id_: "essay" });
 
   // Load and index documents
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // get retriever
   const retriever = index.asRetriever();

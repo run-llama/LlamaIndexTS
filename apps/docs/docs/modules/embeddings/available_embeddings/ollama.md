@@ -3,19 +3,13 @@
 To use Ollama embeddings, you need to import `Ollama` from `llamaindex`.
 
 ```ts
-import { Ollama, serviceContextFromDefaults } from "llamaindex";
+import { Ollama, Settings } from "llamaindex";
 
-const ollamaEmbedModel = new Ollama();
-
-const serviceContext = serviceContextFromDefaults({
-  embedModel: ollamaEmbedModel,
-});
+Settings.embedModel = new Ollama();
 
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 
 const queryEngine = index.asQueryEngine();
 
