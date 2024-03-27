@@ -35,7 +35,7 @@ export async function createIndex() {
 }
 
 async function main() {
-  let images: ImageType[] = [];
+  const images: ImageType[] = [];
 
   const index = await createIndex();
 
