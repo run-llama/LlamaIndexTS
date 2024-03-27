@@ -26,20 +26,20 @@ export class FaithfulnessEvaluator
   private evalTemplate: FaithfulnessTextQAPrompt;
   private refineTemplate: FaithfulnessRefinePrompt;
 
-  constructor(params: {
+  constructor(params?: {
     serviceContext?: ServiceContext;
     raiseError?: boolean;
     faithfulnessSystemPrompt?: FaithfulnessTextQAPrompt;
     faithFulnessRefinePrompt?: FaithfulnessRefinePrompt;
   }) {
     super();
-    this.serviceContext = params.serviceContext;
-    this.raiseError = params.raiseError || false;
+    this.serviceContext = params?.serviceContext;
+    this.raiseError = params?.raiseError ?? false;
 
     this.evalTemplate =
-      params.faithfulnessSystemPrompt || defaultFaithfulnessTextQaPrompt;
+      params?.faithfulnessSystemPrompt ?? defaultFaithfulnessTextQaPrompt;
     this.refineTemplate =
-      params.faithFulnessRefinePrompt || defaultFaithfulnessRefinePrompt;
+      params?.faithFulnessRefinePrompt ?? defaultFaithfulnessRefinePrompt;
   }
 
   protected _getPrompts(): { [x: string]: any } {

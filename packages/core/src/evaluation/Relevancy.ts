@@ -28,13 +28,14 @@ export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
   private evalTemplate: RelevancyEvalPrompt;
   private refineTemplate: RelevancyRefinePrompt;
 
-  constructor(params: RelevancyParams) {
+  constructor(params?: RelevancyParams) {
     super();
 
-    this.serviceContext = params.serviceContext;
-    this.raiseError = params.raiseError ?? false;
-    this.evalTemplate = params.evalTemplate ?? defaultRelevancyEvalPrompt;
-    this.refineTemplate = params.refineTemplate ?? defaultRelevancyRefinePrompt;
+    this.serviceContext = params?.serviceContext;
+    this.raiseError = params?.raiseError ?? false;
+    this.evalTemplate = params?.evalTemplate ?? defaultRelevancyEvalPrompt;
+    this.refineTemplate =
+      params?.refineTemplate ?? defaultRelevancyRefinePrompt;
   }
 
   _getPrompts() {

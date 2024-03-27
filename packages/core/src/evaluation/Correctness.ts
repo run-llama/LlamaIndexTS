@@ -31,13 +31,13 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
   private correctnessPrompt: CorrectnessSystemPrompt =
     defaultCorrectnessSystemPrompt;
 
-  constructor(params: CorrectnessParams) {
+  constructor(params?: CorrectnessParams) {
     super();
 
-    this.llm = llmFromSettingsOrContext(params.serviceContext);
+    this.llm = llmFromSettingsOrContext(params?.serviceContext);
     this.correctnessPrompt = defaultCorrectnessSystemPrompt;
-    this.scoreThreshold = params.scoreThreshold || 4.0;
-    this.parserFunction = params.parserFunction || defaultEvaluationParser;
+    this.scoreThreshold = params?.scoreThreshold ?? 4.0;
+    this.parserFunction = params?.parserFunction ?? defaultEvaluationParser;
   }
 
   _updatePrompts(prompts: {
