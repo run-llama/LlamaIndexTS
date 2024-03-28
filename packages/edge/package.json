@@ -41,7 +41,8 @@
     "replicate": "^0.25.2",
     "string-strip-html": "^13.4.6",
     "wink-nlp": "^1.14.3",
-    "wikipedia": "^2.1.2"
+    "wikipedia": "^2.1.2",
+    "llamaindex": "*"
   },
   "engines": {
     "node": ">=18.0.0"
