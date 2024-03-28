@@ -6,10 +6,6 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]
     },
-    "edge": {
-      "dependsOn": ["^edge"],
-      "outputs": ["dist/**", "build/**"]
-    },
     "lint": {
       "inputs": ["packages/eslint-config-custom"]
     },
