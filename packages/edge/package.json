@@ -41,8 +41,7 @@
     "replicate": "^0.25.2",
     "string-strip-html": "^13.4.6",
     "wink-nlp": "^1.14.3",
-    "wikipedia": "^2.1.2",
-    "llamaindex": "*"
+    "wikipedia": "^2.1.2"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -81,6 +80,6 @@
     "copy": "cp -r ../../README.md ../../LICENSE .",
     "update:deps": "node scripts/update-deps.js",
     "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -rf dist/cjs",
-    "build": "pnpm run update:deps && pnpm run build:core && pnpm copy"
+    "edge": "pnpm run update:deps && pnpm run build:core && pnpm copy"
   }
 }
