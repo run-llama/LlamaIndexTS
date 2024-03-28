@@ -13,8 +13,11 @@
     "lint": {
       "inputs": ["packages/eslint-config-custom"]
     },
+    "@llamaindex/edge#build": {
+      "dependsOn": ["llamaindex#build"]
+    },
     "test": {
-      "dependsOn": ["^build", "^edge"]
+      "dependsOn": ["^build"]
     },
     "dev": {
       "cache": false,

@@ -80,6 +80,6 @@
     "copy": "cp -r ../../README.md ../../LICENSE .",
     "update:deps": "node scripts/update-deps.js",
     "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -rf dist/cjs",
-    "edge": "pnpm run update:deps && pnpm run build:core && pnpm copy"
+    "build": "pnpm run update:deps && pnpm run build:core && pnpm copy"
   }
 }
