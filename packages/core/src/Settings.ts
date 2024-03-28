@@ -26,6 +26,7 @@ interface Config {
   chunkOverlap?: number;
 }
 
+/* Global settings */
 export class GlobalSettings implements Config {
   private _prompt: PromptConfig = {};
   private _llm: LLM | null = null;
@@ -124,22 +125,24 @@ export class GlobalSettings implements Config {
   }
 }
 
-// Determine the global object based on the environment
-const globalObject: any =
-  typeof window !== "undefined"
-    ? window
-    : typeof global !== "undefined"
-      ? global
-      : {};
+/* Proxy for global settings */
+export const Settings = new Proxy(new GlobalSettings(), {
+  get(target, prop) {
+    if (prop in target) {
+      return target[prop as keyof Config];
+    }
 
-// Initialize or access a global config object
-const globalConfigKey = "__GLOBAL_LITS__";
+    return undefined;
+  },
 
-if (!globalObject[globalConfigKey]) {
-  globalObject[globalConfigKey] = new GlobalSettings();
-}
+  set(target, prop, value) {
+    if (prop in target) {
+      target[prop as keyof Config] = value;
+    }
 
-export const Settings = globalObject[globalConfigKey] as GlobalSettings;
+    return true;
+  },
+});
 
 export const llmFromSettingsOrContext = (serviceContext?: ServiceContext) => {
   if (serviceContext?.llm) {
