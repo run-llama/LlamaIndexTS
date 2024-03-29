@@ -154,7 +154,7 @@ export class CallbackManager implements CallbackManagerMethods {
 
   #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<CustomEvent>[]>();
 
-  constructor(handlers?: CallbackManagerMethods) {
+  constructor(handlers?: Partial<CallbackManagerMethods>) {
     const onLLMStream = handlers?.onLLMStream ?? noop;
     this.addHandlers("stream", (event) => onLLMStream(event.detail));
     const onRetrieve = handlers?.onRetrieve ?? noop;
