@@ -68,11 +68,11 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
     const messages: ChatMessage[] = [
       {
         role: "system",
-        content: this.correctnessPrompt(),
+        content: this.correctnessPrompt.format({}),
       },
       {
         role: "user",
-        content: defaultUserPrompt({
+        content: defaultUserPrompt.format({
           query,
           generatedAnswer: response,
           referenceAnswer: reference || "(NO REFERENCE ANSWER SUPPLIED)",

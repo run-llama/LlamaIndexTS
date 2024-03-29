@@ -1,9 +1,10 @@
 import {
   CompactAndRefine,
   OpenAI,
+  Prompt,
   ResponseSynthesizer,
-  serviceContextFromDefaults,
   VectorStoreIndex,
+  serviceContextFromDefaults,
 } from "llamaindex";
 import { PapaCSVReader } from "llamaindex/readers";
 
@@ -22,14 +23,12 @@ async function main() {
     serviceContext,
   });
 
-  const csvPrompt = ({ context = "", query = "" }) => {
-    return `The following CSV file is loaded from ${path}
+  const csvPrompt = new Prompt(`The following CSV file is loaded from {{path}}
 \`\`\`csv
-${context}
+{{context}}
 \`\`\`
-Given the CSV file, generate me Typescript code to answer the question: ${query}. You can use built in NodeJS functions but avoid using third party libraries.
-`;
-  };
+Given the CSV file, generate me Typescript code to answer the question: {{query}. You can use built in NodeJS functions but avoid using third party libraries.
+`);
 
   const responseSynthesizer = new ResponseSynthesizer({
     responseBuilder: new CompactAndRefine(serviceContext, csvPrompt),

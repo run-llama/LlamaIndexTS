@@ -1,5 +1,6 @@
 import {
   Document,
+  Prompt,
   ResponseSynthesizer,
   TreeSummarize,
   TreeSummarizePrompt,
@@ -7,16 +8,15 @@ import {
   serviceContextFromDefaults,
 } from "llamaindex";
 
-const treeSummarizePrompt: TreeSummarizePrompt = ({ context, query }) => {
-  return `Context information from multiple sources is below.
+const treeSummarizePrompt: TreeSummarizePrompt =
+  new Prompt(`Context information from multiple sources is below.
 ---------------------
-${context}
+{{context}}
 ---------------------
 Given the information from multiple sources and not prior knowledge.
 Answer the query in the style of a Shakespeare play"
-Query: ${query}
-Answer:`;
-};
+Query: {{query}}
+Answer:`);
 
 async function main() {
   const documents = new Document({

@@ -2,13 +2,15 @@ import fs from "node:fs/promises";
 
 import {
   Anthropic,
-  anthropicTextQaPrompt,
   CompactAndRefine,
   Document,
   ResponseSynthesizer,
-  serviceContextFromDefaults,
+  Settings,
   VectorStoreIndex,
+  serviceContextFromDefaults,
 } from "llamaindex";
+
+Settings.prompt.llm = "claude";
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -23,10 +25,7 @@ async function main() {
   const serviceContext = serviceContextFromDefaults({ llm: new Anthropic() });
 
   const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(
-      serviceContext,
-      anthropicTextQaPrompt,
-    ),
+    responseBuilder: new CompactAndRefine(serviceContext),
   });
 
   const index = await VectorStoreIndex.fromDocuments([document], {

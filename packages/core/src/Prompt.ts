@@ -1,5 +1,8 @@
 import type { SubQuestion } from "./engines/query/types.js";
 import type { ChatMessage } from "./llm/types.js";
+
+import { Prompt } from "./prompts/types.js";
+
 import type { ToolMetadata } from "./types.js";
 
 /**
@@ -24,66 +27,41 @@ DEFAULT_TEXT_QA_PROMPT_TMPL = (
 )
 */
 
-export const defaultTextQaPrompt = ({ context = "", query = "" }) => {
-  return `Context information is below.
----------------------
-${context}
----------------------
-Given the context information and not prior knowledge, answer the query.
-Query: ${query}
-Answer:`;
-};
+export const defaultTextQaPrompt = new Prompt(`
+default: >
+  Context information is below.
+  ---------------------
+  {{context}}
+  ---------------------
+  Given the context information and not prior knowledge, answer the query.
+  Query: {{query}}
+  Answer:
+llm-claude: >
+  Context information:
+  <context>
+  {{context}}
+  </context>
+  Given the context information and not prior knowledge, answer the query.
+  Query: {{query}};
+`);
 
-export type TextQaPrompt = typeof defaultTextQaPrompt;
+export const defaultSummaryPrompt = new Prompt(`
+default: >  
+  Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
 
-export const anthropicTextQaPrompt: TextQaPrompt = ({
-  context = "",
-  query = "",
-}) => {
-  return `Context information:
-<context>
-${context}
-</context>
-Given the context information and not prior knowledge, answer the query.
-Query: ${query}`;
-};
+  {{context}}
 
-/*
-DEFAULT_SUMMARY_PROMPT_TMPL = (
-    "Write a summary of the following. Try to use only the "
-    "information provided. "
-    "Try to include as many key details as possible.\n"
-    "\n"
-    "\n"
-    "{context_str}\n"
-    "\n"
-    "\n"
-    'SUMMARY:"""\n'
-)
-*/
+  SUMMARY:"""
+llm-claude: >
+  Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
+  <original-text>
+  {{context}}
+  </original-text>
 
-export const defaultSummaryPrompt = ({ context = "" }) => {
-  return `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
-
-
-${context}
-
-
-SUMMARY:"""
-`;
-};
+  SUMMARY:
+`);
 
 export type SummaryPrompt = typeof defaultSummaryPrompt;
-
-export const anthropicSummaryPrompt: SummaryPrompt = ({ context = "" }) => {
-  return `Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
-<original-text>
-${context}
-</original-text>
-
-SUMMARY:
-`;
-};
 
 /*
 DEFAULT_REFINE_PROMPT_TMPL = (
@@ -101,20 +79,17 @@ DEFAULT_REFINE_PROMPT_TMPL = (
 )
 */
 
-export const defaultRefinePrompt = ({
-  query = "",
-  existingAnswer = "",
-  context = "",
-}) => {
-  return `The original query is as follows: ${query}
-We have provided an existing answer: ${existingAnswer}
-We have the opportunity to refine the existing answer (only if needed) with some more context below.
-------------
-${context}
-------------
-Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
-Refined Answer:`;
-};
+export const defaultRefinePrompt = new Prompt(`
+default: >
+  The original query is as follows: {{query}}
+  We have provided an existing answer: {{existingAnswer}}
+  We have the opportunity to refine the existing answer (only if needed) with some more context below.
+  ------------
+  {{context}}
+  ------------
+  Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
+  Refined Answer:
+`);
 
 export type RefinePrompt = typeof defaultRefinePrompt;
 
@@ -131,49 +106,51 @@ DEFAULT_TREE_SUMMARIZE_TMPL = (
 )
 */
 
-export const defaultTreeSummarizePrompt = ({ context = "", query = "" }) => {
-  return `Context information from multiple sources is below.
----------------------
-${context}
----------------------
-Given the information from multiple sources and not prior knowledge, answer the query.
-Query: ${query}
-Answer:`;
-};
+export const defaultTreeSummarizePrompt = new Prompt(`
+default: >
+  Context information from multiple sources is below.
+  ---------------------
+  {{context}}
+  ---------------------
+  Given the information from multiple sources and not prior knowledge, answer the query.
+  Query: {{query}}
+  Answer:
+`);
 
 export type TreeSummarizePrompt = typeof defaultTreeSummarizePrompt;
 
-export const defaultChoiceSelectPrompt = ({ context = "", query = "" }) => {
-  return `A list of documents is shown below. Each document has a number next to it along 
-with a summary of the document. A question is also provided.
-Respond with the numbers of the documents
-you should consult to answer the question, in order of relevance, as well
-as the relevance score. The relevance score is a number from 1-10 based on
-how relevant you think the document is to the question.
-Do not include any documents that are not relevant to the question.
-Example format:
-Document 1:
-<summary of document 1>
+export const defaultChoiceSelectPrompt = new Prompt(`
+default: >
+  A list of documents is shown below. Each document has a number next to it along 
+  with a summary of the document. A question is also provided.
+  Respond with the numbers of the documents
+  you should consult to answer the question, in order of relevance, as well
+  as the relevance score. The relevance score is a number from 1-10 based on
+  how relevant you think the document is to the question.
+  Do not include any documents that are not relevant to the question.
+  Example format:
+  Document 1:
+  <summary of document 1>
 
-Document 2:
-<summary of document 2>
+  Document 2:
+  <summary of document 2>
 
-...
+  ...
 
-Document 10:\n<summary of document 10>
+  Document 10:\n<summary of document 10>
 
-Question: <question>
-Answer:
-Doc: 9, Relevance: 7
-Doc: 3, Relevance: 4
-Doc: 7, Relevance: 3
+  Question: <question>
+  Answer:
+  Doc: 9, Relevance: 7
+  Doc: 3, Relevance: 4
+  Doc: 7, Relevance: 3
 
-Let's try this now:
+  Let's try this now:
 
-${context}
-Question: ${query}
-Answer:`;
-};
+  {{context}}
+  Question: {{query}}
+  Answer:
+`);
 
 export type ChoiceSelectPrompt = typeof defaultChoiceSelectPrompt;
 
