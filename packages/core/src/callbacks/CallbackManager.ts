@@ -85,14 +85,14 @@ interface CallbackManagerMethods {
    * callback auto sets the stream = True flag on the openAI createChatCompletion request.
    * @deprecated will be removed in the next major version
    */
-  onLLMStream: (params: StreamCallbackResponse) => Promise<void>;
+  onLLMStream: (params: StreamCallbackResponse) => Promise<void> | void;
   /**
    * onRetrieve is called as soon as the retriever finishes fetching relevant nodes.
    * This callback allows you to handle the retrieved nodes even if the synthesizer
    * is still running.
    * @deprecated will be removed in the next major version
    */
-  onRetrieve: (params: RetrievalCallbackResponse) => Promise<void>;
+  onRetrieve: (params: RetrievalCallbackResponse) => Promise<void> | void;
 }
 //#endregion
 
