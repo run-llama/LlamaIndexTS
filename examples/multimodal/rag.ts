@@ -7,6 +7,7 @@ import {
   OpenAI,
   ServiceContext,
   VectorStoreIndex,
+  runWithCallbackManager,
   serviceContextFromDefaults,
   storageContextFromDefaults,
 } from "llamaindex";
@@ -38,7 +39,6 @@ async function main() {
     llm,
     chunkSize: 512,
     chunkOverlap: 20,
-    callbackManager,
   });
   const index = await createIndex(serviceContext);
 
@@ -46,9 +46,11 @@ async function main() {
     responseSynthesizer: new MultiModalResponseSynthesizer({ serviceContext }),
     retriever: index.asRetriever({ similarityTopK: 3, imageSimilarityTopK: 1 }),
   });
-  const result = await queryEngine.query({
-    query: "Tell me more about Vincent van Gogh's famous paintings",
-  });
+  const result = await runWithCallbackManager(callbackManager, () =>
+    queryEngine.query({
+      query: "Tell me more about Vincent van Gogh's famous paintings",
+    }),
+  );
   console.log(result.response, "\n");
   images.forEach((image) =>
     console.log(`Image retrieved and used in inference: ${image.toString()}`),
