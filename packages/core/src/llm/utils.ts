@@ -1,4 +1,5 @@
-import type { MessageContent } from "./types.js";
+import { getCurrentCallbackManager } from "../callbacks/CallbackManager.js";
+import type { ChatResponse, LLM, LLMChat, MessageContent } from "./types.js";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
@@ -41,4 +42,60 @@ export function extractText(message: MessageContent): string {
       .join("\n\n");
   }
   return message;
+}
+
+/**
+ * @internal
+ */
+export function llmEvent(
+  originalMethod: LLMChat["chat"],
+  _context: ClassMethodDecoratorContext,
+) {
+  return async function withLLMEvent(
+    this: LLM,
+    ...params: Parameters<LLMChat["chat"]>
+  ): ReturnType<LLMChat["chat"]> {
+    getCurrentCallbackManager().dispatchEvent("llm-start", {
+      payload: {
+        messages: params[0].messages,
+      },
+    });
+    const response = await originalMethod.call(
+      this,
+      // @ts-expect-error - this is a valid call
+      params,
+    );
+    if (Symbol.asyncIterator in response) {
+      response[Symbol.asyncIterator] = async function* () {
+        const finalResponse: ChatResponse = {
+          message: {
+            content: "",
+            role: "assistant",
+          },
+        };
+        let firstOne = false;
+        for await (const chunk of response) {
+          if (!firstOne) {
+            firstOne = true;
+            finalResponse.message.content = chunk.delta;
+          } else {
+            finalResponse.message.content += chunk.delta;
+          }
+          yield chunk;
+        }
+        getCurrentCallbackManager().dispatchEvent("llm-end", {
+          payload: {
+            response: finalResponse,
+          },
+        });
+      };
+    } else {
+      getCurrentCallbackManager().dispatchEvent("llm-end", {
+        payload: {
+          response,
+        },
+      });
+    }
+    return response;
+  };
 }

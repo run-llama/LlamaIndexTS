@@ -2,9 +2,9 @@ import type { Anthropic } from "@anthropic-ai/sdk";
 import { AsyncLocalStorage } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
 
-export type Timeline = "start" | "end";
-
-// do not remove this type
+/**
+ * This type is used to define the event maps for the Llamaindex package.
+ */
 export interface LlamaIndexEventMaps {}
 
 declare module "llamaindex" {
@@ -168,10 +168,7 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!this.#handlers.has(event)) {
       this.#handlers.set(event, []);
     }
-    this.#handlers.get(event)!.push(
-      // @ts-expect-error
-      handler,
-    );
+    this.#handlers.get(event)!.push(handler);
     return this;
   }
 
@@ -183,14 +180,22 @@ export class CallbackManager implements CallbackManagerMethods {
       return;
     }
     const handlers = this.#handlers.get(event)!;
-    const index = handlers.indexOf(
-      // @ts-expect-error
-      handler,
-    );
+    const index = handlers.indexOf(handler);
     if (index > -1) {
       handlers.splice(index, 1);
     }
     return this;
+  }
+
+  dispatchEvent<K extends keyof LlamaIndexEventMaps>(
+    event: K,
+    detail: LlamaIndexEventMaps[K]["detail"],
+  ) {
+    const handlers = this.#handlers.get(event);
+    if (!handlers) {
+      return;
+    }
+    handlers.forEach((handler) => handler(new CustomEvent(event, { detail })));
   }
 }
 

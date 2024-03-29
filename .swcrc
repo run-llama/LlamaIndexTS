@@ -1,7 +1,8 @@
 {
   "jsc": {
     "parser": {
-      "syntax": "typescript"
+      "syntax": "typescript",
+      "decorators": true
     },
     "target": "esnext"
   }

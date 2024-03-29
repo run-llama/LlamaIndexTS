@@ -1,5 +1,5 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import { type Event, type Timeline } from "../callbacks/CallbackManager.js";
+import { type Event } from "../callbacks/CallbackManager.js";
 
 /**
  * @internal do not use this type directly
@@ -8,49 +8,45 @@ type LLMBaseEvent<
   Type extends string,
   Payload extends Record<string, unknown>,
 > = CustomEvent<{
-  timeline: Timeline;
-  type: Type;
   payload: Payload;
 }>;
 
-export type ChatStartEvent = LLMBaseEvent<
-  "chat-start",
+export type LLMStartEvent = LLMBaseEvent<
+  "llm-start",
   {
-    id: string;
     messages: ChatMessage[];
   }
 >;
-export type ChatProgressEvent = LLMBaseEvent<
-  "chat-progress",
+export type LLMEndEvent = LLMBaseEvent<
+  "llm-end",
   {
-    id: string;
-    messages: ChatMessage[];
-  }
->;
-export type ChatEndEvent = LLMBaseEvent<
-  "chat-end",
-  {
-    id: string;
     response: ChatResponse;
   }
 >;
 
 declare module "llamaindex" {
   interface LlamaIndexEventMaps {
-    "chat-start": ChatStartEvent;
-    "chat-end": ChatEndEvent;
+    "llm-start": LLMStartEvent;
+    "llm-end": LLMEndEvent;
   }
+}
+
+/**
+ * @internal
+ */
+export interface LLMChat {
+  chat(
+    params: LLMChatParamsStreaming | LLMChatParamsNonStreaming,
+  ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>>;
 }
 
 /**
  * Unified language model interface
  */
-export interface LLM {
+export interface LLM extends LLMChat {
   metadata: LLMMetadata;
   /**
    * Get a chat response from the LLM
-   *
-   * @param params
    */
   chat(
     params: LLMChatParamsStreaming,
@@ -59,7 +55,6 @@ export interface LLM {
 
   /**
    * Get a prompt completion from the LLM
-   * @param params
    */
   complete(
     params: LLMCompletionParamsStreaming,

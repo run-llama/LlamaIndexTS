@@ -4,6 +4,9 @@ import type { ServiceContext } from "./ServiceContext.js";
 
 export type RetrieveParams = {
   query: string;
+  /**
+   * @deprecated will be removed in the next major version
+   */
   parentEvent?: Event;
   preFilters?: unknown;
 };
