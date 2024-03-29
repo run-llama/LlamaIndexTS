@@ -1,11 +1,11 @@
 import type { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
-import { getCurrentCallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { globalsHelper } from "../GlobalsHelper.js";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { serviceContextFromDefaults } from "../ServiceContext.js";
+import { getCurrentCallbackManager } from "../callbacks/CallbackManager.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
