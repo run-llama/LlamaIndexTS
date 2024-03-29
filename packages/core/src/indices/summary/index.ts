@@ -1,3 +1,4 @@
+import { getCurrentCallbackManager } from "llamaindex/callbacks/CallbackManager";
 import _ from "lodash";
 import { globalsHelper } from "../../GlobalsHelper.js";
 import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
@@ -291,16 +292,14 @@ export class SummaryIndexRetriever implements BaseRetriever {
       score: 1,
     }));
 
-    if (this.index.serviceContext.callbackManager.onRetrieve) {
-      this.index.serviceContext.callbackManager.onRetrieve({
-        query,
-        nodes: result,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes: result,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
 
     return result;
   }
@@ -376,16 +375,14 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       results.push(...nodeWithScores);
     }
 
-    if (this.serviceContext.callbackManager.onRetrieve) {
-      this.serviceContext.callbackManager.onRetrieve({
-        query,
-        nodes: results,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes: results,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
 
     return results;
   }

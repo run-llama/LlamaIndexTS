@@ -1,5 +1,46 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { Event } from "../callbacks/CallbackManager.js";
+import { type Event, type Timeline } from "../callbacks/CallbackManager.js";
+
+/**
+ * @internal do not use this type directly
+ */
+type LLMBaseEvent<
+  Type extends string,
+  Payload extends Record<string, unknown>,
+> = CustomEvent<{
+  timeline: Timeline;
+  type: Type;
+  payload: Payload;
+}>;
+
+export type ChatStartEvent = LLMBaseEvent<
+  "chat-start",
+  {
+    id: string;
+    messages: ChatMessage[];
+  }
+>;
+export type ChatProgressEvent = LLMBaseEvent<
+  "chat-progress",
+  {
+    id: string;
+    messages: ChatMessage[];
+  }
+>;
+export type ChatEndEvent = LLMBaseEvent<
+  "chat-end",
+  {
+    id: string;
+    response: ChatResponse;
+  }
+>;
+
+declare module "llamaindex" {
+  interface LlamaIndexEventMaps {
+    "chat-start": ChatStartEvent;
+    "chat-end": ChatEndEvent;
+  }
+}
 
 /**
  * Unified language model interface

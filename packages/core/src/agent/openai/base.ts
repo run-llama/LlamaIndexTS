@@ -1,4 +1,3 @@
-import type { CallbackManager } from "../../callbacks/CallbackManager.js";
 import type { ChatMessage } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import type { ObjectRetriever } from "../../objects/base.js";
@@ -14,7 +13,6 @@ type OpenAIAgentParams = {
   verbose?: boolean;
   maxFunctionCalls?: number;
   defaultToolChoice?: string;
-  callbackManager?: CallbackManager;
   toolRetriever?: ObjectRetriever;
   systemPrompt?: string;
 };
@@ -33,7 +31,6 @@ export class OpenAIAgent extends AgentRunner {
     verbose,
     maxFunctionCalls = 5,
     defaultToolChoice = "auto",
-    callbackManager,
     toolRetriever,
     systemPrompt,
   }: OpenAIAgentParams) {
@@ -58,7 +55,6 @@ export class OpenAIAgent extends AgentRunner {
 
     const stepEngine = new OpenAIAgentWorker({
       tools,
-      callbackManager,
       llm,
       prefixMessages,
       maxFunctionCalls,
@@ -69,7 +65,6 @@ export class OpenAIAgent extends AgentRunner {
     super({
       agentWorker: stepEngine,
       memory,
-      callbackManager,
       defaultToolChoice,
       chatHistory: prefixMessages,
     });

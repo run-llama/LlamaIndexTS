@@ -100,7 +100,6 @@ export class SentenceSplitter {
     }
     this.chunkSize = chunkSize;
     this.chunkOverlap = chunkOverlap;
-    // this._callback_manager = callback_manager || new CallbackManager([]);
 
     this.tokenizer = tokenizer ?? globalsHelper.tokenizer();
     this.tokenizerDecoder =

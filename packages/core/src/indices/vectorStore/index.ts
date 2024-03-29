@@ -14,7 +14,10 @@ import {
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
-import type { Event } from "../../callbacks/CallbackManager.js";
+import {
+  getCurrentCallbackManager,
+  type Event,
+} from "../../callbacks/CallbackManager.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
 import type {
   BaseEmbedding,
@@ -480,16 +483,14 @@ export class VectorIndexRetriever implements BaseRetriever {
     nodesWithScores: NodeWithScore<Metadata>[],
     parentEvent: Event | undefined,
   ) {
-    if (this.serviceContext.callbackManager.onRetrieve) {
-      this.serviceContext.callbackManager.onRetrieve({
-        query,
-        nodes: nodesWithScores,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes: nodesWithScores,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
   }
 
   protected async buildVectorStoreQuery(

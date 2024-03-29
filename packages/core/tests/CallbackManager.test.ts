@@ -15,7 +15,10 @@ import type {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "llamaindex/callbacks/CallbackManager";
-import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
+import {
+  CallbackManager,
+  runWithCallbackManager,
+} from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import { SummaryIndex } from "llamaindex/indices/summary/index";
 import { VectorStoreIndex } from "llamaindex/indices/vectorStore/index";
@@ -38,10 +41,11 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   let streamCallbackData: StreamCallbackResponse[] = [];
   let retrieveCallbackData: RetrievalCallbackResponse[] = [];
   let document: Document;
+  let callbackManager: CallbackManager;
 
   beforeAll(async () => {
     document = new Document({ text: "Author: My name is Paul Graham" });
-    const callbackManager = new CallbackManager({
+    callbackManager = new CallbackManager({
       onLLMStream: (data) => {
         streamCallbackData.push(data);
       },
@@ -52,7 +56,6 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
 
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
-      callbackManager,
     });
     mockLlmGeneration({ languageModel, callbackManager });
 
@@ -60,7 +63,6 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     mockEmbeddingModel(embedModel);
 
     serviceContext = serviceContextFromDefaults({
-      callbackManager,
       llm: languageModel,
       embedModel,
     });
@@ -81,7 +83,10 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     });
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
-    const response = await queryEngine.query({ query });
+    const response = await runWithCallbackManager(callbackManager, async () => {
+      return queryEngine.query({ query });
+    });
+
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
     expect(streamCallbackData).toEqual([
       {
@@ -159,7 +164,9 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       responseSynthesizer,
     });
     const query = "What is the author's name?";
-    const response = await queryEngine.query({ query });
+    const response = await runWithCallbackManager(callbackManager, async () =>
+      queryEngine.query({ query }),
+    );
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
     expect(streamCallbackData).toEqual([
       {

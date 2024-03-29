@@ -10,3 +10,6 @@ export function getEnv(name: string): string | undefined {
   }
   return process.env[name];
 }
+
+// Browser doesn't support AsyncLocalStorage
+export { AsyncLocalStorage } from "node:async_hooks";
