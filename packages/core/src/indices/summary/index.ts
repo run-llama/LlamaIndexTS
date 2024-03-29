@@ -1,4 +1,3 @@
-import { getCurrentCallbackManager } from "llamaindex/callbacks/CallbackManager";
 import _ from "lodash";
 import { globalsHelper } from "../../GlobalsHelper.js";
 import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
@@ -7,6 +6,7 @@ import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import { getCurrentCallbackManager } from "../../callbacks/CallbackManager.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
@@ -291,6 +291,12 @@ export class SummaryIndexRetriever implements BaseRetriever {
       node: node,
       score: 1,
     }));
+
+    console.trace("SummaryIndexRetriever.retrieve", {
+      query,
+      parentEvent,
+      result,
+    });
 
     getCurrentCallbackManager().onRetrieve({
       query,

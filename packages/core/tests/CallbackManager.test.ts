@@ -83,7 +83,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     });
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
-    const response = await runWithCallbackManager(callbackManager, async () => {
+    const response = await runWithCallbackManager(callbackManager, () => {
       return queryEngine.query({ query });
     });
 
