@@ -292,12 +292,6 @@ export class SummaryIndexRetriever implements BaseRetriever {
       score: 1,
     }));
 
-    console.trace("SummaryIndexRetriever.retrieve", {
-      query,
-      parentEvent,
-      result,
-    });
-
     getCurrentCallbackManager().onRetrieve({
       query,
       nodes: result,

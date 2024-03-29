@@ -7,6 +7,19 @@ export type Timeline = "start" | "end";
 // do not remove this type
 export interface LlamaIndexEventMaps {}
 
+declare module "llamaindex" {
+  interface LlamaIndexEventMaps {
+    /**
+     * @deprecated
+     */
+    retrieve: CustomEvent<RetrievalCallbackResponse>;
+    /**
+     * @deprecated
+     */
+    stream: CustomEvent<StreamCallbackResponse>;
+  }
+}
+
 //#region @deprecated remove in the next major version
 /*
   An event is a wrapper that groups related operations.
@@ -72,14 +85,14 @@ interface CallbackManagerMethods {
    * callback auto sets the stream = True flag on the openAI createChatCompletion request.
    * @deprecated will be removed in the next major version
    */
-  onLLMStream?: (params: StreamCallbackResponse) => Promise<void> | void;
+  onLLMStream: (params: StreamCallbackResponse) => Promise<void>;
   /**
    * onRetrieve is called as soon as the retriever finishes fetching relevant nodes.
    * This callback allows you to handle the retrieved nodes even if the synthesizer
    * is still running.
    * @deprecated will be removed in the next major version
    */
-  onRetrieve?: (params: RetrievalCallbackResponse) => Promise<void> | void;
+  onRetrieve: (params: RetrievalCallbackResponse) => Promise<void>;
 }
 //#endregion
 
@@ -92,19 +105,60 @@ type EventHandler<Event extends CustomEvent> = (event: Event) => void;
 
 export class CallbackManager implements CallbackManagerMethods {
   /**
-   * @deprecated
+   * @deprecated will be removed in the next major version
    */
-  onLLMStream: (params: StreamCallbackResponse) => Promise<void>;
-  /**
-   * @deprecated
-   */
-  onRetrieve: (params: RetrievalCallbackResponse) => Promise<void>;
+  get onLLMStream(): CallbackManagerMethods["onLLMStream"] {
+    return async (response) => {
+      await Promise.all(
+        this.#handlers
+          .get("stream")!
+          .map((handler) =>
+            handler(new CustomEvent("stream", { detail: response })),
+          ),
+      );
+    };
+  }
 
-  #handlers = new Map<string, EventHandler<CustomEvent>[]>();
+  /**
+   * @deprecated will be removed in the next major version
+   */
+  get onRetrieve(): CallbackManagerMethods["onRetrieve"] {
+    return async (response) => {
+      await Promise.all(
+        this.#handlers
+          .get("retrieve")!
+          .map((handler) =>
+            handler(new CustomEvent("retrieve", { detail: response })),
+          ),
+      );
+    };
+  }
+
+  /**
+   * @deprecated will be removed in the next major version
+   */
+  set onLLMStream(_: never) {
+    throw new Error(
+      "onLLMStream is deprecated. Use addHandlers('stream') instead",
+    );
+  }
+
+  /**
+   * @deprecated will be removed in the next major version
+   */
+  set onRetrieve(_: never) {
+    throw new Error(
+      "onRetrieve is deprecated. Use `addHandlers('retrieve')` instead",
+    );
+  }
+
+  #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<CustomEvent>[]>();
 
   constructor(handlers?: CallbackManagerMethods) {
-    this.onLLMStream = handlers?.onLLMStream ?? noop;
-    this.onRetrieve = handlers?.onRetrieve ?? noop;
+    const onLLMStream = handlers?.onLLMStream ?? noop;
+    this.addHandlers("stream", (event) => onLLMStream(event.detail));
+    const onRetrieve = handlers?.onRetrieve ?? noop;
+    this.addHandlers("retrieve", (event) => onRetrieve(event.detail));
   }
 
   addHandlers<K extends keyof LlamaIndexEventMaps>(
@@ -118,6 +172,7 @@ export class CallbackManager implements CallbackManagerMethods {
       // @ts-expect-error
       handler,
     );
+    return this;
   }
 
   removeHandlers<K extends keyof LlamaIndexEventMaps>(
@@ -135,6 +190,7 @@ export class CallbackManager implements CallbackManagerMethods {
     if (index > -1) {
       handlers.splice(index, 1);
     }
+    return this;
   }
 }
 
