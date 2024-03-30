@@ -228,6 +228,9 @@ importers:
       js-tiktoken:
         specifier: ^1.0.10
         version: 1.0.10
+      llama-tokenizer-js:
+        specifier: ^1.2.1
+        version: 1.2.1
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -373,6 +376,9 @@ importers:
       js-tiktoken:
         specifier: ^1.0.10
         version: 1.0.10
+      llama-tokenizer-js:
+        specifier: ^1.2.1
+        version: 1.2.1
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -9984,6 +9990,10 @@ packages:
       rfdc: 1.3.1
       wrap-ansi: 9.0.0
     dev: true
+
+  /llama-tokenizer-js@1.2.1:
+    resolution: {integrity: sha512-SEVVc++cXR0D0Wv30AzMVWzPCAKM701vZYU31h5lCTIn4k5cfZpJ070YDcb2nPq2Ts3xgu44L19wIrq1z/XjXQ==}
+    dev: false
 
   /load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
