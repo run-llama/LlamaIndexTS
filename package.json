@@ -27,7 +27,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
     "turbo": "^1.12.3",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "packageManager": "pnpm@8.15.1",
   "pnpm": {

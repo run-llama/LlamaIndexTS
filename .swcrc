@@ -4,6 +4,9 @@
       "syntax": "typescript",
       "decorators": true
     },
-    "target": "esnext"
+    "target": "esnext",
+    "transform": {
+      "decoratorVersion": "2022-03"
+    }
   }
 }

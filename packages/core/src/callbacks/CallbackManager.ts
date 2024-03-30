@@ -1,5 +1,5 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
-import { AsyncLocalStorage } from "@llamaindex/env";
+import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
 
 /**
@@ -98,9 +98,6 @@ interface CallbackManagerMethods {
 
 const noop: (...args: any[]) => any = () => void 0;
 
-/**
- * @internal
- */
 type EventHandler<Event extends CustomEvent> = (event: Event) => void;
 
 export class CallbackManager implements CallbackManagerMethods {
@@ -161,10 +158,10 @@ export class CallbackManager implements CallbackManagerMethods {
     this.addHandlers("retrieve", (event) => onRetrieve(event.detail));
   }
 
-  addHandlers<K extends keyof LlamaIndexEventMaps>(
-    event: K,
-    handler: EventHandler<LlamaIndexEventMaps[K]>,
-  ) {
+  addHandlers<
+    K extends keyof LlamaIndexEventMaps,
+    H extends EventHandler<LlamaIndexEventMaps[K]>,
+  >(event: K, handler: H) {
     if (!this.#handlers.has(event)) {
       this.#handlers.set(event, []);
     }
@@ -172,10 +169,10 @@ export class CallbackManager implements CallbackManagerMethods {
     return this;
   }
 
-  removeHandlers<K extends keyof LlamaIndexEventMaps>(
-    event: K,
-    handler: EventHandler<LlamaIndexEventMaps[K]>,
-  ) {
+  removeHandlers<
+    K extends keyof LlamaIndexEventMaps,
+    H extends EventHandler<LlamaIndexEventMaps[K]>,
+  >(event: K, handler: H) {
     if (!this.#handlers.has(event)) {
       return;
     }
@@ -205,9 +202,6 @@ const callbackAsyncLocalStorage = new AsyncLocalStorage<CallbackManager>();
 /**
  * Get the current callback manager
  * @default defaultCallbackManager if no callback manager is set
- * @internal
- *  only call this function in the internal code,
- *    do not expose it to the public API
  */
 export function getCurrentCallbackManager() {
   return callbackAsyncLocalStorage.getStore() ?? defaultCallbackManager;

@@ -1,9 +1,6 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
 import { type Event } from "../callbacks/CallbackManager.js";
 
-/**
- * @internal do not use this type directly
- */
 type LLMBaseEvent<
   Type extends string,
   Payload extends Record<string, unknown>,

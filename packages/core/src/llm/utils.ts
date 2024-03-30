@@ -60,12 +60,11 @@ export function llmEvent(
         messages: params[0].messages,
       },
     });
-    const response = await originalMethod.call(
-      this,
-      // @ts-expect-error - this is a valid call
-      params,
-    );
+    const response = await originalMethod.call(this, ...params);
     if (Symbol.asyncIterator in response) {
+      const originalAsyncIterator = {
+        [Symbol.asyncIterator]: response[Symbol.asyncIterator].bind(response),
+      };
       response[Symbol.asyncIterator] = async function* () {
         const finalResponse: ChatResponse = {
           message: {
@@ -74,7 +73,7 @@ export function llmEvent(
           },
         };
         let firstOne = false;
-        for await (const chunk of response) {
+        for await (const chunk of originalAsyncIterator) {
           if (!firstOne) {
             firstOne = true;
             finalResponse.message.content = chunk.delta;

@@ -8,7 +8,6 @@ import {
   type StreamCallbackResponse,
 } from "../callbacks/CallbackManager.js";
 
-import { llmEvent } from "llamaindex/llm/utils";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
@@ -36,6 +35,7 @@ import type {
   LLMMetadata,
   MessageType,
 } from "./types.js";
+import { llmEvent } from "./utils.js";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
