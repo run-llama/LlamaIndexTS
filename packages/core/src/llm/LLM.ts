@@ -8,6 +8,7 @@ import {
   type StreamCallbackResponse,
 } from "../callbacks/CallbackManager.js";
 
+import llamaTokenizer from "llama-tokenizer-js";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
@@ -415,7 +416,8 @@ export class LlamaDeuce extends BaseLLM {
   }
 
   tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
+    return llamaTokenizer.encode(this.mapMessagesToPrompt(messages).prompt)
+      .length;
   }
 
   get metadata() {
