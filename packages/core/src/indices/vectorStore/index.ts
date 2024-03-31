@@ -14,8 +14,8 @@ import {
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
+  Settings,
   embedModelFromSettingsOrContext,
-  getCurrentCallbackManager,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { type Event } from "../../callbacks/CallbackManager.js";
@@ -484,7 +484,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     nodesWithScores: NodeWithScore<Metadata>[],
     parentEvent: Event | undefined,
   ) {
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.onRetrieve({
       query,
       nodes: nodesWithScores,
       event: globalsHelper.createEvent({

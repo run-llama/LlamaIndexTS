@@ -3,7 +3,7 @@ import { globalsHelper } from "../GlobalsHelper.js";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
-import { getCurrentCallbackManager } from "../Settings.js";
+import { Settings } from "../Settings.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
@@ -77,7 +77,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
     const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.onRetrieve({
       query,
       nodes,
       event: globalsHelper.createEvent({

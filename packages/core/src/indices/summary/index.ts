@@ -6,7 +6,7 @@ import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
-  getCurrentCallbackManager,
+  Settings,
   llmFromSettingsOrContext,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
@@ -298,7 +298,7 @@ export class SummaryIndexRetriever implements BaseRetriever {
       score: 1,
     }));
 
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.onRetrieve({
       query,
       nodes: result,
       event: globalsHelper.createEvent({
@@ -380,7 +380,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       results.push(...nodeWithScores);
     }
 
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.onRetrieve({
       query,
       nodes: results,
       event: globalsHelper.createEvent({

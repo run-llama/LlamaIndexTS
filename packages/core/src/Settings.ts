@@ -40,112 +40,141 @@ class GlobalSettings implements Config {
   private _chunkSize?: number;
   private _chunkOverlap?: number;
 
+  #callbackManagerAsyncLocalStorage = new AsyncLocalStorage<CallbackManager>();
+  #llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
+  #promptHelperAsyncLocalStorage = new AsyncLocalStorage<PromptHelper>();
+  #embedModelAsyncLocalStorage = new AsyncLocalStorage<BaseEmbedding>();
+  #nodeParserAsyncLocalStorage = new AsyncLocalStorage<NodeParser>();
+  #chunkSizeAsyncLocalStorage = new AsyncLocalStorage<number>();
+  #chunkOverlapAsyncLocalStorage = new AsyncLocalStorage<number>();
+  #promptAsyncLocalStorage = new AsyncLocalStorage<PromptConfig>();
+
   get llm(): LLM {
     if (this._llm === null) {
-      return (this._llm = new OpenAI());
+      this._llm = new OpenAI();
     }
 
-    return this._llm;
+    return this.#llmAsyncLocalStorage.getStore() ?? this._llm;
   }
 
   set llm(llm: LLM) {
     this._llm = llm;
   }
 
+  withLLM<Result>(llm: LLM, fn: () => Result): Result {
+    return this.#llmAsyncLocalStorage.run(llm, fn);
+  }
+
   get promptHelper(): PromptHelper {
     if (this._promptHelper === null) {
-      return (this._promptHelper = new PromptHelper());
+      this._promptHelper = new PromptHelper();
     }
 
-    return this._promptHelper;
+    return this.#promptHelperAsyncLocalStorage.getStore() ?? this._promptHelper;
   }
 
   set promptHelper(promptHelper: PromptHelper) {
     this._promptHelper = promptHelper;
   }
 
+  withPromptHelper<Result>(
+    promptHelper: PromptHelper,
+    fn: () => Result,
+  ): Result {
+    return this.#promptHelperAsyncLocalStorage.run(promptHelper, fn);
+  }
+
   get embedModel(): BaseEmbedding {
     if (this._embedModel === null) {
-      return (this._embedModel = new OpenAIEmbedding());
+      this._embedModel = new OpenAIEmbedding();
     }
 
-    return this._embedModel;
+    return this.#embedModelAsyncLocalStorage.getStore() ?? this._embedModel;
   }
 
   set embedModel(embedModel: BaseEmbedding) {
     this._embedModel = embedModel;
   }
 
+  withEmbedModel<Result>(embedModel: BaseEmbedding, fn: () => Result): Result {
+    return this.#embedModelAsyncLocalStorage.run(embedModel, fn);
+  }
+
   get nodeParser(): NodeParser {
     if (this._nodeParser === null) {
-      return (this._nodeParser = new SimpleNodeParser({
+      this._nodeParser = new SimpleNodeParser({
         chunkSize: this._chunkSize,
         chunkOverlap: this._chunkOverlap,
-      }));
+      });
     }
 
-    return this._nodeParser;
+    return this.#nodeParserAsyncLocalStorage.getStore() ?? this._nodeParser;
   }
 
   set nodeParser(nodeParser: NodeParser) {
     this._nodeParser = nodeParser;
   }
 
+  withNodeParser<Result>(nodeParser: NodeParser, fn: () => Result): Result {
+    return this.#nodeParserAsyncLocalStorage.run(nodeParser, fn);
+  }
+
   get callbackManager(): CallbackManager {
     if (this._callbackManager === null) {
-      return (this._callbackManager = new CallbackManager());
+      this._callbackManager = new CallbackManager();
     }
 
-    return this._callbackManager;
+    return (
+      this.#callbackManagerAsyncLocalStorage.getStore() ?? this._callbackManager
+    );
   }
 
   set callbackManager(callbackManager: CallbackManager) {
     this._callbackManager = callbackManager;
   }
 
-  get chunkSize(): number | undefined {
-    return this._chunkSize;
+  withCallbackManager<Result>(
+    callbackManager: CallbackManager,
+    fn: () => Result,
+  ): Result {
+    return this.#callbackManagerAsyncLocalStorage.run(callbackManager, fn);
   }
 
   set chunkSize(chunkSize: number | undefined) {
     this._chunkSize = chunkSize;
   }
 
+  get chunkSize(): number | undefined {
+    return this.#chunkSizeAsyncLocalStorage.getStore() ?? this._chunkSize;
+  }
+
+  withChunkSize<Result>(chunkSize: number, fn: () => Result): Result {
+    return this.#chunkSizeAsyncLocalStorage.run(chunkSize, fn);
+  }
+
   get chunkOverlap(): number | undefined {
-    return this._chunkOverlap;
+    return this.#chunkOverlapAsyncLocalStorage.getStore() ?? this._chunkOverlap;
   }
 
   set chunkOverlap(chunkOverlap: number | undefined) {
     this._chunkOverlap = chunkOverlap;
   }
 
+  withChunkOverlap<Result>(chunkOverlap: number, fn: () => Result): Result {
+    return this.#chunkOverlapAsyncLocalStorage.run(chunkOverlap, fn);
+  }
+
   get prompt(): PromptConfig {
-    return this._prompt;
+    return this.#promptAsyncLocalStorage.getStore() ?? this._prompt;
   }
 
   set prompt(prompt: PromptConfig) {
     this._prompt = prompt;
   }
-}
 
-const callbackManagerAsyncLocalStorage =
-  new AsyncLocalStorage<CallbackManager>();
-
-/**
- * Get the current callback manager
- * @default defaultCallbackManager if no callback manager is set
- */
-export function getCurrentCallbackManager() {
-  return (
-    callbackManagerAsyncLocalStorage.getStore() ?? Settings.callbackManager
-  );
-}
-
-export function runWithCallbackManager<Result>(
-  callbackManager: CallbackManager,
-  fn: () => Result,
-): Result {
-  return callbackManagerAsyncLocalStorage.run(callbackManager, fn);
+  withPrompt<Result>(prompt: PromptConfig, fn: () => Result): Result {
+    return this.#promptAsyncLocalStorage.run(prompt, fn);
+  }
 }
 
 export const llmFromSettingsOrContext = (serviceContext?: ServiceContext) => {

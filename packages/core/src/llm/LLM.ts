@@ -1,6 +1,6 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
-import { getCurrentCallbackManager } from "../Settings.js";
+import { Settings } from "../Settings.js";
 import {
   type Event,
   type EventType,
@@ -291,7 +291,7 @@ export class OpenAI extends BaseLLM {
     };
 
     //Now let's wrap our stream in a callback
-    const onLLMStream = getCurrentCallbackManager().onLLMStream;
+    const onLLMStream = Settings.callbackManager.onLLMStream;
 
     const chunk_stream: AsyncIterable<OpenAIStreamToken> =
       await this.session.openai.chat.completions.create({
@@ -837,7 +837,7 @@ export class Portkey extends BaseLLM {
     params?: Record<string, any>,
   ): AsyncIterable<ChatResponseChunk> {
     // Wrapping the stream in a callback.
-    const onLLMStream = getCurrentCallbackManager().onLLMStream;
+    const onLLMStream = Settings.callbackManager.onLLMStream;
 
     const chunkStream = await this.session.portkey.chatCompletions.create({
       messages,

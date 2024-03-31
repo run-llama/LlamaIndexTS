@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import { getCurrentCallbackManager } from "../Settings.js";
+import { Settings } from "../Settings.js";
 import {
   type Event,
   type EventType,
@@ -123,7 +123,7 @@ export class MistralAI extends BaseLLM {
     parentEvent,
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
     //Now let's wrap our stream in a callback
-    const onLLMStream = getCurrentCallbackManager().onLLMStream;
+    const onLLMStream = Settings.callbackManager.onLLMStream;
 
     const client = await this.session.getClient();
     const chunkStream = await client.chatStream(this.buildParams(messages));
