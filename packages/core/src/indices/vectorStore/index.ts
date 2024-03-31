@@ -15,12 +15,10 @@ import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
   embedModelFromSettingsOrContext,
+  getCurrentCallbackManager,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
-import {
-  getCurrentCallbackManager,
-  type Event,
-} from "../../callbacks/CallbackManager.js";
+import { type Event } from "../../callbacks/CallbackManager.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
 import type {
   BaseEmbedding,

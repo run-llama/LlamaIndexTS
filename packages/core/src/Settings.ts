@@ -5,17 +5,18 @@ import { OpenAI } from "./llm/LLM.js";
 import { PromptHelper } from "./PromptHelper.js";
 import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
 
+import { AsyncLocalStorage } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import type { BaseEmbedding } from "./embeddings/types.js";
 import type { LLM } from "./llm/types.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
-type PromptConfig = {
+export type PromptConfig = {
   llm?: string;
   lang?: string;
 };
 
-interface Config {
+export interface Config {
   prompt: PromptConfig;
   llm: LLM | null;
   promptHelper: PromptHelper | null;
@@ -26,8 +27,10 @@ interface Config {
   chunkOverlap?: number;
 }
 
-/* Global settings */
-export class GlobalSettings implements Config {
+/**
+ * @internal
+ */
+class GlobalSettings implements Config {
   private _prompt: PromptConfig = {};
   private _llm: LLM | null = null;
   private _promptHelper: PromptHelper | null = null;
@@ -39,7 +42,7 @@ export class GlobalSettings implements Config {
 
   get llm(): LLM {
     if (this._llm === null) {
-      return new OpenAI();
+      return (this._llm = new OpenAI());
     }
 
     return this._llm;
@@ -51,7 +54,7 @@ export class GlobalSettings implements Config {
 
   get promptHelper(): PromptHelper {
     if (this._promptHelper === null) {
-      return new PromptHelper();
+      return (this._promptHelper = new PromptHelper());
     }
 
     return this._promptHelper;
@@ -63,7 +66,7 @@ export class GlobalSettings implements Config {
 
   get embedModel(): BaseEmbedding {
     if (this._embedModel === null) {
-      return new OpenAIEmbedding();
+      return (this._embedModel = new OpenAIEmbedding());
     }
 
     return this._embedModel;
@@ -75,10 +78,10 @@ export class GlobalSettings implements Config {
 
   get nodeParser(): NodeParser {
     if (this._nodeParser === null) {
-      return new SimpleNodeParser({
+      return (this._nodeParser = new SimpleNodeParser({
         chunkSize: this._chunkSize,
         chunkOverlap: this._chunkOverlap,
-      });
+      }));
     }
 
     return this._nodeParser;
@@ -90,7 +93,7 @@ export class GlobalSettings implements Config {
 
   get callbackManager(): CallbackManager {
     if (this._callbackManager === null) {
-      return new CallbackManager();
+      return (this._callbackManager = new CallbackManager());
     }
 
     return this._callbackManager;
@@ -125,24 +128,25 @@ export class GlobalSettings implements Config {
   }
 }
 
-/* Proxy for global settings */
-export const Settings = new Proxy(new GlobalSettings(), {
-  get(target, prop) {
-    if (prop in target) {
-      return target[prop as keyof Config];
-    }
+const callbackManagerAsyncLocalStorage =
+  new AsyncLocalStorage<CallbackManager>();
 
-    return undefined;
-  },
+/**
+ * Get the current callback manager
+ * @default defaultCallbackManager if no callback manager is set
+ */
+export function getCurrentCallbackManager() {
+  return (
+    callbackManagerAsyncLocalStorage.getStore() ?? Settings.callbackManager
+  );
+}
 
-  set(target, prop, value) {
-    if (prop in target) {
-      target[prop as keyof Config] = value;
-    }
-
-    return true;
-  },
-});
+export function runWithCallbackManager<Result>(
+  callbackManager: CallbackManager,
+  fn: () => Result,
+): Result {
+  return callbackManagerAsyncLocalStorage.run(callbackManager, fn);
+}
 
 export const llmFromSettingsOrContext = (serviceContext?: ServiceContext) => {
   if (serviceContext?.llm) {
@@ -181,3 +185,5 @@ export const promptHelperFromSettingsOrContext = (
 
   return Settings.promptHelper;
 };
+
+export const Settings = new GlobalSettings();

@@ -1,4 +1,4 @@
-import { getCurrentCallbackManager } from "../callbacks/CallbackManager.js";
+import { getCurrentCallbackManager } from "../Settings.js";
 import type { ChatResponse, LLM, LLMChat, MessageContent } from "./types.js";
 
 export async function* streamConverter<S, D>(

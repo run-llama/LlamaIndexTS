@@ -1,6 +1,6 @@
 import { getEnv } from "@llamaindex/env";
+import { getCurrentCallbackManager } from "../Settings.js";
 import {
-  getCurrentCallbackManager,
   type Event,
   type EventType,
   type StreamCallbackResponse,

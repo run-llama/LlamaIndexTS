@@ -1,4 +1,4 @@
-import { getCurrentCallbackManager } from "llamaindex/callbacks/CallbackManager";
+import { Settings } from "llamaindex/Settings";
 import { OpenAI } from "llamaindex/llm";
 
 const llm = new OpenAI({
@@ -7,8 +7,7 @@ const llm = new OpenAI({
 
 let tokenCount = 0;
 
-// @todo: use GlobalSetting in the future
-getCurrentCallbackManager().addHandlers("llm-start", (event) => {
+Settings.callbackManager.addHandlers("llm-start", (event) => {
   const { messages } = event.detail.payload;
   tokenCount += llm.tokens(messages);
   console.log("Token count:", tokenCount);

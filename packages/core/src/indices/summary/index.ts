@@ -6,10 +6,10 @@ import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
+  getCurrentCallbackManager,
   llmFromSettingsOrContext,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
-import { getCurrentCallbackManager } from "../../callbacks/CallbackManager.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";

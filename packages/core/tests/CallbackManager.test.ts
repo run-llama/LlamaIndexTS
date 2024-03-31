@@ -11,14 +11,12 @@ import {
 import { Document } from "llamaindex/Node";
 import type { ServiceContext } from "llamaindex/ServiceContext";
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
+import { runWithCallbackManager } from "llamaindex/Settings";
 import type {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "llamaindex/callbacks/CallbackManager";
-import {
-  CallbackManager,
-  runWithCallbackManager,
-} from "llamaindex/callbacks/CallbackManager";
+import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import { SummaryIndex } from "llamaindex/indices/summary/index";
 import { VectorStoreIndex } from "llamaindex/indices/vectorStore/index";

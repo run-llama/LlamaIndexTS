@@ -1,5 +1,5 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
-import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
+import { CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
 
 /**
@@ -194,22 +194,4 @@ export class CallbackManager implements CallbackManagerMethods {
     }
     handlers.forEach((handler) => handler(new CustomEvent(event, { detail })));
   }
-}
-
-const defaultCallbackManager = new CallbackManager();
-const callbackAsyncLocalStorage = new AsyncLocalStorage<CallbackManager>();
-
-/**
- * Get the current callback manager
- * @default defaultCallbackManager if no callback manager is set
- */
-export function getCurrentCallbackManager() {
-  return callbackAsyncLocalStorage.getStore() ?? defaultCallbackManager;
-}
-
-export function runWithCallbackManager<Result>(
-  callbackManager: CallbackManager,
-  fn: () => Result,
-): Result {
-  return callbackAsyncLocalStorage.run(callbackManager, fn);
 }

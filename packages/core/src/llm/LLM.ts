@@ -1,7 +1,7 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
+import { getCurrentCallbackManager } from "../Settings.js";
 import {
-  getCurrentCallbackManager,
   type Event,
   type EventType,
   type OpenAIStreamToken,
