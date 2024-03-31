@@ -3,7 +3,7 @@ import { CallbackManager } from "../../callbacks/CallbackManager.js";
 
 const callbackManagerAsyncLocalStorage =
   new AsyncLocalStorage<CallbackManager>();
-let globalCallbackManager: CallbackManager | null;
+let globalCallbackManager: CallbackManager | null = null;
 
 export function getCallbackManager(): CallbackManager {
   if (globalCallbackManager === null) {
