@@ -31,14 +31,14 @@ export interface Config {
  * @internal
  */
 class GlobalSettings implements Config {
-  private _prompt: PromptConfig = {};
-  private _llm: LLM | null = null;
-  private _promptHelper: PromptHelper | null = null;
-  private _embedModel: BaseEmbedding | null = null;
-  private _nodeParser: NodeParser | null = null;
-  private _callbackManager: CallbackManager | null = null;
-  private _chunkSize?: number;
-  private _chunkOverlap?: number;
+  #prompt: PromptConfig = {};
+  #llm: LLM | null = null;
+  #promptHelper: PromptHelper | null = null;
+  #embedModel: BaseEmbedding | null = null;
+  #nodeParser: NodeParser | null = null;
+  #callbackManager: CallbackManager | null = null;
+  #chunkSize?: number;
+  #chunkOverlap?: number;
 
   #callbackManagerAsyncLocalStorage = new AsyncLocalStorage<CallbackManager>();
   #llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
@@ -50,15 +50,15 @@ class GlobalSettings implements Config {
   #promptAsyncLocalStorage = new AsyncLocalStorage<PromptConfig>();
 
   get llm(): LLM {
-    if (this._llm === null) {
-      this._llm = new OpenAI();
+    if (this.#llm === null) {
+      this.#llm = new OpenAI();
     }
 
-    return this.#llmAsyncLocalStorage.getStore() ?? this._llm;
+    return this.#llmAsyncLocalStorage.getStore() ?? this.#llm;
   }
 
   set llm(llm: LLM) {
-    this._llm = llm;
+    this.#llm = llm;
   }
 
   withLLM<Result>(llm: LLM, fn: () => Result): Result {
@@ -66,15 +66,15 @@ class GlobalSettings implements Config {
   }
 
   get promptHelper(): PromptHelper {
-    if (this._promptHelper === null) {
-      this._promptHelper = new PromptHelper();
+    if (this.#promptHelper === null) {
+      this.#promptHelper = new PromptHelper();
     }
 
-    return this.#promptHelperAsyncLocalStorage.getStore() ?? this._promptHelper;
+    return this.#promptHelperAsyncLocalStorage.getStore() ?? this.#promptHelper;
   }
 
   set promptHelper(promptHelper: PromptHelper) {
-    this._promptHelper = promptHelper;
+    this.#promptHelper = promptHelper;
   }
 
   withPromptHelper<Result>(
@@ -85,15 +85,15 @@ class GlobalSettings implements Config {
   }
 
   get embedModel(): BaseEmbedding {
-    if (this._embedModel === null) {
-      this._embedModel = new OpenAIEmbedding();
+    if (this.#embedModel === null) {
+      this.#embedModel = new OpenAIEmbedding();
     }
 
-    return this.#embedModelAsyncLocalStorage.getStore() ?? this._embedModel;
+    return this.#embedModelAsyncLocalStorage.getStore() ?? this.#embedModel;
   }
 
   set embedModel(embedModel: BaseEmbedding) {
-    this._embedModel = embedModel;
+    this.#embedModel = embedModel;
   }
 
   withEmbedModel<Result>(embedModel: BaseEmbedding, fn: () => Result): Result {
@@ -101,18 +101,18 @@ class GlobalSettings implements Config {
   }
 
   get nodeParser(): NodeParser {
-    if (this._nodeParser === null) {
-      this._nodeParser = new SimpleNodeParser({
-        chunkSize: this._chunkSize,
-        chunkOverlap: this._chunkOverlap,
+    if (this.#nodeParser === null) {
+      this.#nodeParser = new SimpleNodeParser({
+        chunkSize: this.#chunkSize,
+        chunkOverlap: this.#chunkOverlap,
       });
     }
 
-    return this.#nodeParserAsyncLocalStorage.getStore() ?? this._nodeParser;
+    return this.#nodeParserAsyncLocalStorage.getStore() ?? this.#nodeParser;
   }
 
   set nodeParser(nodeParser: NodeParser) {
-    this._nodeParser = nodeParser;
+    this.#nodeParser = nodeParser;
   }
 
   withNodeParser<Result>(nodeParser: NodeParser, fn: () => Result): Result {
@@ -120,17 +120,17 @@ class GlobalSettings implements Config {
   }
 
   get callbackManager(): CallbackManager {
-    if (this._callbackManager === null) {
-      this._callbackManager = new CallbackManager();
+    if (this.#callbackManager === null) {
+      this.#callbackManager = new CallbackManager();
     }
 
     return (
-      this.#callbackManagerAsyncLocalStorage.getStore() ?? this._callbackManager
+      this.#callbackManagerAsyncLocalStorage.getStore() ?? this.#callbackManager
     );
   }
 
   set callbackManager(callbackManager: CallbackManager) {
-    this._callbackManager = callbackManager;
+    this.#callbackManager = callbackManager;
   }
 
   withCallbackManager<Result>(
@@ -141,11 +141,11 @@ class GlobalSettings implements Config {
   }
 
   set chunkSize(chunkSize: number | undefined) {
-    this._chunkSize = chunkSize;
+    this.#chunkSize = chunkSize;
   }
 
   get chunkSize(): number | undefined {
-    return this.#chunkSizeAsyncLocalStorage.getStore() ?? this._chunkSize;
+    return this.#chunkSizeAsyncLocalStorage.getStore() ?? this.#chunkSize;
   }
 
   withChunkSize<Result>(chunkSize: number, fn: () => Result): Result {
@@ -153,11 +153,11 @@ class GlobalSettings implements Config {
   }
 
   get chunkOverlap(): number | undefined {
-    return this.#chunkOverlapAsyncLocalStorage.getStore() ?? this._chunkOverlap;
+    return this.#chunkOverlapAsyncLocalStorage.getStore() ?? this.#chunkOverlap;
   }
 
   set chunkOverlap(chunkOverlap: number | undefined) {
-    this._chunkOverlap = chunkOverlap;
+    this.#chunkOverlap = chunkOverlap;
   }
 
   withChunkOverlap<Result>(chunkOverlap: number, fn: () => Result): Result {
@@ -165,11 +165,11 @@ class GlobalSettings implements Config {
   }
 
   get prompt(): PromptConfig {
-    return this.#promptAsyncLocalStorage.getStore() ?? this._prompt;
+    return this.#promptAsyncLocalStorage.getStore() ?? this.#prompt;
   }
 
   set prompt(prompt: PromptConfig) {
-    this._prompt = prompt;
+    this.#prompt = prompt;
   }
 
   withPrompt<Result>(prompt: PromptConfig, fn: () => Result): Result {
