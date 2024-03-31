@@ -1,4 +1,4 @@
-import { Settings } from "../Settings.js";
+import { getCallbackManager } from "../internal/settings/callback-manager.js";
 import type { ChatResponse, LLM, LLMChat, MessageContent } from "./types.js";
 
 export async function* streamConverter<S, D>(
@@ -55,7 +55,7 @@ export function llmEvent(
     this: LLM,
     ...params: Parameters<LLMChat["chat"]>
   ): ReturnType<LLMChat["chat"]> {
-    Settings.callbackManager.dispatchEvent("llm-start", {
+    getCallbackManager().dispatchEvent("llm-start", {
       payload: {
         messages: params[0].messages,
       },
@@ -82,14 +82,14 @@ export function llmEvent(
           }
           yield chunk;
         }
-        Settings.callbackManager.dispatchEvent("llm-end", {
+        getCallbackManager().dispatchEvent("llm-end", {
           payload: {
             response: finalResponse,
           },
         });
       };
     } else {
-      Settings.callbackManager.dispatchEvent("llm-end", {
+      getCallbackManager().dispatchEvent("llm-end", {
         payload: {
           response,
         },

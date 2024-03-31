@@ -1,6 +1,5 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
-import { Settings } from "../Settings.js";
 import {
   type Event,
   type EventType,
@@ -12,6 +11,7 @@ import llamaTokenizer from "llama-tokenizer-js";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
+import { getCallbackManager } from "../internal/settings/callback-manager.js";
 import type { AnthropicSession } from "./anthropic.js";
 import { getAnthropicSession } from "./anthropic.js";
 import type { AzureOpenAIConfig } from "./azure.js";
@@ -291,7 +291,7 @@ export class OpenAI extends BaseLLM {
     };
 
     //Now let's wrap our stream in a callback
-    const onLLMStream = Settings.callbackManager.onLLMStream;
+    const onLLMStream = getCallbackManager().onLLMStream;
 
     const chunk_stream: AsyncIterable<OpenAIStreamToken> =
       await this.session.openai.chat.completions.create({
@@ -837,7 +837,7 @@ export class Portkey extends BaseLLM {
     params?: Record<string, any>,
   ): AsyncIterable<ChatResponseChunk> {
     // Wrapping the stream in a callback.
-    const onLLMStream = Settings.callbackManager.onLLMStream;
+    const onLLMStream = getCallbackManager().onLLMStream;
 
     const chunkStream = await this.session.portkey.chatCompletions.create({
       messages,

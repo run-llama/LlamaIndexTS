@@ -8,6 +8,11 @@ import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
 import { AsyncLocalStorage } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import type { BaseEmbedding } from "./embeddings/types.js";
+import {
+  getCallbackManager,
+  setCallbackManager,
+  withCallbackManager,
+} from "./internal/settings/callback-manager.js";
 import type { LLM } from "./llm/types.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
@@ -36,11 +41,9 @@ class GlobalSettings implements Config {
   #promptHelper: PromptHelper | null = null;
   #embedModel: BaseEmbedding | null = null;
   #nodeParser: NodeParser | null = null;
-  #callbackManager: CallbackManager | null = null;
   #chunkSize?: number;
   #chunkOverlap?: number;
 
-  #callbackManagerAsyncLocalStorage = new AsyncLocalStorage<CallbackManager>();
   #llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
   #promptHelperAsyncLocalStorage = new AsyncLocalStorage<PromptHelper>();
   #embedModelAsyncLocalStorage = new AsyncLocalStorage<BaseEmbedding>();
@@ -120,24 +123,18 @@ class GlobalSettings implements Config {
   }
 
   get callbackManager(): CallbackManager {
-    if (this.#callbackManager === null) {
-      this.#callbackManager = new CallbackManager();
-    }
-
-    return (
-      this.#callbackManagerAsyncLocalStorage.getStore() ?? this.#callbackManager
-    );
+    return getCallbackManager();
   }
 
   set callbackManager(callbackManager: CallbackManager) {
-    this.#callbackManager = callbackManager;
+    setCallbackManager(callbackManager);
   }
 
   withCallbackManager<Result>(
     callbackManager: CallbackManager,
     fn: () => Result,
   ): Result {
-    return this.#callbackManagerAsyncLocalStorage.run(callbackManager, fn);
+    return withCallbackManager(callbackManager, fn);
   }
 
   set chunkSize(chunkSize: number | undefined) {
