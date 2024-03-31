@@ -1,6 +1,5 @@
 import { OpenAIAgentWorker } from "llamaindex/agent/index";
 import { AgentRunner } from "llamaindex/agent/runner/base";
-import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAI } from "llamaindex/llm/LLM";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -19,16 +18,12 @@ describe("Agent Runner", () => {
   let agentRunner: AgentRunner;
 
   beforeEach(() => {
-    const callbackManager = new CallbackManager({});
-
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
-      callbackManager,
     });
 
     mockLlmGeneration({
       languageModel,
-      callbackManager,
     });
 
     agentRunner = new AgentRunner({

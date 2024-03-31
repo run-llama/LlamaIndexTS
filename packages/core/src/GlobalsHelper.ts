@@ -12,7 +12,7 @@ export enum Tokenizers {
 }
 
 /**
- * Helper class singleton
+ * @internal Helper class singleton
  */
 class GlobalsHelper {
   defaultTokenizer: {
@@ -58,6 +58,21 @@ class GlobalsHelper {
     return this.defaultTokenizer!.decode.bind(this.defaultTokenizer);
   }
 
+  /**
+   * @deprecated createEvent will be removed in the future,
+   *  please use `new CustomEvent(eventType, { detail: payload })` instead.
+   *
+   *  Also, `parentEvent` will not be used in the future,
+   *    use `AsyncLocalStorage` to track parent events instead.
+   *    @example - Usage of `AsyncLocalStorage`:
+   *    let id = 0;
+   *    const asyncLocalStorage = new AsyncLocalStorage<number>();
+   *    asyncLocalStorage.run(++id, async () => {
+   *      setTimeout(() => {
+   *        console.log('parent event id:', asyncLocalStorage.getStore()); // 1
+   *      }, 1000)
+   *    });
+   */
   createEvent({
     parentEvent,
     type,

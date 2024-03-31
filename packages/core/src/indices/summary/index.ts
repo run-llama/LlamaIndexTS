@@ -6,6 +6,7 @@ import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import { getCurrentCallbackManager } from "../../callbacks/CallbackManager.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
@@ -291,16 +292,14 @@ export class SummaryIndexRetriever implements BaseRetriever {
       score: 1,
     }));
 
-    if (this.index.serviceContext.callbackManager.onRetrieve) {
-      this.index.serviceContext.callbackManager.onRetrieve({
-        query,
-        nodes: result,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes: result,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
 
     return result;
   }
@@ -376,16 +375,14 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       results.push(...nodeWithScores);
     }
 
-    if (this.serviceContext.callbackManager.onRetrieve) {
-      this.serviceContext.callbackManager.onRetrieve({
-        query,
-        nodes: results,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes: results,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
 
     return results;
   }

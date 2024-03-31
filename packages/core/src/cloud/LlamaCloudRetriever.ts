@@ -5,6 +5,7 @@ import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { serviceContextFromDefaults } from "../ServiceContext.js";
+import { getCurrentCallbackManager } from "../callbacks/CallbackManager.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
@@ -80,16 +81,15 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
     const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
-    if (this.serviceContext.callbackManager.onRetrieve) {
-      this.serviceContext.callbackManager.onRetrieve({
-        query,
-        nodes,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
+
     return nodes;
   }
 

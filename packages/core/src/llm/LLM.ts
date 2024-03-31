@@ -1,11 +1,11 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
-import type {
-  CallbackManager,
-  Event,
-  EventType,
-  OpenAIStreamToken,
-  StreamCallbackResponse,
+import {
+  getCurrentCallbackManager,
+  type Event,
+  type EventType,
+  type OpenAIStreamToken,
+  type StreamCallbackResponse,
 } from "../callbacks/CallbackManager.js";
 
 import llamaTokenizer from "llama-tokenizer-js";
@@ -36,6 +36,7 @@ import type {
   LLMMetadata,
   MessageType,
 } from "./types.js";
+import { llmEvent } from "./utils.js";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
@@ -102,8 +103,6 @@ export class OpenAI extends BaseLLM {
     "apiKey" | "maxRetries" | "timeout"
   >;
 
-  callbackManager?: CallbackManager;
-
   constructor(
     init?: Partial<OpenAI> & {
       azure?: AzureOpenAIConfig;
@@ -155,8 +154,6 @@ export class OpenAI extends BaseLLM {
           ...this.additionalSessionOptions,
         });
     }
-
-    this.callbackManager = init?.callbackManager;
   }
 
   get metadata() {
@@ -230,6 +227,7 @@ export class OpenAI extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  @llmEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
@@ -293,9 +291,7 @@ export class OpenAI extends BaseLLM {
     };
 
     //Now let's wrap our stream in a callback
-    const onLLMStream = this.callbackManager?.onLLMStream
-      ? this.callbackManager.onLLMStream
-      : () => {};
+    const onLLMStream = getCurrentCallbackManager().onLLMStream;
 
     const chunk_stream: AsyncIterable<OpenAIStreamToken> =
       await this.session.openai.chat.completions.create({
@@ -566,6 +562,7 @@ If a question does not make any sense, or is not factually coherent, explain why
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  @llmEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
@@ -653,8 +650,6 @@ export class Anthropic extends BaseLLM {
   timeout?: number;
   session: AnthropicSession;
 
-  callbackManager?: CallbackManager;
-
   constructor(init?: Partial<Anthropic>) {
     super();
     this.model = init?.model ?? "claude-3-opus";
@@ -672,8 +667,6 @@ export class Anthropic extends BaseLLM {
         maxRetries: this.maxRetries,
         timeout: this.timeout,
       });
-
-    this.callbackManager = init?.callbackManager;
   }
 
   tokens(messages: ChatMessage[]): number {
@@ -715,6 +708,7 @@ export class Anthropic extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  @llmEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
@@ -790,7 +784,6 @@ export class Portkey extends BaseLLM {
   mode?: string = undefined;
   llms?: [LLMOptions] | null = undefined;
   session: PortkeySession;
-  callbackManager?: CallbackManager;
 
   constructor(init?: Partial<Portkey>) {
     super();
@@ -804,7 +797,6 @@ export class Portkey extends BaseLLM {
       llms: this.llms,
       mode: this.mode,
     });
-    this.callbackManager = init?.callbackManager;
   }
 
   tokens(messages: ChatMessage[]): number {
@@ -819,6 +811,7 @@ export class Portkey extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  @llmEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
@@ -844,9 +837,7 @@ export class Portkey extends BaseLLM {
     params?: Record<string, any>,
   ): AsyncIterable<ChatResponseChunk> {
     // Wrapping the stream in a callback.
-    const onLLMStream = this.callbackManager?.onLLMStream
-      ? this.callbackManager.onLLMStream
-      : () => {};
+    const onLLMStream = getCurrentCallbackManager().onLLMStream;
 
     const chunkStream = await this.session.portkey.chatCompletions.create({
       messages,

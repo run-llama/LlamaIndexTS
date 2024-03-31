@@ -5,6 +5,7 @@ import {
   MetadataMode,
   QdrantVectorStore,
   VectorStoreIndex,
+  runWithCallbackManager,
   serviceContextFromDefaults,
   storageContextFromDefaults,
 } from "llamaindex";
@@ -36,19 +37,21 @@ async function main() {
     const ctx = await storageContextFromDefaults({ vectorStore: qdrantVs });
 
     console.log("Embedding documents and adding to index");
-    const index = await VectorStoreIndex.fromDocuments(docs, {
-      storageContext: ctx,
-      serviceContext: serviceContextFromDefaults({
-        callbackManager: new CallbackManager({
-          onRetrieve: (data) => {
-            console.log(
-              "The retrieved nodes are:",
-              data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
-            );
-          },
-        }),
+    const index = await runWithCallbackManager(
+      new CallbackManager({
+        onRetrieve: (data) => {
+          console.log(
+            "The retrieved nodes are:",
+            data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
+          );
+        },
       }),
-    });
+      () =>
+        VectorStoreIndex.fromDocuments(docs, {
+          storageContext: ctx,
+          serviceContext: serviceContextFromDefaults(),
+        }),
+    );
 
     console.log(
       "Querying index with no filters: Expected output: Brown probably",

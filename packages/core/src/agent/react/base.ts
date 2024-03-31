@@ -1,4 +1,3 @@
-import type { CallbackManager } from "../../callbacks/CallbackManager.js";
 import type { ChatMessage, LLM } from "../../llm/index.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { BaseTool } from "../../types.js";
@@ -13,7 +12,6 @@ type ReActAgentParams = {
   verbose?: boolean;
   maxInteractions?: number;
   defaultToolChoice?: string;
-  callbackManager?: CallbackManager;
   toolRetriever?: ObjectRetriever;
 };
 
@@ -31,12 +29,10 @@ export class ReActAgent extends AgentRunner {
     verbose,
     maxInteractions = 10,
     defaultToolChoice = "auto",
-    callbackManager,
     toolRetriever,
   }: Partial<ReActAgentParams>) {
     const stepEngine = new ReActAgentWorker({
       tools: tools ?? [],
-      callbackManager,
       llm,
       maxInteractions,
       toolRetriever,
@@ -46,7 +42,6 @@ export class ReActAgent extends AgentRunner {
     super({
       agentWorker: stepEngine,
       memory,
-      callbackManager,
       defaultToolChoice,
       chatHistory: prefixMessages,
     });
