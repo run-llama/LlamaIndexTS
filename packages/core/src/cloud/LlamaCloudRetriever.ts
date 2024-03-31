@@ -3,8 +3,7 @@ import { globalsHelper } from "../GlobalsHelper.js";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
-import { callbackManagerFromSettingsOrContext } from "../Settings.js";
-import type { CallbackManager } from "../callbacks/CallbackManager.js";
+import { getCurrentCallbackManager } from "../callbacks/CallbackManager.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
@@ -20,7 +19,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
   retrieveParams: CloudRetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
-  callbackManager: CallbackManager;
 
   private resultNodesToNodeWithScore(
     nodes: PlatformApi.TextNodeWithScore[],
@@ -44,10 +42,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
     if (params.projectName) {
       this.projectName = params.projectName;
     }
-
-    this.callbackManager = callbackManagerFromSettingsOrContext(
-      params.serviceContext,
-    );
   }
 
   private async getClient(): Promise<PlatformApiClient> {
@@ -68,7 +62,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
       projectName: this.projectName,
       pipelineName: this.pipelineName,
     });
-    if (pipelines.length !== 1 && !pipelines[0].id) {
+    if (pipelines.length !== 1 && !pipelines[0]?.id) {
       throw new Error(
         `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
       );
@@ -83,16 +77,15 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
     const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
-    if (this.callbackManager.onRetrieve) {
-      this.callbackManager.onRetrieve({
-        query,
-        nodes,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
+
     return nodes;
   }
 }

@@ -6,10 +6,10 @@ import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
-  callbackManagerFromSettingsOrContext,
   llmFromSettingsOrContext,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
+import { getCurrentCallbackManager } from "../../callbacks/CallbackManager.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
@@ -298,20 +298,14 @@ export class SummaryIndexRetriever implements BaseRetriever {
       score: 1,
     }));
 
-    const callbackManager = callbackManagerFromSettingsOrContext(
-      this.index.serviceContext,
-    );
-
-    if (callbackManager.onRetrieve) {
-      callbackManager.onRetrieve({
-        query,
-        nodes: result,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes: result,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
 
     return result;
   }
@@ -386,20 +380,14 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       results.push(...nodeWithScores);
     }
 
-    const callbackManager = callbackManagerFromSettingsOrContext(
-      this.serviceContext,
-    );
-
-    if (callbackManager.onRetrieve) {
-      callbackManager.onRetrieve({
-        query,
-        nodes: results,
-        event: globalsHelper.createEvent({
-          parentEvent,
-          type: "retrieve",
-        }),
-      });
-    }
+    getCurrentCallbackManager().onRetrieve({
+      query,
+      nodes: results,
+      event: globalsHelper.createEvent({
+        parentEvent,
+        type: "retrieve",
+      }),
+    });
 
     return results;
   }

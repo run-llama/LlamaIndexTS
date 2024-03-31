@@ -1,5 +1,4 @@
 import { randomUUID } from "@llamaindex/env";
-import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import { AgentChatResponse } from "../../engines/chat/index.js";
 import type { ChatResponse, LLM } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
@@ -23,7 +22,6 @@ type ReActAgentWorkerParams = {
   maxInteractions?: number;
   reactChatFormatter?: ReActChatFormatter | undefined;
   outputParser?: ReActOutputParser | undefined;
-  callbackManager?: CallbackManager | undefined;
   verbose?: boolean | undefined;
   toolRetriever?: ObjectRetriever | undefined;
 };
@@ -69,8 +67,6 @@ export class ReActAgentWorker implements AgentWorker {
   reactChatFormatter: ReActChatFormatter;
   outputParser: ReActOutputParser;
 
-  callbackManager: CallbackManager;
-
   _getTools: (message: string) => Promise<BaseTool[]>;
 
   constructor({
@@ -79,12 +75,10 @@ export class ReActAgentWorker implements AgentWorker {
     maxInteractions,
     reactChatFormatter,
     outputParser,
-    callbackManager,
     verbose,
     toolRetriever,
   }: ReActAgentWorkerParams) {
     this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
-    this.callbackManager = callbackManager || new CallbackManager();
 
     this.maxInteractions = maxInteractions ?? 10;
     this.reactChatFormatter = reactChatFormatter ?? new ReActChatFormatter();

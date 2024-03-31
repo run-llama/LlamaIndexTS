@@ -152,16 +152,6 @@ export const llmFromSettingsOrContext = (serviceContext?: ServiceContext) => {
   return Settings.llm;
 };
 
-export const callbackManagerFromSettingsOrContext = (
-  serviceContext?: ServiceContext,
-) => {
-  if (serviceContext?.callbackManager) {
-    return serviceContext.callbackManager;
-  }
-
-  return Settings.callbackManager;
-};
-
 export const nodeParserFromSettingsOrContext = (
   serviceContext?: ServiceContext,
 ) => {

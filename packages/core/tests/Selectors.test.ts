@@ -22,7 +22,6 @@ describe("LLMSelector", () => {
 
     mocStructuredkLlmGeneration({
       languageModel,
-      callbackManager: serviceContext.callbackManager,
     });
 
     const selector = new LLMSingleSelector({

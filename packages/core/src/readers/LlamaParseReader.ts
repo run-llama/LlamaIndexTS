@@ -3,7 +3,7 @@ import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
 import type { FileReader } from "./type.js";
 
-type ResultType = "text" | "markdown";
+type ResultType = "text" | "markdown" | "json";
 
 /**
  * Represents a reader for parsing files using the LlamaParse API.

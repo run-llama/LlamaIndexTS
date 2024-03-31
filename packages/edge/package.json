@@ -24,6 +24,7 @@
     "chromadb": "~1.7.3",
     "cohere-ai": "^7.7.5",
     "js-tiktoken": "^1.0.10",
+    "llama-tokenizer-js": "^1.2.1",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
     "mammoth": "^1.6.0",
@@ -40,8 +41,8 @@
     "rake-modified": "^1.0.8",
     "replicate": "^0.25.2",
     "string-strip-html": "^13.4.6",
-    "wink-nlp": "^1.14.3",
-    "wikipedia": "^2.1.2"
+    "wikipedia": "^2.1.2",
+    "wink-nlp": "^1.14.3"
   },
   "engines": {
     "node": ">=18.0.0"
