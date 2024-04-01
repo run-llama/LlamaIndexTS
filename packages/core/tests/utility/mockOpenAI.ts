@@ -68,7 +68,7 @@ export function mockLlmToolCallGeneration({
   callbackManager,
 }: {
   languageModel: OpenAI;
-  callbackManager: CallbackManager;
+  callbackManager?: CallbackManager;
 }) {
   vi.spyOn(languageModel, "chat").mockImplementation(
     () =>
@@ -119,7 +119,7 @@ export function mocStructuredkLlmGeneration({
   callbackManager,
 }: {
   languageModel: OpenAI;
-  callbackManager: CallbackManager;
+  callbackManager?: CallbackManager;
 }) {
   vi.spyOn(languageModel, "chat").mockImplementation(
     async ({ messages, parentEvent }: LLMChatParamsBase) => {

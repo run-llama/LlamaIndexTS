@@ -1,6 +1,5 @@
 import { randomUUID } from "@llamaindex/env";
 import { Response } from "../../Response.js";
-import type { CallbackManager } from "../../callbacks/CallbackManager.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
@@ -79,7 +78,6 @@ type OpenAIAgentWorkerParams = {
   prefixMessages?: ChatMessage[];
   verbose?: boolean;
   maxFunctionCalls?: number;
-  callbackManager?: CallbackManager | undefined;
   toolRetriever?: ObjectRetriever;
 };
 
@@ -98,7 +96,6 @@ export class OpenAIAgentWorker implements AgentWorker {
   private maxFunctionCalls: number;
 
   public prefixMessages: ChatMessage[];
-  public callbackManager: CallbackManager | undefined;
 
   private _getTools: (input: string) => Promise<BaseTool[]>;
 
@@ -111,14 +108,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     prefixMessages,
     verbose,
     maxFunctionCalls = DEFAULT_MAX_FUNCTION_CALLS,
-    callbackManager,
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
     this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
     this.verbose = verbose || false;
     this.maxFunctionCalls = maxFunctionCalls;
     this.prefixMessages = prefixMessages || [];
-    this.callbackManager = callbackManager || this.llm.callbackManager;
 
     if (tools.length > 0 && toolRetriever) {
       throw new Error("Cannot specify both tools and tool_retriever");

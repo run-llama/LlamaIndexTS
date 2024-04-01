@@ -25,7 +25,6 @@
     "chromadb": "~1.7.3",
     "cohere-ai": "^7.7.5",
     "js-tiktoken": "^1.0.10",
-    "llama-tokenizer-js": "^1.2.1",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
     "mammoth": "^1.6.0",
@@ -42,8 +41,8 @@
     "rake-modified": "^1.0.8",
     "replicate": "^0.25.2",
     "string-strip-html": "^13.4.6",
-    "wikipedia": "^2.1.2",
-    "wink-nlp": "^1.14.3"
+    "wink-nlp": "^1.14.3",
+    "wikipedia": "^2.1.2"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.9",
@@ -67,186 +66,6 @@
       "require": {
         "types": "./dist/type/index.d.ts",
         "default": "./dist/cjs/index.js"
-      }
-    },
-    "./agent": {
-      "import": {
-        "types": "./dist/type/agent/index.d.ts",
-        "default": "./dist/agent/index.js"
-      },
-      "require": {
-        "types": "./dist/type/agent/index.d.ts",
-        "default": "./dist/cjs/agent/index.js"
-      }
-    },
-    "./cloud": {
-      "import": {
-        "types": "./dist/type/cloud/index.d.ts",
-        "default": "./dist/cloud/index.js"
-      },
-      "require": {
-        "types": "./dist/type/cloud/index.d.ts",
-        "default": "./dist/cjs/cloud/index.js"
-      }
-    },
-    "./embeddings": {
-      "import": {
-        "types": "./dist/type/embeddings/index.d.ts",
-        "default": "./dist/embeddings/index.js"
-      },
-      "require": {
-        "types": "./dist/type/embeddings/index.d.ts",
-        "default": "./dist/cjs/embeddings/index.js"
-      }
-    },
-    "./engines": {
-      "import": {
-        "types": "./dist/type/engines/index.d.ts",
-        "default": "./dist/engines/index.js"
-      },
-      "require": {
-        "types": "./dist/type/engines/index.d.ts",
-        "default": "./dist/cjs/engines/index.js"
-      }
-    },
-    "./evaluation": {
-      "import": {
-        "types": "./dist/type/evaluation/index.d.ts",
-        "default": "./dist/evaluation/index.js"
-      },
-      "require": {
-        "types": "./dist/type/evaluation/index.d.ts",
-        "default": "./dist/cjs/evaluation/index.js"
-      }
-    },
-    "./extractors": {
-      "import": {
-        "types": "./dist/type/extractors/index.d.ts",
-        "default": "./dist/extractors/index.js"
-      },
-      "require": {
-        "types": "./dist/type/extractors/index.d.ts",
-        "default": "./dist/cjs/extractors/index.js"
-      }
-    },
-    "./indices": {
-      "import": {
-        "types": "./dist/type/indices/index.d.ts",
-        "default": "./dist/indices/index.js"
-      },
-      "require": {
-        "types": "./dist/type/indices/index.d.ts",
-        "default": "./dist/cjs/indices/index.js"
-      }
-    },
-    "./ingestion": {
-      "import": {
-        "types": "./dist/type/ingestion/index.d.ts",
-        "default": "./dist/ingestion/index.js"
-      },
-      "require": {
-        "types": "./dist/type/ingestion/index.d.ts",
-        "default": "./dist/cjs/ingestion/index.js"
-      }
-    },
-    "./llm": {
-      "import": {
-        "types": "./dist/type/llm/index.d.ts",
-        "default": "./dist/llm/index.js"
-      },
-      "require": {
-        "types": "./dist/type/llm/index.d.ts",
-        "default": "./dist/cjs/llm/index.js"
-      }
-    },
-    "./nodeParsers": {
-      "import": {
-        "types": "./dist/type/nodeParsers/index.d.ts",
-        "default": "./dist/nodeParsers/index.js"
-      },
-      "require": {
-        "types": "./dist/type/nodeParsers/index.d.ts",
-        "default": "./dist/cjs/nodeParsers/index.js"
-      }
-    },
-    "./objects": {
-      "import": {
-        "types": "./dist/type/objects/index.d.ts",
-        "default": "./dist/objects/index.js"
-      },
-      "require": {
-        "types": "./dist/type/objects/index.d.ts",
-        "default": "./dist/cjs/objects/index.js"
-      }
-    },
-    "./postprocessors": {
-      "import": {
-        "types": "./dist/type/postprocessors/index.d.ts",
-        "default": "./dist/postprocessors/index.js"
-      },
-      "require": {
-        "types": "./dist/type/postprocessors/index.d.ts",
-        "default": "./dist/cjs/postprocessors/index.js"
-      }
-    },
-    "./prompts": {
-      "import": {
-        "types": "./dist/type/prompts/index.d.ts",
-        "default": "./dist/prompts/index.js"
-      },
-      "require": {
-        "types": "./dist/type/prompts/index.d.ts",
-        "default": "./dist/cjs/prompts/index.js"
-      }
-    },
-    "./readers": {
-      "import": {
-        "types": "./dist/type/readers/index.d.ts",
-        "default": "./dist/readers/index.js"
-      },
-      "require": {
-        "types": "./dist/type/readers/index.d.ts",
-        "default": "./dist/cjs/readers/index.js"
-      }
-    },
-    "./selectors": {
-      "import": {
-        "types": "./dist/type/selectors/index.d.ts",
-        "default": "./dist/selectors/index.js"
-      },
-      "require": {
-        "types": "./dist/type/selectors/index.d.ts",
-        "default": "./dist/cjs/selectors/index.js"
-      }
-    },
-    "./storage": {
-      "import": {
-        "types": "./dist/type/storage/index.d.ts",
-        "default": "./dist/storage/index.js"
-      },
-      "require": {
-        "types": "./dist/type/storage/index.d.ts",
-        "default": "./dist/cjs/storage/index.js"
-      }
-    },
-    "./synthesizers": {
-      "import": {
-        "types": "./dist/type/synthesizers/index.d.ts",
-        "default": "./dist/synthesizers/index.js"
-      },
-      "require": {
-        "types": "./dist/type/synthesizers/index.d.ts",
-        "default": "./dist/cjs/synthesizers/index.js"
-      }
-    },
-    "./tools": {
-      "import": {
-        "types": "./dist/type/tools/index.d.ts",
-        "default": "./dist/tools/index.js"
-      },
-      "require": {
-        "types": "./dist/type/tools/index.d.ts",
-        "default": "./dist/cjs/tools/index.js"
       }
     },
     "./*": {

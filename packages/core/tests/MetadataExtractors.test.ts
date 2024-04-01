@@ -1,11 +1,6 @@
 import { Document } from "llamaindex/Node";
 import type { ServiceContext } from "llamaindex/ServiceContext";
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
-import type {
-  RetrievalCallbackResponse,
-  StreamCallbackResponse,
-} from "llamaindex/callbacks/CallbackManager";
-import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import {
   KeywordExtractor,
@@ -15,15 +10,7 @@ import {
 } from "llamaindex/extractors/index";
 import { OpenAI } from "llamaindex/llm/LLM";
 import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockEmbeddingModel,
@@ -39,40 +26,22 @@ vi.mock("llamaindex/llm/open_ai", () => {
 
 describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   let serviceContext: ServiceContext;
-  let streamCallbackData: StreamCallbackResponse[] = [];
-  let retrieveCallbackData: RetrievalCallbackResponse[] = [];
 
   beforeAll(async () => {
-    const callbackManager = new CallbackManager({
-      onLLMStream: (data) => {
-        streamCallbackData.push(data);
-      },
-      onRetrieve: (data) => {
-        retrieveCallbackData.push(data);
-      },
-    });
-
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
-      callbackManager,
     });
 
-    mockLlmGeneration({ languageModel, callbackManager });
+    mockLlmGeneration({ languageModel });
 
     const embedModel = new OpenAIEmbedding();
 
     mockEmbeddingModel(embedModel);
 
     serviceContext = serviceContextFromDefaults({
-      callbackManager,
       llm: languageModel,
       embedModel,
     });
-  });
-
-  beforeEach(() => {
-    streamCallbackData = [];
-    retrieveCallbackData = [];
   });
 
   afterAll(() => {

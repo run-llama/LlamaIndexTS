@@ -1,5 +1,4 @@
 import { randomUUID } from "@llamaindex/env";
-import { CallbackManager } from "../../callbacks/CallbackManager.js";
 import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
   AgentChatResponse,
@@ -35,7 +34,6 @@ type AgentRunnerParams = {
   state?: AgentState;
   memory?: BaseMemory;
   llm?: LLM;
-  callbackManager?: CallbackManager;
   initTaskStateKwargs?: Record<string, any>;
   deleteTaskOnFinish?: boolean;
   defaultToolChoice?: string;
@@ -45,7 +43,6 @@ export class AgentRunner extends BaseAgentRunner {
   agentWorker: AgentWorker;
   state: AgentState;
   memory: BaseMemory;
-  callbackManager: CallbackManager;
   initTaskStateKwargs: Record<string, any>;
   deleteTaskOnFinish: boolean;
   defaultToolChoice: string;
@@ -63,7 +60,6 @@ export class AgentRunner extends BaseAgentRunner {
       new ChatMemoryBuffer({
         chatHistory: params.chatHistory,
       });
-    this.callbackManager = params.callbackManager ?? new CallbackManager();
     this.initTaskStateKwargs = params.initTaskStateKwargs ?? {};
     this.deleteTaskOnFinish = params.deleteTaskOnFinish ?? false;
     this.defaultToolChoice = params.defaultToolChoice ?? "auto";

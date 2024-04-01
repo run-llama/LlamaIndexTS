@@ -1,5 +1,5 @@
 import { ok } from "@llamaindex/env";
-import type { CallbackManager, Event } from "../callbacks/CallbackManager.js";
+import type { Event } from "../callbacks/CallbackManager.js";
 import { BaseEmbedding } from "../embeddings/types.js";
 import type {
   ChatMessage,
@@ -35,7 +35,6 @@ export class Ollama extends BaseEmbedding implements LLM {
   contextWindow: number = 4096;
   requestTimeout: number = 60 * 1000; // Default is 60 seconds
   additionalChatOptions?: Record<string, unknown>;
-  callbackManager?: CallbackManager;
 
   protected modelMetadata: Partial<LLMMetadata>;
 

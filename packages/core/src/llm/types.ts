@@ -1,15 +1,49 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { Event } from "../callbacks/CallbackManager.js";
+import { type Event } from "../callbacks/CallbackManager.js";
+
+type LLMBaseEvent<
+  Type extends string,
+  Payload extends Record<string, unknown>,
+> = CustomEvent<{
+  payload: Payload;
+}>;
+
+export type LLMStartEvent = LLMBaseEvent<
+  "llm-start",
+  {
+    messages: ChatMessage[];
+  }
+>;
+export type LLMEndEvent = LLMBaseEvent<
+  "llm-end",
+  {
+    response: ChatResponse;
+  }
+>;
+
+declare module "llamaindex" {
+  interface LlamaIndexEventMaps {
+    "llm-start": LLMStartEvent;
+    "llm-end": LLMEndEvent;
+  }
+}
+
+/**
+ * @internal
+ */
+export interface LLMChat {
+  chat(
+    params: LLMChatParamsStreaming | LLMChatParamsNonStreaming,
+  ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>>;
+}
 
 /**
  * Unified language model interface
  */
-export interface LLM {
+export interface LLM extends LLMChat {
   metadata: LLMMetadata;
   /**
    * Get a chat response from the LLM
-   *
-   * @param params
    */
   chat(
     params: LLMChatParamsStreaming,
@@ -18,7 +52,6 @@ export interface LLM {
 
   /**
    * Get a prompt completion from the LLM
-   * @param params
    */
   complete(
     params: LLMCompletionParamsStreaming,

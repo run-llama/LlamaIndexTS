@@ -1,5 +1,4 @@
 import { OpenAIAgent } from "llamaindex/agent/index";
-import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAI } from "llamaindex/llm/index";
 import { FunctionTool } from "llamaindex/tools/index";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -35,16 +34,12 @@ describe("OpenAIAgent", () => {
   let openaiAgent: OpenAIAgent;
 
   beforeEach(() => {
-    const callbackManager = new CallbackManager({});
-
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
-      callbackManager,
     });
 
     mockLlmToolCallGeneration({
       languageModel,
-      callbackManager,
     });
 
     const sumFunctionTool = new FunctionTool(sumNumbers, {

@@ -1,6 +1,7 @@
 ---
 "llamaindex": patch
+"@llamaindex/env": patch
 "@llamaindex/edge": patch
 ---
 
-feat: support calculate Llama2 model tokens size
+feat: improve CallbackManager
