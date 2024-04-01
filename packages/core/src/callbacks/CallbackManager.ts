@@ -135,18 +135,14 @@ export class CallbackManager implements CallbackManagerMethods {
    * @deprecated will be removed in the next major version
    */
   set onLLMStream(_: never) {
-    throw new Error(
-      "onLLMStream is deprecated. Use addHandlers('stream') instead",
-    );
+    throw new Error("onLLMStream is deprecated. Use on('stream') instead");
   }
 
   /**
    * @deprecated will be removed in the next major version
    */
   set onRetrieve(_: never) {
-    throw new Error(
-      "onRetrieve is deprecated. Use `addHandlers('retrieve')` instead",
-    );
+    throw new Error("onRetrieve is deprecated. Use `on('retrieve')` instead");
   }
 
   #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<CustomEvent>[]>();
