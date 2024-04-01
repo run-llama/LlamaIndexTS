@@ -15,11 +15,6 @@ import { getAppBaseUrl, getClient } from "./utils.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
-const defaultTransformations: TransformComponent[] = [
-  new OpenAIEmbedding(),
-  new SimpleNodeParser(),
-];
-
 export class LlamaCloudIndex {
   params: CloudConstructorParams;
 
@@ -34,6 +29,11 @@ export class LlamaCloudIndex {
       verbose?: boolean;
     } & CloudConstructorParams,
   ): Promise<LlamaCloudIndex> {
+    const defaultTransformations: TransformComponent[] = [
+      new OpenAIEmbedding(),
+      new SimpleNodeParser(),
+    ];
+
     const appUrl = getAppBaseUrl(params.baseUrl);
 
     const client = await getClient({ ...params, baseUrl: appUrl });
