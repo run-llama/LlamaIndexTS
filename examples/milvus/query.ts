@@ -1,8 +1,4 @@
-import {
-  MilvusVectorStore,
-  serviceContextFromDefaults,
-  VectorStoreIndex,
-} from "llamaindex";
+import { MilvusVectorStore, VectorStoreIndex } from "llamaindex";
 
 const collectionName = "movie_reviews";
 
@@ -10,8 +6,7 @@ async function main() {
   try {
     const milvus = new MilvusVectorStore({ collection: collectionName });
 
-    const ctx = serviceContextFromDefaults();
-    const index = await VectorStoreIndex.fromVectorStore(milvus, ctx);
+    const index = await VectorStoreIndex.fromVectorStore(milvus);
 
     const retriever = await index.asRetriever({ similarityTopK: 20 });
 

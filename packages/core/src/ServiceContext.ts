@@ -1,8 +1,8 @@
 import { PromptHelper } from "./PromptHelper.js";
 import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
 import type { BaseEmbedding } from "./embeddings/types.js";
-import type { LLM } from "./llm/index.js";
-import { OpenAI } from "./llm/index.js";
+import { OpenAI } from "./llm/LLM.js";
+import type { LLM } from "./llm/types.js";
 import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 

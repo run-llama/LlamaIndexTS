@@ -68,6 +68,10 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./internal/*": {
+      "import": "./dist/not-allow.js",
+      "require": "./dist/cjs/not-allow.js"
+    },
     "./*": {
       "import": {
         "types": "./dist/type/*.d.ts",

@@ -1,17 +1,15 @@
 import { FireworksEmbedding, FireworksLLM, VectorStoreIndex } from "llamaindex";
 import { PDFReader } from "llamaindex/readers/PDFReader";
 
-import { serviceContextFromDefaults } from "llamaindex";
+import { Settings } from "llamaindex";
 
-const embedModel = new FireworksEmbedding({
-  model: "nomic-ai/nomic-embed-text-v1.5",
-});
-
-const llm = new FireworksLLM({
+Settings.llm = new FireworksLLM({
   model: "accounts/fireworks/models/mixtral-8x7b-instruct",
 });
 
-const serviceContext = serviceContextFromDefaults({ llm, embedModel });
+Settings.embedModel = new FireworksEmbedding({
+  model: "nomic-ai/nomic-embed-text-v1.5",
+});
 
 async function main() {
   // Load PDF
@@ -19,9 +17,7 @@ async function main() {
   const documents = await reader.loadData("../data/brk-2022.pdf");
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
-  const index = await VectorStoreIndex.fromDocuments(documents, {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments(documents);
 
   // Query the index
   const queryEngine = index.asQueryEngine();

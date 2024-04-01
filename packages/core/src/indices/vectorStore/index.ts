@@ -13,11 +13,12 @@ import {
 } from "../../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import {
-  getCurrentCallbackManager,
-  type Event,
-} from "../../callbacks/CallbackManager.js";
+  Settings,
+  embedModelFromSettingsOrContext,
+  nodeParserFromSettingsOrContext,
+} from "../../Settings.js";
+import { type Event } from "../../callbacks/CallbackManager.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
 import type {
   BaseEmbedding,
@@ -79,7 +80,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     super(init);
     this.indexStore = init.indexStore;
     this.vectorStore = init.vectorStore ?? init.storageContext.vectorStore;
-    this.embedModel = init.serviceContext.embedModel;
+    this.embedModel = embedModelFromSettingsOrContext(init.serviceContext);
     this.imageVectorStore =
       init.imageVectorStore ?? init.storageContext.imageVectorStore;
     if (this.imageVectorStore) {
@@ -97,8 +98,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   ): Promise<VectorStoreIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
-    const serviceContext =
-      options.serviceContext ?? serviceContextFromDefaults({});
+    const serviceContext = options.serviceContext;
     const indexStore = storageContext.indexStore;
     const docStore = storageContext.docStore;
 
@@ -222,7 +222,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
         : DocStoreStrategy.DUPLICATES_ONLY);
     args.storageContext =
       args.storageContext ?? (await storageContextFromDefaults({}));
-    args.serviceContext = args.serviceContext ?? serviceContextFromDefaults({});
+    args.serviceContext = args.serviceContext;
     const docStore = args.storageContext.docStore;
 
     if (args.logProgress) {
@@ -237,7 +237,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     );
     args.nodes = await runTransformations(
       documents,
-      [args.serviceContext.nodeParser],
+      [nodeParserFromSettingsOrContext(args.serviceContext)],
       {},
       { docStoreStrategy },
     );
@@ -249,7 +249,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
   static async fromVectorStore(
     vectorStore: VectorStore,
-    serviceContext: ServiceContext,
+    serviceContext?: ServiceContext,
     imageVectorStore?: VectorStore,
   ) {
     if (!vectorStore.storesText) {
@@ -424,7 +424,8 @@ export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
   similarityTopK: number;
   imageSimilarityTopK: number;
-  private serviceContext: ServiceContext;
+
+  serviceContext?: ServiceContext;
 
   constructor({
     index,
@@ -491,7 +492,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     nodesWithScores: NodeWithScore<Metadata>[],
     parentEvent: Event | undefined,
   ) {
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.onRetrieve({
       query,
       nodes: nodesWithScores,
       event: globalsHelper.createEvent({
@@ -539,9 +540,5 @@ export class VectorIndexRetriever implements BaseRetriever {
     }
 
     return nodesWithScores;
-  }
-
-  getServiceContext(): ServiceContext {
-    return this.serviceContext;
   }
 }

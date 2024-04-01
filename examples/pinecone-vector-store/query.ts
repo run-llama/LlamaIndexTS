@@ -1,8 +1,4 @@
-import {
-  PineconeVectorStore,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { PineconeVectorStore, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   const readline = require("readline").createInterface({
@@ -13,8 +9,7 @@ async function main() {
   try {
     const pcvs = new PineconeVectorStore();
 
-    const ctx = serviceContextFromDefaults();
-    const index = await VectorStoreIndex.fromVectorStore(pcvs, ctx);
+    const index = await VectorStoreIndex.fromVectorStore(pcvs);
 
     // Query the index
     const queryEngine = await index.asQueryEngine();

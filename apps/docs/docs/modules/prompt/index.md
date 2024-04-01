@@ -31,13 +31,11 @@ The first method is to create a new instance of `ResponseSynthesizer` (or the mo
 ```ts
 // Create an instance of response synthesizer
 const responseSynthesizer = new ResponseSynthesizer({
-  responseBuilder: new CompactAndRefine(serviceContext, newTextQaPrompt),
+  responseBuilder: new CompactAndRefine(undefined, newTextQaPrompt),
 });
 
 // Create index
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 
 // Query the index
 const queryEngine = index.asQueryEngine({ responseSynthesizer });
@@ -53,9 +51,7 @@ The second method is that most of the modules in LlamaIndex have a `getPrompts` 
 
 ```ts
 // Create index
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 
 // Query the index
 const queryEngine = index.asQueryEngine();

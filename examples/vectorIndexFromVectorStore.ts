@@ -2,7 +2,7 @@ import {
   OpenAI,
   ResponseSynthesizer,
   RetrieverQueryEngine,
-  serviceContextFromDefaults,
+  Settings,
   TextNode,
   TreeSummarize,
   VectorIndexRetriever,
@@ -13,6 +13,12 @@ import {
 } from "llamaindex";
 
 import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
+
+// Update llm
+Settings.llm = new OpenAI({
+  model: "gpt-4",
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 /**
  * Please do not use this class in production; it's only for demonstration purposes.
@@ -146,25 +152,11 @@ async function main() {
     });
   };
 
-  const getServiceContext = () => {
-    const openAI = new OpenAI({
-      model: "gpt-4",
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    return serviceContextFromDefaults({
-      llm: openAI,
-    });
-  };
-
   const getQueryEngine = async (filter: unknown) => {
     const vectorStore = await getPineconeVectorStore();
-    const serviceContext = getServiceContext();
 
-    const vectorStoreIndex = await VectorStoreIndex.fromVectorStore(
-      vectorStore,
-      serviceContext,
-    );
+    const vectorStoreIndex =
+      await VectorStoreIndex.fromVectorStore(vectorStore);
 
     const retriever = new VectorIndexRetriever({
       index: vectorStoreIndex,
@@ -172,8 +164,7 @@ async function main() {
     });
 
     const responseSynthesizer = new ResponseSynthesizer({
-      serviceContext,
-      responseBuilder: new TreeSummarize(serviceContext),
+      responseBuilder: new TreeSummarize(),
     });
 
     return new RetrieverQueryEngine(retriever, responseSynthesizer, {

@@ -1,8 +1,4 @@
-import {
-  PGVectorStore,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { PGVectorStore, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   const readline = require("readline").createInterface({
@@ -15,8 +11,7 @@ async function main() {
     // Optional - set your collection name, default is no filter on this field.
     // pgvs.setCollection();
 
-    const ctx = serviceContextFromDefaults();
-    const index = await VectorStoreIndex.fromVectorStore(pgvs, ctx);
+    const index = await VectorStoreIndex.fromVectorStore(pgvs);
 
     // Query the index
     const queryEngine = await index.asQueryEngine();

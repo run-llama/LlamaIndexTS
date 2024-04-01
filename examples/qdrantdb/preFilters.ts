@@ -4,11 +4,20 @@ import {
   Document,
   MetadataMode,
   QdrantVectorStore,
+  Settings,
   VectorStoreIndex,
-  runWithCallbackManager,
-  serviceContextFromDefaults,
   storageContextFromDefaults,
 } from "llamaindex";
+
+// Update callback manager
+Settings.callbackManager = new CallbackManager({
+  onRetrieve: (data) => {
+    console.log(
+      "The retrieved nodes are:",
+      data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
+    );
+  },
+});
 
 // Load environment variables from local .env file
 dotenv.config();
@@ -37,21 +46,9 @@ async function main() {
     const ctx = await storageContextFromDefaults({ vectorStore: qdrantVs });
 
     console.log("Embedding documents and adding to index");
-    const index = await runWithCallbackManager(
-      new CallbackManager({
-        onRetrieve: (data) => {
-          console.log(
-            "The retrieved nodes are:",
-            data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
-          );
-        },
-      }),
-      () =>
-        VectorStoreIndex.fromDocuments(docs, {
-          storageContext: ctx,
-          serviceContext: serviceContextFromDefaults(),
-        }),
-    );
+    const index = await VectorStoreIndex.fromDocuments(docs, {
+      storageContext: ctx,
+    });
 
     console.log(
       "Querying index with no filters: Expected output: Brown probably",

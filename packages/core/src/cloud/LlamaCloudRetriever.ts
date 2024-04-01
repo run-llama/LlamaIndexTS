@@ -3,9 +3,7 @@ import { globalsHelper } from "../GlobalsHelper.js";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
-import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
-import { getCurrentCallbackManager } from "../callbacks/CallbackManager.js";
+import { Settings } from "../Settings.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
@@ -21,7 +19,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
   retrieveParams: CloudRetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
-  serviceContext: ServiceContext;
 
   private resultNodesToNodeWithScore(
     nodes: PlatformApi.TextNodeWithScore[],
@@ -45,7 +42,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
     if (params.projectName) {
       this.projectName = params.projectName;
     }
-    this.serviceContext = params.serviceContext ?? serviceContextFromDefaults();
   }
 
   private async getClient(): Promise<PlatformApiClient> {
@@ -81,7 +77,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
     const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.onRetrieve({
       query,
       nodes,
       event: globalsHelper.createEvent({
@@ -91,9 +87,5 @@ export class LlamaCloudRetriever implements BaseRetriever {
     });
 
     return nodes;
-  }
-
-  getServiceContext(): ServiceContext {
-    return this.serviceContext;
   }
 }

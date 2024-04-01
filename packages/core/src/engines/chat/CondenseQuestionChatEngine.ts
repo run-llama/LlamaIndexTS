@@ -7,7 +7,7 @@ import {
 } from "../../Prompt.js";
 import type { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import { serviceContextFromDefaults } from "../../ServiceContext.js";
+import { llmFromSettingsOrContext } from "../../Settings.js";
 import type { ChatMessage, LLM } from "../../llm/index.js";
 import { extractText, streamReducer } from "../../llm/utils.js";
 import { PromptMixin } from "../../prompts/index.js";
@@ -48,7 +48,7 @@ export class CondenseQuestionChatEngine
 
     this.queryEngine = init.queryEngine;
     this.chatHistory = getHistory(init?.chatHistory);
-    this.llm = init?.serviceContext?.llm ?? serviceContextFromDefaults().llm;
+    this.llm = llmFromSettingsOrContext(init?.serviceContext);
     this.condenseMessagePrompt =
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
   }

@@ -1,5 +1,5 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
-import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
+import { CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
 
 /**
@@ -135,30 +135,26 @@ export class CallbackManager implements CallbackManagerMethods {
    * @deprecated will be removed in the next major version
    */
   set onLLMStream(_: never) {
-    throw new Error(
-      "onLLMStream is deprecated. Use addHandlers('stream') instead",
-    );
+    throw new Error("onLLMStream is deprecated. Use on('stream') instead");
   }
 
   /**
    * @deprecated will be removed in the next major version
    */
   set onRetrieve(_: never) {
-    throw new Error(
-      "onRetrieve is deprecated. Use `addHandlers('retrieve')` instead",
-    );
+    throw new Error("onRetrieve is deprecated. Use `on('retrieve')` instead");
   }
 
   #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<CustomEvent>[]>();
 
   constructor(handlers?: Partial<CallbackManagerMethods>) {
     const onLLMStream = handlers?.onLLMStream ?? noop;
-    this.addHandlers("stream", (event) => onLLMStream(event.detail));
+    this.on("stream", (event) => onLLMStream(event.detail));
     const onRetrieve = handlers?.onRetrieve ?? noop;
-    this.addHandlers("retrieve", (event) => onRetrieve(event.detail));
+    this.on("retrieve", (event) => onRetrieve(event.detail));
   }
 
-  addHandlers<
+  on<
     K extends keyof LlamaIndexEventMaps,
     H extends EventHandler<LlamaIndexEventMaps[K]>,
   >(event: K, handler: H) {
@@ -169,7 +165,7 @@ export class CallbackManager implements CallbackManagerMethods {
     return this;
   }
 
-  removeHandlers<
+  off<
     K extends keyof LlamaIndexEventMaps,
     H extends EventHandler<LlamaIndexEventMaps[K]>,
   >(event: K, handler: H) {
@@ -194,22 +190,4 @@ export class CallbackManager implements CallbackManagerMethods {
     }
     handlers.forEach((handler) => handler(new CustomEvent(event, { detail })));
   }
-}
-
-const defaultCallbackManager = new CallbackManager();
-const callbackAsyncLocalStorage = new AsyncLocalStorage<CallbackManager>();
-
-/**
- * Get the current callback manager
- * @default defaultCallbackManager if no callback manager is set
- */
-export function getCurrentCallbackManager() {
-  return callbackAsyncLocalStorage.getStore() ?? defaultCallbackManager;
-}
-
-export function runWithCallbackManager<Result>(
-  callbackManager: CallbackManager,
-  fn: () => Result,
-): Result {
-  return callbackAsyncLocalStorage.run(callbackManager, fn);
 }

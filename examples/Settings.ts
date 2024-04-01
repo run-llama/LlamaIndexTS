@@ -1,17 +1,8 @@
 import fs from "node:fs/promises";
 
-import {
-  Anthropic,
-  CompactAndRefine,
-  Document,
-  ResponseSynthesizer,
-  Settings,
-  VectorStoreIndex,
-  anthropicTextQaPrompt,
-} from "llamaindex";
+import { Document, OpenAI, Settings, VectorStoreIndex } from "llamaindex";
 
-// Update llm to use Anthropic
-Settings.llm = new Anthropic();
+Settings.llm = new OpenAI({ model: "gpt-4" });
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -22,15 +13,11 @@ async function main() {
   // Create Document object with essay
   const document = new Document({ text: essay, id_: path });
 
-  // Split text and create embeddings. Store them in a VectorStoreIndex
-  const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(undefined, anthropicTextQaPrompt),
-  });
-
   const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Query the index
-  const queryEngine = index.asQueryEngine({ responseSynthesizer });
+  const queryEngine = index.asQueryEngine();
+
   const response = await queryEngine.query({
     query: "What did the author do in college?",
   });

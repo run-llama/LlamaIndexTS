@@ -11,14 +11,12 @@ import {
 import { Document } from "llamaindex/Node";
 import type { ServiceContext } from "llamaindex/ServiceContext";
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
+import { Settings } from "llamaindex/Settings";
 import type {
   RetrievalCallbackResponse,
   StreamCallbackResponse,
 } from "llamaindex/callbacks/CallbackManager";
-import {
-  CallbackManager,
-  runWithCallbackManager,
-} from "llamaindex/callbacks/CallbackManager";
+import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import { SummaryIndex } from "llamaindex/indices/summary/index";
 import { VectorStoreIndex } from "llamaindex/indices/vectorStore/index";
@@ -83,7 +81,7 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     });
     const queryEngine = vectorStoreIndex.asQueryEngine();
     const query = "What is the author's name?";
-    const response = await runWithCallbackManager(callbackManager, () => {
+    const response = await Settings.withCallbackManager(callbackManager, () => {
       return queryEngine.query({ query });
     });
 
@@ -164,8 +162,9 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       responseSynthesizer,
     });
     const query = "What is the author's name?";
-    const response = await runWithCallbackManager(callbackManager, async () =>
-      queryEngine.query({ query }),
+    const response = await Settings.withCallbackManager(
+      callbackManager,
+      async () => queryEngine.query({ query }),
     );
     expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
     expect(streamCallbackData).toEqual([

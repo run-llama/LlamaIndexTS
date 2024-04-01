@@ -8,6 +8,7 @@ export * from "./QuestionGenerator.js";
 export * from "./Response.js";
 export * from "./Retriever.js";
 export * from "./ServiceContext.js";
+export { Settings } from "./Settings.js";
 export * from "./TextSplitter.js";
 export * from "./agent/index.js";
 export * from "./callbacks/CallbackManager.js";
