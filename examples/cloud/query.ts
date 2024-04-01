@@ -16,8 +16,8 @@ async function main() {
 
   const index = await LlamaCloudIndex.fromDocuments({
     documents: [document],
-    name: "earlier",
-    projectName: "01-06-2024",
+    name: "test",
+    projectName: "default",
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
     baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
     verbose: true,
