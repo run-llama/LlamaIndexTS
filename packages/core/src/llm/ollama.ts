@@ -2,7 +2,6 @@ import { ok } from "@llamaindex/env";
 import type { Event } from "../callbacks/CallbackManager.js";
 import { BaseEmbedding } from "../embeddings/types.js";
 import type {
-  ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
@@ -180,10 +179,6 @@ export class Ollama extends BaseEmbedding implements LLM {
       ok(stream instanceof ReadableStream, "stream is not readable");
       return this.streamChat(stream, completionAccessor, parentEvent);
     }
-  }
-
-  tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
   }
 
   private async getEmbedding(prompt: string): Promise<number[]> {

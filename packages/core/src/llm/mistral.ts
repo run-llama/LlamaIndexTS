@@ -81,10 +81,6 @@ export class MistralAI extends BaseLLM {
     };
   }
 
-  tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
-  }
-
   private buildParams(messages: ChatMessage[]): any {
     return {
       model: this.model,

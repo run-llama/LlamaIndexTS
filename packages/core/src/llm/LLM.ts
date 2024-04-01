@@ -9,7 +9,7 @@ import {
 
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
-import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
+import { Tokenizers } from "../GlobalsHelper.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { AnthropicSession } from "./anthropic.js";
 import { getAnthropicSession } from "./anthropic.js";
@@ -169,21 +169,6 @@ export class OpenAI extends BaseLLM {
       tokenizer: Tokenizers.CL100K_BASE,
       isFunctionCallingModel: isFunctionCallingModel(this.model),
     };
-  }
-
-  tokens(messages: ChatMessage[]): number {
-    // for latest OpenAI models, see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
-    const tokenizer = globalsHelper.tokenizer(this.metadata.tokenizer);
-    const tokensPerMessage = 3;
-    let numTokens = 0;
-    for (const message of messages) {
-      numTokens += tokensPerMessage;
-      for (const value of Object.values(message)) {
-        numTokens += tokenizer(value).length;
-      }
-    }
-    numTokens += 3; // every reply is primed with <|im_start|>assistant<|im_sep|>
-    return numTokens;
   }
 
   mapMessageType(
@@ -412,10 +397,6 @@ export class LlamaDeuce extends BaseLLM {
       init?.maxTokens ??
       ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model].contextWindow; // For Replicate, the default is 500 tokens which is too low.
     this.replicateSession = init?.replicateSession ?? new ReplicateSession();
-  }
-
-  tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
   }
 
   get metadata() {
@@ -667,10 +648,6 @@ export class Anthropic extends BaseLLM {
       });
   }
 
-  tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
-  }
-
   get metadata() {
     return {
       model: this.model,
@@ -795,10 +772,6 @@ export class Portkey extends BaseLLM {
       llms: this.llms,
       mode: this.mode,
     });
-  }
-
-  tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
   }
 
   get metadata(): LLMMetadata {
