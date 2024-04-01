@@ -1,18 +1,33 @@
+import fs from "node:fs/promises";
+
 import { stdin as input, stdout as output } from "node:process";
+
 import readline from "node:readline/promises";
 
-import { LlamaCloudIndex } from "llamaindex";
+import { Document, LlamaCloudIndex } from "llamaindex";
 
 async function main() {
-  const index = new LlamaCloudIndex({
-    name: "test",
-    projectName: "default",
-    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
+  const path = "node_modules/llamaindex/examples/abramov.txt";
+
+  const essay = await fs.readFile(path, "utf-8");
+
+  // Create Document object with essay
+  const document = new Document({ text: essay, id_: path });
+
+  const index = await LlamaCloudIndex.fromDocuments({
+    documents: [document],
+    name: "earlier",
+    projectName: "01-06-2024",
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
+    verbose: true,
   });
+
+  console.log({ index });
+
   const queryEngine = index.asQueryEngine({
     denseSimilarityTopK: 5,
   });
+
   const rl = readline.createInterface({ input, output });
 
   while (true) {
