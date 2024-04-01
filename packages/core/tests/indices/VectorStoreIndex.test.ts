@@ -4,6 +4,7 @@ import {
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
+import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 import { rmSync } from "node:fs";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -24,7 +25,7 @@ describe.sequential("VectorStoreIndex", () => {
   let serviceContext: ServiceContext;
   let storageContext: StorageContext;
   let testStrategy: (
-    // strategy?: DocStoreStrategy,
+    strategy: DocStoreStrategy,
     runs?: number,
   ) => Promise<Array<number>>;
 
@@ -34,7 +35,7 @@ describe.sequential("VectorStoreIndex", () => {
       persistDir: testDir,
     });
     testStrategy = async (
-      // strategy?: DocStoreStrategy,
+      strategy: DocStoreStrategy,
       runs: number = 2,
     ): Promise<Array<number>> => {
       const documents = [new Document({ text: "lorem ipsem", id_: "1" })];
@@ -43,7 +44,7 @@ describe.sequential("VectorStoreIndex", () => {
         await VectorStoreIndex.fromDocuments(documents, {
           serviceContext,
           storageContext,
-          // docStoreStrategy: strategy,
+          docStoreStrategy: strategy,
         });
         const docs = await storageContext.docStore.docs();
         entries.push(Object.keys(docs).length);
@@ -52,15 +53,15 @@ describe.sequential("VectorStoreIndex", () => {
     };
   });
 
-  test("fromDocuments does not stores duplicates per default", async () => {
-    const entries = await testStrategy();
-    expect(entries[0]).toBe(entries[1]);
+  test("fromDocuments stores duplicates without a doc store strategy", async () => {
+    const entries = await testStrategy(DocStoreStrategy.NONE);
+    expect(entries[0] + 1).toBe(entries[1]);
   });
 
-  // test("fromDocuments ignores duplicates in upserts", async () => {
-  //   const entries = await testStrategy(DocStoreStrategy.DUPLICATES_ONLY);
-  //   expect(entries[0]).toBe(entries[1]);
-  // });
+  test("fromDocuments ignores duplicates with upserts doc store strategy", async () => {
+    const entries = await testStrategy(DocStoreStrategy.UPSERTS);
+    expect(entries[0]).toBe(entries[1]);
+  });
 
   afterAll(async () => {
     // TODO: VectorStoreIndex.fromDocuments running twice is causing a cleanup issue

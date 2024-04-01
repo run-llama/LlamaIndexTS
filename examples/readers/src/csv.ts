@@ -5,8 +5,7 @@ import {
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
-
-import { PapaCSVReader } from "llamaindex/readers";
+import { PapaCSVReader } from "llamaindex/readers/CSVReader";
 
 Settings.llm = new OpenAI({ model: "gpt-4" });
 
