@@ -10,7 +10,7 @@ import {
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers, globalsHelper } from "../GlobalsHelper.js";
-import { getCallbackManager } from "../internal/settings/callback-manager.js";
+import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { AnthropicSession } from "./anthropic.js";
 import { getAnthropicSession } from "./anthropic.js";
 import type { AzureOpenAIConfig } from "./azure.js";

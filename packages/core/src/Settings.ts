@@ -12,7 +12,7 @@ import {
   getCallbackManager,
   setCallbackManager,
   withCallbackManager,
-} from "./internal/settings/callback-manager.js";
+} from "./internal/settings/CallbackManager.js";
 import type { LLM } from "./llm/types.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
