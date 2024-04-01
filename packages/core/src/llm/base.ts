@@ -1,5 +1,4 @@
 import type {
-  ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
@@ -48,6 +47,4 @@ export abstract class BaseLLM implements LLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   abstract chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-
-  abstract tokens(messages: ChatMessage[]): number;
 }

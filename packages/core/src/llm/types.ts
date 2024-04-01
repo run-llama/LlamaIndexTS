@@ -59,11 +59,6 @@ export interface LLM extends LLMChat {
   complete(
     params: LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse>;
-
-  /**
-   * Calculates the number of tokens needed for the given chat messages
-   */
-  tokens(messages: ChatMessage[]): number;
 }
 
 export type MessageType =
