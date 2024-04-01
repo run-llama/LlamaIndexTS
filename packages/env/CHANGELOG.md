@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.0.6
+
+### Patch Changes
+
+- 7a23cc6: feat: improve CallbackManager
+
 ## 0.0.5
 
 ### Patch Changes
