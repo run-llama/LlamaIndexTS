@@ -1,10 +1,6 @@
 import { getEnv } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
-import {
-  type Event,
-  type EventType,
-  type StreamCallbackResponse,
-} from "../callbacks/CallbackManager.js";
+import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
 import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
@@ -116,20 +112,9 @@ export class MistralAI extends BaseLLM {
 
   protected async *streamChat({
     messages,
-    parentEvent,
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
-    //Now let's wrap our stream in a callback
-    const onLLMStream = Settings.callbackManager.onLLMStream;
-
     const client = await this.session.getClient();
     const chunkStream = await client.chatStream(this.buildParams(messages));
-
-    const event: Event = parentEvent
-      ? parentEvent
-      : {
-          id: "unspecified",
-          type: "llmPredict" as EventType,
-        };
 
     //Indices
     let idx_counter: number = 0;
@@ -141,12 +126,12 @@ export class MistralAI extends BaseLLM {
         part.choices[0].finish_reason === "stop" ? true : false;
 
       const stream_callback: StreamCallbackResponse = {
-        event: event,
         index: idx_counter,
         isDone: isDone,
         token: part,
       };
-      onLLMStream(stream_callback);
+
+      Settings.callbackManager.dispatchEvent("stream", stream_callback);
 
       idx_counter++;
 

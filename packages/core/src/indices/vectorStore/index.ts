@@ -1,4 +1,3 @@
-import { globalsHelper } from "../../GlobalsHelper.js";
 import type {
   BaseNode,
   Document,
@@ -18,7 +17,6 @@ import {
   embedModelFromSettingsOrContext,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
-import { type Event } from "../../callbacks/CallbackManager.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
 import type {
   BaseEmbedding,
@@ -440,7 +438,6 @@ export class VectorIndexRetriever implements BaseRetriever {
 
   async retrieve({
     query,
-    parentEvent,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
     let nodesWithScores = await this.textRetrieve(
@@ -450,7 +447,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     nodesWithScores = nodesWithScores.concat(
       await this.textToImageRetrieve(query, preFilters as MetadataFilters),
     );
-    this.sendEvent(query, nodesWithScores, parentEvent);
+    this.sendEvent(query, nodesWithScores);
     return nodesWithScores;
   }
 
@@ -490,15 +487,10 @@ export class VectorIndexRetriever implements BaseRetriever {
   protected sendEvent(
     query: string,
     nodesWithScores: NodeWithScore<Metadata>[],
-    parentEvent: Event | undefined,
   ) {
-    Settings.callbackManager.onRetrieve({
+    Settings.callbackManager.dispatchEvent("retrieve", {
       query,
       nodes: nodesWithScores,
-      event: globalsHelper.createEvent({
-        parentEvent,
-        type: "retrieve",
-      }),
     });
   }
 

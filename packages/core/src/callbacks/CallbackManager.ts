@@ -21,26 +21,6 @@ declare module "llamaindex" {
 }
 
 //#region @deprecated remove in the next major version
-/*
-  An event is a wrapper that groups related operations.
-  For example, during retrieve and synthesize,
-  a parent event wraps both operations, and each operation has it's own
-  event. In this case, both sub-events will share a parentId.
-*/
-
-export type EventTag = "intermediate" | "final";
-export type EventType = "retrieve" | "llmPredict" | "wrapper";
-export interface Event {
-  id: string;
-  type: EventType;
-  tags?: EventTag[];
-  parentId?: string;
-}
-
-interface BaseCallbackResponse {
-  event: Event;
-}
-
 //Specify StreamToken per mainstream LLM
 export interface DefaultStreamToken {
   id: string;
@@ -68,13 +48,13 @@ export type AnthropicStreamToken = Anthropic.Completion;
 
 //StreamCallbackResponse should let practitioners implement callbacks out of the box...
 //When custom streaming LLMs are involved, people are expected to write their own StreamCallbackResponses
-export interface StreamCallbackResponse extends BaseCallbackResponse {
+export interface StreamCallbackResponse {
   index: number;
   isDone?: boolean;
   token?: DefaultStreamToken;
 }
 
-export interface RetrievalCallbackResponse extends BaseCallbackResponse {
+export interface RetrievalCallbackResponse {
   query: string;
   nodes: NodeWithScore[];
 }

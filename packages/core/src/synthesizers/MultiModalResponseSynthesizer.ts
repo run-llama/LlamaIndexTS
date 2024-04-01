@@ -55,7 +55,6 @@ export class MultiModalResponseSynthesizer
   async synthesize({
     query,
     nodesWithScore,
-    parentEvent,
     stream,
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
@@ -90,7 +89,6 @@ export class MultiModalResponseSynthesizer
 
     const response = await llm.complete({
       prompt,
-      parentEvent,
     });
 
     return new Response(response.text, nodes);

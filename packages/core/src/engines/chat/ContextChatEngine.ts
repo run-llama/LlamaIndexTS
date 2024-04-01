@@ -1,10 +1,8 @@
-import { randomUUID } from "@llamaindex/env";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
-import type { Event } from "../../callbacks/CallbackManager.js";
 import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
@@ -67,21 +65,14 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     const chatHistory = params.chatHistory
       ? getHistory(params.chatHistory)
       : this.chatHistory;
-    const parentEvent: Event = {
-      id: randomUUID(),
-      type: "wrapper",
-      tags: ["final"],
-    };
     const requestMessages = await this.prepareRequestMessages(
       message,
       chatHistory,
-      parentEvent,
     );
 
     if (stream) {
       const stream = await this.chatModel.chat({
         messages: requestMessages.messages,
-        parentEvent,
         stream: true,
       });
       return streamConverter(
@@ -98,7 +89,6 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     }
     const response = await this.chatModel.chat({
       messages: requestMessages.messages,
-      parentEvent,
     });
     chatHistory.addMessage(response.message);
     return new Response(response.message.content, requestMessages.nodes);
@@ -111,14 +101,13 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
   private async prepareRequestMessages(
     message: MessageContent,
     chatHistory: ChatHistory,
-    parentEvent?: Event,
   ) {
     chatHistory.addMessage({
       content: message,
       role: "user",
     });
     const textOnly = extractText(message);
-    const context = await this.contextGenerator.generate(textOnly, parentEvent);
+    const context = await this.contextGenerator.generate(textOnly);
     const nodes = context.nodes.map((r) => r.node);
     const messages = await chatHistory.requestMessages(
       context ? [context.message] : undefined,

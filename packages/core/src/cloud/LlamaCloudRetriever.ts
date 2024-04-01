@@ -1,5 +1,4 @@
 import type { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
-import { globalsHelper } from "../GlobalsHelper.js";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
@@ -53,7 +52,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
   async retrieve({
     query,
-    parentEvent,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
     const pipelines = await (
@@ -77,13 +75,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
     const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
-    Settings.callbackManager.onRetrieve({
+    Settings.callbackManager.dispatchEvent("retrieve", {
       query,
       nodes,
-      event: globalsHelper.createEvent({
-        parentEvent,
-        type: "retrieve",
-      }),
     });
 
     return nodes;

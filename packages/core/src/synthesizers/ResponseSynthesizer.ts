@@ -62,7 +62,6 @@ export class ResponseSynthesizer
   async synthesize({
     query,
     nodesWithScore,
-    parentEvent,
     stream,
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
@@ -75,7 +74,6 @@ export class ResponseSynthesizer
       const response = await this.responseBuilder.getResponse({
         query,
         textChunks,
-        parentEvent,
         stream,
       });
       return streamConverter(response, (chunk) => new Response(chunk, nodes));
@@ -83,7 +81,6 @@ export class ResponseSynthesizer
     const response = await this.responseBuilder.getResponse({
       query,
       textChunks,
-      parentEvent,
     });
     return new Response(response, nodes);
   }
