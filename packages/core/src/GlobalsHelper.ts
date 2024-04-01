@@ -18,9 +18,9 @@ class GlobalsHelper {
   defaultTokenizer: {
     encode: (text: string) => Uint32Array;
     decode: (tokens: Uint32Array) => string;
-  } | null = null;
+  };
 
-  private initDefaultTokenizer() {
+  constructor() {
     const encoding = encodingForModel("text-embedding-ada-002"); // cl100k_base
 
     this.defaultTokenizer = {
@@ -40,9 +40,6 @@ class GlobalsHelper {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
-    if (!this.defaultTokenizer) {
-      this.initDefaultTokenizer();
-    }
 
     return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
   }
@@ -50,9 +47,6 @@ class GlobalsHelper {
   tokenizerDecoder(encoding?: Tokenizers) {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
-    }
-    if (!this.defaultTokenizer) {
-      this.initDefaultTokenizer();
     }
 
     return this.defaultTokenizer!.decode.bind(this.defaultTokenizer);
