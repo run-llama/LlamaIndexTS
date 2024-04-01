@@ -230,10 +230,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       docStore,
       args.vectorStore,
     );
-    args.nodes = await runTransformations(documents, [
-      ...(docStoreStrategy ? [docStoreStrategy] : []),
-      args.serviceContext.nodeParser,
-    ]);
+    args.nodes = await runTransformations(
+      documents,
+      [args.serviceContext.nodeParser],
+      {},
+      { docStoreStrategy },
+    );
     if (args.logProgress) {
       console.log("Finished parsing documents.");
     }

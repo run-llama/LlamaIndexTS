@@ -25,17 +25,21 @@ type IngestionRunArgs = {
 type TransformRunArgs = {
   inPlace?: boolean;
   cache?: IngestionCache;
+  docStoreStrategy?: TransformComponent;
 };
 
 export async function runTransformations(
   nodesToRun: BaseNode[],
   transformations: TransformComponent[],
   transformOptions: any = {},
-  { inPlace = true, cache }: TransformRunArgs = {},
+  { inPlace = true, cache, docStoreStrategy }: TransformRunArgs = {},
 ): Promise<BaseNode[]> {
   let nodes = nodesToRun;
   if (!inPlace) {
     nodes = [...nodesToRun];
+  }
+  if (docStoreStrategy) {
+    nodes = await docStoreStrategy.transform(nodes);
   }
   for (const transform of transformations) {
     if (cache) {
@@ -108,16 +112,10 @@ export class IngestionPipeline {
     transformOptions?: any,
   ): Promise<BaseNode[]> {
     args.cache = args.cache ?? this.cache;
+    args.docStoreStrategy = args.docStoreStrategy ?? this._docStoreStrategy;
     const inputNodes = await this.prepareInput(args.documents, args.nodes);
-    let nodesToRun;
-    if (this._docStoreStrategy) {
-      nodesToRun = await this._docStoreStrategy.transform(inputNodes);
-    } else {
-      nodesToRun = inputNodes;
-    }
-
     const nodes = await runTransformations(
-      nodesToRun,
+      inputNodes,
       this.transformations,
       transformOptions,
       args,
