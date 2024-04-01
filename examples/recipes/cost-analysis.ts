@@ -1,5 +1,5 @@
+import { OpenAI } from "llamaindex";
 import { getCurrentCallbackManager } from "llamaindex/callbacks/CallbackManager";
-import { OpenAI } from "llamaindex/llm";
 
 const llm = new OpenAI({
   model: "gpt-4-0125-preview",
