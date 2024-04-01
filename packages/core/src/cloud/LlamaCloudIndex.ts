@@ -12,6 +12,7 @@ import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./types.js";
 import { getAppBaseUrl, getClient } from "./utils.js";
 
+import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
@@ -30,7 +31,9 @@ export class LlamaCloudIndex {
     } & CloudConstructorParams,
   ): Promise<LlamaCloudIndex> {
     const defaultTransformations: TransformComponent[] = [
-      new OpenAIEmbedding(),
+      new OpenAIEmbedding({
+        apiKey: getEnv("OPENAI_API_KEY"),
+      }),
       new SimpleNodeParser(),
     ];
 

@@ -72,10 +72,12 @@ export async function getPipelineCreate(
     inputNodes = [],
   } = params;
 
+  const dataSources = inputNodes.map(getDataSourceConfig);
+
   return {
     name: pipelineName,
     configuredTransformations: transformations.map(getTransformationConfig),
-    dataSources: inputNodes.map(getDataSourceConfig),
+    dataSources,
     dataSinks: [],
     pipelineType,
   };
