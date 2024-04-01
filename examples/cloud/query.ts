@@ -12,17 +12,16 @@ async function main() {
   const essay = await fs.readFile(path, "utf-8");
 
   // Create Document object with essay
-  const document = new Document({ text: essay, id_: path });
+  const document = new Document({ text: essay, id_: "file_abramov.txt" });
 
   const index = await LlamaCloudIndex.fromDocuments({
     documents: [document],
     name: "earlier",
     projectName: "01-06-2024",
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
+    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
     verbose: true,
   });
-
-  console.log({ index });
 
   const queryEngine = index.asQueryEngine({
     denseSimilarityTopK: 5,

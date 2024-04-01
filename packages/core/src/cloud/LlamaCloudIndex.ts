@@ -13,8 +13,12 @@ import type { CloudConstructorParams } from "./types.js";
 import { getAppBaseUrl, getClient } from "./utils.js";
 
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
+import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
-const defaultTransformations: TransformComponent[] = [new OpenAIEmbedding()];
+const defaultTransformations: TransformComponent[] = [
+  new OpenAIEmbedding(),
+  new SimpleNodeParser(),
+];
 
 export class LlamaCloudIndex {
   params: CloudConstructorParams;
@@ -42,7 +46,7 @@ export class LlamaCloudIndex {
     });
 
     const project = await client.project.upsertProject({
-      name: params.name,
+      name: params.projectName ?? "default",
     });
 
     if (!project.id) {
@@ -62,7 +66,61 @@ export class LlamaCloudIndex {
       console.log(`Created pipeline ${pipeline.id} with name ${params.name}`);
     }
 
+    const executionsIds: {
+      exectionId: string;
+      dataSourceId: string;
+    }[] = [];
+
+    for (const dataSource of pipeline.dataSources) {
+      const dataSourceExection =
+        await client.dataSource.createDataSourceExecution(dataSource.id);
+
+      if (!dataSourceExection.id) {
+        throw new Error("Data Source Execution ID must be defined");
+      }
+
+      executionsIds.push({
+        exectionId: dataSourceExection.id,
+        dataSourceId: dataSource.id,
+      });
+    }
+
     let isDone = false;
+
+    while (!isDone) {
+      const statuses = [];
+
+      for await (const execution of executionsIds) {
+        const dataSourceExecution =
+          await client.dataSource.getDataSourceExecution(
+            execution.dataSourceId,
+            execution.exectionId,
+          );
+
+        statuses.push(dataSourceExecution.status);
+
+        if (
+          statuses.every((status) => status === PlatformApi.StatusEnum.Success)
+        ) {
+          isDone = true;
+          if (params.verbose) {
+            console.info("Data Source Execution completed");
+          }
+          break;
+        } else if (
+          statuses.some((status) => status === PlatformApi.StatusEnum.Error)
+        ) {
+          throw new Error("Data Source Execution failed");
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          if (params.verbose) {
+            process.stdout.write(".");
+          }
+        }
+      }
+    }
+
+    isDone = false;
 
     const execution = await client.pipeline.runManagedPipelineIngestion(
       pipeline.id,
