@@ -23,11 +23,11 @@ export function createDocStoreStrategy(
   docStore?: BaseDocumentStore,
   vectorStore?: VectorStore,
 ): TransformComponent {
-  if (!docStore) {
-    throw new Error("docStore is required to create a doc store strategy.");
-  }
   if (docStoreStrategy === DocStoreStrategy.NONE) {
     return new NoOpStrategy();
+  }
+  if (!docStore) {
+    throw new Error("docStore is required to create a doc store strategy.");
   }
   if (vectorStore) {
     if (docStoreStrategy === DocStoreStrategy.UPSERTS) {

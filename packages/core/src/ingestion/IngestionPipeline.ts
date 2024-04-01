@@ -77,6 +77,9 @@ export class IngestionPipeline {
   constructor(init?: Partial<IngestionPipeline> & ClientParams) {
     Object.assign(this, init);
     this.clientParams = { apiKey: init?.apiKey, baseUrl: init?.baseUrl };
+    if (!this.docStore) {
+      this.docStoreStrategy = DocStoreStrategy.NONE;
+    }
     this._docStoreStrategy = createDocStoreStrategy(
       this.docStoreStrategy,
       this.docStore,

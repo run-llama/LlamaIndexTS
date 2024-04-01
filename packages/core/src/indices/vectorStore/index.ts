@@ -214,7 +214,12 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       docStoreStrategy?: DocStoreStrategy;
     } = {},
   ): Promise<VectorStoreIndex> {
-    args.docStoreStrategy = args.docStoreStrategy ?? DocStoreStrategy.UPSERTS;
+    args.docStoreStrategy =
+      args.docStoreStrategy ??
+      // set doc store strategy defaults to the same as for the IngestionPipeline
+      (args.vectorStore
+        ? DocStoreStrategy.UPSERTS
+        : DocStoreStrategy.DUPLICATES_ONLY);
     args.storageContext =
       args.storageContext ?? (await storageContextFromDefaults({}));
     args.serviceContext = args.serviceContext ?? serviceContextFromDefaults({});
@@ -224,7 +229,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       console.log("Using node parser on documents...");
     }
 
-    // run doc store strategy before other transformations
+    // use doc store strategy to avoid duplicates
     const docStoreStrategy = createDocStoreStrategy(
       args.docStoreStrategy,
       docStore,
