@@ -3,6 +3,7 @@ import { getHistory } from "../../ChatHistory.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
@@ -58,6 +59,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {

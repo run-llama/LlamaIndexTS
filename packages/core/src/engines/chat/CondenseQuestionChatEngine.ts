@@ -8,6 +8,7 @@ import {
 import type { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatMessage, LLM } from "../../llm/index.js";
 import { extractText, streamReducer } from "../../llm/utils.js";
 import { PromptMixin } from "../../prompts/index.js";
@@ -17,7 +18,6 @@ import type {
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
 } from "./types.js";
-
 /**
  * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorStoreIndex).
  * It does two steps on taking a user's chat message: first, it condenses the chat message
@@ -82,6 +82,7 @@ export class CondenseQuestionChatEngine
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {

@@ -10,6 +10,7 @@ import {
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -286,6 +287,7 @@ export class SummaryIndexRetriever implements BaseRetriever {
     this.index = index;
   }
 
+  @wrapEventCaller
   async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const nodes = await this.index.docStore.getNodes(nodeIds);

@@ -29,6 +29,7 @@ import {
   DocStoreStrategy,
   createDocStoreStrategy,
 } from "../../ingestion/strategies/index.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -484,6 +485,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     return this.buildNodeListFromQueryResult(result);
   }
 
+  @wrapEventCaller
   protected sendEvent(
     query: string,
     nodesWithScores: NodeWithScore<Metadata>[],

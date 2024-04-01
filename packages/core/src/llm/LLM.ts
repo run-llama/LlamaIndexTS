@@ -8,6 +8,7 @@ import {
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers } from "../GlobalsHelper.js";
+import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { AnthropicSession } from "./anthropic.js";
 import { getAnthropicSession } from "./anthropic.js";
@@ -33,7 +34,7 @@ import type {
   LLMMetadata,
   MessageType,
 } from "./types.js";
-import { llmEvent } from "./utils.js";
+import { wrapLLMEvent } from "./utils.js";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
@@ -209,7 +210,8 @@ export class OpenAI extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapEventCaller
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
@@ -253,6 +255,7 @@ export class OpenAI extends BaseLLM {
     };
   }
 
+  @wrapEventCaller
   protected async *streamChat({
     messages,
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
@@ -527,7 +530,7 @@ If a question does not make any sense, or is not factually coherent, explain why
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
@@ -669,7 +672,7 @@ export class Anthropic extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
@@ -767,7 +770,7 @@ export class Portkey extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {

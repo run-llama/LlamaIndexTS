@@ -1,6 +1,33 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
 import { CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
+import {
+  EventCaller,
+  getEventCaller,
+} from "../internal/context/EventCaller.js";
+
+export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
+  reason: EventCaller | null;
+  private constructor(
+    event: string,
+    options?: CustomEventInit & {
+      reason?: EventCaller | null;
+    },
+  ) {
+    super(event, options);
+    this.reason = options?.reason ?? null;
+  }
+
+  static fromEvent<Type extends keyof LlamaIndexEventMaps>(
+    type: Type,
+    detail: LlamaIndexEventMaps[Type]["detail"],
+  ) {
+    return new LlamaIndexCustomEvent(type, {
+      detail: detail,
+      reason: getEventCaller(),
+    });
+  }
+}
 
 /**
  * This type is used to define the event maps for the Llamaindex package.
@@ -78,7 +105,11 @@ interface CallbackManagerMethods {
 
 const noop: (...args: any[]) => any = () => void 0;
 
-type EventHandler<Event extends CustomEvent> = (event: Event) => void;
+type EventHandler<Event extends CustomEvent> = (
+  event: Event & {
+    reason: EventCaller | null;
+  },
+) => void;
 
 export class CallbackManager implements CallbackManagerMethods {
   /**
@@ -90,7 +121,7 @@ export class CallbackManager implements CallbackManagerMethods {
         this.#handlers
           .get("stream")!
           .map((handler) =>
-            handler(new CustomEvent("stream", { detail: response })),
+            handler(LlamaIndexCustomEvent.fromEvent("stream", response)),
           ),
       );
     };
@@ -105,7 +136,7 @@ export class CallbackManager implements CallbackManagerMethods {
         this.#handlers
           .get("retrieve")!
           .map((handler) =>
-            handler(new CustomEvent("retrieve", { detail: response })),
+            handler(LlamaIndexCustomEvent.fromEvent("retrieve", response)),
           ),
       );
     };
@@ -168,6 +199,8 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    handlers.forEach((handler) => handler(new CustomEvent(event, { detail })));
+    handlers.forEach((handler) =>
+      handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
+    );
   }
 }

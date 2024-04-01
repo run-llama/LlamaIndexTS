@@ -1,6 +1,7 @@
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
 import { Response } from "../../Response.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatResponseChunk, LLM } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import { streamConverter, streamReducer } from "../../llm/utils.js";
@@ -25,6 +26,7 @@ export class SimpleChatEngine implements ChatEngine {
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {

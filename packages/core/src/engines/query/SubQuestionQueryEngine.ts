@@ -18,6 +18,7 @@ import type {
   ToolMetadata,
 } from "../../types.js";
 
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 
 /**
@@ -78,6 +79,7 @@ export class SubQuestionQueryEngine
 
   query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  @wrapEventCaller
   async query(
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {
