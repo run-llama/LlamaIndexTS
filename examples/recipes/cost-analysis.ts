@@ -7,7 +7,7 @@ const llm = new OpenAI({
 
 let tokenCount = 0;
 
-Settings.callbackManager.addHandlers("llm-start", (event) => {
+Settings.callbackManager.on("llm-start", (event) => {
   const { messages } = event.detail.payload;
   tokenCount += llm.tokens(messages);
   console.log("Token count:", tokenCount);

@@ -153,12 +153,12 @@ export class CallbackManager implements CallbackManagerMethods {
 
   constructor(handlers?: Partial<CallbackManagerMethods>) {
     const onLLMStream = handlers?.onLLMStream ?? noop;
-    this.addHandlers("stream", (event) => onLLMStream(event.detail));
+    this.on("stream", (event) => onLLMStream(event.detail));
     const onRetrieve = handlers?.onRetrieve ?? noop;
-    this.addHandlers("retrieve", (event) => onRetrieve(event.detail));
+    this.on("retrieve", (event) => onRetrieve(event.detail));
   }
 
-  addHandlers<
+  on<
     K extends keyof LlamaIndexEventMaps,
     H extends EventHandler<LlamaIndexEventMaps[K]>,
   >(event: K, handler: H) {
@@ -169,7 +169,7 @@ export class CallbackManager implements CallbackManagerMethods {
     return this;
   }
 
-  removeHandlers<
+  off<
     K extends keyof LlamaIndexEventMaps,
     H extends EventHandler<LlamaIndexEventMaps[K]>,
   >(event: K, handler: H) {
