@@ -1,6 +1,6 @@
 import { program } from "commander";
-import { VectorStoreIndex, type TranscribeParams } from "llamaindex";
-import { AudioTranscriptReader } from "llamaindex/readers";
+import { TranscribeParams, VectorStoreIndex } from "llamaindex";
+import { AudioTranscriptReader } from "llamaindex/readers/AssemblyAIReader";
 import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 

@@ -1,7 +1,5 @@
-import { OpenAIEmbedding } from "llamaindex/embeddings";
-import { VectorStoreIndex } from "llamaindex/indices";
-import { OpenAI } from "llamaindex/llm";
-import { PDFReader } from "llamaindex/readers";
+import { OpenAI, OpenAIEmbedding, VectorStoreIndex } from "llamaindex";
+import { PDFReader } from "llamaindex/readers/PDFReader";
 
 import { serviceContextFromDefaults } from "llamaindex";
 
