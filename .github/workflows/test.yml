@@ -4,6 +4,11 @@ on: [push, pull_request]
 
 jobs:
   test:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x, 21.x]
+    name: Test on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
 
     steps:
@@ -12,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
