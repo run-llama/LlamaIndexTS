@@ -18,11 +18,11 @@ function getTransformationConfig(
     return {
       configurableTransformationType: "SENTENCE_AWARE_NODE_PARSER",
       component: {
-        // TODO: API returns 422 if these parameters are included
-        // chunkSize: transformation.textSplitter.chunkSize, // TODO: set to public in SentenceSplitter
-        // chunkOverlap: transformation.textSplitter.chunkOverlap, // TODO: set to public in SentenceSplitter
-        // includeMetadata: transformation.includeMetadata,
-        // includePrevNextRel: transformation.includePrevNextRel,
+        // TODO: API doesnt accept camelCase
+        chunk_size: transformation.textSplitter.chunkSize, // TODO: set to public in SentenceSplitter
+        chunk_overlap: transformation.textSplitter.chunkOverlap, // TODO: set to public in SentenceSplitter
+        include_metadata: transformation.includeMetadata,
+        include_prev_next_rel: transformation.includePrevNextRel,
       },
     };
   }
@@ -30,9 +30,10 @@ function getTransformationConfig(
     return {
       configurableTransformationType: "OPENAI_EMBEDDING",
       component: {
-        modelName: transformation.model,
-        apiKey: transformation.apiKey,
-        embedBatchSize: transformation.embedBatchSize,
+        // TODO: API doesnt accept camelCase
+        model: transformation.model,
+        api_key: transformation.apiKey,
+        embed_batch_size: transformation.embedBatchSize,
         dimensions: transformation.dimensions,
       },
     };
@@ -71,10 +72,12 @@ export async function getPipelineCreate(
     inputNodes = [],
   } = params;
 
+  const dataSources = inputNodes.map(getDataSourceConfig);
+
   return {
     name: pipelineName,
     configuredTransformations: transformations.map(getTransformationConfig),
-    dataSources: inputNodes.map(getDataSourceConfig),
+    dataSources,
     dataSinks: [],
     pipelineType,
   };
