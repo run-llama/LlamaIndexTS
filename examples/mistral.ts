@@ -1,15 +1,18 @@
 import * as fs from "fs/promises";
 import {
-  BaseEmbedding,
   Document,
-  LLM,
   MistralAI,
   MistralAIEmbedding,
+  Settings,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
 
-async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
+// Update embed model
+Settings.embedModel = new MistralAIEmbedding();
+// Update llm to use MistralAI
+Settings.llm = new MistralAI({ model: "mistral-tiny" });
+
+async function rag(query: string) {
   // Load essay from abramov.txt in Node
   const path = "node_modules/llamaindex/examples/abramov.txt";
 
@@ -18,12 +21,7 @@ async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
   // Create Document object with essay
   const document = new Document({ text: essay, id_: path });
 
-  // Split text and create embeddings. Store them in a VectorStoreIndex
-  const serviceContext = serviceContextFromDefaults({ llm, embedModel });
-
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Query the index
   const queryEngine = index.asQueryEngine();
@@ -60,10 +58,6 @@ async function rag(llm: LLM, embedModel: BaseEmbedding, query: string) {
   }
 
   // rag
-  const ragResponse = await rag(
-    llm,
-    embedding,
-    "What did the author do in college?",
-  );
+  const ragResponse = await rag("What did the author do in college?");
   console.log(ragResponse);
 })();

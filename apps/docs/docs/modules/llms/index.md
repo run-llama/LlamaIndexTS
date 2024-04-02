@@ -6,14 +6,12 @@ sidebar_position: 3
 
 The LLM is responsible for reading text and generating natural language responses to queries. By default, LlamaIndex.TS uses `gpt-3.5-turbo`.
 
-The LLM can be explicitly set in the `ServiceContext` object.
+The LLM can be explicitly updated through `Settings`.
 
 ```typescript
-import { OpenAI, serviceContextFromDefaults } from "llamaindex";
+import { OpenAI, Settings } from "llamaindex";
 
-const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
-
-const serviceContext = serviceContextFromDefaults({ llm: openaiLLM });
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 ```
 
 ## Azure OpenAI
@@ -35,4 +33,3 @@ For local LLMs, currently we recommend the use of [Ollama](./available_llms/olla
 ## API Reference
 
 - [OpenAI](../api/classes/OpenAI.md)
-- [ServiceContext](../api/interfaces//ServiceContext.md)

@@ -1,4 +1,3 @@
-import { globalsHelper } from "llamaindex/GlobalsHelper";
 import type { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import type { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import type { OpenAI } from "llamaindex/llm/LLM";
@@ -15,18 +14,13 @@ export function mockLlmGeneration({
   callbackManager?: CallbackManager;
 }) {
   vi.spyOn(languageModel, "chat").mockImplementation(
-    async ({ messages, parentEvent }: LLMChatParamsBase) => {
+    async ({ messages }: LLMChatParamsBase) => {
       const text = DEFAULT_LLM_TEXT_OUTPUT;
-      const event = globalsHelper.createEvent({
-        parentEvent,
-        type: "llmPredict",
-      });
       if (callbackManager?.onLLMStream) {
         const chunks = text.split("-");
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
           callbackManager?.onLLMStream({
-            event,
             index: i,
             token: {
               id: "id",
@@ -46,7 +40,6 @@ export function mockLlmGeneration({
           });
         }
         callbackManager?.onLLMStream({
-          event,
           index: chunks.length,
           isDone: true,
         });
@@ -122,18 +115,13 @@ export function mocStructuredkLlmGeneration({
   callbackManager?: CallbackManager;
 }) {
   vi.spyOn(languageModel, "chat").mockImplementation(
-    async ({ messages, parentEvent }: LLMChatParamsBase) => {
+    async ({ messages }: LLMChatParamsBase) => {
       const text = structuredOutput;
-      const event = globalsHelper.createEvent({
-        parentEvent,
-        type: "llmPredict",
-      });
       if (callbackManager?.onLLMStream) {
         const chunks = text.split("-");
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
           callbackManager?.onLLMStream({
-            event,
             index: i,
             token: {
               id: "id",
@@ -153,7 +141,6 @@ export function mocStructuredkLlmGeneration({
           });
         }
         callbackManager?.onLLMStream({
-          event,
           index: chunks.length,
           isDone: true,
         });

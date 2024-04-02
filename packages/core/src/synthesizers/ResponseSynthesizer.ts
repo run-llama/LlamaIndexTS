@@ -1,7 +1,6 @@
 import { MetadataMode } from "../Node.js";
 import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { ResponseBuilderPrompts } from "./builders.js";
@@ -21,7 +20,6 @@ export class ResponseSynthesizer
   implements BaseSynthesizer
 {
   responseBuilder: ResponseBuilder;
-  serviceContext: ServiceContext;
   metadataMode: MetadataMode;
 
   constructor({
@@ -35,9 +33,8 @@ export class ResponseSynthesizer
   } = {}) {
     super();
 
-    this.serviceContext = serviceContext ?? serviceContextFromDefaults();
     this.responseBuilder =
-      responseBuilder ?? getResponseBuilder(this.serviceContext);
+      responseBuilder ?? getResponseBuilder(serviceContext);
     this.metadataMode = metadataMode;
   }
 
@@ -65,7 +62,6 @@ export class ResponseSynthesizer
   async synthesize({
     query,
     nodesWithScore,
-    parentEvent,
     stream,
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
@@ -78,7 +74,6 @@ export class ResponseSynthesizer
       const response = await this.responseBuilder.getResponse({
         query,
         textChunks,
-        parentEvent,
         stream,
       });
       return streamConverter(response, (chunk) => new Response(chunk, nodes));
@@ -86,7 +81,6 @@ export class ResponseSynthesizer
     const response = await this.responseBuilder.getResponse({
       query,
       textChunks,
-      parentEvent,
     });
     return new Response(response, nodes);
   }

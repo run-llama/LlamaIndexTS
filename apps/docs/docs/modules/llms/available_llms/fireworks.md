@@ -5,13 +5,11 @@ Fireworks.ai focus on production use cases for open source LLMs, offering speed 
 ## Usage
 
 ```ts
-import { FireworksLLM, serviceContextFromDefaults } from "llamaindex";
+import { FireworksLLM, Settings } from "llamaindex";
 
-const fireworksLLM = new FireworksLLM({
+Settings.llm = new FireworksLLM({
   apiKey: "<YOUR_API_KEY>",
 });
-
-const serviceContext = serviceContextFromDefaults({ llm: fireworksLLM });
 ```
 
 ## Load and index documents
@@ -23,9 +21,7 @@ const reader = new PDFReader();
 const documents = await reader.loadData("../data/brk-2022.pdf");
 
 // Split text and create embeddings. Store them in a VectorStoreIndex
-const index = await VectorStoreIndex.fromDocuments(documents, {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments(documents);
 ```
 
 ## Query

@@ -27,11 +27,15 @@ import {
   simpleExtractKeywords,
 } from "./utils.js";
 
+import { llmFromSettingsOrContext } from "../../Settings.js";
+import type { LLM } from "../../llm/types.js";
+
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];
   indexStruct?: KeywordTable;
   indexId?: string;
   serviceContext?: ServiceContext;
+  llm?: LLM;
   storageContext?: StorageContext;
 }
 export enum KeywordTableRetrieverMode {
@@ -45,7 +49,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
   protected index: KeywordTableIndex;
   protected indexStruct: KeywordTable;
   protected docstore: BaseDocumentStore;
-  protected serviceContext: ServiceContext;
+  protected llm: LLM;
 
   protected maxKeywordsPerQuery: number; // Maximum number of keywords to extract from query.
   protected numChunksPerQuery: number; // Maximum number of text chunks to query.
@@ -68,7 +72,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     this.index = index;
     this.indexStruct = index.indexStruct;
     this.docstore = index.docStore;
-    this.serviceContext = index.serviceContext;
+    this.llm = llmFromSettingsOrContext(index.serviceContext);
 
     this.maxKeywordsPerQuery = maxKeywordsPerQuery;
     this.numChunksPerQuery = numChunksPerQuery;
@@ -101,16 +105,12 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
 
     return sortedNodes.map((node) => ({ node }));
   }
-
-  getServiceContext(): ServiceContext {
-    return this.index.serviceContext;
-  }
 }
 
 // Extracts keywords using LLMs.
 export class KeywordTableLLMRetriever extends BaseKeywordTableRetriever {
   async getKeywords(query: string): Promise<string[]> {
-    const response = await this.serviceContext.llm.complete({
+    const response = await this.llm.complete({
       prompt: this.queryKeywordExtractTemplate({
         question: query,
         maxKeywords: this.maxKeywordsPerQuery,
@@ -156,8 +156,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   static async init(options: KeywordIndexOptions): Promise<KeywordTableIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
-    const serviceContext =
-      options.serviceContext ?? serviceContextFromDefaults({});
+    const serviceContext = options.serviceContext;
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
@@ -247,13 +246,16 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
 
   static async extractKeywords(
     text: string,
-    serviceContext: ServiceContext,
+    serviceContext?: ServiceContext,
   ): Promise<Set<string>> {
-    const response = await serviceContext.llm.complete({
+    const llm = llmFromSettingsOrContext(serviceContext);
+
+    const response = await llm.complete({
       prompt: defaultKeywordExtractPrompt({
         context: text,
       }),
     });
+
     return extractKeywordsGivenResponse(response.text, "KEYWORDS:");
   }
 
@@ -300,7 +302,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   static async buildIndexFromNodes(
     nodes: BaseNode[],
     docStore: BaseDocumentStore,
-    serviceContext: ServiceContext,
+    serviceContext?: ServiceContext,
   ): Promise<KeywordTable> {
     const indexStruct = new KeywordTable();
     await docStore.addDocuments(nodes, true);

@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "expectedMinorVersion": "2",
   "license": "MIT",
   "type": "module",
@@ -67,6 +67,10 @@
         "types": "./dist/type/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
+    },
+    "./internal/*": {
+      "import": "./dist/not-allow.js",
+      "require": "./dist/cjs/not-allow.js"
     },
     "./*": {
       "import": {

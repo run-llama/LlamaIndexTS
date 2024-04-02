@@ -1,5 +1,4 @@
 import type {
-  ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
@@ -24,11 +23,10 @@ export abstract class BaseLLM implements LLM {
   async complete(
     params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
-    const { prompt, parentEvent, stream } = params;
+    const { prompt, stream } = params;
     if (stream) {
       const stream = await this.chat({
         messages: [{ content: prompt, role: "user" }],
-        parentEvent,
         stream: true,
       });
       return streamConverter(stream, (chunk) => {
@@ -39,7 +37,6 @@ export abstract class BaseLLM implements LLM {
     }
     const chatResponse = await this.chat({
       messages: [{ content: prompt, role: "user" }],
-      parentEvent,
     });
     return { text: chatResponse.message.content as string };
   }
@@ -48,6 +45,4 @@ export abstract class BaseLLM implements LLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   abstract chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-
-  abstract tokens(messages: ChatMessage[]): number;
 }

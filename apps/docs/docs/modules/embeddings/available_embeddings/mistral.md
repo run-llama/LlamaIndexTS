@@ -3,21 +3,16 @@
 To use MistralAI embeddings, you need to import `MistralAIEmbedding` from `llamaindex`.
 
 ```ts
-import { MistralAIEmbedding, serviceContextFromDefaults } from "llamaindex";
+import { MistralAIEmbedding, Settings } from "llamaindex";
 
-const mistralEmbedModel = new MistralAIEmbedding({
+// Update Embed Model
+Settings.embedModel = new MistralAIEmbedding({
   apiKey: "<YOUR_API_KEY>",
-});
-
-const serviceContext = serviceContextFromDefaults({
-  embedModel: mistralEmbedModel,
 });
 
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 
 const queryEngine = index.asQueryEngine();
 

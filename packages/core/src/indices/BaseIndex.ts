@@ -1,6 +1,7 @@
 import type { BaseNode, Document } from "../Node.js";
 import type { BaseRetriever } from "../Retriever.js";
 import type { ServiceContext } from "../ServiceContext.js";
+import { nodeParserFromSettingsOrContext } from "../Settings.js";
 import { runTransformations } from "../ingestion/IngestionPipeline.js";
 import type { StorageContext } from "../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
@@ -15,6 +16,7 @@ import { IndexStructType } from "./json-to-index-struct.js";
 export class KeywordTable extends IndexStruct {
   table: Map<string, Set<string>> = new Map();
   type: IndexStructType = IndexStructType.KEYWORD_TABLE;
+
   addNode(keywords: string[], nodeId: string): void {
     keywords.forEach((keyword) => {
       if (!this.table.has(keyword)) {
@@ -42,7 +44,7 @@ export class KeywordTable extends IndexStruct {
 }
 
 export interface BaseIndexInit<T> {
-  serviceContext: ServiceContext;
+  serviceContext?: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
   vectorStore?: VectorStore;
@@ -55,7 +57,7 @@ export interface BaseIndexInit<T> {
  * they can be retrieved for our queries.
  */
 export abstract class BaseIndex<T> {
-  serviceContext: ServiceContext;
+  serviceContext?: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
   vectorStore?: VectorStore;
@@ -94,7 +96,7 @@ export abstract class BaseIndex<T> {
   async insert(document: Document) {
     const nodes = await runTransformations(
       [document],
-      [this.serviceContext.nodeParser],
+      [nodeParserFromSettingsOrContext(this.serviceContext)],
     );
     await this.insertNodes(nodes);
     this.docStore.setDocumentHash(document.id_, document.hash);

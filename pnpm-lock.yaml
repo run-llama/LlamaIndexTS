@@ -48,9 +48,9 @@ importers:
       '@docusaurus/remark-plugin-npm2yarn':
         specifier: ^3.2.0
         version: 3.2.0
-      '@llamaindex/env':
+      '@llamaindex/examples':
         specifier: workspace:*
-        version: link:../../packages/env
+        version: link:../../examples
       '@mdx-js/react':
         specifier: ^3.0.0
         version: 3.0.0(@types/react@18.2.73)(react@18.2.0)
@@ -130,6 +130,9 @@ importers:
       dotenv:
         specifier: ^16.4.1
         version: 16.4.1
+      js-tiktoken:
+        specifier: ^1.0.10
+        version: 1.0.10
       llamaindex:
         specifier: latest
         version: link:../packages/core

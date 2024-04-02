@@ -1,6 +1,33 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
-import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
+import { CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
+import {
+  EventCaller,
+  getEventCaller,
+} from "../internal/context/EventCaller.js";
+
+export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
+  reason: EventCaller | null;
+  private constructor(
+    event: string,
+    options?: CustomEventInit & {
+      reason?: EventCaller | null;
+    },
+  ) {
+    super(event, options);
+    this.reason = options?.reason ?? null;
+  }
+
+  static fromEvent<Type extends keyof LlamaIndexEventMaps>(
+    type: Type,
+    detail: LlamaIndexEventMaps[Type]["detail"],
+  ) {
+    return new LlamaIndexCustomEvent(type, {
+      detail: detail,
+      reason: getEventCaller(),
+    });
+  }
+}
 
 /**
  * This type is used to define the event maps for the Llamaindex package.
@@ -21,26 +48,6 @@ declare module "llamaindex" {
 }
 
 //#region @deprecated remove in the next major version
-/*
-  An event is a wrapper that groups related operations.
-  For example, during retrieve and synthesize,
-  a parent event wraps both operations, and each operation has it's own
-  event. In this case, both sub-events will share a parentId.
-*/
-
-export type EventTag = "intermediate" | "final";
-export type EventType = "retrieve" | "llmPredict" | "wrapper";
-export interface Event {
-  id: string;
-  type: EventType;
-  tags?: EventTag[];
-  parentId?: string;
-}
-
-interface BaseCallbackResponse {
-  event: Event;
-}
-
 //Specify StreamToken per mainstream LLM
 export interface DefaultStreamToken {
   id: string;
@@ -68,13 +75,13 @@ export type AnthropicStreamToken = Anthropic.Completion;
 
 //StreamCallbackResponse should let practitioners implement callbacks out of the box...
 //When custom streaming LLMs are involved, people are expected to write their own StreamCallbackResponses
-export interface StreamCallbackResponse extends BaseCallbackResponse {
+export interface StreamCallbackResponse {
   index: number;
   isDone?: boolean;
   token?: DefaultStreamToken;
 }
 
-export interface RetrievalCallbackResponse extends BaseCallbackResponse {
+export interface RetrievalCallbackResponse {
   query: string;
   nodes: NodeWithScore[];
 }
@@ -98,7 +105,11 @@ interface CallbackManagerMethods {
 
 const noop: (...args: any[]) => any = () => void 0;
 
-type EventHandler<Event extends CustomEvent> = (event: Event) => void;
+type EventHandler<Event extends CustomEvent> = (
+  event: Event & {
+    reason: EventCaller | null;
+  },
+) => void;
 
 export class CallbackManager implements CallbackManagerMethods {
   /**
@@ -110,7 +121,7 @@ export class CallbackManager implements CallbackManagerMethods {
         this.#handlers
           .get("stream")!
           .map((handler) =>
-            handler(new CustomEvent("stream", { detail: response })),
+            handler(LlamaIndexCustomEvent.fromEvent("stream", response)),
           ),
       );
     };
@@ -125,7 +136,7 @@ export class CallbackManager implements CallbackManagerMethods {
         this.#handlers
           .get("retrieve")!
           .map((handler) =>
-            handler(new CustomEvent("retrieve", { detail: response })),
+            handler(LlamaIndexCustomEvent.fromEvent("retrieve", response)),
           ),
       );
     };
@@ -135,30 +146,26 @@ export class CallbackManager implements CallbackManagerMethods {
    * @deprecated will be removed in the next major version
    */
   set onLLMStream(_: never) {
-    throw new Error(
-      "onLLMStream is deprecated. Use addHandlers('stream') instead",
-    );
+    throw new Error("onLLMStream is deprecated. Use on('stream') instead");
   }
 
   /**
    * @deprecated will be removed in the next major version
    */
   set onRetrieve(_: never) {
-    throw new Error(
-      "onRetrieve is deprecated. Use `addHandlers('retrieve')` instead",
-    );
+    throw new Error("onRetrieve is deprecated. Use `on('retrieve')` instead");
   }
 
   #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<CustomEvent>[]>();
 
   constructor(handlers?: Partial<CallbackManagerMethods>) {
     const onLLMStream = handlers?.onLLMStream ?? noop;
-    this.addHandlers("stream", (event) => onLLMStream(event.detail));
+    this.on("stream", (event) => onLLMStream(event.detail));
     const onRetrieve = handlers?.onRetrieve ?? noop;
-    this.addHandlers("retrieve", (event) => onRetrieve(event.detail));
+    this.on("retrieve", (event) => onRetrieve(event.detail));
   }
 
-  addHandlers<
+  on<
     K extends keyof LlamaIndexEventMaps,
     H extends EventHandler<LlamaIndexEventMaps[K]>,
   >(event: K, handler: H) {
@@ -169,7 +176,7 @@ export class CallbackManager implements CallbackManagerMethods {
     return this;
   }
 
-  removeHandlers<
+  off<
     K extends keyof LlamaIndexEventMaps,
     H extends EventHandler<LlamaIndexEventMaps[K]>,
   >(event: K, handler: H) {
@@ -192,24 +199,8 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    handlers.forEach((handler) => handler(new CustomEvent(event, { detail })));
+    handlers.forEach((handler) =>
+      handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
+    );
   }
-}
-
-const defaultCallbackManager = new CallbackManager();
-const callbackAsyncLocalStorage = new AsyncLocalStorage<CallbackManager>();
-
-/**
- * Get the current callback manager
- * @default defaultCallbackManager if no callback manager is set
- */
-export function getCurrentCallbackManager() {
-  return callbackAsyncLocalStorage.getStore() ?? defaultCallbackManager;
-}
-
-export function runWithCallbackManager<Result>(
-  callbackManager: CallbackManager,
-  fn: () => Result,
-): Result {
-  return callbackAsyncLocalStorage.run(callbackManager, fn);
 }

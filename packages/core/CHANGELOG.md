@@ -1,5 +1,22 @@
 # llamaindex
 
+## 0.2.2
+
+### Patch Changes
+
+- 3f8407c: Add pipeline.register to create a managed index in LlamaCloud
+- 60a1603: fix: make edge run build after core
+- fececd8: feat: add tool factory
+- 1115f83: fix: throw error when no pipelines exist for the retriever
+- 7a23cc6: feat: improve CallbackManager
+- ea467fa: Update the list of supported Azure OpenAI API versions as of 2024-04-02.
+- 6d9e015: feat: use claude3 with react agent
+- 0b665bd: feat: add wikipedia tool
+- 24b4033: feat: add result type json
+- 8b28092: Add support for doc store strategies to VectorStoreIndex.fromDocuments
+- Updated dependencies [7a23cc6]
+  - @llamaindex/env@0.0.6
+
 ## 0.2.1
 
 ### Patch Changes

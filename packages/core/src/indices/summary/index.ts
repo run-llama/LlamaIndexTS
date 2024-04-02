@@ -1,13 +1,16 @@
 import _ from "lodash";
-import { globalsHelper } from "../../GlobalsHelper.js";
 import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
 import type { ChoiceSelectPrompt } from "../../Prompt.js";
 import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import { serviceContextFromDefaults } from "../../ServiceContext.js";
-import { getCurrentCallbackManager } from "../../callbacks/CallbackManager.js";
+import {
+  Settings,
+  llmFromSettingsOrContext,
+  nodeParserFromSettingsOrContext,
+} from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -58,8 +61,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
   static async init(options: SummaryIndexOptions): Promise<SummaryIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
-    const serviceContext =
-      options.serviceContext ?? serviceContextFromDefaults({});
+    const serviceContext = options.serviceContext;
     const { docStore, indexStore } = storageContext;
 
     // Setup IndexStruct from storage
@@ -130,7 +132,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
   ): Promise<SummaryIndex> {
     let { storageContext, serviceContext } = args;
     storageContext = storageContext ?? (await storageContextFromDefaults({}));
-    serviceContext = serviceContext ?? serviceContextFromDefaults({});
+    serviceContext = serviceContext;
     const docStore = storageContext.docStore;
 
     docStore.addDocuments(documents, true);
@@ -138,7 +140,11 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
-    const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);
+    const nodes =
+      nodeParserFromSettingsOrContext(serviceContext).getNodesFromDocuments(
+        documents,
+      );
+
     const index = await SummaryIndex.init({
       nodes,
       storageContext,
@@ -281,10 +287,8 @@ export class SummaryIndexRetriever implements BaseRetriever {
     this.index = index;
   }
 
-  async retrieve({
-    query,
-    parentEvent,
-  }: RetrieveParams): Promise<NodeWithScore[]> {
+  @wrapEventCaller
+  async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const nodes = await this.index.docStore.getNodes(nodeIds);
     const result = nodes.map((node) => ({
@@ -292,20 +296,12 @@ export class SummaryIndexRetriever implements BaseRetriever {
       score: 1,
     }));
 
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.dispatchEvent("retrieve", {
       query,
       nodes: result,
-      event: globalsHelper.createEvent({
-        parentEvent,
-        type: "retrieve",
-      }),
     });
 
     return result;
-  }
-
-  getServiceContext(): ServiceContext {
-    return this.index.serviceContext;
   }
 }
 
@@ -318,7 +314,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
   choiceBatchSize: number;
   formatNodeBatchFn: NodeFormatterFunction;
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
-  serviceContext: ServiceContext;
+  serviceContext?: ServiceContext;
 
   // eslint-disable-next-line max-params
   constructor(
@@ -338,10 +334,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
     this.serviceContext = serviceContext || index.serviceContext;
   }
 
-  async retrieve({
-    query,
-    parentEvent,
-  }: RetrieveParams): Promise<NodeWithScore[]> {
+  async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const results: NodeWithScore[] = [];
 
@@ -351,8 +344,11 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
 
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
       const input = { context: fmtBatchStr, query: query };
+
+      const llm = llmFromSettingsOrContext(this.serviceContext);
+
       const rawResponse = (
-        await this.serviceContext.llm.complete({
+        await llm.complete({
           prompt: this.choiceSelectPrompt(input),
         })
       ).text;
@@ -375,20 +371,12 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       results.push(...nodeWithScores);
     }
 
-    getCurrentCallbackManager().onRetrieve({
+    Settings.callbackManager.dispatchEvent("retrieve", {
       query,
       nodes: results,
-      event: globalsHelper.createEvent({
-        parentEvent,
-        type: "retrieve",
-      }),
     });
 
     return results;
-  }
-
-  getServiceContext(): ServiceContext {
-    return this.serviceContext;
   }
 }
 

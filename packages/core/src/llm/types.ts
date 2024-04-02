@@ -1,5 +1,4 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import { type Event } from "../callbacks/CallbackManager.js";
 
 type LLMBaseEvent<
   Type extends string,
@@ -59,11 +58,6 @@ export interface LLM extends LLMChat {
   complete(
     params: LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse>;
-
-  /**
-   * Calculates the number of tokens needed for the given chat messages
-   */
-  tokens(messages: ChatMessage[]): number;
 }
 
 export type MessageType =
@@ -108,7 +102,6 @@ export interface LLMMetadata {
 
 export interface LLMChatParamsBase {
   messages: ChatMessage[];
-  parentEvent?: Event;
   extraParams?: Record<string, any>;
   tools?: any;
   toolChoice?: any;
@@ -125,7 +118,6 @@ export interface LLMChatParamsNonStreaming extends LLMChatParamsBase {
 
 export interface LLMCompletionParamsBase {
   prompt: any;
-  parentEvent?: Event;
 }
 
 export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {

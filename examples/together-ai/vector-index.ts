@@ -2,11 +2,19 @@ import fs from "node:fs/promises";
 
 import {
   Document,
+  Settings,
   TogetherEmbedding,
   TogetherLLM,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
+
+// Update llm to use TogetherAI
+Settings.llm = new TogetherLLM({
+  model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
+});
+
+// Update embedModel
+Settings.embedModel = new TogetherEmbedding();
 
 async function main() {
   const apiKey = process.env.TOGETHER_API_KEY;
@@ -18,14 +26,7 @@ async function main() {
 
   const document = new Document({ text: essay, id_: path });
 
-  const serviceContext = serviceContextFromDefaults({
-    llm: new TogetherLLM({ model: "mistralai/Mixtral-8x7B-Instruct-v0.1" }),
-    embedModel: new TogetherEmbedding(),
-  });
-
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   const queryEngine = index.asQueryEngine();
 

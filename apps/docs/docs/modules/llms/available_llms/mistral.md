@@ -3,14 +3,12 @@
 ## Usage
 
 ```ts
-import { Ollama, serviceContextFromDefaults } from "llamaindex";
+import { Ollama, Settings } from "llamaindex";
 
-const mistralLLM = new MistralAI({
+Settings.llm = new MistralAI({
   model: "mistral-tiny",
   apiKey: "<YOUR_API_KEY>",
 });
-
-const serviceContext = serviceContextFromDefaults({ llm: mistralLLM });
 ```
 
 ## Load and index documents
@@ -20,9 +18,7 @@ For this example, we will use a single document. In a real-world scenario, you w
 ```ts
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 ```
 
 ## Query
@@ -40,26 +36,16 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  MistralAI,
-  Document,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { MistralAI, Document, VectorStoreIndex, Settings } from "llamaindex";
+
+// Use the MistralAI LLM
+Settings.llm = new MistralAI({ model: "mistral-tiny" });
 
 async function main() {
-  // Create an instance of the LLM
-  const mistralLLM = new MistralAI({ model: "mistral-tiny" });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({ llm: mistralLLM });
-
   const document = new Document({ text: essay, id_: "essay" });
 
   // Load and index documents
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // get retriever
   const retriever = index.asRetriever();

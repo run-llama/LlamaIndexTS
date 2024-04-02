@@ -2,14 +2,14 @@
 
 The embedding model in LlamaIndex is responsible for creating numerical representations of text. By default, LlamaIndex will use the `text-embedding-ada-002` model from OpenAI.
 
-This can be explicitly set in the `ServiceContext` object.
+This can be explicitly updated through `Settings`
 
 ```typescript
-import { OpenAIEmbedding, serviceContextFromDefaults } from "llamaindex";
+import { OpenAIEmbedding, Settings } from "llamaindex";
 
-const openaiEmbeds = new OpenAIEmbedding();
-
-const serviceContext = serviceContextFromDefaults({ embedModel: openaiEmbeds });
+Settings.embedModel = new OpenAIEmbedding({
+  model: "text-embedding-ada-002",
+});
 ```
 
 ## Local Embedding
@@ -19,4 +19,3 @@ For local embeddings, you can use the [HuggingFace](./available_embeddings/huggi
 ## API Reference
 
 - [OpenAIEmbedding](../../api/classes/OpenAIEmbedding.md)
-- [ServiceContext](../../api/interfaces//ServiceContext.md)

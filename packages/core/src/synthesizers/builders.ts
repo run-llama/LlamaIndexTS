@@ -1,4 +1,3 @@
-import type { Event } from "../callbacks/CallbackManager.js";
 import type { LLM } from "../llm/index.js";
 import { streamConverter } from "../llm/utils.js";
 import type {
@@ -16,6 +15,10 @@ import type { PromptHelper } from "../PromptHelper.js";
 import { getBiggestPrompt } from "../PromptHelper.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { ServiceContext } from "../ServiceContext.js";
+import {
+  llmFromSettingsOrContext,
+  promptHelperFromSettingsOrContext,
+} from "../Settings.js";
 import type {
   ResponseBuilder,
   ResponseBuilderParamsNonStreaming,
@@ -39,8 +42,8 @@ export class SimpleResponseBuilder implements ResponseBuilder {
   llm: LLM;
   textQATemplate: TextQaPrompt;
 
-  constructor(serviceContext: ServiceContext, textQATemplate?: TextQaPrompt) {
-    this.llm = serviceContext.llm;
+  constructor(serviceContext?: ServiceContext, textQATemplate?: TextQaPrompt) {
+    this.llm = llmFromSettingsOrContext(serviceContext);
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
   }
 
@@ -51,7 +54,6 @@ export class SimpleResponseBuilder implements ResponseBuilder {
   async getResponse({
     query,
     textChunks,
-    parentEvent,
     stream,
   }:
     | ResponseBuilderParamsStreaming
@@ -65,10 +67,10 @@ export class SimpleResponseBuilder implements ResponseBuilder {
 
     const prompt = this.textQATemplate(input);
     if (stream) {
-      const response = await this.llm.complete({ prompt, parentEvent, stream });
+      const response = await this.llm.complete({ prompt, stream });
       return streamConverter(response, (chunk) => chunk.text);
     } else {
-      const response = await this.llm.complete({ prompt, parentEvent, stream });
+      const response = await this.llm.complete({ prompt, stream });
       return response.text;
     }
   }
@@ -84,14 +86,14 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   refineTemplate: RefinePrompt;
 
   constructor(
-    serviceContext: ServiceContext,
+    serviceContext?: ServiceContext,
     textQATemplate?: TextQaPrompt,
     refineTemplate?: RefinePrompt,
   ) {
     super();
 
-    this.llm = serviceContext.llm;
-    this.promptHelper = serviceContext.promptHelper;
+    this.llm = llmFromSettingsOrContext(serviceContext);
+    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
     this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
@@ -126,7 +128,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   async getResponse({
     query,
     textChunks,
-    parentEvent,
     prevResponse,
     stream,
   }:
@@ -144,7 +145,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
           query,
           chunk,
           !!stream && lastChunk,
-          parentEvent,
         );
       } else {
         response = await this.refineResponseSingle(
@@ -152,7 +152,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
           query,
           chunk,
           !!stream && lastChunk,
-          parentEvent,
         );
       }
     }
@@ -164,7 +163,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     queryStr: string,
     textChunk: string,
     stream: boolean,
-    parentEvent?: Event,
   ) {
     const textQATemplate: SimplePrompt = (input) =>
       this.textQATemplate({ ...input, query: queryStr });
@@ -180,7 +178,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
           prompt: textQATemplate({
             context: chunk,
           }),
-          parentEvent,
           stream: stream && lastChunk,
         });
       } else {
@@ -189,7 +186,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
           queryStr,
           chunk,
           stream && lastChunk,
-          parentEvent,
         );
       }
     }
@@ -203,7 +199,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     queryStr: string,
     textChunk: string,
     stream: boolean,
-    parentEvent?: Event,
   ) {
     const refineTemplate: SimplePrompt = (input) =>
       this.refineTemplate({ ...input, query: queryStr });
@@ -220,7 +215,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
           context: chunk,
           existingAnswer: response as string,
         }),
-        parentEvent,
         stream: stream && lastChunk,
       });
     }
@@ -230,7 +224,6 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   async complete(params: {
     prompt: string;
     stream: boolean;
-    parentEvent?: Event;
   }): Promise<AsyncIterable<string> | string> {
     if (params.stream) {
       const response = await this.llm.complete({ ...params, stream: true });
@@ -253,7 +246,6 @@ export class CompactAndRefine extends Refine {
   async getResponse({
     query,
     textChunks,
-    parentEvent,
     prevResponse,
     stream,
   }:
@@ -271,7 +263,6 @@ export class CompactAndRefine extends Refine {
     const params = {
       query,
       textChunks: newTexts,
-      parentEvent,
       prevResponse,
     };
     if (stream) {
@@ -293,13 +284,13 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
   summaryTemplate: TreeSummarizePrompt;
 
   constructor(
-    serviceContext: ServiceContext,
+    serviceContext?: ServiceContext,
     summaryTemplate?: TreeSummarizePrompt,
   ) {
     super();
 
-    this.llm = serviceContext.llm;
-    this.promptHelper = serviceContext.promptHelper;
+    this.llm = llmFromSettingsOrContext(serviceContext);
+    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
@@ -324,7 +315,6 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
   async getResponse({
     query,
     textChunks,
-    parentEvent,
     stream,
   }:
     | ResponseBuilderParamsStreaming
@@ -347,7 +337,6 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
           context: packedTextChunks[0],
           query,
         }),
-        parentEvent,
       };
       if (stream) {
         const response = await this.llm.complete({ ...params, stream });
@@ -362,7 +351,6 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
               context: chunk,
               query,
             }),
-            parentEvent,
           }),
         ),
       );
@@ -383,7 +371,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
 }
 
 export function getResponseBuilder(
-  serviceContext: ServiceContext,
+  serviceContext?: ServiceContext,
   responseMode?: ResponseMode,
 ): ResponseBuilder {
   switch (responseMode) {

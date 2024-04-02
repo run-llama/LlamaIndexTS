@@ -1,8 +1,6 @@
 import { ok } from "@llamaindex/env";
-import type { Event } from "../callbacks/CallbackManager.js";
 import { BaseEmbedding } from "../embeddings/types.js";
 import type {
-  ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
@@ -70,7 +68,7 @@ export class Ollama extends BaseEmbedding implements LLM {
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream } = params;
+    const { messages, stream } = params;
     const payload = {
       model: this.model,
       messages: messages.map((message) => ({
@@ -107,14 +105,13 @@ export class Ollama extends BaseEmbedding implements LLM {
       const stream = response.body;
       ok(stream, "stream is null");
       ok(stream instanceof ReadableStream, "stream is not readable");
-      return this.streamChat(stream, messageAccessor, parentEvent);
+      return this.streamChat(stream, messageAccessor);
     }
   }
 
   private async *streamChat<T>(
     stream: ReadableStream<Uint8Array>,
     accessor: (data: any) => T,
-    parentEvent?: Event,
   ): AsyncIterable<T> {
     const reader = stream.getReader();
     while (true) {
@@ -148,7 +145,7 @@ export class Ollama extends BaseEmbedding implements LLM {
   async complete(
     params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse | AsyncIterable<CompletionResponse>> {
-    const { prompt, parentEvent, stream } = params;
+    const { prompt, stream } = params;
     const payload = {
       model: this.model,
       prompt: prompt,
@@ -178,12 +175,8 @@ export class Ollama extends BaseEmbedding implements LLM {
       const stream = response.body;
       ok(stream, "stream is null");
       ok(stream instanceof ReadableStream, "stream is not readable");
-      return this.streamChat(stream, completionAccessor, parentEvent);
+      return this.streamChat(stream, completionAccessor);
     }
-  }
-
-  tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
   }
 
   private async getEmbedding(prompt: string): Promise<number[]> {

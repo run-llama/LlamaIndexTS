@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@docusaurus/core": "^3.2.0",
-    "@llamaindex/env": "workspace:*",
     "@docusaurus/remark-plugin-npm2yarn": "^3.2.0",
+    "@llamaindex/examples": "workspace:*",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.1.0",
     "postcss": "^8.4.33",

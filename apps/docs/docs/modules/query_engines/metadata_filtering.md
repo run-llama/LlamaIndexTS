@@ -54,12 +54,13 @@ You can create a `ChromaVectorStore` to store the documents:
 
 ```ts
 const chromaVS = new ChromaVectorStore({ collectionName });
-const serviceContext = await storageContextFromDefaults({
+
+const storageContext = await storageContextFromDefaults({
   vectorStore: chromaVS,
 });
 
 const index = await VectorStoreIndex.fromDocuments(docs, {
-  storageContext: serviceContext,
+  storageContext: storageContext,
 });
 ```
 
