@@ -204,7 +204,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       ...llmChatKwargs,
     });
 
-    const iterator = streamConverter(
+    const iterator = streamConverter.bind(this)(
       streamReducer({
         stream,
         initialValue: "",

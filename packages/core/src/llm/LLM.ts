@@ -1,8 +1,6 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
 import {
-  type Event,
-  type EventType,
   type OpenAIStreamToken,
   type StreamCallbackResponse,
 } from "../callbacks/CallbackManager.js";
@@ -10,6 +8,7 @@ import {
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers } from "../GlobalsHelper.js";
+import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { AnthropicSession } from "./anthropic.js";
 import { getAnthropicSession } from "./anthropic.js";
@@ -35,7 +34,7 @@ import type {
   LLMMetadata,
   MessageType,
 } from "./types.js";
-import { llmEvent } from "./utils.js";
+import { wrapLLMEvent } from "./utils.js";
 
 export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
@@ -211,11 +210,12 @@ export class OpenAI extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapEventCaller
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream, tools, toolChoice } = params;
+    const { messages, stream, tools, toolChoice } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
@@ -255,9 +255,9 @@ export class OpenAI extends BaseLLM {
     };
   }
 
+  @wrapEventCaller
   protected async *streamChat({
     messages,
-    parentEvent,
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
@@ -274,21 +274,11 @@ export class OpenAI extends BaseLLM {
       ...this.additionalChatOptions,
     };
 
-    //Now let's wrap our stream in a callback
-    const onLLMStream = getCallbackManager().onLLMStream;
-
     const chunk_stream: AsyncIterable<OpenAIStreamToken> =
       await this.session.openai.chat.completions.create({
         ...baseRequestParams,
         stream: true,
       });
-
-    const event: Event = parentEvent
-      ? parentEvent
-      : {
-          id: "unspecified",
-          type: "llmPredict" as EventType,
-        };
 
     // TODO: add callback to streamConverter and use streamConverter here
     //Indices
@@ -303,12 +293,11 @@ export class OpenAI extends BaseLLM {
       //onLLMStream Callback
 
       const stream_callback: StreamCallbackResponse = {
-        event: event,
         index: idx_counter,
         isDone: is_done,
         token: part,
       };
-      onLLMStream(stream_callback);
+      getCallbackManager().dispatchEvent("stream", stream_callback);
 
       idx_counter++;
 
@@ -541,11 +530,11 @@ If a question does not make any sense, or is not factually coherent, explain why
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream } = params;
+    const { messages, stream } = params;
     const api = ALL_AVAILABLE_LLAMADEUCE_MODELS[this.model]
       .replicateApi as `${string}/${string}:${string}`;
 
@@ -683,13 +672,13 @@ export class Anthropic extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     let { messages } = params;
 
-    const { parentEvent, stream } = params;
+    const { stream } = params;
 
     let systemPrompt: string | null = null;
 
@@ -706,7 +695,7 @@ export class Anthropic extends BaseLLM {
 
     //Streaming
     if (stream) {
-      return this.streamChat(messages, parentEvent, systemPrompt);
+      return this.streamChat(messages, systemPrompt);
     }
 
     //Non-streaming
@@ -726,7 +715,6 @@ export class Anthropic extends BaseLLM {
 
   protected async *streamChat(
     messages: ChatMessage[],
-    parentEvent?: Event | undefined,
     systemPrompt?: string | null,
   ): AsyncIterable<ChatResponseChunk> {
     const stream = await this.session.anthropic.messages.create({
@@ -782,13 +770,13 @@ export class Portkey extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  @llmEvent
+  @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, parentEvent, stream, extraParams } = params;
+    const { messages, stream, extraParams } = params;
     if (stream) {
-      return this.streamChat(messages, parentEvent, extraParams);
+      return this.streamChat(messages, extraParams);
     } else {
       const bodyParams = extraParams || {};
       const response = await this.session.portkey.chatCompletions.create({
@@ -804,24 +792,13 @@ export class Portkey extends BaseLLM {
 
   async *streamChat(
     messages: ChatMessage[],
-    parentEvent?: Event,
     params?: Record<string, any>,
   ): AsyncIterable<ChatResponseChunk> {
-    // Wrapping the stream in a callback.
-    const onLLMStream = getCallbackManager().onLLMStream;
-
     const chunkStream = await this.session.portkey.chatCompletions.create({
       messages,
       ...params,
       stream: true,
     });
-
-    const event: Event = parentEvent
-      ? parentEvent
-      : {
-          id: "unspecified",
-          type: "llmPredict" as EventType,
-        };
 
     //Indices
     let idx_counter: number = 0;
@@ -833,12 +810,11 @@ export class Portkey extends BaseLLM {
       //onLLMStream Callback
 
       const stream_callback: StreamCallbackResponse = {
-        event: event,
         index: idx_counter,
         isDone: is_done,
         // token: part,
       };
-      onLLMStream(stream_callback);
+      getCallbackManager().dispatchEvent("stream", stream_callback);
 
       idx_counter++;
 

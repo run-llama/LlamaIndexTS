@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "@llamaindex/env";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { ChatResponse, LLM, LLMChat, MessageContent } from "./types.js";
 
@@ -47,7 +48,7 @@ export function extractText(message: MessageContent): string {
 /**
  * @internal
  */
-export function llmEvent(
+export function wrapLLMEvent(
   originalMethod: LLMChat["chat"],
   _context: ClassMethodDecoratorContext,
 ) {
@@ -62,6 +63,8 @@ export function llmEvent(
     });
     const response = await originalMethod.call(this, ...params);
     if (Symbol.asyncIterator in response) {
+      // save snapshot to restore it after the response is done
+      const snapshot = AsyncLocalStorage.snapshot();
       const originalAsyncIterator = {
         [Symbol.asyncIterator]: response[Symbol.asyncIterator].bind(response),
       };
@@ -82,10 +85,12 @@ export function llmEvent(
           }
           yield chunk;
         }
-        getCallbackManager().dispatchEvent("llm-end", {
-          payload: {
-            response: finalResponse,
-          },
+        snapshot(() => {
+          getCallbackManager().dispatchEvent("llm-end", {
+            payload: {
+              response: finalResponse,
+            },
+          });
         });
       };
     } else {

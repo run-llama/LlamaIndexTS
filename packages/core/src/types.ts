@@ -1,7 +1,6 @@
 /**
  * Top level types to avoid circular dependencies
  */
-import type { Event } from "./callbacks/CallbackManager.js";
 import type { Response } from "./Response.js";
 
 /**
@@ -9,7 +8,6 @@ import type { Response } from "./Response.js";
  */
 export interface QueryEngineParamsBase {
   query: string;
-  parentEvent?: Event;
 }
 
 export interface QueryEngineParamsStreaming extends QueryEngineParamsBase {
