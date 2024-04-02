@@ -82,7 +82,7 @@ export class PGVectorStore implements VectorStore {
   private async getDb(): Promise<pg.Client> {
     if (!this.db) {
       try {
-        const { Client } = await import("pg");
+        const { Client } = await (await import("pg")).default;
         const { registerType } = await import("pgvector/pg");
         // Create DB connection
         // Read connection params from env - see comment block above
