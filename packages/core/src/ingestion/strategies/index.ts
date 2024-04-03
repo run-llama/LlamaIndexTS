@@ -5,9 +5,16 @@ import { DuplicatesStrategy } from "./DuplicatesStrategy.js";
 import { UpsertsAndDeleteStrategy } from "./UpsertsAndDeleteStrategy.js";
 import { UpsertsStrategy } from "./UpsertsStrategy.js";
 
+/**
+ * Document de-deduplication strategies work by comparing the hashes or ids stored in the document store.
+ * They require a document store to be set which must be persisted across pipeline runs.
+ */
 export enum DocStoreStrategy {
+  // Use upserts to handle duplicates. Checks if the a document is already in the doc store based on its id. If it is not, or if the hash of the document is updated, it will update the document in the doc store and run the transformations.
   UPSERTS = "upserts",
+  // Only handle duplicates. Checks if the hash of a document is already in the doc store. Only then it will add the document to the doc store and run the transformations
   DUPLICATES_ONLY = "duplicates_only",
+  // Use upserts and delete to handle duplicates. Like the upsert strategy but it will also delete non-existing documents from the doc store
   UPSERTS_AND_DELETE = "upserts_and_delete",
   NONE = "none", // no-op strategy
 }
