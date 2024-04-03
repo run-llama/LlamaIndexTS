@@ -142,11 +142,11 @@ export class PineconeVectorStore implements VectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    _options?: any,
   ): Promise<VectorStoreQueryResult> {
     const filter = this.toPineconeFilter(query.filters);
 
-    var options: any = {
+    const defaultOptions: any = {
       vector: query.queryEmbedding,
       topK: query.similarityTopK,
       includeValues: true,
@@ -155,7 +155,7 @@ export class PineconeVectorStore implements VectorStore {
     };
 
     const idx = await this.index();
-    const results = await idx.query(options);
+    const results = await idx.query(defaultOptions);
 
     const idList = results.matches.map((row) => row.id);
     const records: FetchResponse<any> = await idx.fetch(idList);
