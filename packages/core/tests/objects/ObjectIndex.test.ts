@@ -109,7 +109,7 @@ describe("ObjectIndex", () => {
 
     expect(Object.keys(tools).length).toBe(1);
 
-    objectRetriever.insertObject(tool2);
+    await objectRetriever.insertObject(tool2);
 
     tools = objectRetriever.tools;
 
