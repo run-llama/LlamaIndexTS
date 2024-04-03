@@ -9,7 +9,7 @@
     "moduleResolution": "node16",
     "types": ["node"]
   },
-  "include": ["./src", "./examples"],
+  "include": ["./src"],
   "exclude": ["node_modules"],
   "references": [
     {
