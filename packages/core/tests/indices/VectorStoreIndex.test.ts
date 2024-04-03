@@ -63,9 +63,7 @@ describe.sequential("VectorStoreIndex", () => {
     expect(entries[0]).toBe(entries[1]);
   });
 
-  afterAll(async () => {
-    // TODO: VectorStoreIndex.fromDocuments running twice is causing a cleanup issue
-    await new Promise((resolve) => setTimeout(resolve, 100));
+  afterAll(() => {
     rmSync(testDir, { recursive: true });
   });
 });
