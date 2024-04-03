@@ -58,6 +58,7 @@ export class AgentRunner extends BaseAgentRunner {
     this.memory =
       params.memory ??
       new ChatMemoryBuffer({
+        llm: params.llm,
         chatHistory: params.chatHistory,
       });
     this.initTaskStateKwargs = params.initTaskStateKwargs ?? {};

@@ -1,13 +1,17 @@
-import type { ChatMessage } from "../llm/index.js";
+import type { ChatMessage, LLM } from "../llm/index.js";
 import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore.js";
 import type { BaseChatStore } from "../storage/chatStore/types.js";
 import type { BaseMemory } from "./types.js";
+
+const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
+const DEFAULT_TOKEN_LIMIT = 3000;
 
 type ChatMemoryBufferParams = {
   tokenLimit?: number;
   chatStore?: BaseChatStore;
   chatStoreKey?: string;
   chatHistory?: ChatMessage[];
+  llm?: LLM;
 };
 
 /**
@@ -23,9 +27,16 @@ export class ChatMemoryBuffer implements BaseMemory {
    * Initialize.
    */
   constructor(init?: Partial<ChatMemoryBufferParams>) {
-    this.tokenLimit = init?.tokenLimit ?? 3000;
     this.chatStore = init?.chatStore ?? new SimpleChatStore();
     this.chatStoreKey = init?.chatStoreKey ?? "chat_history";
+    if (init?.llm) {
+      const contextWindow = init.llm.metadata.contextWindow;
+      this.tokenLimit =
+        init?.tokenLimit ??
+        Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO);
+    } else {
+      this.tokenLimit = init?.tokenLimit ?? DEFAULT_TOKEN_LIMIT;
+    }
 
     if (init?.chatHistory) {
       this.chatStore.setMessages(this.chatStoreKey, init.chatHistory);
@@ -49,7 +60,7 @@ export class ChatMemoryBuffer implements BaseMemory {
 
     while (tokenCount > this.tokenLimit && messageCount > 1) {
       messageCount -= 1;
-      if (chatHistory[-messageCount].role === "assistant") {
+      if (chatHistory.at(-messageCount)?.role === "assistant") {
         // we cannot have an assistant message at the start of the chat history
         // if after removal of the first, we have an assistant message,
         // we need to remove the assistant message too
