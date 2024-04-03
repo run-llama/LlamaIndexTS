@@ -20,7 +20,7 @@ export function mockLlmGeneration({
         const chunks = text.split("-");
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
-          callbackManager?.onLLMStream({
+          await callbackManager?.onLLMStream({
             index: i,
             token: {
               id: "id",
@@ -39,7 +39,7 @@ export function mockLlmGeneration({
             },
           });
         }
-        callbackManager?.onLLMStream({
+        await callbackManager?.onLLMStream({
           index: chunks.length,
           isDone: true,
         });
@@ -121,7 +121,7 @@ export function mocStructuredkLlmGeneration({
         const chunks = text.split("-");
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
-          callbackManager?.onLLMStream({
+          await callbackManager?.onLLMStream({
             index: i,
             token: {
               id: "id",
@@ -140,7 +140,7 @@ export function mocStructuredkLlmGeneration({
             },
           });
         }
-        callbackManager?.onLLMStream({
+        await callbackManager?.onLLMStream({
           index: chunks.length,
           isDone: true,
         });

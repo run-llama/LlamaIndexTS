@@ -26,7 +26,7 @@ export class UpsertsStrategy implements TransformComponent {
       }
     }
     // add non-duplicate docs
-    this.docStore.addDocuments(dedupedNodes, true);
+    await this.docStore.addDocuments(dedupedNodes, true);
     return dedupedNodes;
   }
 }

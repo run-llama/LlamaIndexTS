@@ -170,10 +170,10 @@ export class ObjectIndex {
     return new ObjectIndex(index, objectMapping);
   }
 
-  insertObject(obj: any): void {
+  async insertObject(obj: any): Promise<void> {
     this._objectNodeMapping.addObj(obj);
     const node = this._objectNodeMapping.toNode(obj);
-    this._index.insertNodes([node]);
+    await this._index.insertNodes([node]);
   }
 
   get tools(): Record<string, BaseTool> {

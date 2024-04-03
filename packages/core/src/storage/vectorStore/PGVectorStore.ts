@@ -94,7 +94,7 @@ export class PGVectorStore implements VectorStore {
         await db.connect();
 
         // Check vector extension
-        db.query("CREATE EXTENSION IF NOT EXISTS vector");
+        await db.query("CREATE EXTENSION IF NOT EXISTS vector");
         await registerType(db);
 
         // Check schema, table(s), index(es)

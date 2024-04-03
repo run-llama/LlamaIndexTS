@@ -25,7 +25,7 @@ export class DuplicatesStrategy implements TransformComponent {
       }
     }
 
-    this.docStore.addDocuments(nodesToRun, true);
+    await this.docStore.addDocuments(nodesToRun, true);
 
     return nodesToRun;
   }
