@@ -286,7 +286,9 @@ export class OpenAIAgentWorker implements AgentWorker {
   initializeStep(task: Task, kwargs?: any): TaskStep {
     const sources: ToolOutput[] = [];
 
-    const newMemory = new ChatMemoryBuffer();
+    const newMemory = new ChatMemoryBuffer({
+      tokenLimit: task.memory.tokenLimit,
+    });
 
     const taskState = {
       sources,

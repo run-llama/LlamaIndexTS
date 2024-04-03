@@ -64,6 +64,7 @@ export class OpenAIAgent extends AgentRunner {
 
     super({
       agentWorker: stepEngine,
+      llm,
       memory,
       defaultToolChoice,
       chatHistory: prefixMessages,
