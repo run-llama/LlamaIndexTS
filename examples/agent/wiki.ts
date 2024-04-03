@@ -19,6 +19,7 @@ async function main() {
   console.log(response.response);
 }
 
-main().then(() => {
+(async function () {
+  await main();
   console.log("Done");
-});
+})();
