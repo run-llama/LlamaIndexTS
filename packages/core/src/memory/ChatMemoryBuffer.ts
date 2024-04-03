@@ -60,7 +60,7 @@ export class ChatMemoryBuffer implements BaseMemory {
 
     while (tokenCount > this.tokenLimit && messageCount > 1) {
       messageCount -= 1;
-      if (chatHistory[-messageCount].role === "assistant") {
+      if (chatHistory.at(-messageCount)?.role === "assistant") {
         // we cannot have an assistant message at the start of the chat history
         // if after removal of the first, we have an assistant message,
         // we need to remove the assistant message too
