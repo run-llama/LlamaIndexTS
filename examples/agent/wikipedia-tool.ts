@@ -18,6 +18,6 @@ async function main() {
   console.log(response);
 }
 
-main().then(() => {
+void main().then(() => {
   console.log("Done");
 });

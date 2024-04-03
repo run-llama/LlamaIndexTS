@@ -7,7 +7,9 @@ module.exports = {
   ],
   rules: {
     "@next/next/no-html-link-for-pages": "off",
-    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-floating-promises": ["error", {
+      ignoreIIFE: true,
+    }],
     "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-types": "off",

@@ -22,4 +22,4 @@ However, general relativity, published in 1915, extended these ideas to include 
   console.log(result);
 }
 
-main();
+void main();

@@ -45,4 +45,4 @@ async function main() {
   await queryEngine.query({ query });
 }
 
-main();
+void main();

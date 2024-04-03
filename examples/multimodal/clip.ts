@@ -30,4 +30,4 @@ async function main() {
   console.log(`Similarity between "${text2}" and the image is ${sim2}`);
 }
 
-main();
+void main();

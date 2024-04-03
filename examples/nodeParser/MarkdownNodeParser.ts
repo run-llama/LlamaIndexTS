@@ -21,4 +21,4 @@ Sub-header content
   console.log(splits);
 }
 
-main();
+void main();
