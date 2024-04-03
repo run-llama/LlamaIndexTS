@@ -70,7 +70,7 @@ export class KVDocumentStore extends BaseDocumentStore {
         metadata.refDocId = doc.sourceNode.nodeId!;
       }
 
-      this.kvstore.put(nodeKey, metadata, this.metadataCollection);
+      await this.kvstore.put(nodeKey, metadata, this.metadataCollection);
     }
   }
 
@@ -126,9 +126,9 @@ export class KVDocumentStore extends BaseDocumentStore {
       !_.pull(refDocInfo.nodeIds, docId);
 
       if (refDocInfo.nodeIds.length > 0) {
-        this.kvstore.put(refDocId, refDocInfo, this.refDocCollection);
+        await this.kvstore.put(refDocId, refDocInfo, this.refDocCollection);
       }
-      this.kvstore.delete(refDocId, this.metadataCollection);
+      await this.kvstore.delete(refDocId, this.metadataCollection);
     }
   }
 

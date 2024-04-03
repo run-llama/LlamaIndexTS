@@ -20,4 +20,4 @@ async function main() {
   console.log(`Test query > ${SAMPLE_QUERY}:\n`, response.toString());
 }
 
-main();
+void main();

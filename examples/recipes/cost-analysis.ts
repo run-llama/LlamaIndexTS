@@ -31,7 +31,7 @@ Settings.callbackManager.on("llm-end", (event) => {
 
 const question = "Hello, how are you?";
 console.log("Question:", question);
-llm
+void llm
   .chat({
     stream: true,
     messages: [

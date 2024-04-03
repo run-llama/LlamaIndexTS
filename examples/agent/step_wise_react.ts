@@ -85,6 +85,6 @@ async function main() {
   }
 }
 
-main().then(() => {
+void main().then(() => {
   console.log("Done");
 });

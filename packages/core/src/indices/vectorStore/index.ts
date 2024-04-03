@@ -364,7 +364,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     vectorStore: VectorStore,
     refDocId: string,
   ): Promise<void> {
-    vectorStore.delete(refDocId);
+    await vectorStore.delete(refDocId);
 
     if (!vectorStore.storesText) {
       const refDocInfo = await this.docStore.getRefDocInfo(refDocId);
@@ -372,7 +372,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       if (refDocInfo) {
         for (const nodeId of refDocInfo.nodeIds) {
           this.indexStruct.delete(nodeId);
-          vectorStore.delete(nodeId);
+          await vectorStore.delete(nodeId);
         }
       }
       await this.indexStore.addIndexStruct(this.indexStruct);

@@ -111,4 +111,4 @@ async function main() {
   console.log({ rawResponse });
 }
 
-main();
+void main();

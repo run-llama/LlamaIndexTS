@@ -167,7 +167,7 @@ export class MilvusVectorStore implements VectorStore {
     refDocId: string,
     deleteOptions?: Omit<DeleteReq, "ids">,
   ): Promise<void> {
-    this.ensureCollection();
+    await this.ensureCollection();
 
     await this.milvusClient.delete({
       ids: [refDocId],

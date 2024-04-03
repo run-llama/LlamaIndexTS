@@ -135,7 +135,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     serviceContext = serviceContext;
     const docStore = storageContext.docStore;
 
-    docStore.addDocuments(documents, true);
+    await docStore.addDocuments(documents, true);
     for (const doc of documents) {
       docStore.setDocumentHash(doc.id_, doc.hash);
     }

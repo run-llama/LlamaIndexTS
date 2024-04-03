@@ -27,4 +27,4 @@ async function query() {
   await client.close();
 }
 
-query();
+void query();

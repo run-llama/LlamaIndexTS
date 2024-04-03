@@ -65,4 +65,4 @@ async function main() {
   });
 }
 
-main().then(() => console.log("Done"));
+void main().then(() => console.log("Done"));

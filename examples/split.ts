@@ -13,4 +13,4 @@ async function main() {
   console.log(chunks);
 }
 
-main();
+void main();
