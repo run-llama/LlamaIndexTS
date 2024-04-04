@@ -1,9 +1,6 @@
 import type OpenAILLM from "openai";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
-import {
-  type OpenAIStreamToken,
-  type StreamCallbackResponse,
-} from "../callbacks/CallbackManager.js";
+import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
 
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
@@ -32,6 +29,7 @@ import type {
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
   LLMMetadata,
+  MessageToolCall,
   MessageType,
 } from "./types.js";
 import { wrapLLMEvent } from "./utils.js";
@@ -229,7 +227,7 @@ export class OpenAI extends BaseLLM {
 
     // Streaming
     if (stream) {
-      return this.streamChat(params);
+      return this.streamChat(baseRequestParams);
     }
 
     // Non-streaming
@@ -256,25 +254,10 @@ export class OpenAI extends BaseLLM {
   }
 
   @wrapEventCaller
-  protected async *streamChat({
-    messages,
-  }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
-    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
-      model: this.model,
-      temperature: this.temperature,
-      max_tokens: this.maxTokens,
-      messages: messages.map(
-        (message) =>
-          ({
-            role: this.mapMessageType(message.role),
-            content: message.content,
-          }) as ChatCompletionMessageParam,
-      ),
-      top_p: this.topP,
-      ...this.additionalChatOptions,
-    };
-
-    const chunk_stream: AsyncIterable<OpenAIStreamToken> =
+  protected async *streamChat(
+    baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams,
+  ): AsyncIterable<ChatResponseChunk> {
+    const stream: AsyncIterable<OpenAILLM.Chat.ChatCompletionChunk> =
       await this.session.openai.chat.completions.create({
         ...baseRequestParams,
         stream: true,
@@ -282,27 +265,25 @@ export class OpenAI extends BaseLLM {
 
     // TODO: add callback to streamConverter and use streamConverter here
     //Indices
-    let idx_counter: number = 0;
-    for await (const part of chunk_stream) {
+    let idxCounter: number = 0;
+    let toolCalls: MessageToolCall[] = [];
+    for await (const part of stream) {
       if (!part.choices.length) continue;
+      const choice = part.choices[0];
+      updateToolCalls(toolCalls, choice.delta.tool_calls);
 
-      //Increment
-      part.choices[0].index = idx_counter;
-      const is_done: boolean =
-        part.choices[0].finish_reason === "stop" ? true : false;
-      //onLLMStream Callback
+      const isDone: boolean = choice.finish_reason !== null;
 
-      const stream_callback: StreamCallbackResponse = {
-        index: idx_counter,
-        isDone: is_done,
+      getCallbackManager().dispatchEvent("stream", {
+        index: idxCounter++,
+        isDone: isDone,
         token: part,
-      };
-      getCallbackManager().dispatchEvent("stream", stream_callback);
-
-      idx_counter++;
+      });
 
       yield {
-        delta: part.choices[0].delta.content ?? "",
+        // add tool calls to final chunk
+        additionalKwargs: isDone ? { toolCalls: toolCalls } : undefined,
+        delta: choice.delta.content ?? "",
       };
     }
     return;
@@ -821,5 +802,30 @@ export class Portkey extends BaseLLM {
       yield { delta: part.choices[0].delta?.content ?? "" };
     }
     return;
+  }
+}
+
+function updateToolCalls(
+  toolCalls: MessageToolCall[],
+  toolCallDeltas?: OpenAILLM.Chat.Completions.ChatCompletionChunk.Choice.Delta.ToolCall[],
+) {
+  function augmentToolCall(
+    toolCall?: MessageToolCall,
+    toolCallDelta?: OpenAILLM.Chat.Completions.ChatCompletionChunk.Choice.Delta.ToolCall,
+  ) {
+    toolCall =
+      toolCall ??
+      ({ function: { name: "", arguments: "" } } as MessageToolCall);
+    if (toolCallDelta?.function?.arguments) {
+      toolCall.function.arguments += toolCallDelta.function.arguments;
+    }
+    if (toolCallDelta?.function?.name) {
+      toolCall.function.name += toolCallDelta.function.name;
+    }
+  }
+  if (toolCallDeltas) {
+    toolCallDeltas?.forEach((toolCall, i) => {
+      augmentToolCall(toolCalls[i], toolCall);
+    });
   }
 }

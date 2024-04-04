@@ -84,6 +84,7 @@ export interface ChatResponse {
 
 export interface ChatResponseChunk {
   delta: string;
+  additionalKwargs?: Record<string, any>;
 }
 
 export interface CompletionResponse {
@@ -139,3 +140,13 @@ export interface MessageContentDetail {
  * Extended type for the content of a message that allows for multi-modal messages.
  */
 export type MessageContent = string | MessageContentDetail[];
+
+interface Function {
+  arguments: string;
+  name: string;
+}
+
+export interface MessageToolCall {
+  id: string;
+  function: Function;
+}
