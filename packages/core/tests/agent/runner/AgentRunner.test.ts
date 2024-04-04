@@ -1,6 +1,6 @@
 import { OpenAIAgentWorker } from "llamaindex/agent/index";
 import { AgentRunner } from "llamaindex/agent/runner/base";
-import { OpenAI } from "llamaindex/llm/LLM";
+import { OpenAI } from "llamaindex/llm/open_ai";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -8,8 +8,10 @@ import {
   mockLlmGeneration,
 } from "../../utility/mockOpenAI.js";
 
-vi.mock("llamaindex/llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
+  const actual = await importOriginal();
   return {
+    ...(actual as object),
     getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });

@@ -20,7 +20,7 @@ import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import { SummaryIndex } from "llamaindex/indices/summary/index";
 import { VectorStoreIndex } from "llamaindex/indices/vectorStore/index";
-import { OpenAI } from "llamaindex/llm/LLM";
+import { OpenAI } from "llamaindex/llm/open_ai";
 import {
   ResponseSynthesizer,
   SimpleResponseBuilder,
@@ -28,8 +28,10 @@ import {
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI.js";
 
 // Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
+  const actual = await importOriginal();
   return {
+    ...(actual as object),
     getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });

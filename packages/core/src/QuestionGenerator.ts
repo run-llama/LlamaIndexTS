@@ -5,7 +5,7 @@ import type {
   BaseQuestionGenerator,
   SubQuestion,
 } from "./engines/query/types.js";
-import { OpenAI } from "./llm/LLM.js";
+import { OpenAI } from "./llm/open_ai.js";
 import type { LLM } from "./llm/types.js";
 import { PromptMixin } from "./prompts/index.js";
 import type {

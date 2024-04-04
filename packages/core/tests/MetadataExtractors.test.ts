@@ -8,7 +8,7 @@ import {
   SummaryExtractor,
   TitleExtractor,
 } from "llamaindex/extractors/index";
-import { OpenAI } from "llamaindex/llm/LLM";
+import { OpenAI } from "llamaindex/llm/open_ai";
 import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
@@ -18,8 +18,10 @@ import {
 } from "./utility/mockOpenAI.js";
 
 // Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
+  const actual = await importOriginal();
   return {
+    ...(actual as object),
     getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });

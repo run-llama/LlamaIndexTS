@@ -1,6 +1,6 @@
 import type { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import type { OpenAIEmbedding } from "llamaindex/embeddings/index";
-import type { OpenAI } from "llamaindex/llm/LLM";
+import type { OpenAI } from "llamaindex/llm/open_ai";
 import type { LLMChatParamsBase } from "llamaindex/llm/types";
 import { vi } from "vitest";
 

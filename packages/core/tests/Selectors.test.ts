@@ -6,8 +6,10 @@ import { OpenAI } from "llamaindex/llm/index";
 import { LLMSingleSelector } from "llamaindex/selectors/index";
 import { mocStructuredkLlmGeneration } from "./utility/mockOpenAI.js";
 
-vi.mock("llamaindex/llm/open_ai", () => {
+vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
+  const actual = await importOriginal();
   return {
+    ...(actual as object),
     getOpenAISession: vi.fn().mockImplementation(() => null),
   };
 });
