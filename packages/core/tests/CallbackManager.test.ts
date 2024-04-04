@@ -27,15 +27,6 @@ import {
 } from "llamaindex/synthesizers/index";
 import { mockEmbeddingModel, mockLlmGeneration } from "./utility/mockOpenAI.js";
 
-// Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...(actual as object),
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
-
 describe("CallbackManager: onLLMStream and onRetrieve", () => {
   let serviceContext: ServiceContext;
   let streamCallbackData: StreamCallbackResponse[] = [];

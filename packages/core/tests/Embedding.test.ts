@@ -3,17 +3,8 @@ import {
   SimilarityType,
   similarity,
 } from "llamaindex/embeddings/index";
-import { beforeAll, describe, expect, test, vi } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { mockEmbeddingModel } from "./utility/mockOpenAI.js";
-
-// Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...(actual as object),
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
 
 describe("similarity", () => {
   test("throws error on mismatched lengths", () => {

@@ -1,7 +1,7 @@
 import { OpenAIAgent } from "llamaindex/agent/index";
 import { OpenAI } from "llamaindex/llm/index";
 import { FunctionTool } from "llamaindex/tools/index";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { mockLlmToolCallGeneration } from "../utility/mockOpenAI.js";
 
 // Define a function to sum two numbers
@@ -23,14 +23,6 @@ const sumJSON = {
   },
   required: ["a", "b"],
 };
-
-vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...(actual as object),
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
 
 describe("OpenAIAgent", () => {
   let openaiAgent: OpenAIAgent;

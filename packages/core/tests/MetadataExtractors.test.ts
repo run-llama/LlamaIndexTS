@@ -17,15 +17,6 @@ import {
   mockLlmGeneration,
 } from "./utility/mockOpenAI.js";
 
-// Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...(actual as object),
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
-
 describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   let serviceContext: ServiceContext;
 

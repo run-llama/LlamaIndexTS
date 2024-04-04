@@ -9,17 +9,9 @@ import { rmSync } from "node:fs";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
 const testDir = await mkdtemp(join(tmpdir(), "test-"));
-
-vi.mock("llamaindex/llm/open_ai", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...(actual as object),
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
 
 import { mockServiceContext } from "../utility/mockServiceContext.js";
 
