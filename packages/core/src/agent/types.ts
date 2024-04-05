@@ -170,13 +170,13 @@ export class TaskStep implements ITaskStep {
  * @param isLast: isLast
  */
 export class TaskStepOutput {
-  output: any;
+  output: AgentChatResponse | StreamingAgentChatResponse;
   taskStep: TaskStep;
   nextSteps: TaskStep[];
   isLast: boolean;
 
   constructor(
-    output: any,
+    output: AgentChatResponse | StreamingAgentChatResponse,
     taskStep: TaskStep,
     nextSteps: TaskStep[],
     isLast: boolean = false,

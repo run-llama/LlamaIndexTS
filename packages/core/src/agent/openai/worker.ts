@@ -9,6 +9,7 @@ import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
+  LLMChatParamsBase,
 } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import { streamConverter, streamReducer } from "../../llm/utils.js";
@@ -166,8 +167,8 @@ export class OpenAIAgentWorker implements AgentWorker {
     task: Task,
     openaiTools: { [key: string]: any }[],
     toolChoice: string | { [key: string]: any } = "auto",
-  ): { [key: string]: any } {
-    const llmChatKwargs: { [key: string]: any } = {
+  ): LLMChatParamsBase {
+    const llmChatKwargs: LLMChatParamsBase = {
       messages: this.getAllMessages(task),
     };
 
@@ -179,17 +180,10 @@ export class OpenAIAgentWorker implements AgentWorker {
     return llmChatKwargs;
   }
 
-  /**
-   * Process message.
-   * @param task: task
-   * @param chatResponse: chat response
-   * @returns: agent chat response
-   */
   private _processMessage(
     task: Task,
-    chatResponse: ChatResponse,
+    aiMessage: ChatMessage,
   ): AgentChatResponse {
-    const aiMessage = chatResponse.message;
     task.extraState.newMemory.put(aiMessage);
 
     return new AgentChatResponse(aiMessage.content, task.extraState.sources);
@@ -198,16 +192,33 @@ export class OpenAIAgentWorker implements AgentWorker {
   private async _getStreamAiResponse(
     task: Task,
     llmChatKwargs: any,
-  ): Promise<StreamingAgentChatResponse> {
+  ): Promise<StreamingAgentChatResponse | AgentChatResponse> {
     const stream = await this.llm.chat({
       stream: true,
       ...llmChatKwargs,
     });
+    // read first chunk from stream to find out if we need to call tools
+    const iterator = stream[Symbol.asyncIterator]();
+    let { value } = await iterator.next();
+    let content = value.delta;
+    const hasToolCalls = value.additionalKwargs?.toolCalls.length > 0;
 
-    const iterator = streamConverter.bind(this)(
+    if (hasToolCalls) {
+      // consume stream until we have all the tool calls and return a non-streamed response
+      for await (value of stream) {
+        content += value.delta;
+      }
+      return this._processMessage(task, {
+        content,
+        role: "assistant",
+        additionalKwargs: value.additionalKwargs,
+      });
+    }
+
+    const newStream = streamConverter.bind(this)(
       streamReducer({
         stream,
-        initialValue: "",
+        initialValue: content,
         reducer: (accumulator, part) => (accumulator += part.delta),
         finished: (accumulator) => {
           task.extraState.newMemory.put({
@@ -219,7 +230,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       (r: ChatResponseChunk) => new Response(r.delta),
     );
 
-    return new StreamingAgentChatResponse(iterator, task.extraState.sources);
+    return new StreamingAgentChatResponse(newStream, task.extraState.sources);
   }
 
   /**
@@ -240,7 +251,10 @@ export class OpenAIAgentWorker implements AgentWorker {
         ...llmChatKwargs,
       })) as unknown as ChatResponse;
 
-      return this._processMessage(task, chatResponse) as AgentChatResponse;
+      return this._processMessage(
+        task,
+        chatResponse.message,
+      ) as AgentChatResponse;
     } else if (mode === ChatResponseMode.STREAM) {
       return this._getStreamAiResponse(task, llmChatKwargs);
     }

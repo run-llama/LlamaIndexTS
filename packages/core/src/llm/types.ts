@@ -149,4 +149,5 @@ interface Function {
 export interface MessageToolCall {
   id: string;
   function: Function;
+  type: "function";
 }

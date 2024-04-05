@@ -356,6 +356,8 @@ function updateToolCalls(
     toolCall =
       toolCall ??
       ({ function: { name: "", arguments: "" } } as MessageToolCall);
+    toolCall.id = toolCall.id ?? toolCallDelta?.id;
+    toolCall.type = toolCall.type ?? toolCallDelta?.type;
     if (toolCallDelta?.function?.arguments) {
       toolCall.function.arguments += toolCallDelta.function.arguments;
     }
