@@ -336,7 +336,8 @@ export class OpenAI extends BaseLLM {
 
       yield {
         // add tool calls to final chunk
-        additionalKwargs: isDone ? { toolCalls: toolCalls } : undefined,
+        additionalKwargs:
+          toolCalls.length > 0 ? { toolCalls: toolCalls } : undefined,
         delta: choice.delta.content ?? "",
       };
     }
@@ -361,10 +362,11 @@ function updateToolCalls(
     if (toolCallDelta?.function?.name) {
       toolCall.function.name += toolCallDelta.function.name;
     }
+    return toolCall;
   }
   if (toolCallDeltas) {
     toolCallDeltas?.forEach((toolCall, i) => {
-      augmentToolCall(toolCalls[i], toolCall);
+      toolCalls[i] = augmentToolCall(toolCalls[i], toolCall);
     });
   }
 }
