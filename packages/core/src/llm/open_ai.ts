@@ -320,7 +320,7 @@ export class OpenAI extends BaseLLM {
     // TODO: add callback to streamConverter and use streamConverter here
     //Indices
     let idxCounter: number = 0;
-    let toolCalls: MessageToolCall[] = [];
+    const toolCalls: MessageToolCall[] = [];
     for await (const part of stream) {
       if (!part.choices.length) continue;
       const choice = part.choices[0];
