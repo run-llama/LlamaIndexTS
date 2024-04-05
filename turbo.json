@@ -12,6 +12,9 @@
     "@llamaindex/edge#build": {
       "dependsOn": ["llamaindex#build"]
     },
+    "@llamaindex/experimental#build": {
+      "dependsOn": ["@llamaindex/edge#build"]
+    },
     "test": {
       "dependsOn": ["^build", "@llamaindex/edge#build"]
     },

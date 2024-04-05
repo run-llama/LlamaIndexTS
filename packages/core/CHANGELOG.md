@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.2.3
+
+### Patch Changes
+
+- f0704ec: Support streaming for OpenAI agent (and OpenAI tool calls)
+- Removed 'parentEvent' - Use 'event.reason?.computedCallers' instead
+- 3cbfa98: Added LlamaCloudIndex.fromDocuments
+
 ## 0.2.2
 
 ### Patch Changes
