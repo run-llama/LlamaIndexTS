@@ -6,9 +6,7 @@ import type {
 
 import type { QueryEngineParamsNonStreaming } from "../types.js";
 
-export interface AgentWorker<
-  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
-> {
+export interface AgentWorker<ExtraParams extends object = object> {
   initializeStep(task: Task, params?: ExtraParams): TaskStep;
   runStep(
     step: TaskStep,

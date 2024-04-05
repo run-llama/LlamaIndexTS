@@ -9,9 +9,9 @@ import {
 } from "../../engines/chat/types.js";
 import type {
   ChatMessage,
-  ChatResponse,
   ChatResponseChunk,
   LLMChatParamsBase,
+  OpenAIAdditionalChatOptions,
 } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import { streamConverter, streamReducer } from "../../llm/utils.js";
@@ -77,17 +77,9 @@ type CallFunctionOutput = {
   toolOutput: ToolOutput;
 };
 
-type ChatParams = {
-  messages: ChatMessage[];
-  tools?: BaseTool[];
-  toolChoice?: ChatCompletionToolChoiceOption;
-};
-
-/**
- * OpenAI agent worker.
- * This class is responsible for running the agent.
- */
-export class OpenAIAgentWorker implements AgentWorker<ChatParams> {
+export class OpenAIAgentWorker
+  implements AgentWorker<LLMChatParamsBase<OpenAIAdditionalChatOptions>>
+{
   private llm: OpenAI;
   private maxFunctionCalls: number = 5;
 
@@ -143,14 +135,16 @@ export class OpenAIAgentWorker implements AgentWorker<ChatParams> {
     task: Task,
     openaiTools: BaseTool[],
     toolChoice: ChatCompletionToolChoiceOption = "auto",
-  ): LLMChatParamsBase {
-    const llmChatParams: ChatParams = {
+  ): LLMChatParamsBase<OpenAIAdditionalChatOptions> {
+    const llmChatParams = {
       messages: this.getAllMessages(task),
-    };
+      tools: [] as BaseTool[],
+      additionalChatOptions: {} as OpenAIAdditionalChatOptions,
+    } satisfies LLMChatParamsBase<OpenAIAdditionalChatOptions>;
 
     if (openaiTools.length > 0) {
       llmChatParams.tools = openaiTools;
-      llmChatParams.toolChoice = toolChoice;
+      llmChatParams.additionalChatOptions.tool_choice = toolChoice;
     }
 
     return llmChatParams;
@@ -167,15 +161,11 @@ export class OpenAIAgentWorker implements AgentWorker<ChatParams> {
 
   private async _getStreamAiResponse(
     task: Task,
-    llmChatParams: ChatParams,
+    llmChatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
   ): Promise<StreamingAgentChatResponse | AgentChatResponse> {
     const stream = await this.llm.chat({
       stream: true,
-      messages: llmChatParams.messages,
-      tools: llmChatParams.tools,
-      additionalChatOptions: {
-        tool_choice: llmChatParams.toolChoice,
-      },
+      ...llmChatParams,
     });
     // read first chunk from stream to find out if we need to call tools
     const iterator = stream[Symbol.asyncIterator]();
@@ -216,16 +206,12 @@ export class OpenAIAgentWorker implements AgentWorker<ChatParams> {
   private async _getAgentResponse(
     task: Task,
     mode: ChatResponseMode,
-    llmChatParams: ChatParams,
+    llmChatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
   ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
       const chatResponse = await this.llm.chat({
         stream: false,
-        messages: llmChatParams.messages,
-        tools: llmChatParams.tools,
-        additionalChatOptions: {
-          tool_choice: llmChatParams.toolChoice,
-        },
+        ...llmChatParams,
       });
 
       return this._processMessage(
@@ -353,18 +339,18 @@ export class OpenAIAgentWorker implements AgentWorker<ChatParams> {
   async runStep(
     step: TaskStep,
     task: Task,
-    chatParams: ChatParams,
+    chatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
   ): Promise<TaskStepOutput> {
-    const toolChoice = chatParams?.toolChoice || "auto";
+    const toolChoice = chatParams?.additionalChatOptions?.tool_choice ?? "auto";
     return this._runStep(step, task, ChatResponseMode.WAIT, toolChoice);
   }
 
   async streamStep(
     step: TaskStep,
     task: Task,
-    chatParams: ChatParams,
+    chatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
   ): Promise<TaskStepOutput> {
-    const toolChoice = chatParams?.toolChoice || "auto";
+    const toolChoice = chatParams?.additionalChatOptions?.tool_choice ?? "auto";
     return this._runStep(step, task, ChatResponseMode.STREAM, toolChoice);
   }
 
