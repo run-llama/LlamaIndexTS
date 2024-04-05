@@ -31,12 +31,12 @@ export interface BaseQueryEngine {
 }
 
 /**
- * Simple Tool interface. Likely to change.
+ * Tool interface.
  */
-export interface BaseTool {
-  call?: (...args: any[]) => any;
+export type BaseTool<Input = any> = {
+  handler: (input: Input) => string | Promise<string>;
   metadata: ToolMetadata;
-}
+};
 
 /**
  * An OutputParser is used to extract structured data from the raw output of the LLM.

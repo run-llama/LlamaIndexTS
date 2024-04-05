@@ -23,7 +23,7 @@ const DEFAULT_PARAMETERS = {
   required: ["query"],
 };
 
-export class QueryEngineTool implements BaseTool {
+export class QueryEngineTool implements BaseTool<QueryEngineCallParams> {
   private queryEngine: BaseQueryEngine;
   metadata: ToolMetadata;
 
@@ -36,18 +36,8 @@ export class QueryEngineTool implements BaseTool {
     };
   }
 
-  async call(...args: QueryEngineCallParams[]): Promise<any> {
-    let queryStr: string;
-
-    if (args && args.length > 0) {
-      queryStr = String(args[0].query);
-    } else {
-      throw new Error(
-        "Cannot call query engine without specifying `input` parameter.",
-      );
-    }
-
-    const response = await this.queryEngine.query({ query: queryStr });
+  async handler({ query }: QueryEngineCallParams) {
+    const response = await this.queryEngine.query({ query });
 
     return response.response;
   }

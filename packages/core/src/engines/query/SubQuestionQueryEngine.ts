@@ -118,7 +118,7 @@ export class SubQuestionQueryEngine
         return null;
       }
 
-      const responseText = await queryEngine?.call?.({
+      const responseText = await queryEngine?.handler?.({
         query: question,
       });
 

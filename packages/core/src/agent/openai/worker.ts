@@ -1,3 +1,4 @@
+// TODO: REMOVE ANY
 import { randomUUID } from "@llamaindex/env";
 import { Response } from "../../Response.js";
 import {
@@ -21,7 +22,6 @@ import type { AgentWorker, Task } from "../types.js";
 import { TaskStep, TaskStepOutput } from "../types.js";
 import { addUserStepToMemory, getFunctionByName } from "../utils.js";
 import type { OpenAIToolCall } from "./types/chat.js";
-import { toOpenAiTool } from "./utils.js";
 
 const DEFAULT_MAX_FUNCTION_CALLS = 5;
 
@@ -346,15 +346,7 @@ export class OpenAIAgentWorker implements AgentWorker {
       addUserStepToMemory(step, task.extraState.newMemory, this.verbose);
     }
 
-    const openaiTools = tools.map((tool) =>
-      toOpenAiTool({
-        name: tool.metadata.name,
-        description: tool.metadata.description,
-        parameters: tool.metadata.parameters,
-      }),
-    );
-
-    const llmChatKwargs = this._getLlmChatKwargs(task, openaiTools, toolChoice);
+    const llmChatKwargs = this._getLlmChatKwargs(task, tools, toolChoice);
 
     const agentChatResponse = await this._getAgentResponse(
       task,

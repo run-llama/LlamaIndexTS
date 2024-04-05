@@ -1,20 +1,24 @@
-import type { BaseTool } from "../types.js";
 import { WikipediaTool } from "./WikipediaTool.js";
 
 enum Tools {
   Wikipedia = "wikipedia.WikipediaToolSpec",
 }
 
-type ToolConfig = { [key in Tools]: Record<string, any> };
+interface ToolsMap {
+  [Tools.Wikipedia]: WikipediaTool;
+}
+
+type ToolsConfig = {
+  [Tools.Wikipedia]: ConstructorParameters<typeof WikipediaTool>[0];
+};
 
 export class ToolFactory {
-  private static async createTool(
-    key: Tools,
-    options: Record<string, any>,
-  ): Promise<BaseTool> {
+  private static async createTool<T extends Tools>(
+    key: T,
+    options: ToolsConfig[T],
+  ): Promise<ToolsMap[T]> {
     if (key === Tools.Wikipedia) {
-      const tool = new WikipediaTool();
-      return tool;
+      return new WikipediaTool();
     }
 
     throw new Error(
@@ -22,9 +26,11 @@ export class ToolFactory {
     );
   }
 
-  public static async createTools(config: ToolConfig): Promise<BaseTool[]> {
-    const tools: BaseTool[] = [];
-    for (const [key, value] of Object.entries(config as ToolConfig)) {
+  public static async createTools(
+    config: Record<Tools, ToolsConfig[Tools]>,
+  ): Promise<ToolsMap[Tools][]> {
+    const tools: ToolsMap[Tools][] = [];
+    for (const [key, value] of Object.entries(config)) {
       const tool = await ToolFactory.createTool(key as Tools, value);
       tools.push(tool);
     }

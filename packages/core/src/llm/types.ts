@@ -1,4 +1,5 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
+import type { BaseTool } from "../types.js";
 
 type LLMBaseEvent<
   Type extends string,
@@ -103,7 +104,8 @@ export interface LLMMetadata {
 export interface LLMChatParamsBase {
   messages: ChatMessage[];
   extraParams?: Record<string, any>;
-  tools?: any;
+  tools?: BaseTool[];
+  // fixme(alex): remove any!
   toolChoice?: any;
   additionalKwargs?: Record<string, any>;
 }

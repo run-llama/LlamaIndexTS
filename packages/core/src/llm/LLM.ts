@@ -5,11 +5,18 @@ import {
   type StreamCallbackResponse,
 } from "../callbacks/CallbackManager.js";
 
+import type {
+  Tool,
+  ToolResultBlockParam,
+  ToolsBetaMessageParam,
+} from "@anthropic-ai/sdk/resources/beta/tools/messages";
+import type { ChatCompletionTool } from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers } from "../GlobalsHelper.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
+import type { BaseTool } from "../types.js";
 import type { AnthropicSession } from "./anthropic.js";
 import { getAnthropicSession } from "./anthropic.js";
 import type { AzureOpenAIConfig } from "./azure.js";
@@ -220,7 +227,7 @@ export class OpenAI extends BaseLLM {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
-      tools: tools,
+      tools: tools?.map((tool) => OpenAI.toTool(tool)),
       tool_choice: toolChoice,
       messages: this.toOpenAIMessage(messages) as ChatCompletionMessageParam[],
       top_p: this.topP,
@@ -306,6 +313,17 @@ export class OpenAI extends BaseLLM {
       };
     }
     return;
+  }
+
+  static toTool(tool: BaseTool): ChatCompletionTool {
+    return {
+      type: "function",
+      function: {
+        name: tool.metadata.name,
+        description: tool.metadata.description,
+        parameters: tool.metadata.parameters,
+      },
+    };
   }
 }
 
@@ -575,31 +593,34 @@ If a question does not make any sense, or is not factually coherent, explain why
   }
 }
 
-export const ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS = {
-  "claude-2.1": {
-    contextWindow: 200000,
-  },
+export const ANTHROPIC_MODELS_METADATA = {
   "claude-instant-1.2": {
     contextWindow: 100000,
   },
-};
+  "claude-2.1": {
+    contextWindow: 200000,
+  },
+  "claude-3-opus-20240229": { contextWindow: 200000 },
+  "claude-3-sonnet-20240229": { contextWindow: 200000 },
+  "claude-3-haiku-20240307": { contextWindow: 200000 },
+} satisfies { [key in AnthropicModelWithDate]: Partial<LLMMetadata> };
 
-export const ALL_AVAILABLE_V3_MODELS = {
-  "claude-3-opus": { contextWindow: 200000 },
-  "claude-3-sonnet": { contextWindow: 200000 },
-  "claude-3-haiku": { contextWindow: 200000 },
-};
-
-export const ALL_AVAILABLE_ANTHROPIC_MODELS = {
-  ...ALL_AVAILABLE_ANTHROPIC_LEGACY_MODELS,
-  ...ALL_AVAILABLE_V3_MODELS,
-};
-
-const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
+const AVAILABLE_ANTHROPIC_MODELS_WITH_DATE_MAP = {
   "claude-3-opus": "claude-3-opus-20240229",
   "claude-3-sonnet": "claude-3-sonnet-20240229",
   "claude-3-haiku": "claude-3-haiku-20240307",
-} as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
+  "claude-2.1": "claude-2.1",
+  "claude-instant-1.2": "claude-instant-1.2",
+} as const satisfies { [key in AnthropicModel]: string };
+
+type AnthropicModel =
+  | "claude-3-opus"
+  | "claude-3-sonnet"
+  | "claude-3-haiku"
+  | "claude-2.1"
+  | "claude-instant-1.2";
+type AnthropicModelWithDate =
+  (typeof AVAILABLE_ANTHROPIC_MODELS_WITH_DATE_MAP)[AnthropicModel];
 
 /**
  * Anthropic LLM implementation
@@ -607,7 +628,7 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
 
 export class Anthropic extends BaseLLM {
   // Per completion Anthropic params
-  model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
+  model: AnthropicModelWithDate;
   temperature: number;
   topP: number;
   maxTokens?: number;
@@ -618,9 +639,11 @@ export class Anthropic extends BaseLLM {
   timeout?: number;
   session: AnthropicSession;
 
-  constructor(init?: Partial<Anthropic>) {
+  constructor(
+    init?: Partial<Omit<Anthropic, "model">> & { model: AnthropicModel },
+  ) {
     super();
-    this.model = init?.model ?? "claude-3-opus";
+    this.model = Anthropic.getModelName(init?.model ?? "claude-3-opus");
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 0.999; // Per Ben Mann
     this.maxTokens = init?.maxTokens ?? undefined;
@@ -643,17 +666,14 @@ export class Anthropic extends BaseLLM {
       temperature: this.temperature,
       topP: this.topP,
       maxTokens: this.maxTokens,
-      contextWindow: ALL_AVAILABLE_ANTHROPIC_MODELS[this.model].contextWindow,
+      contextWindow: ANTHROPIC_MODELS_METADATA[this.model].contextWindow,
       tokenizer: undefined,
     };
   }
 
-  getModelName = (model: string): string => {
-    if (Object.keys(AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE).includes(model)) {
-      return AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE[model];
-    }
-    return model;
-  };
+  static getModelName(model: AnthropicModel): AnthropicModelWithDate {
+    return AVAILABLE_ANTHROPIC_MODELS_WITH_DATE_MAP[model] ?? model;
+  }
 
   formatMessages(messages: ChatMessage[]) {
     return messages.map((message) => {
@@ -678,7 +698,7 @@ export class Anthropic extends BaseLLM {
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     let { messages } = params;
 
-    const { stream } = params;
+    const { stream, tools } = params;
 
     let systemPrompt: string | null = null;
 
@@ -693,51 +713,153 @@ export class Anthropic extends BaseLLM {
       messages = messages.filter((message) => message.role !== "system");
     }
 
-    //Streaming
+    // case: Streaming
     if (stream) {
-      return this.streamChat(messages, systemPrompt);
+      return this.streamChat(messages, systemPrompt, tools);
     }
+    // case: Non-streaming
+    const anthropic = this.session.anthropic;
 
-    //Non-streaming
-    const response = await this.session.anthropic.messages.create({
-      model: this.getModelName(this.model),
-      messages: this.formatMessages(messages),
-      max_tokens: this.maxTokens ?? 4096,
-      temperature: this.temperature,
-      top_p: this.topP,
-      ...(systemPrompt && { system: systemPrompt }),
-    });
+    if (tools) {
+      if (this.model !== "claude-3-opus-20240229") {
+        throw new TypeError(
+          "Tools are only supported for claude-3-opus-20240229",
+        );
+      }
+      const response = await anthropic.beta.tools.messages.create({
+        messages: this.formatMessages(messages),
+        tools: tools.map(Anthropic.toTool),
+        model: this.model,
+        temperature: this.temperature,
+        // fixme: this number is from example https://github.com/anthropics/anthropic-sdk-typescript/commit/5bcaddbd396fa81e9b65bf2ce3b2917affae5c0a
+        max_tokens: 1024,
+        top_p: this.topP,
+        ...(systemPrompt && { system: systemPrompt }),
+      });
+      if (response.content[1].type === "tool_use") {
+        const targetName = response.content[1].name;
+        const tool = tools.find((tool) => tool.metadata.name === targetName);
+        if (tool) {
+          let error_message: unknown;
+          let result: unknown;
+          try {
+            if (
+              !(
+                response.content[1].input != null &&
+                typeof response.content[1].input === "object"
+              )
+            ) {
+              console.warn(
+                "Tool input is not an object, which is an unexpected behavior",
+              );
+            }
+            result = await tool.handler(response.content[1].input as never);
+          } catch (e) {
+            error_message = e;
+          }
+          const aiPrevMessages: ToolsBetaMessageParam = {
+            role: "assistant",
+            content: response.content,
+          };
+          const toolResultMessageParam: ToolResultBlockParam = {
+            type: "tool_result",
+            tool_use_id: response.content[1].id,
+            is_error: error_message !== undefined,
+            content: [
+              {
+                type: "text",
+                text: error_message ? `${error_message}` : `${result}`,
+              },
+            ],
+          };
+          return this.chat({
+            ...params,
+            messages: [
+              ...params.messages,
+              aiPrevMessages,
+              {
+                content: toolResultMessageParam,
+                role: "user",
+              },
+            ],
+          });
+        } else {
+          throw new TypeError(`Tool ${targetName} not found`);
+        }
+      } else {
+        return {
+          message: {
+            content:
+              response.content[0].type === "text"
+                ? response.content[0].text
+                : (() => {
+                    throw new TypeError("Unexpected response type");
+                  })(),
+            role: "assistant",
+          },
+        };
+      }
+    } else {
+      const response = await anthropic.messages.create({
+        model: this.model,
+        messages: this.formatMessages(messages),
+        max_tokens: this.maxTokens ?? 4096,
+        temperature: this.temperature,
+        top_p: this.topP,
+        ...(systemPrompt && { system: systemPrompt }),
+      });
 
-    return {
-      message: { content: response.content[0].text, role: "assistant" },
-    };
+      return {
+        message: { content: response.content[0].text, role: "assistant" },
+      };
+    }
   }
 
   protected async *streamChat(
     messages: ChatMessage[],
     systemPrompt?: string | null,
+    tools?: BaseTool[],
   ): AsyncIterable<ChatResponseChunk> {
-    const stream = await this.session.anthropic.messages.create({
-      model: this.getModelName(this.model),
-      messages: this.formatMessages(messages),
-      max_tokens: this.maxTokens ?? 4096,
-      temperature: this.temperature,
-      top_p: this.topP,
-      stream: true,
-      ...(systemPrompt && { system: systemPrompt }),
-    });
+    if (tools) {
+      throw new TypeError(
+        "not supported yet, see https://docs.anthropic.com/claude/docs/tool-use",
+      );
+    } else {
+      const stream = await this.session.anthropic.messages.create({
+        model: this.model,
+        messages: this.formatMessages(messages),
+        max_tokens: this.maxTokens ?? 4096,
+        temperature: this.temperature,
+        top_p: this.topP,
+        stream: true,
+        ...(systemPrompt && { system: systemPrompt }),
+      });
 
-    let idx_counter: number = 0;
-    for await (const part of stream) {
-      const content =
-        part.type === "content_block_delta" ? part.delta.text : null;
+      let idx_counter: number = 0;
+      for await (const part of stream) {
+        const content =
+          part.type === "content_block_delta" ? part.delta.text : null;
 
-      if (typeof content !== "string") continue;
+        if (typeof content !== "string") continue;
 
-      idx_counter++;
-      yield { delta: content };
+        idx_counter++;
+        yield { delta: content };
+      }
     }
-    return;
+  }
+
+  static toTool(tool: BaseTool): Tool {
+    if (tool.metadata.parameters?.type !== "object") {
+      throw new TypeError("Tool parameters must be an object");
+    }
+    return {
+      input_schema: {
+        type: "object",
+        properties: tool.metadata.parameters.properties,
+      },
+      name: tool.metadata.name,
+      description: tool.metadata.description,
+    };
   }
 }
 

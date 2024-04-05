@@ -25,7 +25,7 @@ const DEFAULT_META_DATA: ToolMetadata = {
   },
 };
 
-export class WikipediaTool implements BaseTool {
+export class WikipediaTool implements BaseTool<WikipediaCallParams> {
   private readonly DEFAULT_LANG = "en";
   metadata: ToolMetadata;
 
@@ -39,11 +39,10 @@ export class WikipediaTool implements BaseTool {
   ): Promise<string> {
     wiki.default.setLang(lang);
     const pageResult = await wiki.default.page(page, { autoSuggest: false });
-    const content = await pageResult.content();
-    return content;
+    return await pageResult.content();
   }
 
-  async call({
+  async handler({
     query,
     lang = this.DEFAULT_LANG,
   }: WikipediaCallParams): Promise<string> {

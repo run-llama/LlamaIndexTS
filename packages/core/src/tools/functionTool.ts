@@ -26,7 +26,7 @@ export class FunctionTool<T = any> implements BaseTool {
     return this._metadata;
   }
 
-  async call(...args: any[]): Promise<any> {
+  async handler(...args: any[]): Promise<any> {
     return this._fn(...args);
   }
 }
