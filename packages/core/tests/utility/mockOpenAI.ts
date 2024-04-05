@@ -15,7 +15,7 @@ export function mockLlmGeneration({
   callbackManager?: CallbackManager;
 } = {}) {
   callbackManager = callbackManager || Settings.callbackManager;
-  if (Settings.llm instanceof OpenAI) {
+  if (!languageModel && Settings.llm instanceof OpenAI) {
     languageModel = Settings.llm;
   }
   if (!languageModel) {
