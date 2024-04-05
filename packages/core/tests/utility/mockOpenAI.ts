@@ -1,6 +1,7 @@
+import { Settings } from "llamaindex";
 import type { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import type { OpenAIEmbedding } from "llamaindex/embeddings/index";
-import type { OpenAI } from "llamaindex/llm/open_ai";
+import { OpenAI } from "llamaindex/llm/open_ai";
 import type { LLMChatParamsBase } from "llamaindex/llm/types";
 import { vi } from "vitest";
 
@@ -10,9 +11,16 @@ export function mockLlmGeneration({
   languageModel,
   callbackManager,
 }: {
-  languageModel: OpenAI;
+  languageModel?: OpenAI;
   callbackManager?: CallbackManager;
-}) {
+} = {}) {
+  callbackManager = callbackManager || Settings.callbackManager;
+  if (Settings.llm instanceof OpenAI) {
+    languageModel = Settings.llm;
+  }
+  if (!languageModel) {
+    return;
+  }
   vi.spyOn(languageModel, "chat").mockImplementation(
     async ({ messages }: LLMChatParamsBase) => {
       const text = DEFAULT_LLM_TEXT_OUTPUT;
