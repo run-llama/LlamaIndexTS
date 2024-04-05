@@ -14,6 +14,13 @@ export type LLMStartEvent = LLMBaseEvent<
     messages: ChatMessage[];
   }
 >;
+export type LLMFunctionCallEvent = LLMBaseEvent<
+  "llm-function-call",
+  {
+    tool: BaseTool;
+    input: unknown;
+  }
+>;
 export type LLMEndEvent = LLMBaseEvent<
   "llm-end",
   {
@@ -25,6 +32,7 @@ declare module "llamaindex" {
   interface LlamaIndexEventMaps {
     "llm-start": LLMStartEvent;
     "llm-end": LLMEndEvent;
+    "llm-function-call": LLMFunctionCallEvent;
   }
 }
 

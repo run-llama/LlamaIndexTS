@@ -749,6 +749,8 @@ export class Anthropic extends BaseLLM {
         ...(systemPrompt && { system: systemPrompt }),
       });
       // todo(alex): use a better way to check if `tool_use` is present
+      // fixme(alex): we should handle function call outside of the chat method
+      //  FIX THIS BEFORE MERGING
       if (
         response.content.length > 1 &&
         response.content[1].type === "tool_use"
@@ -769,6 +771,12 @@ export class Anthropic extends BaseLLM {
                 "Tool input is not an object, which is an unexpected behavior",
               );
             }
+            getCallbackManager().dispatchEvent("llm-function-call", {
+              payload: {
+                tool: tool,
+                input: response.content[1].input,
+              },
+            });
             result = await tool.handler(response.content[1].input as never);
           } catch (e) {
             error_message = e;
