@@ -1,8 +1,8 @@
-import type { BaseNode, Metadata } from "../Node.js";
-import { TextNode } from "../Node.js";
-import type { BaseRetriever } from "../Retriever.js";
-import type { VectorStoreIndex } from "../indices/index.js";
-import type { BaseTool } from "../types.js";
+import type { BaseNode, Metadata } from '../Node.js'
+import { TextNode } from '../Node.js'
+import type { BaseRetriever } from '../Retriever.js'
+import type { VectorStoreIndex } from '../indices/index.js'
+import type { BaseTool } from '../types.js'
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
 // Import statements (e.g., for TextNode, BaseNode) should be added based on your project's structure
@@ -51,27 +51,16 @@ export abstract class BaseObjectNodeMapping {
 type QueryType = string;
 
 export class ObjectRetriever {
-  _retriever: BaseRetriever;
-  _objectNodeMapping: BaseObjectNodeMapping;
 
   constructor(
-    retriever: BaseRetriever,
-    objectNodeMapping: BaseObjectNodeMapping,
-  ) {
-    this._retriever = retriever;
-    this._objectNodeMapping = objectNodeMapping;
-  }
-
-  // In TypeScript, getters are defined like this.
-  get retriever(): BaseRetriever {
-    return this._retriever;
-  }
+    private readonly retriever: BaseRetriever,
+    private readonly objectNodeMapping: BaseObjectNodeMapping,
+  ) {}
 
   // Translating the retrieve method
   async retrieve(strOrQueryBundle: QueryType): Promise<any> {
     const nodes = await this.retriever.retrieve({ query: strOrQueryBundle });
-    const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
-    return objs;
+    return nodes.map((n) => this.objectNodeMapping.fromNode(n.node));
   }
 }
 

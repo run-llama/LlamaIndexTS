@@ -24,8 +24,6 @@ import { TaskStep, TaskStepOutput } from "../types.js";
 import { addUserStepToMemory, getFunctionByName } from "../utils.js";
 import type { OpenAIToolCall } from "./types/chat.js";
 
-const DEFAULT_MAX_FUNCTION_CALLS = 5;
-
 async function callFunction(
   tools: BaseTool[],
   toolCall: OpenAIToolCall,
@@ -82,7 +80,7 @@ type CallFunctionOutput = {
 
 type ChatParams = {
   messages: ChatMessage[];
-  tools?: { [key: string]: any }[];
+  tools?: BaseTool[];
   toolChoice?: ChatCompletionToolChoiceOption;
 };
 
@@ -90,10 +88,10 @@ type ChatParams = {
  * OpenAI agent worker.
  * This class is responsible for running the agent.
  */
-export class OpenAIAgentWorker implements AgentWorker {
+export class OpenAIAgentWorker implements AgentWorker<ChatParams> {
   private llm: OpenAI;
   private verbose: boolean;
-  private maxFunctionCalls: number;
+  private maxFunctionCalls: number = 5;
 
   public prefixMessages: ChatMessage[];
 
@@ -104,19 +102,22 @@ export class OpenAIAgentWorker implements AgentWorker {
     llm,
     prefixMessages,
     verbose,
-    maxFunctionCalls = DEFAULT_MAX_FUNCTION_CALLS,
+    maxFunctionCalls,
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
     this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
     this.verbose = verbose || false;
-    this.maxFunctionCalls = maxFunctionCalls;
+    if (maxFunctionCalls) {
+      this.maxFunctionCalls = maxFunctionCalls;
+    }
     this.prefixMessages = prefixMessages || [];
 
-    if (tools.length > 0 && toolRetriever) {
+    if (Array.isArray(tools) && tools.length > 0 && toolRetriever) {
       throw new Error("Cannot specify both tools and tool_retriever");
-    } else if (tools.length > 0) {
+    } else if (Array.isArray(tools)) {
       this._getTools = async () => tools;
     } else if (toolRetriever) {
+      // fixme: this won't work, type mismatch
       this._getTools = async (message: string) =>
         toolRetriever.retrieve(message);
     } else {
@@ -144,7 +145,7 @@ export class OpenAIAgentWorker implements AgentWorker {
 
   private _getLlmChatParams(
     task: Task,
-    openaiTools: { [key: string]: any }[],
+    openaiTools: BaseTool[],
     toolChoice: ChatCompletionToolChoiceOption = "auto",
   ): ChatParams {
     const llmChatParams: ChatParams = {

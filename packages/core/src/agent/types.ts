@@ -6,11 +6,11 @@ import type {
 
 import type { QueryEngineParamsNonStreaming } from "../types.js";
 
-export interface AgentWorker {
-  initializeStep(task: Task, kwargs?: any): TaskStep;
-  runStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
-  streamStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
-  finalizeTask(task: Task, kwargs?: any): void;
+export interface AgentWorker<ExtraParams extends Record<string, unknown> = Record<string, unknown>> {
+  initializeStep(task: Task, params?: ExtraParams): TaskStep;
+  runStep(step: TaskStep, task: Task, params?: ExtraParams): Promise<TaskStepOutput>;
+  streamStep(step: TaskStep, task: Task, params?: ExtraParams): Promise<TaskStepOutput>;
+  finalizeTask(task: Task, params?: ExtraParams): void;
 }
 
 interface BaseChatEngine {
