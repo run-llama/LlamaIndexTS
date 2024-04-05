@@ -14,12 +14,15 @@ async function main() {
   // Chat with the agent
   const response = await agent.chat({
     message: "Who was Goethe?",
+    stream: true,
   });
 
-  console.log(response.response);
+  for await (const chunk of response.response) {
+    process.stdout.write(chunk.response);
+  }
 }
 
 (async function () {
   await main();
-  console.log("Done");
+  console.log("\nDone");
 })();
