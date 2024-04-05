@@ -121,7 +121,14 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
 };
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
-  const model = llm.metadata.model;
+  let model: string;
+  if (llm instanceof OpenAI) {
+    model = llm.model;
+  } else if ("model" in llm && typeof llm.model === "string") {
+    model = llm.model;
+  } else {
+    return false;
+  }
   const isChatModel = Object.keys(ALL_AVAILABLE_OPENAI_MODELS).includes(model);
   const isOld = model.includes("0314") || model.includes("0301");
   return isChatModel && !isOld;
