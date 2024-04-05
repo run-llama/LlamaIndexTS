@@ -9,7 +9,6 @@ type ReActAgentParams = {
   llm?: LLM;
   memory?: any;
   prefixMessages?: ChatMessage[];
-  verbose?: boolean;
   maxInteractions?: number;
   defaultToolChoice?: string;
   toolRetriever?: ObjectRetriever;
@@ -26,7 +25,6 @@ export class ReActAgent extends AgentRunner {
     llm,
     memory,
     prefixMessages,
-    verbose,
     maxInteractions = 10,
     defaultToolChoice = "auto",
     toolRetriever,
@@ -36,7 +34,6 @@ export class ReActAgent extends AgentRunner {
       llm,
       maxInteractions,
       toolRetriever,
-      verbose,
     });
 
     super({

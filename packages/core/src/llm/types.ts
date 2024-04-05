@@ -1,4 +1,5 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
+import type { BaseTool } from "../types.js";
 
 type LLMBaseEvent<
   Type extends string,
@@ -30,24 +31,35 @@ declare module "llamaindex" {
 /**
  * @internal
  */
-export interface LLMChat {
+export interface LLMChat<
+  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
+> {
   chat(
-    params: LLMChatParamsStreaming | LLMChatParamsNonStreaming,
+    params:
+      | LLMChatParamsStreaming<ExtraParams>
+      | LLMChatParamsNonStreaming<ExtraParams>,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>>;
 }
 
 /**
  * Unified language model interface
  */
-export interface LLM extends LLMChat {
+export interface LLM<
+  AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> extends LLMChat<AdditionalChatOptions> {
   metadata: LLMMetadata;
   /**
    * Get a chat response from the LLM
    */
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming<AdditionalChatOptions>,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
-  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  chat(
+    params: LLMChatParamsNonStreaming<AdditionalChatOptions>,
+  ): Promise<ChatResponse>;
 
   /**
    * Get a prompt completion from the LLM
@@ -101,20 +113,34 @@ export interface LLMMetadata {
   tokenizer: Tokenizers | undefined;
 }
 
-export interface LLMChatParamsBase {
+export interface LLMChatParamsBase<
+  AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> {
   messages: ChatMessage[];
-  extraParams?: Record<string, any>;
-  tools?: any;
-  toolChoice?: any;
-  additionalKwargs?: Record<string, any>;
+  additionalChatOptions?: AdditionalChatOptions;
+  tools?: BaseTool[];
+  additionalKwargs?: Record<string, unknown>;
 }
 
-export interface LLMChatParamsStreaming extends LLMChatParamsBase {
+export interface LLMChatParamsStreaming<
+  AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> extends LLMChatParamsBase<AdditionalChatOptions> {
   stream: true;
 }
 
-export interface LLMChatParamsNonStreaming extends LLMChatParamsBase {
-  stream?: false | null;
+export interface LLMChatParamsNonStreaming<
+  AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> extends LLMChatParamsBase<AdditionalChatOptions> {
+  stream?: false;
 }
 
 export interface LLMCompletionParamsBase {

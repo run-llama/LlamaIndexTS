@@ -59,7 +59,6 @@ async function main() {
   // Create an OpenAIAgent with the function tools
   const agent = new OpenAIAgent({
     tools: [functionTool, functionTool2],
-    verbose: true,
   });
 
   // Chat with the agent

@@ -10,7 +10,6 @@ type OpenAIAgentParams = {
   llm?: OpenAI;
   memory?: any;
   prefixMessages?: ChatMessage[];
-  verbose?: boolean;
   maxFunctionCalls?: number;
   defaultToolChoice?: string;
   toolRetriever?: ObjectRetriever;
@@ -28,7 +27,6 @@ export class OpenAIAgent extends AgentRunner {
     llm,
     memory,
     prefixMessages,
-    verbose,
     maxFunctionCalls = 5,
     defaultToolChoice = "auto",
     toolRetriever,
@@ -59,7 +57,6 @@ export class OpenAIAgent extends AgentRunner {
       prefixMessages,
       maxFunctionCalls,
       toolRetriever,
-      verbose,
     });
 
     super({

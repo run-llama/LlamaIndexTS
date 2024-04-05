@@ -484,11 +484,11 @@ export class Portkey extends BaseLLM {
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, stream, extraParams } = params;
+    const { messages, stream, additionalChatOptions } = params;
     if (stream) {
-      return this.streamChat(messages, extraParams);
+      return this.streamChat(messages, additionalChatOptions);
     } else {
-      const bodyParams = extraParams || {};
+      const bodyParams = additionalChatOptions || {};
       const response = await this.session.portkey.chatCompletions.create({
         messages,
         ...bodyParams,

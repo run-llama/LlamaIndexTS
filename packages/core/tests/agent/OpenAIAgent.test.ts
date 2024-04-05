@@ -45,7 +45,6 @@ describe("OpenAIAgent", () => {
     openaiAgent = new OpenAIAgent({
       tools: [sumFunctionTool],
       llm: languageModel,
-      verbose: false,
     });
   });
 

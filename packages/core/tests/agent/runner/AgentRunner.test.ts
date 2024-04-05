@@ -25,7 +25,6 @@ describe("Agent Runner", () => {
       agentWorker: new OpenAIAgentWorker({
         llm: languageModel,
         tools: [],
-        verbose: false,
       }),
     });
   });

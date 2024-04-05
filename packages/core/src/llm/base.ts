@@ -11,7 +11,13 @@ import type {
 } from "./types.js";
 import { streamConverter } from "./utils.js";
 
-export abstract class BaseLLM implements LLM {
+export abstract class BaseLLM<
+  AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> implements LLM<AdditionalChatOptions>
+{
   abstract metadata: LLMMetadata;
 
   complete(
@@ -42,7 +48,9 @@ export abstract class BaseLLM implements LLM {
   }
 
   abstract chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming<AdditionalChatOptions>,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
-  abstract chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  abstract chat(
+    params: LLMChatParamsNonStreaming<AdditionalChatOptions>,
+  ): Promise<ChatResponse>;
 }

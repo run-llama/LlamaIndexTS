@@ -5,7 +5,7 @@ import { OpenAI } from "./llm/open_ai.js";
 import { PromptHelper } from "./PromptHelper.js";
 import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
 
-import { AsyncLocalStorage } from "@llamaindex/env";
+import { AsyncLocalStorage, getEnv } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import type { BaseEmbedding } from "./embeddings/types.js";
 import {
@@ -51,6 +51,15 @@ class GlobalSettings implements Config {
   #chunkSizeAsyncLocalStorage = new AsyncLocalStorage<number>();
   #chunkOverlapAsyncLocalStorage = new AsyncLocalStorage<number>();
   #promptAsyncLocalStorage = new AsyncLocalStorage<PromptConfig>();
+
+  get debug() {
+    const debug = getEnv("DEBUG");
+    return (
+      getEnv("NODE_ENV") === "development" &&
+      Boolean(debug) &&
+      debug?.includes("llamaindex")
+    );
+  }
 
   get llm(): LLM {
     if (this.#llm === null) {
