@@ -1,3 +1,4 @@
+import { Settings } from "llamaindex";
 import { OpenAIAgent } from "llamaindex/agent/index";
 import { OpenAI } from "llamaindex/llm/index";
 import { FunctionTool } from "llamaindex/tools/index";
@@ -31,6 +32,8 @@ describe("OpenAIAgent", () => {
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
     });
+
+    Settings.llm = languageModel;
 
     mockLlmToolCallGeneration({
       languageModel,
