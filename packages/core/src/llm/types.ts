@@ -31,24 +31,30 @@ declare module "llamaindex" {
 /**
  * @internal
  */
-export interface LLMChat {
+export interface LLMChat<
+  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
+> {
   chat(
-    params: LLMChatParamsStreaming | LLMChatParamsNonStreaming,
+    params:
+      | LLMChatParamsStreaming<ExtraParams>
+      | LLMChatParamsNonStreaming<ExtraParams>,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>>;
 }
 
 /**
  * Unified language model interface
  */
-export interface LLM extends LLMChat {
+export interface LLM<
+  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
+> extends LLMChat<ExtraParams> {
   metadata: LLMMetadata;
   /**
    * Get a chat response from the LLM
    */
   chat(
-    params: LLMChatParamsStreaming,
+    params: LLMChatParamsStreaming<ExtraParams>,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
-  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+  chat(params: LLMChatParamsNonStreaming<ExtraParams>): Promise<ChatResponse>;
 
   /**
    * Get a prompt completion from the LLM
@@ -101,21 +107,25 @@ export interface LLMMetadata {
   tokenizer: Tokenizers | undefined;
 }
 
-export interface LLMChatParamsBase {
+export interface LLMChatParamsBase<
+  ExtraParams extends Record<string, unknown>,
+> {
   messages: ChatMessage[];
-  extraParams?: Record<string, any>;
+  extraParams?: ExtraParams;
   tools?: BaseTool[];
-  // fixme(alex): remove any!
-  toolChoice?: any;
-  additionalKwargs?: Record<string, any>;
+  additionalKwargs?: Record<string, unknown>;
 }
 
-export interface LLMChatParamsStreaming extends LLMChatParamsBase {
+export interface LLMChatParamsStreaming<
+  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
+> extends LLMChatParamsBase<ExtraParams> {
   stream: true;
 }
 
-export interface LLMChatParamsNonStreaming extends LLMChatParamsBase {
-  stream?: false | null;
+export interface LLMChatParamsNonStreaming<
+  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
+> extends LLMChatParamsBase<ExtraParams> {
+  stream?: false;
 }
 
 export interface LLMCompletionParamsBase {

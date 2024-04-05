@@ -33,7 +33,7 @@ export interface BaseQueryEngine {
 /**
  * Tool interface.
  */
-export type BaseTool<Input = any> = {
+export type BaseTool<Input extends Record<string, unknown> = any> = {
   handler: (input: Input) => string | Promise<string>;
   metadata: ToolMetadata;
 };

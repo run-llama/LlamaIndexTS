@@ -10,8 +10,10 @@
       "name": "Debug Example",
       "skipFiles": ["<node_internals>/**"],
       "runtimeExecutable": "pnpm",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
       "cwd": "${workspaceFolder}/examples",
-      "runtimeArgs": ["ts-node", "${fileBasename}"]
+      "runtimeArgs": ["ts-node", "${file}"]
     }
   ]
 }

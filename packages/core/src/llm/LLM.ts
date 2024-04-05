@@ -10,7 +10,10 @@ import type {
   ToolResultBlockParam,
   ToolsBetaMessageParam,
 } from "@anthropic-ai/sdk/resources/beta/tools/messages";
-import type { ChatCompletionTool } from "openai/resources/chat/completions";
+import type {
+  ChatCompletionTool,
+  ChatCompletionToolChoiceOption,
+} from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import type { LLMOptions } from "portkey-ai";
 import { Tokenizers } from "../GlobalsHelper.js";
@@ -80,7 +83,9 @@ export const isFunctionCallingModel = (model: string): boolean => {
 /**
  * OpenAI LLM implementation
  */
-export class OpenAI extends BaseLLM {
+export class OpenAI extends BaseLLM<{
+  toolChoice?: ChatCompletionToolChoiceOption;
+}> {
   // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
   temperature: number;
@@ -222,16 +227,19 @@ export class OpenAI extends BaseLLM {
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
-    const { messages, stream, tools, toolChoice } = params;
+    const { messages, stream, tools, extraParams } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
       tools: tools?.map((tool) => OpenAI.toTool(tool)),
-      tool_choice: toolChoice,
       messages: this.toOpenAIMessage(messages) as ChatCompletionMessageParam[],
       top_p: this.topP,
-      ...this.additionalChatOptions,
+      ...Object.assign(
+        Object.create(null),
+        extraParams,
+        this.additionalChatOptions,
+      ),
     };
 
     // Streaming
@@ -265,6 +273,7 @@ export class OpenAI extends BaseLLM {
   @wrapEventCaller
   protected async *streamChat({
     messages,
+    extraParams,
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,
@@ -278,7 +287,11 @@ export class OpenAI extends BaseLLM {
           }) as ChatCompletionMessageParam,
       ),
       top_p: this.topP,
-      ...this.additionalChatOptions,
+      ...Object.assign(
+        Object.create(null),
+        extraParams,
+        this.additionalChatOptions,
+      ),
     };
 
     const chunk_stream: AsyncIterable<OpenAIStreamToken> =
@@ -295,8 +308,7 @@ export class OpenAI extends BaseLLM {
 
       //Increment
       part.choices[0].index = idx_counter;
-      const is_done: boolean =
-        part.choices[0].finish_reason === "stop" ? true : false;
+      const is_done: boolean = part.choices[0].finish_reason === "stop";
       //onLLMStream Callback
 
       const stream_callback: StreamCallbackResponse = {
@@ -736,7 +748,11 @@ export class Anthropic extends BaseLLM {
         top_p: this.topP,
         ...(systemPrompt && { system: systemPrompt }),
       });
-      if (response.content[1].type === "tool_use") {
+      // todo(alex): use a better way to check if `tool_use` is present
+      if (
+        response.content.length > 1 &&
+        response.content[1].type === "tool_use"
+      ) {
         const targetName = response.content[1].name;
         const tool = tools.find((tool) => tool.metadata.name === targetName);
         if (tool) {
@@ -778,7 +794,7 @@ export class Anthropic extends BaseLLM {
               ...params.messages,
               aiPrevMessages,
               {
-                content: toolResultMessageParam,
+                content: [toolResultMessageParam],
                 role: "user",
               },
             ],
@@ -856,6 +872,7 @@ export class Anthropic extends BaseLLM {
       input_schema: {
         type: "object",
         properties: tool.metadata.parameters.properties,
+        required: tool.metadata.parameters.required,
       },
       name: tool.metadata.name,
       description: tool.metadata.description,
@@ -927,8 +944,7 @@ export class Portkey extends BaseLLM {
     for await (const part of chunkStream) {
       //Increment
       part.choices[0].index = idx_counter;
-      const is_done: boolean =
-        part.choices[0].finish_reason === "stop" ? true : false;
+      const is_done: boolean = part.choices[0].finish_reason === "stop";
       //onLLMStream Callback
 
       const stream_callback: StreamCallbackResponse = {

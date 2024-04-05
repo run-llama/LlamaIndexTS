@@ -11,7 +11,10 @@ import type {
 } from "./types.js";
 import { streamConverter } from "./utils.js";
 
-export abstract class BaseLLM implements LLM {
+export abstract class BaseLLM<
+  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
+> implements LLM<ExtraParams>
+{
   abstract metadata: LLMMetadata;
 
   complete(
