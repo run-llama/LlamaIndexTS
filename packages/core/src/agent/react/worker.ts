@@ -2,12 +2,7 @@ import { randomUUID } from "@llamaindex/env";
 import type { ChatMessage } from "cohere-ai/api";
 import { Settings } from "../../Settings.js";
 import { AgentChatResponse } from "../../engines/chat/index.js";
-import {
-  OpenAI,
-  isFunctionCallingModel,
-  type ChatResponse,
-  type LLM,
-} from "../../llm/index.js";
+import { type ChatResponse, type LLM } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import { ToolOutput } from "../../tools/index.js";
@@ -79,12 +74,7 @@ export class ReActAgentWorker implements AgentWorker<ChatParams> {
     outputParser,
     toolRetriever,
   }: ReActAgentWorkerParams) {
-    this.llm =
-      llm ?? isFunctionCallingModel(Settings.llm.metadata.model)
-        ? Settings.llm
-        : new OpenAI({
-            model: "gpt-3.5-turbo-0613",
-          });
+    this.llm = llm ?? Settings.llm;
 
     this.maxInteractions = maxInteractions ?? 10;
     this.reactChatFormatter = reactChatFormatter ?? new ReActChatFormatter();

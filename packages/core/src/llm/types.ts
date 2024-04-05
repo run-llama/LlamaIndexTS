@@ -104,14 +104,14 @@ export interface CompletionResponse {
   raw?: Record<string, any>;
 }
 
-export interface LLMMetadata {
+export type LLMMetadata = {
   model: string;
   temperature: number;
   topP: number;
   maxTokens?: number;
   contextWindow: number;
   tokenizer: Tokenizers | undefined;
-}
+};
 
 export interface LLMChatParamsBase<
   AdditionalChatOptions extends Record<string, unknown> = Record<

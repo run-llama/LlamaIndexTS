@@ -7,13 +7,14 @@ import {
   ChatResponseMode,
   StreamingAgentChatResponse,
 } from "../../engines/chat/types.js";
-import type {
-  ChatMessage,
-  ChatResponseChunk,
-  LLMChatParamsBase,
-  OpenAIAdditionalChatOptions,
+import {
+  OpenAI,
+  isFunctionCallingModel,
+  type ChatMessage,
+  type ChatResponseChunk,
+  type LLMChatParamsBase,
+  type OpenAIAdditionalChatOptions,
 } from "../../llm/index.js";
-import { OpenAI } from "../../llm/index.js";
 import { streamConverter, streamReducer } from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
@@ -94,7 +95,12 @@ export class OpenAIAgentWorker
     maxFunctionCalls,
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
-    this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
+    this.llm =
+      llm ?? isFunctionCallingModel(Settings.llm)
+        ? (Settings.llm as OpenAI)
+        : new OpenAI({
+            model: "gpt-3.5-turbo-0613",
+          });
     if (maxFunctionCalls) {
       this.maxFunctionCalls = maxFunctionCalls;
     }

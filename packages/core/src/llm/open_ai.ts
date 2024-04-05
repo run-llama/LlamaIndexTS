@@ -25,8 +25,10 @@ import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
+  LLM,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
+  LLMMetadata,
   MessageToolCall,
   MessageType,
 } from "./types.js";
@@ -118,11 +120,12 @@ export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT35_MODELS,
 };
 
-export const isFunctionCallingModel = (model: string): boolean => {
+export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
+  const model = llm.metadata.model;
   const isChatModel = Object.keys(ALL_AVAILABLE_OPENAI_MODELS).includes(model);
   const isOld = model.includes("0314") || model.includes("0301");
   return isChatModel && !isOld;
-};
+}
 
 export type OpenAIAdditionalChatOptions = Omit<
   Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
@@ -135,6 +138,10 @@ export type OpenAIAdditionalChatOptions = Omit<
   | "tools"
   | "toolChoice"
 >;
+
+export type OpenAIAdditionalMetadata = {
+  isFunctionCallingModel: boolean;
+};
 
 export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
   // Per completion OpenAI params
@@ -207,7 +214,7 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
     }
   }
 
-  get metadata() {
+  get metadata(): LLMMetadata & OpenAIAdditionalMetadata {
     const contextWindow =
       ALL_AVAILABLE_OPENAI_MODELS[
         this.model as keyof typeof ALL_AVAILABLE_OPENAI_MODELS
@@ -219,7 +226,7 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
       maxTokens: this.maxTokens,
       contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
-      isFunctionCallingModel: isFunctionCallingModel(this.model),
+      isFunctionCallingModel: isFunctionCallingModel(this),
     };
   }
 
