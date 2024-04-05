@@ -1,9 +1,12 @@
-import { ChatResponseChunk, LLMChatParamsBase, OpenAI } from "llamaindex";
+import { ChatResponseChunk, OpenAI } from "llamaindex";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo-preview" });
 
-  const args: LLMChatParamsBase = {
+  const args: Parameters<typeof llm.chat>[0] = {
+    additionalChatOptions: {
+      tool_choice: "auto",
+    },
     messages: [
       {
         content: "Who was Goethe?",
@@ -12,8 +15,7 @@ async function main() {
     ],
     tools: [
       {
-        type: "function",
-        function: {
+        metadata: {
           name: "wikipedia_tool",
           description: "A tool that uses a query engine to search Wikipedia.",
           parameters: {
@@ -29,7 +31,6 @@ async function main() {
         },
       },
     ],
-    toolChoice: "auto",
   };
 
   const stream = await llm.chat({ ...args, stream: true });

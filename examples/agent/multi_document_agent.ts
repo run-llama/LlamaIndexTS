@@ -86,7 +86,6 @@ async function main() {
     const agent = new OpenAIAgent({
       tools: queryEngineTools,
       llm: new OpenAI({ model: "gpt-4" }),
-      verbose: true,
     });
 
     documentAgents[title] = agent;
@@ -126,7 +125,6 @@ async function main() {
   const topAgent = new OpenAIAgent({
     toolRetriever: await objectIndex.asRetriever({}),
     llm: new OpenAI({ model: "gpt-4" }),
-    verbose: true,
     prefixMessages: [
       {
         content:

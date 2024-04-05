@@ -8,7 +8,6 @@ async function main() {
   const agent = new OpenAIAgent({
     llm,
     tools: [wikiTool],
-    verbose: true,
   });
 
   // Chat with the agent

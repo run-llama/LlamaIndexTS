@@ -65,7 +65,6 @@ async function main() {
   const agent = new ReActAgent({
     llm: anthropic,
     tools: [functionTool, functionTool2],
-    verbose: true,
   });
 
   // Chat with the agent

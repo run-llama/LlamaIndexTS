@@ -59,7 +59,6 @@ async function main() {
   // Create an OpenAIAgent with the function tools
   const agent = new ReActAgent({
     tools: [functionTool, functionTool2],
-    verbose: true,
   });
 
   const task = agent.createTask("Divide 16 by 2 then add 20");

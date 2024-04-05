@@ -3,6 +3,7 @@ import { AgentRunner } from "llamaindex/agent/runner/base";
 import { OpenAI } from "llamaindex/llm/open_ai";
 import { beforeEach, describe, expect, it } from "vitest";
 
+import { Settings } from "llamaindex";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockLlmGeneration,
@@ -12,20 +13,15 @@ describe("Agent Runner", () => {
   let agentRunner: AgentRunner;
 
   beforeEach(() => {
-    const languageModel = new OpenAI({
+    Settings.llm = new OpenAI({
       model: "gpt-3.5-turbo",
     });
 
-    mockLlmGeneration({
-      languageModel,
-    });
+    mockLlmGeneration();
 
     agentRunner = new AgentRunner({
-      llm: languageModel,
       agentWorker: new OpenAIAgentWorker({
-        llm: languageModel,
         tools: [],
-        verbose: false,
       }),
     });
   });

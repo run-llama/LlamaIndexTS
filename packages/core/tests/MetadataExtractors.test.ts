@@ -1,3 +1,4 @@
+import { Settings } from "llamaindex";
 import { Document } from "llamaindex/Node";
 import type { ServiceContext } from "llamaindex/ServiceContext";
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
@@ -24,6 +25,8 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
     });
+
+    Settings.llm = languageModel;
 
     mockLlmGeneration({ languageModel });
 
