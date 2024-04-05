@@ -1,18 +1,12 @@
 import { OpenAIAgentWorker } from "llamaindex/agent/index";
 import { AgentRunner } from "llamaindex/agent/runner/base";
-import { OpenAI } from "llamaindex/llm/LLM";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { OpenAI } from "llamaindex/llm/open_ai";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockLlmGeneration,
 } from "../../utility/mockOpenAI.js";
-
-vi.mock("llamaindex/llm/open_ai", () => {
-  return {
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
 
 describe("Agent Runner", () => {
   let agentRunner: AgentRunner;
