@@ -1,4 +1,5 @@
 export * from "./LLM.js";
+export { Anthropic } from "./anthropic.js";
 export { FireworksLLM } from "./fireworks.js";
 export { Groq } from "./groq.js";
 export {
