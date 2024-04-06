@@ -21,13 +21,6 @@ export type LLMEndEvent = LLMBaseEvent<
   }
 >;
 
-declare module "llamaindex" {
-  interface LlamaIndexEventMaps {
-    "llm-start": LLMStartEvent;
-    "llm-end": LLMEndEvent;
-  }
-}
-
 /**
  * @internal
  */
