@@ -1,3 +1,4 @@
+import { extractText } from "llamaindex/llm/utils";
 import { globalsHelper } from "./GlobalsHelper.js";
 import type { SummaryPrompt } from "./Prompt.js";
 import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
@@ -188,7 +189,8 @@ export class SummaryChatHistory extends ChatHistory {
 
     // get tokens of current request messages and the transient messages
     const tokens = requestMessages.reduce(
-      (count, message) => count + this.tokenizer(message.content).length,
+      (count, message) =>
+        count + this.tokenizer(extractText(message.content)).length,
       0,
     );
     if (tokens > this.tokensToSummarize) {

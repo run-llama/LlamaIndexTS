@@ -308,7 +308,7 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
       stream: false,
     });
 
-    const content = response.choices[0].message?.content ?? null;
+    const content = response.choices[0].message?.content ?? "";
 
     const kwargsOutput: Record<string, any> = {};
 

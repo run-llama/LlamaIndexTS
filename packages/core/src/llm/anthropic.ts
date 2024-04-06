@@ -10,7 +10,7 @@ import type {
 } from "llamaindex";
 import _ from "lodash";
 import { BaseLLM } from "./base.js";
-import { wrapLLMEvent } from "./utils.js";
+import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class AnthropicSession {
   anthropic: SDKAnthropic;
@@ -138,7 +138,7 @@ export class Anthropic extends BaseLLM {
       }
 
       return {
-        content: message.content,
+        content: extractText(message.content),
         role: message.role,
       };
     });

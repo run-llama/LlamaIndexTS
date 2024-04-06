@@ -15,7 +15,7 @@ import type {
   LLMMetadata,
   MessageType,
 } from "./types.js";
-import { wrapLLMEvent } from "./utils.js";
+import { extractText, wrapLLMEvent } from "./utils.js";
 
 export const ALL_AVAILABLE_LLAMADEUCE_MODELS = {
   "Llama-2-70b-chat-old": {
@@ -215,16 +215,15 @@ If a question does not make any sense, or is not factually coherent, explain why
 
     return {
       prompt: messages.reduce((acc, message, index) => {
+        const content = extractText(message.content);
         if (index % 2 === 0) {
           return (
-            `${acc}${
-              withBos ? BOS : ""
-            }${B_INST} ${message.content.trim()} ${E_INST}` +
+            `${acc}${withBos ? BOS : ""}${B_INST} ${content.trim()} ${E_INST}` +
             (withNewlines ? "\n" : "")
           );
         } else {
           return (
-            `${acc} ${message.content.trim()}` +
+            `${acc} ${content.trim()}` +
             (withNewlines ? "\n" : " ") +
             (withBos ? EOS : "")
           ); // Yes, the EOS comes after the space. This is not a mistake.
@@ -322,7 +321,10 @@ export class Portkey extends BaseLLM {
     } else {
       const bodyParams = additionalChatOptions || {};
       const response = await this.session.portkey.chatCompletions.create({
-        messages,
+        messages: messages.map((message) => ({
+          content: extractText(message.content),
+          role: message.role,
+        })),
         ...bodyParams,
       });
 
@@ -337,7 +339,10 @@ export class Portkey extends BaseLLM {
     params?: Record<string, any>,
   ): AsyncIterable<ChatResponseChunk> {
     const chunkStream = await this.session.portkey.chatCompletions.create({
-      messages,
+      messages: messages.map((message) => ({
+        content: extractText(message.content),
+        role: message.role,
+      })),
       ...params,
       stream: true,
     });

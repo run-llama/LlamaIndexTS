@@ -93,7 +93,10 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
       messages: requestMessages.messages,
     });
     chatHistory.addMessage(response.message);
-    return new Response(response.message.content, requestMessages.nodes);
+    return new Response(
+      extractText(response.message.content),
+      requestMessages.nodes,
+    );
   }
 
   reset() {

@@ -2,6 +2,7 @@ import { MetadataMode } from "../Node.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import type { ChatMessage, LLM } from "../llm/types.js";
+import { extractText } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { CorrectnessSystemPrompt } from "./prompts.js";
 import {
@@ -85,7 +86,7 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
     });
 
     const [score, reasoning] = this.parserFunction(
-      evalResponse.message.content,
+      extractText(evalResponse.message.content),
     );
 
     return {

@@ -75,8 +75,7 @@ export type MessageType =
   | "tool";
 
 export interface ChatMessage {
-  // TODO: use MessageContent
-  content: any;
+  content: MessageContent;
   role: MessageType;
   additionalKwargs?: Record<string, any>;
 }
@@ -149,11 +148,19 @@ export interface LLMCompletionParamsNonStreaming
   stream?: false | null;
 }
 
-export interface MessageContentDetail {
-  type: "text" | "image_url";
-  text?: string;
-  image_url?: { url: string };
-}
+export type MessageContentTextDetail = {
+  type: "text";
+  text: string;
+};
+
+export type MessageContentImageDetail = {
+  type: "image_url";
+  image_url: { url: string };
+};
+
+export type MessageContentDetail =
+  | MessageContentTextDetail
+  | MessageContentImageDetail;
 
 /**
  * Extended type for the content of a message that allows for multi-modal messages.
