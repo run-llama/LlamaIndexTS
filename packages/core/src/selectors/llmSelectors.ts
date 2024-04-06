@@ -48,7 +48,7 @@ export class LLMMultiSelector extends BaseSelector {
   llm: LLMPredictorType;
   prompt: MultiSelectPrompt;
   maxOutputs: number;
-  outputParser: BaseOutputParser<StructuredOutput<Answer[]>> | null;
+  outputParser: BaseOutputParser<StructuredOutput<Answer[]>>;
 
   constructor(init: {
     llm: LLMPredictorType;
@@ -118,7 +118,7 @@ export class LLMMultiSelector extends BaseSelector {
 export class LLMSingleSelector extends BaseSelector {
   llm: LLMPredictorType;
   prompt: SingleSelectPrompt;
-  outputParser: BaseOutputParser<StructuredOutput<Answer[]>> | null;
+  outputParser: BaseOutputParser<StructuredOutput<Answer[]>>;
 
   constructor(init: {
     llm: LLMPredictorType;
@@ -154,7 +154,7 @@ export class LLMSingleSelector extends BaseSelector {
 
     const prompt = this.prompt(choicesText.length, choicesText, query.queryStr);
 
-    const formattedPrompt = this.outputParser?.format(prompt);
+    const formattedPrompt = this.outputParser.format(prompt);
 
     const prediction = await this.llm.complete({
       prompt: formattedPrompt,

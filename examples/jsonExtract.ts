@@ -36,9 +36,7 @@ async function main() {
     ],
   });
 
-  const json = JSON.parse(response.message.content);
-
-  console.log(json);
+  console.log(response.message.content);
 }
 
 main().catch(console.error);

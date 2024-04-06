@@ -11,15 +11,7 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true,
-    "paths": {
-      "llamaindex": ["./packages/core/src/index.ts"],
-      "llamaindex/*": ["./packages/core/src/*.ts"],
-      "@llamaindex/env": ["./packages/env/src/index.ts"],
-      "@llamaindex/env/*": ["./packages/env/src/*.ts"],
-      "@llamaindex/experimental": ["./packages/experimental/src/index.ts"],
-      "@llamaindex/experimental/*": ["./packages/experimental/src/*.ts"]
-    }
+    "composite": true
   },
   "files": [],
   "references": [

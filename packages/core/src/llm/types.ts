@@ -136,7 +136,7 @@ export interface LLMChatParamsNonStreaming<
 }
 
 export interface LLMCompletionParamsBase {
-  prompt: any;
+  prompt: MessageContent;
 }
 
 export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {

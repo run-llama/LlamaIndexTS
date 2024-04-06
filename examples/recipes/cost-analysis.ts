@@ -1,6 +1,7 @@
 import { encodingForModel } from "js-tiktoken";
 import { OpenAI } from "llamaindex";
 import { Settings } from "llamaindex/Settings";
+import { extractText } from "llamaindex/llm/utils";
 
 const encoding = encodingForModel("gpt-4-0125-preview");
 
@@ -13,7 +14,7 @@ let tokenCount = 0;
 Settings.callbackManager.on("llm-start", (event) => {
   const { messages } = event.detail.payload;
   tokenCount += messages.reduce((count, message) => {
-    return count + encoding.encode(message.content).length;
+    return count + encoding.encode(extractText(message.content)).length;
   }, 0);
   console.log("Token count:", tokenCount);
   // https://openai.com/pricing
@@ -22,7 +23,7 @@ Settings.callbackManager.on("llm-start", (event) => {
 });
 Settings.callbackManager.on("llm-end", (event) => {
   const { response } = event.detail.payload;
-  tokenCount += encoding.encode(response.message.content).length;
+  tokenCount += encoding.encode(extractText(response.message.content)).length;
   console.log("Token count:", tokenCount);
   // https://openai.com/pricing
   // $30.00 / 1M tokens
