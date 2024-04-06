@@ -1,9 +1,9 @@
 import { randomUUID } from "@llamaindex/env";
 import type { ChatMessage } from "cohere-ai/api";
-import { extractText } from "llamaindex/llm/utils";
 import { Settings } from "../../Settings.js";
 import { AgentChatResponse } from "../../engines/chat/index.js";
 import { type ChatResponse, type LLM } from "../../llm/index.js";
+import { extractText } from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import { ToolOutput } from "../../tools/index.js";
