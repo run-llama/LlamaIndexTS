@@ -9,7 +9,7 @@ import type {
   LLMCompletionParamsStreaming,
   LLMMetadata,
 } from "./types.js";
-import { streamConverter } from "./utils.js";
+import { extractText, streamConverter } from "./utils.js";
 
 export abstract class BaseLLM<
   AdditionalChatOptions extends Record<string, unknown> = Record<
@@ -44,7 +44,10 @@ export abstract class BaseLLM<
     const chatResponse = await this.chat({
       messages: [{ content: prompt, role: "user" }],
     });
-    return { text: chatResponse.message.content as string };
+    return {
+      text: extractText(chatResponse.message.content),
+      raw: chatResponse.raw,
+    };
   }
 
   abstract chat(

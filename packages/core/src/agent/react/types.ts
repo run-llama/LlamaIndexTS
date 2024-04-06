@@ -1,4 +1,5 @@
 import type { ChatMessage } from "../../llm/index.js";
+import { extractText } from "../../llm/utils.js";
 
 export interface BaseReasoningStep {
   getContent(): string;
@@ -51,10 +52,12 @@ export abstract class BaseOutputParser {
   formatMessages(messages: ChatMessage[]): ChatMessage[] {
     if (messages) {
       if (messages[0].role === "system") {
-        messages[0].content = this.format(messages[0].content || "");
+        messages[0].content = this.format(
+          extractText(messages[0].content) || "",
+        );
       } else {
         messages[messages.length - 1].content = this.format(
-          messages[messages.length - 1].content || "",
+          extractText(messages[messages.length - 1].content) || "",
         );
       }
     }

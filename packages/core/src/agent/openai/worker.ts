@@ -15,7 +15,11 @@ import {
   type LLMChatParamsBase,
   type OpenAIAdditionalChatOptions,
 } from "../../llm/index.js";
-import { streamConverter, streamReducer } from "../../llm/utils.js";
+import {
+  extractText,
+  streamConverter,
+  streamReducer,
+} from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { ToolOutput } from "../../tools/types.js";
@@ -162,7 +166,10 @@ export class OpenAIAgentWorker
   ): AgentChatResponse {
     task.extraState.newMemory.put(aiMessage);
 
-    return new AgentChatResponse(aiMessage.content, task.extraState.sources);
+    return new AgentChatResponse(
+      extractText(aiMessage.content),
+      task.extraState.sources,
+    );
   }
 
   private async _getStreamAiResponse(

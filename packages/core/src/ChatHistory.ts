@@ -3,6 +3,7 @@ import type { SummaryPrompt } from "./Prompt.js";
 import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
 import { OpenAI } from "./llm/open_ai.js";
 import type { ChatMessage, LLM, MessageType } from "./llm/types.js";
+import { extractText } from "./llm/utils.js";
 
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages
@@ -188,7 +189,8 @@ export class SummaryChatHistory extends ChatHistory {
 
     // get tokens of current request messages and the transient messages
     const tokens = requestMessages.reduce(
-      (count, message) => count + this.tokenizer(message.content).length,
+      (count, message) =>
+        count + this.tokenizer(extractText(message.content)).length,
       0,
     );
     if (tokens > this.tokensToSummarize) {

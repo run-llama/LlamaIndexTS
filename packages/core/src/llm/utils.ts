@@ -1,6 +1,12 @@
 import { AsyncLocalStorage } from "@llamaindex/env";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import type { ChatResponse, LLM, LLMChat, MessageContent } from "./types.js";
+import type {
+  ChatResponse,
+  LLM,
+  LLMChat,
+  MessageContent,
+  MessageContentTextDetail,
+} from "./types.js";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
@@ -15,7 +21,7 @@ export async function* streamReducer<S, D>(params: {
   stream: AsyncIterable<S>;
   reducer: (previousValue: D, currentValue: S) => D;
   initialValue: D;
-  finished?: (value: D | undefined) => void;
+  finished?: (value: D) => void;
 }): AsyncIterable<S> {
   let value = params.initialValue;
   for await (const data of params.stream) {
@@ -26,23 +32,29 @@ export async function* streamReducer<S, D>(params: {
     params.finished(value);
   }
 }
+
 /**
  * Extracts just the text from a multi-modal message or the message itself if it's just text.
  *
  * @param message The message to extract text from.
  * @returns The extracted text
  */
-
 export function extractText(message: MessageContent): string {
-  if (Array.isArray(message)) {
+  if (typeof message !== "string" && !Array.isArray(message)) {
+    console.warn(
+      "extractText called with non-string message, this is likely a bug.",
+    );
+    return `${message}`;
+  } else if (typeof message !== "string" && Array.isArray(message)) {
     // message is of type MessageContentDetail[] - retrieve just the text parts and concatenate them
     // so we can pass them to the context generator
     return message
-      .filter((c) => c.type === "text")
+      .filter((c): c is MessageContentTextDetail => c.type === "text")
       .map((c) => c.text)
       .join("\n\n");
+  } else {
+    return message;
   }
-  return message;
 }
 
 /**

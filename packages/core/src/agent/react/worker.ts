@@ -3,6 +3,7 @@ import type { ChatMessage } from "cohere-ai/api";
 import { Settings } from "../../Settings.js";
 import { AgentChatResponse } from "../../engines/chat/index.js";
 import { type ChatResponse, type LLM } from "../../llm/index.js";
+import { extractText } from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import { ToolOutput } from "../../tools/index.js";
@@ -34,7 +35,7 @@ function addUserStepToReasoning(
 ): void {
   if (step.stepState.isFirst) {
     memory.put({
-      content: step.input,
+      content: step.input ?? "",
       role: "user",
     });
     step.stepState.isFirst = false;
@@ -130,7 +131,7 @@ export class ReActAgentWorker implements AgentWorker<ChatParams> {
 
     try {
       reasoningStep = this.outputParser.parse(
-        messageContent,
+        extractText(messageContent),
         isStreaming,
       ) as ActionReasoningStep;
     } catch (e) {
@@ -144,7 +145,7 @@ export class ReActAgentWorker implements AgentWorker<ChatParams> {
     currentReasoning.push(reasoningStep);
 
     if (reasoningStep.isDone()) {
-      return [messageContent, currentReasoning, true];
+      return [extractText(messageContent), currentReasoning, true];
     }
 
     const actionReasoningStep = new ActionReasoningStep({
@@ -157,7 +158,7 @@ export class ReActAgentWorker implements AgentWorker<ChatParams> {
       throw new Error(`Expected ActionReasoningStep, got ${reasoningStep}`);
     }
 
-    return [messageContent, currentReasoning, false];
+    return [extractText(messageContent), currentReasoning, false];
   }
 
   async _processActions(
