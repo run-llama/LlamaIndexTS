@@ -8,9 +8,9 @@ import type {
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
 } from "llamaindex";
-import { BaseLLM } from "llamaindex/llm/base";
-import { wrapLLMEvent } from "llamaindex/llm/utils";
 import _ from "lodash";
+import { BaseLLM } from "./base.js";
+import { wrapLLMEvent } from "./utils.js";
 
 export class AnthropicSession {
   anthropic: SDKAnthropic;
