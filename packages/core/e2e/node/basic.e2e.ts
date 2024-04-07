@@ -1,16 +1,68 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { consola } from "consola";
-import { OpenAI, OpenAIAgent, Settings, type LLM } from "llamaindex";
+import {
+  OpenAI,
+  OpenAIAgent,
+  Settings,
+  type LLM,
+  type LLMEndEvent,
+  type LLMStartEvent,
+} from "llamaindex";
 import { ok } from "node:assert";
-import { before, describe, test } from "node:test";
+import type { WriteStream } from "node:fs";
+import { createWriteStream } from "node:fs";
+import { mkdir } from "node:fs/promises";
+import { join } from "node:path";
+import { after, before, beforeEach, describe, test } from "node:test";
+import { inspect } from "node:util";
 
 let llm: LLM;
+let fsStream: WriteStream;
+before(async () => {
+  const logUrl = new URL(
+    join(
+      "..",
+      "logs",
+      `basic.e2e.${new Date().toISOString().replace(/:/g, "-").replace(/\./g, "-")}.log`,
+    ),
+    import.meta.url,
+  );
+  await mkdir(new URL(".", logUrl), { recursive: true });
+  fsStream = createWriteStream(logUrl, {
+    encoding: "utf-8",
+  });
+});
+
+after(() => {
+  fsStream.end();
+});
+
+beforeEach((s) => {
+  fsStream.write("start: " + s.name + "\n");
+});
+
+const llmEventStartHandler = (event: LLMStartEvent) => {
+  const { payload } = event.detail;
+  fsStream.write("llmEventStart: " + inspect(payload) + "\n");
+};
+
+const llmEventEndHandler = (event: LLMEndEvent) => {
+  const { payload } = event.detail;
+  fsStream.write("llmEventEnd: " + inspect(payload) + "\n");
+};
 
 before(() => {
   Settings.llm = new OpenAI({
     model: "gpt-3.5-turbo",
   });
   llm = Settings.llm;
+  Settings.callbackManager.on("llm-start", llmEventStartHandler);
+  Settings.callbackManager.on("llm-end", llmEventEndHandler);
+});
+
+after(() => {
+  Settings.callbackManager.off("llm-start", llmEventStartHandler);
+  Settings.callbackManager.off("llm-end", llmEventEndHandler);
 });
 
 describe("llm", () => {
@@ -23,6 +75,7 @@ describe("llm", () => {
         },
       ],
     });
+    consola.debug("response:", response);
     ok(typeof response.message.content === "string");
   });
 
@@ -37,6 +90,7 @@ describe("llm", () => {
       ],
     });
     for await (const chunk of iter) {
+      consola.debug("chunk:", chunk);
       ok(typeof chunk.delta === "string");
     }
   });
