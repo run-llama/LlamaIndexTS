@@ -20,7 +20,6 @@ jobs:
       - name: Setup Ollama
         run: |
           brew install ollama
-          brew services start ollama
           ollama serve
           ollama pull llama2
       - name: Setup Node.js
