@@ -1,3 +1,4 @@
+import { Settings } from "../../Settings.js";
 import type { ChatMessage } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import type { ObjectRetriever } from "../../objects/base.js";
@@ -32,7 +33,14 @@ export class OpenAIAgent extends AgentRunner {
     toolRetriever,
     systemPrompt,
   }: OpenAIAgentParams) {
-    llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
+    if (!llm) {
+      if (Settings.llm instanceof OpenAI) {
+        llm = Settings.llm;
+      } else {
+        console.warn("No OpenAI model provided, creating a new one");
+        llm = new OpenAI({ model: "gpt-3.5-turbo-0613" });
+      }
+    }
 
     if (systemPrompt) {
       if (prefixMessages) {
