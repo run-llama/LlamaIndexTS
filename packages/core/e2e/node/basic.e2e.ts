@@ -43,12 +43,24 @@ beforeEach((s) => {
 
 const llmEventStartHandler = (event: LLMStartEvent) => {
   const { payload } = event.detail;
-  fsStream.write("llmEventStart: " + inspect(payload) + "\n");
+  fsStream.write(
+    "llmEventStart: " +
+      inspect(payload, {
+        depth: Infinity,
+      }) +
+      "\n",
+  );
 };
 
 const llmEventEndHandler = (event: LLMEndEvent) => {
   const { payload } = event.detail;
-  fsStream.write("llmEventEnd: " + inspect(payload) + "\n");
+  fsStream.write(
+    "llmEventEnd: " +
+      inspect(payload, {
+        depth: Infinity,
+      }) +
+      "\n",
+  );
 };
 
 before(() => {

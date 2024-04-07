@@ -1,4 +1,4 @@
-import { AsyncLocalStorage } from "@llamaindex/env";
+import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type {
   ChatResponse,
@@ -68,8 +68,10 @@ export function wrapLLMEvent(
     this: LLM,
     ...params: Parameters<LLMChat["chat"]>
   ): ReturnType<LLMChat["chat"]> {
+    const id = randomUUID();
     getCallbackManager().dispatchEvent("llm-start", {
       payload: {
+        id,
         messages: params[0].messages,
       },
     });
@@ -100,6 +102,7 @@ export function wrapLLMEvent(
         snapshot(() => {
           getCallbackManager().dispatchEvent("llm-end", {
             payload: {
+              id,
               response: finalResponse,
             },
           });
@@ -108,6 +111,7 @@ export function wrapLLMEvent(
     } else {
       getCallbackManager().dispatchEvent("llm-end", {
         payload: {
+          id,
           response,
         },
       });
