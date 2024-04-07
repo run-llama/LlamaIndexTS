@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: pnpm run build --filter llamaindex
       - name: Run E2E Tests
-        run: pnpm run test --filter @llamaindex/core-e2e
+        run: pnpm run e2e
 
   test:
     strategy:
@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run tests
-        run: pnpm run e2e
+        run: pnpm run test
   typecheck:
     runs-on: ubuntu-latest
 
