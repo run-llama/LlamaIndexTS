@@ -1,5 +1,5 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { BaseTool } from "../types.js";
+import type { BaseTool, UUID } from "../types.js";
 
 type LLMBaseEvent<
   Type extends string,
@@ -11,12 +11,14 @@ type LLMBaseEvent<
 export type LLMStartEvent = LLMBaseEvent<
   "llm-start",
   {
+    id: UUID;
     messages: ChatMessage[];
   }
 >;
 export type LLMEndEvent = LLMBaseEvent<
   "llm-end",
   {
+    id: UUID;
     response: ChatResponse;
   }
 >;

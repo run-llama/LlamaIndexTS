@@ -81,3 +81,5 @@ export class QueryBundle {
     return this.queryStr;
   }
 }
+
+export type UUID = `${string}-${string}-${string}-${string}-${string}`;
