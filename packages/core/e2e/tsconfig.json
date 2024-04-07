@@ -6,7 +6,12 @@
     "moduleResolution": "node16",
     "target": "ESNext"
   },
-  "include": ["./**/*.ts"],
+  "include": [
+    "./**/*.ts",
+    "./mock-module.js",
+    "./mock-register.js",
+    "./fixtures"
+  ],
   "references": [
     {
       "path": "../../core/tsconfig.json"
