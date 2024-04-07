@@ -25,6 +25,9 @@
       "path": "./packages/edge/e2e/test-edge-runtime/tsconfig.json"
     },
     {
+      "path": "./packages/core/e2e/tsconfig.json"
+    },
+    {
       "path": "./packages/core/tests/tsconfig.json"
     },
     {

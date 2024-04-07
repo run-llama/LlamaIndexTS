@@ -18,6 +18,9 @@
     "test": {
       "dependsOn": ["^build", "@llamaindex/edge#build"]
     },
+    "e2e": {
+      "dependsOn": ["^build"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

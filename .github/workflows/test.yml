@@ -3,6 +3,26 @@ name: Run Tests
 on: [push, pull_request]
 
 jobs:
+  e2e:
+    runs-on: macos-14
+    container:
+      image: ollama/ollama
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build --filter llamaindex
+      - name: Run E2E Tests
+        run: pnpm run test --filter @llamaindex/core-e2e
+
   test:
     strategy:
       fail-fast: false
@@ -22,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run tests
-        run: pnpm run test
+        run: pnpm run e2e
   typecheck:
     runs-on: ubuntu-latest
 
