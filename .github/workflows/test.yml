@@ -18,7 +18,10 @@ jobs:
           path: ${{ env.OLLAMA_MODELS }}
           key: ${{ runner.os }}-ollama
       - name: Setup Ollama
-        run: brew install ollama && ollama pull llama2
+        run: |
+          brew install ollama
+          brew services start ollama
+          ollama pull llama2
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
