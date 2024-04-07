@@ -2,17 +2,23 @@ name: Run Tests
 
 on: [push, pull_request]
 
+env:
+  OLLAMA_MODELS: ${{ github.workspace }}/models
+
 jobs:
   e2e:
-    runs-on: ubuntu-latest
-    container:
-      image: ollama/ollama
-      ports:
-        - 11434:11434
-
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
+      - name: Cache Ollama Models
+        id: cache-ollama
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.OLLAMA_MODELS }}
+          key: ${{ runner.os }}-ollama
+      - name: Setup Ollama
+        run: brew install ollama && ollama pull llama2
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
