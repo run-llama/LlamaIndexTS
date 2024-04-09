@@ -10,16 +10,16 @@
     "@zilliz/milvus2-sdk-node": "^2.3.5",
     "chromadb": "^1.8.1",
     "commander": "^11.1.0",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.10",
-    "llamaindex": "latest",
-    "mongodb": "^6.2.0",
+    "llamaindex": "workspace:latest",
+    "mongodb": "^6.5.0",
     "pathe": "^1.1.2"
   },
   "devDependencies": {
-    "@types/node": "^18.19.10",
+    "@types/node": "^18.19.31",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.4"
   },
   "scripts": {
     "lint": "eslint ."
