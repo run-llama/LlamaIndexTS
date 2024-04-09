@@ -1,5 +1,5 @@
 ---
-"llamaindex": minor
+"llamaindex": patch
 ---
 
 gpt-4-turbo GA
