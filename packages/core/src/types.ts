@@ -34,7 +34,7 @@ export interface BaseQueryEngine {
  * Simple Tool interface. Likely to change.
  */
 export interface BaseTool {
-  call?: (...args: any[]) => any;
+  call: (...args: any[]) => any;
   metadata: ToolMetadata;
 }
 
