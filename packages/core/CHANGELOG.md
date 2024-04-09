@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.2.4
+
+### Patch Changes
+
+- 3bc77f7: gpt-4-turbo GA
+- 8d2b21e: Mistral 0.1.3
+
 ## 0.2.3
 
 ### Patch Changes
