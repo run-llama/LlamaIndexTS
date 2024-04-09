@@ -96,6 +96,7 @@ export const GPT4_MODELS = {
   "gpt-4": { contextWindow: 8192 },
   "gpt-4-32k": { contextWindow: 32768 },
   "gpt-4-32k-0613": { contextWindow: 32768 },
+  "gpt-4-turbo": { contextWindow: 128000 },
   "gpt-4-turbo-preview": { contextWindow: 128000 },
   "gpt-4-1106-preview": { contextWindow: 128000 },
   "gpt-4-0125-preview": { contextWindow: 128000 },
