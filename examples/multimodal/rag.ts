@@ -13,7 +13,7 @@ Settings.chunkSize = 512;
 Settings.chunkOverlap = 20;
 
 // Update llm
-Settings.llm = new OpenAI({ model: "gpt-4-vision-preview", maxTokens: 512 });
+Settings.llm = new OpenAI({ model: "gpt-4-turbo", maxTokens: 512 });
 
 // Update callbackManager
 Settings.callbackManager = new CallbackManager({

@@ -19,6 +19,10 @@ const ALL_AZURE_OPENAI_CHAT_MODELS = {
   },
   "gpt-4": { contextWindow: 8192, openAIModel: "gpt-4" },
   "gpt-4-32k": { contextWindow: 32768, openAIModel: "gpt-4-32k" },
+  "gpt-4-turbo": {
+    contextWindow: 128000,
+    openAIModel: "gpt-4-turbo",
+  },
   "gpt-4-vision-preview": {
     contextWindow: 128000,
     openAIModel: "gpt-4-vision-preview",
