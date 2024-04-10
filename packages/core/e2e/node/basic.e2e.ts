@@ -143,9 +143,9 @@ describe("agent", () => {
   });
 });
 
-test("queryEngine", (t) => {
+test("queryEngine", async (t) => {
   mockLLMEndSnapshot(t, "queryEngine_subquestion");
-  t.test("subquestion", async () => {
+  await t.test("subquestion", async () => {
     const document = new Document({
       text: "Bill Gates stole from Apple.\n Steve Jobs stole from Xerox.",
     });
