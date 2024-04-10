@@ -6,7 +6,8 @@ import { extractText } from "llamaindex/llm/utils";
 const encoding = encodingForModel("gpt-4-0125-preview");
 
 const llm = new OpenAI({
-  model: "gpt-4-0125-preview",
+  // currently is "gpt-4-turbo-2024-04-09"
+  model: "gpt-4-turbo",
 });
 
 let tokenCount = 0;
@@ -19,18 +20,25 @@ Settings.callbackManager.on("llm-start", (event) => {
   console.log("Token count:", tokenCount);
   // https://openai.com/pricing
   // $10.00 / 1M tokens
-  console.log(`Price: $${(tokenCount / 1_000_000) * 10}`);
-});
-Settings.callbackManager.on("llm-end", (event) => {
-  const { response } = event.detail.payload;
-  tokenCount += encoding.encode(extractText(response.message.content)).length;
-  console.log("Token count:", tokenCount);
-  // https://openai.com/pricing
-  // $30.00 / 1M tokens
-  console.log(`Price: $${(tokenCount / 1_000_000) * 30}`);
+  console.log(`Total Price: $${(tokenCount / 1_000_000) * 10}`);
 });
 
-const question = "Hello, how are you?";
+Settings.callbackManager.on("llm-stream", (event) => {
+  const { chunk } = event.detail.payload;
+  const { delta } = chunk;
+  tokenCount += encoding.encode(extractText(delta)).length;
+  if (tokenCount > 20) {
+    // This is just an example, you can set your own limit or handle it differently
+    throw new Error("Token limit exceeded!");
+  }
+});
+Settings.callbackManager.on("llm-end", () => {
+  // https://openai.com/pricing
+  // $30.00 / 1M tokens
+  console.log(`Total Price: $${(tokenCount / 1_000_000) * 30}`);
+});
+
+const question = "Hello, how are you? Please response about 50 tokens.";
 console.log("Question:", question);
 void llm
   .chat({
