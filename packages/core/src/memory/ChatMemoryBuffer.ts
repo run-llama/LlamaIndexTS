@@ -6,28 +6,36 @@ import type { BaseMemory } from "./types.js";
 const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
 const DEFAULT_TOKEN_LIMIT = 3000;
 
-type ChatMemoryBufferParams = {
+type ChatMemoryBufferParams<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> = {
   tokenLimit?: number;
-  chatStore?: BaseChatStore;
+  chatStore?: BaseChatStore<AdditionalMessageOptions>;
   chatStoreKey?: string;
-  chatHistory?: ChatMessage[];
-  llm?: LLM;
+  chatHistory?: ChatMessage<AdditionalMessageOptions>[];
+  llm?: LLM<Record<string, unknown>, AdditionalMessageOptions>;
 };
 
-/**
- * Chat memory buffer.
- */
-export class ChatMemoryBuffer implements BaseMemory {
+export class ChatMemoryBuffer<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> implements BaseMemory<AdditionalMessageOptions>
+{
   tokenLimit: number;
 
-  chatStore: BaseChatStore;
+  chatStore: BaseChatStore<AdditionalMessageOptions>;
   chatStoreKey: string;
 
-  /**
-   * Initialize.
-   */
-  constructor(init?: Partial<ChatMemoryBufferParams>) {
-    this.chatStore = init?.chatStore ?? new SimpleChatStore();
+  constructor(
+    init?: Partial<ChatMemoryBufferParams<AdditionalMessageOptions>>,
+  ) {
+    this.chatStore =
+      init?.chatStore ?? new SimpleChatStore<AdditionalMessageOptions>();
     this.chatStoreKey = init?.chatStoreKey ?? "chat_history";
     if (init?.llm) {
       const contextWindow = init.llm.metadata.contextWindow;
@@ -43,11 +51,7 @@ export class ChatMemoryBuffer implements BaseMemory {
     }
   }
 
-  /**
-    Get chat history.
-    @param initialTokenCount: number of tokens to start with
-  */
-  get(initialTokenCount: number = 0): ChatMessage[] {
+  get(initialTokenCount: number = 0) {
     const chatHistory = this.getAll();
 
     if (initialTokenCount > this.tokenLimit) {
@@ -79,42 +83,22 @@ export class ChatMemoryBuffer implements BaseMemory {
     return chatHistory.slice(-messageCount);
   }
 
-  /**
-   * Get all chat history.
-   * @returns {ChatMessage[]} chat history
-   */
-  getAll(): ChatMessage[] {
+  getAll() {
     return this.chatStore.getMessages(this.chatStoreKey);
   }
 
-  /**
-   * Put chat history.
-   * @param message
-   */
-  put(message: ChatMessage): void {
+  put(message: ChatMessage<AdditionalMessageOptions>) {
     this.chatStore.addMessage(this.chatStoreKey, message);
   }
 
-  /**
-   * Set chat history.
-   * @param messages
-   */
-  set(messages: ChatMessage[]): void {
+  set(messages: ChatMessage<AdditionalMessageOptions>[]) {
     this.chatStore.setMessages(this.chatStoreKey, messages);
   }
 
-  /**
-   * Reset chat history.
-   */
-  reset(): void {
+  reset() {
     this.chatStore.deleteMessages(this.chatStoreKey);
   }
 
-  /**
-   * Get token count for message count.
-   * @param messageCount
-   * @returns {number} token count
-   */
   private _tokenCountForMessageCount(messageCount: number): number {
     if (messageCount <= 0) {
       return 0;

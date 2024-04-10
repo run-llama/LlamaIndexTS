@@ -7,7 +7,16 @@ import type {
 } from "openai";
 import { OpenAI as OrigOpenAI } from "openai";
 
-import type { ChatCompletionTool } from "openai/resources/chat/completions";
+import type {
+  ChatCompletionAssistantMessageParam,
+  ChatCompletionFunctionMessageParam,
+  ChatCompletionMessageToolCall,
+  ChatCompletionRole,
+  ChatCompletionSystemMessageParam,
+  ChatCompletionTool,
+  ChatCompletionToolMessageParam,
+  ChatCompletionUserMessageParam,
+} from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import { Tokenizers } from "../GlobalsHelper.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
@@ -32,7 +41,7 @@ import type {
   MessageToolCall,
   MessageType,
 } from "./types.js";
-import { wrapLLMEvent } from "./utils.js";
+import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class AzureOpenAI extends OrigOpenAI {
   protected override authHeaders() {
@@ -151,7 +160,15 @@ export type OpenAIAdditionalMetadata = {
   isFunctionCallingModel: boolean;
 };
 
-export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
+export type OpenAIAdditionalMessageOptions = {
+  functionName?: string;
+  toolCalls?: ChatCompletionMessageToolCall[];
+};
+
+export class OpenAI extends BaseLLM<
+  OpenAIAdditionalChatOptions,
+  OpenAIAdditionalMessageOptions
+> {
   // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
   temperature: number;
@@ -238,9 +255,7 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
     };
   }
 
-  mapMessageType(
-    messageType: MessageType,
-  ): "user" | "assistant" | "system" | "function" | "tool" {
+  static toOpenAIRole(messageType: MessageType): ChatCompletionRole {
     switch (messageType) {
       case "user":
         return "user";
@@ -257,20 +272,44 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
     }
   }
 
-  toOpenAIMessage(messages: ChatMessage[]) {
+  static toOpenAIMessage(
+    messages: ChatMessage<OpenAIAdditionalMessageOptions>[],
+  ): ChatCompletionMessageParam[] {
     return messages.map((message) => {
-      const additionalKwargs = message.additionalKwargs ?? {};
-
-      if (message.additionalKwargs?.toolCalls) {
-        additionalKwargs.tool_calls = message.additionalKwargs.toolCalls;
-        delete additionalKwargs.toolCalls;
+      const options: OpenAIAdditionalMessageOptions = message.options ?? {};
+      if (message.role === "user") {
+        return {
+          role: "user",
+          content: message.content,
+        } satisfies ChatCompletionUserMessageParam;
+      }
+      if (typeof message.content !== "string") {
+        console.warn("Message content is not a string");
+      }
+      if (message.role === "function") {
+        if (!options.functionName) {
+          console.warn("Function message does not have a name");
+        }
+        return {
+          role: "function",
+          name: options.functionName ?? "UNKNOWN",
+          content: extractText(message.content),
+          // todo: remove this since this is deprecated in the OpenAI API
+        } satisfies ChatCompletionFunctionMessageParam;
       }
 
-      return {
-        role: this.mapMessageType(message.role),
-        content: message.content,
-        ...additionalKwargs,
+      const response:
+        | ChatCompletionSystemMessageParam
+        | ChatCompletionUserMessageParam
+        | ChatCompletionAssistantMessageParam
+        | ChatCompletionToolMessageParam = {
+        // fixme(alex): type assertion
+        role: OpenAI.toOpenAIRole(message.role) as never,
+        // fixme: should not extract text, but assert content is string
+        content: extractText(message.content),
+        ...options,
       };
+      return response;
     });
   }
 
@@ -293,7 +332,7 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
       temperature: this.temperature,
       max_tokens: this.maxTokens,
       tools: tools?.map(OpenAI.toTool),
-      messages: this.toOpenAIMessage(messages) as ChatCompletionMessageParam[],
+      messages: OpenAI.toOpenAIMessage(messages),
       top_p: this.topP,
       ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
     };
@@ -311,17 +350,18 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
 
     const content = response.choices[0].message?.content ?? "";
 
-    const kwargsOutput: Record<string, any> = {};
+    const options: OpenAIAdditionalMessageOptions = {};
 
     if (response.choices[0].message?.tool_calls) {
-      kwargsOutput.toolCalls = response.choices[0].message.tool_calls;
+      options.toolCalls = response.choices[0].message.tool_calls;
     }
 
     return {
+      raw: response,
       message: {
         content,
         role: response.choices[0].message.role,
-        additionalKwargs: kwargsOutput,
+        options,
       },
     };
   }
@@ -355,8 +395,7 @@ export class OpenAI extends BaseLLM<OpenAIAdditionalChatOptions> {
 
       yield {
         // add tool calls to final chunk
-        additionalKwargs:
-          toolCalls.length > 0 ? { toolCalls: toolCalls } : undefined,
+        options: toolCalls.length > 0 ? { toolCalls: toolCalls } : undefined,
         delta: choice.delta.content ?? "",
       };
     }
