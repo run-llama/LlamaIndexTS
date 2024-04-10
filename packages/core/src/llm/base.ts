@@ -41,6 +41,7 @@ export abstract class BaseLLM<
       });
       return streamConverter(stream, (chunk) => {
         return {
+          raw: null,
           text: chunk.delta,
         };
       });

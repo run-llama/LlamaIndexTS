@@ -84,10 +84,11 @@ export function wrapLLMEvent(
       };
       response[Symbol.asyncIterator] = async function* () {
         const finalResponse: ChatResponse = {
-          raw: response,
+          raw: null,
           message: {
             content: "",
             role: "assistant",
+            options: {},
           },
         };
         let firstOne = false;
@@ -97,6 +98,12 @@ export function wrapLLMEvent(
             finalResponse.message.content = chunk.delta;
           } else {
             finalResponse.message.content += chunk.delta;
+          }
+          if (chunk.options) {
+            finalResponse.message.options = {
+              ...finalResponse.message.options,
+              ...chunk.options,
+            };
           }
           yield chunk;
         }
