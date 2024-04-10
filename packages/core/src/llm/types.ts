@@ -1,5 +1,5 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { BaseTool, UUID } from "../types.js";
+import type { BaseTool, MessageContent, UUID } from "../types.js";
 
 type LLMBaseEvent<
   Type extends string,
@@ -149,25 +149,6 @@ export interface LLMCompletionParamsNonStreaming
   extends LLMCompletionParamsBase {
   stream?: false | null;
 }
-
-export type MessageContentTextDetail = {
-  type: "text";
-  text: string;
-};
-
-export type MessageContentImageDetail = {
-  type: "image_url";
-  image_url: { url: string };
-};
-
-export type MessageContentDetail =
-  | MessageContentTextDetail
-  | MessageContentImageDetail;
-
-/**
- * Extended type for the content of a message that allows for multi-modal messages.
- */
-export type MessageContent = string | MessageContentDetail[];
 
 interface Function {
   arguments: string;

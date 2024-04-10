@@ -6,6 +6,7 @@ import {
   getEventCaller,
 } from "../internal/context/EventCaller.js";
 import type { LLMEndEvent, LLMStartEvent } from "../llm/types.js";
+import type { MessageContent } from "../types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   reason: EventCaller | null;
@@ -81,7 +82,7 @@ export interface StreamCallbackResponse {
 }
 
 export interface RetrievalCallbackResponse {
-  query: string;
+  query: MessageContent;
   nodes: NodeWithScore[];
 }
 

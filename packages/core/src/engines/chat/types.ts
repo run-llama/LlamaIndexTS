@@ -2,8 +2,8 @@ import type { ChatHistory } from "../../ChatHistory.js";
 import type { BaseNode, NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
 import type { ChatMessage } from "../../llm/index.js";
-import type { MessageContent } from "../../llm/types.js";
 import type { ToolOutput } from "../../tools/types.js";
+import type { MessageContent } from "../../types.js";
 
 /**
  * Represents the base parameters for ChatEngine.

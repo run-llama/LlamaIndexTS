@@ -1,9 +1,10 @@
 import type { NodeWithScore } from "../Node.js";
 import type { PromptMixin } from "../prompts/Mixin.js";
 import type { Response } from "../Response.js";
+import type { MessageContent, QueryBundle } from "../types.js";
 
 export interface SynthesizeParamsBase {
-  query: string;
+  query: MessageContent | QueryBundle;
   nodesWithScore: NodeWithScore[];
 }
 
@@ -26,7 +27,7 @@ export interface BaseSynthesizer {
 }
 
 export interface ResponseBuilderParamsBase {
-  query: string;
+  query: MessageContent | QueryBundle;
   textChunks: string[];
   prevResponse?: string;
 }

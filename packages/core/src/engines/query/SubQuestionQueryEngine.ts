@@ -19,6 +19,7 @@ import type {
 } from "../../types.js";
 
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
+import { toQueryBundle } from "../../internal/utils.js";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 
 /**
@@ -84,7 +85,10 @@ export class SubQuestionQueryEngine
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {
     const { query, stream } = params;
-    const subQuestions = await this.questionGen.generate(this.metadatas, query);
+    const subQuestions = await this.questionGen.generate(
+      this.metadatas,
+      toQueryBundle(query).query,
+    );
 
     const subQNodes = await Promise.all(
       subQuestions.map((subQ) => this.querySubQ(subQ)),

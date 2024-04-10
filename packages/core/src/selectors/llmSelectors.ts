@@ -1,4 +1,5 @@
 import type { LLM } from "../llm/index.js";
+import { extractText } from "../llm/utils.js";
 import type { Answer } from "../outputParsers/selectors.js";
 import { SelectionOutputParser } from "../outputParsers/selectors.js";
 import type {
@@ -76,19 +77,17 @@ export class LLMMultiSelector extends BaseSelector {
 
   /**
    * Selects a single choice from a list of choices.
-   * @param choices
-   * @param query
    */
   async _select(
     choices: ToolMetadataOnlyDescription[],
-    query: QueryBundle,
+    queryBundle: QueryBundle,
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
     const prompt = this.prompt(
       choicesText.length,
       choicesText,
-      query.queryStr,
+      extractText(queryBundle.query),
       this.maxOutputs,
     );
 
@@ -143,16 +142,18 @@ export class LLMSingleSelector extends BaseSelector {
 
   /**
    * Selects a single choice from a list of choices.
-   * @param choices
-   * @param query
    */
   async _select(
     choices: ToolMetadataOnlyDescription[],
-    query: QueryBundle,
+    queryBundle: QueryBundle,
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(choicesText.length, choicesText, query.queryStr);
+    const prompt = this.prompt(
+      choicesText.length,
+      choicesText,
+      extractText(queryBundle.query),
+    );
 
     const formattedPrompt = this.outputParser.format(prompt);
 

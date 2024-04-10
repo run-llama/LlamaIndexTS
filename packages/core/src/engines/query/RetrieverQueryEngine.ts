@@ -2,12 +2,15 @@ import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
+import { toQueryBundle } from "../../internal/utils.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import { ResponseSynthesizer } from "../../synthesizers/index.js";
 import type {
   BaseQueryEngine,
+  MessageContent,
+  QueryBundle,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
 } from "../../types.js";
@@ -15,31 +18,19 @@ import type {
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.
  */
-export class RetrieverQueryEngine
+export class RetrieverQueryEngine<Filters = unknown>
   extends PromptMixin
   implements BaseQueryEngine
 {
-  retriever: BaseRetriever;
-  responseSynthesizer: BaseSynthesizer;
-  nodePostprocessors: BaseNodePostprocessor[];
-  preFilters?: unknown;
-
   constructor(
-    retriever: BaseRetriever,
-    responseSynthesizer?: BaseSynthesizer,
-    preFilters?: unknown,
-    nodePostprocessors?: BaseNodePostprocessor[],
+    public retriever: BaseRetriever<Filters>,
+    public responseSynthesizer: BaseSynthesizer = new ResponseSynthesizer({
+      serviceContext: retriever.serviceContext,
+    }),
+    public preFilters?: Filters,
+    public nodePostprocessors: BaseNodePostprocessor[] = [],
   ) {
     super();
-
-    this.retriever = retriever;
-    this.responseSynthesizer =
-      responseSynthesizer ||
-      new ResponseSynthesizer({
-        serviceContext: retriever.serviceContext,
-      });
-    this.preFilters = preFilters;
-    this.nodePostprocessors = nodePostprocessors || [];
   }
 
   _getPromptModules() {
@@ -48,7 +39,10 @@ export class RetrieverQueryEngine
     };
   }
 
-  private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {
+  private async applyNodePostprocessors(
+    nodes: NodeWithScore[],
+    query: QueryBundle | MessageContent,
+  ) {
     let nodesWithScore = nodes;
 
     for (const postprocessor of this.nodePostprocessors) {
@@ -61,9 +55,9 @@ export class RetrieverQueryEngine
     return nodesWithScore;
   }
 
-  private async retrieve(query: string) {
+  private async retrieve(query: QueryBundle) {
     const nodes = await this.retriever.retrieve({
-      query,
+      ...query,
       preFilters: this.preFilters,
     });
 
@@ -77,7 +71,7 @@ export class RetrieverQueryEngine
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {
     const { query, stream } = params;
-    const nodesWithScore = await this.retrieve(query);
+    const nodesWithScore = await this.retrieve(toQueryBundle(query));
     if (stream) {
       return this.responseSynthesizer.synthesize({
         query,

@@ -9,6 +9,8 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
 } from "llamaindex/llm/types";
+import { extractText } from "llamaindex/llm/utils";
+import { llmCompleteMockStorage } from "../../node/utils.js";
 
 export function getOpenAISession() {
   return {};
@@ -62,7 +64,17 @@ export class OpenAI implements LLM {
   complete(
     params: LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse>;
-  async complete(params: unknown): Promise<unknown> {
+  async complete(
+    params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
+  ): Promise<AsyncIterable<CompletionResponse> | CompletionResponse> {
+    if (llmCompleteMockStorage.length > 0) {
+      const response =
+        llmCompleteMockStorage.shift()!["llmEventEnd"]["response"];
+      return {
+        raw: response,
+        text: extractText(response.message.content),
+      } satisfies CompletionResponse;
+    }
     throw new Error("Method not implemented.");
   }
 }

@@ -4,6 +4,7 @@ import type {
   StreamingAgentChatResponse,
 } from "../engines/chat/index.js";
 
+import { toQueryBundle } from "../internal/utils.js";
 import type { QueryEngineParamsNonStreaming } from "../types.js";
 
 export interface AgentWorker<ExtraParams extends object = object> {
@@ -61,7 +62,7 @@ export abstract class BaseAgent implements BaseChatEngine, BaseQueryEngine {
   ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     // Handle non-streaming query
     const agentResponse = await this.chat({
-      message: params.query,
+      message: toQueryBundle(params.query).query,
       chatHistory: [],
     });
 

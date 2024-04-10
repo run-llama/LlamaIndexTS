@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { consola } from "consola";
 import {
+  Document,
   OpenAI,
   OpenAIAgent,
+  QueryEngineTool,
   Settings,
+  SubQuestionQueryEngine,
+  VectorStoreIndex,
   type LLM,
   type LLMEndEvent,
   type LLMStartEvent,
@@ -15,6 +19,7 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { after, before, beforeEach, describe, test } from "node:test";
 import { inspect } from "node:util";
+import { mockLLMEndSnapshot } from "./utils.js";
 
 let llm: LLM;
 let fsStream: WriteStream;
@@ -135,5 +140,35 @@ describe("agent", () => {
     });
     consola.debug("response:", result.response);
     ok(typeof result.response === "string");
+  });
+});
+
+describe("queryEngine", (t) => {
+  mockLLMEndSnapshot("queryEngine_subquestion");
+  test("subquestion", async () => {
+    const document = new Document({
+      text: "Bill Gates stole from Apple.\n Steve Jobs stole from Xerox.",
+    });
+    const index = await VectorStoreIndex.fromDocuments([document]);
+
+    const queryEngineTools = [
+      new QueryEngineTool({
+        queryEngine: index.asQueryEngine(),
+        metadata: {
+          name: "bill_gates_idea",
+          description: "Get what Bill Gates idea from.",
+        },
+      }),
+    ];
+
+    const queryEngine = SubQuestionQueryEngine.fromDefaults({
+      queryEngineTools,
+    });
+
+    const { response } = await queryEngine.query({
+      query: "What did Bill Gates steal from?",
+    });
+
+    ok(response.includes("Apple"));
   });
 });

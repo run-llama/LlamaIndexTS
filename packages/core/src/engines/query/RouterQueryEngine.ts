@@ -2,6 +2,7 @@ import type { BaseNode } from "../../Node.js";
 import { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
+import { toQueryBundle } from "../../internal/utils.js";
 import { PromptMixin } from "../../prompts/index.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
@@ -44,7 +45,7 @@ async function combineResponses(
   }
 
   const summary = await summarizer.getResponse({
-    query: queryBundle.queryStr,
+    query: queryBundle.query,
     textChunks: responseStrs,
   });
 
@@ -115,7 +116,7 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   ): Promise<Response | AsyncIterable<Response>> {
     const { query, stream } = params;
 
-    const response = await this.queryRoute({ queryStr: query });
+    const response = await this.queryRoute(toQueryBundle(query));
 
     if (stream) {
       throw new Error("Streaming is not supported yet.");
@@ -140,7 +141,7 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
         const selectedQueryEngine = this.queryEngines[engineInd.index];
         responses.push(
           await selectedQueryEngine.query({
-            query: queryBundle.queryStr,
+            query: queryBundle.query,
           }),
         );
       }
@@ -177,7 +178,7 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
       }
 
       const finalResponse = await selectedQueryEngine.query({
-        query: queryBundle.queryStr,
+        query: queryBundle.query,
       });
 
       // add selected result

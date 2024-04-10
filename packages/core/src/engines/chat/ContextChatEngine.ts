@@ -6,7 +6,6 @@ import type { BaseRetriever } from "../../Retriever.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
-import type { MessageContent } from "../../llm/types.js";
 import {
   extractText,
   streamConverter,
@@ -14,6 +13,7 @@ import {
 } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
+import type { MessageContent } from "../../types.js";
 import { DefaultContextGenerator } from "./DefaultContextGenerator.js";
 import type {
   ChatEngine,

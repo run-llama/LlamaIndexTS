@@ -4,19 +4,50 @@
 import type { Response } from "./Response.js";
 
 /**
+ * @link https://docs.llamaindex.ai/en/stable/api_reference/schema/?h=querybundle#llama_index.core.schema.QueryBundle
+ *
+ *  We don't have `image_path` here, because it is included in the `query` field.
+ */
+export type QueryBundle = {
+  query: MessageContent;
+  embedding?: number[];
+};
+
+export type MessageContentTextDetail = {
+  type: "text";
+  text: string;
+};
+
+export type MessageContentImageDetail = {
+  type: "image_url";
+  image_url: {
+    url: string;
+  };
+};
+
+export type MessageContentDetail =
+  | MessageContentTextDetail
+  | MessageContentImageDetail;
+
+/**
+ * Extended type for the content of a message that allows for multi-modal messages.
+ */
+export type MessageContent = string | MessageContentDetail[];
+
+/**
  * Parameters for sending a query.
  */
-export interface QueryEngineParamsBase {
-  query: string;
-}
+export type QueryEngineParamsBase = {
+  query: MessageContent | QueryBundle;
+};
 
-export interface QueryEngineParamsStreaming extends QueryEngineParamsBase {
+export type QueryEngineParamsStreaming = QueryEngineParamsBase & {
   stream: true;
-}
+};
 
-export interface QueryEngineParamsNonStreaming extends QueryEngineParamsBase {
-  stream?: false | null;
-}
+export type QueryEngineParamsNonStreaming = QueryEngineParamsBase & {
+  stream?: false;
+};
 
 /**
  * A query engine is a question answerer that can use one or more steps.
@@ -69,17 +100,5 @@ export interface ToolMetadata {
 }
 
 export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
-
-export class QueryBundle {
-  queryStr: string;
-
-  constructor(queryStr: string) {
-    this.queryStr = queryStr;
-  }
-
-  toString(): string {
-    return this.queryStr;
-  }
-}
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;

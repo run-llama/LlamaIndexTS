@@ -1,0 +1,107 @@
+[
+  {
+    "llmEventEnd": {
+      "id": "2b68b891-a07f-4ff4-8631-247113f9b840",
+      "response": {
+        "raw": {
+          "id": "chatcmpl-9CKMkBNgXbiu7CmMOAn28oDaxG1aU",
+          "object": "chat.completion",
+          "created": 1712725250,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "[\n    {\n        \"subQuestion\": \"What is Bill Gates' idea\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]"
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 290,
+            "completion_tokens": 35,
+            "total_tokens": 325
+          },
+          "system_fingerprint": "fp_b28b39ffa8"
+        },
+        "message": {
+          "content": "[\n    {\n        \"subQuestion\": \"What is Bill Gates' idea\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  },
+  {
+    "llmEventEnd": {
+      "id": "3f3ffc3a-563a-42e6-a372-c5f1cbb484ef",
+      "response": {
+        "raw": {
+          "id": "chatcmpl-9CKMlH012BXjFXEdLeBt9YiDeE2gX",
+          "object": "chat.completion",
+          "created": 1712725251,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Bill Gates' idea was to steal from Apple."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 53,
+            "completion_tokens": 10,
+            "total_tokens": 63
+          },
+          "system_fingerprint": "fp_b28b39ffa8"
+        },
+        "message": {
+          "content": "Bill Gates' idea was to steal from Apple.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  },
+  {
+    "llmEventEnd": {
+      "id": "251973f3-7259-4480-8707-a82358ddf2ca",
+      "response": {
+        "raw": {
+          "id": "chatcmpl-9CKMm98wrMqlpEsgO8MZrnF7zBBrL",
+          "object": "chat.completion",
+          "created": 1712725252,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Bill Gates stole from Apple."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 62,
+            "completion_tokens": 6,
+            "total_tokens": 68
+          },
+          "system_fingerprint": "fp_b28b39ffa8"
+        },
+        "message": {
+          "content": "Bill Gates stole from Apple.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  }
+]
