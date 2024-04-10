@@ -1,0 +1,135 @@
+{
+  "llmEventStart": [
+    {
+      "id": "3c5024e0-df1d-4a29-b491-9712324bd520",
+      "messages": [
+        {
+          "content": "What is the weather in San Jose?",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "860b61c3-3c3a-4301-8200-9d6c0668cae5",
+      "messages": [
+        {
+          "content": "What is the weather in San Jose?",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "call_wlpohl1FXSCU9vV2CsjTPSWE",
+                "type": "function",
+                "function": {
+                  "name": "Weather",
+                  "arguments": "{\"location\":\"San Jose\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "45 degrees and sunny in San Jose",
+          "role": "tool",
+          "options": {
+            "name": "Weather",
+            "tool_call_id": "call_wlpohl1FXSCU9vV2CsjTPSWE"
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "3c5024e0-df1d-4a29-b491-9712324bd520",
+      "response": {
+        "raw": {
+          "id": "chatcmpl-9CQt20hfgKNlrbsbu47j40GzHzFUJ",
+          "object": "chat.completion",
+          "created": 1712750316,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "call_wlpohl1FXSCU9vV2CsjTPSWE",
+                    "type": "function",
+                    "function": {
+                      "name": "Weather",
+                      "arguments": "{\"location\":\"San Jose\"}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 15,
+            "total_tokens": 64
+          },
+          "system_fingerprint": "fp_b28b39ffa8"
+        },
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "call_wlpohl1FXSCU9vV2CsjTPSWE",
+                "type": "function",
+                "function": {
+                  "name": "Weather",
+                  "arguments": "{\"location\":\"San Jose\"}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "860b61c3-3c3a-4301-8200-9d6c0668cae5",
+      "response": {
+        "raw": {
+          "id": "chatcmpl-9CQt2PPpt5qL8wl3lipBYJXLZXeQi",
+          "object": "chat.completion",
+          "created": 1712750316,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "The weather in San Jose is currently 45 degrees and sunny."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 78,
+            "completion_tokens": 14,
+            "total_tokens": 92
+          },
+          "system_fingerprint": "fp_b28b39ffa8"
+        },
+        "message": {
+          "content": "The weather in San Jose is currently 45 degrees and sunny.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ]
+}

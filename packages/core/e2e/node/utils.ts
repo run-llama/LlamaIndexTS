@@ -35,15 +35,22 @@ export async function mockLLMEvent(
 
   await readFile(join(testRootDir, "snapshot", `${snapshotName}.snap`), {
     encoding: "utf-8",
-  }).then((data) => {
-    const result = JSON.parse(data) as MockStorage;
-    result["llmEventEnd"].forEach((event) => {
-      llmCompleteMockStorage.llmEventEnd.push(event);
+  })
+    .then((data) => {
+      const result = JSON.parse(data) as MockStorage;
+      result["llmEventEnd"].forEach((event) => {
+        llmCompleteMockStorage.llmEventEnd.push(event);
+      });
+      result["llmEventStart"].forEach((event) => {
+        llmCompleteMockStorage.llmEventStart.push(event);
+      });
+    })
+    .catch((error) => {
+      if (error.code === "ENOENT") {
+        console.warn("Snapshot file not found, will create a new one");
+        return;
+      }
     });
-    result["llmEventStart"].forEach((event) => {
-      llmCompleteMockStorage.llmEventStart.push(event);
-    });
-  });
   Settings.callbackManager.on("llm-start", captureLLMStart);
   Settings.callbackManager.on("llm-end", captureLLMEnd);
 

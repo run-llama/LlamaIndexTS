@@ -11,11 +11,11 @@ import {
   type LLM,
 } from "llamaindex";
 import { ok } from "node:assert";
-import { before, test } from "node:test";
+import { beforeEach, test } from "node:test";
 import { mockLLMEvent } from "./utils.js";
 
 let llm: LLM;
-before(async () => {
+beforeEach(async () => {
   Settings.llm = new OpenAI({
     model: "gpt-3.5-turbo",
   });
@@ -54,6 +54,41 @@ test("llm", async (t) => {
   });
 });
 
+test("gpt-4-turbo", async (t) => {
+  const llm = new OpenAI({ model: "gpt-4-turbo" });
+  Settings.llm = llm;
+  await mockLLMEvent(t, "gpt-4-turbo");
+  await t.test("agent", async () => {
+    const agent = new OpenAIAgent({
+      llm,
+      tools: [
+        {
+          call: async () => {
+            return "45 degrees and sunny in San Jose";
+          },
+          metadata: {
+            name: "Weather",
+            description: "Get the weather",
+            parameters: {
+              type: "object",
+              properties: {
+                location: { type: "string" },
+              },
+              required: ["location"],
+            },
+          },
+        },
+      ],
+    });
+    const { response } = await agent.chat({
+      message: "What is the weather in San Jose?",
+    });
+    consola.debug("response:", response);
+    ok(typeof response === "string");
+    ok(response.includes("45"));
+  });
+});
+
 test("agent", async (t) => {
   await mockLLMEvent(t, "agent");
   await t.test("chat", async () => {
@@ -82,6 +117,7 @@ test("agent", async (t) => {
     });
     consola.debug("response:", result.response);
     ok(typeof result.response === "string");
+    ok(result.response.includes("35"));
   });
 });
 
