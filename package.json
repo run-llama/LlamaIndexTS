@@ -33,7 +33,8 @@
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",
-      "@babel/traverse": "7.23.2"
+      "@babel/traverse": "7.23.2",
+      "protobufjs": "7.2.6"
     }
   },
   "lint-staged": {
