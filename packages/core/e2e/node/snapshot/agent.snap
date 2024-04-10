@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "88a7035b-b493-4e95-8902-666ede936fb6",
+      "id": "HIDDEN",
       "messages": [
         {
           "content": "What is the weather in San Francisco?",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "79c7f739-cc24-4cf8-b605-89a460111da1",
+      "id": "HIDDEN",
       "messages": [
         {
           "content": "What is the weather in San Francisco?",
@@ -22,7 +22,7 @@
           "options": {
             "toolCalls": [
               {
-                "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
+                "id": "HIDDEN",
                 "type": "function",
                 "function": {
                   "name": "Weather",
@@ -37,7 +37,7 @@
           "role": "tool",
           "options": {
             "name": "Weather",
-            "tool_call_id": "call_kIqRf0PiYEa6uIQzI3wYZJkR"
+            "tool_call_id": "call_Hm5cZ0XeIaWEXPo8DwV6NkjM"
           }
         }
       ]
@@ -45,12 +45,12 @@
   ],
   "llmEventEnd": [
     {
-      "id": "88a7035b-b493-4e95-8902-666ede936fb6",
+      "id": "HIDDEN",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHEE56nQ0oLqGeOeJuky31TIHZY",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732596,
+          "created": 1712757250,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -60,7 +60,7 @@
                 "content": null,
                 "tool_calls": [
                   {
-                    "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
+                    "id": "HIDDEN",
                     "type": "function",
                     "function": {
                       "name": "Weather",
@@ -86,7 +86,7 @@
           "options": {
             "toolCalls": [
               {
-                "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
+                "id": "HIDDEN",
                 "type": "function",
                 "function": {
                   "name": "Weather",
@@ -99,12 +99,12 @@
       }
     },
     {
-      "id": "79c7f739-cc24-4cf8-b605-89a460111da1",
+      "id": "HIDDEN",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHF8HQai1B6w1BpAd5GAHLKfbkR",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732597,
+          "created": 1712757251,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -131,5 +131,6 @@
         }
       }
     }
-  ]
+  ],
+  "llmEventStream": []
 }

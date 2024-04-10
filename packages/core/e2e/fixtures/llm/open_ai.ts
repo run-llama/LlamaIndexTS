@@ -52,19 +52,12 @@ export class OpenAI implements LLM {
       }
 
       if (llmCompleteMockStorage.llmEventEnd.length > 0) {
-        const response =
-          llmCompleteMockStorage.llmEventEnd.shift()!["response"];
+        const { id, response } = llmCompleteMockStorage.llmEventEnd.shift()!;
         if (params.stream) {
-          const content = response.message.content as string;
-          // maybe this is not the correct way to split the content, but it's good enough for now
-          const tokens = content.split("");
           return {
             [Symbol.asyncIterator]: async function* () {
-              const delta = tokens.shift();
-              if (delta) {
-                yield {
-                  delta,
-                } as ChatResponseChunk;
+              while (llmCompleteMockStorage.llmEventStream.at(-1)?.id === id) {
+                yield llmCompleteMockStorage.llmEventStream.shift()!["chunk"];
               }
             },
           };

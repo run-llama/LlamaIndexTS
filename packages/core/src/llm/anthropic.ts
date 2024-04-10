@@ -212,7 +212,10 @@ export class Anthropic extends BaseLLM {
       if (typeof content !== "string") continue;
 
       idx_counter++;
-      yield { delta: content };
+      yield {
+        raw: part,
+        delta: content,
+      };
     }
     return;
   }

@@ -2,6 +2,7 @@ import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type {
   ChatResponse,
+  ChatResponseChunk,
   LLM,
   LLMChat,
   MessageContent,
@@ -83,14 +84,14 @@ export function wrapLLMEvent(
         [Symbol.asyncIterator]: response[Symbol.asyncIterator].bind(response),
       };
       response[Symbol.asyncIterator] = async function* () {
-        const finalResponse: ChatResponse = {
-          raw: null,
+        const finalResponse = {
+          raw: [] as ChatResponseChunk[],
           message: {
             content: "",
             role: "assistant",
             options: {},
           },
-        };
+        } satisfies ChatResponse;
         let firstOne = false;
         for await (const chunk of originalAsyncIterator) {
           if (!firstOne) {
@@ -105,6 +106,13 @@ export function wrapLLMEvent(
               ...chunk.options,
             };
           }
+          getCallbackManager().dispatchEvent("llm-stream", {
+            payload: {
+              id,
+              chunk,
+            },
+          });
+          finalResponse.raw.push(chunk);
           yield chunk;
         }
         snapshot(() => {

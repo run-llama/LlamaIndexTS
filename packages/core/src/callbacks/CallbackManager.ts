@@ -5,7 +5,11 @@ import {
   EventCaller,
   getEventCaller,
 } from "../internal/context/EventCaller.js";
-import type { LLMEndEvent, LLMStartEvent } from "../llm/types.js";
+import type {
+  LLMEndEvent,
+  LLMStartEvent,
+  LLMStreamEvent,
+} from "../llm/types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   reason: EventCaller | null;
@@ -44,6 +48,7 @@ export interface LlamaIndexEventMaps {
   stream: CustomEvent<StreamCallbackResponse>;
   "llm-start": LLMStartEvent;
   "llm-end": LLMEndEvent;
+  "llm-stream": LLMStreamEvent;
 }
 
 //#region @deprecated remove in the next major version

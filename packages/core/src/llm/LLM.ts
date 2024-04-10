@@ -366,7 +366,7 @@ export class Portkey extends BaseLLM {
 
       idx_counter++;
 
-      yield { delta: part.choices[0].delta?.content ?? "" };
+      yield { raw: part, delta: part.choices[0].delta?.content ?? "" };
     }
     return;
   }

@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "68846dc5-d099-4ab1-b987-3eb5376c9859",
+      "id": "HIDDEN",
       "messages": [
         {
           "content": "Hello",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "de46b84e-7345-430f-b8fa-423354b630c9",
+      "id": "HIDDEN",
       "messages": [
         {
           "content": "hello",
@@ -21,12 +21,12 @@
   ],
   "llmEventEnd": [
     {
-      "id": "68846dc5-d099-4ab1-b987-3eb5376c9859",
+      "id": "HIDDEN",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHDMY3CO1uI6P3JfJMNg94dhrbN",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732595,
+          "created": 1712757247,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -54,7 +54,7 @@
       }
     },
     {
-      "id": "de46b84e-7345-430f-b8fa-423354b630c9",
+      "id": "HIDDEN",
       "response": {
         "raw": null,
         "message": {
@@ -62,6 +62,71 @@
           "role": "assistant",
           "options": {}
         }
+      }
+    }
+  ],
+  "llmEventStream": [
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": "Hello"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": "!"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": " How"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": " can"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": " I"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": " assist"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": " you"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": " today"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "options": {},
+        "delta": "?"
       }
     }
   ]
