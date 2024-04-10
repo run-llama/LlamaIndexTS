@@ -9,10 +9,6 @@ type MockStorage = {
   llmEventEnd: LLMEndEvent["detail"]["payload"][];
 };
 
-/**
- * use AI to generate this initial mockStorage
- * @link https://chatkit.app/s/wx8gjx2v0gedfgi
- */
 export const llmCompleteMockStorage: MockStorage = {
   llmEventStart: [],
   llmEventEnd: [],
