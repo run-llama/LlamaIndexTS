@@ -14,6 +14,7 @@ import type {
 
 const messageAccessor = (data: any): ChatResponseChunk => {
   return {
+    raw: data,
     delta: data.message.content,
   };
 };

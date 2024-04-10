@@ -404,6 +404,7 @@ export class OpenAI extends BaseLLM<
       });
 
       yield {
+        raw: part,
         // add tool calls to final chunk
         options: toolCalls.length > 0 ? { toolCalls: toolCalls } : {},
         delta: choice.delta.content ?? "",

@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "6542b9be-50e9-4bd6-9e8b-94088c0d0a43",
+      "id": "HIDDEN",
       "messages": [
         {
           "content": "Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:\n\n# Example 1\n<Tools>\n```json\n{\n    \"uber_10k\": \"Provides information about Uber financials for year 2021\",\n    \"lyft_10k\": \"Provides information about Lyft financials for year 2021\"\n}\n```\n\n<User Question>\nCompare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021\n\n<Output>\n```json\n[\n    {\n        \"subQuestion\": \"What is the revenue growth of Uber\",\n        \"toolName\": \"uber_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the EBITDA of Uber\",\n        \"toolName\": \"uber_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the revenue growth of Lyft\",\n        \"toolName\": \"lyft_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the EBITDA of Lyft\",\n        \"toolName\": \"lyft_10k\"\n    }\n]\n```\n\n# Example 2\n<Tools>\n```json\n{\n    \"bill_gates_idea\": \"Get what Bill Gates idea from.\"\n}\n```\n\n<User Question>\nWhat did Bill Gates steal from?\n\n<Output>\n",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "8e61829a-f816-47d5-95d5-fc93ff479085",
+      "id": "HIDDEN",
       "messages": [
         {
           "content": "Context information is below.\n---------------------\nBill Gates stole from Apple. Steve Jobs stole from Xerox.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What is Bill Gates' idea\nAnswer:",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "id": "c4b73220-3108-4951-8280-2c6429247f7c",
+      "id": "HIDDEN",
       "messages": [
         {
           "content": "Context information is below.\n---------------------\nSub question: What is Bill Gates' idea\nResponse: Bill Gates' idea was to steal from Apple.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What did Bill Gates steal from?\nAnswer:",
@@ -30,12 +30,12 @@
   ],
   "llmEventEnd": [
     {
-      "id": "6542b9be-50e9-4bd6-9e8b-94088c0d0a43",
+      "id": "HIDDEN",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHF9kjM55jAPKnPfZ7Yj6nOZJNf",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732597,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -53,7 +53,7 @@
             "completion_tokens": 35,
             "total_tokens": 325
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "```json\n[\n    {\n        \"subQuestion\": \"What is Bill Gates' idea\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]\n```",
@@ -63,12 +63,12 @@
       }
     },
     {
-      "id": "8e61829a-f816-47d5-95d5-fc93ff479085",
+      "id": "HIDDEN",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHGHagthzFopnyqU5uPFDNx1fnw",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732598,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -86,7 +86,7 @@
             "completion_tokens": 10,
             "total_tokens": 63
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "Bill Gates' idea was to steal from Apple.",
@@ -96,12 +96,12 @@
       }
     },
     {
-      "id": "c4b73220-3108-4951-8280-2c6429247f7c",
+      "id": "HIDDEN",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHHL7EUvMjm1jTKZIThu76XNAiN",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732599,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -119,7 +119,7 @@
             "completion_tokens": 6,
             "total_tokens": 68
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "Bill Gates stole from Apple.",
@@ -128,5 +128,6 @@
         }
       }
     }
-  ]
+  ],
+  "llmEventStream": []
 }

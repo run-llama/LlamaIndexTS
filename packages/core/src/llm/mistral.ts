@@ -137,6 +137,7 @@ export class MistralAI extends BaseLLM {
       idx_counter++;
 
       yield {
+        raw: part,
         delta: part.choices[0].delta.content ?? "",
       };
     }

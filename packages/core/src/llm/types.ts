@@ -22,6 +22,13 @@ export type LLMEndEvent = LLMBaseEvent<
     response: ChatResponse;
   }
 >;
+export type LLMStreamEvent = LLMBaseEvent<
+  "llm-stream",
+  {
+    id: UUID;
+    chunk: ChatResponseChunk;
+  }
+>;
 
 /**
  * @internal
@@ -127,7 +134,7 @@ export interface ChatResponse<
   /**
    * Raw response from the LLM
    *
-   * It's possible that this is `null` if the LLM response an iterable of chunks
+   * If LLM response an iterable of chunks, this will be an array of those chunks
    */
   raw: object | null;
 }
@@ -140,10 +147,12 @@ export type ChatResponseChunk<
 > =
   AdditionalMessageOptions extends Record<string, unknown>
     ? {
+        raw: object | null;
         delta: string;
         options?: AdditionalMessageOptions;
       }
     : {
+        raw: object | null;
         delta: string;
         options: AdditionalMessageOptions;
       };

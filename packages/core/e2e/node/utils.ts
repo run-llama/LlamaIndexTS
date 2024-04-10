@@ -1,4 +1,9 @@
-import { Settings, type LLMEndEvent, type LLMStartEvent } from "llamaindex";
+import {
+  Settings,
+  type LLMEndEvent,
+  type LLMStartEvent,
+  type LLMStreamEvent,
+} from "llamaindex";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { type test } from "node:test";
@@ -7,11 +12,13 @@ import { fileURLToPath } from "node:url";
 type MockStorage = {
   llmEventStart: LLMStartEvent["detail"]["payload"][];
   llmEventEnd: LLMEndEvent["detail"]["payload"][];
+  llmEventStream: LLMStreamEvent["detail"]["payload"][];
 };
 
 export const llmCompleteMockStorage: MockStorage = {
   llmEventStart: [],
   llmEventEnd: [],
+  llmEventStream: [],
 };
 
 export const testRootDir = fileURLToPath(new URL(".", import.meta.url));
@@ -23,6 +30,7 @@ export async function mockLLMEvent(
   const newLLMCompleteMockStorage: MockStorage = {
     llmEventStart: [],
     llmEventEnd: [],
+    llmEventStream: [],
   };
 
   function captureLLMStart(event: LLMStartEvent) {
@@ -31,6 +39,10 @@ export async function mockLLMEvent(
 
   function captureLLMEnd(event: LLMEndEvent) {
     newLLMCompleteMockStorage.llmEventEnd.push(event.detail.payload);
+  }
+
+  function captureLLMStream(event: LLMStreamEvent) {
+    newLLMCompleteMockStorage.llmEventStream.push(event.detail.payload);
   }
 
   await readFile(join(testRootDir, "snapshot", `${snapshotName}.snap`), {
@@ -44,6 +56,9 @@ export async function mockLLMEvent(
       result["llmEventStart"].forEach((event) => {
         llmCompleteMockStorage.llmEventStart.push(event);
       });
+      result["llmEventStream"].forEach((event) => {
+        llmCompleteMockStorage.llmEventStream.push(event);
+      });
     })
     .catch((error) => {
       if (error.code === "ENOENT") {
@@ -53,15 +68,25 @@ export async function mockLLMEvent(
     });
   Settings.callbackManager.on("llm-start", captureLLMStart);
   Settings.callbackManager.on("llm-end", captureLLMEnd);
+  Settings.callbackManager.on("llm-stream", captureLLMStream);
 
   t.after(async () => {
+    Settings.callbackManager.off("llm-stream", captureLLMStream);
     Settings.callbackManager.off("llm-end", captureLLMEnd);
     Settings.callbackManager.off("llm-start", captureLLMStart);
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     if (process.env.UPDATE_SNAPSHOT === "1") {
+      const data = JSON.stringify(newLLMCompleteMockStorage, null, 2)
+        .replace(/"id": ".*"/g, `"id": "HIDDEN"`)
+        .replace(/"created": \d+/g, `"created": 114514`)
+        .replace(
+          /"system_fingerprint": ".*"/g,
+          '"system_fingerprint": "HIDDEN"',
+        )
+        .replace(/"tool_call_id": ".*"/g, '"tool_call_id": "HIDDEN"');
       await writeFile(
         join(testRootDir, "snapshot", `${snapshotName}.snap`),
-        JSON.stringify(newLLMCompleteMockStorage, null, 2),
+        data,
       );
       return;
     }
@@ -79,10 +104,20 @@ export async function mockLLMEvent(
         "New LLMStartEvent does not match, please update snapshot",
       );
     }
+
+    if (
+      newLLMCompleteMockStorage.llmEventStream.length !==
+      llmCompleteMockStorage.llmEventStream.length
+    ) {
+      throw new Error(
+        "New LLMStreamEvent does not match, please update snapshot",
+      );
+    }
   });
   // cleanup
   t.after(() => {
     llmCompleteMockStorage.llmEventEnd = [];
     llmCompleteMockStorage.llmEventStart = [];
+    llmCompleteMockStorage.llmEventStream = [];
   });
 }
