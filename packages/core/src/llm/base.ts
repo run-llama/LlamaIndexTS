@@ -16,6 +16,10 @@ export abstract class BaseLLM<
     string,
     unknown
   >,
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
 > implements LLM<AdditionalChatOptions>
 {
   abstract metadata: LLMMetadata;
@@ -55,5 +59,5 @@ export abstract class BaseLLM<
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   abstract chat(
     params: LLMChatParamsNonStreaming<AdditionalChatOptions>,
-  ): Promise<ChatResponse>;
+  ): Promise<ChatResponse<AdditionalMessageOptions>>;
 }

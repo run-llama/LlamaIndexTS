@@ -58,9 +58,9 @@ async function callFunction(
 
   return [
     {
-      content: String(output),
+      content: `${output}`,
       role: "tool",
-      additionalKwargs: {
+      options: {
         name,
         tool_call_id: id_,
       },
@@ -138,7 +138,8 @@ export class OpenAIAgentWorker
       return null;
     }
 
-    return chatHistory[chatHistory.length - 1].additionalKwargs?.toolCalls;
+    // fixme
+    return chatHistory[chatHistory.length - 1].options?.toolCalls as any;
   }
 
   private _getLlmChatParams(
@@ -148,7 +149,7 @@ export class OpenAIAgentWorker
   ): LLMChatParamsBase<OpenAIAdditionalChatOptions> {
     const llmChatParams = {
       messages: this.getAllMessages(task),
-      tools: [] as BaseTool[],
+      tools: undefined as BaseTool[] | undefined,
       additionalChatOptions: {} as OpenAIAdditionalChatOptions,
     } satisfies LLMChatParamsBase<OpenAIAdditionalChatOptions>;
 
@@ -184,7 +185,7 @@ export class OpenAIAgentWorker
     const iterator = stream[Symbol.asyncIterator]();
     let { value } = await iterator.next();
     let content = value.delta;
-    const hasToolCalls = value.additionalKwargs?.toolCalls.length > 0;
+    const hasToolCalls = value.options?.toolCalls.length > 0;
 
     if (hasToolCalls) {
       // consume stream until we have all the tool calls and return a non-streamed response
@@ -194,7 +195,7 @@ export class OpenAIAgentWorker
       return this._processMessage(task, {
         content,
         role: "assistant",
-        additionalKwargs: value.additionalKwargs,
+        options: value.options,
       });
     }
 

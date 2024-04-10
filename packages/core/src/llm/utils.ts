@@ -92,6 +92,7 @@ export function wrapLLMEvent(
       };
       response[Symbol.asyncIterator] = async function* () {
         const finalResponse: ChatResponse = {
+          raw: response,
           message: {
             content: "",
             role: "assistant",

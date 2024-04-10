@@ -106,6 +106,7 @@ export class MistralAI extends BaseLLM {
     const response = await client.chat(this.buildParams(messages));
     const message = response.choices[0].message;
     return {
+      raw: response,
       message,
     };
   }

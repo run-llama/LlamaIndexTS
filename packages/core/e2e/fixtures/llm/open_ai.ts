@@ -53,6 +53,9 @@ export class OpenAI implements LLM {
       };
     }
     return {
+      get raw(): never {
+        throw new Error("not implemented");
+      },
       message: {
         content: faker.lorem.paragraph(),
         role: "assistant",
