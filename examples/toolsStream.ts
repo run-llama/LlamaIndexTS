@@ -1,4 +1,4 @@
-import { ChatResponseChunk, OpenAI } from "llamaindex";
+import { OpenAI } from "llamaindex";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
@@ -34,11 +34,10 @@ async function main() {
   };
 
   const stream = await llm.chat({ ...args, stream: true });
-  let chunk: ChatResponseChunk | null = null;
-  for await (chunk of stream) {
+  for await (const chunk of stream) {
     process.stdout.write(chunk.delta);
+    console.log(chunk.options?.toolCalls?.[0]);
   }
-  console.log(chunk?.additionalKwargs?.toolCalls[0]);
 }
 
 (async function () {

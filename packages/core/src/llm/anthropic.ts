@@ -185,6 +185,7 @@ export class Anthropic extends BaseLLM {
     });
 
     return {
+      raw: response,
       message: { content: response.content[0].text, role: "assistant" },
     };
   }

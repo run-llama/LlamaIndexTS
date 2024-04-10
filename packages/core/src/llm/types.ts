@@ -27,13 +27,22 @@ export type LLMEndEvent = LLMBaseEvent<
  * @internal
  */
 export interface LLMChat<
-  ExtraParams extends Record<string, unknown> = Record<string, unknown>,
+  AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
 > {
   chat(
     params:
-      | LLMChatParamsStreaming<ExtraParams>
-      | LLMChatParamsNonStreaming<ExtraParams>,
-  ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>>;
+      | LLMChatParamsStreaming<AdditionalChatOptions>
+      | LLMChatParamsNonStreaming<AdditionalChatOptions>,
+  ): Promise<
+    ChatResponse<AdditionalMessageOptions> | AsyncIterable<ChatResponseChunk>
+  >;
 }
 
 /**
@@ -41,6 +50,10 @@ export interface LLMChat<
  */
 export interface LLM<
   AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
     string,
     unknown
   >,
@@ -54,7 +67,7 @@ export interface LLM<
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(
     params: LLMChatParamsNonStreaming<AdditionalChatOptions>,
-  ): Promise<ChatResponse>;
+  ): Promise<ChatResponse<AdditionalMessageOptions>>;
 
   /**
    * Get a prompt completion from the LLM
@@ -67,31 +80,71 @@ export interface LLM<
   ): Promise<CompletionResponse>;
 }
 
+// todo: remove "generic", "function", "memory";
 export type MessageType =
   | "user"
   | "assistant"
   | "system"
+  /**
+   * @deprecated
+   */
   | "generic"
+  /**
+   * @deprecated
+   */
   | "function"
+  /**
+   * @deprecated
+   */
   | "memory"
   | "tool";
 
-export interface ChatMessage {
-  content: MessageContent;
-  role: MessageType;
-  additionalKwargs?: Record<string, any>;
+export type ChatMessage<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> =
+  AdditionalMessageOptions extends Record<string, unknown>
+    ? {
+        content: MessageContent;
+        role: MessageType;
+        options?: AdditionalMessageOptions;
+      }
+    : {
+        content: MessageContent;
+        role: MessageType;
+        options: AdditionalMessageOptions;
+      };
+
+export interface ChatResponse<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> {
+  message: ChatMessage<AdditionalMessageOptions>;
+  /**
+   * Raw response from the LLM
+   */
+  raw: object;
 }
 
-export interface ChatResponse {
-  message: ChatMessage;
-  raw?: Record<string, any>;
-  additionalKwargs?: Record<string, any>;
-}
-
-export interface ChatResponseChunk {
-  delta: string;
-  additionalKwargs?: Record<string, any>;
-}
+export type ChatResponseChunk<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> =
+  AdditionalMessageOptions extends Record<string, unknown>
+    ? {
+        delta: string;
+        options?: AdditionalMessageOptions;
+      }
+    : {
+        delta: string;
+        options: AdditionalMessageOptions;
+      };
 
 export interface CompletionResponse {
   text: string;
@@ -112,8 +165,12 @@ export interface LLMChatParamsBase<
     string,
     unknown
   >,
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
 > {
-  messages: ChatMessage[];
+  messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
   additionalKwargs?: Record<string, unknown>;

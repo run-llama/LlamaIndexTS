@@ -273,6 +273,7 @@ If a question does not make any sense, or is not factually coherent, explain why
       replicateOptions,
     );
     return {
+      raw: response,
       message: {
         content: (response as Array<string>).join("").trimStart(),
         //^ We need to do this because Replicate returns a list of strings (for streaming functionality which is not exposed by the run function)
@@ -330,7 +331,7 @@ export class Portkey extends BaseLLM {
 
       const content = response.choices[0].message?.content ?? "";
       const role = response.choices[0].message?.role || "assistant";
-      return { message: { content, role: role as MessageType } };
+      return { raw: response, message: { content, role: role as MessageType } };
     }
   }
 

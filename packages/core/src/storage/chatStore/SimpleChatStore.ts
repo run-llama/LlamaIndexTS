@@ -2,47 +2,38 @@ import type { ChatMessage } from "../../llm/index.js";
 import type { BaseChatStore } from "./types.js";
 
 /**
- * Simple chat store.
+ * fixme: User could carry object references in the messages.
+ *  This could lead to memory leaks if the messages are not properly cleaned up.
  */
-export class SimpleChatStore implements BaseChatStore {
-  store: { [key: string]: ChatMessage[] } = {};
+export class SimpleChatStore<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> implements BaseChatStore<AdditionalMessageOptions>
+{
+  store: { [key: string]: ChatMessage<AdditionalMessageOptions>[] } = {};
 
-  /**
-   * Set messages.
-   * @param key: key
-   * @param messages: messages
-   * @returns: void
-   */
-  public setMessages(key: string, messages: ChatMessage[]): void {
+  public setMessages(
+    key: string,
+    messages: ChatMessage<AdditionalMessageOptions>[],
+  ) {
     this.store[key] = messages;
   }
 
-  /**
-   * Get messages.
-   * @param key: key
-   * @returns: messages
-   */
-  public getMessages(key: string): ChatMessage[] {
+  public getMessages(key: string): ChatMessage<AdditionalMessageOptions>[] {
     return this.store[key] || [];
   }
 
-  /**
-   * Add message.
-   * @param key: key
-   * @param message: message
-   * @returns: void
-   */
-  public addMessage(key: string, message: ChatMessage): void {
+  public addMessage(
+    key: string,
+    message: ChatMessage<AdditionalMessageOptions>,
+  ) {
     this.store[key] = this.store[key] || [];
     this.store[key].push(message);
   }
 
-  /**
-   * Delete messages.
-   * @param key: key
-   * @returns: messages
-   */
-  public deleteMessages(key: string): ChatMessage[] | null {
+  public deleteMessages(key: string) {
     if (!(key in this.store)) {
       return null;
     }
@@ -51,13 +42,7 @@ export class SimpleChatStore implements BaseChatStore {
     return messages;
   }
 
-  /**
-   * Delete message.
-   * @param key: key
-   * @param idx: idx
-   * @returns: message
-   */
-  public deleteMessage(key: string, idx: number): ChatMessage | null {
+  public deleteMessage(key: string, idx: number) {
     if (!(key in this.store)) {
       return null;
     }
@@ -67,12 +52,7 @@ export class SimpleChatStore implements BaseChatStore {
     return this.store[key].splice(idx, 1)[0];
   }
 
-  /**
-   * Delete last message.
-   * @param key: key
-   * @returns: message
-   */
-  public deleteLastMessage(key: string): ChatMessage | null {
+  public deleteLastMessage(key: string) {
     if (!(key in this.store)) {
       return null;
     }
@@ -82,10 +62,6 @@ export class SimpleChatStore implements BaseChatStore {
     return lastMessage || null;
   }
 
-  /**
-   * Get keys.
-   * @returns: keys
-   */
   public getKeys(): string[] {
     return Object.keys(this.store);
   }
