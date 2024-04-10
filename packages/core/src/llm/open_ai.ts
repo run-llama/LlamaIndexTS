@@ -323,17 +323,20 @@ export class OpenAI extends BaseLLM<
 
   chat(
     params: LLMChatParamsStreaming<OpenAIAdditionalChatOptions>,
-  ): Promise<AsyncIterable<ChatResponseChunk>>;
+  ): Promise<AsyncIterable<ChatResponseChunk<OpenAIAdditionalMessageOptions>>>;
   chat(
     params: LLMChatParamsNonStreaming<OpenAIAdditionalChatOptions>,
-  ): Promise<ChatResponse>;
+  ): Promise<ChatResponse<OpenAIAdditionalMessageOptions>>;
   @wrapEventCaller
   @wrapLLMEvent
   async chat(
     params:
       | LLMChatParamsNonStreaming<OpenAIAdditionalChatOptions>
       | LLMChatParamsStreaming<OpenAIAdditionalChatOptions>,
-  ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
+  ): Promise<
+    | ChatResponse<OpenAIAdditionalMessageOptions>
+    | AsyncIterable<ChatResponseChunk<OpenAIAdditionalMessageOptions>>
+  > {
     const { messages, stream, tools, additionalChatOptions } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
       model: this.model,

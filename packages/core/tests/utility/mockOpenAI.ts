@@ -54,8 +54,8 @@ export function mockLlmGeneration({
       }
       return new Promise((resolve) => {
         resolve({
-          get raw(): never {
-            throw new Error("not implemented");
+          get raw() {
+            return {};
           },
           message: {
             content: text,
@@ -79,8 +79,8 @@ export function mockLlmToolCallGeneration({
     () =>
       new Promise((resolve) =>
         resolve({
-          get raw(): never {
-            throw new Error("not implemented");
+          get raw() {
+            return {};
           },
           message: {
             content: "The sum is 2",
@@ -163,8 +163,8 @@ export function mocStructuredkLlmGeneration({
       }
       return new Promise((resolve) => {
         resolve({
-          get raw(): never {
-            throw new Error("not implemented");
+          get raw() {
+            return {};
           },
           message: {
             content: text,
