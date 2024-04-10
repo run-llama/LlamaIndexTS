@@ -149,7 +149,7 @@ export class OpenAIAgentWorker
   ): LLMChatParamsBase<OpenAIAdditionalChatOptions> {
     const llmChatParams = {
       messages: this.getAllMessages(task),
-      tools: [] as BaseTool[],
+      tools: undefined as BaseTool[] | undefined,
       additionalChatOptions: {} as OpenAIAdditionalChatOptions,
     } satisfies LLMChatParamsBase<OpenAIAdditionalChatOptions>;
 
