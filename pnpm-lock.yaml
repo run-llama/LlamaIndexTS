@@ -385,6 +385,9 @@ importers:
       '@zilliz/milvus2-sdk-node':
         specifier: ^2.3.5
         version: 2.3.5
+      ajv:
+        specifier: ^8.12.0
+        version: 8.12.0
       assemblyai:
         specifier: ^4.3.4
         version: 4.3.4
