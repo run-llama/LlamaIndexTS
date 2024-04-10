@@ -297,9 +297,6 @@ export class OpenAI extends BaseLLM<
         } satisfies ChatCompletionFunctionMessageParam;
       }
       if (message.role === "assistant") {
-        if (!options.toolCalls) {
-          throw new Error("Tool message does not have a toolCallId");
-        }
         return {
           role: "assistant",
           content: extractText(message.content),
