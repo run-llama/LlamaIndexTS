@@ -185,7 +185,7 @@ export class OpenAIAgentWorker
     const iterator = stream[Symbol.asyncIterator]();
     let { value } = await iterator.next();
     let content = value.delta;
-    const hasToolCalls = value.options?.toolCalls.length > 0;
+    const hasToolCalls = value.options?.toolCalls?.length > 0;
 
     if (hasToolCalls) {
       // consume stream until we have all the tool calls and return a non-streamed response
@@ -214,7 +214,19 @@ export class OpenAIAgentWorker
       (r: ChatResponseChunk) => new Response(r.delta),
     );
 
-    return new StreamingAgentChatResponse(newStream, task.extraState.sources);
+    // prepend content from first chunk that was already read
+    const prependedStream = (async function* () {
+      yield new Response(content);
+
+      for await (const response of newStream) {
+        yield response;
+      }
+    })();
+
+    return new StreamingAgentChatResponse(
+      prependedStream,
+      task.extraState.sources,
+    );
   }
 
   private async _getAgentResponse(

@@ -391,6 +391,8 @@ export class OpenAI extends BaseLLM<
     for await (const part of stream) {
       if (!part.choices.length) continue;
       const choice = part.choices[0];
+      // skip parts that don't have any content
+      if (!(choice.delta.content || choice.delta.tool_calls)) continue;
       updateToolCalls(toolCalls, choice.delta.tool_calls);
 
       const isDone: boolean = choice.finish_reason !== null;
@@ -444,8 +446,11 @@ function updateToolCalls(
     return toolCall;
   }
   if (toolCallDeltas) {
-    toolCallDeltas?.forEach((toolCall, i) => {
-      toolCalls[i] = augmentToolCall(toolCalls[i], toolCall);
+    toolCallDeltas?.forEach((toolCall) => {
+      toolCalls[toolCall.index] = augmentToolCall(
+        toolCalls[toolCall.index],
+        toolCall,
+      );
     });
   }
 }
