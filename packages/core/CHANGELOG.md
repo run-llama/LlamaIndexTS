@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.2.5
+
+### Patch Changes
+
+- 7d56cdf: Allow OpenAIAgent to be called without tools
+
 ## 0.2.4
 
 ### Patch Changes

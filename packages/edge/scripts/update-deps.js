@@ -8,7 +8,9 @@ const corePackagePath = path.join(process.cwd(), "..", "core", "package.json");
 const edgePackagePath = path.join(process.cwd(), "package.json");
 
 const edgePackage = readJson(edgePackagePath);
-edgePackage.dependencies = readJson(corePackagePath).dependencies;
+const corePackage = readJson(corePackagePath);
+edgePackage.dependencies = corePackage.dependencies;
+edgePackage.version = corePackage.version;
 writeJson(edgePackagePath, edgePackage);
 execSync("pnpm install --lockfile-only", { stdio: "inherit" });
 
