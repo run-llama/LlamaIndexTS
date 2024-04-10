@@ -377,7 +377,7 @@ export class OpenAI extends BaseLLM<
   @wrapEventCaller
   protected async *streamChat(
     baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams,
-  ): AsyncIterable<ChatResponseChunk> {
+  ): AsyncIterable<ChatResponseChunk<OpenAIAdditionalMessageOptions>> {
     const stream: AsyncIterable<OpenAILLM.Chat.ChatCompletionChunk> =
       await this.session.openai.chat.completions.create({
         ...baseRequestParams,
@@ -403,7 +403,7 @@ export class OpenAI extends BaseLLM<
 
       yield {
         // add tool calls to final chunk
-        options: toolCalls.length > 0 ? { toolCalls: toolCalls } : undefined,
+        options: toolCalls.length > 0 ? { toolCalls: toolCalls } : {},
         delta: choice.delta.content ?? "",
       };
     }

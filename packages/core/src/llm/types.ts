@@ -130,10 +130,21 @@ export interface ChatResponse<
   raw: object;
 }
 
-export interface ChatResponseChunk {
-  delta: string;
-  options?: Record<string, any>;
-}
+export type ChatResponseChunk<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+> =
+  AdditionalMessageOptions extends Record<string, unknown>
+    ? {
+        delta: string;
+        options?: AdditionalMessageOptions;
+      }
+    : {
+        delta: string;
+        options: AdditionalMessageOptions;
+      };
 
 export interface CompletionResponse {
   text: string;
