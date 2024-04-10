@@ -1,6 +1,35 @@
-[
-  {
-    "llmEventEnd": {
+{
+  "llmEventStart": [
+    {
+      "id": "2b68b891-a07f-4ff4-8631-247113f9b840",
+      "messages": [
+        {
+          "content": "Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:\n\n# Example 1\n<Tools>\n```json\n{\n    \"uber_10k\": \"Provides information about Uber financials for year 2021\",\n    \"lyft_10k\": \"Provides information about Lyft financials for year 2021\"\n}\n```\n\n<User Question>\nCompare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021\n\n<Output>\n```json\n[\n    {\n        \"subQuestion\": \"What is the revenue growth of Uber\",\n        \"toolName\": \"uber_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the EBITDA of Uber\",\n        \"toolName\": \"uber_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the revenue growth of Lyft\",\n        \"toolName\": \"lyft_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the EBITDA of Lyft\",\n        \"toolName\": \"lyft_10k\"\n    }\n]\n```\n\n# Example 2\n<Tools>\n```json\n{\n    \"bill_gates_idea\": \"Get what Bill Gates idea from.\"\n}\n```\n\n<User Question>\nWhat did Bill Gates steal from?\n\n<Output>\n",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "3f3ffc3a-563a-42e6-a372-c5f1cbb484ef",
+      "messages": [
+        {
+          "content": "Context information is below.\n---------------------\nBill Gates stole from Apple. Steve Jobs stole from Xerox.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What is Bill Gates' idea\nAnswer:",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "251973f3-7259-4480-8707-a82358ddf2ca",
+      "messages": [
+        {
+          "content": "Context information is below.\n---------------------\nSub question: What is Bill Gates' idea\nResponse: Bill Gates' idea was to steal from Apple.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What did Bill Gates steal from?\nAnswer:",
+          "role": "user"
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
       "id": "2b68b891-a07f-4ff4-8631-247113f9b840",
       "response": {
         "raw": {
@@ -32,10 +61,8 @@
           "options": {}
         }
       }
-    }
-  },
-  {
-    "llmEventEnd": {
+    },
+    {
       "id": "3f3ffc3a-563a-42e6-a372-c5f1cbb484ef",
       "response": {
         "raw": {
@@ -67,10 +94,8 @@
           "options": {}
         }
       }
-    }
-  },
-  {
-    "llmEventEnd": {
+    },
+    {
       "id": "251973f3-7259-4480-8707-a82358ddf2ca",
       "response": {
         "raw": {
@@ -103,5 +128,5 @@
         }
       }
     }
-  }
-]
+  ]
+}

@@ -10,6 +10,7 @@ import type {
   LLMCompletionParamsStreaming,
 } from "llamaindex/llm/types";
 import { extractText } from "llamaindex/llm/utils";
+import { strictEqual } from "node:assert";
 import { llmCompleteMockStorage } from "../../node/utils.js";
 
 export function getOpenAISession() {
@@ -67,9 +68,15 @@ export class OpenAI implements LLM {
   async complete(
     params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
   ): Promise<AsyncIterable<CompletionResponse> | CompletionResponse> {
-    if (llmCompleteMockStorage.length > 0) {
-      const response =
-        llmCompleteMockStorage.shift()!["llmEventEnd"]["response"];
+    if (llmCompleteMockStorage.llmEventStart.length > 0) {
+      const chatMessage =
+        llmCompleteMockStorage.llmEventStart.shift()!["messages"];
+      strictEqual(chatMessage.length, 1);
+      strictEqual(chatMessage[0].role, "user");
+      strictEqual(chatMessage[0].content, params.prompt);
+    }
+    if (llmCompleteMockStorage.llmEventEnd.length > 0) {
+      const response = llmCompleteMockStorage.llmEventEnd.shift()!["response"];
       return {
         raw: response,
         text: extractText(response.message.content),

@@ -1,38 +1,60 @@
-import { Settings, type LLMEndEvent } from "llamaindex";
+import { Settings, type LLMEndEvent, type LLMStartEvent } from "llamaindex";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { test } from "node:test";
+import { type test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 type MockStorage = {
-  llmEventEnd: LLMEndEvent["detail"]["payload"];
-}[];
+  llmEventStart: LLMStartEvent["detail"]["payload"][];
+  llmEventEnd: LLMEndEvent["detail"]["payload"][];
+};
 
-export const llmCompleteMockStorage: MockStorage = [];
+/**
+ * use AI to generate this initial mockStorage
+ * @link https://chatkit.app/s/wx8gjx2v0gedfgi
+ */
+export const llmCompleteMockStorage: MockStorage = {
+  llmEventStart: [],
+  llmEventEnd: [],
+};
 
 export const testRootDir = fileURLToPath(new URL(".", import.meta.url));
 
-export function mockLLMEndSnapshot(snapshotName: string) {
-  const newLLMCompleteMockStorage: MockStorage = [];
+export function mockLLMEndSnapshot(
+  t: Parameters<NonNullable<Parameters<typeof test>[0]>>[0],
+  snapshotName: string,
+) {
+  const newLLMCompleteMockStorage: MockStorage = {
+    llmEventStart: [],
+    llmEventEnd: [],
+  };
 
-  function captureLLMEnd(event: LLMEndEvent) {
-    newLLMCompleteMockStorage.push({
-      llmEventEnd: event.detail.payload,
-    });
+  function captureLLMStart(event: LLMStartEvent) {
+    newLLMCompleteMockStorage.llmEventStart.push(event.detail.payload);
   }
 
-  test.beforeEach(async () => {
+  function captureLLMEnd(event: LLMEndEvent) {
+    newLLMCompleteMockStorage.llmEventEnd.push(event.detail.payload);
+  }
+
+  t.beforeEach(async () => {
     await readFile(join(testRootDir, "snapshot", `${snapshotName}.snap`), {
       encoding: "utf-8",
     }).then((data) => {
-      JSON.parse(data).forEach((item: MockStorage[0]) => {
-        llmCompleteMockStorage.push(item);
+      const result = JSON.parse(data) as MockStorage;
+      result["llmEventEnd"].forEach((event) => {
+        llmCompleteMockStorage.llmEventEnd.push(event);
+      });
+      result["llmEventStart"].forEach((event) => {
+        llmCompleteMockStorage.llmEventStart.push(event);
       });
     });
+    Settings.callbackManager.on("llm-start", captureLLMStart);
     Settings.callbackManager.on("llm-end", captureLLMEnd);
   });
-  test.afterEach(async () => {
+  t.afterEach(async () => {
     Settings.callbackManager.off("llm-end", captureLLMEnd);
+    Settings.callbackManager.off("llm-start", captureLLMStart);
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     if (process.env.UPDATE_SNAPSHOT === "1") {
       await writeFile(
@@ -41,9 +63,19 @@ export function mockLLMEndSnapshot(snapshotName: string) {
       );
       return;
     }
-    // if newLLMCompleteMockStorage captures and not equal to globalThis.llmCompleteMockStorage
-    if (newLLMCompleteMockStorage.length !== llmCompleteMockStorage.length) {
+    if (
+      newLLMCompleteMockStorage.llmEventEnd.length !==
+      llmCompleteMockStorage.llmEventEnd.length
+    ) {
       throw new Error("New LLMEndEvent does not match, please update snapshot");
+    }
+    if (
+      newLLMCompleteMockStorage.llmEventStart.length !==
+      llmCompleteMockStorage.llmEventStart.length
+    ) {
+      throw new Error(
+        "New LLMStartEvent does not match, please update snapshot",
+      );
     }
   });
 }
