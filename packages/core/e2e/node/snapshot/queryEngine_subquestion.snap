@@ -35,7 +35,7 @@
         "raw": {
           "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712757251,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -53,7 +53,7 @@
             "completion_tokens": 35,
             "total_tokens": 325
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "```json\n[\n    {\n        \"subQuestion\": \"What is Bill Gates' idea\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]\n```",
@@ -68,7 +68,7 @@
         "raw": {
           "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712757253,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -86,7 +86,7 @@
             "completion_tokens": 10,
             "total_tokens": 63
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "Bill Gates' idea was to steal from Apple.",
@@ -101,7 +101,7 @@
         "raw": {
           "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712757253,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -119,7 +119,7 @@
             "completion_tokens": 6,
             "total_tokens": 68
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "Bill Gates stole from Apple.",

@@ -78,7 +78,12 @@ export async function mockLLMEvent(
     if (process.env.UPDATE_SNAPSHOT === "1") {
       const data = JSON.stringify(newLLMCompleteMockStorage, null, 2)
         .replace(/"id": ".*"/g, `"id": "HIDDEN"`)
-        .replace(/"created": ".*"/g, '"id": "HIDDEN"');
+        .replace(/"created": \d+/g, `"created": 114514`)
+        .replace(
+          /"system_fingerprint": ".*"/g,
+          '"system_fingerprint": "HIDDEN"',
+        )
+        .replace(/"tool_call_id": ".*"/g, '"tool_call_id": "HIDDEN"');
       await writeFile(
         join(testRootDir, "snapshot", `${snapshotName}.snap`),
         data,

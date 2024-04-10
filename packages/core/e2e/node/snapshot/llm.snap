@@ -26,7 +26,7 @@
         "raw": {
           "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712757247,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -44,7 +44,7 @@
             "completion_tokens": 9,
             "total_tokens": 17
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "Hello! How can I assist you today?",
@@ -56,7 +56,197 @@
     {
       "id": "HIDDEN",
       "response": {
-        "raw": null,
+        "raw": [
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "Hello"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "Hello"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "!"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "!"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " How"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " How"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " can"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " can"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " I"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " I"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " assist"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " assist"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " you"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " you"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " today"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " today"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "?"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "?"
+          }
+        ],
         "message": {
           "content": "Hello! How can I assist you today?",
           "role": "assistant",
@@ -69,6 +259,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "Hello"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": "Hello"
       }
@@ -76,6 +283,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "!"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": "!"
       }
@@ -83,6 +307,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " How"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": " How"
       }
@@ -90,6 +331,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " can"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": " can"
       }
@@ -97,6 +355,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " I"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": " I"
       }
@@ -104,6 +379,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " assist"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": " assist"
       }
@@ -111,6 +403,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " you"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": " you"
       }
@@ -118,6 +427,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " today"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": " today"
       }
@@ -125,6 +451,23 @@
     {
       "id": "HIDDEN",
       "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "?"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
         "options": {},
         "delta": "?"
       }

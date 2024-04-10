@@ -37,7 +37,7 @@
           "role": "tool",
           "options": {
             "name": "Weather",
-            "tool_call_id": "call_Hm5cZ0XeIaWEXPo8DwV6NkjM"
+            "tool_call_id": "HIDDEN"
           }
         }
       ]
@@ -50,7 +50,7 @@
         "raw": {
           "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712757250,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -78,7 +78,7 @@
             "completion_tokens": 15,
             "total_tokens": 64
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "",
@@ -104,7 +104,7 @@
         "raw": {
           "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712757251,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -122,7 +122,7 @@
             "completion_tokens": 14,
             "total_tokens": 92
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "The weather in San Francisco is currently 35 degrees and sunny.",
