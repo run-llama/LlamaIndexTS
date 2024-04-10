@@ -20,7 +20,7 @@ export const llmCompleteMockStorage: MockStorage = {
 
 export const testRootDir = fileURLToPath(new URL(".", import.meta.url));
 
-export function mockLLMEndSnapshot(
+export async function mockLLMEvent(
   t: Parameters<NonNullable<Parameters<typeof test>[0]>>[0],
   snapshotName: string,
 ) {
@@ -37,22 +37,21 @@ export function mockLLMEndSnapshot(
     newLLMCompleteMockStorage.llmEventEnd.push(event.detail.payload);
   }
 
-  t.beforeEach(async () => {
-    await readFile(join(testRootDir, "snapshot", `${snapshotName}.snap`), {
-      encoding: "utf-8",
-    }).then((data) => {
-      const result = JSON.parse(data) as MockStorage;
-      result["llmEventEnd"].forEach((event) => {
-        llmCompleteMockStorage.llmEventEnd.push(event);
-      });
-      result["llmEventStart"].forEach((event) => {
-        llmCompleteMockStorage.llmEventStart.push(event);
-      });
+  await readFile(join(testRootDir, "snapshot", `${snapshotName}.snap`), {
+    encoding: "utf-8",
+  }).then((data) => {
+    const result = JSON.parse(data) as MockStorage;
+    result["llmEventEnd"].forEach((event) => {
+      llmCompleteMockStorage.llmEventEnd.push(event);
     });
-    Settings.callbackManager.on("llm-start", captureLLMStart);
-    Settings.callbackManager.on("llm-end", captureLLMEnd);
+    result["llmEventStart"].forEach((event) => {
+      llmCompleteMockStorage.llmEventStart.push(event);
+    });
   });
-  t.afterEach(async () => {
+  Settings.callbackManager.on("llm-start", captureLLMStart);
+  Settings.callbackManager.on("llm-end", captureLLMEnd);
+
+  t.after(async () => {
     Settings.callbackManager.off("llm-end", captureLLMEnd);
     Settings.callbackManager.off("llm-start", captureLLMStart);
     // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -77,5 +76,10 @@ export function mockLLMEndSnapshot(
         "New LLMStartEvent does not match, please update snapshot",
       );
     }
+  });
+  // cleanup
+  t.after(() => {
+    llmCompleteMockStorage.llmEventEnd = [];
+    llmCompleteMockStorage.llmEventStart = [];
   });
 }

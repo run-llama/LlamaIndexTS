@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -43,24 +42,38 @@ export class OpenAI implements LLM {
       | LLMChatParamsStreaming<Record<string, unknown>>
       | LLMChatParamsNonStreaming<Record<string, unknown>>,
   ): unknown {
-    if (params.stream) {
-      return {
-        [Symbol.asyncIterator]: async function* () {
-          yield {
-            delta: faker.word.words(),
-          } satisfies ChatResponseChunk;
-        },
-      };
+    if (llmCompleteMockStorage.llmEventStart.length > 0) {
+      const chatMessage =
+        llmCompleteMockStorage.llmEventStart.shift()!["messages"];
+      strictEqual(chatMessage.length, params.messages.length);
+      for (let i = 0; i < chatMessage.length; i++) {
+        strictEqual(chatMessage[i].role, params.messages[i].role);
+        strictEqual(chatMessage[i].content, params.messages[i].content);
+      }
+
+      if (llmCompleteMockStorage.llmEventEnd.length > 0) {
+        const response =
+          llmCompleteMockStorage.llmEventEnd.shift()!["response"];
+        if (params.stream) {
+          const content = response.message.content as string;
+          // maybe this is not the correct way to split the content, but it's good enough for now
+          const tokens = content.split("");
+          return {
+            [Symbol.asyncIterator]: async function* () {
+              const delta = tokens.shift();
+              if (delta) {
+                yield {
+                  delta,
+                } as ChatResponseChunk;
+              }
+            },
+          };
+        } else {
+          return response;
+        }
+      }
     }
-    return {
-      get raw(): never {
-        throw new Error("not implemented");
-      },
-      message: {
-        content: faker.lorem.paragraph(),
-        role: "assistant",
-      },
-    } satisfies ChatResponse;
+    throw new Error("Method not implemented.");
   }
   complete(
     params: LLMCompletionParamsStreaming,
