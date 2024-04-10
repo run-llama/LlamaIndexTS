@@ -17,8 +17,9 @@ const messageAccessor = (data: any): ChatResponseChunk => {
     delta: data.message.content,
   };
 };
+
 const completionAccessor = (data: any): CompletionResponse => {
-  return { text: data.response };
+  return { text: data.response, raw: null };
 };
 
 // https://github.com/jmorganca/ollama

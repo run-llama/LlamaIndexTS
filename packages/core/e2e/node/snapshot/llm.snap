@@ -56,10 +56,11 @@
     {
       "id": "de46b84e-7345-430f-b8fa-423354b630c9",
       "response": {
-        "raw": {},
+        "raw": null,
         "message": {
           "content": "Hello! How can I assist you today?",
-          "role": "assistant"
+          "role": "assistant",
+          "options": {}
         }
       }
     }

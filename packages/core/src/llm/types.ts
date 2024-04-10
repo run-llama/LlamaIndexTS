@@ -126,8 +126,10 @@ export interface ChatResponse<
   message: ChatMessage<AdditionalMessageOptions>;
   /**
    * Raw response from the LLM
+   *
+   * It's possible that this is `null` if the LLM response an iterable of chunks
    */
-  raw: object;
+  raw: object | null;
 }
 
 export type ChatResponseChunk<
@@ -148,7 +150,12 @@ export type ChatResponseChunk<
 
 export interface CompletionResponse {
   text: string;
-  raw?: Record<string, any>;
+  /**
+   * Raw response from the LLM
+   *
+   * It's possible that this is `null` if the LLM response an iterable of chunks
+   */
+  raw: object | null;
 }
 
 export type LLMMetadata = {
