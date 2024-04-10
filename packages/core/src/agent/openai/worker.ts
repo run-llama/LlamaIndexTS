@@ -1,4 +1,4 @@
-import { randomUUID } from "@llamaindex/env";
+import { pipeline, randomUUID } from "@llamaindex/env";
 import type { ChatCompletionToolChoiceOption } from "openai/resources/chat/completions";
 import { Response } from "../../Response.js";
 import { Settings } from "../../Settings.js";
@@ -14,12 +14,9 @@ import {
   type ChatResponseChunk,
   type LLMChatParamsBase,
   type OpenAIAdditionalChatOptions,
+  type OpenAIAdditionalMessageOptions,
 } from "../../llm/index.js";
-import {
-  extractText,
-  streamConverter,
-  streamReducer,
-} from "../../llm/utils.js";
+import { extractText } from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { ToolOutput } from "../../tools/types.js";
@@ -181,40 +178,70 @@ export class OpenAIAgentWorker
       stream: true,
       ...llmChatParams,
     });
-    // read first chunk from stream to find out if we need to call tools
-    const iterator = stream[Symbol.asyncIterator]();
-    let { value } = await iterator.next();
-    let content = value.delta;
-    const hasToolCalls = value.options?.toolCalls.length > 0;
+
+    const responseChunkStream = new ReadableStream<
+      ChatResponseChunk<OpenAIAdditionalMessageOptions>
+    >({
+      async start(controller) {
+        for await (const chunk of stream) {
+          controller.enqueue(chunk);
+        }
+      },
+    });
+    const [pipStream, finalStream] = responseChunkStream.tee();
+    const { value } = await pipStream.getReader().read();
+    if (value === undefined) {
+      throw new Error("first chunk value is undefined, this should not happen");
+    }
+    // check if first chunk has tool calls, if so, this is a function call
+    // otherwise, it's a regular message
+    const hasToolCalls: boolean =
+      !!value.options?.toolCalls?.length &&
+      value.options?.toolCalls?.length > 0;
 
     if (hasToolCalls) {
-      // consume stream until we have all the tool calls and return a non-streamed response
-      for await (value of stream) {
-        content += value.delta;
-      }
       return this._processMessage(task, {
-        content,
+        content: await pipeline(finalStream, async (iterator) => {
+          let content = "";
+          for await (const value of iterator) {
+            content += value.delta;
+          }
+          return content;
+        }),
         role: "assistant",
         options: value.options,
       });
-    }
-
-    const newStream = streamConverter.bind(this)(
-      streamReducer({
-        stream,
-        initialValue: content,
-        reducer: (accumulator, part) => (accumulator += part.delta),
-        finished: (accumulator) => {
-          task.extraState.newMemory.put({
-            content: accumulator,
-            role: "assistant",
-          });
+    } else {
+      let content = "";
+      return pipeline(
+        finalStream.pipeThrough<Response>({
+          readable: new ReadableStream({
+            async start(controller) {
+              for await (const chunk of finalStream) {
+                controller.enqueue(new Response(chunk.delta));
+              }
+            },
+          }),
+          writable: new WritableStream({
+            write(chunk) {
+              content += chunk.delta;
+            },
+            close() {
+              task.extraState.newMemory.put({
+                content,
+                role: "assistant",
+              });
+            },
+          }),
+        }),
+        async (iterator: AsyncIterable<Response>) => {
+          return new StreamingAgentChatResponse(
+            iterator,
+            task.extraState.sources,
+          );
         },
-      }),
-      (r: ChatResponseChunk) => new Response(r.delta),
-    );
-
-    return new StreamingAgentChatResponse(newStream, task.extraState.sources);
+      );
+    }
   }
 
   private async _getAgentResponse(
