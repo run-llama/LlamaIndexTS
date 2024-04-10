@@ -31,7 +31,7 @@ export interface LLMChat<
     string,
     unknown
   >,
-  AdditionalResponseOptions extends Record<string, unknown> = Record<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
     string,
     unknown
   >,
@@ -41,7 +41,7 @@ export interface LLMChat<
       | LLMChatParamsStreaming<AdditionalChatOptions>
       | LLMChatParamsNonStreaming<AdditionalChatOptions>,
   ): Promise<
-    ChatResponse<AdditionalResponseOptions> | AsyncIterable<ChatResponseChunk>
+    ChatResponse<AdditionalMessageOptions> | AsyncIterable<ChatResponseChunk>
   >;
 }
 
@@ -165,12 +165,12 @@ export interface LLMChatParamsBase<
     string,
     unknown
   >,
-  AdditionalResponseOptions extends Record<string, unknown> = Record<
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
     string,
     unknown
   >,
 > {
-  messages: ChatMessage<AdditionalResponseOptions>[];
+  messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
   additionalKwargs?: Record<string, unknown>;
