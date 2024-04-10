@@ -14,7 +14,6 @@ import type {
   ChatCompletionRole,
   ChatCompletionSystemMessageParam,
   ChatCompletionTool,
-  ChatCompletionToolMessageParam,
   ChatCompletionUserMessageParam,
 } from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
@@ -144,6 +143,15 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld;
 }
 
+export type OpenAIAdditionalMetadata = {
+  isFunctionCallingModel: boolean;
+};
+
+export type OpenAIAdditionalMessageOptions = {
+  functionName?: string;
+  toolCalls?: ChatCompletionMessageToolCall[];
+};
+
 export type OpenAIAdditionalChatOptions = Omit<
   Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
   | "max_tokens"
@@ -155,15 +163,6 @@ export type OpenAIAdditionalChatOptions = Omit<
   | "tools"
   | "toolChoice"
 >;
-
-export type OpenAIAdditionalMetadata = {
-  isFunctionCallingModel: boolean;
-};
-
-export type OpenAIAdditionalMessageOptions = {
-  functionName?: string;
-  toolCalls?: ChatCompletionMessageToolCall[];
-};
 
 export class OpenAI extends BaseLLM<
   OpenAIAdditionalChatOptions,
@@ -297,12 +296,21 @@ export class OpenAI extends BaseLLM<
           // todo: remove this since this is deprecated in the OpenAI API
         } satisfies ChatCompletionFunctionMessageParam;
       }
+      if (message.role === "assistant") {
+        if (!options.toolCalls) {
+          throw new Error("Tool message does not have a toolCallId");
+        }
+        return {
+          role: "assistant",
+          content: extractText(message.content),
+          tool_calls: options.toolCalls,
+        } satisfies ChatCompletionAssistantMessageParam;
+      }
 
       const response:
         | ChatCompletionSystemMessageParam
         | ChatCompletionUserMessageParam
-        | ChatCompletionAssistantMessageParam
-        | ChatCompletionToolMessageParam = {
+        | ChatCompletionMessageToolCall = {
         // fixme(alex): type assertion
         role: OpenAI.toOpenAIRole(message.role) as never,
         // fixme: should not extract text, but assert content is string
