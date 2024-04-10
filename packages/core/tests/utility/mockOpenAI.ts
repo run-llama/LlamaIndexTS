@@ -54,9 +54,13 @@ export function mockLlmGeneration({
       }
       return new Promise((resolve) => {
         resolve({
+          get raw() {
+            return {};
+          },
           message: {
             content: text,
             role: "assistant",
+            options: {},
           },
         });
       });
@@ -75,9 +79,13 @@ export function mockLlmToolCallGeneration({
     () =>
       new Promise((resolve) =>
         resolve({
+          get raw() {
+            return {};
+          },
           message: {
             content: "The sum is 2",
             role: "assistant",
+            options: {},
           },
         }),
       ),
@@ -155,9 +163,13 @@ export function mocStructuredkLlmGeneration({
       }
       return new Promise((resolve) => {
         resolve({
+          get raw() {
+            return {};
+          },
           message: {
             content: text,
             role: "assistant",
+            options: {},
           },
         });
       });

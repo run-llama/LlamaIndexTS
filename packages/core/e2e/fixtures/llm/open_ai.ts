@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -9,6 +8,9 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
 } from "llamaindex/llm/types";
+import { extractText } from "llamaindex/llm/utils";
+import { strictEqual } from "node:assert";
+import { llmCompleteMockStorage } from "../../node/utils.js";
 
 export function getOpenAISession() {
   return {};
@@ -40,21 +42,31 @@ export class OpenAI implements LLM {
       | LLMChatParamsStreaming<Record<string, unknown>>
       | LLMChatParamsNonStreaming<Record<string, unknown>>,
   ): unknown {
-    if (params.stream) {
-      return {
-        [Symbol.asyncIterator]: async function* () {
-          yield {
-            delta: faker.word.words(),
-          } satisfies ChatResponseChunk;
-        },
-      };
+    if (llmCompleteMockStorage.llmEventStart.length > 0) {
+      const chatMessage =
+        llmCompleteMockStorage.llmEventStart.shift()!["messages"];
+      strictEqual(chatMessage.length, params.messages.length);
+      for (let i = 0; i < chatMessage.length; i++) {
+        strictEqual(chatMessage[i].role, params.messages[i].role);
+        strictEqual(chatMessage[i].content, params.messages[i].content);
+      }
+
+      if (llmCompleteMockStorage.llmEventEnd.length > 0) {
+        const { id, response } = llmCompleteMockStorage.llmEventEnd.shift()!;
+        if (params.stream) {
+          return {
+            [Symbol.asyncIterator]: async function* () {
+              while (llmCompleteMockStorage.llmEventStream.at(-1)?.id === id) {
+                yield llmCompleteMockStorage.llmEventStream.shift()!["chunk"];
+              }
+            },
+          };
+        } else {
+          return response;
+        }
+      }
     }
-    return {
-      message: {
-        content: faker.lorem.paragraph(),
-        role: "assistant",
-      },
-    } satisfies ChatResponse;
+    throw new Error("Method not implemented.");
   }
   complete(
     params: LLMCompletionParamsStreaming,
@@ -62,7 +74,23 @@ export class OpenAI implements LLM {
   complete(
     params: LLMCompletionParamsNonStreaming,
   ): Promise<CompletionResponse>;
-  async complete(params: unknown): Promise<unknown> {
+  async complete(
+    params: LLMCompletionParamsStreaming | LLMCompletionParamsNonStreaming,
+  ): Promise<AsyncIterable<CompletionResponse> | CompletionResponse> {
+    if (llmCompleteMockStorage.llmEventStart.length > 0) {
+      const chatMessage =
+        llmCompleteMockStorage.llmEventStart.shift()!["messages"];
+      strictEqual(chatMessage.length, 1);
+      strictEqual(chatMessage[0].role, "user");
+      strictEqual(chatMessage[0].content, params.prompt);
+    }
+    if (llmCompleteMockStorage.llmEventEnd.length > 0) {
+      const response = llmCompleteMockStorage.llmEventEnd.shift()!["response"];
+      return {
+        raw: response,
+        text: extractText(response.message.content),
+      } satisfies CompletionResponse;
+    }
     throw new Error("Method not implemented.");
   }
 }

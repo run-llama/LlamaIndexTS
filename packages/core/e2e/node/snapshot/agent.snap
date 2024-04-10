@@ -1,0 +1,136 @@
+{
+  "llmEventStart": [
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "What is the weather in San Francisco?",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "What is the weather in San Francisco?",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "HIDDEN",
+                "type": "function",
+                "function": {
+                  "name": "Weather",
+                  "arguments": "{\"location\":\"San Francisco\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "35 degrees and sunny in San Francisco",
+          "role": "tool",
+          "options": {
+            "name": "Weather",
+            "tool_call_id": "HIDDEN"
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "Weather",
+                      "arguments": "{\"location\":\"San Francisco\"}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 15,
+            "total_tokens": 64
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "HIDDEN",
+                "type": "function",
+                "function": {
+                  "name": "Weather",
+                  "arguments": "{\"location\":\"San Francisco\"}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "The weather in San Francisco is currently 35 degrees and sunny."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 78,
+            "completion_tokens": 14,
+            "total_tokens": 92
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "The weather in San Francisco is currently 35 degrees and sunny.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

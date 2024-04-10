@@ -106,6 +106,7 @@ export class MistralAI extends BaseLLM {
     const response = await client.chat(this.buildParams(messages));
     const message = response.choices[0].message;
     return {
+      raw: response,
       message,
     };
   }
@@ -136,6 +137,7 @@ export class MistralAI extends BaseLLM {
       idx_counter++;
 
       yield {
+        raw: part,
         delta: part.choices[0].delta.content ?? "",
       };
     }

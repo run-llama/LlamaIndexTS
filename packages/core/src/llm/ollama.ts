@@ -14,11 +14,13 @@ import type {
 
 const messageAccessor = (data: any): ChatResponseChunk => {
   return {
+    raw: data,
     delta: data.message.content,
   };
 };
+
 const completionAccessor = (data: any): CompletionResponse => {
-  return { text: data.response };
+  return { text: data.response, raw: null };
 };
 
 // https://github.com/jmorganca/ollama

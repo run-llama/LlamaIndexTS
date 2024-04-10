@@ -3,6 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import { EOL } from "node:os";
 import path from "node:path";
+import { pipeline } from "node:stream/promises";
 import type { SHA256 } from "./index.polyfill.js";
 import type { CompleteFileSystem } from "./type.js";
 
@@ -36,4 +37,4 @@ export const defaultFS: CompleteFileSystem = {
 
 export type * from "./type.js";
 export { AsyncLocalStorage, CustomEvent, getEnv } from "./utils.js";
-export { EOL, ok, path, randomUUID };
+export { EOL, ok, path, pipeline, randomUUID };
