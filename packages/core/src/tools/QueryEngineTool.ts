@@ -1,18 +1,11 @@
+import type { JSONSchemaType } from "ajv";
 import type { BaseQueryEngine, BaseTool, ToolMetadata } from "../types.js";
-
-export type QueryEngineToolParams = {
-  queryEngine: BaseQueryEngine;
-  metadata: ToolMetadata;
-};
-
-type QueryEngineCallParams = {
-  query: string;
-};
 
 const DEFAULT_NAME = "query_engine_tool";
 const DEFAULT_DESCRIPTION =
   "Useful for running a natural language query against a knowledge base and get back a natural language response.";
-const DEFAULT_PARAMETERS = {
+
+const DEFAULT_PARAMETERS: JSONSchemaType<QueryEngineParam> = {
   type: "object",
   properties: {
     query: {
@@ -23,9 +16,18 @@ const DEFAULT_PARAMETERS = {
   required: ["query"],
 };
 
-export class QueryEngineTool implements BaseTool {
+export type QueryEngineToolParams = {
+  queryEngine: BaseQueryEngine;
+  metadata: ToolMetadata<QueryEngineParam>;
+};
+
+export type QueryEngineParam = {
+  query: string;
+};
+
+export class QueryEngineTool implements BaseTool<QueryEngineParam> {
   private queryEngine: BaseQueryEngine;
-  metadata: ToolMetadata;
+  metadata: ToolMetadata<QueryEngineParam>;
 
   constructor({ queryEngine, metadata }: QueryEngineToolParams) {
     this.queryEngine = queryEngine;
@@ -36,18 +38,8 @@ export class QueryEngineTool implements BaseTool {
     };
   }
 
-  async call(...args: QueryEngineCallParams[]): Promise<any> {
-    let queryStr: string;
-
-    if (args && args.length > 0) {
-      queryStr = String(args[0].query);
-    } else {
-      throw new Error(
-        "Cannot call query engine without specifying `input` parameter.",
-      );
-    }
-
-    const response = await this.queryEngine.query({ query: queryStr });
+  async call({ query }: QueryEngineParam) {
+    const response = await this.queryEngine.query({ query });
 
     return response.response;
   }
