@@ -12962,7 +12962,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 18.19.31
+      '@types/node': 20.11.20
       long: 4.0.0
     dev: false
 

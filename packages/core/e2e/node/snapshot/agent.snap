@@ -1,0 +1,135 @@
+{
+  "llmEventStart": [
+    {
+      "id": "88a7035b-b493-4e95-8902-666ede936fb6",
+      "messages": [
+        {
+          "content": "What is the weather in San Francisco?",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "79c7f739-cc24-4cf8-b605-89a460111da1",
+      "messages": [
+        {
+          "content": "What is the weather in San Francisco?",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
+                "type": "function",
+                "function": {
+                  "name": "Weather",
+                  "arguments": "{\"location\":\"San Francisco\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "35 degrees and sunny in San Francisco",
+          "role": "tool",
+          "options": {
+            "name": "Weather",
+            "tool_call_id": "call_kIqRf0PiYEa6uIQzI3wYZJkR"
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "88a7035b-b493-4e95-8902-666ede936fb6",
+      "response": {
+        "raw": {
+          "id": "chatcmpl-9CMHEE56nQ0oLqGeOeJuky31TIHZY",
+          "object": "chat.completion",
+          "created": 1712732596,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
+                    "type": "function",
+                    "function": {
+                      "name": "Weather",
+                      "arguments": "{\"location\":\"San Francisco\"}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 15,
+            "total_tokens": 64
+          },
+          "system_fingerprint": "fp_b28b39ffa8"
+        },
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
+                "type": "function",
+                "function": {
+                  "name": "Weather",
+                  "arguments": "{\"location\":\"San Francisco\"}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "79c7f739-cc24-4cf8-b605-89a460111da1",
+      "response": {
+        "raw": {
+          "id": "chatcmpl-9CMHF8HQai1B6w1BpAd5GAHLKfbkR",
+          "object": "chat.completion",
+          "created": 1712732597,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "The weather in San Francisco is currently 35 degrees and sunny."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 78,
+            "completion_tokens": 14,
+            "total_tokens": 92
+          },
+          "system_fingerprint": "fp_b28b39ffa8"
+        },
+        "message": {
+          "content": "The weather in San Francisco is currently 35 degrees and sunny.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ]
+}
