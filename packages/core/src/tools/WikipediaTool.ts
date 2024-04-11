@@ -1,3 +1,4 @@
+import type { JSONSchemaType } from "ajv";
 import { default as wiki } from "wikipedia";
 import type { BaseTool, ToolMetadata } from "../types.js";
 
@@ -7,10 +8,10 @@ type WikipediaParameter = {
 };
 
 export type WikipediaToolParams = {
-  metadata?: ToolMetadata<WikipediaParameter>;
+  metadata?: ToolMetadata<JSONSchemaType<WikipediaParameter>>;
 };
 
-const DEFAULT_META_DATA: ToolMetadata<WikipediaParameter> = {
+const DEFAULT_META_DATA: ToolMetadata<JSONSchemaType<WikipediaParameter>> = {
   name: "wikipedia_tool",
   description: "A tool that uses a query engine to search Wikipedia.",
   parameters: {
@@ -32,7 +33,7 @@ const DEFAULT_META_DATA: ToolMetadata<WikipediaParameter> = {
 
 export class WikipediaTool implements BaseTool<WikipediaParameter> {
   private readonly DEFAULT_LANG = "en";
-  metadata: ToolMetadata<WikipediaParameter>;
+  metadata: ToolMetadata<JSONSchemaType<WikipediaParameter>>;
 
   constructor(params?: WikipediaToolParams) {
     this.metadata = params?.metadata || DEFAULT_META_DATA;

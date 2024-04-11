@@ -31,6 +31,27 @@ export interface BaseQueryEngine {
   query(params: QueryEngineParamsNonStreaming): Promise<Response>;
 }
 
+type Known =
+  | { [key: string]: Known }
+  | [Known, ...Known[]]
+  | Known[]
+  | number
+  | string
+  | boolean
+  | null;
+
+export type ToolMetadata<
+  Parameters extends Record<string, unknown> = Record<string, unknown>,
+> = {
+  description: string;
+  name: string;
+  /**
+   * OpenAI uses JSON Schema to describe the parameters that a tool can take.
+   * @link https://json-schema.org/understanding-json-schema
+   */
+  parameters?: Parameters;
+};
+
 /**
  * Simple Tool interface. Likely to change.
  */
@@ -42,7 +63,8 @@ export interface BaseTool<Input = any> {
    * @return string - the output of the tool, should be string in any case for LLM input.
    */
   call?: (input: Input) => string | Promise<string>;
-  metadata: ToolMetadata<Input>;
+  metadata: // if user input any, we cannot check the schema
+  Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
 
 export type ToolWithCall<Input = unknown> = Omit<BaseTool<Input>, "call"> & {
@@ -66,20 +88,7 @@ export interface StructuredOutput<T> {
   parsedOutput: T;
 }
 
-export interface ToolMetadata<Input = any> {
-  description: string;
-  name: string;
-  /**
-   * OpenAI uses JSON Schema to describe the parameters that a tool can take.
-   * @link https://json-schema.org/understanding-json-schema
-   */
-  parameters?: JSONSchemaType<Input>;
-}
-
-export type ToolMetadataOnlyDescription = Pick<
-  ToolMetadata<unknown>,
-  "description"
->;
+export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
 
 export class QueryBundle {
   queryStr: string;

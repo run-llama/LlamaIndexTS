@@ -21,7 +21,7 @@ import essay from "./essay";
     }),
   ];
 
-  const queryEngine = SubQuestionQueryEngine.from({
+  const queryEngine = SubQuestionQueryEngine.fromDefaults({
     queryEngineTools,
   });
 

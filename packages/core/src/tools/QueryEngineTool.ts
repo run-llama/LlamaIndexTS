@@ -18,7 +18,7 @@ const DEFAULT_PARAMETERS: JSONSchemaType<QueryEngineParam> = {
 
 export type QueryEngineToolParams = {
   queryEngine: BaseQueryEngine;
-  metadata: ToolMetadata<QueryEngineParam>;
+  metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
 };
 
 export type QueryEngineParam = {
@@ -27,7 +27,7 @@ export type QueryEngineParam = {
 
 export class QueryEngineTool implements BaseTool<QueryEngineParam> {
   private queryEngine: BaseQueryEngine;
-  metadata: ToolMetadata<QueryEngineParam>;
+  metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
 
   constructor({ queryEngine, metadata }: QueryEngineToolParams) {
     this.queryEngine = queryEngine;

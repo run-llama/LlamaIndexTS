@@ -111,7 +111,7 @@
               "index": 0,
               "message": {
                 "role": "assistant",
-                "content": "The weather in San Jose is currently 45 degrees and sunny."
+                "content": "The weather in San Jose is 45 degrees and sunny."
               },
               "logprobs": null,
               "finish_reason": "stop"
@@ -119,13 +119,13 @@
           ],
           "usage": {
             "prompt_tokens": 78,
-            "completion_tokens": 14,
-            "total_tokens": 92
+            "completion_tokens": 13,
+            "total_tokens": 91
           },
           "system_fingerprint": "HIDDEN"
         },
         "message": {
-          "content": "The weather in San Jose is currently 45 degrees and sunny.",
+          "content": "The weather in San Jose is 45 degrees and sunny.",
           "role": "assistant",
           "options": {}
         }

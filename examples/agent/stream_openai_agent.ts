@@ -1,13 +1,13 @@
 import { FunctionTool, OpenAIAgent } from "llamaindex";
 
 // Define a function to sum two numbers
-function sumNumbers({ a, b }: { a: number; b: number }): number {
-  return a + b;
+function sumNumbers({ a, b }: { a: number; b: number }) {
+  return `${a + b}`;
 }
 
 // Define a function to divide two numbers
-function divideNumbers({ a, b }: { a: number; b: number }): number {
-  return a / b;
+function divideNumbers({ a, b }: { a: number; b: number }) {
+  return `${a / b}`;
 }
 
 // Define the parameters of the sum function as a JSON schema
@@ -24,7 +24,7 @@ const sumJSON = {
     },
   },
   required: ["a", "b"],
-};
+} as const;
 
 const divideJSON = {
   type: "object",
@@ -39,18 +39,18 @@ const divideJSON = {
     },
   },
   required: ["a", "b"],
-};
+} as const;
 
 async function main() {
   // Create a function tool from the sum function
-  const functionTool = new FunctionTool(sumNumbers, {
+  const functionTool = FunctionTool.from(sumNumbers, {
     name: "sumNumbers",
     description: "Use this function to sum two numbers",
     parameters: sumJSON,
   });
 
   // Create a function tool from the divide function
-  const functionTool2 = new FunctionTool(divideNumbers, {
+  const functionTool2 = FunctionTool.from(divideNumbers, {
     name: "divideNumbers",
     description: "Use this function to divide two numbers",
     parameters: divideJSON,
