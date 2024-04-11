@@ -1,6 +1,7 @@
 import { Settings } from "../../Settings.js";
 import type { ChatMessage } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
+import type { BaseMemory } from "../../memory/types.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { BaseTool } from "../../types.js";
 import { AgentRunner } from "../runner/base.js";
@@ -9,7 +10,7 @@ import { OpenAIAgentWorker } from "./worker.js";
 type OpenAIAgentParams = {
   tools?: BaseTool[];
   llm?: OpenAI;
-  memory?: any;
+  memory?: BaseMemory;
   prefixMessages?: ChatMessage[];
   maxFunctionCalls?: number;
   defaultToolChoice?: string;
