@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.2.7
+
+### Patch Changes
+
+- 96f8f40: fix: agent stream
+- Updated dependencies
+  - @llamaindex/env@0.0.7
+
 ## 0.2.6
 
 ### Patch Changes
