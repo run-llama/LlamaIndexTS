@@ -186,10 +186,13 @@ export class OpenAIAgentWorker
         for await (const chunk of stream) {
           controller.enqueue(chunk);
         }
+        controller.close();
       },
     });
     const [pipStream, finalStream] = responseChunkStream.tee();
-    const { value } = await pipStream.getReader().read();
+    const reader = pipStream.getReader();
+    const { value } = await reader.read();
+    reader.releaseLock();
     if (value === undefined) {
       throw new Error("first chunk value is undefined, this should not happen");
     }
@@ -212,14 +215,16 @@ export class OpenAIAgentWorker
         options: value.options,
       });
     } else {
+      const [responseStream, chunkStream] = finalStream.tee();
       let content = "";
-      return pipeline(
-        finalStream.pipeThrough<Response>({
+      return new StreamingAgentChatResponse(
+        responseStream.pipeThrough<Response>({
           readable: new ReadableStream({
             async start(controller) {
-              for await (const chunk of finalStream) {
+              for await (const chunk of chunkStream) {
                 controller.enqueue(new Response(chunk.delta));
               }
+              controller.close();
             },
           }),
           writable: new WritableStream({
@@ -234,12 +239,7 @@ export class OpenAIAgentWorker
             },
           }),
         }),
-        async (iterator: AsyncIterable<Response>) => {
-          return new StreamingAgentChatResponse(
-            iterator,
-            task.extraState.sources,
-          );
-        },
+        task.extraState.sources,
       );
     }
   }
