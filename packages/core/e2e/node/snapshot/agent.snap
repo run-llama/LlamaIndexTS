@@ -125,6 +125,64 @@
           }
         }
       ]
+    },
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "Divide 16 by 2 then add 20",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "Divide 16 by 2 then add 20",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "function": {
+                  "name": "divideNumbers",
+                  "arguments": "{\"a\": 16, \"b\": 2}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              },
+              {
+                "function": {
+                  "name": "sumNumbers",
+                  "arguments": "{\"a\": 8, \"b\": 20}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              }
+            ]
+          }
+        },
+        {
+          "content": "8",
+          "role": "tool",
+          "options": {
+            "name": "divideNumbers",
+            "tool_call_id": "HIDDEN"
+          }
+        },
+        {
+          "content": "28",
+          "role": "tool",
+          "options": {
+            "name": "sumNumbers",
+            "tool_call_id": "HIDDEN"
+          }
+        }
+      ]
     }
   ],
   "llmEventEnd": [
@@ -369,7 +427,7 @@
               "index": 0,
               "message": {
                 "role": "assistant",
-                "content": "1 + 1 is equal to 2."
+                "content": "The sum of 1 + 1 is 2."
               },
               "logprobs": null,
               "finish_reason": "stop"
@@ -377,18 +435,2304 @@
           ],
           "usage": {
             "prompt_tokens": 97,
-            "completion_tokens": 11,
-            "total_tokens": 108
+            "completion_tokens": 13,
+            "total_tokens": 110
           },
           "system_fingerprint": "HIDDEN"
         },
         "message": {
-          "content": "1 + 1 is equal to 2.",
+          "content": "The sum of 1 + 1 is 2.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": [
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "id": "HIDDEN",
+                        "type": "function",
+                        "function": {
+                          "name": "divideNumbers",
+                          "arguments": ""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "{\"a\""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": ": 16,"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": " \"b\": "
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "2}"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "id": "HIDDEN",
+                        "type": "function",
+                        "function": {
+                          "name": "sumNumbers",
+                          "arguments": ""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": "{\"a\""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": ": 8, "
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": "\"b\": 2"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": "0}"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          }
+        ],
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "function": {
+                  "name": "divideNumbers",
+                  "arguments": "{\"a\": 16, \"b\": 2}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              },
+              {
+                "function": {
+                  "name": "sumNumbers",
+                  "arguments": "{\"a\": 8, \"b\": 20}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": [
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "The"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "The"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " result"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " result"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " of"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " of"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " dividing"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " dividing"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "16"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "16"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " by"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " by"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "2"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "2"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " is"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " is"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "8"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "8"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "."
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "."
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " When"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " When"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " you"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " you"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " add"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " add"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "20"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "20"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " to"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " to"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "8"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "8"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": ","
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": ","
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " the"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " the"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " total"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " total"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " is"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " is"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "28"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "28"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "."
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "."
+          }
+        ],
+        "message": {
+          "content": "The result of dividing 16 by 2 is 8. When you add 20 to 8, the total is 28.",
           "role": "assistant",
           "options": {}
         }
       }
     }
   ],
-  "llmEventStream": []
+  "llmEventStream": [
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "divideNumbers",
+                      "arguments": ""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "{\"a\""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": ": 16,"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": " \"b\": "
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "2}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "sumNumbers",
+                      "arguments": ""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": "{\"a\""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": ": 8, "
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": "\"b\": 2"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": "0}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "The"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "The"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " result"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " result"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " of"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " of"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " dividing"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " dividing"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "16"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "16"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " by"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " by"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "2"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "2"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " is"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " is"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "8"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "8"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "."
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "."
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " When"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " When"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " you"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " you"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " add"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " add"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "20"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "20"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " to"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " to"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "8"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "8"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": ","
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": ","
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " the"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " the"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " total"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " total"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " is"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " is"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "28"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "28"
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "."
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "."
+      }
+    }
+  ]
 }

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "e2e": "node --import tsx --import ./mock-register.js --test ./node/*.e2e.ts",
-    "e2e:nomock": "node --import tsx --test ./node/*.e2e.ts"
+    "e2e:nomock": "node --import tsx --test ./node/*.e2e.ts",
+    "e2e:updatesnap": "UPDATE_SNAPSHOT=1 pnmp e2e:nomock"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
