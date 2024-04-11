@@ -161,7 +161,7 @@ export class AgentRunner extends BaseAgentRunner {
     const task = this.state.getTask(taskId);
     const curStep = step || this.state.getStepQueue(taskId).shift();
 
-    let curStepOutput;
+    let curStepOutput: TaskStepOutput;
 
     if (!curStep) {
       throw new Error(`No step found for task ${taskId}`);
