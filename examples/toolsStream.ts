@@ -2,7 +2,6 @@ import { OpenAI } from "llamaindex";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
-
   const args: Parameters<typeof llm.chat>[0] = {
     additionalChatOptions: {
       tool_choice: "auto",

@@ -194,7 +194,7 @@ export class ReActAgentWorker implements AgentWorker<ChatParams> {
 
     const tool = toolsDict[actionReasoningStep.action];
 
-    const toolOutput = await tool?.call?.(actionReasoningStep.actionInput);
+    const toolOutput = await tool.call!(actionReasoningStep.actionInput);
 
     task.extraState.sources.push(
       new ToolOutput(

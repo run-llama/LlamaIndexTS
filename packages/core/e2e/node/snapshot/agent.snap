@@ -41,6 +41,90 @@
           }
         }
       ]
+    },
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "My name is Alex Yang. What is my unique id?",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "My name is Alex Yang. What is my unique id?",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "HIDDEN",
+                "type": "function",
+                "function": {
+                  "name": "unique_id",
+                  "arguments": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "123456789",
+          "role": "tool",
+          "options": {
+            "name": "unique_id",
+            "tool_call_id": "HIDDEN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "how much is 1 + 1?",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "HIDDEN",
+      "messages": [
+        {
+          "content": "how much is 1 + 1?",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "HIDDEN",
+                "type": "function",
+                "function": {
+                  "name": "sumNumbers",
+                  "arguments": "{\"a\":1,\"b\":1}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "2",
+          "role": "tool",
+          "options": {
+            "name": "sumNumbers",
+            "tool_call_id": "HIDDEN"
+          }
+        }
+      ]
     }
   ],
   "llmEventEnd": [
@@ -126,6 +210,180 @@
         },
         "message": {
           "content": "The weather in San Francisco is currently 35 degrees and sunny.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "unique_id",
+                      "arguments": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 59,
+            "completion_tokens": 18,
+            "total_tokens": 77
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "HIDDEN",
+                "type": "function",
+                "function": {
+                  "name": "unique_id",
+                  "arguments": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Your unique id is 123456789."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 88,
+            "completion_tokens": 10,
+            "total_tokens": 98
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "Your unique id is 123456789.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "sumNumbers",
+                      "arguments": "{\"a\":1,\"b\":1}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 70,
+            "completion_tokens": 18,
+            "total_tokens": 88
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "id": "HIDDEN",
+                "type": "function",
+                "function": {
+                  "name": "sumNumbers",
+                  "arguments": "{\"a\":1,\"b\":1}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "HIDDEN",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "1 + 1 is equal to 2."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 97,
+            "completion_tokens": 11,
+            "total_tokens": 108
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "1 + 1 is equal to 2.",
           "role": "assistant",
           "options": {}
         }

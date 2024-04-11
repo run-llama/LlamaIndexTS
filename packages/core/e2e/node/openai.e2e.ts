@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { consola } from "consola";
 import {
   Document,
+  FunctionTool,
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
@@ -22,7 +22,7 @@ beforeEach(async () => {
   llm = Settings.llm;
 });
 
-test("llm", async (t) => {
+await test("llm", async (t) => {
   await mockLLMEvent(t, "llm");
   await t.test("llm.chat", async () => {
     const response = await llm.chat({
@@ -54,7 +54,7 @@ test("llm", async (t) => {
   });
 });
 
-test("gpt-4-turbo", async (t) => {
+await test("gpt-4-turbo", async (t) => {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
   Settings.llm = llm;
   await mockLLMEvent(t, "gpt-4-turbo");
@@ -89,7 +89,7 @@ test("gpt-4-turbo", async (t) => {
   });
 });
 
-test("agent", async (t) => {
+await test("agent", async (t) => {
   await mockLLMEvent(t, "agent");
   await t.test("chat", async () => {
     const agent = new OpenAIAgent({
@@ -119,9 +119,80 @@ test("agent", async (t) => {
     ok(typeof result.response === "string");
     ok(result.response.includes("35"));
   });
+
+  await t.test("async function", async () => {
+    const uniqueId = "123456789";
+    const showUniqueId = FunctionTool.from<{
+      firstName: string;
+      lastName: string;
+    }>(
+      async ({ firstName, lastName }) => {
+        ok(typeof firstName === "string");
+        ok(typeof lastName === "string");
+        const fullName = firstName + lastName;
+        ok(fullName.toLowerCase().includes("alex"));
+        ok(fullName.toLowerCase().includes("yang"));
+        return uniqueId;
+      },
+      {
+        name: "unique_id",
+        description: "show user unique id",
+        parameters: {
+          type: "object",
+          properties: {
+            firstName: { type: "string" },
+            lastName: { type: "string" },
+          },
+          required: ["firstName", "lastName"],
+        },
+      },
+    );
+    const agent = new OpenAIAgent({
+      tools: [showUniqueId],
+    });
+    const { response } = await agent.chat({
+      message: "My name is Alex Yang. What is my unique id?",
+    });
+    consola.debug("response:", response);
+    ok(response.includes(uniqueId));
+  });
+
+  await t.test("sum numbers", async () => {
+    function sumNumbers({ a, b }: { a: number; b: number }): string {
+      return `${a + b}`;
+    }
+    const sumFunctionTool = new FunctionTool(sumNumbers, {
+      name: "sumNumbers",
+      description: "Use this function to sum two numbers",
+      parameters: {
+        type: "object",
+        properties: {
+          a: {
+            type: "number",
+            description: "The first number",
+          },
+          b: {
+            type: "number",
+            description: "The second number",
+          },
+        },
+        required: ["a", "b"],
+      },
+    });
+
+    const openaiAgent = new OpenAIAgent({
+      tools: [sumFunctionTool],
+    });
+
+    const response = await openaiAgent.chat({
+      message: "how much is 1 + 1?",
+    });
+
+    ok(response.response.includes("2"));
+  });
 });
 
-test("queryEngine", async (t) => {
+await test("queryEngine", async (t) => {
   await mockLLMEvent(t, "queryEngine_subquestion");
   await t.test("subquestion", async () => {
     const document = new Document({

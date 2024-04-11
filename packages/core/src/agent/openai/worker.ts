@@ -46,7 +46,7 @@ async function callFunction(
 
   // Call tool
   // Use default error message
-  const output = await callToolWithErrorHandling(tool, argumentDict, null);
+  const output = await callToolWithErrorHandling(tool, argumentDict);
 
   if (Settings.debug) {
     console.log(`Got output ${output}`);
