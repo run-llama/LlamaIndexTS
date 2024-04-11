@@ -33,7 +33,7 @@
       "id": "PRESERVE_0",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO6Bdcf3szrlb1FpBqz21QNQeKI",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -66,7 +66,7 @@
       "id": "PRESERVE_1",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyP5PzGWf0GKzsRPScEDftcLYRyJ",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -99,7 +99,7 @@
       "id": "PRESERVE_2",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyP50Qz6piuBNbhLpuOoLM1lLNYe",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",

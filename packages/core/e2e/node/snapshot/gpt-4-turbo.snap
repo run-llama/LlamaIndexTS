@@ -48,7 +48,7 @@
       "id": "PRESERVE_0",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO0B1DxJwbfIEVl4uAAJVdG1heE",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -102,7 +102,7 @@
       "id": "PRESERVE_1",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO1hyVQc5zqvnppKQs6LCJrkwBe",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",

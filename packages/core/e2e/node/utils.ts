@@ -92,7 +92,7 @@ export async function mockLLMEvent(
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     if (process.env.UPDATE_SNAPSHOT === "1") {
       const data = JSON.stringify(newLLMCompleteMockStorage, null, 2)
-        .replace(/"id": "(?!PRESERVE_)\w+"/g, '"id": "HIDDEN"')
+        .replace(/"id": "(?!PRESERVE_).*"/g, '"id": "HIDDEN"')
         .replace(/"created": \d+/g, `"created": 114514`)
         .replace(
           /"system_fingerprint": ".*"/g,

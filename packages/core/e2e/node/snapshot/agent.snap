@@ -132,7 +132,7 @@
       "id": "PRESERVE_0",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO1NVFnb3qpOQUaWqv79GGGvfn1",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -186,7 +186,7 @@
       "id": "PRESERVE_1",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO2PR56iDznQOZvdRFHxKj1EcDK",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -219,7 +219,7 @@
       "id": "PRESERVE_2",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO2i0K88pWbnPmhvTI8913xwMGi",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -273,7 +273,7 @@
       "id": "PRESERVE_3",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO3xDlcgJplvU4buW4TCTrFJQ2B",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -306,7 +306,7 @@
       "id": "PRESERVE_4",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO38ctF4fk7sUvnAkqnkHJdt2Jg",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -360,7 +360,7 @@
       "id": "PRESERVE_5",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CyO4F4XnTyoJ5CODPIUHhp9SRdKx",
+          "id": "HIDDEN",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -369,7 +369,7 @@
               "index": 0,
               "message": {
                 "role": "assistant",
-                "content": "1 + 1 is equal to 2."
+                "content": "The sum of 1 + 1 is 2."
               },
               "logprobs": null,
               "finish_reason": "stop"
@@ -377,13 +377,13 @@
           ],
           "usage": {
             "prompt_tokens": 97,
-            "completion_tokens": 11,
-            "total_tokens": 108
+            "completion_tokens": 13,
+            "total_tokens": 110
           },
           "system_fingerprint": "HIDDEN"
         },
         "message": {
-          "content": "1 + 1 is equal to 2.",
+          "content": "The sum of 1 + 1 is 2.",
           "role": "assistant",
           "options": {}
         }
