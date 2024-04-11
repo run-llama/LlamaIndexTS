@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.2.6
+
+### Patch Changes
+
+- a3b4409: Fix agent streaming with new OpenAI models
+
 ## 0.2.5
 
 ### Patch Changes

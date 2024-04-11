@@ -135,7 +135,7 @@ importers:
         specifier: ^1.0.10
         version: 1.0.10
       llamaindex:
-        specifier: workspace:latest
+        specifier: latest
         version: link:../packages/core
       mongodb:
         specifier: ^6.5.0
@@ -4600,10 +4600,6 @@ packages:
 
   /@tsconfig/docusaurus@2.0.3:
     resolution: {integrity: sha512-3l1L5PzWVa7l0691TjnsZ0yOIEwG9DziSqu5IPZPlI5Dowi7z42cEym8Y35GHbgHvPcBfNxfrbxm7Cncn4nByQ==}
-    dev: true
-
-  /@tsconfig/node10@1.0.11:
-    resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
     dev: true
 
   /@tsconfig/node10@1.0.9:
@@ -14928,7 +14924,7 @@ packages:
         optional: true
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node10': 1.0.9
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4

@@ -12,7 +12,7 @@
     "commander": "^11.1.0",
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.10",
-    "llamaindex": "workspace:latest",
+    "llamaindex": "latest",
     "mongodb": "^6.5.0",
     "pathe": "^1.1.2"
   },
