@@ -22,6 +22,14 @@ beforeEach(async () => {
   llm = Settings.llm;
 });
 
+function sumNumbers({ a, b }: { a: number; b: number }) {
+  return `${a + b}`;
+}
+
+function divideNumbers({ a, b }: { a: number; b: number }) {
+  return `${a / b}`;
+}
+
 await test("llm", async (t) => {
   await mockLLMEvent(t, "llm");
   await t.test("llm.chat", async () => {
@@ -157,13 +165,6 @@ await test("agent", async (t) => {
     ok(response.includes(uniqueId));
   });
 
-  function sumNumbers({ a, b }: { a: number; b: number }) {
-    return `${a + b}`;
-  }
-
-  function divideNumbers({ a, b }: { a: number; b: number }) {
-    return `${a / b}`;
-  }
   await t.test("sum numbers", async () => {
     const sumFunctionTool = new FunctionTool(sumNumbers, {
       name: "sumNumbers",
@@ -194,7 +195,10 @@ await test("agent", async (t) => {
 
     ok(response.response.includes("2"));
   });
+});
 
+await test("agent stream", async (t) => {
+  await mockLLMEvent(t, "agent_stream");
   await t.test("sum numbers stream", async () => {
     const sumJSON = {
       type: "object",

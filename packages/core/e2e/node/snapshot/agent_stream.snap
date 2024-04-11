@@ -1,0 +1,2351 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "content": "Divide 16 by 2 then add 20",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "content": "Divide 16 by 2 then add 20",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "function": {
+                  "name": "divideNumbers",
+                  "arguments": "{\"a\": 16, \"b\": 2}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              },
+              {
+                "function": {
+                  "name": "sumNumbers",
+                  "arguments": "{\"a\": 8, \"b\": 20}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              }
+            ]
+          }
+        },
+        {
+          "content": "8",
+          "role": "tool",
+          "options": {
+            "name": "divideNumbers",
+            "tool_call_id": "HIDDEN"
+          }
+        },
+        {
+          "content": "28",
+          "role": "tool",
+          "options": {
+            "name": "sumNumbers",
+            "tool_call_id": "HIDDEN"
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": [
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "id": "HIDDEN",
+                        "type": "function",
+                        "function": {
+                          "name": "divideNumbers",
+                          "arguments": ""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "{\"a\""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": ": 16,"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": " \"b\": "
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "2}"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "id": "HIDDEN",
+                        "type": "function",
+                        "function": {
+                          "name": "sumNumbers",
+                          "arguments": ""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": "{\"a\""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": ": 8, "
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": "\"b\": 2"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 1,
+                        "function": {
+                          "arguments": "0}"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCalls": [
+                {
+                  "function": {
+                    "name": "divideNumbers",
+                    "arguments": "{\"a\": 16, \"b\": 2}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                },
+                {
+                  "function": {
+                    "name": "sumNumbers",
+                    "arguments": "{\"a\": 8, \"b\": 20}"
+                  },
+                  "id": "HIDDEN",
+                  "type": "function"
+                }
+              ]
+            },
+            "delta": ""
+          }
+        ],
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCalls": [
+              {
+                "function": {
+                  "name": "divideNumbers",
+                  "arguments": "{\"a\": 16, \"b\": 2}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              },
+              {
+                "function": {
+                  "name": "sumNumbers",
+                  "arguments": "{\"a\": 8, \"b\": 20}"
+                },
+                "id": "HIDDEN",
+                "type": "function"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": [
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "The"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "The"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " result"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " result"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " of"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " of"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " dividing"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " dividing"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "16"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "16"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " by"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " by"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "2"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "2"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " is"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " is"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "8"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "8"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "."
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "."
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " When"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " When"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " you"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " you"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " add"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " add"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "20"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "20"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " to"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " to"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "8"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "8"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": ","
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": ","
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " the"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " the"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " total"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " total"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " is"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " is"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " "
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " "
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "28"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "28"
+          },
+          {
+            "raw": {
+              "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": "."
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": "."
+          }
+        ],
+        "message": {
+          "content": "The result of dividing 16 by 2 is 8. When you add 20 to 8, the total is 28.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": [
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "divideNumbers",
+                      "arguments": ""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "{\"a\""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": ": 16,"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": " \"b\": "
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "2}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "sumNumbers",
+                      "arguments": ""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": "{\"a\""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": ": 8, "
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": "\"b\": 2"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO4Gpwsd0MTZBUdryRXlL0d62xC",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 1,
+                    "function": {
+                      "arguments": "0}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCalls": [
+            {
+              "function": {
+                "name": "divideNumbers",
+                "arguments": "{\"a\": 16, \"b\": 2}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            },
+            {
+              "function": {
+                "name": "sumNumbers",
+                "arguments": "{\"a\": 8, \"b\": 20}"
+              },
+              "id": "HIDDEN",
+              "type": "function"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "The"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "The"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " result"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " result"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " of"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " of"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " dividing"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " dividing"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "16"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "16"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " by"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " by"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "2"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "2"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " is"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " is"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "8"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "8"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "."
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "."
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " When"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " When"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " you"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " you"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " add"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " add"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "20"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "20"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " to"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " to"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "8"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "8"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": ","
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": ","
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " the"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " the"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " total"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " total"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " is"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " is"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " "
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "28"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "28"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "chatcmpl-9CyO5hh7cPZ3d9iQgJPSPZkto7akt",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": "."
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": "."
+      }
+    }
+  ]
+}

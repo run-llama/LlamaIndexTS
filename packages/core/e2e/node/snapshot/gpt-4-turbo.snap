@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "messages": [
         {
           "content": "What is the weather in San Jose?",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "messages": [
         {
           "content": "What is the weather in San Jose?",
@@ -45,10 +45,10 @@
   ],
   "llmEventEnd": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "response": {
         "raw": {
-          "id": "HIDDEN",
+          "id": "chatcmpl-9CyO0B1DxJwbfIEVl4uAAJVdG1heE",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -99,10 +99,10 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "response": {
         "raw": {
-          "id": "HIDDEN",
+          "id": "chatcmpl-9CyO1hyVQc5zqvnppKQs6LCJrkwBe",
           "object": "chat.completion",
           "created": 114514,
           "model": "gpt-3.5-turbo-0125",
@@ -111,7 +111,7 @@
               "index": 0,
               "message": {
                 "role": "assistant",
-                "content": "The weather in San Jose is 45 degrees and sunny."
+                "content": "The weather in San Jose is currently 45 degrees and sunny."
               },
               "logprobs": null,
               "finish_reason": "stop"
@@ -119,13 +119,13 @@
           ],
           "usage": {
             "prompt_tokens": 78,
-            "completion_tokens": 13,
-            "total_tokens": 91
+            "completion_tokens": 14,
+            "total_tokens": 92
           },
           "system_fingerprint": "HIDDEN"
         },
         "message": {
-          "content": "The weather in San Jose is 45 degrees and sunny.",
+          "content": "The weather in San Jose is currently 45 degrees and sunny.",
           "role": "assistant",
           "options": {}
         }
