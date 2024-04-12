@@ -1,14 +1,14 @@
 import { WikipediaTool } from "./WikipediaTool.js";
 
-export const enum Tools {
-  Wikipedia = "wikipedia.WikipediaToolSpec",
-}
-
-type ToolsMap = {
-  [Tools.Wikipedia]: typeof WikipediaTool;
-};
-
 export namespace ToolsFactory {
+  type ToolsMap = {
+    [Tools.Wikipedia]: typeof WikipediaTool;
+  };
+
+  export enum Tools {
+    Wikipedia = "wikipedia.WikipediaToolSpec",
+  }
+
   export async function createTool<Tool extends Tools>(
     key: Tool,
     ...params: ConstructorParameters<ToolsMap[Tool]>
