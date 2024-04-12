@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.2.8
+
+### Patch Changes
+
+- Add ToolsFactory to generate agent tools
+
 ## 0.2.7
 
 ### Patch Changes
