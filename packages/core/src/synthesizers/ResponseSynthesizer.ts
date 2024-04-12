@@ -69,19 +69,21 @@ export class ResponseSynthesizer
     const textChunks: string[] = nodesWithScore.map(({ node }) =>
       node.getContent(this.metadataMode),
     );
-    const nodes = nodesWithScore.map(({ node }) => node);
     if (stream) {
       const response = await this.responseBuilder.getResponse({
         query,
         textChunks,
         stream,
       });
-      return streamConverter(response, (chunk) => new Response(chunk, nodes));
+      return streamConverter(
+        response,
+        (chunk) => new Response(chunk, nodesWithScore),
+      );
     }
     const response = await this.responseBuilder.getResponse({
       query,
       textChunks,
     });
-    return new Response(response, nodes);
+    return new Response(response, nodesWithScore);
   }
 }

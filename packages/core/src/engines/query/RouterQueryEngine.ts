@@ -1,4 +1,4 @@
-import type { BaseNode } from "../../Node.js";
+import type { NodeWithScore } from "../../Node.js";
 import { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
@@ -33,7 +33,7 @@ async function combineResponses(
   }
 
   const responseStrs: string[] = [];
-  const sourceNodes: BaseNode[] = [];
+  const sourceNodes: NodeWithScore[] = [];
 
   for (const response of responses) {
     if (response?.sourceNodes) {

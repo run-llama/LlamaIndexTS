@@ -111,7 +111,7 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
 
     if (response) {
       for (const node of response.sourceNodes || []) {
-        contexts.push(node.getContent(MetadataMode.ALL));
+        contexts.push(node.node.getContent(MetadataMode.ALL));
       }
     }
 

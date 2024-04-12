@@ -113,10 +113,9 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     });
     const textOnly = extractText(message);
     const context = await this.contextGenerator.generate(textOnly);
-    const nodes = context.nodes.map((r) => r.node);
     const messages = await chatHistory.requestMessages(
       context ? [context.message] : undefined,
     );
-    return { nodes, messages };
+    return { nodes: context.nodes, messages };
   }
 }

@@ -91,6 +91,6 @@ export class MultiModalResponseSynthesizer
       prompt,
     });
 
-    return new Response(response.text, nodes);
+    return new Response(response.text, nodesWithScore);
   }
 }
