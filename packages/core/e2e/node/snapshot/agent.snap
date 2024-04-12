@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "messages": [
         {
           "content": "What is the weather in San Francisco?",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "messages": [
         {
           "content": "What is the weather in San Francisco?",
@@ -43,7 +43,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_2",
       "messages": [
         {
           "content": "My name is Alex Yang. What is my unique id?",
@@ -52,7 +52,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_3",
       "messages": [
         {
           "content": "My name is Alex Yang. What is my unique id?",
@@ -85,7 +85,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_4",
       "messages": [
         {
           "content": "how much is 1 + 1?",
@@ -94,7 +94,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_5",
       "messages": [
         {
           "content": "how much is 1 + 1?",
@@ -129,7 +129,7 @@
   ],
   "llmEventEnd": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -183,7 +183,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -216,7 +216,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_2",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -270,7 +270,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_3",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -303,7 +303,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_4",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -357,7 +357,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_5",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -369,7 +369,7 @@
               "index": 0,
               "message": {
                 "role": "assistant",
-                "content": "1 + 1 is equal to 2."
+                "content": "The sum of 1 + 1 is 2."
               },
               "logprobs": null,
               "finish_reason": "stop"
@@ -377,13 +377,13 @@
           ],
           "usage": {
             "prompt_tokens": 97,
-            "completion_tokens": 11,
-            "total_tokens": 108
+            "completion_tokens": 13,
+            "total_tokens": 110
           },
           "system_fingerprint": "HIDDEN"
         },
         "message": {
-          "content": "1 + 1 is equal to 2.",
+          "content": "The sum of 1 + 1 is 2.",
           "role": "assistant",
           "options": {}
         }

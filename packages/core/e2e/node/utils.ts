@@ -27,6 +27,8 @@ export async function mockLLMEvent(
   t: Parameters<NonNullable<Parameters<typeof test>[0]>>[0],
   snapshotName: string,
 ) {
+  const idMap = new Map<string, string>();
+  let counter = 0;
   const newLLMCompleteMockStorage: MockStorage = {
     llmEventStart: [],
     llmEventEnd: [],
@@ -34,15 +36,28 @@ export async function mockLLMEvent(
   };
 
   function captureLLMStart(event: LLMStartEvent) {
-    newLLMCompleteMockStorage.llmEventStart.push(event.detail.payload);
+    idMap.set(event.detail.payload.id, `PRESERVE_${counter++}`);
+    newLLMCompleteMockStorage.llmEventStart.push({
+      ...event.detail.payload,
+      // @ts-expect-error id is not UUID, but it is fine for testing
+      id: idMap.get(event.detail.payload.id)!,
+    });
   }
 
   function captureLLMEnd(event: LLMEndEvent) {
-    newLLMCompleteMockStorage.llmEventEnd.push(event.detail.payload);
+    newLLMCompleteMockStorage.llmEventEnd.push({
+      ...event.detail.payload,
+      // @ts-expect-error id is not UUID, but it is fine for testing
+      id: idMap.get(event.detail.payload.id)!,
+    });
   }
 
   function captureLLMStream(event: LLMStreamEvent) {
-    newLLMCompleteMockStorage.llmEventStream.push(event.detail.payload);
+    newLLMCompleteMockStorage.llmEventStream.push({
+      ...event.detail.payload,
+      // @ts-expect-error id is not UUID, but it is fine for testing
+      id: idMap.get(event.detail.payload.id)!,
+    });
   }
 
   await readFile(join(testRootDir, "snapshot", `${snapshotName}.snap`), {
@@ -77,7 +92,7 @@ export async function mockLLMEvent(
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     if (process.env.UPDATE_SNAPSHOT === "1") {
       const data = JSON.stringify(newLLMCompleteMockStorage, null, 2)
-        .replace(/"id": ".*"/g, `"id": "HIDDEN"`)
+        .replace(/"id": "(?!PRESERVE_).*"/g, '"id": "HIDDEN"')
         .replace(/"created": \d+/g, `"created": 114514`)
         .replace(
           /"system_fingerprint": ".*"/g,

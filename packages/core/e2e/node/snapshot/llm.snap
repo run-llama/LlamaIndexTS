@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "messages": [
         {
           "content": "Hello",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "messages": [
         {
           "content": "hello",
@@ -21,7 +21,7 @@
   ],
   "llmEventEnd": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -54,7 +54,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "response": {
         "raw": [
           {
@@ -257,7 +257,7 @@
   ],
   "llmEventStream": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -281,7 +281,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -305,7 +305,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -329,7 +329,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -353,7 +353,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -377,7 +377,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -401,7 +401,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -425,7 +425,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -449,7 +449,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "chunk": {
         "raw": {
           "id": "HIDDEN",

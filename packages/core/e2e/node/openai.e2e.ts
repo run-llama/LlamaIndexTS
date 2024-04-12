@@ -22,6 +22,14 @@ beforeEach(async () => {
   llm = Settings.llm;
 });
 
+function sumNumbers({ a, b }: { a: number; b: number }) {
+  return `${a + b}`;
+}
+
+function divideNumbers({ a, b }: { a: number; b: number }) {
+  return `${a / b}`;
+}
+
 await test("llm", async (t) => {
   await mockLLMEvent(t, "llm");
   await t.test("llm.chat", async () => {
@@ -158,9 +166,6 @@ await test("agent", async (t) => {
   });
 
   await t.test("sum numbers", async () => {
-    function sumNumbers({ a, b }: { a: number; b: number }): string {
-      return `${a + b}`;
-    }
     const sumFunctionTool = new FunctionTool(sumNumbers, {
       name: "sumNumbers",
       description: "Use this function to sum two numbers",
@@ -189,6 +194,70 @@ await test("agent", async (t) => {
     });
 
     ok(response.response.includes("2"));
+  });
+});
+
+await test("agent stream", async (t) => {
+  await mockLLMEvent(t, "agent_stream");
+  await t.test("sum numbers stream", async () => {
+    const sumJSON = {
+      type: "object",
+      properties: {
+        a: {
+          type: "number",
+          description: "The first number",
+        },
+        b: {
+          type: "number",
+          description: "The second number",
+        },
+      },
+      required: ["a", "b"],
+    } as const;
+
+    const divideJSON = {
+      type: "object",
+      properties: {
+        a: {
+          type: "number",
+          description: "The dividend",
+        },
+        b: {
+          type: "number",
+          description: "The divisor",
+        },
+      },
+      required: ["a", "b"],
+    } as const;
+
+    const functionTool = FunctionTool.from(sumNumbers, {
+      name: "sumNumbers",
+      description: "Use this function to sum two numbers",
+      parameters: sumJSON,
+    });
+
+    const functionTool2 = FunctionTool.from(divideNumbers, {
+      name: "divideNumbers",
+      description: "Use this function to divide two numbers",
+      parameters: divideJSON,
+    });
+
+    const agent = new OpenAIAgent({
+      tools: [functionTool, functionTool2],
+    });
+
+    const { response } = await agent.chat({
+      message: "Divide 16 by 2 then add 20",
+      stream: true,
+    });
+
+    let message = "";
+
+    for await (const chunk of response) {
+      message += chunk.response;
+    }
+
+    ok(message.includes("28"));
   });
 });
 

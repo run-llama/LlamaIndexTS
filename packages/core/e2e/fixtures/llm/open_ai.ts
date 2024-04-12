@@ -56,8 +56,16 @@ export class OpenAI implements LLM {
         if (params.stream) {
           return {
             [Symbol.asyncIterator]: async function* () {
-              while (llmCompleteMockStorage.llmEventStream.at(-1)?.id === id) {
-                yield llmCompleteMockStorage.llmEventStream.shift()!["chunk"];
+              while (true) {
+                const idx = llmCompleteMockStorage.llmEventStream.findIndex(
+                  (e) => e.id === id,
+                );
+                if (idx === -1) {
+                  break;
+                }
+                const chunk = llmCompleteMockStorage.llmEventStream[idx].chunk;
+                llmCompleteMockStorage.llmEventStream.splice(idx, 1);
+                yield chunk;
               }
             },
           };

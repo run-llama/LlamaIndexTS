@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@types/node": "^18.19.14",
+    "@types/node": "^20.12.7",
     "@assemblyscript/loader": "^0.19.9"
   },
   "devDependencies": {

@@ -15,7 +15,7 @@
     "@pinecone-database/pinecone": "^2.2.0",
     "@qdrant/js-client-rest": "^1.8.2",
     "@types/lodash": "^4.17.0",
-    "@types/node": "^18.19.31",
+    "@types/node": "^20.12.7",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.5",
     "@xenova/transformers": "^2.16.1",

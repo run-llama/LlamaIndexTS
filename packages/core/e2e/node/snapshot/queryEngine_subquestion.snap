@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "messages": [
         {
           "content": "Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:\n\n# Example 1\n<Tools>\n```json\n{\n    \"uber_10k\": \"Provides information about Uber financials for year 2021\",\n    \"lyft_10k\": \"Provides information about Lyft financials for year 2021\"\n}\n```\n\n<User Question>\nCompare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021\n\n<Output>\n```json\n[\n    {\n        \"subQuestion\": \"What is the revenue growth of Uber\",\n        \"toolName\": \"uber_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the EBITDA of Uber\",\n        \"toolName\": \"uber_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the revenue growth of Lyft\",\n        \"toolName\": \"lyft_10k\"\n    },\n    {\n        \"subQuestion\": \"What is the EBITDA of Lyft\",\n        \"toolName\": \"lyft_10k\"\n    }\n]\n```\n\n# Example 2\n<Tools>\n```json\n{\n    \"bill_gates_idea\": \"Get what Bill Gates idea from.\"\n}\n```\n\n<User Question>\nWhat did Bill Gates steal from?\n\n<Output>\n",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "messages": [
         {
           "content": "Context information is below.\n---------------------\nBill Gates stole from Apple. Steve Jobs stole from Xerox.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What is Bill Gates' idea\nAnswer:",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_2",
       "messages": [
         {
           "content": "Context information is below.\n---------------------\nSub question: What is Bill Gates' idea\nResponse: Bill Gates' idea was to steal from Apple.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What did Bill Gates steal from?\nAnswer:",
@@ -30,7 +30,7 @@
   ],
   "llmEventEnd": [
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_0",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -63,7 +63,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_1",
       "response": {
         "raw": {
           "id": "HIDDEN",
@@ -96,7 +96,7 @@
       }
     },
     {
-      "id": "HIDDEN",
+      "id": "PRESERVE_2",
       "response": {
         "raw": {
           "id": "HIDDEN",
