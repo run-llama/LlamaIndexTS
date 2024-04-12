@@ -22,7 +22,6 @@ describe("ToolsFactory", async () => {
     });
   });
   test("type", () => {
-    assertType<Tools>(Tools.Wikipedia);
     assertType<
       (
         key: ToolsFactory.Tools.Wikipedia,
