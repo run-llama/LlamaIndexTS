@@ -188,8 +188,8 @@ importers:
   packages/core:
     dependencies:
       '@anthropic-ai/sdk':
-        specifier: ^0.18.0
-        version: 0.18.0
+        specifier: ^0.20.4
+        version: 0.20.4
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
         version: 5.2.0
@@ -796,6 +796,21 @@ packages:
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
       digest-fetch: 1.3.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+      web-streams-polyfill: 3.3.3
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@anthropic-ai/sdk@0.20.4:
+    resolution: {integrity: sha512-ULzz+0Smk9SNkAi1tcjJByxbt4taBhnQkRAB75iH0ku5dRwiPxGxN0WOWHoNIq22dGWBXJByrQRhVf80V4xAPA==}
+    dependencies:
+      '@types/node': 18.19.31
+      '@types/node-fetch': 2.6.11
+      abort-controller: 3.0.0
+      agentkeepalive: 4.5.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0(encoding@0.1.13)
