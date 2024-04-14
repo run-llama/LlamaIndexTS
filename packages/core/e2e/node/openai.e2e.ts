@@ -12,9 +12,7 @@ import {
 } from "llamaindex";
 import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
-import { ensureEnvironmentVariables, mockLLMEvent } from "./utils.js";
-
-using _ = ensureEnvironmentVariables("openai");
+import { mockLLMEvent } from "./utils.js";
 
 let llm: LLM;
 beforeEach(async () => {

@@ -2,9 +2,7 @@ import { consola } from "consola";
 import { Anthropic, Settings, type LLM } from "llamaindex";
 import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
-import { ensureEnvironmentVariables, mockLLMEvent } from "./utils.js";
-
-using _ = ensureEnvironmentVariables("anthropic");
+import { mockLLMEvent } from "./utils.js";
 
 let llm: LLM;
 beforeEach(async () => {

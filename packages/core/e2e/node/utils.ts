@@ -16,35 +16,6 @@ type MockStorage = {
   llmEventStream: LLMStreamEvent["detail"]["payload"][];
 };
 
-const checkEnvironmentVariable = (key: string) => {
-  if (!process.env[key]) {
-    throw new Error(`${key} is not set`);
-  }
-};
-
-export function ensureEnvironmentVariables(llm: "openai" | "anthropic") {
-  if (llm === "openai") {
-    checkEnvironmentVariable("OPENAI_API_KEY");
-    const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
-    delete process.env.ANTHROPIC_API_KEY;
-    return {
-      [Symbol.dispose]: () => {
-        process.env.ANTHROPIC_API_KEY = anthropicApiKey;
-      },
-    };
-  } else if (llm === "anthropic") {
-    checkEnvironmentVariable("ANTHROPIC_API_KEY");
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    delete process.env.OPENAI_API_KEY;
-    return {
-      [Symbol.dispose]: () => {
-        process.env.OPENAI_API_KEY = openaiApiKey;
-      },
-    };
-  }
-  throw new Error("Unknown LLM");
-}
-
 export const llmCompleteMockStorage: MockStorage = {
   llmEventStart: [],
   llmEventEnd: [],
