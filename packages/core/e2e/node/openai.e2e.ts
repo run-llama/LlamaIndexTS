@@ -30,7 +30,7 @@ function divideNumbers({ a, b }: { a: number; b: number }) {
   return `${a / b}`;
 }
 
-await test("llm", async (t) => {
+await test("openai llm", async (t) => {
   await mockLLMEvent(t, "llm");
   await t.test("llm.chat", async () => {
     const response = await llm.chat({
