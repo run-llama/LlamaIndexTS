@@ -2,6 +2,7 @@ import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
 import type {
   Tool,
+  ToolResultBlockParam,
   ToolUseBlock,
 } from "@anthropic-ai/sdk/resources/beta/tools/messages";
 import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
@@ -91,7 +92,7 @@ export type AnthropicAdditionalChatOptions = {};
 
 export type AnthropicAdditionalMessageOptions =
   | {
-      toolCall: string;
+      toolResult: Omit<ToolResultBlockParam, "content">;
     }
   | {
       toolUse: ToolUseBlock;
@@ -158,6 +159,7 @@ export class Anthropic extends BaseLLM<
       }
 
       return {
+        // todo: extract tool call
         content: extractText(message.content),
         role: message.role,
       };
