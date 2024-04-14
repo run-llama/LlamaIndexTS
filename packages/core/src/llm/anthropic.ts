@@ -1,15 +1,15 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
 import { getEnv } from "@llamaindex/env";
+import _ from "lodash";
+import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
-} from "llamaindex";
-import _ from "lodash";
-import { BaseLLM } from "./base.js";
+} from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class AnthropicSession {
