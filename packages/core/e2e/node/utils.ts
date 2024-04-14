@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import {
   Settings,
   type LLMEndEvent,

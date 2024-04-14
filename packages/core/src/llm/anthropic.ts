@@ -1,7 +1,13 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
+import type {
+  Tool,
+  ToolUseBlock,
+} from "@anthropic-ai/sdk/resources/beta/tools/messages";
+import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
+import type { BaseTool } from "../types.js";
 import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
@@ -81,7 +87,21 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
   "claude-3-haiku": "claude-3-haiku-20240307",
 } as { [key in keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS]: string };
 
-export class Anthropic extends BaseLLM {
+export type AnthropicAdditionalChatOptions = {};
+
+export type AnthropicAdditionalMessageOptions =
+  | {
+      toolCall: string;
+    }
+  | {
+      toolUse: ToolUseBlock;
+    }
+  | {};
+
+export class Anthropic extends BaseLLM<
+  AnthropicAdditionalChatOptions,
+  AnthropicAdditionalMessageOptions
+> {
   // Per completion Anthropic params
   model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
   temperature: number;
@@ -154,7 +174,7 @@ export class Anthropic extends BaseLLM {
   ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
     let { messages } = params;
 
-    const { stream } = params;
+    const { stream, tools } = params;
 
     let systemPrompt: string | null = null;
 
@@ -169,25 +189,63 @@ export class Anthropic extends BaseLLM {
       messages = messages.filter((message) => message.role !== "system");
     }
 
-    //Streaming
+    // case: Streaming
     if (stream) {
+      if (tools) {
+        console.error("Tools are not supported in streaming mode");
+      }
       return this.streamChat(messages, systemPrompt);
     }
+    // case: Non-streaming
+    const anthropic = this.session.anthropic;
 
-    //Non-streaming
-    const response = await this.session.anthropic.messages.create({
-      model: this.getModelName(this.model),
-      messages: this.formatMessages(messages),
-      max_tokens: this.maxTokens ?? 4096,
-      temperature: this.temperature,
-      top_p: this.topP,
-      ...(systemPrompt && { system: systemPrompt }),
-    });
+    if (tools) {
+      const response = await anthropic.beta.tools.messages.create({
+        messages: this.formatMessages(messages),
+        tools: tools.map(Anthropic.toTool),
+        model: this.getModelName(this.model),
+        temperature: this.temperature,
+        max_tokens: this.maxTokens ?? 4096,
+        top_p: this.topP,
+        ...(systemPrompt && { system: systemPrompt }),
+      });
 
-    return {
-      raw: response,
-      message: { content: response.content[0].text, role: "assistant" },
-    };
+      const toolUseBlock = response.content.find(
+        (content): content is ToolUseBlock => content.type === "tool_use",
+      );
+
+      return {
+        raw: response,
+        message: {
+          content: response.content
+            .filter((content): content is TextBlock => content.type === "text")
+            .map((content) => ({
+              type: "text",
+              text: content.text,
+            })),
+          role: "assistant",
+          options: toolUseBlock
+            ? {
+                toolUse: toolUseBlock,
+              }
+            : {},
+        },
+      };
+    } else {
+      const response = await anthropic.messages.create({
+        model: this.getModelName(this.model),
+        messages: this.formatMessages(messages),
+        max_tokens: this.maxTokens ?? 4096,
+        temperature: this.temperature,
+        top_p: this.topP,
+        ...(systemPrompt && { system: systemPrompt }),
+      });
+
+      return {
+        raw: response,
+        message: { content: response.content[0].text, role: "assistant" },
+      };
+    }
   }
 
   protected async *streamChat(
@@ -218,5 +276,20 @@ export class Anthropic extends BaseLLM {
       };
     }
     return;
+  }
+
+  static toTool(tool: BaseTool): Tool {
+    if (tool.metadata.parameters?.type !== "object") {
+      throw new TypeError("Tool parameters must be an object");
+    }
+    return {
+      input_schema: {
+        type: "object",
+        properties: tool.metadata.parameters.properties,
+        required: tool.metadata.parameters.required,
+      },
+      name: tool.metadata.name,
+      description: tool.metadata.description,
+    };
   }
 }

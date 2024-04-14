@@ -1,0 +1,290 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "content": "Hello",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "content": "hello",
+          "role": "user"
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-3-opus-20240229",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 8,
+            "output_tokens": 12
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Hello! How can I assist you today?"
+            }
+          ],
+          "stop_reason": "end_turn"
+        },
+        "message": {
+          "content": "Hello! How can I assist you today?",
+          "role": "assistant"
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": [
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": "Hello"
+              }
+            },
+            "delta": "Hello"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": "!"
+              }
+            },
+            "delta": "!"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": " How"
+              }
+            },
+            "delta": " How"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": " can"
+              }
+            },
+            "delta": " can"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": " I"
+              }
+            },
+            "delta": " I"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": " assist"
+              }
+            },
+            "delta": " assist"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": " you"
+              }
+            },
+            "delta": " you"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": " today"
+              }
+            },
+            "delta": " today"
+          },
+          {
+            "raw": {
+              "type": "content_block_delta",
+              "index": 0,
+              "delta": {
+                "type": "text_delta",
+                "text": "?"
+              }
+            },
+            "delta": "?"
+          }
+        ],
+        "message": {
+          "content": "Hello! How can I assist you today?",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": [
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": "Hello"
+          }
+        },
+        "delta": "Hello"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": "!"
+          }
+        },
+        "delta": "!"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": " How"
+          }
+        },
+        "delta": " How"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": " can"
+          }
+        },
+        "delta": " can"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": " I"
+          }
+        },
+        "delta": " I"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": " assist"
+          }
+        },
+        "delta": " assist"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": " you"
+          }
+        },
+        "delta": " you"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": " today"
+          }
+        },
+        "delta": " today"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "type": "content_block_delta",
+          "index": 0,
+          "delta": {
+            "type": "text_delta",
+            "text": "?"
+          }
+        },
+        "delta": "?"
+      }
+    }
+  ]
+}
