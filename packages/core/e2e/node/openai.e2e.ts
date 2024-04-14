@@ -12,7 +12,9 @@ import {
 } from "llamaindex";
 import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
-import { mockLLMEvent } from "./utils.js";
+import { ensureEnvironmentVariables, mockLLMEvent } from "./utils.js";
+
+using _ = ensureEnvironmentVariables("openai");
 
 let llm: LLM;
 beforeEach(async () => {
@@ -30,7 +32,7 @@ function divideNumbers({ a, b }: { a: number; b: number }) {
   return `${a / b}`;
 }
 
-await test("llm", async (t) => {
+await test("openai llm", async (t) => {
   await mockLLMEvent(t, "llm");
   await t.test("llm.chat", async () => {
     const response = await llm.chat({

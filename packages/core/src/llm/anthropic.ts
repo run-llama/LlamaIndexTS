@@ -203,7 +203,7 @@ export class Anthropic extends BaseLLM<
       const response = await anthropic.beta.tools.messages.create({
         messages: this.formatMessages(messages),
         tools: tools.map(Anthropic.toTool),
-        model: this.model,
+        model: this.getModelName(this.model),
         temperature: this.temperature,
         max_tokens: this.maxTokens ?? 4096,
         top_p: this.topP,
@@ -233,7 +233,7 @@ export class Anthropic extends BaseLLM<
       };
     } else {
       const response = await anthropic.messages.create({
-        model: this.model,
+        model: this.getModelName(this.model),
         messages: this.formatMessages(messages),
         max_tokens: this.maxTokens ?? 4096,
         temperature: this.temperature,
