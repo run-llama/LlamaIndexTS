@@ -184,17 +184,6 @@ export type MessageContentDetail =
  */
 export type MessageContent = string | MessageContentDetail[];
 
-interface Function {
-  arguments: string;
-  name: string;
-}
-
-export interface MessageToolCall {
-  id: string;
-  function: Function;
-  type: "function";
-}
-
 export type ToolCallOptions = {
   toolCall: {
     name: string;
