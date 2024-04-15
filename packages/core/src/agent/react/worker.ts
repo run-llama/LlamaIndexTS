@@ -2,6 +2,7 @@ import { randomUUID } from "@llamaindex/env";
 import type { ChatMessage } from "cohere-ai/api";
 import { Settings } from "../../Settings.js";
 import { AgentChatResponse } from "../../engines/chat/index.js";
+import { getCallbackManager } from "../../internal/settings/CallbackManager.js";
 import { type ChatResponse, type LLM } from "../../llm/index.js";
 import { extractText } from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
@@ -194,6 +195,14 @@ export class ReActAgentWorker implements AgentWorker<ChatParams> {
 
     const tool = toolsDict[actionReasoningStep.action];
 
+    getCallbackManager().dispatchEvent("llm-tool-call", {
+      payload: {
+        toolCall: {
+          name: tool.metadata.name,
+          input: JSON.stringify(actionReasoningStep.actionInput),
+        },
+      },
+    });
     const toolOutput = await tool.call!(actionReasoningStep.actionInput);
 
     task.extraState.sources.push(

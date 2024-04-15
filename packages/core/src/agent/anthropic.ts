@@ -4,6 +4,7 @@ import {
   type ChatEngineParamsNonStreaming,
 } from "../engines/chat/index.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { prettifyError } from "../internal/utils.js";
 import {
   Anthropic,
@@ -73,7 +74,15 @@ async function task(
       output = `Error: Tool ${name} not found`;
     } else {
       try {
-        output = await targetTool.call(input);
+        getCallbackManager().dispatchEvent("llm-tool-call", {
+          payload: {
+            toolCall: {
+              name,
+              input,
+            },
+          },
+        });
+        output = await targetTool.call(JSON.parse(input));
         isError = false;
       } catch (error: unknown) {
         output = prettifyError(error);

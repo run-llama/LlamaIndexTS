@@ -1,34 +1,27 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
 import type { BaseTool, UUID } from "../types.js";
 
-type LLMBaseEvent<
-  Type extends string,
-  Payload extends Record<string, unknown>,
-> = CustomEvent<{
+type LLMBaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{
   payload: Payload;
 }>;
 
-export type LLMStartEvent = LLMBaseEvent<
-  "llm-start",
-  {
-    id: UUID;
-    messages: ChatMessage[];
-  }
->;
-export type LLMEndEvent = LLMBaseEvent<
-  "llm-end",
-  {
-    id: UUID;
-    response: ChatResponse;
-  }
->;
-export type LLMStreamEvent = LLMBaseEvent<
-  "llm-stream",
-  {
-    id: UUID;
-    chunk: ChatResponseChunk;
-  }
->;
+export type LLMStartEvent = LLMBaseEvent<{
+  id: UUID;
+  messages: ChatMessage[];
+}>;
+export type LLMToolCallEvent = LLMBaseEvent<{
+  // fixme: id is missing in the context
+  // id: UUID;
+  toolCall: Omit<ToolCallOptions["toolCall"], "id">;
+}>;
+export type LLMEndEvent = LLMBaseEvent<{
+  id: UUID;
+  response: ChatResponse;
+}>;
+export type LLMStreamEvent = LLMBaseEvent<{
+  id: UUID;
+  chunk: ChatResponseChunk;
+}>;
 
 /**
  * @internal
@@ -184,17 +177,22 @@ export type MessageContentDetail =
  */
 export type MessageContent = string | MessageContentDetail[];
 
+export type ToolCall = {
+  name: string;
+  input: string;
+  id: string;
+};
+
+export type ToolResult = {
+  id: string;
+  result: string;
+  isError: boolean;
+};
+
 export type ToolCallOptions = {
-  toolCall: {
-    name: string;
-    input: string;
-    id: string;
-  };
+  toolCall: ToolCall;
 };
 
 export type ToolResultOptions = {
-  toolResult: {
-    id: string;
-    isError: boolean;
-  };
+  toolResult: ToolResult;
 };

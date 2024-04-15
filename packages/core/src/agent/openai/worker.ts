@@ -42,11 +42,9 @@ async function callFunction(
 
   const tool = getFunctionByName(tools, name);
 
-  const argumentDict = JSON.parse(input);
-
   // Call tool
   // Use default error message
-  const output = await callToolWithErrorHandling(tool, argumentDict);
+  const output = await callToolWithErrorHandling(tool, input);
 
   if (Settings.debug) {
     console.log(`Got output ${output}`);

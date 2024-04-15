@@ -10,7 +10,7 @@ import {
   VectorStoreIndex,
   type LLM,
 } from "llamaindex";
-import { ok } from "node:assert";
+import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { mockLLMEvent } from "./utils.js";
 
@@ -199,7 +199,9 @@ await test("agent", async (t) => {
 
 await test("agent stream", async (t) => {
   await mockLLMEvent(t, "agent_stream");
-  await t.test("sum numbers stream", async () => {
+  await t.test("sum numbers stream", async (t) => {
+    const fn = t.mock.fn(() => {});
+    Settings.callbackManager.on("llm-tool-call", fn);
     const sumJSON = {
       type: "object",
       properties: {
@@ -257,13 +259,17 @@ await test("agent stream", async (t) => {
       message += chunk.response;
     }
 
+    strictEqual(fn.mock.callCount(), 2);
     ok(message.includes("28"));
+    Settings.callbackManager.off("llm-tool-call", fn);
   });
 });
 
 await test("queryEngine", async (t) => {
   await mockLLMEvent(t, "queryEngine_subquestion");
   await t.test("subquestion", async () => {
+    const fn = t.mock.fn(() => {});
+    Settings.callbackManager.on("llm-tool-call", fn);
     const document = new Document({
       text: "Bill Gates stole from Apple.\n Steve Jobs stole from Xerox.",
     });
@@ -288,5 +294,7 @@ await test("queryEngine", async (t) => {
     });
 
     ok(response.includes("Apple"));
+    strictEqual(fn.mock.callCount(), 0);
+    Settings.callbackManager.off("llm-tool-call", fn);
   });
 });
