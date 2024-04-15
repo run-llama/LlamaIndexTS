@@ -21,6 +21,7 @@ export function isFunctionCallingModel() {
 }
 
 export class OpenAI implements LLM {
+  supportToolCall = true;
   get metadata() {
     return {
       model: "mock-model",
