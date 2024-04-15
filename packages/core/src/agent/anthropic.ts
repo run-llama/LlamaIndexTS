@@ -6,11 +6,12 @@ import {
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { prettifyError } from "../internal/utils.js";
-import {
-  Anthropic,
-  type AnthropicAdditionalMessageOptions,
-} from "../llm/anthropic.js";
-import type { ChatMessage, ChatResponse } from "../llm/index.js";
+import { Anthropic } from "../llm/anthropic.js";
+import type {
+  ChatMessage,
+  ChatResponse,
+  ToolCallLLMMessageOptions,
+} from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
@@ -19,7 +20,7 @@ const MAX_TOOL_CALLS = 10;
 
 type AnthropicParamsBase = {
   llm?: Anthropic;
-  chatHistory?: ChatMessage<AnthropicAdditionalMessageOptions>[];
+  chatHistory?: ChatMessage<ToolCallLLMMessageOptions>[];
 };
 
 type AnthropicParamsWithTools = AnthropicParamsBase & {
@@ -38,21 +39,21 @@ type AgentContext = {
   toolCalls: number;
   llm: Anthropic;
   tools: BaseToolWithCall[];
-  messages: ChatMessage<AnthropicAdditionalMessageOptions>[];
+  messages: ChatMessage<ToolCallLLMMessageOptions>[];
   shouldContinue: (context: AgentContext) => boolean;
 };
 
 type TaskResult = {
-  response: ChatResponse<AnthropicAdditionalMessageOptions>;
-  chatHistory: ChatMessage<AnthropicAdditionalMessageOptions>[];
+  response: ChatResponse<ToolCallLLMMessageOptions>;
+  chatHistory: ChatMessage<ToolCallLLMMessageOptions>[];
 };
 
 async function task(
   context: AgentContext,
-  input: ChatMessage<AnthropicAdditionalMessageOptions>,
+  input: ChatMessage<ToolCallLLMMessageOptions>,
 ): Promise<TaskResult> {
   const { llm, tools, messages } = context;
-  const nextMessages: ChatMessage<AnthropicAdditionalMessageOptions>[] = [
+  const nextMessages: ChatMessage<ToolCallLLMMessageOptions>[] = [
     ...messages,
     input,
   ];
@@ -115,7 +116,7 @@ export class AnthropicAgent {
   readonly #tools:
     | BaseToolWithCall[]
     | ((query: string) => Promise<BaseToolWithCall[]>) = [];
-  #chatHistory: ChatMessage<AnthropicAdditionalMessageOptions>[] = [];
+  #chatHistory: ChatMessage<ToolCallLLMMessageOptions>[] = [];
 
   constructor(params: AnthropicAgentParams) {
     this.#llm =

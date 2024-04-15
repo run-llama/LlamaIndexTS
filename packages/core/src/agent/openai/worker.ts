@@ -14,7 +14,7 @@ import {
   type ChatResponseChunk,
   type LLMChatParamsBase,
   type OpenAIAdditionalChatOptions,
-  type OpenAIAdditionalMessageOptions,
+  type ToolCallLLMMessageOptions,
   type ToolCallOptions,
 } from "../../llm/index.js";
 import { extractText } from "../../llm/utils.js";
@@ -30,7 +30,7 @@ import { addUserStepToMemory, getFunctionByName } from "../utils.js";
 async function callFunction(
   tools: BaseTool[],
   toolCall: ToolCallOptions["toolCall"],
-): Promise<[ChatMessage<OpenAIAdditionalMessageOptions>, ToolOutput]> {
+): Promise<[ChatMessage<ToolCallLLMMessageOptions>, ToolOutput]> {
   const id = toolCall.id;
   const name = toolCall.name;
   const input = toolCall.input;
@@ -120,9 +120,7 @@ export class OpenAIAgentWorker
     }
   }
 
-  public getAllMessages(
-    task: Task,
-  ): ChatMessage<OpenAIAdditionalMessageOptions>[] {
+  public getAllMessages(task: Task): ChatMessage<ToolCallLLMMessageOptions>[] {
     return [
       ...this.prefixMessages,
       ...task.memory.get(),
@@ -145,17 +143,14 @@ export class OpenAIAgentWorker
     task: Task,
     tools: BaseTool[],
     toolChoice: ChatCompletionToolChoiceOption = "auto",
-  ): LLMChatParamsBase<
-    OpenAIAdditionalChatOptions,
-    OpenAIAdditionalMessageOptions
-  > {
+  ): LLMChatParamsBase<OpenAIAdditionalChatOptions, ToolCallLLMMessageOptions> {
     const llmChatParams = {
       messages: this.getAllMessages(task),
       tools: undefined as BaseTool[] | undefined,
       additionalChatOptions: {} as OpenAIAdditionalChatOptions,
     } satisfies LLMChatParamsBase<
       OpenAIAdditionalChatOptions,
-      OpenAIAdditionalMessageOptions
+      ToolCallLLMMessageOptions
     >;
 
     if (tools.length > 0) {
@@ -182,7 +177,7 @@ export class OpenAIAgentWorker
     task: Task,
     llmChatParams: LLMChatParamsBase<
       OpenAIAdditionalChatOptions,
-      OpenAIAdditionalMessageOptions
+      ToolCallLLMMessageOptions
     >,
   ): Promise<StreamingAgentChatResponse | AgentChatResponse> {
     const stream = await this.llm.chat({
@@ -191,7 +186,7 @@ export class OpenAIAgentWorker
     });
 
     const responseChunkStream = new ReadableStream<
-      ChatResponseChunk<OpenAIAdditionalMessageOptions>
+      ChatResponseChunk<ToolCallLLMMessageOptions>
     >({
       async start(controller) {
         for await (const chunk of stream) {
@@ -260,7 +255,7 @@ export class OpenAIAgentWorker
     mode: ChatResponseMode,
     llmChatParams: LLMChatParamsBase<
       OpenAIAdditionalChatOptions,
-      OpenAIAdditionalMessageOptions
+      ToolCallLLMMessageOptions
     >,
   ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {

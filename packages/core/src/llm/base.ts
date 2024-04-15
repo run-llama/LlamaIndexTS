@@ -8,6 +8,7 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
+  ToolCallLLMMessageOptions,
 } from "./types.js";
 import { extractText, streamConverter } from "./utils.js";
 
@@ -61,4 +62,10 @@ export abstract class BaseLLM<
       AdditionalMessageOptions
     >,
   ): Promise<ChatResponse<AdditionalMessageOptions>>;
+}
+
+export abstract class ToolCallLLM<
+  AdditionalChatOptions extends object = object,
+> extends BaseLLM<AdditionalChatOptions, ToolCallLLMMessageOptions> {
+  abstract supportToolCall: boolean;
 }

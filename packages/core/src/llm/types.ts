@@ -198,3 +198,8 @@ export type ToolCallOptions = {
 export type ToolResultOptions = {
   toolResult: ToolResult;
 };
+
+export type ToolCallLLMMessageOptions =
+  | ToolResultOptions
+  | ToolCallOptions
+  | {};

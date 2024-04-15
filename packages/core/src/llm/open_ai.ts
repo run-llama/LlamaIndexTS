@@ -28,7 +28,7 @@ import {
   getAzureModel,
   shouldUseAzure,
 } from "./azure.js";
-import { BaseLLM } from "./base.js";
+import { ToolCallLLM } from "./base.js";
 import type {
   ChatMessage,
   ChatResponse,
@@ -38,8 +38,8 @@ import type {
   LLMChatParamsStreaming,
   LLMMetadata,
   MessageType,
+  ToolCallLLMMessageOptions,
   ToolCallOptions,
-  ToolResultOptions,
 } from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
@@ -144,14 +144,7 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   return isChatModel && !isOld;
 }
 
-export type OpenAIAdditionalMetadata = {
-  isFunctionCallingModel: boolean;
-};
-
-export type OpenAIAdditionalMessageOptions =
-  | ToolResultOptions
-  | ToolCallOptions
-  | {};
+export type OpenAIAdditionalMetadata = {};
 
 export type OpenAIAdditionalChatOptions = Omit<
   Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
@@ -165,10 +158,7 @@ export type OpenAIAdditionalChatOptions = Omit<
   | "toolChoice"
 >;
 
-export class OpenAI extends BaseLLM<
-  OpenAIAdditionalChatOptions,
-  OpenAIAdditionalMessageOptions
-> {
+export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   // Per completion OpenAI params
   model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
   temperature: number;
@@ -239,6 +229,10 @@ export class OpenAI extends BaseLLM<
     }
   }
 
+  get supportToolCall() {
+    return isFunctionCallingModel(this);
+  }
+
   get metadata(): LLMMetadata & OpenAIAdditionalMetadata {
     const contextWindow =
       ALL_AVAILABLE_OPENAI_MODELS[
@@ -251,7 +245,6 @@ export class OpenAI extends BaseLLM<
       maxTokens: this.maxTokens,
       contextWindow,
       tokenizer: Tokenizers.CL100K_BASE,
-      isFunctionCallingModel: isFunctionCallingModel(this),
     };
   }
 
@@ -269,7 +262,7 @@ export class OpenAI extends BaseLLM<
   }
 
   static toOpenAIMessage(
-    messages: ChatMessage<OpenAIAdditionalMessageOptions>[],
+    messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): ChatCompletionMessageParam[] {
     return messages.map((message) => {
       const options = message.options ?? {};
@@ -320,30 +313,30 @@ export class OpenAI extends BaseLLM<
   chat(
     params: LLMChatParamsStreaming<
       OpenAIAdditionalChatOptions,
-      OpenAIAdditionalMessageOptions
+      ToolCallLLMMessageOptions
     >,
-  ): Promise<AsyncIterable<ChatResponseChunk<OpenAIAdditionalMessageOptions>>>;
+  ): Promise<AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>>;
   chat(
     params: LLMChatParamsNonStreaming<
       OpenAIAdditionalChatOptions,
-      OpenAIAdditionalMessageOptions
+      ToolCallLLMMessageOptions
     >,
-  ): Promise<ChatResponse<OpenAIAdditionalMessageOptions>>;
+  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
   @wrapEventCaller
   @wrapLLMEvent
   async chat(
     params:
       | LLMChatParamsNonStreaming<
           OpenAIAdditionalChatOptions,
-          OpenAIAdditionalMessageOptions
+          ToolCallLLMMessageOptions
         >
       | LLMChatParamsStreaming<
           OpenAIAdditionalChatOptions,
-          OpenAIAdditionalMessageOptions
+          ToolCallLLMMessageOptions
         >,
   ): Promise<
-    | ChatResponse<OpenAIAdditionalMessageOptions>
-    | AsyncIterable<ChatResponseChunk<OpenAIAdditionalMessageOptions>>
+    | ChatResponse<ToolCallLLMMessageOptions>
+    | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
   > {
     const { messages, stream, tools, additionalChatOptions } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
@@ -391,7 +384,7 @@ export class OpenAI extends BaseLLM<
   @wrapEventCaller
   protected async *streamChat(
     baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams,
-  ): AsyncIterable<ChatResponseChunk<OpenAIAdditionalMessageOptions>> {
+  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
     const stream: AsyncIterable<OpenAILLM.Chat.ChatCompletionChunk> =
       await this.session.openai.chat.completions.create({
         ...baseRequestParams,

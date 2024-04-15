@@ -56,7 +56,7 @@ export class OpenAIAgent extends AgentRunner {
       ];
     }
 
-    if (!llm?.metadata.isFunctionCallingModel) {
+    if (!llm?.supportToolCall) {
       throw new Error("LLM model must be a function-calling model");
     }
 
