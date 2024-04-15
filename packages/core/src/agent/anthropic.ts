@@ -21,6 +21,7 @@ const agentContextAsyncLocalStorage = new AsyncLocalStorage<WorkerContext>();
 export type AnthropicParams = {
   llm?: Anthropic;
   tools: BaseToolWithCall[];
+  chatHistory?: ChatMessage<AnthropicAdditionalMessageOptions>[];
 };
 
 type WorkerContext = {
@@ -33,9 +34,14 @@ function shouldContinue(context: WorkerContext): boolean {
   return context.toolCalls < MAX_TOOL_CALLS;
 }
 
+type TaskResult = {
+  response: ChatResponse<AnthropicAdditionalMessageOptions>;
+  chatHistory: ChatMessage<AnthropicAdditionalMessageOptions>[];
+};
+
 async function createTaskStateMachine(
   message: ChatMessage<AnthropicAdditionalMessageOptions>,
-): Promise<ChatResponse<AnthropicAdditionalMessageOptions>> {
+): Promise<TaskResult> {
   const context = agentContextAsyncLocalStorage.getStore();
   if (!context) {
     throw new Error("No context found, please initialize the agent first.");
@@ -89,13 +95,14 @@ async function createTaskStateMachine(
       },
     );
   } else {
-    return response;
+    return { response, chatHistory: [...nextMessages, response.message] };
   }
 }
 
 export class AnthropicAgent {
   readonly #llm: Anthropic;
   readonly #tools: BaseToolWithCall[] = [];
+  #chatHistory: ChatMessage<AnthropicAdditionalMessageOptions>[] = [];
 
   constructor(params: AnthropicParams) {
     this.#llm =
@@ -107,6 +114,10 @@ export class AnthropicAgent {
 
   static shouldContinue(context: WorkerContext): boolean {
     return context.toolCalls < MAX_TOOL_CALLS;
+  }
+
+  public reset(): void {
+    this.#chatHistory = [];
   }
 
   get tools(): BaseToolWithCall[] {
@@ -121,11 +132,11 @@ export class AnthropicAgent {
   async chat(
     params: ChatEngineParamsNonStreaming,
   ): Promise<Promise<AgentChatResponse>> {
-    const response = await agentContextAsyncLocalStorage.run(
+    const { response, chatHistory } = await agentContextAsyncLocalStorage.run(
       {
         agent: this,
         toolCalls: 0,
-        messages: [],
+        messages: [...this.#chatHistory],
       },
       async () =>
         createTaskStateMachine({
@@ -134,6 +145,7 @@ export class AnthropicAgent {
           options: {},
         }),
     );
+    this.#chatHistory = [...chatHistory];
     return new AgentChatResponse(extractText(response.message.content));
   }
 }
