@@ -30,9 +30,8 @@ import type { OpenAIToolCall } from "./types/chat.js";
 async function callFunction(
   tools: BaseTool[],
   toolCall: OpenAIToolCall,
-): Promise<[ChatMessage, ToolOutput]> {
-  const id_ = toolCall.id;
-  const functionCall = toolCall.function;
+): Promise<[ChatMessage<OpenAIAdditionalMessageOptions>, ToolOutput]> {
+  const id = toolCall.id;
   const name = toolCall.function.name;
   const argumentsStr = toolCall.function.arguments;
 
@@ -56,10 +55,9 @@ async function callFunction(
   return [
     {
       content: `${output}`,
-      role: "tool",
+      role: "user",
       options: {
-        name,
-        tool_call_id: id_,
+        toolResultId: id,
       },
     },
     output,
@@ -210,8 +208,7 @@ export class OpenAIAgentWorker
     // check if first chunk has tool calls, if so, this is a function call
     // otherwise, it's a regular message
     const hasToolCalls: boolean =
-      !!value.options?.toolCalls?.length &&
-      value.options?.toolCalls?.length > 0;
+      "toolCalls" in value.options && value.options.toolCalls.length > 0;
 
     if (hasToolCalls) {
       return this._processMessage(task, {

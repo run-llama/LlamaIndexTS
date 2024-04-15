@@ -9,11 +9,11 @@ import { OpenAI as OrigOpenAI } from "openai";
 
 import type {
   ChatCompletionAssistantMessageParam,
-  ChatCompletionFunctionMessageParam,
   ChatCompletionMessageToolCall,
   ChatCompletionRole,
   ChatCompletionSystemMessageParam,
   ChatCompletionTool,
+  ChatCompletionToolMessageParam,
   ChatCompletionUserMessageParam,
 } from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
@@ -147,10 +147,14 @@ export type OpenAIAdditionalMetadata = {
   isFunctionCallingModel: boolean;
 };
 
-export type OpenAIAdditionalMessageOptions = {
-  functionName?: string;
-  toolCalls?: ChatCompletionMessageToolCall[];
-};
+export type OpenAIAdditionalMessageOptions =
+  | {}
+  | {
+      toolResultId: string;
+    }
+  | {
+      toolCalls: ChatCompletionMessageToolCall[];
+    };
 
 export type OpenAIAdditionalChatOptions = Omit<
   Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
@@ -262,10 +266,6 @@ export class OpenAI extends BaseLLM<
         return "assistant";
       case "system":
         return "system";
-      case "function":
-        return "function";
-      case "tool":
-        return "tool";
       default:
         return "user";
     }
@@ -276,32 +276,23 @@ export class OpenAI extends BaseLLM<
   ): ChatCompletionMessageParam[] {
     return messages.map((message) => {
       const options: OpenAIAdditionalMessageOptions = message.options ?? {};
-      if (message.role === "user") {
+      if ("toolResultId" in options) {
         return {
-          role: "user",
-          content: message.content,
-        } satisfies ChatCompletionUserMessageParam;
-      }
-      if (typeof message.content !== "string") {
-        console.warn("Message content is not a string");
-      }
-      if (message.role === "function") {
-        if (!options.functionName) {
-          console.warn("Function message does not have a name");
-        }
-        return {
-          role: "function",
-          name: options.functionName ?? "UNKNOWN",
+          tool_call_id: options.toolResultId,
+          role: "tool",
           content: extractText(message.content),
-          // todo: remove this since this is deprecated in the OpenAI API
-        } satisfies ChatCompletionFunctionMessageParam;
-      }
-      if (message.role === "assistant") {
+        } satisfies ChatCompletionToolMessageParam;
+      } else if ("toolCalls" in options) {
         return {
           role: "assistant",
           content: extractText(message.content),
           tool_calls: options.toolCalls,
         } satisfies ChatCompletionAssistantMessageParam;
+      } else if (message.role === "user") {
+        return {
+          role: "user",
+          content: message.content,
+        } satisfies ChatCompletionUserMessageParam;
       }
 
       const response:
@@ -312,7 +303,6 @@ export class OpenAI extends BaseLLM<
         role: OpenAI.toOpenAIRole(message.role) as never,
         // fixme: should not extract text, but assert content is string
         content: extractText(message.content),
-        ...options,
       };
       return response;
     });
@@ -370,18 +360,16 @@ export class OpenAI extends BaseLLM<
 
     const content = response.choices[0].message?.content ?? "";
 
-    const options: OpenAIAdditionalMessageOptions = {};
-
-    if (response.choices[0].message?.tool_calls) {
-      options.toolCalls = response.choices[0].message.tool_calls;
-    }
-
     return {
       raw: response,
       message: {
         content,
         role: response.choices[0].message.role,
-        options,
+        options: response.choices[0].message?.tool_calls
+          ? {
+              toolCalls: response.choices[0].message.tool_calls,
+            }
+          : {},
       },
     };
   }

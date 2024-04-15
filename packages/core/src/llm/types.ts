@@ -89,24 +89,7 @@ export interface LLM<
   ): Promise<CompletionResponse>;
 }
 
-// todo: remove "generic", "function", "memory";
-export type MessageType =
-  | "user"
-  | "assistant"
-  | "system"
-  /**
-   * @deprecated
-   */
-  | "generic"
-  /**
-   * @deprecated
-   */
-  | "function"
-  /**
-   * @deprecated
-   */
-  | "memory"
-  | "tool";
+export type MessageType = "user" | "assistant" | "system" | "memory";
 
 export type ChatMessage<
   AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,

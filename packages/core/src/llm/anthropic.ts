@@ -4,10 +4,14 @@ import type {
   Tool,
   ToolResultBlockParam,
   ToolUseBlock,
+  ToolUseBlockParam,
   ToolsBetaContentBlock,
   ToolsBetaMessageParam,
 } from "@anthropic-ai/sdk/resources/beta/tools/messages";
-import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
+import type {
+  TextBlock,
+  TextBlockParam,
+} from "@anthropic-ai/sdk/resources/index";
 import type { MessageParam } from "@anthropic-ai/sdk/resources/messages";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
@@ -179,23 +183,29 @@ export class Anthropic extends BaseLLM<
               tool_use_id,
             },
           ] satisfies ToolResultBlockParam[],
-        };
+        } satisfies ToolsBetaMessageParam;
       } else if ("toolUse" in message.options) {
+        const aiThinkingText = extractText(message.content);
         return {
+          role: "assistant",
           content: [
-            {
-              type: "text",
-              text: extractText(message.content),
-            },
+            // this could be empty when you call two tools in one query
+            ...(aiThinkingText.trim()
+              ? [
+                  {
+                    type: "text",
+                    text: aiThinkingText,
+                  } satisfies TextBlockParam,
+                ]
+              : []),
             {
               type: "tool_use",
               id: message.options.toolUse.id,
               name: message.options.toolUse.name,
               input: message.options.toolUse.input,
-            },
+            } satisfies ToolUseBlockParam,
           ] satisfies ToolsBetaContentBlock[],
-          role: "assistant",
-        };
+        } satisfies ToolsBetaMessageParam;
       }
 
       return {
