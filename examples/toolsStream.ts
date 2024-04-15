@@ -35,9 +35,9 @@ async function main() {
   const stream = await llm.chat({ ...args, stream: true });
   for await (const chunk of stream) {
     process.stdout.write(chunk.delta);
-    if (chunk.options && "toolCalls" in chunk.options) {
+    if (chunk.options && "toolCall" in chunk.options) {
       console.log("Tool call:");
-      console.log(chunk.options.toolCalls[0]);
+      console.log(chunk.options.toolCall);
     }
   }
 }
