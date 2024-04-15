@@ -179,7 +179,7 @@ export type MessageContent = string | MessageContentDetail[];
 
 export type ToolCall = {
   name: string;
-  input: string;
+  input: unknown;
   id: string;
 };
 

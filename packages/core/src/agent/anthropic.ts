@@ -82,7 +82,7 @@ async function task(
             },
           },
         });
-        output = await targetTool.call(JSON.parse(input));
+        output = await targetTool.call(input);
         isError = false;
       } catch (error: unknown) {
         output = prettifyError(error);
@@ -99,8 +99,8 @@ async function task(
         role: "user",
         options: {
           toolResult: {
-            is_error: isError,
-            tool_use_id: id,
+            isError,
+            id,
           },
         },
       },
