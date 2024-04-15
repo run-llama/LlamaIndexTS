@@ -9,7 +9,7 @@ import type {
   LLMCompletionParamsStreaming,
 } from "llamaindex/llm/types";
 import { extractText } from "llamaindex/llm/utils";
-import { strictEqual } from "node:assert";
+import { deepStrictEqual, strictEqual } from "node:assert";
 import { llmCompleteMockStorage } from "../../node/utils.js";
 
 export function getOpenAISession() {
@@ -48,7 +48,7 @@ export class OpenAI implements LLM {
       strictEqual(chatMessage.length, params.messages.length);
       for (let i = 0; i < chatMessage.length; i++) {
         strictEqual(chatMessage[i].role, params.messages[i].role);
-        strictEqual(chatMessage[i].content, params.messages[i].content);
+        deepStrictEqual(chatMessage[i].content, params.messages[i].content);
       }
 
       if (llmCompleteMockStorage.llmEventEnd.length > 0) {
