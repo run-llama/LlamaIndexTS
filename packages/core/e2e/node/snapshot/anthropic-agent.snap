@@ -1,0 +1,403 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?",
+          "options": {}
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?",
+          "options": {}
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking for the weather in a specific location, San Francisco. The Weather function is the relevant tool to answer this request, as it returns weather information for a given location.\n\nThe Weather function has one required parameter:\n- location (string): The user has directly provided the location of \"San Francisco\"\n\nSince the required location parameter has been provided by the user, we have all the necessary information to call the Weather function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": {
+                "location": "San Francisco"
+              }
+            }
+          }
+        },
+        {
+          "content": "35 degrees and sunny in San Francisco",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "isError": false,
+              "id": "HIDDEN"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?",
+          "options": {}
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_3",
+      "messages": [
+        {
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?",
+          "options": {}
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe unique_id function is the relevant tool to answer the user's request for their unique ID. It requires two parameters:\nfirstName: The user provided their first name, which is \"Alex\"\nlastName: The user also provided their last name, \"Yang\"\nSince the user has provided all the required parameters, we can proceed with calling the unique_id function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "unique_id",
+              "input": {
+                "firstName": "Alex",
+                "lastName": "Yang"
+              }
+            }
+          }
+        },
+        {
+          "content": "123456789",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "isError": false,
+              "id": "HIDDEN"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "how much is 1 + 1?",
+          "options": {}
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "how much is 1 + 1?",
+          "options": {}
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking to sum the numbers 1 and 1. The relevant tool to use is the sumNumbers function, which takes two number parameters a and b.\nThe user has directly provided the values for the parameters:\na = 1 \nb = 1\nSince all the required parameters have been provided, we can proceed with calling the function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "sumNumbers",
+              "input": {
+                "a": 1,
+                "b": 1
+              }
+            }
+          }
+        },
+        {
+          "content": "2",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "isError": false,
+              "id": "HIDDEN"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-3-opus-20240229",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 462,
+            "output_tokens": 147
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking for the weather in a specific location, San Francisco. The Weather function is the relevant tool to answer this request, as it returns weather information for a given location.\n\nThe Weather function has one required parameter:\n- location (string): The user has directly provided the location of \"San Francisco\"\n\nSince the required location parameter has been provided by the user, we have all the necessary information to call the Weather function.\n</thinking>"
+            },
+            {
+              "type": "tool_use",
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": {
+                "location": "San Francisco"
+              }
+            }
+          ],
+          "stop_reason": "tool_use"
+        },
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking for the weather in a specific location, San Francisco. The Weather function is the relevant tool to answer this request, as it returns weather information for a given location.\n\nThe Weather function has one required parameter:\n- location (string): The user has directly provided the location of \"San Francisco\"\n\nSince the required location parameter has been provided by the user, we have all the necessary information to call the Weather function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": {
+                "location": "San Francisco"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-3-opus-20240229",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 628,
+            "output_tokens": 18
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "The current weather in San Francisco is 35 degrees and sunny."
+            }
+          ],
+          "stop_reason": "end_turn"
+        },
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The current weather in San Francisco is 35 degrees and sunny."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-3-opus-20240229",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 482,
+            "output_tokens": 152
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe unique_id function is the relevant tool to answer the user's request for their unique ID. It requires two parameters:\nfirstName: The user provided their first name, which is \"Alex\"\nlastName: The user also provided their last name, \"Yang\"\nSince the user has provided all the required parameters, we can proceed with calling the unique_id function.\n</thinking>"
+            },
+            {
+              "type": "tool_use",
+              "id": "HIDDEN",
+              "name": "unique_id",
+              "input": {
+                "firstName": "Alex",
+                "lastName": "Yang"
+              }
+            }
+          ],
+          "stop_reason": "tool_use"
+        },
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe unique_id function is the relevant tool to answer the user's request for their unique ID. It requires two parameters:\nfirstName: The user provided their first name, which is \"Alex\"\nlastName: The user also provided their last name, \"Yang\"\nSince the user has provided all the required parameters, we can proceed with calling the unique_id function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "unique_id",
+              "input": {
+                "firstName": "Alex",
+                "lastName": "Yang"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_3",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-3-opus-20240229",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 648,
+            "output_tokens": 13
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Your unique ID is 123456789."
+            }
+          ],
+          "stop_reason": "end_turn"
+        },
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Your unique ID is 123456789."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_4",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-3-opus-20240229",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 498,
+            "output_tokens": 151
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking to sum the numbers 1 and 1. The relevant tool to use is the sumNumbers function, which takes two number parameters a and b.\nThe user has directly provided the values for the parameters:\na = 1 \nb = 1\nSince all the required parameters have been provided, we can proceed with calling the function.\n</thinking>"
+            },
+            {
+              "type": "tool_use",
+              "id": "HIDDEN",
+              "name": "sumNumbers",
+              "input": {
+                "a": 1,
+                "b": 1
+              }
+            }
+          ],
+          "stop_reason": "tool_use"
+        },
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking to sum the numbers 1 and 1. The relevant tool to use is the sumNumbers function, which takes two number parameters a and b.\nThe user has directly provided the values for the parameters:\na = 1 \nb = 1\nSince all the required parameters have been provided, we can proceed with calling the function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "sumNumbers",
+              "input": {
+                "a": 1,
+                "b": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_5",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "type": "message",
+          "role": "assistant",
+          "model": "claude-3-opus-20240229",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 661,
+            "output_tokens": 16
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "So 1 + 1 = 2."
+            }
+          ],
+          "stop_reason": "end_turn"
+        },
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "So 1 + 1 = 2."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

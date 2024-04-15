@@ -14,7 +14,7 @@ type OpenAIAgentParams = {
   prefixMessages?: ChatMessage[];
   maxFunctionCalls?: number;
   defaultToolChoice?: string;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
   systemPrompt?: string;
 };
 
@@ -56,7 +56,7 @@ export class OpenAIAgent extends AgentRunner {
       ];
     }
 
-    if (!llm?.metadata.isFunctionCallingModel) {
+    if (!llm?.supportToolCall) {
       throw new Error("LLM model must be a function-calling model");
     }
 
@@ -73,6 +73,7 @@ export class OpenAIAgent extends AgentRunner {
       llm,
       memory,
       defaultToolChoice,
+      // @ts-expect-error 2322
       chatHistory: prefixMessages,
     });
   }

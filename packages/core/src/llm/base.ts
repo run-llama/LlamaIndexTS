@@ -8,18 +8,13 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
+  ToolCallLLMMessageOptions,
 } from "./types.js";
 import { extractText, streamConverter } from "./utils.js";
 
 export abstract class BaseLLM<
-  AdditionalChatOptions extends Record<string, unknown> = Record<
-    string,
-    unknown
-  >,
-  AdditionalMessageOptions extends Record<string, unknown> = Record<
-    string,
-    unknown
-  >,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 > implements LLM<AdditionalChatOptions>
 {
   abstract metadata: LLMMetadata;
@@ -56,9 +51,21 @@ export abstract class BaseLLM<
   }
 
   abstract chat(
-    params: LLMChatParamsStreaming<AdditionalChatOptions>,
+    params: LLMChatParamsStreaming<
+      AdditionalChatOptions,
+      AdditionalMessageOptions
+    >,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   abstract chat(
-    params: LLMChatParamsNonStreaming<AdditionalChatOptions>,
+    params: LLMChatParamsNonStreaming<
+      AdditionalChatOptions,
+      AdditionalMessageOptions
+    >,
   ): Promise<ChatResponse<AdditionalMessageOptions>>;
+}
+
+export abstract class ToolCallLLM<
+  AdditionalChatOptions extends object = object,
+> extends BaseLLM<AdditionalChatOptions, ToolCallLLMMessageOptions> {
+  abstract supportToolCall: boolean;
 }

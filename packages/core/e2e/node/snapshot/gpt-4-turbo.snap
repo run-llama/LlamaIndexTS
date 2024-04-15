@@ -20,24 +20,21 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "Weather",
-                  "arguments": "{\"location\":\"San Jose\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": "{\"location\":\"San Jose\"}"
+            }
           }
         },
         {
           "content": "45 degrees and sunny in San Jose",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "Weather",
-            "tool_call_id": "HIDDEN"
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
           }
         }
       ]
@@ -84,16 +81,11 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "Weather",
-                  "arguments": "{\"location\":\"San Jose\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": "{\"location\":\"San Jose\"}"
+            }
           }
         }
       }

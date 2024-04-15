@@ -1,10 +1,7 @@
 import type { ChatMessage } from "../../llm/index.js";
 
 export interface BaseChatStore<
-  AdditionalMessageOptions extends Record<string, unknown> = Record<
-    string,
-    unknown
-  >,
+  AdditionalMessageOptions extends object = object,
 > {
   setMessages(
     key: string,

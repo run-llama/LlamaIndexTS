@@ -5,7 +5,8 @@
       "messages": [
         {
           "content": "Hello",
-          "role": "user"
+          "role": "user",
+          "options": {}
         }
       ]
     },
@@ -43,7 +44,8 @@
         },
         "message": {
           "content": "Hello! How can I assist you today?",
-          "role": "assistant"
+          "role": "assistant",
+          "options": {}
         }
       }
     },
@@ -60,7 +62,8 @@
                 "text": "Hello"
               }
             },
-            "delta": "Hello"
+            "delta": "Hello",
+            "options": {}
           },
           {
             "raw": {
@@ -71,7 +74,8 @@
                 "text": "!"
               }
             },
-            "delta": "!"
+            "delta": "!",
+            "options": {}
           },
           {
             "raw": {
@@ -82,7 +86,8 @@
                 "text": " How"
               }
             },
-            "delta": " How"
+            "delta": " How",
+            "options": {}
           },
           {
             "raw": {
@@ -93,7 +98,8 @@
                 "text": " can"
               }
             },
-            "delta": " can"
+            "delta": " can",
+            "options": {}
           },
           {
             "raw": {
@@ -104,7 +110,8 @@
                 "text": " I"
               }
             },
-            "delta": " I"
+            "delta": " I",
+            "options": {}
           },
           {
             "raw": {
@@ -115,7 +122,8 @@
                 "text": " assist"
               }
             },
-            "delta": " assist"
+            "delta": " assist",
+            "options": {}
           },
           {
             "raw": {
@@ -126,7 +134,8 @@
                 "text": " you"
               }
             },
-            "delta": " you"
+            "delta": " you",
+            "options": {}
           },
           {
             "raw": {
@@ -137,7 +146,8 @@
                 "text": " today"
               }
             },
-            "delta": " today"
+            "delta": " today",
+            "options": {}
           },
           {
             "raw": {
@@ -148,7 +158,8 @@
                 "text": "?"
               }
             },
-            "delta": "?"
+            "delta": "?",
+            "options": {}
           }
         ],
         "message": {
@@ -171,7 +182,8 @@
             "text": "Hello"
           }
         },
-        "delta": "Hello"
+        "delta": "Hello",
+        "options": {}
       }
     },
     {
@@ -185,7 +197,8 @@
             "text": "!"
           }
         },
-        "delta": "!"
+        "delta": "!",
+        "options": {}
       }
     },
     {
@@ -199,7 +212,8 @@
             "text": " How"
           }
         },
-        "delta": " How"
+        "delta": " How",
+        "options": {}
       }
     },
     {
@@ -213,7 +227,8 @@
             "text": " can"
           }
         },
-        "delta": " can"
+        "delta": " can",
+        "options": {}
       }
     },
     {
@@ -227,7 +242,8 @@
             "text": " I"
           }
         },
-        "delta": " I"
+        "delta": " I",
+        "options": {}
       }
     },
     {
@@ -241,7 +257,8 @@
             "text": " assist"
           }
         },
-        "delta": " assist"
+        "delta": " assist",
+        "options": {}
       }
     },
     {
@@ -255,7 +272,8 @@
             "text": " you"
           }
         },
-        "delta": " you"
+        "delta": " you",
+        "options": {}
       }
     },
     {
@@ -269,7 +287,8 @@
             "text": " today"
           }
         },
-        "delta": " today"
+        "delta": " today",
+        "options": {}
       }
     },
     {
@@ -283,7 +302,8 @@
             "text": "?"
           }
         },
-        "delta": "?"
+        "delta": "?",
+        "options": {}
       }
     }
   ]

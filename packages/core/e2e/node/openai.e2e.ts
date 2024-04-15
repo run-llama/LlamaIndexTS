@@ -10,8 +10,9 @@ import {
   VectorStoreIndex,
   type LLM,
 } from "llamaindex";
-import { ok } from "node:assert";
+import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
+import { divideNumbersTool, sumNumbersTool } from "./fixtures/tools.js";
 import { mockLLMEvent } from "./utils.js";
 
 let llm: LLM;
@@ -21,14 +22,6 @@ beforeEach(async () => {
   });
   llm = Settings.llm;
 });
-
-function sumNumbers({ a, b }: { a: number; b: number }) {
-  return `${a + b}`;
-}
-
-function divideNumbers({ a, b }: { a: number; b: number }) {
-  return `${a / b}`;
-}
 
 await test("openai llm", async (t) => {
   await mockLLMEvent(t, "llm");
@@ -166,27 +159,8 @@ await test("agent", async (t) => {
   });
 
   await t.test("sum numbers", async () => {
-    const sumFunctionTool = new FunctionTool(sumNumbers, {
-      name: "sumNumbers",
-      description: "Use this function to sum two numbers",
-      parameters: {
-        type: "object",
-        properties: {
-          a: {
-            type: "number",
-            description: "The first number",
-          },
-          b: {
-            type: "number",
-            description: "The second number",
-          },
-        },
-        required: ["a", "b"],
-      },
-    });
-
     const openaiAgent = new OpenAIAgent({
-      tools: [sumFunctionTool],
+      tools: [sumNumbersTool],
     });
 
     const response = await openaiAgent.chat({
@@ -199,51 +173,12 @@ await test("agent", async (t) => {
 
 await test("agent stream", async (t) => {
   await mockLLMEvent(t, "agent_stream");
-  await t.test("sum numbers stream", async () => {
-    const sumJSON = {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The first number",
-        },
-        b: {
-          type: "number",
-          description: "The second number",
-        },
-      },
-      required: ["a", "b"],
-    } as const;
-
-    const divideJSON = {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The dividend",
-        },
-        b: {
-          type: "number",
-          description: "The divisor",
-        },
-      },
-      required: ["a", "b"],
-    } as const;
-
-    const functionTool = FunctionTool.from(sumNumbers, {
-      name: "sumNumbers",
-      description: "Use this function to sum two numbers",
-      parameters: sumJSON,
-    });
-
-    const functionTool2 = FunctionTool.from(divideNumbers, {
-      name: "divideNumbers",
-      description: "Use this function to divide two numbers",
-      parameters: divideJSON,
-    });
+  await t.test("sum numbers stream", async (t) => {
+    const fn = t.mock.fn(() => {});
+    Settings.callbackManager.on("llm-tool-call", fn);
 
     const agent = new OpenAIAgent({
-      tools: [functionTool, functionTool2],
+      tools: [sumNumbersTool, divideNumbersTool],
     });
 
     const { response } = await agent.chat({
@@ -257,13 +192,17 @@ await test("agent stream", async (t) => {
       message += chunk.response;
     }
 
+    strictEqual(fn.mock.callCount(), 2);
     ok(message.includes("28"));
+    Settings.callbackManager.off("llm-tool-call", fn);
   });
 });
 
 await test("queryEngine", async (t) => {
   await mockLLMEvent(t, "queryEngine_subquestion");
   await t.test("subquestion", async () => {
+    const fn = t.mock.fn(() => {});
+    Settings.callbackManager.on("llm-tool-call", fn);
     const document = new Document({
       text: "Bill Gates stole from Apple.\n Steve Jobs stole from Xerox.",
     });
@@ -288,5 +227,7 @@ await test("queryEngine", async (t) => {
     });
 
     ok(response.includes("Apple"));
+    strictEqual(fn.mock.callCount(), 0);
+    Settings.callbackManager.off("llm-tool-call", fn);
   });
 });

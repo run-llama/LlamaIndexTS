@@ -8,20 +8,22 @@ import { extractText } from "./llm/utils.js";
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages
  */
-export abstract class ChatHistory {
-  abstract get messages(): ChatMessage[];
+export abstract class ChatHistory<
+  AdditionalMessageOptions extends object = object,
+> {
+  abstract get messages(): ChatMessage<AdditionalMessageOptions>[];
   /**
    * Adds a message to the chat history.
    * @param message
    */
-  abstract addMessage(message: ChatMessage): void;
+  abstract addMessage(message: ChatMessage<AdditionalMessageOptions>): void;
 
   /**
    * Returns the messages that should be used as input to the LLM.
    */
   abstract requestMessages(
-    transientMessages?: ChatMessage[],
-  ): Promise<ChatMessage[]>;
+    transientMessages?: ChatMessage<AdditionalMessageOptions>[],
+  ): Promise<ChatMessage<AdditionalMessageOptions>[]>;
 
   /**
    * Resets the chat history so that it's empty.
@@ -31,7 +33,7 @@ export abstract class ChatHistory {
   /**
    * Returns the new messages since the last call to this function (or since calling the constructor)
    */
-  abstract newMessages(): ChatMessage[];
+  abstract newMessages(): ChatMessage<AdditionalMessageOptions>[];
 }
 
 export class SimpleChatHistory extends ChatHistory {
@@ -108,6 +110,7 @@ export class SummaryChatHistory extends ChatHistory {
             context: messagesToHistoryStr(messagesToSummarize),
           }),
           role: "user" as MessageType,
+          options: {},
         },
       ];
       // remove oldest message until the chat history is short enough for the context window
@@ -116,7 +119,9 @@ export class SummaryChatHistory extends ChatHistory {
       this.tokenizer(promptMessages[0].content).length > this.tokensToSummarize
     );
 
-    const response = await this.llm.chat({ messages: promptMessages });
+    const response = await this.llm.chat({
+      messages: promptMessages,
+    });
     return { content: response.message.content, role: "memory" };
   }
 

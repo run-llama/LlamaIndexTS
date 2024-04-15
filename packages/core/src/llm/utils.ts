@@ -61,14 +61,24 @@ export function extractText(message: MessageContent): string {
 /**
  * @internal
  */
-export function wrapLLMEvent(
-  originalMethod: LLMChat["chat"],
+export function wrapLLMEvent<
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
+>(
+  originalMethod: LLMChat<
+    AdditionalChatOptions,
+    AdditionalMessageOptions
+  >["chat"],
   _context: ClassMethodDecoratorContext,
 ) {
   return async function withLLMEvent(
-    this: LLM,
-    ...params: Parameters<LLMChat["chat"]>
-  ): ReturnType<LLMChat["chat"]> {
+    this: LLM<AdditionalChatOptions, AdditionalMessageOptions>,
+    ...params: Parameters<
+      LLMChat<AdditionalChatOptions, AdditionalMessageOptions>["chat"]
+    >
+  ): ReturnType<
+    LLMChat<AdditionalChatOptions, AdditionalMessageOptions>["chat"]
+  > {
     const id = randomUUID();
     getCallbackManager().dispatchEvent("llm-start", {
       payload: {

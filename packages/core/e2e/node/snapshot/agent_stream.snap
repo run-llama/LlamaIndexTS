@@ -20,40 +20,72 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "function": {
-                  "name": "divideNumbers",
-                  "arguments": "{\"a\": 16, \"b\": 2}"
-                },
-                "id": "HIDDEN",
-                "type": "function"
-              },
-              {
-                "function": {
-                  "name": "sumNumbers",
-                  "arguments": "{\"a\": 8, \"b\": 20}"
-                },
-                "id": "HIDDEN",
-                "type": "function"
-              }
-            ]
+            "toolCall": {
+              "name": "divideNumbers",
+              "id": "HIDDEN",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
           }
         },
         {
           "content": "8",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "divideNumbers",
-            "tool_call_id": "HIDDEN"
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "content": "Divide 16 by 2 then add 20",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "name": "divideNumbers",
+              "id": "HIDDEN",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          }
+        },
+        {
+          "content": "8",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
+          }
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "name": "sumNumbers",
+              "id": "HIDDEN",
+              "input": "{\"a\":8,\"b\":20}"
+            }
           }
         },
         {
           "content": "28",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "sumNumbers",
-            "tool_call_id": "HIDDEN"
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
           }
         }
       ]
@@ -93,24 +125,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "divideNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 16, \"b\": 2}"
+              }
             },
             "delta": ""
           },
@@ -140,24 +159,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "divideNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 16, \"b\": 2}"
+              }
             },
             "delta": ""
           },
@@ -187,24 +193,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "divideNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 16, \"b\": 2}"
+              }
             },
             "delta": ""
           },
@@ -234,24 +227,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "divideNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 16, \"b\": 2}"
+              }
             },
             "delta": ""
           },
@@ -281,24 +261,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "divideNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 16, \"b\": 2}"
+              }
             },
             "delta": ""
           },
@@ -331,24 +298,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
             },
             "delta": ""
           },
@@ -378,24 +332,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
             },
             "delta": ""
           },
@@ -425,24 +366,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
             },
             "delta": ""
           },
@@ -472,24 +400,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
             },
             "delta": ""
           },
@@ -519,24 +434,11 @@
               ]
             },
             "options": {
-              "toolCalls": [
-                {
-                  "function": {
-                    "name": "divideNumbers",
-                    "arguments": "{\"a\": 16, \"b\": 2}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                },
-                {
-                  "function": {
-                    "name": "sumNumbers",
-                    "arguments": "{\"a\": 8, \"b\": 20}"
-                  },
-                  "id": "HIDDEN",
-                  "type": "function"
-                }
-              ]
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
             },
             "delta": ""
           }
@@ -545,30 +447,380 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "function": {
-                  "name": "divideNumbers",
-                  "arguments": "{\"a\": 16, \"b\": 2}"
-                },
-                "id": "HIDDEN",
-                "type": "function"
-              },
-              {
-                "function": {
-                  "name": "sumNumbers",
-                  "arguments": "{\"a\": 8, \"b\": 20}"
-                },
-                "id": "HIDDEN",
-                "type": "function"
-              }
-            ]
+            "toolCall": {
+              "name": "sumNumbers",
+              "id": "HIDDEN",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
           }
         }
       }
     },
     {
       "id": "PRESERVE_1",
+      "response": {
+        "raw": [
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "role": "assistant",
+                    "content": null,
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "id": "HIDDEN",
+                        "type": "function",
+                        "function": {
+                          "name": "sumNumbers",
+                          "arguments": ""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "{\""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "a"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "\":"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "8"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": ",\""
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "b"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "\":"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "20"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "tool_calls": [
+                      {
+                        "index": 0,
+                        "function": {
+                          "arguments": "}"
+                        }
+                      }
+                    ]
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {
+              "toolCall": {
+                "name": "sumNumbers",
+                "id": "HIDDEN",
+                "input": "{\"a\":8,\"b\":20}"
+              }
+            },
+            "delta": ""
+          }
+        ],
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "name": "sumNumbers",
+              "id": "HIDDEN",
+              "input": "{\"a\":8,\"b\":20}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
       "response": {
         "raw": [
           {
@@ -771,90 +1023,6 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " is"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " is"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " "
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " "
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": "8"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": "8"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": ","
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": ","
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
                     "content": " and"
                   },
                   "logprobs": null,
@@ -876,7 +1044,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " when"
+                    "content": " then"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -884,7 +1052,7 @@
               ]
             },
             "options": {},
-            "delta": " when"
+            "delta": " then"
           },
           {
             "raw": {
@@ -897,7 +1065,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " you"
+                    "content": " adding"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -905,28 +1073,7 @@
               ]
             },
             "options": {},
-            "delta": " you"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " add"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " add"
+            "delta": " adding"
           },
           {
             "raw": {
@@ -981,7 +1128,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " to"
+                    "content": " is"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -989,112 +1136,7 @@
               ]
             },
             "options": {},
-            "delta": " to"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " "
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " "
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": "8"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": "8"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": ","
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": ","
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " you"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " you"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " get"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " get"
+            "delta": " is"
           },
           {
             "raw": {
@@ -1161,7 +1203,7 @@
           }
         ],
         "message": {
-          "content": "The result of dividing 16 by 2 is 8, and when you add 20 to 8, you get 28.",
+          "content": "The result of dividing 16 by 2 and then adding 20 is 28.",
           "role": "assistant",
           "options": {}
         }
@@ -1200,24 +1242,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 16, \"b\": 2}"
+          }
         },
         "delta": ""
       }
@@ -1250,24 +1279,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 16, \"b\": 2}"
+          }
         },
         "delta": ""
       }
@@ -1300,24 +1316,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 16, \"b\": 2}"
+          }
         },
         "delta": ""
       }
@@ -1350,24 +1353,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 16, \"b\": 2}"
+          }
         },
         "delta": ""
       }
@@ -1400,24 +1390,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 16, \"b\": 2}"
+          }
         },
         "delta": ""
       }
@@ -1453,24 +1430,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 8, \"b\": 20}"
+          }
         },
         "delta": ""
       }
@@ -1503,24 +1467,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 8, \"b\": 20}"
+          }
         },
         "delta": ""
       }
@@ -1553,24 +1504,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 8, \"b\": 20}"
+          }
         },
         "delta": ""
       }
@@ -1603,24 +1541,11 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 8, \"b\": 20}"
+          }
         },
         "delta": ""
       }
@@ -1653,30 +1578,392 @@
           ]
         },
         "options": {
-          "toolCalls": [
-            {
-              "function": {
-                "name": "divideNumbers",
-                "arguments": "{\"a\": 16, \"b\": 2}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            },
-            {
-              "function": {
-                "name": "sumNumbers",
-                "arguments": "{\"a\": 8, \"b\": 20}"
-              },
-              "id": "HIDDEN",
-              "type": "function"
-            }
-          ]
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\": 8, \"b\": 20}"
+          }
         },
         "delta": ""
       }
     },
     {
       "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "sumNumbers",
+                      "arguments": ""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "{\""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "a"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "\":"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "8"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": ",\""
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "b"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "\":"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "20"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "tool_calls": [
+                  {
+                    "index": 0,
+                    "function": {
+                      "arguments": "}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {
+          "toolCall": {
+            "name": "sumNumbers",
+            "id": "HIDDEN",
+            "input": "{\"a\":8,\"b\":20}"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1700,7 +1987,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1724,7 +2011,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1748,7 +2035,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1772,7 +2059,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1796,7 +2083,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1820,7 +2107,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1844,7 +2131,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1868,7 +2155,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -1892,103 +2179,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " is"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " is"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " "
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " "
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": "8"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": "8"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": ","
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": ","
-      }
-    },
-    {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2012,7 +2203,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2024,7 +2215,7 @@
             {
               "index": 0,
               "delta": {
-                "content": " when"
+                "content": " then"
               },
               "logprobs": null,
               "finish_reason": null
@@ -2032,11 +2223,11 @@
           ]
         },
         "options": {},
-        "delta": " when"
+        "delta": " then"
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2048,7 +2239,7 @@
             {
               "index": 0,
               "delta": {
-                "content": " you"
+                "content": " adding"
               },
               "logprobs": null,
               "finish_reason": null
@@ -2056,35 +2247,11 @@
           ]
         },
         "options": {},
-        "delta": " you"
+        "delta": " adding"
       }
     },
     {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " add"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " add"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2108,7 +2275,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2132,7 +2299,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2144,7 +2311,7 @@
             {
               "index": 0,
               "delta": {
-                "content": " to"
+                "content": " is"
               },
               "logprobs": null,
               "finish_reason": null
@@ -2152,131 +2319,11 @@
           ]
         },
         "options": {},
-        "delta": " to"
+        "delta": " is"
       }
     },
     {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " "
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " "
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": "8"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": "8"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": ","
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": ","
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " you"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " you"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " get"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " get"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2300,7 +2347,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",
@@ -2324,7 +2371,7 @@
       }
     },
     {
-      "id": "PRESERVE_1",
+      "id": "PRESERVE_2",
       "chunk": {
         "raw": {
           "id": "HIDDEN",

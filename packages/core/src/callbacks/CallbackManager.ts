@@ -9,6 +9,7 @@ import type {
   LLMEndEvent,
   LLMStartEvent,
   LLMStreamEvent,
+  LLMToolCallEvent,
 } from "../llm/types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
@@ -48,6 +49,7 @@ export interface LlamaIndexEventMaps {
   stream: CustomEvent<StreamCallbackResponse>;
   "llm-start": LLMStartEvent;
   "llm-end": LLMEndEvent;
+  "llm-tool-call": LLMToolCallEvent;
   "llm-stream": LLMStreamEvent;
 }
 
@@ -203,8 +205,10 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    handlers.forEach((handler) =>
-      handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
-    );
+    queueMicrotask(() => {
+      handlers.forEach((handler) =>
+        handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
+      );
+    });
   }
 }

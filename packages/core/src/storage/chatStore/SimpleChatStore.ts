@@ -6,10 +6,7 @@ import type { BaseChatStore } from "./types.js";
  *  This could lead to memory leaks if the messages are not properly cleaned up.
  */
 export class SimpleChatStore<
-  AdditionalMessageOptions extends Record<string, unknown> = Record<
-    string,
-    unknown
-  >,
+  AdditionalMessageOptions extends object = Record<string, unknown>,
 > implements BaseChatStore<AdditionalMessageOptions>
 {
   store: { [key: string]: ChatMessage<AdditionalMessageOptions>[] } = {};

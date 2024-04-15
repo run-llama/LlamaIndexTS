@@ -12,7 +12,7 @@ type ReActAgentParams = {
   prefixMessages?: ChatMessage[];
   maxInteractions?: number;
   defaultToolChoice?: string;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
 /**
@@ -41,6 +41,7 @@ export class ReActAgent extends AgentRunner {
       agentWorker: stepEngine,
       memory,
       defaultToolChoice,
+      // @ts-expect-error 2322
       chatHistory: prefixMessages,
     });
   }
