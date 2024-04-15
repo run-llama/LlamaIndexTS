@@ -4,6 +4,7 @@ import {
   AgentChatResponse,
   type ChatEngineParamsNonStreaming,
 } from "../engines/chat/index.js";
+import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import {
   Anthropic,
   type AnthropicAdditionalMessageOptions,
@@ -101,6 +102,7 @@ export class AnthropicAgent {
     this.#tools = params.tools;
   }
 
+  @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming,
   ): Promise<Promise<AgentChatResponse>> {
