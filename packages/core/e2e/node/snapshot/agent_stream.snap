@@ -44,14 +44,14 @@
           "content": "8",
           "role": "user",
           "options": {
-            "toolResultId": "call_Ue5BqUdiQElcR3nWpKgf0gxL"
+            "toolResultId": "call_PPcKaappIptSRyl5OvcDo6HY"
           }
         },
         {
           "content": "28",
           "role": "user",
           "options": {
-            "toolResultId": "call_OsppX0UqLlnzGsyWqOzmXUBx"
+            "toolResultId": "call_QSN8y325eLYuyBPMqH0c2fCg"
           }
         }
       ]
@@ -580,7 +580,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": "After"
+                    "content": "The"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -588,7 +588,49 @@
               ]
             },
             "options": {},
-            "delta": "After"
+            "delta": "The"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " result"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " result"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " of"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " of"
           },
           {
             "raw": {
@@ -727,7 +769,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": ","
+                    "content": " is"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -735,49 +777,7 @@
               ]
             },
             "options": {},
-            "delta": ","
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " we"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " we"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " get"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " get"
+            "delta": " is"
           },
           {
             "raw": {
@@ -853,7 +853,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " Adding"
+                    "content": " When"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -861,7 +861,49 @@
               ]
             },
             "options": {},
-            "delta": " Adding"
+            "delta": " When"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " you"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " you"
+          },
+          {
+            "raw": {
+              "id": "HIDDEN",
+              "object": "chat.completion.chunk",
+              "created": 114514,
+              "model": "gpt-3.5-turbo-0125",
+              "system_fingerprint": "HIDDEN",
+              "choices": [
+                {
+                  "index": 0,
+                  "delta": {
+                    "content": " add"
+                  },
+                  "logprobs": null,
+                  "finish_reason": null
+                }
+              ]
+            },
+            "options": {},
+            "delta": " add"
           },
           {
             "raw": {
@@ -979,7 +1021,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " gives"
+                    "content": ","
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -987,7 +1029,7 @@
               ]
             },
             "options": {},
-            "delta": " gives"
+            "delta": ","
           },
           {
             "raw": {
@@ -1000,7 +1042,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " us"
+                    "content": " the"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -1008,28 +1050,7 @@
               ]
             },
             "options": {},
-            "delta": " us"
-          },
-          {
-            "raw": {
-              "id": "HIDDEN",
-              "object": "chat.completion.chunk",
-              "created": 114514,
-              "model": "gpt-3.5-turbo-0125",
-              "system_fingerprint": "HIDDEN",
-              "choices": [
-                {
-                  "index": 0,
-                  "delta": {
-                    "content": " a"
-                  },
-                  "logprobs": null,
-                  "finish_reason": null
-                }
-              ]
-            },
-            "options": {},
-            "delta": " a"
+            "delta": " the"
           },
           {
             "raw": {
@@ -1063,7 +1084,7 @@
                 {
                   "index": 0,
                   "delta": {
-                    "content": " of"
+                    "content": " is"
                   },
                   "logprobs": null,
                   "finish_reason": null
@@ -1071,7 +1092,7 @@
               ]
             },
             "options": {},
-            "delta": " of"
+            "delta": " is"
           },
           {
             "raw": {
@@ -1138,7 +1159,7 @@
           }
         ],
         "message": {
-          "content": "After dividing 16 by 2, we get 8. Adding 20 to 8 gives us a total of 28.",
+          "content": "The result of dividing 16 by 2 is 8. When you add 20 to 8, the total is 28.",
           "role": "assistant",
           "options": {}
         }
@@ -1665,7 +1686,7 @@
             {
               "index": 0,
               "delta": {
-                "content": "After"
+                "content": "The"
               },
               "logprobs": null,
               "finish_reason": null
@@ -1673,7 +1694,55 @@
           ]
         },
         "options": {},
-        "delta": "After"
+        "delta": "The"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " result"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " result"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " of"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " of"
       }
     },
     {
@@ -1833,7 +1902,7 @@
             {
               "index": 0,
               "delta": {
-                "content": ","
+                "content": " is"
               },
               "logprobs": null,
               "finish_reason": null
@@ -1841,55 +1910,7 @@
           ]
         },
         "options": {},
-        "delta": ","
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " we"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " we"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " get"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " get"
+        "delta": " is"
       }
     },
     {
@@ -1977,7 +1998,7 @@
             {
               "index": 0,
               "delta": {
-                "content": " Adding"
+                "content": " When"
               },
               "logprobs": null,
               "finish_reason": null
@@ -1985,7 +2006,55 @@
           ]
         },
         "options": {},
-        "delta": " Adding"
+        "delta": " When"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " you"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " you"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion.chunk",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "system_fingerprint": "HIDDEN",
+          "choices": [
+            {
+              "index": 0,
+              "delta": {
+                "content": " add"
+              },
+              "logprobs": null,
+              "finish_reason": null
+            }
+          ]
+        },
+        "options": {},
+        "delta": " add"
       }
     },
     {
@@ -2121,7 +2190,7 @@
             {
               "index": 0,
               "delta": {
-                "content": " gives"
+                "content": ","
               },
               "logprobs": null,
               "finish_reason": null
@@ -2129,7 +2198,7 @@
           ]
         },
         "options": {},
-        "delta": " gives"
+        "delta": ","
       }
     },
     {
@@ -2145,7 +2214,7 @@
             {
               "index": 0,
               "delta": {
-                "content": " us"
+                "content": " the"
               },
               "logprobs": null,
               "finish_reason": null
@@ -2153,31 +2222,7 @@
           ]
         },
         "options": {},
-        "delta": " us"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion.chunk",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "system_fingerprint": "HIDDEN",
-          "choices": [
-            {
-              "index": 0,
-              "delta": {
-                "content": " a"
-              },
-              "logprobs": null,
-              "finish_reason": null
-            }
-          ]
-        },
-        "options": {},
-        "delta": " a"
+        "delta": " the"
       }
     },
     {
@@ -2217,7 +2262,7 @@
             {
               "index": 0,
               "delta": {
-                "content": " of"
+                "content": " is"
               },
               "logprobs": null,
               "finish_reason": null
@@ -2225,7 +2270,7 @@
           ]
         },
         "options": {},
-        "delta": " of"
+        "delta": " is"
       }
     },
     {

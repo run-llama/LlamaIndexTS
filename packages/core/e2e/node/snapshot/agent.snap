@@ -36,7 +36,7 @@
           "content": "35 degrees and sunny in San Francisco",
           "role": "user",
           "options": {
-            "toolResultId": "call_Oto0YEgPQbwg9u1ImIRfjPT0"
+            "toolResultId": "call_32y3qeqnhosV89dyBolJ9FMl"
           }
         }
       ]
@@ -77,7 +77,7 @@
           "content": "123456789",
           "role": "user",
           "options": {
-            "toolResultId": "call_mGvjFNon2FX07WWa0QX0Mruq"
+            "toolResultId": "call_g5gORWfd520vgOLUwCVg23QN"
           }
         }
       ]
@@ -118,7 +118,7 @@
           "content": "2",
           "role": "user",
           "options": {
-            "toolResultId": "call_0TqEjEJoceGKQ52UnxN7SJGm"
+            "toolResultId": "call_eFsgCcIJJcMR8x4irHnopYVb"
           }
         }
       ]
@@ -366,7 +366,7 @@
               "index": 0,
               "message": {
                 "role": "assistant",
-                "content": "The sum of 1 + 1 is 2."
+                "content": "1 + 1 is equal to 2."
               },
               "logprobs": null,
               "finish_reason": "stop"
@@ -374,13 +374,13 @@
           ],
           "usage": {
             "prompt_tokens": 97,
-            "completion_tokens": 13,
-            "total_tokens": 110
+            "completion_tokens": 11,
+            "total_tokens": 108
           },
           "system_fingerprint": "HIDDEN"
         },
         "message": {
-          "content": "The sum of 1 + 1 is 2.",
+          "content": "1 + 1 is equal to 2.",
           "role": "assistant",
           "options": {}
         }
