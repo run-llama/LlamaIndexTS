@@ -5,6 +5,8 @@ import { SimilarityType, similarity } from "./utils.js";
 
 const DEFAULT_EMBED_BATCH_SIZE = 10;
 
+type EmbedFunc<T> = (values: T[]) => Promise<Array<number[]>>;
+
 export abstract class BaseEmbedding implements TransformComponent {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
 
@@ -45,17 +47,31 @@ export abstract class BaseEmbedding implements TransformComponent {
       logProgress?: boolean;
     },
   ): Promise<Array<number[]>> {
+    return await this.batchEmbeddings(
+      texts,
+      this.getTextEmbeddings.bind(this),
+      options,
+    );
+  }
+
+  protected async batchEmbeddings<T>(
+    values: T[],
+    embedFunc: EmbedFunc<T>,
+    options?: {
+      logProgress?: boolean;
+    },
+  ): Promise<Array<number[]>> {
     const resultEmbeddings: Array<number[]> = [];
     const chunkSize = this.embedBatchSize;
 
-    const queue: string[] = texts;
+    const queue: T[] = values;
 
-    const curBatch: string[] = [];
+    const curBatch: T[] = [];
 
     for (let i = 0; i < queue.length; i++) {
       curBatch.push(queue[i]);
       if (i == queue.length - 1 || curBatch.length == chunkSize) {
-        const embeddings = await this.getTextEmbeddings(curBatch);
+        const embeddings = await embedFunc(curBatch);
 
         resultEmbeddings.push(...embeddings);
 
@@ -73,7 +89,7 @@ export abstract class BaseEmbedding implements TransformComponent {
   async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
     const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
 
-    const embeddings = await this.getTextEmbeddingsBatch(texts);
+    const embeddings = await this.getTextEmbeddingsBatch(texts, _options);
 
     for (let i = 0; i < nodes.length; i++) {
       nodes[i].embedding = embeddings[i];

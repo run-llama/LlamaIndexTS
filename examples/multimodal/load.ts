@@ -4,6 +4,7 @@ import {
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
+import { DocStoreStrategy } from "llamaindex/ingestion/strategies/index";
 
 import * as path from "path";
 
@@ -31,6 +32,7 @@ async function generateDatasource() {
     });
     await VectorStoreIndex.fromDocuments(documents, {
       storageContext,
+      docStoreStrategy: DocStoreStrategy.NONE,
     });
   });
   console.log(`Storage successfully generated in ${ms / 1000}s.`);
