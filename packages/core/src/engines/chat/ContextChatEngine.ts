@@ -74,6 +74,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
 
     if (stream) {
       const stream = await this.chatModel.chat({
+        // @ts-expect-error 2769
         messages: requestMessages.messages,
         stream: true,
       });
@@ -90,6 +91,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
       );
     }
     const response = await this.chatModel.chat({
+      // @ts-expect-error 2769
       messages: requestMessages.messages,
     });
     chatHistory.addMessage(response.message);

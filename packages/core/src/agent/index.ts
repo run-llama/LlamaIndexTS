@@ -1,3 +1,4 @@
+export { AnthropicAgent, type AnthropicParams } from "./anthropic.js";
 export * from "./openai/base.js";
 export * from "./openai/worker.js";
 export * from "./react/base.js";

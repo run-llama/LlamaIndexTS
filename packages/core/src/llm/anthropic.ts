@@ -4,8 +4,11 @@ import type {
   Tool,
   ToolResultBlockParam,
   ToolUseBlock,
+  ToolsBetaContentBlock,
+  ToolsBetaMessageParam,
 } from "@anthropic-ai/sdk/resources/beta/tools/messages";
 import type { TextBlock } from "@anthropic-ai/sdk/resources/index";
+import type { MessageParam } from "@anthropic-ai/sdk/resources/messages";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 import type { BaseTool } from "../types.js";
@@ -152,28 +155,85 @@ export class Anthropic extends BaseLLM<
     return model;
   };
 
-  formatMessages(messages: ChatMessage[]) {
-    return messages.map((message) => {
+  formatMessages<Beta = false>(
+    messages: ChatMessage<AnthropicAdditionalMessageOptions>[],
+  ): Beta extends true ? ToolsBetaMessageParam[] : MessageParam[] {
+    return messages.map<any>((message) => {
       if (message.role !== "user" && message.role !== "assistant") {
         throw new Error("Unsupported Anthropic role");
       }
+      if ("toolResult" in message.options) {
+        const { tool_use_id, is_error } = message.options.toolResult;
+        return {
+          role: "user",
+          content: [
+            {
+              type: "tool_result",
+              is_error,
+              content: [
+                {
+                  type: "text",
+                  text: extractText(message.content),
+                },
+              ],
+              tool_use_id,
+            },
+          ] satisfies ToolResultBlockParam[],
+        };
+      } else if ("toolUse" in message.options) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: extractText(message.content),
+            },
+            {
+              type: "tool_use",
+              id: message.options.toolUse.id,
+              name: message.options.toolUse.name,
+              input: message.options.toolUse.input,
+            },
+          ] satisfies ToolsBetaContentBlock[],
+          role: "assistant",
+        };
+      }
 
       return {
-        // todo: extract tool call
         content: extractText(message.content),
         role: message.role,
-      };
+      } satisfies MessageParam;
     });
   }
 
   chat(
-    params: LLMChatParamsStreaming,
-  ): Promise<AsyncIterable<ChatResponseChunk>>;
-  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
+    params: LLMChatParamsStreaming<
+      AnthropicAdditionalChatOptions,
+      AnthropicAdditionalMessageOptions
+    >,
+  ): Promise<
+    AsyncIterable<ChatResponseChunk<AnthropicAdditionalMessageOptions>>
+  >;
+  chat(
+    params: LLMChatParamsNonStreaming<
+      AnthropicAdditionalChatOptions,
+      AnthropicAdditionalMessageOptions
+    >,
+  ): Promise<ChatResponse<AnthropicAdditionalMessageOptions>>;
   @wrapLLMEvent
   async chat(
-    params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
-  ): Promise<ChatResponse | AsyncIterable<ChatResponseChunk>> {
+    params:
+      | LLMChatParamsNonStreaming<
+          AnthropicAdditionalChatOptions,
+          AnthropicAdditionalMessageOptions
+        >
+      | LLMChatParamsStreaming<
+          AnthropicAdditionalChatOptions,
+          AnthropicAdditionalMessageOptions
+        >,
+  ): Promise<
+    | ChatResponse<AnthropicAdditionalMessageOptions>
+    | AsyncIterable<ChatResponseChunk<AnthropicAdditionalMessageOptions>>
+  > {
     let { messages } = params;
 
     const { stream, tools } = params;
@@ -203,7 +263,7 @@ export class Anthropic extends BaseLLM<
 
     if (tools) {
       const response = await anthropic.beta.tools.messages.create({
-        messages: this.formatMessages(messages),
+        messages: this.formatMessages<true>(messages),
         tools: tools.map(Anthropic.toTool),
         model: this.getModelName(this.model),
         temperature: this.temperature,
@@ -245,18 +305,22 @@ export class Anthropic extends BaseLLM<
 
       return {
         raw: response,
-        message: { content: response.content[0].text, role: "assistant" },
+        message: {
+          content: response.content[0].text,
+          role: "assistant",
+          options: {},
+        },
       };
     }
   }
 
   protected async *streamChat(
-    messages: ChatMessage[],
+    messages: ChatMessage<AnthropicAdditionalMessageOptions>[],
     systemPrompt?: string | null,
-  ): AsyncIterable<ChatResponseChunk> {
+  ): AsyncIterable<ChatResponseChunk<AnthropicAdditionalMessageOptions>> {
     const stream = await this.session.anthropic.messages.create({
       model: this.getModelName(this.model),
-      messages: this.formatMessages(messages),
+      messages: this.formatMessages<false>(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
       top_p: this.topP,
@@ -275,6 +339,7 @@ export class Anthropic extends BaseLLM<
       yield {
         raw: part,
         delta: content,
+        options: {},
       };
     }
     return;

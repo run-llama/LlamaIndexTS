@@ -73,6 +73,7 @@ export class OpenAIAgent extends AgentRunner {
       llm,
       memory,
       defaultToolChoice,
+      // @ts-expect-error 2322
       chatHistory: prefixMessages,
     });
   }

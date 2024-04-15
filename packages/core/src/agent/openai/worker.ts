@@ -120,7 +120,9 @@ export class OpenAIAgentWorker
     }
   }
 
-  public getAllMessages(task: Task): ChatMessage[] {
+  public getAllMessages(
+    task: Task,
+  ): ChatMessage<OpenAIAdditionalMessageOptions>[] {
     return [
       ...this.prefixMessages,
       ...task.memory.get(),
@@ -143,12 +145,18 @@ export class OpenAIAgentWorker
     task: Task,
     openaiTools: BaseTool[],
     toolChoice: ChatCompletionToolChoiceOption = "auto",
-  ): LLMChatParamsBase<OpenAIAdditionalChatOptions> {
+  ): LLMChatParamsBase<
+    OpenAIAdditionalChatOptions,
+    OpenAIAdditionalMessageOptions
+  > {
     const llmChatParams = {
       messages: this.getAllMessages(task),
       tools: undefined as BaseTool[] | undefined,
       additionalChatOptions: {} as OpenAIAdditionalChatOptions,
-    } satisfies LLMChatParamsBase<OpenAIAdditionalChatOptions>;
+    } satisfies LLMChatParamsBase<
+      OpenAIAdditionalChatOptions,
+      OpenAIAdditionalMessageOptions
+    >;
 
     if (openaiTools.length > 0) {
       llmChatParams.tools = openaiTools;
@@ -172,7 +180,10 @@ export class OpenAIAgentWorker
 
   private async _getStreamAiResponse(
     task: Task,
-    llmChatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
+    llmChatParams: LLMChatParamsBase<
+      OpenAIAdditionalChatOptions,
+      OpenAIAdditionalMessageOptions
+    >,
   ): Promise<StreamingAgentChatResponse | AgentChatResponse> {
     const stream = await this.llm.chat({
       stream: true,
@@ -247,7 +258,10 @@ export class OpenAIAgentWorker
   private async _getAgentResponse(
     task: Task,
     mode: ChatResponseMode,
-    llmChatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
+    llmChatParams: LLMChatParamsBase<
+      OpenAIAdditionalChatOptions,
+      OpenAIAdditionalMessageOptions
+    >,
   ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
       const chatResponse = await this.llm.chat({

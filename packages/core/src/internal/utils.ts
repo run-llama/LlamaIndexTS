@@ -15,3 +15,14 @@ export const isAsyncGenerator = (obj: unknown): obj is AsyncGenerator => {
 export const isGenerator = (obj: unknown): obj is Generator => {
   return obj != null && typeof obj === "object" && Symbol.iterator in obj;
 };
+
+/**
+ * Prettify an error for AI to read
+ */
+export function prettifyError(error: unknown): string {
+  if (error instanceof Error) {
+    return `${error.name}: ${error.message}\n${error.stack}`;
+  } else {
+    return `${error}`;
+  }
+}

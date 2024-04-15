@@ -1,10 +1,8 @@
+import type { PlaceholderRecord } from "../internal/utils.js";
 import type { ChatMessage } from "../llm/index.js";
 
 export interface BaseMemory<
-  AdditionalMessageOptions extends Record<string, unknown> = Record<
-    string,
-    unknown
-  >,
+  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
 > {
   tokenLimit: number;
   get(...args: unknown[]): ChatMessage<AdditionalMessageOptions>[];

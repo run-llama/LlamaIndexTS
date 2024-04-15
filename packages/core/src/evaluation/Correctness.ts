@@ -82,6 +82,7 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
     ];
 
     const evalResponse = await this.llm.chat({
+      // @ts-expect-error 2769
       messages,
     });
 

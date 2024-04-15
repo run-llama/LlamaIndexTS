@@ -67,7 +67,7 @@ export interface BaseTool<Input = any> {
   Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
 
-export type ToolWithCall<Input = unknown> = Omit<BaseTool<Input>, "call"> & {
+export type BaseToolWithCall<Input = any> = Omit<BaseTool<Input>, "call"> & {
   call: NonNullable<Pick<BaseTool<Input>, "call">["call"]>;
 };
 

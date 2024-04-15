@@ -43,7 +43,8 @@ export interface LLMChat<
       | LLMChatParamsStreaming<AdditionalChatOptions>
       | LLMChatParamsNonStreaming<AdditionalChatOptions>,
   ): Promise<
-    ChatResponse<AdditionalMessageOptions> | AsyncIterable<ChatResponseChunk>
+    | ChatResponse<AdditionalMessageOptions>
+    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
   >;
 }
 
@@ -51,18 +52,30 @@ export interface LLMChat<
  * Unified language model interface
  */
 export interface LLM<
-  AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalChatOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
+  AdditionalMessageOptions extends Record<string, unknown> = Record<
+    string,
+    unknown
+  >,
 > extends LLMChat<AdditionalChatOptions> {
   metadata: LLMMetadata;
   /**
    * Get a chat response from the LLM
    */
   chat(
-    params: LLMChatParamsStreaming<AdditionalChatOptions>,
+    params: LLMChatParamsStreaming<
+      AdditionalChatOptions,
+      AdditionalMessageOptions
+    >,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(
-    params: LLMChatParamsNonStreaming<AdditionalChatOptions>,
+    params: LLMChatParamsNonStreaming<
+      AdditionalChatOptions,
+      AdditionalMessageOptions
+    >,
   ): Promise<ChatResponse<AdditionalMessageOptions>>;
 
   /**
@@ -106,7 +119,10 @@ export type ChatMessage<
   : {
       content: MessageContent;
       role: MessageType;
-      options: AdditionalMessageOptions;
+      options:
+        | AdditionalMessageOptions
+        // always allow empty options
+        | {};
     };
 
 export interface ChatResponse<
@@ -166,13 +182,15 @@ export interface LLMChatParamsBase<
 
 export interface LLMChatParamsStreaming<
   AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-> extends LLMChatParamsBase<AdditionalChatOptions> {
+  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+> extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
   stream: true;
 }
 
 export interface LLMChatParamsNonStreaming<
   AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-> extends LLMChatParamsBase<AdditionalChatOptions> {
+  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+> extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
   stream?: false;
 }
 

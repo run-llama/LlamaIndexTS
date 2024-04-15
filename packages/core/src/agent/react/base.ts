@@ -41,6 +41,7 @@ export class ReActAgent extends AgentRunner {
       agentWorker: stepEngine,
       memory,
       defaultToolChoice,
+      // @ts-expect-error 2322
       chatHistory: prefixMessages,
     });
   }
