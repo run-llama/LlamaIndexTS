@@ -110,6 +110,9 @@ export class AnthropicAgent {
         ? (Settings.llm as Anthropic)
         : new Anthropic();
     this.#tools = params.tools;
+    if (Array.isArray(params.chatHistory)) {
+      this.#chatHistory = params.chatHistory;
+    }
   }
 
   static shouldContinue(context: WorkerContext): boolean {
