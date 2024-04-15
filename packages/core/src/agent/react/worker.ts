@@ -26,7 +26,7 @@ type ReActAgentWorkerParams = {
   maxInteractions?: number;
   reactChatFormatter?: ReActChatFormatter | undefined;
   outputParser?: ReActOutputParser | undefined;
-  toolRetriever?: ObjectRetriever | undefined;
+  toolRetriever?: ObjectRetriever<BaseTool> | undefined;
 };
 
 function addUserStepToReasoning(

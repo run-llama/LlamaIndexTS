@@ -2,7 +2,7 @@ import type { BaseNode, Metadata } from "../Node.js";
 import { TextNode } from "../Node.js";
 import type { BaseRetriever } from "../Retriever.js";
 import type { VectorStoreIndex } from "../indices/index.js";
-import type { BaseTool, BaseToolWithCall } from "../types.js";
+import type { BaseTool } from "../types.js";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
 // Import statements (e.g., for TextNode, BaseNode) should be added based on your project's structure
@@ -50,7 +50,7 @@ export abstract class BaseObjectNodeMapping {
 
 type QueryType = string;
 
-export class ObjectRetriever {
+export class ObjectRetriever<T = unknown> {
   _retriever: BaseRetriever;
   _objectNodeMapping: BaseObjectNodeMapping;
 
@@ -68,7 +68,7 @@ export class ObjectRetriever {
   }
 
   // Translating the retrieve method
-  async retrieve(strOrQueryBundle: QueryType): Promise<BaseToolWithCall[]> {
+  async retrieve(strOrQueryBundle: QueryType): Promise<T[]> {
     const nodes = await this.retriever.retrieve({ query: strOrQueryBundle });
     const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
     return objs;

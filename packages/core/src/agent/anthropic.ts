@@ -28,7 +28,7 @@ type AnthropicParamsWithTools = AnthropicParamsBase & {
 };
 
 type AnthropicParamsWithToolRetriever = AnthropicParamsBase & {
-  toolRetriever: ObjectRetriever;
+  toolRetriever: ObjectRetriever<BaseToolWithCall>;
 };
 
 export type AnthropicAgentParams =

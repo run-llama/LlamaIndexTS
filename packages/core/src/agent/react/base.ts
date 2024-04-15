@@ -12,7 +12,7 @@ type ReActAgentParams = {
   prefixMessages?: ChatMessage[];
   maxInteractions?: number;
   defaultToolChoice?: string;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
 /**

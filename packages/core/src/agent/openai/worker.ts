@@ -71,7 +71,7 @@ type OpenAIAgentWorkerParams = {
   llm?: OpenAI;
   prefixMessages?: ChatMessage[];
   maxFunctionCalls?: number;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
 type CallFunctionOutput = {

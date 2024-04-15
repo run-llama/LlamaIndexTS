@@ -14,7 +14,7 @@ type OpenAIAgentParams = {
   prefixMessages?: ChatMessage[];
   maxFunctionCalls?: number;
   defaultToolChoice?: string;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
   systemPrompt?: string;
 };
 
