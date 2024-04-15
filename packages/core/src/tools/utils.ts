@@ -4,7 +4,7 @@ import { ToolOutput } from "./types.js";
 
 export async function callToolWithErrorHandling(
   tool: BaseTool,
-  input: string,
+  input: unknown,
 ): Promise<ToolOutput> {
   if (!tool.call) {
     return new ToolOutput(
@@ -23,7 +23,9 @@ export async function callToolWithErrorHandling(
         },
       },
     });
-    const value = await tool.call(JSON.parse(input));
+    const value = await tool.call(
+      typeof input === "string" ? JSON.parse(input) : input,
+    );
     return new ToolOutput(value, tool.metadata.name, input, value);
   } catch (e) {
     return new ToolOutput(`Error: ${e}`, tool.metadata.name, input, e);

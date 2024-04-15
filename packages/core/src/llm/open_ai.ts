@@ -289,7 +289,10 @@ export class OpenAI extends BaseLLM<
               type: "function",
               function: {
                 name: options.toolCall.name,
-                arguments: options.toolCall.input,
+                arguments:
+                  typeof options.toolCall.input === "string"
+                    ? options.toolCall.input
+                    : JSON.stringify(options.toolCall.input),
               },
             },
           ],

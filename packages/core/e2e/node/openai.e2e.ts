@@ -12,6 +12,7 @@ import {
 } from "llamaindex";
 import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
+import { divideNumbersTool, sumNumbersTool } from "./fixtures/tools.js";
 import { mockLLMEvent } from "./utils.js";
 
 let llm: LLM;
@@ -21,14 +22,6 @@ beforeEach(async () => {
   });
   llm = Settings.llm;
 });
-
-function sumNumbers({ a, b }: { a: number; b: number }) {
-  return `${a + b}`;
-}
-
-function divideNumbers({ a, b }: { a: number; b: number }) {
-  return `${a / b}`;
-}
 
 await test("openai llm", async (t) => {
   await mockLLMEvent(t, "llm");
@@ -166,27 +159,8 @@ await test("agent", async (t) => {
   });
 
   await t.test("sum numbers", async () => {
-    const sumFunctionTool = new FunctionTool(sumNumbers, {
-      name: "sumNumbers",
-      description: "Use this function to sum two numbers",
-      parameters: {
-        type: "object",
-        properties: {
-          a: {
-            type: "number",
-            description: "The first number",
-          },
-          b: {
-            type: "number",
-            description: "The second number",
-          },
-        },
-        required: ["a", "b"],
-      },
-    });
-
     const openaiAgent = new OpenAIAgent({
-      tools: [sumFunctionTool],
+      tools: [sumNumbersTool],
     });
 
     const response = await openaiAgent.chat({
@@ -202,50 +176,9 @@ await test("agent stream", async (t) => {
   await t.test("sum numbers stream", async (t) => {
     const fn = t.mock.fn(() => {});
     Settings.callbackManager.on("llm-tool-call", fn);
-    const sumJSON = {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The first number",
-        },
-        b: {
-          type: "number",
-          description: "The second number",
-        },
-      },
-      required: ["a", "b"],
-    } as const;
-
-    const divideJSON = {
-      type: "object",
-      properties: {
-        a: {
-          type: "number",
-          description: "The dividend",
-        },
-        b: {
-          type: "number",
-          description: "The divisor",
-        },
-      },
-      required: ["a", "b"],
-    } as const;
-
-    const functionTool = FunctionTool.from(sumNumbers, {
-      name: "sumNumbers",
-      description: "Use this function to sum two numbers",
-      parameters: sumJSON,
-    });
-
-    const functionTool2 = FunctionTool.from(divideNumbers, {
-      name: "divideNumbers",
-      description: "Use this function to divide two numbers",
-      parameters: divideJSON,
-    });
 
     const agent = new OpenAIAgent({
-      tools: [functionTool, functionTool2],
+      tools: [sumNumbersTool, divideNumbersTool],
     });
 
     const { response } = await agent.chat({

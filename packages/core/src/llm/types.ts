@@ -179,6 +179,8 @@ export type MessageContent = string | MessageContentDetail[];
 
 export type ToolCall = {
   name: string;
+  // for now, claude-3-opus will give object, gpt-3/4 will give string
+  // todo: unify this to always be an object
   input: unknown;
   id: string;
 };
