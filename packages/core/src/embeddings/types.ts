@@ -47,43 +47,12 @@ export abstract class BaseEmbedding implements TransformComponent {
       logProgress?: boolean;
     },
   ): Promise<Array<number[]>> {
-    return await this.batchEmbeddings(
+    return await batchEmbeddings(
       texts,
       this.getTextEmbeddings.bind(this),
+      this.embedBatchSize,
       options,
     );
-  }
-
-  protected async batchEmbeddings<T>(
-    values: T[],
-    embedFunc: EmbedFunc<T>,
-    options?: {
-      logProgress?: boolean;
-    },
-  ): Promise<Array<number[]>> {
-    const resultEmbeddings: Array<number[]> = [];
-    const chunkSize = this.embedBatchSize;
-
-    const queue: T[] = values;
-
-    const curBatch: T[] = [];
-
-    for (let i = 0; i < queue.length; i++) {
-      curBatch.push(queue[i]);
-      if (i == queue.length - 1 || curBatch.length == chunkSize) {
-        const embeddings = await embedFunc(curBatch);
-
-        resultEmbeddings.push(...embeddings);
-
-        if (options?.logProgress) {
-          console.log(`getting embedding progress: ${i} / ${queue.length}`);
-        }
-
-        curBatch.length = 0;
-      }
-    }
-
-    return resultEmbeddings;
   }
 
   async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
@@ -97,4 +66,36 @@ export abstract class BaseEmbedding implements TransformComponent {
 
     return nodes;
   }
+}
+
+export async function batchEmbeddings<T>(
+  values: T[],
+  embedFunc: EmbedFunc<T>,
+  chunkSize: number,
+  options?: {
+    logProgress?: boolean;
+  },
+): Promise<Array<number[]>> {
+  const resultEmbeddings: Array<number[]> = [];
+
+  const queue: T[] = values;
+
+  const curBatch: T[] = [];
+
+  for (let i = 0; i < queue.length; i++) {
+    curBatch.push(queue[i]);
+    if (i == queue.length - 1 || curBatch.length == chunkSize) {
+      const embeddings = await embedFunc(curBatch);
+
+      resultEmbeddings.push(...embeddings);
+
+      if (options?.logProgress) {
+        console.log(`getting embedding progress: ${i} / ${queue.length}`);
+      }
+
+      curBatch.length = 0;
+    }
+  }
+
+  return resultEmbeddings;
 }

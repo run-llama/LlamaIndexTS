@@ -4,7 +4,7 @@ import {
   type BaseNode,
   type ImageType,
 } from "../Node.js";
-import { BaseEmbedding } from "./types.js";
+import { BaseEmbedding, batchEmbeddings } from "./types.js";
 
 /*
  * Base class for Multi Modal embeddings.
@@ -26,18 +26,20 @@ export abstract class MultiModalEmbedding extends BaseEmbedding {
   async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
     const { imageNodes, textNodes } = splitNodesByType(nodes);
 
-    const embeddings = await this.batchEmbeddings(
+    const embeddings = await batchEmbeddings(
       textNodes.map((node) => node.getContent(MetadataMode.EMBED)),
       this.getTextEmbeddings.bind(this),
+      this.embedBatchSize,
       _options,
     );
     for (let i = 0; i < textNodes.length; i++) {
       textNodes[i].embedding = embeddings[i];
     }
 
-    const imageEmbeddings = await this.batchEmbeddings(
+    const imageEmbeddings = await batchEmbeddings(
       imageNodes.map((n) => n.image),
       this.getImageEmbeddings.bind(this),
+      this.embedBatchSize,
       _options,
     );
     for (let i = 0; i < imageNodes.length; i++) {
