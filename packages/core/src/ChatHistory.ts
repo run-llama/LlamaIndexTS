@@ -1,7 +1,6 @@
 import { globalsHelper } from "./GlobalsHelper.js";
 import type { SummaryPrompt } from "./Prompt.js";
 import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
-import type { PlaceholderRecord } from "./internal/utils.js";
 import { OpenAI } from "./llm/open_ai.js";
 import type { ChatMessage, LLM, MessageType } from "./llm/types.js";
 import { extractText } from "./llm/utils.js";
@@ -10,7 +9,7 @@ import { extractText } from "./llm/utils.js";
  * A ChatHistory is used to keep the state of back and forth chat messages
  */
 export abstract class ChatHistory<
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalMessageOptions extends object = object,
 > {
   abstract get messages(): ChatMessage<AdditionalMessageOptions>[];
   /**

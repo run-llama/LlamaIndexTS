@@ -20,6 +20,7 @@ await test("anthropic llm", async (t) => {
         {
           content: "Hello",
           role: "user",
+          options: {},
         },
       ],
     });

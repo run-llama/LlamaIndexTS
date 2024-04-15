@@ -34,10 +34,9 @@
         },
         {
           "content": "35 degrees and sunny in San Francisco",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "Weather",
-            "tool_call_id": "HIDDEN"
+            "toolResultId": "call_Oto0YEgPQbwg9u1ImIRfjPT0"
           }
         }
       ]
@@ -76,10 +75,9 @@
         },
         {
           "content": "123456789",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "unique_id",
-            "tool_call_id": "HIDDEN"
+            "toolResultId": "call_mGvjFNon2FX07WWa0QX0Mruq"
           }
         }
       ]
@@ -118,10 +116,9 @@
         },
         {
           "content": "2",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "sumNumbers",
-            "tool_call_id": "HIDDEN"
+            "toolResultId": "call_0TqEjEJoceGKQ52UnxN7SJGm"
           }
         }
       ]

@@ -11,7 +11,7 @@ test("chat message type", () => {
   expectTypeOf<ChatMessage>().toMatchTypeOf<{
     content: MessageContent;
     role: MessageType;
-    options?: Record<string, unknown>;
+    options?: object;
   }>();
   expectTypeOf<ChatMessage>().not.toMatchTypeOf<{
     content: MessageContent;
@@ -27,7 +27,7 @@ test("chat message type", () => {
   expectTypeOf<ChatMessage<Options>>().toMatchTypeOf<{
     content: MessageContent;
     role: MessageType;
-    options: Options;
+    options?: Options;
   }>();
 });
 

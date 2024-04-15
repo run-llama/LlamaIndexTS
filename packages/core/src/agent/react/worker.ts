@@ -275,7 +275,6 @@ export class ReActAgentWorker implements AgentWorker<ChatParams> {
     );
 
     const chatResponse = await this.llm.chat({
-      // @ts-expect-error 2769
       messages: inputChat,
     });
 

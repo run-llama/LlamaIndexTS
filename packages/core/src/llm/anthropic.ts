@@ -166,8 +166,9 @@ export class Anthropic extends BaseLLM<
       if (message.role !== "user" && message.role !== "assistant") {
         throw new Error("Unsupported Anthropic role");
       }
-      if ("toolResult" in message.options) {
-        const { tool_use_id, is_error } = message.options.toolResult;
+      const options = message.options ?? {};
+      if ("toolResult" in options) {
+        const { tool_use_id, is_error } = options.toolResult;
         return {
           role: "user",
           content: [
@@ -184,7 +185,7 @@ export class Anthropic extends BaseLLM<
             },
           ] satisfies ToolResultBlockParam[],
         } satisfies ToolsBetaMessageParam;
-      } else if ("toolUse" in message.options) {
+      } else if ("toolUse" in options) {
         const aiThinkingText = extractText(message.content);
         return {
           role: "assistant",
@@ -200,9 +201,9 @@ export class Anthropic extends BaseLLM<
               : []),
             {
               type: "tool_use",
-              id: message.options.toolUse.id,
-              name: message.options.toolUse.name,
-              input: message.options.toolUse.input,
+              id: options.toolUse.id,
+              name: options.toolUse.name,
+              input: options.toolUse.input,
             } satisfies ToolUseBlockParam,
           ] satisfies ToolsBetaContentBlock[],
         } satisfies ToolsBetaMessageParam;

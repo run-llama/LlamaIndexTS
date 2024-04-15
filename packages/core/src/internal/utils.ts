@@ -1,13 +1,3 @@
-const placeholder = Symbol("placeholderSymbol");
-
-/**
- * @internal
- * Default Record type, so we can use `extends InternalRecord` in other types
- */
-export type PlaceholderRecord = {
-  [placeholder]: unknown;
-};
-
 export const isAsyncGenerator = (obj: unknown): obj is AsyncGenerator => {
   return obj != null && typeof obj === "object" && Symbol.asyncIterator in obj;
 };
@@ -21,7 +11,7 @@ export const isGenerator = (obj: unknown): obj is Generator => {
  */
 export function prettifyError(error: unknown): string {
   if (error instanceof Error) {
-    return `${error.name}: ${error.message}\n${error.stack}`;
+    return `Error(${error.name}): ${error.message}`;
   } else {
     return `${error}`;
   }

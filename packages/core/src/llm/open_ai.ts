@@ -275,7 +275,7 @@ export class OpenAI extends BaseLLM<
     messages: ChatMessage<OpenAIAdditionalMessageOptions>[],
   ): ChatCompletionMessageParam[] {
     return messages.map((message) => {
-      const options: OpenAIAdditionalMessageOptions = message.options ?? {};
+      const options = message.options ?? {};
       if ("toolResultId" in options) {
         return {
           tool_call_id: options.toolResultId,

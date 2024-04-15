@@ -1,5 +1,4 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { PlaceholderRecord } from "../internal/utils.js";
 import type { BaseTool, UUID } from "../types.js";
 
 type LLMBaseEvent<
@@ -35,8 +34,8 @@ export type LLMStreamEvent = LLMBaseEvent<
  * @internal
  */
 export interface LLMChat<
-  AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 > {
   chat(
     params:
@@ -52,14 +51,8 @@ export interface LLMChat<
  * Unified language model interface
  */
 export interface LLM<
-  AdditionalChatOptions extends Record<string, unknown> = Record<
-    string,
-    unknown
-  >,
-  AdditionalMessageOptions extends Record<string, unknown> = Record<
-    string,
-    unknown
-  >,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 > extends LLMChat<AdditionalChatOptions> {
   metadata: LLMMetadata;
   /**
@@ -91,25 +84,14 @@ export interface LLM<
 
 export type MessageType = "user" | "assistant" | "system" | "memory";
 
-export type ChatMessage<
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
-> = AdditionalMessageOptions extends PlaceholderRecord
-  ? {
-      content: MessageContent;
-      role: MessageType;
-      options?: Record<string, unknown>;
-    }
-  : {
-      content: MessageContent;
-      role: MessageType;
-      options:
-        | AdditionalMessageOptions
-        // always allow empty options
-        | {};
-    };
+export type ChatMessage<AdditionalMessageOptions extends object = object> = {
+  content: MessageContent;
+  role: MessageType;
+  options?: undefined | AdditionalMessageOptions;
+};
 
 export interface ChatResponse<
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalMessageOptions extends object = object,
 > {
   message: ChatMessage<AdditionalMessageOptions>;
   /**
@@ -121,18 +103,12 @@ export interface ChatResponse<
 }
 
 export type ChatResponseChunk<
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
-> = AdditionalMessageOptions extends PlaceholderRecord
-  ? {
-      raw: object | null;
-      delta: string;
-      options?: Record<string, unknown>;
-    }
-  : {
-      raw: object | null;
-      delta: string;
-      options: AdditionalMessageOptions;
-    };
+  AdditionalMessageOptions extends object = object,
+> = {
+  raw: object | null;
+  delta: string;
+  options?: undefined | AdditionalMessageOptions;
+};
 
 export interface CompletionResponse {
   text: string;
@@ -154,25 +130,24 @@ export type LLMMetadata = {
 };
 
 export interface LLMChatParamsBase<
-  AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 > {
   messages: ChatMessage<AdditionalMessageOptions>[];
   additionalChatOptions?: AdditionalChatOptions;
   tools?: BaseTool[];
-  additionalKwargs?: Record<string, unknown>;
 }
 
 export interface LLMChatParamsStreaming<
-  AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 > extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
   stream: true;
 }
 
 export interface LLMChatParamsNonStreaming<
-  AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 > extends LLMChatParamsBase<AdditionalChatOptions, AdditionalMessageOptions> {
   stream?: false;
 }

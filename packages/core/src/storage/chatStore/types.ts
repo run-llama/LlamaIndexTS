@@ -1,8 +1,7 @@
-import type { PlaceholderRecord } from "../../internal/utils.js";
 import type { ChatMessage } from "../../llm/index.js";
 
 export interface BaseChatStore<
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalMessageOptions extends object = object,
 > {
   setMessages(
     key: string,

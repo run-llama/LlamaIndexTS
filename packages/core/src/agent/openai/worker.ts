@@ -135,8 +135,8 @@ export class OpenAIAgentWorker
       return null;
     }
 
-    // fixme
-    return chatHistory[chatHistory.length - 1].options?.toolCalls as any;
+    // @ts-expect-error fixme
+    return chatHistory[chatHistory.length - 1].options?.toolCalls;
   }
 
   private _getLlmChatParams(
@@ -207,8 +207,11 @@ export class OpenAIAgentWorker
     }
     // check if first chunk has tool calls, if so, this is a function call
     // otherwise, it's a regular message
-    const hasToolCalls: boolean =
-      "toolCalls" in value.options && value.options.toolCalls.length > 0;
+    const hasToolCalls: boolean = !!(
+      value.options &&
+      "toolCalls" in value.options &&
+      value.options.toolCalls.length > 0
+    );
 
     if (hasToolCalls) {
       return this._processMessage(task, {

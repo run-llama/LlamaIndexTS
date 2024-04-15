@@ -1,4 +1,3 @@
-import type { PlaceholderRecord } from "../internal/utils.js";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -13,8 +12,8 @@ import type {
 import { extractText, streamConverter } from "./utils.js";
 
 export abstract class BaseLLM<
-  AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 > implements LLM<AdditionalChatOptions>
 {
   abstract metadata: LLMMetadata;
@@ -31,7 +30,6 @@ export abstract class BaseLLM<
     const { prompt, stream } = params;
     if (stream) {
       const stream = await this.chat({
-        // @ts-expect-error TS2769
         messages: [{ content: prompt, role: "user" }],
         stream: true,
       });
@@ -43,7 +41,6 @@ export abstract class BaseLLM<
       });
     }
     const chatResponse = await this.chat({
-      // @ts-expect-error TS2769
       messages: [{ content: prompt, role: "user" }],
     });
     return {

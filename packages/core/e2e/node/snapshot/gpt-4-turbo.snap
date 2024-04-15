@@ -34,10 +34,9 @@
         },
         {
           "content": "45 degrees and sunny in San Jose",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "Weather",
-            "tool_call_id": "HIDDEN"
+            "toolResultId": "call_fy10ZK8NLEDUieeSDUtQUCEW"
           }
         }
       ]

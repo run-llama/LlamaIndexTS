@@ -1,5 +1,4 @@
 import type { ChatHistory } from "../ChatHistory.js";
-import type { PlaceholderRecord } from "../internal/utils.js";
 import type { ChatMessage, LLM } from "../llm/index.js";
 import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore.js";
 import type { BaseChatStore } from "../storage/chatStore/types.js";
@@ -8,19 +7,17 @@ import type { BaseMemory } from "./types.js";
 const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
 const DEFAULT_TOKEN_LIMIT = 3000;
 
-type ChatMemoryBufferParams<
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
-> = {
-  tokenLimit?: number;
-  chatStore?: BaseChatStore<AdditionalMessageOptions>;
-  chatStoreKey?: string;
-  chatHistory?: ChatHistory<AdditionalMessageOptions>;
-  llm?: LLM<PlaceholderRecord, AdditionalMessageOptions>;
-};
+type ChatMemoryBufferParams<AdditionalMessageOptions extends object = object> =
+  {
+    tokenLimit?: number;
+    chatStore?: BaseChatStore<AdditionalMessageOptions>;
+    chatStoreKey?: string;
+    chatHistory?: ChatHistory<AdditionalMessageOptions>;
+    llm?: LLM<object, AdditionalMessageOptions>;
+  };
 
-export class ChatMemoryBuffer<
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
-> implements BaseMemory<AdditionalMessageOptions>
+export class ChatMemoryBuffer<AdditionalMessageOptions extends object = object>
+  implements BaseMemory<AdditionalMessageOptions>
 {
   tokenLimit: number;
 

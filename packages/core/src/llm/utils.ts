@@ -1,6 +1,5 @@
 import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import type { PlaceholderRecord } from "../internal/utils.js";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -63,8 +62,8 @@ export function extractText(message: MessageContent): string {
  * @internal
  */
 export function wrapLLMEvent<
-  AdditionalChatOptions extends Record<string, unknown> = PlaceholderRecord,
-  AdditionalMessageOptions extends Record<string, unknown> = PlaceholderRecord,
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
 >(
   originalMethod: LLMChat<
     AdditionalChatOptions,
@@ -139,7 +138,6 @@ export function wrapLLMEvent<
       getCallbackManager().dispatchEvent("llm-end", {
         payload: {
           id,
-          // @ts-expect-error TS2322
           response,
         },
       });

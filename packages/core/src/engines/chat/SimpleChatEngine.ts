@@ -43,7 +43,6 @@ export class SimpleChatEngine implements ChatEngine {
 
     if (stream) {
       const stream = await this.llm.chat({
-        // @ts-expect-error TS2322
         messages: await chatHistory.requestMessages(),
         stream: true,
       });
@@ -61,7 +60,6 @@ export class SimpleChatEngine implements ChatEngine {
     }
 
     const response = await this.llm.chat({
-      // @ts-expect-error TS2322
       messages: await chatHistory.requestMessages(),
     });
     chatHistory.addMessage(response.message);

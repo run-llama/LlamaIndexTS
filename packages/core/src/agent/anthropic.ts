@@ -5,6 +5,7 @@ import {
   type ChatEngineParamsNonStreaming,
 } from "../engines/chat/index.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { prettifyError } from "../internal/utils.js";
 import {
   Anthropic,
   type AnthropicAdditionalMessageOptions,
@@ -49,8 +50,9 @@ async function createTaskStateMachine(
     tools: agent.tools,
     messages: nextMessages,
   });
-  if ("toolUse" in response.message.options) {
-    const { toolUse } = response.message.options;
+  const options = response.message.options ?? {};
+  if ("toolUse" in options) {
+    const { toolUse } = options;
     const { input, name, id } = toolUse;
     const targetTool = agent.tools.find((tool) => tool.metadata.name === name);
     let output: string;
@@ -64,7 +66,7 @@ async function createTaskStateMachine(
         output = await targetTool.call(input);
         isError = false;
       } catch (error: unknown) {
-        output = `Error: ${error}`;
+        output = prettifyError(error);
       }
     }
     return agentContextAsyncLocalStorage.run(

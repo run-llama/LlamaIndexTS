@@ -237,7 +237,6 @@ If a question does not make any sense, or is not factually coherent, explain why
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  // @ts-expect-error TS1241
   @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
@@ -313,7 +312,6 @@ export class Portkey extends BaseLLM {
     params: LLMChatParamsStreaming,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
   chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
-  // @ts-expect-error TS1241
   @wrapLLMEvent
   async chat(
     params: LLMChatParamsNonStreaming | LLMChatParamsStreaming,
