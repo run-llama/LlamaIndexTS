@@ -107,9 +107,9 @@ export class OpenAIAgentWorker
     }
     this.prefixMessages = prefixMessages || [];
 
-    if (Array.isArray(tools) && tools.length > 0 && toolRetriever) {
+    if (tools.length > 0 && toolRetriever) {
       throw new Error("Cannot specify both tools and tool_retriever");
-    } else if (Array.isArray(tools)) {
+    } else if (tools.length > 0) {
       this._getTools = async () => tools;
     } else if (toolRetriever) {
       // fixme: this won't work, type mismatch
