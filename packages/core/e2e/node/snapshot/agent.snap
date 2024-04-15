@@ -20,23 +20,21 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "Weather",
-                  "arguments": "{\"location\":\"San Francisco\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": "{\"location\":\"San Francisco\"}"
+            }
           }
         },
         {
           "content": "35 degrees and sunny in San Francisco",
           "role": "user",
           "options": {
-            "toolResultId": "call_32y3qeqnhosV89dyBolJ9FMl"
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
           }
         }
       ]
@@ -61,23 +59,21 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "unique_id",
-                  "arguments": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "unique_id",
+              "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+            }
           }
         },
         {
           "content": "123456789",
           "role": "user",
           "options": {
-            "toolResultId": "call_g5gORWfd520vgOLUwCVg23QN"
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
           }
         }
       ]
@@ -102,23 +98,21 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "sumNumbers",
-                  "arguments": "{\"a\":1,\"b\":1}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "sumNumbers",
+              "input": "{\"a\":1,\"b\":1}"
+            }
           }
         },
         {
           "content": "2",
           "role": "user",
           "options": {
-            "toolResultId": "call_eFsgCcIJJcMR8x4irHnopYVb"
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
           }
         }
       ]
@@ -165,16 +159,11 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "Weather",
-                  "arguments": "{\"location\":\"San Francisco\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": "{\"location\":\"San Francisco\"}"
+            }
           }
         }
       }
@@ -252,16 +241,11 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "unique_id",
-                  "arguments": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "unique_id",
+              "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+            }
           }
         }
       }
@@ -339,16 +323,11 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "HIDDEN",
-                "type": "function",
-                "function": {
-                  "name": "sumNumbers",
-                  "arguments": "{\"a\":1,\"b\":1}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "sumNumbers",
+              "input": "{\"a\":1,\"b\":1}"
+            }
           }
         }
       }

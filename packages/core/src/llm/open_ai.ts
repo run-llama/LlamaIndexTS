@@ -37,8 +37,9 @@ import type {
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
   LLMMetadata,
-  MessageToolCall,
   MessageType,
+  ToolCallOptions,
+  ToolResultOptions,
 } from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
@@ -148,13 +149,9 @@ export type OpenAIAdditionalMetadata = {
 };
 
 export type OpenAIAdditionalMessageOptions =
-  | {}
-  | {
-      toolResultId: string;
-    }
-  | {
-      toolCalls: ChatCompletionMessageToolCall[];
-    };
+  | ToolResultOptions
+  | ToolCallOptions
+  | {};
 
 export type OpenAIAdditionalChatOptions = Omit<
   Partial<OpenAILLM.Chat.ChatCompletionCreateParams>,
@@ -276,17 +273,26 @@ export class OpenAI extends BaseLLM<
   ): ChatCompletionMessageParam[] {
     return messages.map((message) => {
       const options = message.options ?? {};
-      if ("toolResultId" in options) {
+      if ("toolResult" in options) {
         return {
-          tool_call_id: options.toolResultId,
+          tool_call_id: options.toolResult.id,
           role: "tool",
           content: extractText(message.content),
         } satisfies ChatCompletionToolMessageParam;
-      } else if ("toolCalls" in options) {
+      } else if ("toolCall" in options) {
         return {
           role: "assistant",
           content: extractText(message.content),
-          tool_calls: options.toolCalls,
+          tool_calls: [
+            {
+              id: options.toolCall.id,
+              type: "function",
+              function: {
+                name: options.toolCall.name,
+                arguments: options.toolCall.input,
+              },
+            },
+          ],
         } satisfies ChatCompletionAssistantMessageParam;
       } else if (message.role === "user") {
         return {
@@ -367,7 +373,12 @@ export class OpenAI extends BaseLLM<
         role: response.choices[0].message.role,
         options: response.choices[0].message?.tool_calls
           ? {
-              toolCalls: response.choices[0].message.tool_calls,
+              toolCall: {
+                id: response.choices[0].message.tool_calls[0].id,
+                name: response.choices[0].message.tool_calls[0].function.name,
+                input:
+                  response.choices[0].message.tool_calls[0].function.arguments,
+              },
             }
           : {},
       },
@@ -387,13 +398,26 @@ export class OpenAI extends BaseLLM<
     // TODO: add callback to streamConverter and use streamConverter here
     //Indices
     let idxCounter: number = 0;
-    const toolCalls: MessageToolCall[] = [];
+    let toolCallOptions: ToolCallOptions | null = null;
     for await (const part of stream) {
       if (!part.choices.length) continue;
       const choice = part.choices[0];
       // skip parts that don't have any content
       if (!(choice.delta.content || choice.delta.tool_calls)) continue;
-      updateToolCalls(toolCalls, choice.delta.tool_calls);
+      if (choice.delta.tool_calls?.[0].id) {
+        toolCallOptions = {
+          toolCall: {
+            name: choice.delta.tool_calls[0].function!.name!,
+            id: choice.delta.tool_calls[0].id,
+            input: choice.delta.tool_calls[0].function!.arguments!,
+          },
+        };
+      } else {
+        if (choice.delta.tool_calls?.[0].function?.arguments) {
+          toolCallOptions!.toolCall.input +=
+            choice.delta.tool_calls[0].function.arguments;
+        }
+      }
 
       const isDone: boolean = choice.finish_reason !== null;
 
@@ -405,8 +429,7 @@ export class OpenAI extends BaseLLM<
 
       yield {
         raw: part,
-        // add tool calls to final chunk
-        options: toolCalls.length > 0 ? { toolCalls: toolCalls } : {},
+        options: toolCallOptions ? toolCallOptions : {},
         delta: choice.delta.content ?? "",
       };
     }
@@ -422,36 +445,5 @@ export class OpenAI extends BaseLLM<
         parameters: tool.metadata.parameters,
       },
     };
-  }
-}
-
-function updateToolCalls(
-  toolCalls: MessageToolCall[],
-  toolCallDeltas?: OpenAILLM.Chat.Completions.ChatCompletionChunk.Choice.Delta.ToolCall[],
-) {
-  function augmentToolCall(
-    toolCall?: MessageToolCall,
-    toolCallDelta?: OpenAILLM.Chat.Completions.ChatCompletionChunk.Choice.Delta.ToolCall,
-  ) {
-    toolCall =
-      toolCall ??
-      ({ function: { name: "", arguments: "" } } as MessageToolCall);
-    toolCall.id = toolCall.id ?? toolCallDelta?.id;
-    toolCall.type = toolCall.type ?? toolCallDelta?.type;
-    if (toolCallDelta?.function?.arguments) {
-      toolCall.function.arguments += toolCallDelta.function.arguments;
-    }
-    if (toolCallDelta?.function?.name) {
-      toolCall.function.name += toolCallDelta.function.name;
-    }
-    return toolCall;
-  }
-  if (toolCallDeltas) {
-    toolCallDeltas?.forEach((toolCall) => {
-      toolCalls[toolCall.index] = augmentToolCall(
-        toolCalls[toolCall.index],
-        toolCall,
-      );
-    });
   }
 }

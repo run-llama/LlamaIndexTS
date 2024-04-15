@@ -194,3 +194,18 @@ export interface MessageToolCall {
   function: Function;
   type: "function";
 }
+
+export type ToolCallOptions = {
+  toolCall: {
+    name: string;
+    input: string;
+    id: string;
+  };
+};
+
+export type ToolResultOptions = {
+  toolResult: {
+    id: string;
+    isError: boolean;
+  };
+};

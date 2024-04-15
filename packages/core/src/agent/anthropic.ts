@@ -1,4 +1,3 @@
-import { AsyncLocalStorage } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
 import {
   AgentChatResponse,
@@ -12,58 +11,63 @@ import {
 } from "../llm/anthropic.js";
 import type { ChatMessage, ChatResponse } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
+import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
 
 const MAX_TOOL_CALLS = 10;
 
-const agentContextAsyncLocalStorage = new AsyncLocalStorage<WorkerContext>();
-
-export type AnthropicParams = {
+type AnthropicParamsBase = {
   llm?: Anthropic;
-  tools: BaseToolWithCall[];
   chatHistory?: ChatMessage<AnthropicAdditionalMessageOptions>[];
 };
 
-type WorkerContext = {
-  toolCalls: number;
-  agent: AnthropicAgent;
-  messages: ChatMessage<AnthropicAdditionalMessageOptions>[];
+type AnthropicParamsWithTools = AnthropicParamsBase & {
+  tools: BaseToolWithCall[];
 };
 
-function shouldContinue(context: WorkerContext): boolean {
-  return context.toolCalls < MAX_TOOL_CALLS;
-}
+type AnthropicParamsWithToolRetriever = AnthropicParamsBase & {
+  toolRetriever: ObjectRetriever;
+};
+
+export type AnthropicAgentParams =
+  | AnthropicParamsWithTools
+  | AnthropicParamsWithToolRetriever;
+
+type AgentContext = {
+  toolCalls: number;
+  llm: Anthropic;
+  tools: BaseToolWithCall[];
+  messages: ChatMessage<AnthropicAdditionalMessageOptions>[];
+  shouldContinue: (context: AgentContext) => boolean;
+};
 
 type TaskResult = {
   response: ChatResponse<AnthropicAdditionalMessageOptions>;
   chatHistory: ChatMessage<AnthropicAdditionalMessageOptions>[];
 };
 
-async function createTaskStateMachine(
-  message: ChatMessage<AnthropicAdditionalMessageOptions>,
+async function task(
+  context: AgentContext,
+  input: ChatMessage<AnthropicAdditionalMessageOptions>,
 ): Promise<TaskResult> {
-  const context = agentContextAsyncLocalStorage.getStore();
-  if (!context) {
-    throw new Error("No context found, please initialize the agent first.");
-  }
-  const { agent, messages, toolCalls } = context;
+  const { llm, tools, messages } = context;
   const nextMessages: ChatMessage<AnthropicAdditionalMessageOptions>[] = [
     ...messages,
-    message,
+    input,
   ];
-  const response = await agent.llm.chat({
+  const response = await llm.chat({
     stream: false,
-    tools: agent.tools,
+    tools,
     messages: nextMessages,
   });
   const options = response.message.options ?? {};
-  if ("toolUse" in options) {
-    const { toolUse } = options;
-    const { input, name, id } = toolUse;
-    const targetTool = agent.tools.find((tool) => tool.metadata.name === name);
+  if ("toolCall" in options) {
+    const { toolCall } = options;
+    const { input, name, id } = toolCall;
+    const targetTool = tools.find((tool) => tool.metadata.name === name);
     let output: string;
     let isError = true;
-    if (!shouldContinue(context)) {
+    if (!context.shouldContinue(context)) {
       output = "Error: Tool call limit reached";
     } else if (!targetTool) {
       output = `Error: Tool ${name} not found`;
@@ -75,23 +79,21 @@ async function createTaskStateMachine(
         output = prettifyError(error);
       }
     }
-    return agentContextAsyncLocalStorage.run(
+    return task(
       {
         ...context,
         toolCalls: context.toolCalls + 1,
         messages: [...nextMessages, response.message],
       },
-      async () => {
-        return createTaskStateMachine({
-          content: output,
-          role: "user",
-          options: {
-            toolResult: {
-              is_error: isError,
-              tool_use_id: id,
-            },
+      {
+        content: output,
+        role: "user",
+        options: {
+          toolResult: {
+            is_error: isError,
+            tool_use_id: id,
           },
-        });
+        },
       },
     );
   } else {
@@ -101,21 +103,27 @@ async function createTaskStateMachine(
 
 export class AnthropicAgent {
   readonly #llm: Anthropic;
-  readonly #tools: BaseToolWithCall[] = [];
+  readonly #tools:
+    | BaseToolWithCall[]
+    | ((query: string) => Promise<BaseToolWithCall[]>) = [];
   #chatHistory: ChatMessage<AnthropicAdditionalMessageOptions>[] = [];
 
-  constructor(params: AnthropicParams) {
+  constructor(params: AnthropicAgentParams) {
     this.#llm =
       params.llm ?? Settings.llm instanceof Anthropic
         ? (Settings.llm as Anthropic)
         : new Anthropic();
-    this.#tools = params.tools;
+    if ("tools" in params) {
+      this.#tools = params.tools;
+    } else if ("toolRetriever" in params) {
+      this.#tools = params.toolRetriever.retrieve.bind(params.toolRetriever);
+    }
     if (Array.isArray(params.chatHistory)) {
       this.#chatHistory = params.chatHistory;
     }
   }
 
-  static shouldContinue(context: WorkerContext): boolean {
+  static shouldContinue(context: AgentContext): boolean {
     return context.toolCalls < MAX_TOOL_CALLS;
   }
 
@@ -123,30 +131,28 @@ export class AnthropicAgent {
     this.#chatHistory = [];
   }
 
-  get tools(): BaseToolWithCall[] {
-    return this.#tools;
-  }
-
-  get llm(): Anthropic {
-    return this.#llm;
+  getTools(query: string): Promise<BaseToolWithCall[]> | BaseToolWithCall[] {
+    return typeof this.#tools === "function" ? this.#tools(query) : this.#tools;
   }
 
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming,
   ): Promise<Promise<AgentChatResponse>> {
-    const { response, chatHistory } = await agentContextAsyncLocalStorage.run(
+    const { chatHistory, response } = await task(
       {
-        agent: this,
+        llm: this.#llm,
+        tools: await this.getTools(extractText(params.message)),
         toolCalls: 0,
         messages: [...this.#chatHistory],
+        // do we need this?
+        shouldContinue: AnthropicAgent.shouldContinue,
       },
-      async () =>
-        createTaskStateMachine({
-          role: "user",
-          content: params.message,
-          options: {},
-        }),
+      {
+        role: "user",
+        content: params.message,
+        options: {},
+      },
     );
     this.#chatHistory = [...chatHistory];
     return new AgentChatResponse(extractText(response.message.content));

@@ -23,6 +23,8 @@ import type {
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
+  ToolCallOptions,
+  ToolResultOptions,
 } from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
@@ -98,12 +100,8 @@ const AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE: { [key: string]: string } = {
 export type AnthropicAdditionalChatOptions = {};
 
 export type AnthropicAdditionalMessageOptions =
-  | {
-      toolResult: Omit<ToolResultBlockParam, "content">;
-    }
-  | {
-      toolUse: ToolUseBlock;
-    }
+  | ToolResultOptions
+  | ToolCallOptions
   | {};
 
 export class Anthropic extends BaseLLM<
@@ -168,24 +166,24 @@ export class Anthropic extends BaseLLM<
       }
       const options = message.options ?? {};
       if ("toolResult" in options) {
-        const { tool_use_id, is_error } = options.toolResult;
+        const { id, isError } = options.toolResult;
         return {
           role: "user",
           content: [
             {
               type: "tool_result",
-              is_error,
+              is_error: isError,
               content: [
                 {
                   type: "text",
                   text: extractText(message.content),
                 },
               ],
-              tool_use_id,
+              tool_use_id: id,
             },
           ] satisfies ToolResultBlockParam[],
         } satisfies ToolsBetaMessageParam;
-      } else if ("toolUse" in options) {
+      } else if ("toolCall" in options) {
         const aiThinkingText = extractText(message.content);
         return {
           role: "assistant",
@@ -201,9 +199,9 @@ export class Anthropic extends BaseLLM<
               : []),
             {
               type: "tool_use",
-              id: options.toolUse.id,
-              name: options.toolUse.name,
-              input: options.toolUse.input,
+              id: options.toolCall.id,
+              name: options.toolCall.name,
+              input: options.toolCall.input,
             } satisfies ToolUseBlockParam,
           ] satisfies ToolsBetaContentBlock[],
         } satisfies ToolsBetaMessageParam;
@@ -299,7 +297,11 @@ export class Anthropic extends BaseLLM<
           role: "assistant",
           options: toolUseBlock
             ? {
-                toolUse: toolUseBlock,
+                toolCall: {
+                  id: toolUseBlock.id,
+                  name: toolUseBlock.name,
+                  input: toolUseBlock.input,
+                },
               }
             : {},
         },
