@@ -180,7 +180,7 @@ export class ObjectIndex {
     return this._objectNodeMapping.objNodeMapping();
   }
 
-  async asRetriever(kwargs: any): Promise<ObjectRetriever> {
+  async asRetriever(kwargs: any): Promise<ObjectRetriever<any>> {
     return new ObjectRetriever(
       this._index.asRetriever(kwargs),
       this._objectNodeMapping,
