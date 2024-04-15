@@ -9,5 +9,6 @@ export {
 } from "./mistral.js";
 export { Ollama } from "./ollama.js";
 export * from "./open_ai.js";
+export { Portkey } from "./portkey.js";
 export { TogetherLLM } from "./together.js";
 export * from "./types.js";
