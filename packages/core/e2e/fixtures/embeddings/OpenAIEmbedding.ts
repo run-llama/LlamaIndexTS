@@ -28,6 +28,7 @@ export class OpenAIEmbedding implements BaseEmbedding {
   }
 
   async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+    nodes.forEach((node) => (node.embedding = [0]));
     return nodes;
   }
 }
