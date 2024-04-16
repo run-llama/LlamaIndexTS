@@ -221,7 +221,6 @@ for (const title of wikiTitles) {
   const agent = new OpenAIAgent({
     tools: queryEngineTools,
     llm,
-    verbose: true,
   });
 
   documentAgents[title] = agent;
@@ -282,7 +281,6 @@ const objectIndex = await ObjectIndex.fromObjects(
 const topAgent = new OpenAIAgent({
   toolRetriever: await objectIndex.asRetriever({}),
   llm,
-  verbose: true,
   prefixMessages: [
     {
       content:

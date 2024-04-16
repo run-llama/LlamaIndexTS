@@ -88,7 +88,6 @@ Now we can create an OpenAIAgent with the function tools.
 ```ts
 const agent = new OpenAIAgent({
   tools: [sumFunctionTool, divideFunctionTool],
-  verbose: true,
 });
 ```
 
@@ -169,7 +168,6 @@ async function main() {
   // Create an OpenAIAgent with the function tools
   const agent = new OpenAIAgent({
     tools: [sumFunctionTool, divideFunctionTool],
-    verbose: true,
   });
 
   // Chat with the agent
