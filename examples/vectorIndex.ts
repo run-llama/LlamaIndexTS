@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 
-import { Document, VectorStoreIndex } from "llamaindex";
+import { Document, NodeWithScore, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -16,12 +16,18 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query({
+  const { response, sourceNodes } = await queryEngine.query({
     query: "What did the author do in college?",
   });
 
-  // Output response
-  console.log(response.toString());
+  // Output response with sources
+  console.log(response);
+
+  sourceNodes.forEach((source: NodeWithScore, index: number) => {
+    console.log(
+      `\n${index}: Score: ${source.score} - ${source.node.text.substring(0, 50)}...\n`,
+    );
+  });
 }
 
 main().catch(console.error);
