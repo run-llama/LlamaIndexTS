@@ -154,7 +154,7 @@ If you need any of those classes, you have to import them instead directly. Here
 import { PineconeVectorStore } from "@llamaindex/edge/storage/vectorStore/PineconeVectorStore";
 ```
 
-As the `PDFReader` is not with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
+As the `PDFReader` is not working with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
 
 ```typescript
 import { SimpleDirectoryReader } from "@llamaindex/edge/readers/SimpleDirectoryReader";

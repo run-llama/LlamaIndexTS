@@ -4,12 +4,7 @@ import type {
   Metadata,
   NodeWithScore,
 } from "../../Node.js";
-import {
-  ImageNode,
-  MetadataMode,
-  ObjectType,
-  splitNodesByType,
-} from "../../Node.js";
+import { ImageNode, ObjectType, splitNodesByType } from "../../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
@@ -179,14 +174,21 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     nodes: BaseNode[],
     options?: { logProgress?: boolean },
   ): Promise<BaseNode[]> {
-    const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
-    const embeddings = await this.embedModel.getTextEmbeddingsBatch(texts, {
+    const { imageNodes, textNodes } = splitNodesByType(nodes);
+    if (imageNodes.length > 0) {
+      if (!this.imageEmbedModel) {
+        throw new Error(
+          "Cannot calculate image nodes embedding without 'imageEmbedModel' set",
+        );
+      }
+      await this.imageEmbedModel.transform(imageNodes, {
+        logProgress: options?.logProgress,
+      });
+    }
+    await this.embedModel.transform(textNodes, {
       logProgress: options?.logProgress,
     });
-    return nodes.map((node, i) => {
-      node.embedding = embeddings[i];
-      return node;
-    });
+    return nodes;
   }
 
   /**
@@ -324,25 +326,15 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     if (!nodes || nodes.length === 0) {
       return;
     }
+    nodes = await this.getNodeEmbeddingResults(nodes, options);
     const { imageNodes, textNodes } = splitNodesByType(nodes);
     if (imageNodes.length > 0) {
       if (!this.imageVectorStore) {
         throw new Error("Cannot insert image nodes without image vector store");
       }
-      const imageNodesWithEmbedding = await this.getImageNodeEmbeddingResults(
-        imageNodes,
-        options,
-      );
-      await this.insertNodesToStore(
-        this.imageVectorStore,
-        imageNodesWithEmbedding,
-      );
+      await this.insertNodesToStore(this.imageVectorStore, imageNodes);
     }
-    const embeddingResults = await this.getNodeEmbeddingResults(
-      textNodes,
-      options,
-    );
-    await this.insertNodesToStore(this.vectorStore, embeddingResults);
+    await this.insertNodesToStore(this.vectorStore, textNodes);
     await this.indexStore.addIndexStruct(this.indexStruct);
   }
 
@@ -377,35 +369,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       }
       await this.indexStore.addIndexStruct(this.indexStruct);
     }
-  }
-
-  /**
-   * Calculates the embeddings for the given image nodes.
-   *
-   * @param nodes - An array of ImageNode objects representing the nodes for which embeddings are to be calculated.
-   * @param {Object} [options] - An optional object containing additional parameters.
-   *   @param {boolean} [options.logProgress] - A boolean indicating whether to log progress to the console (useful for debugging).
-   */
-  async getImageNodeEmbeddingResults(
-    nodes: ImageNode[],
-    options?: { logProgress?: boolean },
-  ): Promise<ImageNode[]> {
-    if (!this.imageEmbedModel) {
-      return [];
-    }
-
-    const nodesWithEmbeddings: ImageNode[] = [];
-
-    for (let i = 0; i < nodes.length; ++i) {
-      const node = nodes[i];
-      if (options?.logProgress) {
-        console.log(`Getting embedding for node ${i + 1}/${nodes.length}`);
-      }
-      node.embedding = await this.imageEmbedModel.getImageEmbedding(node.image);
-      nodesWithEmbeddings.push(node);
-    }
-
-    return nodesWithEmbeddings;
   }
 }
 
