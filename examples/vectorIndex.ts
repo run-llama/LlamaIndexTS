@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
 
-import { Document, NodeWithScore, VectorStoreIndex } from "llamaindex";
+import {
+  Document,
+  MetadataMode,
+  NodeWithScore,
+  VectorStoreIndex,
+} from "llamaindex";
 
 async function main() {
   // Load essay from abramov.txt in Node
@@ -23,11 +28,13 @@ async function main() {
   // Output response with sources
   console.log(response);
 
-  sourceNodes.forEach((source: NodeWithScore, index: number) => {
-    console.log(
-      `\n${index}: Score: ${source.score} - ${source.node.text.substring(0, 50)}...\n`,
-    );
-  });
+  if (sourceNodes) {
+    sourceNodes.forEach((source: NodeWithScore, index: number) => {
+      console.log(
+        `\n${index}: Score: ${source.score} - ${source.node.getContent(MetadataMode.NONE).substring(0, 50)}...\n`,
+      );
+    });
+  }
 }
 
 main().catch(console.error);
