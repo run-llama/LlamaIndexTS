@@ -14,6 +14,9 @@ Configure a variable once, and you'll be able to do things like the following:
 
 Each provider has similarities and differences. Take a look below for the full set of guides for each one!
 
+- [OpenLLMetry](#openllmetry)
+- [Langtrace](#langtrace)
+
 ## OpenLLMetry
 
 [OpenLLMetry](https://github.com/traceloop/openllmetry-js) is an open-source project based on OpenTelemetry for tracing and monitoring
@@ -33,3 +36,29 @@ traceloop.initialize({
   disableBatch: true,
 });
 ```
+
+## Langtrace
+
+Enhance your observability with Langtrace, a robust open-source tool supports OpenTelemetry and is designed to trace, evaluate, and manage LLM applications seamlessly. Langtrace integrates directly with LlamaIndex, offering detailed, real-time insights into performance metrics such as accuracy, evaluations, and latency.
+
+#### Install
+
+- Self-host or sign-up and generate an API key using [Langtrace](https://www.langtrace.ai) Cloud
+
+```bash
+npm install @langtrase/typescript-sdk
+```
+
+#### Initialize
+
+```js
+import * as Langtrace from "@langtrase/typescript-sdk";
+Langtrace.init({ api_key: "<YOUR_API_KEY>" });
+```
+
+Features:
+
+- OpenTelemetry compliant, ensuring broad compatibility with observability platforms.
+- Provides comprehensive logs and detailed traces of all components.
+- Real-time monitoring of accuracy, evaluations, usage, costs, and latency.
+- For more configuration options and details, visit [Langtrace Docs](https://docs.langtrace.ai/introduction).
