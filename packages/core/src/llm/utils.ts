@@ -1,11 +1,14 @@
 import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type {
+  ChatResponse,
+  ChatResponseChunk,
+  LLM,
+  LLMChat,
   MessageContent,
   MessageContentImageDetail,
   MessageContentTextDetail,
-} from "../types.js";
-import type { ChatResponse, LLM, LLMChat } from "./types.js";
+} from "./types.js";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
@@ -68,14 +71,24 @@ export function extractImage(
 /**
  * @internal
  */
-export function wrapLLMEvent(
-  originalMethod: LLMChat["chat"],
+export function wrapLLMEvent<
+  AdditionalChatOptions extends object = object,
+  AdditionalMessageOptions extends object = object,
+>(
+  originalMethod: LLMChat<
+    AdditionalChatOptions,
+    AdditionalMessageOptions
+  >["chat"],
   _context: ClassMethodDecoratorContext,
 ) {
   return async function withLLMEvent(
-    this: LLM,
-    ...params: Parameters<LLMChat["chat"]>
-  ): ReturnType<LLMChat["chat"]> {
+    this: LLM<AdditionalChatOptions, AdditionalMessageOptions>,
+    ...params: Parameters<
+      LLMChat<AdditionalChatOptions, AdditionalMessageOptions>["chat"]
+    >
+  ): ReturnType<
+    LLMChat<AdditionalChatOptions, AdditionalMessageOptions>["chat"]
+  > {
     const id = randomUUID();
     getCallbackManager().dispatchEvent("llm-start", {
       payload: {
@@ -91,13 +104,14 @@ export function wrapLLMEvent(
         [Symbol.asyncIterator]: response[Symbol.asyncIterator].bind(response),
       };
       response[Symbol.asyncIterator] = async function* () {
-        const finalResponse: ChatResponse = {
-          raw: response,
+        const finalResponse = {
+          raw: [] as ChatResponseChunk[],
           message: {
             content: "",
             role: "assistant",
+            options: {},
           },
-        };
+        } satisfies ChatResponse;
         let firstOne = false;
         for await (const chunk of originalAsyncIterator) {
           if (!firstOne) {
@@ -106,6 +120,19 @@ export function wrapLLMEvent(
           } else {
             finalResponse.message.content += chunk.delta;
           }
+          if (chunk.options) {
+            finalResponse.message.options = {
+              ...finalResponse.message.options,
+              ...chunk.options,
+            };
+          }
+          getCallbackManager().dispatchEvent("llm-stream", {
+            payload: {
+              id,
+              chunk,
+            },
+          });
+          finalResponse.raw.push(chunk);
           yield chunk;
         }
         snapshot(() => {

@@ -1,11 +1,12 @@
 import { randomUUID } from "@llamaindex/env";
+import type { ChatHistory } from "../../ChatHistory.js";
 import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
   StreamingAgentChatResponse,
 } from "../../engines/chat/index.js";
-import type { ChatMessage, LLM } from "../../llm/index.js";
+import type { LLM } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { BaseMemory } from "../../memory/types.js";
 import type { AgentWorker, TaskStepOutput } from "../types.js";
@@ -30,7 +31,7 @@ const validateStepFromArgs = (
 
 type AgentRunnerParams = {
   agentWorker: AgentWorker;
-  chatHistory?: ChatMessage[];
+  chatHistory?: ChatHistory;
   state?: AgentState;
   memory?: BaseMemory;
   llm?: LLM;
@@ -161,7 +162,7 @@ export class AgentRunner extends BaseAgentRunner {
     const task = this.state.getTask(taskId);
     const curStep = step || this.state.getStepQueue(taskId).shift();
 
-    let curStepOutput;
+    let curStepOutput: TaskStepOutput;
 
     if (!curStep) {
       throw new Error(`No step found for task ${taskId}`);

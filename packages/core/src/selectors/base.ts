@@ -1,10 +1,7 @@
 import { toQueryBundle } from "../internal/utils.js";
+import type { MessageContent } from "../llm/index.js";
 import { PromptMixin } from "../prompts/Mixin.js";
-import type {
-  MessageContent,
-  QueryBundle,
-  ToolMetadataOnlyDescription,
-} from "../types.js";
+import type { QueryBundle, ToolMetadataOnlyDescription } from "../types.js";
 
 export interface SingleSelection {
   index: number;

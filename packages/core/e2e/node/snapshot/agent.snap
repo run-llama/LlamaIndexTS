@@ -1,7 +1,7 @@
 {
   "llmEventStart": [
     {
-      "id": "88a7035b-b493-4e95-8902-666ede936fb6",
+      "id": "PRESERVE_0",
       "messages": [
         {
           "content": "What is the weather in San Francisco?",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "id": "79c7f739-cc24-4cf8-b605-89a460111da1",
+      "id": "PRESERVE_1",
       "messages": [
         {
           "content": "What is the weather in San Francisco?",
@@ -20,24 +20,99 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
-                "type": "function",
-                "function": {
-                  "name": "Weather",
-                  "arguments": "{\"location\":\"San Francisco\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": "{\"location\":\"San Francisco\"}"
+            }
           }
         },
         {
           "content": "35 degrees and sunny in San Francisco",
-          "role": "tool",
+          "role": "user",
           "options": {
-            "name": "Weather",
-            "tool_call_id": "call_kIqRf0PiYEa6uIQzI3wYZJkR"
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "content": "My name is Alex Yang. What is my unique id?",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_3",
+      "messages": [
+        {
+          "content": "My name is Alex Yang. What is my unique id?",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "unique_id",
+              "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+            }
+          }
+        },
+        {
+          "content": "123456789",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_4",
+      "messages": [
+        {
+          "content": "how much is 1 + 1?",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_5",
+      "messages": [
+        {
+          "content": "how much is 1 + 1?",
+          "role": "user"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "sumNumbers",
+              "input": "{\"a\":1,\"b\":1}"
+            }
+          }
+        },
+        {
+          "content": "2",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "id": "HIDDEN",
+              "isError": false
+            }
           }
         }
       ]
@@ -45,12 +120,12 @@
   ],
   "llmEventEnd": [
     {
-      "id": "88a7035b-b493-4e95-8902-666ede936fb6",
+      "id": "PRESERVE_0",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHEE56nQ0oLqGeOeJuky31TIHZY",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732596,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -60,7 +135,7 @@
                 "content": null,
                 "tool_calls": [
                   {
-                    "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
+                    "id": "HIDDEN",
                     "type": "function",
                     "function": {
                       "name": "Weather",
@@ -78,33 +153,28 @@
             "completion_tokens": 15,
             "total_tokens": 64
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCalls": [
-              {
-                "id": "call_kIqRf0PiYEa6uIQzI3wYZJkR",
-                "type": "function",
-                "function": {
-                  "name": "Weather",
-                  "arguments": "{\"location\":\"San Francisco\"}"
-                }
-              }
-            ]
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "Weather",
+              "input": "{\"location\":\"San Francisco\"}"
+            }
           }
         }
       }
     },
     {
-      "id": "79c7f739-cc24-4cf8-b605-89a460111da1",
+      "id": "PRESERVE_1",
       "response": {
         "raw": {
-          "id": "chatcmpl-9CMHF8HQai1B6w1BpAd5GAHLKfbkR",
+          "id": "HIDDEN",
           "object": "chat.completion",
-          "created": 1712732597,
+          "created": 114514,
           "model": "gpt-3.5-turbo-0125",
           "choices": [
             {
@@ -122,7 +192,7 @@
             "completion_tokens": 14,
             "total_tokens": 92
           },
-          "system_fingerprint": "fp_b28b39ffa8"
+          "system_fingerprint": "HIDDEN"
         },
         "message": {
           "content": "The weather in San Francisco is currently 35 degrees and sunny.",
@@ -130,6 +200,171 @@
           "options": {}
         }
       }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "unique_id",
+                      "arguments": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 59,
+            "completion_tokens": 18,
+            "total_tokens": 77
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "unique_id",
+              "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_3",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Your unique id is 123456789."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 88,
+            "completion_tokens": 10,
+            "total_tokens": 98
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "Your unique id is 123456789.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_4",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "HIDDEN",
+                    "type": "function",
+                    "function": {
+                      "name": "sumNumbers",
+                      "arguments": "{\"a\":1,\"b\":1}"
+                    }
+                  }
+                ]
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 70,
+            "completion_tokens": 18,
+            "total_tokens": 88
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "HIDDEN",
+              "name": "sumNumbers",
+              "input": "{\"a\":1,\"b\":1}"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_5",
+      "response": {
+        "raw": {
+          "id": "HIDDEN",
+          "object": "chat.completion",
+          "created": 114514,
+          "model": "gpt-3.5-turbo-0125",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "1 + 1 is equal to 2."
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 97,
+            "completion_tokens": 11,
+            "total_tokens": 108
+          },
+          "system_fingerprint": "HIDDEN"
+        },
+        "message": {
+          "content": "1 + 1 is equal to 2.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
     }
-  ]
+  ],
+  "llmEventStream": []
 }

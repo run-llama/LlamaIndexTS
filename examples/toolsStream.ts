@@ -2,7 +2,6 @@ import { OpenAI } from "llamaindex";
 
 async function main() {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
-
   const args: Parameters<typeof llm.chat>[0] = {
     additionalChatOptions: {
       tool_choice: "auto",
@@ -36,7 +35,10 @@ async function main() {
   const stream = await llm.chat({ ...args, stream: true });
   for await (const chunk of stream) {
     process.stdout.write(chunk.delta);
-    console.log(chunk.options?.toolCalls?.[0]);
+    if (chunk.options && "toolCall" in chunk.options) {
+      console.log("Tool call:");
+      console.log(chunk.options.toolCall);
+    }
   }
 }
 

@@ -5,8 +5,13 @@ import {
   EventCaller,
   getEventCaller,
 } from "../internal/context/EventCaller.js";
-import type { LLMEndEvent, LLMStartEvent } from "../llm/types.js";
-import type { MessageContent } from "../types.js";
+import type {
+  LLMEndEvent,
+  LLMStartEvent,
+  LLMStreamEvent,
+  LLMToolCallEvent,
+  MessageContent,
+} from "../llm/types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   reason: EventCaller | null;
@@ -45,6 +50,8 @@ export interface LlamaIndexEventMaps {
   stream: CustomEvent<StreamCallbackResponse>;
   "llm-start": LLMStartEvent;
   "llm-end": LLMEndEvent;
+  "llm-tool-call": LLMToolCallEvent;
+  "llm-stream": LLMStreamEvent;
 }
 
 //#region @deprecated remove in the next major version
@@ -199,8 +206,10 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    handlers.forEach((handler) =>
-      handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
-    );
+    queueMicrotask(() => {
+      handlers.forEach((handler) =>
+        handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
+      );
+    });
   }
 }

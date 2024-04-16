@@ -4,7 +4,12 @@ import type { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
+import type {
+  ChatMessage,
+  ChatResponseChunk,
+  LLM,
+  MessageContent,
+} from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
 import {
   extractText,
@@ -13,7 +18,6 @@ import {
 } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
-import type { MessageContent } from "../../types.js";
 import { DefaultContextGenerator } from "./DefaultContextGenerator.js";
 import type {
   ChatEngine,
@@ -113,10 +117,9 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     });
     const textOnly = extractText(message);
     const context = await this.contextGenerator.generate(textOnly);
-    const nodes = context.nodes.map((r) => r.node);
     const messages = await chatHistory.requestMessages(
       context ? [context.message] : undefined,
     );
-    return { nodes, messages };
+    return { nodes: context.nodes, messages };
   }
 }

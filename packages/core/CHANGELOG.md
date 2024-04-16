@@ -1,5 +1,25 @@
 # llamaindex
 
+## 0.2.8
+
+### Patch Changes
+
+- Add ToolsFactory to generate agent tools
+
+## 0.2.7
+
+### Patch Changes
+
+- 96f8f40: fix: agent stream
+- Updated dependencies
+  - @llamaindex/env@0.0.7
+
+## 0.2.6
+
+### Patch Changes
+
+- a3b4409: Fix agent streaming with new OpenAI models
+
 ## 0.2.5
 
 ### Patch Changes

@@ -5,9 +5,9 @@ import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import { imageToDataUrl } from "../embeddings/index.js";
 import { toQueryBundle } from "../internal/utils.js";
+import type { MessageContentDetail } from "../llm/index.js";
 import { extractImage, extractText } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
-import type { MessageContentDetail } from "../types.js";
 import type { TextQaPrompt } from "./../Prompt.js";
 import { defaultTextQaPrompt } from "./../Prompt.js";
 import type {
@@ -97,6 +97,6 @@ export class MultiModalResponseSynthesizer
       prompt,
     });
 
-    return new Response(response.text, nodes);
+    return new Response(response.text, nodesWithScore);
   }
 }

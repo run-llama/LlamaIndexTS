@@ -17,7 +17,7 @@ describe("ObjectIndex", () => {
   });
 
   test("test_object_with_tools", async () => {
-    const tool1 = new FunctionTool((x: any) => x, {
+    const tool1 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool",
       description: "test tool",
       parameters: {
@@ -27,10 +27,11 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 
-    const tool2 = new FunctionTool((x: any) => x, {
+    const tool2 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool_2",
       description: "test tool 2",
       parameters: {
@@ -40,6 +41,7 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 
@@ -62,7 +64,7 @@ describe("ObjectIndex", () => {
   });
 
   test("add a new object", async () => {
-    const tool1 = new FunctionTool((x: any) => x, {
+    const tool1 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool",
       description: "test tool",
       parameters: {
@@ -72,10 +74,11 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 
-    const tool2 = new FunctionTool((x: any) => x, {
+    const tool2 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool_2",
       description: "test tool 2",
       parameters: {
@@ -85,6 +88,7 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 

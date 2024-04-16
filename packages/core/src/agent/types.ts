@@ -5,6 +5,7 @@ import type {
 } from "../engines/chat/index.js";
 
 import { toQueryBundle } from "../internal/utils.js";
+import type { BaseMemory } from "../memory/types.js";
 import type { QueryEngineParamsNonStreaming } from "../types.js";
 
 export interface AgentWorker<ExtraParams extends object = object> {
@@ -73,7 +74,7 @@ export abstract class BaseAgent implements BaseChatEngine, BaseQueryEngine {
 type TaskParams = {
   taskId: string;
   input: string;
-  memory: any;
+  memory: BaseMemory;
   extraState: Record<string, any>;
 };
 
@@ -85,7 +86,7 @@ export class Task {
   taskId: string;
   input: string;
 
-  memory: any;
+  memory: BaseMemory;
   extraState: Record<string, any>;
 
   constructor({ taskId, input, memory, extraState }: TaskParams) {

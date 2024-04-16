@@ -1,4 +1,5 @@
 import type { ChatMessage, LLM } from "../../llm/index.js";
+import type { BaseMemory } from "../../memory/types.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { BaseTool } from "../../types.js";
 import { AgentRunner } from "../runner/base.js";
@@ -7,11 +8,11 @@ import { ReActAgentWorker } from "./worker.js";
 type ReActAgentParams = {
   tools: BaseTool[];
   llm?: LLM;
-  memory?: any;
+  memory?: BaseMemory;
   prefixMessages?: ChatMessage[];
   maxInteractions?: number;
   defaultToolChoice?: string;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
 /**
@@ -40,6 +41,7 @@ export class ReActAgent extends AgentRunner {
       agentWorker: stepEngine,
       memory,
       defaultToolChoice,
+      // @ts-expect-error 2322
       chatHistory: prefixMessages,
     });
   }

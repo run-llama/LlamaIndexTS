@@ -1,33 +1,33 @@
+import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { BaseTool } from "../types.js";
 import { ToolOutput } from "./types.js";
 
-/**
- * Call tool with error handling.
- * @param tool: tool
- * @param inputDict: input dict
- * @param errorMessage: error message
- * @param raiseError: raise error
- * @returns: tool output
- */
 export async function callToolWithErrorHandling(
   tool: BaseTool,
-  inputDict: { [key: string]: any },
-  errorMessage: string | null = null,
-  raiseError: boolean = false,
+  input: unknown,
 ): Promise<ToolOutput> {
-  try {
-    const value = await tool.call?.(inputDict);
-    return new ToolOutput(value, tool.metadata.name, inputDict, value);
-  } catch (e) {
-    if (raiseError) {
-      throw e;
-    }
-    errorMessage = errorMessage || `Error: ${e}`;
+  if (!tool.call) {
     return new ToolOutput(
-      errorMessage,
+      "Error: Tool does not have a call function.",
       tool.metadata.name,
-      { kwargs: inputDict },
-      e,
+      input,
+      null,
     );
+  }
+  try {
+    getCallbackManager().dispatchEvent("llm-tool-call", {
+      payload: {
+        toolCall: {
+          name: tool.metadata.name,
+          input,
+        },
+      },
+    });
+    const value = await tool.call(
+      typeof input === "string" ? JSON.parse(input) : input,
+    );
+    return new ToolOutput(value, tool.metadata.name, input, value);
+  } catch (e) {
+    return new ToolOutput(`Error: ${e}`, tool.metadata.name, input, e);
   }
 }

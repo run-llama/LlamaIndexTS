@@ -3,13 +3,13 @@ import type { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import { toQueryBundle } from "../../internal/utils.js";
+import type { MessageContent } from "../../llm/index.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import { ResponseSynthesizer } from "../../synthesizers/index.js";
 import type {
   BaseQueryEngine,
-  MessageContent,
   QueryBundle,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,

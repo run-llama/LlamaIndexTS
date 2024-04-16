@@ -9,7 +9,7 @@ import type {
   LLMCompletionParamsStreaming,
 } from "llamaindex/llm/types";
 import { extractText } from "llamaindex/llm/utils";
-import { strictEqual } from "node:assert";
+import { deepStrictEqual, strictEqual } from "node:assert";
 import { llmCompleteMockStorage } from "../../node/utils.js";
 
 export function getOpenAISession() {
@@ -21,6 +21,7 @@ export function isFunctionCallingModel() {
 }
 
 export class OpenAI implements LLM {
+  supportToolCall = true;
   get metadata() {
     return {
       model: "mock-model",
@@ -48,23 +49,24 @@ export class OpenAI implements LLM {
       strictEqual(chatMessage.length, params.messages.length);
       for (let i = 0; i < chatMessage.length; i++) {
         strictEqual(chatMessage[i].role, params.messages[i].role);
-        strictEqual(chatMessage[i].content, params.messages[i].content);
+        deepStrictEqual(chatMessage[i].content, params.messages[i].content);
       }
 
       if (llmCompleteMockStorage.llmEventEnd.length > 0) {
-        const response =
-          llmCompleteMockStorage.llmEventEnd.shift()!["response"];
+        const { id, response } = llmCompleteMockStorage.llmEventEnd.shift()!;
         if (params.stream) {
-          const content = response.message.content as string;
-          // maybe this is not the correct way to split the content, but it's good enough for now
-          const tokens = content.split("");
           return {
             [Symbol.asyncIterator]: async function* () {
-              const delta = tokens.shift();
-              if (delta) {
-                yield {
-                  delta,
-                } as ChatResponseChunk;
+              while (true) {
+                const idx = llmCompleteMockStorage.llmEventStream.findIndex(
+                  (e) => e.id === id,
+                );
+                if (idx === -1) {
+                  break;
+                }
+                const chunk = llmCompleteMockStorage.llmEventStream[idx].chunk;
+                llmCompleteMockStorage.llmEventStream.splice(idx, 1);
+                yield chunk;
               }
             },
           };

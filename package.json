@@ -21,19 +21,24 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "eslint": "^8.57.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint-config-next": "^13.5.6",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-config-turbo": "^1.11.3",
+    "eslint-plugin-react": "7.28.0",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
     "turbo": "^1.13.2",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   },
   "packageManager": "pnpm@8.15.6+sha256.01c01eeb990e379b31ef19c03e9d06a14afa5250b82e81303f88721c99ff2e6f",
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",
-      "@babel/traverse": "7.23.2"
+      "@babel/traverse": "7.23.2",
+      "protobufjs": "7.2.6"
     }
   },
   "lint-staged": {

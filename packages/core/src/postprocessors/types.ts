@@ -1,5 +1,6 @@
 import type { NodeWithScore } from "../Node.js";
-import type { MessageContent, QueryBundle } from "../types.js";
+import type { MessageContent } from "../llm/index.js";
+import type { QueryBundle } from "../types.js";
 
 export interface BaseNodePostprocessor {
   /**

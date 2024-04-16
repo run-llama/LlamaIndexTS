@@ -1,12 +1,22 @@
 module.exports = {
+  root: true,
   extends: [
-    "next",
     "turbo",
     "prettier",
     "plugin:@typescript-eslint/recommended-type-checked-only",
   ],
+  parserOptions: {
+    project: true,
+    __tsconfigRootDir: __dirname,
+  },
+  settings: {
+    react: {
+      version: "999.999.999",
+    },
+  },
   rules: {
-    "@next/next/no-html-link-for-pages": "off",
+    "max-params": ["error", 4],
+    "prefer-const": "error",
     "@typescript-eslint/no-floating-promises": [
       "error",
       {
@@ -54,22 +64,13 @@ module.exports = {
     "@typescript-eslint/triple-slash-reference": "off",
     "@typescript-eslint/unbound-method": "off",
   },
-  // NOTE I think because we've temporarily removed all of the NextJS stuff
-  // from the turborepo not having next in the devDeps causes an error on only
-  // clean clones of the repo
-  // Not sure if this is a missing dependency in the package.json or just my not
-  // understanding how turborepo is supposed to work.
-  // Anyways, planning to add back a Next.JS example soon
-  parserOptions: {
-    babelOptions: {
-      presets: [require.resolve("next/babel")],
+  overrides: [
+    {
+      files: ["examples/**/*.ts"],
+      rules: {
+        "turbo/no-undeclared-env-vars": "off",
+      },
     },
-    project: true,
-    __tsconfigRootDir: __dirname,
-  },
-  settings: {
-    react: {
-      version: "999.999.999",
-    },
-  },
+  ],
+  ignorePatterns: ["dist/", "lib/"],
 };

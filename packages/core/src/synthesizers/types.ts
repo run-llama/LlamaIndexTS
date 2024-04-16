@@ -1,7 +1,8 @@
 import type { NodeWithScore } from "../Node.js";
-import type { PromptMixin } from "../prompts/Mixin.js";
 import type { Response } from "../Response.js";
-import type { MessageContent, QueryBundle } from "../types.js";
+import type { MessageContent } from "../llm/index.js";
+import type { PromptMixin } from "../prompts/Mixin.js";
+import type { QueryBundle } from "../types.js";
 
 export interface SynthesizeParamsBase {
   query: MessageContent | QueryBundle;
