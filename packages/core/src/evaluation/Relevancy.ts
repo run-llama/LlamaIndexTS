@@ -1,6 +1,5 @@
 import { Document, MetadataMode } from "../Node.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { serviceContextFromDefaults } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { RelevancyEvalPrompt, RelevancyRefinePrompt } from "./prompts.js";
@@ -23,19 +22,20 @@ type RelevancyParams = {
 };
 
 export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
-  private serviceContext: ServiceContext;
+  private serviceContext?: ServiceContext;
   private raiseError: boolean;
 
   private evalTemplate: RelevancyEvalPrompt;
   private refineTemplate: RelevancyRefinePrompt;
 
-  constructor(params: RelevancyParams) {
+  constructor(params?: RelevancyParams) {
     super();
 
-    this.serviceContext = params.serviceContext ?? serviceContextFromDefaults();
-    this.raiseError = params.raiseError ?? false;
-    this.evalTemplate = params.evalTemplate ?? defaultRelevancyEvalPrompt;
-    this.refineTemplate = params.refineTemplate ?? defaultRelevancyRefinePrompt;
+    this.serviceContext = params?.serviceContext;
+    this.raiseError = params?.raiseError ?? false;
+    this.evalTemplate = params?.evalTemplate ?? defaultRelevancyEvalPrompt;
+    this.refineTemplate =
+      params?.refineTemplate ?? defaultRelevancyRefinePrompt;
   }
 
   _getPrompts() {
@@ -126,7 +126,7 @@ export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
 
     if (response) {
       for (const node of response.sourceNodes || []) {
-        contexts.push(node.getContent(MetadataMode.ALL));
+        contexts.push(node.node.getContent(MetadataMode.ALL));
       }
     }
 

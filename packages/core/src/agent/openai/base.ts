@@ -1,6 +1,7 @@
-import type { CallbackManager } from "../../callbacks/CallbackManager.js";
+import { Settings } from "../../Settings.js";
 import type { ChatMessage } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
+import type { BaseMemory } from "../../memory/types.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { BaseTool } from "../../types.js";
 import { AgentRunner } from "../runner/base.js";
@@ -9,13 +10,11 @@ import { OpenAIAgentWorker } from "./worker.js";
 type OpenAIAgentParams = {
   tools?: BaseTool[];
   llm?: OpenAI;
-  memory?: any;
+  memory?: BaseMemory;
   prefixMessages?: ChatMessage[];
-  verbose?: boolean;
   maxFunctionCalls?: number;
   defaultToolChoice?: string;
-  callbackManager?: CallbackManager;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
   systemPrompt?: string;
 };
 
@@ -30,14 +29,19 @@ export class OpenAIAgent extends AgentRunner {
     llm,
     memory,
     prefixMessages,
-    verbose,
     maxFunctionCalls = 5,
     defaultToolChoice = "auto",
-    callbackManager,
     toolRetriever,
     systemPrompt,
   }: OpenAIAgentParams) {
-    llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
+    if (!llm) {
+      if (Settings.llm instanceof OpenAI) {
+        llm = Settings.llm;
+      } else {
+        console.warn("No OpenAI model provided, creating a new one");
+        llm = new OpenAI({ model: "gpt-3.5-turbo-0613" });
+      }
+    }
 
     if (systemPrompt) {
       if (prefixMessages) {
@@ -52,25 +56,24 @@ export class OpenAIAgent extends AgentRunner {
       ];
     }
 
-    if (!llm?.metadata.isFunctionCallingModel) {
+    if (!llm?.supportToolCall) {
       throw new Error("LLM model must be a function-calling model");
     }
 
     const stepEngine = new OpenAIAgentWorker({
       tools,
-      callbackManager,
       llm,
       prefixMessages,
       maxFunctionCalls,
       toolRetriever,
-      verbose,
     });
 
     super({
       agentWorker: stepEngine,
+      llm,
       memory,
-      callbackManager,
       defaultToolChoice,
+      // @ts-expect-error 2322
       chatHistory: prefixMessages,
     });
   }

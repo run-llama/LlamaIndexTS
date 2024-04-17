@@ -31,4 +31,4 @@ async function importJsonToMongo() {
 }
 
 // Run the import function
-importJsonToMongo();
+void importJsonToMongo();

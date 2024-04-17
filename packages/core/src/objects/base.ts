@@ -50,7 +50,7 @@ export abstract class BaseObjectNodeMapping {
 
 type QueryType = string;
 
-export class ObjectRetriever {
+export class ObjectRetriever<T = unknown> {
   _retriever: BaseRetriever;
   _objectNodeMapping: BaseObjectNodeMapping;
 
@@ -68,7 +68,7 @@ export class ObjectRetriever {
   }
 
   // Translating the retrieve method
-  async retrieve(strOrQueryBundle: QueryType): Promise<any> {
+  async retrieve(strOrQueryBundle: QueryType): Promise<T[]> {
     const nodes = await this.retriever.retrieve({ query: strOrQueryBundle });
     const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
     return objs;
@@ -170,17 +170,17 @@ export class ObjectIndex {
     return new ObjectIndex(index, objectMapping);
   }
 
-  insertObject(obj: any): void {
+  async insertObject(obj: any): Promise<void> {
     this._objectNodeMapping.addObj(obj);
     const node = this._objectNodeMapping.toNode(obj);
-    this._index.insertNodes([node]);
+    await this._index.insertNodes([node]);
   }
 
   get tools(): Record<string, BaseTool> {
     return this._objectNodeMapping.objNodeMapping();
   }
 
-  async asRetriever(kwargs: any): Promise<ObjectRetriever> {
+  async asRetriever(kwargs: any): Promise<ObjectRetriever<any>> {
     return new ObjectRetriever(
       this._index.asRetriever(kwargs),
       this._objectNodeMapping,

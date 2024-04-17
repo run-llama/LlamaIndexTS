@@ -289,7 +289,7 @@ export class QdrantVectorStore implements VectorStore {
    * @param query The VectorStoreQuery to be used
    */
   private async buildQueryFilter(query: VectorStoreQuery) {
-    if (!query.docIds && !query.queryStr) {
+    if (!query.docIds && !query.queryStr && !query.filters) {
       return null;
     }
 

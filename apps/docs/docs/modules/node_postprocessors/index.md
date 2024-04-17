@@ -36,7 +36,7 @@ const processor = new SimilarityPostprocessor({
   similarityCutoff: 0.7,
 });
 
-const filteredNodes = processor.postprocessNodes(nodes);
+const filteredNodes = await processor.postprocessNodes(nodes);
 
 // cohere rerank: rerank nodes given query using trained model
 const reranker = new CohereRerank({
@@ -58,7 +58,10 @@ Most commonly, node-postprocessors will be used in a query engine, where they ar
 ### Using Node Postprocessors in a Query Engine
 
 ```ts
-import { Node, NodeWithScore, SimilarityPostprocessor, CohereRerank } from "llamaindex";
+import { Node, NodeWithScore, SimilarityPostprocessor, CohereRerank, Settings } from "llamaindex";
+
+// Use OpenAI LLM
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 });
 
 const nodes: NodeWithScore[] = [
   {
@@ -78,14 +81,6 @@ const reranker = new CohereRerank({
 })
 
 const document = new Document({ text: "essay", id_: "essay" });
-
-const serviceContext = serviceContextFromDefaults({
-  llm: new OpenAI({ model: "gpt-3.5-turbo", temperature: 0.1 }),
-});
-
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
 
 const queryEngine = index.asQueryEngine({
   nodePostprocessors: [processor, reranker],

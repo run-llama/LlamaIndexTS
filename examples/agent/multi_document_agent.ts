@@ -6,17 +6,19 @@ import {
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
+  Settings,
   SimpleNodeParser,
   SimpleToolNodeMapping,
   SummaryIndex,
   VectorStoreIndex,
-  serviceContextFromDefaults,
   storageContextFromDefaults,
 } from "llamaindex";
 
 import { extractWikipedia } from "./helpers/extractWikipedia";
 
 const wikiTitles = ["Brazil", "Canada"];
+
+Settings.llm = new OpenAI({ model: "gpt-4" });
 
 async function main() {
   await extractWikipedia(wikiTitles);
@@ -30,11 +32,6 @@ async function main() {
     countryDocs[title] = document;
   }
 
-  const llm = new OpenAI({
-    model: "gpt-4",
-  });
-
-  const serviceContext = serviceContextFromDefaults({ llm });
   const storageContext = await storageContextFromDefaults({
     persistDir: "./storage",
   });
@@ -54,13 +51,11 @@ async function main() {
     console.log(`Creating index for ${title}`);
 
     const vectorIndex = await VectorStoreIndex.init({
-      serviceContext: serviceContext,
       storageContext: storageContext,
       nodes,
     });
 
     const summaryIndex = await SummaryIndex.init({
-      serviceContext: serviceContext,
       nodes,
     });
 
@@ -90,8 +85,7 @@ async function main() {
 
     const agent = new OpenAIAgent({
       tools: queryEngineTools,
-      llm,
-      verbose: true,
+      llm: new OpenAI({ model: "gpt-4" }),
     });
 
     documentAgents[title] = agent;
@@ -126,15 +120,11 @@ async function main() {
     allTools,
     toolMapping,
     VectorStoreIndex,
-    {
-      serviceContext,
-    },
   );
 
   const topAgent = new OpenAIAgent({
     toolRetriever: await objectIndex.asRetriever({}),
-    llm,
-    verbose: true,
+    llm: new OpenAI({ model: "gpt-4" }),
     prefixMessages: [
       {
         content:
@@ -153,4 +143,4 @@ async function main() {
   });
 }
 
-main();
+void main();

@@ -1,9 +1,7 @@
-import { randomUUID } from "@llamaindex/env";
 import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
-import type { ServiceContext } from "../../ServiceContext.js";
-import type { Event } from "../../callbacks/CallbackManager.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
@@ -35,10 +33,11 @@ export class RetrieverQueryEngine
     super();
 
     this.retriever = retriever;
-    const serviceContext: ServiceContext | undefined =
-      this.retriever.getServiceContext();
     this.responseSynthesizer =
-      responseSynthesizer || new ResponseSynthesizer({ serviceContext });
+      responseSynthesizer ||
+      new ResponseSynthesizer({
+        serviceContext: retriever.serviceContext,
+      });
     this.preFilters = preFilters;
     this.nodePostprocessors = nodePostprocessors || [];
   }
@@ -62,10 +61,9 @@ export class RetrieverQueryEngine
     return nodesWithScore;
   }
 
-  private async retrieve(query: string, parentEvent: Event) {
+  private async retrieve(query: string) {
     const nodes = await this.retriever.retrieve({
       query,
-      parentEvent,
       preFilters: this.preFilters,
     });
 
@@ -74,28 +72,22 @@ export class RetrieverQueryEngine
 
   query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  @wrapEventCaller
   async query(
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {
     const { query, stream } = params;
-    const parentEvent: Event = params.parentEvent || {
-      id: randomUUID(),
-      type: "wrapper",
-      tags: ["final"],
-    };
-    const nodesWithScore = await this.retrieve(query, parentEvent);
+    const nodesWithScore = await this.retrieve(query);
     if (stream) {
       return this.responseSynthesizer.synthesize({
         query,
         nodesWithScore,
-        parentEvent,
         stream: true,
       });
     }
     return this.responseSynthesizer.synthesize({
       query,
       nodesWithScore,
-      parentEvent,
     });
   }
 }

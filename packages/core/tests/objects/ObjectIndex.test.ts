@@ -2,44 +2,22 @@ import type { ServiceContext } from "llamaindex";
 import {
   FunctionTool,
   ObjectIndex,
-  OpenAI,
-  OpenAIEmbedding,
   SimpleToolNodeMapping,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
-import { beforeAll, describe, expect, test, vi } from "vitest";
-import {
-  mockEmbeddingModel,
-  mockLlmGeneration,
-} from "../utility/mockOpenAI.js";
+import { beforeAll, describe, expect, test } from "vitest";
 
-vi.mock("llamaindex/llm/open_ai", () => {
-  return {
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
+import { mockServiceContext } from "../utility/mockServiceContext.js";
 
 describe("ObjectIndex", () => {
   let serviceContext: ServiceContext;
 
   beforeAll(() => {
-    const embeddingModel = new OpenAIEmbedding();
-    const llm = new OpenAI();
-
-    mockEmbeddingModel(embeddingModel);
-    mockLlmGeneration({ languageModel: llm });
-
-    const ctx = serviceContextFromDefaults({
-      embedModel: embeddingModel,
-      llm,
-    });
-
-    serviceContext = ctx;
+    serviceContext = mockServiceContext();
   });
 
   test("test_object_with_tools", async () => {
-    const tool1 = new FunctionTool((x: any) => x, {
+    const tool1 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool",
       description: "test tool",
       parameters: {
@@ -49,10 +27,11 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 
-    const tool2 = new FunctionTool((x: any) => x, {
+    const tool2 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool_2",
       description: "test tool 2",
       parameters: {
@@ -62,6 +41,7 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 
@@ -84,7 +64,7 @@ describe("ObjectIndex", () => {
   });
 
   test("add a new object", async () => {
-    const tool1 = new FunctionTool((x: any) => x, {
+    const tool1 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool",
       description: "test tool",
       parameters: {
@@ -94,10 +74,11 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 
-    const tool2 = new FunctionTool((x: any) => x, {
+    const tool2 = new FunctionTool(({ x }: { x: string }) => x, {
       name: "test_tool_2",
       description: "test tool 2",
       parameters: {
@@ -107,6 +88,7 @@ describe("ObjectIndex", () => {
             type: "string",
           },
         },
+        required: ["x"],
       },
     });
 
@@ -125,7 +107,7 @@ describe("ObjectIndex", () => {
 
     expect(Object.keys(tools).length).toBe(1);
 
-    objectRetriever.insertObject(tool2);
+    await objectRetriever.insertObject(tool2);
 
     tools = objectRetriever.tools;
 

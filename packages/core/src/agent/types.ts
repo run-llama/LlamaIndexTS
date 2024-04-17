@@ -4,13 +4,22 @@ import type {
   StreamingAgentChatResponse,
 } from "../engines/chat/index.js";
 
+import type { BaseMemory } from "../memory/types.js";
 import type { QueryEngineParamsNonStreaming } from "../types.js";
 
-export interface AgentWorker {
-  initializeStep(task: Task, kwargs?: any): TaskStep;
-  runStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
-  streamStep(step: TaskStep, task: Task, kwargs?: any): Promise<TaskStepOutput>;
-  finalizeTask(task: Task, kwargs?: any): void;
+export interface AgentWorker<ExtraParams extends object = object> {
+  initializeStep(task: Task, params?: ExtraParams): TaskStep;
+  runStep(
+    step: TaskStep,
+    task: Task,
+    params?: ExtraParams,
+  ): Promise<TaskStepOutput>;
+  streamStep(
+    step: TaskStep,
+    task: Task,
+    params?: ExtraParams,
+  ): Promise<TaskStepOutput>;
+  finalizeTask(task: Task, params?: ExtraParams): void;
 }
 
 interface BaseChatEngine {
@@ -64,7 +73,7 @@ export abstract class BaseAgent implements BaseChatEngine, BaseQueryEngine {
 type TaskParams = {
   taskId: string;
   input: string;
-  memory: any;
+  memory: BaseMemory;
   extraState: Record<string, any>;
 };
 
@@ -76,7 +85,7 @@ export class Task {
   taskId: string;
   input: string;
 
-  memory: any;
+  memory: BaseMemory;
   extraState: Record<string, any>;
 
   constructor({ taskId, input, memory, extraState }: TaskParams) {
@@ -170,13 +179,13 @@ export class TaskStep implements ITaskStep {
  * @param isLast: isLast
  */
 export class TaskStepOutput {
-  output: any;
+  output: AgentChatResponse | StreamingAgentChatResponse;
   taskStep: TaskStep;
   nextSteps: TaskStep[];
   isLast: boolean;
 
   constructor(
-    output: any,
+    output: AgentChatResponse | StreamingAgentChatResponse,
     taskStep: TaskStep,
     nextSteps: TaskStep[],
     isLast: boolean = false,

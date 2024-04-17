@@ -1,7 +1,6 @@
 import type { ChatHistory } from "../../ChatHistory.js";
-import type { BaseNode, NodeWithScore } from "../../Node.js";
+import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
-import type { Event } from "../../callbacks/CallbackManager.js";
 import type { ChatMessage } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
 import type { ToolOutput } from "../../tools/types.js";
@@ -56,7 +55,7 @@ export interface Context {
  * A ContextGenerator is used to generate a context based on a message's text content
  */
 export interface ContextGenerator {
-  generate(message: string, parentEvent?: Event): Promise<Context>;
+  generate(message: string): Promise<Context>;
 }
 
 export enum ChatResponseMode {
@@ -67,12 +66,12 @@ export enum ChatResponseMode {
 export class AgentChatResponse {
   response: string;
   sources: ToolOutput[];
-  sourceNodes?: BaseNode[];
+  sourceNodes?: NodeWithScore[];
 
   constructor(
     response: string,
     sources?: ToolOutput[],
-    sourceNodes?: BaseNode[],
+    sourceNodes?: NodeWithScore[],
   ) {
     this.response = response;
     this.sources = sources || [];
@@ -92,12 +91,12 @@ export class StreamingAgentChatResponse {
   response: AsyncIterable<Response>;
 
   sources: ToolOutput[];
-  sourceNodes?: BaseNode[];
+  sourceNodes?: NodeWithScore[];
 
   constructor(
     response: AsyncIterable<Response>,
     sources?: ToolOutput[],
-    sourceNodes?: BaseNode[],
+    sourceNodes?: NodeWithScore[],
   ) {
     this.response = response;
     this.sources = sources ?? [];

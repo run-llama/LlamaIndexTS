@@ -33,7 +33,7 @@ import {
   SimpleToolNodeMapping,
   SummaryIndex,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  Settings,
   storageContextFromDefaults,
 } from "llamaindex";
 ```
@@ -147,11 +147,9 @@ for (const title of wikiTitles) {
 We will be using gpt-4 for this example and we will use the `StorageContext` to store the documents in-memory.
 
 ```ts
-const llm = new OpenAI({
+Settings.llm = new OpenAI({
   model: "gpt-4",
 });
-
-const ctx = serviceContextFromDefaults({ llm });
 
 const storageContext = await storageContextFromDefaults({
   persistDir: "./storage",
@@ -189,14 +187,12 @@ for (const title of wikiTitles) {
 
   // create the vector index for specific search
   const vectorIndex = await VectorStoreIndex.init({
-    serviceContext: serviceContext,
     storageContext: storageContext,
     nodes,
   });
 
   // create the summary index for broader search
   const summaryIndex = await SummaryIndex.init({
-    serviceContext: serviceContext,
     nodes,
   });
 
@@ -225,7 +221,6 @@ for (const title of wikiTitles) {
   const agent = new OpenAIAgent({
     tools: queryEngineTools,
     llm,
-    verbose: true,
   });
 
   documentAgents[title] = agent;
@@ -278,7 +273,6 @@ const objectIndex = await ObjectIndex.fromObjects(
   toolMapping,
   VectorStoreIndex,
   {
-    serviceContext,
     storageContext,
   },
 );
@@ -287,7 +281,6 @@ const objectIndex = await ObjectIndex.fromObjects(
 const topAgent = new OpenAIAgent({
   toolRetriever: await objectIndex.asRetriever({}),
   llm,
-  verbose: true,
   prefixMessages: [
     {
       content:

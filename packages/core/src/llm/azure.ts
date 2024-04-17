@@ -19,6 +19,10 @@ const ALL_AZURE_OPENAI_CHAT_MODELS = {
   },
   "gpt-4": { contextWindow: 8192, openAIModel: "gpt-4" },
   "gpt-4-32k": { contextWindow: 32768, openAIModel: "gpt-4-32k" },
+  "gpt-4-turbo": {
+    contextWindow: 128000,
+    openAIModel: "gpt-4-turbo",
+  },
   "gpt-4-vision-preview": {
     contextWindow: 128000,
     openAIModel: "gpt-4-vision-preview",
@@ -49,15 +53,15 @@ const ALL_AZURE_OPENAI_EMBEDDING_MODELS = {
   },
 };
 
+// Current version list found here - https://learn.microsoft.com/en-us/azure/ai-services/openai/reference
 const ALL_AZURE_API_VERSIONS = [
   "2022-12-01",
   "2023-05-15",
-  "2023-03-15-preview", // retiring 2024-04-02
-  "2023-06-01-preview", // retiring 2024-04-02
-  "2023-07-01-preview", // retiring 2024-04-02
-  "2023-08-01-preview", // retiring 2024-04-02
-  "2023-09-01-preview",
-  "2023-12-01-preview",
+  "2023-06-01-preview", // Maintained for DALL-E 2
+  "2023-10-01-preview",
+  "2024-02-01",
+  "2024-02-15-preview",
+  "2024-03-01-preview",
 ];
 
 const DEFAULT_API_VERSION = "2023-05-15";

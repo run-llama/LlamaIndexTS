@@ -1,48 +1,33 @@
-import type { ServiceContext } from "llamaindex";
 import {
   Document,
-  OpenAI,
-  OpenAIEmbedding,
   SummaryIndex,
   VectorStoreIndex,
-  serviceContextFromDefaults,
   storageContextFromDefaults,
+  type ServiceContext,
+  type StorageContext,
 } from "llamaindex";
-import { beforeAll, describe, expect, it, vi } from "vitest";
-import {
-  mockEmbeddingModel,
-  mockLlmGeneration,
-} from "../utility/mockOpenAI.js";
+import { rmSync } from "node:fs";
+import { mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-// Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", () => {
-  return {
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
+const testDir = await mkdtemp(join(tmpdir(), "test-"));
+
+import { mockServiceContext } from "../utility/mockServiceContext.js";
 
 describe("SummaryIndex", () => {
   let serviceContext: ServiceContext;
+  let storageContext: StorageContext;
 
-  beforeAll(() => {
-    const embeddingModel = new OpenAIEmbedding();
-    const llm = new OpenAI();
-
-    mockEmbeddingModel(embeddingModel);
-    mockLlmGeneration({ languageModel: llm });
-
-    const ctx = serviceContextFromDefaults({
-      embedModel: embeddingModel,
-      llm,
+  beforeAll(async () => {
+    serviceContext = mockServiceContext();
+    storageContext = await storageContextFromDefaults({
+      persistDir: testDir,
     });
-
-    serviceContext = ctx;
   });
 
   it("SummaryIndex and VectorStoreIndex must be able to share the same storage context", async () => {
-    const storageContext = await storageContextFromDefaults({
-      persistDir: "/tmp/test_dir",
-    });
     const documents = [new Document({ text: "lorem ipsem", id_: "1" })];
     const vectorIndex = await VectorStoreIndex.fromDocuments(documents, {
       serviceContext,
@@ -54,5 +39,9 @@ describe("SummaryIndex", () => {
       storageContext,
     });
     expect(summaryIndex).toBeDefined();
+  });
+
+  afterAll(() => {
+    rmSync(testDir, { recursive: true });
   });
 });

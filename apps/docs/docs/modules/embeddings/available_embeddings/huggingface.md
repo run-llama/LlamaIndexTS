@@ -3,17 +3,14 @@
 To use HuggingFace embeddings, you need to import `HuggingFaceEmbedding` from `llamaindex`.
 
 ```ts
-import { HuggingFaceEmbedding, serviceContextFromDefaults } from "llamaindex";
+import { HuggingFaceEmbedding, Settings } from "llamaindex";
 
-const huggingFaceEmbeds = new HuggingFaceEmbedding();
-
-const serviceContext = serviceContextFromDefaults({ embedModel: openaiEmbeds });
+// Update Embed Model
+Settings.embedModel = new HuggingFaceEmbedding();
 
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 
 const queryEngine = index.asQueryEngine();
 
@@ -29,8 +26,8 @@ If you're not using a quantized model, set the `quantized` parameter to `false`.
 
 For example, to use the not quantized `BAAI/bge-small-en-v1.5` model, you can use the following code:
 
-```
-const embedModel = new HuggingFaceEmbedding({
+```ts
+Settings.embedModel = new HuggingFaceEmbedding({
   modelType: "BAAI/bge-small-en-v1.5",
   quantized: false,
 });

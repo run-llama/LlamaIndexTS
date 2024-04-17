@@ -21,22 +21,14 @@ export OPENAI_API_KEY=your-api-key
 Import the required modules:
 
 ```ts
-import {
-  RelevancyEvaluator,
-  OpenAI,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { RelevancyEvaluator, OpenAI, Settings } from "llamaindex";
 ```
 
 Let's setup gpt-4 for better results:
 
 ```ts
-const llm = new OpenAI({
+Settings.llm = new OpenAI({
   model: "gpt-4",
-});
-
-const ctx = serviceContextFromDefaults({
-  llm,
 });
 ```
 
@@ -58,6 +50,8 @@ const query = "How did New York City get its name?";
 const response = await queryEngine.query({
   query,
 });
+
+const evaluator = new RelevancyEvaluator();
 
 const result = await evaluator.evaluateResponse({
   query,

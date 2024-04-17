@@ -1,42 +1,50 @@
-import type { ChatMessage } from "../llm/index.js";
+import type { ChatHistory } from "../ChatHistory.js";
+import type { ChatMessage, LLM } from "../llm/index.js";
 import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore.js";
 import type { BaseChatStore } from "../storage/chatStore/types.js";
 import type { BaseMemory } from "./types.js";
 
-type ChatMemoryBufferParams = {
-  tokenLimit?: number;
-  chatStore?: BaseChatStore;
-  chatStoreKey?: string;
-  chatHistory?: ChatMessage[];
-};
+const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
+const DEFAULT_TOKEN_LIMIT = 3000;
 
-/**
- * Chat memory buffer.
- */
-export class ChatMemoryBuffer implements BaseMemory {
+type ChatMemoryBufferParams<AdditionalMessageOptions extends object = object> =
+  {
+    tokenLimit?: number;
+    chatStore?: BaseChatStore<AdditionalMessageOptions>;
+    chatStoreKey?: string;
+    chatHistory?: ChatHistory<AdditionalMessageOptions>;
+    llm?: LLM<object, AdditionalMessageOptions>;
+  };
+
+export class ChatMemoryBuffer<AdditionalMessageOptions extends object = object>
+  implements BaseMemory<AdditionalMessageOptions>
+{
   tokenLimit: number;
 
-  chatStore: BaseChatStore;
+  chatStore: BaseChatStore<AdditionalMessageOptions>;
   chatStoreKey: string;
 
-  /**
-   * Initialize.
-   */
-  constructor(init?: Partial<ChatMemoryBufferParams>) {
-    this.tokenLimit = init?.tokenLimit ?? 3000;
-    this.chatStore = init?.chatStore ?? new SimpleChatStore();
+  constructor(
+    init?: Partial<ChatMemoryBufferParams<AdditionalMessageOptions>>,
+  ) {
+    this.chatStore =
+      init?.chatStore ?? new SimpleChatStore<AdditionalMessageOptions>();
     this.chatStoreKey = init?.chatStoreKey ?? "chat_history";
+    if (init?.llm) {
+      const contextWindow = init.llm.metadata.contextWindow;
+      this.tokenLimit =
+        init?.tokenLimit ??
+        Math.ceil(contextWindow * DEFAULT_TOKEN_LIMIT_RATIO);
+    } else {
+      this.tokenLimit = init?.tokenLimit ?? DEFAULT_TOKEN_LIMIT;
+    }
 
     if (init?.chatHistory) {
-      this.chatStore.setMessages(this.chatStoreKey, init.chatHistory);
+      this.chatStore.setMessages(this.chatStoreKey, init.chatHistory.messages);
     }
   }
 
-  /**
-    Get chat history.
-    @param initialTokenCount: number of tokens to start with
-  */
-  get(initialTokenCount: number = 0): ChatMessage[] {
+  get(initialTokenCount: number = 0) {
     const chatHistory = this.getAll();
 
     if (initialTokenCount > this.tokenLimit) {
@@ -49,7 +57,7 @@ export class ChatMemoryBuffer implements BaseMemory {
 
     while (tokenCount > this.tokenLimit && messageCount > 1) {
       messageCount -= 1;
-      if (chatHistory[-messageCount].role === "assistant") {
+      if (chatHistory.at(-messageCount)?.role === "assistant") {
         // we cannot have an assistant message at the start of the chat history
         // if after removal of the first, we have an assistant message,
         // we need to remove the assistant message too
@@ -68,42 +76,22 @@ export class ChatMemoryBuffer implements BaseMemory {
     return chatHistory.slice(-messageCount);
   }
 
-  /**
-   * Get all chat history.
-   * @returns {ChatMessage[]} chat history
-   */
-  getAll(): ChatMessage[] {
+  getAll() {
     return this.chatStore.getMessages(this.chatStoreKey);
   }
 
-  /**
-   * Put chat history.
-   * @param message
-   */
-  put(message: ChatMessage): void {
+  put(message: ChatMessage<AdditionalMessageOptions>) {
     this.chatStore.addMessage(this.chatStoreKey, message);
   }
 
-  /**
-   * Set chat history.
-   * @param messages
-   */
-  set(messages: ChatMessage[]): void {
+  set(messages: ChatMessage<AdditionalMessageOptions>[]) {
     this.chatStore.setMessages(this.chatStoreKey, messages);
   }
 
-  /**
-   * Reset chat history.
-   */
-  reset(): void {
+  reset() {
     this.chatStore.deleteMessages(this.chatStoreKey);
   }
 
-  /**
-   * Get token count for message count.
-   * @param messageCount
-   * @returns {number} token count
-   */
   private _tokenCountForMessageCount(messageCount: number): number {
     if (messageCount <= 0) {
       return 0;

@@ -3,13 +3,11 @@
 ## Usage
 
 ```ts
-import { Anthropic, serviceContextFromDefaults } from "llamaindex";
+import { Anthropic, Settings } from "llamaindex";
 
-const anthropicLLM = new Anthropic({
+Settings.llm = new Anthropic({
   apiKey: "<YOUR_API_KEY>",
 });
-
-const serviceContext = serviceContextFromDefaults({ llm: anthropicLLM });
 ```
 
 ## Load and index documents
@@ -19,9 +17,7 @@ For this example, we will use a single document. In a real-world scenario, you w
 ```ts
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 ```
 
 ## Query
@@ -39,28 +35,17 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  Anthropic,
-  Document,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { Anthropic, Document, VectorStoreIndex, Settings } from "llamaindex";
+
+Settings.llm = new Anthropic({
+  apiKey: "<YOUR_API_KEY>",
+});
 
 async function main() {
-  // Create an instance of the Anthropic LLM
-  const anthropicLLM = new Anthropic({
-    apiKey: "<YOUR_API_KEY>",
-  });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({ llm: anthropicLLM });
-
   const document = new Document({ text: essay, id_: "essay" });
 
   // Load and index documents
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // Create a query engine
   const queryEngine = index.asQueryEngine({

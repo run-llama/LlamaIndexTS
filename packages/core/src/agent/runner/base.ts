@@ -1,18 +1,17 @@
-import { randomUUID } from "crypto";
-import { CallbackManager } from "../../callbacks/CallbackManager.js";
+import { randomUUID } from "@llamaindex/env";
+import type { ChatHistory } from "../../ChatHistory.js";
 import type { ChatEngineAgentParams } from "../../engines/chat/index.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
   StreamingAgentChatResponse,
 } from "../../engines/chat/index.js";
-import type { ChatMessage, LLM } from "../../llm/index.js";
+import type { LLM } from "../../llm/index.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { BaseMemory } from "../../memory/types.js";
 import type { AgentWorker, TaskStepOutput } from "../types.js";
 import { Task, TaskStep } from "../types.js";
 import { AgentState, BaseAgentRunner, TaskState } from "./types.js";
-
 const validateStepFromArgs = (
   taskId: string,
   input?: string | null,
@@ -32,11 +31,10 @@ const validateStepFromArgs = (
 
 type AgentRunnerParams = {
   agentWorker: AgentWorker;
-  chatHistory?: ChatMessage[];
+  chatHistory?: ChatHistory;
   state?: AgentState;
   memory?: BaseMemory;
   llm?: LLM;
-  callbackManager?: CallbackManager;
   initTaskStateKwargs?: Record<string, any>;
   deleteTaskOnFinish?: boolean;
   defaultToolChoice?: string;
@@ -46,7 +44,6 @@ export class AgentRunner extends BaseAgentRunner {
   agentWorker: AgentWorker;
   state: AgentState;
   memory: BaseMemory;
-  callbackManager: CallbackManager;
   initTaskStateKwargs: Record<string, any>;
   deleteTaskOnFinish: boolean;
   defaultToolChoice: string;
@@ -62,9 +59,9 @@ export class AgentRunner extends BaseAgentRunner {
     this.memory =
       params.memory ??
       new ChatMemoryBuffer({
+        llm: params.llm,
         chatHistory: params.chatHistory,
       });
-    this.callbackManager = params.callbackManager ?? new CallbackManager();
     this.initTaskStateKwargs = params.initTaskStateKwargs ?? {};
     this.deleteTaskOnFinish = params.deleteTaskOnFinish ?? false;
     this.defaultToolChoice = params.defaultToolChoice ?? "auto";
@@ -165,7 +162,7 @@ export class AgentRunner extends BaseAgentRunner {
     const task = this.state.getTask(taskId);
     const curStep = step || this.state.getStepQueue(taskId).shift();
 
-    let curStepOutput;
+    let curStepOutput: TaskStepOutput;
 
     if (!curStep) {
       throw new Error(`No step found for task ${taskId}`);

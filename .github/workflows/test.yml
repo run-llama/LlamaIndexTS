@@ -1,9 +1,44 @@
 name: Run Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  e2e:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x, 21.x]
+    name: E2E on Node.js ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run E2E Tests
+        run: pnpm run e2e
+
   test:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x, 21.x]
+    name: Test on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
 
     steps:
@@ -12,7 +47,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
@@ -33,6 +68,9 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm run build --filter llamaindex
+      - name: Use Build For Examples
+        run: pnpm link ../packages/core/
+        working-directory: ./examples
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
@@ -44,6 +82,24 @@ jobs:
           name: typecheck-build-dist
           path: ./packages/core/dist
           if-no-files-found: error
+  core-edge-runtime:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build --filter @llamaindex/edge
+      - name: Build Edge Runtime
+        run: pnpm run build
+        working-directory: ./packages/edge/e2e/test-edge-runtime
   typecheck-examples:
     runs-on: ubuntu-latest
 

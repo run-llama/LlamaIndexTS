@@ -3,11 +3,9 @@
 ## Usage
 
 ```ts
-import { Ollama, serviceContextFromDefaults } from "llamaindex";
+import { Ollama, Settings, DeuceChatStrategy } from "llamaindex";
 
-const llama2LLM = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
-
-const serviceContext = serviceContextFromDefaults({ llm: llama2LLM });
+Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
 ```
 
 ## Usage with Replication
@@ -16,19 +14,18 @@ const serviceContext = serviceContextFromDefaults({ llm: llama2LLM });
 import {
   Ollama,
   ReplicateSession,
-  serviceContextFromDefaults,
+  Settings,
+  DeuceChatStrategy,
 } from "llamaindex";
 
 const replicateSession = new ReplicateSession({
   replicateKey,
 });
 
-const llama2LLM = new LlamaDeuce({
+Settings.llm = new LlamaDeuce({
   chatStrategy: DeuceChatStrategy.META,
   replicateSession,
 });
-
-const serviceContext = serviceContextFromDefaults({ llm: llama2LLM });
 ```
 
 ## Load and index documents
@@ -38,9 +35,7 @@ For this example, we will use a single document. In a real-world scenario, you w
 ```ts
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 ```
 
 ## Query
@@ -62,22 +57,18 @@ import {
   LlamaDeuce,
   Document,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  Settings,
+  DeuceChatStrategy,
 } from "llamaindex";
 
+// Use the LlamaDeuce LLM
+Settings.llm = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
+
 async function main() {
-  // Create an instance of the LLM
-  const llama2LLM = new LlamaDeuce({ chatStrategy: DeuceChatStrategy.META });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({ llm: mistralLLM });
-
   const document = new Document({ text: essay, id_: "essay" });
 
   // Load and index documents
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // get retriever
   const retriever = index.asRetriever();

@@ -2,22 +2,16 @@ import {
   Document,
   OpenAI,
   RelevancyEvaluator,
+  Settings,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
 
+Settings.llm = new OpenAI({
+  model: "gpt-4",
+});
+
 async function main() {
-  const llm = new OpenAI({
-    model: "gpt-4",
-  });
-
-  const ctx = serviceContextFromDefaults({
-    llm,
-  });
-
-  const evaluator = new RelevancyEvaluator({
-    serviceContext: ctx,
-  });
+  const evaluator = new RelevancyEvaluator();
 
   const documents = [
     new Document({
@@ -43,4 +37,4 @@ async function main() {
   console.log(result);
 }
 
-main();
+void main();

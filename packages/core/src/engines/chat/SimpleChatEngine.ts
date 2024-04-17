@@ -1,9 +1,14 @@
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
 import { Response } from "../../Response.js";
+import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatResponseChunk, LLM } from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
-import { streamConverter, streamReducer } from "../../llm/utils.js";
+import {
+  extractText,
+  streamConverter,
+  streamReducer,
+} from "../../llm/utils.js";
 import type {
   ChatEngine,
   ChatEngineParamsNonStreaming,
@@ -25,6 +30,7 @@ export class SimpleChatEngine implements ChatEngine {
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
   ): Promise<Response | AsyncIterable<Response>> {
@@ -44,7 +50,7 @@ export class SimpleChatEngine implements ChatEngine {
         streamReducer({
           stream,
           initialValue: "",
-          reducer: (accumulator, part) => (accumulator += part.delta),
+          reducer: (accumulator, part) => accumulator + part.delta,
           finished: (accumulator) => {
             chatHistory.addMessage({ content: accumulator, role: "assistant" });
           },
@@ -57,7 +63,7 @@ export class SimpleChatEngine implements ChatEngine {
       messages: await chatHistory.requestMessages(),
     });
     chatHistory.addMessage(response.message);
-    return new Response(response.message.content);
+    return new Response(extractText(response.message.content));
   }
 
   reset() {

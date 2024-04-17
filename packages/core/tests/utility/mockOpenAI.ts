@@ -1,7 +1,7 @@
-import { globalsHelper } from "llamaindex/GlobalsHelper";
+import { Settings } from "llamaindex";
 import type { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import type { OpenAIEmbedding } from "llamaindex/embeddings/index";
-import type { OpenAI } from "llamaindex/llm/LLM";
+import { OpenAI } from "llamaindex/llm/open_ai";
 import type { LLMChatParamsBase } from "llamaindex/llm/types";
 import { vi } from "vitest";
 
@@ -11,22 +11,24 @@ export function mockLlmGeneration({
   languageModel,
   callbackManager,
 }: {
-  languageModel: OpenAI;
+  languageModel?: OpenAI;
   callbackManager?: CallbackManager;
-}) {
+} = {}) {
+  callbackManager = callbackManager || Settings.callbackManager;
+  if (!languageModel && Settings.llm instanceof OpenAI) {
+    languageModel = Settings.llm;
+  }
+  if (!languageModel) {
+    return;
+  }
   vi.spyOn(languageModel, "chat").mockImplementation(
-    async ({ messages, parentEvent }: LLMChatParamsBase) => {
+    async ({ messages }: LLMChatParamsBase) => {
       const text = DEFAULT_LLM_TEXT_OUTPUT;
-      const event = globalsHelper.createEvent({
-        parentEvent,
-        type: "llmPredict",
-      });
       if (callbackManager?.onLLMStream) {
         const chunks = text.split("-");
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
-          callbackManager?.onLLMStream({
-            event,
+          await callbackManager?.onLLMStream({
             index: i,
             token: {
               id: "id",
@@ -45,17 +47,20 @@ export function mockLlmGeneration({
             },
           });
         }
-        callbackManager?.onLLMStream({
-          event,
+        await callbackManager?.onLLMStream({
           index: chunks.length,
           isDone: true,
         });
       }
       return new Promise((resolve) => {
         resolve({
+          get raw() {
+            return {};
+          },
           message: {
             content: text,
             role: "assistant",
+            options: {},
           },
         });
       });
@@ -68,15 +73,19 @@ export function mockLlmToolCallGeneration({
   callbackManager,
 }: {
   languageModel: OpenAI;
-  callbackManager: CallbackManager;
+  callbackManager?: CallbackManager;
 }) {
   vi.spyOn(languageModel, "chat").mockImplementation(
     () =>
       new Promise((resolve) =>
         resolve({
+          get raw() {
+            return {};
+          },
           message: {
             content: "The sum is 2",
             role: "assistant",
+            options: {},
           },
         }),
       ),
@@ -119,21 +128,16 @@ export function mocStructuredkLlmGeneration({
   callbackManager,
 }: {
   languageModel: OpenAI;
-  callbackManager: CallbackManager;
+  callbackManager?: CallbackManager;
 }) {
   vi.spyOn(languageModel, "chat").mockImplementation(
-    async ({ messages, parentEvent }: LLMChatParamsBase) => {
+    async ({ messages }: LLMChatParamsBase) => {
       const text = structuredOutput;
-      const event = globalsHelper.createEvent({
-        parentEvent,
-        type: "llmPredict",
-      });
       if (callbackManager?.onLLMStream) {
         const chunks = text.split("-");
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
-          callbackManager?.onLLMStream({
-            event,
+          await callbackManager?.onLLMStream({
             index: i,
             token: {
               id: "id",
@@ -152,17 +156,20 @@ export function mocStructuredkLlmGeneration({
             },
           });
         }
-        callbackManager?.onLLMStream({
-          event,
+        await callbackManager?.onLLMStream({
           index: chunks.length,
           isDone: true,
         });
       }
       return new Promise((resolve) => {
         resolve({
+          get raw() {
+            return {};
+          },
           message: {
             content: text,
             role: "assistant",
+            options: {},
           },
         });
       });

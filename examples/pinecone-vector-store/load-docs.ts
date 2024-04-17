@@ -32,7 +32,7 @@ async function main(args: any) {
   console.log(`Found ${count} files`);
 
   console.log(`Importing contents from ${count} files in ${sourceDir}`);
-  var fileName = "";
+  const fileName = "";
   try {
     // Passing callback fn to the ctor here
     // will enable looging to console.
@@ -63,4 +63,4 @@ async function main(args: any) {
   process.exit(0);
 }
 
-main(process.argv).catch((err) => console.error(err));
+void main(process.argv).catch((err) => console.error(err));

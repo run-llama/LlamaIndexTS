@@ -1,24 +1,10 @@
 import type { ChatMessage } from "../llm/index.js";
 
-export interface BaseMemory {
-  /*
-   Get chat history.
-  */
-  get(...args: any): ChatMessage[];
-  /*
-    Get all chat history.
-  */
-  getAll(): ChatMessage[];
-  /*
-    Put chat history.
-  */
-  put(message: ChatMessage): void;
-  /*
-    Set chat history.
-  */
-  set(messages: ChatMessage[]): void;
-  /*
-    Reset chat history.
-  */
+export interface BaseMemory<AdditionalMessageOptions extends object = object> {
+  tokenLimit: number;
+  get(...args: unknown[]): ChatMessage<AdditionalMessageOptions>[];
+  getAll(): ChatMessage<AdditionalMessageOptions>[];
+  put(message: ChatMessage<AdditionalMessageOptions>): void;
+  set(messages: ChatMessage<AdditionalMessageOptions>[]): void;
   reset(): void;
 }

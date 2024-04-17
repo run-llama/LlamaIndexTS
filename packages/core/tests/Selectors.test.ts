@@ -1,16 +1,10 @@
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 // from unittest.mock import patch
 
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
 import { OpenAI } from "llamaindex/llm/index";
 import { LLMSingleSelector } from "llamaindex/selectors/index";
 import { mocStructuredkLlmGeneration } from "./utility/mockOpenAI.js";
-
-vi.mock("llamaindex/llm/open_ai", () => {
-  return {
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
 
 describe("LLMSelector", () => {
   test("should be able to output a selection with a reason", async () => {
@@ -22,7 +16,6 @@ describe("LLMSelector", () => {
 
     mocStructuredkLlmGeneration({
       languageModel,
-      callbackManager: serviceContext.callbackManager,
     });
 
     const selector = new LLMSingleSelector({

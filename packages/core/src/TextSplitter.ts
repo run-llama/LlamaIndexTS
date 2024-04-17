@@ -66,8 +66,9 @@ export const defaultParagraphSeparator = EOL + EOL + EOL;
  * One of the advantages of SentenceSplitter is that even in the fixed length chunks it will try to keep sentences together.
  */
 export class SentenceSplitter {
-  private chunkSize: number;
-  private chunkOverlap: number;
+  public chunkSize: number;
+  public chunkOverlap: number;
+
   private tokenizer: any;
   private tokenizerDecoder: any;
   private paragraphSeparator: string;
@@ -100,7 +101,6 @@ export class SentenceSplitter {
     }
     this.chunkSize = chunkSize;
     this.chunkOverlap = chunkOverlap;
-    // this._callback_manager = callback_manager || new CallbackManager([]);
 
     this.tokenizer = tokenizer ?? globalsHelper.tokenizer();
     this.tokenizerDecoder =

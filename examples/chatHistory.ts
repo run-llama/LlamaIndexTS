@@ -1,7 +1,18 @@
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
 
-import { OpenAI, SimpleChatEngine, SummaryChatHistory } from "llamaindex";
+import {
+  OpenAI,
+  Settings,
+  SimpleChatEngine,
+  SummaryChatHistory,
+} from "llamaindex";
+
+if (process.env.NODE_ENV === "development") {
+  Settings.callbackManager.on("llm-end", (event) => {
+    console.log("callers chain", event.reason?.computedCallers);
+  });
+}
 
 async function main() {
   // Set maxTokens to 75% of the context window size of 4096

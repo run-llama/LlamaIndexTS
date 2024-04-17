@@ -1,11 +1,9 @@
 # OpenAI
 
 ```ts
-import { OpenAI, serviceContextFromDefaults } from "llamaindex";
+import { OpenAI, Settings } from "llamaindex";
 
-const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0, apiKey: <YOUR_API_KEY> });
-
-const serviceContext = serviceContextFromDefaults({ llm: openaiLLM });
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0, apiKey: <YOUR_API_KEY> });
 ```
 
 You can setup the apiKey on the environment variables, like:
@@ -21,9 +19,7 @@ For this example, we will use a single document. In a real-world scenario, you w
 ```ts
 const document = new Document({ text: essay, id_: "essay" });
 
-const index = await VectorStoreIndex.fromDocuments([document], {
-  serviceContext,
-});
+const index = await VectorStoreIndex.fromDocuments([document]);
 ```
 
 ## Query
@@ -41,26 +37,16 @@ const results = await queryEngine.query({
 ## Full Example
 
 ```ts
-import {
-  OpenAI,
-  Document,
-  VectorStoreIndex,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { OpenAI, Document, VectorStoreIndex, Settings } from "llamaindex";
+
+// Use the OpenAI LLM
+Settings.llm = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
 
 async function main() {
-  // Create an instance of the LLM
-  const openaiLLM = new OpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
-
-  // Create a service context
-  const serviceContext = serviceContextFromDefaults({ llm: openaiLLM });
-
   const document = new Document({ text: essay, id_: "essay" });
 
   // Load and index documents
-  const index = await VectorStoreIndex.fromDocuments([document], {
-    serviceContext,
-  });
+  const index = await VectorStoreIndex.fromDocuments([document]);
 
   // get retriever
   const retriever = index.asRetriever();

@@ -73,7 +73,7 @@ export class PineconeVectorStore implements VectorStore {
 
   async index() {
     const db: Pinecone = await this.getDb();
-    return await db.index(this.indexName);
+    return db.index(this.indexName).namespace(this.namespace);
   }
 
   /**
@@ -82,8 +82,8 @@ export class PineconeVectorStore implements VectorStore {
    * @returns The result of the delete query.
    */
   async clearIndex() {
-    const db: Pinecone = await this.getDb();
-    return await db.index(this.indexName).deleteAll();
+    const idx = await this.index();
+    return await idx.deleteAll();
   }
 
   /**
@@ -142,11 +142,11 @@ export class PineconeVectorStore implements VectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    _options?: any,
   ): Promise<VectorStoreQueryResult> {
     const filter = this.toPineconeFilter(query.filters);
 
-    var options: any = {
+    const defaultOptions: any = {
       vector: query.queryEmbedding,
       topK: query.similarityTopK,
       includeValues: true,
@@ -155,12 +155,10 @@ export class PineconeVectorStore implements VectorStore {
     };
 
     const idx = await this.index();
-    const results = await idx.namespace(this.namespace).query(options);
+    const results = await idx.query(defaultOptions);
 
     const idList = results.matches.map((row) => row.id);
-    const records: FetchResponse<any> = await idx
-      .namespace(this.namespace)
-      .fetch(idList);
+    const records: FetchResponse<any> = await idx.fetch(idList);
     const rows = Object.values(records.records);
 
     const nodes = rows.map((row) => {

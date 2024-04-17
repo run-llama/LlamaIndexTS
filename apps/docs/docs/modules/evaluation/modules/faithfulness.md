@@ -28,19 +28,15 @@ import {
   FaithfulnessEvaluator,
   OpenAI,
   VectorStoreIndex,
-  serviceContextFromDefaults,
+  Settings,
 } from "llamaindex";
 ```
 
 Let's setup gpt-4 for better results:
 
 ```ts
-const llm = new OpenAI({
+Settings.llm = new OpenAI({
   model: "gpt-4",
-});
-
-const ctx = serviceContextFromDefaults({
-  llm,
 });
 ```
 
@@ -63,9 +59,7 @@ Now, let's evaluate the response:
 ```ts
 const query = "How did New York City get its name?";
 
-const evaluator = new FaithfulnessEvaluator({
-  serviceContext: ctx,
-});
+const evaluator = new FaithfulnessEvaluator();
 
 const response = await queryEngine.query({
   query,

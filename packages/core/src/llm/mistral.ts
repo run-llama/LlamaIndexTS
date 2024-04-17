@@ -1,10 +1,6 @@
 import { getEnv } from "@llamaindex/env";
-import type {
-  CallbackManager,
-  Event,
-  EventType,
-  StreamCallbackResponse,
-} from "../callbacks/CallbackManager.js";
+import { Settings } from "../Settings.js";
+import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
 import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
@@ -54,7 +50,6 @@ export class MistralAI extends BaseLLM {
   topP: number;
   maxTokens?: number;
   apiKey?: string;
-  callbackManager?: CallbackManager;
   safeMode: boolean;
   randomSeed?: number;
 
@@ -66,7 +61,6 @@ export class MistralAI extends BaseLLM {
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
-    this.callbackManager = init?.callbackManager;
     this.safeMode = init?.safeMode ?? false;
     this.randomSeed = init?.randomSeed ?? undefined;
     this.session = new MistralAISession(init);
@@ -81,10 +75,6 @@ export class MistralAI extends BaseLLM {
       contextWindow: ALL_AVAILABLE_MISTRAL_MODELS[this.model].contextWindow,
       tokenizer: undefined,
     };
-  }
-
-  tokens(messages: ChatMessage[]): number {
-    throw new Error("Method not implemented.");
   }
 
   private buildParams(messages: ChatMessage[]): any {
@@ -116,28 +106,16 @@ export class MistralAI extends BaseLLM {
     const response = await client.chat(this.buildParams(messages));
     const message = response.choices[0].message;
     return {
+      raw: response,
       message,
     };
   }
 
   protected async *streamChat({
     messages,
-    parentEvent,
   }: LLMChatParamsStreaming): AsyncIterable<ChatResponseChunk> {
-    //Now let's wrap our stream in a callback
-    const onLLMStream = this.callbackManager?.onLLMStream
-      ? this.callbackManager.onLLMStream
-      : () => {};
-
     const client = await this.session.getClient();
     const chunkStream = await client.chatStream(this.buildParams(messages));
-
-    const event: Event = parentEvent
-      ? parentEvent
-      : {
-          id: "unspecified",
-          type: "llmPredict" as EventType,
-        };
 
     //Indices
     let idx_counter: number = 0;
@@ -149,16 +127,17 @@ export class MistralAI extends BaseLLM {
         part.choices[0].finish_reason === "stop" ? true : false;
 
       const stream_callback: StreamCallbackResponse = {
-        event: event,
         index: idx_counter,
         isDone: isDone,
         token: part,
       };
-      onLLMStream(stream_callback);
+
+      Settings.callbackManager.dispatchEvent("stream", stream_callback);
 
       idx_counter++;
 
       yield {
+        raw: part,
         delta: part.choices[0].delta.content ?? "",
       };
     }

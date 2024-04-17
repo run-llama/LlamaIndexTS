@@ -29,7 +29,6 @@ async function main() {
   // Create an OpenAIAgent with the function tools
   const agent = new OpenAIAgent({
     tools: [queryEngineTool],
-    verbose: true,
   });
 
   // Chat with the agent
@@ -41,6 +40,6 @@ async function main() {
   console.log(String(response));
 }
 
-main().then(() => {
+void main().then(() => {
   console.log("Done");
 });

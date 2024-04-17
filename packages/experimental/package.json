@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/experimental",
   "description": "Experimental package for LlamaIndexTS",
-  "version": "0.0.2",
+  "version": "0.0.12",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.20",
+    "@types/node": "^20.12.7",
     "jsonpath": "^1.1.1",
     "llamaindex": "workspace:*",
     "lodash": "^4.17.21"

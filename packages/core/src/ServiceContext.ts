@@ -1,9 +1,8 @@
 import { PromptHelper } from "./PromptHelper.js";
-import { CallbackManager } from "./callbacks/CallbackManager.js";
 import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
 import type { BaseEmbedding } from "./embeddings/types.js";
-import type { LLM } from "./llm/index.js";
-import { OpenAI } from "./llm/index.js";
+import { OpenAI } from "./llm/open_ai.js";
+import type { LLM } from "./llm/types.js";
 import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
@@ -15,7 +14,6 @@ export interface ServiceContext {
   promptHelper: PromptHelper;
   embedModel: BaseEmbedding;
   nodeParser: NodeParser;
-  callbackManager: CallbackManager;
   // llamaLogger: any;
 }
 
@@ -24,14 +22,12 @@ export interface ServiceContextOptions {
   promptHelper?: PromptHelper;
   embedModel?: BaseEmbedding;
   nodeParser?: NodeParser;
-  callbackManager?: CallbackManager;
   // NodeParser arguments
   chunkSize?: number;
   chunkOverlap?: number;
 }
 
 export function serviceContextFromDefaults(options?: ServiceContextOptions) {
-  const callbackManager = options?.callbackManager ?? new CallbackManager();
   const serviceContext: ServiceContext = {
     llm: options?.llm ?? new OpenAI(),
     embedModel: options?.embedModel ?? new OpenAIEmbedding(),
@@ -42,7 +38,6 @@ export function serviceContextFromDefaults(options?: ServiceContextOptions) {
         chunkOverlap: options?.chunkOverlap,
       }),
     promptHelper: options?.promptHelper ?? new PromptHelper(),
-    callbackManager,
   };
 
   return serviceContext;
@@ -64,9 +59,6 @@ export function serviceContextFromServiceContext(
   }
   if (options.nodeParser) {
     newServiceContext.nodeParser = options.nodeParser;
-  }
-  if (options.callbackManager) {
-    newServiceContext.callbackManager = options.callbackManager;
   }
   return newServiceContext;
 }

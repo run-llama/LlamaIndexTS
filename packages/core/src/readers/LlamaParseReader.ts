@@ -1,8 +1,9 @@
 import { defaultFS, getEnv, type GenericFileSystem } from "@llamaindex/env";
+import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
 import type { FileReader } from "./type.js";
 
-type ResultType = "text" | "markdown";
+type ResultType = "text" | "markdown" | "json";
 
 /**
  * Represents a reader for parsing files using the LlamaParse API.
@@ -109,11 +110,10 @@ export class LlamaParseReader implements FileReader {
   }
 
   private async getMimeType(data: Buffer): Promise<string> {
-    const { fileTypeFromBuffer } = await import("file-type");
-    const type = await fileTypeFromBuffer(data);
-    if (type?.mime !== "application/pdf") {
+    const mimes = filetypemime(data);
+    if (!mimes.includes("application/pdf")) {
       throw new Error("Currently, only PDF files are supported.");
     }
-    return type.mime;
+    return "application/pdf";
   }
 }

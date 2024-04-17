@@ -1,7 +1,7 @@
 /**
  * Top level types to avoid circular dependencies
  */
-import type { Event } from "./callbacks/CallbackManager.js";
+import { type JSONSchemaType } from "ajv";
 import type { Response } from "./Response.js";
 
 /**
@@ -9,7 +9,6 @@ import type { Response } from "./Response.js";
  */
 export interface QueryEngineParamsBase {
   query: string;
-  parentEvent?: Event;
 }
 
 export interface QueryEngineParamsStreaming extends QueryEngineParamsBase {
@@ -32,13 +31,45 @@ export interface BaseQueryEngine {
   query(params: QueryEngineParamsNonStreaming): Promise<Response>;
 }
 
+type Known =
+  | { [key: string]: Known }
+  | [Known, ...Known[]]
+  | Known[]
+  | number
+  | string
+  | boolean
+  | null;
+
+export type ToolMetadata<
+  Parameters extends Record<string, unknown> = Record<string, unknown>,
+> = {
+  description: string;
+  name: string;
+  /**
+   * OpenAI uses JSON Schema to describe the parameters that a tool can take.
+   * @link https://json-schema.org/understanding-json-schema
+   */
+  parameters?: Parameters;
+};
+
 /**
  * Simple Tool interface. Likely to change.
  */
-export interface BaseTool {
-  call?: (...args: any[]) => any;
-  metadata: ToolMetadata;
+export interface BaseTool<Input = any> {
+  /**
+   * This could be undefined if the implementation is not provided,
+   *  which might be the case when communicating with a llm.
+   *
+   * @return string - the output of the tool, should be string in any case for LLM input.
+   */
+  call?: (input: Input) => string | Promise<string>;
+  metadata: // if user input any, we cannot check the schema
+  Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
+
+export type BaseToolWithCall<Input = any> = Omit<BaseTool<Input>, "call"> & {
+  call: NonNullable<Pick<BaseTool<Input>, "call">["call"]>;
+};
 
 /**
  * An OutputParser is used to extract structured data from the raw output of the LLM.
@@ -57,19 +88,6 @@ export interface StructuredOutput<T> {
   parsedOutput: T;
 }
 
-export type ToolParameters = {
-  type: string | "object";
-  properties: Record<string, { type: string; description?: string }>;
-  required?: string[];
-};
-
-export interface ToolMetadata {
-  description: string;
-  name: string;
-  parameters?: ToolParameters;
-  argsKwargs?: Record<string, any>;
-}
-
 export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
 
 export class QueryBundle {
@@ -83,3 +101,5 @@ export class QueryBundle {
     return this.queryStr;
   }
 }
+
+export type UUID = `${string}-${string}-${string}-${string}-${string}`;

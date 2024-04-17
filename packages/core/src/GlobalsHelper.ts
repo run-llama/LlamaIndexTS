@@ -1,26 +1,19 @@
 import { encodingForModel } from "js-tiktoken";
 
-import { randomUUID } from "@llamaindex/env";
-import type {
-  Event,
-  EventTag,
-  EventType,
-} from "./callbacks/CallbackManager.js";
-
 export enum Tokenizers {
   CL100K_BASE = "cl100k_base",
 }
 
 /**
- * Helper class singleton
+ * @internal Helper class singleton
  */
 class GlobalsHelper {
   defaultTokenizer: {
     encode: (text: string) => Uint32Array;
     decode: (tokens: Uint32Array) => string;
-  } | null = null;
+  };
 
-  private initDefaultTokenizer() {
+  constructor() {
     const encoding = encodingForModel("text-embedding-ada-002"); // cl100k_base
 
     this.defaultTokenizer = {
@@ -40,9 +33,6 @@ class GlobalsHelper {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
-    if (!this.defaultTokenizer) {
-      this.initDefaultTokenizer();
-    }
 
     return this.defaultTokenizer!.encode.bind(this.defaultTokenizer);
   }
@@ -51,29 +41,8 @@ class GlobalsHelper {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
-    if (!this.defaultTokenizer) {
-      this.initDefaultTokenizer();
-    }
 
     return this.defaultTokenizer!.decode.bind(this.defaultTokenizer);
-  }
-
-  createEvent({
-    parentEvent,
-    type,
-    tags,
-  }: {
-    parentEvent?: Event;
-    type: EventType;
-    tags?: EventTag[];
-  }): Event {
-    return {
-      id: randomUUID(),
-      type,
-      // inherit parent tags if tags not set
-      tags: tags || parentEvent?.tags,
-      parentId: parentEvent?.id,
-    };
   }
 }
 

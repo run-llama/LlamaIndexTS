@@ -2,22 +2,15 @@ import {
   Document,
   FaithfulnessEvaluator,
   OpenAI,
+  Settings,
   VectorStoreIndex,
-  serviceContextFromDefaults,
 } from "llamaindex";
 
+// Update llm to use OpenAI
+Settings.llm = new OpenAI({ model: "gpt-4" });
+
 async function main() {
-  const llm = new OpenAI({
-    model: "gpt-4",
-  });
-
-  const ctx = serviceContextFromDefaults({
-    llm,
-  });
-
-  const evaluator = new FaithfulnessEvaluator({
-    serviceContext: ctx,
-  });
+  const evaluator = new FaithfulnessEvaluator();
 
   const documents = [
     new Document({
@@ -43,4 +36,4 @@ async function main() {
   console.log(result);
 }
 
-main();
+void main();

@@ -1,13 +1,13 @@
-import { FunctionTool, ReActAgent } from "llamaindex";
+import { Anthropic, FunctionTool, ReActAgent } from "llamaindex";
 
 // Define a function to sum two numbers
-function sumNumbers({ a, b }: { a: number; b: number }): number {
-  return a + b;
+function sumNumbers({ a, b }: { a: number; b: number }) {
+  return `${a + b}`;
 }
 
 // Define a function to divide two numbers
-function divideNumbers({ a, b }: { a: number; b: number }): number {
-  return a / b;
+function divideNumbers({ a, b }: { a: number; b: number }) {
+  return `${a / b}`;
 }
 
 // Define the parameters of the sum function as a JSON schema
@@ -24,7 +24,7 @@ const sumJSON = {
     },
   },
   required: ["a", "b"],
-};
+} as const;
 
 const divideJSON = {
   type: "object",
@@ -39,7 +39,7 @@ const divideJSON = {
     },
   },
   required: ["a", "b"],
-};
+} as const;
 
 async function main() {
   // Create a function tool from the sum function
@@ -56,10 +56,15 @@ async function main() {
     parameters: divideJSON,
   });
 
-  // Create an OpenAIAgent with the function tools
+  const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    model: "claude-3-opus",
+  });
+
+  // Create an ReActAgent with the function tools
   const agent = new ReActAgent({
+    llm: anthropic,
     tools: [functionTool, functionTool2],
-    verbose: true,
   });
 
   // Chat with the agent
@@ -71,6 +76,6 @@ async function main() {
   console.log(String(response));
 }
 
-main().then(() => {
+void main().then(() => {
   console.log("Done");
 });

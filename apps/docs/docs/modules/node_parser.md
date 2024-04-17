@@ -4,15 +4,14 @@ sidebar_position: 4
 
 # NodeParser
 
-The `NodeParser` in LlamaIndex is responsible for splitting `Document` objects into more manageable `Node` objects. When you call `.fromDocuments()`, the `NodeParser` from the `ServiceContext` is used to do this automatically for you. Alternatively, you can use it to split documents ahead of time.
+The `NodeParser` in LlamaIndex is responsible for splitting `Document` objects into more manageable `Node` objects. When you call `.fromDocuments()`, the `NodeParser` from the `Settings` is used to do this automatically for you. Alternatively, you can use it to split documents ahead of time.
 
 ```typescript
 import { Document, SimpleNodeParser } from "llamaindex";
 
 const nodeParser = new SimpleNodeParser();
-const nodes = nodeParser.getNodesFromDocuments([
-  new Document({ text: "I am 10 years old. John is 20 years old." }),
-]);
+
+Settings.nodeParser = nodeParser;
 ```
 
 ## TextSplitter

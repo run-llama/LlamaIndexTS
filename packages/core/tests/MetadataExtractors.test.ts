@@ -1,11 +1,7 @@
+import { Settings } from "llamaindex";
 import { Document } from "llamaindex/Node";
 import type { ServiceContext } from "llamaindex/ServiceContext";
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
-import type {
-  RetrievalCallbackResponse,
-  StreamCallbackResponse,
-} from "llamaindex/callbacks/CallbackManager";
-import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";
 import {
   KeywordExtractor,
@@ -13,66 +9,35 @@ import {
   SummaryExtractor,
   TitleExtractor,
 } from "llamaindex/extractors/index";
-import { OpenAI } from "llamaindex/llm/LLM";
+import { OpenAI } from "llamaindex/llm/open_ai";
 import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockEmbeddingModel,
   mockLlmGeneration,
 } from "./utility/mockOpenAI.js";
 
-// Mock the OpenAI getOpenAISession function during testing
-vi.mock("llamaindex/llm/open_ai", () => {
-  return {
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
-
 describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   let serviceContext: ServiceContext;
-  let streamCallbackData: StreamCallbackResponse[] = [];
-  let retrieveCallbackData: RetrievalCallbackResponse[] = [];
 
   beforeAll(async () => {
-    const callbackManager = new CallbackManager({
-      onLLMStream: (data) => {
-        streamCallbackData.push(data);
-      },
-      onRetrieve: (data) => {
-        retrieveCallbackData.push(data);
-      },
-    });
-
     const languageModel = new OpenAI({
       model: "gpt-3.5-turbo",
-      callbackManager,
     });
 
-    mockLlmGeneration({ languageModel, callbackManager });
+    Settings.llm = languageModel;
+
+    mockLlmGeneration({ languageModel });
 
     const embedModel = new OpenAIEmbedding();
 
     mockEmbeddingModel(embedModel);
 
     serviceContext = serviceContextFromDefaults({
-      callbackManager,
       llm: languageModel,
       embedModel,
     });
-  });
-
-  beforeEach(() => {
-    streamCallbackData = [];
-    retrieveCallbackData = [];
   });
 
   afterAll(() => {

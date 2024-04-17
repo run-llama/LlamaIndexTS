@@ -1,42 +1,27 @@
 import { OpenAIAgentWorker } from "llamaindex/agent/index";
 import { AgentRunner } from "llamaindex/agent/runner/base";
-import { CallbackManager } from "llamaindex/callbacks/CallbackManager";
-import { OpenAI } from "llamaindex/llm/LLM";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { OpenAI } from "llamaindex/llm/open_ai";
+import { beforeEach, describe, expect, it } from "vitest";
 
+import { Settings } from "llamaindex";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
   mockLlmGeneration,
 } from "../../utility/mockOpenAI.js";
 
-vi.mock("llamaindex/llm/open_ai", () => {
-  return {
-    getOpenAISession: vi.fn().mockImplementation(() => null),
-  };
-});
-
 describe("Agent Runner", () => {
   let agentRunner: AgentRunner;
 
   beforeEach(() => {
-    const callbackManager = new CallbackManager({});
-
-    const languageModel = new OpenAI({
+    Settings.llm = new OpenAI({
       model: "gpt-3.5-turbo",
-      callbackManager,
     });
 
-    mockLlmGeneration({
-      languageModel,
-      callbackManager,
-    });
+    mockLlmGeneration();
 
     agentRunner = new AgentRunner({
-      llm: languageModel,
       agentWorker: new OpenAIAgentWorker({
-        llm: languageModel,
         tools: [],
-        verbose: false,
       }),
     });
   });

@@ -1,18 +1,23 @@
-import { randomUUID } from "@llamaindex/env";
+import { pipeline, randomUUID } from "@llamaindex/env";
+import type { ChatCompletionToolChoiceOption } from "openai/resources/chat/completions";
 import { Response } from "../../Response.js";
-import type { CallbackManager } from "../../callbacks/CallbackManager.js";
+import { Settings } from "../../Settings.js";
 import {
   AgentChatResponse,
   ChatResponseMode,
   StreamingAgentChatResponse,
 } from "../../engines/chat/types.js";
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
+import {
+  OpenAI,
+  isFunctionCallingModel,
+  type ChatMessage,
+  type ChatResponseChunk,
+  type LLMChatParamsBase,
+  type OpenAIAdditionalChatOptions,
+  type ToolCallLLMMessageOptions,
+  type ToolCallOptions,
 } from "../../llm/index.js";
-import { OpenAI } from "../../llm/index.js";
-import { streamConverter, streamReducer } from "../../llm/utils.js";
+import { extractText } from "../../llm/utils.js";
 import { ChatMemoryBuffer } from "../../memory/ChatMemoryBuffer.js";
 import type { ObjectRetriever } from "../../objects/base.js";
 import type { ToolOutput } from "../../tools/types.js";
@@ -21,52 +26,40 @@ import type { BaseTool } from "../../types.js";
 import type { AgentWorker, Task } from "../types.js";
 import { TaskStep, TaskStepOutput } from "../types.js";
 import { addUserStepToMemory, getFunctionByName } from "../utils.js";
-import type { OpenAIToolCall } from "./types/chat.js";
-import { toOpenAiTool } from "./utils.js";
 
-const DEFAULT_MAX_FUNCTION_CALLS = 5;
-
-/**
- * Call function.
- * @param tools: tools
- * @param toolCall: tool call
- * @param verbose: verbose
- * @returns: void
- */
 async function callFunction(
   tools: BaseTool[],
-  toolCall: OpenAIToolCall,
-  verbose: boolean = false,
-): Promise<[ChatMessage, ToolOutput]> {
-  const id_ = toolCall.id;
-  const functionCall = toolCall.function;
-  const name = toolCall.function.name;
-  const argumentsStr = toolCall.function.arguments;
+  toolCall: ToolCallOptions["toolCall"],
+): Promise<[ChatMessage<ToolCallLLMMessageOptions>, ToolOutput]> {
+  const id = toolCall.id;
+  const name = toolCall.name;
+  const input = toolCall.input;
 
-  if (verbose) {
+  if (Settings.debug) {
     console.log("=== Calling Function ===");
-    console.log(`Calling function: ${name} with args: ${argumentsStr}`);
+    console.log(`Calling function: ${name} with args: ${input}`);
   }
 
   const tool = getFunctionByName(tools, name);
-  const argumentDict = JSON.parse(argumentsStr);
 
   // Call tool
   // Use default error message
-  const output = await callToolWithErrorHandling(tool, argumentDict, null);
+  const output = await callToolWithErrorHandling(tool, input);
 
-  if (verbose) {
+  if (Settings.debug) {
     console.log(`Got output ${output}`);
     console.log("==========================");
   }
 
   return [
     {
-      content: String(output),
-      role: "tool",
-      additionalKwargs: {
-        name,
-        tool_call_id: id_,
+      content: `${output}`,
+      role: "user",
+      options: {
+        toolResult: {
+          id,
+          isError: false,
+        },
       },
     },
     output,
@@ -77,10 +70,8 @@ type OpenAIAgentWorkerParams = {
   tools?: BaseTool[];
   llm?: OpenAI;
   prefixMessages?: ChatMessage[];
-  verbose?: boolean;
   maxFunctionCalls?: number;
-  callbackManager?: CallbackManager | undefined;
-  toolRetriever?: ObjectRetriever;
+  toolRetriever?: ObjectRetriever<BaseTool>;
 };
 
 type CallFunctionOutput = {
@@ -88,43 +79,40 @@ type CallFunctionOutput = {
   toolOutput: ToolOutput;
 };
 
-/**
- * OpenAI agent worker.
- * This class is responsible for running the agent.
- */
-export class OpenAIAgentWorker implements AgentWorker {
+export class OpenAIAgentWorker
+  implements AgentWorker<LLMChatParamsBase<OpenAIAdditionalChatOptions>>
+{
   private llm: OpenAI;
-  private verbose: boolean;
-  private maxFunctionCalls: number;
+  private maxFunctionCalls: number = 5;
 
   public prefixMessages: ChatMessage[];
-  public callbackManager: CallbackManager | undefined;
 
   private _getTools: (input: string) => Promise<BaseTool[]>;
 
-  /**
-   * Initialize.
-   */
   constructor({
     tools = [],
     llm,
     prefixMessages,
-    verbose,
-    maxFunctionCalls = DEFAULT_MAX_FUNCTION_CALLS,
-    callbackManager,
+    maxFunctionCalls,
     toolRetriever,
   }: OpenAIAgentWorkerParams) {
-    this.llm = llm ?? new OpenAI({ model: "gpt-3.5-turbo-0613" });
-    this.verbose = verbose || false;
-    this.maxFunctionCalls = maxFunctionCalls;
+    this.llm =
+      llm ?? isFunctionCallingModel(Settings.llm)
+        ? (Settings.llm as OpenAI)
+        : new OpenAI({
+            model: "gpt-3.5-turbo-0613",
+          });
+    if (maxFunctionCalls) {
+      this.maxFunctionCalls = maxFunctionCalls;
+    }
     this.prefixMessages = prefixMessages || [];
-    this.callbackManager = callbackManager || this.llm.callbackManager;
 
     if (tools.length > 0 && toolRetriever) {
       throw new Error("Cannot specify both tools and tool_retriever");
     } else if (tools.length > 0) {
       this._getTools = async () => tools;
     } else if (toolRetriever) {
+      // fixme: this won't work, type mismatch
       this._getTools = async (message: string) =>
         toolRetriever.retrieve(message);
     } else {
@@ -132,12 +120,7 @@ export class OpenAIAgentWorker implements AgentWorker {
     }
   }
 
-  /**
-   * Get all messages.
-   * @param task: task
-   * @returns: messages
-   */
-  public getAllMessages(task: Task): ChatMessage[] {
+  public getAllMessages(task: Task): ChatMessage<ToolCallLLMMessageOptions>[] {
     return [
       ...this.prefixMessages,
       ...task.memory.get(),
@@ -145,133 +128,158 @@ export class OpenAIAgentWorker implements AgentWorker {
     ];
   }
 
-  /**
-   * Get latest tool calls.
-   * @param task: task
-   * @returns: tool calls
-   */
-  public getLatestToolCalls(task: Task): OpenAIToolCall[] | null {
+  public getLatestToolCall(task: Task): ToolCallOptions["toolCall"] | null {
     const chatHistory: ChatMessage[] = task.extraState.newMemory.getAll();
 
     if (chatHistory.length === 0) {
       return null;
     }
 
-    return chatHistory[chatHistory.length - 1].additionalKwargs?.toolCalls;
+    // @ts-expect-error fixme
+    return chatHistory[chatHistory.length - 1].options?.toolCall;
   }
 
-  /**
-   *
-   * @param task
-   * @param openaiTools
-   * @param toolChoice
-   * @returns
-   */
-  private _getLlmChatKwargs(
+  private _getLlmChatParams(
     task: Task,
-    openaiTools: { [key: string]: any }[],
-    toolChoice: string | { [key: string]: any } = "auto",
-  ): { [key: string]: any } {
-    const llmChatKwargs: { [key: string]: any } = {
+    tools: BaseTool[],
+    toolChoice: ChatCompletionToolChoiceOption = "auto",
+  ): LLMChatParamsBase<OpenAIAdditionalChatOptions, ToolCallLLMMessageOptions> {
+    const llmChatParams = {
       messages: this.getAllMessages(task),
-    };
+      tools: undefined as BaseTool[] | undefined,
+      additionalChatOptions: {} as OpenAIAdditionalChatOptions,
+    } satisfies LLMChatParamsBase<
+      OpenAIAdditionalChatOptions,
+      ToolCallLLMMessageOptions
+    >;
 
-    if (openaiTools.length > 0) {
-      llmChatKwargs.tools = openaiTools;
-      llmChatKwargs.toolChoice = toolChoice;
+    if (tools.length > 0) {
+      llmChatParams.tools = tools;
+      llmChatParams.additionalChatOptions.tool_choice = toolChoice;
     }
 
-    return llmChatKwargs;
+    return llmChatParams;
   }
 
-  /**
-   * Process message.
-   * @param task: task
-   * @param chatResponse: chat response
-   * @returns: agent chat response
-   */
   private _processMessage(
     task: Task,
-    chatResponse: ChatResponse,
+    aiMessage: ChatMessage,
   ): AgentChatResponse {
-    const aiMessage = chatResponse.message;
     task.extraState.newMemory.put(aiMessage);
 
-    return new AgentChatResponse(aiMessage.content, task.extraState.sources);
+    return new AgentChatResponse(
+      extractText(aiMessage.content),
+      task.extraState.sources,
+    );
   }
 
   private async _getStreamAiResponse(
     task: Task,
-    llmChatKwargs: any,
-  ): Promise<StreamingAgentChatResponse> {
+    llmChatParams: LLMChatParamsBase<
+      OpenAIAdditionalChatOptions,
+      ToolCallLLMMessageOptions
+    >,
+  ): Promise<StreamingAgentChatResponse | AgentChatResponse> {
     const stream = await this.llm.chat({
       stream: true,
-      ...llmChatKwargs,
+      ...llmChatParams,
     });
 
-    const iterator = streamConverter(
-      streamReducer({
-        stream,
-        initialValue: "",
-        reducer: (accumulator, part) => (accumulator += part.delta),
-        finished: (accumulator) => {
-          task.extraState.newMemory.put({
-            content: accumulator,
-            role: "assistant",
-          });
-        },
-      }),
-      (r: ChatResponseChunk) => new Response(r.delta),
+    const responseChunkStream = new ReadableStream<
+      ChatResponseChunk<ToolCallLLMMessageOptions>
+    >({
+      async start(controller) {
+        for await (const chunk of stream) {
+          controller.enqueue(chunk);
+        }
+        controller.close();
+      },
+    });
+    const [pipStream, finalStream] = responseChunkStream.tee();
+    const reader = pipStream.getReader();
+    const { value } = await reader.read();
+    reader.releaseLock();
+    if (value === undefined) {
+      throw new Error("first chunk value is undefined, this should not happen");
+    }
+    // check if first chunk has tool calls, if so, this is a function call
+    // otherwise, it's a regular message
+    const hasToolCall: boolean = !!(
+      value.options && "toolCall" in value.options
     );
 
-    return new StreamingAgentChatResponse(iterator, task.extraState.sources);
+    if (hasToolCall) {
+      return this._processMessage(task, {
+        content: await pipeline(finalStream, async (iterator) => {
+          let content = "";
+          for await (const value of iterator) {
+            content += value.delta;
+          }
+          return content;
+        }),
+        role: "assistant",
+        options: value.options,
+      });
+    } else {
+      const [responseStream, chunkStream] = finalStream.tee();
+      let content = "";
+      return new StreamingAgentChatResponse(
+        responseStream.pipeThrough<Response>({
+          readable: new ReadableStream({
+            async start(controller) {
+              for await (const chunk of chunkStream) {
+                controller.enqueue(new Response(chunk.delta));
+              }
+              controller.close();
+            },
+          }),
+          writable: new WritableStream({
+            write(chunk) {
+              content += chunk.delta;
+            },
+            close() {
+              task.extraState.newMemory.put({
+                content,
+                role: "assistant",
+              });
+            },
+          }),
+        }),
+        task.extraState.sources,
+      );
+    }
   }
 
-  /**
-   * Get agent response.
-   * @param task: task
-   * @param mode: mode
-   * @param llmChatKwargs: llm chat kwargs
-   * @returns: agent chat response
-   */
   private async _getAgentResponse(
     task: Task,
     mode: ChatResponseMode,
-    llmChatKwargs: any,
+    llmChatParams: LLMChatParamsBase<
+      OpenAIAdditionalChatOptions,
+      ToolCallLLMMessageOptions
+    >,
   ): Promise<AgentChatResponse | StreamingAgentChatResponse> {
     if (mode === ChatResponseMode.WAIT) {
-      const chatResponse = (await this.llm.chat({
+      const chatResponse = await this.llm.chat({
         stream: false,
-        ...llmChatKwargs,
-      })) as unknown as ChatResponse;
+        ...llmChatParams,
+      });
 
-      return this._processMessage(task, chatResponse) as AgentChatResponse;
+      return this._processMessage(
+        task,
+        chatResponse.message,
+      ) as AgentChatResponse;
     } else if (mode === ChatResponseMode.STREAM) {
-      return this._getStreamAiResponse(task, llmChatKwargs);
+      return this._getStreamAiResponse(task, llmChatParams);
     }
 
     throw new Error("Invalid mode");
   }
 
-  /**
-   * Call function.
-   * @param tools: tools
-   * @param toolCall: tool call
-   * @param memory: memory
-   * @param sources: sources
-   * @returns: void
-   */
   async callFunction(
     tools: BaseTool[],
-    toolCall: OpenAIToolCall,
+    toolCall: ToolCallOptions["toolCall"],
   ): Promise<CallFunctionOutput> {
-    const functionCall = toolCall.function;
-
-    if (!functionCall) {
-      throw new Error("Invalid tool_call object");
-    }
-
-    const functionMessage = await callFunction(tools, toolCall, this.verbose);
+    const functionMessage = await callFunction(tools, toolCall);
 
     const message = functionMessage[0];
     const toolOutput = functionMessage[1];
@@ -282,16 +290,12 @@ export class OpenAIAgentWorker implements AgentWorker {
     };
   }
 
-  /**
-   * Initialize step.
-   * @param task: task
-   * @param kwargs: kwargs
-   * @returns: task step
-   */
-  initializeStep(task: Task, kwargs?: any): TaskStep {
+  initializeStep(task: Task): TaskStep {
     const sources: ToolOutput[] = [];
 
-    const newMemory = new ChatMemoryBuffer();
+    const newMemory = new ChatMemoryBuffer({
+      tokenLimit: task.memory.tokenLimit,
+    });
 
     const taskState = {
       sources,
@@ -307,32 +311,17 @@ export class OpenAIAgentWorker implements AgentWorker {
     return new TaskStep(task.taskId, randomUUID(), task.input);
   }
 
-  /**
-   * Should continue.
-   * @param toolCalls: tool calls
-   * @param nFunctionCalls: number of function calls
-   * @returns: boolean
-   */
   private _shouldContinue(
-    toolCalls: OpenAIToolCall[] | null,
+    toolCall: ToolCallOptions["toolCall"] | null,
     nFunctionCalls: number,
-  ): boolean {
+  ): toolCall is ToolCallOptions["toolCall"] {
     if (nFunctionCalls > this.maxFunctionCalls) {
       return false;
     }
 
-    if (toolCalls?.length === 0) {
-      return false;
-    }
-
-    return true;
+    return !!toolCall;
   }
 
-  /**
-   * Get tools.
-   * @param input: input
-   * @returns: tools
-   */
   async getTools(input: string): Promise<BaseTool[]> {
     return this._getTools(input);
   }
@@ -341,53 +330,41 @@ export class OpenAIAgentWorker implements AgentWorker {
     step: TaskStep,
     task: Task,
     mode: ChatResponseMode = ChatResponseMode.WAIT,
-    toolChoice: string | { [key: string]: any } = "auto",
+    toolChoice: ChatCompletionToolChoiceOption = "auto",
   ): Promise<TaskStepOutput> {
     const tools = await this.getTools(task.input);
 
     if (step.input) {
-      addUserStepToMemory(step, task.extraState.newMemory, this.verbose);
+      addUserStepToMemory(step, task.extraState.newMemory);
     }
 
-    const openaiTools = tools.map((tool) =>
-      toOpenAiTool({
-        name: tool.metadata.name,
-        description: tool.metadata.description,
-        parameters: tool.metadata.parameters,
-      }),
-    );
-
-    const llmChatKwargs = this._getLlmChatKwargs(task, openaiTools, toolChoice);
+    const llmChatParams = this._getLlmChatParams(task, tools, toolChoice);
 
     const agentChatResponse = await this._getAgentResponse(
       task,
       mode,
-      llmChatKwargs,
+      llmChatParams,
     );
 
-    const latestToolCalls = this.getLatestToolCalls(task) || [];
+    const latestToolCall = this.getLatestToolCall(task) ?? null;
 
     let isDone: boolean;
-    let newSteps: TaskStep[] = [];
+    let newSteps: TaskStep[];
 
-    if (
-      !this._shouldContinue(latestToolCalls, task.extraState.nFunctionCalls)
-    ) {
+    if (!this._shouldContinue(latestToolCall, task.extraState.nFunctionCalls)) {
       isDone = true;
       newSteps = [];
     } else {
       isDone = false;
-      for (const toolCall of latestToolCalls) {
-        const { message, toolOutput } = await this.callFunction(
-          tools,
-          toolCall,
-        );
+      const { message, toolOutput } = await this.callFunction(
+        tools,
+        latestToolCall,
+      );
 
-        task.extraState.sources.push(toolOutput);
-        task.extraState.newMemory.put(message);
+      task.extraState.sources.push(toolOutput);
+      task.extraState.newMemory.put(message);
 
-        task.extraState.nFunctionCalls += 1;
-      }
+      task.extraState.nFunctionCalls += 1;
 
       newSteps = [step.getNextStep(randomUUID(), undefined)];
     }
@@ -395,45 +372,25 @@ export class OpenAIAgentWorker implements AgentWorker {
     return new TaskStepOutput(agentChatResponse, step, newSteps, isDone);
   }
 
-  /**
-   * Run step.
-   * @param step: step
-   * @param task: task
-   * @param kwargs: kwargs
-   * @returns: task step output
-   */
   async runStep(
     step: TaskStep,
     task: Task,
-    kwargs?: any,
+    chatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
   ): Promise<TaskStepOutput> {
-    const toolChoice = kwargs?.toolChoice || "auto";
+    const toolChoice = chatParams?.additionalChatOptions?.tool_choice ?? "auto";
     return this._runStep(step, task, ChatResponseMode.WAIT, toolChoice);
   }
 
-  /**
-   * Stream step.
-   * @param step: step
-   * @param task: task
-   * @param kwargs: kwargs
-   * @returns: task step output
-   */
   async streamStep(
     step: TaskStep,
     task: Task,
-    kwargs?: any,
+    chatParams: LLMChatParamsBase<OpenAIAdditionalChatOptions>,
   ): Promise<TaskStepOutput> {
-    const toolChoice = kwargs?.toolChoice || "auto";
+    const toolChoice = chatParams?.additionalChatOptions?.tool_choice ?? "auto";
     return this._runStep(step, task, ChatResponseMode.STREAM, toolChoice);
   }
 
-  /**
-   * Finalize task.
-   * @param task: task
-   * @param kwargs: kwargs
-   * @returns: void
-   */
-  finalizeTask(task: Task, kwargs?: any): void {
+  finalizeTask(task: Task): void {
     task.memory.set(task.memory.get().concat(task.extraState.newMemory.get()));
     task.extraState.newMemory.reset();
   }

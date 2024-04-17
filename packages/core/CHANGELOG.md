@@ -1,5 +1,102 @@
 # llamaindex
 
+## 0.2.9
+
+### Patch Changes
+
+- 76c3fd6: Add score to source nodes response
+- 208282d: feat: init anthropic agent
+
+  remove the `tool` | `function` type in `MessageType`. Replace with `assistant` instead.
+  This is because these two types are only available for `OpenAI`.
+  Since `OpenAI` deprecates the function type, we support the Claude 3 tool call.
+
+## 0.2.8
+
+### Patch Changes
+
+- Add ToolsFactory to generate agent tools
+
+## 0.2.7
+
+### Patch Changes
+
+- 96f8f40: fix: agent stream
+- Updated dependencies
+  - @llamaindex/env@0.0.7
+
+## 0.2.6
+
+### Patch Changes
+
+- a3b4409: Fix agent streaming with new OpenAI models
+
+## 0.2.5
+
+### Patch Changes
+
+- 7d56cdf: Allow OpenAIAgent to be called without tools
+
+## 0.2.4
+
+### Patch Changes
+
+- 3bc77f7: gpt-4-turbo GA
+- 8d2b21e: Mistral 0.1.3
+
+## 0.2.3
+
+### Patch Changes
+
+- f0704ec: Support streaming for OpenAI agent (and OpenAI tool calls)
+- Removed 'parentEvent' - Use 'event.reason?.computedCallers' instead
+- 3cbfa98: Added LlamaCloudIndex.fromDocuments
+
+## 0.2.2
+
+### Patch Changes
+
+- 3f8407c: Add pipeline.register to create a managed index in LlamaCloud
+- 60a1603: fix: make edge run build after core
+- fececd8: feat: add tool factory
+- 1115f83: fix: throw error when no pipelines exist for the retriever
+- 7a23cc6: feat: improve CallbackManager
+- ea467fa: Update the list of supported Azure OpenAI API versions as of 2024-04-02.
+- 6d9e015: feat: use claude3 with react agent
+- 0b665bd: feat: add wikipedia tool
+- 24b4033: feat: add result type json
+- 8b28092: Add support for doc store strategies to VectorStoreIndex.fromDocuments
+- Updated dependencies [7a23cc6]
+  - @llamaindex/env@0.0.6
+
+## 0.2.1
+
+### Patch Changes
+
+- 41210df: Add auto create milvus collection and add milvus node metadata
+- 137cf67: Use Pinecone namespaces for all operations
+- 259c842: Add support for edge runtime by using @llamaindex/edge
+
+## 0.2.0
+
+### Minor Changes
+
+- bf583a7: Use parameter object for retrieve function of Retriever (to align usage with query function of QueryEngine)
+
+### Patch Changes
+
+- d2e8d0c: add support for Milvus vector store
+- aefc326: feat: experimental package + json query engine
+- 484a710: - Add missing exports:
+  - `IndexStructType`,
+  - `IndexDict`,
+  - `jsonToIndexStruct`,
+  - `IndexList`,
+  - `IndexStruct`
+  - Fix `IndexDict.toJson()` method
+- d766bd0: Add streaming to agents
+- dd95927: add Claude Haiku support and update anthropic SDK
+
 ## 0.1.21
 
 ### Patch Changes

@@ -1,21 +1,10 @@
-import {
-  CorrectnessEvaluator,
-  OpenAI,
-  serviceContextFromDefaults,
-} from "llamaindex";
+import { CorrectnessEvaluator, OpenAI, Settings } from "llamaindex";
+
+// Update llm to use OpenAI
+Settings.llm = new OpenAI({ model: "gpt-4" });
 
 async function main() {
-  const llm = new OpenAI({
-    model: "gpt-4",
-  });
-
-  const ctx = serviceContextFromDefaults({
-    llm,
-  });
-
-  const evaluator = new CorrectnessEvaluator({
-    serviceContext: ctx,
-  });
+  const evaluator = new CorrectnessEvaluator();
 
   const query =
     "Can you explain the theory of relativity proposed by Albert Einstein in detail?";
@@ -33,4 +22,4 @@ However, general relativity, published in 1915, extended these ideas to include 
   console.log(result);
 }
 
-main();
+void main();

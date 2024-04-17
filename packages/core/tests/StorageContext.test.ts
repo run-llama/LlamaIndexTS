@@ -1,21 +1,40 @@
-import { storageContextFromDefaults } from "llamaindex/storage/StorageContext";
+import {
+  storageContextFromDefaults,
+  type StorageContext,
+} from "llamaindex/storage/StorageContext";
 import { existsSync, rmSync } from "node:fs";
-import { describe, expect, test, vi, vitest } from "vitest";
-
+import { mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  test,
+  vi,
+  vitest,
+} from "vitest";
+const testDir = await mkdtemp(join(tmpdir(), "test-"));
 vitest.spyOn(console, "error");
 
 describe("StorageContext", () => {
+  let storageContext: StorageContext;
+
+  beforeAll(async () => {
+    storageContext = await storageContextFromDefaults({
+      persistDir: testDir,
+    });
+  });
+
   test("initializes", async () => {
     vi.mocked(console.error).mockImplementation(() => {}); // silence console.error
 
-    const storageContext = await storageContextFromDefaults({
-      persistDir: "/tmp/test_dir",
-    });
-
-    expect(existsSync("/tmp/test_dir")).toBe(true);
+    expect(existsSync(testDir)).toBe(true);
     expect(storageContext).toBeDefined();
+  });
 
-    // cleanup
-    rmSync("/tmp/test_dir", { recursive: true });
+  afterAll(() => {
+    rmSync(testDir, { recursive: true });
   });
 });
