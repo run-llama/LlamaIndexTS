@@ -10,7 +10,6 @@ import type {
   ChatResponse,
   ChatResponseChunk,
   LLM,
-  ToolCallLLMMessageOptions,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import type { BaseTool, BaseToolWithCall, UUID } from "../types.js";
@@ -188,7 +187,7 @@ export abstract class AgentRunner<
     return this.#llm;
   }
 
-  get chatHistory(): ChatMessage<ToolCallLLMMessageOptions>[] {
+  get chatHistory(): ChatMessage<AdditionalMessageOptions>[] {
     return this.#chatHistory;
   }
 
