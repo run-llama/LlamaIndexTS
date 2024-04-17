@@ -1,6 +1,6 @@
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import { prettifyError } from "../internal/utils.js";
-import type { ToolCall } from "../llm/index.js";
+import { isAsyncIterable, prettifyError } from "../internal/utils.js";
+import type { ChatMessage, ChatResponseChunk, ToolCall } from "../llm/index.js";
 import type { BaseTool } from "../types.js";
 import type { ToolOutput } from "./base.js";
 
@@ -29,7 +29,16 @@ export async function callTool(
     };
   }
   try {
-    output = await call(toolCall.input);
+    let input = toolCall.input;
+    if (typeof input === "string") {
+      input = JSON.parse(input);
+    }
+    getCallbackManager().dispatchEvent("llm-tool-call", {
+      payload: {
+        toolCall: { ...toolCall },
+      },
+    });
+    output = await call.call(tool, input);
     const toolOutput: ToolOutput = {
       tool,
       input: toolCall.input,
@@ -42,6 +51,7 @@ export async function callTool(
         toolResult: { ...toolOutput },
       },
     });
+    return toolOutput;
   } catch (e) {
     output = prettifyError(e);
   }
@@ -51,4 +61,28 @@ export async function callTool(
     output,
     isError: true,
   };
+}
+
+export async function consumeAsyncIterable<Options extends object>(
+  input: ChatMessage<Options> | AsyncIterable<ChatResponseChunk<Options>>,
+): Promise<ChatMessage<Options>> {
+  if (isAsyncIterable(input)) {
+    const result: ChatMessage<Options> = {
+      content: "",
+      role: "assistant",
+      options: {} as Options,
+    };
+    for await (const chunk of input) {
+      result.content += chunk.delta;
+      if (chunk.options) {
+        result.options = {
+          ...result.options,
+          ...chunk.options,
+        };
+      }
+    }
+    return result;
+  } else {
+    return input;
+  }
 }

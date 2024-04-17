@@ -1,6 +1,7 @@
 import { consola } from "consola";
 import { Anthropic, FunctionTool, Settings, type LLM } from "llamaindex";
 import { AnthropicAgent } from "llamaindex/agent/anthropic";
+import { extractText } from "llamaindex/llm/utils";
 import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { sumNumbersTool } from "./fixtures/tools.js";
@@ -73,9 +74,8 @@ await test("anthropic agent", async (t) => {
     const result = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
-    consola.debug("response:", result.response);
-    ok(typeof result.response === "string");
-    ok(result.response.includes("35"));
+    consola.debug("response:", result.message.content);
+    ok(extractText(result.message.content).includes("35"));
   });
 
   await t.test("async function", async () => {
@@ -108,11 +108,11 @@ await test("anthropic agent", async (t) => {
     const agent = new AnthropicAgent({
       tools: [showUniqueId],
     });
-    const { response } = await agent.chat({
+    const { message } = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
-    consola.debug("response:", response);
-    ok(response.includes(uniqueId));
+    consola.debug("response:", message);
+    ok(extractText(message.content).includes(uniqueId));
   });
 
   await t.test("sum numbers", async () => {
@@ -124,6 +124,6 @@ await test("anthropic agent", async (t) => {
       message: "how much is 1 + 1?",
     });
 
-    ok(response.response.includes("2"));
+    ok(extractText(response.message.content).includes("2"));
   });
 });

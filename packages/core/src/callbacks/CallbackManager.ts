@@ -207,10 +207,8 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    queueMicrotask(() => {
-      handlers.forEach((handler) =>
-        handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
-      );
-    });
+    handlers.forEach((handler) =>
+      handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
+    );
   }
 }

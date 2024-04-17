@@ -46,10 +46,10 @@ export class OpenAI implements LLM {
     if (llmCompleteMockStorage.llmEventStart.length > 0) {
       const chatMessage =
         llmCompleteMockStorage.llmEventStart.shift()!["messages"];
-      strictEqual(chatMessage.length, params.messages.length);
+      strictEqual(params.messages.length, chatMessage.length);
       for (let i = 0; i < chatMessage.length; i++) {
-        strictEqual(chatMessage[i].role, params.messages[i].role);
-        deepStrictEqual(chatMessage[i].content, params.messages[i].content);
+        strictEqual(params.messages[i].role, chatMessage[i].role);
+        deepStrictEqual(params.messages[i].content, chatMessage[i].content);
       }
 
       if (llmCompleteMockStorage.llmEventEnd.length > 0) {
@@ -89,9 +89,9 @@ export class OpenAI implements LLM {
     if (llmCompleteMockStorage.llmEventStart.length > 0) {
       const chatMessage =
         llmCompleteMockStorage.llmEventStart.shift()!["messages"];
-      strictEqual(chatMessage.length, 1);
-      strictEqual(chatMessage[0].role, "user");
-      strictEqual(chatMessage[0].content, params.prompt);
+      strictEqual(1, chatMessage.length);
+      strictEqual("user", chatMessage[0].role);
+      strictEqual(params.prompt, chatMessage[0].content);
     }
     if (llmCompleteMockStorage.llmEventEnd.length > 0) {
       const response = llmCompleteMockStorage.llmEventEnd.shift()!["response"];

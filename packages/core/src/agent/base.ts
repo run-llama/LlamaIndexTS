@@ -1,18 +1,20 @@
 import { pipeline, randomUUID } from "@llamaindex/env";
 import {
-  AgentChatResponse,
   type ChatEngineParamsNonStreaming,
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { isAsyncIterable } from "../internal/utils.js";
 import type {
   ChatMessage,
   ChatResponse,
+  ChatResponseChunk,
   LLM,
   ToolCallLLMMessageOptions,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import type { BaseTool, BaseToolWithCall, UUID } from "../types.js";
+import { consumeAsyncIterable } from "./utils.js";
 
 export const MAX_TOOL_CALLS = 10;
 
@@ -53,7 +55,7 @@ export type TaskStep<
     : never,
 > = {
   id: UUID;
-  input: ChatMessage<AdditionalMessageOptions>;
+  input: ChatMessage<AdditionalMessageOptions> | null;
   context: AgentTaskContext<Model, AdditionalMessageOptions>;
 
   // linked list
@@ -70,7 +72,10 @@ export type TaskStepOutput<
     : never,
 > = {
   taskStep: TaskStep<Model, AdditionalMessageOptions>;
-  output: ChatResponse<AdditionalMessageOptions>;
+  output:
+    | null
+    | ChatResponse<AdditionalMessageOptions>
+    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
   isLast: boolean;
 };
 
@@ -100,9 +105,10 @@ export async function* createTaskImpl<
 >(
   handler: TaskHandler<Model, AdditionalMessageOptions>,
   context: AgentTaskContext<Model, AdditionalMessageOptions>,
-  input: ChatMessage<AdditionalMessageOptions>,
+  _input: ChatMessage<AdditionalMessageOptions>,
 ): AsyncGenerator<TaskStepOutput<Model, AdditionalMessageOptions>> {
   let isDone = false;
+  let input: ChatMessage<AdditionalMessageOptions> | null = _input;
   let prevStep: TaskStep<Model, AdditionalMessageOptions> | null = null;
   while (!isDone) {
     const step: TaskStep<Model, AdditionalMessageOptions> = {
@@ -115,7 +121,16 @@ export async function* createTaskImpl<
     // todo: handle case tool call count over limit
     const taskOutput = await handler(step);
     const { isLast, output, taskStep } = taskOutput;
-    input = output.message;
+    // do not consume last output
+    if (!isLast) {
+      if (output) {
+        input = isAsyncIterable(output)
+          ? await consumeAsyncIterable(output)
+          : output.message;
+      } else {
+        input = null;
+      }
+    }
     context = {
       ...taskStep.context,
       toolCallCount: prevToolCallCount + 1,
@@ -183,10 +198,19 @@ export abstract class AgentRunner<
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
+  async chat(
+    params: ChatEngineParamsNonStreaming,
+  ): Promise<ChatResponse<AdditionalMessageOptions>>;
+  async chat(
+    params: ChatEngineParamsStreaming,
+  ): Promise<AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
-  ): Promise<Promise<AgentChatResponse>> {
+  ): Promise<
+    | ChatResponse<AdditionalMessageOptions>
+    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
+  > {
     const task = await this.#runner.createTask(extractText(params.message), {
       stream: !!params.stream,
       toolCallCount: 0,
@@ -206,7 +230,7 @@ export abstract class AgentRunner<
     });
     const { output, taskStep } = stepOutput;
     this.#chatHistory = [...taskStep.context.messages];
-    return new AgentChatResponse(extractText(output.message.content));
+    return output!;
   }
 }
 

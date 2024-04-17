@@ -1,11 +1,14 @@
 import { Settings } from "../Settings.js";
 import {
-  AgentChatResponse,
   type ChatEngineParamsNonStreaming,
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { Anthropic } from "../llm/anthropic.js";
-import type { ChatMessage, ToolCallLLMMessageOptions } from "../llm/index.js";
+import type {
+  ChatMessage,
+  ChatResponse,
+  ToolCallLLMMessageOptions,
+} from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
 import {
@@ -84,9 +87,13 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
     );
   }
 
+  async chat(
+    params: ChatEngineParamsNonStreaming,
+  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
+  async chat(params: ChatEngineParamsStreaming): Promise<never>;
   override async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
-  ): Promise<Promise<AgentChatResponse>> {
+  ) {
     if (params.stream) {
       throw new Error("Anthropic does not support streaming");
     }
@@ -96,7 +103,9 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
   static taskHandler: TaskHandler<Anthropic> = async (step) => {
     const { input } = step;
     const { llm, tools, stream } = step.context;
-    step.context.messages = [...step.context.messages, input];
+    if (input) {
+      step.context.messages = [...step.context.messages, input];
+    }
     if (stream === true) {
       throw new Error("Anthropic does not support streaming");
     }

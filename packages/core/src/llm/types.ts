@@ -1,5 +1,5 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { ToolOutput } from "../agent/anthropic.js";
+import type { ToolOutput } from "../agent/base.js";
 import type { BaseTool, UUID } from "../types.js";
 
 type LLMBaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{

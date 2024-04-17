@@ -10,6 +10,7 @@ import {
   VectorStoreIndex,
   type LLM,
 } from "llamaindex";
+import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { divideNumbersTool, sumNumbersTool } from "./fixtures/tools.js";
@@ -81,12 +82,11 @@ await test("gpt-4-turbo", async (t) => {
         },
       ],
     });
-    const { response } = await agent.chat({
+    const { message } = await agent.chat({
       message: "What is the weather in San Jose?",
     });
-    consola.debug("response:", response);
-    ok(typeof response === "string");
-    ok(response.includes("45"));
+    consola.debug("response:", message);
+    ok(extractText(message.content).includes("45"));
   });
 });
 
@@ -116,9 +116,8 @@ await test("agent", async (t) => {
     const result = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
-    consola.debug("response:", result.response);
-    ok(typeof result.response === "string");
-    ok(result.response.includes("35"));
+    consola.debug("response:", result.message);
+    ok(extractText(result.message.content).includes("35"));
   });
 
   await t.test("async function", async () => {
@@ -151,11 +150,10 @@ await test("agent", async (t) => {
     const agent = new OpenAIAgent({
       tools: [showUniqueId],
     });
-    const { response } = await agent.chat({
+    const { message } = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
-    consola.debug("response:", response);
-    ok(response.includes(uniqueId));
+    ok(extractText(message.content).includes(uniqueId));
   });
 
   await t.test("sum numbers", async () => {
@@ -167,7 +165,7 @@ await test("agent", async (t) => {
       message: "how much is 1 + 1?",
     });
 
-    ok(response.response.includes("2"));
+    ok(extractText(response.message.content).includes("2"));
   });
 });
 
@@ -181,7 +179,7 @@ await test("agent stream", async (t) => {
       tools: [sumNumbersTool, divideNumbersTool],
     });
 
-    const { response } = await agent.chat({
+    const response = await agent.chat({
       message: "Divide 16 by 2 then add 20",
       stream: true,
     });
@@ -189,7 +187,7 @@ await test("agent stream", async (t) => {
     let message = "";
 
     for await (const chunk of response) {
-      message += chunk.response;
+      message += chunk.delta;
     }
 
     strictEqual(fn.mock.callCount(), 2);
