@@ -85,20 +85,25 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
     );
   }
 
+  createStore = AgentRunner.defaultCreateStore;
+
   static taskHandler: TaskHandler<OpenAI> = async (step) => {
     const { input } = step;
     const { llm, tools, stream } = step.context;
     if (input) {
-      step.context.messages = [...step.context.messages, input];
+      step.context.store.messages = [...step.context.store.messages, input];
     }
     const response = await llm.chat({
       // @ts-expect-error
       stream,
       tools,
-      messages: step.context.messages,
+      messages: step.context.store.messages,
     });
     if (!stream) {
-      step.context.messages = [...step.context.messages, response.message];
+      step.context.store.messages = [
+        ...step.context.store.messages,
+        response.message,
+      ];
       const options = response.message.options ?? {};
       if ("toolCall" in options) {
         const { toolCall } = options;
@@ -106,7 +111,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           (tool) => tool.metadata.name === toolCall.name,
         );
         const toolOutput = await callTool(targetTool, toolCall);
-        step.context.toolOutputs.push(toolOutput);
+        step.context.store.toolOutputs.push(toolOutput);
         return {
           taskStep: step,
           output: {
@@ -177,8 +182,8 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           const targetTool = tools.find(
             (tool) => tool.metadata.name === toolCall.name,
           );
-          step.context.messages = [
-            ...step.context.messages,
+          step.context.store.messages = [
+            ...step.context.store.messages,
             {
               role: "assistant" as const,
               content: "",
@@ -188,8 +193,8 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
             },
           ];
           const toolOutput = await callTool(targetTool, toolCall);
-          step.context.messages = [
-            ...step.context.messages,
+          step.context.store.messages = [
+            ...step.context.store.messages,
             {
               role: "user" as const,
               content: toolOutput.output,
@@ -202,7 +207,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
               },
             },
           ];
-          step.context.toolOutputs.push(toolOutput);
+          step.context.store.toolOutputs.push(toolOutput);
         }
         return {
           taskStep: step,

@@ -1,6 +1,11 @@
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable, prettifyError } from "../internal/utils.js";
-import type { ChatMessage, ChatResponseChunk, ToolCall } from "../llm/index.js";
+import type {
+  ChatMessage,
+  ChatResponseChunk,
+  TextChatMessage,
+  ToolCall,
+} from "../llm/index.js";
 import type { BaseTool } from "../types.js";
 import type { ToolOutput } from "./base.js";
 
@@ -64,11 +69,18 @@ export async function callTool(
 }
 
 export async function consumeAsyncIterable<Options extends object>(
+  input: ChatMessage<Options>,
+): Promise<ChatMessage<Options>>;
+export async function consumeAsyncIterable<Options extends object>(
+  input: AsyncIterable<ChatResponseChunk<Options>>,
+): Promise<TextChatMessage<Options>>;
+export async function consumeAsyncIterable<Options extends object>(
   input: ChatMessage<Options> | AsyncIterable<ChatResponseChunk<Options>>,
 ): Promise<ChatMessage<Options>> {
   if (isAsyncIterable(input)) {
     const result: ChatMessage<Options> = {
       content: "",
+      // only assistant will give streaming response
       role: "assistant",
       options: {} as Options,
     };
@@ -85,4 +97,17 @@ export async function consumeAsyncIterable<Options extends object>(
   } else {
     return input;
   }
+}
+
+export function createReadableStream<T>(
+  asyncIterable: AsyncIterable<T>,
+): ReadableStream<T> {
+  return new ReadableStream<T>({
+    async start(controller) {
+      for await (const chunk of asyncIterable) {
+        controller.enqueue(chunk);
+      }
+      controller.close();
+    },
+  });
 }

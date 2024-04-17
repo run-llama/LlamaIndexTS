@@ -80,6 +80,13 @@ export interface LLM<
 
 export type MessageType = "user" | "assistant" | "system" | "memory";
 
+export type TextChatMessage<AdditionalMessageOptions extends object = object> =
+  {
+    content: string;
+    role: MessageType;
+    options?: undefined | AdditionalMessageOptions;
+  };
+
 export type ChatMessage<AdditionalMessageOptions extends object = object> = {
   content: MessageContent;
   role: MessageType;

@@ -207,8 +207,11 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    handlers.forEach((handler) =>
-      handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
-    );
+    const clone = structuredClone(detail);
+    queueMicrotask(() => {
+      handlers.forEach((handler) =>
+        handler(LlamaIndexCustomEvent.fromEvent(event, clone)),
+      );
+    });
   }
 }

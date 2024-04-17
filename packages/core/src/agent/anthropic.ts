@@ -87,6 +87,8 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
     );
   }
 
+  createStore = AgentRunner.defaultCreateStore;
+
   async chat(
     params: ChatEngineParamsNonStreaming,
   ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
@@ -104,7 +106,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
     const { input } = step;
     const { llm, tools, stream } = step.context;
     if (input) {
-      step.context.messages = [...step.context.messages, input];
+      step.context.store.messages = [...step.context.store.messages, input];
     }
     if (stream === true) {
       throw new Error("Anthropic does not support streaming");
@@ -112,9 +114,12 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
     const response = await llm.chat({
       stream,
       tools,
-      messages: step.context.messages,
+      messages: step.context.store.messages,
     });
-    step.context.messages = [...step.context.messages, response.message];
+    step.context.store.messages = [
+      ...step.context.store.messages,
+      response.message,
+    ];
     const options = response.message.options ?? {};
     if ("toolCall" in options) {
       const { toolCall } = options;
@@ -122,7 +127,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
         (tool) => tool.metadata.name === toolCall.name,
       );
       const toolOutput = await callTool(targetTool, toolCall);
-      step.context.toolOutputs.push(toolOutput);
+      step.context.store.toolOutputs.push(toolOutput);
       return {
         taskStep: step,
         output: {

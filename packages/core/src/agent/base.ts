@@ -26,6 +26,7 @@ export type ToolOutput = {
 
 export type AgentTaskContext<
   Model extends LLM,
+  Store extends object = {},
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -34,18 +35,21 @@ export type AgentTaskContext<
     : never,
 > = {
   readonly stream: boolean;
-  toolCallCount: number;
-  llm: Model;
-  tools: BaseToolWithCall[];
-  toolOutputs: ToolOutput[];
-  messages: ChatMessage<AdditionalMessageOptions>[];
+  readonly toolCallCount: number;
+  readonly llm: Model;
+  readonly tools: BaseToolWithCall[];
   shouldContinue: (
-    taskStep: TaskStep<Model, AdditionalMessageOptions>,
+    taskStep: TaskStep<Model, Store, AdditionalMessageOptions>,
   ) => boolean;
+  store: {
+    toolOutputs: ToolOutput[];
+    messages: ChatMessage<AdditionalMessageOptions>[];
+  } & Store;
 };
 
 export type TaskStep<
   Model extends LLM,
+  Store extends object = {},
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -55,14 +59,15 @@ export type TaskStep<
 > = {
   id: UUID;
   input: ChatMessage<AdditionalMessageOptions> | null;
-  context: AgentTaskContext<Model, AdditionalMessageOptions>;
+  context: AgentTaskContext<Model, Store, AdditionalMessageOptions>;
 
   // linked list
-  prevStep: TaskStep<Model, AdditionalMessageOptions> | null;
+  prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null;
 };
 
 export type TaskStepOutput<
   Model extends LLM,
+  Store extends object = {},
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -71,7 +76,7 @@ export type TaskStepOutput<
     : never,
 > =
   | {
-      taskStep: TaskStep<Model, AdditionalMessageOptions>;
+      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
       output:
         | null
         | ChatResponse<AdditionalMessageOptions>
@@ -79,7 +84,7 @@ export type TaskStepOutput<
       isLast: false;
     }
   | {
-      taskStep: TaskStep<Model, AdditionalMessageOptions>;
+      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
       output:
         | ChatResponse<AdditionalMessageOptions>
         | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
@@ -88,6 +93,7 @@ export type TaskStepOutput<
 
 export type TaskHandler<
   Model extends LLM,
+  Store extends object = {},
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -95,14 +101,15 @@ export type TaskHandler<
     ? AdditionalMessageOptions
     : never,
 > = (
-  step: TaskStep<Model, AdditionalMessageOptions>,
-) => Promise<TaskStepOutput<Model, AdditionalMessageOptions>>;
+  step: TaskStep<Model, Store, AdditionalMessageOptions>,
+) => Promise<TaskStepOutput<Model, Store, AdditionalMessageOptions>>;
 
 /**
  * @internal
  */
 export async function* createTaskImpl<
   Model extends LLM,
+  Store extends object = {},
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -110,15 +117,15 @@ export async function* createTaskImpl<
     ? AdditionalMessageOptions
     : never,
 >(
-  handler: TaskHandler<Model, AdditionalMessageOptions>,
-  context: AgentTaskContext<Model, AdditionalMessageOptions>,
+  handler: TaskHandler<Model, Store, AdditionalMessageOptions>,
+  context: AgentTaskContext<Model, Store, AdditionalMessageOptions>,
   _input: ChatMessage<AdditionalMessageOptions>,
-): AsyncGenerator<TaskStepOutput<Model, AdditionalMessageOptions>> {
+): AsyncGenerator<TaskStepOutput<Model, Store, AdditionalMessageOptions>> {
   let isDone = false;
   let input: ChatMessage<AdditionalMessageOptions> | null = _input;
-  let prevStep: TaskStep<Model, AdditionalMessageOptions> | null = null;
+  let prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null = null;
   while (!isDone) {
-    const step: TaskStep<Model, AdditionalMessageOptions> = {
+    const step: TaskStep<Model, Store, AdditionalMessageOptions> = {
       id: randomUUID(),
       input,
       context,
@@ -152,6 +159,7 @@ export async function* createTaskImpl<
 
 export abstract class AgentRunner<
   AI extends LLM,
+  Store extends object = {},
   AdditionalMessageOptions extends object = AI extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -164,12 +172,18 @@ export abstract class AgentRunner<
     | BaseToolWithCall[]
     | ((query: string) => Promise<BaseToolWithCall[]>) = [];
   #chatHistory: ChatMessage<AdditionalMessageOptions>[];
-  readonly #runner: AgentWorker<AI, AdditionalMessageOptions>;
+  readonly #runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
+
+  // create extra store
+  abstract createStore(): Store;
+  static defaultCreateStore(): object {
+    return Object.create(null);
+  }
 
   protected constructor(
     llm: AI,
     chatHistory: ChatMessage<AdditionalMessageOptions>[],
-    runner: AgentWorker<AI, AdditionalMessageOptions>,
+    runner: AgentWorker<AI, Store, AdditionalMessageOptions>,
     tools:
       | BaseToolWithCall[]
       | ((query: string) => Promise<BaseToolWithCall[]>)
@@ -223,8 +237,11 @@ export abstract class AgentRunner<
       toolCallCount: 0,
       llm: this.#llm,
       tools: await this.getTools(extractText(params.message)),
-      toolOutputs: [],
-      messages: [...this.#chatHistory],
+      store: {
+        ...this.createStore(),
+        messages: [...this.#chatHistory],
+        toolOutputs: [] as ToolOutput[],
+      },
       shouldContinue: AgentRunner.shouldContinue,
     });
     const stepOutput = await pipeline(task, async (iter) => {
@@ -236,13 +253,14 @@ export abstract class AgentRunner<
       throw new Error("Task did not complete");
     });
     const { output, taskStep } = stepOutput;
-    this.#chatHistory = [...taskStep.context.messages];
+    this.#chatHistory = [...taskStep.context.store.messages];
     return output;
   }
 }
 
 export abstract class AgentWorker<
   AI extends LLM,
+  Store extends object = {},
   AdditionalMessageOptions extends object = AI extends LLM<
     object,
     infer AdditionalMessageOptions
@@ -252,6 +270,8 @@ export abstract class AgentWorker<
 > {
   abstract createTask(
     query: string,
-    context?: AgentTaskContext<AI, AdditionalMessageOptions>,
-  ): Promise<AsyncGenerator<TaskStepOutput<AI, AdditionalMessageOptions>>>;
+    context?: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
+  ): Promise<
+    AsyncGenerator<TaskStepOutput<AI, Store, AdditionalMessageOptions>>
+  >;
 }
