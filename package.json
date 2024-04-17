@@ -15,7 +15,7 @@
     "release": "pnpm run check-minor-version && pnpm run build:release && changeset publish",
     "release-snapshot": "pnpm run check-minor-version && pnpm run build:release && changeset publish --tag snapshot",
     "check-minor-version": "node ./scripts/check-minor-version",
-    "new-version": "pnpm run build:release && changeset version && pnpm run check-minor-version",
+    "new-version": "changeset version && pnpm run check-minor-version && pnpm run build:release",
     "new-snapshot": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {

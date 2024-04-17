@@ -1,5 +1,16 @@
 # llamaindex
 
+## 0.2.9
+
+### Patch Changes
+
+- 76c3fd6: Add score to source nodes response
+- 208282d: feat: init anthropic agent
+
+  remove the `tool` | `function` type in `MessageType`. Replace with `assistant` instead.
+  This is because these two types are only available for `OpenAI`.
+  Since `OpenAI` deprecates the function type, we support the Claude 3 tool call.
+
 ## 0.2.8
 
 ### Patch Changes
