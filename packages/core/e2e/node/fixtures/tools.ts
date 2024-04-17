@@ -45,3 +45,23 @@ export const divideNumbersTool = FunctionTool.from(divideNumbers, {
     required: ["a", "b"],
   },
 });
+
+export const getWeatherTool = FunctionTool.from(
+  async ({ city }: { city: string }) => {
+    return `The weather in ${city} is 72 degrees`;
+  },
+  {
+    name: "getWeather",
+    description: "Get the weather for a city",
+    parameters: {
+      type: "object",
+      properties: {
+        city: {
+          type: "string",
+          description: "The city to get the weather for",
+        },
+      },
+      required: ["city"],
+    },
+  },
+);

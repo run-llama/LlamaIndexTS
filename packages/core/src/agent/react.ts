@@ -161,12 +161,12 @@ const reACTOutputParser: ReACTOutputParser = async (
       let content = "";
       for await (const chunk of iter) {
         content += chunk.delta;
-        if (content.includes("Thought:")) {
-          return "thought";
+        if (content.includes("Action")) {
+          return "action";
         } else if (content.includes("Answer:")) {
           return "answer";
-        } else if (content.includes("Action")) {
-          return "action";
+        } else if (content.includes("Thought:")) {
+          return "thought";
         }
       }
     });
@@ -225,11 +225,11 @@ const reACTOutputParser: ReACTOutputParser = async (
     }
   } else {
     const content = extractText(output.message.content);
-    const type = content.includes("Thought:")
-      ? "thought"
+    const type = content.includes("Action:")
+      ? "action"
       : content.includes("Answer:")
         ? "answer"
-        : "action";
+        : "thought";
 
     // step 2: do the parsing from content
     switch (type) {
