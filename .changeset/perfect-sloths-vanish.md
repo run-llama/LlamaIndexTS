@@ -1,6 +1,5 @@
 ---
 "llamaindex": patch
-"@llamaindex/edge": patch
 ---
 
 feat: init anthropic agent
