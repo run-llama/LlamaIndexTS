@@ -6,6 +6,7 @@ import type {
   LLM,
   LLMChat,
   MessageContent,
+  MessageContentImageDetail,
   MessageContentTextDetail,
 } from "./types.js";
 
@@ -36,9 +37,6 @@ export async function* streamReducer<S, D>(params: {
 
 /**
  * Extracts just the text from a multi-modal message or the message itself if it's just text.
- *
- * @param message The message to extract text from.
- * @returns The extracted text
  */
 export function extractText(message: MessageContent): string {
   if (typeof message !== "string" && !Array.isArray(message)) {
@@ -55,6 +53,18 @@ export function extractText(message: MessageContent): string {
       .join("\n\n");
   } else {
     return message;
+  }
+}
+
+export function extractImage(
+  message: MessageContent,
+): MessageContentImageDetail[] {
+  if (typeof message === "string") {
+    return [];
+  } else {
+    return message.filter(
+      (c): c is MessageContentImageDetail => c.type === "image_url",
+    );
   }
 }
 

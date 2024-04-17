@@ -25,6 +25,8 @@ import {
   createDocStoreStrategy,
 } from "../../ingestion/strategies/index.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
+import { toQueryBundle } from "../../internal/utils.js";
+import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -37,7 +39,6 @@ import type {
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
 import type { BaseSynthesizer } from "../../synthesizers/types.js";
-import type { BaseQueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
@@ -280,13 +281,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   asQueryEngine(options?: {
-    retriever?: BaseRetriever;
+    retriever?: BaseRetriever<MetadataFilters>;
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: MetadataFilters;
     nodePostprocessors?: BaseNodePostprocessor[];
-  }): BaseQueryEngine & RetrieverQueryEngine {
+  }): RetrieverQueryEngine<MetadataFilters> {
     const { retriever, responseSynthesizer } = options ?? {};
-    return new RetrieverQueryEngine(
+    return new RetrieverQueryEngine<MetadataFilters>(
       retriever ?? this.asRetriever(),
       responseSynthesizer,
       options?.preFilters,
@@ -382,7 +383,7 @@ export type VectorIndexRetrieverOptions = {
   imageSimilarityTopK?: number;
 };
 
-export class VectorIndexRetriever implements BaseRetriever {
+export class VectorIndexRetriever implements BaseRetriever<MetadataFilters> {
   index: VectorStoreIndex;
   similarityTopK: number;
   imageSimilarityTopK: number;
@@ -403,15 +404,13 @@ export class VectorIndexRetriever implements BaseRetriever {
   async retrieve({
     query,
     preFilters,
-  }: RetrieveParams): Promise<NodeWithScore[]> {
-    let nodesWithScores = await this.textRetrieve(
-      query,
-      preFilters as MetadataFilters,
-    );
+  }: RetrieveParams<MetadataFilters>): Promise<NodeWithScore[]> {
+    const textQuery = extractText(toQueryBundle(query).query);
+    let nodesWithScores = await this.textRetrieve(textQuery, preFilters);
     nodesWithScores = nodesWithScores.concat(
-      await this.textToImageRetrieve(query, preFilters as MetadataFilters),
+      await this.textToImageRetrieve(textQuery, preFilters as MetadataFilters),
     );
-    this.sendEvent(query, nodesWithScores);
+    this.sendEvent(textQuery, nodesWithScores);
     return nodesWithScores;
   }
 

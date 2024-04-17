@@ -4,6 +4,8 @@ import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import { Settings } from "../Settings.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { toQueryBundle } from "../internal/utils.js";
+import { extractText } from "../llm/utils.js";
 import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
@@ -70,14 +72,14 @@ export class LlamaCloudRetriever implements BaseRetriever {
       await this.getClient()
     ).pipeline.runSearch(pipelines[0].id, {
       ...this.retrieveParams,
-      query,
+      query: extractText(toQueryBundle(query).query),
       searchFilters: preFilters as Record<string, unknown[]>,
     });
 
     const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
     Settings.callbackManager.dispatchEvent("retrieve", {
-      query,
+      query: extractText(toQueryBundle(query).query),
       nodes,
     });
 

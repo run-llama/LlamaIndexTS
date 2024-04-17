@@ -4,9 +4,13 @@ import type { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
+import type {
+  ChatMessage,
+  ChatResponseChunk,
+  LLM,
+  MessageContent,
+} from "../../llm/index.js";
 import { OpenAI } from "../../llm/index.js";
-import type { MessageContent } from "../../llm/types.js";
 import {
   extractText,
   streamConverter,

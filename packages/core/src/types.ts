@@ -3,21 +3,32 @@
  */
 import { type JSONSchemaType } from "ajv";
 import type { Response } from "./Response.js";
+import type { MessageContent } from "./llm/index.js";
+
+/**
+ * @link https://docs.llamaindex.ai/en/stable/api_reference/schema/?h=querybundle#llama_index.core.schema.QueryBundle
+ *
+ *  We don't have `image_path` here, because it is included in the `query` field.
+ */
+export type QueryBundle = {
+  query: MessageContent;
+  embedding?: number[];
+};
 
 /**
  * Parameters for sending a query.
  */
-export interface QueryEngineParamsBase {
-  query: string;
-}
+export type QueryEngineParamsBase = {
+  query: MessageContent | QueryBundle;
+};
 
-export interface QueryEngineParamsStreaming extends QueryEngineParamsBase {
+export type QueryEngineParamsStreaming = QueryEngineParamsBase & {
   stream: true;
-}
+};
 
-export interface QueryEngineParamsNonStreaming extends QueryEngineParamsBase {
-  stream?: false | null;
-}
+export type QueryEngineParamsNonStreaming = QueryEngineParamsBase & {
+  stream?: false;
+};
 
 /**
  * A query engine is a question answerer that can use one or more steps.
@@ -89,17 +100,5 @@ export interface StructuredOutput<T> {
 }
 
 export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
-
-export class QueryBundle {
-  queryStr: string;
-
-  constructor(queryStr: string) {
-    this.queryStr = queryStr;
-  }
-
-  toString(): string {
-    return this.queryStr;
-  }
-}
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;

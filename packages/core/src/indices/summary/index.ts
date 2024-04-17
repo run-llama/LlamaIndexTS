@@ -11,6 +11,8 @@ import {
 } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
+import { toQueryBundle } from "../../internal/utils.js";
+import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -297,7 +299,7 @@ export class SummaryIndexRetriever implements BaseRetriever {
     }));
 
     Settings.callbackManager.dispatchEvent("retrieve", {
-      query,
+      query: toQueryBundle(query).query,
       nodes: result,
     });
 
@@ -343,13 +345,15 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       const nodesBatch = await this.index.docStore.getNodes(nodeIdsBatch);
 
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
-      const input = { context: fmtBatchStr, query: query };
 
       const llm = llmFromSettingsOrContext(this.serviceContext);
 
       const rawResponse = (
         await llm.complete({
-          prompt: this.choiceSelectPrompt(input),
+          prompt: this.choiceSelectPrompt({
+            context: fmtBatchStr,
+            query: extractText(toQueryBundle(query).query),
+          }),
         })
       ).text;
 
@@ -372,7 +376,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
     }
 
     Settings.callbackManager.dispatchEvent("retrieve", {
-      query,
+      query: toQueryBundle(query).query,
       nodes: results,
     });
 

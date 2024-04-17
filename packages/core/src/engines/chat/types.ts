@@ -1,8 +1,7 @@
 import type { ChatHistory } from "../../ChatHistory.js";
 import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
-import type { ChatMessage } from "../../llm/index.js";
-import type { MessageContent } from "../../llm/types.js";
+import type { ChatMessage, MessageContent } from "../../llm/index.js";
 import type { ToolOutput } from "../../tools/types.js";
 
 /**

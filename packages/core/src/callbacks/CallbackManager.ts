@@ -10,6 +10,7 @@ import type {
   LLMStartEvent,
   LLMStreamEvent,
   LLMToolCallEvent,
+  MessageContent,
 } from "../llm/types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
@@ -88,7 +89,7 @@ export interface StreamCallbackResponse {
 }
 
 export interface RetrievalCallbackResponse {
-  query: string;
+  query: MessageContent;
   nodes: NodeWithScore[];
 }
 

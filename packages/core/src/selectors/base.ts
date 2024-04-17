@@ -1,3 +1,5 @@
+import { toQueryBundle } from "../internal/utils.js";
+import type { MessageContent } from "../llm/index.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { QueryBundle, ToolMetadataOnlyDescription } from "../types.js";
 
@@ -10,8 +12,6 @@ export type SelectorResult = {
   selections: SingleSelection[];
 };
 
-type QueryType = string | QueryBundle;
-
 function wrapChoice(
   choice: string | ToolMetadataOnlyDescription,
 ): ToolMetadataOnlyDescription {
@@ -22,21 +22,13 @@ function wrapChoice(
   }
 }
 
-function wrapQuery(query: QueryType): QueryBundle {
-  if (typeof query === "string") {
-    return { queryStr: query };
-  }
-
-  return query;
-}
-
 type MetadataType = string | ToolMetadataOnlyDescription;
 
 export abstract class BaseSelector extends PromptMixin {
-  async select(choices: MetadataType[], query: QueryType) {
-    const metadatas = choices.map((choice) => wrapChoice(choice));
-    const queryBundle = wrapQuery(query);
-    return await this._select(metadatas, queryBundle);
+  async select(choices: MetadataType[], query: MessageContent | QueryBundle) {
+    const metadata = choices.map((choice) => wrapChoice(choice));
+    const queryBundle = toQueryBundle(query);
+    return await this._select(metadata, queryBundle);
   }
 
   abstract _select(

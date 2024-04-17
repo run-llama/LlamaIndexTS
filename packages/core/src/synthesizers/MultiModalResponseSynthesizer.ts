@@ -4,7 +4,9 @@ import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import { imageToDataUrl } from "../embeddings/index.js";
-import type { MessageContentDetail } from "../llm/types.js";
+import { toQueryBundle } from "../internal/utils.js";
+import type { MessageContentDetail } from "../llm/index.js";
+import { extractImage, extractText } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { TextQaPrompt } from "./../Prompt.js";
 import { defaultTextQaPrompt } from "./../Prompt.js";
@@ -69,7 +71,10 @@ export class MultiModalResponseSynthesizer
     );
     // TODO: use builders to generate context
     const context = textChunks.join("\n\n");
-    const textPrompt = this.textQATemplate({ context, query });
+    const textPrompt = this.textQATemplate({
+      context,
+      query: extractText(toQueryBundle(query).query),
+    });
     const images = await Promise.all(
       imageNodes.map(async (node: ImageNode) => {
         return {
@@ -77,10 +82,11 @@ export class MultiModalResponseSynthesizer
           image_url: {
             url: await imageToDataUrl(node.image),
           },
-        } as MessageContentDetail;
+        } satisfies MessageContentDetail;
       }),
     );
     const prompt: MessageContentDetail[] = [
+      ...extractImage(toQueryBundle(query).query),
       { type: "text", text: textPrompt },
       ...images,
     ];

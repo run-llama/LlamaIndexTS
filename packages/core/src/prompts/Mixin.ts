@@ -75,6 +75,7 @@ export class PromptMixin {
   }
 
   // Must be implemented by subclasses
+  // fixme: says must but never implemented
   protected _getPrompts(): PromptsDict {
     return {};
   }

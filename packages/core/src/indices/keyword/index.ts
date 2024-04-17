@@ -28,7 +28,9 @@ import {
 } from "./utils.js";
 
 import { llmFromSettingsOrContext } from "../../Settings.js";
+import { toQueryBundle } from "../../internal/utils.js";
 import type { LLM } from "../../llm/types.js";
+import { extractText } from "../../llm/utils.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];
@@ -85,7 +87,9 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
   abstract getKeywords(query: string): Promise<string[]>;
 
   async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
-    const keywords = await this.getKeywords(query);
+    const keywords = await this.getKeywords(
+      extractText(toQueryBundle(query).query),
+    );
     const chunkIndicesCount: { [key: string]: number } = {};
     const filteredKeywords = keywords.filter((keyword) =>
       this.indexStruct.table.has(keyword),
