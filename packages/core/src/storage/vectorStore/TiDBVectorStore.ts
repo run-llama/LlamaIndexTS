@@ -101,11 +101,11 @@ export class TiDBVectorStore implements VectorStore {
         this.db = db;
       } catch (err: any) {
         console.error(err);
-        return Promise.reject(err);
+        throw err;
       }
     }
 
-    return Promise.resolve(this.db);
+    return this.db;
   }
 
   private async checkSchema(db: mysql.Pool) {
