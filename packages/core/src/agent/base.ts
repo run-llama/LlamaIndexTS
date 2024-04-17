@@ -70,14 +70,22 @@ export type TaskStepOutput<
   >
     ? AdditionalMessageOptions
     : never,
-> = {
-  taskStep: TaskStep<Model, AdditionalMessageOptions>;
-  output:
-    | null
-    | ChatResponse<AdditionalMessageOptions>
-    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
-  isLast: boolean;
-};
+> =
+  | {
+      taskStep: TaskStep<Model, AdditionalMessageOptions>;
+      output:
+        | null
+        | ChatResponse<AdditionalMessageOptions>
+        | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
+      isLast: false;
+    }
+  | {
+      taskStep: TaskStep<Model, AdditionalMessageOptions>;
+      output:
+        | ChatResponse<AdditionalMessageOptions>
+        | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
+      isLast: true;
+    };
 
 export type TaskHandler<
   Model extends LLM,
@@ -230,7 +238,7 @@ export abstract class AgentRunner<
     });
     const { output, taskStep } = stepOutput;
     this.#chatHistory = [...taskStep.context.messages];
-    return output!;
+    return output;
   }
 }
 
