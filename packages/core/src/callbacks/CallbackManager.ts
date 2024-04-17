@@ -10,6 +10,7 @@ import type {
   LLMStartEvent,
   LLMStreamEvent,
   LLMToolCallEvent,
+  LLMToolResultEvent,
 } from "../llm/types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
@@ -50,6 +51,7 @@ export interface LlamaIndexEventMaps {
   "llm-start": LLMStartEvent;
   "llm-end": LLMEndEvent;
   "llm-tool-call": LLMToolCallEvent;
+  "llm-tool-result": LLMToolResultEvent;
   "llm-stream": LLMStreamEvent;
 }
 

@@ -78,10 +78,6 @@ export class AgentChatResponse {
     this.sourceNodes = sourceNodes || [];
   }
 
-  protected _getFormattedSources() {
-    throw new Error("Not implemented yet");
-  }
-
   toString() {
     return this.response ?? "";
   }

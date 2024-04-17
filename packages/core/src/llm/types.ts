@@ -1,4 +1,5 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
+import type { ToolOutput } from "../agent/anthropic.js";
 import type { BaseTool, UUID } from "../types.js";
 
 type LLMBaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{
@@ -10,9 +11,11 @@ export type LLMStartEvent = LLMBaseEvent<{
   messages: ChatMessage[];
 }>;
 export type LLMToolCallEvent = LLMBaseEvent<{
-  // fixme: id is missing in the context
-  // id: UUID;
-  toolCall: Omit<ToolCallOptions["toolCall"], "id">;
+  toolCall: ToolCall;
+}>;
+export type LLMToolResultEvent = LLMBaseEvent<{
+  toolCall: ToolCall;
+  toolResult: ToolOutput;
 }>;
 export type LLMEndEvent = LLMBaseEvent<{
   id: UUID;
