@@ -39,7 +39,7 @@ export type AgentTaskContext<
   readonly llm: Model;
   readonly tools: BaseToolWithCall[];
   shouldContinue: (
-    taskStep: TaskStep<Model, Store, AdditionalMessageOptions>,
+    taskStep: Readonly<TaskStep<Model, Store, AdditionalMessageOptions>>,
   ) => boolean;
   store: {
     toolOutputs: ToolOutput[];
@@ -132,7 +132,9 @@ export async function* createTaskImpl<
       prevStep,
     };
     const prevToolCallCount = step.context.toolCallCount;
-    // todo: handle case tool call count over limit
+    if (!step.context.shouldContinue(step)) {
+      throw new Error("Tool call count exceeded limit");
+    }
     const taskOutput = await handler(step);
     const { isLast, output, taskStep } = taskOutput;
     // do not consume last output
@@ -215,7 +217,7 @@ export abstract class AgentRunner<
     return typeof this.#tools === "function" ? this.#tools(query) : this.#tools;
   }
 
-  static shouldContinue(task: TaskStep<LLM, object>): boolean {
+  static shouldContinue(task: Readonly<TaskStep<LLM, object>>): boolean {
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
