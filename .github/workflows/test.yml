@@ -68,6 +68,9 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm run build --filter llamaindex
+      - name: Use Build For Examples
+        run: pnpm link ../packages/core/
+        working-directory: ./examples
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check

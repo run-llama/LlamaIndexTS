@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/edge",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "license": "MIT",
   "type": "module",
   "dependencies": {
@@ -78,7 +78,7 @@
     "directory": "packages/edge"
   },
   "scripts": {
-    "copy": "cp -r ../../README.md ../../LICENSE .",
+    "copy": "cp -r ../../README.md ../../LICENSE ../core/CHANGELOG.md .",
     "update:deps": "node scripts/update-deps.js",
     "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -rf dist/cjs",
     "build": "pnpm run update:deps && pnpm run build:core && pnpm copy"

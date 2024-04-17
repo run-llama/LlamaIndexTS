@@ -15,17 +15,17 @@
     "release": "pnpm run check-minor-version && pnpm run build:release && changeset publish",
     "release-snapshot": "pnpm run check-minor-version && pnpm run build:release && changeset publish --tag snapshot",
     "check-minor-version": "node ./scripts/check-minor-version",
-    "new-version": "pnpm run build:release && changeset version && pnpm run check-minor-version",
+    "new-version": "changeset version && pnpm run check-minor-version && pnpm run build:release",
     "new-snapshot": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^13.5.6",
     "eslint-config-prettier": "^8.10.0",
-    "eslint-config-turbo": "^1.11.3",
+    "eslint-config-turbo": "^1.13.2",
     "eslint-plugin-react": "7.28.0",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
@@ -33,7 +33,7 @@
     "turbo": "^1.13.2",
     "typescript": "^5.4.5"
   },
-  "packageManager": "pnpm@8.15.6+sha256.01c01eeb990e379b31ef19c03e9d06a14afa5250b82e81303f88721c99ff2e6f",
+  "packageManager": "pnpm@9.0.1+sha256.46d50ee2afecb42b185ebbd662dc7bdd52ef5be56bf035bb615cab81a75345df",
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",
