@@ -247,9 +247,15 @@ export class AnthropicAgentWorker implements AgentWorker<Anthropic> {
       task.next.bind(task);
     task.next = async (...args) => {
       const nextValue = await next(...args);
-      this.#taskSet.add(nextValue.value.taskStep);
-      if (nextValue.done) {
-        this.#taskSet.delete(nextValue.value.taskStep);
+      const taskStepOutput = nextValue.value as TaskStepOutput<Anthropic>;
+      const { taskStep, isLast } = taskStepOutput;
+      this.#taskSet.add(taskStep);
+      if (isLast) {
+        let currentStep: TaskStep<Anthropic> | null = taskStep;
+        while (currentStep) {
+          this.#taskSet.delete(currentStep);
+          currentStep = currentStep.prevStep;
+        }
       }
       return nextValue;
     };
