@@ -136,7 +136,7 @@ importers:
         version: 2.3.5
       chromadb:
         specifier: ^1.8.1
-        version: 1.8.1(cohere-ai@7.9.4(encoding@0.1.13))(encoding@0.1.13)(openai@4.36.0(encoding@0.1.13))
+        version: 1.8.1(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13))
       commander:
         specifier: ^11.1.0
         version: 11.1.0
@@ -148,7 +148,7 @@ importers:
         version: 1.0.10
       llamaindex:
         specifier: latest
-        version: 0.2.8(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.5)
+        version: 0.2.9(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.5)
       mongodb:
         specifier: ^6.5.0
         version: 6.5.0
@@ -161,7 +161,7 @@ importers:
         version: 20.12.7
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.5)
+        version: 10.9.2(@swc/core@1.4.16(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.5)
       tsx:
         specifier: ^4.7.2
         version: 4.7.2
@@ -180,7 +180,7 @@ importers:
         version: 20.12.7
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.3)
+        version: 10.9.2(@swc/core@1.4.16(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.3)
       typescript:
         specifier: ^5.4.3
         version: 5.4.3
@@ -188,8 +188,8 @@ importers:
   packages/core:
     dependencies:
       '@anthropic-ai/sdk':
-        specifier: ^0.20.4
-        version: 0.20.4(encoding@0.1.13)
+        specifier: ^0.20.6
+        version: 0.20.6(encoding@0.1.13)
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
         version: 5.2.0
@@ -230,26 +230,26 @@ importers:
         specifier: ^8.11.5
         version: 8.11.5
       '@xenova/transformers':
-        specifier: ^2.16.1
-        version: 2.16.1
+        specifier: ^2.17.1
+        version: 2.17.1
       '@zilliz/milvus2-sdk-node':
-        specifier: ^2.3.5
-        version: 2.3.5
+        specifier: ^2.4.1
+        version: 2.4.1
       ajv:
         specifier: ^8.12.0
         version: 8.12.0
       assemblyai:
-        specifier: ^4.3.4
-        version: 4.3.4
+        specifier: ^4.4.1
+        version: 4.4.1
       chromadb:
         specifier: ~1.7.3
-        version: 1.7.3(cohere-ai@7.9.3(encoding@0.1.13))(encoding@0.1.13)(openai@4.33.0(encoding@0.1.13))
+        version: 1.7.3(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13))
       cohere-ai:
-        specifier: ^7.9.3
-        version: 7.9.3(encoding@0.1.13)
+        specifier: ^7.9.5
+        version: 7.9.5(encoding@0.1.13)
       js-tiktoken:
-        specifier: ^1.0.10
-        version: 1.0.10
+        specifier: ^1.0.11
+        version: 1.0.11
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -269,8 +269,8 @@ importers:
         specifier: ^0.0.2
         version: 0.0.2(encoding@0.1.13)
       openai:
-        specifier: ^4.33.0
-        version: 4.33.0(encoding@0.1.13)
+        specifier: ^4.38.0
+        version: 4.38.0(encoding@0.1.13)
       papaparse:
         specifier: ^5.4.1
         version: 5.4.1
@@ -293,8 +293,8 @@ importers:
         specifier: ^1.0.8
         version: 1.0.8
       replicate:
-        specifier: ^0.25.2
-        version: 0.25.2
+        specifier: ^0.29.1
+        version: 0.29.1
       string-strip-html:
         specifier: ^13.4.8
         version: 13.4.8
@@ -307,10 +307,10 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: ^0.3.12
-        version: 0.3.12(@swc/core@1.4.13(@swc/helpers@0.5.2))(chokidar@3.6.0)
+        version: 0.3.12(@swc/core@1.4.16(@swc/helpers@0.5.2))(chokidar@3.6.0)
       '@swc/core':
-        specifier: ^1.4.13
-        version: 1.4.13(@swc/helpers@0.5.2)
+        specifier: ^1.4.16
+        version: 1.4.16(@swc/helpers@0.5.2)
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -687,6 +687,9 @@ packages:
 
   '@anthropic-ai/sdk@0.20.4':
     resolution: {integrity: sha512-ULzz+0Smk9SNkAi1tcjJByxbt4taBhnQkRAB75iH0ku5dRwiPxGxN0WOWHoNIq22dGWBXJByrQRhVf80V4xAPA==}
+
+  '@anthropic-ai/sdk@0.20.6':
+    resolution: {integrity: sha512-vpVWAol+Ih1UkZGUj8DYPuqWDGxBp6M/JYz4nvq2HBT0zKdvi24Z9oznA7tr+HDed78JZrw+nbxs2I8JbTAIiQ==}
 
   '@assemblyscript/loader@0.19.23':
     resolution: {integrity: sha512-ulkCYfFbYj01ie1MDOyxv2F6SpRN1TOj7fQxbP07D6HmeR+gr2JLSmINKjga2emB+b1L2KGrFKBTc+e00p54nw==}
@@ -1983,6 +1986,9 @@ packages:
     resolution: {integrity: sha512-XhdSY/4B1D34tSco/GION+23GMjaS9S2zszcqYkMHo8RcWInymF6L1x+Gk7EmHdrSxNFva2WM8orhC4BwQCwgw==}
     engines: {node: '>=12'}
 
+  '@petamoriken/float16@3.8.6':
+    resolution: {integrity: sha512-GNJhABTtcmt9al/nqdJPycwFD46ww2+q2zwZzTjY0dFFwUAFRw9zszvEr9osyJRd9krRGy6hUDopWUg9fX7VVw==}
+
   '@pinecone-database/pinecone@1.1.3':
     resolution: {integrity: sha512-bGldvvoAr4agVZ2ql4RZesXIDjMLjnuqNmKYfMQoVO3UFRYeuO9z+1WJodvanGIPY2iGh1w9yz0jDAkBiT53qw==}
     engines: {node: '>=14.0.0'}
@@ -2263,8 +2269,8 @@ packages:
       chokidar:
         optional: true
 
-  '@swc/core-darwin-arm64@1.4.13':
-    resolution: {integrity: sha512-36P72FLpm5iq85IvoEjBvi22DiqkkEIanJ1M0E8bkxcFHUbjBrYfPY9T6cpPyK5oQqkaTBvNAc3j1BlVD6IH6w==}
+  '@swc/core-darwin-arm64@1.4.16':
+    resolution: {integrity: sha512-UOCcH1GvjRnnM/LWT6VCGpIk0OhHRq6v1U6QXuPt5wVsgXnXQwnf5k3sG5Cm56hQHDvhRPY6HCsHi/p0oek8oQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [darwin]
@@ -2275,8 +2281,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@swc/core-darwin-x64@1.4.13':
-    resolution: {integrity: sha512-ye7OgKpDdyA8AMIVVdmD1ICDaFXgoEXORnVO8bBHyul0WN71yUBZMX+YxEx2lpWtiftA2vY/1MAuOR80vHkBCw==}
+  '@swc/core-darwin-x64@1.4.16':
+    resolution: {integrity: sha512-t3bgqFoYLWvyVtVL6KkFNCINEoOrIlyggT/kJRgi1y0aXSr0oVgcrQ4ezJpdeahZZ4N+Q6vT3ffM30yIunELNA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [darwin]
@@ -2287,8 +2293,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@swc/core-linux-arm-gnueabihf@1.4.13':
-    resolution: {integrity: sha512-+x593Jlmu4c3lJtZUKRejWpV2MAij1Js5nmQLLdjo6ChR2D4B2rzj3iMiKn5gITew7fraF9t3fvXALdWh7HmUg==}
+  '@swc/core-linux-arm-gnueabihf@1.4.16':
+    resolution: {integrity: sha512-DvHuwvEF86YvSd0lwnzVcjOTZ0jcxewIbsN0vc/0fqm9qBdMMjr9ox6VCam1n3yYeRtj4VFgrjeNFksqbUejdQ==}
     engines: {node: '>=10'}
     cpu: [arm]
     os: [linux]
@@ -2299,8 +2305,8 @@ packages:
     cpu: [arm]
     os: [linux]
 
-  '@swc/core-linux-arm64-gnu@1.4.13':
-    resolution: {integrity: sha512-0x8OVw4dfyNerrs/9eZX9wNnmvwbwXSMCi+LbE6Xt1pXOIwvoLtFIXcV3NsrlkFboO3sr5UAQIwDxKqbIZA9pQ==}
+  '@swc/core-linux-arm64-gnu@1.4.16':
+    resolution: {integrity: sha512-9Uu5YlPbyCvbidjKtYEsPpyZlu16roOZ5c2tP1vHfnU9bgf5Tz5q5VovSduNxPHx+ed2iC1b1URODHvDzbbDuQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
@@ -2311,8 +2317,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@swc/core-linux-arm64-musl@1.4.13':
-    resolution: {integrity: sha512-Z9c4JiequtZvngPcxbCuAOkmWBxi2vInZbjjhD5I+Q9oiJdXUz1t2USGwsGPS41Xvk1BOA3ecK2Sn1ilY3titg==}
+  '@swc/core-linux-arm64-musl@1.4.16':
+    resolution: {integrity: sha512-/YZq/qB1CHpeoL0eMzyqK5/tYZn/rzKoCYDviFU4uduSUIJsDJQuQA/skdqUzqbheOXKAd4mnJ1hT04RbJ8FPQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
@@ -2323,8 +2329,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@swc/core-linux-x64-gnu@1.4.13':
-    resolution: {integrity: sha512-ChatHtk+vX0Ke5QG+jO+rIapw/KwZsi9MedCBHFXHH6iWF4z8d51cJeN68ykcn+vAXzjNeFNdlNy5Vbkd1zAqg==}
+  '@swc/core-linux-x64-gnu@1.4.16':
+    resolution: {integrity: sha512-UUjaW5VTngZYDcA8yQlrFmqs1tLi1TxbKlnaJwoNhel9zRQ0yG1YEVGrzTvv4YApSuIiDK18t+Ip927bwucuVQ==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -2335,8 +2341,8 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@swc/core-linux-x64-musl@1.4.13':
-    resolution: {integrity: sha512-0Pz39YR530mXpsztwQkmEKdkkZy4fY4Smdh4pkm6Ly8Nndyo0te/l4bcAGqN24Jp7aVwF/QSy14SAtw4HRjU9g==}
+  '@swc/core-linux-x64-musl@1.4.16':
+    resolution: {integrity: sha512-aFhxPifevDTwEDKPi4eRYWzC0p/WYJeiFkkpNU5Uc7a7M5iMWPAbPFUbHesdlb9Jfqs5c07oyz86u+/HySBNPQ==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -2347,8 +2353,8 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@swc/core-win32-arm64-msvc@1.4.13':
-    resolution: {integrity: sha512-LVZfhlD+jHcAbz5NN+gAJ1BEasB0WpcvUzcsJt0nQSRsojgzPzFjJ+fzEBnvT7SMtqKkrnVJ0OmDYeh88bDRpw==}
+  '@swc/core-win32-arm64-msvc@1.4.16':
+    resolution: {integrity: sha512-bTD43MbhIHL2s5QgCwyleaGwl96Gk/scF2TaVKdUe4QlJCDV/YK9h5oIBAp63ckHtE8GHlH4c8dZNBiAXn4Org==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [win32]
@@ -2359,8 +2365,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@swc/core-win32-ia32-msvc@1.4.13':
-    resolution: {integrity: sha512-78hxHWUvUZtWsnhcf8DKwhBcNFJw+j4y4fN2B9ioXmBWX2tIyw+BqUHOrismOtjPihaZmwe/Ok2e4qmkawE2fw==}
+  '@swc/core-win32-ia32-msvc@1.4.16':
+    resolution: {integrity: sha512-/lmZeAN/qV5XbK2SEvi8e2RkIg8FQNYiSA8y2/Zb4gTUMKVO5JMLH0BSWMiIKMstKDPDSxMWgwJaQHF8UMyPmQ==}
     engines: {node: '>=10'}
     cpu: [ia32]
     os: [win32]
@@ -2371,8 +2377,8 @@ packages:
     cpu: [ia32]
     os: [win32]
 
-  '@swc/core-win32-x64-msvc@1.4.13':
-    resolution: {integrity: sha512-WSfy1u2Xde6jU7UpHIInCUMW98Zw9iZglddKUAvmr1obkZji5U6EX0Oca3asEJdZPFb+2lMLjt0Mh5a1YisROg==}
+  '@swc/core-win32-x64-msvc@1.4.16':
+    resolution: {integrity: sha512-BPAfFfODWXtUu6SwaTTftDHvcbDyWBSI/oanUeRbQR5vVWkXoQ3cxLTsDluc3H74IqXS5z1Uyoe0vNo2hB1opA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [win32]
@@ -2383,8 +2389,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@swc/core@1.4.13':
-    resolution: {integrity: sha512-rOtusBE+2gaeRkAJn5E4zp5yzZekZOypzSOz5ZG6P1hFbd+Cc26fWEdK6sUSnrkkvTd0Oj33KXLB/4UkbK/UHA==}
+  '@swc/core@1.4.16':
+    resolution: {integrity: sha512-Xaf+UBvW6JNuV131uvSNyMXHn+bh6LyKN4tbv7tOUFQpXyz/t9YWRE04emtlUW9Y0qrm/GKFCbY8n3z6BpZbTA==}
     engines: {node: '>=10'}
     peerDependencies:
       '@swc/helpers': ^0.5.0
@@ -2592,9 +2598,6 @@ packages:
 
   '@types/prop-types@15.7.12':
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
-
-  '@types/qs@6.9.14':
-    resolution: {integrity: sha512-5khscbd3SwWMhFqylJBLQ0zIu7c1K6Vz0uBIt915BI3zV0q1nfjRQD3RqSBcPaO6PHEF4ov/t9y89fSiyThlPA==}
 
   '@types/qs@6.9.15':
     resolution: {integrity: sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==}
@@ -2881,8 +2884,8 @@ packages:
   '@xenova/transformers@2.16.1':
     resolution: {integrity: sha512-p2ii7v7oC3Se0PC012dn4vt196GCroaN5ngOYJYkfg0/ce8A5frsrnnnktOBJuejG3bW5Hreb7JZ/KxtUaKd8w==}
 
-  '@xenova/transformers@2.17.0':
-    resolution: {integrity: sha512-usmDut7hwnrc4EqP59cboYqE6C8up63SqMy3E9RjG9nCsOhrsLndEU7DMu+bZ9R+HcAI8jRGabTIxH+B6agBVA==}
+  '@xenova/transformers@2.17.1':
+    resolution: {integrity: sha512-zo702tQAFZXhzeD2GCYUNUqeqkoueOdiSbQWa4s0q7ZE4z8WBIwIsMMPGobpgdqjQ2u0Qulo08wuqVEUrBXjkQ==}
 
   '@xmldom/xmldom@0.8.10':
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
@@ -2896,6 +2899,9 @@ packages:
 
   '@zilliz/milvus2-sdk-node@2.3.5':
     resolution: {integrity: sha512-bWbQnhvu+7jZXoqI+qySycwph3vloy0LDV54TBY4wRmu6HhMlqIqyIiI8sQNeSJFs8M1jHg1PlmhE/dvckA1bA==}
+
+  '@zilliz/milvus2-sdk-node@2.4.1':
+    resolution: {integrity: sha512-j3vbMvaQyjnUhDA+Nk6AmEKroGJiA6qTW6lVkLMGYsPQd2WzDXjbEM4YCLUcfyh8xsngAzKFkPmM4YIpI3BdQQ==}
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -3088,8 +3094,8 @@ packages:
     resolution: {integrity: sha512-qsDkLjbAKqgVrpxTdoxF1b5dt1Txmdh49lmO/02MJzXFXzMFUqpsgE/hvQ8Hkfykx/aXuU7WcU2otA9tXKgTPA==}
     engines: {node: '>=18'}
 
-  assemblyai@4.4.0:
-    resolution: {integrity: sha512-UlIDMF/bCzMbD32PI9vd+MXlSMCU+pY+4Z9gJcGxGyv7StJdCDEZFhKQlwFWgKqpxF0DTrcldXev0s/8ngae0A==}
+  assemblyai@4.4.1:
+    resolution: {integrity: sha512-GzpbSRhZ0VlHNTQTOKxOrod3Ckw4AZVQQlnE5sJeCuAhTXJLLi5SE6U4vOapTsxf3lO7+93tdNTlWBrkwYO4Nw==}
     engines: {node: '>=18'}
 
   assemblyscript@0.19.23:
@@ -3517,8 +3523,8 @@ packages:
   cohere-ai@7.9.3:
     resolution: {integrity: sha512-DcZ6B9Fa1yaFFkZ3+HO/aE4R97m08cZs/ww7YpfEcTatAljznmnXtaFKRMP57olLMGKmYA/oHpkUqh/Vt4kvFA==}
 
-  cohere-ai@7.9.4:
-    resolution: {integrity: sha512-ZdrDNs/zAVLd1DUCCX3Dz5/k7IfBDQ31TboxQD1SM44Nboc1NEPoy7mNpqffRzXjwFanQCUg0n+4ZjPp3K6eIQ==}
+  cohere-ai@7.9.5:
+    resolution: {integrity: sha512-tr8LUR3Q46agFpfEwaYwzYO4qAuN0/R/8YroG4bc86LadOacBAabctZUq0zfCdLiL7gB4yWJs4QCzfpRH3rQuw==}
 
   collapse-white-space@2.1.0:
     resolution: {integrity: sha512-loKTxY1zCOuG4j9f6EPnuyyYkf58RnhhWTvRoZEokgB+WbdXehfjFviyOVYkqzEWz1Q5kRiZdBYS5SwxbQYwzw==}
@@ -4734,6 +4740,10 @@ packages:
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
+  generic-pool@3.9.0:
+    resolution: {integrity: sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==}
+    engines: {node: '>= 4'}
+
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -5627,6 +5637,10 @@ packages:
     resolution: {integrity: sha512-aZrWC5MAMko+RPGwRWiBXEhYWffq/Gp6+GWDOyNQGmQom6Dr3EuKcQ9b+QiTV7w9XLUss4NA2aMmTYX60azSiQ==}
     engines: {node: '>=18.0.0'}
 
+  llamaindex@0.2.9:
+    resolution: {integrity: sha512-Ifmk4Bu0CEKI3cwfER3WyZSP7+gOBHgtWobsEJ1c+1pYcIMipwxpqBUba/YXQceuEmh7xsCd0+ROkoNumUX3CQ==}
+    engines: {node: '>=18.0.0'}
+
   load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
     engines: {node: '>=6'}
@@ -6376,8 +6390,8 @@ packages:
     resolution: {integrity: sha512-Sh4KvplkvkAREuhb8yZpohqsOo08cBBu6LNWLD8YyMxe8yCxbE+ouJYUs1X2oDPrzQGANj0rFNQYiwW9gWLBOg==}
     hasBin: true
 
-  openai@4.36.0:
-    resolution: {integrity: sha512-AtYrhhWY64LhB9P6f3H0nV8nTSaQJ89mWPnfNU5CnYg81zlYaV8nkyO+aTNfprdqP/9xv10woNNUgefXINT4Dg==}
+  openai@4.38.0:
+    resolution: {integrity: sha512-q1w04cRm+7CgUAGDXqt+OMa89zXBffHrEK0FcVDRhD+zL1S1aAatu4iYO5sIxR2QFEP//i8CM3QaxGVTNajxuw==}
     hasBin: true
 
   opener@1.5.2:
@@ -7102,8 +7116,8 @@ packages:
     resolution: {integrity: sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==}
     engines: {node: '>=0.6'}
 
-  qs@6.12.0:
-    resolution: {integrity: sha512-trVZiI6RMOkO476zLGaBIzszOdFPnCCXHPG9kn0yuS1uz6xdVxPfZdB3vUig9pxPFDM9BRAgz/YUIVQ1/vuiUg==}
+  qs@6.12.1:
+    resolution: {integrity: sha512-zWmv4RSuB9r2mYQw3zxQuHWeU+42aKi1wWig/j4ele4ygELZ7PEO6MM7rim9oAQH2A5MWfsAVf/jPvTPgCbvUQ==}
     engines: {node: '>=0.6'}
 
   queue-microtask@1.2.3:
@@ -7362,6 +7376,10 @@ packages:
 
   replicate@0.25.2:
     resolution: {integrity: sha512-c5otBJ5E66XLS0X196pBCsyy85b03ZBLeV/lbKfU8cqfkt3Qd6NGEiPwTtxtsQ4AznggMJNn2Qq68t/bV85M2w==}
+    engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
+
+  replicate@0.29.1:
+    resolution: {integrity: sha512-AezrONSwjYohugcxOd334A4zijdVQ4QyGZHysB9dg7auCng2vuXbi5EFkqTX+kZ+aihxJdhO1bURYmgrxOZg2w==}
     engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
 
   require-directory@2.1.1:
@@ -8930,6 +8948,19 @@ snapshots:
       - encoding
 
   '@anthropic-ai/sdk@0.20.4(encoding@0.1.13)':
+    dependencies:
+      '@types/node': 18.19.31
+      '@types/node-fetch': 2.6.11
+      abort-controller: 3.0.0
+      agentkeepalive: 4.5.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+      web-streams-polyfill: 3.3.3
+    transitivePeerDependencies:
+      - encoding
+
+  '@anthropic-ai/sdk@0.20.6(encoding@0.1.13)':
     dependencies:
       '@types/node': 18.19.31
       '@types/node-fetch': 2.6.11
@@ -10853,10 +10884,10 @@ snapshots:
 
   '@llamaindex/cloud@0.0.5(node-fetch@2.7.0(encoding@0.1.13))':
     dependencies:
-      '@types/qs': 6.9.14
+      '@types/qs': 6.9.15
       form-data: 4.0.0
       js-base64: 3.7.7
-      qs: 6.12.0
+      qs: 6.12.1
     optionalDependencies:
       node-fetch: 2.7.0(encoding@0.1.13)
 
@@ -10991,6 +11022,8 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
+
+  '@petamoriken/float16@3.8.6': {}
 
   '@pinecone-database/pinecone@1.1.3':
     dependencies:
@@ -11234,10 +11267,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@swc/cli@0.3.12(@swc/core@1.4.13(@swc/helpers@0.5.2))(chokidar@3.6.0)':
+  '@swc/cli@0.3.12(@swc/core@1.4.16(@swc/helpers@0.5.2))(chokidar@3.6.0)':
     dependencies:
       '@mole-inc/bin-wrapper': 8.0.1
-      '@swc/core': 1.4.13(@swc/helpers@0.5.2)
+      '@swc/core': 1.4.16(@swc/helpers@0.5.2)
       '@swc/counter': 0.1.3
       commander: 8.3.0
       fast-glob: 3.3.2
@@ -11264,81 +11297,81 @@ snapshots:
     optionalDependencies:
       chokidar: 3.6.0
 
-  '@swc/core-darwin-arm64@1.4.13':
+  '@swc/core-darwin-arm64@1.4.16':
     optional: true
 
   '@swc/core-darwin-arm64@1.4.2':
     optional: true
 
-  '@swc/core-darwin-x64@1.4.13':
+  '@swc/core-darwin-x64@1.4.16':
     optional: true
 
   '@swc/core-darwin-x64@1.4.2':
     optional: true
 
-  '@swc/core-linux-arm-gnueabihf@1.4.13':
+  '@swc/core-linux-arm-gnueabihf@1.4.16':
     optional: true
 
   '@swc/core-linux-arm-gnueabihf@1.4.2':
     optional: true
 
-  '@swc/core-linux-arm64-gnu@1.4.13':
+  '@swc/core-linux-arm64-gnu@1.4.16':
     optional: true
 
   '@swc/core-linux-arm64-gnu@1.4.2':
     optional: true
 
-  '@swc/core-linux-arm64-musl@1.4.13':
+  '@swc/core-linux-arm64-musl@1.4.16':
     optional: true
 
   '@swc/core-linux-arm64-musl@1.4.2':
     optional: true
 
-  '@swc/core-linux-x64-gnu@1.4.13':
+  '@swc/core-linux-x64-gnu@1.4.16':
     optional: true
 
   '@swc/core-linux-x64-gnu@1.4.2':
     optional: true
 
-  '@swc/core-linux-x64-musl@1.4.13':
+  '@swc/core-linux-x64-musl@1.4.16':
     optional: true
 
   '@swc/core-linux-x64-musl@1.4.2':
     optional: true
 
-  '@swc/core-win32-arm64-msvc@1.4.13':
+  '@swc/core-win32-arm64-msvc@1.4.16':
     optional: true
 
   '@swc/core-win32-arm64-msvc@1.4.2':
     optional: true
 
-  '@swc/core-win32-ia32-msvc@1.4.13':
+  '@swc/core-win32-ia32-msvc@1.4.16':
     optional: true
 
   '@swc/core-win32-ia32-msvc@1.4.2':
     optional: true
 
-  '@swc/core-win32-x64-msvc@1.4.13':
+  '@swc/core-win32-x64-msvc@1.4.16':
     optional: true
 
   '@swc/core-win32-x64-msvc@1.4.2':
     optional: true
 
-  '@swc/core@1.4.13(@swc/helpers@0.5.2)':
+  '@swc/core@1.4.16(@swc/helpers@0.5.2)':
     dependencies:
       '@swc/counter': 0.1.3
       '@swc/types': 0.1.6
     optionalDependencies:
-      '@swc/core-darwin-arm64': 1.4.13
-      '@swc/core-darwin-x64': 1.4.13
-      '@swc/core-linux-arm-gnueabihf': 1.4.13
-      '@swc/core-linux-arm64-gnu': 1.4.13
-      '@swc/core-linux-arm64-musl': 1.4.13
-      '@swc/core-linux-x64-gnu': 1.4.13
-      '@swc/core-linux-x64-musl': 1.4.13
-      '@swc/core-win32-arm64-msvc': 1.4.13
-      '@swc/core-win32-ia32-msvc': 1.4.13
-      '@swc/core-win32-x64-msvc': 1.4.13
+      '@swc/core-darwin-arm64': 1.4.16
+      '@swc/core-darwin-x64': 1.4.16
+      '@swc/core-linux-arm-gnueabihf': 1.4.16
+      '@swc/core-linux-arm64-gnu': 1.4.16
+      '@swc/core-linux-arm64-musl': 1.4.16
+      '@swc/core-linux-x64-gnu': 1.4.16
+      '@swc/core-linux-x64-musl': 1.4.16
+      '@swc/core-win32-arm64-msvc': 1.4.16
+      '@swc/core-win32-ia32-msvc': 1.4.16
+      '@swc/core-win32-x64-msvc': 1.4.16
       '@swc/helpers': 0.5.2
 
   '@swc/core@1.4.2(@swc/helpers@0.5.2)':
@@ -11559,8 +11592,6 @@ snapshots:
   '@types/prop-types@15.7.11': {}
 
   '@types/prop-types@15.7.12': {}
-
-  '@types/qs@6.9.14': {}
 
   '@types/qs@6.9.15': {}
 
@@ -11963,7 +11994,7 @@ snapshots:
     optionalDependencies:
       onnxruntime-node: 1.14.0
 
-  '@xenova/transformers@2.17.0':
+  '@xenova/transformers@2.17.1':
     dependencies:
       '@huggingface/jinja': 0.2.2
       onnxruntime-web: 1.14.0
@@ -11982,6 +12013,17 @@ snapshots:
       '@grpc/grpc-js': 1.8.17
       '@grpc/proto-loader': 0.7.7
       dayjs: 1.11.10
+      lru-cache: 9.1.2
+      protobufjs: 7.2.6
+      winston: 3.13.0
+
+  '@zilliz/milvus2-sdk-node@2.4.1':
+    dependencies:
+      '@grpc/grpc-js': 1.10.6
+      '@grpc/proto-loader': 0.7.12
+      '@petamoriken/float16': 3.8.6
+      dayjs: 1.11.10
+      generic-pool: 3.9.0
       lru-cache: 9.1.2
       protobufjs: 7.2.6
       winston: 3.13.0
@@ -12206,7 +12248,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  assemblyai@4.4.0:
+  assemblyai@4.4.1:
     dependencies:
       ws: 8.16.0
     transitivePeerDependencies:
@@ -12608,23 +12650,23 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  chromadb@1.7.3(cohere-ai@7.9.4(encoding@0.1.13))(encoding@0.1.13)(openai@4.36.0(encoding@0.1.13)):
+  chromadb@1.7.3(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0(encoding@0.1.13)
     optionalDependencies:
-      cohere-ai: 7.9.4(encoding@0.1.13)
-      openai: 4.36.0(encoding@0.1.13)
+      cohere-ai: 7.9.5(encoding@0.1.13)
+      openai: 4.38.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
-  chromadb@1.8.1(cohere-ai@7.9.4(encoding@0.1.13))(encoding@0.1.13)(openai@4.36.0(encoding@0.1.13)):
+  chromadb@1.8.1(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0(encoding@0.1.13)
     optionalDependencies:
-      cohere-ai: 7.9.4(encoding@0.1.13)
-      openai: 4.36.0(encoding@0.1.13)
+      cohere-ai: 7.9.5(encoding@0.1.13)
+      openai: 4.38.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
@@ -12703,7 +12745,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  cohere-ai@7.9.4(encoding@0.1.13):
+  cohere-ai@7.9.5(encoding@0.1.13):
     dependencies:
       form-data: 4.0.0
       js-base64: 3.7.2
@@ -14234,6 +14276,8 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
+  generic-pool@3.9.0: {}
+
   gensync@1.0.0-beta.2: {}
 
   get-amd-module-type@3.0.2:
@@ -15199,12 +15243,12 @@ snapshots:
       '@types/node': 20.12.7
       '@types/papaparse': 5.3.14
       '@types/pg': 8.11.5
-      '@xenova/transformers': 2.17.0
-      '@zilliz/milvus2-sdk-node': 2.3.5
+      '@xenova/transformers': 2.17.1
+      '@zilliz/milvus2-sdk-node': 2.4.1
       ajv: 8.12.0
-      assemblyai: 4.4.0
-      chromadb: 1.7.3(cohere-ai@7.9.4(encoding@0.1.13))(encoding@0.1.13)(openai@4.36.0(encoding@0.1.13))
-      cohere-ai: 7.9.4(encoding@0.1.13)
+      assemblyai: 4.4.1
+      chromadb: 1.7.3(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13))
+      cohere-ai: 7.9.5(encoding@0.1.13)
       js-tiktoken: 1.0.11
       lodash: 4.17.21
       magic-bytes.js: 1.10.0
@@ -15212,7 +15256,7 @@ snapshots:
       md-utils-ts: 2.0.0
       mongodb: 6.5.0
       notion-md-crawler: 0.0.2(encoding@0.1.13)
-      openai: 4.36.0(encoding@0.1.13)
+      openai: 4.38.0(encoding@0.1.13)
       papaparse: 5.4.1
       pathe: 1.1.2
       pdf2json: 3.0.5
@@ -15242,9 +15286,9 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  llamaindex@0.2.8(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.5):
+  llamaindex@0.2.9(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.5):
     dependencies:
-      '@anthropic-ai/sdk': 0.18.0(encoding@0.1.13)
+      '@anthropic-ai/sdk': 0.20.4(encoding@0.1.13)
       '@aws-crypto/sha256-js': 5.2.0
       '@datastax/astra-db-ts': 0.1.4
       '@grpc/grpc-js': 1.10.6
@@ -15258,12 +15302,12 @@ snapshots:
       '@types/node': 20.12.7
       '@types/papaparse': 5.3.14
       '@types/pg': 8.11.5
-      '@xenova/transformers': 2.17.0
+      '@xenova/transformers': 2.17.1
       '@zilliz/milvus2-sdk-node': 2.3.5
       ajv: 8.12.0
-      assemblyai: 4.4.0
-      chromadb: 1.7.3(cohere-ai@7.9.4(encoding@0.1.13))(encoding@0.1.13)(openai@4.36.0(encoding@0.1.13))
-      cohere-ai: 7.9.4(encoding@0.1.13)
+      assemblyai: 4.4.1
+      chromadb: 1.7.3(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13))
+      cohere-ai: 7.9.5(encoding@0.1.13)
       js-tiktoken: 1.0.10
       lodash: 4.17.21
       magic-bytes.js: 1.10.0
@@ -15271,7 +15315,7 @@ snapshots:
       md-utils-ts: 2.0.0
       mongodb: 6.5.0
       notion-md-crawler: 0.0.2(encoding@0.1.13)
-      openai: 4.36.0(encoding@0.1.13)
+      openai: 4.38.0(encoding@0.1.13)
       papaparse: 5.4.1
       pathe: 1.1.2
       pdf2json: 3.0.5
@@ -16363,7 +16407,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  openai@4.36.0(encoding@0.1.13):
+  openai@4.38.0(encoding@0.1.13):
     dependencies:
       '@types/node': 18.19.31
       '@types/node-fetch': 2.6.11
@@ -17090,7 +17134,7 @@ snapshots:
     dependencies:
       side-channel: 1.0.6
 
-  qs@6.12.0:
+  qs@6.12.1:
     dependencies:
       side-channel: 1.0.6
 
@@ -17471,6 +17515,10 @@ snapshots:
       strip-ansi: 6.0.1
 
   replicate@0.25.2:
+    optionalDependencies:
+      readable-stream: 4.5.2
+
+  replicate@0.29.1:
     optionalDependencies:
       readable-stream: 4.5.2
 
@@ -18265,7 +18313,7 @@ snapshots:
 
   ts-graphviz@1.8.2: {}
 
-  ts-node@10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.3):
+  ts-node@10.9.2(@swc/core@1.4.16(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
@@ -18283,9 +18331,9 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
-      '@swc/core': 1.4.13(@swc/helpers@0.5.2)
+      '@swc/core': 1.4.16(@swc/helpers@0.5.2)
 
-  ts-node@10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.5):
+  ts-node@10.9.2(@swc/core@1.4.16(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
@@ -18303,7 +18351,7 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
-      '@swc/core': 1.4.13(@swc/helpers@0.5.2)
+      '@swc/core': 1.4.16(@swc/helpers@0.5.2)
 
   tsconfig-paths@3.15.0:
     dependencies:
