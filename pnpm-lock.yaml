@@ -8,6 +8,7 @@ overrides:
   trim: 1.0.1
   '@babel/traverse': 7.23.2
   protobufjs: 7.2.6
+  llamaindex: link:../packages/core
 
 importers:
 
@@ -147,8 +148,8 @@ importers:
         specifier: ^1.0.11
         version: 1.0.11
       llamaindex:
-        specifier: latest
-        version: 0.2.9(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.5)
+        specifier: link:../../packages/core
+        version: link:../../packages/core
       mongodb:
         specifier: ^6.5.0
         version: 6.5.0
@@ -172,8 +173,8 @@ importers:
   examples/readers:
     dependencies:
       llamaindex:
-        specifier: latest
-        version: 0.2.8(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.3)
+        specifier: link:../../../packages/core
+        version: link:../../../packages/core
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -330,8 +331,8 @@ importers:
         specifier: ^3.2.3
         version: 3.2.3
       llamaindex:
-        specifier: workspace:*
-        version: link:..
+        specifier: link:../../../../packages/core
+        version: link:../../../../packages/core
       tsx:
         specifier: ^4.7.2
         version: 4.7.2
@@ -339,8 +340,8 @@ importers:
   packages/core/tests:
     devDependencies:
       llamaindex:
-        specifier: workspace:*
-        version: link:..
+        specifier: link:../../../../packages/core
+        version: link:../../../../packages/core
       vitest:
         specifier: ^1.3.1
         version: 1.3.1(@types/node@20.12.7)(terser@5.30.3)
@@ -533,8 +534,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       llamaindex:
-        specifier: workspace:*
-        version: link:../core
+        specifier: link:../../../packages/core
+        version: link:../../../packages/core
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -675,9 +676,6 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
-
-  '@anthropic-ai/sdk@0.18.0':
-    resolution: {integrity: sha512-3XsWEn/4nPGRd4AdSguugbSDFy6Z2AWTNOeI3iK+aV22+w23+vY9CEb3Hiy0kvKIQuxSmZz/+5WKC8nPWy8gVg==}
 
   '@anthropic-ai/sdk@0.20.6':
     resolution: {integrity: sha512-vpVWAol+Ih1UkZGUj8DYPuqWDGxBp6M/JYz4nvq2HBT0zKdvi24Z9oznA7tr+HDed78JZrw+nbxs2I8JbTAIiQ==}
@@ -1855,13 +1853,6 @@ packages:
     peerDependenciesMeta:
       node-fetch:
         optional: true
-
-  '@llamaindex/env@0.0.7':
-    resolution: {integrity: sha512-6j7eGXhSDspz33FzdWJRTbGlXa3osYP/aP9dm10Z7JCxaxyQZmGIWL149HNkGgV4lxiPmGPx7YWjBBj9nRdo2w==}
-    peerDependencies:
-      '@aws-crypto/sha256-js': ^5.2.0
-      pathe: ^1.1.2
-      readable-stream: ^4.5.2
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -3165,9 +3156,6 @@ packages:
   bare-path@2.1.1:
     resolution: {integrity: sha512-OHM+iwRDRMDBsSW7kl3dO62JyHdBKO3B25FB9vNQBPcGHMo4+eA8Yj41Lfbk3pS/seDY+siNge0LdRTulAau/A==}
 
-  base-64@0.1.0:
-    resolution: {integrity: sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==}
-
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
@@ -3365,9 +3353,6 @@ packages:
 
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
-
-  charenc@0.0.2:
-    resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
 
   check-error@1.0.3:
     resolution: {integrity: sha512-iKEoDYaRmd1mxM90a2OEfWhjsjPpYPuQ+lMYsoxB126+t8fw7ySEO48nmDg5COTjxDI65/Y2OWpeEHk3ZOe8zg==}
@@ -3674,9 +3659,6 @@ packages:
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
-
-  crypt@0.0.2:
-    resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
 
   crypto-random-string@4.0.0:
     resolution: {integrity: sha512-x8dy3RnvYdlUcPOjkEHqozhiwzKNSq7GcPuXFbnyMOCHxX8V3OgIg/pYuabl2sbUPfIJaeAQB7PMOK8DFIdoRA==}
@@ -4023,9 +4005,6 @@ packages:
   diff@4.0.2:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
-
-  digest-fetch@1.3.0:
-    resolution: {integrity: sha512-CGJuv6iKNM7QyZlM2T3sPAdZWd/p9zQiRNS9G+9COUCwzWFTs0Xp8NF5iePx7wtvhDykReiRRrSeNb4oMmB8lA==}
 
   dingbat-to-unicode@1.0.1:
     resolution: {integrity: sha512-98l0sW87ZT58pU4i61wa2OHwxbiYSbuxsCBozaVnYX2iCnr3bLM3fIes1/ej7h1YdOKuKt/MLs706TVnALA65w==}
@@ -5172,9 +5151,6 @@ packages:
     resolution: {integrity: sha512-gDYaKHJmnj4aWxyj6YHyXVpdQawtVLHU5cb+eztPGczf6cjuTdwve5ZIEfgXqH4e57An1D1AKf8CZ3kYrQRqYA==}
     engines: {node: '>= 0.4'}
 
-  is-buffer@1.1.6:
-    resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
-
   is-callable@1.2.7:
     resolution: {integrity: sha512-1BC0BVFhS/p0qtw6enp8e+8OD0UrK0oFLztSjNzhcKA3WDuJxxAPXzPuPtKkjEY9UUoEWlX/8fgKeu2S8i9JTA==}
     engines: {node: '>= 0.4'}
@@ -5584,14 +5560,6 @@ packages:
     resolution: {integrity: sha512-ovJXBXkKGfq+CwmKTjluEqFi3p4h8xvkxGQQAQan22YCgef4KZ1mKGjzfGh6PL6AW5Csw0QiQPNuQyH+6Xk3hA==}
     engines: {node: '>=18.0.0'}
 
-  llamaindex@0.2.8:
-    resolution: {integrity: sha512-aZrWC5MAMko+RPGwRWiBXEhYWffq/Gp6+GWDOyNQGmQom6Dr3EuKcQ9b+QiTV7w9XLUss4NA2aMmTYX60azSiQ==}
-    engines: {node: '>=18.0.0'}
-
-  llamaindex@0.2.9:
-    resolution: {integrity: sha512-Ifmk4Bu0CEKI3cwfER3WyZSP7+gOBHgtWobsEJ1c+1pYcIMipwxpqBUba/YXQceuEmh7xsCd0+ROkoNumUX3CQ==}
-    engines: {node: '>=18.0.0'}
-
   load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
     engines: {node: '>=6'}
@@ -5762,9 +5730,6 @@ packages:
 
   md-utils-ts@2.0.0:
     resolution: {integrity: sha512-sMG6JtX0ebcRMHxYTcmgsh0/m6o8hGdQHFE2OgjvflRZlQM51CGGj/uuk056D+12BlCiW0aTpt/AdlDNtgQiew==}
-
-  md5@2.3.0:
-    resolution: {integrity: sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==}
 
   mdast-util-directive@3.0.0:
     resolution: {integrity: sha512-JUpYOqKI4mM3sZcNxmF/ox04XYFFkNwr0CFlrQIkCwbvH0xzMCqkMqAde9wRd80VAhaUrwFwKm2nxretdT1h7Q==}
@@ -7321,10 +7286,6 @@ packages:
   renderkid@3.0.0:
     resolution: {integrity: sha512-q/7VIQA8lmM1hF+jn+sFSPWGlMkSAeNYcPLmDQx2zzuiDfaLrOmumR8iaUKlenFgh0XRPIUeSPlH3A+AW3Z5pg==}
 
-  replicate@0.25.2:
-    resolution: {integrity: sha512-c5otBJ5E66XLS0X196pBCsyy85b03ZBLeV/lbKfU8cqfkt3Qd6NGEiPwTtxtsQ4AznggMJNn2Qq68t/bV85M2w==}
-    engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
-
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
@@ -8875,20 +8836,6 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
-
-  '@anthropic-ai/sdk@0.18.0(encoding@0.1.13)':
-    dependencies:
-      '@types/node': 18.19.31
-      '@types/node-fetch': 2.6.11
-      abort-controller: 3.0.0
-      agentkeepalive: 4.5.0
-      digest-fetch: 1.3.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0(encoding@0.1.13)
-      web-streams-polyfill: 3.3.3
-    transitivePeerDependencies:
-      - encoding
 
   '@anthropic-ai/sdk@0.20.6(encoding@0.1.13)':
     dependencies:
@@ -10806,15 +10753,6 @@ snapshots:
     optionalDependencies:
       node-fetch: 2.7.0(encoding@0.1.13)
 
-  '@llamaindex/env@0.0.7(@aws-crypto/sha256-js@5.2.0)(pathe@1.1.2)(readable-stream@4.5.2)':
-    dependencies:
-      '@aws-crypto/sha256-js': 5.2.0
-      '@types/lodash': 4.17.0
-      '@types/node': 20.12.7
-      lodash: 4.17.21
-      pathe: 1.1.2
-      readable-stream: 4.5.2
-
   '@manypkg/find-root@1.1.0':
     dependencies:
       '@babel/runtime': 7.24.4
@@ -10993,13 +10931,6 @@ snapshots:
   '@protobufjs/pool@1.1.0': {}
 
   '@protobufjs/utf8@1.1.0': {}
-
-  '@qdrant/js-client-rest@1.8.2(typescript@5.4.3)':
-    dependencies:
-      '@qdrant/openapi-typescript-fetch': 1.2.6
-      '@sevinf/maybe': 0.5.0
-      typescript: 5.4.3
-      undici: 5.28.4
 
   '@qdrant/js-client-rest@1.8.2(typescript@5.4.5)':
     dependencies:
@@ -12255,8 +12186,6 @@ snapshots:
       bare-os: 2.2.1
     optional: true
 
-  base-64@0.1.0: {}
-
   base64-js@1.5.1: {}
 
   batch@0.6.1: {}
@@ -12489,8 +12418,6 @@ snapshots:
   character-reference-invalid@2.0.1: {}
 
   chardet@0.7.0: {}
-
-  charenc@0.0.2: {}
 
   check-error@1.0.3:
     dependencies:
@@ -12817,8 +12744,6 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  crypt@0.0.2: {}
 
   crypto-random-string@4.0.0:
     dependencies:
@@ -13197,11 +13122,6 @@ snapshots:
   diff-sequences@29.6.3: {}
 
   diff@4.0.2: {}
-
-  digest-fetch@1.3.0:
-    dependencies:
-      base-64: 0.1.0
-      md5: 2.3.0
 
   dingbat-to-unicode@1.0.1: {}
 
@@ -14712,8 +14632,6 @@ snapshots:
       call-bind: 1.0.7
       has-tostringtag: 1.0.2
 
-  is-buffer@1.1.6: {}
-
   is-callable@1.2.7: {}
 
   is-ci@3.0.1:
@@ -15086,124 +15004,6 @@ snapshots:
       rfdc: 1.3.1
       wrap-ansi: 9.0.0
 
-  llamaindex@0.2.8(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.3):
-    dependencies:
-      '@anthropic-ai/sdk': 0.18.0(encoding@0.1.13)
-      '@aws-crypto/sha256-js': 5.2.0
-      '@datastax/astra-db-ts': 0.1.4
-      '@grpc/grpc-js': 1.10.6
-      '@llamaindex/cloud': 0.0.5(node-fetch@2.7.0(encoding@0.1.13))
-      '@llamaindex/env': 0.0.7(@aws-crypto/sha256-js@5.2.0)(pathe@1.1.2)(readable-stream@4.5.2)
-      '@mistralai/mistralai': 0.1.3(encoding@0.1.13)
-      '@notionhq/client': 2.2.15(encoding@0.1.13)
-      '@pinecone-database/pinecone': 2.2.0
-      '@qdrant/js-client-rest': 1.8.2(typescript@5.4.3)
-      '@types/lodash': 4.17.0
-      '@types/node': 20.12.7
-      '@types/papaparse': 5.3.14
-      '@types/pg': 8.11.5
-      '@xenova/transformers': 2.17.1
-      '@zilliz/milvus2-sdk-node': 2.4.1
-      ajv: 8.12.0
-      assemblyai: 4.4.1
-      chromadb: 1.7.3(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13))
-      cohere-ai: 7.9.5(encoding@0.1.13)
-      js-tiktoken: 1.0.11
-      lodash: 4.17.21
-      magic-bytes.js: 1.10.0
-      mammoth: 1.7.1
-      md-utils-ts: 2.0.0
-      mongodb: 6.5.0
-      notion-md-crawler: 0.0.2(encoding@0.1.13)
-      openai: 4.38.0(encoding@0.1.13)
-      papaparse: 5.4.1
-      pathe: 1.1.2
-      pdf2json: 3.0.5
-      pg: 8.11.5
-      pgvector: 0.1.8
-      portkey-ai: 0.1.16
-      rake-modified: 1.0.8
-      replicate: 0.25.2
-      string-strip-html: 13.4.8
-      wikipedia: 2.1.2
-      wink-nlp: 1.14.3
-    transitivePeerDependencies:
-      - '@aws-sdk/credential-providers'
-      - '@google/generative-ai'
-      - '@mongodb-js/zstd'
-      - bufferutil
-      - debug
-      - encoding
-      - gcp-metadata
-      - kerberos
-      - mongodb-client-encryption
-      - node-fetch
-      - pg-native
-      - readable-stream
-      - snappy
-      - socks
-      - typescript
-      - utf-8-validate
-
-  llamaindex@0.2.9(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(readable-stream@4.5.2)(typescript@5.4.5):
-    dependencies:
-      '@anthropic-ai/sdk': 0.20.6(encoding@0.1.13)
-      '@aws-crypto/sha256-js': 5.2.0
-      '@datastax/astra-db-ts': 0.1.4
-      '@grpc/grpc-js': 1.10.6
-      '@llamaindex/cloud': 0.0.5(node-fetch@2.7.0(encoding@0.1.13))
-      '@llamaindex/env': 0.0.7(@aws-crypto/sha256-js@5.2.0)(pathe@1.1.2)(readable-stream@4.5.2)
-      '@mistralai/mistralai': 0.1.3(encoding@0.1.13)
-      '@notionhq/client': 2.2.15(encoding@0.1.13)
-      '@pinecone-database/pinecone': 2.2.0
-      '@qdrant/js-client-rest': 1.8.2(typescript@5.4.5)
-      '@types/lodash': 4.17.0
-      '@types/node': 20.12.7
-      '@types/papaparse': 5.3.14
-      '@types/pg': 8.11.5
-      '@xenova/transformers': 2.17.1
-      '@zilliz/milvus2-sdk-node': 2.4.1
-      ajv: 8.12.0
-      assemblyai: 4.4.1
-      chromadb: 1.7.3(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.0(encoding@0.1.13))
-      cohere-ai: 7.9.5(encoding@0.1.13)
-      js-tiktoken: 1.0.11
-      lodash: 4.17.21
-      magic-bytes.js: 1.10.0
-      mammoth: 1.7.1
-      md-utils-ts: 2.0.0
-      mongodb: 6.5.0
-      notion-md-crawler: 0.0.2(encoding@0.1.13)
-      openai: 4.38.0(encoding@0.1.13)
-      papaparse: 5.4.1
-      pathe: 1.1.2
-      pdf2json: 3.0.5
-      pg: 8.11.5
-      pgvector: 0.1.8
-      portkey-ai: 0.1.16
-      rake-modified: 1.0.8
-      replicate: 0.25.2
-      string-strip-html: 13.4.8
-      wikipedia: 2.1.2
-      wink-nlp: 1.14.3
-    transitivePeerDependencies:
-      - '@aws-sdk/credential-providers'
-      - '@google/generative-ai'
-      - '@mongodb-js/zstd'
-      - bufferutil
-      - debug
-      - encoding
-      - gcp-metadata
-      - kerberos
-      - mongodb-client-encryption
-      - node-fetch
-      - pg-native
-      - readable-stream
-      - snappy
-      - socks
-      - typescript
-      - utf-8-validate
-
   load-yaml-file@0.2.0:
     dependencies:
       graceful-fs: 4.2.11
@@ -15389,12 +15189,6 @@ snapshots:
   marked@4.3.0: {}
 
   md-utils-ts@2.0.0: {}
-
-  md5@2.3.0:
-    dependencies:
-      charenc: 0.0.2
-      crypt: 0.0.2
-      is-buffer: 1.1.6
 
   mdast-util-directive@3.0.0:
     dependencies:
@@ -17359,10 +17153,6 @@ snapshots:
       htmlparser2: 6.1.0
       lodash: 4.17.21
       strip-ansi: 6.0.1
-
-  replicate@0.25.2:
-    optionalDependencies:
-      readable-stream: 4.5.2
 
   require-directory@2.1.1: {}
 
