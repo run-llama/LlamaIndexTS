@@ -4,14 +4,15 @@ import {
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { Anthropic } from "../llm/anthropic.js";
-import type {
-  ChatMessage,
-  ChatResponse,
-  ToolCallLLMMessageOptions,
-} from "../llm/index.js";
+import type { ChatMessage, ToolCallLLMMessageOptions } from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
-import { AgentRunner, AgentWorker, type TaskHandler } from "./base.js";
+import {
+  AgentRunner,
+  AgentWorker,
+  type AgentChatResponse,
+  type TaskHandler,
+} from "./base.js";
 import { callTool } from "./utils.js";
 
 type AnthropicParamsBase = {
@@ -53,7 +54,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
 
   async chat(
     params: ChatEngineParamsNonStreaming,
-  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
+  ): Promise<AgentChatResponse<ToolCallLLMMessageOptions>>;
   async chat(params: ChatEngineParamsStreaming): Promise<never>;
   override async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,

@@ -171,12 +171,12 @@ export async function* createTaskImpl<
   }
 }
 
-type AgentStreamChatResponse<Options extends object> = {
+export type AgentStreamChatResponse<Options extends object> = {
   response: ReadableStream<ChatResponseChunk<Options>>;
   sources: ToolOutput[];
 };
 
-type AgentChatResponse<Options extends object> = {
+export type AgentChatResponse<Options extends object> = {
   response: ChatResponse<Options>;
   sources: ToolOutput[];
 };
