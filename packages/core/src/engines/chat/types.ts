@@ -3,7 +3,6 @@ import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
 import type { ChatMessage } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
-import type { ToolOutput } from "../../tools/types.js";
 
 /**
  * Represents the base parameters for ChatEngine.
@@ -56,46 +55,4 @@ export interface Context {
  */
 export interface ContextGenerator {
   generate(message: string): Promise<Context>;
-}
-
-export enum ChatResponseMode {
-  WAIT = "wait",
-  STREAM = "stream",
-}
-
-export class AgentChatResponse {
-  response: string;
-  sources: ToolOutput[];
-  sourceNodes?: NodeWithScore[];
-
-  constructor(
-    response: string,
-    sources?: ToolOutput[],
-    sourceNodes?: NodeWithScore[],
-  ) {
-    this.response = response;
-    this.sources = sources || [];
-    this.sourceNodes = sourceNodes || [];
-  }
-
-  toString() {
-    return this.response ?? "";
-  }
-}
-
-export class StreamingAgentChatResponse {
-  response: AsyncIterable<Response>;
-
-  sources: ToolOutput[];
-  sourceNodes?: NodeWithScore[];
-
-  constructor(
-    response: AsyncIterable<Response>,
-    sources?: ToolOutput[],
-    sourceNodes?: NodeWithScore[],
-  ) {
-    this.response = response;
-    this.sources = sources ?? [];
-    this.sourceNodes = sourceNodes ?? [];
-  }
 }

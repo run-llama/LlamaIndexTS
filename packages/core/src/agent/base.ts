@@ -4,6 +4,7 @@ import {
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import type {
   ChatMessage,
@@ -81,14 +82,14 @@ export type TaskStepOutput<
       output:
         | null
         | ChatResponse<AdditionalMessageOptions>
-        | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
+        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
       isLast: false;
     }
   | {
       taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
       output:
         | ChatResponse<AdditionalMessageOptions>
-        | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>;
+        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
       isLast: true;
     };
 
@@ -140,6 +141,9 @@ export async function* createTaskImpl<
     if (!step.context.shouldContinue(step)) {
       throw new Error("Tool call count exceeded limit");
     }
+    getCallbackManager().dispatchEvent("agent-start", {
+      payload: {},
+    });
     const taskOutput = await handler(step);
     const { isLast, output, taskStep } = taskOutput;
     // do not consume last output
@@ -158,11 +162,24 @@ export async function* createTaskImpl<
     };
     if (isLast) {
       isDone = true;
+      getCallbackManager().dispatchEvent("agent-end", {
+        payload: {},
+      });
     }
     prevStep = taskStep;
     yield taskOutput;
   }
 }
+
+type AgentStreamChatResponse<Options extends object> = {
+  response: ReadableStream<ChatResponseChunk<Options>>;
+  sources: ToolOutput[];
+};
+
+type AgentChatResponse<Options extends object> = {
+  response: ChatResponse<Options>;
+  sources: ToolOutput[];
+};
 
 export abstract class AgentRunner<
   AI extends LLM,
@@ -229,16 +246,16 @@ export abstract class AgentRunner<
 
   async chat(
     params: ChatEngineParamsNonStreaming,
-  ): Promise<ChatResponse<AdditionalMessageOptions>>;
+  ): Promise<AgentChatResponse<AdditionalMessageOptions>>;
   async chat(
     params: ChatEngineParamsStreaming,
-  ): Promise<AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>>;
+  ): Promise<AgentStreamChatResponse<AdditionalMessageOptions>>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
   ): Promise<
-    | ChatResponse<AdditionalMessageOptions>
-    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
+    | AgentChatResponse<AdditionalMessageOptions>
+    | AgentStreamChatResponse<AdditionalMessageOptions>
   > {
     const task = this.#runner.createTask(extractText(params.message), {
       stream: !!params.stream,
@@ -252,17 +269,34 @@ export abstract class AgentRunner<
       },
       shouldContinue: AgentRunner.shouldContinue,
     });
-    const stepOutput = await pipeline(task, async (iter) => {
-      for await (const stepOutput of iter) {
-        if (stepOutput.isLast) {
-          return stepOutput;
+    const stepOutput = await pipeline(
+      task,
+      async (
+        iter: AsyncIterable<
+          TaskStepOutput<AI, Store, AdditionalMessageOptions>
+        >,
+      ) => {
+        for await (const stepOutput of iter) {
+          if (stepOutput.isLast) {
+            return stepOutput;
+          }
         }
-      }
-      throw new Error("Task did not complete");
-    });
+        throw new Error("Task did not complete");
+      },
+    );
     const { output, taskStep } = stepOutput;
     this.#chatHistory = [...taskStep.context.store.messages];
-    return output;
+    if (isAsyncIterable(output)) {
+      return {
+        response: output,
+        sources: [...taskStep.context.store.toolOutputs],
+      } satisfies AgentStreamChatResponse<AdditionalMessageOptions>;
+    } else {
+      return {
+        response: output,
+        sources: [...taskStep.context.store.toolOutputs],
+      } satisfies AgentChatResponse<AdditionalMessageOptions>;
+    }
   }
 }
 
@@ -283,7 +317,7 @@ export abstract class AgentWorker<
     query: string,
     context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
   ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
-    const task = createTaskImpl(this.taskHandler, context, {
+    const taskGenerator = createTaskImpl(this.taskHandler, context, {
       role: "user",
       content: query,
     });
@@ -291,7 +325,8 @@ export abstract class AgentWorker<
       TaskStepOutput<AI, Store, AdditionalMessageOptions>
     >({
       start: async (controller) => {
-        for await (const stepOutput of task) {
+        for await (const stepOutput of taskGenerator) {
+          this.#taskSet.add(stepOutput.taskStep);
           controller.enqueue(stepOutput);
           if (stepOutput.isLast) {
             let currentStep: TaskStep<

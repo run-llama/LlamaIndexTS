@@ -1,6 +1,7 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
 import { CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
+import type { AgentEndEvent, AgentStartEvent } from "../agent/type.js";
 import {
   EventCaller,
   getEventCaller,
@@ -48,11 +49,15 @@ export interface LlamaIndexEventMaps {
    * @deprecated
    */
   stream: CustomEvent<StreamCallbackResponse>;
+  // llm events
   "llm-start": LLMStartEvent;
   "llm-end": LLMEndEvent;
   "llm-tool-call": LLMToolCallEvent;
   "llm-tool-result": LLMToolResultEvent;
   "llm-stream": LLMStreamEvent;
+  // agent events
+  "agent-start": AgentStartEvent;
+  "agent-end": AgentEndEvent;
 }
 
 //#region @deprecated remove in the next major version
