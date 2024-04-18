@@ -71,11 +71,11 @@ await test("anthropic agent", async (t) => {
         },
       ],
     });
-    const result = await agent.chat({
+    const { response } = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
-    consola.debug("response:", result.message.content);
-    ok(extractText(result.message.content).includes("35"));
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes("35"));
   });
 
   await t.test("async function", async () => {
@@ -108,11 +108,11 @@ await test("anthropic agent", async (t) => {
     const agent = new AnthropicAgent({
       tools: [showUniqueId],
     });
-    const { message } = await agent.chat({
+    const { response } = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
-    consola.debug("response:", message);
-    ok(extractText(message.content).includes(uniqueId));
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes(uniqueId));
   });
 
   await t.test("sum numbers", async () => {
@@ -120,7 +120,7 @@ await test("anthropic agent", async (t) => {
       tools: [sumNumbersTool],
     });
 
-    const response = await openaiAgent.chat({
+    const { response } = await openaiAgent.chat({
       message: "how much is 1 + 1?",
     });
 

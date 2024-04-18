@@ -82,11 +82,11 @@ await test("gpt-4-turbo", async (t) => {
         },
       ],
     });
-    const { message } = await agent.chat({
+    const { response } = await agent.chat({
       message: "What is the weather in San Jose?",
     });
-    consola.debug("response:", message);
-    ok(extractText(message.content).includes("45"));
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes("45"));
   });
 });
 
@@ -113,11 +113,11 @@ await test("agent", async (t) => {
         },
       ],
     });
-    const result = await agent.chat({
+    const { response } = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
-    consola.debug("response:", result.message);
-    ok(extractText(result.message.content).includes("35"));
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes("35"));
   });
 
   await t.test("async function", async () => {
@@ -150,10 +150,10 @@ await test("agent", async (t) => {
     const agent = new OpenAIAgent({
       tools: [showUniqueId],
     });
-    const { message } = await agent.chat({
+    const { response } = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
-    ok(extractText(message.content).includes(uniqueId));
+    ok(extractText(response.message.content).includes(uniqueId));
   });
 
   await t.test("sum numbers", async () => {
@@ -161,7 +161,7 @@ await test("agent", async (t) => {
       tools: [sumNumbersTool],
     });
 
-    const response = await openaiAgent.chat({
+    const { response } = await openaiAgent.chat({
       message: "how much is 1 + 1?",
     });
 
@@ -179,7 +179,7 @@ await test("agent stream", async (t) => {
       tools: [sumNumbersTool, divideNumbersTool],
     });
 
-    const response = await agent.chat({
+    const { response } = await agent.chat({
       message: "Divide 16 by 2 then add 20",
       stream: true,
     });
