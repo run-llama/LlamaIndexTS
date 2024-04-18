@@ -72,5 +72,5 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ["dist/", "lib/"],
+  ignorePatterns: ["dist/", "lib/", "deps/"],
 };

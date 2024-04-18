@@ -292,9 +292,6 @@ importers:
       rake-modified:
         specifier: ^1.0.8
         version: 1.0.8
-      replicate:
-        specifier: ^0.29.1
-        version: 0.29.1
       string-strip-html:
         specifier: ^13.4.8
         version: 13.4.8
@@ -455,9 +452,6 @@ importers:
       rake-modified:
         specifier: ^1.0.8
         version: 1.0.8
-      replicate:
-        specifier: ^0.29.1
-        version: 0.29.1
       string-strip-html:
         specifier: ^13.4.8
         version: 13.4.8
@@ -1828,10 +1822,6 @@ packages:
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
     engines: {node: '>=6.0.0'}
 
-  '@jridgewell/resolve-uri@3.1.1':
-    resolution: {integrity: sha512-dSYZh7HhCDtCKm4QakX0xFpsRDqjjtZf/kjI/v3T3Nwt5r8/qz/M19F9ySyOqU94SXBmeG9ttTul+YnR4LOxFA==}
-    engines: {node: '>=6.0.0'}
-
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
     engines: {node: '>=6.0.0'}
@@ -2424,9 +2414,6 @@ packages:
 
   '@tsconfig/docusaurus@2.0.3':
     resolution: {integrity: sha512-3l1L5PzWVa7l0691TjnsZ0yOIEwG9DziSqu5IPZPlI5Dowi7z42cEym8Y35GHbgHvPcBfNxfrbxm7Cncn4nByQ==}
-
-  '@tsconfig/node10@1.0.11':
-    resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
 
   '@tsconfig/node10@1.0.9':
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -7338,10 +7325,6 @@ packages:
     resolution: {integrity: sha512-c5otBJ5E66XLS0X196pBCsyy85b03ZBLeV/lbKfU8cqfkt3Qd6NGEiPwTtxtsQ4AznggMJNn2Qq68t/bV85M2w==}
     engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
 
-  replicate@0.29.1:
-    resolution: {integrity: sha512-AezrONSwjYohugcxOd334A4zijdVQ4QyGZHysB9dg7auCng2vuXbi5EFkqTX+kZ+aihxJdhO1bURYmgrxOZg2w==}
-    engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
-
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
@@ -10789,8 +10772,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.4.15
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@jridgewell/resolve-uri@3.1.1': {}
-
   '@jridgewell/resolve-uri@3.1.2': {}
 
   '@jridgewell/set-array@1.2.1': {}
@@ -10809,7 +10790,7 @@ snapshots:
 
   '@jridgewell/trace-mapping@0.3.9':
     dependencies:
-      '@jridgewell/resolve-uri': 3.1.1
+      '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
   '@js-sdsl/ordered-map@4.4.2': {}
@@ -11350,8 +11331,6 @@ snapshots:
   '@trysound/sax@0.2.0': {}
 
   '@tsconfig/docusaurus@2.0.3': {}
-
-  '@tsconfig/node10@1.0.11': {}
 
   '@tsconfig/node10@1.0.9': {}
 
@@ -17385,10 +17364,6 @@ snapshots:
     optionalDependencies:
       readable-stream: 4.5.2
 
-  replicate@0.29.1:
-    optionalDependencies:
-      readable-stream: 4.5.2
-
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
@@ -18203,7 +18178,7 @@ snapshots:
   ts-node@10.9.2(@swc/core@1.4.16(@swc/helpers@0.5.2))(@types/node@20.12.7)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node10': 1.0.9
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4

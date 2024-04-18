@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import Replicate from "replicate";
+import Replicate from "../internal/deps/replicate.js";
 import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
