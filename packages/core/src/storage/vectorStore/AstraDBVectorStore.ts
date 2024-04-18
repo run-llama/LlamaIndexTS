@@ -1,5 +1,4 @@
-import { AstraDB } from "@datastax/astra-db-ts";
-import type { Collection } from "@datastax/astra-db-ts/dist/collections";
+import { Collection, DataAPIClient, Db } from "@datastax/astra-db-ts";
 import { getEnv } from "@llamaindex/env";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
@@ -16,11 +15,10 @@ export class AstraDBVectorStore implements VectorStore {
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
-  astraDBClient: AstraDB;
   idKey: string;
   contentKey: string;
-  metadataKey: string;
 
+  private astraDBClient: Db;
   private collection: Collection | undefined;
 
   constructor(
@@ -28,49 +26,47 @@ export class AstraDBVectorStore implements VectorStore {
       params?: {
         token: string;
         endpoint: string;
-        namespace: string;
+        namespace?: string;
       };
     },
   ) {
-    if (init?.astraDBClient) {
-      this.astraDBClient = init.astraDBClient;
-    } else {
-      const token = init?.params?.token ?? getEnv("ASTRA_DB_APPLICATION_TOKEN");
-      const endpoint = init?.params?.endpoint ?? getEnv("ASTRA_DB_ENDPOINT");
+    const token = init?.params?.token ?? getEnv("ASTRA_DB_APPLICATION_TOKEN");
+    const endpoint = init?.params?.endpoint ?? getEnv("ASTRA_DB_API_ENDPOINT");
 
-      if (!token) {
-        throw new Error(
-          "Must specify ASTRA_DB_APPLICATION_TOKEN via env variable.",
-        );
-      }
-      if (!endpoint) {
-        throw new Error("Must specify ASTRA_DB_ENDPOINT via env variable.");
-      }
-      const namespace =
-        init?.params?.namespace ??
-        getEnv("ASTRA_DB_NAMESPACE") ??
-        "default_keyspace";
-      this.astraDBClient = new AstraDB(token, endpoint, namespace);
+    if (!token) {
+      throw new Error(
+        "Must specify ASTRA_DB_APPLICATION_TOKEN via env variable.",
+      );
     }
+    if (!endpoint) {
+      throw new Error("Must specify ASTRA_DB_API_ENDPOINT via env variable.");
+    }
+    const namespace =
+      init?.params?.namespace ??
+      getEnv("ASTRA_DB_NAMESPACE") ??
+      "default_keyspace";
+    const client = new DataAPIClient(token, {
+      caller: ["LlamaIndexTS"],
+    });
+    this.astraDBClient = client.db(endpoint, { namespace });
 
     this.idKey = init?.idKey ?? "_id";
     this.contentKey = init?.contentKey ?? "content";
-    this.metadataKey = init?.metadataKey ?? "metadata";
   }
 
   /**
-   * Create a new collection in your Astra DB vector database.
-   * You must still use connect() to connect to the collection.
+   * Create a new collection in your Astra DB vector database and connects to it.
+   * You must call this method or `connect` before adding, deleting, or querying.
    *
    * @param collection your new colletion's name
    * @param options: CreateCollectionOptions used to set the number of vector dimensions and similarity metric
    * @returns Promise that resolves if the creation did not throw an error.
    */
-  async create(
+  async createAndConnect(
     collection: string,
-    options?: Parameters<AstraDB["createCollection"]>[1],
+    options?: Parameters<Db["createCollection"]>[1],
   ): Promise<void> {
-    await this.astraDBClient.createCollection(collection, options);
+    this.collection = await this.astraDBClient.createCollection(collection, options);
     console.debug("Created Astra DB collection");
 
     return;
@@ -78,7 +74,7 @@ export class AstraDBVectorStore implements VectorStore {
 
   /**
    * Connect to an existing collection in your Astra DB vector database.
-   * You must call this before adding, deleting, or querying.
+   * You must call this method or `createAndConnect` before adding, deleting, or querying.
    *
    * @param collection your existing colletion's name
    * @returns Promise that resolves if the connection did not throw an error.
@@ -94,7 +90,7 @@ export class AstraDBVectorStore implements VectorStore {
    * Get an instance of your Astra DB client.
    * @returns the AstraDB client
    */
-  client(): AstraDB {
+  client(): Db {
     return this.astraDBClient;
   }
 
@@ -125,23 +121,13 @@ export class AstraDBVectorStore implements VectorStore {
         $vector: node.getEmbedding(),
         [this.idKey]: node.id_,
         [this.contentKey]: node.getContent(MetadataMode.NONE),
-        [this.metadataKey]: metadata,
+        ...metadata,
       };
     });
 
     console.debug(`Adding ${dataToInsert.length} rows to table`);
 
-    // Perform inserts in steps of MAX_INSERT_BATCH_SIZE
-    const batchData: any[] = [];
-
-    for (let i = 0; i < dataToInsert.length; i += MAX_INSERT_BATCH_SIZE) {
-      batchData.push(dataToInsert.slice(i, i + MAX_INSERT_BATCH_SIZE));
-    }
-
-    for (const batch of batchData) {
-      console.debug(`Inserting batch of size ${batch.length}`);
-      await collection.insertMany(batch);
-    }
+    collection.insertMany(dataToInsert);
 
     return dataToInsert.map((node) => node?.[this.idKey] as string);
   }
@@ -201,22 +187,20 @@ export class AstraDBVectorStore implements VectorStore {
     const ids: string[] = [];
     const similarities: number[] = [];
 
-    await cursor.forEach(async (row: Record<string, any>) => {
+    for await (const row of cursor) {
       const {
         $vector: embedding,
         $similarity: similarity,
         [this.idKey]: id,
         [this.contentKey]: content,
-        [this.metadataKey]: metadata = {},
-        ...rest
+        ...metadata
       } = row;
 
       const node = metadataDictToNode(metadata, {
         fallback: {
           id,
           text: content,
-          metadata,
-          ...rest,
+          ...metadata,
         },
       });
       node.setContent(content);
@@ -224,7 +208,7 @@ export class AstraDBVectorStore implements VectorStore {
       ids.push(id);
       similarities.push(similarity);
       nodes.push(node);
-    });
+    }
 
     return {
       similarities,
