@@ -9,8 +9,6 @@ import type {
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-const MAX_INSERT_BATCH_SIZE = 20;
-
 export class AstraDBVectorStore implements VectorStore {
   storesText: boolean = true;
   flatMetadata: boolean = true;
@@ -66,7 +64,10 @@ export class AstraDBVectorStore implements VectorStore {
     collection: string,
     options?: Parameters<Db["createCollection"]>[1],
   ): Promise<void> {
-    this.collection = await this.astraDBClient.createCollection(collection, options);
+    this.collection = await this.astraDBClient.createCollection(
+      collection,
+      options,
+    );
     console.debug("Created Astra DB collection");
 
     return;
@@ -127,7 +128,7 @@ export class AstraDBVectorStore implements VectorStore {
 
     console.debug(`Adding ${dataToInsert.length} rows to table`);
 
-    collection.insertMany(dataToInsert);
+    await collection.insertMany(dataToInsert);
 
     return dataToInsert.map((node) => node?.[this.idKey] as string);
   }
