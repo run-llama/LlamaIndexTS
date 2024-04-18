@@ -13,15 +13,7 @@ import {
 import { extractText } from "../llm/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseTool, BaseToolWithCall } from "../types.js";
-import {
-  AgentRunner,
-  AgentWorker,
-  createTaskImpl,
-  type AgentTaskContext,
-  type TaskHandler,
-  type TaskStep,
-  type TaskStepOutput,
-} from "./base.js";
+import { AgentRunner, AgentWorker, type TaskHandler } from "./base.js";
 import {
   callTool,
   consumeAsyncIterable,
@@ -326,34 +318,7 @@ const chatFormatter: ChatFormatter = async <Options extends object>(
 };
 
 export class ReACTAgentWorker extends AgentWorker<LLM, ReACTAgentStore> {
-  #taskSet: Set<TaskStep<OpenAI>> = new Set();
-
-  createTask(
-    query: string,
-    context: AgentTaskContext<LLM, ReACTAgentStore>,
-  ): any {
-    const task = createTaskImpl(ReACTAgent.taskHandler, context, {
-      role: "user",
-      content: query,
-    });
-    const next: AsyncGenerator<TaskStepOutput<LLM, ReACTAgentStore>>["next"] =
-      task.next.bind(task);
-    task.next = async (...args) => {
-      const nextValue = await next(...args);
-      const taskStepOutput = nextValue.value as TaskStepOutput<OpenAI>;
-      const { taskStep, isLast } = taskStepOutput;
-      this.#taskSet.add(taskStep);
-      if (isLast) {
-        let currentStep: TaskStep<OpenAI> | null = taskStep;
-        while (currentStep) {
-          this.#taskSet.delete(currentStep);
-          currentStep = currentStep.prevStep;
-        }
-      }
-      return nextValue;
-    };
-    return task;
-  }
+  taskHandler = ReACTAgent.taskHandler;
 }
 
 export class ReACTAgent extends AgentRunner<LLM, ReACTAgentStore> {

@@ -63,6 +63,7 @@ export type TaskStep<
 
   // linked list
   prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null;
+  nextSteps: Set<TaskStep<Model, Store, AdditionalMessageOptions>>;
 };
 
 export type TaskStepOutput<
@@ -130,7 +131,11 @@ export async function* createTaskImpl<
       input,
       context,
       prevStep,
+      nextSteps: new Set(),
     };
+    if (prevStep) {
+      prevStep.nextSteps.add(step);
+    }
     const prevToolCallCount = step.context.toolCallCount;
     if (!step.context.shouldContinue(step)) {
       throw new Error("Tool call count exceeded limit");
@@ -178,6 +183,7 @@ export abstract class AgentRunner<
 
   // create extra store
   abstract createStore(): Store;
+
   static defaultCreateStore(): object {
     return Object.create(null);
   }
@@ -234,7 +240,7 @@ export abstract class AgentRunner<
     | ChatResponse<AdditionalMessageOptions>
     | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
   > {
-    const task = await this.#runner.createTask(extractText(params.message), {
+    const task = this.#runner.createTask(extractText(params.message), {
       stream: !!params.stream,
       toolCallCount: 0,
       llm: this.#llm,
@@ -270,10 +276,39 @@ export abstract class AgentWorker<
     ? AdditionalMessageOptions
     : never,
 > {
-  abstract createTask(
+  #taskSet = new Set<TaskStep<AI, Store, AdditionalMessageOptions>>();
+  abstract taskHandler: TaskHandler<AI, Store, AdditionalMessageOptions>;
+
+  public createTask(
     query: string,
-    context?: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
-  ): Promise<
-    AsyncGenerator<TaskStepOutput<AI, Store, AdditionalMessageOptions>>
-  >;
+    context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
+  ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
+    const task = createTaskImpl(this.taskHandler, context, {
+      role: "user",
+      content: query,
+    });
+    return new ReadableStream<
+      TaskStepOutput<AI, Store, AdditionalMessageOptions>
+    >({
+      start: async (controller) => {
+        for await (const stepOutput of task) {
+          controller.enqueue(stepOutput);
+          if (stepOutput.isLast) {
+            let currentStep: TaskStep<
+              AI,
+              Store,
+              AdditionalMessageOptions
+            > | null = stepOutput.taskStep;
+            while (currentStep) {
+              this.#taskSet.delete(currentStep);
+              currentStep = currentStep.prevStep;
+            }
+            controller.close();
+          }
+        }
+      },
+    });
+  }
+
+  [Symbol.toStringTag] = "AgentWorker";
 }

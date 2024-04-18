@@ -11,15 +11,7 @@ import type {
 } from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
-import {
-  AgentRunner,
-  AgentWorker,
-  createTaskImpl,
-  type AgentTaskContext,
-  type TaskHandler,
-  type TaskStep,
-  type TaskStepOutput,
-} from "./base.js";
+import { AgentRunner, AgentWorker, type TaskHandler } from "./base.js";
 import { callTool } from "./utils.js";
 
 type AnthropicParamsBase = {
@@ -39,38 +31,8 @@ export type AnthropicAgentParams =
   | AnthropicParamsWithTools
   | AnthropicParamsWithToolRetriever;
 
-export class AnthropicAgentWorker implements AgentWorker<Anthropic> {
-  #taskSet: Set<TaskStep<Anthropic>> = new Set();
-
-  public constructor() {}
-
-  get tasks(): TaskStep<Anthropic>[] {
-    return [...this.#taskSet];
-  }
-
-  public async createTask(query: string, context: AgentTaskContext<Anthropic>) {
-    const task = createTaskImpl(AnthropicAgent.taskHandler, context, {
-      role: "user",
-      content: query,
-    });
-    const next: AsyncGenerator<TaskStepOutput<Anthropic>>["next"] =
-      task.next.bind(task);
-    task.next = async (...args) => {
-      const nextValue = await next(...args);
-      const taskStepOutput = nextValue.value as TaskStepOutput<Anthropic>;
-      const { taskStep, isLast } = taskStepOutput;
-      this.#taskSet.add(taskStep);
-      if (isLast) {
-        let currentStep: TaskStep<Anthropic> | null = taskStep;
-        while (currentStep) {
-          this.#taskSet.delete(currentStep);
-          currentStep = currentStep.prevStep;
-        }
-      }
-      return nextValue;
-    };
-    return task;
-  }
+export class AnthropicAgentWorker extends AgentWorker<Anthropic> {
+  taskHandler = AnthropicAgent.taskHandler;
 }
 
 export class AnthropicAgent extends AgentRunner<Anthropic> {

@@ -9,15 +9,7 @@ import type {
 import { OpenAI } from "../llm/open_ai.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
-import {
-  AgentRunner,
-  AgentWorker,
-  createTaskImpl,
-  type AgentTaskContext,
-  type TaskHandler,
-  type TaskStep,
-  type TaskStepOutput,
-} from "./base.js";
+import { AgentRunner, AgentWorker, type TaskHandler } from "./base.js";
 import { callTool } from "./utils.js";
 
 type OpenAIParamsBase = {
@@ -37,38 +29,8 @@ export type OpenAIAgentParams =
   | OpenAIParamsWithTools
   | OpenAIParamsWithToolRetriever;
 
-export class OpenAIAgentWorker implements AgentWorker<OpenAI> {
-  #taskSet: Set<TaskStep<OpenAI>> = new Set();
-
-  public constructor() {}
-
-  get tasks(): TaskStep<OpenAI>[] {
-    return [...this.#taskSet];
-  }
-
-  public async createTask(query: string, context: AgentTaskContext<OpenAI>) {
-    const task = createTaskImpl(OpenAIAgent.taskHandler, context, {
-      role: "user",
-      content: query,
-    });
-    const next: AsyncGenerator<TaskStepOutput<OpenAI>>["next"] =
-      task.next.bind(task);
-    task.next = async (...args) => {
-      const nextValue = await next(...args);
-      const taskStepOutput = nextValue.value as TaskStepOutput<OpenAI>;
-      const { taskStep, isLast } = taskStepOutput;
-      this.#taskSet.add(taskStep);
-      if (isLast) {
-        let currentStep: TaskStep<OpenAI> | null = taskStep;
-        while (currentStep) {
-          this.#taskSet.delete(currentStep);
-          currentStep = currentStep.prevStep;
-        }
-      }
-      return nextValue;
-    };
-    return task;
-  }
+export class OpenAIAgentWorker extends AgentWorker<OpenAI> {
+  taskHandler = OpenAIAgent.taskHandler;
 }
 
 export class OpenAIAgent extends AgentRunner<OpenAI> {
