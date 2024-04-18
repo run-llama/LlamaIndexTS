@@ -172,6 +172,7 @@ export class ReplicateLLM extends BaseLLM {
   mapMessagesToPromptLlama3(messages: ChatMessage[]) {
     return {
       prompt:
+        "<|begin_of_text|>" +
         messages.reduce((acc, message) => {
           let content = "";
           if (typeof message.content === "string") {
@@ -188,7 +189,8 @@ export class ReplicateLLM extends BaseLLM {
             acc +
             `<|start_header_id|>${message.role}<|end_header_id|>\n\n${content}<|eot_id|>`
           );
-        }, "") + "<|start_header_id|>assistant<|end_header_id|>\n\n",
+        }, "") +
+        "<|start_header_id|>assistant<|end_header_id|>\n\n",
       systemPrompt: undefined,
     };
   }
