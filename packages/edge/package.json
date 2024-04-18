@@ -6,7 +6,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.20.6",
     "@aws-crypto/sha256-js": "^5.2.0",
-    "@datastax/astra-db-ts": "^0.1.4",
+    "@datastax/astra-db-ts": "^1.0.1",
     "@grpc/grpc-js": "^1.10.6",
     "@llamaindex/cloud": "0.0.5",
     "@llamaindex/env": "workspace:*",
