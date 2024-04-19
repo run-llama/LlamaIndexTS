@@ -17,7 +17,7 @@ export class JinaAIReranker implements BaseNodePostprocessor {
   apiKey?: string = undefined;
 
   constructor(init?: Partial<JinaAIReranker>) {
-    this.topN = init?.topN;
+    this.topN = init?.topN ?? 2;
     this.model = init?.model ?? "jina-reranker-v1-base-en";
     this.apiKey = getEnv("JINAAI_API_KEY");
 
