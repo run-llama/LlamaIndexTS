@@ -16,7 +16,8 @@ export class AstraDBVectorStore implements VectorStore {
   idKey: string;
   contentKey: string;
 
-  private astraDBClient: Db;
+  private astraClient: DataAPIClient;
+  private astraDB: Db;
   private collection: Collection | undefined;
 
   constructor(
@@ -43,10 +44,10 @@ export class AstraDBVectorStore implements VectorStore {
       init?.params?.namespace ??
       getEnv("ASTRA_DB_NAMESPACE") ??
       "default_keyspace";
-    const client = new DataAPIClient(token, {
+    this.astraClient = new DataAPIClient(token, {
       caller: ["LlamaIndexTS"],
     });
-    this.astraDBClient = client.db(endpoint, { namespace });
+    this.astraDB = this.astraClient.db(endpoint, { namespace });
 
     this.idKey = init?.idKey ?? "_id";
     this.contentKey = init?.contentKey ?? "content";
@@ -56,7 +57,7 @@ export class AstraDBVectorStore implements VectorStore {
    * Create a new collection in your Astra DB vector database and connects to it.
    * You must call this method or `connect` before adding, deleting, or querying.
    *
-   * @param collection your new colletion's name
+   * @param collection: your new colletion's name
    * @param options: CreateCollectionOptions used to set the number of vector dimensions and similarity metric
    * @returns Promise that resolves if the creation did not throw an error.
    */
@@ -64,10 +65,7 @@ export class AstraDBVectorStore implements VectorStore {
     collection: string,
     options?: Parameters<Db["createCollection"]>[1],
   ): Promise<void> {
-    this.collection = await this.astraDBClient.createCollection(
-      collection,
-      options,
-    );
+    this.collection = await this.astraDB.createCollection(collection, options);
     console.debug("Created Astra DB collection");
 
     return;
@@ -77,11 +75,11 @@ export class AstraDBVectorStore implements VectorStore {
    * Connect to an existing collection in your Astra DB vector database.
    * You must call this method or `createAndConnect` before adding, deleting, or querying.
    *
-   * @param collection your existing colletion's name
+   * @param collection: your existing colletion's name
    * @returns Promise that resolves if the connection did not throw an error.
    */
   async connect(collection: string): Promise<void> {
-    this.collection = await this.astraDBClient.collection(collection);
+    this.collection = await this.astraDB.collection(collection);
     console.debug("Connected to Astra DB collection");
 
     return;
@@ -91,8 +89,8 @@ export class AstraDBVectorStore implements VectorStore {
    * Get an instance of your Astra DB client.
    * @returns the AstraDB client
    */
-  client(): Db {
-    return this.astraDBClient;
+  client(): DataAPIClient {
+    return this.astraClient;
   }
 
   /**
@@ -128,19 +126,22 @@ export class AstraDBVectorStore implements VectorStore {
 
     console.debug(`Adding ${dataToInsert.length} rows to table`);
 
-    await collection.insertMany(dataToInsert);
+    const insertResult = await collection.insertMany(dataToInsert);
 
-    return dataToInsert.map((node) => node?.[this.idKey] as string);
+    return insertResult.insertedIds as string[];
   }
 
   /**
    * Delete a document from your Astra DB collection.
    *
-   * @param refDocId the id of the document to delete
-   * @param deleteOptions: any DeleteOneOptions to pass to the delete query
+   * @param refDocId: the id of the document to delete
+   * @param deleteOptions: DeleteOneOptions to pass to the delete query
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, deleteOptions?: any): Promise<void> {
+  async delete(
+    refDocId: string,
+    deleteOptions?: Parameters<Collection["deleteOne"]>[1],
+  ): Promise<void> {
     if (!this.collection) {
       throw new Error("Must connect to collection before deleting.");
     }
@@ -160,11 +161,11 @@ export class AstraDBVectorStore implements VectorStore {
    * Query documents from your Astra DB collection to get the closest match to your embedding.
    *
    * @param query: VectorStoreQuery
-   * @param options: Not used
+   * @param options: FindOptions
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    options?: Parameters<Collection["find"]>[1],
   ): Promise<VectorStoreQueryResult> {
     if (!this.collection) {
       throw new Error("Must connect to collection before querying.");
@@ -177,9 +178,10 @@ export class AstraDBVectorStore implements VectorStore {
     });
 
     const cursor = await collection.find(filters, {
+      ...options,
       sort: query.queryEmbedding
         ? { $vector: query.queryEmbedding }
-        : undefined,
+        : options?.sort,
       limit: query.similarityTopK,
       includeSimilarity: true,
     });
