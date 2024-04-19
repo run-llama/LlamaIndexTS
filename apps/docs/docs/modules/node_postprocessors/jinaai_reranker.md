@@ -49,7 +49,7 @@ Then you can create a new instance of the `JinaAIReranker` class and pass in the
 The Jina AI Reranker API key is set in the `JINAAI_API_KEY` environment variable.
 
 ```bash
-export JINA_API_KEY=<YOUR API KEY>
+export JINAAI_API_KEY=<YOUR API KEY>
 ```
 
 ```ts
