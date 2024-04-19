@@ -55,10 +55,12 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
 
   static taskHandler: TaskHandler<OpenAI> = async (step) => {
     const { input } = step;
-    const { llm, tools, stream } = step.context;
+    const { llm, stream, getTools } = step.context;
     if (input) {
       step.context.store.messages = [...step.context.store.messages, input];
     }
+    const lastMessage = step.context.store.messages.at(-1)!.content;
+    const tools = await getTools(lastMessage);
     const response = await llm.chat({
       // @ts-expect-error
       stream,

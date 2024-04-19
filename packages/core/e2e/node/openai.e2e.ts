@@ -2,23 +2,29 @@ import { consola } from "consola";
 import {
   Document,
   FunctionTool,
+  ObjectIndex,
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
   Settings,
+  SimpleNodeParser,
+  SimpleToolNodeMapping,
   SubQuestionQueryEngine,
+  SummaryIndex,
   VectorStoreIndex,
   type LLM,
 } from "llamaindex";
 import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { beforeEach, test } from "node:test";
 import {
   divideNumbersTool,
   getWeatherTool,
   sumNumbersTool,
 } from "./fixtures/tools.js";
-import { mockLLMEvent } from "./utils.js";
+import { mockLLMEvent, testRootDir } from "./utils.js";
 
 let llm: LLM;
 beforeEach(async () => {
@@ -109,6 +115,85 @@ await test("agent system prompt", async (t) => {
     ok(extractText(response.message.content).includes("72"));
     ok(extractText(response.message.content).includes("Arhg"));
   });
+});
+
+await test("agent with object retriever", async (t) => {
+  await mockLLMEvent(t, "agent_with_object_retriever");
+
+  const alexInfoPath = join(testRootDir, "./fixtures/data/Alex.txt");
+  const alexInfoText = await readFile(alexInfoPath, "utf-8");
+  const alexDocument = new Document({ text: alexInfoText, id_: alexInfoPath });
+
+  const nodes = new SimpleNodeParser({
+    chunkSize: 200,
+    chunkOverlap: 20,
+  }).getNodesFromDocuments([alexDocument]);
+
+  const summaryIndex = await SummaryIndex.init({
+    nodes,
+  });
+
+  const summaryQueryEngine = summaryIndex.asQueryEngine();
+
+  const queryEngineTools = [
+    FunctionTool.from(
+      ({ query }: { query?: string }) => {
+        throw new Error("This tool should not be called");
+      },
+      {
+        name: "vector_tool",
+        description:
+          "This tool should not be called, never use this tool in any cases.",
+        parameters: {
+          type: "object",
+          properties: {
+            query: { type: "string", nullable: true },
+          },
+        },
+      },
+    ),
+    new QueryEngineTool({
+      queryEngine: summaryQueryEngine,
+      metadata: {
+        name: "summary_tool",
+        description: `Useful for any requests that short information about Alex.
+For questions about Alex, please use this tool.
+For questions about more specific sections, please use the vector_tool.`,
+      },
+    }),
+  ];
+
+  const originalCall = queryEngineTools[1].call.bind(queryEngineTools[1]);
+  const mockCall = t.mock.fn(({ query }: { query: string }) => {
+    return originalCall({ query });
+  });
+  queryEngineTools[1].call = mockCall;
+
+  const toolMapping = SimpleToolNodeMapping.fromObjects(queryEngineTools);
+
+  const objectIndex = await ObjectIndex.fromObjects(
+    queryEngineTools,
+    toolMapping,
+    VectorStoreIndex,
+  );
+
+  const toolRetriever = await objectIndex.asRetriever({});
+
+  const agent = new OpenAIAgent({
+    toolRetriever,
+    systemPrompt:
+      "Please always use the tools provided to answer a question. Do not rely on prior knowledge.",
+  });
+
+  strictEqual(mockCall.mock.callCount(), 0);
+  const { response } = await agent.chat({
+    message:
+      "What's the summary of Alex? Does he live in Brazil based on the brief information? Return yes or no.",
+  });
+  strictEqual(mockCall.mock.callCount(), 1);
+
+  consola.debug("response:", response.message.content);
+  ok(extractText(response.message.content).toLowerCase().includes("no"));
 });
 
 await test("agent", async (t) => {

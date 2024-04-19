@@ -68,10 +68,12 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
 
   static taskHandler: TaskHandler<Anthropic> = async (step) => {
     const { input } = step;
-    const { llm, tools, stream } = step.context;
+    const { llm, getTools, stream } = step.context;
     if (input) {
       step.context.store.messages = [...step.context.store.messages, input];
     }
+    const lastMessage = step.context.store.messages.at(-1)!.content;
+    const tools = await getTools(lastMessage);
     if (stream === true) {
       throw new Error("Anthropic does not support streaming");
     }

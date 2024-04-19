@@ -10,6 +10,7 @@ import type {
 } from "llamaindex/llm/types";
 import { extractText } from "llamaindex/llm/utils";
 import { deepStrictEqual, strictEqual } from "node:assert";
+import { inspect } from "node:util";
 import { llmCompleteMockStorage } from "../../node/utils.js";
 
 export function getOpenAISession() {
@@ -46,6 +47,8 @@ export class OpenAI implements LLM {
     if (llmCompleteMockStorage.llmEventStart.length > 0) {
       const chatMessage =
         llmCompleteMockStorage.llmEventStart.shift()!["messages"];
+      console.log(inspect(params.messages, { depth: 1 }));
+      console.log(inspect(chatMessage, { depth: 1 }));
       strictEqual(params.messages.length, chatMessage.length);
       for (let i = 0; i < chatMessage.length; i++) {
         strictEqual(params.messages[i].role, chatMessage[i].role);

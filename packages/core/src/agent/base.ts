@@ -32,7 +32,9 @@ export type AgentTaskContext<
   readonly stream: boolean;
   readonly toolCallCount: number;
   readonly llm: Model;
-  readonly tools: BaseToolWithCall[];
+  readonly getTools: (
+    input: MessageContent,
+  ) => BaseToolWithCall[] | Promise<BaseToolWithCall[]>;
   shouldContinue: (
     taskStep: Readonly<TaskStep<Model, Store, AdditionalMessageOptions>>,
   ) => boolean;
@@ -192,7 +194,9 @@ export type AgentRunnerParams<
   chatHistory: ChatMessage<AdditionalMessageOptions>[];
   systemPrompt: MessageContent | null;
   runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
-  tools: BaseToolWithCall[] | ((query: string) => Promise<BaseToolWithCall[]>);
+  tools:
+    | BaseToolWithCall[]
+    | ((query: MessageContent) => Promise<BaseToolWithCall[]>);
 };
 
 export type AgentParamsBase<
@@ -276,7 +280,7 @@ export abstract class AgentRunner<
   readonly #llm: AI;
   readonly #tools:
     | BaseToolWithCall[]
-    | ((query: string) => Promise<BaseToolWithCall[]>) = [];
+    | ((query: MessageContent) => Promise<BaseToolWithCall[]>);
   readonly #systemPrompt: MessageContent | null = null;
   #chatHistory: ChatMessage<AdditionalMessageOptions>[];
   readonly #runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
@@ -314,12 +318,21 @@ export abstract class AgentRunner<
   }
 
   public getTools(
-    query: string,
+    query: MessageContent,
   ): Promise<BaseToolWithCall[]> | BaseToolWithCall[] {
     return typeof this.#tools === "function" ? this.#tools(query) : this.#tools;
   }
 
-  static shouldContinue(task: Readonly<TaskStep<LLM, object>>): boolean {
+  static shouldContinue<
+    AI extends LLM,
+    Store extends object = {},
+    AdditionalMessageOptions extends object = AI extends LLM<
+      object,
+      infer AdditionalMessageOptions
+    >
+      ? AdditionalMessageOptions
+      : never,
+  >(task: Readonly<TaskStep<AI, Store, AdditionalMessageOptions>>): boolean {
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
@@ -342,9 +355,7 @@ export abstract class AgentRunner<
       stream,
       toolCallCount: 0,
       llm: this.#llm,
-      // fixme: `getTools` should be called in the runtime
-      //  change this to `getTools: (message) => ToolWithCall[]`
-      tools: await this.getTools(extractText(message)),
+      getTools: (message) => this.getTools(message),
       store: {
         ...this.createStore(),
         messages: initialMessages,
