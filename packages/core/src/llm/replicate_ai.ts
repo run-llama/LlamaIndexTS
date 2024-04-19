@@ -9,7 +9,12 @@ import type {
   LLMChatParamsStreaming,
   MessageType,
 } from "./types.js";
-import { extractText, wrapLLMEvent } from "./utils.js";
+import {
+  extractText,
+  streamCallbacks,
+  streamConverter,
+  wrapLLMEvent,
+} from "./utils.js";
 
 export class ReplicateSession {
   replicateKey: string | null = null;
@@ -332,9 +337,25 @@ If a question does not make any sense, or is not factually coherent, explain why
       replicateOptions.input.prompt_template = "{prompt}";
     }
 
-    //TODO: Add streaming for this
     if (stream) {
-      throw new Error("Streaming not supported for ReplicateLLM");
+      const controller = new AbortController();
+      const stream = this.replicateSession.replicate.stream(api, {
+        ...replicateOptions,
+        signal: controller.signal,
+      });
+      // replicate.stream is not closing if used as AsyncIterable, force closing after consumption with the AbortController
+      return streamCallbacks(
+        streamConverter(stream, (chunk) => {
+          if (chunk.event === "done") {
+            return null;
+          }
+          return {
+            raw: chunk,
+            delta: chunk.data,
+          };
+        }),
+        { finished: () => controller.abort() },
+      );
     }
 
     //Non-streaming
@@ -342,6 +363,7 @@ If a question does not make any sense, or is not factually coherent, explain why
       api,
       replicateOptions,
     );
+
     return {
       raw: response,
       message: {
