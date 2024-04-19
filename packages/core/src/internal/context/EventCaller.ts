@@ -1,5 +1,5 @@
 import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
-import { isAsyncGenerator, isGenerator } from "../utils.js";
+import { isAsyncIterable, isIterable } from "../utils.js";
 
 const eventReasonAsyncLocalStorage = new AsyncLocalStorage<EventCaller>();
 
@@ -71,22 +71,24 @@ export function wrapEventCaller<This, Result, Args extends unknown[]>(
   return function (this: This, ...args: Args): Result {
     const result = originalMethod.call(this, ...args);
     // patch for iterators because AsyncLocalStorage doesn't work with them
-    if (isAsyncGenerator(result)) {
+    if (isAsyncIterable(result)) {
+      const iter = result[Symbol.asyncIterator]();
       const snapshot = AsyncLocalStorage.snapshot();
       return (async function* asyncGeneratorWrapper() {
         while (true) {
-          const { value, done } = await snapshot(() => result.next());
+          const { value, done } = await snapshot(() => iter.next());
           if (done) {
             break;
           }
           yield value;
         }
       })() as Result;
-    } else if (isGenerator(result)) {
+    } else if (isIterable(result)) {
+      const iter = result[Symbol.iterator]();
       const snapshot = AsyncLocalStorage.snapshot();
       return (function* generatorWrapper() {
         while (true) {
-          const { value, done } = snapshot(() => result.next());
+          const { value, done } = snapshot(() => iter.next());
           if (done) {
             break;
           }

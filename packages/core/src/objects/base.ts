@@ -2,6 +2,8 @@ import type { BaseNode, Metadata } from "../Node.js";
 import { TextNode } from "../Node.js";
 import type { BaseRetriever } from "../Retriever.js";
 import type { VectorStoreIndex } from "../indices/index.js";
+import type { MessageContent } from "../llm/index.js";
+import { extractText } from "../llm/utils.js";
 import type { BaseTool } from "../types.js";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
@@ -48,7 +50,8 @@ export abstract class BaseObjectNodeMapping {
 
 // You will need to implement specific subclasses of BaseObjectNodeMapping as per your project requirements.
 
-type QueryType = string;
+// todo: multimodal support
+type QueryType = MessageContent;
 
 export class ObjectRetriever<T = unknown> {
   _retriever: BaseRetriever;
@@ -69,7 +72,9 @@ export class ObjectRetriever<T = unknown> {
 
   // Translating the retrieve method
   async retrieve(strOrQueryBundle: QueryType): Promise<T[]> {
-    const nodes = await this.retriever.retrieve({ query: strOrQueryBundle });
+    const nodes = await this.retriever.retrieve({
+      query: extractText(strOrQueryBundle),
+    });
     const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
     return objs;
   }

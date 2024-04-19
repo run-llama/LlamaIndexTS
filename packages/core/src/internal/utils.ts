@@ -1,8 +1,10 @@
-export const isAsyncGenerator = (obj: unknown): obj is AsyncGenerator => {
+export const isAsyncIterable = (
+  obj: unknown,
+): obj is AsyncIterable<unknown> => {
   return obj != null && typeof obj === "object" && Symbol.asyncIterator in obj;
 };
 
-export const isGenerator = (obj: unknown): obj is Generator => {
+export const isIterable = (obj: unknown): obj is Iterable<unknown> => {
   return obj != null && typeof obj === "object" && Symbol.iterator in obj;
 };
 

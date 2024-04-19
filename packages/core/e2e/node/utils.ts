@@ -50,6 +50,11 @@ export async function mockLLMEvent(
       ...event.detail.payload,
       // @ts-expect-error id is not UUID, but it is fine for testing
       id: idMap.get(event.detail.payload.id)!,
+      response: {
+        ...event.detail.payload.response,
+        // hide raw object since it might too big
+        raw: null,
+      },
     });
   }
 
@@ -58,6 +63,11 @@ export async function mockLLMEvent(
       ...event.detail.payload,
       // @ts-expect-error id is not UUID, but it is fine for testing
       id: idMap.get(event.detail.payload.id)!,
+      chunk: {
+        ...event.detail.payload.chunk,
+        // hide raw object since it might too big
+        raw: null,
+      },
     });
   }
 
@@ -92,14 +102,7 @@ export async function mockLLMEvent(
     Settings.callbackManager.off("llm-start", captureLLMStart);
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     if (process.env.UPDATE_SNAPSHOT === "1") {
-      const data = JSON.stringify(newLLMCompleteMockStorage, null, 2)
-        .replace(/"id": "(?!PRESERVE_).*"/g, '"id": "HIDDEN"')
-        .replace(/"created": \d+/g, `"created": 114514`)
-        .replace(
-          /"system_fingerprint": ".*"/g,
-          '"system_fingerprint": "HIDDEN"',
-        )
-        .replace(/"tool_call_id": ".*"/g, '"tool_call_id": "HIDDEN"');
+      const data = JSON.stringify(newLLMCompleteMockStorage, null, 2);
       await writeFile(
         join(testRootDir, "snapshot", `${snapshotName}.snap`),
         data,

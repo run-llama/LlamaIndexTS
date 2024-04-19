@@ -1,4 +1,4 @@
-import { Anthropic, FunctionTool, ReActAgent } from "llamaindex";
+import { Anthropic, FunctionTool, ReACTAgent } from "llamaindex";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }) {
@@ -62,18 +62,18 @@ async function main() {
   });
 
   // Create an ReActAgent with the function tools
-  const agent = new ReActAgent({
+  const agent = new ReACTAgent({
     llm: anthropic,
     tools: [functionTool, functionTool2],
   });
 
   // Chat with the agent
-  const response = await agent.chat({
+  const { response } = await agent.chat({
     message: "Divide 16 by 2 then add 20",
   });
 
   // Print the response
-  console.log(String(response));
+  console.log(response.message);
 }
 
 void main().then(() => {

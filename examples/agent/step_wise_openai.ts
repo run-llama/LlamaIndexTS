@@ -62,29 +62,18 @@ async function main() {
   });
 
   // Create a task to sum and divide numbers
-  const task = agent.createTask("How much is 5 + 5? then divide by 2");
+  const task = await agent.createTask("How much is 5 + 5? then divide by 2");
 
   let count = 0;
 
-  while (true) {
-    const stepOutput = await agent.runStep(task.taskId);
-
+  for await (const stepOutput of task) {
     console.log(`Runnning step ${count++}`);
     console.log(`======== OUTPUT ==========`);
-    if (stepOutput.output.response) {
-      console.log(stepOutput.output.response);
-    } else {
-      console.log(stepOutput.output.sources);
-    }
+    console.log(stepOutput.output.message.content);
     console.log(`==========================`);
 
     if (stepOutput.isLast) {
-      const finalResponse = await agent.finalizeResponse(
-        task.taskId,
-        stepOutput,
-      );
-      console.log({ finalResponse });
-      break;
+      console.log(stepOutput.output.message.content);
     }
   }
 }

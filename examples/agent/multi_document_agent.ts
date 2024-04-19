@@ -125,7 +125,7 @@ async function main() {
   const topAgent = new OpenAIAgent({
     toolRetriever: await objectIndex.asRetriever({}),
     llm: new OpenAI({ model: "gpt-4" }),
-    prefixMessages: [
+    chatHistory: [
       {
         content:
           "You are an agent designed to answer queries about a set of given countries. Please always use the tools provided to answer a question. Do not rely on prior knowledge.",

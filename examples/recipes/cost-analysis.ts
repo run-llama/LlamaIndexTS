@@ -1,5 +1,5 @@
 import { encodingForModel } from "js-tiktoken";
-import { OpenAI } from "llamaindex";
+import { ChatMessage, OpenAI, type LLMStartEvent } from "llamaindex";
 import { Settings } from "llamaindex/Settings";
 import { extractText } from "llamaindex/llm/utils";
 
@@ -12,9 +12,9 @@ const llm = new OpenAI({
 
 let tokenCount = 0;
 
-Settings.callbackManager.on("llm-start", (event) => {
+Settings.callbackManager.on("llm-start", (event: LLMStartEvent) => {
   const { messages } = event.detail.payload;
-  tokenCount += messages.reduce((count, message) => {
+  messages.reduce((count: number, message: ChatMessage) => {
     return count + encoding.encode(extractText(message.content)).length;
   }, 0);
   console.log("Token count:", tokenCount);

@@ -1,27 +1,22 @@
 import { Settings } from "../Settings.js";
 import {
-  AgentChatResponse,
   type ChatEngineParamsNonStreaming,
+  type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
-import { wrapEventCaller } from "../internal/context/EventCaller.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import { prettifyError } from "../internal/utils.js";
 import { Anthropic } from "../llm/anthropic.js";
-import type {
-  ChatMessage,
-  ChatResponse,
-  ToolCallLLMMessageOptions,
-} from "../llm/index.js";
-import { extractText } from "../llm/utils.js";
+import type { ToolCallLLMMessageOptions } from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
+import {
+  AgentRunner,
+  AgentWorker,
+  type AgentChatResponse,
+  type AgentParamsBase,
+  type TaskHandler,
+} from "./base.js";
+import { callTool } from "./utils.js";
 
-const MAX_TOOL_CALLS = 10;
-
-type AnthropicParamsBase = {
-  llm?: Anthropic;
-  chatHistory?: ChatMessage<ToolCallLLMMessageOptions>[];
-};
+type AnthropicParamsBase = AgentParamsBase<Anthropic>;
 
 type AnthropicParamsWithTools = AnthropicParamsBase & {
   tools: BaseToolWithCall[];
@@ -35,136 +30,94 @@ export type AnthropicAgentParams =
   | AnthropicParamsWithTools
   | AnthropicParamsWithToolRetriever;
 
-type AgentContext = {
-  toolCalls: number;
-  llm: Anthropic;
-  tools: BaseToolWithCall[];
-  messages: ChatMessage<ToolCallLLMMessageOptions>[];
-  shouldContinue: (context: AgentContext) => boolean;
-};
-
-type TaskResult = {
-  response: ChatResponse<ToolCallLLMMessageOptions>;
-  chatHistory: ChatMessage<ToolCallLLMMessageOptions>[];
-};
-
-async function task(
-  context: AgentContext,
-  input: ChatMessage<ToolCallLLMMessageOptions>,
-): Promise<TaskResult> {
-  const { llm, tools, messages } = context;
-  const nextMessages: ChatMessage<ToolCallLLMMessageOptions>[] = [
-    ...messages,
-    input,
-  ];
-  const response = await llm.chat({
-    stream: false,
-    tools,
-    messages: nextMessages,
-  });
-  const options = response.message.options ?? {};
-  if ("toolCall" in options) {
-    const { toolCall } = options;
-    const { input, name, id } = toolCall;
-    const targetTool = tools.find((tool) => tool.metadata.name === name);
-    let output: string;
-    let isError = true;
-    if (!context.shouldContinue(context)) {
-      output = "Error: Tool call limit reached";
-    } else if (!targetTool) {
-      output = `Error: Tool ${name} not found`;
-    } else {
-      try {
-        getCallbackManager().dispatchEvent("llm-tool-call", {
-          payload: {
-            toolCall: {
-              name,
-              input,
-            },
-          },
-        });
-        output = await targetTool.call(input);
-        isError = false;
-      } catch (error: unknown) {
-        output = prettifyError(error);
-      }
-    }
-    return task(
-      {
-        ...context,
-        toolCalls: context.toolCalls + 1,
-        messages: [...nextMessages, response.message],
-      },
-      {
-        content: output,
-        role: "user",
-        options: {
-          toolResult: {
-            isError,
-            id,
-          },
-        },
-      },
-    );
-  } else {
-    return { response, chatHistory: [...nextMessages, response.message] };
-  }
+export class AnthropicAgentWorker extends AgentWorker<Anthropic> {
+  taskHandler = AnthropicAgent.taskHandler;
 }
 
-export class AnthropicAgent {
-  readonly #llm: Anthropic;
-  readonly #tools:
-    | BaseToolWithCall[]
-    | ((query: string) => Promise<BaseToolWithCall[]>) = [];
-  #chatHistory: ChatMessage<ToolCallLLMMessageOptions>[] = [];
-
+export class AnthropicAgent extends AgentRunner<Anthropic> {
   constructor(params: AnthropicAgentParams) {
-    this.#llm =
-      params.llm ?? Settings.llm instanceof Anthropic
-        ? (Settings.llm as Anthropic)
-        : new Anthropic();
-    if ("tools" in params) {
-      this.#tools = params.tools;
-    } else if ("toolRetriever" in params) {
-      this.#tools = params.toolRetriever.retrieve.bind(params.toolRetriever);
-    }
-    if (Array.isArray(params.chatHistory)) {
-      this.#chatHistory = params.chatHistory;
-    }
+    super({
+      llm:
+        params.llm ?? Settings.llm instanceof Anthropic
+          ? (Settings.llm as Anthropic)
+          : new Anthropic(),
+      chatHistory: params.chatHistory ?? [],
+      systemPrompt: params.systemPrompt ?? null,
+      runner: new AnthropicAgentWorker(),
+      tools:
+        "tools" in params
+          ? params.tools
+          : params.toolRetriever.retrieve.bind(params.toolRetriever),
+    });
   }
 
-  static shouldContinue(context: AgentContext): boolean {
-    return context.toolCalls < MAX_TOOL_CALLS;
-  }
+  createStore = AgentRunner.defaultCreateStore;
 
-  public reset(): void {
-    this.#chatHistory = [];
-  }
-
-  getTools(query: string): Promise<BaseToolWithCall[]> | BaseToolWithCall[] {
-    return typeof this.#tools === "function" ? this.#tools(query) : this.#tools;
-  }
-
-  @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming,
-  ): Promise<Promise<AgentChatResponse>> {
-    const { chatHistory, response } = await task(
-      {
-        llm: this.#llm,
-        tools: await this.getTools(extractText(params.message)),
-        toolCalls: 0,
-        messages: [...this.#chatHistory],
-        // do we need this?
-        shouldContinue: AnthropicAgent.shouldContinue,
-      },
-      {
-        role: "user",
-        content: params.message,
-        options: {},
-      },
-    );
-    this.#chatHistory = [...chatHistory];
-    return new AgentChatResponse(extractText(response.message.content));
+  ): Promise<AgentChatResponse<ToolCallLLMMessageOptions>>;
+  async chat(params: ChatEngineParamsStreaming): Promise<never>;
+  override async chat(
+    params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
+  ) {
+    if (params.stream) {
+      throw new Error("Anthropic does not support streaming");
+    }
+    return super.chat(params);
   }
+
+  static taskHandler: TaskHandler<Anthropic> = async (step) => {
+    const { input } = step;
+    const { llm, getTools, stream } = step.context;
+    if (input) {
+      step.context.store.messages = [...step.context.store.messages, input];
+    }
+    const lastMessage = step.context.store.messages.at(-1)!.content;
+    const tools = await getTools(lastMessage);
+    if (stream === true) {
+      throw new Error("Anthropic does not support streaming");
+    }
+    const response = await llm.chat({
+      stream,
+      tools,
+      messages: step.context.store.messages,
+    });
+    step.context.store.messages = [
+      ...step.context.store.messages,
+      response.message,
+    ];
+    const options = response.message.options ?? {};
+    if ("toolCall" in options) {
+      const { toolCall } = options;
+      const targetTool = tools.find(
+        (tool) => tool.metadata.name === toolCall.name,
+      );
+      const toolOutput = await callTool(targetTool, toolCall);
+      step.context.store.toolOutputs.push(toolOutput);
+      return {
+        taskStep: step,
+        output: {
+          raw: response.raw,
+          message: {
+            content: toolOutput.output,
+            role: "user",
+            options: {
+              toolResult: {
+                result: toolOutput.output,
+                isError: toolOutput.isError,
+                id: toolCall.id,
+              },
+            },
+          },
+        },
+        isLast: false,
+      };
+    } else {
+      return {
+        taskStep: step,
+        output: response,
+        isLast: true,
+      };
+    }
+  };
 }
