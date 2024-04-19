@@ -1,7 +1,6 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { ToolOutput } from "../agent/base.js";
-import type { BaseEvent } from "../callbacks/CallbackManager.js";
-import type { BaseTool, UUID } from "../types.js";
+import type { BaseEvent } from "../internal/type.js";
+import type { BaseTool, ToolOutput, UUID } from "../types.js";
 
 export type LLMStartEvent = BaseEvent<{
   id: UUID;

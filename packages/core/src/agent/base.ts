@@ -14,17 +14,10 @@ import type {
   MessageContent,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
-import type { BaseTool, BaseToolWithCall, UUID } from "../types.js";
+import type { BaseToolWithCall, ToolOutput, UUID } from "../types.js";
 import { consumeAsyncIterable } from "./utils.js";
 
 export const MAX_TOOL_CALLS = 10;
-
-export type ToolOutput = {
-  tool: BaseTool | undefined;
-  input: unknown;
-  output: string;
-  isError: boolean;
-};
 
 export type AgentTaskContext<
   Model extends LLM,

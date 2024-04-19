@@ -103,3 +103,10 @@ export class QueryBundle {
 }
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
+
+export type ToolOutput = {
+  tool: BaseTool | undefined;
+  input: unknown;
+  output: string;
+  isError: boolean;
+};

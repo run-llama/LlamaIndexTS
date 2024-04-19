@@ -37,10 +37,6 @@ export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   }
 }
 
-export type BaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{
-  payload: Payload;
-}>;
-
 /**
  * This type is used to define the event maps.
  */
