@@ -12,7 +12,7 @@
     "start:llamaparse": "node --loader ts-node/esm ./src/llamaparse.ts"
   },
   "dependencies": {
-    "llamaindex": "latest"
+    "llamaindex": "*"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
