@@ -12,8 +12,10 @@ export { Portkey } from "./portkey.js";
 export * from "./replicate_ai.js";
 // Note: The type aliases for replicate are to simplify usage for Llama 2 (we're using replicate for Llama 2 support)
 export {
-  ReplicateChatStrategy as DeuceChatStrategy,
-  ReplicateLLM as LlamaDeuce,
+  DeuceChatStrategy,
+  LlamaDeuce,
+  ReplicateChatStrategy,
+  ReplicateLLM,
 } from "./replicate_ai.js";
 export { TogetherLLM } from "./together.js";
 export * from "./types.js";

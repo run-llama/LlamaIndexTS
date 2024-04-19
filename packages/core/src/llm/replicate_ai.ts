@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import Replicate from "replicate";
+import Replicate from "../internal/deps/replicate.js";
 import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
@@ -69,6 +69,16 @@ export const ALL_AVAILABLE_REPLICATE_MODELS = {
     replicateApi:
       "meta/llama-2-7b-chat:13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0",
   },
+
+  "llama-3-70b-instruct": {
+    contextWindow: 8192,
+    replicateApi: "meta/meta-llama-3-70b-instruct",
+  },
+
+  "llama-3-8b-instruct": {
+    contextWindow: 8192,
+    replicateApi: "meta/meta-llama-3-8b-instruct",
+  },
 };
 
 export enum ReplicateChatStrategy {
@@ -81,7 +91,10 @@ export enum ReplicateChatStrategy {
   //^ To satisfy Replicate's 4 bit models' requirements where they also insert some INST tags
   REPLICATE4BITWNEWLINES = "replicate4bitwnewlines",
   //^ Replicate's documentation recommends using newlines: https://replicate.com/blog/how-to-prompt-llama
+  LLAMA3 = "llama3",
 }
+
+export const DeuceChatStrategy = ReplicateChatStrategy;
 
 /**
  * Replicate LLM implementation used
@@ -94,16 +107,25 @@ export class ReplicateLLM extends BaseLLM {
   maxTokens?: number;
   replicateSession: ReplicateSession;
 
-  constructor(init?: Partial<ReplicateLLM>) {
+  constructor(init?: Partial<ReplicateLLM> & { noWarn?: boolean }) {
     super();
-    this.model = init?.model ?? "Llama-2-70b-chat-4bit";
+
+    if (!init?.model && !init?.noWarn) {
+      console.warn(
+        "The default model has been changed to llama-3-70b-instruct. Set noWarn to true to suppress this warning.",
+      );
+    }
+
+    this.model = init?.model ?? "llama-3-70b-instruct";
     this.chatStrategy =
       init?.chatStrategy ??
-      (this.model.endsWith("4bit")
-        ? ReplicateChatStrategy.REPLICATE4BITWNEWLINES // With the newer Replicate models they do the system message themselves.
-        : ReplicateChatStrategy.METAWBOS); // With BOS and EOS seems to work best, although they all have problems past a certain point
+      (this.model.startsWith("llama-3")
+        ? ReplicateChatStrategy.LLAMA3
+        : this.model.endsWith("4bit")
+          ? ReplicateChatStrategy.REPLICATE4BITWNEWLINES // With the newer Replicate models they do the system message themselves.
+          : ReplicateChatStrategy.METAWBOS); // With BOS and EOS seems to work best, although they all have problems past a certain point
     this.temperature = init?.temperature ?? 0.1; // minimum temperature is 0.01 for Replicate endpoint
-    this.topP = init?.topP ?? 1;
+    this.topP = init?.topP ?? (this.model.startsWith("llama-3") ? 0.9 : 1); // llama-3 defaults to 0.9 top P
     this.maxTokens =
       init?.maxTokens ??
       ALL_AVAILABLE_REPLICATE_MODELS[this.model].contextWindow; // For Replicate, the default is 500 tokens which is too low.
@@ -122,7 +144,9 @@ export class ReplicateLLM extends BaseLLM {
   }
 
   mapMessagesToPrompt(messages: ChatMessage[]) {
-    if (this.chatStrategy === ReplicateChatStrategy.A16Z) {
+    if (this.chatStrategy === ReplicateChatStrategy.LLAMA3) {
+      return this.mapMessagesToPromptLlama3(messages);
+    } else if (this.chatStrategy === ReplicateChatStrategy.A16Z) {
       return this.mapMessagesToPromptA16Z(messages);
     } else if (this.chatStrategy === ReplicateChatStrategy.META) {
       return this.mapMessagesToPromptMeta(messages);
@@ -143,6 +167,32 @@ export class ReplicateLLM extends BaseLLM {
     } else {
       return this.mapMessagesToPromptMeta(messages);
     }
+  }
+
+  mapMessagesToPromptLlama3(messages: ChatMessage[]) {
+    return {
+      prompt:
+        "<|begin_of_text|>" +
+        messages.reduce((acc, message) => {
+          let content = "";
+          if (typeof message.content === "string") {
+            content = message.content;
+          } else {
+            if (message.content[0].type === "text") {
+              content = message.content[0].text;
+            } else {
+              content = "";
+            }
+          }
+
+          return (
+            acc +
+            `<|start_header_id|>${message.role}<|end_header_id|>\n\n${content}<|eot_id|>`
+          );
+        }, "") +
+        "<|start_header_id|>assistant<|end_header_id|>\n\n",
+      systemPrompt: undefined,
+    };
   }
 
   mapMessagesToPromptA16Z(messages: ChatMessage[]) {
@@ -278,6 +328,10 @@ If a question does not make any sense, or is not factually coherent, explain why
       replicateOptions.input.max_length = this.maxTokens;
     }
 
+    if (this.model.startsWith("llama-3")) {
+      replicateOptions.input.prompt_template = "{prompt}";
+    }
+
     //TODO: Add streaming for this
     if (stream) {
       throw new Error("Streaming not supported for ReplicateLLM");
@@ -298,3 +352,5 @@ If a question does not make any sense, or is not factually coherent, explain why
     };
   }
 }
+
+export const LlamaDeuce = ReplicateLLM;
