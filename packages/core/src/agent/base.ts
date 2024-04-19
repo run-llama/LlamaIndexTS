@@ -11,6 +11,7 @@ import type {
   ChatResponse,
   ChatResponseChunk,
   LLM,
+  MessageContent,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import type { BaseTool, BaseToolWithCall, UUID } from "../types.js";
@@ -181,6 +182,22 @@ export type AgentChatResponse<Options extends object> = {
   sources: ToolOutput[];
 };
 
+export type AgentRunnerParams<
+  AI extends LLM,
+  Store extends object = {},
+  AdditionalMessageOptions extends object = AI extends LLM<
+    object,
+    infer AdditionalMessageOptions
+  >
+    ? AdditionalMessageOptions
+    : never,
+> = {
+  llm: AI;
+  chatHistory: ChatMessage<AdditionalMessageOptions>[];
+  runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
+  tools: BaseToolWithCall[] | ((query: string) => Promise<BaseToolWithCall[]>);
+};
+
 export abstract class AgentRunner<
   AI extends LLM,
   Store extends object = {},
@@ -206,14 +223,9 @@ export abstract class AgentRunner<
   }
 
   protected constructor(
-    llm: AI,
-    chatHistory: ChatMessage<AdditionalMessageOptions>[],
-    runner: AgentWorker<AI, Store, AdditionalMessageOptions>,
-    tools:
-      | BaseToolWithCall[]
-      | ((query: string) => Promise<BaseToolWithCall[]>)
-      | undefined,
+    params: AgentRunnerParams<AI, Store, AdditionalMessageOptions>,
   ) {
+    const { llm, chatHistory, runner, tools } = params;
     this.#llm = llm;
     this.#chatHistory = chatHistory;
     this.#runner = runner;
@@ -244,6 +256,24 @@ export abstract class AgentRunner<
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
+  // fixme: this shouldn't be async
+  async createTask(message: MessageContent) {
+    return this.#runner.createTask(extractText(message), {
+      stream: false,
+      toolCallCount: 0,
+      llm: this.#llm,
+      // fixme: `getTools` should be called in the runtime
+      //  change this to `getTools: (message) => ToolWithCall[]`
+      tools: await this.getTools(extractText(message)),
+      store: {
+        ...this.createStore(),
+        messages: [...this.#chatHistory],
+        toolOutputs: [] as ToolOutput[],
+      },
+      shouldContinue: AgentRunner.shouldContinue,
+    });
+  }
+
   async chat(
     params: ChatEngineParamsNonStreaming,
   ): Promise<AgentChatResponse<AdditionalMessageOptions>>;
@@ -257,18 +287,7 @@ export abstract class AgentRunner<
     | AgentChatResponse<AdditionalMessageOptions>
     | AgentStreamChatResponse<AdditionalMessageOptions>
   > {
-    const task = this.#runner.createTask(extractText(params.message), {
-      stream: !!params.stream,
-      toolCallCount: 0,
-      llm: this.#llm,
-      tools: await this.getTools(extractText(params.message)),
-      store: {
-        ...this.createStore(),
-        messages: [...this.#chatHistory],
-        toolOutputs: [] as ToolOutput[],
-      },
-      shouldContinue: AgentRunner.shouldContinue,
-    });
+    const task = await this.createTask(params.message);
     const stepOutput = await pipeline(
       task,
       async (

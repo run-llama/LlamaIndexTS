@@ -1,6 +1,4 @@
-type AgentBaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{
-  payload: Payload;
-}>;
+import type { BaseEvent } from "../callbacks/CallbackManager.js";
 
-export type AgentStartEvent = AgentBaseEvent<{}>;
-export type AgentEndEvent = AgentBaseEvent<{}>;
+export type AgentStartEvent = BaseEvent<{}>;
+export type AgentEndEvent = BaseEvent<{}>;

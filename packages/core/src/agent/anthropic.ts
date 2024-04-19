@@ -38,16 +38,18 @@ export class AnthropicAgentWorker extends AgentWorker<Anthropic> {
 
 export class AnthropicAgent extends AgentRunner<Anthropic> {
   constructor(params: AnthropicAgentParams) {
-    super(
-      params.llm ?? Settings.llm instanceof Anthropic
-        ? (Settings.llm as Anthropic)
-        : new Anthropic(),
-      params.chatHistory ?? [],
-      new AnthropicAgentWorker(),
-      "tools" in params
-        ? params.tools
-        : params.toolRetriever.retrieve.bind(params.toolRetriever),
-    );
+    super({
+      llm:
+        params.llm ?? Settings.llm instanceof Anthropic
+          ? (Settings.llm as Anthropic)
+          : new Anthropic(),
+      chatHistory: params.chatHistory ?? [],
+      runner: new AnthropicAgentWorker(),
+      tools:
+        "tools" in params
+          ? params.tools
+          : params.toolRetriever.retrieve.bind(params.toolRetriever),
+    });
   }
 
   createStore = AgentRunner.defaultCreateStore;

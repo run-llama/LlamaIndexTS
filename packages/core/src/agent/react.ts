@@ -3,7 +3,6 @@ import { Settings } from "../Settings.js";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import {
-  OpenAI,
   type ChatMessage,
   type ChatResponse,
   type ChatResponseChunk,
@@ -21,7 +20,7 @@ import {
 } from "./utils.js";
 
 type ReACTAgentParamsBase = {
-  llm?: OpenAI;
+  llm?: LLM;
   chatHistory?: ChatMessage<ToolCallLLMMessageOptions>[];
 };
 
@@ -117,12 +116,14 @@ function extractToolUse(
   inputText: string,
 ): [thought: string, action: string, input: string] {
   const pattern =
-    /\s*Thought: (.*?)\nAction: ([a-zA-Z0-9_]+).*?\nAction Input: .*?(\{.*?\})/s;
+    /\s*Thought: (.*?)\nAction: ([a-zA-Z0-9_]+).*?\.*Input: .*?(\{.*?})/s;
 
   const match = inputText.match(pattern);
 
   if (!match) {
-    throw new Error(`Could not extract tool use from input text: ${inputText}`);
+    throw new Error(
+      `Could not extract tool use from input text: "${inputText}"`,
+    );
   }
 
   const thought = match[1].trim();
@@ -153,7 +154,7 @@ const reACTOutputParser: ReACTOutputParser = async (
       let content = "";
       for await (const chunk of iter) {
         content += chunk.delta;
-        if (content.includes("Action")) {
+        if (content.includes("Action:")) {
           return "action";
         } else if (content.includes("Answer:")) {
           return "answer";
@@ -217,10 +218,10 @@ const reACTOutputParser: ReACTOutputParser = async (
     }
   } else {
     const content = extractText(output.message.content);
-    const type = content.includes("Action:")
-      ? "action"
-      : content.includes("Answer:")
-        ? "answer"
+    const type = content.includes("Answer:")
+      ? "answer"
+      : content.includes("Action:")
+        ? "action"
         : "thought";
 
     // step 2: do the parsing from content
@@ -325,14 +326,15 @@ export class ReACTAgent extends AgentRunner<LLM, ReACTAgentStore> {
   constructor(
     params: ReACTAgentParamsWithTools | ReACTAgentParamsWithToolRetriever,
   ) {
-    super(
-      params.llm ?? Settings.llm,
-      params.chatHistory ?? [],
-      new ReACTAgentWorker(),
-      "tools" in params
-        ? params.tools
-        : params.toolRetriever.retrieve.bind(params.toolRetriever),
-    );
+    super({
+      llm: params.llm ?? Settings.llm,
+      chatHistory: params.chatHistory ?? [],
+      runner: new ReACTAgentWorker(),
+      tools:
+        "tools" in params
+          ? params.tools
+          : params.toolRetriever.retrieve.bind(params.toolRetriever),
+    });
   }
 
   createStore() {

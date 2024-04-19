@@ -31,31 +31,11 @@ async function main() {
     tools: [queryEngineTool],
   });
 
-  const task = agent.createTask("What was his salary?");
+  const { response } = await agent.chat({
+    message: "What was his salary?",
+  });
 
-  let count = 0;
-
-  while (true) {
-    const stepOutput = await agent.runStep(task.taskId);
-
-    console.log(`Runnning step ${count++}`);
-    console.log(`======== OUTPUT ==========`);
-    if (stepOutput.output.response) {
-      console.log(stepOutput.output.response);
-    } else {
-      console.log(stepOutput.output.sources);
-    }
-    console.log(`==========================`);
-
-    if (stepOutput.isLast) {
-      const finalResponse = await agent.finalizeResponse(
-        task.taskId,
-        stepOutput,
-      );
-      console.log({ finalResponse });
-      break;
-    }
-  }
+  console.log(response.message.content);
 }
 
 void main().then(() => {

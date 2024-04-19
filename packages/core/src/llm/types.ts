@@ -1,27 +1,24 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
 import type { ToolOutput } from "../agent/base.js";
+import type { BaseEvent } from "../callbacks/CallbackManager.js";
 import type { BaseTool, UUID } from "../types.js";
 
-type LLMBaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{
-  payload: Payload;
-}>;
-
-export type LLMStartEvent = LLMBaseEvent<{
+export type LLMStartEvent = BaseEvent<{
   id: UUID;
   messages: ChatMessage[];
 }>;
-export type LLMToolCallEvent = LLMBaseEvent<{
+export type LLMToolCallEvent = BaseEvent<{
   toolCall: ToolCall;
 }>;
-export type LLMToolResultEvent = LLMBaseEvent<{
+export type LLMToolResultEvent = BaseEvent<{
   toolCall: ToolCall;
   toolResult: ToolOutput;
 }>;
-export type LLMEndEvent = LLMBaseEvent<{
+export type LLMEndEvent = BaseEvent<{
   id: UUID;
   response: ChatResponse;
 }>;
-export type LLMStreamEvent = LLMBaseEvent<{
+export type LLMStreamEvent = BaseEvent<{
   id: UUID;
   chunk: ChatResponseChunk;
 }>;

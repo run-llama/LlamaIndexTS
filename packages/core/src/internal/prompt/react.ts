@@ -1,7 +1,12 @@
 import type { BaseTool } from "../../types.js";
 
 export const getReACTAgentSystemHeader = (tools: BaseTool[]) => {
-  const description = tools.map((tool) => tool.metadata.description).join("\n");
+  const description = tools
+    .map(
+      (tool) =>
+        `- ${tool.metadata.name}: ${tool.metadata.description} with schema: ${JSON.stringify(tool.metadata.parameters)}`,
+    )
+    .join("\n");
   const names = tools.map((tool) => tool.metadata.name).join(", ");
   return `You are designed to help with a variety of tasks, from answering questions to providing summaries to other types of analyses.
 

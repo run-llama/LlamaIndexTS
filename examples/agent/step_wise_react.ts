@@ -1,4 +1,4 @@
-import { FunctionTool, ReActAgent } from "llamaindex";
+import { Anthropic, FunctionTool, ReACTAgent } from "llamaindex";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }) {
@@ -7,6 +7,7 @@ function sumNumbers({ a, b }: { a: number; b: number }) {
 
 // Define a function to divide two numbers
 function divideNumbers({ a, b }: { a: number; b: number }) {
+  console.log("get input", a, b);
   return `${a / b}`;
 }
 
@@ -57,30 +58,22 @@ async function main() {
   });
 
   // Create an OpenAIAgent with the function tools
-  const agent = new ReActAgent({
+  const agent = new ReACTAgent({
+    llm: new Anthropic({
+      model: "claude-3-opus",
+    }),
     tools: [functionTool, functionTool2],
   });
 
-  const task = agent.createTask("Divide 16 by 2 then add 20");
+  const task = await agent.createTask("Divide 16 by 2 then add 20");
 
   let count = 0;
 
-  while (true) {
-    const stepOutput = await agent.runStep(task.taskId);
-
+  for await (const stepOutput of task) {
     console.log(`Runnning step ${count++}`);
     console.log(`======== OUTPUT ==========`);
-    console.log(stepOutput.output);
+    console.log(stepOutput);
     console.log(`==========================`);
-
-    if (stepOutput.isLast) {
-      const finalResponse = await agent.finalizeResponse(
-        task.taskId,
-        stepOutput,
-      );
-      console.log({ finalResponse });
-      break;
-    }
   }
 }
 

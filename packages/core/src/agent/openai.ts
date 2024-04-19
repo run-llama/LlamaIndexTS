@@ -35,16 +35,18 @@ export class OpenAIAgentWorker extends AgentWorker<OpenAI> {
 
 export class OpenAIAgent extends AgentRunner<OpenAI> {
   constructor(params: OpenAIAgentParams) {
-    super(
-      params.llm ?? Settings.llm instanceof OpenAI
-        ? (Settings.llm as OpenAI)
-        : new OpenAI(),
-      params.chatHistory ?? [],
-      new OpenAIAgentWorker(),
-      "tools" in params
-        ? params.tools
-        : params.toolRetriever.retrieve.bind(params.toolRetriever),
-    );
+    super({
+      llm:
+        params.llm ?? Settings.llm instanceof OpenAI
+          ? (Settings.llm as OpenAI)
+          : new OpenAI(),
+      chatHistory: params.chatHistory ?? [],
+      runner: new OpenAIAgentWorker(),
+      tools:
+        "tools" in params
+          ? params.tools
+          : params.toolRetriever.retrieve.bind(params.toolRetriever),
+    });
   }
 
   createStore = AgentRunner.defaultCreateStore;
