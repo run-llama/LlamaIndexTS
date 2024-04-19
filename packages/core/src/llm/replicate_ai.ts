@@ -9,7 +9,12 @@ import type {
   LLMChatParamsStreaming,
   MessageType,
 } from "./types.js";
-import { extractText, streamConverter, wrapLLMEvent } from "./utils.js";
+import {
+  extractText,
+  streamCallbacks,
+  streamConverter,
+  wrapLLMEvent,
+} from "./utils.js";
 
 export class ReplicateSession {
   replicateKey: string | null = null;
@@ -333,19 +338,24 @@ If a question does not make any sense, or is not factually coherent, explain why
     }
 
     if (stream) {
-      const stream = this.replicateSession.replicate.stream(
-        api,
-        replicateOptions,
-      );
-      return streamConverter(stream, (chunk) => {
-        if (chunk.event === "done") {
-          return null;
-        }
-        return {
-          raw: chunk,
-          delta: chunk.data,
-        };
+      const controller = new AbortController();
+      const stream = this.replicateSession.replicate.stream(api, {
+        ...replicateOptions,
+        signal: controller.signal,
       });
+      // replicate.stream is not closing if used as AsyncIterable, force closing after consumption with the AbortController
+      return streamCallbacks(
+        streamConverter(stream, (chunk) => {
+          if (chunk.event === "done") {
+            return null;
+          }
+          return {
+            raw: chunk,
+            delta: chunk.data,
+          };
+        }),
+        { finished: () => controller.abort() },
+      );
     }
 
     //Non-streaming

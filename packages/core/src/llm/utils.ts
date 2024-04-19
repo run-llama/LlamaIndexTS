@@ -22,6 +22,21 @@ export async function* streamConverter<S, D>(
   }
 }
 
+export async function* streamCallbacks<S>(
+  stream: AsyncIterable<S>,
+  callbacks: {
+    finished?: (value?: S) => void;
+  },
+): AsyncIterable<S> {
+  let value: S | undefined;
+  for await (value of stream) {
+    yield value;
+  }
+  if (callbacks.finished) {
+    callbacks.finished(value);
+  }
+}
+
 export async function* streamReducer<S, D>(params: {
   stream: AsyncIterable<S>;
   reducer: (previousValue: D, currentValue: S) => D;
