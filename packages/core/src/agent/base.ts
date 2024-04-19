@@ -159,6 +159,9 @@ export async function* createTaskImpl<
     }
     context = {
       ...taskStep.context,
+      store: {
+        ...taskStep.context.store,
+      },
       toolCallCount: prevToolCallCount + 1,
     };
     if (isLast) {
@@ -257,9 +260,9 @@ export abstract class AgentRunner<
   }
 
   // fixme: this shouldn't be async
-  async createTask(message: MessageContent) {
+  async createTask(message: MessageContent, stream: boolean) {
     return this.#runner.createTask(extractText(message), {
-      stream: false,
+      stream,
       toolCallCount: 0,
       llm: this.#llm,
       // fixme: `getTools` should be called in the runtime
@@ -287,7 +290,7 @@ export abstract class AgentRunner<
     | AgentChatResponse<AdditionalMessageOptions>
     | AgentStreamChatResponse<AdditionalMessageOptions>
   > {
-    const task = await this.createTask(params.message);
+    const task = await this.createTask(params.message, !!params.stream);
     const stepOutput = await pipeline(
       task,
       async (

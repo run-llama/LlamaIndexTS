@@ -61,7 +61,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
       // @ts-expect-error
       stream,
       tools,
-      messages: step.context.store.messages,
+      messages: [...step.context.store.messages],
     });
     if (!stream) {
       step.context.store.messages = [
