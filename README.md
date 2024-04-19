@@ -183,7 +183,7 @@ You'll find a complete example of using the Edge runtime with LlamaIndexTS here:
 - OpenAI GPT-3.5-turbo and GPT-4
 - Anthropic Claude 3 (Opus, Sonnet, and Haiku) and the legacy models (Claude 2 and Instant)
 - Groq LLMs
-- Llama2 Chat LLMs (70B, 13B, and 7B parameters)
+- Llama2/3 Chat LLMs (70B, 13B, and 7B parameters)
 - MistralAI Chat LLMs
 - Fireworks Chat LLMs
 
