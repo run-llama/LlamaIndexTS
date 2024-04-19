@@ -11,10 +11,29 @@ import type {
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
-  converter: (s: S) => D,
+  converter: (s: S) => D | null,
 ): AsyncIterable<D> {
   for await (const data of stream) {
-    yield converter(data);
+    const newData = converter(data);
+    if (newData === null) {
+      return;
+    }
+    yield newData;
+  }
+}
+
+export async function* streamCallbacks<S>(
+  stream: AsyncIterable<S>,
+  callbacks: {
+    finished?: (value?: S) => void;
+  },
+): AsyncIterable<S> {
+  let value: S | undefined;
+  for await (value of stream) {
+    yield value;
+  }
+  if (callbacks.finished) {
+    callbacks.finished(value);
   }
 }
 
