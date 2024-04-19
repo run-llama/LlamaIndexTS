@@ -260,7 +260,7 @@ export abstract class AgentRunner<
   }
 
   // fixme: this shouldn't be async
-  async createTask(message: MessageContent, stream: boolean) {
+  async createTask(message: MessageContent, stream: boolean = false) {
     return this.#runner.createTask(extractText(message), {
       stream,
       toolCallCount: 0,
