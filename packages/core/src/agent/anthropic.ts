@@ -4,21 +4,19 @@ import {
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { Anthropic } from "../llm/anthropic.js";
-import type { ChatMessage, ToolCallLLMMessageOptions } from "../llm/index.js";
+import type { ToolCallLLMMessageOptions } from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
 import {
   AgentRunner,
   AgentWorker,
   type AgentChatResponse,
+  type AgentParamsBase,
   type TaskHandler,
 } from "./base.js";
 import { callTool } from "./utils.js";
 
-type AnthropicParamsBase = {
-  llm?: Anthropic;
-  chatHistory?: ChatMessage<ToolCallLLMMessageOptions>[];
-};
+type AnthropicParamsBase = AgentParamsBase<Anthropic>;
 
 type AnthropicParamsWithTools = AnthropicParamsBase & {
   tools: BaseToolWithCall[];
@@ -44,6 +42,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
           ? (Settings.llm as Anthropic)
           : new Anthropic(),
       chatHistory: params.chatHistory ?? [],
+      systemPrompt: params.systemPrompt ?? null,
       runner: new AnthropicAgentWorker(),
       tools:
         "tools" in params

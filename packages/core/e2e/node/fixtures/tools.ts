@@ -46,6 +46,7 @@ export const divideNumbersTool = FunctionTool.from(divideNumbers, {
   },
 });
 
+// should always return the 72 degrees
 export const getWeatherTool = FunctionTool.from(
   async ({ city }: { city: string }) => {
     return `The weather in ${city} is 72 degrees`;

@@ -7,22 +7,23 @@ import {
   type ChatResponse,
   type ChatResponseChunk,
   type LLM,
-  type ToolCallLLMMessageOptions,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseTool, BaseToolWithCall } from "../types.js";
-import { AgentRunner, AgentWorker, type TaskHandler } from "./base.js";
+import {
+  AgentRunner,
+  AgentWorker,
+  type AgentParamsBase,
+  type TaskHandler,
+} from "./base.js";
 import {
   callTool,
   consumeAsyncIterable,
   createReadableStream,
 } from "./utils.js";
 
-type ReACTAgentParamsBase = {
-  llm?: LLM;
-  chatHistory?: ChatMessage<ToolCallLLMMessageOptions>[];
-};
+type ReACTAgentParamsBase = AgentParamsBase<LLM>;
 
 type ReACTAgentParamsWithTools = ReACTAgentParamsBase & {
   tools: BaseToolWithCall[];
@@ -330,6 +331,7 @@ export class ReACTAgent extends AgentRunner<LLM, ReACTAgentStore> {
       llm: params.llm ?? Settings.llm,
       chatHistory: params.chatHistory ?? [],
       runner: new ReACTAgentWorker(),
+      systemPrompt: params.systemPrompt ?? null,
       tools:
         "tools" in params
           ? params.tools

@@ -190,10 +190,79 @@ export type AgentRunnerParams<
 > = {
   llm: AI;
   chatHistory: ChatMessage<AdditionalMessageOptions>[];
+  systemPrompt: MessageContent | null;
   runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
   tools: BaseToolWithCall[] | ((query: string) => Promise<BaseToolWithCall[]>);
 };
 
+export type AgentParamsBase<
+  AI extends LLM,
+  AdditionalMessageOptions extends object = AI extends LLM<
+    object,
+    infer AdditionalMessageOptions
+  >
+    ? AdditionalMessageOptions
+    : never,
+> = {
+  llm?: AI;
+  chatHistory?: ChatMessage<AdditionalMessageOptions>[];
+  systemPrompt?: MessageContent;
+};
+
+/**
+ * Worker will schedule tasks and handle the task execution
+ */
+export abstract class AgentWorker<
+  AI extends LLM,
+  Store extends object = {},
+  AdditionalMessageOptions extends object = AI extends LLM<
+    object,
+    infer AdditionalMessageOptions
+  >
+    ? AdditionalMessageOptions
+    : never,
+> {
+  #taskSet = new Set<TaskStep<AI, Store, AdditionalMessageOptions>>();
+  abstract taskHandler: TaskHandler<AI, Store, AdditionalMessageOptions>;
+
+  public createTask(
+    query: string,
+    context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
+  ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
+    const taskGenerator = createTaskImpl(this.taskHandler, context, {
+      role: "user",
+      content: query,
+    });
+    return new ReadableStream<
+      TaskStepOutput<AI, Store, AdditionalMessageOptions>
+    >({
+      start: async (controller) => {
+        for await (const stepOutput of taskGenerator) {
+          this.#taskSet.add(stepOutput.taskStep);
+          controller.enqueue(stepOutput);
+          if (stepOutput.isLast) {
+            let currentStep: TaskStep<
+              AI,
+              Store,
+              AdditionalMessageOptions
+            > | null = stepOutput.taskStep;
+            while (currentStep) {
+              this.#taskSet.delete(currentStep);
+              currentStep = currentStep.prevStep;
+            }
+            controller.close();
+          }
+        }
+      },
+    });
+  }
+
+  [Symbol.toStringTag] = "AgentWorker";
+}
+
+/**
+ * Runner will manage the task execution and provide a high-level API for the user
+ */
 export abstract class AgentRunner<
   AI extends LLM,
   Store extends object = {},
@@ -208,6 +277,7 @@ export abstract class AgentRunner<
   readonly #tools:
     | BaseToolWithCall[]
     | ((query: string) => Promise<BaseToolWithCall[]>) = [];
+  readonly #systemPrompt: MessageContent | null = null;
   #chatHistory: ChatMessage<AdditionalMessageOptions>[];
   readonly #runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
 
@@ -225,9 +295,10 @@ export abstract class AgentRunner<
     this.#llm = llm;
     this.#chatHistory = chatHistory;
     this.#runner = runner;
-    if (tools) {
-      this.#tools = tools;
+    if (params.systemPrompt) {
+      this.#systemPrompt = params.systemPrompt;
     }
+    this.#tools = tools;
   }
 
   get llm() {
@@ -254,6 +325,19 @@ export abstract class AgentRunner<
 
   // fixme: this shouldn't be async
   async createTask(message: MessageContent, stream: boolean = false) {
+    const initialMessages = [...this.#chatHistory];
+    if (this.#systemPrompt !== null) {
+      const systemPrompt = this.#systemPrompt;
+      const alreadyHasSystemPrompt = initialMessages
+        .filter((msg) => msg.role === "system")
+        .some((msg) => Object.is(msg.content, systemPrompt));
+      if (!alreadyHasSystemPrompt) {
+        initialMessages.push({
+          content: systemPrompt,
+          role: "system",
+        });
+      }
+    }
     return this.#runner.createTask(extractText(message), {
       stream,
       toolCallCount: 0,
@@ -263,7 +347,7 @@ export abstract class AgentRunner<
       tools: await this.getTools(extractText(message)),
       store: {
         ...this.createStore(),
-        messages: [...this.#chatHistory],
+        messages: initialMessages,
         toolOutputs: [] as ToolOutput[],
       },
       shouldContinue: AgentRunner.shouldContinue,
@@ -313,52 +397,4 @@ export abstract class AgentRunner<
       } satisfies AgentChatResponse<AdditionalMessageOptions>;
     }
   }
-}
-
-export abstract class AgentWorker<
-  AI extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = AI extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> {
-  #taskSet = new Set<TaskStep<AI, Store, AdditionalMessageOptions>>();
-  abstract taskHandler: TaskHandler<AI, Store, AdditionalMessageOptions>;
-
-  public createTask(
-    query: string,
-    context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
-  ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
-    const taskGenerator = createTaskImpl(this.taskHandler, context, {
-      role: "user",
-      content: query,
-    });
-    return new ReadableStream<
-      TaskStepOutput<AI, Store, AdditionalMessageOptions>
-    >({
-      start: async (controller) => {
-        for await (const stepOutput of taskGenerator) {
-          this.#taskSet.add(stepOutput.taskStep);
-          controller.enqueue(stepOutput);
-          if (stepOutput.isLast) {
-            let currentStep: TaskStep<
-              AI,
-              Store,
-              AdditionalMessageOptions
-            > | null = stepOutput.taskStep;
-            while (currentStep) {
-              this.#taskSet.delete(currentStep);
-              currentStep = currentStep.prevStep;
-            }
-            controller.close();
-          }
-        }
-      },
-    });
-  }
-
-  [Symbol.toStringTag] = "AgentWorker";
 }

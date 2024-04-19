@@ -13,7 +13,11 @@ import {
 import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
-import { divideNumbersTool, sumNumbersTool } from "./fixtures/tools.js";
+import {
+  divideNumbersTool,
+  getWeatherTool,
+  sumNumbersTool,
+} from "./fixtures/tools.js";
 import { mockLLMEvent } from "./utils.js";
 
 let llm: LLM;
@@ -87,6 +91,23 @@ await test("gpt-4-turbo", async (t) => {
     });
     consola.debug("response:", response.message.content);
     ok(extractText(response.message.content).includes("45"));
+  });
+});
+
+await test("agent system prompt", async (t) => {
+  await mockLLMEvent(t, "openai_agent_system_prompt");
+  await t.test("chat", async (t) => {
+    const agent = new OpenAIAgent({
+      tools: [getWeatherTool],
+      systemPrompt:
+        "You are a pirate. You MUST speak every words staring with a 'Arhgs'",
+    });
+    const { response } = await agent.chat({
+      message: "What is the weather in San Francisco?",
+    });
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes("72"));
+    ok(extractText(response.message.content).includes("Arhg"));
   });
 });
 

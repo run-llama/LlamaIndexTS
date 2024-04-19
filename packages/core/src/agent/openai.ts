@@ -1,7 +1,6 @@
 import { pipeline } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
 import type {
-  ChatMessage,
   ChatResponseChunk,
   ToolCall,
   ToolCallLLMMessageOptions,
@@ -9,13 +8,15 @@ import type {
 import { OpenAI } from "../llm/open_ai.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
-import { AgentRunner, AgentWorker, type TaskHandler } from "./base.js";
+import {
+  AgentRunner,
+  AgentWorker,
+  type AgentParamsBase,
+  type TaskHandler,
+} from "./base.js";
 import { callTool } from "./utils.js";
 
-type OpenAIParamsBase = {
-  llm?: OpenAI;
-  chatHistory?: ChatMessage<ToolCallLLMMessageOptions>[];
-};
+type OpenAIParamsBase = AgentParamsBase<OpenAI>;
 
 type OpenAIParamsWithTools = OpenAIParamsBase & {
   tools: BaseToolWithCall[];
@@ -42,6 +43,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           : new OpenAI(),
       chatHistory: params.chatHistory ?? [],
       runner: new OpenAIAgentWorker(),
+      systemPrompt: params.systemPrompt ?? null,
       tools:
         "tools" in params
           ? params.tools
