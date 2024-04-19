@@ -1,10 +1,30 @@
 # Agent
 
+> This is an internal code design document for the agent API.
+>
+> APIs are not exactly the same as the final version, but it is a good reference for what we are going to do.
+
 Most of the agent logic is same with Python, but we have some changes to make it more suitable for JavaScript.
 
 > https://github.com/run-llama/llama_index/tree/6b97753dec4a9c33b16c63a8333ddba3f49ec40f/docs/docs/module_guides/deploying/agents
 
 ## API Changes
+
+### Classes changes
+
+- Task: we don't have `Task` class in JS, we use `ReadableStream` instead.
+
+- TaskStep: this is the step for each task run, includes like the input, the context, etc. This class will be used in taskHandler.
+
+- TaskOutput: this is the output for each task run, includes like is last step, the output, etc.
+
+### taskHandler
+
+taskHandler is a function that takes a TaskStep and returns a TaskOutput.
+
+```typescript
+type TaskHandler = (step: TaskStep) => Promise<TaskOutput>;
+```
 
 ### `createTask` to be AsyncGenerator
 
