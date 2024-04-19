@@ -2,8 +2,12 @@ import { ReplicateLLM } from "llamaindex";
 
 (async () => {
   const tres = new ReplicateLLM({ model: "llama-3-70b-instruct" });
-  const result = await tres.chat({
+  const stream = await tres.chat({
     messages: [{ content: "Hello, world!", role: "user" }],
+    stream: true,
   });
-  console.log(result);
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.delta);
+  }
+  console.log("\n\ndone");
 })();
