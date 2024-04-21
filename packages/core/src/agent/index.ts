@@ -7,6 +7,8 @@ export {
   OpenAIAgent,
   OpenAIAgentWorker,
   type OpenAIAgentParams,
+  OpenaiAssistantAgent,
+  type OpenaiAssistantAgentParams
 } from "./openai.js";
 export {
   ReACTAgent,
