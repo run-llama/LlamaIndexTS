@@ -1,3 +1,5 @@
+import type { JSONValue } from "../types.js";
+
 export const isAsyncIterable = (
   obj: unknown,
 ): obj is AsyncIterable<unknown> => {
@@ -17,4 +19,8 @@ export function prettifyError(error: unknown): string {
   } else {
     return `${error}`;
   }
+}
+
+export function stringifyJSONToMessageContent(value: JSONValue): string {
+  return JSON.stringify(value, null, 2).replace(/"([^"]*)"/g, "$1");
 }

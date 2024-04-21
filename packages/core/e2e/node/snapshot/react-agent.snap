@@ -26,7 +26,7 @@
         },
         {
           "role": "assistant",
-          "content": "Thought: I need to use a tool to help me answer the question.\nAction: getWeather\nInput: {\"city\":\"San Francisco\"}"
+          "content": "Thought: I need to use a tool to help me answer the question.\nAction: getWeather\nInput: {\n  city: San Francisco\n}"
         },
         {
           "role": "user",
@@ -41,7 +41,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "Thought: I need to use a tool to help me answer the question. \nAction: getWeather\nAction Input: {\"city\": \"San Francisco\"}",
+          "content": "Thought: I need to use a tool to help me answer the question.\nAction: getWeather\nAction Input: {\"city\": \"San Francisco\"}",
           "role": "assistant",
           "options": {}
         }

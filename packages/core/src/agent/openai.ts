@@ -1,5 +1,6 @@
 import { pipeline } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
+import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import type {
   ChatResponseChunk,
   ToolCall,
@@ -85,7 +86,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           output: {
             raw: response.raw,
             message: {
-              content: JSON.stringify(toolOutput.output),
+              content: stringifyJSONToMessageContent(toolOutput.output),
               role: "user",
               options: {
                 toolResult: {
@@ -165,7 +166,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
             ...step.context.store.messages,
             {
               role: "user" as const,
-              content: JSON.stringify(toolOutput.output),
+              content: stringifyJSONToMessageContent(toolOutput.output),
               options: {
                 toolResult: {
                   result: toolOutput.output,

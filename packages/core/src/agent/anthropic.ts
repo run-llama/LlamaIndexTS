@@ -3,6 +3,7 @@ import {
   type ChatEngineParamsNonStreaming,
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
+import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import { Anthropic } from "../llm/anthropic.js";
 import type { ToolCallLLMMessageOptions } from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
@@ -99,7 +100,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
         output: {
           raw: response.raw,
           message: {
-            content: JSON.stringify(toolOutput.output),
+            content: stringifyJSONToMessageContent(toolOutput.output),
             role: "user",
             options: {
               toolResult: {

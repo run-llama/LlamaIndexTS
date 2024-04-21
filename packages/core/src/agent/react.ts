@@ -1,7 +1,10 @@
 import { pipeline, randomUUID } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
-import { isAsyncIterable } from "../internal/utils.js";
+import {
+  isAsyncIterable,
+  stringifyJSONToMessageContent,
+} from "../internal/utils.js";
 import {
   type ChatMessage,
   type ChatResponse,
@@ -69,9 +72,9 @@ type Reason = ObservationReason | ActionReason | ResponseReason;
 function reasonFormatter(reason: Reason): string | Promise<string> {
   switch (reason.type) {
     case "observation":
-      return `Observation: ${JSON.stringify(reason.observation)}`;
+      return `Observation: ${stringifyJSONToMessageContent(reason.observation)}`;
     case "action":
-      return `Thought: ${reason.thought}\nAction: ${reason.action}\nInput: ${JSON.stringify(
+      return `Thought: ${reason.thought}\nAction: ${reason.action}\nInput: ${stringifyJSONToMessageContent(
         reason.input,
       )}`;
     case "response": {
