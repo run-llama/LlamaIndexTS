@@ -104,9 +104,18 @@ export class QueryBundle {
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
+export type JSONValue = string | number | boolean | JSONObject | JSONArray;
+
+export type JSONObject = {
+  [key: string]: JSONValue;
+};
+
+type JSONArray = Array<JSONValue>;
+
 export type ToolOutput = {
   tool: BaseTool | undefined;
-  input: unknown;
-  output: string;
+  // all of existing function calling LLMs only support object input
+  input: JSONObject;
+  output: JSONValue;
   isError: boolean;
 };

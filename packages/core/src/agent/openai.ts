@@ -85,7 +85,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           output: {
             raw: response.raw,
             message: {
-              content: toolOutput.output,
+              content: JSON.stringify(toolOutput.output),
               role: "user",
               options: {
                 toolResult: {
@@ -165,7 +165,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
             ...step.context.store.messages,
             {
               role: "user" as const,
-              content: toolOutput.output,
+              content: JSON.stringify(toolOutput.output),
               options: {
                 toolResult: {
                   result: toolOutput.output,

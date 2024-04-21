@@ -99,7 +99,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
         output: {
           raw: response.raw,
           message: {
-            content: toolOutput.output,
+            content: JSON.stringify(toolOutput.output),
             role: "user",
             options: {
               toolResult: {
