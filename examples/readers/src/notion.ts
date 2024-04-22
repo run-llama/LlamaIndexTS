@@ -7,7 +7,7 @@ import { createInterface } from "node:readline/promises";
 
 program
   .argument("[page]", "Notion page id (must be provided)")
-  .action(async (page, _options, command) => {
+  .action(async (page, _options) => {
     // Initializing a client
 
     if (!process.env.NOTION_TOKEN) {
@@ -55,7 +55,7 @@ program
           .filter((page) => page !== null);
         console.log("Found pages:");
         console.table(pages);
-        console.log(`To run, run ts-node ${command.name()} [page id]`);
+        console.log(`To run, run with [page id]`);
         return;
       }
     }
