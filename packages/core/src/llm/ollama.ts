@@ -1,4 +1,7 @@
-import { ok } from "@llamaindex/env";
+import ollama, {
+  type ChatResponse as OllamaChatResponse,
+  type GenerateResponse as OllamaGenerateResponse,
+} from "ollama";
 import { BaseEmbedding } from "../embeddings/types.js";
 import type {
   ChatResponse,
@@ -11,19 +14,24 @@ import type {
   LLMCompletionParamsStreaming,
   LLMMetadata,
 } from "./types.js";
+import { extractText, streamConverter } from "./utils.js";
 
-const messageAccessor = (data: any): ChatResponseChunk => {
+const messageAccessor = (part: OllamaChatResponse): ChatResponseChunk => {
   return {
-    raw: data,
-    delta: data.message.content,
+    raw: part,
+    delta: part.message.content,
   };
 };
 
-const completionAccessor = (data: any): CompletionResponse => {
-  return { text: data.response, raw: null };
+const completionAccessor = (
+  part: OllamaGenerateResponse,
+): CompletionResponse => {
+  return { text: part.response, raw: part };
 };
 
-// https://github.com/jmorganca/ollama
+/**
+ * This class both implements the LLM and Embedding interfaces.
+ */
 export class Ollama extends BaseEmbedding implements LLM {
   readonly hasStreaming = true;
 
@@ -75,7 +83,7 @@ export class Ollama extends BaseEmbedding implements LLM {
       model: this.model,
       messages: messages.map((message) => ({
         role: message.role,
-        content: message.content,
+        content: extractText(message.content),
       })),
       stream: !!stream,
       options: {
@@ -85,56 +93,25 @@ export class Ollama extends BaseEmbedding implements LLM {
         ...this.additionalChatOptions,
       },
     };
-    const response = await fetch(`${this.baseURL}/api/chat`, {
-      body: JSON.stringify(payload),
-      method: "POST",
-      signal: AbortSignal.timeout(this.requestTimeout),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
     if (!stream) {
-      const raw = await response.json();
-      const { message } = raw;
+      const chatResponse = await ollama.chat({
+        ...payload,
+        stream: false,
+      });
+
       return {
         message: {
           role: "assistant",
-          content: message.content,
+          content: chatResponse.message.content,
         },
-        raw,
+        raw: chatResponse,
       };
     } else {
-      const stream = response.body;
-      ok(stream, "stream is null");
-      ok(stream instanceof ReadableStream, "stream is not readable");
-      return this.streamChat(stream, messageAccessor);
-    }
-  }
-
-  private async *streamChat<T>(
-    stream: ReadableStream<Uint8Array>,
-    accessor: (data: any) => T,
-  ): AsyncIterable<T> {
-    const reader = stream.getReader();
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) {
-        return;
-      }
-      const lines = Buffer.from(value)
-        .toString("utf-8")
-        .split("\n")
-        .map((line) => line.trim());
-      for (const line of lines) {
-        if (line === "") {
-          continue;
-        }
-        const json = JSON.parse(line);
-        if (json.error) {
-          throw new Error(json.error);
-        }
-        yield accessor(json);
-      }
+      const stream = await ollama.chat({
+        ...payload,
+        stream: true,
+      });
+      return streamConverter(stream, messageAccessor);
     }
   }
 
@@ -150,7 +127,7 @@ export class Ollama extends BaseEmbedding implements LLM {
     const { prompt, stream } = params;
     const payload = {
       model: this.model,
-      prompt: prompt,
+      prompt: extractText(prompt),
       stream: !!stream,
       options: {
         temperature: this.temperature,
@@ -159,25 +136,21 @@ export class Ollama extends BaseEmbedding implements LLM {
         ...this.additionalChatOptions,
       },
     };
-    const response = await fetch(`${this.baseURL}/api/generate`, {
-      body: JSON.stringify(payload),
-      method: "POST",
-      signal: AbortSignal.timeout(this.requestTimeout),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
     if (!stream) {
-      const raw = await response.json();
+      const response = await ollama.generate({
+        ...payload,
+        stream: false,
+      });
       return {
-        text: raw.response,
-        raw,
+        text: response.response,
+        raw: response,
       };
     } else {
-      const stream = response.body;
-      ok(stream, "stream is null");
-      ok(stream instanceof ReadableStream, "stream is not readable");
-      return this.streamChat(stream, completionAccessor);
+      const stream = await ollama.generate({
+        ...payload,
+        stream: true,
+      });
+      return streamConverter(stream, completionAccessor);
     }
   }
 
@@ -192,16 +165,10 @@ export class Ollama extends BaseEmbedding implements LLM {
         ...this.additionalChatOptions,
       },
     };
-    const response = await fetch(`${this.baseURL}/api/embeddings`, {
-      body: JSON.stringify(payload),
-      method: "POST",
-      signal: AbortSignal.timeout(this.requestTimeout),
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await ollama.embeddings({
+      ...payload,
     });
-    const { embedding } = await response.json();
-    return embedding;
+    return response.embedding;
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {
