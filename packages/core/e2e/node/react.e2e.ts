@@ -1,4 +1,4 @@
-import { OpenAI, ReACTAgent, Settings, type LLM } from "llamaindex";
+import { OpenAI, ReActAgent, Settings, type LLM } from "llamaindex";
 import { extractText } from "llamaindex/llm/utils";
 import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
@@ -16,7 +16,7 @@ beforeEach(async () => {
 await test("react agent", async (t) => {
   await mockLLMEvent(t, "react-agent");
   await t.test("get weather", async () => {
-    const agent = new ReACTAgent({
+    const agent = new ReActAgent({
       tools: [getWeatherTool],
     });
     const { response } = await agent.chat({
