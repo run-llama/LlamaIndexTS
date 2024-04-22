@@ -1,4 +1,15 @@
+import * as fs from "fs";
 import { ClipEmbedding, similarity, SimilarityType } from "llamaindex";
+
+async function loadImageFromDisk(path: string) {
+  try {
+    const file = fs.readFileSync(path);
+    return new Blob([file]);
+  } catch (error) {
+    console.error(`Error loading image from disk: ${error}`);
+    return null;
+  }
+}
 
 async function main() {
   const clip = new ClipEmbedding();
@@ -12,7 +23,8 @@ async function main() {
   // Get image embedding
   const image =
     "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/football-match.jpg";
-  const imageEmbedding = await clip.getImageEmbedding(image);
+  const blobImage = await loadImageFromDisk("./data/football-match.jpg");
+  const imageEmbedding = await clip.getImageEmbedding(blobImage || image);
 
   // Calc similarity
   const sim1 = similarity(
