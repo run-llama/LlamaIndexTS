@@ -9,7 +9,7 @@ import {
   SummaryExtractor,
   TitleExtractor,
 } from "llamaindex/extractors/index";
-import { OpenAI } from "llamaindex/llm/open_ai";
+import { OpenAI } from "llamaindex/llm/openai";
 import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
