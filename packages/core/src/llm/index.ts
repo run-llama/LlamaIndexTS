@@ -6,7 +6,6 @@ export {
   MistralAI,
   MistralAISession,
 } from "./mistral.js";
-export { Ollama, type OllamaParams } from "./ollama.js";
 export * from "./openai.js";
 export { Portkey } from "./portkey.js";
 export * from "./replicate_ai.js";
