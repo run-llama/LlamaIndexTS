@@ -13,6 +13,7 @@ import {
   SummaryIndex,
   VectorStoreIndex,
   type LLM,
+  type ToolOutput,
 } from "llamaindex";
 import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
@@ -222,10 +223,12 @@ await test("agent with object function call", async (t) => {
         ),
       ],
     });
-    const { response } = await agent.chat({
+    const { response, sources } = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
     consola.debug("response:", response.message.content);
+
+    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("72"));
   });
 });
@@ -253,10 +256,12 @@ await test("agent", async (t) => {
         },
       ],
     });
-    const { response } = await agent.chat({
+    const { response, sources } = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
     consola.debug("response:", response.message.content);
+
+    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("35"));
   });
 
@@ -290,9 +295,10 @@ await test("agent", async (t) => {
     const agent = new OpenAIAgent({
       tools: [showUniqueId],
     });
-    const { response } = await agent.chat({
+    const { response, sources } = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
+    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes(uniqueId));
   });
 
@@ -301,10 +307,11 @@ await test("agent", async (t) => {
       tools: [sumNumbersTool],
     });
 
-    const { response } = await openaiAgent.chat({
+    const { response, sources } = await openaiAgent.chat({
       message: "how much is 1 + 1?",
     });
 
+    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("2"));
   });
 });
@@ -319,18 +326,21 @@ await test("agent stream", async (t) => {
       tools: [sumNumbersTool, divideNumbersTool],
     });
 
-    const { response } = await agent.chat({
+    const stream = await agent.chat({
       message: "Divide 16 by 2 then add 20",
       stream: true,
     });
 
     let message = "";
+    let soruces: ToolOutput[] = [];
 
-    for await (const chunk of response) {
-      message += chunk.delta;
+    for await (const { response, sources: _sources } of stream) {
+      message += response.delta;
+      soruces = _sources;
     }
 
     strictEqual(fn.mock.callCount(), 2);
+    strictEqual(soruces.length, 2);
     ok(message.includes("28"));
     Settings.callbackManager.off("llm-tool-call", fn);
   });

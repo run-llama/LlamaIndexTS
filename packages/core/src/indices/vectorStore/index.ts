@@ -37,7 +37,7 @@ import type {
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
 import type { BaseSynthesizer } from "../../synthesizers/types.js";
-import type { BaseQueryEngine } from "../../types.js";
+import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
@@ -284,7 +284,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: MetadataFilters;
     nodePostprocessors?: BaseNodePostprocessor[];
-  }): BaseQueryEngine & RetrieverQueryEngine {
+  }): QueryEngine & RetrieverQueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),

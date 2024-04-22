@@ -22,7 +22,7 @@ export interface QueryEngineParamsNonStreaming extends QueryEngineParamsBase {
 /**
  * A query engine is a question answerer that can use one or more steps.
  */
-export interface BaseQueryEngine {
+export interface QueryEngine {
   /**
    * Query the query engine and get a response.
    * @param params

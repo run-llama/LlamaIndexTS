@@ -12,7 +12,7 @@ import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatMessage, LLM } from "../../llm/index.js";
 import { extractText, streamReducer } from "../../llm/utils.js";
 import { PromptMixin } from "../../prompts/index.js";
-import type { BaseQueryEngine } from "../../types.js";
+import type { QueryEngine } from "../../types.js";
 import type {
   ChatEngine,
   ChatEngineParamsNonStreaming,
@@ -33,13 +33,13 @@ export class CondenseQuestionChatEngine
   extends PromptMixin
   implements ChatEngine
 {
-  queryEngine: BaseQueryEngine;
+  queryEngine: QueryEngine;
   chatHistory: ChatHistory;
   llm: LLM;
   condenseMessagePrompt: CondenseQuestionPrompt;
 
   constructor(init: {
-    queryEngine: BaseQueryEngine;
+    queryEngine: QueryEngine;
     chatHistory: ChatMessage[];
     serviceContext?: ServiceContext;
     condenseMessagePrompt?: CondenseQuestionPrompt;

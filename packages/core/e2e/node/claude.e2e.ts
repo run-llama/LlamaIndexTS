@@ -2,7 +2,7 @@ import { consola } from "consola";
 import { Anthropic, FunctionTool, Settings, type LLM } from "llamaindex";
 import { AnthropicAgent } from "llamaindex/agent/anthropic";
 import { extractText } from "llamaindex/llm/utils";
-import { ok } from "node:assert";
+import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { sumNumbersTool } from "./fixtures/tools.js";
 import { mockLLMEvent } from "./utils.js";
@@ -71,10 +71,12 @@ await test("anthropic agent", async (t) => {
         },
       ],
     });
-    const { response } = await agent.chat({
+    const { response, sources } = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
     consola.debug("response:", response.message.content);
+
+    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("35"));
   });
 
