@@ -371,9 +371,6 @@ importers:
       '@mistralai/mistralai':
         specifier: ^0.1.3
         version: 0.1.3(encoding@0.1.13)
-      '@notionhq/client':
-        specifier: ^2.2.15
-        version: 2.2.15(encoding@0.1.13)
       '@pinecone-database/pinecone':
         specifier: ^2.2.0
         version: 2.2.0
@@ -429,8 +426,8 @@ importers:
         specifier: ^6.5.0
         version: 6.5.0
       notion-md-crawler:
-        specifier: ^0.0.2
-        version: 0.0.2(encoding@0.1.13)
+        specifier: ^1.0.0
+        version: 1.0.0(encoding@0.1.13)
       ollama:
         specifier: ^0.5.0
         version: 0.5.0
@@ -6124,9 +6121,6 @@ packages:
   normalize-url@8.0.1:
     resolution: {integrity: sha512-IO9QvjUMWxPQQhs60oOu10CRkWCiZzSUkzbXGGV9pviYl1fXYcvkzQ5jV9z8Y6un8ARoVRl4EtC6v6jNqbaJ/w==}
     engines: {node: '>=14.16'}
-
-  notion-md-crawler@0.0.2:
-    resolution: {integrity: sha512-lE3/DFMrg7GSbl1sBfDuLVLyxw+yjdarPVm1JGfQ6eONEbNGgO+BdZxpwwZQ1uYeEJurAXMXb/AXT8GKYjKAyg==}
 
   notion-md-crawler@1.0.0:
     resolution: {integrity: sha512-mdB6zn/i32qO2C7X7wZLDpWvFryO3bPYMuBfFgmTPomnfEtIejdQJNVaZzw2GapM82lfWZ5dfsZp3s3UL4p1Fg==}
@@ -15767,13 +15761,6 @@ snapshots:
   normalize-url@6.1.0: {}
 
   normalize-url@8.0.1: {}
-
-  notion-md-crawler@0.0.2(encoding@0.1.13):
-    dependencies:
-      '@notionhq/client': 2.2.15(encoding@0.1.13)
-      md-utils-ts: 2.0.0
-    transitivePeerDependencies:
-      - encoding
 
   notion-md-crawler@1.0.0(encoding@0.1.13):
     dependencies:
