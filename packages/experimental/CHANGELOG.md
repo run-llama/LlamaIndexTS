@@ -1,5 +1,12 @@
 # @llamaindex/experimental
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [cf70edb]
+  - llamaindex@0.2.10
+
 ## 0.0.12
 
 ### Patch Changes

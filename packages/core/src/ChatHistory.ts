@@ -1,7 +1,7 @@
 import { globalsHelper } from "./GlobalsHelper.js";
 import type { SummaryPrompt } from "./Prompt.js";
 import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
-import { OpenAI } from "./llm/open_ai.js";
+import { OpenAI } from "./llm/openai.js";
 import type { ChatMessage, LLM, MessageType } from "./llm/types.js";
 import { extractText } from "./llm/utils.js";
 

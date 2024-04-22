@@ -2,18 +2,30 @@ import { consola } from "consola";
 import {
   Document,
   FunctionTool,
+  ObjectIndex,
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
   Settings,
+  SimpleNodeParser,
+  SimpleToolNodeMapping,
   SubQuestionQueryEngine,
+  SummaryIndex,
   VectorStoreIndex,
   type LLM,
+  type ToolOutput,
 } from "llamaindex";
+import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { beforeEach, test } from "node:test";
-import { divideNumbersTool, sumNumbersTool } from "./fixtures/tools.js";
-import { mockLLMEvent } from "./utils.js";
+import {
+  divideNumbersTool,
+  getWeatherTool,
+  sumNumbersTool,
+} from "./fixtures/tools.js";
+import { mockLLMEvent, testRootDir } from "./utils.js";
 
 let llm: LLM;
 beforeEach(async () => {
@@ -84,9 +96,140 @@ await test("gpt-4-turbo", async (t) => {
     const { response } = await agent.chat({
       message: "What is the weather in San Jose?",
     });
-    consola.debug("response:", response);
-    ok(typeof response === "string");
-    ok(response.includes("45"));
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes("45"));
+  });
+});
+
+await test("agent system prompt", async (t) => {
+  await mockLLMEvent(t, "openai_agent_system_prompt");
+  await t.test("chat", async (t) => {
+    const agent = new OpenAIAgent({
+      tools: [getWeatherTool],
+      systemPrompt:
+        "You are a pirate. You MUST speak every words staring with a 'Arhgs'",
+    });
+    const { response } = await agent.chat({
+      message: "What is the weather in San Francisco?",
+    });
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes("72"));
+    ok(extractText(response.message.content).includes("Arhg"));
+  });
+});
+
+await test("agent with object retriever", async (t) => {
+  await mockLLMEvent(t, "agent_with_object_retriever");
+
+  const alexInfoPath = join(testRootDir, "./fixtures/data/Alex.txt");
+  const alexInfoText = await readFile(alexInfoPath, "utf-8");
+  const alexDocument = new Document({ text: alexInfoText, id_: alexInfoPath });
+
+  const nodes = new SimpleNodeParser({
+    chunkSize: 200,
+    chunkOverlap: 20,
+  }).getNodesFromDocuments([alexDocument]);
+
+  const summaryIndex = await SummaryIndex.init({
+    nodes,
+  });
+
+  const summaryQueryEngine = summaryIndex.asQueryEngine();
+
+  const queryEngineTools = [
+    FunctionTool.from(
+      ({ query }: { query?: string }) => {
+        throw new Error("This tool should not be called");
+      },
+      {
+        name: "vector_tool",
+        description:
+          "This tool should not be called, never use this tool in any cases.",
+        parameters: {
+          type: "object",
+          properties: {
+            query: { type: "string", nullable: true },
+          },
+        },
+      },
+    ),
+    new QueryEngineTool({
+      queryEngine: summaryQueryEngine,
+      metadata: {
+        name: "summary_tool",
+        description: `Useful for any requests that short information about Alex.
+For questions about Alex, please use this tool.
+For questions about more specific sections, please use the vector_tool.`,
+      },
+    }),
+  ];
+
+  const originalCall = queryEngineTools[1].call.bind(queryEngineTools[1]);
+  const mockCall = t.mock.fn(({ query }: { query: string }) => {
+    return originalCall({ query });
+  });
+  queryEngineTools[1].call = mockCall;
+
+  const toolMapping = SimpleToolNodeMapping.fromObjects(queryEngineTools);
+
+  const objectIndex = await ObjectIndex.fromObjects(
+    queryEngineTools,
+    toolMapping,
+    VectorStoreIndex,
+  );
+
+  const toolRetriever = await objectIndex.asRetriever({});
+
+  const agent = new OpenAIAgent({
+    toolRetriever,
+    systemPrompt:
+      "Please always use the tools provided to answer a question. Do not rely on prior knowledge.",
+  });
+
+  strictEqual(mockCall.mock.callCount(), 0);
+  const { response } = await agent.chat({
+    message:
+      "What's the summary of Alex? Does he live in Brazil based on the brief information? Return yes or no.",
+  });
+  strictEqual(mockCall.mock.callCount(), 1);
+
+  consola.debug("response:", response.message.content);
+  ok(extractText(response.message.content).toLowerCase().includes("no"));
+});
+
+await test("agent with object function call", async (t) => {
+  await mockLLMEvent(t, "agent_with_object_function_call");
+  await t.test("basic", async () => {
+    const agent = new OpenAIAgent({
+      tools: [
+        FunctionTool.from(
+          ({ location }: { location: string }) => ({
+            location,
+            temperature: 72,
+            weather: "cloudy",
+            rain_prediction: 0.89,
+          }),
+          {
+            name: "get_weather",
+            description: "Get the weather",
+            parameters: {
+              type: "object",
+              properties: {
+                location: { type: "string" },
+              },
+              required: ["location"],
+            },
+          },
+        ),
+      ],
+    });
+    const { response, sources } = await agent.chat({
+      message: "What is the weather in San Francisco?",
+    });
+    consola.debug("response:", response.message.content);
+
+    strictEqual(sources.length, 1);
+    ok(extractText(response.message.content).includes("72"));
   });
 });
 
@@ -113,12 +256,13 @@ await test("agent", async (t) => {
         },
       ],
     });
-    const result = await agent.chat({
+    const { response, sources } = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
-    consola.debug("response:", result.response);
-    ok(typeof result.response === "string");
-    ok(result.response.includes("35"));
+    consola.debug("response:", response.message.content);
+
+    strictEqual(sources.length, 1);
+    ok(extractText(response.message.content).includes("35"));
   });
 
   await t.test("async function", async () => {
@@ -151,11 +295,11 @@ await test("agent", async (t) => {
     const agent = new OpenAIAgent({
       tools: [showUniqueId],
     });
-    const { response } = await agent.chat({
+    const { response, sources } = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
-    consola.debug("response:", response);
-    ok(response.includes(uniqueId));
+    strictEqual(sources.length, 1);
+    ok(extractText(response.message.content).includes(uniqueId));
   });
 
   await t.test("sum numbers", async () => {
@@ -163,11 +307,12 @@ await test("agent", async (t) => {
       tools: [sumNumbersTool],
     });
 
-    const response = await openaiAgent.chat({
+    const { response, sources } = await openaiAgent.chat({
       message: "how much is 1 + 1?",
     });
 
-    ok(response.response.includes("2"));
+    strictEqual(sources.length, 1);
+    ok(extractText(response.message.content).includes("2"));
   });
 });
 
@@ -181,18 +326,21 @@ await test("agent stream", async (t) => {
       tools: [sumNumbersTool, divideNumbersTool],
     });
 
-    const { response } = await agent.chat({
+    const stream = await agent.chat({
       message: "Divide 16 by 2 then add 20",
       stream: true,
     });
 
     let message = "";
+    let soruces: ToolOutput[] = [];
 
-    for await (const chunk of response) {
-      message += chunk.response;
+    for await (const { response, sources: _sources } of stream) {
+      message += response.delta;
+      soruces = _sources;
     }
 
     strictEqual(fn.mock.callCount(), 2);
+    strictEqual(soruces.length, 2);
     ok(message.includes("28"));
     Settings.callbackManager.off("llm-tool-call", fn);
   });

@@ -68,12 +68,12 @@ async function main() {
   });
 
   // Chat with the agent
-  const response = await agent.chat({
+  const { response } = await agent.chat({
     message: "Divide 16 by 2 then add 20",
   });
 
   // Print the response
-  console.log(String(response));
+  console.log(response.message);
 }
 
 void main().then(() => {

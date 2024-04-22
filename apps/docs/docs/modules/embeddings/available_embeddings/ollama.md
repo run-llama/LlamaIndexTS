@@ -1,11 +1,19 @@
 # Ollama
 
-To use Ollama embeddings, you need to import `Ollama` from `llamaindex`.
+To use Ollama embeddings, you need to import `OllamaEmbedding` from `llamaindex`.
+
+Note that you need to pull the embedding model first before using it.
+
+In the example below, we're using the [`nomic-embed-text`](https://ollama.com/library/nomic-embed-text) model, so you have to call:
+
+```shell
+ollama pull nomic-embed-text
+```
 
 ```ts
-import { Ollama, Settings } from "llamaindex";
+import { OllamaEmbedding, Settings } from "llamaindex";
 
-Settings.embedModel = new Ollama();
+Settings.embedModel = new OllamaEmbedding({ model: "nomic-embed-text" });
 
 const document = new Document({ text: essay, id_: "essay" });
 

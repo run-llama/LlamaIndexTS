@@ -1,5 +1,5 @@
 import type { JSONSchemaType } from "ajv";
-import type { BaseQueryEngine, BaseTool, ToolMetadata } from "../types.js";
+import type { BaseTool, QueryEngine, ToolMetadata } from "../types.js";
 
 const DEFAULT_NAME = "query_engine_tool";
 const DEFAULT_DESCRIPTION =
@@ -17,7 +17,7 @@ const DEFAULT_PARAMETERS: JSONSchemaType<QueryEngineParam> = {
 };
 
 export type QueryEngineToolParams = {
-  queryEngine: BaseQueryEngine;
+  queryEngine: QueryEngine;
   metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
 };
 
@@ -26,7 +26,7 @@ export type QueryEngineParam = {
 };
 
 export class QueryEngineTool implements BaseTool<QueryEngineParam> {
-  private queryEngine: BaseQueryEngine;
+  private queryEngine: QueryEngine;
   metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
 
   constructor({ queryEngine, metadata }: QueryEngineToolParams) {

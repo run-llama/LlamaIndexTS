@@ -3,7 +3,6 @@ import type { NodeWithScore } from "../../Node.js";
 import type { Response } from "../../Response.js";
 import type { ChatMessage } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
-import type { ToolOutput } from "../../tools/types.js";
 
 /**
  * Represents the base parameters for ChatEngine.
@@ -24,21 +23,21 @@ export interface ChatEngineParamsNonStreaming extends ChatEngineParamsBase {
   stream?: false | null;
 }
 
-export interface ChatEngineAgentParams extends ChatEngineParamsBase {
-  toolChoice?: string | Record<string, any>;
-  stream?: boolean;
-}
-
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
  */
-export interface ChatEngine {
+export interface ChatEngine<
+  // synchronous response
+  R = Response,
+  // asynchronous response
+  AR extends AsyncIterable<unknown> = AsyncIterable<R>,
+> {
   /**
    * Send message along with the class's current chat history to the LLM.
    * @param params
    */
-  chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  chat(params: ChatEngineParamsStreaming): Promise<AR>;
+  chat(params: ChatEngineParamsNonStreaming): Promise<R>;
 
   /**
    * Resets the chat history so that it's empty.
@@ -56,50 +55,4 @@ export interface Context {
  */
 export interface ContextGenerator {
   generate(message: string): Promise<Context>;
-}
-
-export enum ChatResponseMode {
-  WAIT = "wait",
-  STREAM = "stream",
-}
-
-export class AgentChatResponse {
-  response: string;
-  sources: ToolOutput[];
-  sourceNodes?: NodeWithScore[];
-
-  constructor(
-    response: string,
-    sources?: ToolOutput[],
-    sourceNodes?: NodeWithScore[],
-  ) {
-    this.response = response;
-    this.sources = sources || [];
-    this.sourceNodes = sourceNodes || [];
-  }
-
-  protected _getFormattedSources() {
-    throw new Error("Not implemented yet");
-  }
-
-  toString() {
-    return this.response ?? "";
-  }
-}
-
-export class StreamingAgentChatResponse {
-  response: AsyncIterable<Response>;
-
-  sources: ToolOutput[];
-  sourceNodes?: NodeWithScore[];
-
-  constructor(
-    response: AsyncIterable<Response>,
-    sources?: ToolOutput[],
-    sourceNodes?: NodeWithScore[],
-  ) {
-    this.response = response;
-    this.sources = sources ?? [];
-    this.sourceNodes = sourceNodes ?? [];
-  }
 }

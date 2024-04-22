@@ -1,24 +1,23 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
-import type { BaseTool, UUID } from "../types.js";
+import type { BaseEvent } from "../internal/type.js";
+import type { BaseTool, JSONObject, ToolOutput, UUID } from "../types.js";
 
-type LLMBaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{
-  payload: Payload;
-}>;
-
-export type LLMStartEvent = LLMBaseEvent<{
+export type LLMStartEvent = BaseEvent<{
   id: UUID;
   messages: ChatMessage[];
 }>;
-export type LLMToolCallEvent = LLMBaseEvent<{
-  // fixme: id is missing in the context
-  // id: UUID;
-  toolCall: Omit<ToolCallOptions["toolCall"], "id">;
+export type LLMToolCallEvent = BaseEvent<{
+  toolCall: ToolCall;
 }>;
-export type LLMEndEvent = LLMBaseEvent<{
+export type LLMToolResultEvent = BaseEvent<{
+  toolCall: ToolCall;
+  toolResult: ToolOutput;
+}>;
+export type LLMEndEvent = BaseEvent<{
   id: UUID;
   response: ChatResponse;
 }>;
-export type LLMStreamEvent = LLMBaseEvent<{
+export type LLMStreamEvent = BaseEvent<{
   id: UUID;
   chunk: ChatResponseChunk;
 }>;
@@ -76,6 +75,13 @@ export interface LLM<
 }
 
 export type MessageType = "user" | "assistant" | "system" | "memory";
+
+export type TextChatMessage<AdditionalMessageOptions extends object = object> =
+  {
+    content: string;
+    role: MessageType;
+    options?: undefined | AdditionalMessageOptions;
+  };
 
 export type ChatMessage<AdditionalMessageOptions extends object = object> = {
   content: MessageContent;
@@ -179,9 +185,7 @@ export type MessageContent = string | MessageContentDetail[];
 
 export type ToolCall = {
   name: string;
-  // for now, claude-3-opus will give object, gpt-3/4 will give string
-  // todo: unify this to always be an object
-  input: unknown;
+  input: JSONObject;
   id: string;
 };
 

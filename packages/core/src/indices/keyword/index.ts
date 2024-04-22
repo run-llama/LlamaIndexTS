@@ -17,7 +17,7 @@ import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
-import type { BaseQueryEngine } from "../../types.js";
+import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex, KeywordTable } from "../BaseIndex.js";
 import { IndexStructType } from "../json-to-index-struct.js";
@@ -234,7 +234,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
-  }): BaseQueryEngine {
+  }): QueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),

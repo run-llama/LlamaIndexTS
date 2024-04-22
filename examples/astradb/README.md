@@ -13,7 +13,7 @@ Here are two sample scripts which work well with the sample data in the Astra Po
 1. Set your env variables:
 
 - `ASTRA_DB_APPLICATION_TOKEN`: The generated app token for your Astra database
-- `ASTRA_DB_ENDPOINT`: The API endpoint for your Astra database
+- `ASTRA_DB_API_ENDPOINT`: The API endpoint for your Astra database
 - `ASTRA_DB_NAMESPACE`: (Optional) The namespace where your collection is stored defaults to `default_keyspace`
 - `OPENAI_API_KEY`: Your OpenAI key
 

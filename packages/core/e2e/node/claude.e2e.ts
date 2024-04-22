@@ -1,7 +1,8 @@
 import { consola } from "consola";
 import { Anthropic, FunctionTool, Settings, type LLM } from "llamaindex";
 import { AnthropicAgent } from "llamaindex/agent/anthropic";
-import { ok } from "node:assert";
+import { extractText } from "llamaindex/llm/utils";
+import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { sumNumbersTool } from "./fixtures/tools.js";
 import { mockLLMEvent } from "./utils.js";
@@ -70,12 +71,13 @@ await test("anthropic agent", async (t) => {
         },
       ],
     });
-    const result = await agent.chat({
+    const { response, sources } = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
-    consola.debug("response:", result.response);
-    ok(typeof result.response === "string");
-    ok(result.response.includes("35"));
+    consola.debug("response:", response.message.content);
+
+    strictEqual(sources.length, 1);
+    ok(extractText(response.message.content).includes("35"));
   });
 
   await t.test("async function", async () => {
@@ -111,8 +113,8 @@ await test("anthropic agent", async (t) => {
     const { response } = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
-    consola.debug("response:", response);
-    ok(response.includes(uniqueId));
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes(uniqueId));
   });
 
   await t.test("sum numbers", async () => {
@@ -120,10 +122,10 @@ await test("anthropic agent", async (t) => {
       tools: [sumNumbersTool],
     });
 
-    const response = await openaiAgent.chat({
+    const { response } = await openaiAgent.chat({
       message: "how much is 1 + 1?",
     });
 
-    ok(response.response.includes("2"));
+    ok(extractText(response.message.content).includes("2"));
   });
 });

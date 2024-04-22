@@ -22,7 +22,7 @@ export interface QueryEngineParamsNonStreaming extends QueryEngineParamsBase {
 /**
  * A query engine is a question answerer that can use one or more steps.
  */
-export interface BaseQueryEngine {
+export interface QueryEngine {
   /**
    * Query the query engine and get a response.
    * @param params
@@ -60,9 +60,9 @@ export interface BaseTool<Input = any> {
    * This could be undefined if the implementation is not provided,
    *  which might be the case when communicating with a llm.
    *
-   * @return string - the output of the tool, should be string in any case for LLM input.
+   * @return {JSONValue | Promise<JSONValue>} The output of the tool.
    */
-  call?: (input: Input) => string | Promise<string>;
+  call?: (input: Input) => JSONValue | Promise<JSONValue>;
   metadata: // if user input any, we cannot check the schema
   Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
@@ -103,3 +103,19 @@ export class QueryBundle {
 }
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
+
+export type JSONValue = string | number | boolean | JSONObject | JSONArray;
+
+export type JSONObject = {
+  [key: string]: JSONValue;
+};
+
+type JSONArray = Array<JSONValue>;
+
+export type ToolOutput = {
+  tool: BaseTool | undefined;
+  // all of existing function calling LLMs only support object input
+  input: JSONObject;
+  output: JSONValue;
+  isError: boolean;
+};

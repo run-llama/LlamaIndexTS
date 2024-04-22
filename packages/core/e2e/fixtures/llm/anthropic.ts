@@ -1,3 +1,3 @@
-import { OpenAI } from "./open_ai.js";
+import { OpenAI } from "./openai.js";
 
 export class Anthropic extends OpenAI {}

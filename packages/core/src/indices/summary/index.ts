@@ -23,7 +23,7 @@ import {
   CompactAndRefine,
   ResponseSynthesizer,
 } from "../../synthesizers/index.js";
-import type { BaseQueryEngine } from "../../types.js";
+import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexList, IndexStructType } from "../json-to-index-struct.js";
@@ -171,7 +171,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
-  }): BaseQueryEngine & RetrieverQueryEngine {
+  }): QueryEngine & RetrieverQueryEngine {
     let { retriever, responseSynthesizer } = options ?? {};
 
     if (!retriever) {

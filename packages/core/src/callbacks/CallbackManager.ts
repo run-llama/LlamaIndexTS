@@ -1,6 +1,7 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
 import { CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
+import type { AgentEndEvent, AgentStartEvent } from "../agent/type.js";
 import {
   EventCaller,
   getEventCaller,
@@ -10,6 +11,7 @@ import type {
   LLMStartEvent,
   LLMStreamEvent,
   LLMToolCallEvent,
+  LLMToolResultEvent,
 } from "../llm/types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
@@ -47,10 +49,15 @@ export interface LlamaIndexEventMaps {
    * @deprecated
    */
   stream: CustomEvent<StreamCallbackResponse>;
+  // llm events
   "llm-start": LLMStartEvent;
   "llm-end": LLMEndEvent;
   "llm-tool-call": LLMToolCallEvent;
+  "llm-tool-result": LLMToolResultEvent;
   "llm-stream": LLMStreamEvent;
+  // agent events
+  "agent-start": AgentStartEvent;
+  "agent-end": AgentEndEvent;
 }
 
 //#region @deprecated remove in the next major version
@@ -205,9 +212,10 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
+    const clone = structuredClone(detail);
     queueMicrotask(() => {
       handlers.forEach((handler) =>
-        handler(LlamaIndexCustomEvent.fromEvent(event, detail)),
+        handler(LlamaIndexCustomEvent.fromEvent(event, clone)),
       );
     });
   }

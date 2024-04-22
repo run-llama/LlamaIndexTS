@@ -1,0 +1,63 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are designed to help with a variety of tasks, from answering questions to providing summaries to other types of analyses.\n\n## Tools\nYou have access to a wide variety of tools. You are responsible for using\nthe tools in any sequence you deem appropriate to complete the task at hand.\nThis may require breaking the task into subtasks and using different tools\nto complete each subtask.\n\nYou have access to the following tools:\n- getWeather: Get the weather for a city with schema: {\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\",\"description\":\"The city to get the weather for\"}},\"required\":[\"city\"]}\n\n## Output Format\nTo answer the question, please use the following format.\n\n\"\"\"\nThought: I need to use a tool to help me answer the question.\nAction: tool name (one of getWeather) if using a tool.\nAction Input: the input to the tool, in a JSON format representing the kwargs (e.g. {{\"input\": \"hello world\", \"num_beams\": 5}})\n\"\"\"\n\nPlease ALWAYS start with a Thought.\n\nPlease use a valid JSON format for the Action Input. Do NOT do this {{'input': 'hello world', 'num_beams': 5}}.\n\nIf this format is used, the user will respond in the following format:\n\n\"\"\"\"\nObservation: tool response\n\"\"\"\"\n\nYou should keep repeating the above format until you have enough information\nto answer the question without using any more tools. At that point, you MUST respond\nin the one of the following two formats:\n\n\"\"\"\"\nThought: I can answer without using any more tools.\nAnswer: [your answer here]\n\"\"\"\"\n\n\"\"\"\"\nThought: I cannot answer the question with the provided tools.\nAnswer: Sorry, I cannot answer your query.\n\"\"\"\"\n\n## Current Conversation\nBelow is the current conversation consisting of interleaving human and assistant messages."
+        },
+        {
+          "role": "user",
+          "content": "What is the weather like in San Francisco?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are designed to help with a variety of tasks, from answering questions to providing summaries to other types of analyses.\n\n## Tools\nYou have access to a wide variety of tools. You are responsible for using\nthe tools in any sequence you deem appropriate to complete the task at hand.\nThis may require breaking the task into subtasks and using different tools\nto complete each subtask.\n\nYou have access to the following tools:\n- getWeather: Get the weather for a city with schema: {\"type\":\"object\",\"properties\":{\"city\":{\"type\":\"string\",\"description\":\"The city to get the weather for\"}},\"required\":[\"city\"]}\n\n## Output Format\nTo answer the question, please use the following format.\n\n\"\"\"\nThought: I need to use a tool to help me answer the question.\nAction: tool name (one of getWeather) if using a tool.\nAction Input: the input to the tool, in a JSON format representing the kwargs (e.g. {{\"input\": \"hello world\", \"num_beams\": 5}})\n\"\"\"\n\nPlease ALWAYS start with a Thought.\n\nPlease use a valid JSON format for the Action Input. Do NOT do this {{'input': 'hello world', 'num_beams': 5}}.\n\nIf this format is used, the user will respond in the following format:\n\n\"\"\"\"\nObservation: tool response\n\"\"\"\"\n\nYou should keep repeating the above format until you have enough information\nto answer the question without using any more tools. At that point, you MUST respond\nin the one of the following two formats:\n\n\"\"\"\"\nThought: I can answer without using any more tools.\nAnswer: [your answer here]\n\"\"\"\"\n\n\"\"\"\"\nThought: I cannot answer the question with the provided tools.\nAnswer: Sorry, I cannot answer your query.\n\"\"\"\"\n\n## Current Conversation\nBelow is the current conversation consisting of interleaving human and assistant messages."
+        },
+        {
+          "role": "user",
+          "content": "What is the weather like in San Francisco?"
+        },
+        {
+          "role": "assistant",
+          "content": "Thought: I need to use a tool to help me answer the question.\nAction: getWeather\nInput: {\n  city: San Francisco\n}"
+        },
+        {
+          "role": "user",
+          "content": "Observation: The weather in San Francisco is 72 degrees"
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Thought: I need to use a tool to help me answer the question.\nAction: getWeather\nAction Input: {\"city\": \"San Francisco\"}",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Thought: I can answer without using any more tools.\nAnswer: The weather in San Francisco is 72 degrees.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

@@ -5,7 +5,7 @@ import { Response } from "llamaindex";
 import { serviceContextFromDefaults, type ServiceContext } from "llamaindex";
 
 import type {
-  BaseQueryEngine,
+  QueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
 } from "llamaindex";
@@ -89,7 +89,7 @@ type OutputProcessor = typeof defaultOutputProcessor;
 /**
  * A JSON query engine that uses JSONPath to query a JSON object.
  */
-export class JSONQueryEngine implements BaseQueryEngine {
+export class JSONQueryEngine implements QueryEngine {
   jsonValue: JSONSchemaType;
   jsonSchema: JSONSchemaType;
   serviceContext: ServiceContext;

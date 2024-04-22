@@ -1,13 +1,14 @@
-type ReactChatSystemHeaderParams = {
-  toolDesc: string;
-  toolNames: string;
-};
+import type { BaseTool } from "../../types.js";
 
-export const getReactChatSystemHeader = ({
-  toolDesc,
-  toolNames,
-}: ReactChatSystemHeaderParams) =>
-  `You are designed to help with a variety of tasks, from answering questions to providing summaries to other types of analyses.
+export const getReACTAgentSystemHeader = (tools: BaseTool[]) => {
+  const description = tools
+    .map(
+      (tool) =>
+        `- ${tool.metadata.name}: ${tool.metadata.description} with schema: ${JSON.stringify(tool.metadata.parameters)}`,
+    )
+    .join("\n");
+  const names = tools.map((tool) => tool.metadata.name).join(", ");
+  return `You are designed to help with a variety of tasks, from answering questions to providing summaries to other types of analyses.
 
 ## Tools
 You have access to a wide variety of tools. You are responsible for using
@@ -16,14 +17,14 @@ This may require breaking the task into subtasks and using different tools
 to complete each subtask.
 
 You have access to the following tools:
-${toolDesc}
+${description}
 
 ## Output Format
 To answer the question, please use the following format.
 
 """
 Thought: I need to use a tool to help me answer the question.
-Action: tool name (one of ${toolNames}) if using a tool.
+Action: tool name (one of ${names}) if using a tool.
 Action Input: the input to the tool, in a JSON format representing the kwargs (e.g. {{"input": "hello world", "num_beams": 5}})
 """
 
@@ -52,5 +53,5 @@ Answer: Sorry, I cannot answer your query.
 """"
 
 ## Current Conversation
-Below is the current conversation consisting of interleaving human and assistant messages.
-`;
+Below is the current conversation consisting of interleaving human and assistant messages.`;
+};
