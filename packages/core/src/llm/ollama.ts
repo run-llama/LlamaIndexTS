@@ -5,7 +5,7 @@ import ollama, {
   type Options,
   type ProgressResponse,
   type ShowRequest,
-} from "ollama";
+} from "ollama/browser";
 import { BaseEmbedding } from "../embeddings/types.js";
 import type {
   ChatResponse,
