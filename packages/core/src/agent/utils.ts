@@ -6,7 +6,7 @@ import type {
   TextChatMessage,
   ToolCall,
 } from "../llm/index.js";
-import type { BaseTool, JSONValue, ToolOutput } from '../types.js'
+import type { BaseTool, JSONValue, ToolOutput } from "../types.js";
 
 export async function callTool(
   tool: BaseTool | undefined,
