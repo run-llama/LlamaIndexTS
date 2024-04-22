@@ -19,7 +19,7 @@ export class ImageReader implements FileReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file);
+    const dataBuffer = await fs.readRawFile(file);
     const blob = new Blob([dataBuffer]);
     return [new ImageDocument({ image: blob, id_: file })];
   }
