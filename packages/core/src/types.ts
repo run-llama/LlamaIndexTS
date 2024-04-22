@@ -60,9 +60,9 @@ export interface BaseTool<Input = any> {
    * This could be undefined if the implementation is not provided,
    *  which might be the case when communicating with a llm.
    *
-   * @return string - the output of the tool, should be string in any case for LLM input.
+   * @return {JSONValue | Promise<JSONValue>} The output of the tool.
    */
-  call?: (input: Input) => string | Promise<string>;
+  call?: (input: Input) => JSONValue | Promise<JSONValue>;
   metadata: // if user input any, we cannot check the schema
   Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
