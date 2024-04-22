@@ -9,8 +9,8 @@ export {
   type OpenAIAgentParams,
 } from "./openai.js";
 export {
-  ReACTAgent,
   ReACTAgentWorker,
+  ReActAgent,
   type ReACTAgentParams,
 } from "./react.js";
 // todo: ParallelAgent
