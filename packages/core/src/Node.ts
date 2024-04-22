@@ -326,16 +326,6 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
     const absPath = path.resolve(this.id_);
     return new URL(`file://${absPath}`);
   }
-}
-
-export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
-  constructor(init: ImageNodeConstructorProps<T>) {
-    super(init);
-
-    if (new.target === ImageDocument) {
-      this.hash = init?.hash ?? this.generateHash();
-    }
-  }
 
   generateHash() {
     const hashFunction = createSHA256();
@@ -345,6 +335,16 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
     );
     hashFunction.update(this.id_);
     return hashFunction.digest();
+  }
+}
+
+export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
+  constructor(init: ImageNodeConstructorProps<T>) {
+    super(init);
+
+    if (new.target === ImageDocument) {
+      this.hash = init?.hash ?? this.generateHash();
+    }
   }
 
   getType() {
