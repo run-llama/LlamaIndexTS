@@ -1,6 +1,6 @@
 import { CallbackManager } from "./callbacks/CallbackManager.js";
 import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
-import { OpenAI } from "./llm/open_ai.js";
+import { OpenAI } from "./llm/openai.js";
 
 import { PromptHelper } from "./PromptHelper.js";
 import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
