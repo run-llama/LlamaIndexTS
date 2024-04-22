@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import { OpenAI } from "./open_ai.js";
+import { OpenAI } from "./openai.js";
 
 export class Groq extends OpenAI {
   constructor(init?: Partial<OpenAI>) {

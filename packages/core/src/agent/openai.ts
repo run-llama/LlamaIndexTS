@@ -6,7 +6,7 @@ import type {
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "../llm/index.js";
-import { OpenAI } from "../llm/open_ai.js";
+import { OpenAI } from "../llm/openai.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
 import {

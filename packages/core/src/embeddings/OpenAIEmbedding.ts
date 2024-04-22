@@ -6,8 +6,8 @@ import {
   getAzureModel,
   shouldUseAzure,
 } from "../llm/azure.js";
-import type { OpenAISession } from "../llm/open_ai.js";
-import { getOpenAISession } from "../llm/open_ai.js";
+import type { OpenAISession } from "../llm/openai.js";
+import { getOpenAISession } from "../llm/openai.js";
 import { BaseEmbedding } from "./types.js";
 
 export const ALL_OPENAI_EMBEDDING_MODELS = {
