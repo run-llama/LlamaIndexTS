@@ -1,7 +1,7 @@
 import { Ollama } from "llamaindex/llm/ollama";
 
 (async () => {
-  const llm = new Ollama({ model: "llama2", temperature: 0.75 });
+  const llm = new Ollama({ model: "llama3" });
   {
     const response = await llm.chat({
       messages: [{ content: "Tell me a joke.", role: "user" }],
