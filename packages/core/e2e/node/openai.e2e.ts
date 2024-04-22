@@ -196,6 +196,40 @@ For questions about more specific sections, please use the vector_tool.`,
   ok(extractText(response.message.content).toLowerCase().includes("no"));
 });
 
+await test("agent with object function call", async (t) => {
+  await mockLLMEvent(t, "agent_with_object_function_call");
+  await t.test("basic", async () => {
+    const agent = new OpenAIAgent({
+      tools: [
+        FunctionTool.from(
+          ({ location }: { location: string }) => ({
+            location,
+            temperature: 72,
+            weather: "cloudy",
+            rain_prediction: 0.89,
+          }),
+          {
+            name: "get_weather",
+            description: "Get the weather",
+            parameters: {
+              type: "object",
+              properties: {
+                location: { type: "string" },
+              },
+              required: ["location"],
+            },
+          },
+        ),
+      ],
+    });
+    const { response } = await agent.chat({
+      message: "What is the weather in San Francisco?",
+    });
+    consola.debug("response:", response.message.content);
+    ok(extractText(response.message.content).includes("72"));
+  });
+});
+
 await test("agent", async (t) => {
   await mockLLMEvent(t, "agent");
   await t.test("chat", async () => {

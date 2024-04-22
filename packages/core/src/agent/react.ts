@@ -1,7 +1,10 @@
 import { pipeline, randomUUID } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
-import { isAsyncIterable } from "../internal/utils.js";
+import {
+  isAsyncIterable,
+  stringifyJSONToMessageContent,
+} from "../internal/utils.js";
 import {
   type ChatMessage,
   type ChatResponse,
@@ -10,7 +13,12 @@ import {
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
-import type { BaseTool, BaseToolWithCall } from "../types.js";
+import type {
+  BaseTool,
+  BaseToolWithCall,
+  JSONObject,
+  JSONValue,
+} from "../types.js";
 import {
   AgentRunner,
   AgentWorker,
@@ -43,14 +51,14 @@ type BaseReason = {
 
 type ObservationReason = BaseReason & {
   type: "observation";
-  observation: string;
+  observation: JSONValue;
 };
 
 type ActionReason = BaseReason & {
   type: "action";
   thought: string;
   action: string;
-  input: Record<string, unknown>;
+  input: JSONObject;
 };
 
 type ResponseReason = BaseReason & {
@@ -64,9 +72,9 @@ type Reason = ObservationReason | ActionReason | ResponseReason;
 function reasonFormatter(reason: Reason): string | Promise<string> {
   switch (reason.type) {
     case "observation":
-      return `Observation: ${reason.observation}`;
+      return `Observation: ${stringifyJSONToMessageContent(reason.observation)}`;
     case "action":
-      return `Thought: ${reason.thought}\nAction: ${reason.action}\nInput: ${JSON.stringify(
+      return `Thought: ${reason.thought}\nAction: ${reason.action}\nInput: ${stringifyJSONToMessageContent(
         reason.input,
       )}`;
     case "response": {
@@ -133,7 +141,7 @@ function extractToolUse(
   return [thought, action, actionInput];
 }
 
-function actionInputParser(jsonStr: string): Record<string, unknown> {
+function actionInputParser(jsonStr: string): JSONObject {
   const processedString = jsonStr.replace(/(?<!\w)'|'(?!\w)/g, '"');
   const pattern = /"(\w+)":\s*"([^"]*)"/g;
   const matches = [...processedString.matchAll(pattern)];
@@ -172,7 +180,7 @@ const reACTOutputParser: ReACTOutputParser = async (
         const { content } = response;
         const [thought, action, input] = extractToolUse(content);
         const jsonStr = extractJsonStr(input);
-        let json: Record<string, unknown>;
+        let json: JSONObject;
         try {
           json = JSON.parse(jsonStr);
         } catch (e) {
@@ -230,7 +238,7 @@ const reACTOutputParser: ReACTOutputParser = async (
       case "action": {
         const [thought, action, input] = extractToolUse(content);
         const jsonStr = extractJsonStr(input);
-        let json: Record<string, unknown>;
+        let json: JSONObject;
         try {
           json = JSON.parse(jsonStr);
         } catch (e) {
