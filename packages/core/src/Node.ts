@@ -334,6 +334,16 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
     );
     hashFunction.update(this.id_);
+
+    if (this.image instanceof Blob) {
+      // Absolute path is always unique for a file
+      hashFunction.update(path.resolve(this.id_));
+    } else if (typeof this.image === "string") {
+      hashFunction.update(this.image);
+    } else {
+      hashFunction.update(this.image.toString());
+    }
+
     return hashFunction.digest();
   }
 }
