@@ -1,6 +1,6 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
 import type { BaseEvent } from "../internal/type.js";
-import type { BaseTool, ToolOutput, UUID } from "../types.js";
+import type { BaseTool, JSONObject, ToolOutput, UUID } from "../types.js";
 
 export type LLMStartEvent = BaseEvent<{
   id: UUID;
@@ -185,9 +185,7 @@ export type MessageContent = string | MessageContentDetail[];
 
 export type ToolCall = {
   name: string;
-  // for now, claude-3-opus will give object, gpt-3/4 will give string
-  // todo: unify this to always be an object
-  input: unknown;
+  input: JSONObject;
   id: string;
 };
 

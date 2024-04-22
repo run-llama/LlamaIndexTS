@@ -1,7 +1,7 @@
 import type { JSONSchemaType } from "ajv";
-import type { BaseTool, ToolMetadata } from "../types.js";
+import type { BaseTool, JSONValue, ToolMetadata } from "../types.js";
 
-export class FunctionTool<T, R extends string | Promise<string>>
+export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
   implements BaseTool<T>
 {
   constructor(
@@ -10,10 +10,10 @@ export class FunctionTool<T, R extends string | Promise<string>>
   ) {}
 
   static from<T>(
-    fn: (input: T) => string | Promise<string>,
+    fn: (input: T) => JSONValue | Promise<JSONValue>,
     schema: ToolMetadata<JSONSchemaType<T>>,
-  ): FunctionTool<T, string | Promise<string>>;
-  static from<T, R extends string | Promise<string>>(
+  ): FunctionTool<T, JSONValue | Promise<JSONValue>>;
+  static from<T, R extends JSONValue | Promise<JSONValue>>(
     fn: (input: T) => R,
     schema: ToolMetadata<JSONSchemaType<T>>,
   ): FunctionTool<T, R> {

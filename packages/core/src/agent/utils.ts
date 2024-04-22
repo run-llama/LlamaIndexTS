@@ -6,7 +6,7 @@ import type {
   TextChatMessage,
   ToolCall,
 } from "../llm/index.js";
-import type { BaseTool, ToolOutput } from "../types.js";
+import type { BaseTool, JSONValue, ToolOutput } from "../types.js";
 
 export async function callTool(
   tool: BaseTool | undefined,
@@ -22,7 +22,7 @@ export async function callTool(
     };
   }
   const call = tool.call;
-  let output: string;
+  let output: JSONValue;
   if (!call) {
     output = `Tool ${tool.metadata.name} (remote:${toolCall.name}) does not have a implementation.`;
     return {

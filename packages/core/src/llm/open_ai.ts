@@ -38,8 +38,8 @@ import type {
   LLMChatParamsStreaming,
   LLMMetadata,
   MessageType,
+  ToolCall,
   ToolCallLLMMessageOptions,
-  ToolCallOptions,
 } from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
@@ -394,23 +394,45 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     // TODO: add callback to streamConverter and use streamConverter here
     //Indices
     let idxCounter: number = 0;
-    let toolCallOptions: ToolCallOptions | null = null;
+    // this will be used to keep track of the current tool call, make sure input are valid json object.
+    let currentToolCall:
+      | (Omit<ToolCall, "input"> & {
+          input: string;
+        })
+      | null = null;
+    const toolCallMap = new Map<
+      string,
+      Omit<ToolCall, "input"> & {
+        input: string;
+      }
+    >();
     for await (const part of stream) {
-      if (!part.choices.length) continue;
+      if (part.choices.length === 0) continue;
       const choice = part.choices[0];
       // skip parts that don't have any content
       if (!(choice.delta.content || choice.delta.tool_calls)) continue;
-      if (choice.delta.tool_calls?.[0].id) {
-        toolCallOptions = {
-          toolCall: {
-            name: choice.delta.tool_calls[0].function!.name!,
-            id: choice.delta.tool_calls[0].id,
-            input: choice.delta.tool_calls[0].function!.arguments!,
-          },
+
+      let shouldEmitToolCall: ToolCall | null = null;
+      if (
+        choice.delta.tool_calls?.[0].id &&
+        currentToolCall &&
+        choice.delta.tool_calls?.[0].id !== currentToolCall.id
+      ) {
+        shouldEmitToolCall = {
+          ...currentToolCall,
+          input: JSON.parse(currentToolCall.input),
         };
+      }
+      if (choice.delta.tool_calls?.[0].id) {
+        currentToolCall = {
+          name: choice.delta.tool_calls[0].function!.name!,
+          id: choice.delta.tool_calls[0].id,
+          input: choice.delta.tool_calls[0].function!.arguments!,
+        };
+        toolCallMap.set(choice.delta.tool_calls[0].id, currentToolCall);
       } else {
         if (choice.delta.tool_calls?.[0].function?.arguments) {
-          toolCallOptions!.toolCall.input +=
+          currentToolCall!.input +=
             choice.delta.tool_calls[0].function.arguments;
         }
       }
@@ -423,12 +445,21 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         token: part,
       });
 
+      if (isDone && currentToolCall) {
+        // for the last one, we need to emit the tool call
+        shouldEmitToolCall = {
+          ...currentToolCall,
+          input: JSON.parse(currentToolCall.input),
+        };
+      }
+
       yield {
         raw: part,
-        options: toolCallOptions ? toolCallOptions : {},
+        options: shouldEmitToolCall ? shouldEmitToolCall : {},
         delta: choice.delta.content ?? "",
       };
     }
+    toolCallMap.clear();
     return;
   }
 
