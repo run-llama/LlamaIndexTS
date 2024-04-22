@@ -81,5 +81,17 @@
     "update:deps": "node scripts/update-deps.js",
     "build:core": "pnpm --filter llamaindex build && cp -r ../core/dist . && rm -rf dist/cjs",
     "build": "pnpm run update:deps && pnpm run build:core && pnpm copy"
+  },
+  "devDependencies": {
+    "@notionhq/client": "^2.2.15",
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.4.16",
+    "concurrently": "^8.2.2",
+    "glob": "^10.3.12",
+    "madge": "^7.0.0",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "@notionhq/client": "^2.2.15"
   }
 }

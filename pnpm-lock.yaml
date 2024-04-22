@@ -464,6 +464,28 @@ importers:
       wink-nlp:
         specifier: ^1.14.3
         version: 1.14.3
+    devDependencies:
+      '@notionhq/client':
+        specifier: ^2.2.15
+        version: 2.2.15(encoding@0.1.13)
+      '@swc/cli':
+        specifier: ^0.3.12
+        version: 0.3.12(@swc/core@1.4.16(@swc/helpers@0.5.2))(chokidar@3.6.0)
+      '@swc/core':
+        specifier: ^1.4.16
+        version: 1.4.16(@swc/helpers@0.5.2)
+      concurrently:
+        specifier: ^8.2.2
+        version: 8.2.2
+      glob:
+        specifier: ^10.3.12
+        version: 10.3.12
+      madge:
+        specifier: ^7.0.0
+        version: 7.0.0(typescript@5.4.5)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
 
   packages/edge/e2e/test-edge-runtime:
     dependencies:
