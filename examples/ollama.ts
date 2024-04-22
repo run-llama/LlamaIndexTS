@@ -1,7 +1,9 @@
+import { OllamaEmbedding } from "llamaindex";
 import { Ollama } from "llamaindex/llm/ollama";
 
 (async () => {
   const llm = new Ollama({ model: "llama3" });
+  const embedModel = new OllamaEmbedding({ model: "nomic-embed-text" });
   {
     const response = await llm.chat({
       messages: [{ content: "Tell me a joke.", role: "user" }],
@@ -35,7 +37,7 @@ import { Ollama } from "llamaindex/llm/ollama";
     console.log(); // newline
   }
   {
-    const embedding = await llm.getTextEmbedding("Hello world!");
+    const embedding = await embedModel.getTextEmbedding("Hello world!");
     console.log("Embedding:", embedding);
   }
 })();
