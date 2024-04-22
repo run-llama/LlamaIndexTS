@@ -8,7 +8,7 @@ import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type { BaseIndexStore } from "../storage/indexStore/types.js";
 import type { VectorStore } from "../storage/vectorStore/types.js";
 import type { BaseSynthesizer } from "../synthesizers/types.js";
-import type { BaseQueryEngine } from "../types.js";
+import type { QueryEngine } from "../types.js";
 import { IndexStruct } from "./IndexStruct.js";
 import { IndexStructType } from "./json-to-index-struct.js";
 
@@ -87,7 +87,7 @@ export abstract class BaseIndex<T> {
   abstract asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
-  }): BaseQueryEngine;
+  }): QueryEngine;
 
   /**
    * Insert a document into the index.

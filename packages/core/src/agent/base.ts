@@ -1,5 +1,6 @@
 import { pipeline, randomUUID } from "@llamaindex/env";
 import {
+  type ChatEngine,
   type ChatEngineParamsNonStreaming,
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
@@ -171,8 +172,9 @@ export async function* createTaskImpl<
 }
 
 export type AgentStreamChatResponse<Options extends object> = {
-  response: ReadableStream<ChatResponseChunk<Options>>;
-  sources: ToolOutput[];
+  response: ChatResponseChunk<Options>;
+  // sources of the response, will emit when new tool outputs are available
+  sources?: ToolOutput[];
 };
 
 export type AgentChatResponse<Options extends object> = {
@@ -276,7 +278,12 @@ export abstract class AgentRunner<
   >
     ? AdditionalMessageOptions
     : never,
-> {
+> implements
+    ChatEngine<
+      AgentChatResponse<AdditionalMessageOptions>,
+      ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>
+    >
+{
   readonly #llm: AI;
   readonly #tools:
     | BaseToolWithCall[]
@@ -370,13 +377,13 @@ export abstract class AgentRunner<
   ): Promise<AgentChatResponse<AdditionalMessageOptions>>;
   async chat(
     params: ChatEngineParamsStreaming,
-  ): Promise<AgentStreamChatResponse<AdditionalMessageOptions>>;
+  ): Promise<ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
   ): Promise<
     | AgentChatResponse<AdditionalMessageOptions>
-    | AgentStreamChatResponse<AdditionalMessageOptions>
+    | ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>
   > {
     const task = await this.createTask(params.message, !!params.stream);
     const stepOutput = await pipeline(
@@ -397,10 +404,27 @@ export abstract class AgentRunner<
     const { output, taskStep } = stepOutput;
     this.#chatHistory = [...taskStep.context.store.messages];
     if (isAsyncIterable(output)) {
-      return {
-        response: output,
-        sources: [...taskStep.context.store.toolOutputs],
-      } satisfies AgentStreamChatResponse<AdditionalMessageOptions>;
+      let prevSources: ToolOutput[] = [...taskStep.context.store.toolOutputs];
+      return output.pipeThrough<
+        AgentStreamChatResponse<AdditionalMessageOptions>
+      >(
+        new TransformStream({
+          transform(chunk, controller) {
+            controller.enqueue({
+              response: chunk,
+              // lazy evaluation
+              get sources() {
+                const diffSources = taskStep.context.store.toolOutputs.filter(
+                  (source) =>
+                    !prevSources.some((prev) => Object.is(prev, source)),
+                );
+                return diffSources.length > 0 ? [...diffSources] : undefined;
+              },
+            });
+            prevSources = [...taskStep.context.store.toolOutputs];
+          },
+        }),
+      );
     } else {
       return {
         response: output,

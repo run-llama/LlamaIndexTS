@@ -7,14 +7,14 @@ import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 import { TreeSummarize } from "../../synthesizers/index.js";
 import type {
-  BaseQueryEngine,
   QueryBundle,
+  QueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
 } from "../../types.js";
 
 type RouterQueryEngineTool = {
-  queryEngine: BaseQueryEngine;
+  queryEngine: QueryEngine;
   description: string;
 };
 
@@ -54,9 +54,9 @@ async function combineResponses(
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
-export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
+export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   private selector: BaseSelector;
-  private queryEngines: BaseQueryEngine[];
+  private queryEngines: QueryEngine[];
   private metadatas: RouterQueryEngineMetadata[];
   private summarizer: TreeSummarize;
   private verbose: boolean;

@@ -23,21 +23,21 @@ export interface ChatEngineParamsNonStreaming extends ChatEngineParamsBase {
   stream?: false | null;
 }
 
-export interface ChatEngineAgentParams extends ChatEngineParamsBase {
-  toolChoice?: string | Record<string, any>;
-  stream?: boolean;
-}
-
 /**
  * A ChatEngine is used to handle back and forth chats between the application and the LLM.
  */
-export interface ChatEngine {
+export interface ChatEngine<
+  // synchronous response
+  R = Response,
+  // asynchronous response
+  AR extends AsyncIterable<unknown> = AsyncIterable<R>,
+> {
   /**
    * Send message along with the class's current chat history to the LLM.
    * @param params
    */
-  chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  chat(params: ChatEngineParamsStreaming): Promise<AR>;
+  chat(params: ChatEngineParamsNonStreaming): Promise<R>;
 
   /**
    * Resets the chat history so that it's empty.

@@ -5,7 +5,7 @@ import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import type { BaseNodePostprocessor } from "../postprocessors/types.js";
 import type { BaseSynthesizer } from "../synthesizers/types.js";
-import type { BaseQueryEngine } from "../types.js";
+import type { QueryEngine } from "../types.js";
 import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
 import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
 import { getPipelineCreate } from "./config.js";
@@ -178,7 +178,7 @@ export class LlamaCloudIndex {
       preFilters?: unknown;
       nodePostprocessors?: BaseNodePostprocessor[];
     } & CloudRetrieveParams,
-  ): BaseQueryEngine {
+  ): QueryEngine {
     const retriever = new LlamaCloudRetriever({
       ...this.params,
       ...params,

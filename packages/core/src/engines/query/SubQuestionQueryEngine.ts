@@ -11,8 +11,8 @@ import {
 } from "../../synthesizers/index.js";
 
 import type {
-  BaseQueryEngine,
   BaseTool,
+  QueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
   ToolMetadata,
@@ -24,10 +24,7 @@ import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
-export class SubQuestionQueryEngine
-  extends PromptMixin
-  implements BaseQueryEngine
-{
+export class SubQuestionQueryEngine extends PromptMixin implements QueryEngine {
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: BaseTool[];
