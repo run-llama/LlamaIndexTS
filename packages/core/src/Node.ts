@@ -337,6 +337,16 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
     }
   }
 
+  generateHash() {
+    const hashFunction = createSHA256();
+    hashFunction.update(`type=${this.getType()}`);
+    hashFunction.update(
+      `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
+    );
+    hashFunction.update(this.id_);
+    return hashFunction.digest();
+  }
+
   getType() {
     return ObjectType.IMAGE_DOCUMENT;
   }
