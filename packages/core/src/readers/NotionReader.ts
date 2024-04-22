@@ -1,21 +1,9 @@
-import type { Client } from "@notionhq/client";
-import type { Crawler, Pages } from "notion-md-crawler";
+import type { Crawler, CrawlerOptions, Page } from "notion-md-crawler";
 import { crawler, pageToString } from "notion-md-crawler";
 import { Document } from "../Node.js";
 import type { BaseReader } from "./type.js";
 
-type OptionalSerializers = Parameters<Crawler>[number]["serializers"];
-
-/**
- * Options for initializing the NotionReader class
- * @typedef {Object} NotionReaderOptions
- * @property {Client} client - The Notion Client object for API interactions
- * @property {OptionalSerializers} [serializers] - Option to customize serialization. See [the url](https://github.com/TomPenguin/notion-md-crawler/tree/main) for details.
- */
-type NotionReaderOptions = {
-  client: Client;
-  serializers?: OptionalSerializers;
-};
+type NotionReaderOptions = Pick<CrawlerOptions, "client" | "serializers">;
 
 /**
  * Notion pages are retrieved recursively and converted to Document objects.
@@ -25,7 +13,7 @@ type NotionReaderOptions = {
  * Please refer to [this document](https://www.notion.so/help/create-integrations-with-the-notion-api) for details.
  */
 export class NotionReader implements BaseReader {
-  private crawl: ReturnType<Crawler>;
+  private readonly crawl: ReturnType<Crawler>;
 
   /**
    * Constructor for the NotionReader class
@@ -37,10 +25,10 @@ export class NotionReader implements BaseReader {
 
   /**
    * Converts Pages to an array of Document objects
-   * @param {Pages} pages - The Notion pages to convert (Return value of `loadPages`)
+   * @param {Page} pages - The Notion pages to convert (Return value of `loadPages`)
    * @returns {Document[]} An array of Document objects
    */
-  toDocuments(pages: Pages): Document[] {
+  toDocuments(pages: Page[]): Document[] {
     return Object.values(pages).map((page) => {
       const text = pageToString(page);
       return new Document({
@@ -54,10 +42,21 @@ export class NotionReader implements BaseReader {
   /**
    * Loads recursively the Notion page with the specified root page ID.
    * @param {string} rootPageId - The root Notion page ID
-   * @returns {Promise<Pages>} A Promise that resolves to a Pages object(Convertible with the `toDocuments` method)
+   * @returns {Promise<Page[]>} A Promise that resolves to a Pages object(Convertible with the `toDocuments` method)
    */
-  async loadPages(rootPageId: string): Promise<Pages> {
-    return this.crawl(rootPageId);
+  async loadPages(rootPageId: string): Promise<Page[]> {
+    const iter = this.crawl(rootPageId);
+    const pages: Page[] = [];
+    for await (const result of iter) {
+      if (result.success) {
+        pages.push(result.page);
+      } else {
+        console.error(
+          `Failed to load page (${result.failure.parentId}): ${result.failure.reason}`,
+        );
+      }
+    }
+    return pages;
   }
 
   /**
