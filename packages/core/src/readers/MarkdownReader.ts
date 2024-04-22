@@ -89,7 +89,7 @@ export class MarkdownReader implements FileReader {
   }
 
   async loadData(
-    file: string,
+    file: string | URL,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const content = await fs.readFile(file);

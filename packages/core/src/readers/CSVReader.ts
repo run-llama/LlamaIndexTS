@@ -36,15 +36,15 @@ export class PapaCSVReader implements FileReader {
 
   /**
    * Loads data from csv files
-   * @param {string} file - The path to the file to load.
+   * @param {string | URL} filePath - The path to the file to load.
    * @param {GenericFileSystem} [fs=DEFAULT_FS] - The file system to use for reading the file.
    * @returns {Promise<Document[]>}
    */
   async loadData(
-    file: string,
+    filePath: string | URL,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const fileContent = await fs.readFile(file);
+    const fileContent = await fs.readFile(filePath);
     const result = Papa.parse(fileContent, this.papaConfig);
     const textList = result.data.map((row: any) => {
       // Compatible with header row mode

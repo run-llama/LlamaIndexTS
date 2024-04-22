@@ -20,13 +20,25 @@ export function createSHA256(): SHA256 {
 }
 
 export const defaultFS: CompleteFileSystem = {
-  writeFile: function (path: string, content: string) {
+  writeFile: async function (path: string | URL, content: string) {
     return fs.writeFile(path, content, "utf-8");
   },
-  readRawFile(path: string): Promise<Buffer> {
+  readRawFile: async function (path: string | URL): Promise<Buffer> {
+    if (path instanceof URL) {
+      if (path.protocol === "http:" || path.protocol === "https:") {
+        const response = await fetch(path);
+        return Buffer.from(await response.arrayBuffer());
+      }
+    }
     return fs.readFile(path);
   },
-  readFile: function (path: string) {
+  readFile: async function (path: string | URL): Promise<string> {
+    if (path instanceof URL) {
+      if (path.protocol === "http:" || path.protocol === "https:") {
+        const response = await fetch(path);
+        return response.text();
+      }
+    }
     return fs.readFile(path, "utf-8");
   },
   access: fs.access,

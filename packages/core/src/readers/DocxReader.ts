@@ -7,11 +7,11 @@ import type { FileReader } from "./type.js";
 export class DocxReader implements FileReader {
   /** DocxParser */
   async loadData(
-    file: string,
+    file: string | URL,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readRawFile(file);
     const { value } = await mammoth.extractRawText({ buffer: dataBuffer });
-    return [new Document({ text: value, id_: file })];
+    return [new Document({ text: value, id_: `${file}` })];
   }
 }

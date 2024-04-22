@@ -7,27 +7,27 @@ import _ from "lodash";
  * browsers.
  */
 export type GenericFileSystem = {
-  writeFile(path: string, content: string): Promise<void>;
+  writeFile(path: string | URL, content: string): Promise<void>;
   /**
    * Reads a file and returns its content as a raw buffer.
    */
-  readRawFile(path: string): Promise<Buffer>;
+  readRawFile(path: string | URL): Promise<Buffer>;
   /**
    * Reads a file and returns its content as an utf-8 string.
    */
-  readFile(path: string): Promise<string>;
-  access(path: string): Promise<void>;
+  readFile(path: string | URL): Promise<string>;
+  access(path: string | URL): Promise<void>;
   mkdir(
-    path: string,
+    path: string | URL,
     options: {
       recursive: boolean;
     },
   ): Promise<string | undefined>;
-  mkdir(path: string): Promise<void>;
+  mkdir(path: string | URL): Promise<void>;
 };
 export type WalkableFileSystem = {
-  readdir(path: string): Promise<string[]>;
-  stat(path: string): Promise<any>;
+  readdir(path: string | URL): Promise<string[]>;
+  stat(path: string | URL): Promise<any>;
 };
 export type CompleteFileSystem = GenericFileSystem & WalkableFileSystem;
 
@@ -35,7 +35,7 @@ export type CompleteFileSystem = GenericFileSystem & WalkableFileSystem;
  * A filesystem implementation that stores files in memory.
  */
 export class InMemoryFileSystem implements CompleteFileSystem {
-  private files: Record<string, any> = {};
+  private files: Record<string, string> = {};
 
   async writeFile(
     path: string,
@@ -59,7 +59,10 @@ export class InMemoryFileSystem implements CompleteFileSystem {
   }
 
   async mkdir(path: string): Promise<undefined> {
-    this.files[path] = _.get(this.files, path, null);
+    const content = _.get(this.files, path, null);
+    if (content) {
+      this.files[path] = content;
+    }
   }
 
   async readdir(path: string): Promise<string[]> {

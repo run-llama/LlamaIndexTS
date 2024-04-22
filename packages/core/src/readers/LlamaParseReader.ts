@@ -34,10 +34,10 @@ export class LlamaParseReader implements FileReader {
   }
 
   async loadData(
-    file: string,
+    file: string | URL,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    if (!file.endsWith(".pdf")) {
+    if (file instanceof URL || !file.endsWith(".pdf")) {
       throw new Error("Currently, only PDF files are supported.");
     }
 

@@ -12,5 +12,8 @@ export interface BaseReader {
  * A reader takes file paths and imports data into Document objects.
  */
 export interface FileReader extends BaseReader {
-  loadData(filePath: string, fs?: CompleteFileSystem): Promise<Document[]>;
+  loadData(
+    filePath: string | URL,
+    fs?: CompleteFileSystem,
+  ): Promise<Document[]>;
 }

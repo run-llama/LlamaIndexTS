@@ -19,13 +19,13 @@ export class HTMLReader implements FileReader {
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
    */
   async loadData(
-    file: string,
+    file: string | URL,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file);
     const htmlOptions = this.getOptions();
     const content = await this.parseContent(dataBuffer, htmlOptions);
-    return [new Document({ text: content, id_: file })];
+    return [new Document({ text: content, id_: `${file}` })];
   }
 
   /**
