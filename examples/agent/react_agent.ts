@@ -1,4 +1,4 @@
-import { Anthropic, FunctionTool, ReACTAgent } from "llamaindex";
+import { Anthropic, FunctionTool, ReActAgent } from "llamaindex";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }) {
@@ -62,7 +62,7 @@ async function main() {
   });
 
   // Create an ReActAgent with the function tools
-  const agent = new ReACTAgent({
+  const agent = new ReActAgent({
     llm: anthropic,
     tools: [functionTool, functionTool2],
   });

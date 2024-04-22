@@ -328,10 +328,10 @@ const chatFormatter: ChatFormatter = async <Options extends object>(
 };
 
 export class ReACTAgentWorker extends AgentWorker<LLM, ReACTAgentStore> {
-  taskHandler = ReACTAgent.taskHandler;
+  taskHandler = ReActAgent.taskHandler;
 }
 
-export class ReACTAgent extends AgentRunner<LLM, ReACTAgentStore> {
+export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
   constructor(
     params: ReACTAgentParamsWithTools | ReACTAgentParamsWithToolRetriever,
   ) {
