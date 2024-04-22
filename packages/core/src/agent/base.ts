@@ -404,7 +404,6 @@ export abstract class AgentRunner<
     const { output, taskStep } = stepOutput;
     this.#chatHistory = [...taskStep.context.store.messages];
     if (isAsyncIterable(output)) {
-      let prevSources: ToolOutput[] = [...taskStep.context.store.toolOutputs];
       return output.pipeThrough<
         AgentStreamChatResponse<AdditionalMessageOptions>
       >(
@@ -412,23 +411,19 @@ export abstract class AgentRunner<
           transform(chunk, controller) {
             controller.enqueue({
               response: chunk,
-              // lazy evaluation
               get sources() {
-                const diffSources = taskStep.context.store.toolOutputs.filter(
-                  (source) =>
-                    !prevSources.some((prev) => Object.is(prev, source)),
-                );
-                return diffSources.length > 0 ? [...diffSources] : undefined;
+                return [...taskStep.context.store.toolOutputs];
               },
             });
-            prevSources = [...taskStep.context.store.toolOutputs];
           },
         }),
       );
     } else {
       return {
         response: output,
-        sources: [...taskStep.context.store.toolOutputs],
+        get sources() {
+          return [...taskStep.context.store.toolOutputs];
+        },
       } satisfies AgentChatResponse<AdditionalMessageOptions>;
     }
   }
