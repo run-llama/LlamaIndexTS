@@ -18,13 +18,9 @@ export class EpubReader implements BaseReader {
     });
     const sections = book.sections ?? [];
     const header = `${book.info?.author}\n${book.info?.publisher}\n${book.info?.title}`;
-    const options = this.getOptions();
     const results = await Promise.all(
-      sections.map((section) => {
-        return new Promise(async (resolve) => {
-          const parsed = await this.parseContent(section.htmlString, options);
-          resolve(parsed);
-        });
+      sections.map(async (section) => {
+        return await this.parseContent(section.htmlString);
       }),
     );
     return [
@@ -39,18 +35,9 @@ export class EpubReader implements BaseReader {
    * @see getOptions
    * @returns The HTML content, stripped of unwanted tags and attributes
    */
-  async parseContent(html: string, options: any = {}): Promise<string> {
+  async parseContent(html: string): Promise<string> {
     const { stripHtml } = await import("string-strip-html"); // ESM only
-    return stripHtml(html).result;
-  }
-
-  /**
-   * Wrapper for our configuration options passed to string-strip-html library
-   * @see https://codsen.com/os/string-strip-html/examples
-   * @returns An object of options for the underlying library
-   */
-  getOptions() {
-    return {
+    return stripHtml(html, {
       skipHtmlDecoding: true,
       stripTogetherWithTheirContents: [
         "script", // default
@@ -58,6 +45,6 @@ export class EpubReader implements BaseReader {
         "xml", // default
         "head", // <-- custom-added
       ],
-    };
+    }).result;
   }
 }
