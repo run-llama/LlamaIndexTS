@@ -7,7 +7,7 @@ import type {
 } from "./types.js";
 
 import type { GenericFileSystem } from "@llamaindex/env";
-import type { BaseNode, Metadata } from "../../Node.js";
+import type { BaseNode } from "../../Node.js";
 import { Document, MetadataMode } from "../../Node.js";
 
 export const PGVECTOR_SCHEMA = "public";
@@ -157,7 +157,7 @@ export class PGVectorStore implements VectorStore {
     return ret;
   }
 
-  private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
+  private getDataToInsert(embeddingResults: BaseNode[]) {
     const result = [];
     for (let index = 0; index < embeddingResults.length; index++) {
       const row = embeddingResults[index];
@@ -186,7 +186,7 @@ export class PGVectorStore implements VectorStore {
    * @param embeddingResults The Nodes to be inserted, optionally including metadata tuples.
    * @returns A list of zero or more id values for the created records.
    */
-  async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
+  async add(embeddingResults: BaseNode[]): Promise<string[]> {
     if (embeddingResults.length == 0) {
       console.debug("Empty list sent to PGVectorStore::add");
       return Promise.resolve([]);

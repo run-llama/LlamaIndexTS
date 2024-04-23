@@ -27,9 +27,9 @@ export class MarkdownNodeParser implements NodeParser {
 
   buildNodeFromSplit(
     textSplit: string,
-    node: BaseNode<Metadata>,
+    node: BaseNode,
     metadata: Metadata,
-  ): BaseNode<Metadata> {
+  ): TextNode {
     const newNode = new TextNode({
       text: textSplit,
       relationships: {
@@ -61,9 +61,9 @@ export class MarkdownNodeParser implements NodeParser {
     return updatedHeaders;
   }
 
-  getNodesFromNode(node: BaseNode<Metadata>): BaseNode<Metadata>[] {
+  getNodesFromNode(node: BaseNode): BaseNode[] {
     const text = node.getContent(MetadataMode.NONE);
-    const markdownNodes: BaseNode<Metadata>[] = [];
+    const markdownNodes: BaseNode[] = [];
     const lines = text.split("\n");
     let metadata: Metadata = {};
     let codeBlock = false;
@@ -98,8 +98,8 @@ export class MarkdownNodeParser implements NodeParser {
     return markdownNodes;
   }
 
-  getNodesFromDocuments(documents: BaseNode<Metadata>[]): BaseNode<Metadata>[] {
-    let allNodes: BaseNode<Metadata>[] = [];
+  getNodesFromDocuments(documents: BaseNode[]): BaseNode[] {
+    let allNodes: BaseNode[] = [];
     for (const node of documents) {
       const nodes = this.getNodesFromNode(node);
       allNodes = allNodes.concat(nodes);

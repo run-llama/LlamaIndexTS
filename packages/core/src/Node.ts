@@ -40,7 +40,7 @@ export type RelatedNodeType<T extends Metadata = Metadata> =
 /**
  * Generic abstract class for retrievable nodes
  */
-export abstract class BaseNode<T extends Metadata = Metadata> {
+export abstract class BaseNode<V = string, T extends Metadata = Metadata> {
   /**
    * The unique ID of the Node/Document. The trailing underscore is here
    * to avoid collisions with the id keyword in Python.
@@ -57,16 +57,16 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   relationships: Partial<Record<NodeRelationship, RelatedNodeType<T>>> = {};
   hash: string = "";
 
-  constructor(init?: Partial<BaseNode<T>>) {
+  constructor(init?: Partial<BaseNode<V, T>>) {
     Object.assign(this, init);
   }
 
   abstract getType(): ObjectType;
 
-  abstract getContent(metadataMode: MetadataMode): string;
+  abstract getContent(metadataMode: MetadataMode): V;
+  abstract setContent(value: V): void;
+
   abstract getMetadataStr(metadataMode: MetadataMode): string;
-  // todo: set value as a generic type
-  abstract setContent(value: unknown): void;
 
   get sourceNode(): RelatedNodeInfo<T> | undefined {
     const relationship = this.relationships[NodeRelationship.SOURCE];
@@ -149,8 +149,9 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
     return { ...this, type: this.getType() };
   }
 
-  clone(): BaseNode {
-    return jsonToNode(this.toMutableJSON()) as BaseNode;
+  clone(): BaseNode<V, T> {
+    // fixme: type casting
+    return jsonToNode(this.toMutableJSON()) as unknown as BaseNode<V, T>;
   }
 
   /**
@@ -166,7 +167,10 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 /**
  * TextNode is the default node type for text. Most common node type in LlamaIndex.TS
  */
-export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
+export class TextNode<T extends Metadata = Metadata> extends BaseNode<
+  string,
+  T
+> {
   text: string = "";
   textTemplate: string = "";
 
@@ -281,7 +285,10 @@ export class Document<T extends Metadata = Metadata> extends TextNode<T> {
   }
 }
 
-export function jsonToNode(json: any, type?: ObjectType) {
+export function jsonToNode(
+  json: any,
+  type?: ObjectType,
+): TextNode | IndexNode | Document | ImageDocument {
   if (!json.type && !type) {
     throw new Error("Node type not found");
   }
@@ -376,12 +383,12 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
 /**
  * A node with a similarity score
  */
-export interface NodeWithScore<T extends Metadata = Metadata> {
-  node: BaseNode<T>;
+export interface NodeWithScore<V = string, T extends Metadata = Metadata> {
+  node: BaseNode<V, T>;
   score?: number;
 }
 
-export function splitNodesByType(nodes: BaseNode[]): {
+export function splitNodesByType<V>(nodes: BaseNode<V>[]): {
   imageNodes: ImageNode[];
   textNodes: TextNode[];
 } {

@@ -1,9 +1,4 @@
-import type {
-  BaseNode,
-  Document,
-  Metadata,
-  NodeWithScore,
-} from "../../Node.js";
+import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
 import { ImageNode, ObjectType, splitNodesByType } from "../../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
@@ -449,10 +444,7 @@ export class VectorIndexRetriever implements BaseRetriever {
   }
 
   @wrapEventCaller
-  protected sendEvent(
-    query: string,
-    nodesWithScores: NodeWithScore<Metadata>[],
-  ) {
+  protected sendEvent(query: string, nodesWithScores: NodeWithScore[]) {
     Settings.callbackManager.dispatchEvent("retrieve", {
       query,
       nodes: nodesWithScores,

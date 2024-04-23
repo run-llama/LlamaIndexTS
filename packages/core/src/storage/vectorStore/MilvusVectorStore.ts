@@ -7,7 +7,7 @@ import {
   type DeleteReq,
   type RowData,
 } from "@zilliz/milvus2-sdk-node";
-import { BaseNode, MetadataMode, type Metadata } from "../../Node.js";
+import { BaseNode, MetadataMode } from "../../Node.js";
 import type {
   VectorStore,
   VectorStoreQuery,
@@ -128,7 +128,7 @@ export class MilvusVectorStore implements VectorStore {
     }
   }
 
-  public async add(nodes: BaseNode<Metadata>[]): Promise<string[]> {
+  public async add(nodes: BaseNode[]): Promise<string[]> {
     await this.ensureCollection();
 
     const result = await this.milvusClient.insert({
@@ -188,7 +188,7 @@ export class MilvusVectorStore implements VectorStore {
       vector: query.queryEmbedding,
     });
 
-    const nodes: BaseNode<Metadata>[] = [];
+    const nodes: BaseNode[] = [];
     const similarities: number[] = [];
     const ids: string[] = [];
 

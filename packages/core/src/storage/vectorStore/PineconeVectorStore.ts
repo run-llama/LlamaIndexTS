@@ -92,7 +92,7 @@ export class PineconeVectorStore implements VectorStore {
    * @param embeddingResults The Nodes to be inserted, optionally including metadata tuples.
    * @returns Due to limitations in the Pinecone client, does not return the upserted ID list, only a Promise resolve/reject.
    */
-  async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
+  async add(embeddingResults: BaseNode[]): Promise<string[]> {
     if (embeddingResults.length == 0) {
       return Promise.resolve([]);
     }
@@ -215,7 +215,7 @@ export class PineconeVectorStore implements VectorStore {
       }, {});
   }
 
-  nodeToRecord(node: BaseNode<Metadata>) {
+  nodeToRecord(node: BaseNode) {
     const id: any = node.id_.length ? node.id_ : null;
     return {
       id: id,
