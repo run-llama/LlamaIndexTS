@@ -327,22 +327,33 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
     return new URL(`file://${absPath}`);
   }
 
-  generateHash() {
+  // Calculates the image part of the hash
+  private generateImageHash() {
     const hashFunction = createSHA256();
-    hashFunction.update(`type=${this.getType()}`);
-    hashFunction.update(
-      `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
-    );
-    hashFunction.update(this.id_);
 
     if (this.image instanceof Blob) {
-      // Absolute path is always unique for a file
-      hashFunction.update(path.resolve(this.id_));
+      // TODO: ideally we should use the blob's content to calculate the hash:
+      // hashFunction.update(new Uint8Array(await this.image.arrayBuffer()));
+      // as this is async, we're using the node's ID for the time being
+      hashFunction.update(this.id_);
+    } else if (this.image instanceof URL) {
+      hashFunction.update(this.image.toString());
     } else if (typeof this.image === "string") {
       hashFunction.update(this.image);
     } else {
-      hashFunction.update(this.image.toString());
+      throw new Error(
+        `Unknown image type: ${typeof this.image}. Can't calculate hash`,
+      );
     }
+
+    return hashFunction.digest();
+  }
+
+  generateHash() {
+    const hashFunction = createSHA256();
+    // calculates hash based on hash of both components (image and text)
+    hashFunction.update(super.generateHash());
+    hashFunction.update(this.generateImageHash());
 
     return hashFunction.digest();
   }
