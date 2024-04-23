@@ -8,7 +8,11 @@
     "module": "node16",
     "moduleResolution": "node16",
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@llamaindex/env": ["../env/src/index.ts"],
+      "@llamaindex/env/*": ["../env/src/*.ts"]
+    }
   },
   "include": ["./src"],
   "exclude": ["node_modules"],
