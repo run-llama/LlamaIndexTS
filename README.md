@@ -114,14 +114,21 @@ Add the following config to your `next.config.js` to ignore specific packages in
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf2json", "@zilliz/milvus2-sdk-node"],
+    serverComponentsExternalPackages: [
+      "pdf2json",
+      "@zilliz/milvus2-sdk-node",
+      "sharp",
+      "onnxruntime-node",
+    ],
   },
   webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      sharp$: false,
-      "onnxruntime-node$": false,
-    };
+    config.externals.push({
+      pdf2json: "commonjs pdf2json",
+      "@zilliz/milvus2-sdk-node": "commonjs @zilliz/milvus2-sdk-node",
+      sharp: "commonjs sharp",
+      "onnxruntime-node": "commonjs onnxruntime-node",
+    });
+
     return config;
   },
 };
