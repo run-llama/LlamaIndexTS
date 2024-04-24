@@ -94,18 +94,18 @@ export class IngestionPipeline {
     documents?: Document[],
     nodes?: BaseNode[],
   ): Promise<BaseNode[]> {
-    const inputNodes: BaseNode[] = [];
+    let inputNodes: BaseNode[] = [];
     if (documents) {
-      inputNodes.push(...documents);
+      inputNodes = inputNodes.concat(documents);
     }
     if (nodes) {
-      inputNodes.push(...nodes);
+      inputNodes = inputNodes.concat(nodes);
     }
     if (this.documents) {
-      inputNodes.push(...this.documents);
+      inputNodes = inputNodes.concat(this.documents);
     }
     if (this.reader) {
-      inputNodes.push(...(await this.reader.loadData()));
+      inputNodes = inputNodes.concat(await this.reader.loadData()));
     }
     return inputNodes;
   }
