@@ -1,5 +1,6 @@
 export * from "./ClipEmbedding.js";
 export * from "./HuggingFaceEmbedding.js";
+export * from "./JinaAIEmbedding.js";
 export * from "./MistralAIEmbedding.js";
 export * from "./MultiModalEmbedding.js";
 export { OllamaEmbedding } from "./OllamaEmbedding.js";
