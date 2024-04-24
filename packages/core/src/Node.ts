@@ -326,6 +326,37 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
     const absPath = path.resolve(this.id_);
     return new URL(`file://${absPath}`);
   }
+
+  // Calculates the image part of the hash
+  private generateImageHash() {
+    const hashFunction = createSHA256();
+
+    if (this.image instanceof Blob) {
+      // TODO: ideally we should use the blob's content to calculate the hash:
+      // hashFunction.update(new Uint8Array(await this.image.arrayBuffer()));
+      // as this is async, we're using the node's ID for the time being
+      hashFunction.update(this.id_);
+    } else if (this.image instanceof URL) {
+      hashFunction.update(this.image.toString());
+    } else if (typeof this.image === "string") {
+      hashFunction.update(this.image);
+    } else {
+      throw new Error(
+        `Unknown image type: ${typeof this.image}. Can't calculate hash`,
+      );
+    }
+
+    return hashFunction.digest();
+  }
+
+  generateHash() {
+    const hashFunction = createSHA256();
+    // calculates hash based on hash of both components (image and text)
+    hashFunction.update(super.generateHash());
+    hashFunction.update(this.generateImageHash());
+
+    return hashFunction.digest();
+  }
 }
 
 export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
