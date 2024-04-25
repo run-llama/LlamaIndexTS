@@ -34,10 +34,20 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Get changeset status
+        id: get-changeset-status
+        run: |
+          pnpm changeset status --output .changeset/status.json
+          new_version=$(jq -r '.releases[] | select(.name == "llamaindex") | .newVersion' < .changeset/status.json)
+          rm -v .changeset/status.json
+          echo "new-version=${new_version}" >> "$GITHUB_OUTPUT"
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
+          commit: Release ${{ steps.get-changeset-status.outputs.new-version }}
+          title: Release ${{ steps.get-changeset-status.outputs.new-version }}
           # update version PR with the latest changesets
           version: pnpm new-version
           # build package and call changeset publish
