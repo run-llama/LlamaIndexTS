@@ -365,6 +365,9 @@ importers:
       '@datastax/astra-db-ts':
         specifier: ^1.0.1
         version: 1.1.0
+      '@google/generative-ai':
+        specifier: ^0.8.0
+        version: 0.8.0
       '@grpc/grpc-js':
         specifier: ^1.10.6
         version: 1.10.6
