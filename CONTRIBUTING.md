@@ -91,16 +91,10 @@ Please send a descriptive changeset for each PR.
 
 ## Publishing (maintainers only)
 
-To publish a new version of the library, first create a new version:
+The [Release Github Action](.github/workflows/release.yml) is automatically generating and updating a
+PR called "Version Packages".
 
-```shell
-pnpm new-version
-```
+This PR will update the `package.json` and `CHANGELOG.md` files of each package according to
+the current changesets in the [.changeset](.changeset/) folder.
 
-If everything looks good, commit the generated files and release the new version:
-
-```shell
-pnpm release
-git push # push to the main branch
-git push --tags
-```
+If this PR is merged it will automatically add version tags to the repository and publish the updated packages to NPM.
