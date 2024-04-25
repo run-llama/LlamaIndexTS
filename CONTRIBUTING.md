@@ -92,7 +92,7 @@ Please send a descriptive changeset for each PR.
 ## Publishing (maintainers only)
 
 The [Release Github Action](.github/workflows/release.yml) is automatically generating and updating a
-PR called "Version Packages".
+PR called "Release {version}".
 
 This PR will update the `package.json` and `CHANGELOG.md` files of each package according to
 the current changesets in the [.changeset](.changeset/) folder.
