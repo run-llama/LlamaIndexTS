@@ -96,14 +96,14 @@ export class MarkdownReader implements FileReader {
     const tups = this.parseTups(content);
     const results: Document[] = [];
     for (const [header, value] of tups) {
+      const sha256 = createSHA256()
       if (header) {
-        results.push(
-          new Document({
-            text: `\n\n${header}\n${value}`,
-          }),
-        );
+        const text = `\n\n${header}\n${value}`;
+        sha256.update(text);
+        results.push(new Document({ text, id_: sha256.digest() }));
       } else {
-        results.push(new Document({ text: value }));
+        sha256.update(value);
+        results.push(new Document({ text: value, id_: sha256.digest() }));
       }
     }
     return results;
