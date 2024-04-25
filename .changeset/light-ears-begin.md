@@ -2,4 +2,4 @@
 "llamaindex": patch
 ---
 
-feat: add gemini llm and embedding 
+feat: add gemini llm and embedding
