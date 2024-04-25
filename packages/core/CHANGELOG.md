@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.2.11
+
+### Patch Changes
+
+- 87142b2: refactor: use ollama official sdk
+- 5a6cc0e: feat: support jina ai embedding and reranker
+- 87142b2: feat: support output to json format
+
 ## 0.2.10
 
 ### Patch Changes
