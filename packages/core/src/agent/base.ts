@@ -120,7 +120,7 @@ export async function* createTaskImpl<
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>,
   _input: ChatMessage<AdditionalMessageOptions>,
 ): AsyncGenerator<TaskStepOutput<Model, Store, AdditionalMessageOptions>> {
-  const isFirst = true;
+  let isFirst = true;
   let isDone = false;
   let input: ChatMessage<AdditionalMessageOptions> | null = _input;
   let prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null = null;
@@ -145,6 +145,7 @@ export async function* createTaskImpl<
           startStep: step,
         },
       });
+      isFirst = false;
     }
     const taskOutput = await handler(step);
     const { isLast, output, taskStep } = taskOutput;
