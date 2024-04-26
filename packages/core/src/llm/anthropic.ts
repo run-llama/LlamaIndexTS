@@ -1,6 +1,7 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
 import type {
+  MessageCreateParamsNonStreaming,
   Tool,
   ToolResultBlockParam,
   ToolUseBlock,
@@ -264,7 +265,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
     const anthropic = this.session.anthropic;
 
     if (tools) {
-      const response = await anthropic.beta.tools.messages.create({
+      const params: MessageCreateParamsNonStreaming = {
         messages: this.formatMessages<true>(messages),
         tools: tools.map(Anthropic.toTool),
         model: this.getModelName(this.model),
@@ -272,7 +273,12 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
         max_tokens: this.maxTokens ?? 4096,
         top_p: this.topP,
         ...(systemPrompt && { system: systemPrompt }),
-      });
+      };
+      // Remove tools if there are none, as it will cause an error
+      if (tools.length === 0) {
+        delete params.tools;
+      }
+      const response = await anthropic.beta.tools.messages.create(params);
 
       const toolUseBlock = response.content.find(
         (content): content is ToolUseBlock => content.type === "tool_use",

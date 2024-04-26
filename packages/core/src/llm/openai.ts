@@ -349,6 +349,14 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       ...Object.assign({}, this.additionalChatOptions, additionalChatOptions),
     };
 
+    if (
+      Array.isArray(baseRequestParams.tools) &&
+      baseRequestParams.tools.length === 0
+    ) {
+      // remove empty tools array to avoid OpenAI error
+      delete baseRequestParams.tools;
+    }
+
     // Streaming
     if (stream) {
       return this.streamChat(baseRequestParams);
