@@ -5,13 +5,12 @@ import {
   type Part,
 } from "@google/generative-ai";
 import { getEnv } from "@llamaindex/env";
-import { BaseEmbedding } from "../embeddings/types.js";
+import { ToolCallLLM } from "./base.js";
 import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   CompletionResponse,
-  LLM,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
   LLMCompletionParamsNonStreaming,
@@ -64,7 +63,7 @@ const DEFAULT_GEMINI_PARAMS = {
   maxTokens: undefined,
 };
 
-export type GeminiLLMConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
+export type GeminiConfig = Partial<typeof DEFAULT_GEMINI_PARAMS> & {
   session?: GeminiSession;
 };
 
@@ -230,17 +229,14 @@ export class GeminiHelper {
 /**
  * ToolCallLLM for Gemini
  */
-export class Gemini
-  extends BaseEmbedding
-  implements LLM<GeminiAdditionalChatOptions>
-{
+export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   model: GEMINI_MODEL;
   temperature: number;
   topP: number;
   maxTokens?: number;
   session: GeminiSession;
 
-  constructor(init?: GeminiLLMConfig) {
+  constructor(init?: GeminiConfig) {
     super();
     this.model = init?.model ?? GEMINI_MODEL.GEMINI_PRO;
     this.temperature = init?.temperature ?? 0.1;
@@ -363,19 +359,5 @@ export class Gemini
       text: result.response.text(),
       raw: result.response,
     };
-  }
-
-  private async getEmbedding(prompt: string): Promise<number[]> {
-    const client = this.session.gemini.getGenerativeModel(this.metadata);
-    const result = await client.embedContent(prompt);
-    return result.embedding.values;
-  }
-
-  getTextEmbedding(text: string): Promise<number[]> {
-    return this.getEmbedding(text);
-  }
-
-  getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getTextEmbedding(query);
   }
 }
