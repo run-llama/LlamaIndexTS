@@ -10,6 +10,7 @@ export * from "./openai.js";
 export { Portkey } from "./portkey.js";
 export * from "./replicate_ai.js";
 // Note: The type aliases for replicate are to simplify usage for Llama 2 (we're using replicate for Llama 2 support)
+export { GEMINI_MODEL, Gemini } from "./gemini.js";
 export {
   DeuceChatStrategy,
   LlamaDeuce,
