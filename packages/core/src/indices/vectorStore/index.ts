@@ -17,7 +17,6 @@ import type {
   BaseEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings/index.js";
-import { ClipEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import { runTransformations } from "../../ingestion/IngestionPipeline.js";
 import {
@@ -41,6 +40,7 @@ import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
+import { ClipEmbedding } from '../../embeddings/ClipEmbedding.js'
 
 interface IndexStructOptions {
   indexStruct?: IndexDict;
