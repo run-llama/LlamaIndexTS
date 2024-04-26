@@ -98,10 +98,10 @@ export class GeminiSession {
 
   constructor(options: GeminiSessionOptions) {
     if (!options.apiKey) {
-      options.apiKey = getEnv("ANTHROPIC_API_KEY");
+      options.apiKey = getEnv("GOOGLE_API_KEY");
     }
     if (!options.apiKey) {
-      throw new Error("Set Anthropic Key in ANTHROPIC_API_KEY env variable");
+      throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
     }
     this.gemini = new GoogleGenerativeAI(options.apiKey);
   }
