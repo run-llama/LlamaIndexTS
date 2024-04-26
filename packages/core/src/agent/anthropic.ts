@@ -13,8 +13,8 @@ import {
   AgentWorker,
   type AgentChatResponse,
   type AgentParamsBase,
-  type TaskHandler,
 } from "./base.js";
+import type { TaskHandler } from "./types.js";
 import { callTool } from "./utils.js";
 
 type AnthropicParamsBase = AgentParamsBase<Anthropic>;
