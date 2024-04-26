@@ -1,4 +1,14 @@
+// DO NOT EXPOSE THIS VARIABLE TO PUBLIC, IT IS USED INTERNALLY FOR CLOUDFLARE WORKER
+export const INTERNAL_ENV: Record<string, string> = {};
+
+export function setEnvs(envs: object): void {
+  Object.assign(INTERNAL_ENV, envs);
+}
+
 export function getEnv(name: string): string | undefined {
+  if (INTERNAL_ENV[name]) {
+    return INTERNAL_ENV[name];
+  }
   if (typeof process === "undefined" || typeof process.env === "undefined") {
     // @ts-expect-error
     if (typeof Deno === "undefined") {

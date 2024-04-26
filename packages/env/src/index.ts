@@ -36,5 +36,5 @@ export const defaultFS: CompleteFileSystem = {
 };
 
 export type * from "./type.js";
-export { AsyncLocalStorage, CustomEvent, getEnv } from "./utils.js";
+export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
 export { EOL, ok, path, pipeline, randomUUID };
