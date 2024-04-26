@@ -13,6 +13,7 @@ import {
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
+import { ClipEmbedding } from "../../embeddings/ClipEmbedding.js";
 import type {
   BaseEmbedding,
   MultiModalEmbedding,
@@ -40,7 +41,6 @@ import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
-import { ClipEmbedding } from '../../embeddings/ClipEmbedding.js'
 
 interface IndexStructOptions {
   indexStruct?: IndexDict;
