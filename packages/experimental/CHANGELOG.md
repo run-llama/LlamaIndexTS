@@ -1,5 +1,12 @@
 # @llamaindex/experimental
 
+## 0.0.15
+
+### Patch Changes
+
+- Updated dependencies [d8d952d]
+  - llamaindex@0.2.12
+
 ## 0.0.14
 
 ### Patch Changes
