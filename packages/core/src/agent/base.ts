@@ -138,8 +138,11 @@ export async function* createTaskImpl<
     if (!step.context.shouldContinue(step)) {
       throw new Error("Tool call count exceeded limit");
     }
+    const id = randomUUID();
     getCallbackManager().dispatchEvent("agent-start", {
-      payload: {},
+      payload: {
+        id,
+      },
     });
     const taskOutput = await handler(step);
     const { isLast, output, taskStep } = taskOutput;
@@ -163,7 +166,9 @@ export async function* createTaskImpl<
     if (isLast) {
       isDone = true;
       getCallbackManager().dispatchEvent("agent-end", {
-        payload: {},
+        payload: {
+          id,
+        },
       });
     }
     prevStep = taskStep;
