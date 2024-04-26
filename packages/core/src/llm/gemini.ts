@@ -137,7 +137,7 @@ export class GeminiSessionStore {
 /**
  * Helper class providing utility functions for Gemini
  */
-export class GeminiHelper {
+class GeminiHelper {
   // Gemini only has user and model roles. Put the rest in user role.
   public static readonly ROLES_TO_GEMINI: Record<
     MessageType,
