@@ -1,5 +1,13 @@
 # test-edge-runtime
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [87142b2]
+- Updated dependencies [87142b2]
+  - @llamaindex/edge@0.2.11
+
 ## 0.1.2
 
 ### Patch Changes
