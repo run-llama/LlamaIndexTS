@@ -1,9 +1,9 @@
 import type { BaseEvent } from "../internal/type.js";
-import type { UUID } from "../types.js";
+import type { TaskStep } from "./base.js";
 
 export type AgentStartEvent = BaseEvent<{
-  id: UUID;
+  startStep: TaskStep;
 }>;
 export type AgentEndEvent = BaseEvent<{
-  id: UUID;
+  endStep: TaskStep;
 }>;

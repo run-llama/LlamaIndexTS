@@ -46,7 +46,7 @@ export type AgentTaskContext<
 };
 
 export type TaskStep<
-  Model extends LLM,
+  Model extends LLM = LLM,
   Store extends object = {},
   AdditionalMessageOptions extends object = Model extends LLM<
     object,
@@ -120,6 +120,7 @@ export async function* createTaskImpl<
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>,
   _input: ChatMessage<AdditionalMessageOptions>,
 ): AsyncGenerator<TaskStepOutput<Model, Store, AdditionalMessageOptions>> {
+  const isFirst = true;
   let isDone = false;
   let input: ChatMessage<AdditionalMessageOptions> | null = _input;
   let prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null = null;
@@ -138,12 +139,13 @@ export async function* createTaskImpl<
     if (!step.context.shouldContinue(step)) {
       throw new Error("Tool call count exceeded limit");
     }
-    const id = randomUUID();
-    getCallbackManager().dispatchEvent("agent-start", {
-      payload: {
-        id,
-      },
-    });
+    if (isFirst) {
+      getCallbackManager().dispatchEvent("agent-start", {
+        payload: {
+          startStep: step,
+        },
+      });
+    }
     const taskOutput = await handler(step);
     const { isLast, output, taskStep } = taskOutput;
     // do not consume last output
@@ -167,7 +169,7 @@ export async function* createTaskImpl<
       isDone = true;
       getCallbackManager().dispatchEvent("agent-end", {
         payload: {
-          id,
+          endStep: step,
         },
       });
     }
