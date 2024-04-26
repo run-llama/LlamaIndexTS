@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.2.13
+
+### Patch Changes
+
+- 6277105: fix: allow passing empty tools to llms
+
 ## 0.2.12
 
 ### Patch Changes
