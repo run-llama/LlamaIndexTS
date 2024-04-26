@@ -1,6 +1,5 @@
 export * from "./ClipEmbedding.js";
 export * from "./GeminiEmbedding.js";
-export * from "./HuggingFaceEmbedding.js";
 export * from "./JinaAIEmbedding.js";
 export * from "./MistralAIEmbedding.js";
 export * from "./MultiModalEmbedding.js";

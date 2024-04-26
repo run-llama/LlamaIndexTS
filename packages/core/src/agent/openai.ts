@@ -9,12 +9,8 @@ import type {
 import { OpenAI } from "../llm/openai.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
-import {
-  AgentRunner,
-  AgentWorker,
-  type AgentParamsBase,
-  type TaskHandler,
-} from "./base.js";
+import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
+import type { TaskHandler } from "./types.js";
 import { callTool } from "./utils.js";
 
 type OpenAIParamsBase = AgentParamsBase<OpenAI>;

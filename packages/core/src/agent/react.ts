@@ -19,12 +19,8 @@ import type {
   JSONObject,
   JSONValue,
 } from "../types.js";
-import {
-  AgentRunner,
-  AgentWorker,
-  type AgentParamsBase,
-  type TaskHandler,
-} from "./base.js";
+import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
+import type { TaskHandler } from "./types.js";
 import {
   callTool,
   consumeAsyncIterable,

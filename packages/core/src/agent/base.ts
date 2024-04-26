@@ -15,93 +15,16 @@ import type {
   MessageContent,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
-import type { BaseToolWithCall, ToolOutput, UUID } from "../types.js";
+import type { BaseToolWithCall, ToolOutput } from "../types.js";
+import type {
+  AgentTaskContext,
+  TaskHandler,
+  TaskStep,
+  TaskStepOutput,
+} from "./types.js";
 import { consumeAsyncIterable } from "./utils.js";
 
 export const MAX_TOOL_CALLS = 10;
-
-export type AgentTaskContext<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> = {
-  readonly stream: boolean;
-  readonly toolCallCount: number;
-  readonly llm: Model;
-  readonly getTools: (
-    input: MessageContent,
-  ) => BaseToolWithCall[] | Promise<BaseToolWithCall[]>;
-  shouldContinue: (
-    taskStep: Readonly<TaskStep<Model, Store, AdditionalMessageOptions>>,
-  ) => boolean;
-  store: {
-    toolOutputs: ToolOutput[];
-    messages: ChatMessage<AdditionalMessageOptions>[];
-  } & Store;
-};
-
-export type TaskStep<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> = {
-  id: UUID;
-  input: ChatMessage<AdditionalMessageOptions> | null;
-  context: AgentTaskContext<Model, Store, AdditionalMessageOptions>;
-
-  // linked list
-  prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null;
-  nextSteps: Set<TaskStep<Model, Store, AdditionalMessageOptions>>;
-};
-
-export type TaskStepOutput<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> =
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | null
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: false;
-    }
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: true;
-    };
-
-export type TaskHandler<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> = (
-  step: TaskStep<Model, Store, AdditionalMessageOptions>,
-) => Promise<TaskStepOutput<Model, Store, AdditionalMessageOptions>>;
 
 /**
  * @internal
@@ -120,6 +43,7 @@ export async function* createTaskImpl<
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>,
   _input: ChatMessage<AdditionalMessageOptions>,
 ): AsyncGenerator<TaskStepOutput<Model, Store, AdditionalMessageOptions>> {
+  let isFirst = true;
   let isDone = false;
   let input: ChatMessage<AdditionalMessageOptions> | null = _input;
   let prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null = null;
@@ -138,9 +62,14 @@ export async function* createTaskImpl<
     if (!step.context.shouldContinue(step)) {
       throw new Error("Tool call count exceeded limit");
     }
-    getCallbackManager().dispatchEvent("agent-start", {
-      payload: {},
-    });
+    if (isFirst) {
+      getCallbackManager().dispatchEvent("agent-start", {
+        payload: {
+          startStep: step,
+        },
+      });
+      isFirst = false;
+    }
     const taskOutput = await handler(step);
     const { isLast, output, taskStep } = taskOutput;
     // do not consume last output
@@ -163,7 +92,9 @@ export async function* createTaskImpl<
     if (isLast) {
       isDone = true;
       getCallbackManager().dispatchEvent("agent-end", {
-        payload: {},
+        payload: {
+          endStep: step,
+        },
       });
     }
     prevStep = taskStep;
