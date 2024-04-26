@@ -64,6 +64,14 @@
   "main": "./dist/cjs/index.js",
   "exports": {
     ".": {
+      "react-server": {
+        "types": "./dist/type/index.react-server.d.ts",
+        "default": "./dist/index.react-server.js"
+      },
+      "edge-light": {
+        "types": "./dist/type/index.edge.d.ts",
+        "default": "./dist/index.edge.js"
+      },
       "import": {
         "types": "./dist/type/index.d.ts",
         "default": "./dist/index.js"

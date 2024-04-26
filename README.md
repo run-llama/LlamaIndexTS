@@ -95,7 +95,7 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 ## Using NextJS
 
-If you're using the NextJS App Router, you can choose between the Node.js and the [Edge runtime](https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes#edge-runtime).
+If you're using the NextJS App Router, you can choose between the `Node.js` and the [Edge runtime](https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes#edge-runtime).
 
 With NextJS 13 and 14, using the Node.js runtime is the default. You can explicitly set the Edge runtime in your [router handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) by adding this line:
 
@@ -103,69 +103,23 @@ With NextJS 13 and 14, using the Node.js runtime is the default. You can explici
 export const runtime = "edge";
 ```
 
-The following sections explain further differences in using the Node.js or Edge runtime.
+### Using in Vercel Edge runtime
 
-### Using the Node.js runtime
+A further difference is that the in next.js runtime we don't export classes from the `readers` or `storage` folders.
 
-Add the following config to your `next.config.js` to ignore specific packages in the server-side bundling:
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: [
-      "pdf2json",
-      "@zilliz/milvus2-sdk-node",
-      "sharp",
-      "onnxruntime-node",
-    ],
-  },
-  webpack: (config) => {
-    config.externals.push({
-      pdf2json: "commonjs pdf2json",
-      "@zilliz/milvus2-sdk-node": "commonjs @zilliz/milvus2-sdk-node",
-      sharp: "commonjs sharp",
-      "onnxruntime-node": "commonjs onnxruntime-node",
-    });
-
-    return config;
-  },
-};
-
-module.exports = nextConfig;
-```
-
-### Using the Edge runtime
-
-We publish a dedicated package (`@llamaindex/edge` instead of `llamaindex`) for using the Edge runtime. To use it, first install the package:
-
-```shell
-pnpm install @llamaindex/edge
-```
-
-> _Note_: Ensure that your `package.json` doesn't include the `llamaindex` package if you're using `@llamaindex/edge`.
-
-Then make sure to use the correct import statement in your code:
-
-```typescript
-// replace 'llamaindex' with '@llamaindex/edge'
-import {} from "@llamaindex/edge";
-```
-
-A further difference is that the `@llamaindex/edge` package doesn't export classes from the `readers` or `storage` folders. The reason is that most of these classes are not compatible with the Edge runtime.
+The reason is that most of these classes are not compatible with the Edge runtime.
 
 If you need any of those classes, you have to import them instead directly. Here's an example for importing the `PineconeVectorStore` class:
 
 ```typescript
-import { PineconeVectorStore } from "@llamaindex/edge/storage/vectorStore/PineconeVectorStore";
+import { PineconeVectorStore } from "llamaindex/storage/vectorStore/PineconeVectorStore";
 ```
 
 As the `PDFReader` is not working with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
 
 ```typescript
-import { SimpleDirectoryReader } from "@llamaindex/edge/readers/SimpleDirectoryReader";
-import { LlamaParseReader } from "@llamaindex/edge/readers/LlamaParseReader";
+import { SimpleDirectoryReader } from "llamaindex/readers/SimpleDirectoryReader";
+import { LlamaParseReader } from "llamaindex/readers/LlamaParseReader";
 
 export const DATA_DIR = "./data";
 

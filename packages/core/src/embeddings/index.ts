@@ -1,4 +1,3 @@
-export * from "./ClipEmbedding.js";
 export * from "./GeminiEmbedding.js";
 export * from "./JinaAIEmbedding.js";
 export * from "./MistralAIEmbedding.js";

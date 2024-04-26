@@ -208,17 +208,6 @@ async function blobToDataUrl(input: Blob) {
   return "data:" + mimes[0] + ";base64," + buffer.toString("base64");
 }
 
-export async function readImage(input: ImageType) {
-  const { RawImage } = await import("@xenova/transformers");
-  if (input instanceof Blob) {
-    return await RawImage.fromBlob(input);
-  } else if (_.isString(input) || input instanceof URL) {
-    return await RawImage.fromURL(input);
-  } else {
-    throw new Error(`Unsupported input type: ${typeof input}`);
-  }
-}
-
 export async function imageToString(input: ImageType): Promise<string> {
   if (input instanceof Blob) {
     // if the image is a Blob, convert it to a base64 data URL

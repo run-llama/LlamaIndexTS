@@ -1,6 +1,17 @@
+import _ from "lodash";
 import type { ImageType } from "../Node.js";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
-import { readImage } from "./utils.js";
+
+async function readImage(input: ImageType) {
+  const { RawImage } = await import("@xenova/transformers");
+  if (input instanceof Blob) {
+    return await RawImage.fromBlob(input);
+  } else if (_.isString(input) || input instanceof URL) {
+    return await RawImage.fromURL(input);
+  } else {
+    throw new Error(`Unsupported input type: ${typeof input}`);
+  }
+}
 
 export enum ClipEmbeddingModelType {
   XENOVA_CLIP_VIT_BASE_PATCH32 = "Xenova/clip-vit-base-patch32",
