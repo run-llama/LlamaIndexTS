@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.2.12
+
+### Patch Changes
+
+- d8d952d: feat: add gemini llm and embedding
+
 ## 0.2.11
 
 ### Patch Changes
