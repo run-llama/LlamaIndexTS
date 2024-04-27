@@ -1,5 +1,5 @@
 import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS, createSHA256 } from "@llamaindex/env";
+import { defaultFS } from "@llamaindex/env";
 import { Document } from "../Node.js";
 import type { FileReader } from "./type.js";
 
@@ -95,16 +95,16 @@ export class MarkdownReader implements FileReader {
     const content = await fs.readFile(file);
     const tups = this.parseTups(content);
     const results: Document[] = [];
-        for (const [header, value] of tups) {
-      const sha256 = createSHA256()
+    let counter = 0;
+    for (const [header, value] of tups) {
+      const id_ = `${file}_${counter}`
       if (header) {
         const text = `\n\n${header}\n${value}`;
-        sha256.update(text);
-        results.push(new Document({ text, id_: sha256.digest() }));
+        results.push(new Document({ text, id_ }));
       } else {
-        sha256.update(value);
-        results.push(new Document({ text: value, id_: sha256.digest() }));
+        results.push(new Document({ text: value, id_ }));
       }
+      counter += 1;
     }
     return results;
   }
