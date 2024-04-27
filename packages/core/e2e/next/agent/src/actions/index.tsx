@@ -27,6 +27,6 @@ export async function chatWithAgent(
         },
       }),
     )
-    .catch(console.error);
+    .catch(uiStream.error);
   return uiStream.value;
 }
