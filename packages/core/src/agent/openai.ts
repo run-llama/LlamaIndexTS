@@ -1,5 +1,4 @@
 import { pipeline, ReadableStream } from "@llamaindex/env";
-import { Settings } from "../Settings.js";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import type {
   ChatResponseChunk,
@@ -8,6 +7,7 @@ import type {
 } from "../llm/index.js";
 import { OpenAI } from "../llm/openai.js";
 import { ObjectRetriever } from "../objects/index.js";
+import { Settings } from "../Settings.js";
 import type { BaseToolWithCall } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
