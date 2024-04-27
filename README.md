@@ -32,6 +32,13 @@ For now, browser support is limited due to the lack of support for [AsyncLocalSt
 
 ## Getting started
 
+```shell
+npm install llamaindex
+pnpm install llamaindex
+yarn add llamaindex
+jsr install @llamaindex/core
+```
+
 ### Node.js
 
 ```ts
@@ -65,7 +72,8 @@ main();
 ```
 
 ```bash
-pnpm dlx tsx example.ts
+# `pnpm install tsx` before running the script
+node --import tsx ./main.ts
 ```
 
 ### Next.js
@@ -95,9 +103,11 @@ export default function Home() {
     </main>
   );
 }
+```
 
+```tsx
 // src/actions/index.ts
-("use server");
+"use server";
 import { createStreamableUI } from "ai/rsc";
 import { OpenAIAgent } from "llamaindex";
 import type { ChatMessage } from "llamaindex/llm/types";
