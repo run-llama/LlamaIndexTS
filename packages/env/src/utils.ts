@@ -21,9 +21,11 @@ interface CustomEventInit<T = any> extends EventInit {
   detail?: T;
 }
 
-// Browser doesn't support AsyncLocalStorage
+// Async Local Storage is available cross different JS runtimes
 export { AsyncLocalStorage } from "node:async_hooks";
 
+// Node.js 18 doesn't have CustomEvent by default
+// Refs: https://github.com/nodejs/node/issues/40678
 class CustomEvent<T = any> extends Event {
   readonly #detail: T;
   get detail(): T {
@@ -34,17 +36,15 @@ class CustomEvent<T = any> extends Event {
     this.#detail = options?.detail;
   }
 
+  /**
+   * @deprecated This method is not supported
+   */
   initCustomEvent() {
     throw new Error("initCustomEvent is not supported");
   }
 }
 
-interface Global {
-  CustomEvent: typeof CustomEvent;
-}
-
-// Node.js doesn't have CustomEvent by default
-// Refs: https://github.com/nodejs/node/issues/40678
-const defaultCustomEvent = CustomEvent || CustomEvent;
+const defaultCustomEvent: typeof CustomEvent =
+  (globalThis as any).CustomEvent || CustomEvent;
 
 export { defaultCustomEvent as CustomEvent };
