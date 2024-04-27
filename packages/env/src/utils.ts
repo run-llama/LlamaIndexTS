@@ -11,6 +11,16 @@ export function getEnv(name: string): string | undefined {
   return process.env[name];
 }
 
+interface EventInit {
+  bubbles?: boolean;
+  cancelable?: boolean;
+  composed?: boolean;
+}
+
+interface CustomEventInit<T = any> extends EventInit {
+  detail?: T;
+}
+
 // Browser doesn't support AsyncLocalStorage
 export { AsyncLocalStorage } from "node:async_hooks";
 
@@ -23,10 +33,18 @@ class CustomEvent<T = any> extends Event {
     super(event, options);
     this.#detail = options?.detail;
   }
+
+  initCustomEvent() {
+    throw new Error("initCustomEvent is not supported");
+  }
+}
+
+interface Global {
+  CustomEvent: typeof CustomEvent;
 }
 
 // Node.js doesn't have CustomEvent by default
 // Refs: https://github.com/nodejs/node/issues/40678
-const defaultCustomEvent = globalThis.CustomEvent || CustomEvent;
+const defaultCustomEvent = CustomEvent || CustomEvent;
 
 export { defaultCustomEvent as CustomEvent };

@@ -1,3 +1,4 @@
+import { ReadableStream } from "@llamaindex/env";
 import type { BaseEvent } from "../internal/type.js";
 import type {
   ChatMessage,

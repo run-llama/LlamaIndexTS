@@ -1,4 +1,4 @@
-import { pipeline } from "@llamaindex/env";
+import { pipeline, ReadableStream } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import type {

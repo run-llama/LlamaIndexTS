@@ -1,3 +1,4 @@
+import { ReadableStream } from "@llamaindex/env";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable, prettifyError } from "../internal/utils.js";
 import type {

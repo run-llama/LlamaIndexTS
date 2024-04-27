@@ -3,8 +3,7 @@ import _ from "lodash";
 /**
  * A filesystem interface that is meant to be compatible with
  * the 'fs' module from Node.js.
- * Allows for the use of similar inteface implementation on
- * browsers.
+ * Allows for the use of similar interface implementation on different JS runtimes.
  */
 export type GenericFileSystem = {
   writeFile(path: string, content: string): Promise<void>;
