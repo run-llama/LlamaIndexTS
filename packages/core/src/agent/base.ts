@@ -1,4 +1,9 @@
-import { pipeline, randomUUID } from "@llamaindex/env";
+import {
+  ReadableStream,
+  TransformStream,
+  pipeline,
+  randomUUID,
+} from "@llamaindex/env";
 import {
   type ChatEngine,
   type ChatEngineParamsNonStreaming,
@@ -104,8 +109,7 @@ export async function* createTaskImpl<
 
 export type AgentStreamChatResponse<Options extends object> = {
   response: ChatResponseChunk<Options>;
-  // sources of the response, will emit when new tool outputs are available
-  sources?: ToolOutput[];
+  sources: ToolOutput[];
 };
 
 export type AgentChatResponse<Options extends object> = {

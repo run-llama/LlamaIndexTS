@@ -11,7 +11,9 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true
+    "composite": true,
+    "types": [],
+    "lib": ["ES2022"]
   },
   "files": [],
   "references": [

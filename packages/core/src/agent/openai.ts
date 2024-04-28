@@ -1,13 +1,14 @@
-import { pipeline } from "@llamaindex/env";
-import { Settings } from "../Settings.js";
+import { pipeline, ReadableStream } from "@llamaindex/env";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import type {
   ChatResponseChunk,
+  PartialToolCall,
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "../llm/index.js";
 import { OpenAI } from "../llm/openai.js";
 import { ObjectRetriever } from "../objects/index.js";
+import { Settings } from "../Settings.js";
 import type { BaseToolWithCall } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
@@ -133,7 +134,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           async (
             iter: AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>,
           ) => {
-            const toolCalls = new Map<string, ToolCall>();
+            const toolCalls = new Map<string, ToolCall | PartialToolCall>();
             for await (const chunk of iter) {
               if (chunk.options && "toolCall" in chunk.options) {
                 const toolCall = chunk.options.toolCall;

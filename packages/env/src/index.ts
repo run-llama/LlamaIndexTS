@@ -4,6 +4,11 @@ import fs from "node:fs/promises";
 import { EOL } from "node:os";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
+import {
+  ReadableStream,
+  TransformStream,
+  WritableStream,
+} from "node:stream/web";
 import type { SHA256 } from "./index.polyfill.js";
 import type { CompleteFileSystem } from "./type.js";
 
@@ -37,4 +42,13 @@ export const defaultFS: CompleteFileSystem = {
 
 export type * from "./type.js";
 export { AsyncLocalStorage, CustomEvent, getEnv } from "./utils.js";
-export { EOL, ok, path, pipeline, randomUUID };
+export {
+  EOL,
+  ReadableStream,
+  TransformStream,
+  WritableStream,
+  ok,
+  path,
+  pipeline,
+  randomUUID,
+};
