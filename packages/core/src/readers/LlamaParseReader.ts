@@ -63,7 +63,7 @@ export class LlamaParseReader implements FileReader {
     let response = await fetch(url, {
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
       method: "POST",
-      body: body,
+      body,
       headers,
     });
     if (!response.ok) {
