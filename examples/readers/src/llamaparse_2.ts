@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import { LlamaParseReader } from "llamaindex";
 
 async function main() {
@@ -12,15 +12,15 @@ async function main() {
   const documents = await reader.loadData("../data/manga.pdf"); // The manga.pdf in the data folder is just a copy of the TOS, due to copyright laws. You have to place your own. I used "The Manga Guide to Calculus" by Hiroyuki Kojima
 
   // Assuming documents contain an array of pages or sections
-  const parsedManga = documents.map((page) => page.text).join("\n\n");
+  const parsedManga = documents.map((page) => page.text).join("\n---\n");
 
   // Output the parsed manga to .md file. Will be placed in ../example/readers/
-  fs.writeFile("parsedManga.md", parsedManga, (err) => {
-    if (err) {
-      console.error("Error writing to file:", err);
-    } else {
-      console.log("Output successfully written to parsedManga.md");
-    }
-  });
+  try {
+    await fs.writeFile("./parsedManga.md", parsedManga);
+    console.log("Output successfully written to parsedManga.md");
+  } catch (err) {
+    console.error("Error writing to file:", err);
+  }
 }
+
 main().catch(console.error);
