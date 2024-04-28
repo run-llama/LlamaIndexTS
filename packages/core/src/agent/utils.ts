@@ -4,20 +4,25 @@ import { isAsyncIterable, prettifyError } from "../internal/utils.js";
 import type {
   ChatMessage,
   ChatResponseChunk,
+  PartialToolCall,
   TextChatMessage,
   ToolCall,
 } from "../llm/index.js";
-import type { BaseTool, JSONValue, ToolOutput } from "../types.js";
+import type { BaseTool, JSONObject, JSONValue, ToolOutput } from "../types.js";
 
 export async function callTool(
   tool: BaseTool | undefined,
-  toolCall: ToolCall,
+  toolCall: ToolCall | PartialToolCall,
 ): Promise<ToolOutput> {
+  const input: JSONObject =
+    typeof toolCall.input === "string"
+      ? JSON.parse(toolCall.input)
+      : toolCall.input;
   if (!tool) {
     const output = `Tool ${toolCall.name} does not exist.`;
     return {
       tool,
-      input: toolCall.input,
+      input,
       output,
       isError: true,
     };
@@ -28,31 +33,27 @@ export async function callTool(
     output = `Tool ${tool.metadata.name} (remote:${toolCall.name}) does not have a implementation.`;
     return {
       tool,
-      input: toolCall.input,
+      input,
       output,
       isError: true,
     };
   }
   try {
-    let input = toolCall.input;
-    if (typeof input === "string") {
-      input = JSON.parse(input);
-    }
     getCallbackManager().dispatchEvent("llm-tool-call", {
       payload: {
-        toolCall: { ...toolCall },
+        toolCall: { ...toolCall, input },
       },
     });
     output = await call.call(tool, input);
     const toolOutput: ToolOutput = {
       tool,
-      input: toolCall.input,
+      input,
       output,
       isError: false,
     };
     getCallbackManager().dispatchEvent("llm-tool-result", {
       payload: {
-        toolCall: { ...toolCall },
+        toolCall: { ...toolCall, input },
         toolResult: { ...toolOutput },
       },
     });
@@ -62,7 +63,7 @@ export async function callTool(
   }
   return {
     tool,
-    input: toolCall.input,
+    input,
     output,
     isError: true,
   };

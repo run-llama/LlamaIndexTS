@@ -38,7 +38,7 @@
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "call_EVThrsiOylO0p6ZmGdsA31x9",
+              "id": "call_VfgZS1NPKpbtzqhM3o1Buzx8",
               "name": "summary_tool",
               "input": "{\"query\": \"Alex\"}"
             }
@@ -51,7 +51,7 @@
             "toolResult": {
               "result": "Alex is not in Brazil.",
               "isError": false,
-              "id": "call_EVThrsiOylO0p6ZmGdsA31x9"
+              "id": "call_VfgZS1NPKpbtzqhM3o1Buzx8"
             }
           }
         }
@@ -68,7 +68,7 @@
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "call_EVThrsiOylO0p6ZmGdsA31x9",
+              "id": "call_VfgZS1NPKpbtzqhM3o1Buzx8",
               "name": "summary_tool",
               "input": "{\"query\": \"Alex\"}"
             }

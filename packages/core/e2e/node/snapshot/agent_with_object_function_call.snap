@@ -21,7 +21,7 @@
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "call_lR2r0rpfqNX11jukJvEUdByv",
+              "id": "call_iY0VO4HvXDT2PtR3CvRSY1uK",
               "name": "get_weather",
               "input": "{\"location\":\"San Francisco\"}"
             }
@@ -39,7 +39,7 @@
                 "rain_prediction": 0.89
               },
               "isError": false,
-              "id": "call_lR2r0rpfqNX11jukJvEUdByv"
+              "id": "call_iY0VO4HvXDT2PtR3CvRSY1uK"
             }
           }
         }
@@ -56,7 +56,7 @@
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "call_lR2r0rpfqNX11jukJvEUdByv",
+              "id": "call_iY0VO4HvXDT2PtR3CvRSY1uK",
               "name": "get_weather",
               "input": "{\"location\":\"San Francisco\"}"
             }

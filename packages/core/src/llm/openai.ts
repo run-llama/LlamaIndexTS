@@ -38,7 +38,7 @@ import type {
   LLMChatParamsStreaming,
   LLMMetadata,
   MessageType,
-  ToolCall,
+  PartialToolCall,
   ToolCallLLMMessageOptions,
 } from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
@@ -389,6 +389,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     };
   }
 
+  // todo: this wrapper is ugly, refactor it
   @wrapEventCaller
   protected async *streamChat(
     baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams,
@@ -403,24 +404,15 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     //Indices
     let idxCounter: number = 0;
     // this will be used to keep track of the current tool call, make sure input are valid json object.
-    let currentToolCall:
-      | (Omit<ToolCall, "input"> & {
-          input: string;
-        })
-      | null = null;
-    const toolCallMap = new Map<
-      string,
-      Omit<ToolCall, "input"> & {
-        input: string;
-      }
-    >();
+    let currentToolCall: PartialToolCall | null = null;
+    const toolCallMap = new Map<string, PartialToolCall>();
     for await (const part of stream) {
       if (part.choices.length === 0) continue;
       const choice = part.choices[0];
       // skip parts that don't have any content
       if (!(choice.delta.content || choice.delta.tool_calls)) continue;
 
-      let shouldEmitToolCall: ToolCall | null = null;
+      let shouldEmitToolCall: PartialToolCall | null = null;
       if (
         choice.delta.tool_calls?.[0].id &&
         currentToolCall &&
@@ -463,7 +455,13 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
 
       yield {
         raw: part,
-        options: shouldEmitToolCall ? shouldEmitToolCall : {},
+        options: shouldEmitToolCall
+          ? { toolCall: shouldEmitToolCall }
+          : currentToolCall
+            ? {
+                toolCall: currentToolCall,
+              }
+            : {},
         delta: choice.delta.content ?? "",
       };
     }

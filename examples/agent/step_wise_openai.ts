@@ -1,4 +1,5 @@
 import { FunctionTool, OpenAIAgent } from "llamaindex";
+import { ReadableStream } from "node:stream/web";
 
 // Define a function to sum two numbers
 function sumNumbers({ a, b }: { a: number; b: number }) {
@@ -69,11 +70,24 @@ async function main() {
   for await (const stepOutput of task) {
     console.log(`Runnning step ${count++}`);
     console.log(`======== OUTPUT ==========`);
-    console.log(stepOutput.output.message.content);
+    const output = stepOutput.output;
+    if (output instanceof ReadableStream) {
+      for await (const chunk of output) {
+        process.stdout.write(chunk.delta);
+      }
+    } else {
+      console.log(output);
+    }
     console.log(`==========================`);
 
     if (stepOutput.isLast) {
-      console.log(stepOutput.output.message.content);
+      if (stepOutput.output instanceof ReadableStream) {
+        for await (const chunk of stepOutput.output) {
+          process.stdout.write(chunk.delta);
+        }
+      } else {
+        console.log(stepOutput.output);
+      }
     }
   }
 }

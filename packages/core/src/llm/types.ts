@@ -189,6 +189,14 @@ export type ToolCall = {
   id: string;
 };
 
+// happened in streaming response, the tool call is not ready yet
+export type PartialToolCall = {
+  name: string;
+  id: string;
+  // input is not ready yet, JSON.parse(input) will throw an error
+  input: string;
+};
+
 export type ToolResult = {
   id: string;
   result: string;
@@ -196,7 +204,7 @@ export type ToolResult = {
 };
 
 export type ToolCallOptions = {
-  toolCall: ToolCall;
+  toolCall: ToolCall | PartialToolCall;
 };
 
 export type ToolResultOptions = {

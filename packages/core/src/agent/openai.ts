@@ -2,6 +2,7 @@ import { pipeline, ReadableStream } from "@llamaindex/env";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import type {
   ChatResponseChunk,
+  PartialToolCall,
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "../llm/index.js";
@@ -133,7 +134,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           async (
             iter: AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>,
           ) => {
-            const toolCalls = new Map<string, ToolCall>();
+            const toolCalls = new Map<string, ToolCall | PartialToolCall>();
             for await (const chunk of iter) {
               if (chunk.options && "toolCall" in chunk.options) {
                 const toolCall = chunk.options.toolCall;
