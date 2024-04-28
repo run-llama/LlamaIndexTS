@@ -10,7 +10,8 @@
     "start:markdown": "node --import tsx ./src/markdown.ts",
     "start:pdf": "node --import tsx ./src/pdf.ts",
     "start:llamaparse": "node --import tsx ./src/llamaparse.ts",
-    "start:notion": "node --import tsx ./src/notion.ts"
+    "start:notion": "node --import tsx ./src/notion.ts",
+    "start:llamaparse2": "node --import tsx ./src/llamaparse_2.ts"
   },
   "dependencies": {
     "llamaindex": "*"

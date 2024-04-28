@@ -32,29 +32,7 @@
     {
       "id": "PRESERVE_0",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": "```json\n[\n    {\n        \"subQuestion\": \"What is Bill Gates' idea\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]\n```"
-              },
-              "logprobs": null,
-              "finish_reason": "stop"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 290,
-            "completion_tokens": 35,
-            "total_tokens": 325
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "```json\n[\n    {\n        \"subQuestion\": \"What is Bill Gates' idea\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]\n```",
           "role": "assistant",
@@ -65,29 +43,7 @@
     {
       "id": "PRESERVE_1",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": "Bill Gates' idea was to steal from Apple."
-              },
-              "logprobs": null,
-              "finish_reason": "stop"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 53,
-            "completion_tokens": 10,
-            "total_tokens": 63
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "Bill Gates' idea was to steal from Apple.",
           "role": "assistant",
@@ -98,29 +54,7 @@
     {
       "id": "PRESERVE_2",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": "Bill Gates stole from Apple."
-              },
-              "logprobs": null,
-              "finish_reason": "stop"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 62,
-            "completion_tokens": 6,
-            "total_tokens": 68
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "Bill Gates stole from Apple.",
           "role": "assistant",
