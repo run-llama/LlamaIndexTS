@@ -332,6 +332,9 @@ importers:
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
+      '@types/node':
+        specifier: ^20.12.7
+        version: 20.12.7
       consola:
         specifier: ^3.2.3
         version: 3.2.3
