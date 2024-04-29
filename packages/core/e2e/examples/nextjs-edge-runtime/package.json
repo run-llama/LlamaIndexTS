@@ -1,5 +1,5 @@
 {
-  "name": "edge-runtime-test",
+  "name": "@llamaindex/nextjs-edge-runtime-test",
   "version": "0.1.4",
   "private": true,
   "scripts": {

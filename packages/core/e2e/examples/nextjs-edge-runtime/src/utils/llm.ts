@@ -1,6 +1,6 @@
 "use server";
 // test runtime
-import "@llamaindex/edge";
+import "llamaindex";
 
 // @ts-expect-error
 if (typeof EdgeRuntime !== "string") {
