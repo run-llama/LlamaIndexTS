@@ -456,7 +456,8 @@ var require_stopwords = __commonJS({
 });
 
 // src/index.js
-import { fromPairs, sortBy, toPairs } from "lodash";
+import _ from "lodash";
+const { fromPairs, sortBy, toPairs } = _;
 var stopwords = require_stopwords();
 function isNumber(str) {
   return /\d/.test(str);
