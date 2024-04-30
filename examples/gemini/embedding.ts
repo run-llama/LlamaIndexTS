@@ -5,7 +5,7 @@ async function main() {
     throw new Error("Please set the GOOGLE_API_KEY environment variable.");
   }
   const embedModel = new GeminiEmbedding({
-    model: GEMINI_MODEL.GEMINI_PRO,
+    model: GEMINI_MODEL.EMBEDDING_001,
   });
   const texts = ["hello", "world"];
   const embeddings = await embedModel.getTextEmbeddingsBatch(texts);
