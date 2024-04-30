@@ -91,6 +91,7 @@ jobs:
           - cloudflare-worker-agent
           - nextjs-agent
           - nextjs-edge-runtime
+          - waku-query-engine
     runs-on: ubuntu-latest
     name: Build Core Example (${{ matrix.packages }})
     steps:
