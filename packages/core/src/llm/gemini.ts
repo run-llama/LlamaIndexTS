@@ -32,8 +32,6 @@ type GeminiSessionOptions = {
 export enum GEMINI_MODEL {
   GEMINI_PRO = "gemini-pro",
   GEMINI_PRO_VISION = "gemini-pro-vision",
-  EMBEDDING_001 = "embedding-001",
-  AQA = "aqa",
   GEMINI_PRO_LATEST = "gemini-1.5-pro-latest",
 }
 
@@ -44,16 +42,12 @@ export interface GeminiModelInfo {
 export const GEMINI_MODEL_INFO_MAP: Record<GEMINI_MODEL, GeminiModelInfo> = {
   [GEMINI_MODEL.GEMINI_PRO]: { contextWindow: 30720 },
   [GEMINI_MODEL.GEMINI_PRO_VISION]: { contextWindow: 12288 },
-  [GEMINI_MODEL.EMBEDDING_001]: { contextWindow: 2048 },
-  [GEMINI_MODEL.AQA]: { contextWindow: 7168 },
   [GEMINI_MODEL.GEMINI_PRO_LATEST]: { contextWindow: 10 ** 6 },
 };
 
 const SUPPORT_TOOL_CALL_MODELS: GEMINI_MODEL[] = [
   GEMINI_MODEL.GEMINI_PRO,
   GEMINI_MODEL.GEMINI_PRO_VISION,
-  GEMINI_MODEL.EMBEDDING_001,
-  GEMINI_MODEL.AQA,
 ];
 
 const DEFAULT_GEMINI_PARAMS = {
