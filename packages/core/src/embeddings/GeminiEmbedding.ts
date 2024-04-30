@@ -1,27 +1,21 @@
-import {
-  GEMINI_MODEL,
-  GeminiSessionStore,
-  type GeminiConfig,
-  type GeminiSession,
-} from "../llm/gemini.js";
+import { GeminiSessionStore, type GeminiSession } from "../llm/gemini.js";
 import { BaseEmbedding } from "./types.js";
+
+export enum GEMINI_EMBEDDING_MODEL {
+  EMBEDDING_001 = "embedding-001",
+  TEXT_EMBEDDING_004 = "text-embedding-004",
+}
 
 /**
  * GeminiEmbedding is an alias for Gemini that implements the BaseEmbedding interface.
  */
 export class GeminiEmbedding extends BaseEmbedding {
-  model: GEMINI_MODEL;
-  temperature: number;
-  topP: number;
-  maxTokens?: number;
+  model: GEMINI_EMBEDDING_MODEL;
   session: GeminiSession;
 
-  constructor(init?: GeminiConfig) {
+  constructor(init?: Partial<GeminiEmbedding>) {
     super();
-    this.model = init?.model ?? GEMINI_MODEL.GEMINI_PRO;
-    this.temperature = init?.temperature ?? 0.1;
-    this.topP = init?.topP ?? 1;
-    this.maxTokens = init?.maxTokens ?? undefined;
+    this.model = init?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
     this.session = init?.session ?? GeminiSessionStore.get();
   }
 
