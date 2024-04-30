@@ -92,7 +92,7 @@ jobs:
           - nextjs-agent
           - nextjs-edge-runtime
     runs-on: ubuntu-latest
-    name: E2E on Core Example (${{ matrix.packages }})
+    name: Build Core Example (${{ matrix.packages }})
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3

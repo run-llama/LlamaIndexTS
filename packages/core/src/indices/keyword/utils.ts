@@ -1,5 +1,4 @@
-// @ts-ignore
-import rake from "rake-modified";
+import rake from "../../internal/deps/rake-modified.js";
 
 // Get subtokens from a list of tokens., filtering for stopwords.
 export function expandTokensWithSubtokens(tokens: Set<string>): Set<string> {
