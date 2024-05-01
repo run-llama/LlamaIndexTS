@@ -45,7 +45,6 @@ export type TaskStep<
     : never,
 > = {
   id: UUID;
-  input: ChatMessage<AdditionalMessageOptions> | null;
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>;
 
   // linked list
@@ -62,22 +61,14 @@ export type TaskStepOutput<
   >
     ? AdditionalMessageOptions
     : never,
-> =
-  | {
+> = {
       taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
+      // output shows the response to the user
       output:
-        | null
         | ChatResponse<AdditionalMessageOptions>
         | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: false;
+      isLast: boolean;
     }
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: true;
-    };
 
 export type TaskHandler<
   Model extends LLM,

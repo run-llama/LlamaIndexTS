@@ -5,7 +5,7 @@ import {
 } from "../engines/chat/index.js";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import { Anthropic } from "../llm/anthropic.js";
-import type { ToolCallLLMMessageOptions } from "../llm/index.js";
+import type { ChatMessage, ToolCallLLMMessageOptions } from '../llm/index.js';
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
 import {
@@ -68,11 +68,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
   }
 
   static taskHandler: TaskHandler<Anthropic> = async (step) => {
-    const { input } = step;
     const { llm, getTools, stream } = step.context;
-    if (input) {
-      step.context.store.messages = [...step.context.store.messages, input];
-    }
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     if (stream === true) {
@@ -95,22 +91,20 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
       );
       const toolOutput = await callTool(targetTool, toolCall);
       step.context.store.toolOutputs.push(toolOutput);
-      return {
-        taskStep: step,
-        output: {
-          raw: response.raw,
-          message: {
-            content: stringifyJSONToMessageContent(toolOutput.output),
-            role: "user",
-            options: {
-              toolResult: {
-                result: toolOutput.output,
-                isError: toolOutput.isError,
-                id: toolCall.id,
-              },
-            },
+      step.context.store.messages.push({
+        content: stringifyJSONToMessageContent(toolOutput.output),
+        role: "user",
+        options: {
+          toolResult: {
+            result: toolOutput.output,
+            isError: toolOutput.isError,
+            id: toolCall.id,
           },
         },
+      });
+      return {
+        taskStep: step,
+        output: response,
         isLast: false,
       };
     } else {

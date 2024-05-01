@@ -46,16 +46,13 @@ export async function* createTaskImpl<
 >(
   handler: TaskHandler<Model, Store, AdditionalMessageOptions>,
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>,
-  _input: ChatMessage<AdditionalMessageOptions>,
 ): AsyncGenerator<TaskStepOutput<Model, Store, AdditionalMessageOptions>> {
   let isFirst = true;
   let isDone = false;
-  let input: ChatMessage<AdditionalMessageOptions> | null = _input;
   let prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null = null;
   while (!isDone) {
     const step: TaskStep<Model, Store, AdditionalMessageOptions> = {
       id: randomUUID(),
-      input,
       context,
       prevStep,
       nextSteps: new Set(),
@@ -76,17 +73,7 @@ export async function* createTaskImpl<
       isFirst = false;
     }
     const taskOutput = await handler(step);
-    const { isLast, output, taskStep } = taskOutput;
-    // do not consume last output
-    if (!isLast) {
-      if (output) {
-        input = isAsyncIterable(output)
-          ? await consumeAsyncIterable(output)
-          : output.message;
-      } else {
-        input = null;
-      }
-    }
+    const { isLast, taskStep } = taskOutput;
     context = {
       ...taskStep.context,
       store: {
@@ -170,10 +157,11 @@ export abstract class AgentWorker<
     query: string,
     context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
   ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
-    const taskGenerator = createTaskImpl(this.taskHandler, context, {
+    context.store.messages.push({
       role: "user",
       content: query,
-    });
+    })
+    const taskGenerator = createTaskImpl(this.taskHandler, context);
     return new ReadableStream<
       TaskStepOutput<AI, Store, AdditionalMessageOptions>
     >({

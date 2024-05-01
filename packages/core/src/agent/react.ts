@@ -351,10 +351,6 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
 
   static taskHandler: TaskHandler<LLM, ReACTAgentStore> = async (step) => {
     const { llm, stream, getTools } = step.context;
-    const input = step.input;
-    if (input) {
-      step.context.store.messages.push(input);
-    }
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     const messages = await chatFormatter(
@@ -393,7 +389,7 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
       }
       return {
         isLast: false,
-        output: null,
+        output: response,
         taskStep: step,
       };
     }

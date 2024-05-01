@@ -52,11 +52,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
   createStore = AgentRunner.defaultCreateStore;
 
   static taskHandler: TaskHandler<OpenAI> = async (step) => {
-    const { input } = step;
     const { llm, stream, getTools } = step.context;
-    if (input) {
-      step.context.store.messages = [...step.context.store.messages, input];
-    }
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     const response = await llm.chat({
@@ -80,20 +76,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         step.context.store.toolOutputs.push(toolOutput);
         return {
           taskStep: step,
-          output: {
-            raw: response.raw,
-            message: {
-              content: stringifyJSONToMessageContent(toolOutput.output),
-              role: "user",
-              options: {
-                toolResult: {
-                  result: toolOutput.output,
-                  isError: toolOutput.isError,
-                  id: toolCall.id,
-                },
-              },
-            },
-          },
+          output: response,
           isLast: false,
         };
       } else {
@@ -177,7 +160,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         }
         return {
           taskStep: step,
-          output: null,
+          output: finalStream,
           isLast: false,
         };
       } else {
