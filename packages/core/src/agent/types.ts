@@ -62,13 +62,13 @@ export type TaskStepOutput<
     ? AdditionalMessageOptions
     : never,
 > = {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      // output shows the response to the user
-      output:
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: boolean;
-    }
+  taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
+  // output shows the response to the user
+  output:
+    | ChatResponse<AdditionalMessageOptions>
+    | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
+  isLast: boolean;
+};
 
 export type TaskHandler<
   Model extends LLM,

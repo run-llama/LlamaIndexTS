@@ -27,7 +27,6 @@ import type {
   TaskStep,
   TaskStepOutput,
 } from "./types.js";
-import { consumeAsyncIterable } from "./utils.js";
 
 export const MAX_TOOL_CALLS = 10;
 
@@ -160,7 +159,7 @@ export abstract class AgentWorker<
     context.store.messages.push({
       role: "user",
       content: query,
-    })
+    });
     const taskGenerator = createTaskImpl(this.taskHandler, context);
     return new ReadableStream<
       TaskStepOutput<AI, Store, AdditionalMessageOptions>

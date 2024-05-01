@@ -5,7 +5,7 @@ import {
 } from "../engines/chat/index.js";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import { Anthropic } from "../llm/anthropic.js";
-import type { ChatMessage, ToolCallLLMMessageOptions } from '../llm/index.js';
+import type { ToolCallLLMMessageOptions } from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall } from "../types.js";
 import {
