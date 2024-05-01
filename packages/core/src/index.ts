@@ -12,3 +12,5 @@ export {
 } from "./embeddings/HuggingFaceEmbedding.js";
 export { OllamaEmbedding } from "./embeddings/OllamaEmbedding.js";
 export { Ollama, type OllamaParams } from "./llm/ollama.js";
+// Use ClipEmbedding
+export * from "./indices/vectorStore/index.js";
