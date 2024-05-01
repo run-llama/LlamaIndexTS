@@ -51,7 +51,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
 
   createStore = AgentRunner.defaultCreateStore;
 
-  static taskHandler: TaskHandler<OpenAI> = async (step) => {
+  static taskHandler: TaskHandler<OpenAI> = async (step, enqueueOutput) => {
     const { llm, stream, getTools } = step.context;
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
@@ -67,6 +67,11 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         response.message,
       ];
       const options = response.message.options ?? {};
+      enqueueOutput({
+        taskStep: step,
+        output: response,
+        isLast: !("toolCall" in options),
+      });
       if ("toolCall" in options) {
         const { toolCall } = options;
         const targetTool = tools.find(
@@ -88,17 +93,6 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
             },
           },
         ];
-        return {
-          taskStep: step,
-          output: response,
-          isLast: false,
-        };
-      } else {
-        return {
-          taskStep: step,
-          output: response,
-          isLast: true,
-        };
       }
     } else {
       const responseChunkStream = new ReadableStream<
@@ -123,6 +117,11 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
       // check if first chunk has tool calls, if so, this is a function call
       // otherwise, it's a regular message
       const hasToolCall = !!(value.options && "toolCall" in value.options);
+      enqueueOutput({
+        taskStep: step,
+        output: finalStream,
+        isLast: !hasToolCall,
+      });
 
       if (hasToolCall) {
         // you need to consume the response to get the full toolCalls
@@ -172,17 +171,6 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           ];
           step.context.store.toolOutputs.push(toolOutput);
         }
-        return {
-          taskStep: step,
-          output: finalStream,
-          isLast: false,
-        };
-      } else {
-        return {
-          taskStep: step,
-          output: finalStream,
-          isLast: true,
-        };
       }
     }
   };

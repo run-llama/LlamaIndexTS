@@ -81,7 +81,10 @@ export type TaskHandler<
     : never,
 > = (
   step: TaskStep<Model, Store, AdditionalMessageOptions>,
-) => Promise<TaskStepOutput<Model, Store, AdditionalMessageOptions>>;
+  enqueueOutput: (
+    taskOutput: TaskStepOutput<Model, Store, AdditionalMessageOptions>,
+  ) => void,
+) => Promise<void>;
 
 export type AgentStartEvent = BaseEvent<{
   startStep: TaskStep;

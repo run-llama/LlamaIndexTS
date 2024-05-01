@@ -67,7 +67,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
     return super.chat(params);
   }
 
-  static taskHandler: TaskHandler<Anthropic> = async (step) => {
+  static taskHandler: TaskHandler<Anthropic> = async (step, enqueueOutput) => {
     const { llm, getTools, stream } = step.context;
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
@@ -84,6 +84,11 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
       response.message,
     ];
     const options = response.message.options ?? {};
+    enqueueOutput({
+      taskStep: step,
+      output: response,
+      isLast: !("toolCall" in options),
+    });
     if ("toolCall" in options) {
       const { toolCall } = options;
       const targetTool = tools.find(
@@ -105,17 +110,6 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
           },
         },
       ];
-      return {
-        taskStep: step,
-        output: response,
-        isLast: false,
-      };
-    } else {
-      return {
-        taskStep: step,
-        output: response,
-        isLast: true,
-      };
     }
   };
 }
