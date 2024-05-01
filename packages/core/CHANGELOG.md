@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.3.1
+
+### Patch Changes
+
+- 46227f2: fix: build error on next.js nodejs runtime
+
 ## 0.3.0
 
 ### Minor Changes
