@@ -3,7 +3,10 @@ import type { ImageType } from "../Node.js";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 
 async function readImage(input: ImageType) {
-  const { RawImage } = await import("@xenova/transformers");
+  const { RawImage } = await import(
+    /* webpackIgnore: true */
+    "@xenova/transformers"
+  );
   if (input instanceof Blob) {
     return await RawImage.fromBlob(input);
   } else if (_.isString(input) || input instanceof URL) {
@@ -29,7 +32,10 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getTokenizer() {
     if (!this.tokenizer) {
-      const { AutoTokenizer } = await import("@xenova/transformers");
+      const { AutoTokenizer } = await import(
+        /* webpackIgnore: true */
+        "@xenova/transformers"
+      );
       this.tokenizer = await AutoTokenizer.from_pretrained(this.modelType);
     }
     return this.tokenizer;
@@ -37,7 +43,10 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getProcessor() {
     if (!this.processor) {
-      const { AutoProcessor } = await import("@xenova/transformers");
+      const { AutoProcessor } = await import(
+        /* webpackIgnore: true */
+        "@xenova/transformers"
+      );
       this.processor = await AutoProcessor.from_pretrained(this.modelType);
     }
     return this.processor;
@@ -46,6 +55,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
   async getVisionModel() {
     if (!this.visionModel) {
       const { CLIPVisionModelWithProjection } = await import(
+        /* webpackIgnore: true */
         "@xenova/transformers"
       );
       this.visionModel = await CLIPVisionModelWithProjection.from_pretrained(
@@ -59,6 +69,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
   async getTextModel() {
     if (!this.textModel) {
       const { CLIPTextModelWithProjection } = await import(
+        /* webpackIgnore: true */
         "@xenova/transformers"
       );
       this.textModel = await CLIPTextModelWithProjection.from_pretrained(
