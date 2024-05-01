@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/env",
-  "description": "environment wrapper",
+  "description": "environment wrapper, supports all JS environment including node, deno, bun, edge runtime, and cloudflare worker",
   "version": "0.1.0",
   "type": "module",
   "types": "dist/type/index.d.ts",
@@ -74,5 +74,16 @@
     "@aws-crypto/sha256-js": "^5.2.0",
     "pathe": "^1.1.2",
     "readable-stream": "^4.5.2"
+  },
+  "peerDependenciesMeta": {
+    "@aws-crypto/sha256-js": {
+      "optional": true
+    },
+    "pathe": {
+      "optional": true
+    },
+    "readable-stream": {
+      "optional": true
+    }
   }
 }
