@@ -1,5 +1,5 @@
 {
-  "name": "test-edge-runtime",
+  "name": "@llamaindex/nextjs-edge-runtime-test",
   "version": "0.1.4",
   "private": true,
   "scripts": {
@@ -15,8 +15,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
     "typescript": "^5"
   }
 }

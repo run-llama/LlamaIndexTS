@@ -63,6 +63,18 @@
   "main": "./dist/cjs/index.js",
   "exports": {
     ".": {
+      "react-server": {
+        "types": "./dist/type/index.react-server.d.ts",
+        "default": "./dist/index.react-server.js"
+      },
+      "workerd": {
+        "types": "./dist/type/index.workerd.d.ts",
+        "default": "./dist/index.workerd.js"
+      },
+      "edge-light": {
+        "types": "./dist/type/index.edge.d.ts",
+        "default": "./dist/index.edge.js"
+      },
       "import": {
         "types": "./dist/type/index.d.ts",
         "default": "./dist/index.js"
@@ -75,6 +87,24 @@
     "./internal/*": {
       "import": "./dist/not-allow.js",
       "require": "./dist/cjs/not-allow.js"
+    },
+    "./readers/SimpleDirectoryReader": {
+      "workerd": {
+        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
+        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
+      },
+      "edge-light": {
+        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
+        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
+      },
+      "import": {
+        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
+        "default": "./dist/readers/SimpleDirectoryReader.js"
+      },
+      "require": {
+        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
+        "default": "./dist/cjs/readers/SimpleDirectoryReader.js"
+      }
     },
     "./*": {
       "import": {

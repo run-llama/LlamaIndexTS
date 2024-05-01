@@ -13,11 +13,11 @@ import {
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
+import { ClipEmbedding } from "../../embeddings/ClipEmbedding.js";
 import type {
   BaseEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings/index.js";
-import { ClipEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import { runTransformations } from "../../ingestion/IngestionPipeline.js";
 import {

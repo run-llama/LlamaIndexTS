@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "build:release": "turbo run build lint test --filter=\"!docs\"",
+    "build:release": "turbo run build lint test --filter=\"!docs\" --filter=\"!*-test\"",
     "dev": "turbo run dev",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",

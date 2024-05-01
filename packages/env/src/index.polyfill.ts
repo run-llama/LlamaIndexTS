@@ -51,5 +51,5 @@ const TransformStream = globalThis.TransformStream;
 // @ts-expect-error
 const WritableStream = globalThis.WritableStream;
 
-export { AsyncLocalStorage, CustomEvent, getEnv } from "./utils.js";
+export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
 export { ReadableStream, TransformStream, WritableStream };

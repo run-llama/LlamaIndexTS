@@ -1,6 +1,7 @@
 "use server";
 // test runtime
-import "@llamaindex/edge";
+import "llamaindex";
+import "llamaindex/readers/SimpleDirectoryReader";
 
 // @ts-expect-error
 if (typeof EdgeRuntime !== "string") {
