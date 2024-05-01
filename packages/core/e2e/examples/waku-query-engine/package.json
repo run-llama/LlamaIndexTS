@@ -1,5 +1,5 @@
 {
-  "name": "@llamaindex/waku-query-engine",
+  "name": "@llamaindex/waku-query-engine-test",
   "version": "0.0.0",
   "type": "module",
   "private": true,
