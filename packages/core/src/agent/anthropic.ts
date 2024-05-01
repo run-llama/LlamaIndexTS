@@ -91,7 +91,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
       );
       const toolOutput = await callTool(targetTool, toolCall);
       step.context.store.toolOutputs.push(toolOutput);
-      step.context.store.messages.push({
+      step.context.store.messages =[...step.context.store.messages, {
         content: stringifyJSONToMessageContent(toolOutput.output),
         role: "user",
         options: {
@@ -101,7 +101,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
             id: toolCall.id,
           },
         },
-      });
+      }]
       return {
         taskStep: step,
         output: response,

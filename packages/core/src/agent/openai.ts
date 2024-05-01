@@ -74,6 +74,20 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         );
         const toolOutput = await callTool(targetTool, toolCall);
         step.context.store.toolOutputs.push(toolOutput);
+        step.context.store.messages = [
+          ...step.context.store.messages,
+          {
+            role: "user" as const,
+            content: stringifyJSONToMessageContent(toolOutput.output),
+            options: {
+              toolResult: {
+                result: toolOutput.output,
+                isError: toolOutput.isError,
+                id: toolCall.id,
+              },
+            },
+          },
+        ];
         return {
           taskStep: step,
           output: response,

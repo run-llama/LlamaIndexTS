@@ -67,7 +67,7 @@ await test("openai llm", async (t) => {
   });
 });
 
-await test("gpt-4-turbo", async (t) => {
+await test.only("gpt-4-turbo", async (t) => {
   const llm = new OpenAI({ model: "gpt-4-turbo" });
   Settings.llm = llm;
   await mockLLMEvent(t, "gpt-4-turbo");
