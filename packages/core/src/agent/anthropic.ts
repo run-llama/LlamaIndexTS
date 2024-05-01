@@ -91,17 +91,20 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
       );
       const toolOutput = await callTool(targetTool, toolCall);
       step.context.store.toolOutputs.push(toolOutput);
-      step.context.store.messages =[...step.context.store.messages, {
-        content: stringifyJSONToMessageContent(toolOutput.output),
-        role: "user",
-        options: {
-          toolResult: {
-            result: toolOutput.output,
-            isError: toolOutput.isError,
-            id: toolCall.id,
+      step.context.store.messages = [
+        ...step.context.store.messages,
+        {
+          content: stringifyJSONToMessageContent(toolOutput.output),
+          role: "user",
+          options: {
+            toolResult: {
+              result: toolOutput.output,
+              isError: toolOutput.isError,
+              id: toolCall.id,
+            },
           },
         },
-      }]
+      ];
       return {
         taskStep: step,
         output: response,
