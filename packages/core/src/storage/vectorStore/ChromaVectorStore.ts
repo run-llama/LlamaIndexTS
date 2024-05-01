@@ -106,12 +106,25 @@ export class ChromaVectorStore implements VectorStore {
       throw new Error("ChromaDB does not support querying by mode");
     }
 
-    const chromaWhere: { [x: string]: string | number | boolean } = {};
+    let chromaWhere: any = {};
     if (query.filters?.filters) {
       query.filters.filters.map((filter) => {
         const filterKey = filter.key;
         const filterValue = filter.value;
-        chromaWhere[filterKey] = filterValue;
+        if (chromaWhere[filterKey]) {
+          chromaWhere = {
+            $or: [
+              {
+                ...chromaWhere,
+              },
+              {
+                [filterKey]: filterValue,
+              },
+            ],
+          };
+        } else {
+          chromaWhere[filterKey] = filterValue;
+        }
       });
     }
 
@@ -130,6 +143,7 @@ export class ChromaVectorStore implements VectorStore {
         IncludeEnum.Embeddings,
       ],
     });
+    console.log("queryResponse", queryResponse);
     const vectorStoreQueryResult: VectorStoreQueryResult = {
       nodes: queryResponse.ids[0].map((id, index) => {
         const text = (queryResponse.documents as string[][])[0][index];
