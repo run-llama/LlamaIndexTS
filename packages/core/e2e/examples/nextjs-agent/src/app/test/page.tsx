@@ -1,5 +1,5 @@
-import 'llamaindex';
+import "llamaindex";
 
-export default function Page () {
-	return 'hello world!'
+export default function Page() {
+  return "hello world!";
 }

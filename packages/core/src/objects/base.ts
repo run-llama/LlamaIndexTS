@@ -1,10 +1,10 @@
 import type { BaseNode, Metadata } from "../Node.js";
 import { TextNode } from "../Node.js";
 import type { BaseRetriever } from "../Retriever.js";
+import type { VectorStoreIndex } from "../indices/vectorStore/index.js";
 import type { MessageContent } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import type { BaseTool } from "../types.js";
-import type { VectorStoreIndex } from '../indices/vectorStore/index.js';
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
 // Import statements (e.g., for TextNode, BaseNode) should be added based on your project's structure
