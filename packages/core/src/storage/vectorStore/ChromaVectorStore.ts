@@ -111,7 +111,7 @@ export class ChromaVectorStore implements VectorStore {
       query.filters.filters.map((filter) => {
         const filterKey = filter.key;
         const filterValue = filter.value;
-        if (chromaWhere[filterKey]) {
+        if (filterKey in chromaWhere) {
           chromaWhere = {
             $or: [
               {
@@ -143,7 +143,7 @@ export class ChromaVectorStore implements VectorStore {
         IncludeEnum.Embeddings,
       ],
     });
-    console.log("queryResponse", queryResponse);
+
     const vectorStoreQueryResult: VectorStoreQueryResult = {
       nodes: queryResponse.ids[0].map((id, index) => {
         const text = (queryResponse.documents as string[][])[0][index];
