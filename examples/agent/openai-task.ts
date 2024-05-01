@@ -66,8 +66,8 @@ async function main() {
   );
 
   for await (const stepOutput of task) {
+    const stream = stepOutput.output as ReadableStream<ChatResponseChunk>;
     if (stepOutput.isLast) {
-      const stream = stepOutput.output as ReadableStream<ChatResponseChunk>;
       for await (const chunk of stream) {
         process.stdout.write(chunk.delta);
       }
@@ -75,6 +75,9 @@ async function main() {
     } else {
       // handing function call
       console.log("handling function call...");
+      for await (const chunk of stream) {
+        console.log("debug:", JSON.stringify(chunk.raw));
+      }
     }
   }
 }
