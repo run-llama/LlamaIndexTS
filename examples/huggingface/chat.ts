@@ -6,6 +6,7 @@ import { HuggingFaceInferenceAPI } from "llamaindex";
   }
   const hf = new HuggingFaceInferenceAPI({
     accessToken: process.env.HUGGING_FACE_TOKEN,
+    model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
   });
   const result = await hf.chat({
     messages: [

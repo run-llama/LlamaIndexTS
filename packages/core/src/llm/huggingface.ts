@@ -15,7 +15,6 @@ import type {
 import { streamConverter, wrapLLMEvent } from "./utils.js";
 
 const DEFAULT_PARAMS = {
-  model: "microsoft/phi-2",
   temperature: 0.1,
   topP: 1,
   maxTokens: undefined,
@@ -23,6 +22,7 @@ const DEFAULT_PARAMS = {
 };
 export type HFConfig = Partial<typeof DEFAULT_PARAMS> &
   HfInferenceOptions & {
+    model: string;
     accessToken: string;
     endpoint?: string;
   };
@@ -57,7 +57,7 @@ export class HuggingFaceInferenceAPI extends BaseLLM {
       ...hfInferenceOpts
     } = init;
     this.hf = new HfInference(accessToken, hfInferenceOpts);
-    this.model = model ?? DEFAULT_PARAMS.model;
+    this.model = model;
     this.temperature = temperature ?? DEFAULT_PARAMS.temperature;
     this.topP = topP ?? DEFAULT_PARAMS.topP;
     this.maxTokens = maxTokens ?? DEFAULT_PARAMS.maxTokens;
