@@ -2,6 +2,7 @@ import { defaultFS, getEnv, type GenericFileSystem } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
 import type { FileReader, Language, ResultType } from "./type.js";
+import { SupportedFileTypes, SupportedMimeTypes } from "./utils.js";
 
 /**
  * Represents a reader for parsing files using the LlamaParse API.
@@ -40,8 +41,11 @@ export class LlamaParseReader implements FileReader {
     file: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
-    if (!file.endsWith(".pdf")) {
-      throw new Error("Currently, only PDF files are supported.");
+    const extension = file.slice(file.lastIndexOf("."));
+    if (!SupportedFileTypes.includes(extension)) {
+      throw new Error(
+        `Unsupported file type: ${extension}. Supported types include: ${SupportedFileTypes.join(", ")}`,
+      );
     }
 
     const metadata = { file_path: file };
@@ -67,7 +71,7 @@ export class LlamaParseReader implements FileReader {
       headers,
     });
     if (!response.ok) {
-      throw new Error(`Failed to parse the PDF file: ${await response.text()}`);
+      throw new Error(`Failed to parse the file: ${await response.text()}`);
     }
     const jsonResponse = await response.json();
 
@@ -94,7 +98,7 @@ export class LlamaParseReader implements FileReader {
         const end = Date.now();
         if (end - start > this.maxTimeout * 1000) {
           throw new Error(
-            `Timeout while parsing the PDF file: ${await response.text()}`,
+            `Timeout while parsing the file: ${await response.text()}`,
           );
         }
         if (this.verbose && tries % 10 === 0) {
@@ -116,9 +120,13 @@ export class LlamaParseReader implements FileReader {
 
   private async getMimeType(data: Buffer): Promise<string> {
     const mimes = filetypemime(data);
-    if (!mimes.includes("application/pdf")) {
-      throw new Error("Currently, only PDF files are supported.");
+    const validMimes = mimes.find((mime) => SupportedMimeTypes.includes(mime));
+    if (!validMimes) {
+      throw new Error(
+        `Unsupported file type. Supported types include: ${SupportedFileTypes.join(", ")}`,
+      );
     }
-    return "application/pdf";
+
+    return validMimes;
   }
 }
