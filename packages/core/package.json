@@ -10,6 +10,7 @@
     "@datastax/astra-db-ts": "^1.0.1",
     "@google/generative-ai": "^0.8.0",
     "@grpc/grpc-js": "^1.10.6",
+    "@huggingface/inference": "^2.6.7",
     "@llamaindex/cloud": "0.0.5",
     "@llamaindex/env": "workspace:*",
     "@mistralai/mistralai": "^0.1.3",
