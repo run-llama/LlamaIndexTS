@@ -1,4 +1,4 @@
-import { ChatResponseChunk, OpenAIAgent } from "llamaindex";
+import { ChatResponseChunk, ReActAgent } from "llamaindex";
 import { ReadableStream } from "node:stream/web";
 import {
   getCurrentIDTool,
@@ -8,7 +8,7 @@ import {
 
 async function main() {
   // Create an OpenAIAgent with the function tools
-  const agent = new OpenAIAgent({
+  const agent = new ReActAgent({
     tools: [getCurrentIDTool, getUserInfoTool, getWeatherTool],
   });
 
@@ -31,6 +31,7 @@ async function main() {
         console.log("debug:", JSON.stringify(chunk.raw));
       }
     }
+    console.log("---");
   }
 }
 

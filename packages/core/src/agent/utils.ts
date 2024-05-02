@@ -71,16 +71,19 @@ export async function callTool(
 
 export async function consumeAsyncIterable<Options extends object>(
   input: ChatMessage<Options>,
+  previousContent?: string,
 ): Promise<ChatMessage<Options>>;
 export async function consumeAsyncIterable<Options extends object>(
   input: AsyncIterable<ChatResponseChunk<Options>>,
+  previousContent?: string,
 ): Promise<TextChatMessage<Options>>;
 export async function consumeAsyncIterable<Options extends object>(
   input: ChatMessage<Options> | AsyncIterable<ChatResponseChunk<Options>>,
+  previousContent: string = "",
 ): Promise<ChatMessage<Options>> {
   if (isAsyncIterable(input)) {
     const result: ChatMessage<Options> = {
-      content: "",
+      content: previousContent,
       // only assistant will give streaming response
       role: "assistant",
       options: {} as Options,
