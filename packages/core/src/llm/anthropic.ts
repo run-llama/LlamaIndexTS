@@ -156,7 +156,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   formatMessages<Beta = false>(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): Beta extends true ? ToolsBetaMessageParam[] : MessageParam[] {
-    return messages.map<any>((message) => {
+    const result: ToolsBetaMessageParam[] = messages.map((message) => {
       if (message.role !== "user" && message.role !== "assistant") {
         throw new Error("Unsupported Anthropic role");
       }
@@ -208,6 +208,51 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
         role: message.role,
       } satisfies MessageParam;
     });
+    // merge messages with the same role
+    // in case of 'messages: roles must alternate between "user" and "assistant", but found multiple "user" roles in a row'
+    const realResult: ToolsBetaMessageParam[] = [];
+    for (let i = 0; i < result.length; i++) {
+      if (i === 0) {
+        realResult.push(result[i]);
+        continue;
+      }
+      const current = result[i];
+      const previous = result[i - 1];
+      if (current.role === previous.role) {
+        // merge two messages with the same role
+        if (Array.isArray(previous.content)) {
+          if (Array.isArray(current.content)) {
+            previous.content.push(...current.content);
+          } else {
+            previous.content.push({
+              type: "text",
+              text: current.content,
+            });
+          }
+        } else {
+          if (Array.isArray(current.content)) {
+            previous.content = [
+              {
+                type: "text",
+                text: previous.content,
+              },
+              ...current.content,
+            ];
+          } else {
+            previous.content += `\n${current.content}`;
+          }
+        }
+        // no need to push the message
+      }
+      // if the roles are different, just push the message
+      else {
+        realResult.push(current);
+      }
+    }
+
+    return realResult as Beta extends true
+      ? ToolsBetaMessageParam[]
+      : MessageParam[];
   }
 
   chat(
