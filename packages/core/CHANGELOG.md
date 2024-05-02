@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.3.3
+
+### Patch Changes
+
+- e8c41c5: fix: wrong gemini streaming chat response
+
 ## 0.3.2
 
 ### Patch Changes
