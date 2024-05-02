@@ -302,12 +302,10 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): GeminiChatStreamResponse {
     const { chat, messageContent } = this.prepareChat(params);
     const result = await chat.sendMessageStream(messageContent);
-    return streamConverter(result.stream, (response) => {
-      return {
-        text: response.text(),
-        raw: response,
-      };
-    });
+    yield* streamConverter(result.stream, (response) => ({
+      delta: response.text(),
+      raw: response,
+    }));
   }
 
   chat(params: GeminiChatParamsStreaming): Promise<GeminiChatStreamResponse>;
