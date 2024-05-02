@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.3.2
+
+### Patch Changes
+
+- 61103b6: fix: streaming for `Agent.createTask` API
+
 ## 0.3.1
 
 ### Patch Changes

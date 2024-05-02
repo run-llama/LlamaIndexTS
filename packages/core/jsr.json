@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/core",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "exports": "./src/index.ts",
   "imports": {
     "@llamaindex/env": "jsr:@llamaindex/env@0.0.6"
