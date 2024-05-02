@@ -45,7 +45,6 @@ export type TaskStep<
     : never,
 > = {
   id: UUID;
-  input: ChatMessage<AdditionalMessageOptions> | null;
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>;
 
   // linked list
@@ -62,22 +61,14 @@ export type TaskStepOutput<
   >
     ? AdditionalMessageOptions
     : never,
-> =
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | null
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: false;
-    }
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: true;
-    };
+> = {
+  taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
+  // output shows the response to the user
+  output:
+    | ChatResponse<AdditionalMessageOptions>
+    | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
+  isLast: boolean;
+};
 
 export type TaskHandler<
   Model extends LLM,
@@ -90,7 +81,10 @@ export type TaskHandler<
     : never,
 > = (
   step: TaskStep<Model, Store, AdditionalMessageOptions>,
-) => Promise<TaskStepOutput<Model, Store, AdditionalMessageOptions>>;
+  enqueueOutput: (
+    taskOutput: TaskStepOutput<Model, Store, AdditionalMessageOptions>,
+  ) => void,
+) => Promise<void>;
 
 export type AgentStartEvent = BaseEvent<{
   startStep: TaskStep;

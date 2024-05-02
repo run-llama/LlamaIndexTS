@@ -349,12 +349,11 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
     };
   }
 
-  static taskHandler: TaskHandler<LLM, ReACTAgentStore> = async (step) => {
+  static taskHandler: TaskHandler<LLM, ReACTAgentStore> = async (
+    step,
+    enqueueOutput,
+  ) => {
     const { llm, stream, getTools } = step.context;
-    const input = step.input;
-    if (input) {
-      step.context.store.messages.push(input);
-    }
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     const messages = await chatFormatter(
@@ -369,33 +368,25 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
     });
     const reason = await reACTOutputParser(response);
     step.context.store.reasons = [...step.context.store.reasons, reason];
-    if (reason.type === "response") {
-      return {
-        isLast: true,
-        output: response,
-        taskStep: step,
-      };
-    } else {
-      if (reason.type === "action") {
-        const tool = tools.find((tool) => tool.metadata.name === reason.action);
-        const toolOutput = await callTool(tool, {
-          id: randomUUID(),
-          input: reason.input,
-          name: reason.action,
-        });
-        step.context.store.reasons = [
-          ...step.context.store.reasons,
-          {
-            type: "observation",
-            observation: toolOutput.output,
-          },
-        ];
-      }
-      return {
-        isLast: false,
-        output: null,
-        taskStep: step,
-      };
+    enqueueOutput({
+      taskStep: step,
+      output: response,
+      isLast: reason.type === "response",
+    });
+    if (reason.type === "action") {
+      const tool = tools.find((tool) => tool.metadata.name === reason.action);
+      const toolOutput = await callTool(tool, {
+        id: randomUUID(),
+        input: reason.input,
+        name: reason.action,
+      });
+      step.context.store.reasons = [
+        ...step.context.store.reasons,
+        {
+          type: "observation",
+          observation: toolOutput.output,
+        },
+      ];
     }
   };
 }
