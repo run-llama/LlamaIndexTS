@@ -14,19 +14,6 @@ import type {
 } from "./types.js";
 import { streamConverter, wrapLLMEvent } from "./utils.js";
 
-export type HFAdditionalChatOptions = {};
-export type HFChatParamsStreaming = LLMChatParamsStreaming<
-  HFAdditionalChatOptions,
-  ToolCallLLMMessageOptions
->;
-export type HFChatStreamResponse = AsyncIterable<
-  ChatResponseChunk<ToolCallLLMMessageOptions>
->;
-export type HFChatParamsNonStreaming = LLMChatParamsNonStreaming<
-  HFAdditionalChatOptions,
-  ToolCallLLMMessageOptions
->;
-export type HFChatNonStreamResponse = ChatResponse<ToolCallLLMMessageOptions>;
 const DEFAULT_PARAMS = {
   model: "microsoft/phi-2",
   temperature: 0.1,
@@ -89,12 +76,14 @@ export class HuggingFaceInferenceAPI extends BaseLLM {
     };
   }
 
-  chat(params: HFChatParamsStreaming): Promise<HFChatStreamResponse>;
-  chat(params: HFChatParamsNonStreaming): Promise<HFChatNonStreamResponse>;
+  chat(
+    params: LLMChatParamsStreaming,
+  ): Promise<AsyncIterable<ChatResponseChunk>>;
+  chat(params: LLMChatParamsNonStreaming): Promise<ChatResponse>;
   @wrapLLMEvent
   async chat(
-    params: HFChatParamsStreaming | HFChatParamsNonStreaming,
-  ): Promise<HFChatNonStreamResponse | HFChatStreamResponse> {
+    params: LLMChatParamsStreaming | LLMChatParamsNonStreaming,
+  ): Promise<AsyncIterable<ChatResponseChunk> | ChatResponse<object>> {
     if (params.stream) return this.streamChat(params);
     return this.nonStreamChat(params);
   }
@@ -120,8 +109,8 @@ export class HuggingFaceInferenceAPI extends BaseLLM {
   }
 
   protected async nonStreamChat(
-    params: HFChatParamsNonStreaming,
-  ): Promise<HFChatNonStreamResponse> {
+    params: LLMChatParamsNonStreaming,
+  ): Promise<ChatResponse> {
     const res = await this.hf.textGeneration({
       model: this.model,
       inputs: this.messagesToPrompt(params.messages),
@@ -137,9 +126,8 @@ export class HuggingFaceInferenceAPI extends BaseLLM {
   }
 
   protected async *streamChat(
-    params: HFChatParamsStreaming,
-  ): HFChatStreamResponse {
-    const lastMessage = params.messages[params.messages.length - 1];
+    params: LLMChatParamsStreaming,
+  ): AsyncIterable<ChatResponseChunk> {
     const stream = this.hf.textGenerationStream({
       model: this.model,
       inputs: this.messagesToPrompt(params.messages),
