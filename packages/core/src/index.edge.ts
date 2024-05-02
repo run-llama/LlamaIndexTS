@@ -27,6 +27,7 @@ export * from "./objects/index.js";
 export * from "./postprocessors/index.js";
 export * from "./prompts/index.js";
 export * from "./selectors/index.js";
+export * from "./storage/StorageContext.js";
 export * from "./synthesizers/index.js";
 export * from "./tools/index.js";
 export * from "./types.js";
