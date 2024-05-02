@@ -2,8 +2,9 @@ import {
   HfInference,
   type Options as HfInferenceOptions,
 } from "@huggingface/inference";
-import { ToolCallLLM } from "./base.js";
+import { BaseLLM } from "./base.js";
 import type {
+  ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
@@ -48,7 +49,7 @@ export type HFConfig = Partial<typeof DEFAULT_PARAMS> &
     They recommend using the text generation API instead.
     See: https://github.com/huggingface/huggingface.js/issues/586#issuecomment-2024059308
  */
-export class HuggingFaceInferenceAPI extends ToolCallLLM<HFAdditionalChatOptions> {
+export class HuggingFaceInferenceAPI extends BaseLLM {
   model: string;
   temperature: number;
   topP: number;
@@ -77,10 +78,6 @@ export class HuggingFaceInferenceAPI extends ToolCallLLM<HFAdditionalChatOptions
     if (endpoint) this.hf.endpoint(endpoint);
   }
 
-  get supportToolCall(): boolean {
-    return true;
-  }
-
   get metadata(): LLMMetadata {
     return {
       model: this.model,
@@ -102,13 +99,32 @@ export class HuggingFaceInferenceAPI extends ToolCallLLM<HFAdditionalChatOptions
     return this.nonStreamChat(params);
   }
 
+  private messagesToPrompt(messages: ChatMessage<ToolCallLLMMessageOptions>[]) {
+    let prompt = "";
+    for (const message of messages) {
+      if (message.role === "system") {
+        prompt += `<|system|>\n${message.content}</s>\n`;
+      } else if (message.role === "user") {
+        prompt += `<|user|>\n${message.content}</s>\n`;
+      } else if (message.role === "assistant") {
+        prompt += `<|assistant|>\n${message.content}</s>\n`;
+      }
+    }
+    // ensure we start with a system prompt, insert blank if needed
+    if (!prompt.startsWith("<|system|>\n")) {
+      prompt = "<|system|>\n</s>\n" + prompt;
+    }
+    // add final assistant prompt
+    prompt = prompt + "<|assistant|>\n";
+    return prompt;
+  }
+
   protected async nonStreamChat(
     params: HFChatParamsNonStreaming,
   ): Promise<HFChatNonStreamResponse> {
-    const lastMessage = params.messages[params.messages.length - 1];
     const res = await this.hf.textGeneration({
       model: this.model,
-      inputs: lastMessage.content as string,
+      inputs: this.messagesToPrompt(params.messages),
       parameters: this.metadata,
     });
     return {
@@ -126,7 +142,7 @@ export class HuggingFaceInferenceAPI extends ToolCallLLM<HFAdditionalChatOptions
     const lastMessage = params.messages[params.messages.length - 1];
     const stream = this.hf.textGenerationStream({
       model: this.model,
-      inputs: lastMessage.content as string,
+      inputs: this.messagesToPrompt(params.messages),
       parameters: this.metadata,
     });
     yield* streamConverter(stream, (chunk) => ({
