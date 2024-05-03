@@ -26,7 +26,10 @@ if (minorVersion !== expectedMinorVersion) {
   process.exit(1);
 }
 
-const packages = ["core", "env"];
+const packages = ["env", "core"];
+const envPackageJson = JSON.parse(
+  fs.readFileSync("./packages/env/package.json", "utf8"),
+);
 for (const pkg of packages) {
   const packageJson = JSON.parse(
     fs.readFileSync(`./packages/${pkg}/package.json`, "utf8"),
@@ -36,6 +39,10 @@ for (const pkg of packages) {
   );
 
   jsrJson.version = packageJson.version;
+  if (pkg === "core") {
+    jsrJson.imports["@llamaindex/env"] =
+      `jsr:@llamaindex/env@${envPackageJson.version}`;
+  }
 
   fs.writeFileSync(
     `./packages/${pkg}/jsr.json`,
