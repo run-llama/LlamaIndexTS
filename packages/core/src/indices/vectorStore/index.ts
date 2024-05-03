@@ -279,18 +279,29 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return new VectorIndexRetriever({ index: this, ...options });
   }
 
+  /**
+   * Create a RetrieverQueryEngine.
+   * similarityTopK is only used if no existing retriever is provided.
+   */
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: MetadataFilters;
     nodePostprocessors?: BaseNodePostprocessor[];
+    similarityTopK?: number;
   }): QueryEngine & RetrieverQueryEngine {
-    const { retriever, responseSynthesizer } = options ?? {};
-    return new RetrieverQueryEngine(
-      retriever ?? this.asRetriever(),
+    const {
+      retriever,
       responseSynthesizer,
-      options?.preFilters,
-      options?.nodePostprocessors,
+      preFilters,
+      nodePostprocessors,
+      similarityTopK,
+    } = options ?? {};
+    return new RetrieverQueryEngine(
+      retriever ?? this.asRetriever({ similarityTopK }),
+      responseSynthesizer,
+      preFilters,
+      nodePostprocessors,
     );
   }
 
