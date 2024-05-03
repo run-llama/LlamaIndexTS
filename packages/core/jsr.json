@@ -6,6 +6,6 @@
     "@llamaindex/env": "jsr:@llamaindex/env@0.1.0"
   },
   "publish": {
-    "include": ["LICENSE", "README.md", "src/**/*.ts"]
+    "include": ["LICENSE", "README.md", "src/**/*"]
   }
 }
