@@ -49,6 +49,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
         "tools" in params
           ? params.tools
           : params.toolRetriever.retrieve.bind(params.toolRetriever),
+      verbose: params.verbose ?? false,
     });
   }
 
@@ -94,7 +95,11 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
       const targetTool = tools.find(
         (tool) => tool.metadata.name === toolCall.name,
       );
-      const toolOutput = await callTool(targetTool, toolCall);
+      const toolOutput = await callTool(
+        targetTool,
+        toolCall,
+        step.context.logger,
+      );
       step.context.store.toolOutputs.push(toolOutput);
       step.context.store.messages = [
         ...step.context.store.messages,
