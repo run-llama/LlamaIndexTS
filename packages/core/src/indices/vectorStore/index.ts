@@ -282,8 +282,6 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   /**
    * Create a RetrieverQueryEngine.
    * similarityTopK is only used if no existing retriever is provided.
-   * @param options
-   * @returns
    */
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
