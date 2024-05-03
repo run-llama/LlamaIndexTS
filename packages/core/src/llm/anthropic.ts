@@ -156,10 +156,11 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   formatMessages<Beta = false>(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): Beta extends true ? ToolsBetaMessageParam[] : MessageParam[] {
-    const result: ToolsBetaMessageParam[] = messages.map((message) => {
-      if (message.role !== "user" && message.role !== "assistant") {
-        throw new Error("Unsupported Anthropic role");
-      }
+    const result: ToolsBetaMessageParam[] = messages
+    .filter((message) =>
+      message.role === 'user' || message.role === 'assistant'
+    )
+    .map((message) => {
       const options = message.options ?? {};
       if ("toolResult" in options) {
         const { id, isError } = options.toolResult;
@@ -205,7 +206,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
 
       return {
         content: extractText(message.content),
-        role: message.role,
+        role: message.role as "user" | "assistant",
       } satisfies MessageParam;
     });
     // merge messages with the same role

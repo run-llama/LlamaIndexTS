@@ -118,14 +118,44 @@ await test("anthropic agent", async (t) => {
   });
 
   await t.test("sum numbers", async () => {
-    const openaiAgent = new AnthropicAgent({
+    const anthropicAgent = new AnthropicAgent({
       tools: [sumNumbersTool],
     });
 
-    const { response } = await openaiAgent.chat({
+    const { response } = await anthropicAgent.chat({
       message: "how much is 1 + 1?",
     });
 
     ok(extractText(response.message.content).includes("2"));
   });
 });
+
+await test("anthropic agent with multiple chat", async (t) => {
+  await mockLLMEvent(t, "anthropic-agent-multiple-chat");
+  await t.test("chat", async () => {
+    const agent = new AnthropicAgent({
+      tools: [],
+    });
+    {
+      const { response } = await agent.chat({
+        message: 'Hello? Response to me "Yes"'
+      });
+      consola.debug("response:", response.message.content);
+      ok(extractText(response.message.content).includes("Yes"));
+    }
+    {
+      const { response} = await agent.chat({
+        message: "Hello? Response to me \"No\"",
+      });
+      consola.debug("response:", response.message.content);
+      ok(extractText(response.message.content).includes("No"));
+    }
+    {
+      const { response } = await agent.chat({
+        message: "Hello? Response to me \"Maybe\"",
+      });
+      consola.debug("response:", response.message.content);
+      ok(extractText(response.message.content).includes("Maybe"));
+    }
+  })
+})

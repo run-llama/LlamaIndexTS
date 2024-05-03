@@ -1,0 +1,124 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "Yes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "Yes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "No"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Maybe\""
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Yes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "No"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Maybe"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}
