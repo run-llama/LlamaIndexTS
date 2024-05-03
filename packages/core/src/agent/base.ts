@@ -348,6 +348,8 @@ export abstract class AgentRunner<
         >,
       ) => {
         for await (const stepOutput of iter) {
+          // update chat history for each round
+          this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
           if (stepOutput.isLast) {
             return stepOutput;
           }
@@ -356,7 +358,6 @@ export abstract class AgentRunner<
       },
     );
     const { output, taskStep } = stepOutput;
-    this.#chatHistory = [...taskStep.context.store.messages];
     if (isAsyncIterable(output)) {
       return output.pipeThrough<
         AgentStreamChatResponse<AdditionalMessageOptions>

@@ -156,58 +156,104 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   formatMessages<Beta = false>(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): Beta extends true ? ToolsBetaMessageParam[] : MessageParam[] {
-    return messages.map<any>((message) => {
-      if (message.role !== "user" && message.role !== "assistant") {
-        throw new Error("Unsupported Anthropic role");
-      }
-      const options = message.options ?? {};
-      if ("toolResult" in options) {
-        const { id, isError } = options.toolResult;
-        return {
-          role: "user",
-          content: [
-            {
-              type: "tool_result",
-              is_error: isError,
-              content: [
-                {
-                  type: "text",
-                  text: extractText(message.content),
-                },
-              ],
-              tool_use_id: id,
-            },
-          ] satisfies ToolResultBlockParam[],
-        } satisfies ToolsBetaMessageParam;
-      } else if ("toolCall" in options) {
-        const aiThinkingText = extractText(message.content);
-        return {
-          role: "assistant",
-          content: [
-            // this could be empty when you call two tools in one query
-            ...(aiThinkingText.trim()
-              ? [
+    const result: ToolsBetaMessageParam[] = messages
+      .filter(
+        (message) => message.role === "user" || message.role === "assistant",
+      )
+      .map((message) => {
+        const options = message.options ?? {};
+        if ("toolResult" in options) {
+          const { id, isError } = options.toolResult;
+          return {
+            role: "user",
+            content: [
+              {
+                type: "tool_result",
+                is_error: isError,
+                content: [
                   {
                     type: "text",
-                    text: aiThinkingText,
-                  } satisfies TextBlockParam,
-                ]
-              : []),
-            {
-              type: "tool_use",
-              id: options.toolCall.id,
-              name: options.toolCall.name,
-              input: options.toolCall.input,
-            } satisfies ToolUseBlockParam,
-          ] satisfies ToolsBetaContentBlock[],
-        } satisfies ToolsBetaMessageParam;
-      }
+                    text: extractText(message.content),
+                  },
+                ],
+                tool_use_id: id,
+              },
+            ] satisfies ToolResultBlockParam[],
+          } satisfies ToolsBetaMessageParam;
+        } else if ("toolCall" in options) {
+          const aiThinkingText = extractText(message.content);
+          return {
+            role: "assistant",
+            content: [
+              // this could be empty when you call two tools in one query
+              ...(aiThinkingText.trim()
+                ? [
+                    {
+                      type: "text",
+                      text: aiThinkingText,
+                    } satisfies TextBlockParam,
+                  ]
+                : []),
+              {
+                type: "tool_use",
+                id: options.toolCall.id,
+                name: options.toolCall.name,
+                input: options.toolCall.input,
+              } satisfies ToolUseBlockParam,
+            ] satisfies ToolsBetaContentBlock[],
+          } satisfies ToolsBetaMessageParam;
+        }
 
-      return {
-        content: extractText(message.content),
-        role: message.role,
-      } satisfies MessageParam;
-    });
+        return {
+          content: extractText(message.content),
+          role: message.role as "user" | "assistant",
+        } satisfies MessageParam;
+      });
+    // merge messages with the same role
+    // in case of 'messages: roles must alternate between "user" and "assistant", but found multiple "user" roles in a row'
+    const realResult: ToolsBetaMessageParam[] = [];
+    for (let i = 0; i < result.length; i++) {
+      if (i === 0) {
+        realResult.push(result[i]);
+        continue;
+      }
+      const current = result[i];
+      const previous = result[i - 1];
+      if (current.role === previous.role) {
+        // merge two messages with the same role
+        if (Array.isArray(previous.content)) {
+          if (Array.isArray(current.content)) {
+            previous.content.push(...current.content);
+          } else {
+            previous.content.push({
+              type: "text",
+              text: current.content,
+            });
+          }
+        } else {
+          if (Array.isArray(current.content)) {
+            previous.content = [
+              {
+                type: "text",
+                text: previous.content,
+              },
+              ...current.content,
+            ];
+          } else {
+            previous.content += `\n${current.content}`;
+          }
+        }
+        // no need to push the message
+      }
+      // if the roles are different, just push the message
+      else {
+        realResult.push(current);
+      }
+    }
+
+    return realResult as Beta extends true
+      ? ToolsBetaMessageParam[]
+      : MessageParam[];
   }
 
   chat(
