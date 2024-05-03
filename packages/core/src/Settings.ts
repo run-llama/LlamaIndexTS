@@ -54,7 +54,11 @@ class GlobalSettings implements Config {
 
   get debug() {
     const debug = getEnv("DEBUG");
-    return Boolean(debug) && debug?.includes("llamaindex");
+    return (
+      (Boolean(debug) && debug?.includes("llamaindex")) ||
+      debug === "*" ||
+      debug === "true"
+    );
   }
 
   get llm(): LLM {
