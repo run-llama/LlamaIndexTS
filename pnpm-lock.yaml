@@ -348,6 +348,16 @@ importers:
         specifier: ^4.7.2
         version: 4.7.2
 
+  packages/core/e2e/examples/chroma-db:
+    dependencies:
+      llamaindex:
+        specifier: workspace:*
+        version: link:../../..
+    devDependencies:
+      tsx:
+        specifier: ^4.7.2
+        version: 4.7.2
+
   packages/core/e2e/examples/cloudflare-worker-agent:
     dependencies:
       llamaindex:

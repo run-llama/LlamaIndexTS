@@ -106,22 +106,29 @@ export class ChromaVectorStore implements VectorStore {
       throw new Error("ChromaDB does not support querying by mode");
     }
 
+    // fixme: type is broken
     let chromaWhere: any = {};
     if (query.filters?.filters) {
       query.filters.filters.map((filter) => {
         const filterKey = filter.key;
         const filterValue = filter.value;
-        if (filterKey in chromaWhere) {
-          chromaWhere = {
-            $or: [
-              {
-                ...chromaWhere,
-              },
-              {
-                [filterKey]: filterValue,
-              },
-            ],
-          };
+        if (filterKey in chromaWhere || "$or" in chromaWhere) {
+          if (!chromaWhere["$or"]) {
+            chromaWhere = {
+              $or: [
+                {
+                  ...chromaWhere,
+                },
+                {
+                  [filterKey]: filterValue,
+                },
+              ],
+            };
+          } else {
+            chromaWhere["$or"].push({
+              [filterKey]: filterValue,
+            });
+          }
         } else {
           chromaWhere[filterKey] = filterValue;
         }
