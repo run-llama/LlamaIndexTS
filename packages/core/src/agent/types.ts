@@ -1,4 +1,5 @@
 import { ReadableStream } from "@llamaindex/env";
+import type { Logger } from "../internal/logger.js";
 import type { BaseEvent } from "../internal/type.js";
 import type {
   ChatMessage,
@@ -32,6 +33,7 @@ export type AgentTaskContext<
     toolOutputs: ToolOutput[];
     messages: ChatMessage<AdditionalMessageOptions>[];
   } & Store;
+  logger: Readonly<Logger>;
 };
 
 export type TaskStep<
@@ -45,7 +47,6 @@ export type TaskStep<
     : never,
 > = {
   id: UUID;
-  input: ChatMessage<AdditionalMessageOptions> | null;
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>;
 
   // linked list
@@ -62,22 +63,14 @@ export type TaskStepOutput<
   >
     ? AdditionalMessageOptions
     : never,
-> =
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | null
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: false;
-    }
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: true;
-    };
+> = {
+  taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
+  // output shows the response to the user
+  output:
+    | ChatResponse<AdditionalMessageOptions>
+    | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
+  isLast: boolean;
+};
 
 export type TaskHandler<
   Model extends LLM,
@@ -90,7 +83,10 @@ export type TaskHandler<
     : never,
 > = (
   step: TaskStep<Model, Store, AdditionalMessageOptions>,
-) => Promise<TaskStepOutput<Model, Store, AdditionalMessageOptions>>;
+  enqueueOutput: (
+    taskOutput: TaskStepOutput<Model, Store, AdditionalMessageOptions>,
+  ) => void,
+) => Promise<void>;
 
 export type AgentStartEvent = BaseEvent<{
   startStep: TaskStep;

@@ -46,17 +46,14 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         "tools" in params
           ? params.tools
           : params.toolRetriever.retrieve.bind(params.toolRetriever),
+      verbose: params.verbose ?? false,
     });
   }
 
   createStore = AgentRunner.defaultCreateStore;
 
-  static taskHandler: TaskHandler<OpenAI> = async (step) => {
-    const { input } = step;
+  static taskHandler: TaskHandler<OpenAI> = async (step, enqueueOutput) => {
     const { llm, stream, getTools } = step.context;
-    if (input) {
-      step.context.store.messages = [...step.context.store.messages, input];
-    }
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     const response = await llm.chat({
@@ -71,37 +68,36 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         response.message,
       ];
       const options = response.message.options ?? {};
+      enqueueOutput({
+        taskStep: step,
+        output: response,
+        isLast: !("toolCall" in options),
+      });
       if ("toolCall" in options) {
         const { toolCall } = options;
         const targetTool = tools.find(
           (tool) => tool.metadata.name === toolCall.name,
         );
-        const toolOutput = await callTool(targetTool, toolCall);
+        const toolOutput = await callTool(
+          targetTool,
+          toolCall,
+          step.context.logger,
+        );
         step.context.store.toolOutputs.push(toolOutput);
-        return {
-          taskStep: step,
-          output: {
-            raw: response.raw,
-            message: {
-              content: stringifyJSONToMessageContent(toolOutput.output),
-              role: "user",
-              options: {
-                toolResult: {
-                  result: toolOutput.output,
-                  isError: toolOutput.isError,
-                  id: toolCall.id,
-                },
+        step.context.store.messages = [
+          ...step.context.store.messages,
+          {
+            role: "user" as const,
+            content: stringifyJSONToMessageContent(toolOutput.output),
+            options: {
+              toolResult: {
+                result: toolOutput.output,
+                isError: toolOutput.isError,
+                id: toolCall.id,
               },
             },
           },
-          isLast: false,
-        };
-      } else {
-        return {
-          taskStep: step,
-          output: response,
-          isLast: true,
-        };
+        ];
       }
     } else {
       const responseChunkStream = new ReadableStream<
@@ -126,6 +122,11 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
       // check if first chunk has tool calls, if so, this is a function call
       // otherwise, it's a regular message
       const hasToolCall = !!(value.options && "toolCall" in value.options);
+      enqueueOutput({
+        taskStep: step,
+        output: finalStream,
+        isLast: !hasToolCall,
+      });
 
       if (hasToolCall) {
         // you need to consume the response to get the full toolCalls
@@ -158,7 +159,11 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
               },
             },
           ];
-          const toolOutput = await callTool(targetTool, toolCall);
+          const toolOutput = await callTool(
+            targetTool,
+            toolCall,
+            step.context.logger,
+          );
           step.context.store.messages = [
             ...step.context.store.messages,
             {
@@ -175,17 +180,6 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           ];
           step.context.store.toolOutputs.push(toolOutput);
         }
-        return {
-          taskStep: step,
-          output: null,
-          isLast: false,
-        };
-      } else {
-        return {
-          taskStep: step,
-          output: finalStream,
-          isLast: true,
-        };
       }
     }
   };

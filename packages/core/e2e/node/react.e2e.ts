@@ -27,3 +27,23 @@ await test("react agent", async (t) => {
     ok(extractText(response.message.content).includes("72"));
   });
 });
+
+await test("react agent stream", async (t) => {
+  await mockLLMEvent(t, "react-agent-stream");
+  await t.test("get weather", async () => {
+    const agent = new ReActAgent({
+      tools: [getWeatherTool],
+    });
+
+    const stream = await agent.chat({
+      stream: true,
+      message: "What is the weather like in San Francisco?",
+    });
+
+    let content = "";
+    for await (const { response } of stream) {
+      content += response.delta;
+    }
+    ok(content.includes("72"));
+  });
+});

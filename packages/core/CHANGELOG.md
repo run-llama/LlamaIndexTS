@@ -1,5 +1,28 @@
 # llamaindex
 
+## 0.3.4
+
+### Patch Changes
+
+- 1dce275: fix: export `StorageContext` on edge runtime
+- d10533e: feat: add hugging face llm
+- 2008efe: feat: add verbose mode to Agent
+- 5e61934: fix: remove clone object in `CallbackManager.dispatchEvent`
+- 9e74a43: feat: add top k to `asQueryEngine`
+- ee719a1: fix: streaming for ReAct Agent
+
+## 0.3.3
+
+### Patch Changes
+
+- e8c41c5: fix: wrong gemini streaming chat response
+
+## 0.3.2
+
+### Patch Changes
+
+- 61103b6: fix: streaming for `Agent.createTask` API
+
 ## 0.3.1
 
 ### Patch Changes

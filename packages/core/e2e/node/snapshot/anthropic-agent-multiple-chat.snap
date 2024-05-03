@@ -1,0 +1,552 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Yes\".\n</thinking>\n\nYes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Yes\".\n</thinking>\n\nYes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"No\".\n</thinking>\n\nNo"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Maybe\""
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_3",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Yes\".\n</thinking>\n\nYes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"No\".\n</thinking>\n\nNo"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Maybe\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Maybe\".\n</thinking>\n\nMaybe"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Yes\".\n</thinking>\n\nYes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"No\".\n</thinking>\n\nNo"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Maybe\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Maybe\".\n</thinking>\n\nMaybe"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific city, San Francisco. The relevant tool to answer this is the getWeather function.\n\nLooking at the required parameters for getWeather:\ncity (string): The user directly provided the city \"San Francisco\"\n\nSince the required \"city\" parameter has been provided, we can proceed with the getWeather function call.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
+              "name": "getWeather",
+              "input": {
+                "city": "San Francisco"
+              }
+            }
+          }
+        },
+        {
+          "content": "The weather in San Francisco is 72 degrees",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "result": "The weather in San Francisco is 72 degrees",
+              "isError": false,
+              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Yes\".\n</thinking>\n\nYes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"No\".\n</thinking>\n\nNo"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Maybe\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Maybe\".\n</thinking>\n\nMaybe"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific city, San Francisco. The relevant tool to answer this is the getWeather function.\n\nLooking at the required parameters for getWeather:\ncity (string): The user directly provided the city \"San Francisco\"\n\nSince the required \"city\" parameter has been provided, we can proceed with the getWeather function call.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
+              "name": "getWeather",
+              "input": {
+                "city": "San Francisco"
+              }
+            }
+          }
+        },
+        {
+          "content": "The weather in San Francisco is 72 degrees",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "result": "The weather in San Francisco is 72 degrees",
+              "isError": false,
+              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL"
+            }
+          }
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "The current weather in San Francisco is 72 degrees."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in Shanghai?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_6",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Yes\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Yes\".\n</thinking>\n\nYes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"No\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"No\".\n</thinking>\n\nNo"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "Hello? Response to me \"Maybe\""
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Maybe\".\n</thinking>\n\nMaybe"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific city, San Francisco. The relevant tool to answer this is the getWeather function.\n\nLooking at the required parameters for getWeather:\ncity (string): The user directly provided the city \"San Francisco\"\n\nSince the required \"city\" parameter has been provided, we can proceed with the getWeather function call.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
+              "name": "getWeather",
+              "input": {
+                "city": "San Francisco"
+              }
+            }
+          }
+        },
+        {
+          "content": "The weather in San Francisco is 72 degrees",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "result": "The weather in San Francisco is 72 degrees",
+              "isError": false,
+              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL"
+            }
+          }
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "The current weather in San Francisco is 72 degrees."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in Shanghai?"
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific city, Shanghai. The relevant tool to answer this is the getWeather function.\n\nLooking at the required parameters for getWeather:\ncity (string): The user directly provided the city \"Shanghai\"\n\nSince the required \"city\" parameter has been provided, we can proceed with the getWeather function call.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "toolu_01NHyahSUqrPjxQk9mvCvvGe",
+              "name": "getWeather",
+              "input": {
+                "city": "Shanghai"
+              }
+            }
+          }
+        },
+        {
+          "content": "The weather in Shanghai is 72 degrees",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "result": "The weather in Shanghai is 72 degrees",
+              "isError": false,
+              "id": "toolu_01NHyahSUqrPjxQk9mvCvvGe"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Yes\".\n</thinking>\n\nYes"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"No\".\n</thinking>\n\nNo"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has not asked a question that requires using any of the available tools. They have simply requested that I respond with the word \"Maybe\".\n</thinking>\n\nMaybe"
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_3",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific city, San Francisco. The relevant tool to answer this is the getWeather function.\n\nLooking at the required parameters for getWeather:\ncity (string): The user directly provided the city \"San Francisco\"\n\nSince the required \"city\" parameter has been provided, we can proceed with the getWeather function call.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
+              "name": "getWeather",
+              "input": {
+                "city": "San Francisco"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_4",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The current weather in San Francisco is 72 degrees."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_5",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific city, Shanghai. The relevant tool to answer this is the getWeather function.\n\nLooking at the required parameters for getWeather:\ncity (string): The user directly provided the city \"Shanghai\"\n\nSince the required \"city\" parameter has been provided, we can proceed with the getWeather function call.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": {
+              "id": "toolu_01NHyahSUqrPjxQk9mvCvvGe",
+              "name": "getWeather",
+              "input": {
+                "city": "Shanghai"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_6",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The current weather in Shanghai is 72 degrees."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

@@ -49,6 +49,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
         "tools" in params
           ? params.tools
           : params.toolRetriever.retrieve.bind(params.toolRetriever),
+      verbose: params.verbose ?? false,
     });
   }
 
@@ -67,12 +68,8 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
     return super.chat(params);
   }
 
-  static taskHandler: TaskHandler<Anthropic> = async (step) => {
-    const { input } = step;
+  static taskHandler: TaskHandler<Anthropic> = async (step, enqueueOutput) => {
     const { llm, getTools, stream } = step.context;
-    if (input) {
-      step.context.store.messages = [...step.context.store.messages, input];
-    }
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     if (stream === true) {
@@ -88,37 +85,36 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
       response.message,
     ];
     const options = response.message.options ?? {};
+    enqueueOutput({
+      taskStep: step,
+      output: response,
+      isLast: !("toolCall" in options),
+    });
     if ("toolCall" in options) {
       const { toolCall } = options;
       const targetTool = tools.find(
         (tool) => tool.metadata.name === toolCall.name,
       );
-      const toolOutput = await callTool(targetTool, toolCall);
+      const toolOutput = await callTool(
+        targetTool,
+        toolCall,
+        step.context.logger,
+      );
       step.context.store.toolOutputs.push(toolOutput);
-      return {
-        taskStep: step,
-        output: {
-          raw: response.raw,
-          message: {
-            content: stringifyJSONToMessageContent(toolOutput.output),
-            role: "user",
-            options: {
-              toolResult: {
-                result: toolOutput.output,
-                isError: toolOutput.isError,
-                id: toolCall.id,
-              },
+      step.context.store.messages = [
+        ...step.context.store.messages,
+        {
+          content: stringifyJSONToMessageContent(toolOutput.output),
+          role: "user",
+          options: {
+            toolResult: {
+              result: toolOutput.output,
+              isError: toolOutput.isError,
+              id: toolCall.id,
             },
           },
         },
-        isLast: false,
-      };
-    } else {
-      return {
-        taskStep: step,
-        output: response,
-        isLast: true,
-      };
+      ];
     }
   };
 }
