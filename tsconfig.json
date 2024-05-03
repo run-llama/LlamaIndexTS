@@ -36,6 +36,9 @@
       "path": "./packages/core/e2e/examples/nextjs-edge-runtime/tsconfig.json"
     },
     {
+      "path": "./packages/core/e2e/examples/waku-query-engine/tsconfig.json"
+    },
+    {
       "path": "./packages/core/tests/tsconfig.json"
     },
     {
