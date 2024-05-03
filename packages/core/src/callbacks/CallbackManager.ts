@@ -212,10 +212,13 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    const clone = structuredClone(detail);
     queueMicrotask(() => {
       handlers.forEach((handler) =>
-        handler(LlamaIndexCustomEvent.fromEvent(event, clone)),
+        handler(
+          LlamaIndexCustomEvent.fromEvent(event, {
+            ...detail,
+          }),
+        ),
       );
     });
   }
