@@ -1,6 +1,13 @@
 import fs from "node:fs/promises";
 
-import { Document, OpenAI, Settings, VectorStoreIndex } from "llamaindex";
+import {
+  Document,
+  LLMEndEvent,
+  OpenAI,
+  Settings,
+  VectorStoreIndex,
+  withCallbacks,
+} from "llamaindex";
 
 Settings.llm = new OpenAI({ model: "gpt-4" });
 
@@ -26,4 +33,13 @@ async function main() {
   console.log(response.toString());
 }
 
-main().catch(console.error);
+withCallbacks(
+  {
+    "llm-end": (event: LLMEndEvent) => {
+      console.log("end", event.detail);
+    },
+  },
+  main,
+).then(async () => {
+  console.log("Done");
+});

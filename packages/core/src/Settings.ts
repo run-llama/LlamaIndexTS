@@ -1,4 +1,8 @@
-import { CallbackManager } from "./callbacks/CallbackManager.js";
+import {
+  CallbackManager,
+  type Callbacks,
+  type LlamaIndexEventMaps,
+} from "./callbacks/CallbackManager.js";
 import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
 import { OpenAI } from "./llm/openai.js";
 
@@ -139,6 +143,39 @@ class GlobalSettings implements Config {
     setCallbackManager(callbackManager);
   }
 
+  withCallbacks<Result, Key extends keyof LlamaIndexEventMaps>(
+    callbacks: Callbacks<Key>,
+    fn: () => Result,
+  ): Result {
+    const callbackManager = this.callbackManager;
+    const fnWrapper = (): Result => {
+      for (const key in callbacks) {
+        const cb = callbacks[key];
+        callbackManager.on(key as keyof LlamaIndexEventMaps, cb as any);
+      }
+      const res = fn();
+      if (res instanceof Promise) {
+        return res.finally(() => {
+          for (const key in callbacks) {
+            callbackManager.off(
+              key as keyof LlamaIndexEventMaps,
+              callbacks[key] as any,
+            );
+          }
+        }) as Result;
+      } else {
+        for (const key in callbacks) {
+          callbackManager.off(
+            key as keyof LlamaIndexEventMaps,
+            callbacks[key] as any,
+          );
+        }
+        return res;
+      }
+    };
+    return withCallbackManager(callbackManager, fnWrapper);
+  }
+
   withCallbackManager<Result>(
     callbackManager: CallbackManager,
     fn: () => Result,
@@ -222,3 +259,25 @@ export const promptHelperFromSettingsOrContext = (
 };
 
 export const Settings = new GlobalSettings();
+
+// helper functions
+const withLLM = Settings.withLLM.bind(Settings);
+const withPromptHelper = Settings.withPromptHelper.bind(Settings);
+const withEmbedModel = Settings.withEmbedModel.bind(Settings);
+const withNodeParser = Settings.withNodeParser.bind(Settings);
+const withCallbacks = Settings.withCallbacks.bind(Settings);
+const withChunkSize = Settings.withChunkSize.bind(Settings);
+const withChunkOverlap = Settings.withChunkOverlap.bind(Settings);
+const withPrompt = Settings.withPrompt.bind(Settings);
+
+export {
+  withCallbackManager,
+  withCallbacks,
+  withChunkOverlap,
+  withChunkSize,
+  withEmbedModel,
+  withLLM,
+  withNodeParser,
+  withPrompt,
+  withPromptHelper,
+};

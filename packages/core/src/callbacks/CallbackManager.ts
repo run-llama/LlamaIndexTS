@@ -124,6 +124,10 @@ type EventHandler<Event extends CustomEvent> = (
   },
 ) => void;
 
+export type Callbacks<Key extends keyof LlamaIndexEventMaps> = {
+  [K in Key]: EventHandler<LlamaIndexEventMaps[K]>;
+};
+
 export class CallbackManager implements CallbackManagerMethods {
   /**
    * @deprecated will be removed in the next major version
