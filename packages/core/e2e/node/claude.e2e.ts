@@ -4,7 +4,7 @@ import { AnthropicAgent } from "llamaindex/agent/anthropic";
 import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
 import { beforeEach, test } from "node:test";
-import { sumNumbersTool } from "./fixtures/tools.js";
+import { getWeatherTool, sumNumbersTool } from "./fixtures/tools.js";
 import { mockLLMEvent } from "./utils.js";
 
 let llm: LLM;
@@ -134,7 +134,7 @@ await test("anthropic agent with multiple chat", async (t) => {
   await mockLLMEvent(t, "anthropic-agent-multiple-chat");
   await t.test("chat", async () => {
     const agent = new AnthropicAgent({
-      tools: [],
+      tools: [getWeatherTool],
     });
     {
       const { response } = await agent.chat({
@@ -156,6 +156,20 @@ await test("anthropic agent with multiple chat", async (t) => {
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("Maybe"));
+    }
+    {
+      const { response } = await agent.chat({
+        message: "What is the weather in San Francisco?",
+      });
+      consola.debug("response:", response.message.content);
+      ok(extractText(response.message.content).includes("72"));
+    }
+    {
+      const { response } = await agent.chat({
+        message: "What is the weather in Shanghai?",
+      });
+      consola.debug("response:", response.message.content);
+      ok(extractText(response.message.content).includes("72"));
     }
   });
 });
