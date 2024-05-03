@@ -1,0 +1,24 @@
+{
+  "name": "@llamaindex/cloudflare-worker-agent-test",
+  "version": "0.0.5",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "start": "wrangler dev",
+    "test": "vitest",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.2.3",
+    "@cloudflare/workers-types": "^4.20240423.0",
+    "typescript": "^5.4.5",
+    "vitest": "1.3.0",
+    "wrangler": "^3.52.0"
+  },
+  "dependencies": {
+    "llamaindex": "workspace:*"
+  }
+}

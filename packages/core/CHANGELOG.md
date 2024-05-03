@@ -1,5 +1,65 @@
 # llamaindex
 
+## 0.3.4
+
+### Patch Changes
+
+- 1dce275: fix: export `StorageContext` on edge runtime
+- d10533e: feat: add hugging face llm
+- 2008efe: feat: add verbose mode to Agent
+- 5e61934: fix: remove clone object in `CallbackManager.dispatchEvent`
+- 9e74a43: feat: add top k to `asQueryEngine`
+- ee719a1: fix: streaming for ReAct Agent
+
+## 0.3.3
+
+### Patch Changes
+
+- e8c41c5: fix: wrong gemini streaming chat response
+
+## 0.3.2
+
+### Patch Changes
+
+- 61103b6: fix: streaming for `Agent.createTask` API
+
+## 0.3.1
+
+### Patch Changes
+
+- 46227f2: fix: build error on next.js nodejs runtime
+
+## 0.3.0
+
+### Minor Changes
+
+- 5016f21: feat: improve next.js/cloudflare/vite support
+
+### Patch Changes
+
+- Updated dependencies [5016f21]
+  - @llamaindex/env@0.1.0
+
+## 0.2.13
+
+### Patch Changes
+
+- 6277105: fix: allow passing empty tools to llms
+
+## 0.2.12
+
+### Patch Changes
+
+- d8d952d: feat: add gemini llm and embedding
+
+## 0.2.11
+
+### Patch Changes
+
+- 87142b2: refactor: use ollama official sdk
+- 5a6cc0e: feat: support jina ai embedding and reranker
+- 87142b2: feat: support output to json format
+
 ## 0.2.10
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core-e2e",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "scripts": {
     "e2e": "node --import tsx --import ./mock-register.js --test ./node/*.e2e.ts",
@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@types/node": "^20.12.7",
     "consola": "^3.2.3",
     "llamaindex": "workspace:*",
     "tsx": "^4.7.2"

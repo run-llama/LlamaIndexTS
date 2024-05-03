@@ -26,6 +26,23 @@ if (minorVersion !== expectedMinorVersion) {
   process.exit(1);
 }
 
+const packages = ["core", "env"];
+for (const pkg of packages) {
+  const packageJson = JSON.parse(
+    fs.readFileSync(`./packages/${pkg}/package.json`, "utf8"),
+  );
+  const jsrJson = JSON.parse(
+    fs.readFileSync(`./packages/${pkg}/jsr.json`, "utf8"),
+  );
+
+  jsrJson.version = packageJson.version;
+
+  fs.writeFileSync(
+    `./packages/${pkg}/jsr.json`,
+    JSON.stringify(jsrJson, null, 2) + "\n",
+  );
+}
+
 console.log("Current expected minor version is: " + expectedMinorVersion);
 console.log("Minor version is: " + minorVersion);
 console.log("Good to go!");

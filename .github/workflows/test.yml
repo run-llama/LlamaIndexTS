@@ -84,9 +84,16 @@ jobs:
           name: typecheck-build-dist
           path: ./packages/core/dist
           if-no-files-found: error
-  core-edge-runtime:
+  e2e-core-examples:
+    strategy:
+      matrix:
+        packages:
+          - cloudflare-worker-agent
+          - nextjs-agent
+          - nextjs-edge-runtime
+          - waku-query-engine
     runs-on: ubuntu-latest
-
+    name: Build Core Example (${{ matrix.packages }})
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -97,11 +104,12 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: Build
-        run: pnpm run build --filter @llamaindex/edge
-      - name: Build Edge Runtime
+      - name: Build llamaindex
+        run: pnpm run build --filter llamaindex
+      - name: Build ${{ matrix.packages }}
         run: pnpm run build
-        working-directory: ./packages/edge/e2e/test-edge-runtime
+        working-directory: packages/core/e2e/examples/${{ matrix.packages }}
+
   typecheck-examples:
     runs-on: ubuntu-latest
 

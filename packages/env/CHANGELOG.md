@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.0
+
+### Minor Changes
+
+- 5016f21: feat: improve next.js/cloudflare/vite support
+
 ## 0.0.7
 
 ### Patch Changes

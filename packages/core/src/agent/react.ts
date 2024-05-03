@@ -1,5 +1,4 @@
-import { pipeline, randomUUID } from "@llamaindex/env";
-import { Settings } from "../Settings.js";
+import { randomUUID, ReadableStream } from "@llamaindex/env";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
 import {
   isAsyncIterable,
@@ -13,18 +12,15 @@ import {
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
+import { Settings } from "../Settings.js";
 import type {
   BaseTool,
   BaseToolWithCall,
   JSONObject,
   JSONValue,
 } from "../types.js";
-import {
-  AgentRunner,
-  AgentWorker,
-  type AgentParamsBase,
-  type TaskHandler,
-} from "./base.js";
+import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
+import type { TaskHandler } from "./types.js";
 import {
   callTool,
   consumeAsyncIterable,
@@ -64,7 +60,7 @@ type ActionReason = BaseReason & {
 type ResponseReason = BaseReason & {
   type: "response";
   thought: string;
-  response: ChatResponse | AsyncIterable<ChatResponseChunk>;
+  response: ChatResponse;
 };
 
 type Reason = ObservationReason | ActionReason | ResponseReason;
@@ -78,16 +74,9 @@ function reasonFormatter(reason: Reason): string | Promise<string> {
         reason.input,
       )}`;
     case "response": {
-      if (isAsyncIterable(reason.response)) {
-        return consumeAsyncIterable(reason.response).then(
-          (message) =>
-            `Thought: ${reason.thought}\nAnswer: ${extractText(message.content)}`,
-        );
-      } else {
-        return `Thought: ${reason.thought}\nAnswer: ${extractText(
-          reason.response.message.content,
-        )}`;
-      }
+      return `Thought: ${reason.thought}\nAnswer: ${extractText(
+        reason.response.message.content,
+      )}`;
     }
   }
 }
@@ -150,35 +139,52 @@ function actionInputParser(jsonStr: string): JSONObject {
 
 type ReACTOutputParser = <Options extends object>(
   output: ChatResponse<Options> | AsyncIterable<ChatResponseChunk<Options>>,
+  onResolveType: (
+    type: "action" | "thought" | "answer",
+    response:
+      | ChatResponse<Options>
+      | ReadableStream<ChatResponseChunk<Options>>,
+  ) => void,
 ) => Promise<Reason>;
 
 const reACTOutputParser: ReACTOutputParser = async (
   output,
+  onResolveType,
 ): Promise<Reason> => {
   let reason: Reason | null = null;
 
   if (isAsyncIterable(output)) {
     const [peakStream, finalStream] = createReadableStream(output).tee();
-    const type = await pipeline(peakStream, async (iter) => {
-      let content = "";
-      for await (const chunk of iter) {
-        content += chunk.delta;
-        if (content.includes("Action:")) {
-          return "action";
-        } else if (content.includes("Answer:")) {
-          return "answer";
-        } else if (content.includes("Thought:")) {
-          return "thought";
-        }
+    const reader = peakStream.getReader();
+    let type: "action" | "thought" | "answer" | null = null;
+    let content = "";
+    do {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
       }
-    });
+      content += value.delta;
+      if (content.includes("Action:")) {
+        type = "action";
+      } else if (content.includes("Answer:")) {
+        type = "answer";
+      }
+    } while (true);
+    if (type === null) {
+      // `Thought:` is always present at the beginning of the output.
+      type = "thought";
+    }
+    reader.releaseLock();
+    if (!type) {
+      throw new Error("Could not determine type of output");
+    }
+    onResolveType(type, finalStream);
     // step 2: do the parsing from content
     switch (type) {
       case "action": {
         // have to consume the stream to get the full content
-        const response = await consumeAsyncIterable(finalStream);
-        const { content } = response;
-        const [thought, action, input] = extractToolUse(content);
+        const response = await consumeAsyncIterable(peakStream, content);
+        const [thought, action, input] = extractToolUse(response.content);
         const jsonStr = extractJsonStr(input);
         let json: JSONObject;
         try {
@@ -196,18 +202,20 @@ const reACTOutputParser: ReACTOutputParser = async (
       }
       case "thought": {
         const thought = "(Implicit) I can answer without any more tools!";
+        const response = await consumeAsyncIterable(peakStream, content);
         reason = {
           type: "response",
           thought,
-          // bypass the response, because here we don't need to do anything with it
-          response: finalStream,
+          response: {
+            raw: peakStream,
+            message: response,
+          },
         };
         break;
       }
       case "answer": {
-        const response = await consumeAsyncIterable(finalStream);
-        const { content } = response;
-        const [thought, answer] = extractFinalResponse(content);
+        const response = await consumeAsyncIterable(peakStream, content);
+        const [thought, answer] = extractFinalResponse(response.content);
         reason = {
           type: "response",
           thought,
@@ -231,7 +239,9 @@ const reACTOutputParser: ReACTOutputParser = async (
       ? "answer"
       : content.includes("Action:")
         ? "action"
-        : "thought";
+        : // `Thought:` is always present at the beginning of the output.
+          "thought";
+    onResolveType(type, output);
 
     // step 2: do the parsing from content
     switch (type) {
@@ -344,6 +354,7 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
         "tools" in params
           ? params.tools
           : params.toolRetriever.retrieve.bind(params.toolRetriever),
+      verbose: params.verbose ?? false,
     });
   }
 
@@ -353,12 +364,11 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
     };
   }
 
-  static taskHandler: TaskHandler<LLM, ReACTAgentStore> = async (step) => {
+  static taskHandler: TaskHandler<LLM, ReACTAgentStore> = async (
+    step,
+    enqueueOutput,
+  ) => {
     const { llm, stream, getTools } = step.context;
-    const input = step.input;
-    if (input) {
-      step.context.store.messages.push(input);
-    }
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
     const messages = await chatFormatter(
@@ -371,35 +381,33 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
       stream,
       messages,
     });
-    const reason = await reACTOutputParser(response);
-    step.context.store.reasons = [...step.context.store.reasons, reason];
-    if (reason.type === "response") {
-      return {
-        isLast: true,
-        output: response,
+    const reason = await reACTOutputParser(response, (type, response) => {
+      enqueueOutput({
         taskStep: step,
-      };
-    } else {
-      if (reason.type === "action") {
-        const tool = tools.find((tool) => tool.metadata.name === reason.action);
-        const toolOutput = await callTool(tool, {
+        output: response,
+        isLast: type !== "action",
+      });
+    });
+    step.context.logger.log("current reason: %O", reason);
+    step.context.store.reasons = [...step.context.store.reasons, reason];
+    if (reason.type === "action") {
+      const tool = tools.find((tool) => tool.metadata.name === reason.action);
+      const toolOutput = await callTool(
+        tool,
+        {
           id: randomUUID(),
           input: reason.input,
           name: reason.action,
-        });
-        step.context.store.reasons = [
-          ...step.context.store.reasons,
-          {
-            type: "observation",
-            observation: toolOutput.output,
-          },
-        ];
-      }
-      return {
-        isLast: false,
-        output: null,
-        taskStep: step,
-      };
+        },
+        step.context.logger,
+      );
+      step.context.store.reasons = [
+        ...step.context.store.reasons,
+        {
+          type: "observation",
+          observation: toolOutput.output,
+        },
+      ];
     }
   };
 }

@@ -250,7 +250,7 @@ export class PGVectorStore implements VectorStore {
     options?: any,
   ): Promise<VectorStoreQueryResult> {
     // TODO QUERY TYPES:
-    //    Distance:       SELECT embedding <-> $1 AS distance FROM items;
+    //    Distance:       SELECT embedding <=> $1 AS distance FROM items;
     //    Inner Product:  SELECT (embedding <#> $1) * -1 AS inner_product FROM items;
     //    Cosine Sim:     SELECT 1 - (embedding <=> $1) AS cosine_similarity FROM items;
 
@@ -273,7 +273,7 @@ export class PGVectorStore implements VectorStore {
 
     const sql = `SELECT 
         v.*, 
-        embeddings <-> $1 s 
+        embeddings <=> $1 s 
       FROM ${this.schemaName}.${this.tableName} v
       ${where}
       ORDER BY s 

@@ -22,8 +22,11 @@
           "options": {
             "toolCall": {
               "name": "divideNumbers",
-              "id": "call_t0vy4M815ncAQnfRqoflW5hn",
-              "input": "{\"a\": 16, \"b\": 2}"
+              "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
+              "input": {
+                "a": 16,
+                "b": 2
+              }
             }
           }
         },
@@ -34,7 +37,7 @@
             "toolResult": {
               "result": "8",
               "isError": false,
-              "id": "call_t0vy4M815ncAQnfRqoflW5hn"
+              "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT"
             }
           }
         },
@@ -44,7 +47,7 @@
           "options": {
             "toolCall": {
               "name": "sumNumbers",
-              "id": "call_08QNOtWYlDoqPPXHMtbvr7A2",
+              "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
               "input": "{\"a\": 8, \"b\": 20}"
             }
           }
@@ -56,7 +59,7 @@
             "toolResult": {
               "result": "28",
               "isError": false,
-              "id": "call_08QNOtWYlDoqPPXHMtbvr7A2"
+              "id": "call_C03ASSDxIFTrYmzSuTxCrItd"
             }
           }
         }
@@ -74,7 +77,7 @@
           "options": {
             "toolCall": {
               "name": "sumNumbers",
-              "id": "call_08QNOtWYlDoqPPXHMtbvr7A2",
+              "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
               "input": "{\"a\": 8, \"b\": 20}"
             }
           }
@@ -101,7 +104,63 @@
         "options": {
           "toolCall": {
             "name": "divideNumbers",
-            "id": "call_t0vy4M815ncAQnfRqoflW5hn",
+            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
+            "input": ""
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
+            "input": "{\"a\""
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
+            "input": "{\"a\": 16,"
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
+            "input": "{\"a\": 16, \"b\": "
+          }
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": {
+            "name": "divideNumbers",
+            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
             "input": "{\"a\": 16, \"b\": 2}"
           }
         },
@@ -115,50 +174,11 @@
         "options": {
           "toolCall": {
             "name": "divideNumbers",
-            "id": "call_t0vy4M815ncAQnfRqoflW5hn",
-            "input": "{\"a\": 16, \"b\": 2}"
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_t0vy4M815ncAQnfRqoflW5hn",
-            "input": "{\"a\": 16, \"b\": 2}"
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_t0vy4M815ncAQnfRqoflW5hn",
-            "input": "{\"a\": 16, \"b\": 2}"
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_t0vy4M815ncAQnfRqoflW5hn",
-            "input": "{\"a\": 16, \"b\": 2}"
+            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
+            "input": {
+              "a": 16,
+              "b": 2
+            }
           }
         },
         "delta": ""
@@ -171,8 +191,8 @@
         "options": {
           "toolCall": {
             "name": "sumNumbers",
-            "id": "call_08QNOtWYlDoqPPXHMtbvr7A2",
-            "input": "{\"a\": 8, \"b\": 20}"
+            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
+            "input": "{\"a\""
           }
         },
         "delta": ""
@@ -185,8 +205,8 @@
         "options": {
           "toolCall": {
             "name": "sumNumbers",
-            "id": "call_08QNOtWYlDoqPPXHMtbvr7A2",
-            "input": "{\"a\": 8, \"b\": 20}"
+            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
+            "input": "{\"a\": 8, "
           }
         },
         "delta": ""
@@ -199,8 +219,8 @@
         "options": {
           "toolCall": {
             "name": "sumNumbers",
-            "id": "call_08QNOtWYlDoqPPXHMtbvr7A2",
-            "input": "{\"a\": 8, \"b\": 20}"
+            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
+            "input": "{\"a\": 8, \"b\": 2"
           }
         },
         "delta": ""
@@ -213,21 +233,7 @@
         "options": {
           "toolCall": {
             "name": "sumNumbers",
-            "id": "call_08QNOtWYlDoqPPXHMtbvr7A2",
-            "input": "{\"a\": 8, \"b\": 20}"
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "sumNumbers",
-            "id": "call_08QNOtWYlDoqPPXHMtbvr7A2",
+            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
             "input": "{\"a\": 8, \"b\": 20}"
           }
         },

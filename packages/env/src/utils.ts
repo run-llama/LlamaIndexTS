@@ -1,4 +1,14 @@
+// DO NOT EXPOSE THIS VARIABLE TO PUBLIC, IT IS USED INTERNALLY FOR CLOUDFLARE WORKER
+export const INTERNAL_ENV: Record<string, string> = {};
+
+export function setEnvs(envs: object): void {
+  Object.assign(INTERNAL_ENV, envs);
+}
+
 export function getEnv(name: string): string | undefined {
+  if (INTERNAL_ENV[name]) {
+    return INTERNAL_ENV[name];
+  }
   if (typeof process === "undefined" || typeof process.env === "undefined") {
     // @ts-expect-error
     if (typeof Deno === "undefined") {
@@ -11,9 +21,21 @@ export function getEnv(name: string): string | undefined {
   return process.env[name];
 }
 
-// Browser doesn't support AsyncLocalStorage
+interface EventInit {
+  bubbles?: boolean;
+  cancelable?: boolean;
+  composed?: boolean;
+}
+
+interface CustomEventInit<T = any> extends EventInit {
+  detail?: T;
+}
+
+// Async Local Storage is available cross different JS runtimes
 export { AsyncLocalStorage } from "node:async_hooks";
 
+// Node.js 18 doesn't have CustomEvent by default
+// Refs: https://github.com/nodejs/node/issues/40678
 class CustomEvent<T = any> extends Event {
   readonly #detail: T;
   get detail(): T {
@@ -23,10 +45,16 @@ class CustomEvent<T = any> extends Event {
     super(event, options);
     this.#detail = options?.detail;
   }
+
+  /**
+   * @deprecated This method is not supported
+   */
+  initCustomEvent() {
+    throw new Error("initCustomEvent is not supported");
+  }
 }
 
-// Node.js doesn't have CustomEvent by default
-// Refs: https://github.com/nodejs/node/issues/40678
-const defaultCustomEvent = globalThis.CustomEvent || CustomEvent;
+const defaultCustomEvent: typeof CustomEvent =
+  (globalThis as any).CustomEvent || CustomEvent;
 
 export { defaultCustomEvent as CustomEvent };

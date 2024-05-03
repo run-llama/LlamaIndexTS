@@ -1,22 +1,31 @@
+import { ReadableStream } from "@llamaindex/env";
+import type { Logger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable, prettifyError } from "../internal/utils.js";
 import type {
   ChatMessage,
   ChatResponseChunk,
+  PartialToolCall,
   TextChatMessage,
   ToolCall,
 } from "../llm/index.js";
-import type { BaseTool, JSONValue, ToolOutput } from "../types.js";
+import type { BaseTool, JSONObject, JSONValue, ToolOutput } from "../types.js";
 
 export async function callTool(
   tool: BaseTool | undefined,
-  toolCall: ToolCall,
+  toolCall: ToolCall | PartialToolCall,
+  logger: Logger,
 ): Promise<ToolOutput> {
+  const input: JSONObject =
+    typeof toolCall.input === "string"
+      ? JSON.parse(toolCall.input)
+      : toolCall.input;
   if (!tool) {
+    logger.error(`Tool ${toolCall.name} does not exist.`);
     const output = `Tool ${toolCall.name} does not exist.`;
     return {
       tool,
-      input: toolCall.input,
+      input,
       output,
       isError: true,
     };
@@ -24,44 +33,50 @@ export async function callTool(
   const call = tool.call;
   let output: JSONValue;
   if (!call) {
+    logger.error(
+      `Tool ${tool.metadata.name} (remote:${toolCall.name}) does not have a implementation.`,
+    );
     output = `Tool ${tool.metadata.name} (remote:${toolCall.name}) does not have a implementation.`;
     return {
       tool,
-      input: toolCall.input,
+      input,
       output,
       isError: true,
     };
   }
   try {
-    let input = toolCall.input;
-    if (typeof input === "string") {
-      input = JSON.parse(input);
-    }
     getCallbackManager().dispatchEvent("llm-tool-call", {
       payload: {
-        toolCall: { ...toolCall },
+        toolCall: { ...toolCall, input },
       },
     });
     output = await call.call(tool, input);
+    logger.log(
+      `Tool ${tool.metadata.name} (remote:${toolCall.name}) succeeded.`,
+    );
+    logger.log(`Output: ${JSON.stringify(output)}`);
     const toolOutput: ToolOutput = {
       tool,
-      input: toolCall.input,
+      input,
       output,
       isError: false,
     };
     getCallbackManager().dispatchEvent("llm-tool-result", {
       payload: {
-        toolCall: { ...toolCall },
+        toolCall: { ...toolCall, input },
         toolResult: { ...toolOutput },
       },
     });
     return toolOutput;
   } catch (e) {
     output = prettifyError(e);
+    logger.error(
+      `Tool ${tool.metadata.name} (remote:${toolCall.name}) failed: ${output}`,
+    );
   }
   return {
     tool,
-    input: toolCall.input,
+    input,
     output,
     isError: true,
   };
@@ -69,16 +84,19 @@ export async function callTool(
 
 export async function consumeAsyncIterable<Options extends object>(
   input: ChatMessage<Options>,
+  previousContent?: string,
 ): Promise<ChatMessage<Options>>;
 export async function consumeAsyncIterable<Options extends object>(
   input: AsyncIterable<ChatResponseChunk<Options>>,
+  previousContent?: string,
 ): Promise<TextChatMessage<Options>>;
 export async function consumeAsyncIterable<Options extends object>(
   input: ChatMessage<Options> | AsyncIterable<ChatResponseChunk<Options>>,
+  previousContent: string = "",
 ): Promise<ChatMessage<Options>> {
   if (isAsyncIterable(input)) {
     const result: ChatMessage<Options> = {
-      content: "",
+      content: previousContent,
       // only assistant will give streaming response
       role: "assistant",
       options: {} as Options,

@@ -1,18 +1,23 @@
 {
   "name": "@llamaindex/env",
   "description": "environment wrapper",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
   "exports": {
     ".": {
-      "workerd": {
+      "node": {
         "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.polyfill.js"
+        "import": "./dist/index.js",
+        "default": "./dist/cjs/index.js"
+      },
+      "workerd": {
+        "types": "./dist/type/index.workerd.d.ts",
+        "default": "./dist/index.workerd.js"
       },
       "edge-light": {
-        "types": "./dist/type/index.d.ts",
+        "types": "./dist/type/index.polyfill.d.ts",
         "default": "./dist/index.polyfill.js"
       },
       "import": {

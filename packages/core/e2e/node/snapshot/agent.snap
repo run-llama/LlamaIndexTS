@@ -4,8 +4,8 @@
       "id": "PRESERVE_0",
       "messages": [
         {
-          "content": "What is the weather in San Francisco?",
-          "role": "user"
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
         }
       ]
     },
@@ -13,15 +13,15 @@
       "id": "PRESERVE_1",
       "messages": [
         {
-          "content": "What is the weather in San Francisco?",
-          "role": "user"
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
         },
         {
           "content": "",
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "HIDDEN",
+              "id": "call_Enrc7RhNts0qxGaEATOEhV6F",
               "name": "Weather",
               "input": "{\"location\":\"San Francisco\"}"
             }
@@ -32,8 +32,9 @@
           "role": "user",
           "options": {
             "toolResult": {
-              "id": "HIDDEN",
-              "isError": false
+              "result": "35 degrees and sunny in San Francisco",
+              "isError": false,
+              "id": "call_Enrc7RhNts0qxGaEATOEhV6F"
             }
           }
         }
@@ -43,8 +44,8 @@
       "id": "PRESERVE_2",
       "messages": [
         {
-          "content": "My name is Alex Yang. What is my unique id?",
-          "role": "user"
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?"
         }
       ]
     },
@@ -52,15 +53,15 @@
       "id": "PRESERVE_3",
       "messages": [
         {
-          "content": "My name is Alex Yang. What is my unique id?",
-          "role": "user"
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?"
         },
         {
           "content": "",
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "HIDDEN",
+              "id": "call_OYo81prrpK2RLOS9d0Y6kiXB",
               "name": "unique_id",
               "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
             }
@@ -71,8 +72,9 @@
           "role": "user",
           "options": {
             "toolResult": {
-              "id": "HIDDEN",
-              "isError": false
+              "result": "123456789",
+              "isError": false,
+              "id": "call_OYo81prrpK2RLOS9d0Y6kiXB"
             }
           }
         }
@@ -82,8 +84,8 @@
       "id": "PRESERVE_4",
       "messages": [
         {
-          "content": "how much is 1 + 1?",
-          "role": "user"
+          "role": "user",
+          "content": "how much is 1 + 1?"
         }
       ]
     },
@@ -91,15 +93,15 @@
       "id": "PRESERVE_5",
       "messages": [
         {
-          "content": "how much is 1 + 1?",
-          "role": "user"
+          "role": "user",
+          "content": "how much is 1 + 1?"
         },
         {
           "content": "",
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "HIDDEN",
+              "id": "call_YUXowHKwOJ6GIWV4EA59x8iF",
               "name": "sumNumbers",
               "input": "{\"a\":1,\"b\":1}"
             }
@@ -110,8 +112,9 @@
           "role": "user",
           "options": {
             "toolResult": {
-              "id": "HIDDEN",
-              "isError": false
+              "result": "2",
+              "isError": false,
+              "id": "call_YUXowHKwOJ6GIWV4EA59x8iF"
             }
           }
         }
@@ -122,45 +125,13 @@
     {
       "id": "PRESERVE_0",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": null,
-                "tool_calls": [
-                  {
-                    "id": "HIDDEN",
-                    "type": "function",
-                    "function": {
-                      "name": "Weather",
-                      "arguments": "{\"location\":\"San Francisco\"}"
-                    }
-                  }
-                ]
-              },
-              "logprobs": null,
-              "finish_reason": "tool_calls"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 49,
-            "completion_tokens": 15,
-            "total_tokens": 64
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "",
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "HIDDEN",
+              "id": "call_Enrc7RhNts0qxGaEATOEhV6F",
               "name": "Weather",
               "input": "{\"location\":\"San Francisco\"}"
             }
@@ -171,29 +142,7 @@
     {
       "id": "PRESERVE_1",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": "The weather in San Francisco is currently 35 degrees and sunny."
-              },
-              "logprobs": null,
-              "finish_reason": "stop"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 78,
-            "completion_tokens": 14,
-            "total_tokens": 92
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "The weather in San Francisco is currently 35 degrees and sunny.",
           "role": "assistant",
@@ -204,45 +153,13 @@
     {
       "id": "PRESERVE_2",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": null,
-                "tool_calls": [
-                  {
-                    "id": "HIDDEN",
-                    "type": "function",
-                    "function": {
-                      "name": "unique_id",
-                      "arguments": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
-                    }
-                  }
-                ]
-              },
-              "logprobs": null,
-              "finish_reason": "tool_calls"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 59,
-            "completion_tokens": 18,
-            "total_tokens": 77
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "",
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "HIDDEN",
+              "id": "call_OYo81prrpK2RLOS9d0Y6kiXB",
               "name": "unique_id",
               "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
             }
@@ -253,29 +170,7 @@
     {
       "id": "PRESERVE_3",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": "Your unique id is 123456789."
-              },
-              "logprobs": null,
-              "finish_reason": "stop"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 88,
-            "completion_tokens": 10,
-            "total_tokens": 98
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "Your unique id is 123456789.",
           "role": "assistant",
@@ -286,45 +181,13 @@
     {
       "id": "PRESERVE_4",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": null,
-                "tool_calls": [
-                  {
-                    "id": "HIDDEN",
-                    "type": "function",
-                    "function": {
-                      "name": "sumNumbers",
-                      "arguments": "{\"a\":1,\"b\":1}"
-                    }
-                  }
-                ]
-              },
-              "logprobs": null,
-              "finish_reason": "tool_calls"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 70,
-            "completion_tokens": 18,
-            "total_tokens": 88
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
           "content": "",
           "role": "assistant",
           "options": {
             "toolCall": {
-              "id": "HIDDEN",
+              "id": "call_YUXowHKwOJ6GIWV4EA59x8iF",
               "name": "sumNumbers",
               "input": "{\"a\":1,\"b\":1}"
             }
@@ -335,31 +198,9 @@
     {
       "id": "PRESERVE_5",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "object": "chat.completion",
-          "created": 114514,
-          "model": "gpt-3.5-turbo-0125",
-          "choices": [
-            {
-              "index": 0,
-              "message": {
-                "role": "assistant",
-                "content": "1 + 1 is equal to 2."
-              },
-              "logprobs": null,
-              "finish_reason": "stop"
-            }
-          ],
-          "usage": {
-            "prompt_tokens": 97,
-            "completion_tokens": 11,
-            "total_tokens": 108
-          },
-          "system_fingerprint": "HIDDEN"
-        },
+        "raw": null,
         "message": {
-          "content": "1 + 1 is equal to 2.",
+          "content": "The sum of 1 + 1 is 2.",
           "role": "assistant",
           "options": {}
         }

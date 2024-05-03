@@ -3,6 +3,7 @@ packages:
   - "packages/*"
   - "packages/core/tests"
   - "packages/core/e2e"
+  - "packages/core/e2e/examples/*"
   - "packages/edge/e2e/*"
   - "examples/"
   - "examples/*"

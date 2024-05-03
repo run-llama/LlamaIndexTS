@@ -13,11 +13,11 @@ import {
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
+import { ClipEmbedding } from "../../embeddings/ClipEmbedding.js";
 import type {
   BaseEmbedding,
   MultiModalEmbedding,
 } from "../../embeddings/index.js";
-import { ClipEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import { runTransformations } from "../../ingestion/IngestionPipeline.js";
 import {
@@ -279,18 +279,29 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return new VectorIndexRetriever({ index: this, ...options });
   }
 
+  /**
+   * Create a RetrieverQueryEngine.
+   * similarityTopK is only used if no existing retriever is provided.
+   */
   asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: MetadataFilters;
     nodePostprocessors?: BaseNodePostprocessor[];
+    similarityTopK?: number;
   }): QueryEngine & RetrieverQueryEngine {
-    const { retriever, responseSynthesizer } = options ?? {};
-    return new RetrieverQueryEngine(
-      retriever ?? this.asRetriever(),
+    const {
+      retriever,
       responseSynthesizer,
-      options?.preFilters,
-      options?.nodePostprocessors,
+      preFilters,
+      nodePostprocessors,
+      similarityTopK,
+    } = options ?? {};
+    return new RetrieverQueryEngine(
+      retriever ?? this.asRetriever({ similarityTopK }),
+      responseSynthesizer,
+      preFilters,
+      nodePostprocessors,
     );
   }
 

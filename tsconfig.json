@@ -11,7 +11,9 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true
+    "composite": true,
+    "types": [],
+    "lib": ["ES2022"]
   },
   "files": [],
   "references": [
@@ -22,10 +24,16 @@
       "path": "./packages/core/tsconfig.json"
     },
     {
-      "path": "./packages/edge/e2e/test-edge-runtime/tsconfig.json"
+      "path": "./packages/core/e2e/tsconfig.json"
     },
     {
-      "path": "./packages/core/e2e/tsconfig.json"
+      "path": "./packages/core/e2e/examples/cloudflare-worker-agent/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/e2e/examples/nextjs-agent/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/e2e/examples/nextjs-edge-runtime/tsconfig.json"
     },
     {
       "path": "./packages/core/tests/tsconfig.json"

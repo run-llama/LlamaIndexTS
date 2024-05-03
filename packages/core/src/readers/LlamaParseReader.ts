@@ -1,9 +1,7 @@
 import { defaultFS, getEnv, type GenericFileSystem } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
-import type { FileReader } from "./type.js";
-
-type ResultType = "text" | "markdown" | "json";
+import type { FileReader, Language, ResultType } from "./type.js";
 
 /**
  * Represents a reader for parsing files using the LlamaParse API.
@@ -20,7 +18,12 @@ export class LlamaParseReader implements FileReader {
   checkInterval = 1;
   // Whether to print the progress of the parsing.
   verbose = true;
+  // The result type for the parser.
   resultType: ResultType = "text";
+  // The language of the text to parse.
+  language: Language = "en";
+  // The parsing instruction for the parser.
+  parsingInstruction: string = "";
 
   constructor(params: Partial<LlamaParseReader> = {}) {
     Object.assign(this, params);
@@ -48,6 +51,8 @@ export class LlamaParseReader implements FileReader {
     const mimeType = await this.getMimeType(data);
     const body = new FormData();
     body.set("file", new Blob([data], { type: mimeType }), file);
+    body.append("language", this.language);
+    body.append("parsingInstruction", this.parsingInstruction);
 
     const headers = {
       Authorization: `Bearer ${this.apiKey}`,

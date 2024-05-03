@@ -19,25 +19,29 @@ Try examples online:
 
 LlamaIndex.TS aims to be a lightweight, easy to use set of libraries to help you integrate large language models into your applications with your own data.
 
-## Getting started with an example:
+## Multiple JS Environment Support
 
-LlamaIndex.TS requires Node v18 or higher. You can download it from https://nodejs.org or use https://nvm.sh (our preferred option).
+LlamaIndex.TS supports multiple JS environments, including:
 
-In a new folder:
+- Node.js (18, 20, 22) ✅
+- Deno ✅
+- Bun ✅
+- React Server Components (Next.js) ✅
 
-```bash
-export OPENAI_API_KEY="sk-......" # Replace with your key from https://platform.openai.com/account/api-keys
-pnpm init
-pnpm install typescript
-pnpm exec tsc --init # if needed
+For now, browser support is limited due to the lack of support for [AsyncLocalStorage-like APIs](https://github.com/tc39/proposal-async-context)
+
+## Getting started
+
+```shell
+npm install llamaindex
 pnpm install llamaindex
-pnpm install @types/node
+yarn add llamaindex
+jsr install @llamaindex/core
 ```
 
-Create the file example.ts
+### Node.js
 
 ```ts
-// example.ts
 import fs from "fs/promises";
 import { Document, VectorStoreIndex } from "llamaindex";
 
@@ -67,10 +71,110 @@ async function main() {
 main();
 ```
 
-Then you can run it using
-
 ```bash
-pnpm dlx ts-node example.ts
+# `pnpm install tsx` before running the script
+node --import tsx ./main.ts
+```
+
+### Next.js
+
+You can combine `ai` with `llamaindex` in Next.js with RSC (React Server Components).
+
+```tsx
+// src/apps/page.tsx
+"use client";
+import { chatWithAgent } from "@/actions";
+import type { JSX } from "react";
+import { useFormState } from "react-dom";
+
+// You can use the Edge runtime in Next.js by adding this line:
+// export const runtime = "edge";
+
+export default function Home() {
+  const [ui, action] = useFormState<JSX.Element | null>(async () => {
+    return chatWithAgent("hello!", []);
+  }, null);
+  return (
+    <main>
+      {ui}
+      <form action={action}>
+        <button>Chat</button>
+      </form>
+    </main>
+  );
+}
+```
+
+```tsx
+// src/actions/index.ts
+"use server";
+import { createStreamableUI } from "ai/rsc";
+import { OpenAIAgent } from "llamaindex";
+import type { ChatMessage } from "llamaindex/llm/types";
+
+export async function chatWithAgent(
+  question: string,
+  prevMessages: ChatMessage[] = [],
+) {
+  const agent = new OpenAIAgent({
+    tools: [
+      // ... adding your tools here
+    ],
+  });
+  const responseStream = await agent.chat({
+    stream: true,
+    message: question,
+    chatHistory: prevMessages,
+  });
+  const uiStream = createStreamableUI(<div>loading...</div>);
+  responseStream
+    .pipeTo(
+      new WritableStream({
+        start: () => {
+          uiStream.update("response:");
+        },
+        write: async (message) => {
+          uiStream.append(message.response.delta);
+        },
+      }),
+    )
+    .catch(console.error);
+  return uiStream.value;
+}
+```
+
+### Cloudflare Workers
+
+```ts
+// src/index.ts
+export default {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
+    const { setEnvs } = await import("@llamaindex/env");
+    // set environment variables so that the OpenAIAgent can use them
+    setEnvs(env);
+    const { OpenAIAgent } = await import("llamaindex");
+    const agent = new OpenAIAgent({
+      tools: [],
+    });
+    const responseStream = await agent.chat({
+      stream: true,
+      message: "Hello? What is the weather today?",
+    });
+    const textEncoder = new TextEncoder();
+    const response = responseStream.pipeThrough(
+      new TransformStream({
+        transform: (chunk, controller) => {
+          controller.enqueue(textEncoder.encode(chunk.response.delta));
+        },
+      }),
+    );
+    return new Response(response);
+  },
+};
 ```
 
 ## Playground
@@ -93,79 +197,25 @@ Check out our NextJS playground at https://llama-playground.vercel.app/. The sou
 
 - [SimplePrompt](/packages/core/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
-## Using NextJS
+## Tips when using in non-Node.js environments
 
-If you're using the NextJS App Router, you can choose between the Node.js and the [Edge runtime](https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes#edge-runtime).
+When you are importing `llamaindex` in a non-Node.js environment(such as React Server Components, Cloudflare Workers, etc.)
+Some classes are not exported from top-level entry file.
 
-With NextJS 13 and 14, using the Node.js runtime is the default. You can explicitly set the Edge runtime in your [router handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) by adding this line:
+The reason is that some classes are only compatible with Node.js runtime,(e.g. `PDFReader`) which uses Node.js specific APIs(like `fs`, `child_process`, `crypto`).
 
-```typescript
-export const runtime = "edge";
-```
-
-The following sections explain further differences in using the Node.js or Edge runtime.
-
-### Using the Node.js runtime
-
-Add the following config to your `next.config.js` to ignore specific packages in the server-side bundling:
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: [
-      "pdf2json",
-      "@zilliz/milvus2-sdk-node",
-      "sharp",
-      "onnxruntime-node",
-    ],
-  },
-  webpack: (config) => {
-    config.externals.push({
-      pdf2json: "commonjs pdf2json",
-      "@zilliz/milvus2-sdk-node": "commonjs @zilliz/milvus2-sdk-node",
-      sharp: "commonjs sharp",
-      "onnxruntime-node": "commonjs onnxruntime-node",
-    });
-
-    return config;
-  },
-};
-
-module.exports = nextConfig;
-```
-
-### Using the Edge runtime
-
-We publish a dedicated package (`@llamaindex/edge` instead of `llamaindex`) for using the Edge runtime. To use it, first install the package:
-
-```shell
-pnpm install @llamaindex/edge
-```
-
-> _Note_: Ensure that your `package.json` doesn't include the `llamaindex` package if you're using `@llamaindex/edge`.
-
-Then make sure to use the correct import statement in your code:
+If you need any of those classes, you have to import them instead directly though their file path in the package.
+Here's an example for importing the `PineconeVectorStore` class:
 
 ```typescript
-// replace 'llamaindex' with '@llamaindex/edge'
-import {} from "@llamaindex/edge";
-```
-
-A further difference is that the `@llamaindex/edge` package doesn't export classes from the `readers` or `storage` folders. The reason is that most of these classes are not compatible with the Edge runtime.
-
-If you need any of those classes, you have to import them instead directly. Here's an example for importing the `PineconeVectorStore` class:
-
-```typescript
-import { PineconeVectorStore } from "@llamaindex/edge/storage/vectorStore/PineconeVectorStore";
+import { PineconeVectorStore } from "llamaindex/storage/vectorStore/PineconeVectorStore";
 ```
 
 As the `PDFReader` is not working with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
 
 ```typescript
-import { SimpleDirectoryReader } from "@llamaindex/edge/readers/SimpleDirectoryReader";
-import { LlamaParseReader } from "@llamaindex/edge/readers/LlamaParseReader";
+import { SimpleDirectoryReader } from "llamaindex/readers/SimpleDirectoryReader";
+import { LlamaParseReader } from "llamaindex/readers/LlamaParseReader";
 
 export const DATA_DIR = "./data";
 
@@ -183,7 +233,7 @@ export async function getDocuments() {
 
 > _Note_: Reader classes have to be added explictly to the `fileExtToReader` map in the Edge version of the `SimpleDirectoryReader`.
 
-You'll find a complete example of using the Edge runtime with LlamaIndexTS here: https://github.com/run-llama/create_llama_projects/tree/main/nextjs-edge-llamaparse
+You'll find a complete example with LlamaIndexTS here: https://github.com/run-llama/create_llama_projects/tree/main/nextjs-edge-llamaparse
 
 ## Supported LLMs:
 

@@ -2,7 +2,9 @@ import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
 import { InMemoryFileSystem, type CompleteFileSystem } from "./type.js";
 // @ts-expect-error
-import { pipeline } from "readable-stream";
+import { promises } from "readable-stream";
+
+const { pipeline } = promises;
 
 export { pathe as path, pipeline };
 
@@ -41,4 +43,13 @@ export function randomUUID(): string {
   return crypto.randomUUID();
 }
 export * from "./type.js";
-export { AsyncLocalStorage, CustomEvent, getEnv } from "./utils.js";
+
+// @ts-expect-error
+const ReadableStream = globalThis.ReadableStream;
+// @ts-expect-error
+const TransformStream = globalThis.TransformStream;
+// @ts-expect-error
+const WritableStream = globalThis.WritableStream;
+
+export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
+export { ReadableStream, TransformStream, WritableStream };

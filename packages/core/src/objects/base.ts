@@ -1,7 +1,7 @@
 import type { BaseNode, Metadata } from "../Node.js";
 import { TextNode } from "../Node.js";
 import type { BaseRetriever } from "../Retriever.js";
-import type { VectorStoreIndex } from "../indices/index.js";
+import type { VectorStoreIndex } from "../indices/vectorStore/index.js";
 import type { MessageContent } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import type { BaseTool } from "../types.js";

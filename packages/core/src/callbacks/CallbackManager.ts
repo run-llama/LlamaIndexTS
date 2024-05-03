@@ -1,7 +1,7 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
 import { CustomEvent } from "@llamaindex/env";
 import type { NodeWithScore } from "../Node.js";
-import type { AgentEndEvent, AgentStartEvent } from "../agent/type.js";
+import type { AgentEndEvent, AgentStartEvent } from "../agent/types.js";
 import {
   EventCaller,
   getEventCaller,
@@ -212,10 +212,13 @@ export class CallbackManager implements CallbackManagerMethods {
     if (!handlers) {
       return;
     }
-    const clone = structuredClone(detail);
     queueMicrotask(() => {
       handlers.forEach((handler) =>
-        handler(LlamaIndexCustomEvent.fromEvent(event, clone)),
+        handler(
+          LlamaIndexCustomEvent.fromEvent(event, {
+            ...detail,
+          }),
+        ),
       );
     });
   }

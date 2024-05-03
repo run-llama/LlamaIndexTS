@@ -1,10 +1,17 @@
-import { pipeline, randomUUID } from "@llamaindex/env";
+import {
+  ReadableStream,
+  TransformStream,
+  pipeline,
+  randomUUID,
+} from "@llamaindex/env";
+import { Settings } from "../Settings.js";
 import {
   type ChatEngine,
   type ChatEngineParamsNonStreaming,
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import type {
@@ -15,98 +22,17 @@ import type {
   MessageContent,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
-import type { BaseToolWithCall, ToolOutput, UUID } from "../types.js";
-import { consumeAsyncIterable } from "./utils.js";
+import type { BaseToolWithCall, ToolOutput } from "../types.js";
+import type {
+  AgentTaskContext,
+  TaskHandler,
+  TaskStep,
+  TaskStepOutput,
+} from "./types.js";
 
 export const MAX_TOOL_CALLS = 10;
 
-export type AgentTaskContext<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> = {
-  readonly stream: boolean;
-  readonly toolCallCount: number;
-  readonly llm: Model;
-  readonly getTools: (
-    input: MessageContent,
-  ) => BaseToolWithCall[] | Promise<BaseToolWithCall[]>;
-  shouldContinue: (
-    taskStep: Readonly<TaskStep<Model, Store, AdditionalMessageOptions>>,
-  ) => boolean;
-  store: {
-    toolOutputs: ToolOutput[];
-    messages: ChatMessage<AdditionalMessageOptions>[];
-  } & Store;
-};
-
-export type TaskStep<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> = {
-  id: UUID;
-  input: ChatMessage<AdditionalMessageOptions> | null;
-  context: AgentTaskContext<Model, Store, AdditionalMessageOptions>;
-
-  // linked list
-  prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null;
-  nextSteps: Set<TaskStep<Model, Store, AdditionalMessageOptions>>;
-};
-
-export type TaskStepOutput<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> =
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | null
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: false;
-    }
-  | {
-      taskStep: TaskStep<Model, Store, AdditionalMessageOptions>;
-      output:
-        | ChatResponse<AdditionalMessageOptions>
-        | ReadableStream<ChatResponseChunk<AdditionalMessageOptions>>;
-      isLast: true;
-    };
-
-export type TaskHandler<
-  Model extends LLM,
-  Store extends object = {},
-  AdditionalMessageOptions extends object = Model extends LLM<
-    object,
-    infer AdditionalMessageOptions
-  >
-    ? AdditionalMessageOptions
-    : never,
-> = (
-  step: TaskStep<Model, Store, AdditionalMessageOptions>,
-) => Promise<TaskStepOutput<Model, Store, AdditionalMessageOptions>>;
-
-/**
- * @internal
- */
-export async function* createTaskImpl<
+export function createTaskOutputStream<
   Model extends LLM,
   Store extends object = {},
   AdditionalMessageOptions extends object = Model extends LLM<
@@ -118,63 +44,72 @@ export async function* createTaskImpl<
 >(
   handler: TaskHandler<Model, Store, AdditionalMessageOptions>,
   context: AgentTaskContext<Model, Store, AdditionalMessageOptions>,
-  _input: ChatMessage<AdditionalMessageOptions>,
-): AsyncGenerator<TaskStepOutput<Model, Store, AdditionalMessageOptions>> {
-  let isDone = false;
-  let input: ChatMessage<AdditionalMessageOptions> | null = _input;
-  let prevStep: TaskStep<Model, Store, AdditionalMessageOptions> | null = null;
-  while (!isDone) {
-    const step: TaskStep<Model, Store, AdditionalMessageOptions> = {
-      id: randomUUID(),
-      input,
-      context,
-      prevStep,
-      nextSteps: new Set(),
-    };
-    if (prevStep) {
-      prevStep.nextSteps.add(step);
-    }
-    const prevToolCallCount = step.context.toolCallCount;
-    if (!step.context.shouldContinue(step)) {
-      throw new Error("Tool call count exceeded limit");
-    }
-    getCallbackManager().dispatchEvent("agent-start", {
-      payload: {},
-    });
-    const taskOutput = await handler(step);
-    const { isLast, output, taskStep } = taskOutput;
-    // do not consume last output
-    if (!isLast) {
-      if (output) {
-        input = isAsyncIterable(output)
-          ? await consumeAsyncIterable(output)
-          : output.message;
-      } else {
-        input = null;
+): ReadableStream<TaskStepOutput<Model, Store, AdditionalMessageOptions>> {
+  const steps: TaskStep<Model, Store, AdditionalMessageOptions>[] = [];
+  return new ReadableStream<
+    TaskStepOutput<Model, Store, AdditionalMessageOptions>
+  >({
+    pull: async (controller) => {
+      const step: TaskStep<Model, Store, AdditionalMessageOptions> = {
+        id: randomUUID(),
+        context,
+        prevStep: null,
+        nextSteps: new Set(),
+      };
+      if (steps.length > 0) {
+        step.prevStep = steps[steps.length - 1];
       }
-    }
-    context = {
-      ...taskStep.context,
-      store: {
-        ...taskStep.context.store,
-      },
-      toolCallCount: prevToolCallCount + 1,
-    };
-    if (isLast) {
-      isDone = true;
-      getCallbackManager().dispatchEvent("agent-end", {
-        payload: {},
+      const taskOutputs: TaskStepOutput<
+        Model,
+        Store,
+        AdditionalMessageOptions
+      >[] = [];
+      steps.push(step);
+      const enqueueOutput = (
+        output: TaskStepOutput<Model, Store, AdditionalMessageOptions>,
+      ) => {
+        context.logger.log("Enqueueing output for step(id, %s).", step.id);
+        taskOutputs.push(output);
+        controller.enqueue(output);
+      };
+      getCallbackManager().dispatchEvent("agent-start", {
+        payload: {
+          startStep: step,
+        },
       });
-    }
-    prevStep = taskStep;
-    yield taskOutput;
-  }
+
+      context.logger.log("Starting step(id, %s).", step.id);
+      await handler(step, enqueueOutput);
+      context.logger.log("Finished step(id, %s).", step.id);
+      // fixme: support multi-thread when there are multiple outputs
+      // todo: for now we pretend there is only one task output
+      const { isLast, taskStep } = taskOutputs[0];
+      context = {
+        ...taskStep.context,
+        store: {
+          ...taskStep.context.store,
+        },
+        toolCallCount: 1,
+      };
+      if (isLast) {
+        context.logger.log(
+          "Final step(id, %s) reached, closing task.",
+          step.id,
+        );
+        getCallbackManager().dispatchEvent("agent-end", {
+          payload: {
+            endStep: step,
+          },
+        });
+        controller.close();
+      }
+    },
+  });
 }
 
 export type AgentStreamChatResponse<Options extends object> = {
   response: ChatResponseChunk<Options>;
-  // sources of the response, will emit when new tool outputs are available
-  sources?: ToolOutput[];
+  sources: ToolOutput[];
 };
 
 export type AgentChatResponse<Options extends object> = {
@@ -199,6 +134,7 @@ export type AgentRunnerParams<
   tools:
     | BaseToolWithCall[]
     | ((query: MessageContent) => Promise<BaseToolWithCall[]>);
+  verbose: boolean;
 };
 
 export type AgentParamsBase<
@@ -213,6 +149,7 @@ export type AgentParamsBase<
   llm?: AI;
   chatHistory?: ChatMessage<AdditionalMessageOptions>[];
   systemPrompt?: MessageContent;
+  verbose?: boolean;
 };
 
 /**
@@ -235,15 +172,16 @@ export abstract class AgentWorker<
     query: string,
     context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
   ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
-    const taskGenerator = createTaskImpl(this.taskHandler, context, {
+    context.store.messages.push({
       role: "user",
       content: query,
     });
+    const taskOutputStream = createTaskOutputStream(this.taskHandler, context);
     return new ReadableStream<
       TaskStepOutput<AI, Store, AdditionalMessageOptions>
     >({
       start: async (controller) => {
-        for await (const stepOutput of taskGenerator) {
+        for await (const stepOutput of taskOutputStream) {
           this.#taskSet.add(stepOutput.taskStep);
           controller.enqueue(stepOutput);
           if (stepOutput.isLast) {
@@ -291,6 +229,7 @@ export abstract class AgentRunner<
   readonly #systemPrompt: MessageContent | null = null;
   #chatHistory: ChatMessage<AdditionalMessageOptions>[];
   readonly #runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
+  readonly #verbose: boolean;
 
   // create extra store
   abstract createStore(): Store;
@@ -302,14 +241,15 @@ export abstract class AgentRunner<
   protected constructor(
     params: AgentRunnerParams<AI, Store, AdditionalMessageOptions>,
   ) {
-    const { llm, chatHistory, runner, tools } = params;
+    const { llm, chatHistory, systemPrompt, runner, tools, verbose } = params;
     this.#llm = llm;
     this.#chatHistory = chatHistory;
     this.#runner = runner;
-    if (params.systemPrompt) {
-      this.#systemPrompt = params.systemPrompt;
+    if (systemPrompt) {
+      this.#systemPrompt = systemPrompt;
     }
     this.#tools = tools;
+    this.#verbose = verbose;
   }
 
   get llm() {
@@ -318,6 +258,10 @@ export abstract class AgentRunner<
 
   get chatHistory(): ChatMessage<AdditionalMessageOptions>[] {
     return this.#chatHistory;
+  }
+
+  get verbose(): boolean {
+    return Settings.debug || this.#verbose;
   }
 
   public reset(): void {
@@ -343,8 +287,11 @@ export abstract class AgentRunner<
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
-  // fixme: this shouldn't be async
-  async createTask(message: MessageContent, stream: boolean = false) {
+  createTask(
+    message: MessageContent,
+    stream: boolean = false,
+    verbose: boolean | undefined = undefined,
+  ) {
     const initialMessages = [...this.#chatHistory];
     if (this.#systemPrompt !== null) {
       const systemPrompt = this.#systemPrompt;
@@ -369,6 +316,13 @@ export abstract class AgentRunner<
         toolOutputs: [] as ToolOutput[],
       },
       shouldContinue: AgentRunner.shouldContinue,
+      logger:
+        // disable verbose if explicitly set to false
+        verbose === false
+          ? emptyLogger
+          : verbose || this.verbose
+            ? consoleLogger
+            : emptyLogger,
     });
   }
 
@@ -385,7 +339,7 @@ export abstract class AgentRunner<
     | AgentChatResponse<AdditionalMessageOptions>
     | ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>
   > {
-    const task = await this.createTask(params.message, !!params.stream);
+    const task = this.createTask(params.message, !!params.stream);
     const stepOutput = await pipeline(
       task,
       async (
@@ -394,6 +348,8 @@ export abstract class AgentRunner<
         >,
       ) => {
         for await (const stepOutput of iter) {
+          // update chat history for each round
+          this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
           if (stepOutput.isLast) {
             return stepOutput;
           }
@@ -402,7 +358,6 @@ export abstract class AgentRunner<
       },
     );
     const { output, taskStep } = stepOutput;
-    this.#chatHistory = [...taskStep.context.store.messages];
     if (isAsyncIterable(output)) {
       return output.pipeThrough<
         AgentStreamChatResponse<AdditionalMessageOptions>
