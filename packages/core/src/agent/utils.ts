@@ -1,4 +1,5 @@
 import { ReadableStream } from "@llamaindex/env";
+import type { Logger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable, prettifyError } from "../internal/utils.js";
 import type {
@@ -13,12 +14,14 @@ import type { BaseTool, JSONObject, JSONValue, ToolOutput } from "../types.js";
 export async function callTool(
   tool: BaseTool | undefined,
   toolCall: ToolCall | PartialToolCall,
+  logger: Logger,
 ): Promise<ToolOutput> {
   const input: JSONObject =
     typeof toolCall.input === "string"
       ? JSON.parse(toolCall.input)
       : toolCall.input;
   if (!tool) {
+    logger.error(`Tool ${toolCall.name} does not exist.`);
     const output = `Tool ${toolCall.name} does not exist.`;
     return {
       tool,
@@ -30,6 +33,9 @@ export async function callTool(
   const call = tool.call;
   let output: JSONValue;
   if (!call) {
+    logger.error(
+      `Tool ${tool.metadata.name} (remote:${toolCall.name}) does not have a implementation.`,
+    );
     output = `Tool ${tool.metadata.name} (remote:${toolCall.name}) does not have a implementation.`;
     return {
       tool,
@@ -45,6 +51,10 @@ export async function callTool(
       },
     });
     output = await call.call(tool, input);
+    logger.log(
+      `Tool ${tool.metadata.name} (remote:${toolCall.name}) succeeded.`,
+    );
+    logger.log(`Output: ${JSON.stringify(output)}`);
     const toolOutput: ToolOutput = {
       tool,
       input,
@@ -60,6 +70,9 @@ export async function callTool(
     return toolOutput;
   } catch (e) {
     output = prettifyError(e);
+    logger.error(
+      `Tool ${tool.metadata.name} (remote:${toolCall.name}) failed: ${output}`,
+    );
   }
   return {
     tool,

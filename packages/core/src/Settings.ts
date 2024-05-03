@@ -55,9 +55,9 @@ class GlobalSettings implements Config {
   get debug() {
     const debug = getEnv("DEBUG");
     return (
-      getEnv("NODE_ENV") === "development" &&
-      Boolean(debug) &&
-      debug?.includes("llamaindex")
+      (Boolean(debug) && debug?.includes("llamaindex")) ||
+      debug === "*" ||
+      debug === "true"
     );
   }
 
