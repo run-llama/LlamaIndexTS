@@ -4,5 +4,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./type": "./src/type.ts"
+  },
+  "publish": {
+    "include": ["LICENSE", "README.md", "src/**/*.ts"]
   }
 }
