@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.3.5
+
+### Patch Changes
+
+- bc7a11c: fix: inline ollama build
+- 2fe2b81: fix: filter with multiple filters in ChromaDB
+- 5596e31: feat: improve `@llamaindex/env`
+- e74fe88: fix: change <-> to <=> in the SELECT query
+- be5df5b: fix: anthropic agent on multiple chat
+- Updated dependencies [5596e31]
+  - @llamaindex/env@0.1.1
+
 ## 0.3.4
 
 ### Patch Changes

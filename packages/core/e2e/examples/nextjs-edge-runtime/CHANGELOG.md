@@ -1,5 +1,11 @@
 # test-edge-runtime
 
+## 0.1.7
+
+### Patch Changes
+
+- @llamaindex/edge@0.3.5
+
 ## 0.1.6
 
 ### Patch Changes
