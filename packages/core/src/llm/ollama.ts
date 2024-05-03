@@ -1,3 +1,4 @@
+import { BaseEmbedding } from "../embeddings/types.js";
 import ollama, {
   type CreateRequest,
   type ChatResponse as OllamaChatResponse,
@@ -5,8 +6,7 @@ import ollama, {
   type Options,
   type ProgressResponse,
   type ShowRequest,
-} from "ollama/browser";
-import { BaseEmbedding } from "../embeddings/types.js";
+} from "../internal/deps/ollama.js";
 import type {
   ChatResponse,
   ChatResponseChunk,

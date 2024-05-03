@@ -1,3 +1,16 @@
+/**
+ * This module is under Node.js environment.
+ * It provides a set of APIs to interact with the file system, streams, and other Node.js built-in modules.
+ *
+ * Use this under "node" condition,
+ *
+ * For example:
+ * ```shell
+ * node -e "const env = require('@llamaindex/env');"
+ * ```
+ *
+ * @module
+ */
 import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
