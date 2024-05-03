@@ -4,12 +4,14 @@ import {
   pipeline,
   randomUUID,
 } from "@llamaindex/env";
+import { Settings } from "../Settings.js";
 import {
   type ChatEngine,
   type ChatEngineParamsNonStreaming,
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import type {
@@ -66,6 +68,7 @@ export function createTaskOutputStream<
       const enqueueOutput = (
         output: TaskStepOutput<Model, Store, AdditionalMessageOptions>,
       ) => {
+        context.logger.log("Enqueueing output for step(id, %s).", step.id);
         taskOutputs.push(output);
         controller.enqueue(output);
       };
@@ -75,7 +78,9 @@ export function createTaskOutputStream<
         },
       });
 
+      context.logger.log("Starting step(id, %s).", step.id);
       await handler(step, enqueueOutput);
+      context.logger.log("Finished step(id, %s).", step.id);
       // fixme: support multi-thread when there are multiple outputs
       // todo: for now we pretend there is only one task output
       const { isLast, taskStep } = taskOutputs[0];
@@ -87,6 +92,10 @@ export function createTaskOutputStream<
         toolCallCount: 1,
       };
       if (isLast) {
+        context.logger.log(
+          "Final step(id, %s) reached, closing task.",
+          step.id,
+        );
         getCallbackManager().dispatchEvent("agent-end", {
           payload: {
             endStep: step,
@@ -125,6 +134,7 @@ export type AgentRunnerParams<
   tools:
     | BaseToolWithCall[]
     | ((query: MessageContent) => Promise<BaseToolWithCall[]>);
+  verbose: boolean;
 };
 
 export type AgentParamsBase<
@@ -139,6 +149,7 @@ export type AgentParamsBase<
   llm?: AI;
   chatHistory?: ChatMessage<AdditionalMessageOptions>[];
   systemPrompt?: MessageContent;
+  verbose?: boolean;
 };
 
 /**
@@ -218,6 +229,7 @@ export abstract class AgentRunner<
   readonly #systemPrompt: MessageContent | null = null;
   #chatHistory: ChatMessage<AdditionalMessageOptions>[];
   readonly #runner: AgentWorker<AI, Store, AdditionalMessageOptions>;
+  readonly #verbose: boolean;
 
   // create extra store
   abstract createStore(): Store;
@@ -229,14 +241,15 @@ export abstract class AgentRunner<
   protected constructor(
     params: AgentRunnerParams<AI, Store, AdditionalMessageOptions>,
   ) {
-    const { llm, chatHistory, runner, tools } = params;
+    const { llm, chatHistory, systemPrompt, runner, tools, verbose } = params;
     this.#llm = llm;
     this.#chatHistory = chatHistory;
     this.#runner = runner;
-    if (params.systemPrompt) {
-      this.#systemPrompt = params.systemPrompt;
+    if (systemPrompt) {
+      this.#systemPrompt = systemPrompt;
     }
     this.#tools = tools;
+    this.#verbose = verbose;
   }
 
   get llm() {
@@ -245,6 +258,10 @@ export abstract class AgentRunner<
 
   get chatHistory(): ChatMessage<AdditionalMessageOptions>[] {
     return this.#chatHistory;
+  }
+
+  get verbose(): boolean {
+    return Settings.debug || this.#verbose;
   }
 
   public reset(): void {
@@ -270,8 +287,11 @@ export abstract class AgentRunner<
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
-  // fixme: this shouldn't be async
-  async createTask(message: MessageContent, stream: boolean = false) {
+  createTask(
+    message: MessageContent,
+    stream: boolean = false,
+    verbose: boolean | undefined = undefined,
+  ) {
     const initialMessages = [...this.#chatHistory];
     if (this.#systemPrompt !== null) {
       const systemPrompt = this.#systemPrompt;
@@ -296,6 +316,13 @@ export abstract class AgentRunner<
         toolOutputs: [] as ToolOutput[],
       },
       shouldContinue: AgentRunner.shouldContinue,
+      logger:
+        // disable verbose if explicitly set to false
+        verbose === false
+          ? emptyLogger
+          : verbose || this.verbose
+            ? consoleLogger
+            : emptyLogger,
     });
   }
 
@@ -312,7 +339,7 @@ export abstract class AgentRunner<
     | AgentChatResponse<AdditionalMessageOptions>
     | ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>
   > {
-    const task = await this.createTask(params.message, !!params.stream);
+    const task = this.createTask(params.message, !!params.stream);
     const stepOutput = await pipeline(
       task,
       async (

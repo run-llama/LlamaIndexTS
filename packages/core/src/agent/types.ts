@@ -1,4 +1,5 @@
 import { ReadableStream } from "@llamaindex/env";
+import type { Logger } from "../internal/logger.js";
 import type { BaseEvent } from "../internal/type.js";
 import type {
   ChatMessage,
@@ -32,6 +33,7 @@ export type AgentTaskContext<
     toolOutputs: ToolOutput[];
     messages: ChatMessage<AdditionalMessageOptions>[];
   } & Store;
+  logger: Readonly<Logger>;
 };
 
 export type TaskStep<
