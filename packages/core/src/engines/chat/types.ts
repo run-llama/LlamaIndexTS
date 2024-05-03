@@ -13,6 +13,11 @@ export interface ChatEngineParamsBase {
    * Optional chat history if you want to customize the chat history.
    */
   chatHistory?: ChatMessage[] | ChatHistory;
+  /**
+   * Optional flag to enable verbose mode.
+   * @default false
+   */
+  verbose?: boolean;
 }
 
 export interface ChatEngineParamsStreaming extends ChatEngineParamsBase {

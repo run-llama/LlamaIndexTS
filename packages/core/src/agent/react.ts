@@ -354,6 +354,7 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
         "tools" in params
           ? params.tools
           : params.toolRetriever.retrieve.bind(params.toolRetriever),
+      verbose: params.verbose ?? false,
     });
   }
 
@@ -387,14 +388,19 @@ export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
         isLast: type !== "action",
       });
     });
+    step.context.logger.log("current reason: %O", reason);
     step.context.store.reasons = [...step.context.store.reasons, reason];
     if (reason.type === "action") {
       const tool = tools.find((tool) => tool.metadata.name === reason.action);
-      const toolOutput = await callTool(tool, {
-        id: randomUUID(),
-        input: reason.input,
-        name: reason.action,
-      });
+      const toolOutput = await callTool(
+        tool,
+        {
+          id: randomUUID(),
+          input: reason.input,
+          name: reason.action,
+        },
+        step.context.logger,
+      );
       step.context.store.reasons = [
         ...step.context.store.reasons,
         {
