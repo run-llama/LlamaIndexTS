@@ -138,24 +138,24 @@ await test("anthropic agent with multiple chat", async (t) => {
     });
     {
       const { response } = await agent.chat({
-        message: 'Hello? Response to me "Yes"'
+        message: 'Hello? Response to me "Yes"',
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("Yes"));
     }
     {
-      const { response} = await agent.chat({
-        message: "Hello? Response to me \"No\"",
+      const { response } = await agent.chat({
+        message: 'Hello? Response to me "No"',
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("No"));
     }
     {
       const { response } = await agent.chat({
-        message: "Hello? Response to me \"Maybe\"",
+        message: 'Hello? Response to me "Maybe"',
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("Maybe"));
     }
-  })
-})
+  });
+});

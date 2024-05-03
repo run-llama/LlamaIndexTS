@@ -157,58 +157,58 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
   ): Beta extends true ? ToolsBetaMessageParam[] : MessageParam[] {
     const result: ToolsBetaMessageParam[] = messages
-    .filter((message) =>
-      message.role === 'user' || message.role === 'assistant'
-    )
-    .map((message) => {
-      const options = message.options ?? {};
-      if ("toolResult" in options) {
-        const { id, isError } = options.toolResult;
-        return {
-          role: "user",
-          content: [
-            {
-              type: "tool_result",
-              is_error: isError,
-              content: [
-                {
-                  type: "text",
-                  text: extractText(message.content),
-                },
-              ],
-              tool_use_id: id,
-            },
-          ] satisfies ToolResultBlockParam[],
-        } satisfies ToolsBetaMessageParam;
-      } else if ("toolCall" in options) {
-        const aiThinkingText = extractText(message.content);
-        return {
-          role: "assistant",
-          content: [
-            // this could be empty when you call two tools in one query
-            ...(aiThinkingText.trim()
-              ? [
+      .filter(
+        (message) => message.role === "user" || message.role === "assistant",
+      )
+      .map((message) => {
+        const options = message.options ?? {};
+        if ("toolResult" in options) {
+          const { id, isError } = options.toolResult;
+          return {
+            role: "user",
+            content: [
+              {
+                type: "tool_result",
+                is_error: isError,
+                content: [
                   {
                     type: "text",
-                    text: aiThinkingText,
-                  } satisfies TextBlockParam,
-                ]
-              : []),
-            {
-              type: "tool_use",
-              id: options.toolCall.id,
-              name: options.toolCall.name,
-              input: options.toolCall.input,
-            } satisfies ToolUseBlockParam,
-          ] satisfies ToolsBetaContentBlock[],
-        } satisfies ToolsBetaMessageParam;
-      }
+                    text: extractText(message.content),
+                  },
+                ],
+                tool_use_id: id,
+              },
+            ] satisfies ToolResultBlockParam[],
+          } satisfies ToolsBetaMessageParam;
+        } else if ("toolCall" in options) {
+          const aiThinkingText = extractText(message.content);
+          return {
+            role: "assistant",
+            content: [
+              // this could be empty when you call two tools in one query
+              ...(aiThinkingText.trim()
+                ? [
+                    {
+                      type: "text",
+                      text: aiThinkingText,
+                    } satisfies TextBlockParam,
+                  ]
+                : []),
+              {
+                type: "tool_use",
+                id: options.toolCall.id,
+                name: options.toolCall.name,
+                input: options.toolCall.input,
+              } satisfies ToolUseBlockParam,
+            ] satisfies ToolsBetaContentBlock[],
+          } satisfies ToolsBetaMessageParam;
+        }
 
-      return {
-        content: extractText(message.content),
-        role: message.role as "user" | "assistant",
-      } satisfies MessageParam;
-    });
+        return {
+          content: extractText(message.content),
+          role: message.role as "user" | "assistant",
+        } satisfies MessageParam;
+      });
     // merge messages with the same role
     // in case of 'messages: roles must alternate between "user" and "assistant", but found multiple "user" roles in a row'
     const realResult: ToolsBetaMessageParam[] = [];
