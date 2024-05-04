@@ -88,7 +88,19 @@ export class SimpleDirectoryReader implements BaseReader {
           continue;
         }
 
-        const fileDocs = await reader.loadData(filePath, fs);
+        let fileDocs: Document<Metadata>[] = [];
+
+        try {
+          const loadedData = await reader.loadData(filePath, fs);
+          if (Array.isArray(loadedData)) {
+            fileDocs = loadedData.flat(); // Ensure flat structure
+          } else {
+            fileDocs = [loadedData];
+          }
+        } catch (error) {
+          console.error(`Error loading data for file ${filePath}: ${error}`);
+        }
+
         fileDocs.forEach(addMetaData(filePath));
 
         // Observer can still cancel addition of the resulting docs from this file

@@ -5,7 +5,7 @@ import type { Document } from "../Node.js";
  * A reader takes imports data into Document objects.
  */
 export interface BaseReader {
-  loadData(...args: unknown[]): Promise<Document[]>;
+  loadData(...args: unknown[]): Promise<Document[] | Document[][]>;
 }
 
 /**
@@ -16,9 +16,9 @@ export interface FileReader extends BaseReader {
 }
 
 /**
- * A reader takes multiple file paths and imports data into Document objects.
+ * A reader takes multiple file paths and imports data into an array of Document objects.
  */
-export interface MultiReader {
+export interface MultiReader extends BaseReader {
   loadData(filePath: string, fs?: CompleteFileSystem): Promise<Document[]>;
   loadData(filePaths: string[], fs?: CompleteFileSystem): Promise<Document[][]>;
 }
