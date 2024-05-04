@@ -105,7 +105,16 @@ export class IngestionPipeline {
       inputNodes.push(this.documents);
     }
     if (this.reader) {
-      inputNodes.push(await this.reader.loadData());
+      try {
+        const loadedData = await this.reader.loadData();
+        if (Array.isArray(loadedData)) {
+          inputNodes.push(loadedData.flat()); // Ensure flat structure
+        } else {
+          inputNodes.push([loadedData]);
+        }
+      } catch (error) {
+        console.error(`Error loading data: ${error}`);
+      }
     }
     return inputNodes.flat();
   }
