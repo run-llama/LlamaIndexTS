@@ -15,7 +15,13 @@ export interface FileReader extends BaseReader {
   loadData(filePath: string, fs?: CompleteFileSystem): Promise<Document[]>;
 }
 
-// For LlamaParseReader.ts
+/**
+ * A reader takes multiple file paths and imports data into Document objects.
+ */
+export interface MultiReader {
+  loadData(filePath: string, fs?: CompleteFileSystem): Promise<Document[]>;
+  loadData(filePaths: string[], fs?: CompleteFileSystem): Promise<Document[][]>;
+}
 
 export type ResultType = "text" | "markdown" | "json";
 export type Language =
