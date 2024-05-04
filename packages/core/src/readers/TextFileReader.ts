@@ -9,10 +9,10 @@ import type { BaseReader } from "./type.js";
 
 export class TextFileReader implements BaseReader {
   async loadData(
-    file: string,
+    file: string | URL,
     fs: CompleteFileSystem = defaultFS,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file);
-    return [new Document({ text: dataBuffer, id_: file })];
+    return [new Document({ text: dataBuffer, id_: `${file}` })];
   }
 }

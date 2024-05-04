@@ -8,7 +8,7 @@ import type { BaseReader } from "./type.js";
  */
 export class PDFReader implements BaseReader {
   async loadData(
-    file: string,
+    file: string | URL,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const content = await fs.readRawFile(file);

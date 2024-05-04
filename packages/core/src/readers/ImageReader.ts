@@ -16,11 +16,11 @@ export class ImageReader implements FileReader {
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one ImageDocument of the specified file.
    */
   async loadData(
-    file: string,
+    file: string | URL,
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const dataBuffer = await fs.readRawFile(file);
     const blob = new Blob([dataBuffer]);
-    return [new ImageDocument({ image: blob, id_: file })];
+    return [new ImageDocument({ image: blob, id_: `${file}` })];
   }
 }
