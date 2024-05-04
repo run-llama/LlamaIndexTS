@@ -1,26 +1,40 @@
-import fs from "fs/promises";
-import { LlamaParseReader } from "llamaindex";
+import { LlamaParseReader, VectorStoreIndex } from "llamaindex";
 
 async function main() {
   // Load PDF using LlamaParse. set apiKey here or in environment variable LLAMA_CLOUD_API_KEY
   const reader = new LlamaParseReader({
     resultType: "markdown",
     language: "en",
+    numWorkers: 2, //Load files in batches of 2
     parsingInstruction:
-      "The provided document is a manga comic book. Most pages do NOT have title. It does not contain tables. Try to reconstruct the dialogue happening in a cohesive way. Output any math equation in LATEX markdown (between $$)",
+      "The provided documents are datasheets and Quick-Installation-Guides for Solplanet's Ai-LB and Ai-HB series of batteries. They contain tables and graphics. There is also a lot of technical information. The goal is to extract and structure the knowledge in a coherent way",
   });
-  const documents = await reader.loadData("../data/manga.pdf"); // The manga.pdf in the data folder is just a copy of the TOS, due to copyright laws. You have to place your own. I used "The Manga Guide to Calculus" by Hiroyuki Kojima
+  // load an array of files
+  const documents = await reader.loadData([
+    "../data/LlamaParseData/Battery_Ai-HB-2.56LG_Datasheet.pdf",
+    "../data/LlamaParseData/Battery_Ai-HB-075_100_125_150_200A-G2-Datasheet.pdf",
+    "../data/LlamaParseData/Battery_Ai-LB-5_10kwh-Datasheet.pdf",
+    "../data/LlamaParseData/Battery_Ai-LB-5k_Quick-Installation-Guide.pdf",
+    "../data/LlamaParseData/Battery_Ai-LB-5K-Pro_Quick-Installation-Guide.pdf",
+    "../data/LlamaParseData/Battery_Ai-LB-10k_Quick-Installation-Guide.pdf",
+    "../data/LlamaParseData/Battery_Ai-LB-10K-Pro_Quick-Installation-Guide.pdf",
+    "../data/LlamaParseData/Battery_Ai-LB-Pro-5_10kwh-Datasheet.pdf",
+  ]);
 
-  // Assuming documents contain an array of pages or sections
-  const parsedManga = documents.map((page) => page.text).join("\n---\n");
+  // Flatten the array of arrays of files
+  const flatdocuments = documents.flat();
 
-  // Output the parsed manga to .md file. Will be placed in ../example/readers/
-  try {
-    await fs.writeFile("./parsedManga.md", parsedManga);
-    console.log("Output successfully written to parsedManga.md");
-  } catch (err) {
-    console.error("Error writing to file:", err);
-  }
+  // Split text and create embeddings. Store them in a VectorStoreIndex
+  const index = await VectorStoreIndex.fromDocuments(flatdocuments);
+
+  // Query the index
+  const queryEngine = index.asQueryEngine();
+  const response = await queryEngine.query({
+    query: "Which Batteries can be used in parallel connection?",
+  });
+
+  // Output response
+  console.log(response.toString());
 }
 
 main().catch(console.error);
