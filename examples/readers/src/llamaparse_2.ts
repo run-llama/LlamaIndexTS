@@ -5,21 +5,12 @@ async function main() {
   const reader = new LlamaParseReader({
     resultType: "markdown",
     language: "en",
-    numWorkers: 2, //Load files in batches of 2
+    numWorkers: 3, //Load files in batches of 2
     parsingInstruction:
-      "The provided documents are datasheets and Quick-Installation-Guides for Solplanet's Ai-LB and Ai-HB series of batteries. They contain tables and graphics. There is also a lot of technical information. The goal is to extract and structure the knowledge in a coherent way",
+      "The provided documents are datasheets and Quick-Installation-Guides for Solplanet's Ai-LB series of batteries. They contain tables and graphics. There is also a lot of technical information. The goal is to extract and structure the knowledge in a coherent way",
   });
-  // load an array of files
-  const documents = await reader.loadData([
-    "../data/LlamaParseData/Battery_Ai-HB-2.56LG_Datasheet.pdf",
-    "../data/LlamaParseData/Battery_Ai-HB-075_100_125_150_200A-G2-Datasheet.pdf",
-    "../data/LlamaParseData/Battery_Ai-LB-5_10kwh-Datasheet.pdf",
-    "../data/LlamaParseData/Battery_Ai-LB-5k_Quick-Installation-Guide.pdf",
-    "../data/LlamaParseData/Battery_Ai-LB-5K-Pro_Quick-Installation-Guide.pdf",
-    "../data/LlamaParseData/Battery_Ai-LB-10k_Quick-Installation-Guide.pdf",
-    "../data/LlamaParseData/Battery_Ai-LB-10K-Pro_Quick-Installation-Guide.pdf",
-    "../data/LlamaParseData/Battery_Ai-LB-Pro-5_10kwh-Datasheet.pdf",
-  ]);
+  // Can either accept a single file path an array[] of file paths or a directory path
+  const documents = await reader.loadData("../data/LlamaParseData");
 
   // Flatten the array of arrays of files
   const flatdocuments = documents.flat();

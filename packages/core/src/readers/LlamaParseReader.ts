@@ -1,6 +1,7 @@
-import { defaultFS, getEnv, type GenericFileSystem } from "@llamaindex/env";
+import { defaultFS, getEnv, type CompleteFileSystem } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
+import { walk } from "../storage/FileSystem.js";
 import type { Language, MultiReader, ResultType } from "./type.js";
 import { SupportedFileTypes, SupportedMimeTypes } from "./utils.js";
 
@@ -15,7 +16,7 @@ export class LlamaParseReader implements MultiReader {
   baseUrl: string = "https://api.cloud.llamaindex.ai/api/parsing";
   // The result type for the parser.
   resultType: ResultType = "text";
-  // The number of workers to use sending API requests when parsing multiple files. Must be greater than 0 and less than 10.
+  // The number of "workers" to use sending API requests when parsing multiple files. Must be greater than 0 and less than 10.
   numWorkers: number = 4;
   // The interval in seconds to check if the parsing is done.
   checkInterval: number = 1;
@@ -49,59 +50,46 @@ export class LlamaParseReader implements MultiReader {
     this.apiKey = params.apiKey;
   }
 
-  async loadData(file: string, fs?: GenericFileSystem): Promise<Document[]>;
+  async loadData(file: string, fs?: CompleteFileSystem): Promise<Document[]>;
   async loadData(
     files: string[],
-    fs?: GenericFileSystem,
+    fs?: CompleteFileSystem,
   ): Promise<Document[][]>;
   async loadData(
-    files: string | string[],
-    fs: GenericFileSystem = defaultFS,
+    directoryPath: string,
+    fs?: CompleteFileSystem,
+  ): Promise<Document[][]>;
+
+  async loadData(
+    input: string | string[],
+    fs: CompleteFileSystem = defaultFS,
   ): Promise<Document[] | Document[][]> {
-    if (typeof files === "string") {
-      // Single file
-      return [await this.loadFile(files, fs)];
+    if (typeof input === "string") {
+      const stats = await fs.stat(input);
+      if (stats.isDirectory()) {
+        return await this.loadDirectory(input, fs);
+      } else {
+        return [await this.loadFile(input, fs)];
+      }
     } else {
-      // Multiple files
-      const results: Document[][] = [];
-      for (let i = 0; i < files.length; i += this.numWorkers) {
-        const batch = files.slice(i, i + this.numWorkers);
-        const batchResults = await Promise.all(
-          batch.map((file) => this.loadFile(file, fs)),
-        );
-        results.push(...batchResults);
-        if (this.verbose && this.showProgress) {
-          console.log(
-            `Processed batch ${i / this.numWorkers + 1}/${Math.ceil(files.length / this.numWorkers)} (${(((i + this.numWorkers) / files.length) * 100).toFixed(2)}% complete).`,
-          );
-        }
-      }
-      if (this.verbose) {
-        console.log("All files loaded successfully.");
-      }
-      return results;
+      return await this.loadFiles(input, fs);
     }
   }
 
+  // Load a single file
   private async loadFile(
     file: string,
-    fs: GenericFileSystem = defaultFS,
+    fs: CompleteFileSystem = defaultFS,
   ): Promise<Document[]> {
-    const extension = `.${file
-      .split(".")
-      .pop()
-      ?.trim()
-      .replace(/[\u200B-\u200D\uFEFF]/g, "")
-      .toLowerCase()}`;
-    if (!SupportedFileTypes.includes(extension)) {
-      throw new Error(
-        `Unsupported file type: ${extension}. Supported types include: ${SupportedFileTypes.join(", ")}`,
-      );
-    }
-
     // Load data, set the mime type
     const data = await fs.readRawFile(file);
     const mimeType = await this.getMimeType(data);
+    if (!SupportedMimeTypes.includes(mimeType)) {
+      throw new Error(
+        `File has type ${mimeType} which does not match supported MIME Types. Supported Types include these formats: ${SupportedFileTypes.join(", ")}`,
+      );
+    }
+
     const metadata = { file_path: file };
 
     if (this.verbose) {
@@ -174,12 +162,59 @@ export class LlamaParseReader implements MultiReader {
     }
   }
 
+  // Load multiple files in parallel
+  private async loadFiles(
+    filePaths: string[],
+    fs: CompleteFileSystem,
+  ): Promise<Document[][]> {
+    const results: Document[][] = [];
+    for (let i = 0; i < filePaths.length; i += this.numWorkers) {
+      const batch = filePaths.slice(i, i + this.numWorkers);
+      const batchResults = await Promise.all(
+        batch.map(async (file) => {
+          const stats = await fs.stat(file);
+          if (!stats.isDirectory()) {
+            return await this.loadFile(file, fs);
+          } else {
+            console.warn(`Skipping directory: ${file}`);
+            return [];
+          }
+        }),
+      );
+
+      results.push(...batchResults);
+      if (this.verbose && this.showProgress) {
+        console.log(
+          `Processed batch ${i / this.numWorkers + 1}/${Math.ceil(filePaths.length / this.numWorkers)}.`,
+        );
+      }
+    }
+    if (this.verbose) {
+      console.log("All files loaded successfully.");
+    }
+    return results;
+  }
+
+  // Load all files in a directory
+  private async loadDirectory(
+    directoryPath: string,
+    fs: CompleteFileSystem,
+  ): Promise<Document[][]> {
+    const filePaths = [];
+    for await (const filePath of walk(fs, directoryPath)) {
+      filePaths.push(filePath);
+    }
+
+    return await this.loadFiles(filePaths, fs);
+  }
+
+  // Get the MIME type of a file
   private async getMimeType(data: Buffer): Promise<string> {
     const mimes = filetypemime(data);
     const validMimes = mimes.find((mime) => SupportedMimeTypes.includes(mime));
     if (!validMimes) {
       throw new Error(
-        `Unsupported file type. Supported types include: ${SupportedFileTypes.join(", ")}`,
+        `File has type ${mimes} which does not match supported MIME Types. Supported Types include these formats: ${SupportedFileTypes.join(", ")}`,
       );
     }
 
