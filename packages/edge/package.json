@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/edge",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "license": "MIT",
   "type": "module",
   "dependencies": {
