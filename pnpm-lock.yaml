@@ -628,9 +628,6 @@ importers:
       '@types/node':
         specifier: ^20.12.7
         version: 20.12.7
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
     devDependencies:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0

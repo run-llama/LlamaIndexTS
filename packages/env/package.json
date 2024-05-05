@@ -5,6 +5,22 @@
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
+  "keywords": [
+    "llm",
+    "llama",
+    "openai",
+    "gpt",
+    "data science",
+    "prompt",
+    "prompt engineering",
+    "chatgpt",
+    "machine learning",
+    "ml",
+    "embedding",
+    "vectorstore",
+    "data framework",
+    "llamaindex"
+  ],
   "exports": {
     ".": {
       "node": {
@@ -67,8 +83,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.12.7",
-    "lodash": "^4.17.21"
+    "@types/node": "^20.12.7"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",

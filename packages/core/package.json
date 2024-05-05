@@ -4,6 +4,22 @@
   "expectedMinorVersion": "3",
   "license": "MIT",
   "type": "module",
+  "keywords": [
+    "llm",
+    "llama",
+    "openai",
+    "gpt",
+    "data science",
+    "prompt",
+    "prompt engineering",
+    "chatgpt",
+    "machine learning",
+    "ml",
+    "embedding",
+    "vectorstore",
+    "data framework",
+    "llamaindex"
+  ],
   "dependencies": {
     "@anthropic-ai/sdk": "^0.20.6",
     "@aws-crypto/sha256-js": "^5.2.0",
