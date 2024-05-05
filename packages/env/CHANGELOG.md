@@ -1,5 +1,12 @@
 # @llamaindex/env
 
+## 0.1.2
+
+### Patch Changes
+
+- efa326a: chore: update package.json
+- efa326a: refactor: remove usage of lodash
+
 ## 0.1.1
 
 ### Patch Changes

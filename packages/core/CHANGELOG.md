@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.3.6
+
+### Patch Changes
+
+- efa326a: chore: update package.json
+- Updated dependencies [efa326a]
+- Updated dependencies [efa326a]
+  - @llamaindex/env@0.1.2
+
 ## 0.3.5
 
 ### Patch Changes
