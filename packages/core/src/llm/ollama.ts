@@ -1,11 +1,23 @@
 import { BaseEmbedding } from "../embeddings/types.js";
-import ollama, {
+import {
+  Ollama as OllamaBase,
+  type Config,
+  type CopyRequest,
   type CreateRequest,
+  type DeleteRequest,
+  type EmbeddingsRequest,
+  type EmbeddingsResponse,
+  type GenerateRequest,
+  type ListResponse,
   type ChatResponse as OllamaChatResponse,
   type GenerateResponse as OllamaGenerateResponse,
   type Options,
   type ProgressResponse,
+  type PullRequest,
+  type PushRequest,
   type ShowRequest,
+  type ShowResponse,
+  type StatusResponse,
 } from "../internal/deps/ollama.js";
 import type {
   ChatResponse,
@@ -35,14 +47,20 @@ const completionAccessor = (
 
 export type OllamaParams = {
   model: string;
+  config?: Partial<Config>;
   options?: Partial<Options>;
 };
 
 /**
  * This class both implements the LLM and Embedding interfaces.
  */
-export class Ollama extends BaseEmbedding implements LLM {
+export class Ollama
+  extends BaseEmbedding
+  implements LLM, Omit<OllamaBase, "chat">
+{
   readonly hasStreaming = true;
+
+  ollama: OllamaBase;
 
   // https://ollama.ai/library
   model: string;
@@ -57,6 +75,7 @@ export class Ollama extends BaseEmbedding implements LLM {
   constructor(params: OllamaParams) {
     super();
     this.model = params.model;
+    this.ollama = new OllamaBase(params.config);
     if (params.options) {
       this.options = {
         ...this.options,
@@ -97,7 +116,7 @@ export class Ollama extends BaseEmbedding implements LLM {
       },
     };
     if (!stream) {
-      const chatResponse = await ollama.chat({
+      const chatResponse = await this.ollama.chat({
         ...payload,
         stream: false,
       });
@@ -110,7 +129,7 @@ export class Ollama extends BaseEmbedding implements LLM {
         raw: chatResponse,
       };
     } else {
-      const stream = await ollama.chat({
+      const stream = await this.ollama.chat({
         ...payload,
         stream: true,
       });
@@ -137,7 +156,7 @@ export class Ollama extends BaseEmbedding implements LLM {
       },
     };
     if (!stream) {
-      const response = await ollama.generate({
+      const response = await this.ollama.generate({
         ...payload,
         stream: false,
       });
@@ -146,7 +165,7 @@ export class Ollama extends BaseEmbedding implements LLM {
         raw: response,
       };
     } else {
-      const stream = await ollama.generate({
+      const stream = await this.ollama.generate({
         ...payload,
         stream: true,
       });
@@ -162,7 +181,7 @@ export class Ollama extends BaseEmbedding implements LLM {
         ...this.options,
       },
     };
-    const response = await ollama.embeddings({
+    const response = await this.ollama.embeddings({
       ...payload,
     });
     return response.embedding;
@@ -176,104 +195,63 @@ export class Ollama extends BaseEmbedding implements LLM {
     return this.getEmbedding(query);
   }
 
-  // ollama specific methods, inherited from the ollama library
-  static async list() {
-    const { models } = await ollama.list();
-    return models;
-  }
+  // Inherited from OllamaBase
 
-  static async detail(modelName: string, options?: Omit<ShowRequest, "model">) {
-    return ollama.show({
-      model: modelName,
-      ...options,
-    });
-  }
-
-  static async create(
-    modelName: string,
-    options?: Omit<CreateRequest, "model"> & {
-      stream: false;
-    },
+  push(
+    request: PushRequest & { stream: true },
+  ): Promise<AsyncGenerator<ProgressResponse, any, unknown>>;
+  push(
+    request: PushRequest & { stream?: false | undefined },
   ): Promise<ProgressResponse>;
-  static async create(
-    modelName: string,
-    options: Omit<CreateRequest, "model"> & {
-      stream: true;
-    },
+  push(request: any): any {
+    return this.ollama.push(request);
+  }
+  abort(): void {
+    return this.ollama.abort();
+  }
+  encodeImage(image: string | Uint8Array): Promise<string> {
+    return this.ollama.encodeImage(image);
+  }
+  generate(
+    request: GenerateRequest & { stream: true },
+  ): Promise<AsyncGenerator<OllamaGenerateResponse>>;
+  generate(
+    request: GenerateRequest & { stream?: false | undefined },
+  ): Promise<OllamaGenerateResponse>;
+  generate(request: any): any {
+    return this.ollama.generate(request);
+  }
+  create(
+    request: CreateRequest & { stream: true },
   ): Promise<AsyncGenerator<ProgressResponse>>;
-  static async create(
-    modelName: string,
-    options?: Omit<CreateRequest, "model"> & {
-      stream: boolean;
-    },
-  ) {
-    return ollama.create({
-      model: modelName,
-      ...options,
-      stream: (options ? !!options.stream : false) as never,
-    }) as Promise<ProgressResponse> | Promise<AsyncGenerator<ProgressResponse>>;
-  }
-
-  static async delete(modelName: string) {
-    return ollama.delete({
-      model: modelName,
-    });
-  }
-
-  static async copy(source: string, destination: string) {
-    return ollama.copy({
-      source,
-      destination,
-    });
-  }
-
-  static async pull(
-    modelName: string,
-    options?: Omit<CreateRequest, "model"> & {
-      stream: false;
-    },
+  create(
+    request: CreateRequest & { stream?: false | undefined },
   ): Promise<ProgressResponse>;
-  static async pull(
-    modelName: string,
-    options: Omit<CreateRequest, "model"> & {
-      stream: true;
-    },
-  ): Promise<AsyncGenerator<ProgressResponse>>;
-  static async pull(
-    modelName: string,
-    options?: Omit<CreateRequest, "model"> & {
-      stream: boolean;
-    },
-  ) {
-    return ollama.pull({
-      model: modelName,
-      ...options,
-      stream: (options ? !!options.stream : false) as never,
-    }) as Promise<ProgressResponse> | Promise<AsyncGenerator<ProgressResponse>>;
+  create(request: any): any {
+    return this.ollama.create(request);
   }
-
-  static async push(
-    modelName: string,
-    options?: Omit<CreateRequest, "model"> & {
-      stream: false;
-    },
-  ): Promise<ProgressResponse>;
-  static async push(
-    modelName: string,
-    options: Omit<CreateRequest, "model"> & {
-      stream: true;
-    },
+  pull(
+    request: PullRequest & { stream: true },
   ): Promise<AsyncGenerator<ProgressResponse>>;
-  static async push(
-    modelName: string,
-    options?: Omit<CreateRequest, "model"> & {
-      stream: boolean;
-    },
-  ) {
-    return ollama.push({
-      model: modelName,
-      ...options,
-      stream: (options ? !!options.stream : false) as never,
-    }) as Promise<ProgressResponse> | Promise<AsyncGenerator<ProgressResponse>>;
+  pull(
+    request: PullRequest & { stream?: false | undefined },
+  ): Promise<ProgressResponse>;
+  pull(request: any): any {
+    return this.ollama.pull(request);
+  }
+  delete(request: DeleteRequest): Promise<StatusResponse> {
+    return this.ollama.delete(request);
+  }
+  copy(request: CopyRequest): Promise<StatusResponse> {
+    return this.ollama.copy(request);
+  }
+  list(): Promise<ListResponse> {
+    return this.ollama.list();
+  }
+  show(request: ShowRequest): Promise<ShowResponse> {
+    return this.ollama.show(request);
+  }
+  embeddings(request: EmbeddingsRequest): Promise<EmbeddingsResponse> {
+    return this.ollama.embeddings(request);
   }
 }
