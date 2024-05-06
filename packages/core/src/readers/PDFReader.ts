@@ -14,7 +14,7 @@ export class PDFReader implements BaseReader {
     const content = await fs.readRawFile(file);
     const text = await readPDF(content);
     return text.map((text, page) => {
-      const id_ = `${file}_${page}`
+      const id_ = `${file}_${page}`;
       return new Document({ text, id_ });
     });
   }
