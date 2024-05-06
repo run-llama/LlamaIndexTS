@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.3.7
+
+### Patch Changes
+
+- b6a6606: feat: allow change host of ollama
+- b6a6606: chore: export ollama in default js runtime
+
 ## 0.3.6
 
 ### Patch Changes
