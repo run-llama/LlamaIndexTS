@@ -10,5 +10,3 @@ export {
   HuggingFaceEmbedding,
   HuggingFaceEmbeddingModelType,
 } from "./embeddings/HuggingFaceEmbedding.js";
-export { OllamaEmbedding } from "./embeddings/OllamaEmbedding.js";
-export { Ollama, type OllamaParams } from "./llm/ollama.js";
