@@ -42,6 +42,12 @@
       "path": "./packages/core/tests/tsconfig.json"
     },
     {
+      "path": "./packages/autotool/tsconfig.json"
+    },
+    {
+      "path": "./packages/autotool/examples/01_node/tsconfig.json"
+    },
+    {
       "path": "./packages/env/tsconfig.json"
     },
     {

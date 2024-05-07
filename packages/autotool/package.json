@@ -1,0 +1,51 @@
+{
+  "name": "@llamaindex/autotool",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js",
+      "require": "./dist/next.cjs",
+      "default": "./dist/next.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "import": "./dist/loader.js",
+      "require": "./dist/loader.cjs",
+      "default": "./dist/loader.js"
+    },
+    "./node": "./dist/node.js"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "dependencies": {
+    "@swc/core": "^1.4.16",
+    "jotai": "^2.8.0",
+    "openai": "^4.42.0",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.4.5",
+    "unplugin": "^1.10.1"
+  },
+  "devDependencies": {
+    "@swc/types": "^0.1.6",
+    "@types/json-schema": "^7.0.15",
+    "@types/node": "^20.12.10",
+    "bunchee": "^5.1.2",
+    "llamaindex": "^0.3.0",
+    "next": "14.2.3",
+    "rollup": "^4.17.2",
+    "tsx": "^4.7.2",
+    "vitest": "^1.5.0",
+    "webpack": "^5.91.0"
+  }
+}
