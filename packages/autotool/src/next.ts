@@ -7,9 +7,10 @@ const webpackPlugin = createWebpackPlugin(unpluginFactory);
 export function withNext(config: NextConfig) {
   return {
     ...config,
-    webpack: (config: any) => {
-      config.plugins.push(webpackPlugin());
-      return config;
+    webpack: (webpackConfig: any, context: any) => {
+      webpackConfig = config.webpack?.(webpackConfig, context) ?? webpackConfig;
+      webpackConfig.plugins.push(webpackPlugin());
+      return webpackConfig;
     },
   };
 }
