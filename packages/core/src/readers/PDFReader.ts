@@ -12,10 +12,13 @@ export class PDFReader implements BaseReader {
     fs: GenericFileSystem = defaultFS,
   ): Promise<Document[]> {
     const content = await fs.readRawFile(file);
-    const text = await readPDF(content);
-    return text.map((text, page) => {
-      const id_ = `${file}_${page}`;
-      return new Document({ text, id_ });
+    const pages = await readPDF(content);
+    return pages.map((text, page) => {
+      const id_ = `${file}_${page + 1}`;
+      const metadata = {
+        page_number: page + 1,
+      };
+      return new Document({ text, id_, metadata });
     });
   }
 }
