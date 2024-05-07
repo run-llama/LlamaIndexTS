@@ -7,5 +7,13 @@
     "outDir": "./lib",
     "types": ["node"]
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "references": [
+    {
+      "path": "../core/tsconfig.json"
+    },
+    {
+      "path": "../env/tsconfig.json"
+    }
+  ]
 }
