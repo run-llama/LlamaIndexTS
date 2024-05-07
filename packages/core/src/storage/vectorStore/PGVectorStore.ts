@@ -292,10 +292,14 @@ export class PGVectorStore implements VectorStore {
       });
     });
 
+    let similarities = undefined;
+    if (results && results.rows && results.rows.length > 0) {
+        similarities = results.rows.map((row) => 1 - row.s);
+    } 
     const ret = {
-      nodes: nodes,
-      similarities: results.rows.map((row) => row.s),
-      ids: results.rows.map((row) => row.id),
+        nodes: nodes,
+        similarities: similarities,
+        ids: results.rows.map((row)=>row.id)
     };
 
     return Promise.resolve(ret);
