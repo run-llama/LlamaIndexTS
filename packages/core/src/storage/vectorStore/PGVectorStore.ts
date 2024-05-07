@@ -295,7 +295,7 @@ export class PGVectorStore implements VectorStore {
     const ret = {
       nodes: nodes,
       similarities: results.rows.map((row) => 1 - row.s),
-      ids: results.rows.map((row)=>row.id)
+      ids: results.rows.map((row) => row.id),
     };
 
     return Promise.resolve(ret);
