@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 /**
  * A filesystem interface that is meant to be compatible with
  * the 'fs' module from Node.js.
@@ -41,14 +39,14 @@ export class InMemoryFileSystem implements CompleteFileSystem {
     content: string,
     options?: unknown,
   ): Promise<void> {
-    this.files[path] = _.cloneDeep(content);
+    this.files[path] = structuredClone(content);
   }
 
   async readFile(path: string): Promise<string> {
     if (!(path in this.files)) {
       throw new Error(`File ${path} does not exist`);
     }
-    return _.cloneDeep(this.files[path]);
+    return structuredClone(this.files[path]);
   }
 
   async access(path: string): Promise<void> {
@@ -58,7 +56,7 @@ export class InMemoryFileSystem implements CompleteFileSystem {
   }
 
   async mkdir(path: string): Promise<undefined> {
-    this.files[path] = _.get(this.files, path, null);
+    this.files[path] = this.files[path] ?? null;
   }
 
   async readdir(path: string): Promise<string[]> {

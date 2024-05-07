@@ -1,3 +1,10 @@
+/**
+ * Polyfill implementation some node.js APIs.
+ *
+ * The code should be compatible with any JS runtime.
+ *
+ * @module
+ */
 import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
 import { InMemoryFileSystem, type CompleteFileSystem } from "./type.js";
