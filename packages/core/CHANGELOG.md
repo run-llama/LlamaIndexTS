@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.3.8
+
+### Patch Changes
+
+- ce94780: Add page number to read PDFs and use generated IDs for PDF and markdown content
+
 ## 0.3.7
 
 ### Patch Changes
