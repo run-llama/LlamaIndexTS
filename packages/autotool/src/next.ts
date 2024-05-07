@@ -1,8 +1,5 @@
 import type { NextConfig } from "next";
-import { createWebpackPlugin } from "unplugin";
-import { unpluginFactory } from "./plugin";
-
-const webpackPlugin = createWebpackPlugin(unpluginFactory);
+import webpackPlugin from "./webpack";
 
 export function withNext(config: NextConfig) {
   return {

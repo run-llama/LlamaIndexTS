@@ -16,6 +16,18 @@
       "require": "./dist/next.cjs",
       "default": "./dist/next.js"
     },
+    "./webpack": {
+      "types": "./dist/webpack.d.ts",
+      "import": "./dist/webpack.js",
+      "require": "./dist/webpack.cjs",
+      "default": "./dist/webpack.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs",
+      "default": "./dist/vite.js"
+    },
     "./loader": {
       "types": "./dist/loader.d.ts",
       "import": "./dist/loader.js",
@@ -31,17 +43,31 @@
   "dependencies": {
     "@swc/core": "^1.4.16",
     "jotai": "^2.8.0",
-    "openai": "^4.42.0",
     "typedoc": "^0.25.13",
-    "typescript": "^5.4.5",
     "unplugin": "^1.10.1"
+  },
+  "peerDependencies": {
+    "openai": "^4",
+    "llamaindex": "workspace:*",
+    "typescript": "^4"
+  },
+  "peerDependenciesMeta": {
+    "openai": {
+      "optional": true
+    },
+    "llamaindex": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@swc/types": "^0.1.6",
     "@types/json-schema": "^7.0.15",
     "@types/node": "^20.12.10",
     "bunchee": "^5.1.2",
-    "llamaindex": "^0.3.0",
+    "llamaindex": "workspace:*",
     "next": "14.2.3",
     "rollup": "^4.17.2",
     "tsx": "^4.7.2",

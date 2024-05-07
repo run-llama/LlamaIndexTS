@@ -197,14 +197,14 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0(@types/react@18.3.1)(react@19.0.0-canary-e3ebcd54b-20240405)
       openai:
-        specifier: ^4.42.0
+        specifier: ^4
         version: 4.42.0(encoding@0.1.13)
       typedoc:
         specifier: ^0.25.13
-        version: 0.25.13(typescript@5.4.5)
+        version: 0.25.13(typescript@4.9.5)
       typescript:
-        specifier: ^5.4.5
-        version: 5.4.5
+        specifier: ^4
+        version: 4.9.5
       unplugin:
         specifier: ^1.10.1
         version: 1.10.1
@@ -220,9 +220,9 @@ importers:
         version: 20.12.10
       bunchee:
         specifier: ^5.1.2
-        version: 5.1.5(typescript@5.4.5)
+        version: 5.1.5(typescript@4.9.5)
       llamaindex:
-        specifier: ^0.3.0
+        specifier: workspace:*
         version: link:../core
       next:
         specifier: 14.2.3
@@ -9842,6 +9842,11 @@ packages:
     peerDependencies:
       typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x
 
+  typescript@4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+
   typescript@5.4.3:
     resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
     engines: {node: '>=14.17'}
@@ -14834,7 +14839,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bunchee@5.1.5(typescript@5.4.5):
+  bunchee@5.1.5(typescript@4.9.5):
     dependencies:
       '@rollup/plugin-commonjs': 25.0.7(rollup@4.17.2)
       '@rollup/plugin-json': 6.1.0(rollup@4.17.2)
@@ -14849,12 +14854,12 @@ snapshots:
       magic-string: 0.30.10
       pretty-bytes: 5.6.0
       rollup: 4.17.2
-      rollup-plugin-dts: 6.1.0(rollup@4.17.2)(typescript@5.4.5)
+      rollup-plugin-dts: 6.1.0(rollup@4.17.2)(typescript@4.9.5)
       rollup-plugin-swc3: 0.11.1(@swc/core@1.5.3(@swc/helpers@0.5.11))(rollup@4.17.2)
       rollup-preserve-directives: 1.1.1(rollup@4.17.2)
       tslib: 2.6.2
     optionalDependencies:
-      typescript: 5.4.5
+      typescript: 4.9.5
 
   busboy@1.6.0:
     dependencies:
@@ -20290,11 +20295,11 @@ snapshots:
     dependencies:
       glob: 7.2.3
 
-  rollup-plugin-dts@6.1.0(rollup@4.17.2)(typescript@5.4.5):
+  rollup-plugin-dts@6.1.0(rollup@4.17.2)(typescript@4.9.5):
     dependencies:
       magic-string: 0.30.10
       rollup: 4.17.2
-      typescript: 5.4.5
+      typescript: 4.9.5
     optionalDependencies:
       '@babel/code-frame': 7.24.2
 
@@ -21491,6 +21496,14 @@ snapshots:
       handlebars: 4.7.8
       typedoc: 0.25.13(typescript@5.4.4)
 
+  typedoc@0.25.13(typescript@4.9.5):
+    dependencies:
+      lunr: 2.3.9
+      marked: 4.3.0
+      minimatch: 9.0.4
+      shiki: 0.14.7
+      typescript: 4.9.5
+
   typedoc@0.25.13(typescript@5.4.4):
     dependencies:
       lunr: 2.3.9
@@ -21499,13 +21512,7 @@ snapshots:
       shiki: 0.14.7
       typescript: 5.4.4
 
-  typedoc@0.25.13(typescript@5.4.5):
-    dependencies:
-      lunr: 2.3.9
-      marked: 4.3.0
-      minimatch: 9.0.4
-      shiki: 0.14.7
-      typescript: 5.4.5
+  typescript@4.9.5: {}
 
   typescript@5.4.3: {}
 
