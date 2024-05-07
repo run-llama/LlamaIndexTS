@@ -95,16 +95,16 @@ export class MarkdownReader implements FileReader {
     const content = await fs.readFile(file);
     const tups = this.parseTups(content);
     const results: Document[] = [];
+    let counter = 0;
     for (const [header, value] of tups) {
+      const id_ = `${file}_${counter}`;
       if (header) {
-        results.push(
-          new Document({
-            text: `\n\n${header}\n${value}`,
-          }),
-        );
+        const text = `\n\n${header}\n${value}`;
+        results.push(new Document({ text, id_ }));
       } else {
-        results.push(new Document({ text: value }));
+        results.push(new Document({ text: value, id_ }));
       }
+      counter += 1;
     }
     return results;
   }

@@ -1,5 +1,5 @@
 import type { GenericFileSystem } from "@llamaindex/env";
-import { createSHA256, defaultFS } from "@llamaindex/env";
+import { defaultFS } from "@llamaindex/env";
 import { Document } from "../Node.js";
 import type { BaseReader } from "./type.js";
 
@@ -13,13 +13,9 @@ export class PDFReader implements BaseReader {
   ): Promise<Document[]> {
     const content = await fs.readRawFile(file);
     const text = await readPDF(content);
-    return text.map((text) => {
-      const sha256 = createSHA256();
-      sha256.update(text);
-      return new Document({
-        text,
-        id_: sha256.digest(),
-      });
+    return text.map((text, page) => {
+      const id_ = `${file}_${page}`;
+      return new Document({ text, id_ });
     });
   }
 }
