@@ -29,15 +29,16 @@ async function main() {
   // Create an OpenAIAgent with the function tools
   const agent = new OpenAIAgent({
     tools: [queryEngineTool],
+    verbose: true,
   });
 
   // Chat with the agent
   const response = await agent.chat({
-    message: "What was his salary?",
+    message: "What was his first salary?",
   });
 
   // Print the response
-  console.log(String(response));
+  console.log(response.response);
 }
 
 void main().then(() => {
