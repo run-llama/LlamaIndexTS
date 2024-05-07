@@ -1,4 +1,5 @@
 {
+  "name": "@llamaindex/autotool-01-node-example",
   "type": "module",
   "dependencies": {
     "@llamaindex/autotool": "workspace:*",

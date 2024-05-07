@@ -1,5 +1,5 @@
 {
-  "name": "02_nextjs",
+  "name": "@llamaindex/autotool-02-next-example",
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
