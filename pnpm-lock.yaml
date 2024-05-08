@@ -216,7 +216,7 @@ importers:
         specifier: ^20.12.10
         version: 20.12.10
       bunchee:
-        specifier: ^5.1.2
+        specifier: ^5.1.5
         version: 5.1.5(typescript@5.4.5)
       llamaindex:
         specifier: workspace:*
@@ -549,9 +549,9 @@ importers:
 
   packages/core/e2e/examples/nextjs-edge-runtime:
     dependencies:
-      '@llamaindex/edge':
+      llamaindex:
         specifier: workspace:*
-        version: link:../../../../edge
+        version: link:../../..
       next:
         specifier: 14.1.3
         version: 14.1.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -617,145 +617,6 @@ importers:
       vitest:
         specifier: ^1.3.1
         version: 1.3.1(@types/node@20.12.10)(terser@5.30.3)
-
-  packages/edge:
-    dependencies:
-      '@anthropic-ai/sdk':
-        specifier: ^0.20.6
-        version: 0.20.6(encoding@0.1.13)
-      '@aws-crypto/sha256-js':
-        specifier: ^5.2.0
-        version: 5.2.0
-      '@datastax/astra-db-ts':
-        specifier: ^1.0.1
-        version: 1.0.1
-      '@google/generative-ai':
-        specifier: ^0.8.0
-        version: 0.8.0
-      '@grpc/grpc-js':
-        specifier: ^1.10.6
-        version: 1.10.6
-      '@huggingface/inference':
-        specifier: ^2.6.7
-        version: 2.6.7
-      '@llamaindex/cloud':
-        specifier: 0.0.5
-        version: 0.0.5(node-fetch@2.7.0(encoding@0.1.13))
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../env
-      '@mistralai/mistralai':
-        specifier: ^0.1.3
-        version: 0.1.3(encoding@0.1.13)
-      '@pinecone-database/pinecone':
-        specifier: ^2.2.0
-        version: 2.2.0
-      '@qdrant/js-client-rest':
-        specifier: ^1.8.2
-        version: 1.8.2(typescript@5.4.5)
-      '@types/lodash':
-        specifier: ^4.17.0
-        version: 4.17.0
-      '@types/papaparse':
-        specifier: ^5.3.14
-        version: 5.3.14
-      '@types/pg':
-        specifier: ^8.11.5
-        version: 8.11.5
-      '@xenova/transformers':
-        specifier: ^2.17.1
-        version: 2.17.1
-      '@zilliz/milvus2-sdk-node':
-        specifier: ^2.4.1
-        version: 2.4.1
-      ajv:
-        specifier: ^8.12.0
-        version: 8.12.0
-      assemblyai:
-        specifier: ^4.4.1
-        version: 4.4.1
-      chromadb:
-        specifier: ~1.7.3
-        version: 1.7.3(@google/generative-ai@0.8.0)(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.38.1(encoding@0.1.13))
-      cohere-ai:
-        specifier: ^7.9.5
-        version: 7.9.5(encoding@0.1.13)
-      js-tiktoken:
-        specifier: ^1.0.11
-        version: 1.0.11
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      magic-bytes.js:
-        specifier: ^1.10.0
-        version: 1.10.0
-      mammoth:
-        specifier: ^1.7.1
-        version: 1.7.1
-      md-utils-ts:
-        specifier: ^2.0.0
-        version: 2.0.0
-      mongodb:
-        specifier: ^6.5.0
-        version: 6.5.0
-      notion-md-crawler:
-        specifier: ^1.0.0
-        version: 1.0.0(encoding@0.1.13)
-      openai:
-        specifier: ^4.38.0
-        version: 4.38.1(encoding@0.1.13)
-      papaparse:
-        specifier: ^5.4.1
-        version: 5.4.1
-      pathe:
-        specifier: ^1.1.2
-        version: 1.1.2
-      pdf2json:
-        specifier: ^3.0.5
-        version: 3.0.5
-      pg:
-        specifier: ^8.11.5
-        version: 8.11.5
-      pgvector:
-        specifier: ^0.1.8
-        version: 0.1.8
-      portkey-ai:
-        specifier: ^0.1.16
-        version: 0.1.16
-      rake-modified:
-        specifier: ^1.0.8
-        version: 1.0.8
-      string-strip-html:
-        specifier: ^13.4.8
-        version: 13.4.8
-      wikipedia:
-        specifier: ^2.1.2
-        version: 2.1.2
-      wink-nlp:
-        specifier: ^1.14.3
-        version: 1.14.3
-    devDependencies:
-      '@notionhq/client':
-        specifier: ^2.2.15
-        version: 2.2.15(encoding@0.1.13)
-      '@swc/cli':
-        specifier: ^0.3.12
-        version: 0.3.12(@swc/core@1.4.16(@swc/helpers@0.5.11))(chokidar@3.6.0)
-      '@swc/core':
-        specifier: ^1.4.16
-        version: 1.4.16(@swc/helpers@0.5.11)
-      concurrently:
-        specifier: ^8.2.2
-        version: 8.2.2
-      glob:
-        specifier: ^10.3.12
-        version: 10.3.12
-      madge:
-        specifier: ^7.0.0
-        version: 7.0.0(typescript@5.4.5)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.4.5
 
   packages/env:
     dependencies:
