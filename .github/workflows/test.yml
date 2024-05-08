@@ -69,7 +69,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build --filter llamaindex
+        run: pnpm run build
       - name: Use Build For Examples
         run: pnpm link ../packages/core/
         working-directory: ./examples
@@ -105,7 +105,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build llamaindex
-        run: pnpm run build --filter llamaindex
+        run: pnpm run build
       - name: Build ${{ matrix.packages }}
         run: pnpm run build
         working-directory: packages/core/e2e/examples/${{ matrix.packages }}
@@ -124,7 +124,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build --filter llamaindex
+        run: pnpm run build
       - name: Copy examples
         run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
       - name: Pack @llamaindex/env

@@ -1,0 +1,12 @@
+{
+  "name": "@llamaindex/autotool-01-node-example",
+  "type": "module",
+  "dependencies": {
+    "@llamaindex/autotool": "workspace:*",
+    "llamaindex": "workspace:*",
+    "openai": "^4.33.0"
+  },
+  "scripts": {
+    "start": "node --import tsx --import @llamaindex/autotool/node ./src/index.ts"
+  }
+}
