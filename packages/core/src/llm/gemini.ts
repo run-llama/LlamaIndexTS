@@ -139,7 +139,7 @@ class GeminiHelper {
   > = {
     user: "user",
     system: "user",
-    assistant: "user",
+    assistant: "model",
     memory: "user",
   };
 
@@ -152,38 +152,26 @@ class GeminiHelper {
   };
 
   public static mergeNeighboringSameRoleMessages(
-    messages: ChatMessage[],
-  ): ChatMessage[] {
-    // Gemini does not support multiple messages of the same role in a row, so we merge them
-    const mergedMessages: ChatMessage[] = [];
-    let i: number = 0;
-
-    while (i < messages.length) {
-      const currentMessage: ChatMessage = messages[i];
-      // Initialize merged content with current message content
-      const mergedContent: MessageContent[] = [currentMessage.content];
-
-      // Check if the next message exists and has the same role
-      while (
-        i + 1 < messages.length &&
-        this.ROLES_TO_GEMINI[messages[i + 1].role] ===
-          this.ROLES_TO_GEMINI[currentMessage.role]
-      ) {
-        i++;
-        const nextMessage: ChatMessage = messages[i];
-        mergedContent.push(nextMessage.content);
-      }
-
-      // Create a new ChatMessage object with merged content
-      const mergedMessage: ChatMessage = {
-        role: currentMessage.role,
-        content: mergedContent.join("\n"),
-      };
-      mergedMessages.push(mergedMessage);
-      i++;
-    }
-
-    return mergedMessages;
+    messages: GeminiMessageContent[],
+  ): GeminiMessageContent[] {
+    return messages.reduce(
+      (
+        result: GeminiMessageContent[],
+        current: GeminiMessageContent,
+        index: number,
+      ) => {
+        if (index > 0 && messages[index - 1].role === current.role) {
+          result[result.length - 1].parts = [
+            ...result[result.length - 1].parts,
+            ...current.parts,
+          ];
+        } else {
+          result.push(current);
+        }
+        return result;
+      },
+      [],
+    );
   }
 
   public static messageContentToGeminiParts(content: MessageContent): Part[] {
@@ -214,8 +202,8 @@ class GeminiHelper {
     message: ChatMessage,
   ): GeminiMessageContent {
     return {
-      role: this.ROLES_TO_GEMINI[message.role],
-      parts: this.messageContentToGeminiParts(message.content),
+      role: GeminiHelper.ROLES_TO_GEMINI[message.role],
+      parts: GeminiHelper.messageContentToGeminiParts(message.content),
     };
   }
 }
@@ -260,22 +248,20 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     chat: ChatSession;
     messageContent: Part[];
   } {
-    const { messages } = params;
-    const mergedMessages =
-      GeminiHelper.mergeNeighboringSameRoleMessages(messages);
-    const history = mergedMessages.slice(0, -1);
-    const nextMessage = mergedMessages[mergedMessages.length - 1];
-    const messageContent = GeminiHelper.chatMessageToGemini(nextMessage).parts;
+    const messages = GeminiHelper.mergeNeighboringSameRoleMessages(
+      params.messages.map(GeminiHelper.chatMessageToGemini),
+    );
+
+    const history = messages.slice(0, -1);
 
     const client = this.session.gemini.getGenerativeModel(this.metadata);
 
     const chat = client.startChat({
-      history: history.map(GeminiHelper.chatMessageToGemini),
+      history,
     });
-
     return {
       chat,
-      messageContent,
+      messageContent: messages[messages.length - 1].parts,
     };
   }
 
