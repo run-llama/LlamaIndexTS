@@ -1,7 +1,7 @@
 import type {
   ExactMatchFilter,
   MetadataFilters,
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
@@ -14,6 +14,7 @@ import type {
 } from "@pinecone-database/pinecone";
 import { type Pinecone } from "@pinecone-database/pinecone";
 import type { BaseNode, Metadata } from "../../Node.js";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {
@@ -24,9 +25,9 @@ type PineconeParams = {
 };
 
 /**
- * Provides support for writing and querying vector data in Postgres.
+ * Provides support for writing and querying vector data in Pinecone.
  */
-export class PineconeVectorStore implements VectorStore {
+class _PineconeVectorStore implements VectorStoreNoEmbedModel {
   storesText: boolean = true;
 
   /*
@@ -224,3 +225,5 @@ export class PineconeVectorStore implements VectorStore {
     };
   }
 }
+
+export const PineconeVectorStore = mixinEmbedModel(_PineconeVectorStore);

@@ -381,22 +381,20 @@ export interface NodeWithScore<T extends Metadata = Metadata> {
   score?: number;
 }
 
-export function splitNodesByType(nodes: BaseNode[]): {
-  imageNodes: ImageNode[];
-  textNodes: TextNode[];
-} {
-  const imageNodes: ImageNode[] = [];
-  const textNodes: TextNode[] = [];
+type NodesByType = {
+  [P in ObjectType]?: BaseNode[];
+};
+
+export function splitNodesByType(nodes: BaseNode[]): NodesByType {
+  const result: NodesByType = {};
 
   for (const node of nodes) {
-    if (node instanceof ImageNode) {
-      imageNodes.push(node);
-    } else if (node instanceof TextNode) {
-      textNodes.push(node);
+    const type = node.getType();
+    if (type in result) {
+      result[type]?.push(node);
+    } else {
+      result[type] = [node];
     }
   }
-  return {
-    imageNodes,
-    textNodes,
-  };
+  return result;
 }

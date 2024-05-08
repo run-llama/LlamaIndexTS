@@ -1,5 +1,5 @@
 import type { ImageNode } from "../Node.js";
-import { MetadataMode, splitNodesByType } from "../Node.js";
+import { MetadataMode, ObjectType, splitNodesByType } from "../Node.js";
 import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
@@ -63,7 +63,10 @@ export class MultiModalResponseSynthesizer
       throw new Error("streaming not implemented");
     }
     const nodes = nodesWithScore.map(({ node }) => node);
-    const { imageNodes, textNodes } = splitNodesByType(nodes);
+    const nodeMap = splitNodesByType(nodes);
+    const imageNodes: ImageNode[] =
+      (nodeMap[ObjectType.IMAGE] as ImageNode[]) ?? [];
+    const textNodes = nodeMap[ObjectType.TEXT] ?? [];
     const textChunks = textNodes.map((node) =>
       node.getContent(this.metadataMode),
     );

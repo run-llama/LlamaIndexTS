@@ -2,6 +2,7 @@ import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS, path } from "@llamaindex/env";
 import _ from "lodash";
 import type { BaseNode } from "../../Node.js";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
@@ -10,7 +11,7 @@ import {
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import type {
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
@@ -29,23 +30,23 @@ class SimpleVectorStoreData {
   textIdToRefDocId: Record<string, string> = {};
 }
 
-export class SimpleVectorStore implements VectorStore {
+class _SimpleVectorStore implements VectorStoreNoEmbedModel {
   storesText: boolean = false;
-  private data: SimpleVectorStoreData = new SimpleVectorStoreData();
+  private data: SimpleVectorStoreData;
   private fs: GenericFileSystem = defaultFS;
   private persistPath: string | undefined;
 
-  constructor(data?: SimpleVectorStoreData, fs?: GenericFileSystem) {
-    this.data = data || new SimpleVectorStoreData();
+  constructor(init?: { data?: SimpleVectorStoreData }, fs?: GenericFileSystem) {
+    this.data = init?.data || new SimpleVectorStoreData();
     this.fs = fs || defaultFS;
   }
 
-  static async fromPersistDir(
+  static async fromPersistDir<T extends _SimpleVectorStore>(
     persistDir: string = DEFAULT_PERSIST_DIR,
     fs: GenericFileSystem = defaultFS,
-  ): Promise<SimpleVectorStore> {
+  ): Promise<T> {
     const persistPath = `${persistDir}/vector_store.json`;
-    return await SimpleVectorStore.fromPersistPath(persistPath, fs);
+    return await this.fromPersistPath(persistPath, fs);
   }
 
   get client(): any {
@@ -159,10 +160,10 @@ export class SimpleVectorStore implements VectorStore {
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath(
+  static async fromPersistPath<T extends _SimpleVectorStore>(
     persistPath: string,
     fs: GenericFileSystem = defaultFS,
-  ): Promise<SimpleVectorStore> {
+  ): Promise<T> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });
@@ -181,17 +182,17 @@ export class SimpleVectorStore implements VectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = dataDict.embeddingDict ?? {};
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
-    const store = new SimpleVectorStore(data);
+    const store = this.constructor({ data });
     store.persistPath = persistPath;
     store.fs = fs;
     return store;
   }
 
-  static fromDict(saveDict: SimpleVectorStoreData): SimpleVectorStore {
+  static fromDict(saveDict: SimpleVectorStoreData): _SimpleVectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
-    return new SimpleVectorStore(data);
+    return new _SimpleVectorStore({ data });
   }
 
   toDict(): SimpleVectorStoreData {
@@ -201,3 +202,5 @@ export class SimpleVectorStore implements VectorStore {
     };
   }
 }
+
+export const SimpleVectorStore = mixinEmbedModel(_SimpleVectorStore);

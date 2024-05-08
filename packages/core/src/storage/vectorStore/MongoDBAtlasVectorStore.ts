@@ -3,9 +3,10 @@ import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 import type {
   MetadataFilters,
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
@@ -23,7 +24,7 @@ function toMongoDBFilter(
 }
 
 // MongoDB Atlas Vector Store class implementing VectorStore
-export class MongoDBAtlasVectorSearch implements VectorStore {
+class _MongoDBAtlasVectorSearch implements VectorStoreNoEmbedModel {
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -37,7 +38,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
   private collection: Collection;
 
   constructor(
-    init: Partial<MongoDBAtlasVectorSearch> & {
+    init: Partial<_MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
     },
@@ -165,3 +166,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
     return result;
   }
 }
+
+export const MongoDBAtlasVectorSearch = mixinEmbedModel(
+  _MongoDBAtlasVectorSearch,
+);

@@ -2,14 +2,15 @@ import { Collection, DataAPIClient, Db } from "@datastax/astra-db-ts";
 import { getEnv } from "@llamaindex/env";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 import type {
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-export class AstraDBVectorStore implements VectorStore {
+class _AstraDBVectorStore implements VectorStoreNoEmbedModel {
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -21,7 +22,7 @@ export class AstraDBVectorStore implements VectorStore {
   private collection: Collection | undefined;
 
   constructor(
-    init?: Partial<AstraDBVectorStore> & {
+    init?: Partial<_AstraDBVectorStore> & {
       params?: {
         token: string;
         endpoint: string;
@@ -220,3 +221,5 @@ export class AstraDBVectorStore implements VectorStore {
     };
   }
 }
+
+export const AstraDBVectorStore = mixinEmbedModel(_AstraDBVectorStore);

@@ -8,14 +8,15 @@ import {
   type RowData,
 } from "@zilliz/milvus2-sdk-node";
 import { BaseNode, MetadataMode, type Metadata } from "../../Node.js";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 import type {
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-export class MilvusVectorStore implements VectorStore {
+class _MilvusVectorStore implements VectorStoreNoEmbedModel {
   public storesText: boolean = true;
   public isEmbeddingQuery?: boolean;
   private flatMetadata: boolean = true;
@@ -212,3 +213,5 @@ export class MilvusVectorStore implements VectorStore {
     // no need to do anything
   }
 }
+
+export const MilvusVectorStore = mixinEmbedModel(_MilvusVectorStore);

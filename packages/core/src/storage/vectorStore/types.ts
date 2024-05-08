@@ -1,4 +1,5 @@
-import type { BaseNode } from "../../Node.js";
+import type { BaseNode, ObjectType } from "../../Node.js";
+import type { EmbedModelMixin } from "../../embeddings/types.js";
 
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];
@@ -56,7 +57,7 @@ export interface VectorStoreQuery {
   mmrThreshold?: number;
 }
 
-export interface VectorStore {
+export interface VectorStoreNoEmbedModel {
   storesText: boolean;
   isEmbeddingQuery?: boolean;
   client(): any;
@@ -67,3 +68,9 @@ export interface VectorStore {
     options?: any,
   ): Promise<VectorStoreQueryResult>;
 }
+
+export interface VectorStore extends VectorStoreNoEmbedModel, EmbedModelMixin {}
+
+export type VectorStoreByType = {
+  [P in ObjectType]?: VectorStore;
+};

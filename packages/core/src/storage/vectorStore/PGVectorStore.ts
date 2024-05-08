@@ -1,7 +1,7 @@
 import type pg from "pg";
 
 import type {
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
@@ -9,6 +9,7 @@ import type {
 import type { GenericFileSystem } from "@llamaindex/env";
 import type { BaseNode, Metadata } from "../../Node.js";
 import { Document, MetadataMode } from "../../Node.js";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
@@ -17,7 +18,7 @@ export const PGVECTOR_TABLE = "llamaindex_embedding";
  * Provides support for writing and querying vector data in Postgres.
  * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
  */
-export class PGVectorStore implements VectorStore {
+class _PGVectorStore implements VectorStoreNoEmbedModel {
   storesText: boolean = true;
 
   private collection: string = "";
@@ -314,3 +315,5 @@ export class PGVectorStore implements VectorStore {
     return Promise.resolve();
   }
 }
+
+export const PGVectorStore = mixinEmbedModel(_PGVectorStore);

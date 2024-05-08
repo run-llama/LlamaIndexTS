@@ -1,8 +1,10 @@
 import {
+  ClipEmbedding,
+  ObjectType,
   Settings,
   SimpleDirectoryReader,
+  SimpleVectorStore,
   VectorStoreIndex,
-  storageContextFromDefaults,
 } from "llamaindex";
 
 import * as path from "path";
@@ -25,12 +27,16 @@ async function generateDatasource() {
     const documents = await new SimpleDirectoryReader().loadData({
       directoryPath: path.join("multimodal", "data"),
     });
-    const storageContext = await storageContextFromDefaults({
-      persistDir: "storage",
-      storeImages: true,
+    const clipVectorStore = new SimpleVectorStore({
+      embedModel: new ClipEmbedding(),
     });
+    // embedding for vector Store defaults to OpenAIEmbedding
+    const vectorStore = new SimpleVectorStore();
     await VectorStoreIndex.fromDocuments(documents, {
-      storageContext,
+      vectorStores: {
+        [ObjectType.IMAGE]: clipVectorStore,
+        [ObjectType.TEXT]: vectorStore,
+      },
     });
   });
   console.log(`Storage successfully generated in ${ms / 1000}s.`);

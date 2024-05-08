@@ -9,8 +9,9 @@ import type {
 import { ChromaClient, IncludeEnum } from "chromadb";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 import type {
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
@@ -28,7 +29,7 @@ type ChromaQueryOptions = {
 
 const DEFAULT_TEXT_KEY = "text";
 
-export class ChromaVectorStore implements VectorStore {
+class _ChromaVectorStore implements VectorStoreNoEmbedModel {
   storesText: boolean = true;
   flatMetadata: boolean = true;
   textKey: string;
@@ -167,3 +168,5 @@ export class ChromaVectorStore implements VectorStore {
     return vectorStoreQueryResult;
   }
 }
+
+export const ChromaVectorStore = mixinEmbedModel(_ChromaVectorStore);

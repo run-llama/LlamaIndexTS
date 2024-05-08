@@ -1,5 +1,11 @@
 import type { PlatformApiClient } from "@llamaindex/cloud";
-import type { BaseNode, Document } from "../Node.js";
+import {
+  ObjectType,
+  splitNodesByType,
+  type BaseNode,
+  type Document,
+  type Metadata,
+} from "../Node.js";
 import { getPipelineCreate } from "../cloud/config.js";
 import {
   DEFAULT_PIPELINE_NAME,
@@ -9,7 +15,10 @@ import {
 import { getAppBaseUrl, getClient } from "../cloud/utils.js";
 import type { BaseReader } from "../readers/type.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
-import type { VectorStore } from "../storage/vectorStore/types.js";
+import type {
+  VectorStore,
+  VectorStoreByType,
+} from "../storage/vectorStore/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
   DocStoreStrategy,
@@ -63,6 +72,7 @@ export class IngestionPipeline {
   documents?: Document[];
   reader?: BaseReader;
   vectorStore?: VectorStore;
+  vectorStores?: VectorStoreByType;
   docStore?: BaseDocumentStore;
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
   cache?: IngestionCache;
@@ -80,10 +90,13 @@ export class IngestionPipeline {
     if (!this.docStore) {
       this.docStoreStrategy = DocStoreStrategy.NONE;
     }
+    this.vectorStores = this.vectorStores ?? {
+      [ObjectType.TEXT]: this.vectorStore,
+    };
     this._docStoreStrategy = createDocStoreStrategy(
       this.docStoreStrategy,
       this.docStore,
-      this.vectorStore,
+      Object.values(this.vectorStores),
     );
     if (!this.disableCache) {
       this.cache = new IngestionCache();
@@ -123,9 +136,9 @@ export class IngestionPipeline {
       transformOptions,
       args,
     );
-    if (this.vectorStore) {
+    if (this.vectorStores) {
       const nodesToAdd = nodes.filter((node) => node.embedding);
-      await this.vectorStore.add(nodesToAdd);
+      await addNodesToVectorStores(nodesToAdd, this.vectorStores);
     }
     return nodes;
   }
@@ -174,5 +187,32 @@ export class IngestionPipeline {
     }
 
     return pipeline.id;
+  }
+}
+
+export async function addNodesToVectorStores(
+  nodes: BaseNode<Metadata>[],
+  vectorStores: VectorStoreByType,
+  nodesAdded?: (
+    newIds: string[],
+    nodes: BaseNode<Metadata>[],
+    vectorStore: VectorStore,
+  ) => Promise<void>,
+) {
+  const nodeMap = splitNodesByType(nodes);
+  for (const type in nodeMap) {
+    const nodes = nodeMap[type as ObjectType];
+    if (nodes) {
+      const vectorStore = vectorStores[type as ObjectType];
+      if (!vectorStore) {
+        throw new Error(
+          `Cannot insert nodes of type ${type} without assigned vector store`,
+        );
+      }
+      const newIds = await vectorStore.add(nodes);
+      if (nodesAdded) {
+        await nodesAdded(newIds, nodes, vectorStore);
+      }
+    }
   }
 }

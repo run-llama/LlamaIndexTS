@@ -1,28 +1,25 @@
 import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS, path } from "@llamaindex/env";
-import {
-  DEFAULT_IMAGE_VECTOR_NAMESPACE,
-  DEFAULT_NAMESPACE,
-} from "./constants.js";
+import { defaultFS } from "@llamaindex/env";
+import { ObjectType } from "../Node.js";
+import { DEFAULT_NAMESPACE } from "./constants.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 import type { BaseDocumentStore } from "./docStore/types.js";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
 import type { BaseIndexStore } from "./indexStore/types.js";
 import { SimpleVectorStore } from "./vectorStore/SimpleVectorStore.js";
-import type { VectorStore } from "./vectorStore/types.js";
+import type { VectorStore, VectorStoreByType } from "./vectorStore/types.js";
 
 export interface StorageContext {
   docStore: BaseDocumentStore;
   indexStore: BaseIndexStore;
-  vectorStore: VectorStore;
-  imageVectorStore?: VectorStore;
+  vectorStores: VectorStoreByType;
 }
 
-export type BuilderParams = {
+type BuilderParams = {
   docStore: BaseDocumentStore;
   indexStore: BaseIndexStore;
   vectorStore: VectorStore;
-  imageVectorStore: VectorStore;
+  vectorStores: VectorStoreByType;
   storeImages: boolean;
   persistDir: string;
   fs: GenericFileSystem;
@@ -32,16 +29,18 @@ export async function storageContextFromDefaults({
   docStore,
   indexStore,
   vectorStore,
-  imageVectorStore,
+  vectorStores,
   storeImages,
   persistDir,
   fs,
 }: Partial<BuilderParams>): Promise<StorageContext> {
+  vectorStores = vectorStores ?? {};
   if (!persistDir) {
-    docStore = docStore || new SimpleDocumentStore();
-    indexStore = indexStore || new SimpleIndexStore();
-    vectorStore = vectorStore || new SimpleVectorStore();
-    imageVectorStore = storeImages ? new SimpleVectorStore() : imageVectorStore;
+    docStore = docStore ?? new SimpleDocumentStore();
+    indexStore = indexStore ?? new SimpleIndexStore();
+    if (!(ObjectType.TEXT in vectorStores)) {
+      vectorStores[ObjectType.TEXT] = vectorStore ?? new SimpleVectorStore();
+    }
   } else {
     fs = fs || defaultFS;
     docStore =
@@ -53,20 +52,19 @@ export async function storageContextFromDefaults({
       ));
     indexStore =
       indexStore || (await SimpleIndexStore.fromPersistDir(persistDir, fs));
-    vectorStore =
-      vectorStore || (await SimpleVectorStore.fromPersistDir(persistDir, fs));
-    imageVectorStore = storeImages
-      ? await SimpleVectorStore.fromPersistDir(
-          path.join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
+    if (!(ObjectType.TEXT in vectorStores)) {
+      vectorStores[ObjectType.TEXT] =
+        vectorStore ??
+        ((await SimpleVectorStore.fromPersistDir(
+          persistDir,
           fs,
-        )
-      : imageVectorStore;
+        )) as unknown as VectorStore);
+    }
   }
 
   return {
     docStore,
     indexStore,
-    vectorStore,
-    imageVectorStore,
+    vectorStores,
   };
 }

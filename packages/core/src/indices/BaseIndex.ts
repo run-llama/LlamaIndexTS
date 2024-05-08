@@ -6,7 +6,6 @@ import { runTransformations } from "../ingestion/IngestionPipeline.js";
 import type { StorageContext } from "../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type { BaseIndexStore } from "../storage/indexStore/types.js";
-import type { VectorStore } from "../storage/vectorStore/types.js";
 import type { BaseSynthesizer } from "../synthesizers/types.js";
 import type { QueryEngine } from "../types.js";
 import { IndexStruct } from "./IndexStruct.js";
@@ -47,7 +46,6 @@ export interface BaseIndexInit<T> {
   serviceContext?: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  vectorStore?: VectorStore;
   indexStore?: BaseIndexStore;
   indexStruct: T;
 }
@@ -60,7 +58,6 @@ export abstract class BaseIndex<T> {
   serviceContext?: ServiceContext;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  vectorStore?: VectorStore;
   indexStore?: BaseIndexStore;
   indexStruct: T;
 
@@ -68,7 +65,6 @@ export abstract class BaseIndex<T> {
     this.serviceContext = init.serviceContext;
     this.storageContext = init.storageContext;
     this.docStore = init.docStore;
-    this.vectorStore = init.vectorStore;
     this.indexStore = init.indexStore;
     this.indexStruct = init.indexStruct;
   }

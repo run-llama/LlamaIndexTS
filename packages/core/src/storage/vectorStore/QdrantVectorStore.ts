@@ -1,11 +1,12 @@
 import type { BaseNode } from "../../Node.js";
 import type {
-  VectorStore,
+  VectorStoreNoEmbedModel,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "./types.js";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
+import { mixinEmbedModel } from "../../embeddings/types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PointStruct = {
@@ -33,7 +34,7 @@ type QuerySearchResult = {
 /**
  * Qdrant vector store.
  */
-export class QdrantVectorStore implements VectorStore {
+class _QdrantVectorStore implements VectorStoreNoEmbedModel {
   storesText: boolean = true;
 
   batchSize: number;
@@ -338,3 +339,5 @@ export class QdrantVectorStore implements VectorStore {
     };
   }
 }
+
+export const QdrantVectorStore = mixinEmbedModel(_QdrantVectorStore);

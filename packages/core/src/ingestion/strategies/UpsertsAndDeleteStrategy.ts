@@ -10,11 +10,11 @@ import { classify } from "./classify.js";
  */
 export class UpsertsAndDeleteStrategy implements TransformComponent {
   protected docStore: BaseDocumentStore;
-  protected vectorStore?: VectorStore;
+  protected vectorStores?: VectorStore[];
 
-  constructor(docStore: BaseDocumentStore, vectorStore?: VectorStore) {
+  constructor(docStore: BaseDocumentStore, vectorStores?: VectorStore[]) {
     this.docStore = docStore;
-    this.vectorStore = vectorStore;
+    this.vectorStores = vectorStores;
   }
 
   async transform(nodes: BaseNode[]): Promise<BaseNode[]> {
@@ -26,16 +26,20 @@ export class UpsertsAndDeleteStrategy implements TransformComponent {
     // remove unused docs
     for (const refDocId of unusedDocs) {
       await this.docStore.deleteRefDoc(refDocId, false);
-      if (this.vectorStore) {
-        await this.vectorStore.delete(refDocId);
+      if (this.vectorStores) {
+        for (const vectorStore of this.vectorStores) {
+          await vectorStore.delete(refDocId);
+        }
       }
     }
 
     // remove missing docs
     for (const docId of missingDocs) {
       await this.docStore.deleteDocument(docId, true);
-      if (this.vectorStore) {
-        await this.vectorStore.delete(docId);
+      if (this.vectorStores) {
+        for (const vectorStore of this.vectorStores) {
+          await vectorStore.delete(docId);
+        }
       }
     }
 
