@@ -1,3 +1,4 @@
+import { lazyLoadTransformers } from "../internal/deps/transformers.js";
 import { BaseEmbedding } from "./types.js";
 
 export enum HuggingFaceEmbeddingModelType {
@@ -31,7 +32,7 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
 
   async getExtractor() {
     if (!this.extractor) {
-      const { pipeline } = await import("@xenova/transformers");
+      const { pipeline } = await lazyLoadTransformers();
       this.extractor = await pipeline("feature-extraction", this.modelType, {
         quantized: this.quantized,
       });
