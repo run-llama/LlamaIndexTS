@@ -251,6 +251,10 @@ importers:
       openai:
         specifier: ^4.33.0
         version: 4.42.0(encoding@0.1.13)
+    devDependencies:
+      tsx:
+        specifier: ^4.7.2
+        version: 4.7.2
 
   packages/autotool/examples/02_nextjs:
     dependencies:
