@@ -12,5 +12,6 @@
   },
   "scripts": {
     "start": "node --import tsx --import @llamaindex/autotool/node ./src/index.ts"
-  }
+  },
+  "version": null
 }

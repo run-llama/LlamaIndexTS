@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.3.9
+
+### Patch Changes
+
+- c3747d0: fix: import `@xenova/transformers`
+
+  For now, if you use llamaindex in next.js, you need to add a plugin from `llamaindex/next` to ensure some module resolutions are correct.
+
 ## 0.3.8
 
 ### Patch Changes
