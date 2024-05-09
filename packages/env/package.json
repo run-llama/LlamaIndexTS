@@ -75,15 +75,15 @@
   },
   "devDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
-    "@swc/cli": "^0.3.9",
-    "@swc/core": "^1.4.16",
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.5.5",
     "concurrently": "^8.2.2",
     "pathe": "^1.1.2",
     "readable-stream": "^4.5.2"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^20.12.7"
+    "@types/lodash": "^4.17.1",
+    "@types/node": "^20.12.11"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
