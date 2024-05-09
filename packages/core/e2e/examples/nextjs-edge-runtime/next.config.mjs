@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
 
-export default nextConfig;
+import withLlamaIndex from "llamaindex/next";
+
+export default withLlamaIndex(nextConfig);
