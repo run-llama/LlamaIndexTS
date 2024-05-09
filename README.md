@@ -78,7 +78,7 @@ node --import tsx ./main.ts
 
 ### Next.js
 
-First, you will need to add llamaindex plugins to your Next.js project.
+First, you will need to add a llamaindex plugin to your Next.js project.
 
 ```js
 // next.config.js
