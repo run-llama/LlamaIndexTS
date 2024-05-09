@@ -22,7 +22,7 @@ type QdrantParams = {
   url?: string;
   apiKey?: string;
   batchSize?: number;
-} & IEmbedModel;
+} & Partial<IEmbedModel>;
 
 type QuerySearchResult = {
   id: string;
