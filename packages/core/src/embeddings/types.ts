@@ -105,12 +105,12 @@ export interface EmbedModelMixin {
   embedModel: BaseEmbedding;
 }
 
-export function mixinEmbedModel<T extends new (...args: any[]) => {}>(Base: T) {
-  return class extends Base implements EmbedModelMixin {
-    embedModel: BaseEmbedding;
-    constructor(...args: any[]) {
-      super(...(args ?? []));
-      this.embedModel = args[0]?.embedModel ?? Settings.embedModel;
-    }
-  };
+export function mixinEmbedModel<
+  T extends new (...args: any[]) => {},
+  Args extends ConstructorParameters<T>,
+>(Base: T): new (...args: Args) => InstanceType<T> & EmbedModelMixin {
+  return function (this: InstanceType<T> & EmbedModelMixin, ...args: Args) {
+    Base.call(this, ...(args ?? []));
+    this.embedModel = args[0]?.embedModel ?? Settings.embedModel;
+  } as any;
 }
