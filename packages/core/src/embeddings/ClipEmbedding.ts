@@ -1,9 +1,21 @@
+import {
+  AutoProcessor,
+  AutoTokenizer,
+  CLIPTextModelWithProjection,
+  CLIPVisionModelWithProjection,
+  RawImage,
+  env,
+} from "@xenova/transformers";
 import _ from "lodash";
 import type { ImageType } from "../Node.js";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 
+// @ts-expect-error
+if (typeof EdgeRuntime === "string") {
+  env.allowLocalModels = false;
+}
+
 async function readImage(input: ImageType) {
-  const { RawImage } = await import("@xenova/transformers");
   if (input instanceof Blob) {
     return await RawImage.fromBlob(input);
   } else if (_.isString(input) || input instanceof URL) {
@@ -29,7 +41,6 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getTokenizer() {
     if (!this.tokenizer) {
-      const { AutoTokenizer } = await import("@xenova/transformers");
       this.tokenizer = await AutoTokenizer.from_pretrained(this.modelType);
     }
     return this.tokenizer;
@@ -37,7 +48,6 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getProcessor() {
     if (!this.processor) {
-      const { AutoProcessor } = await import("@xenova/transformers");
       this.processor = await AutoProcessor.from_pretrained(this.modelType);
     }
     return this.processor;
@@ -45,9 +55,6 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getVisionModel() {
     if (!this.visionModel) {
-      const { CLIPVisionModelWithProjection } = await import(
-        "@xenova/transformers"
-      );
       this.visionModel = await CLIPVisionModelWithProjection.from_pretrained(
         this.modelType,
       );
@@ -58,9 +65,6 @@ export class ClipEmbedding extends MultiModalEmbedding {
 
   async getTextModel() {
     if (!this.textModel) {
-      const { CLIPTextModelWithProjection } = await import(
-        "@xenova/transformers"
-      );
       this.textModel = await CLIPTextModelWithProjection.from_pretrained(
         this.modelType,
       );

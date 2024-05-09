@@ -1,4 +1,10 @@
+import { env, pipeline } from "@xenova/transformers";
 import { BaseEmbedding } from "./types.js";
+
+// @ts-expect-error
+if (typeof EdgeRuntime === "string") {
+  env.allowLocalModels = false;
+}
 
 export enum HuggingFaceEmbeddingModelType {
   XENOVA_ALL_MINILM_L6_V2 = "Xenova/all-MiniLM-L6-v2",
@@ -31,7 +37,6 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
 
   async getExtractor() {
     if (!this.extractor) {
-      const { pipeline } = await import("@xenova/transformers");
       this.extractor = await pipeline("feature-extraction", this.modelType, {
         quantized: this.quantized,
       });
