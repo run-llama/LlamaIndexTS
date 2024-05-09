@@ -1,7 +1,15 @@
 import type { Tokenizers } from "../GlobalsHelper.js";
+import type { NodeWithScore } from "../Node.js";
 import type { BaseEvent } from "../internal/type.js";
 import type { BaseTool, JSONObject, ToolOutput, UUID } from "../types.js";
 
+export type RetrievalStartEvent = BaseEvent<{
+  query: string;
+}>;
+export type RetrievalEndEvent = BaseEvent<{
+  query: string;
+  nodes: NodeWithScore[];
+}>;
 export type LLMStartEvent = BaseEvent<{
   id: UUID;
   messages: ChatMessage[];

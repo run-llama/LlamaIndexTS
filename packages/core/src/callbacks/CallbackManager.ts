@@ -12,6 +12,8 @@ import type {
   LLMStreamEvent,
   LLMToolCallEvent,
   LLMToolResultEvent,
+  RetrievalEndEvent,
+  RetrievalStartEvent,
 } from "../llm/types.js";
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
@@ -45,6 +47,8 @@ export interface LlamaIndexEventMaps {
    * @deprecated
    */
   retrieve: CustomEvent<RetrievalCallbackResponse>;
+  "retrieve-start": RetrievalStartEvent;
+  "retrieve-end": RetrievalEndEvent;
   /**
    * @deprecated
    */

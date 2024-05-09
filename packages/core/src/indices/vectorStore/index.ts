@@ -1,14 +1,8 @@
-import type {
-  BaseNode,
-  Document,
-  Metadata,
-  NodeWithScore,
-} from "../../Node.js";
+import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
 import { ImageNode, ObjectType, splitNodesByType } from "../../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
-  Settings,
   embedModelFromSettingsOrContext,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
@@ -25,6 +19,7 @@ import {
   createDocStoreStrategy,
 } from "../../ingestion/strategies/index.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
+import { getCallbackManager } from "../../internal/settings/CallbackManager.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -411,10 +406,16 @@ export class VectorIndexRetriever implements BaseRetriever {
     this.imageSimilarityTopK = imageSimilarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
   }
 
+  @wrapEventCaller
   async retrieve({
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
+    getCallbackManager().dispatchEvent("retrieve-start", {
+      payload: {
+        query,
+      },
+    });
     let nodesWithScores = await this.textRetrieve(
       query,
       preFilters as MetadataFilters,
@@ -422,7 +423,17 @@ export class VectorIndexRetriever implements BaseRetriever {
     nodesWithScores = nodesWithScores.concat(
       await this.textToImageRetrieve(query, preFilters as MetadataFilters),
     );
-    this.sendEvent(query, nodesWithScores);
+    getCallbackManager().dispatchEvent("retrieve-end", {
+      payload: {
+        query,
+        nodes: nodesWithScores,
+      },
+    });
+    // send deprecated event
+    getCallbackManager().dispatchEvent("retrieve", {
+      query,
+      nodes: nodesWithScores,
+    });
     return nodesWithScores;
   }
 
@@ -457,17 +468,6 @@ export class VectorIndexRetriever implements BaseRetriever {
     );
     const result = await this.index.imageVectorStore.query(q, preFilters);
     return this.buildNodeListFromQueryResult(result);
-  }
-
-  @wrapEventCaller
-  protected sendEvent(
-    query: string,
-    nodesWithScores: NodeWithScore<Metadata>[],
-  ) {
-    Settings.callbackManager.dispatchEvent("retrieve", {
-      query,
-      nodes: nodesWithScores,
-    });
   }
 
   protected async buildVectorStoreQuery(
