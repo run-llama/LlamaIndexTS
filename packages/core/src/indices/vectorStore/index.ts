@@ -2,7 +2,7 @@ import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
 import { ImageNode, ObjectType, splitNodesByType } from "../../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import { Settings, nodeParserFromSettingsOrContext } from "../../Settings.js";
+import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
 import type { BaseEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
@@ -25,6 +25,7 @@ import type {
   VectorStoreByType,
   VectorStoreQuery,
   VectorStoreQueryResult,
+  VectorStoreType,
 } from "../../storage/index.js";
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
@@ -157,8 +158,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   ): Promise<BaseNode[]> {
     const nodeMap = splitNodesByType(nodes);
     for (const type in nodeMap) {
-      const nodes = nodeMap[type as ObjectType];
-      const embedModel = this.vectorStores[type as ObjectType]?.embedModel;
+      const nodes = nodeMap[type as VectorStoreType];
+      const embedModel = this.vectorStores[type as VectorStoreType]?.embedModel;
       if (embedModel && nodes) {
         await embedModel.transform(nodes, {
           logProgress: options?.logProgress,
@@ -367,28 +368,34 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
  * VectorIndexRetriever retrieves nodes from a VectorIndex.
  */
 
+type TopKMap = { [P in VectorStoreType]: number };
+
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   similarityTopK?: number;
-  imageSimilarityTopK?: number;
+  topK?: TopKMap;
 };
 
 export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
-  similarityTopK: number;
-  imageSimilarityTopK: number;
+  topK: TopKMap;
 
   serviceContext?: ServiceContext;
 
-  constructor({
-    index,
-    similarityTopK,
-    imageSimilarityTopK,
-  }: VectorIndexRetrieverOptions) {
+  constructor({ index, similarityTopK, topK }: VectorIndexRetrieverOptions) {
     this.index = index;
     this.serviceContext = this.index.serviceContext;
-    this.similarityTopK = similarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
-    this.imageSimilarityTopK = imageSimilarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
+    this.topK = topK ?? {
+      [ObjectType.TEXT]: similarityTopK ?? DEFAULT_SIMILARITY_TOP_K,
+      [ObjectType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
+    };
+  }
+
+  /**
+   * @deprecated, pass topK in constructor instead
+   */
+  set similarityTopK(similarityTopK: number) {
+    this.topK[ObjectType.TEXT] = similarityTopK;
   }
 
   @wrapEventCaller
@@ -403,11 +410,14 @@ export class VectorIndexRetriever implements BaseRetriever {
     });
     const vectorStores = Object.values(this.index.vectorStores);
     let nodesWithScores: NodeWithScore[] = [];
-    for (const vectorStore of vectorStores) {
+
+    for (const type in vectorStores) {
+      // TODO: add retrieval by using an image as query
       nodesWithScores = nodesWithScores.concat(
         await this.textRetrieve(
           query,
-          vectorStore,
+          type as VectorStoreType,
+          vectorStores[type],
           preFilters as MetadataFilters,
         ),
       );
@@ -428,18 +438,17 @@ export class VectorIndexRetriever implements BaseRetriever {
 
   protected async textRetrieve(
     query: string,
+    type: VectorStoreType,
     vectorStore: VectorStore,
     preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
-    const options = {};
     const q = await this.buildVectorStoreQuery(
       vectorStore.embedModel,
       query,
-      // TODO: use different topK for image and text
-      this.similarityTopK,
+      this.topK[type],
       preFilters,
     );
-    const result = await vectorStore.query(q, options);
+    const result = await vectorStore.query(q);
     return this.buildNodeListFromQueryResult(result);
   }
 

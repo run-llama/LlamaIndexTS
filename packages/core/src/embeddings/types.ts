@@ -109,8 +109,8 @@ export function mixinEmbedModel<T extends new (...args: any[]) => {}>(Base: T) {
   return class extends Base implements EmbedModelMixin {
     embedModel: BaseEmbedding;
     constructor(...args: any[]) {
-      super(args);
-      this.embedModel = args[0].embedModel ?? Settings.embedModel;
+      super(...(args ?? []));
+      this.embedModel = args[0]?.embedModel ?? Settings.embedModel;
     }
   };
 }

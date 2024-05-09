@@ -18,6 +18,7 @@ import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type {
   VectorStore,
   VectorStoreByType,
+  VectorStoreType,
 } from "../storage/vectorStore/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
@@ -203,7 +204,7 @@ export async function addNodesToVectorStores(
   for (const type in nodeMap) {
     const nodes = nodeMap[type as ObjectType];
     if (nodes) {
-      const vectorStore = vectorStores[type as ObjectType];
+      const vectorStore = vectorStores[type as VectorStoreType];
       if (!vectorStore) {
         throw new Error(
           `Cannot insert nodes of type ${type} without assigned vector store`,

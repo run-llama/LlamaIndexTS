@@ -41,7 +41,7 @@ async function main() {
 
   const queryEngine = index.asQueryEngine({
     responseSynthesizer: new MultiModalResponseSynthesizer(),
-    retriever: index.asRetriever({ similarityTopK: 3, imageSimilarityTopK: 1 }),
+    retriever: index.asRetriever({ topK: { TEXT: 3, IMAGE: 1 } }),
   });
   const result = await queryEngine.query({
     query: "Tell me more about Vincent van Gogh's famous paintings",

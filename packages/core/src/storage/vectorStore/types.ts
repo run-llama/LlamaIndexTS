@@ -71,6 +71,9 @@ export interface VectorStoreNoEmbedModel {
 
 export interface VectorStore extends VectorStoreNoEmbedModel, EmbedModelMixin {}
 
+// Supported types of vector stores (for each modality)
+export type VectorStoreType = ObjectType.IMAGE | ObjectType.TEXT;
+
 export type VectorStoreByType = {
-  [P in ObjectType]?: VectorStore;
+  [P in VectorStoreType]?: VectorStore;
 };

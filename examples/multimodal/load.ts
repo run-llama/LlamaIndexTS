@@ -1,6 +1,5 @@
 import {
   ClipEmbedding,
-  ObjectType,
   Settings,
   SimpleDirectoryReader,
   SimpleVectorStore,
@@ -34,8 +33,8 @@ async function generateDatasource() {
     const vectorStore = new SimpleVectorStore();
     await VectorStoreIndex.fromDocuments(documents, {
       vectorStores: {
-        [ObjectType.IMAGE]: clipVectorStore,
-        [ObjectType.TEXT]: vectorStore,
+        IMAGE: clipVectorStore,
+        TEXT: vectorStore,
       },
     });
   });
