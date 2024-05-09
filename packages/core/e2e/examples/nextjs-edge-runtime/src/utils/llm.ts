@@ -1,7 +1,6 @@
-"use server";
 // test runtime
-import { AutoTokenizer } from "@xenova/transformers";
 import "llamaindex";
+import { ClipEmbedding } from "llamaindex/embeddings/ClipEmbedding";
 import "llamaindex/readers/SimpleDirectoryReader";
 
 // @ts-expect-error
@@ -9,10 +8,16 @@ if (typeof EdgeRuntime !== "string") {
   throw new Error("Expected run in EdgeRuntime");
 }
 
-//#region make sure @xenova/transformers is working in edge runtime
-const tokenizer = await AutoTokenizer.from_pretrained(
-  "Xenova/clip-vit-base-patch32",
+export const tokenizerResultPromise = new Promise<number[]>(
+  (resolve, reject) => {
+    const embedding = new ClipEmbedding();
+    //#region make sure @xenova/transformers is working in edge runtime
+    embedding
+      .getTokenizer()
+      .then((tokenizer) => {
+        resolve(tokenizer.encode("hello world"));
+      })
+      .catch(reject);
+    //#endregion
+  },
 );
-
-console.log("encode result:", tokenizer.encode("Hello, world!"));
-//#endregion

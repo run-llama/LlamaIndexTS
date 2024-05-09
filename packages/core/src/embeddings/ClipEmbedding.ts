@@ -2,6 +2,13 @@ import _ from "lodash";
 import type { ImageType } from "../Node.js";
 import { lazyLoadTransformers } from "../internal/deps/transformers.js";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
+// only import type, to avoid bundling error
+import type {
+  CLIPTextModelWithProjection,
+  CLIPVisionModelWithProjection,
+  PreTrainedTokenizer,
+  Processor,
+} from "@xenova/transformers";
 
 async function readImage(input: ImageType) {
   const { RawImage } = await lazyLoadTransformers();
@@ -23,10 +30,10 @@ export class ClipEmbedding extends MultiModalEmbedding {
   modelType: ClipEmbeddingModelType =
     ClipEmbeddingModelType.XENOVA_CLIP_VIT_BASE_PATCH16;
 
-  private tokenizer: any;
-  private processor: any;
-  private visionModel: any;
-  private textModel: any;
+  private tokenizer: PreTrainedTokenizer | null = null;
+  private processor: Processor | null = null;
+  private visionModel: CLIPVisionModelWithProjection | null = null;
+  private textModel: CLIPTextModelWithProjection | null = null;
 
   async getTokenizer() {
     const { AutoTokenizer } = await lazyLoadTransformers();
