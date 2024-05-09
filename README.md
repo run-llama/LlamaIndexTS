@@ -78,6 +78,17 @@ node --import tsx ./main.ts
 
 ### Next.js
 
+First, you will need to add a llamaindex plugin to your Next.js project.
+
+```js
+// next.config.js
+const withLlamaIndex = require("llamaindex/next");
+
+module.exports = withLlamaIndex({
+  // your next.js config
+});
+```
+
 You can combine `ai` with `llamaindex` in Next.js with RSC (React Server Components).
 
 ```tsx

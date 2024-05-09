@@ -1,5 +1,16 @@
 # test-edge-runtime
 
+## 0.1.9
+
+### Patch Changes
+
+- c3747d0: fix: import `@xenova/transformers`
+
+  For now, if you use llamaindex in next.js, you need to add a plugin from `llamaindex/next` to ensure some module resolutions are correct.
+
+- Updated dependencies [c3747d0]
+  - llamaindex@0.3.9
+
 ## 0.1.8
 
 ### Patch Changes
