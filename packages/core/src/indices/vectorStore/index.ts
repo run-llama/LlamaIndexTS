@@ -1,5 +1,12 @@
-import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
-import { ImageNode, ObjectType, splitNodesByType } from "../../Node.js";
+import {
+  ImageNode,
+  ModalityType,
+  ObjectType,
+  splitNodesByType,
+  type BaseNode,
+  type Document,
+  type NodeWithScore,
+} from "../../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
@@ -25,7 +32,6 @@ import type {
   VectorStoreByType,
   VectorStoreQuery,
   VectorStoreQueryResult,
-  VectorStoreType,
 } from "../../storage/index.js";
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
@@ -158,8 +164,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   ): Promise<BaseNode[]> {
     const nodeMap = splitNodesByType(nodes);
     for (const type in nodeMap) {
-      const nodes = nodeMap[type as VectorStoreType];
-      const embedModel = this.vectorStores[type as VectorStoreType]?.embedModel;
+      const nodes = nodeMap[type as ModalityType];
+      const embedModel = this.vectorStores[type as ModalityType]?.embedModel;
       if (embedModel && nodes) {
         await embedModel.transform(nodes, {
           logProgress: options?.logProgress,
@@ -231,7 +237,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     vectorStores: VectorStoreByType,
     serviceContext?: ServiceContext,
   ) {
-    if (!vectorStores[ObjectType.TEXT]?.storesText) {
+    if (!vectorStores[ModalityType.TEXT]?.storesText) {
       throw new Error(
         "Cannot initialize from a vector store that does not store text",
       );
@@ -255,7 +261,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     serviceContext?: ServiceContext,
   ) {
     return this.fromVectorStores(
-      { [ObjectType.TEXT]: vectorStore },
+      { [ModalityType.TEXT]: vectorStore },
       serviceContext,
     );
   }
@@ -327,7 +333,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     await addNodesToVectorStores(
       nodes,
       this.vectorStores,
-      this.insertNodesToStore,
+      this.insertNodesToStore.bind(this),
     );
     await this.indexStore.addIndexStruct(this.indexStruct);
   }
@@ -368,7 +374,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
  * VectorIndexRetriever retrieves nodes from a VectorIndex.
  */
 
-type TopKMap = { [P in VectorStoreType]: number };
+type TopKMap = { [P in ModalityType]: number };
 
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
@@ -386,8 +392,8 @@ export class VectorIndexRetriever implements BaseRetriever {
     this.index = index;
     this.serviceContext = this.index.serviceContext;
     this.topK = topK ?? {
-      [ObjectType.TEXT]: similarityTopK ?? DEFAULT_SIMILARITY_TOP_K,
-      [ObjectType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
+      [ModalityType.TEXT]: similarityTopK ?? DEFAULT_SIMILARITY_TOP_K,
+      [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
     };
   }
 
@@ -395,7 +401,7 @@ export class VectorIndexRetriever implements BaseRetriever {
    * @deprecated, pass topK in constructor instead
    */
   set similarityTopK(similarityTopK: number) {
-    this.topK[ObjectType.TEXT] = similarityTopK;
+    this.topK[ModalityType.TEXT] = similarityTopK;
   }
 
   @wrapEventCaller
@@ -416,7 +422,7 @@ export class VectorIndexRetriever implements BaseRetriever {
       nodesWithScores = nodesWithScores.concat(
         await this.textRetrieve(
           query,
-          type as VectorStoreType,
+          type as ModalityType,
           vectorStores[type],
           preFilters as MetadataFilters,
         ),
@@ -438,7 +444,7 @@ export class VectorIndexRetriever implements BaseRetriever {
 
   protected async textRetrieve(
     query: string,
-    type: VectorStoreType,
+    type: ModalityType,
     vectorStore: VectorStore,
     preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {

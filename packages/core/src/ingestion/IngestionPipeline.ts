@@ -1,6 +1,6 @@
 import type { PlatformApiClient } from "@llamaindex/cloud";
 import {
-  ObjectType,
+  ModalityType,
   splitNodesByType,
   type BaseNode,
   type Document,
@@ -18,7 +18,6 @@ import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type {
   VectorStore,
   VectorStoreByType,
-  VectorStoreType,
 } from "../storage/vectorStore/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
@@ -92,7 +91,7 @@ export class IngestionPipeline {
       this.docStoreStrategy = DocStoreStrategy.NONE;
     }
     this.vectorStores = this.vectorStores ?? {
-      [ObjectType.TEXT]: this.vectorStore,
+      [ModalityType.TEXT]: this.vectorStore,
     };
     this._docStoreStrategy = createDocStoreStrategy(
       this.docStoreStrategy,
@@ -202,9 +201,10 @@ export async function addNodesToVectorStores(
 ) {
   const nodeMap = splitNodesByType(nodes);
   for (const type in nodeMap) {
-    const nodes = nodeMap[type as ObjectType];
+    const nodes = nodeMap[type as ModalityType];
     if (nodes) {
-      const vectorStore = vectorStores[type as VectorStoreType];
+      console.log(type);
+      const vectorStore = vectorStores[type as ModalityType];
       if (!vectorStore) {
         throw new Error(
           `Cannot insert nodes of type ${type} without assigned vector store`,

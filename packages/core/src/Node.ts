@@ -381,15 +381,27 @@ export interface NodeWithScore<T extends Metadata = Metadata> {
   score?: number;
 }
 
+export enum ModalityType {
+  TEXT = "text",
+  IMAGE = "image",
+}
+
 type NodesByType = {
-  [P in ObjectType]?: BaseNode[];
+  [P in ModalityType]?: BaseNode[];
 };
 
 export function splitNodesByType(nodes: BaseNode[]): NodesByType {
   const result: NodesByType = {};
 
   for (const node of nodes) {
-    const type = node.getType();
+    let type: ModalityType;
+    if (node instanceof ImageNode) {
+      type = ModalityType.IMAGE;
+    } else if (node instanceof TextNode) {
+      type = ModalityType.TEXT;
+    } else {
+      throw new Error(`Unknown node type: ${node.getType()}`);
+    }
     if (type in result) {
       result[type]?.push(node);
     } else {

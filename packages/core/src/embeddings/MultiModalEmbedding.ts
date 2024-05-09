@@ -1,7 +1,7 @@
 import {
   ImageNode,
   MetadataMode,
-  ObjectType,
+  ModalityType,
   splitNodesByType,
   type BaseNode,
   type ImageType,
@@ -27,8 +27,8 @@ export abstract class MultiModalEmbedding extends BaseEmbedding {
 
   async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
     const nodeMap = splitNodesByType(nodes);
-    const imageNodes = nodeMap[ObjectType.IMAGE] ?? [];
-    const textNodes = nodeMap[ObjectType.TEXT] ?? [];
+    const imageNodes = nodeMap[ModalityType.IMAGE] ?? [];
+    const textNodes = nodeMap[ModalityType.TEXT] ?? [];
 
     const embeddings = await batchEmbeddings(
       textNodes.map((node) => node.getContent(MetadataMode.EMBED)),

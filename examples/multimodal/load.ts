@@ -1,5 +1,6 @@
 import {
   ClipEmbedding,
+  ModalityType,
   Settings,
   SimpleDirectoryReader,
   SimpleVectorStore,
@@ -33,8 +34,8 @@ async function generateDatasource() {
     const vectorStore = new SimpleVectorStore();
     await VectorStoreIndex.fromDocuments(documents, {
       vectorStores: {
-        IMAGE: clipVectorStore,
-        TEXT: vectorStore,
+        [ModalityType.IMAGE]: clipVectorStore,
+        [ModalityType.TEXT]: vectorStore,
       },
     });
   });

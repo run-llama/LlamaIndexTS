@@ -1,6 +1,6 @@
 import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS } from "@llamaindex/env";
-import { ObjectType } from "../Node.js";
+import { ModalityType, ObjectType } from "../Node.js";
 import { DEFAULT_NAMESPACE } from "./constants.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 import type { BaseDocumentStore } from "./docStore/types.js";
@@ -38,8 +38,8 @@ export async function storageContextFromDefaults({
   if (!persistDir) {
     docStore = docStore ?? new SimpleDocumentStore();
     indexStore = indexStore ?? new SimpleIndexStore();
-    if (!(ObjectType.TEXT in vectorStores)) {
-      vectorStores[ObjectType.TEXT] = vectorStore ?? new SimpleVectorStore();
+    if (!(ModalityType.TEXT in vectorStores)) {
+      vectorStores[ModalityType.TEXT] = vectorStore ?? new SimpleVectorStore();
     }
   } else {
     fs = fs || defaultFS;
@@ -53,7 +53,7 @@ export async function storageContextFromDefaults({
     indexStore =
       indexStore || (await SimpleIndexStore.fromPersistDir(persistDir, fs));
     if (!(ObjectType.TEXT in vectorStores)) {
-      vectorStores[ObjectType.TEXT] =
+      vectorStores[ModalityType.TEXT] =
         vectorStore ??
         ((await SimpleVectorStore.fromPersistDir(
           persistDir,
