@@ -9,13 +9,14 @@ import type {
 import { ChromaClient, IncludeEnum } from "chromadb";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
-import { mixinEmbedModel } from "../../embeddings/types.js";
-import type {
-  VectorStoreNoEmbedModel,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  VectorStoreQueryMode,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
-import { VectorStoreQueryMode } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type ChromaDeleteOptions = {
@@ -29,7 +30,10 @@ type ChromaQueryOptions = {
 
 const DEFAULT_TEXT_KEY = "text";
 
-class _ChromaVectorStore implements VectorStoreNoEmbedModel {
+export class ChromaVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
   flatMetadata: boolean = true;
   textKey: string;
@@ -37,11 +41,14 @@ class _ChromaVectorStore implements VectorStoreNoEmbedModel {
   private collection: Collection | null = null;
   private collectionName: string;
 
-  constructor(init: {
-    collectionName: string;
-    textKey?: string;
-    chromaClientParams?: ChromaClientParams;
-  }) {
+  constructor(
+    init: {
+      collectionName: string;
+      textKey?: string;
+      chromaClientParams?: ChromaClientParams;
+    } & Partial<IEmbedModel>,
+  ) {
+    super(init.embedModel);
     this.collectionName = init.collectionName;
     this.chromaClient = new ChromaClient(init.chromaClientParams);
     this.textKey = init.textKey ?? DEFAULT_TEXT_KEY;
@@ -168,5 +175,3 @@ class _ChromaVectorStore implements VectorStoreNoEmbedModel {
     return vectorStoreQueryResult;
   }
 }
-
-export const ChromaVectorStore = mixinEmbedModel(_ChromaVectorStore);

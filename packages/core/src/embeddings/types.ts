@@ -1,6 +1,5 @@
 import type { BaseNode } from "../Node.js";
 import { MetadataMode } from "../Node.js";
-import { Settings } from "../Settings.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import { SimilarityType, similarity } from "./utils.js";
 
@@ -99,18 +98,4 @@ export async function batchEmbeddings<T>(
   }
 
   return resultEmbeddings;
-}
-
-export interface EmbedModelMixin {
-  embedModel: BaseEmbedding;
-}
-
-export function mixinEmbedModel<
-  T extends new (...args: any[]) => {},
-  Args extends ConstructorParameters<T>,
->(Base: T): new (...args: Args) => InstanceType<T> & EmbedModelMixin {
-  return function (this: InstanceType<T> & EmbedModelMixin, ...args: Args) {
-    Base.call(this, ...(args ?? []));
-    this.embedModel = args[0]?.embedModel ?? Settings.embedModel;
-  } as any;
 }

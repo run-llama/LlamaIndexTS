@@ -1,9 +1,11 @@
-import type {
-  ExactMatchFilter,
-  MetadataFilters,
-  VectorStoreNoEmbedModel,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type ExactMatchFilter,
+  type IEmbedModel,
+  type MetadataFilters,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 
 import { getEnv, type GenericFileSystem } from "@llamaindex/env";
@@ -14,7 +16,6 @@ import type {
 } from "@pinecone-database/pinecone";
 import { type Pinecone } from "@pinecone-database/pinecone";
 import type { BaseNode, Metadata } from "../../Node.js";
-import { mixinEmbedModel } from "../../embeddings/types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {
@@ -22,12 +23,15 @@ type PineconeParams = {
   chunkSize?: number;
   namespace?: string;
   textKey?: string;
-};
+} & IEmbedModel;
 
 /**
  * Provides support for writing and querying vector data in Pinecone.
  */
-class _PineconeVectorStore implements VectorStoreNoEmbedModel {
+export class PineconeVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
 
   /*
@@ -45,6 +49,7 @@ class _PineconeVectorStore implements VectorStoreNoEmbedModel {
   textKey: string;
 
   constructor(params?: PineconeParams) {
+    super(params?.embedModel);
     this.indexName =
       params?.indexName ?? getEnv("PINECONE_INDEX_NAME") ?? "llama";
     this.namespace = params?.namespace ?? getEnv("PINECONE_NAMESPACE") ?? "";
@@ -225,5 +230,3 @@ class _PineconeVectorStore implements VectorStoreNoEmbedModel {
     };
   }
 }
-
-export const PineconeVectorStore = mixinEmbedModel(_PineconeVectorStore);

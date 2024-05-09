@@ -1,12 +1,13 @@
 import type { BaseNode } from "../../Node.js";
-import type {
-  VectorStoreNoEmbedModel,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { mixinEmbedModel } from "../../embeddings/types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PointStruct = {
@@ -21,7 +22,7 @@ type QdrantParams = {
   url?: string;
   apiKey?: string;
   batchSize?: number;
-};
+} & IEmbedModel;
 
 type QuerySearchResult = {
   id: string;
@@ -34,7 +35,10 @@ type QuerySearchResult = {
 /**
  * Qdrant vector store.
  */
-class _QdrantVectorStore implements VectorStoreNoEmbedModel {
+export class QdrantVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
 
   batchSize: number;
@@ -50,6 +54,7 @@ class _QdrantVectorStore implements VectorStoreNoEmbedModel {
    * @param url Qdrant URL
    * @param apiKey Qdrant API key
    * @param batchSize Number of vectors to upload in a single batch
+   * @param embedModel Embedding model
    */
   constructor({
     collectionName,
@@ -57,7 +62,9 @@ class _QdrantVectorStore implements VectorStoreNoEmbedModel {
     url,
     apiKey,
     batchSize,
+    embedModel,
   }: QdrantParams) {
+    super(embedModel);
     if (!client && !url) {
       if (!url) {
         throw new Error("QdrantVectorStore requires url and collectionName");
@@ -339,5 +346,3 @@ class _QdrantVectorStore implements VectorStoreNoEmbedModel {
     };
   }
 }
-
-export const QdrantVectorStore = mixinEmbedModel(_QdrantVectorStore);

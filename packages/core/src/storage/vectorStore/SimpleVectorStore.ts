@@ -2,7 +2,6 @@ import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS, path } from "@llamaindex/env";
 import _ from "lodash";
 import type { BaseNode } from "../../Node.js";
-import { mixinEmbedModel } from "../../embeddings/types.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
@@ -10,12 +9,14 @@ import {
 } from "../../embeddings/utils.js";
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
-import type {
-  VectorStoreNoEmbedModel,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  VectorStoreQueryMode,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
-import { VectorStoreQueryMode } from "./types.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -30,18 +31,25 @@ class SimpleVectorStoreData {
   textIdToRefDocId: Record<string, string> = {};
 }
 
-class _SimpleVectorStore implements VectorStoreNoEmbedModel {
+export class SimpleVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = false;
   private data: SimpleVectorStoreData;
   private fs: GenericFileSystem = defaultFS;
   private persistPath: string | undefined;
 
-  constructor(init?: { data?: SimpleVectorStoreData }, fs?: GenericFileSystem) {
+  constructor(
+    init?: { data?: SimpleVectorStoreData } & Partial<IEmbedModel>,
+    fs?: GenericFileSystem,
+  ) {
+    super(init?.embedModel);
     this.data = init?.data || new SimpleVectorStoreData();
     this.fs = fs || defaultFS;
   }
 
-  static async fromPersistDir<T extends _SimpleVectorStore>(
+  static async fromPersistDir<T extends SimpleVectorStore>(
     persistDir: string = DEFAULT_PERSIST_DIR,
     fs: GenericFileSystem = defaultFS,
   ): Promise<T> {
@@ -160,7 +168,7 @@ class _SimpleVectorStore implements VectorStoreNoEmbedModel {
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath<T extends _SimpleVectorStore>(
+  static async fromPersistPath<T extends SimpleVectorStore>(
     persistPath: string,
     fs: GenericFileSystem = defaultFS,
   ): Promise<T> {
@@ -188,11 +196,11 @@ class _SimpleVectorStore implements VectorStoreNoEmbedModel {
     return store;
   }
 
-  static fromDict(saveDict: SimpleVectorStoreData): _SimpleVectorStore {
+  static fromDict(saveDict: SimpleVectorStoreData): SimpleVectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
-    return new _SimpleVectorStore({ data });
+    return new SimpleVectorStore({ data });
   }
 
   toDict(): SimpleVectorStoreData {
@@ -202,5 +210,3 @@ class _SimpleVectorStore implements VectorStoreNoEmbedModel {
     };
   }
 }
-
-export const SimpleVectorStore = mixinEmbedModel(_SimpleVectorStore);

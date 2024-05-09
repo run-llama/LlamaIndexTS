@@ -3,12 +3,12 @@ import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
-import { mixinEmbedModel } from "../../embeddings/types.js";
-import type {
-  MetadataFilters,
-  VectorStoreNoEmbedModel,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type MetadataFilters,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
@@ -24,7 +24,10 @@ function toMongoDBFilter(
 }
 
 // MongoDB Atlas Vector Store class implementing VectorStore
-class _MongoDBAtlasVectorSearch implements VectorStoreNoEmbedModel {
+export class MongoDBAtlasVectorSearch
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -38,11 +41,12 @@ class _MongoDBAtlasVectorSearch implements VectorStoreNoEmbedModel {
   private collection: Collection;
 
   constructor(
-    init: Partial<_MongoDBAtlasVectorSearch> & {
+    init: Partial<MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
     },
   ) {
+    super();
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
     } else {
@@ -166,7 +170,3 @@ class _MongoDBAtlasVectorSearch implements VectorStoreNoEmbedModel {
     return result;
   }
 }
-
-export const MongoDBAtlasVectorSearch = mixinEmbedModel(
-  _MongoDBAtlasVectorSearch,
-);

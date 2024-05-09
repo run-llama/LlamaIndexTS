@@ -2,15 +2,19 @@ import { Collection, DataAPIClient, Db } from "@datastax/astra-db-ts";
 import { getEnv } from "@llamaindex/env";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
-import { mixinEmbedModel } from "../../embeddings/types.js";
-import type {
-  VectorStoreNoEmbedModel,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-class _AstraDBVectorStore implements VectorStoreNoEmbedModel {
+export class AstraDBVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -22,14 +26,15 @@ class _AstraDBVectorStore implements VectorStoreNoEmbedModel {
   private collection: Collection | undefined;
 
   constructor(
-    init?: Partial<_AstraDBVectorStore> & {
+    init?: Partial<AstraDBVectorStore> & {
       params?: {
         token: string;
         endpoint: string;
         namespace?: string;
       };
-    },
+    } & Partial<IEmbedModel>,
   ) {
+    super(init?.embedModel);
     const token = init?.params?.token ?? getEnv("ASTRA_DB_APPLICATION_TOKEN");
     const endpoint = init?.params?.endpoint ?? getEnv("ASTRA_DB_API_ENDPOINT");
 
@@ -221,5 +226,3 @@ class _AstraDBVectorStore implements VectorStoreNoEmbedModel {
     };
   }
 }
-
-export const AstraDBVectorStore = mixinEmbedModel(_AstraDBVectorStore);

@@ -1,15 +1,16 @@
 import type pg from "pg";
 
-import type {
-  VectorStoreNoEmbedModel,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 
 import type { GenericFileSystem } from "@llamaindex/env";
 import type { BaseNode, Metadata } from "../../Node.js";
 import { Document, MetadataMode } from "../../Node.js";
-import { mixinEmbedModel } from "../../embeddings/types.js";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
@@ -18,7 +19,10 @@ export const PGVECTOR_TABLE = "llamaindex_embedding";
  * Provides support for writing and querying vector data in Postgres.
  * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
  */
-class _PGVectorStore implements VectorStoreNoEmbedModel {
+export class PGVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
 
   private collection: string = "";
@@ -46,12 +50,15 @@ class _PGVectorStore implements VectorStoreNoEmbedModel {
    * @param {string} config.connectionString - The connection string (optional).
    * @param {number} config.dimensions - The dimensions of the embedding model.
    */
-  constructor(config?: {
-    schemaName?: string;
-    tableName?: string;
-    connectionString?: string;
-    dimensions?: number;
-  }) {
+  constructor(
+    config?: {
+      schemaName?: string;
+      tableName?: string;
+      connectionString?: string;
+      dimensions?: number;
+    } & Partial<IEmbedModel>,
+  ) {
+    super(config?.embedModel);
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
     this.connectionString = config?.connectionString;
@@ -315,5 +322,3 @@ class _PGVectorStore implements VectorStoreNoEmbedModel {
     return Promise.resolve();
   }
 }
-
-export const PGVectorStore = mixinEmbedModel(_PGVectorStore);
