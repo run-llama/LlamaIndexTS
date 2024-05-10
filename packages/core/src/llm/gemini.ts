@@ -3,20 +3,20 @@ import {
   GenerativeModel as GoogleGenerativeModel,
   type EnhancedGenerateContentResponse,
   type Content as GeminiMessageContent,
-  type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
-  type Part as GooglePart,
   type ModelParams as GoogleModelParams,
+  type Part as GooglePart,
+  type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
 } from "@google/generative-ai";
 
 import {
   VertexAI,
   GenerativeModel as VertexGenerativeModel,
   GenerativeModelPreview as VertexGenerativeModelPreview,
-  type StreamGenerateContentResult as VertexStreamGenerateContentResult,
   type GenerateContentResponse,
   type VertexInit,
-  type Part as VertexPart,
   type ModelParams as VertexModelParams,
+  type Part as VertexPart,
+  type StreamGenerateContentResult as VertexStreamGenerateContentResult,
 } from "@google-cloud/vertexai";
 
 import { getEnv } from "@llamaindex/env";
