@@ -12,7 +12,7 @@ globalThis.fetch = function fetch(...args: Parameters<typeof originalFetch>) {
     }
   }
   const { host } = new URL(url);
-  if (host === "openai.com") {
+  if (host.endsWith("openai.com")) {
     // todo: mock api using https://mswjs.io
     throw new Error(
       "Make sure to return a mock response for OpenAI API requests in your test.",
