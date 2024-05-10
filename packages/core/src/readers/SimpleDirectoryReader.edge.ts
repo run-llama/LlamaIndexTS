@@ -21,7 +21,6 @@ export type SimpleDirectoryReaderLoadDataParams = {
   defaultReader?: BaseReader | null;
   fileExtToReader?: Record<string, BaseReader>;
   numWorkers?: number;
-  showProgress?: boolean;
 };
 
 /**
@@ -48,7 +47,6 @@ export class SimpleDirectoryReader implements BaseReader {
       defaultReader = new TextFileReader(),
       fileExtToReader,
       numWorkers = 1,
-      showProgress = false,
     } = params;
 
     // Observer can decide to skip the directory
@@ -58,36 +56,19 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
-    const filePathsToProcess: string[] = [];
+    const docs: Document[] = [];
+    const filePathQueue: string[] = [];
+
     for await (const filePath of walk(fs, directoryPath)) {
-      filePathsToProcess.push(filePath);
+      filePathQueue.push(filePath);
     }
 
-    const totalFiles = filePathsToProcess.length;
-    let processedFiles = 0;
-
-    const chunkSize = Math.ceil(filePathsToProcess.length / numWorkers);
-    const chunks = Array.from({ length: numWorkers }, (_, i) =>
-      filePathsToProcess.slice(i * chunkSize, (i + 1) * chunkSize),
+    const workerPromises = Array.from({ length: numWorkers }, () =>
+      this.processFiles(filePathQueue, fs, defaultReader, fileExtToReader),
     );
 
-    const results = await Promise.all(
-      chunks.map(async (chunk) => {
-        const docs = await this.processChunk(
-          chunk,
-          fs,
-          defaultReader,
-          fileExtToReader,
-        );
-        processedFiles += chunk.length;
-        if (showProgress) {
-          console.log(`Processed ${processedFiles}/${totalFiles} files`);
-        }
-        return docs;
-      }),
-    );
-
-    const docs: Document[] = results.flat();
+    const results = await Promise.all(workerPromises);
+    docs.push(...results.flat());
 
     // After successful import of all files, directory completion
     // is only a notification for observer, cannot be cancelled.
@@ -96,15 +77,17 @@ export class SimpleDirectoryReader implements BaseReader {
     return docs;
   }
 
-  private async processChunk(
-    filePaths: string[],
+  private async processFiles(
+    filePathQueue: string[],
     fs: CompleteFileSystem,
     defaultReader: BaseReader | null,
     fileExtToReader?: Record<string, BaseReader>,
   ): Promise<Document[]> {
     const docs: Document[] = [];
 
-    for (const filePath of filePaths) {
+    while (filePathQueue.length > 0) {
+      const filePath = filePathQueue.shift()!;
+
       try {
         const fileExt = path.extname(filePath).slice(1).toLowerCase();
 
