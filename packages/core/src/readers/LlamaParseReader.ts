@@ -67,6 +67,7 @@ export class LlamaParseReader implements FileReader {
   language: Language = "en";
   // The parsing instruction for the parser.
   parsingInstruction: string = "";
+  // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
     Object.assign(this, params);
