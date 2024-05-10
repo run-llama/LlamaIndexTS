@@ -24,6 +24,7 @@
     "@anthropic-ai/sdk": "^0.20.9",
     "@aws-crypto/sha256-js": "^5.2.0",
     "@datastax/astra-db-ts": "^1.1.0",
+    "@google-cloud/vertexai": "^1.1.0",
     "@google/generative-ai": "^0.11.0",
     "@grpc/grpc-js": "^1.10.7",
     "@huggingface/inference": "^2.6.7",

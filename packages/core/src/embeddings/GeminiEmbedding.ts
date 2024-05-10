@@ -1,4 +1,8 @@
-import { GeminiSessionStore, type GeminiSession } from "../llm/gemini.js";
+import {
+  GEMINI_BACKENDS,
+  GeminiSessionStore,
+  type GeminiSession,
+} from "../llm/gemini.js";
 import { BaseEmbedding } from "./types.js";
 
 export enum GEMINI_EMBEDDING_MODEL {
@@ -8,6 +12,7 @@ export enum GEMINI_EMBEDDING_MODEL {
 
 /**
  * GeminiEmbedding is an alias for Gemini that implements the BaseEmbedding interface.
+ * Note: Vertex SDK currently does not support embeddings
  */
 export class GeminiEmbedding extends BaseEmbedding {
   model: GEMINI_EMBEDDING_MODEL;
@@ -16,11 +21,15 @@ export class GeminiEmbedding extends BaseEmbedding {
   constructor(init?: Partial<GeminiEmbedding>) {
     super();
     this.model = init?.model ?? GEMINI_EMBEDDING_MODEL.EMBEDDING_001;
-    this.session = init?.session ?? GeminiSessionStore.get();
+    this.session =
+      init?.session ??
+      (GeminiSessionStore.get({
+        backend: GEMINI_BACKENDS.GOOGLE,
+      }) as GeminiSession);
   }
 
   private async getEmbedding(prompt: string): Promise<number[]> {
-    const client = this.session.gemini.getGenerativeModel({
+    const client = this.session.getGenerativeModel({
       model: this.model,
     });
     const result = await client.embedContent(prompt);

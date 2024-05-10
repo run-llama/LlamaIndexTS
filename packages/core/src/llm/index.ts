@@ -5,7 +5,12 @@ export {
   Anthropic,
 } from "./anthropic.js";
 export { FireworksLLM } from "./fireworks.js";
-export { GEMINI_MODEL, Gemini, GeminiSession } from "./gemini.js";
+export {
+  GEMINI_MODEL,
+  Gemini,
+  GeminiSession,
+  GeminiVertexSession,
+} from "./gemini.js";
 export { Groq } from "./groq.js";
 export { HuggingFaceInferenceAPI } from "./huggingface.js";
 export {
