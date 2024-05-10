@@ -11,8 +11,8 @@ globalThis.fetch = function fetch(...args: Parameters<typeof originalFetch>) {
       url = url.toString();
     }
   }
-  const parsedUrl = new URL(url);
-  if (parsedUrl.hostname.includes("openai.com")) {
+  const { host } = new URL(url);
+  if (host === "openai.com") {
     // todo: mock api using https://mswjs.io
     throw new Error(
       "Make sure to return a mock response for OpenAI API requests in your test.",
