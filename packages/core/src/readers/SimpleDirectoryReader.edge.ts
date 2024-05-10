@@ -1,6 +1,7 @@
 import { fs, path } from "@llamaindex/env";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
+import { LlamaParseReader } from "./LlamaParseReader.js";
 import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader } from "./type.js";
 
@@ -48,6 +49,13 @@ export class SimpleDirectoryReader implements BaseReader {
       fileExtToReader,
       numWorkers = 1,
     } = params;
+
+    // Check if LlamaParseReader is used as the defaultReader and if so checks if numWorkers is in the valid range
+    if (defaultReader instanceof LlamaParseReader && numWorkers > 9) {
+      throw new Error(
+        "Currently LlamaParseReader supports a maximum of 9 workers.",
+      );
+    }
 
     // Observer can decide to skip the directory
     if (
