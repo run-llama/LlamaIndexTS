@@ -10,7 +10,6 @@ async function main() {
   const docs = await reader.loadData({
     directoryPath: "../data/parallel", // brk-2022.pdf split into 6 parts
     numWorkers: 2,
-    showProgress: true,
     // set LlamaParse as the default reader. Set apiKey here or in environment variable LLAMA_CLOUD_API_KEY
     defaultReader: new LlamaParseReader({
       language: "en",
