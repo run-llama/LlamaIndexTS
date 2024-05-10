@@ -61,7 +61,7 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
-    const docs: Document[] = [];
+    let docs: Document[] = [];
     const filePathQueue: string[] = [];
 
     for await (const filePath of walk(fs, directoryPath)) {
@@ -73,7 +73,7 @@ export class SimpleDirectoryReader implements BaseReader {
     );
 
     const results = await Promise.all(workerPromises);
-    docs.push(...results.flat());
+    docs = docs.concat(...results);
 
     // After successful import of all files, directory completion
     // is only a notification for observer, cannot be cancelled.
