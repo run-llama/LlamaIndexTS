@@ -20,6 +20,8 @@ export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
   defaultReader?: BaseReader | null;
   fileExtToReader?: Record<string, BaseReader>;
+  numWorkers?: number;
+  showProgress?: boolean;
 };
 
 /**
@@ -45,6 +47,8 @@ export class SimpleDirectoryReader implements BaseReader {
       directoryPath,
       defaultReader = new TextFileReader(),
       fileExtToReader,
+      numWorkers = 1,
+      showProgress = false,
     } = params;
 
     // Observer can decide to skip the directory
@@ -54,8 +58,53 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
+    const filePathsToProcess: string[] = [];
+    for await (const filePath of walk(fs, directoryPath)) {
+      filePathsToProcess.push(filePath);
+    }
+
+    const totalFiles = filePathsToProcess.length;
+    let processedFiles = 0;
+
+    const chunkSize = Math.ceil(filePathsToProcess.length / numWorkers);
+    const chunks = Array.from({ length: numWorkers }, (_, i) =>
+      filePathsToProcess.slice(i * chunkSize, (i + 1) * chunkSize),
+    );
+
+    const results = await Promise.all(
+      chunks.map(async (chunk) => {
+        const docs = await this.processChunk(
+          chunk,
+          fs,
+          defaultReader,
+          fileExtToReader,
+        );
+        processedFiles += chunk.length;
+        if (showProgress) {
+          console.log(`Processed ${processedFiles}/${totalFiles} files`);
+        }
+        return docs;
+      }),
+    );
+
+    const docs: Document[] = results.flat();
+
+    // After successful import of all files, directory completion
+    // is only a notification for observer, cannot be cancelled.
+    this.doObserverCheck("directory", directoryPath, ReaderStatus.COMPLETE);
+
+    return docs;
+  }
+
+  private async processChunk(
+    filePaths: string[],
+    fs: CompleteFileSystem,
+    defaultReader: BaseReader | null,
+    fileExtToReader?: Record<string, BaseReader>,
+  ): Promise<Document[]> {
     const docs: Document[] = [];
-    for await (const filePath of walk(directoryPath)) {
+
+    for (const filePath of filePaths) {
       try {
         const fileExt = path.extname(filePath).slice(1).toLowerCase();
 
@@ -67,10 +116,10 @@ export class SimpleDirectoryReader implements BaseReader {
 
         let reader: BaseReader;
 
-        if (fileExtToReader && fileExt in fileExtToReader) {
-          reader = fileExtToReader[fileExt];
-        } else if (defaultReader != null) {
+        if (defaultReader != null) {
           reader = defaultReader;
+        } else if (fileExtToReader && fileExt in fileExtToReader) {
+          reader = fileExtToReader[fileExt];
         } else {
           const msg = `No reader for file extension of ${filePath}`;
           console.warn(msg);
@@ -102,10 +151,6 @@ export class SimpleDirectoryReader implements BaseReader {
         }
       }
     }
-
-    // After successful import of all files, directory completion
-    // is only a notification for observer, cannot be cancelled.
-    this.doObserverCheck("directory", directoryPath, ReaderStatus.COMPLETE);
 
     return docs;
   }
