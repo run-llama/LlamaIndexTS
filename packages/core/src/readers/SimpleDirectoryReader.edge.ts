@@ -1,8 +1,7 @@
-import { fs, path } from "@llamaindex/env";
+import { path } from "@llamaindex/env";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { LlamaParseReader } from "./LlamaParseReader.js";
-import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader } from "./type.js";
 
 type ReaderCallback = (
@@ -19,7 +18,8 @@ enum ReaderStatus {
 
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
-  defaultReader?: BaseReader | null;
+  fs?: CompleteFileSystem;
+  defaultReader?: BaseReader;
   fileExtToReader?: Record<string, BaseReader>;
   numWorkers?: number;
 };
@@ -45,16 +45,15 @@ export class SimpleDirectoryReader implements BaseReader {
 
     const {
       directoryPath,
-      defaultReader = new TextFileReader(),
+      fs = defaultFS,
+      defaultReader,
       fileExtToReader,
       numWorkers = 1,
     } = params;
 
     // Check if LlamaParseReader is used as the defaultReader and if so checks if numWorkers is in the valid range
     if (defaultReader instanceof LlamaParseReader && numWorkers > 9) {
-      throw new Error(
-        "Currently LlamaParseReader supports a maximum of 9 workers.",
-      );
+      throw new Error("Currently, LlamaParse supports a maximum of 9 workers.");
     }
 
     // Observer can decide to skip the directory
@@ -88,7 +87,7 @@ export class SimpleDirectoryReader implements BaseReader {
   private async processFiles(
     filePathQueue: string[],
     fs: CompleteFileSystem,
-    defaultReader: BaseReader | null,
+    defaultReader: BaseReader | undefined,
     fileExtToReader?: Record<string, BaseReader>,
   ): Promise<Document[]> {
     const docs: Document[] = [];
@@ -107,7 +106,7 @@ export class SimpleDirectoryReader implements BaseReader {
 
         let reader: BaseReader;
 
-        if (defaultReader != null) {
+        if (defaultReader) {
           reader = defaultReader;
         } else if (fileExtToReader && fileExt in fileExtToReader) {
           reader = fileExtToReader[fileExt];
