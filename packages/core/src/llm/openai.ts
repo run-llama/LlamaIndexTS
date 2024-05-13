@@ -110,6 +110,7 @@ export const GPT4_MODELS = {
   "gpt-4-1106-preview": { contextWindow: 128000 },
   "gpt-4-0125-preview": { contextWindow: 128000 },
   "gpt-4-vision-preview": { contextWindow: 128000 },
+  "gpt-4o": { contextWindow: 128000 },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
