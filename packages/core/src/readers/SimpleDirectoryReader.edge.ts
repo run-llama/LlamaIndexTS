@@ -63,7 +63,6 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
-    let docs: Document[] = [];
     const filePathQueue: string[] = [];
 
     for await (const filePath of walk(fs, directoryPath)) {
@@ -74,14 +73,13 @@ export class SimpleDirectoryReader implements BaseReader {
       this.processFiles(filePathQueue, fs, defaultReader, fileExtToReader),
     );
 
-    const results = await Promise.all(workerPromises);
-    docs = docs.concat(...results);
+    const results: Document[][] = await Promise.all(workerPromises);
 
     // After successful import of all files, directory completion
     // is only a notification for observer, cannot be cancelled.
     this.doObserverCheck("directory", directoryPath, ReaderStatus.COMPLETE);
 
-    return docs;
+    return results.flat();
   }
 
   private async processFiles(
