@@ -20,7 +20,6 @@ type BuilderParams = {
   indexStore: BaseIndexStore;
   vectorStore: VectorStore;
   vectorStores: VectorStoreByType;
-  storeImages: boolean;
   persistDir: string;
   fs: GenericFileSystem;
 };
@@ -30,7 +29,6 @@ export async function storageContextFromDefaults({
   indexStore,
   vectorStore,
   vectorStores,
-  storeImages,
   persistDir,
   fs,
 }: Partial<BuilderParams>): Promise<StorageContext> {

@@ -1,13 +1,6 @@
-import {
-  ClipEmbedding,
-  ModalityType,
-  Settings,
-  SimpleDirectoryReader,
-  SimpleVectorStore,
-  VectorStoreIndex,
-} from "llamaindex";
-
-import * as path from "path";
+import { Settings, SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
+import path from "path";
+import { getStorageContext } from "./storage";
 
 // Update chunk size and overlap
 Settings.chunkSize = 512;
@@ -27,16 +20,9 @@ async function generateDatasource() {
     const documents = await new SimpleDirectoryReader().loadData({
       directoryPath: path.join("multimodal", "data"),
     });
-    const clipVectorStore = new SimpleVectorStore({
-      embedModel: new ClipEmbedding(),
-    });
-    // embedding for vector Store defaults to OpenAIEmbedding
-    const vectorStore = new SimpleVectorStore();
+    const storageContext = await getStorageContext();
     await VectorStoreIndex.fromDocuments(documents, {
-      vectorStores: {
-        [ModalityType.IMAGE]: clipVectorStore,
-        [ModalityType.TEXT]: vectorStore,
-      },
+      storageContext,
     });
   });
   console.log(`Storage successfully generated in ${ms / 1000}s.`);

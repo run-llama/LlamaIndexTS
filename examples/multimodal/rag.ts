@@ -5,8 +5,8 @@ import {
   OpenAI,
   Settings,
   VectorStoreIndex,
-  storageContextFromDefaults,
 } from "llamaindex";
+import { getStorageContext } from "./storage";
 
 // Update chunk size and overlap
 Settings.chunkSize = 512;
@@ -22,26 +22,18 @@ Settings.callbackManager = new CallbackManager({
   },
 });
 
-export async function createIndex() {
-  // set up vector store index with two vector stores, one for text, the other for images
-  const storageContext = await storageContextFromDefaults({
-    persistDir: "storage",
-    storeImages: true,
-  });
-  return await VectorStoreIndex.init({
-    nodes: [],
-    storageContext,
-  });
-}
-
 async function main() {
   const images: ImageType[] = [];
 
-  const index = await createIndex();
+  const storageContext = await getStorageContext();
+  const index = await VectorStoreIndex.init({
+    nodes: [],
+    storageContext,
+  });
 
   const queryEngine = index.asQueryEngine({
     responseSynthesizer: new MultiModalResponseSynthesizer(),
-    retriever: index.asRetriever({ topK: { text: 3, image: 1 } }),
+    retriever: index.asRetriever({ topK: { TEXT: 3, IMAGE: 1 } }),
   });
   const result = await queryEngine.query({
     query: "Tell me more about Vincent van Gogh's famous paintings",

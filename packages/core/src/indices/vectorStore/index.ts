@@ -199,14 +199,15 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       docStoreStrategy?: DocStoreStrategy;
     } = {},
   ): Promise<VectorStoreIndex> {
+    args.storageContext =
+      args.storageContext ?? (await storageContextFromDefaults({}));
+    args.vectorStores = args.vectorStores ?? args.storageContext.vectorStores;
     args.docStoreStrategy =
       args.docStoreStrategy ??
       // set doc store strategy defaults to the same as for the IngestionPipeline
       (args.vectorStores
         ? DocStoreStrategy.UPSERTS
         : DocStoreStrategy.DUPLICATES_ONLY);
-    args.storageContext =
-      args.storageContext ?? (await storageContextFromDefaults({}));
     args.serviceContext = args.serviceContext;
     const docStore = args.storageContext.docStore;
 
@@ -414,16 +415,17 @@ export class VectorIndexRetriever implements BaseRetriever {
         query,
       },
     });
-    const vectorStores = Object.values(this.index.vectorStores);
+    const vectorStores = this.index.vectorStores;
     let nodesWithScores: NodeWithScore[] = [];
 
     for (const type in vectorStores) {
       // TODO: add retrieval by using an image as query
+      const vectorStore: VectorStore = vectorStores[type as ModalityType]!;
       nodesWithScores = nodesWithScores.concat(
         await this.textRetrieve(
           query,
           type as ModalityType,
-          vectorStores[type],
+          vectorStore,
           preFilters as MetadataFilters,
         ),
       );

@@ -7,6 +7,7 @@ import {
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
 } from "../../embeddings/utils.js";
+import type { BaseEmbedding } from "../../index.edge.js";
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
@@ -49,12 +50,17 @@ export class SimpleVectorStore
     this.fs = fs || defaultFS;
   }
 
-  static async fromPersistDir<T extends SimpleVectorStore>(
+  static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
     fs: GenericFileSystem = defaultFS,
-  ): Promise<T> {
+    embedModel?: BaseEmbedding,
+  ): Promise<SimpleVectorStore> {
     const persistPath = `${persistDir}/vector_store.json`;
-    return await this.fromPersistPath(persistPath, fs);
+    return await SimpleVectorStore.fromPersistPath({
+      persistPath,
+      fs,
+      embedModel,
+    });
   }
 
   get client(): any {
@@ -168,10 +174,16 @@ export class SimpleVectorStore
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath<T extends SimpleVectorStore>(
-    persistPath: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<T> {
+  static async fromPersistPath({
+    persistPath,
+    fs,
+    embedModel,
+  }: {
+    persistPath: string;
+    fs?: GenericFileSystem;
+    embedModel?: BaseEmbedding;
+  }): Promise<SimpleVectorStore> {
+    fs = fs ?? defaultFS;
     const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });
@@ -190,17 +202,20 @@ export class SimpleVectorStore
     const data = new SimpleVectorStoreData();
     data.embeddingDict = dataDict.embeddingDict ?? {};
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
-    const store = this.constructor({ data });
+    const store = new SimpleVectorStore({ data, embedModel });
     store.persistPath = persistPath;
     store.fs = fs;
     return store;
   }
 
-  static fromDict(saveDict: SimpleVectorStoreData): SimpleVectorStore {
+  static fromDict(
+    saveDict: SimpleVectorStoreData,
+    embedModel?: BaseEmbedding,
+  ): SimpleVectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
-    return new SimpleVectorStore({ data });
+    return new SimpleVectorStore({ data, embedModel });
   }
 
   toDict(): SimpleVectorStoreData {

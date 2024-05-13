@@ -203,7 +203,6 @@ export async function addNodesToVectorStores(
   for (const type in nodeMap) {
     const nodes = nodeMap[type as ModalityType];
     if (nodes) {
-      console.log(type);
       const vectorStore = vectorStores[type as ModalityType];
       if (!vectorStore) {
         throw new Error(
