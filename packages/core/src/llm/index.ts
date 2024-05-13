@@ -10,6 +10,8 @@ export {
   Gemini,
   GeminiSession,
   GeminiVertexSession,
+  type GoogleGeminiSessionOptions,
+  type VertexGeminiSessionOptions,
 } from "./gemini.js";
 export { Groq } from "./groq.js";
 export { HuggingFaceInferenceAPI } from "./huggingface.js";

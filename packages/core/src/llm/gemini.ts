@@ -44,11 +44,11 @@ export enum GEMINI_BACKENDS {
   VERTEX = "vertex",
 }
 
-type GoogleGeminiSessionOptions = {
+export type GoogleGeminiSessionOptions = {
   apiKey?: string;
 };
 
-type VertexGeminiSessionOptions = {
+export type VertexGeminiSessionOptions = {
   preview?: boolean;
 } & VertexInit;
 
