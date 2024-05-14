@@ -1,18 +1,17 @@
-import {
-  ClipEmbedding,
-  SimpleVectorStore,
-  storageContextFromDefaults,
-} from "llamaindex";
+import { storageContextFromDefaults } from "llamaindex";
 
 // set up store context with two vector stores, one for text, the other for images
 export async function getStorageContext() {
   return await storageContextFromDefaults({
     persistDir: "storage",
-    vectorStores: {
-      IMAGE: await SimpleVectorStore.fromPersistPath({
-        persistPath: "storage/images_vector_store.json",
-        embedModel: new ClipEmbedding(),
-      }),
-    },
+    storeImages: true,
+    // if storeImages is true, the following vector store will be added
+    // vectorStores: {
+    //   IMAGE: SimpleVectorStore.fromPersistDir(
+    //     `${persistDir}/images`,
+    //     fs,
+    //     new ClipEmbedding(),
+    //   ),
+    // },
   });
 }
