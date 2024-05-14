@@ -2,7 +2,10 @@ import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS } from "@llamaindex/env";
 import { ModalityType, ObjectType } from "../Node.js";
 import { ClipEmbedding } from "../embeddings/ClipEmbedding.js";
-import { DEFAULT_NAMESPACE } from "./constants.js";
+import {
+  DEFAULT_IMAGE_VECTOR_NAMESPACE,
+  DEFAULT_NAMESPACE,
+} from "./constants.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 import type { BaseDocumentStore } from "./docStore/types.js";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
@@ -68,7 +71,7 @@ export async function storageContextFromDefaults({
     }
     if (storeImages && !(ObjectType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = await SimpleVectorStore.fromPersistDir(
-        `${persistDir}/images`,
+        `${persistDir}/${DEFAULT_IMAGE_VECTOR_NAMESPACE}`,
         fs,
         new ClipEmbedding(),
       );
