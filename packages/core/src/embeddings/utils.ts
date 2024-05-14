@@ -243,7 +243,7 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
     _.isString(input)
   ) {
     // string or file URL
-    const dataBuffer = await defaultFS.readFile(
+    const dataBuffer = await defaultFS.readRawFile(
       input instanceof URL ? input.pathname : input,
     );
     input = new Blob([dataBuffer]);
