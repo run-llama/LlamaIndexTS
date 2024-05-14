@@ -2,7 +2,11 @@
   "name": "@llamaindex/autotool",
   "type": "module",
   "version": "0.0.1",
-  "description": "",
+  "description": "auto transpile your JS function to LLM Agent compatible",
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -47,7 +51,7 @@
     "unplugin": "^1.10.1"
   },
   "peerDependencies": {
-    "llamaindex": "^0.3.9",
+    "llamaindex": "^0.3.10",
     "openai": "^4",
     "typescript": "^4"
   },

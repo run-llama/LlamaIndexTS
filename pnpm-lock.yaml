@@ -138,8 +138,8 @@ importers:
         specifier: ^2.4.2
         version: 2.4.2
       chromadb:
-        specifier: ^1.8.1
-        version: 1.8.1(@google/generative-ai@0.11.0)(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.43.0(encoding@0.1.13))
+        specifier: ^1.7.3
+        version: 1.7.3(@google/generative-ai@0.11.0)(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.46.0(encoding@0.1.13))
       commander:
         specifier: ^12.0.0
         version: 12.0.0
@@ -386,8 +386,8 @@ importers:
         specifier: ^4.4.2
         version: 4.4.2
       chromadb:
-        specifier: ~1.8.1
-        version: 1.8.1(@google/generative-ai@0.11.0)(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.43.0(encoding@0.1.13))
+        specifier: ~1.7.3
+        version: 1.7.3(@google/generative-ai@0.11.0)(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.46.0(encoding@0.1.13))
       cohere-ai:
         specifier: ^7.9.5
         version: 7.9.5(encoding@0.1.13)
@@ -413,8 +413,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
       openai:
-        specifier: ^4.43.0
-        version: 4.43.0(encoding@0.1.13)
+        specifier: ^4.46.0
+        version: 4.46.0(encoding@0.1.13)
       papaparse:
         specifier: ^5.4.1
         version: 5.4.1
@@ -4075,8 +4075,8 @@ packages:
   chownr@1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
 
-  chromadb@1.8.1:
-    resolution: {integrity: sha512-NpbYydbg4Uqt/9BXKgkZXn0fqpsh2Z1yjhkhKH+rcHMoq0pwI18BFSU2QU7Fk/ZypwGefW2AvqyE/3ZJIgy4QA==}
+  chromadb@1.7.3:
+    resolution: {integrity: sha512-3GgvQjpqgk5C89x5EuTDaXKbfrdqYDJ5UVyLQ3ZmwxnpetNc+HhRDGjkvXa5KSvpQ3lmKoyDoqnN4tZepfFkbw==}
     engines: {node: '>=14.17.0'}
     peerDependencies:
       '@google/generative-ai': ^0.1.1
@@ -7189,6 +7189,10 @@ packages:
 
   openai@4.43.0:
     resolution: {integrity: sha512-4SMUB/XiqnO5IrEcdzEGGTcHoeXq7D/k82v36zoqSitrMUjenZXGH5JysIH7aF7Wr+gjvq0dT2mV6wLVKA7Seg==}
+    hasBin: true
+
+  openai@4.46.0:
+    resolution: {integrity: sha512-l0Betzsx3WIjdagqQiH14hWmwYouUzUCcB1ENvKyfG5XOqh6YC2XT7OukzEBTnweutMC91pW2ToddWn8uyD4SA==}
     hasBin: true
 
   opener@1.5.2:
@@ -14162,14 +14166,14 @@ snapshots:
 
   chownr@1.1.4: {}
 
-  chromadb@1.8.1(@google/generative-ai@0.11.0)(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.43.0(encoding@0.1.13)):
+  chromadb@1.7.3(@google/generative-ai@0.11.0)(cohere-ai@7.9.5(encoding@0.1.13))(encoding@0.1.13)(openai@4.46.0(encoding@0.1.13)):
     dependencies:
       cliui: 8.0.1
       isomorphic-fetch: 3.0.0(encoding@0.1.13)
     optionalDependencies:
       '@google/generative-ai': 0.11.0
       cohere-ai: 7.9.5(encoding@0.1.13)
-      openai: 4.43.0(encoding@0.1.13)
+      openai: 4.46.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
@@ -17990,6 +17994,19 @@ snapshots:
       - encoding
 
   openai@4.43.0(encoding@0.1.13):
+    dependencies:
+      '@types/node': 18.19.33
+      '@types/node-fetch': 2.6.11
+      abort-controller: 3.0.0
+      agentkeepalive: 4.5.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+      web-streams-polyfill: 3.3.3
+    transitivePeerDependencies:
+      - encoding
+
+  openai@4.46.0(encoding@0.1.13):
     dependencies:
       '@types/node': 18.19.33
       '@types/node-fetch': 2.6.11
