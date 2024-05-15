@@ -13,7 +13,6 @@
  */
 import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
-import nodeFS from "node:fs/promises";
 import { EOL } from "node:os";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
@@ -22,8 +21,8 @@ import {
   TransformStream,
   WritableStream,
 } from "node:stream/web";
-import type { SHA256 } from "./index.polyfill.js";
-import type { CompleteFileSystem } from "./type.js";
+import { fs } from "./fs/node.js";
+import type { SHA256 } from "./polyfill.js";
 
 export function createSHA256(): SHA256 {
   const hash = createHash("sha256");
@@ -37,29 +36,13 @@ export function createSHA256(): SHA256 {
   };
 }
 
-export const fs: CompleteFileSystem = {
-  writeFile: function (path: string, content: string) {
-    return nodeFS.writeFile(path, content, "utf-8");
-  },
-  readRawFile(path: string): Promise<Buffer> {
-    return nodeFS.readFile(path);
-  },
-  readFile: function (path: string) {
-    return nodeFS.readFile(path, "utf-8");
-  },
-  access: nodeFS.access,
-  mkdir: nodeFS.mkdir,
-  readdir: nodeFS.readdir,
-  stat: nodeFS.stat,
-};
-
-export type * from "./type.js";
 export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
 export {
   EOL,
   ReadableStream,
   TransformStream,
   WritableStream,
+  fs,
   ok,
   path,
   pipeline,

@@ -17,7 +17,7 @@ export class HTMLReader implements FileReader {
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
    */
   async loadData(file: string): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file);
+    const dataBuffer = await fs.readFile(file, "utf-8");
     const htmlOptions = this.getOptions();
     const content = await this.parseContent(dataBuffer, htmlOptions);
     return [new Document({ text: content, id_: file })];

@@ -83,7 +83,7 @@ export class LlamaParseReader implements FileReader {
     const metadata = { file_path: file };
 
     // Load data, set the mime type
-    const data = await fs.readRawFile(file);
+    const data = await fs.readFile(file);
     const mimeType = await this.getMimeType(data);
 
     const body = new FormData();

@@ -6,7 +6,7 @@ import type { FileReader } from "./type.js";
 export class DocxReader implements FileReader {
   /** DocxParser */
   async loadData(file: string): Promise<Document[]> {
-    const dataBuffer = await fs.readRawFile(file);
+    const dataBuffer = await fs.readFile(file);
     const { value } = await mammoth.extractRawText({ buffer: dataBuffer });
     return [new Document({ text: value, id_: file })];
   }

@@ -145,7 +145,7 @@ export class SimpleVectorStore implements VectorStore {
     persistPath: string = path.join(DEFAULT_PERSIST_DIR, "vector_store.json"),
   ): Promise<void> {
     const dirPath = path.dirname(persistPath);
-    if (!(await exists(fs, dirPath))) {
+    if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath);
     }
 
@@ -156,7 +156,7 @@ export class SimpleVectorStore implements VectorStore {
     persistPath: string,
   ): Promise<SimpleVectorStore> {
     const dirPath = path.dirname(persistPath);
-    if (!(await exists(fs, dirPath))) {
+    if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });
     }
 

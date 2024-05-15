@@ -33,8 +33,8 @@
         "default": "./dist/index.workerd.js"
       },
       "edge-light": {
-        "types": "./dist/type/index.polyfill.d.ts",
-        "default": "./dist/index.polyfill.js"
+        "types": "./dist/type/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
       },
       "import": {
         "types": "./dist/type/index.d.ts",
@@ -43,16 +43,6 @@
       "require": {
         "types": "./dist/type/index.d.ts",
         "default": "./dist/cjs/index.js"
-      }
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
-      },
-      "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
       }
     }
   },
@@ -78,6 +68,7 @@
     "@swc/cli": "^0.3.12",
     "@swc/core": "^1.5.5",
     "concurrently": "^8.2.2",
+    "memfs": "^4.9.2",
     "pathe": "^1.1.2",
     "readable-stream": "^4.5.2"
   },
@@ -87,11 +78,15 @@
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
+    "memfs": "^4.9.2",
     "pathe": "^1.1.2",
     "readable-stream": "^4.5.2"
   },
   "peerDependenciesMeta": {
     "@aws-crypto/sha256-js": {
+      "optional": true
+    },
+    "memfs": {
       "optional": true
     },
     "pathe": {

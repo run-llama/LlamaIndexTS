@@ -1,4 +1,3 @@
-import type { GenericFileSystem } from "@llamaindex/env";
 import { BaseNode } from "../../Node.js";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
@@ -14,10 +13,7 @@ export interface RefDocInfo {
 
 export abstract class BaseDocumentStore {
   // Save/load
-  persist(
-    persistPath: string = defaultPersistPath,
-    fs?: GenericFileSystem,
-  ): void {
+  persist(persistPath: string = defaultPersistPath): void {
     // Persist the docstore to a file.
   }
 

@@ -1,4 +1,3 @@
-import type { GenericFileSystem } from "@llamaindex/env";
 import { fs } from "@llamaindex/env";
 import type { ParseConfig } from "papaparse";
 import Papa from "papaparse";
@@ -41,7 +40,7 @@ export class PapaCSVReader implements FileReader {
    * @returns {Promise<Document[]>}
    */
   async loadData(file: string): Promise<Document[]> {
-    const fileContent = await fs.readFile(file);
+    const fileContent = await fs.readFile(file, "utf-8");
     const result = Papa.parse(fileContent, this.papaConfig);
     const textList = result.data.map((row: any) => {
       // Compatible with header row mode

@@ -646,9 +646,6 @@ importers:
       '@swc/core':
         specifier: ^1.5.5
         version: 1.5.5(@swc/helpers@0.5.11)
-      bunchee:
-        specifier: ^5.1.5
-        version: 5.1.5(typescript@5.4.5)
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2

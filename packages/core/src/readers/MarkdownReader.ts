@@ -88,7 +88,7 @@ export class MarkdownReader implements FileReader {
   }
 
   async loadData(file: string): Promise<Document[]> {
-    const content = await fs.readFile(file);
+    const content = await fs.readFile(file, "utf-8");
     const tups = this.parseTups(content);
     const results: Document[] = [];
     let counter = 0;

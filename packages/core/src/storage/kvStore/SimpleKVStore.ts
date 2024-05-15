@@ -62,7 +62,7 @@ export class SimpleKVStore extends BaseKVStore {
   async persist(persistPath: string): Promise<void> {
     // TODO: decide on a way to polyfill path
     const dirPath = path.dirname(persistPath);
-    if (!(await exists(fs, dirPath))) {
+    if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath);
     }
     await fs.writeFile(persistPath, JSON.stringify(this.data));
@@ -70,7 +70,7 @@ export class SimpleKVStore extends BaseKVStore {
 
   static async fromPersistPath(persistPath: string): Promise<SimpleKVStore> {
     const dirPath = path.dirname(persistPath);
-    if (!(await exists(fs, dirPath))) {
+    if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath);
     }
 

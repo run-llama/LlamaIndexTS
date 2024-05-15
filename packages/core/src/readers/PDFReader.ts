@@ -7,7 +7,7 @@ import type { BaseReader } from "./type.js";
  */
 export class PDFReader implements BaseReader {
   async loadData(file: string): Promise<Document[]> {
-    const content = await fs.readRawFile(file);
+    const content = await fs.readFile(file);
     const pages = await readPDF(content);
     return pages.map((text, page) => {
       const id_ = `${file}_${page + 1}`;

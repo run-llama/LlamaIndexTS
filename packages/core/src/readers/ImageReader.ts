@@ -15,7 +15,7 @@ export class ImageReader implements FileReader {
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one ImageDocument of the specified file.
    */
   async loadData(file: string): Promise<Document[]> {
-    const dataBuffer = await fs.readRawFile(file);
+    const dataBuffer = await fs.readFile(file);
     const blob = new Blob([dataBuffer]);
     return [new ImageDocument({ image: blob, id_: file })];
   }

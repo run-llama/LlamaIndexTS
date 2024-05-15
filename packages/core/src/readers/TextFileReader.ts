@@ -8,7 +8,7 @@ import type { BaseReader } from "./type.js";
 
 export class TextFileReader implements BaseReader {
   async loadData(file: string): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file);
+    const dataBuffer = await fs.readFile(file, "utf-8");
     return [new Document({ text: dataBuffer, id_: file })];
   }
 }

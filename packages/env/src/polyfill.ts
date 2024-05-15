@@ -1,19 +1,21 @@
 /**
- * Polyfill implementation some node.js APIs.
+ * Polyfill implementation for `@llamaindex/env`.
  *
  * The code should be compatible with any JS runtime.
+ *
+ * Sometimes you should overwrite the polyfill with a native implementation.
  *
  * @module
  */
 import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
-import { InMemoryFileSystem, type CompleteFileSystem } from "./type.js";
 // @ts-expect-error
 import { promises } from "readable-stream";
+import { fs } from "./fs/memory.js";
 
 const { pipeline } = promises;
 
-export { pathe as path, pipeline };
+export { fs, pathe as path, pipeline };
 
 export interface SHA256 {
   update(data: string | Uint8Array): void;
@@ -22,8 +24,6 @@ export interface SHA256 {
 }
 
 export const EOL = "\n";
-
-export const fs: CompleteFileSystem = new InMemoryFileSystem();
 
 export function ok(value: unknown, message?: string): asserts value {
   if (!value) {
@@ -49,7 +49,6 @@ export function createSHA256(): SHA256 {
 export function randomUUID(): string {
   return crypto.randomUUID();
 }
-export * from "./type.js";
 
 // @ts-expect-error
 const ReadableStream = globalThis.ReadableStream;
