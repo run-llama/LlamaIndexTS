@@ -10,8 +10,8 @@ async function main() {
   const docs = await reader.loadData({
     directoryPath: "../data/parallel", // brk-2022.pdf split into 6 parts
     numWorkers: 2,
-    // set LlamaParse as the default reader. Set apiKey here or in environment variable LLAMA_CLOUD_API_KEY
-    defaultReader: new LlamaParseReader({
+    // set LlamaParse as the default reader for all file types. Set apiKey here or in environment variable LLAMA_CLOUD_API_KEY
+    overrideReader: new LlamaParseReader({
       language: "en",
       resultType: "markdown",
       parsingInstruction:
@@ -25,7 +25,7 @@ async function main() {
   const queryEngine = index.asQueryEngine();
   const response = await queryEngine.query({
     query:
-      "What is the general strategy for shareholder safety outlined in the report? Use an example with numbers",
+      "What is the general strategy for shareholder safety outlined in the report? Use a concrete example with numbers",
   });
 
   // Output response
