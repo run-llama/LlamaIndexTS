@@ -87,6 +87,10 @@ export class LlamaParseReader implements FileReader {
     const data = await fs.readFile(file);
     const mimeType = await this.getMimeType(data);
 
+    if (this.verbose) {
+      console.log(`Starting load for file: ${file}`);
+    }
+
     const body = new FormData();
     body.set("file", new Blob([data], { type: mimeType }), file);
     body.append("language", this.language);
