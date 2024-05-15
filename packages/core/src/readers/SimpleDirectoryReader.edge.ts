@@ -2,6 +2,7 @@ import { path } from "@llamaindex/env";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { LlamaParseReader } from "./LlamaParseReader.js";
+import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader } from "./type.js";
 
 type ReaderCallback = (
@@ -19,7 +20,7 @@ enum ReaderStatus {
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
   fs?: CompleteFileSystem;
-  defaultReader?: BaseReader;
+  defaultReader?: BaseReader | null;
   fileExtToReader?: Record<string, BaseReader>;
   numWorkers?: number;
 };
@@ -46,7 +47,7 @@ export class SimpleDirectoryReader implements BaseReader {
     const {
       directoryPath,
       fs = defaultFS,
-      defaultReader,
+      defaultReader = new TextFileReader(),
       fileExtToReader,
       numWorkers = 1,
     } = params;
@@ -85,7 +86,7 @@ export class SimpleDirectoryReader implements BaseReader {
   private async processFiles(
     filePathQueue: string[],
     fs: CompleteFileSystem,
-    defaultReader: BaseReader | undefined,
+    defaultReader: BaseReader | null,
     fileExtToReader?: Record<string, BaseReader>,
   ): Promise<Document[]> {
     const docs: Document[] = [];
@@ -104,10 +105,10 @@ export class SimpleDirectoryReader implements BaseReader {
 
         let reader: BaseReader;
 
-        if (defaultReader) {
-          reader = defaultReader;
-        } else if (fileExtToReader && fileExt in fileExtToReader) {
+        if (fileExtToReader && fileExt in fileExtToReader) {
           reader = fileExtToReader[fileExt];
+        } else if (defaultReader != null) {
+          reader = defaultReader;
         } else {
           const msg = `No reader for file extension of ${filePath}`;
           console.warn(msg);
