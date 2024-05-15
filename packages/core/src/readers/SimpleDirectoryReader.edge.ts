@@ -1,7 +1,6 @@
 import { fs, path } from "@llamaindex/env";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
-import { LlamaParseReader } from "./LlamaParseReader.js";
 import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader } from "./type.js";
 
@@ -22,7 +21,13 @@ export type SimpleDirectoryReaderLoadDataParams = {
   defaultReader?: BaseReader | null;
   fileExtToReader?: Record<string, BaseReader>;
   numWorkers?: number;
+  overrideReader?: BaseReader;
 };
+
+type ProcessFilesParams = Omit<
+  SimpleDirectoryReaderLoadDataParams,
+  "directoryPath"
+>;
 
 /**
  * Read all the documents in a directory.
@@ -48,11 +53,12 @@ export class SimpleDirectoryReader implements BaseReader {
       defaultReader = new TextFileReader(),
       fileExtToReader,
       numWorkers = 1,
+      overrideReader,
     } = params;
 
     // Check if LlamaParseReader is used as the defaultReader and if so checks if numWorkers is in the valid range
-    if (defaultReader instanceof LlamaParseReader && numWorkers > 9) {
-      throw new Error("Currently, LlamaParse supports a maximum of 9 workers.");
+    if (numWorkers < 1 || numWorkers > 9) {
+      throw new Error("The number of workers must be between 1 - 9.");
     }
 
     // Observer can decide to skip the directory
@@ -68,8 +74,15 @@ export class SimpleDirectoryReader implements BaseReader {
       filePathQueue.push(filePath);
     }
 
+    const processFilesParams: ProcessFilesParams = {
+      fs,
+      defaultReader,
+      fileExtToReader,
+      overrideReader,
+    };
+
     const workerPromises = Array.from({ length: numWorkers }, () =>
-      this.processFiles(filePathQueue, fs, defaultReader, fileExtToReader),
+      this.processFiles(filePathQueue, processFilesParams),
     );
 
     const results: Document[][] = await Promise.all(workerPromises);
@@ -83,9 +96,7 @@ export class SimpleDirectoryReader implements BaseReader {
 
   private async processFiles(
     filePathQueue: string[],
-    fs: CompleteFileSystem,
-    defaultReader: BaseReader | null,
-    fileExtToReader?: Record<string, BaseReader>,
+    params: ProcessFilesParams,
   ): Promise<Document[]> {
     const docs: Document[] = [];
 
@@ -103,10 +114,15 @@ export class SimpleDirectoryReader implements BaseReader {
 
         let reader: BaseReader;
 
-        if (fileExtToReader && fileExt in fileExtToReader) {
-          reader = fileExtToReader[fileExt];
-        } else if (defaultReader != null) {
-          reader = defaultReader;
+        if (params.overrideReader) {
+          reader = params.overrideReader;
+        } else if (
+          params.fileExtToReader &&
+          fileExt in params.fileExtToReader
+        ) {
+          reader = params.fileExtToReader[fileExt];
+        } else if (params.defaultReader != null) {
+          reader = params.defaultReader;
         } else {
           const msg = `No reader for file extension of ${filePath}`;
           console.warn(msg);
@@ -121,7 +137,7 @@ export class SimpleDirectoryReader implements BaseReader {
           continue;
         }
 
-        const fileDocs = await reader.loadData(filePath, fs);
+        const fileDocs = await reader.loadData(filePath, params.fs);
         fileDocs.forEach(addMetaData(filePath));
 
         // Observer can still cancel addition of the resulting docs from this file
