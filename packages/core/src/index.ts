@@ -10,3 +10,6 @@ export {
   HuggingFaceEmbedding,
   HuggingFaceEmbeddingModelType,
 } from "./embeddings/HuggingFaceEmbedding.js";
+
+export { type VertexGeminiSessionOptions } from "./llm/gemini/types.js";
+export { GeminiVertexSession } from "./llm/gemini/vertex.js";
