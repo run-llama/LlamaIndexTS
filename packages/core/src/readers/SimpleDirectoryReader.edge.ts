@@ -1,4 +1,5 @@
 import { fs, path } from "@llamaindex/env";
+import pLimit from "p-limit";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
@@ -56,7 +57,6 @@ export class SimpleDirectoryReader implements BaseReader {
       overrideReader,
     } = params;
 
-    // Check if LlamaParseReader is used as the defaultReader and if so checks if numWorkers is in the valid range
     if (numWorkers < 1 || numWorkers > 9) {
       throw new Error("The number of workers must be between 1 - 9.");
     }
@@ -81,8 +81,16 @@ export class SimpleDirectoryReader implements BaseReader {
       overrideReader,
     };
 
-    const workerPromises = Array.from({ length: numWorkers }, () =>
-      this.processFiles(filePathQueue, processFilesParams),
+    const processFilesParams: ProcessFilesParams = {
+      fs,
+      defaultReader,
+      fileExtToReader,
+      overrideReader,
+    };
+
+    const limit = pLimit(numWorkers);
+    const workerPromises = filePathQueue.map((filePath) =>
+      limit(() => this.processFiles(filePath, processFilesParams)),
     );
 
     const results: Document[][] = await Promise.all(workerPromises);
@@ -95,63 +103,54 @@ export class SimpleDirectoryReader implements BaseReader {
   }
 
   private async processFiles(
-    filePathQueue: string[],
+    filePath: string,
     params: ProcessFilesParams,
   ): Promise<Document[]> {
     const docs: Document[] = [];
 
-    while (filePathQueue.length > 0) {
-      const filePath = filePathQueue.shift()!;
+    try {
+      const fileExt = path.extname(filePath).slice(1).toLowerCase();
 
-      try {
-        const fileExt = path.extname(filePath).slice(1).toLowerCase();
+      // Observer can decide to skip each file
+      if (!this.doObserverCheck("file", filePath, ReaderStatus.STARTED)) {
+        // Skip this file
+        return [];
+      }
 
-        // Observer can decide to skip each file
-        if (!this.doObserverCheck("file", filePath, ReaderStatus.STARTED)) {
-          // Skip this file
-          continue;
-        }
+      let reader: BaseReader;
 
-        let reader: BaseReader;
-
-        if (params.overrideReader) {
-          reader = params.overrideReader;
-        } else if (
-          params.fileExtToReader &&
-          fileExt in params.fileExtToReader
-        ) {
-          reader = params.fileExtToReader[fileExt];
-        } else if (params.defaultReader != null) {
-          reader = params.defaultReader;
-        } else {
-          const msg = `No reader for file extension of ${filePath}`;
-          console.warn(msg);
-
-          // In an error condition, observer's false cancels the whole process.
-          if (
-            !this.doObserverCheck("file", filePath, ReaderStatus.ERROR, msg)
-          ) {
-            return [];
-          }
-
-          continue;
-        }
-
-        const fileDocs = await reader.loadData(filePath, params.fs);
-        fileDocs.forEach(addMetaData(filePath));
-
-        // Observer can still cancel addition of the resulting docs from this file
-        if (this.doObserverCheck("file", filePath, ReaderStatus.COMPLETE)) {
-          docs.push(...fileDocs);
-        }
-      } catch (e) {
-        const msg = `Error reading file ${filePath}: ${e}`;
-        console.error(msg);
+      if (params.overrideReader) {
+        reader = params.overrideReader;
+      } else if (params.fileExtToReader && fileExt in params.fileExtToReader) {
+        reader = params.fileExtToReader[fileExt];
+      } else if (params.defaultReader != null) {
+        reader = params.defaultReader;
+      } else {
+        const msg = `No reader for file extension of ${filePath}`;
+        console.warn(msg);
 
         // In an error condition, observer's false cancels the whole process.
         if (!this.doObserverCheck("file", filePath, ReaderStatus.ERROR, msg)) {
           return [];
         }
+
+        return [];
+      }
+
+      const fileDocs = await reader.loadData(filePath, params.fs);
+      fileDocs.forEach(addMetaData(filePath));
+
+      // Observer can still cancel addition of the resulting docs from this file
+      if (this.doObserverCheck("file", filePath, ReaderStatus.COMPLETE)) {
+        docs.push(...fileDocs);
+      }
+    } catch (e) {
+      const msg = `Error reading file ${filePath}: ${e}`;
+      console.error(msg);
+
+      // In an error condition, observer's false cancels the whole process.
+      if (!this.doObserverCheck("file", filePath, ReaderStatus.ERROR, msg)) {
+        return [];
       }
     }
 

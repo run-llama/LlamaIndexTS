@@ -419,8 +419,11 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
       openai:
-        specifier: ^4.46.0
-        version: 4.47.1(encoding@0.1.13)
+        specifier: ^4.43.0
+        version: 4.43.0(encoding@0.1.13)
+      p-limit:
+        specifier: ^5.0.0
+        version: 5.0.0
       papaparse:
         specifier: ^5.4.1
         version: 5.4.1
