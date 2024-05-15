@@ -7,7 +7,6 @@ import {
   getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
 } from "../../embeddings/utils.js";
-import type { BaseEmbedding } from "../../index.edge.js";
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
@@ -18,6 +17,7 @@ import {
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
+import { BaseEmbedding } from '../../embeddings/index.js';
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
