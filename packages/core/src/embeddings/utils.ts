@@ -3,7 +3,7 @@ import _ from "lodash";
 import { filetypemime } from "magic-bytes.js";
 import type { ImageType } from "../Node.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants.js";
-import { VectorStoreQueryMode } from "../storage/vectorStore/types.js";
+import type { VectorStoreQueryMode } from "../storage/vectorStore/types.js";
 
 /**
  * Similarity type
@@ -126,11 +126,9 @@ export function getTopKEmbeddingsLearner(
   embeddings: number[][],
   similarityTopK?: number,
   embeddingsIds?: any[],
-  queryMode: VectorStoreQueryMode = VectorStoreQueryMode.SVM,
+  queryMode?: VectorStoreQueryMode,
 ): [number[], any[]] {
   throw new Error("Not implemented yet");
-  // To support SVM properly we're probably going to have to use something like
-  // https://github.com/mljs/libsvm which itself hasn't been updated in a while
 }
 
 // eslint-disable-next-line max-params

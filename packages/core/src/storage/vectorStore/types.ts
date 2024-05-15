@@ -1,5 +1,5 @@
 import type { BaseNode, ModalityType } from "../../Node.js";
-import { BaseEmbedding } from "../../embeddings/types.js";
+import type { BaseEmbedding } from "../../embeddings/types.js";
 import { getEmbeddedModel } from "../../internal/settings/EmbedModel.js";
 
 export interface VectorStoreQueryResult {
