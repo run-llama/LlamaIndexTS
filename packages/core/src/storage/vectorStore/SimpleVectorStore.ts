@@ -1,6 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS, path } from "@llamaindex/env";
-import _ from "lodash";
+import { fs, path } from "@llamaindex/env";
 import type { BaseNode } from "../../Node.js";
 import {
   getTopKEmbeddings,
@@ -32,20 +30,17 @@ class SimpleVectorStoreData {
 export class SimpleVectorStore implements VectorStore {
   storesText: boolean = false;
   private data: SimpleVectorStoreData = new SimpleVectorStoreData();
-  private fs: GenericFileSystem = defaultFS;
   private persistPath: string | undefined;
 
-  constructor(data?: SimpleVectorStoreData, fs?: GenericFileSystem) {
+  constructor(data?: SimpleVectorStoreData) {
     this.data = data || new SimpleVectorStoreData();
-    this.fs = fs || defaultFS;
   }
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleVectorStore> {
-    const persistPath = `${persistDir}/vector_store.json`;
-    return await SimpleVectorStore.fromPersistPath(persistPath, fs);
+    const persistPath = path.join(persistDir, "vector_store.json");
+    return await SimpleVectorStore.fromPersistPath(persistPath);
   }
 
   get client(): any {
@@ -68,7 +63,7 @@ export class SimpleVectorStore implements VectorStore {
     }
 
     if (this.persistPath) {
-      await this.persist(this.persistPath, this.fs);
+      await this.persist(this.persistPath);
     }
 
     return embeddingResults.map((result) => result.id_);
@@ -83,13 +78,13 @@ export class SimpleVectorStore implements VectorStore {
       delete this.data.textIdToRefDocId[textId];
     }
     if (this.persistPath) {
-      await this.persist(this.persistPath, this.fs);
+      await this.persist(this.persistPath);
     }
     return Promise.resolve();
   }
 
   async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
-    if (!_.isNil(query.filters)) {
+    if (!(query.filters == null)) {
       throw new Error(
         "Metadata filters not implemented for SimpleVectorStore yet.",
       );
@@ -147,10 +142,8 @@ export class SimpleVectorStore implements VectorStore {
   }
 
   async persist(
-    persistPath: string = `${DEFAULT_PERSIST_DIR}/vector_store.json`,
-    fs?: GenericFileSystem,
+    persistPath: string = path.join(DEFAULT_PERSIST_DIR, "vector_store.json"),
   ): Promise<void> {
-    fs = fs || this.fs;
     const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
@@ -161,7 +154,6 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistPath(
     persistPath: string,
-    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleVectorStore> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
@@ -183,7 +175,6 @@ export class SimpleVectorStore implements VectorStore {
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
     const store = new SimpleVectorStore(data);
     store.persistPath = persistPath;
-    store.fs = fs;
     return store;
   }
 

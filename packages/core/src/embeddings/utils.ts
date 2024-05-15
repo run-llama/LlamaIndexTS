@@ -1,4 +1,4 @@
-import { defaultFS } from "@llamaindex/env";
+import { fs } from "@llamaindex/env";
 import _ from "lodash";
 import { filetypemime } from "magic-bytes.js";
 import type { ImageType } from "../Node.js";
@@ -243,7 +243,7 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
     _.isString(input)
   ) {
     // string or file URL
-    const dataBuffer = await defaultFS.readFile(
+    const dataBuffer = await fs.readFile(
       input instanceof URL ? input.pathname : input,
     );
     input = new Blob([dataBuffer]);

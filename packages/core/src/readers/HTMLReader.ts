@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS } from "@llamaindex/env";
+import { fs } from "@llamaindex/env";
 import { Document } from "../Node.js";
 import type { FileReader } from "./type.js";
 
@@ -15,13 +14,9 @@ export class HTMLReader implements FileReader {
    * Public method for this reader.
    * Required by BaseReader interface.
    * @param file Path/name of the file to be loaded.
-   * @param fs fs wrapper interface for getting the file content.
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
    */
-  async loadData(
-    file: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<Document[]> {
+  async loadData(file: string): Promise<Document[]> {
     const dataBuffer = await fs.readFile(file);
     const htmlOptions = this.getOptions();
     const content = await this.parseContent(dataBuffer, htmlOptions);

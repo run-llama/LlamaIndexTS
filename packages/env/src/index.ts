@@ -13,7 +13,7 @@
  */
 import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
-import fs from "node:fs/promises";
+import nodeFS from "node:fs/promises";
 import { EOL } from "node:os";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
@@ -37,20 +37,20 @@ export function createSHA256(): SHA256 {
   };
 }
 
-export const defaultFS: CompleteFileSystem = {
+export const fs: CompleteFileSystem = {
   writeFile: function (path: string, content: string) {
-    return fs.writeFile(path, content, "utf-8");
+    return nodeFS.writeFile(path, content, "utf-8");
   },
   readRawFile(path: string): Promise<Buffer> {
-    return fs.readFile(path);
+    return nodeFS.readFile(path);
   },
   readFile: function (path: string) {
-    return fs.readFile(path, "utf-8");
+    return nodeFS.readFile(path, "utf-8");
   },
-  access: fs.access,
-  mkdir: fs.mkdir,
-  readdir: fs.readdir,
-  stat: fs.stat,
+  access: nodeFS.access,
+  mkdir: nodeFS.mkdir,
+  readdir: nodeFS.readdir,
+  stat: nodeFS.stat,
 };
 
 export type * from "./type.js";

@@ -23,7 +23,7 @@ export interface SHA256 {
 
 export const EOL = "\n";
 
-export const defaultFS: CompleteFileSystem = new InMemoryFileSystem();
+export const fs: CompleteFileSystem = new InMemoryFileSystem();
 
 export function ok(value: unknown, message?: string): asserts value {
   if (!value) {

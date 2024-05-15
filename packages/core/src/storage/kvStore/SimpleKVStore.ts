@@ -1,6 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS, path } from "@llamaindex/env";
-import _ from "lodash";
+import { fs, path } from "@llamaindex/env";
 import { exists } from "../FileSystem.js";
 import { DEFAULT_COLLECTION } from "../constants.js";
 import { BaseKVStore } from "./types.js";
@@ -9,7 +7,6 @@ export type DataType = Record<string, Record<string, any>>;
 
 export class SimpleKVStore extends BaseKVStore {
   private persistPath: string | undefined;
-  private fs: GenericFileSystem | undefined;
 
   constructor(private data: DataType = {}) {
     super();
@@ -23,10 +20,10 @@ export class SimpleKVStore extends BaseKVStore {
     if (!(collection in this.data)) {
       this.data[collection] = {};
     }
-    this.data[collection][key] = _.clone(val); // Creating a shallow copy of the object
+    this.data[collection][key] = structuredClone(val); // Creating a shallow copy of the object
 
     if (this.persistPath) {
-      await this.persist(this.persistPath, this.fs);
+      await this.persist(this.persistPath);
     }
   }
 
@@ -35,17 +32,17 @@ export class SimpleKVStore extends BaseKVStore {
     collection: string = DEFAULT_COLLECTION,
   ): Promise<any> {
     const collectionData = this.data[collection];
-    if (_.isNil(collectionData)) {
+    if (collectionData == null) {
       return null;
     }
     if (!(key in collectionData)) {
       return null;
     }
-    return _.clone(collectionData[key]); // Creating a shallow copy of the object
+    return structuredClone(collectionData[key]); // Creating a shallow copy of the object
   }
 
   async getAll(collection: string = DEFAULT_COLLECTION): Promise<DataType> {
-    return _.clone(this.data[collection]); // Creating a shallow copy of the object
+    return structuredClone(this.data[collection]); // Creating a shallow copy of the object
   }
 
   async delete(
@@ -55,17 +52,14 @@ export class SimpleKVStore extends BaseKVStore {
     if (key in this.data[collection]) {
       delete this.data[collection][key];
       if (this.persistPath) {
-        await this.persist(this.persistPath, this.fs);
+        await this.persist(this.persistPath);
       }
       return true;
     }
     return false;
   }
 
-  async persist(
-    persistPath: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<void> {
+  async persist(persistPath: string): Promise<void> {
     // TODO: decide on a way to polyfill path
     const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
@@ -74,10 +68,7 @@ export class SimpleKVStore extends BaseKVStore {
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath(
-    persistPath: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<SimpleKVStore> {
+  static async fromPersistPath(persistPath: string): Promise<SimpleKVStore> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(fs, dirPath))) {
       await fs.mkdir(dirPath);
@@ -95,7 +86,6 @@ export class SimpleKVStore extends BaseKVStore {
 
     const store = new SimpleKVStore(data);
     store.persistPath = persistPath;
-    store.fs = fs;
     return store;
   }
 
