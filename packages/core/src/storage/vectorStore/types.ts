@@ -1,6 +1,6 @@
 import type { BaseNode, ModalityType } from "../../Node.js";
-import { Settings } from "../../Settings.js";
 import { BaseEmbedding } from "../../embeddings/types.js";
+import { getEmbeddedModel } from "../../internal/settings/EmbedModel.js";
 
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];
@@ -86,6 +86,6 @@ export abstract class VectorStoreBase implements IEmbedModel {
   embedModel: BaseEmbedding;
 
   protected constructor(embedModel?: BaseEmbedding) {
-    this.embedModel = embedModel ?? Settings.embedModel;
+    this.embedModel = embedModel ?? getEmbeddedModel();
   }
 }

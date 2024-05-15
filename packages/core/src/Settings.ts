@@ -1,5 +1,4 @@
 import { CallbackManager } from "./callbacks/CallbackManager.js";
-import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
 import { OpenAI } from "./llm/openai.js";
 
 import { PromptHelper } from "./PromptHelper.js";
@@ -13,6 +12,11 @@ import {
   setCallbackManager,
   withCallbackManager,
 } from "./internal/settings/CallbackManager.js";
+import {
+  getEmbeddedModel,
+  setEmbeddedModel,
+  withEmbeddedModel,
+} from "./internal/settings/EmbedModel.js";
 import type { LLM } from "./llm/types.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
@@ -39,14 +43,12 @@ class GlobalSettings implements Config {
   #prompt: PromptConfig = {};
   #llm: LLM | null = null;
   #promptHelper: PromptHelper | null = null;
-  #embedModel: BaseEmbedding | null = null;
   #nodeParser: NodeParser | null = null;
   #chunkSize?: number;
   #chunkOverlap?: number;
 
   #llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
   #promptHelperAsyncLocalStorage = new AsyncLocalStorage<PromptHelper>();
-  #embedModelAsyncLocalStorage = new AsyncLocalStorage<BaseEmbedding>();
   #nodeParserAsyncLocalStorage = new AsyncLocalStorage<NodeParser>();
   #chunkSizeAsyncLocalStorage = new AsyncLocalStorage<number>();
   #chunkOverlapAsyncLocalStorage = new AsyncLocalStorage<number>();
@@ -97,19 +99,15 @@ class GlobalSettings implements Config {
   }
 
   get embedModel(): BaseEmbedding {
-    if (this.#embedModel === null) {
-      this.#embedModel = new OpenAIEmbedding();
-    }
-
-    return this.#embedModelAsyncLocalStorage.getStore() ?? this.#embedModel;
+    return getEmbeddedModel();
   }
 
   set embedModel(embedModel: BaseEmbedding) {
-    this.#embedModel = embedModel;
+    setEmbeddedModel(embedModel);
   }
 
   withEmbedModel<Result>(embedModel: BaseEmbedding, fn: () => Result): Result {
-    return this.#embedModelAsyncLocalStorage.run(embedModel, fn);
+    return withEmbeddedModel(embedModel, fn);
   }
 
   get nodeParser(): NodeParser {
