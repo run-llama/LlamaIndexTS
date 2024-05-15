@@ -3,8 +3,7 @@
  *
  * @module
  */
-import { fs as memFS } from "memfs";
+// @ts-expect-error
+import memFS from "./memfs/index.js";
 
-const fs = memFS.promises;
-
-export { fs };
+export const fs = memFS.promises;
