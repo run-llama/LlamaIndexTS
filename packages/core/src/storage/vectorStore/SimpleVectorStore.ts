@@ -2,6 +2,7 @@ import type { GenericFileSystem } from "@llamaindex/env";
 import { defaultFS, path } from "@llamaindex/env";
 import _ from "lodash";
 import type { BaseNode } from "../../Node.js";
+import { BaseEmbedding } from "../../embeddings/index.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
@@ -17,7 +18,6 @@ import {
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
-import { BaseEmbedding } from '../../embeddings/index.js';
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
