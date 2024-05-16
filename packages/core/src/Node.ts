@@ -1,5 +1,6 @@
 import { createSHA256, path, randomUUID } from "@llamaindex/env";
 import _ from "lodash";
+import type { JSONValue } from "./types.js";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -24,7 +25,7 @@ export enum MetadataMode {
   NONE = "NONE",
 }
 
-export type Metadata = Record<string, any>;
+export type Metadata = Record<string, JSONValue>;
 
 export interface RelatedNodeInfo<T extends Metadata = Metadata> {
   nodeId: string;

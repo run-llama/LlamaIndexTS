@@ -163,7 +163,7 @@ export class PGVectorStore implements VectorStore {
 
       const id: any = row.id_.length ? row.id_ : null;
       const meta = row.metadata || {};
-      meta.create_date = new Date();
+      meta.create_date = new Date().toString();
 
       const params = [
         id,

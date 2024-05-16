@@ -16,7 +16,7 @@ export function nodeToMetadata(
   removeText: boolean = false,
   textField: string = DEFAULT_TEXT_KEY,
   flatMetadata: boolean = false,
-): Metadata {
+): Record<string, string> {
   const { metadata, embedding, ...rest } = node.toMutableJSON();
 
   if (flatMetadata) {
@@ -44,9 +44,12 @@ type MetadataDictToNodeOptions = {
 };
 
 export function metadataDictToNode(
-  metadata: Metadata,
+  metadata: Record<string, unknown> | undefined,
   options?: MetadataDictToNodeOptions,
 ): BaseNode {
+  if (!metadata) {
+    throw new Error("metadata is undefined");
+  }
   const {
     _node_content: nodeContent,
     _node_type: nodeType,
@@ -63,7 +66,7 @@ export function metadataDictToNode(
       throw new Error("Node content not found in metadata.");
     }
   } else {
-    nodeObj = JSON.parse(nodeContent);
+    nodeObj = JSON.parse(`${nodeContent}`);
     nodeObj.metadata = rest;
   }
 
