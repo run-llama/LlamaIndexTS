@@ -44,12 +44,9 @@ type MetadataDictToNodeOptions = {
 };
 
 export function metadataDictToNode(
-  metadata: Record<string, unknown> | undefined,
+  metadata: Record<string, unknown>,
   options?: MetadataDictToNodeOptions,
 ): BaseNode {
-  if (!metadata) {
-    throw new Error("metadata is undefined");
-  }
   const {
     _node_content: nodeContent,
     _node_type: nodeType,
