@@ -1,4 +1,3 @@
-import type { CompleteFileSystem } from "@llamaindex/env";
 import type { Document } from "../Node.js";
 
 /**
@@ -12,7 +11,7 @@ export interface BaseReader {
  * A reader takes file paths and imports data into Document objects.
  */
 export interface FileReader extends BaseReader {
-  loadData(filePath: string, fs?: CompleteFileSystem): Promise<Document[]>;
+  loadData(filePath: string): Promise<Document[]>;
 }
 
 // For LlamaParseReader.ts

@@ -1,4 +1,3 @@
-import type { GenericFileSystem } from "@llamaindex/env";
 const defaultCollection = "data";
 
 type StoredValue = Record<string, any> | null;
@@ -15,7 +14,7 @@ export abstract class BaseKVStore {
 }
 
 export abstract class BaseInMemoryKVStore extends BaseKVStore {
-  abstract persist(persistPath: string, fs?: GenericFileSystem): void;
+  abstract persist(persistPath: string): void;
   static fromPersistPath(persistPath: string): BaseInMemoryKVStore {
     throw new Error("Method not implemented.");
   }

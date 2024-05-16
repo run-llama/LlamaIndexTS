@@ -51,6 +51,9 @@
       "path": "./packages/env/tsconfig.json"
     },
     {
+      "path": "./packages/env/tests/tsconfig.json"
+    },
+    {
       "path": "./examples"
     },
     {

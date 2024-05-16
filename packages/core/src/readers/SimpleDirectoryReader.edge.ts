@@ -1,5 +1,4 @@
-import type { CompleteFileSystem } from "@llamaindex/env";
-import { defaultFS, path } from "@llamaindex/env";
+import { fs, path } from "@llamaindex/env";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
@@ -19,7 +18,6 @@ enum ReaderStatus {
 
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
-  fs?: CompleteFileSystem;
   defaultReader?: BaseReader | null;
   fileExtToReader?: Record<string, BaseReader>;
 };
@@ -45,7 +43,6 @@ export class SimpleDirectoryReader implements BaseReader {
 
     const {
       directoryPath,
-      fs = defaultFS,
       defaultReader = new TextFileReader(),
       fileExtToReader,
     } = params;
@@ -58,7 +55,7 @@ export class SimpleDirectoryReader implements BaseReader {
     }
 
     const docs: Document[] = [];
-    for await (const filePath of walk(fs, directoryPath)) {
+    for await (const filePath of walk(directoryPath)) {
       try {
         const fileExt = path.extname(filePath).slice(1).toLowerCase();
 

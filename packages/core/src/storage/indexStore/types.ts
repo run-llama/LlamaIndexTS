@@ -1,4 +1,3 @@
-import type { GenericFileSystem } from "@llamaindex/env";
 import type { IndexStruct } from "../../indices/IndexStruct.js";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
@@ -16,10 +15,7 @@ export abstract class BaseIndexStore {
 
   abstract getIndexStruct(structId?: string): Promise<IndexStruct | undefined>;
 
-  async persist(
-    persistPath: string = defaultPersistPath,
-    fs?: GenericFileSystem,
-  ): Promise<void> {
+  async persist(persistPath: string = defaultPersistPath): Promise<void> {
     // Persist the index store to disk.
   }
 }

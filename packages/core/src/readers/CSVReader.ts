@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS } from "@llamaindex/env";
+import { fs } from "@llamaindex/env";
 import type { ParseConfig } from "papaparse";
 import Papa from "papaparse";
 import { Document } from "../Node.js";
@@ -40,11 +39,8 @@ export class PapaCSVReader implements FileReader {
    * @param {GenericFileSystem} [fs=DEFAULT_FS] - The file system to use for reading the file.
    * @returns {Promise<Document[]>}
    */
-  async loadData(
-    file: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<Document[]> {
-    const fileContent = await fs.readFile(file);
+  async loadData(file: string): Promise<Document[]> {
+    const fileContent = await fs.readFile(file, "utf-8");
     const result = Papa.parse(fileContent, this.papaConfig);
     const textList = result.data.map((row: any) => {
       // Compatible with header row mode
