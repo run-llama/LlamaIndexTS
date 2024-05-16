@@ -1,5 +1,5 @@
 import { createSHA256, path, randomUUID } from "@llamaindex/env";
-import _ from "lodash";
+import { chunkSizeCheck, lazyInitHash } from "./internal/decorator/node.js";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -37,6 +37,16 @@ export type RelatedNodeType<T extends Metadata = Metadata> =
   | RelatedNodeInfo<T>
   | RelatedNodeInfo<T>[];
 
+export type BaseNodeParams<T extends Metadata = Metadata> = {
+  id_?: string;
+  metadata?: T;
+  excludedEmbedMetadataKeys?: string[];
+  excludedLlmMetadataKeys?: string[];
+  relationships?: Partial<Record<NodeRelationship, RelatedNodeType<T>>>;
+  hash?: string;
+  embedding?: number[];
+};
+
 /**
  * Generic abstract class for retrievable nodes
  */
@@ -47,21 +57,37 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    *
    * Set to a UUID by default.
    */
-  id_: string = randomUUID();
+  id_: string;
   embedding?: number[];
 
   // Metadata fields
-  metadata: T = {} as T;
-  excludedEmbedMetadataKeys: string[] = [];
-  excludedLlmMetadataKeys: string[] = [];
-  relationships: Partial<Record<NodeRelationship, RelatedNodeType<T>>> = {};
-  hash: string = "";
+  metadata: T;
+  excludedEmbedMetadataKeys: string[];
+  excludedLlmMetadataKeys: string[];
+  relationships: Partial<Record<NodeRelationship, RelatedNodeType<T>>>;
 
-  constructor(init?: Partial<BaseNode<T>>) {
-    Object.assign(this, init);
+  @lazyInitHash
+  accessor hash: string = "";
+
+  protected constructor(init?: BaseNodeParams<T>) {
+    const {
+      id_,
+      metadata,
+      excludedEmbedMetadataKeys,
+      excludedLlmMetadataKeys,
+      relationships,
+      hash,
+      embedding,
+    } = init || {};
+    this.id_ = id_ ?? randomUUID();
+    this.metadata = metadata ?? ({} as T);
+    this.excludedEmbedMetadataKeys = excludedEmbedMetadataKeys ?? [];
+    this.excludedLlmMetadataKeys = excludedLlmMetadataKeys ?? [];
+    this.relationships = relationships ?? {};
+    this.embedding = embedding;
   }
 
-  abstract getType(): ObjectType;
+  abstract get type(): ObjectType;
 
   abstract getContent(metadataMode: MetadataMode): string;
   abstract getMetadataStr(metadataMode: MetadataMode): string;
@@ -146,7 +172,12 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * @see toMutableJSON - use to return a mutable JSON instead
    */
   toJSON(): Record<string, any> {
-    return { ...this, type: this.getType() };
+    return {
+      ...this,
+      type: this.type,
+      // hash is an accessor property, so it's not included in the rest operator
+      hash: this.hash,
+    };
   }
 
   clone(): BaseNode {
@@ -159,32 +190,43 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * @return {Record<string, any>} - The JSON representation of the object.
    */
   toMutableJSON(): Record<string, any> {
-    return _.cloneDeep(this.toJSON());
+    return structuredClone(this.toJSON());
   }
 }
+
+export type TextNodeParams<T extends Metadata = Metadata> =
+  BaseNodeParams<T> & {
+    text?: string;
+    textTemplate?: string;
+    startCharIdx?: number;
+    endCharIdx?: number;
+    metadataSeparator?: string;
+  };
 
 /**
  * TextNode is the default node type for text. Most common node type in LlamaIndex.TS
  */
 export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
-  text: string = "";
-  textTemplate: string = "";
+  text: string;
+  textTemplate: string;
 
   startCharIdx?: number;
   endCharIdx?: number;
   // textTemplate: NOTE write your own formatter if needed
   // metadataTemplate: NOTE write your own formatter if needed
-  metadataSeparator: string = "\n";
+  metadataSeparator: string;
 
-  constructor(init?: Partial<TextNode<T>>) {
+  constructor(init: TextNodeParams<T> = {}) {
     super(init);
-    Object.assign(this, init);
-
-    if (new.target === TextNode) {
-      // Don't generate the hash repeatedly so only do it if this is
-      // constructing the derived class
-      this.hash = init?.hash ?? this.generateHash();
+    const { text, textTemplate, startCharIdx, endCharIdx, metadataSeparator } =
+      init;
+    this.text = text ?? "";
+    this.textTemplate = textTemplate ?? "";
+    if (startCharIdx) {
+      this.startCharIdx = startCharIdx;
     }
+    this.endCharIdx = endCharIdx;
+    this.metadataSeparator = metadataSeparator ?? "\n";
   }
 
   /**
@@ -194,7 +236,7 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
    */
   generateHash() {
     const hashFunction = createSHA256();
-    hashFunction.update(`type=${this.getType()}`);
+    hashFunction.update(`type=${this.type}`);
     hashFunction.update(
       `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
     );
@@ -202,10 +244,11 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
     return hashFunction.digest();
   }
 
-  getType(): ObjectType {
+  get type() {
     return ObjectType.TEXT;
   }
 
+  @chunkSizeCheck
   getContent(metadataMode: MetadataMode = MetadataMode.NONE): string {
     const metadataStr = this.getMetadataStr(metadataMode).trim();
     return `${metadataStr}\n\n${this.text}`.trim();
@@ -246,19 +289,21 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
   }
 }
 
+export type IndexNodeParams<T extends Metadata = Metadata> =
+  TextNodeParams<T> & {
+    indexId: string;
+  };
+
 export class IndexNode<T extends Metadata = Metadata> extends TextNode<T> {
-  indexId: string = "";
+  indexId: string;
 
-  constructor(init?: Partial<IndexNode<T>>) {
+  constructor(init?: IndexNodeParams<T>) {
     super(init);
-    Object.assign(this, init);
-
-    if (new.target === IndexNode) {
-      this.hash = init?.hash ?? this.generateHash();
-    }
+    const { indexId } = init || {};
+    this.indexId = indexId ?? "";
   }
 
-  getType(): ObjectType {
+  get type() {
     return ObjectType.INDEX;
   }
 }
@@ -267,16 +312,11 @@ export class IndexNode<T extends Metadata = Metadata> extends TextNode<T> {
  * A document is just a special text node with a docId.
  */
 export class Document<T extends Metadata = Metadata> extends TextNode<T> {
-  constructor(init?: Partial<Document<T>>) {
+  constructor(init?: TextNodeParams<T>) {
     super(init);
-    Object.assign(this, init);
-
-    if (new.target === Document) {
-      this.hash = init?.hash ?? this.generateHash();
-    }
   }
 
-  getType() {
+  get type() {
     return ObjectType.DOCUMENT;
   }
 }
@@ -303,21 +343,21 @@ export function jsonToNode(json: any, type?: ObjectType) {
 
 export type ImageType = string | Blob | URL;
 
-export type ImageNodeConstructorProps<T extends Metadata> = Pick<
-  ImageNode<T>,
-  "image" | "id_"
-> &
-  Partial<ImageNode<T>>;
+export type ImageNodeParams<T extends Metadata = Metadata> =
+  TextNodeParams<T> & {
+    image: ImageType;
+  };
 
 export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
   image: ImageType; // image as blob
 
-  constructor(init: ImageNodeConstructorProps<T>) {
+  constructor(init: ImageNodeParams<T>) {
     super(init);
-    this.image = init.image;
+    const { image } = init;
+    this.image = image;
   }
 
-  getType(): ObjectType {
+  get type() {
     return ObjectType.IMAGE;
   }
 
@@ -360,15 +400,11 @@ export class ImageNode<T extends Metadata = Metadata> extends TextNode<T> {
 }
 
 export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
-  constructor(init: ImageNodeConstructorProps<T>) {
+  constructor(init: ImageNodeParams<T>) {
     super(init);
-
-    if (new.target === ImageDocument) {
-      this.hash = init?.hash ?? this.generateHash();
-    }
   }
 
-  getType() {
+  get type() {
     return ObjectType.IMAGE_DOCUMENT;
   }
 }

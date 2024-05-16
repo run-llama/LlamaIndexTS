@@ -12,6 +12,7 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "circular-check": {},
     "e2e": {
       "dependsOn": ["^build"]
     },

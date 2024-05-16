@@ -62,6 +62,7 @@
     "build:type": "tsc -p tsconfig.json",
     "postbuild": "node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
     "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\"",
+    "circular-check": "madge -c ./src/index.ts",
     "test": "vitest"
   },
   "devDependencies": {
