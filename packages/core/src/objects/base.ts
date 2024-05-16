@@ -120,7 +120,7 @@ export class SimpleToolNodeMapping extends BaseObjectNodeMapping {
     if (!node.metadata) {
       throw new Error("Metadata must be set");
     }
-    const name = node.metadata.name
+    const name = node.metadata.name;
     if (typeof name !== "string") {
       console.warn("Name must be a string");
     }

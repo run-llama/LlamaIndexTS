@@ -1,4 +1,4 @@
-import type { BaseNode, Metadata } from "../../Node.js";
+import type { BaseNode } from "../../Node.js";
 import { ObjectType, jsonToNode } from "../../Node.js";
 
 const DEFAULT_TEXT_KEY = "text";
