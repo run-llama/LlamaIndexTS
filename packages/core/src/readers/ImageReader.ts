@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS } from "@llamaindex/env";
+import { fs } from "@llamaindex/env";
 import type { Document } from "../Node.js";
 import { ImageDocument } from "../Node.js";
 import type { FileReader } from "./type.js";
@@ -15,11 +14,8 @@ export class ImageReader implements FileReader {
    * @param fs fs wrapper interface for getting the file content.
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one ImageDocument of the specified file.
    */
-  async loadData(
-    file: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<Document[]> {
-    const dataBuffer = await fs.readRawFile(file);
+  async loadData(file: string): Promise<Document[]> {
+    const dataBuffer = await fs.readFile(file);
     const blob = new Blob([dataBuffer]);
     return [new ImageDocument({ image: blob, id_: file })];
   }

@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS, path } from "@llamaindex/env";
+import { path } from "@llamaindex/env";
 import _ from "lodash";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
@@ -25,26 +24,19 @@ export class SimpleDocumentStore extends KVDocumentStore {
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
     namespace?: string,
-    fsModule?: GenericFileSystem,
   ): Promise<SimpleDocumentStore> {
     const persistPath = path.join(
       persistDir,
       DEFAULT_DOC_STORE_PERSIST_FILENAME,
     );
-    return await SimpleDocumentStore.fromPersistPath(
-      persistPath,
-      namespace,
-      fsModule,
-    );
+    return await SimpleDocumentStore.fromPersistPath(persistPath, namespace);
   }
 
   static async fromPersistPath(
     persistPath: string,
     namespace?: string,
-    fs?: GenericFileSystem,
   ): Promise<SimpleDocumentStore> {
-    fs = fs || defaultFS;
-    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
+    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath);
     return new SimpleDocumentStore(simpleKVStore, namespace);
   }
 
@@ -53,14 +45,12 @@ export class SimpleDocumentStore extends KVDocumentStore {
       DEFAULT_PERSIST_DIR,
       DEFAULT_DOC_STORE_PERSIST_FILENAME,
     ),
-    fs?: GenericFileSystem,
   ): Promise<void> {
-    fs = fs || defaultFS;
     if (
       _.isObject(this.kvStore) &&
       this.kvStore instanceof BaseInMemoryKVStore
     ) {
-      await this.kvStore.persist(persistPath, fs);
+      await this.kvStore.persist(persistPath);
     }
   }
 

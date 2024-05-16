@@ -8,7 +8,7 @@ import {
   type VectorStoreQueryResult,
 } from "./types.js";
 
-import { getEnv, type GenericFileSystem } from "@llamaindex/env";
+import { getEnv } from "@llamaindex/env";
 import type {
   FetchResponse,
   Index,
@@ -194,10 +194,7 @@ export class PineconeVectorStore
    * @param fs
    * @returns Resolved Promise.
    */
-  persist(
-    persistPath: string,
-    fs?: GenericFileSystem | undefined,
-  ): Promise<void> {
+  persist(persistPath: string): Promise<void> {
     return Promise.resolve();
   }
 

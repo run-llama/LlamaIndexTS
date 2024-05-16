@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS } from "@llamaindex/env";
+import { fs } from "@llamaindex/env";
 import { Document } from "../Node.js";
 import type { BaseReader } from "./type.js";
 
@@ -7,11 +6,8 @@ import type { BaseReader } from "./type.js";
  * Read the text of a PDF
  */
 export class PDFReader implements BaseReader {
-  async loadData(
-    file: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<Document[]> {
-    const content = await fs.readRawFile(file);
+  async loadData(file: string): Promise<Document[]> {
+    const content = await fs.readFile(file);
     const pages = await readPDF(content);
     return pages.map((text, page) => {
       const id_ = `${file}_${page + 1}`;

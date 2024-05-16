@@ -1,4 +1,4 @@
-import { defaultFS, getEnv, type GenericFileSystem } from "@llamaindex/env";
+import { fs, getEnv } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
 import type { FileReader, Language, ResultType } from "./type.js";
@@ -79,14 +79,11 @@ export class LlamaParseReader implements FileReader {
     this.apiKey = params.apiKey;
   }
 
-  async loadData(
-    file: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<Document[]> {
+  async loadData(file: string): Promise<Document[]> {
     const metadata = { file_path: file };
 
     // Load data, set the mime type
-    const data = await fs.readRawFile(file);
+    const data = await fs.readFile(file);
     const mimeType = await this.getMimeType(data);
 
     const body = new FormData();

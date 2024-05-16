@@ -1,5 +1,4 @@
-import type { CompleteFileSystem } from "@llamaindex/env";
-import { defaultFS } from "@llamaindex/env";
+import { fs } from "@llamaindex/env";
 import { Document } from "../Node.js";
 import type { BaseReader } from "./type.js";
 
@@ -8,11 +7,8 @@ import type { BaseReader } from "./type.js";
  */
 
 export class TextFileReader implements BaseReader {
-  async loadData(
-    file: string,
-    fs: CompleteFileSystem = defaultFS,
-  ): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file);
+  async loadData(file: string): Promise<Document[]> {
+    const dataBuffer = await fs.readFile(file, "utf-8");
     return [new Document({ text: dataBuffer, id_: file })];
   }
 }

@@ -1,3 +1,3 @@
-pnpm format:write
+pnpm format
 pnpm lint
 npx lint-staged

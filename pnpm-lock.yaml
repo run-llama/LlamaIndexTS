@@ -655,6 +655,9 @@ importers:
       readable-stream:
         specifier: ^4.5.2
         version: 4.5.2
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.0(@types/node@20.12.11)(terser@5.31.0)
 
   packages/experimental:
     dependencies:

@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS, path } from "@llamaindex/env";
+import { path } from "@llamaindex/env";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,
@@ -20,28 +19,21 @@ export class SimpleIndexStore extends KVIndexStore {
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = defaultFS,
   ): Promise<SimpleIndexStore> {
     const persistPath = path.join(
       persistDir,
       DEFAULT_INDEX_STORE_PERSIST_FILENAME,
     );
-    return this.fromPersistPath(persistPath, fs);
+    return this.fromPersistPath(persistPath);
   }
 
-  static async fromPersistPath(
-    persistPath: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<SimpleIndexStore> {
-    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath, fs);
+  static async fromPersistPath(persistPath: string): Promise<SimpleIndexStore> {
+    const simpleKVStore = await SimpleKVStore.fromPersistPath(persistPath);
     return new SimpleIndexStore(simpleKVStore);
   }
 
-  async persist(
-    persistPath: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<void> {
-    await this.kvStore.persist(persistPath, fs);
+  async persist(persistPath: string = DEFAULT_PERSIST_DIR): Promise<void> {
+    this.kvStore.persist(persistPath);
   }
 
   static fromDict(saveDict: DataType): SimpleIndexStore {

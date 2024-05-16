@@ -1,6 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS, path } from "@llamaindex/env";
-import _ from "lodash";
+import { fs, path } from "@llamaindex/env";
 import type { BaseNode } from "../../Node.js";
 import { BaseEmbedding } from "../../embeddings/index.js";
 import {
@@ -38,29 +36,19 @@ export class SimpleVectorStore
 {
   storesText: boolean = false;
   private data: SimpleVectorStoreData;
-  private fs: GenericFileSystem = defaultFS;
   private persistPath: string | undefined;
 
-  constructor(
-    init?: { data?: SimpleVectorStoreData } & Partial<IEmbedModel>,
-    fs?: GenericFileSystem,
-  ) {
+  constructor(init?: { data?: SimpleVectorStoreData } & Partial<IEmbedModel>) {
     super(init?.embedModel);
     this.data = init?.data || new SimpleVectorStoreData();
-    this.fs = fs || defaultFS;
   }
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
-    fs: GenericFileSystem = defaultFS,
     embedModel?: BaseEmbedding,
   ): Promise<SimpleVectorStore> {
-    const persistPath = `${persistDir}/vector_store.json`;
-    return await SimpleVectorStore.fromPersistPath({
-      persistPath,
-      fs,
-      embedModel,
-    });
+    const persistPath = path.join(persistDir, "vector_store.json");
+    return await SimpleVectorStore.fromPersistPath(persistPath, embedModel);
   }
 
   get client(): any {
@@ -83,7 +71,7 @@ export class SimpleVectorStore
     }
 
     if (this.persistPath) {
-      await this.persist(this.persistPath, this.fs);
+      await this.persist(this.persistPath);
     }
 
     return embeddingResults.map((result) => result.id_);
@@ -98,13 +86,13 @@ export class SimpleVectorStore
       delete this.data.textIdToRefDocId[textId];
     }
     if (this.persistPath) {
-      await this.persist(this.persistPath, this.fs);
+      await this.persist(this.persistPath);
     }
     return Promise.resolve();
   }
 
   async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
-    if (!_.isNil(query.filters)) {
+    if (!(query.filters == null)) {
       throw new Error(
         "Metadata filters not implemented for SimpleVectorStore yet.",
       );
@@ -162,30 +150,22 @@ export class SimpleVectorStore
   }
 
   async persist(
-    persistPath: string = `${DEFAULT_PERSIST_DIR}/vector_store.json`,
-    fs?: GenericFileSystem,
+    persistPath: string = path.join(DEFAULT_PERSIST_DIR, "vector_store.json"),
   ): Promise<void> {
-    fs = fs || this.fs;
     const dirPath = path.dirname(persistPath);
-    if (!(await exists(fs, dirPath))) {
+    if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath);
     }
 
     await fs.writeFile(persistPath, JSON.stringify(this.data));
   }
 
-  static async fromPersistPath({
-    persistPath,
-    fs,
-    embedModel,
-  }: {
-    persistPath: string;
-    fs?: GenericFileSystem;
-    embedModel?: BaseEmbedding;
-  }): Promise<SimpleVectorStore> {
-    fs = fs ?? defaultFS;
+  static async fromPersistPath(
+    persistPath: string,
+    embedModel?: BaseEmbedding,
+  ): Promise<SimpleVectorStore> {
     const dirPath = path.dirname(persistPath);
-    if (!(await exists(fs, dirPath))) {
+    if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath, { recursive: true });
     }
 
@@ -204,7 +184,6 @@ export class SimpleVectorStore
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
     const store = new SimpleVectorStore({ data, embedModel });
     store.persistPath = persistPath;
-    store.fs = fs;
     return store;
   }
 

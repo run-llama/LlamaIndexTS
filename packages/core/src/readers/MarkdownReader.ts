@@ -1,5 +1,4 @@
-import type { GenericFileSystem } from "@llamaindex/env";
-import { defaultFS } from "@llamaindex/env";
+import { fs } from "@llamaindex/env";
 import { Document } from "../Node.js";
 import type { FileReader } from "./type.js";
 
@@ -88,11 +87,8 @@ export class MarkdownReader implements FileReader {
     return this.markdownToTups(modifiedContent);
   }
 
-  async loadData(
-    file: string,
-    fs: GenericFileSystem = defaultFS,
-  ): Promise<Document[]> {
-    const content = await fs.readFile(file);
+  async loadData(file: string): Promise<Document[]> {
+    const content = await fs.readFile(file, "utf-8");
     const tups = this.parseTups(content);
     const results: Document[] = [];
     let counter = 0;

@@ -371,6 +371,7 @@ export function messagesToHistoryStr(messages: ChatMessage[]) {
 }
 
 export const defaultContextSystemPrompt = ({ context = "" }) => {
+  if (!context) return "";
   return `Context information is below.
 ---------------------
 ${context}
