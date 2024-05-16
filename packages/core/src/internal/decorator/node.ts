@@ -41,11 +41,10 @@ export function lazyInitHash(
   value: ClassAccessorDecoratorTarget<BaseNode, string>,
   _context: ClassAccessorDecoratorContext,
 ): ClassAccessorDecoratorResult<BaseNode, string> {
-  let initialized = false;
   return {
     get() {
-      if (!initialized) {
-        initialized = true;
+      const oldValue = value.get.call(this);
+      if (oldValue === "") {
         const hash = this.generateHash();
         value.set.call(this, hash);
       }
@@ -53,12 +52,8 @@ export function lazyInitHash(
     },
     set(newValue: string) {
       value.set.call(this, newValue);
-      initialized = true;
     },
     init(value: string): string {
-      if (value !== "") {
-        initialized = true;
-      }
       return value;
     },
   };

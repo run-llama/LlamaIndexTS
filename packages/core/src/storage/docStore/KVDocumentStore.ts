@@ -30,6 +30,8 @@ export class KVDocumentStore extends BaseDocumentStore {
       const value = jsonDict[key];
       if (isValidDocJson(value)) {
         docs[key] = jsonToDoc(value);
+      } else {
+        console.warn(`Invalid JSON for docId ${key}`);
       }
     }
     return docs;
