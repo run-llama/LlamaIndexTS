@@ -21,7 +21,6 @@ import type {
   LLM,
   MessageContent,
 } from "../llm/index.js";
-import { extractText } from "../llm/utils.js";
 import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
@@ -169,7 +168,7 @@ export abstract class AgentWorker<
   abstract taskHandler: TaskHandler<AI, Store, AdditionalMessageOptions>;
 
   public createTask(
-    query: string,
+    query: MessageContent,
     context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
   ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
     context.store.messages.push({
@@ -305,7 +304,7 @@ export abstract class AgentRunner<
         });
       }
     }
-    return this.#runner.createTask(extractText(message), {
+    return this.#runner.createTask(message, {
       stream,
       toolCallCount: 0,
       llm: this.#llm,
