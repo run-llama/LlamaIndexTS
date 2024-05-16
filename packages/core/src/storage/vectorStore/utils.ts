@@ -1,4 +1,4 @@
-import type { BaseNode, Metadata } from "../../Node.js";
+import type { BaseNode } from "../../Node.js";
 import { ObjectType, jsonToNode } from "../../Node.js";
 
 const DEFAULT_TEXT_KEY = "text";
@@ -16,7 +16,7 @@ export function nodeToMetadata(
   removeText: boolean = false,
   textField: string = DEFAULT_TEXT_KEY,
   flatMetadata: boolean = false,
-): Metadata {
+): Record<string, string> {
   const { metadata, embedding, ...rest } = node.toMutableJSON();
 
   if (flatMetadata) {
@@ -44,7 +44,7 @@ type MetadataDictToNodeOptions = {
 };
 
 export function metadataDictToNode(
-  metadata: Metadata,
+  metadata: Record<string, unknown>,
   options?: MetadataDictToNodeOptions,
 ): BaseNode {
   const {
@@ -63,7 +63,7 @@ export function metadataDictToNode(
       throw new Error("Node content not found in metadata.");
     }
   } else {
-    nodeObj = JSON.parse(nodeContent);
+    nodeObj = JSON.parse(`${nodeContent}`);
     nodeObj.metadata = rest;
   }
 

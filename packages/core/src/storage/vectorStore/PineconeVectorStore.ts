@@ -199,7 +199,7 @@ export class PineconeVectorStore implements VectorStore {
     }, {});
   }
 
-  textFromResultRow(row: ScoredPineconeRecord<Metadata>): string {
+  textFromResultRow(row: ScoredPineconeRecord<Record<string, any>>): string {
     return row.metadata?.[this.textKey] ?? "";
   }
 
