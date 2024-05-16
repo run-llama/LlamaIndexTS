@@ -75,6 +75,9 @@ jobs:
         working-directory: ./examples
       - name: Run Type Check
         run: pnpm run type-check
+      - name: Run Circular Dependency Check
+        run: pnpm run circular-check
+        working-directory: ./packages/core
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
