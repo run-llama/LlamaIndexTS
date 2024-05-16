@@ -21,7 +21,6 @@ import type {
   LLM,
   MessageContent,
 } from "../llm/index.js";
-import { extractText } from "../llm/utils.js";
 import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
@@ -287,12 +286,6 @@ export abstract class AgentRunner<
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
-  protected computedMessageQuery = (
-    message: MessageContent,
-  ): MessageContent => {
-    return extractText(message);
-  };
-
   createTask(
     message: MessageContent,
     stream: boolean = false,
@@ -311,7 +304,7 @@ export abstract class AgentRunner<
         });
       }
     }
-    return this.#runner.createTask(this.computedMessageQuery(message), {
+    return this.#runner.createTask(message, {
       stream,
       toolCallCount: 0,
       llm: this.#llm,
