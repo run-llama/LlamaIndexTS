@@ -1,5 +1,6 @@
 import { createSHA256, path, randomUUID } from "@llamaindex/env";
 import _ from "lodash";
+import { Settings } from "./Settings.js";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
@@ -208,7 +209,14 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
 
   getContent(metadataMode: MetadataMode = MetadataMode.NONE): string {
     const metadataStr = this.getMetadataStr(metadataMode).trim();
-    return `${metadataStr}\n\n${this.text}`.trim();
+    const fullText = `${metadataStr}\n\n${this.text}`.trim();
+    if (Settings.chunkSize) {
+      if (fullText.length > Settings.chunkSize) {
+        console.warn(`Content ${this.id_} is too long, truncating`);
+        return this.text.slice(0, Settings.chunkSize);
+      }
+    }
+    return fullText;
   }
 
   getMetadataStr(metadataMode: MetadataMode): string {
