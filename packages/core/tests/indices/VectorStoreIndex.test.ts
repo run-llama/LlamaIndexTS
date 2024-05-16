@@ -15,7 +15,7 @@ const testDir = await mkdtemp(join(tmpdir(), "test-"));
 
 import { mockServiceContext } from "../utility/mockServiceContext.js";
 
-describe.sequential("VectorStoreIndex", () => {
+describe("VectorStoreIndex", () => {
   let serviceContext: ServiceContext;
   let storageContext: StorageContext;
   let testStrategy: (
