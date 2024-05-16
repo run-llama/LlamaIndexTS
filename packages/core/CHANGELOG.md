@@ -1,5 +1,22 @@
 # llamaindex
 
+## 0.3.11
+
+### Patch Changes
+
+- e072c45: fix: remove non-standard API `pipeline`
+- 9e133ac: refactor: remove `defaultFS` from parameters
+
+  We don't accept passing fs in the parameter since it's unnecessary for a determined JS environment.
+
+  This was a polyfill way for the non-Node.js environment, but now we use another way to polyfill APIs.
+
+- 447105a: Improve Gemini message and context preparation
+- 320be3f: Force ChromaDB version to 1.7.3 (to prevent NextJS issues)
+- Updated dependencies [e072c45]
+- Updated dependencies [9e133ac]
+  - @llamaindex/env@0.1.3
+
 ## 0.3.10
 
 ### Patch Changes
