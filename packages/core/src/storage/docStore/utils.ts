@@ -4,14 +4,28 @@ import { Document, ObjectType, TextNode } from "../../Node.js";
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
 
-export function docToJson(doc: BaseNode): Record<string, any> {
+type DocJson = {
+  [TYPE_KEY]: ObjectType;
+  [DATA_KEY]: string;
+};
+
+export function isValidDocJson(docJson: any): docJson is DocJson {
+  return (
+    typeof docJson === "object" &&
+    docJson !== null &&
+    docJson[TYPE_KEY] !== undefined &&
+    docJson[DATA_KEY] !== undefined
+  );
+}
+
+export function docToJson(doc: BaseNode): DocJson {
   return {
-    [DATA_KEY]: JSON.stringify(doc),
-    [TYPE_KEY]: doc.getType(),
+    [DATA_KEY]: JSON.stringify(doc.toJSON()),
+    [TYPE_KEY]: doc.type,
   };
 }
 
-export function jsonToDoc(docDict: Record<string, any>): BaseNode {
+export function jsonToDoc(docDict: DocJson): BaseNode {
   const docType = docDict[TYPE_KEY];
   const dataDict = JSON.parse(docDict[DATA_KEY]);
   let doc: BaseNode;

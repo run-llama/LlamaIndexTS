@@ -40,6 +40,9 @@ importers:
       lint-staged:
         specifier: ^15.2.2
         version: 15.2.2
+      madge:
+        specifier: ^7.0.0
+        version: 7.0.0(typescript@5.4.5)
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
@@ -461,9 +464,6 @@ importers:
       glob:
         specifier: ^10.3.12
         version: 10.3.12
-      madge:
-        specifier: ^7.0.0
-        version: 7.0.0(typescript@5.4.5)
       typescript:
         specifier: ^5.4.5
         version: 5.4.5

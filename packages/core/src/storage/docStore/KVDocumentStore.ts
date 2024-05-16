@@ -5,7 +5,7 @@ import { DEFAULT_NAMESPACE } from "../constants.js";
 import type { BaseKVStore } from "../kvStore/types.js";
 import type { RefDocInfo } from "./types.js";
 import { BaseDocumentStore } from "./types.js";
-import { docToJson, jsonToDoc } from "./utils.js";
+import { docToJson, isValidDocJson, jsonToDoc } from "./utils.js";
 
 type DocMetaData = { docHash: string; refDocId?: string };
 
@@ -27,7 +27,10 @@ export class KVDocumentStore extends BaseDocumentStore {
     const jsonDict = await this.kvstore.getAll(this.nodeCollection);
     const docs: Record<string, BaseNode> = {};
     for (const key in jsonDict) {
-      docs[key] = jsonToDoc(jsonDict[key] as Record<string, any>);
+      const value = jsonDict[key];
+      if (isValidDocJson(value)) {
+        docs[key] = jsonToDoc(value);
+      }
     }
     return docs;
   }
@@ -51,7 +54,7 @@ export class KVDocumentStore extends BaseDocumentStore {
       await this.kvstore.put(nodeKey, data, this.nodeCollection);
       const metadata: DocMetaData = { docHash: doc.hash };
 
-      if (doc.getType() === ObjectType.TEXT && doc.sourceNode !== undefined) {
+      if (doc.type === ObjectType.TEXT && doc.sourceNode !== undefined) {
         const refDocInfo = (await this.getRefDocInfo(
           doc.sourceNode.nodeId,
         )) || {
@@ -85,6 +88,9 @@ export class KVDocumentStore extends BaseDocumentStore {
       } else {
         return;
       }
+    }
+    if (!isValidDocJson(json)) {
+      throw new Error(`Invalid JSON for docId ${docId}`);
     }
     return jsonToDoc(json);
   }

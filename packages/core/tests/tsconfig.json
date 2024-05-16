@@ -4,7 +4,11 @@
     "outDir": "./lib",
     "module": "node16",
     "moduleResolution": "node16",
-    "target": "ESNext"
+    "target": "ESNext",
+    "paths": {
+      "llamaindex": ["../src/index.ts"],
+      "llamaindex/*": ["../src/*"]
+    }
   },
   "include": ["./**/*.ts"],
   "references": [

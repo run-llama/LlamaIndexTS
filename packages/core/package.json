@@ -69,7 +69,6 @@
     "@swc/core": "^1.5.5",
     "concurrently": "^8.2.2",
     "glob": "^10.3.12",
-    "madge": "^7.0.0",
     "typescript": "^5.4.5"
   },
   "engines": {
