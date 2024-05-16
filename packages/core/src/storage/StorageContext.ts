@@ -1,3 +1,4 @@
+import { path } from "@llamaindex/env";
 import { ModalityType, ObjectType } from "../Node.js";
 import { ClipEmbedding } from "../embeddings/ClipEmbedding.js";
 import {
@@ -54,14 +55,11 @@ export async function storageContextFromDefaults({
       indexStore || (await SimpleIndexStore.fromPersistDir(persistDir));
     if (!(ObjectType.TEXT in vectorStores)) {
       vectorStores[ModalityType.TEXT] =
-        vectorStore ??
-        ((await SimpleVectorStore.fromPersistDir(
-          persistDir,
-        )) as unknown as VectorStore);
+        vectorStore ?? (await SimpleVectorStore.fromPersistDir(persistDir));
     }
     if (storeImages && !(ObjectType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = await SimpleVectorStore.fromPersistDir(
-        `${persistDir}/${DEFAULT_IMAGE_VECTOR_NAMESPACE}`,
+        path.join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
         new ClipEmbedding(),
       );
     }
