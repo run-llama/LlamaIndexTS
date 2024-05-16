@@ -169,7 +169,7 @@ export abstract class AgentWorker<
   abstract taskHandler: TaskHandler<AI, Store, AdditionalMessageOptions>;
 
   public createTask(
-    query: string,
+    query: MessageContent,
     context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
   ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
     context.store.messages.push({
@@ -287,6 +287,12 @@ export abstract class AgentRunner<
     return task.context.toolCallCount < MAX_TOOL_CALLS;
   }
 
+  protected computedMessageQuery = (
+    message: MessageContent,
+  ): MessageContent => {
+    return extractText(message);
+  };
+
   createTask(
     message: MessageContent,
     stream: boolean = false,
@@ -305,7 +311,7 @@ export abstract class AgentRunner<
         });
       }
     }
-    return this.#runner.createTask(extractText(message), {
+    return this.#runner.createTask(this.computedMessageQuery(message), {
       stream,
       toolCallCount: 0,
       llm: this.#llm,

@@ -2,6 +2,7 @@ import { pipeline, ReadableStream } from "@llamaindex/env";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import type {
   ChatResponseChunk,
+  MessageContent,
   PartialToolCall,
   ToolCall,
   ToolCallLLMMessageOptions,
@@ -51,6 +52,12 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
   }
 
   createStore = AgentRunner.defaultCreateStore;
+
+  protected computedMessageQuery = (
+    message: MessageContent,
+  ): MessageContent => {
+    return message;
+  };
 
   static taskHandler: TaskHandler<OpenAI> = async (step, enqueueOutput) => {
     const { llm, stream, getTools } = step.context;
