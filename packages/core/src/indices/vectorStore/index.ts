@@ -54,7 +54,6 @@ export interface VectorIndexOptions extends IndexStructOptions {
 }
 
 export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
-  embedModel?: BaseEmbedding;
   indexStore: BaseIndexStore;
   vectorStores?: VectorStoreByType;
 }
@@ -71,7 +70,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     super(init);
     this.indexStore = init.indexStore;
     this.vectorStores = init.vectorStores ?? init.storageContext.vectorStores;
-    this.embedModel = init.embedModel ?? init.serviceContext?.embedModel;
+    this.embedModel = init.serviceContext?.embedModel;
   }
 
   /**
