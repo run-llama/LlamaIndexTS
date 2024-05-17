@@ -2,6 +2,8 @@ import {
   GenerativeModel as GoogleGenerativeModel,
   type EnhancedGenerateContentResponse,
   type Content as GeminiMessageContent,
+  type FileDataPart as GoogleFileDataPart,
+  type InlineDataPart as GoogleInlineFileDataPart,
   type ModelParams as GoogleModelParams,
   type Part as GooglePart,
   type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
@@ -11,7 +13,9 @@ import {
   GenerativeModel as VertexGenerativeModel,
   GenerativeModelPreview as VertexGenerativeModelPreview,
   type GenerateContentResponse,
+  type FileDataPart as VertexFileDataPart,
   type VertexInit,
+  type InlineDataPart as VertexInlineFileDataPart,
   type ModelParams as VertexModelParams,
   type Part as VertexPart,
   type StreamGenerateContentResult as VertexStreamGenerateContentResult,
@@ -54,6 +58,11 @@ export interface GeminiModelInfo {
 }
 
 export type Part = GooglePart | VertexPart;
+export type FileDataPart = GoogleFileDataPart | VertexFileDataPart;
+export type InlineDataPart =
+  | GoogleInlineFileDataPart
+  | VertexInlineFileDataPart;
+
 export type ModelParams = GoogleModelParams | VertexModelParams;
 
 export type GenerativeModel =

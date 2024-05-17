@@ -8,13 +8,66 @@ import type {
   MessageContentTextDetail,
   MessageType,
 } from "../types.js";
+import { extractDataUrlComponents } from "../utils.js";
 import type {
   ChatContext,
+  FileDataPart,
   GeminiChatParamsNonStreaming,
   GeminiChatParamsStreaming,
   GeminiMessageRole,
+  InlineDataPart,
   Part,
 } from "./types.js";
+
+const FILE_EXT_MIME_TYPES: { [key: string]: string } = {
+  png: "image/png",
+  jpeg: "image/jpeg",
+  jpg: "image/jpeg",
+  webp: "image/webp",
+  heic: "image/heic",
+  heif: "image/heif",
+};
+const ACCEPTED_IMAGE_MIME_TYPES = Object.values(FILE_EXT_MIME_TYPES);
+
+const getFileURLExtension = (url: string): string | null => {
+  const pathname = new URL(url).pathname;
+  const parts = pathname.split(".");
+  return parts.length > 1 ? parts.pop()?.toLowerCase() || null : null;
+};
+
+const getFileURLMimeType = (url: string): string | null => {
+  const ext = getFileURLExtension(url);
+  return ext ? FILE_EXT_MIME_TYPES[ext] || null : null;
+};
+
+const getImageParts = (
+  message: MessageContentImageDetail,
+): InlineDataPart | FileDataPart => {
+  if (message.image_url.url.startsWith("data:")) {
+    const { mimeType, base64: data } = extractDataUrlComponents(
+      message.image_url.url,
+    );
+    if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType))
+      throw new Error(
+        `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join("\n")}`,
+      );
+    return {
+      inlineData: {
+        mimeType,
+        data,
+      },
+    };
+  }
+  const mimeType = getFileURLMimeType(message.image_url.url);
+  if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType))
+    throw new Error(
+      `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join("\n")}`,
+    );
+  return {
+    fileData: { mimeType, fileUri: message.image_url.url },
+  };
+};
+
 export const getPartsText = (parts: Part[]): string => {
   const textStrings = [];
   if (parts.length) {
@@ -123,14 +176,9 @@ export class GeminiHelper {
     const imageContents = content.filter(
       (i) => i.type === "image_url",
     ) as MessageContentImageDetail[];
-    parts.push(
-      ...imageContents.map((i) => ({
-        fileData: {
-          mimeType: i.type,
-          fileUri: i.image_url.url,
-        },
-      })),
-    );
+
+    parts.push(...imageContents.map(getImageParts));
+
     const textContents = content.filter(
       (i) => i.type === "text",
     ) as MessageContentTextDetail[];
