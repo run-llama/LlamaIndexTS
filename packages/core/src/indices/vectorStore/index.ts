@@ -54,21 +54,24 @@ export interface VectorIndexOptions extends IndexStructOptions {
 }
 
 export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
+  embedModel?: BaseEmbedding;
   indexStore: BaseIndexStore;
   vectorStores?: VectorStoreByType;
 }
 
 /**
- * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
+ * The VectorStoreIndex, an index that stores the nodes only according to their vector embeddings.
  */
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
   indexStore: BaseIndexStore;
+  embedModel?: BaseEmbedding;
   vectorStores: VectorStoreByType;
 
   private constructor(init: VectorIndexConstructorProps) {
     super(init);
     this.indexStore = init.indexStore;
     this.vectorStores = init.vectorStores ?? init.storageContext.vectorStores;
+    this.embedModel = init.embedModel;
   }
 
   /**
@@ -165,7 +168,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     const nodeMap = splitNodesByType(nodes);
     for (const type in nodeMap) {
       const nodes = nodeMap[type as ModalityType];
-      const embedModel = this.vectorStores[type as ModalityType]?.embedModel;
+      const embedModel =
+        this.embedModel ?? this.vectorStores[type as ModalityType]?.embedModel;
       if (embedModel && nodes) {
         await embedModel.transform(nodes, {
           logProgress: options?.logProgress,
@@ -451,7 +455,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
     const q = await this.buildVectorStoreQuery(
-      vectorStore.embedModel,
+      this.index.embedModel ?? vectorStore.embedModel,
       query,
       this.topK[type],
       preFilters,
@@ -469,9 +473,9 @@ export class VectorIndexRetriever implements BaseRetriever {
     const queryEmbedding = await embedModel.getQueryEmbedding(query);
 
     return {
-      queryEmbedding: queryEmbedding,
+      queryEmbedding,
       mode: VectorStoreQueryMode.DEFAULT,
-      similarityTopK: similarityTopK,
+      similarityTopK,
       filters: preFilters ?? undefined,
     };
   }
