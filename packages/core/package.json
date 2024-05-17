@@ -56,6 +56,7 @@
     "pgvector": "^0.1.8",
     "portkey-ai": "^0.1.16",
     "rake-modified": "^1.0.8",
+    "std-env": "^3.7.0",
     "string-strip-html": "^13.4.8",
     "wikipedia": "^2.1.2",
     "wink-nlp": "^2.2.2"
