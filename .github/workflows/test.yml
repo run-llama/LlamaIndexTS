@@ -76,8 +76,7 @@ jobs:
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
-        run: pnpm run circular-check
-        working-directory: ./packages/core
+        run: pnpm dlx turbo run circular-check
       - uses: actions/upload-artifact@v3
         if: failure()
         with:

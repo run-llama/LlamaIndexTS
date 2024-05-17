@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.3.10",
+  "version": "0.3.12",
   "expectedMinorVersion": "3",
   "license": "MIT",
   "type": "module",
@@ -56,6 +56,7 @@
     "pgvector": "^0.1.8",
     "portkey-ai": "^0.1.16",
     "rake-modified": "^1.0.8",
+    "std-env": "^3.7.0",
     "string-strip-html": "^13.4.8",
     "wikipedia": "^2.1.2",
     "wink-nlp": "^2.2.2"
@@ -69,7 +70,6 @@
     "@swc/core": "^1.5.5",
     "concurrently": "^8.2.2",
     "glob": "^10.3.12",
-    "madge": "^7.0.0",
     "typescript": "^5.4.5"
   },
   "engines": {

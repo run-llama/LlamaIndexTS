@@ -15,7 +15,6 @@ import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
 import { EOL } from "node:os";
 import path from "node:path";
-import { pipeline } from "node:stream/promises";
 import {
   ReadableStream,
   TransformStream,
@@ -45,6 +44,5 @@ export {
   fs,
   ok,
   path,
-  pipeline,
   randomUUID,
 };

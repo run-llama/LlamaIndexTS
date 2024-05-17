@@ -1,9 +1,4 @@
-import {
-  ReadableStream,
-  TransformStream,
-  pipeline,
-  randomUUID,
-} from "@llamaindex/env";
+import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
 import {
   type ChatEngine,
@@ -21,7 +16,6 @@ import type {
   LLM,
   MessageContent,
 } from "../llm/index.js";
-import { extractText } from "../llm/utils.js";
 import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
@@ -169,7 +163,7 @@ export abstract class AgentWorker<
   abstract taskHandler: TaskHandler<AI, Store, AdditionalMessageOptions>;
 
   public createTask(
-    query: string,
+    query: MessageContent,
     context: AgentTaskContext<AI, Store, AdditionalMessageOptions>,
   ): ReadableStream<TaskStepOutput<AI, Store, AdditionalMessageOptions>> {
     context.store.messages.push({
@@ -305,7 +299,7 @@ export abstract class AgentRunner<
         });
       }
     }
-    return this.#runner.createTask(extractText(message), {
+    return this.#runner.createTask(message, {
       stream,
       toolCallCount: 0,
       llm: this.#llm,
@@ -340,46 +334,36 @@ export abstract class AgentRunner<
     | ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>
   > {
     const task = this.createTask(params.message, !!params.stream);
-    const stepOutput = await pipeline(
-      task,
-      async (
-        iter: AsyncIterable<
-          TaskStepOutput<AI, Store, AdditionalMessageOptions>
-        >,
-      ) => {
-        for await (const stepOutput of iter) {
-          // update chat history for each round
-          this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
-          if (stepOutput.isLast) {
-            return stepOutput;
-          }
-        }
-        throw new Error("Task did not complete");
-      },
-    );
-    const { output, taskStep } = stepOutput;
-    if (isAsyncIterable(output)) {
-      return output.pipeThrough<
-        AgentStreamChatResponse<AdditionalMessageOptions>
-      >(
-        new TransformStream({
-          transform(chunk, controller) {
-            controller.enqueue({
-              response: chunk,
-              get sources() {
-                return [...taskStep.context.store.toolOutputs];
+    for await (const stepOutput of task) {
+      // update chat history for each round
+      this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
+      if (stepOutput.isLast) {
+        const { output, taskStep } = stepOutput;
+        if (isAsyncIterable(output)) {
+          return output.pipeThrough<
+            AgentStreamChatResponse<AdditionalMessageOptions>
+          >(
+            new TransformStream({
+              transform(chunk, controller) {
+                controller.enqueue({
+                  response: chunk,
+                  get sources() {
+                    return [...taskStep.context.store.toolOutputs];
+                  },
+                });
               },
-            });
-          },
-        }),
-      );
-    } else {
-      return {
-        response: output,
-        get sources() {
-          return [...taskStep.context.store.toolOutputs];
-        },
-      } satisfies AgentChatResponse<AdditionalMessageOptions>;
+            }),
+          );
+        } else {
+          return {
+            response: output,
+            get sources() {
+              return [...taskStep.context.store.toolOutputs];
+            },
+          } satisfies AgentChatResponse<AdditionalMessageOptions>;
+        }
+      }
     }
+    throw new Error("Task ended without a last step.");
   }
 }

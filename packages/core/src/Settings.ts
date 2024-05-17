@@ -17,6 +17,11 @@ import {
   setEmbeddedModel,
   withEmbeddedModel,
 } from "./internal/settings/EmbedModel.js";
+import {
+  getChunkSize,
+  setChunkSize,
+  withChunkSize,
+} from "./internal/settings/chunk-size.js";
 import type { LLM } from "./llm/types.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
@@ -44,13 +49,11 @@ class GlobalSettings implements Config {
   #llm: LLM | null = null;
   #promptHelper: PromptHelper | null = null;
   #nodeParser: NodeParser | null = null;
-  #chunkSize?: number;
   #chunkOverlap?: number;
 
   #llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
   #promptHelperAsyncLocalStorage = new AsyncLocalStorage<PromptHelper>();
   #nodeParserAsyncLocalStorage = new AsyncLocalStorage<NodeParser>();
-  #chunkSizeAsyncLocalStorage = new AsyncLocalStorage<number>();
   #chunkOverlapAsyncLocalStorage = new AsyncLocalStorage<number>();
   #promptAsyncLocalStorage = new AsyncLocalStorage<PromptConfig>();
 
@@ -113,8 +116,8 @@ class GlobalSettings implements Config {
   get nodeParser(): NodeParser {
     if (this.#nodeParser === null) {
       this.#nodeParser = new SimpleNodeParser({
-        chunkSize: this.#chunkSize,
-        chunkOverlap: this.#chunkOverlap,
+        chunkSize: this.chunkSize,
+        chunkOverlap: this.chunkOverlap,
       });
     }
 
@@ -145,15 +148,15 @@ class GlobalSettings implements Config {
   }
 
   set chunkSize(chunkSize: number | undefined) {
-    this.#chunkSize = chunkSize;
+    setChunkSize(chunkSize);
   }
 
   get chunkSize(): number | undefined {
-    return this.#chunkSizeAsyncLocalStorage.getStore() ?? this.#chunkSize;
+    return getChunkSize();
   }
 
   withChunkSize<Result>(chunkSize: number, fn: () => Result): Result {
-    return this.#chunkSizeAsyncLocalStorage.run(chunkSize, fn);
+    return withChunkSize(chunkSize, fn);
   }
 
   get chunkOverlap(): number | undefined {

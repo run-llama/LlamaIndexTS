@@ -7,7 +7,7 @@ export {
 export { FireworksLLM } from "./fireworks.js";
 export { GEMINI_MODEL, Gemini, GeminiSession } from "./gemini.js";
 export { Groq } from "./groq.js";
-export { HuggingFaceInferenceAPI } from "./huggingface.js";
+export { HuggingFaceInferenceAPI, HuggingFaceLLM } from "./huggingface.js";
 export {
   ALL_AVAILABLE_MISTRAL_MODELS,
   MistralAI,

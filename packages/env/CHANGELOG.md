@@ -1,5 +1,16 @@
 # @llamaindex/env
 
+## 0.1.3
+
+### Patch Changes
+
+- e072c45: fix: remove non-standard API `pipeline`
+- 9e133ac: refactor: remove `defaultFS` from parameters
+
+  We don't accept passing fs in the parameter since it's unnecessary for a determined JS environment.
+
+  This was a polyfill way for the non-Node.js environment, but now we use another way to polyfill APIs.
+
 ## 0.1.2
 
 ### Patch Changes
