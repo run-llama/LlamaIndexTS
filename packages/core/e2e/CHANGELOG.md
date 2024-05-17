@@ -1,5 +1,11 @@
 # @llamaindex/core-e2e
 
+## 0.0.6
+
+### Patch Changes
+
+- 34fb1d8: fix: cloudflare dev
+
 ## 0.0.5
 
 ### Patch Changes
