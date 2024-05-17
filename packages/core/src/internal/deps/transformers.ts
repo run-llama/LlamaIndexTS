@@ -1,23 +1,15 @@
-/**
- * Copy/paste from `@xenova/transformers` dist and types folders
- *
- * @module
- */
-import { runtime } from "std-env";
-// @ts-expect-error
-let transformer: typeof import("./transformers/transformers.js") | null = null;
+let transformer: typeof import("@xenova/transformers") | null = null;
 
-export async function lazyLoadTransformers(): Promise<
-  typeof import("@xenova/transformers")
-> {
+export async function lazyLoadTransformers() {
   if (!transformer) {
-    // @ts-expect-error
-    transformer = await import("./transformers/transformers.js");
+    transformer = await import("@xenova/transformers");
   }
 
-  if (runtime !== "node" && runtime !== "deno" && runtime !== "bun") {
-    // there is no local file system for such runtimes
+  // @ts-expect-error
+  if (typeof EdgeRuntime === "string") {
+    // there is no local file system in the edge runtime
     transformer.env.allowLocalModels = false;
   }
+  // fixme: handle cloudflare workers case here?
   return transformer;
 }
