@@ -38,9 +38,11 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     chatHistory?: ChatMessage[];
     contextSystemPrompt?: ContextSystemPrompt;
     nodePostprocessors?: BaseNodePostprocessor[];
+    systemPrompt?: string;
   }) {
-    super();
-
+    super({
+      systemPrompt: init.systemPrompt,
+    });
     this.chatModel =
       init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
     this.chatHistory = getHistory(init?.chatHistory);
@@ -71,7 +73,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
       message,
       chatHistory,
     );
-
+    this.addSystemPromptToMessages(requestMessages.messages);
     if (stream) {
       const stream = await this.chatModel.chat({
         messages: requestMessages.messages,
