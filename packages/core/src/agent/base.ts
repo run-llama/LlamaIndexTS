@@ -285,8 +285,13 @@ export abstract class AgentRunner<
     message: MessageContent,
     stream: boolean = false,
     verbose: boolean | undefined = undefined,
+    overwriteChatHistory:
+      | ChatMessage<AdditionalMessageOptions>[]
+      | undefined = undefined,
   ) {
-    const initialMessages = [...this.#chatHistory];
+    const initialMessages = overwriteChatHistory
+      ? [...overwriteChatHistory]
+      : [...this.#chatHistory];
     if (this.#systemPrompt !== null) {
       const systemPrompt = this.#systemPrompt;
       const alreadyHasSystemPrompt = initialMessages
