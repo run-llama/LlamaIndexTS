@@ -3,11 +3,12 @@ import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
-import type {
-  MetadataFilters,
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type MetadataFilters,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
@@ -23,7 +24,10 @@ function toMongoDBFilter(
 }
 
 // MongoDB Atlas Vector Store class implementing VectorStore
-export class MongoDBAtlasVectorSearch implements VectorStore {
+export class MongoDBAtlasVectorSearch
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -42,6 +46,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
       collectionName: string;
     },
   ) {
+    super();
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
     } else {

@@ -417,22 +417,32 @@ export interface NodeWithScore<T extends Metadata = Metadata> {
   score?: number;
 }
 
-export function splitNodesByType(nodes: BaseNode[]): {
-  imageNodes: ImageNode[];
-  textNodes: TextNode[];
-} {
-  const imageNodes: ImageNode[] = [];
-  const textNodes: TextNode[] = [];
+export enum ModalityType {
+  TEXT = "TEXT",
+  IMAGE = "IMAGE",
+}
+
+type NodesByType = {
+  [P in ModalityType]?: BaseNode[];
+};
+
+export function splitNodesByType(nodes: BaseNode[]): NodesByType {
+  const result: NodesByType = {};
 
   for (const node of nodes) {
+    let type: ModalityType;
     if (node instanceof ImageNode) {
-      imageNodes.push(node);
+      type = ModalityType.IMAGE;
     } else if (node instanceof TextNode) {
-      textNodes.push(node);
+      type = ModalityType.TEXT;
+    } else {
+      throw new Error(`Unknown node type: ${node.type}`);
+    }
+    if (type in result) {
+      result[type]?.push(node);
+    } else {
+      result[type] = [node];
     }
   }
-  return {
-    imageNodes,
-    textNodes,
-  };
+  return result;
 }

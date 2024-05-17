@@ -151,7 +151,7 @@
     "build:type": "tsc -p tsconfig.json",
     "copy": "cp -r ../../README.md ../../LICENSE .",
     "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "circular-check": "madge -c ./src/index.ts",
+    "circular-check": "madge -c ./src/**/*.ts",
     "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
   }
 }

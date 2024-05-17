@@ -8,14 +8,19 @@ import {
   type RowData,
 } from "@zilliz/milvus2-sdk-node";
 import { BaseNode, MetadataMode, type Metadata } from "../../Node.js";
-import type {
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-export class MilvusVectorStore implements VectorStore {
+export class MilvusVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   public storesText: boolean = true;
   public isEmbeddingQuery?: boolean;
   private flatMetadata: boolean = true;
@@ -30,21 +35,23 @@ export class MilvusVectorStore implements VectorStore {
   private embeddingKey: string;
 
   constructor(
-    init?: Partial<{ milvusClient: MilvusClient }> & {
-      params?: {
-        configOrAddress: ClientConfig | string;
-        ssl?: boolean;
-        username?: string;
-        password?: string;
-        channelOptions?: ChannelOptions;
-      };
-      collection?: string;
-      idKey?: string;
-      contentKey?: string;
-      metadataKey?: string;
-      embeddingKey?: string;
-    },
+    init?: Partial<{ milvusClient: MilvusClient }> &
+      Partial<IEmbedModel> & {
+        params?: {
+          configOrAddress: ClientConfig | string;
+          ssl?: boolean;
+          username?: string;
+          password?: string;
+          channelOptions?: ChannelOptions;
+        };
+        collection?: string;
+        idKey?: string;
+        contentKey?: string;
+        metadataKey?: string;
+        embeddingKey?: string;
+      },
   ) {
+    super(init?.embedModel);
     if (init?.milvusClient) {
       this.milvusClient = init.milvusClient;
     } else {

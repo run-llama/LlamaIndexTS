@@ -1,8 +1,10 @@
 import type { BaseNode } from "../../Node.js";
-import type {
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
@@ -20,7 +22,7 @@ type QdrantParams = {
   url?: string;
   apiKey?: string;
   batchSize?: number;
-};
+} & Partial<IEmbedModel>;
 
 type QuerySearchResult = {
   id: string;
@@ -33,7 +35,10 @@ type QuerySearchResult = {
 /**
  * Qdrant vector store.
  */
-export class QdrantVectorStore implements VectorStore {
+export class QdrantVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
 
   batchSize: number;
@@ -49,6 +54,7 @@ export class QdrantVectorStore implements VectorStore {
    * @param url Qdrant URL
    * @param apiKey Qdrant API key
    * @param batchSize Number of vectors to upload in a single batch
+   * @param embedModel Embedding model
    */
   constructor({
     collectionName,
@@ -56,7 +62,9 @@ export class QdrantVectorStore implements VectorStore {
     url,
     apiKey,
     batchSize,
+    embedModel,
   }: QdrantParams) {
+    super(embedModel);
     if (!client && !url) {
       if (!url) {
         throw new Error("QdrantVectorStore requires url and collectionName");

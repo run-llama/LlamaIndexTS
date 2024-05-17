@@ -1,4 +1,6 @@
-import type { BaseNode } from "../../Node.js";
+import type { BaseNode, ModalityType } from "../../Node.js";
+import type { BaseEmbedding } from "../../embeddings/types.js";
+import { getEmbeddedModel } from "../../internal/settings/EmbedModel.js";
 
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];
@@ -56,7 +58,7 @@ export interface VectorStoreQuery {
   mmrThreshold?: number;
 }
 
-export interface VectorStore {
+export interface VectorStoreNoEmbedModel {
   storesText: boolean;
   isEmbeddingQuery?: boolean;
   client(): any;
@@ -66,4 +68,24 @@ export interface VectorStore {
     query: VectorStoreQuery,
     options?: any,
   ): Promise<VectorStoreQueryResult>;
+}
+
+export interface IEmbedModel {
+  embedModel: BaseEmbedding;
+}
+
+export interface VectorStore extends VectorStoreNoEmbedModel, IEmbedModel {}
+
+// Supported types of vector stores (for each modality)
+
+export type VectorStoreByType = {
+  [P in ModalityType]?: VectorStore;
+};
+
+export abstract class VectorStoreBase implements IEmbedModel {
+  embedModel: BaseEmbedding;
+
+  protected constructor(embedModel?: BaseEmbedding) {
+    this.embedModel = embedModel ?? getEmbeddedModel();
+  }
 }

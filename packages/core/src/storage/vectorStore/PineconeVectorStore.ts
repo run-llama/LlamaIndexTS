@@ -1,9 +1,11 @@
-import type {
-  ExactMatchFilter,
-  MetadataFilters,
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type ExactMatchFilter,
+  type IEmbedModel,
+  type MetadataFilters,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 
 import { getEnv } from "@llamaindex/env";
@@ -21,12 +23,15 @@ type PineconeParams = {
   chunkSize?: number;
   namespace?: string;
   textKey?: string;
-};
+} & IEmbedModel;
 
 /**
- * Provides support for writing and querying vector data in Postgres.
+ * Provides support for writing and querying vector data in Pinecone.
  */
-export class PineconeVectorStore implements VectorStore {
+export class PineconeVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
 
   /*
@@ -44,6 +49,7 @@ export class PineconeVectorStore implements VectorStore {
   textKey: string;
 
   constructor(params?: PineconeParams) {
+    super(params?.embedModel);
     this.indexName =
       params?.indexName ?? getEnv("PINECONE_INDEX_NAME") ?? "llama";
     this.namespace = params?.namespace ?? getEnv("PINECONE_NAMESPACE") ?? "";

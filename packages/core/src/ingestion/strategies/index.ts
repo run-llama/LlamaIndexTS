@@ -28,7 +28,7 @@ class NoOpStrategy implements TransformComponent {
 export function createDocStoreStrategy(
   docStoreStrategy: DocStoreStrategy,
   docStore?: BaseDocumentStore,
-  vectorStore?: VectorStore,
+  vectorStores: VectorStore[] = [],
 ): TransformComponent {
   if (docStoreStrategy === DocStoreStrategy.NONE) {
     return new NoOpStrategy();
@@ -36,11 +36,11 @@ export function createDocStoreStrategy(
   if (!docStore) {
     throw new Error("docStore is required to create a doc store strategy.");
   }
-  if (vectorStore) {
+  if (vectorStores.length > 0) {
     if (docStoreStrategy === DocStoreStrategy.UPSERTS) {
-      return new UpsertsStrategy(docStore, vectorStore);
+      return new UpsertsStrategy(docStore, vectorStores);
     } else if (docStoreStrategy === DocStoreStrategy.UPSERTS_AND_DELETE) {
-      return new UpsertsAndDeleteStrategy(docStore, vectorStore);
+      return new UpsertsAndDeleteStrategy(docStore, vectorStores);
     } else if (docStoreStrategy === DocStoreStrategy.DUPLICATES_ONLY) {
       return new DuplicatesStrategy(docStore);
     } else {

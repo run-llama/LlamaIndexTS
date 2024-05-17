@@ -1,19 +1,22 @@
-import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
-import { ImageNode, ObjectType, splitNodesByType } from "../../Node.js";
+import {
+  ImageNode,
+  ModalityType,
+  ObjectType,
+  splitNodesByType,
+  type BaseNode,
+  type Document,
+  type NodeWithScore,
+} from "../../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import {
-  embedModelFromSettingsOrContext,
-  nodeParserFromSettingsOrContext,
-} from "../../Settings.js";
+import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
-import { ClipEmbedding } from "../../embeddings/ClipEmbedding.js";
-import type {
-  BaseEmbedding,
-  MultiModalEmbedding,
-} from "../../embeddings/index.js";
+import type { BaseEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
-import { runTransformations } from "../../ingestion/IngestionPipeline.js";
+import {
+  addNodesToVectorStores,
+  runTransformations,
+} from "../../ingestion/IngestionPipeline.js";
 import {
   DocStoreStrategy,
   createDocStoreStrategy,
@@ -26,6 +29,7 @@ import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type {
   MetadataFilters,
   VectorStore,
+  VectorStoreByType,
   VectorStoreQuery,
   VectorStoreQueryResult,
 } from "../../storage/index.js";
@@ -45,36 +49,28 @@ export interface VectorIndexOptions extends IndexStructOptions {
   nodes?: BaseNode[];
   serviceContext?: ServiceContext;
   storageContext?: StorageContext;
-  imageVectorStore?: VectorStore;
-  vectorStore?: VectorStore;
+  vectorStores?: VectorStoreByType;
   logProgress?: boolean;
 }
 
 export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
   indexStore: BaseIndexStore;
-  imageVectorStore?: VectorStore;
+  vectorStores?: VectorStoreByType;
 }
 
 /**
- * The VectorStoreIndex, an index that stores the nodes only according to their vector embedings.
+ * The VectorStoreIndex, an index that stores the nodes only according to their vector embeddings.
  */
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
-  vectorStore: VectorStore;
   indexStore: BaseIndexStore;
-  embedModel: BaseEmbedding;
-  imageVectorStore?: VectorStore;
-  imageEmbedModel?: MultiModalEmbedding;
+  embedModel?: BaseEmbedding;
+  vectorStores: VectorStoreByType;
 
   private constructor(init: VectorIndexConstructorProps) {
     super(init);
     this.indexStore = init.indexStore;
-    this.vectorStore = init.vectorStore ?? init.storageContext.vectorStore;
-    this.embedModel = embedModelFromSettingsOrContext(init.serviceContext);
-    this.imageVectorStore =
-      init.imageVectorStore ?? init.storageContext.imageVectorStore;
-    if (this.imageVectorStore) {
-      this.imageEmbedModel = new ClipEmbedding();
-    }
+    this.vectorStores = init.vectorStores ?? init.storageContext.vectorStores;
+    this.embedModel = init.serviceContext?.embedModel;
   }
 
   /**
@@ -110,8 +106,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       docStore,
       indexStruct,
       indexStore,
-      vectorStore: options.vectorStore,
-      imageVectorStore: options.imageVectorStore,
+      vectorStores: options.vectorStores,
     });
 
     if (options.nodes) {
@@ -169,20 +164,17 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     nodes: BaseNode[],
     options?: { logProgress?: boolean },
   ): Promise<BaseNode[]> {
-    const { imageNodes, textNodes } = splitNodesByType(nodes);
-    if (imageNodes.length > 0) {
-      if (!this.imageEmbedModel) {
-        throw new Error(
-          "Cannot calculate image nodes embedding without 'imageEmbedModel' set",
-        );
+    const nodeMap = splitNodesByType(nodes);
+    for (const type in nodeMap) {
+      const nodes = nodeMap[type as ModalityType];
+      const embedModel =
+        this.embedModel ?? this.vectorStores[type as ModalityType]?.embedModel;
+      if (embedModel && nodes) {
+        await embedModel.transform(nodes, {
+          logProgress: options?.logProgress,
+        });
       }
-      await this.imageEmbedModel.transform(imageNodes, {
-        logProgress: options?.logProgress,
-      });
     }
-    await this.embedModel.transform(textNodes, {
-      logProgress: options?.logProgress,
-    });
     return nodes;
   }
 
@@ -210,14 +202,15 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       docStoreStrategy?: DocStoreStrategy;
     } = {},
   ): Promise<VectorStoreIndex> {
+    args.storageContext =
+      args.storageContext ?? (await storageContextFromDefaults({}));
+    args.vectorStores = args.vectorStores ?? args.storageContext.vectorStores;
     args.docStoreStrategy =
       args.docStoreStrategy ??
       // set doc store strategy defaults to the same as for the IngestionPipeline
-      (args.vectorStore
+      (args.vectorStores
         ? DocStoreStrategy.UPSERTS
         : DocStoreStrategy.DUPLICATES_ONLY);
-    args.storageContext =
-      args.storageContext ?? (await storageContextFromDefaults({}));
     args.serviceContext = args.serviceContext;
     const docStore = args.storageContext.docStore;
 
@@ -226,10 +219,11 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     }
 
     // use doc store strategy to avoid duplicates
+    const vectorStores = Object.values(args.vectorStores ?? {});
     const docStoreStrategy = createDocStoreStrategy(
       args.docStoreStrategy,
       docStore,
-      args.vectorStore,
+      vectorStores,
     );
     args.nodes = await runTransformations(
       documents,
@@ -243,20 +237,18 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     return await this.init(args);
   }
 
-  static async fromVectorStore(
-    vectorStore: VectorStore,
+  static async fromVectorStores(
+    vectorStores: VectorStoreByType,
     serviceContext?: ServiceContext,
-    imageVectorStore?: VectorStore,
   ) {
-    if (!vectorStore.storesText) {
+    if (!vectorStores[ModalityType.TEXT]?.storesText) {
       throw new Error(
         "Cannot initialize from a vector store that does not store text",
       );
     }
 
     const storageContext = await storageContextFromDefaults({
-      vectorStore,
-      imageVectorStore,
+      vectorStores,
     });
 
     const index = await this.init({
@@ -266,6 +258,16 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     });
 
     return index;
+  }
+
+  static async fromVectorStore(
+    vectorStore: VectorStore,
+    serviceContext?: ServiceContext,
+  ) {
+    return this.fromVectorStores(
+      { [ModalityType.TEXT]: vectorStore },
+      serviceContext,
+    );
   }
 
   asRetriever(
@@ -301,11 +303,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   protected async insertNodesToStore(
-    vectorStore: VectorStore,
+    newIds: string[],
     nodes: BaseNode[],
+    vectorStore: VectorStore,
   ): Promise<void> {
-    const newIds = await vectorStore.add(nodes);
-
     // NOTE: if the vector store doesn't store text,
     // we need to add the nodes to the index struct and document store
     // NOTE: if the vector store keeps text,
@@ -333,14 +334,11 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       return;
     }
     nodes = await this.getNodeEmbeddingResults(nodes, options);
-    const { imageNodes, textNodes } = splitNodesByType(nodes);
-    if (imageNodes.length > 0) {
-      if (!this.imageVectorStore) {
-        throw new Error("Cannot insert image nodes without image vector store");
-      }
-      await this.insertNodesToStore(this.imageVectorStore, imageNodes);
-    }
-    await this.insertNodesToStore(this.vectorStore, textNodes);
+    await addNodesToVectorStores(
+      nodes,
+      this.vectorStores,
+      this.insertNodesToStore.bind(this),
+    );
     await this.indexStore.addIndexStruct(this.indexStruct);
   }
 
@@ -348,11 +346,9 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     refDocId: string,
     deleteFromDocStore: boolean = true,
   ): Promise<void> {
-    await this.deleteRefDocFromStore(this.vectorStore, refDocId);
-    if (this.imageVectorStore) {
-      await this.deleteRefDocFromStore(this.imageVectorStore, refDocId);
+    for (const vectorStore of Object.values(this.vectorStores)) {
+      await this.deleteRefDocFromStore(vectorStore, refDocId);
     }
-
     if (deleteFromDocStore) {
       await this.docStore.deleteDocument(refDocId, false);
     }
@@ -382,28 +378,34 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
  * VectorIndexRetriever retrieves nodes from a VectorIndex.
  */
 
+type TopKMap = { [P in ModalityType]: number };
+
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   similarityTopK?: number;
-  imageSimilarityTopK?: number;
+  topK?: TopKMap;
 };
 
 export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
-  similarityTopK: number;
-  imageSimilarityTopK: number;
+  topK: TopKMap;
 
   serviceContext?: ServiceContext;
 
-  constructor({
-    index,
-    similarityTopK,
-    imageSimilarityTopK,
-  }: VectorIndexRetrieverOptions) {
+  constructor({ index, similarityTopK, topK }: VectorIndexRetrieverOptions) {
     this.index = index;
     this.serviceContext = this.index.serviceContext;
-    this.similarityTopK = similarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
-    this.imageSimilarityTopK = imageSimilarityTopK ?? DEFAULT_SIMILARITY_TOP_K;
+    this.topK = topK ?? {
+      [ModalityType.TEXT]: similarityTopK ?? DEFAULT_SIMILARITY_TOP_K,
+      [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
+    };
+  }
+
+  /**
+   * @deprecated, pass topK in constructor instead
+   */
+  set similarityTopK(similarityTopK: number) {
+    this.topK[ModalityType.TEXT] = similarityTopK;
   }
 
   @wrapEventCaller
@@ -416,13 +418,21 @@ export class VectorIndexRetriever implements BaseRetriever {
         query,
       },
     });
-    let nodesWithScores = await this.textRetrieve(
-      query,
-      preFilters as MetadataFilters,
-    );
-    nodesWithScores = nodesWithScores.concat(
-      await this.textToImageRetrieve(query, preFilters as MetadataFilters),
-    );
+    const vectorStores = this.index.vectorStores;
+    let nodesWithScores: NodeWithScore[] = [];
+
+    for (const type in vectorStores) {
+      // TODO: add retrieval by using an image as query
+      const vectorStore: VectorStore = vectorStores[type as ModalityType]!;
+      nodesWithScores = nodesWithScores.concat(
+        await this.textRetrieve(
+          query,
+          type as ModalityType,
+          vectorStore,
+          preFilters as MetadataFilters,
+        ),
+      );
+    }
     getCallbackManager().dispatchEvent("retrieve-end", {
       payload: {
         query,
@@ -439,34 +449,17 @@ export class VectorIndexRetriever implements BaseRetriever {
 
   protected async textRetrieve(
     query: string,
+    type: ModalityType,
+    vectorStore: VectorStore,
     preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
-    const options = {};
     const q = await this.buildVectorStoreQuery(
-      this.index.embedModel,
+      this.index.embedModel ?? vectorStore.embedModel,
       query,
-      this.similarityTopK,
+      this.topK[type],
       preFilters,
     );
-    const result = await this.index.vectorStore.query(q, options);
-    return this.buildNodeListFromQueryResult(result);
-  }
-
-  private async textToImageRetrieve(
-    query: string,
-    preFilters?: MetadataFilters,
-  ) {
-    if (!this.index.imageEmbedModel || !this.index.imageVectorStore) {
-      // no-op if image embedding and vector store are not set
-      return [];
-    }
-    const q = await this.buildVectorStoreQuery(
-      this.index.imageEmbedModel,
-      query,
-      this.imageSimilarityTopK,
-      preFilters,
-    );
-    const result = await this.index.imageVectorStore.query(q, preFilters);
+    const result = await vectorStore.query(q);
     return this.buildNodeListFromQueryResult(result);
   }
 
@@ -479,9 +472,9 @@ export class VectorIndexRetriever implements BaseRetriever {
     const queryEmbedding = await embedModel.getQueryEmbedding(query);
 
     return {
-      queryEmbedding: queryEmbedding,
+      queryEmbedding,
       mode: VectorStoreQueryMode.DEFAULT,
-      similarityTopK: similarityTopK,
+      similarityTopK,
       filters: preFilters ?? undefined,
     };
   }

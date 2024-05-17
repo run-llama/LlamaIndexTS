@@ -1,11 +1,6 @@
-import {
-  Settings,
-  SimpleDirectoryReader,
-  VectorStoreIndex,
-  storageContextFromDefaults,
-} from "llamaindex";
-
-import * as path from "path";
+import { Settings, SimpleDirectoryReader, VectorStoreIndex } from "llamaindex";
+import path from "path";
+import { getStorageContext } from "./storage";
 
 // Update chunk size and overlap
 Settings.chunkSize = 512;
@@ -25,10 +20,7 @@ async function generateDatasource() {
     const documents = await new SimpleDirectoryReader().loadData({
       directoryPath: path.join("multimodal", "data"),
     });
-    const storageContext = await storageContextFromDefaults({
-      persistDir: "storage",
-      storeImages: true,
-    });
+    const storageContext = await getStorageContext();
     await VectorStoreIndex.fromDocuments(documents, {
       storageContext,
     });

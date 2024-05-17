@@ -1,5 +1,6 @@
 import { fs, path } from "@llamaindex/env";
 import type { BaseNode } from "../../Node.js";
+import { BaseEmbedding } from "../../embeddings/index.js";
 import {
   getTopKEmbeddings,
   getTopKEmbeddingsLearner,
@@ -7,12 +8,14 @@ import {
 } from "../../embeddings/utils.js";
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
-import type {
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  VectorStoreQueryMode,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
-import { VectorStoreQueryMode } from "./types.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -27,20 +30,25 @@ class SimpleVectorStoreData {
   textIdToRefDocId: Record<string, string> = {};
 }
 
-export class SimpleVectorStore implements VectorStore {
+export class SimpleVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = false;
-  private data: SimpleVectorStoreData = new SimpleVectorStoreData();
+  private data: SimpleVectorStoreData;
   private persistPath: string | undefined;
 
-  constructor(data?: SimpleVectorStoreData) {
-    this.data = data || new SimpleVectorStoreData();
+  constructor(init?: { data?: SimpleVectorStoreData } & Partial<IEmbedModel>) {
+    super(init?.embedModel);
+    this.data = init?.data || new SimpleVectorStoreData();
   }
 
   static async fromPersistDir(
     persistDir: string = DEFAULT_PERSIST_DIR,
+    embedModel?: BaseEmbedding,
   ): Promise<SimpleVectorStore> {
     const persistPath = path.join(persistDir, "vector_store.json");
-    return await SimpleVectorStore.fromPersistPath(persistPath);
+    return await SimpleVectorStore.fromPersistPath(persistPath, embedModel);
   }
 
   get client(): any {
@@ -154,6 +162,7 @@ export class SimpleVectorStore implements VectorStore {
 
   static async fromPersistPath(
     persistPath: string,
+    embedModel?: BaseEmbedding,
   ): Promise<SimpleVectorStore> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(dirPath))) {
@@ -173,16 +182,19 @@ export class SimpleVectorStore implements VectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = dataDict.embeddingDict ?? {};
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
-    const store = new SimpleVectorStore(data);
+    const store = new SimpleVectorStore({ data, embedModel });
     store.persistPath = persistPath;
     return store;
   }
 
-  static fromDict(saveDict: SimpleVectorStoreData): SimpleVectorStore {
+  static fromDict(
+    saveDict: SimpleVectorStoreData,
+    embedModel?: BaseEmbedding,
+  ): SimpleVectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
-    return new SimpleVectorStore(data);
+    return new SimpleVectorStore({ data, embedModel });
   }
 
   toDict(): SimpleVectorStoreData {

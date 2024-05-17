@@ -1,9 +1,11 @@
 import type pg from "pg";
 
-import type {
-  VectorStore,
-  VectorStoreQuery,
-  VectorStoreQueryResult,
+import {
+  VectorStoreBase,
+  type IEmbedModel,
+  type VectorStoreNoEmbedModel,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
 } from "./types.js";
 
 import type { BaseNode, Metadata } from "../../Node.js";
@@ -16,7 +18,10 @@ export const PGVECTOR_TABLE = "llamaindex_embedding";
  * Provides support for writing and querying vector data in Postgres.
  * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
  */
-export class PGVectorStore implements VectorStore {
+export class PGVectorStore
+  extends VectorStoreBase
+  implements VectorStoreNoEmbedModel
+{
   storesText: boolean = true;
 
   private collection: string = "";
@@ -44,12 +49,15 @@ export class PGVectorStore implements VectorStore {
    * @param {string} config.connectionString - The connection string (optional).
    * @param {number} config.dimensions - The dimensions of the embedding model.
    */
-  constructor(config?: {
-    schemaName?: string;
-    tableName?: string;
-    connectionString?: string;
-    dimensions?: number;
-  }) {
+  constructor(
+    config?: {
+      schemaName?: string;
+      tableName?: string;
+      connectionString?: string;
+      dimensions?: number;
+    } & Partial<IEmbedModel>,
+  ) {
+    super(config?.embedModel);
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
     this.connectionString = config?.connectionString;
