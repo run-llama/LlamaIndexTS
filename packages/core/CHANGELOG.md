@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.3.12
+
+### Patch Changes
+
+- 34fb1d8: fix: cloudflare dev
+
 ## 0.3.11
 
 ### Patch Changes
