@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Environments
 
-LlamaIndex currently officially supports NodeJS 18 and NodeJS 20.
+We support Node.JS versions 18, 20 and 22, with experimental support for Deno, Bun and Vercel Edge functions.
 
 ## NextJS App Router
 

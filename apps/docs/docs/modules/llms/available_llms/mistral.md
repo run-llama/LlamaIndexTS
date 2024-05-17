@@ -3,7 +3,7 @@
 ## Usage
 
 ```ts
-import { Ollama, Settings } from "llamaindex";
+import { MistralAI, Settings } from "llamaindex";
 
 Settings.llm = new MistralAI({
   model: "mistral-tiny",

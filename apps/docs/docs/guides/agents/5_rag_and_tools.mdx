@@ -1,0 +1,128 @@
+# A RAG agent that does math
+
+In [our third iteration of the agent](https://github.com/run-llama/ts-agents/blob/main/3_rag_and_tools/agent.ts) we've combined the two previous agents, so we've defined both `sumNumbers` and a `QueryEngineTool` and created an array of two tools:
+
+```javascript
+// define the query engine as a tool
+const tools = [
+  new QueryEngineTool({
+    queryEngine: queryEngine,
+    metadata: {
+      name: "san_francisco_budget_tool",
+      description: `This tool can answer detailed questions about the individual components of the budget of San Francisco in 2023-2024.`,
+    },
+  }),
+  FunctionTool.from(sumNumbers, {
+    name: "sumNumbers",
+    description: "Use this function to sum two numbers",
+    parameters: {
+      type: "object",
+      properties: {
+        a: {
+          type: "number",
+          description: "First number to sum",
+        },
+        b: {
+          type: "number",
+          description: "Second number to sum",
+        },
+      },
+      required: ["a", "b"],
+    },
+  }),
+];
+```
+
+These tool descriptions are identical to the ones we previously defined. Now let's ask it 3 questions in a row:
+
+```javascript
+let response = await agent.chat({
+  message:
+    "What's the budget of San Francisco for community health in 2023-24?",
+});
+console.log(response);
+
+let response2 = await agent.chat({
+  message:
+    "What's the budget of San Francisco for public protection in 2023-24?",
+});
+console.log(response2);
+
+let response3 = await agent.chat({
+  message:
+    "What's the combined budget of San Francisco for community health and public protection in 2023-24?",
+});
+console.log(response3);
+```
+
+We'll abbreviate the output, but here are the important things to spot:
+
+```javascript
+{
+  toolCall: {
+    id: 'call_ZA1LPx03gO4ABre1r6XowLWq',
+    name: 'san_francisco_budget_tool',
+    input: { query: 'community health budget 2023-2024' }
+  },
+  toolResult: {
+    tool: QueryEngineTool {
+      queryEngine: [RetrieverQueryEngine],
+      metadata: [Object]
+    },
+    input: { query: 'community health budget 2023-2024' },
+    output: 'The proposed Fiscal Year (FY) 2023-24 budget for the Department of Public Health is $3.2 billion
+  }
+}
+```
+
+This is the first tool call, where it used the query engine to get the public health budget.
+
+```javascript
+{
+  toolCall: {
+    id: 'call_oHu1KjEvA47ER6HYVfFIq9yp',
+    name: 'san_francisco_budget_tool',
+    input: { query: 'public protection budget 2023-2024' }
+  },
+  toolResult: {
+    tool: QueryEngineTool {
+      queryEngine: [RetrieverQueryEngine],
+      metadata: [Object]
+    },
+    input: { query: 'public protection budget 2023-2024' },
+    output: "The budget for Public Protection in San Francisco for Fiscal Year (FY) 2023-24 is $2,012.5 million."
+  }
+}
+```
+
+In the second tool call, it got the police budget also from the query engine.
+
+```javascript
+{
+  toolCall: {
+    id: 'call_SzG4yGUnLbv1T7IyaLAOqg3t',
+    name: 'sumNumbers',
+    input: { a: 3200, b: 2012.5 }
+  },
+  toolResult: {
+    tool: FunctionTool { _fn: [Function: sumNumbers], _metadata: [Object] },
+    input: { a: 3200, b: 2012.5 },
+    output: '5212.5',
+    isError: false
+  }
+}
+```
+
+In the final tool call, it used the `sumNumbers` function to add the two budgets together. Perfect! This leads to the final answer:
+
+```javascript
+{
+    message: {
+      content: 'The combined budget of San Francisco for community health and public protection in Fiscal Year (FY) 2023-24 is $5,212.5 million.',
+      role: 'assistant',
+      options: {}
+    }
+}
+```
+
+Great! Now let's improve accuracy by improving our parsing with [LlamaParse](llamaparse).
