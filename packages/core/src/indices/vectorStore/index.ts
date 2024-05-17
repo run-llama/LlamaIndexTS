@@ -71,7 +71,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     super(init);
     this.indexStore = init.indexStore;
     this.vectorStores = init.vectorStores ?? init.storageContext.vectorStores;
-    this.embedModel = init.embedModel;
+    this.embedModel = init.embedModel ?? init.serviceContext?.embedModel;
   }
 
   /**
