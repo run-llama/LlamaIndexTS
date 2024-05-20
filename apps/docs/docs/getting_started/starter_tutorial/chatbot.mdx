@@ -1,0 +1,27 @@
+---
+sidebar_position: 2
+---
+
+# Chatbot tutorial
+
+Once you've mastered basic [retrieval-augment generation](retrieval_augmented_generation) you may want to create an interface to chat with your data. You can do this step-by-step, but we recommend getting started quickly using `create-llama`.
+
+## Using create-llama
+
+`create-llama` is a powerful but easy to use command-line tool that generates a working, full-stack web application that allows you to chat with your data. You can learn more about it on [the `create-llama` README page](https://www.npmjs.com/package/create-llama).
+
+Run it once and it will ask you a series of questions about the kind of application you want to generate. Then you can customize your application to suit your use-case. To get started, run:
+
+```bash npm2yarn
+npx create-llama@latest
+```
+
+Once your app is generated, `cd` into your app directory and run
+
+```bash npm2yarn
+npm run dev
+```
+
+to start the development server. You can then visit [http://localhost:3000](http://localhost:3000) to see your app, which should look something like this:
+
+![create-llama interface](./images/create_llama.png)
