@@ -28,6 +28,7 @@ export default function withLlamaIndex(config: any) {
       ...webpackConfig.resolve.alias,
       sharp$: false,
       "onnxruntime-node$": false,
+      "@google-cloud/vertexai": false,
     };
     return webpackConfig;
   };
