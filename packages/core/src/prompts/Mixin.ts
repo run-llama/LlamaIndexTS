@@ -1,28 +1,7 @@
-import type { ChatMessage } from "../index.edge.js";
-
 type PromptsDict = Record<string, any>;
 type ModuleDict = Record<string, any>;
 
 export class PromptMixin {
-  systemPrompt?: string;
-
-  constructor(opts?: { systemPrompt?: string }) {
-    this.systemPrompt = opts?.systemPrompt;
-  }
-
-  protected addSystemPromptToMessages(messages: ChatMessage[]) {
-    if (!this.systemPrompt) return messages;
-    const alreadyHasSystemPrompt = messages
-      .filter((msg) => msg.role === "system")
-      .some((msg) => Object.is(msg.content, this.systemPrompt));
-    if (!alreadyHasSystemPrompt) {
-      messages.push({
-        content: this.systemPrompt!,
-        role: "system",
-      });
-    }
-  }
-
   /**
    * Validates the prompt keys and module keys
    * @param promptsDict

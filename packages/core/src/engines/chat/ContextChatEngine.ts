@@ -31,6 +31,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
   chatModel: LLM;
   chatHistory: ChatHistory;
   contextGenerator: ContextGenerator;
+  systemPrompt?: string;
 
   constructor(init: {
     retriever: BaseRetriever;
@@ -40,9 +41,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     nodePostprocessors?: BaseNodePostprocessor[];
     systemPrompt?: string;
   }) {
-    super({
-      systemPrompt: init.systemPrompt,
-    });
+    super();
     this.chatModel =
       init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
     this.chatHistory = getHistory(init?.chatHistory);
@@ -51,12 +50,26 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
       contextSystemPrompt: init?.contextSystemPrompt,
       nodePostprocessors: init?.nodePostprocessors,
     });
+    this.systemPrompt = init.systemPrompt;
   }
 
   protected _getPromptModules(): Record<string, ContextGenerator> {
     return {
       contextGenerator: this.contextGenerator,
     };
+  }
+
+  public addSystemPromptToMessages(messages: ChatMessage[]) {
+    if (!this.systemPrompt) return messages;
+    const alreadyHasSystemPrompt = messages
+      .filter((msg) => msg.role === "system")
+      .some((msg) => Object.is(msg.content, this.systemPrompt));
+    if (!alreadyHasSystemPrompt) {
+      messages.push({
+        content: this.systemPrompt!,
+        role: "system",
+      });
+    }
   }
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
