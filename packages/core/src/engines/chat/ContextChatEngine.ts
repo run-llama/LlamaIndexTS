@@ -114,26 +114,16 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     });
     const textOnly = extractText(message);
     const context = await this.contextGenerator.generate(textOnly);
-    const messages = await chatHistory.requestMessages(
-      context ? [context.message] : undefined,
-    );
-    this.addSystemPromptToMessages(messages);
+    const systemMessage = this.prependSystemPrompt(context.message);
+    const messages = await chatHistory.requestMessages([systemMessage]);
     return { nodes: context.nodes, messages };
   }
 
-  // if already has system message, update it by appending the system prompt
-  // otherwise, add a new system message
-  private addSystemPromptToMessages(messages: ChatMessage[]) {
-    if (!this.systemPrompt) return messages;
-    const currentSystemMessage = messages.find((msg) => msg.role === "system");
-    if (currentSystemMessage) {
-      currentSystemMessage.content =
-        this.systemPrompt.trim() + "\n" + currentSystemMessage.content;
-    } else {
-      messages.push({
-        content: this.systemPrompt,
-        role: "system",
-      });
-    }
+  private prependSystemPrompt(message: ChatMessage): ChatMessage {
+    if (!this.systemPrompt) return message;
+    return {
+      ...message,
+      content: this.systemPrompt.trim() + "\n" + message.content,
+    };
   }
 }
