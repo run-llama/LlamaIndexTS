@@ -59,19 +59,6 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     };
   }
 
-  public addSystemPromptToMessages(messages: ChatMessage[]) {
-    if (!this.systemPrompt) return messages;
-    const alreadyHasSystemPrompt = messages
-      .filter((msg) => msg.role === "system")
-      .some((msg) => Object.is(msg.content, this.systemPrompt));
-    if (!alreadyHasSystemPrompt) {
-      messages.push({
-        content: this.systemPrompt!,
-        role: "system",
-      });
-    }
-  }
-
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
   chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
   @wrapEventCaller
@@ -86,7 +73,6 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
       message,
       chatHistory,
     );
-    this.addSystemPromptToMessages(requestMessages.messages);
     if (stream) {
       const stream = await this.chatModel.chat({
         messages: requestMessages.messages,
@@ -131,6 +117,23 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     const messages = await chatHistory.requestMessages(
       context ? [context.message] : undefined,
     );
+    this.addSystemPromptToMessages(messages);
     return { nodes: context.nodes, messages };
+  }
+
+  // if already has system message, update it by appending the system prompt
+  // otherwise, add a new system message
+  private addSystemPromptToMessages(messages: ChatMessage[]) {
+    if (!this.systemPrompt) return messages;
+    const currentSystemMessage = messages.find((msg) => msg.role === "system");
+    if (currentSystemMessage) {
+      currentSystemMessage.content =
+        this.systemPrompt.trim() + "\n" + currentSystemMessage.content;
+    } else {
+      messages.push({
+        content: this.systemPrompt,
+        role: "system",
+      });
+    }
   }
 }
