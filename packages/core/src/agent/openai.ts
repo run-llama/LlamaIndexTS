@@ -34,6 +34,7 @@ export class OpenAIAgentWorker extends AgentWorker<OpenAI> {
 
 export class OpenAIAgent extends AgentRunner<OpenAI> {
   constructor(params: OpenAIAgentParams) {
+    const llm: OpenAI = params.llm ?? (Settings.llm as OpenAI);
     super({
       llm:
         params.llm ??
