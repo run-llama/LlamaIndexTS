@@ -44,6 +44,8 @@ export class MarkdownReader implements FileReader {
             continue;
           }
           markdownTups.push([currentHeader, currentText]);
+        } else if (currentText) {
+          markdownTups.push([null, currentText]);
         }
 
         currentHeader = line;
