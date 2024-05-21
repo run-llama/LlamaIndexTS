@@ -25,7 +25,7 @@ export type SimpleDirectoryReaderLoadDataParams = {
   overrideReader?: BaseReader;
 };
 
-type ProcessFilesParams = Omit<
+type ProcessFileParams = Omit<
   SimpleDirectoryReaderLoadDataParams,
   "directoryPath"
 >;
@@ -74,7 +74,7 @@ export class SimpleDirectoryReader implements BaseReader {
       filePathQueue.push(filePath);
     }
 
-    const processFilesParams: ProcessFilesParams = {
+    const processFileParams: ProcessFileParams = {
       fs,
       defaultReader,
       fileExtToReader,
@@ -90,7 +90,7 @@ export class SimpleDirectoryReader implements BaseReader {
 
     const limit = pLimit(numWorkers);
     const workerPromises = filePathQueue.map((filePath) =>
-      limit(() => this.processFiles(filePath, processFilesParams)),
+      limit(() => this.processFile(filePath, processFileParams)),
     );
 
     const results: Document[][] = await Promise.all(workerPromises);
@@ -102,9 +102,9 @@ export class SimpleDirectoryReader implements BaseReader {
     return results.flat();
   }
 
-  private async processFiles(
+  private async processFile(
     filePath: string,
-    params: ProcessFilesParams,
+    params: ProcessFileParams,
   ): Promise<Document[]> {
     const docs: Document[] = [];
 
