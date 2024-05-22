@@ -39,9 +39,10 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
   constructor(params: AnthropicAgentParams) {
     super({
       llm:
-        params.llm ?? Settings.llm instanceof Anthropic
+        params.llm ??
+        (Settings.llm instanceof Anthropic
           ? (Settings.llm as Anthropic)
-          : new Anthropic(),
+          : new Anthropic()),
       chatHistory: params.chatHistory ?? [],
       systemPrompt: params.systemPrompt ?? null,
       runner: new AnthropicAgentWorker(),
