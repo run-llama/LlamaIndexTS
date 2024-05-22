@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "expectedMinorVersion": "3",
   "license": "MIT",
   "type": "module",
