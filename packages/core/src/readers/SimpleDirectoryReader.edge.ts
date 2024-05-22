@@ -19,9 +19,13 @@ enum ReaderStatus {
 
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
+  // Fallback Reader, defaults to TextFileReader
   defaultReader?: BaseReader | null;
+  // Overrides the reader for specific file extensions
   fileExtToReader?: Record<string, BaseReader>;
+  // Defines the amount of "workers" to use. Must be between 1 and 9
   numWorkers?: number;
+  // Overrides the reader for all file extension
   overrideReader?: BaseReader;
 };
 
@@ -68,26 +72,20 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
+    // Creates a Queue of filePaths to be accessed by each individual worker
     const filePathQueue: string[] = [];
 
-    for await (const filePath of walk(fs, directoryPath)) {
+    for await (const filePath of walk(directoryPath)) {
       filePathQueue.push(filePath);
     }
 
     const processFileParams: ProcessFileParams = {
-      fs,
       defaultReader,
       fileExtToReader,
       overrideReader,
     };
 
-    const processFilesParams: ProcessFilesParams = {
-      fs,
-      defaultReader,
-      fileExtToReader,
-      overrideReader,
-    };
-
+    // Uses pLimit to control the number of parallel requests
     const limit = pLimit(numWorkers);
     const workerPromises = filePathQueue.map((filePath) =>
       limit(() => this.processFile(filePath, processFileParams)),
@@ -137,7 +135,7 @@ export class SimpleDirectoryReader implements BaseReader {
         return [];
       }
 
-      const fileDocs = await reader.loadData(filePath, params.fs);
+      const fileDocs = await reader.loadData(filePath, fs);
       fileDocs.forEach(addMetaData(filePath));
 
       // Observer can still cancel addition of the resulting docs from this file
