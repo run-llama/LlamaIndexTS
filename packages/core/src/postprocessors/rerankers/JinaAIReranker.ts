@@ -1,6 +1,8 @@
 import { getEnv } from "@llamaindex/env";
 import type { NodeWithScore } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
+import type { MessageContent } from "../../llm/types.js";
+import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../types.js";
 
 interface JinaAIRerankerResult {
@@ -62,7 +64,7 @@ export class JinaAIReranker implements BaseNodePostprocessor {
 
   async postprocessNodes(
     nodes: NodeWithScore[],
-    query?: string,
+    query?: MessageContent,
   ): Promise<NodeWithScore[]> {
     if (nodes.length === 0) {
       return [];
@@ -73,7 +75,7 @@ export class JinaAIReranker implements BaseNodePostprocessor {
     }
 
     const documents = nodes.map((n) => n.node.getContent(MetadataMode.ALL));
-    const results = await this.rerank(query, documents, this.topN);
+    const results = await this.rerank(extractText(query), documents, this.topN);
     const newNodes: NodeWithScore[] = [];
 
     for (const result of results) {

@@ -30,8 +30,4 @@ export class MistralAIEmbedding extends BaseEmbedding {
   async getTextEmbedding(text: string): Promise<number[]> {
     return this.getMistralAIEmbedding(text);
   }
-
-  async getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getMistralAIEmbedding(query);
-  }
 }

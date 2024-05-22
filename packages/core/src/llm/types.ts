@@ -4,10 +4,10 @@ import type { BaseEvent } from "../internal/type.js";
 import type { BaseTool, JSONObject, ToolOutput, UUID } from "../types.js";
 
 export type RetrievalStartEvent = BaseEvent<{
-  query: string;
+  query: MessageContent;
 }>;
 export type RetrievalEndEvent = BaseEvent<{
-  query: string;
+  query: MessageContent;
   nodes: NodeWithScore[];
 }>;
 export type LLMStartEvent = BaseEvent<{
