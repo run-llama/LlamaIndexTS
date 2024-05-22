@@ -95,7 +95,7 @@ export class MongoDBAtlasVectorSearch implements VectorStore {
   }
 
   async delete(refDocId: string, deleteOptions?: any): Promise<void> {
-    await this.collection.deleteOne(
+    await this.collection.deleteMany(
       {
         [`${this.metadataKey}.ref_doc_id`]: refDocId,
       },
