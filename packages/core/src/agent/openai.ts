@@ -36,7 +36,8 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
   constructor(params: OpenAIAgentParams) {
     super({
       llm:
-        params.llm ?? (Settings.llm instanceof OpenAI
+        params.llm ??
+        (Settings.llm instanceof OpenAI
           ? (Settings.llm as OpenAI)
           : new OpenAI()),
       chatHistory: params.chatHistory ?? [],
