@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.3.14
+
+### Patch Changes
+
+- 6ff7576: Added GPT-4o for Azure
+- 94543de: Added the latest preview gemini models and multi modal images taken into account
+
 ## 0.3.13
 
 ### Patch Changes

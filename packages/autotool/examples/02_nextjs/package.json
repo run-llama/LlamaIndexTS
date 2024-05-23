@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/autotool-02-next-example",
   "private": true,
-  "version": "0.1.5",
+  "version": "0.1.6",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

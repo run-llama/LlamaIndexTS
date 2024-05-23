@@ -51,7 +51,7 @@
     "unplugin": "^1.10.1"
   },
   "peerDependencies": {
-    "llamaindex": "^0.3.13",
+    "llamaindex": "^0.3.14",
     "openai": "^4",
     "typescript": "^4"
   },
