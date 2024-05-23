@@ -36,7 +36,6 @@ const ALL_AZURE_OPENAI_CHAT_MODELS = {
     contextWindow: 128000,
     openAIModel: "gpt-4-1106-preview",
   },
-  "gpt-4o": { contextWindow: 128000, openAIModel: "gpt-4o" },
   "gpt-4o-2024-05-13": {
     contextWindow: 128000,
     openAIModel: "gpt-4o-2024-05-13",
