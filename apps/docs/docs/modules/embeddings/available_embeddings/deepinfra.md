@@ -27,7 +27,7 @@ For example:
 ```ts
 import { DeepInfraEmbedding } from "llamaindex";
 
-const model = "intfloat/e5-large-v2"
+const model = "intfloat/e5-large-v2";
 Settings.embedModel = new DeepInfraEmbedding({
   model,
 });
