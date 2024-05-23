@@ -51,6 +51,8 @@ export enum GEMINI_MODEL {
   GEMINI_PRO = "gemini-pro",
   GEMINI_PRO_VISION = "gemini-pro-vision",
   GEMINI_PRO_LATEST = "gemini-1.5-pro-latest",
+  GEMINI_PRO_1_5_PRO_PREVIEW = "gemini-1.5-pro-preview-0514",
+  GEMINI_PRO_1_5_FLASH_PREVIEW = "gemini-1.5-flash-preview-0514",
 }
 
 export interface GeminiModelInfo {
