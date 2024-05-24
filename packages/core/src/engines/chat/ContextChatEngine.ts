@@ -3,9 +3,9 @@ import { getHistory } from "../../ChatHistory.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
+import { Settings } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
-import { OpenAI } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
 import {
   extractText,
@@ -42,8 +42,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     systemPrompt?: string;
   }) {
     super();
-    this.chatModel =
-      init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
+    this.chatModel = init.chatModel ?? Settings.llm;
     this.chatHistory = getHistory(init?.chatHistory);
     this.contextGenerator = new DefaultContextGenerator({
       retriever: init.retriever,
