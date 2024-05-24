@@ -191,10 +191,6 @@ export class Ollama
     return this.getEmbedding(text);
   }
 
-  async getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getEmbedding(query);
-  }
-
   // Inherited from OllamaBase
 
   push(
