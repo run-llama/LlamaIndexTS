@@ -19,9 +19,13 @@ enum ReaderStatus {
 
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
+  // Fallback Reader, defaults to TextFileReader
   defaultReader?: BaseReader | null;
+  // Map of file extensions individually to readers
   fileExtToReader?: Record<string, BaseReader>;
+  // Number of workers, defaults to 1. Must be between 1 and 9.
   numWorkers?: number;
+  // Overrides reader for all file extensions
   overrideReader?: BaseReader;
 };
 
@@ -80,6 +84,7 @@ export class SimpleDirectoryReader implements BaseReader {
       overrideReader,
     };
 
+    // Uses pLimit to control number of parallel requests
     const limit = pLimit(numWorkers);
     const workerPromises = filePathQueue.map((filePath) =>
       limit(() => this.processFile(filePath, processFileParams)),
