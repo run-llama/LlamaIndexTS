@@ -21,7 +21,7 @@ export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
   // Fallback Reader, defaults to TextFileReader
   defaultReader?: BaseReader | null;
-  // Map of file extensions individually to readers
+  // Map file extensions individually to readers
   fileExtToReader?: Record<string, BaseReader>;
   // Number of workers, defaults to 1. Must be between 1 and 9.
   numWorkers?: number;
@@ -72,6 +72,7 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
+    // Crates a queue of file paths each worker accesses individually
     const filePathQueue: string[] = [];
 
     for await (const filePath of walk(directoryPath)) {
