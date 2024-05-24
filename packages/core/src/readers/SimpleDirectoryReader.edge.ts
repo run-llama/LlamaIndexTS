@@ -1,4 +1,4 @@
-import { path } from "@llamaindex/env";
+import { fs, path } from "@llamaindex/env";
 import pLimit from "p-limit";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
@@ -19,7 +19,6 @@ enum ReaderStatus {
 
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
-  fs?: CompleteFileSystem;
   defaultReader?: BaseReader | null;
   fileExtToReader?: Record<string, BaseReader>;
   numWorkers?: number;
@@ -52,7 +51,6 @@ export class SimpleDirectoryReader implements BaseReader {
 
     const {
       directoryPath,
-      fs = defaultFS,
       defaultReader = new TextFileReader(),
       fileExtToReader,
       numWorkers = 1,
@@ -72,12 +70,11 @@ export class SimpleDirectoryReader implements BaseReader {
 
     const filePathQueue: string[] = [];
 
-    for await (const filePath of walk(fs, directoryPath)) {
+    for await (const filePath of walk(directoryPath)) {
       filePathQueue.push(filePath);
     }
 
     const processFileParams: ProcessFileParams = {
-      fs,
       defaultReader,
       fileExtToReader,
       overrideReader,
@@ -132,7 +129,7 @@ export class SimpleDirectoryReader implements BaseReader {
         return [];
       }
 
-      const fileDocs = await reader.loadData(filePath, params.fs);
+      const fileDocs = await reader.loadData(filePath, fs);
       fileDocs.forEach(addMetaData(filePath));
 
       // Observer can still cancel addition of the resulting docs from this file
