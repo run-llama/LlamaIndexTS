@@ -1,9 +1,9 @@
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
 import { Response } from "../../Response.js";
+import { Settings } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatResponseChunk, LLM } from "../../llm/index.js";
-import { OpenAI } from "../../llm/index.js";
 import {
   extractText,
   streamConverter,
@@ -25,7 +25,7 @@ export class SimpleChatEngine implements ChatEngine {
 
   constructor(init?: Partial<SimpleChatEngine>) {
     this.chatHistory = getHistory(init?.chatHistory);
-    this.llm = init?.llm ?? new OpenAI();
+    this.llm = init?.llm ?? Settings.llm;
   }
 
   chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
