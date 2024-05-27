@@ -89,11 +89,7 @@ export class LlamaParseReader implements FileReader {
     if (params.gpt4oMode) {
       params.gpt4oApiKey =
         params.gpt4oApiKey ?? getEnv("LLAMA_CLOUD_GPT4O_API_KEY");
-      if (!params.gpt4oApiKey) {
-        throw new Error(
-          "LlamaParse: GPT-4o Mode is enabled but no API Key provided. Please pass the gpt4oApiKey parameter or set the LLAMA_CLOUD_GPT4O_API_KEY environment variable.",
-        );
-      }
+
       this.gpt4oApiKey = params.gpt4oApiKey;
     }
   }
