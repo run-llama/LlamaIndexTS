@@ -67,6 +67,14 @@ export class LlamaParseReader implements FileReader {
   language: Language = "en";
   // The parsing instruction for the parser.
   parsingInstruction: string = "";
+  // If set to true, the parser will ignore diagonal text (when the text rotation in degrees modulo 90 is not 0).
+  skipDiagonalText: boolean = false;
+  // If set to true, the cache will be ignored and the document re-processes. All document are kept in cache for 48hours after the job was completed to avoid processing 2 time the same document.
+  invalidateCache: boolean = false;
+  // Whether to use gpt-4o extract text from documents.
+  gpt4oMode: boolean = false;
+  // The API key for the GPT-4o API. Lowers the cost of parsing.
+  gpt4oApiKey?: string;
 
   constructor(params: Partial<LlamaParseReader> = {}) {
     Object.assign(this, params);
@@ -77,6 +85,17 @@ export class LlamaParseReader implements FileReader {
       );
     }
     this.apiKey = params.apiKey;
+
+    if (params.gpt4oMode) {
+      params.gpt4oApiKey =
+        params.gpt4oApiKey ?? getEnv("LLAMA_CLOUD_GPT4O_API_KEY");
+      if (!params.gpt4oApiKey) {
+        throw new Error(
+          "LlamaParse: GPT-4o Mode is enabled but no API Key provided. Please pass the gpt4oApiKey parameter or set the LLAMA_CLOUD_GPT4O_API_KEY environment variable.",
+        );
+      }
+      this.gpt4oApiKey = params.gpt4oApiKey;
+    }
   }
 
   async loadData(file: string): Promise<Document[]> {
@@ -89,7 +108,13 @@ export class LlamaParseReader implements FileReader {
     const body = new FormData();
     body.set("file", new Blob([data], { type: mimeType }), file);
     body.append("language", this.language);
-    body.append("parsingInstruction", this.parsingInstruction);
+    body.append("parsing_instruction", this.parsingInstruction);
+    body.append("skip_diagonal_text", this.skipDiagonalText.toString());
+    body.append("invalidate_cache", this.invalidateCache.toString());
+    body.append("gpt4o_mode", this.gpt4oMode.toString());
+    if (this.gpt4oMode && this.gpt4oApiKey) {
+      body.append("gpt4o_api_key", this.gpt4oApiKey);
+    }
 
     const headers = {
       Authorization: `Bearer ${this.apiKey}`,
