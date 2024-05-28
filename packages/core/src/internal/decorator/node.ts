@@ -4,12 +4,19 @@ import { getChunkSize } from "../settings/chunk-size.js";
 
 const emitOnce = false;
 
-export function chunkSizeCheck(
-  contentGetter: () => string,
-  _context: ClassMethodDecoratorContext | ClassGetterDecoratorContext,
+export function chunkSizeCheck<
+  This extends BaseNode,
+  Args extends any[],
+  Return,
+>(
+  contentGetter: (this: This, ...args: Args) => string,
+  _context: ClassMethodDecoratorContext<
+    This,
+    (this: This, ...args: Args) => Return
+  >,
 ) {
-  return function <Node extends BaseNode>(this: Node) {
-    const content = contentGetter.call(this);
+  return function (this: This, ...args: Args) {
+    const content = contentGetter.call(this, ...args);
     const chunkSize = getChunkSize();
     const enableChunkSizeCheck = getEnv("ENABLE_CHUNK_SIZE_CHECK") === "true";
     if (
