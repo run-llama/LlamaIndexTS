@@ -7,9 +7,12 @@ const API_TOKEN_ENV_VARIABLE_NAME = "DEEPINFRA_API_TOKEN";
 
 const API_ROOT = "https://api.deepinfra.com/v1/inference";
 
+const DEFAULT_TIMEOUT = 60 * 1000;
+
+const DEFAULT_MAX_RETRIES = 5;
+
 export interface DeepInfraEmbeddingResponse {
   embeddings: number[][];
-  input_tokens: number;
   request_id: string;
   inference_status: InferenceStatus;
 }
@@ -57,6 +60,18 @@ export class DeepInfraEmbedding extends BaseEmbedding {
    */
   textPrefix: string;
 
+  /**
+   *
+   * @default 5
+   */
+  maxRetries: number;
+
+  /**
+   *
+   * @default 60 * 1000
+   */
+  timeout: number;
+
   constructor(init?: Partial<DeepInfraEmbedding>) {
     super();
 
@@ -64,6 +79,8 @@ export class DeepInfraEmbedding extends BaseEmbedding {
     this.apiToken = init?.apiToken ?? getEnv(API_TOKEN_ENV_VARIABLE_NAME) ?? "";
     this.queryPrefix = init?.queryPrefix ?? "";
     this.textPrefix = init?.textPrefix ?? "";
+    this.maxRetries = init?.maxRetries ?? DEFAULT_MAX_RETRIES;
+    this.timeout = init?.timeout ?? DEFAULT_TIMEOUT;
   }
 
   async getTextEmbedding(text: string): Promise<number[]> {
@@ -90,18 +107,35 @@ export class DeepInfraEmbedding extends BaseEmbedding {
 
   private async getDeepInfraEmbedding(inputs: string[]): Promise<number[][]> {
     const url = this.getUrl(this.model);
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.apiToken}`,
-      },
-      body: JSON.stringify({
-        inputs: [inputs],
-      }),
-    });
-    const responseJson: DeepInfraEmbeddingResponse = await response.json();
-    return responseJson.embeddings;
+
+    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), this.timeout);
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.apiToken}`,
+          },
+          body: JSON.stringify({ inputs }),
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const responseJson: DeepInfraEmbeddingResponse = await response.json();
+        return responseJson.embeddings;
+      } catch (error) {
+        console.error(`Attempt ${attempt + 1} failed: ${error}`);
+      } finally {
+        clearTimeout(id);
+      }
+    }
+
+    throw new Error("Exceeded maximum retries");
   }
 
   private getUrl(model: string): string {
