@@ -21,7 +21,6 @@ export interface InferenceStatus {
   status: string;
   runtime_ms: number;
   cost: number;
-  tokens_generated: number;
   tokens_input: number;
 }
 
