@@ -8,7 +8,7 @@ import { DeepInfra, Settings } from "llamaindex";
 // Get the API key from `DEEPINFRA_API_TOKEN` environment variable
 import { config } from "dotenv";
 config();
-Settings.llm = new DeepInfraLLM();
+Settings.llm = new DeepInfra();
 
 // Set the API key
 apiKey = "YOUR_API_KEY";
