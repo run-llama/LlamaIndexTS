@@ -39,6 +39,7 @@ export class MongoDBAtlasVectorSearch
   textKey: string;
   metadataKey: string;
   insertOptions?: BulkWriteOptions;
+  numCandidates?: number;
   private collection: Collection;
 
   constructor(
@@ -69,6 +70,7 @@ export class MongoDBAtlasVectorSearch
     this.idKey = init.idKey ?? "id";
     this.textKey = init.textKey ?? "text";
     this.metadataKey = init.metadataKey ?? "metadata";
+    this.numCandidates = init.numCandidates;
     this.insertOptions = init.insertOptions;
   }
 
@@ -121,7 +123,7 @@ export class MongoDBAtlasVectorSearch
     const params: any = {
       queryVector: query.queryEmbedding,
       path: this.embeddingKey,
-      numCandidates: query.similarityTopK * 10,
+      numCandidates: this.numCandidates ?? query.similarityTopK * 10,
       limit: query.similarityTopK,
       index: this.indexName,
     };
