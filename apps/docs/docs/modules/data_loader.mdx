@@ -41,13 +41,13 @@ LlamaParse is an API created by LlamaIndex to efficiently parse files, e.g. it's
 To use it, first login and get an API key from https://cloud.llamaindex.ai. Make sure to store the key as `apiKey` parameter or in the environment variable `LLAMA_CLOUD_API_KEY`.
 
 Then, you can use the `LlamaParseReader` class to local files and convert them into a parsed document that can be used by LlamaIndex.
-See [LlamaParseReader.ts](https://github.com/run-llama/LlamaIndexTS/blob/060b700e0941f0a7668b31d758ff7d2d1685f5bc/packages/core/src/readers/LlamaParseReader.ts#L6) for a list of supported file types:
+See [LlamaParseReader.ts](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/readers/LlamaParseReader.ts#L6) for a list of supported file types:
 
 <CodeBlock language="ts">{CodeSource3}</CodeBlock>
 
 Additional options can be set with the `LlamaParseReader` constructor:
 `resultType` can be set to `markdown`, `text` or `.json`. Defaults to `text`
-`language` primarly helps with OCR recognition. Defaults to `en`. See [../readers/type.ts](https://github.com/run-llama/LlamaIndexTS/blob/060b700e0941f0a7668b31d758ff7d2d1685f5bc/packages/core/src/readers/type.ts#L20) for a list of supported languages.
+`language` primarly helps with OCR recognition. Defaults to `en`. See [../readers/type.ts](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/readers/type.ts#L20) for a list of supported languages.
 `parsingInstructions` can help with complicated document structures. See this [LlamaIndex Blog Post](https://www.llamaindex.ai/blog/launching-the-first-genai-native-document-parsing-platform) for an example.
 `skipDiagonalText` set to true to ignore diagonal text.
 `invalidateCache` set to true to ignore the LlamaCloud cache. All document are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Can be useful for texting when trying to re-parse the same document with, e.g. different `parsingInstructions`.
