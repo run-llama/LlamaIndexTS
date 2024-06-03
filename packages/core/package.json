@@ -137,7 +137,8 @@
   "files": [
     "dist",
     "CHANGELOG.md",
-    "examples"
+    "examples",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",

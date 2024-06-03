@@ -48,7 +48,8 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",

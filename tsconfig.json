@@ -21,6 +21,9 @@
       "path": "./apps/docs/tsconfig.json"
     },
     {
+      "path": "./packages/community/tsconfig.json"
+    },
+    {
       "path": "./packages/core/tsconfig.json"
     },
     {
