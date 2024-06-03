@@ -7,14 +7,6 @@
   "main": "dist/cjs/index.js",
   "exports": {
     ".": {
-      "workerd": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.polyfill.js"
-      },
-      "edge-light": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.polyfill.js"
-      },
       "import": {
         "types": "./dist/type/index.d.ts",
         "default": "./dist/index.js"
