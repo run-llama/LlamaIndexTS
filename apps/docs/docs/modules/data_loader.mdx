@@ -50,7 +50,7 @@ Additional options can be set with the `LlamaParseReader` constructor:
 `language` primarly helps with OCR recognition. Defaults to `en`. See [../readers/type.ts](https://github.com/run-llama/LlamaIndexTS/blob/main/packages/core/src/readers/type.ts#L20) for a list of supported languages.
 `parsingInstructions` can help with complicated document structures. See this [LlamaIndex Blog Post](https://www.llamaindex.ai/blog/launching-the-first-genai-native-document-parsing-platform) for an example.
 `skipDiagonalText` set to true to ignore diagonal text.
-`invalidateCache` set to true to ignore the LlamaCloud cache. All document are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Can be useful for texting when trying to re-parse the same document with, e.g. different `parsingInstructions`.
+`invalidateCache` set to true to ignore the LlamaCloud cache. All document are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Can be useful for testing when trying to re-parse the same document with, e.g. different `parsingInstructions`.
 `gpt4oMode` set to true to use GPT-4o to extract content.
 `gpt4oApiKey` set the GPT-4o API key. Optional. Lowers the cost of parsing by using your own API key. Your OpenAI account will be charged. Can also be set in the environment variable `LLAMA_CLOUD_GPT4O_API_KEY`.
 `numWorkers` as in the python version, is set in `SimpleDirectoryReader`. Default is 1.
@@ -60,7 +60,6 @@ Additional options can be set with the `LlamaParseReader` constructor:
 Below a full example of `LlamaParse` integrated in `SimpleDirectoryReader` with additional options.
 
 <CodeBlock language="ts">{CodeSource4}</CodeBlock>
-
 
 ## API Reference
 
