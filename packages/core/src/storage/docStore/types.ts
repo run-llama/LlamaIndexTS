@@ -32,7 +32,7 @@ export abstract class BaseDocumentStore {
   abstract documentExists(docId: string): Promise<boolean>;
 
   // Hash
-  abstract setDocumentHash(docId: string, docHash: string): void;
+  abstract setDocumentHash(docId: string, docHash: string): Promise<void>;
 
   abstract getDocumentHash(docId: string): Promise<string | undefined>;
 

@@ -3,6 +3,7 @@ import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import type { BaseNode } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
+import { BaseEmbedding } from "../../embeddings/types.js";
 import {
   VectorStoreBase,
   type MetadataFilters,
@@ -44,9 +45,10 @@ export class MongoDBAtlasVectorSearch
     init: Partial<MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
+      embedModel?: BaseEmbedding;
     },
   ) {
-    super();
+    super(init.embedModel);
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
     } else {
@@ -100,7 +102,7 @@ export class MongoDBAtlasVectorSearch
   }
 
   async delete(refDocId: string, deleteOptions?: any): Promise<void> {
-    await this.collection.deleteOne(
+    await this.collection.deleteMany(
       {
         [`${this.metadataKey}.ref_doc_id`]: refDocId,
       },

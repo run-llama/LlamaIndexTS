@@ -1,8 +1,9 @@
 import type { NodeWithScore } from "./Node.js";
 import type { ServiceContext } from "./ServiceContext.js";
+import type { MessageContent } from "./index.edge.js";
 
 export type RetrieveParams = {
-  query: string;
+  query: MessageContent;
   preFilters?: unknown;
 };
 

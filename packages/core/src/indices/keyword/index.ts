@@ -29,6 +29,7 @@ import {
 
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import type { LLM } from "../../llm/types.js";
+import { extractText } from "../../llm/utils.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];
@@ -85,7 +86,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
   abstract getKeywords(query: string): Promise<string[]>;
 
   async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
-    const keywords = await this.getKeywords(query);
+    const keywords = await this.getKeywords(extractText(query));
     const chunkIndicesCount: { [key: string]: number } = {};
     const filteredKeywords = keywords.filter((keyword) =>
       this.indexStruct.table.has(keyword),
@@ -280,7 +281,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
 
     await docStore.addDocuments(documents, true);
     for (const doc of documents) {
-      docStore.setDocumentHash(doc.id_, doc.hash);
+      await docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
     const nodes = serviceContext.nodeParser.getNodesFromDocuments(documents);

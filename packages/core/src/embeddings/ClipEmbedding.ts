@@ -87,8 +87,4 @@ export class ClipEmbedding extends MultiModalEmbedding {
     const { text_embeds } = await (await this.getTextModel())(textInputs);
     return text_embeds.data;
   }
-
-  async getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getTextEmbedding(query);
-  }
 }

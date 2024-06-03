@@ -12,6 +12,7 @@ import type {
   LLMStreamEvent,
   LLMToolCallEvent,
   LLMToolResultEvent,
+  MessageContent,
   RetrievalEndEvent,
   RetrievalStartEvent,
 } from "../llm/types.js";
@@ -99,7 +100,7 @@ export interface StreamCallbackResponse {
 }
 
 export interface RetrievalCallbackResponse {
-  query: string;
+  query: MessageContent;
   nodes: NodeWithScore[];
 }
 

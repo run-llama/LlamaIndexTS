@@ -1,9 +1,11 @@
-import type { NodeWithScore, TextNode } from "../../Node.js";
+import { type NodeWithScore } from "../../Node.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { defaultContextSystemPrompt } from "../../Prompt.js";
 import type { BaseRetriever } from "../../Retriever.js";
+import type { MessageContent, MessageType } from "../../llm/types.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/index.js";
+import { createMessageContent } from "../../synthesizers/utils.js";
 import type { Context, ContextGenerator } from "./types.js";
 
 export class DefaultContextGenerator
@@ -13,11 +15,13 @@ export class DefaultContextGenerator
   retriever: BaseRetriever;
   contextSystemPrompt: ContextSystemPrompt;
   nodePostprocessors: BaseNodePostprocessor[];
+  contextRole: MessageType;
 
   constructor(init: {
     retriever: BaseRetriever;
     contextSystemPrompt?: ContextSystemPrompt;
     nodePostprocessors?: BaseNodePostprocessor[];
+    contextRole?: MessageType;
   }) {
     super();
 
@@ -25,6 +29,7 @@ export class DefaultContextGenerator
     this.contextSystemPrompt =
       init?.contextSystemPrompt ?? defaultContextSystemPrompt;
     this.nodePostprocessors = init.nodePostprocessors || [];
+    this.contextRole = init.contextRole ?? "system";
   }
 
   protected _getPrompts(): { contextSystemPrompt: ContextSystemPrompt } {
@@ -41,7 +46,10 @@ export class DefaultContextGenerator
     }
   }
 
-  private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {
+  private async applyNodePostprocessors(
+    nodes: NodeWithScore[],
+    query: MessageContent,
+  ) {
     let nodesWithScore = nodes;
 
     for (const postprocessor of this.nodePostprocessors) {
@@ -54,7 +62,7 @@ export class DefaultContextGenerator
     return nodesWithScore;
   }
 
-  async generate(message: string): Promise<Context> {
+  async generate(message: MessageContent): Promise<Context> {
     const sourceNodesWithScore = await this.retriever.retrieve({
       query: message,
     });
@@ -64,12 +72,15 @@ export class DefaultContextGenerator
       message,
     );
 
+    const content = await createMessageContent(
+      this.contextSystemPrompt,
+      nodes.map((r) => r.node),
+    );
+
     return {
       message: {
-        content: this.contextSystemPrompt({
-          context: nodes.map((r) => (r.node as TextNode).text).join("\n\n"),
-        }),
-        role: "system",
+        content,
+        role: this.contextRole,
       },
       nodes,
     };

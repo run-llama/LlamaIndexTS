@@ -4,6 +4,25 @@
 
 ### Patch Changes
 
+- Updated dependencies [6e156ed]
+- Updated dependencies [265976d]
+- Updated dependencies [8e26f75]
+  - llamaindex@0.3.15
+  - @llamaindex/autotool@0.0.1
+
+## null
+
+### Patch Changes
+
+- Updated dependencies [6ff7576]
+- Updated dependencies [94543de]
+  - llamaindex@0.3.14
+  - @llamaindex/autotool@0.0.1
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [1b1081b]
 - Updated dependencies [37525df]
 - Updated dependencies [660a2b3]

@@ -1,4 +1,5 @@
 import type { NodeWithScore } from "../Node.js";
+import type { MessageContent } from "../llm/types.js";
 
 export interface BaseNodePostprocessor {
   /**
@@ -9,6 +10,6 @@ export interface BaseNodePostprocessor {
    */
   postprocessNodes(
     nodes: NodeWithScore[],
-    query?: string,
+    query?: MessageContent,
   ): Promise<NodeWithScore[]>;
 }

@@ -1,5 +1,20 @@
 # llamaindex
 
+## 0.3.15
+
+### Patch Changes
+
+- 6e156ed: Use images in context chat engine
+- 265976d: fix bug with node decorator
+- 8e26f75: Add retrieval for images using multi-modal messages
+
+## 0.3.14
+
+### Patch Changes
+
+- 6ff7576: Added GPT-4o for Azure
+- 94543de: Added the latest preview gemini models and multi modal images taken into account
+
 ## 0.3.13
 
 ### Patch Changes

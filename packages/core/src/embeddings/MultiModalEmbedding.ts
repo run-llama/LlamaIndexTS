@@ -6,6 +6,8 @@ import {
   type BaseNode,
   type ImageType,
 } from "../Node.js";
+import type { MessageContentDetail } from "../llm/types.js";
+import { extractImage, extractSingleText } from "../llm/utils.js";
 import { BaseEmbedding, batchEmbeddings } from "./types.js";
 
 /*
@@ -51,5 +53,19 @@ export abstract class MultiModalEmbedding extends BaseEmbedding {
     }
 
     return nodes;
+  }
+
+  async getQueryEmbedding(
+    query: MessageContentDetail,
+  ): Promise<number[] | null> {
+    const image = extractImage(query);
+    if (image) {
+      return await this.getImageEmbedding(image);
+    }
+    const text = extractSingleText(query);
+    if (text) {
+      return await this.getTextEmbedding(text);
+    }
+    return null;
   }
 }

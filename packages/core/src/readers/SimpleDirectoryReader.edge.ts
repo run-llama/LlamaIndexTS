@@ -1,4 +1,5 @@
 import { fs, path } from "@llamaindex/env";
+import pLimit from "p-limit";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
@@ -18,9 +19,20 @@ enum ReaderStatus {
 
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
+  // Fallback Reader, defaults to TextFileReader
   defaultReader?: BaseReader | null;
+  // Map file extensions individually to readers
   fileExtToReader?: Record<string, BaseReader>;
+  // Number of workers, defaults to 1. Must be between 1 and 9.
+  numWorkers?: number;
+  // Overrides reader for all file extensions
+  overrideReader?: BaseReader;
 };
+
+type ProcessFileParams = Omit<
+  SimpleDirectoryReaderLoadDataParams,
+  "directoryPath"
+>;
 
 /**
  * Read all the documents in a directory.
@@ -45,7 +57,13 @@ export class SimpleDirectoryReader implements BaseReader {
       directoryPath,
       defaultReader = new TextFileReader(),
       fileExtToReader,
+      numWorkers = 1,
+      overrideReader,
     } = params;
+
+    if (numWorkers < 1 || numWorkers > 9) {
+      throw new Error("The number of workers must be between 1 - 9.");
+    }
 
     // Observer can decide to skip the directory
     if (
@@ -54,58 +72,85 @@ export class SimpleDirectoryReader implements BaseReader {
       return [];
     }
 
-    const docs: Document[] = [];
+    // Crates a queue of file paths each worker accesses individually
+    const filePathQueue: string[] = [];
+
     for await (const filePath of walk(directoryPath)) {
-      try {
-        const fileExt = path.extname(filePath).slice(1).toLowerCase();
+      filePathQueue.push(filePath);
+    }
 
-        // Observer can decide to skip each file
-        if (!this.doObserverCheck("file", filePath, ReaderStatus.STARTED)) {
-          // Skip this file
-          continue;
-        }
+    const processFileParams: ProcessFileParams = {
+      defaultReader,
+      fileExtToReader,
+      overrideReader,
+    };
 
-        let reader: BaseReader;
+    // Uses pLimit to control number of parallel requests
+    const limit = pLimit(numWorkers);
+    const workerPromises = filePathQueue.map((filePath) =>
+      limit(() => this.processFile(filePath, processFileParams)),
+    );
 
-        if (fileExtToReader && fileExt in fileExtToReader) {
-          reader = fileExtToReader[fileExt];
-        } else if (defaultReader != null) {
-          reader = defaultReader;
-        } else {
-          const msg = `No reader for file extension of ${filePath}`;
-          console.warn(msg);
+    const results: Document[][] = await Promise.all(workerPromises);
 
-          // In an error condition, observer's false cancels the whole process.
-          if (
-            !this.doObserverCheck("file", filePath, ReaderStatus.ERROR, msg)
-          ) {
-            return [];
-          }
+    // After successful import of all files, directory completion
+    // is only a notification for observer, cannot be cancelled.
+    this.doObserverCheck("directory", directoryPath, ReaderStatus.COMPLETE);
 
-          continue;
-        }
+    return results.flat();
+  }
 
-        const fileDocs = await reader.loadData(filePath, fs);
-        fileDocs.forEach(addMetaData(filePath));
+  private async processFile(
+    filePath: string,
+    params: ProcessFileParams,
+  ): Promise<Document[]> {
+    const docs: Document[] = [];
 
-        // Observer can still cancel addition of the resulting docs from this file
-        if (this.doObserverCheck("file", filePath, ReaderStatus.COMPLETE)) {
-          docs.push(...fileDocs);
-        }
-      } catch (e) {
-        const msg = `Error reading file ${filePath}: ${e}`;
-        console.error(msg);
+    try {
+      const fileExt = path.extname(filePath).slice(1).toLowerCase();
+
+      // Observer can decide to skip each file
+      if (!this.doObserverCheck("file", filePath, ReaderStatus.STARTED)) {
+        // Skip this file
+        return [];
+      }
+
+      let reader: BaseReader;
+
+      if (params.overrideReader) {
+        reader = params.overrideReader;
+      } else if (params.fileExtToReader && fileExt in params.fileExtToReader) {
+        reader = params.fileExtToReader[fileExt];
+      } else if (params.defaultReader != null) {
+        reader = params.defaultReader;
+      } else {
+        const msg = `No reader for file extension of ${filePath}`;
+        console.warn(msg);
 
         // In an error condition, observer's false cancels the whole process.
         if (!this.doObserverCheck("file", filePath, ReaderStatus.ERROR, msg)) {
           return [];
         }
+
+        return [];
+      }
+
+      const fileDocs = await reader.loadData(filePath, fs);
+      fileDocs.forEach(addMetaData(filePath));
+
+      // Observer can still cancel addition of the resulting docs from this file
+      if (this.doObserverCheck("file", filePath, ReaderStatus.COMPLETE)) {
+        docs.push(...fileDocs);
+      }
+    } catch (e) {
+      const msg = `Error reading file ${filePath}: ${e}`;
+      console.error(msg);
+
+      // In an error condition, observer's false cancels the whole process.
+      if (!this.doObserverCheck("file", filePath, ReaderStatus.ERROR, msg)) {
+        return [];
       }
     }
-
-    // After successful import of all files, directory completion
-    // is only a notification for observer, cannot be cancelled.
-    this.doObserverCheck("directory", directoryPath, ReaderStatus.COMPLETE);
 
     return docs;
   }

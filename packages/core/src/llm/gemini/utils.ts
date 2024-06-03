@@ -99,7 +99,13 @@ export const cleanParts = (
 ): GeminiMessageContent => {
   return {
     ...message,
-    parts: message.parts.filter((part) => part.text?.trim()),
+    parts: message.parts.filter(
+      (part) =>
+        part.text?.trim() ||
+        part.inlineData ||
+        part.fileData ||
+        part.functionCall,
+    ),
   };
 };
 
@@ -147,24 +153,28 @@ export class GeminiHelper {
   public static mergeNeighboringSameRoleMessages(
     messages: GeminiMessageContent[],
   ): GeminiMessageContent[] {
-    return messages.reduce(
-      (
-        result: GeminiMessageContent[],
-        current: GeminiMessageContent,
-        index: number,
-      ) => {
-        if (index > 0 && messages[index - 1].role === current.role) {
-          result[result.length - 1].parts = [
-            ...result[result.length - 1].parts,
-            ...current.parts,
-          ];
-        } else {
-          result.push(current);
-        }
-        return result;
-      },
-      [],
-    );
+    return messages
+      .map(cleanParts)
+      .filter((message) => message.parts.length)
+      .reduce(
+        (
+          result: GeminiMessageContent[],
+          current: GeminiMessageContent,
+          index: number,
+          original: GeminiMessageContent[],
+        ) => {
+          if (index > 0 && original[index - 1].role === current.role) {
+            result[result.length - 1].parts = [
+              ...result[result.length - 1].parts,
+              ...current.parts,
+            ];
+          } else {
+            result.push(current);
+          }
+          return result;
+        },
+        [],
+      );
   }
 
   public static messageContentToGeminiParts(content: MessageContent): Part[] {

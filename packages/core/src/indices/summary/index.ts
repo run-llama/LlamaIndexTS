@@ -11,6 +11,7 @@ import {
 } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
+import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -137,7 +138,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
     await docStore.addDocuments(documents, true);
     for (const doc of documents) {
-      docStore.setDocumentHash(doc.id_, doc.hash);
+      await docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
     const nodes =
@@ -343,7 +344,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
       const nodesBatch = await this.index.docStore.getNodes(nodeIdsBatch);
 
       const fmtBatchStr = this.formatNodeBatchFn(nodesBatch);
-      const input = { context: fmtBatchStr, query: query };
+      const input = { context: fmtBatchStr, query: extractText(query) };
 
       const llm = llmFromSettingsOrContext(this.serviceContext);
 

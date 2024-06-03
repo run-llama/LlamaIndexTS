@@ -1,10 +1,8 @@
-import type { ImageNode } from "../Node.js";
-import { MetadataMode, ModalityType, splitNodesByType } from "../Node.js";
+import { MetadataMode } from "../Node.js";
 import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
-import { imageToDataUrl } from "../embeddings/index.js";
-import type { MessageContentDetail } from "../llm/types.js";
+import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { TextQaPrompt } from "./../Prompt.js";
 import { defaultTextQaPrompt } from "./../Prompt.js";
@@ -13,6 +11,7 @@ import type {
   SynthesizeParamsNonStreaming,
   SynthesizeParamsStreaming,
 } from "./types.js";
+import { createMessageContent } from "./utils.js";
 
 export class MultiModalResponseSynthesizer
   extends PromptMixin
@@ -59,41 +58,29 @@ export class MultiModalResponseSynthesizer
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
   > {
-    if (stream) {
-      throw new Error("streaming not implemented");
-    }
     const nodes = nodesWithScore.map(({ node }) => node);
-    const nodeMap = splitNodesByType(nodes);
-    const imageNodes: ImageNode[] =
-      (nodeMap[ModalityType.IMAGE] as ImageNode[]) ?? [];
-    const textNodes = nodeMap[ModalityType.TEXT] ?? [];
-    const textChunks = textNodes.map((node) =>
-      node.getContent(this.metadataMode),
+    const prompt = await createMessageContent(
+      this.textQATemplate,
+      nodes,
+      { query },
+      this.metadataMode,
     );
-    // TODO: use builders to generate context
-    const context = textChunks.join("\n\n");
-    const textPrompt = this.textQATemplate({ context, query });
-    const images = await Promise.all(
-      imageNodes.map(async (node: ImageNode) => {
-        return {
-          type: "image_url",
-          image_url: {
-            url: await imageToDataUrl(node.image),
-          },
-        } as MessageContentDetail;
-      }),
-    );
-    const prompt: MessageContentDetail[] = [
-      { type: "text", text: textPrompt },
-      ...images,
-    ];
 
     const llm = llmFromSettingsOrContext(this.serviceContext);
 
+    if (stream) {
+      const response = await llm.complete({
+        prompt,
+        stream,
+      });
+      return streamConverter(
+        response,
+        ({ text }) => new Response(text, nodesWithScore),
+      );
+    }
     const response = await llm.complete({
       prompt,
     });
-
     return new Response(response.text, nodesWithScore);
   }
 }

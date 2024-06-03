@@ -2,6 +2,8 @@ import { CohereClient } from "cohere-ai";
 
 import type { NodeWithScore } from "../../Node.js";
 import { MetadataMode } from "../../Node.js";
+import type { MessageContent } from "../../llm/types.js";
+import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../types.js";
 
 type CohereRerankOptions = {
@@ -46,7 +48,7 @@ export class CohereRerank implements BaseNodePostprocessor {
    */
   async postprocessNodes(
     nodes: NodeWithScore[],
-    query?: string,
+    query?: MessageContent,
   ): Promise<NodeWithScore[]> {
     if (this.client === null) {
       throw new Error("CohereRerank client is null");
@@ -61,7 +63,7 @@ export class CohereRerank implements BaseNodePostprocessor {
     }
 
     const results = await this.client.rerank({
-      query,
+      query: extractText(query),
       model: this.model,
       topN: this.topN,
       documents: nodes.map((n) => n.node.getContent(MetadataMode.ALL)),

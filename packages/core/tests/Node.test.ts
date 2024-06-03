@@ -53,7 +53,7 @@ describe("TextNode", () => {
         "endCharIdx": undefined,
         "excludedEmbedMetadataKeys": [],
         "excludedLlmMetadataKeys": [],
-        "hash": "nTSKdUTYqR52MPv/brvb4RTGeqedTEqG9QN8KSAj2Do=",
+        "hash": "Z6SWgFPlalaeblMGQGw0KS3qKgmZdEWXKfzEp/K+QN0=",
         "id_": Any<String>,
         "metadata": {
           "something": 1,
