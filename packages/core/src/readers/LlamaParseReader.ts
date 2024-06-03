@@ -130,6 +130,7 @@ export class LlamaParseReader implements FileReader {
   gpt4oMode: boolean = false;
   // The API key for the GPT-4o API. Lowers the cost of parsing.
   gpt4oApiKey?: string;
+  // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
     Object.assign(this, params);
@@ -155,6 +156,10 @@ export class LlamaParseReader implements FileReader {
     // Load data, set the mime type
     const data = await fs.readFile(file);
     const mimeType = await this.getMimeType(data);
+
+    if (this.verbose) {
+      console.log(`Starting load for file: ${file}`);
+    }
 
     const body = new FormData();
     body.set("file", new Blob([data], { type: mimeType }), file);
