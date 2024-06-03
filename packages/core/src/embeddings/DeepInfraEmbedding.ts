@@ -27,7 +27,7 @@ export interface InferenceStatus {
 }
 
 const mapPrefixWithInputs = (prefix: string, inputs: string[]): string[] => {
-  return inputs.map((input) => `${prefix} ${input}`);
+  return inputs.map((input) => (prefix ? `${prefix} ${input}` : input));
 };
 
 /**
