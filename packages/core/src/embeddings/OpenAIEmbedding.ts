@@ -133,13 +133,4 @@ export class OpenAIEmbedding extends BaseEmbedding {
   async getTextEmbedding(text: string): Promise<number[]> {
     return (await this.getOpenAIEmbedding([text]))[0];
   }
-
-  /**
-   * Get embeddings for a query
-   * @param texts
-   * @param options
-   */
-  async getQueryEmbedding(query: string): Promise<number[]> {
-    return (await this.getOpenAIEmbedding([query]))[0];
-  }
 }

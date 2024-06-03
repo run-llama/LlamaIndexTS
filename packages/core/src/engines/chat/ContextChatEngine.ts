@@ -3,10 +3,10 @@ import { getHistory } from "../../ChatHistory.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
+import { Settings } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
-import { OpenAI } from "../../llm/index.js";
-import type { MessageContent } from "../../llm/types.js";
+import type { MessageContent, MessageType } from "../../llm/types.js";
 import {
   extractText,
   streamConverter,
@@ -40,15 +40,16 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     contextSystemPrompt?: ContextSystemPrompt;
     nodePostprocessors?: BaseNodePostprocessor[];
     systemPrompt?: string;
+    contextRole?: MessageType;
   }) {
     super();
-    this.chatModel =
-      init.chatModel ?? new OpenAI({ model: "gpt-3.5-turbo-16k" });
+    this.chatModel = init.chatModel ?? Settings.llm;
     this.chatHistory = getHistory(init?.chatHistory);
     this.contextGenerator = new DefaultContextGenerator({
       retriever: init.retriever,
       contextSystemPrompt: init?.contextSystemPrompt,
       nodePostprocessors: init?.nodePostprocessors,
+      contextRole: init?.contextRole,
     });
     this.systemPrompt = init.systemPrompt;
   }

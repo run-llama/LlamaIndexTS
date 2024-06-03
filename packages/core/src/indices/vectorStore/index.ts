@@ -23,6 +23,7 @@ import {
 } from "../../ingestion/strategies/index.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import { getCallbackManager } from "../../internal/settings/CallbackManager.js";
+import type { MessageContent } from "../../llm/types.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -30,7 +31,6 @@ import type {
   MetadataFilters,
   VectorStore,
   VectorStoreByType,
-  VectorStoreQuery,
   VectorStoreQueryResult,
 } from "../../storage/index.js";
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
@@ -422,10 +422,9 @@ export class VectorIndexRetriever implements BaseRetriever {
     let nodesWithScores: NodeWithScore[] = [];
 
     for (const type in vectorStores) {
-      // TODO: add retrieval by using an image as query
       const vectorStore: VectorStore = vectorStores[type as ModalityType]!;
       nodesWithScores = nodesWithScores.concat(
-        await this.textRetrieve(
+        await this.retrieveQuery(
           query,
           type as ModalityType,
           vectorStore,
@@ -447,36 +446,33 @@ export class VectorIndexRetriever implements BaseRetriever {
     return nodesWithScores;
   }
 
-  protected async textRetrieve(
-    query: string,
+  protected async retrieveQuery(
+    query: MessageContent,
     type: ModalityType,
     vectorStore: VectorStore,
     preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
-    const q = await this.buildVectorStoreQuery(
-      this.index.embedModel ?? vectorStore.embedModel,
-      query,
-      this.topK[type],
-      preFilters,
-    );
-    const result = await vectorStore.query(q);
-    return this.buildNodeListFromQueryResult(result);
-  }
-
-  protected async buildVectorStoreQuery(
-    embedModel: BaseEmbedding,
-    query: string,
-    similarityTopK: number,
-    preFilters?: MetadataFilters,
-  ): Promise<VectorStoreQuery> {
-    const queryEmbedding = await embedModel.getQueryEmbedding(query);
-
-    return {
-      queryEmbedding,
-      mode: VectorStoreQueryMode.DEFAULT,
-      similarityTopK,
-      filters: preFilters ?? undefined,
-    };
+    // convert string message to multi-modal format
+    if (typeof query === "string") {
+      query = [{ type: "text", text: query }];
+    }
+    // overwrite embed model if specified, otherwise use the one from the vector store
+    const embedModel = this.index.embedModel ?? vectorStore.embedModel;
+    let nodes: NodeWithScore[] = [];
+    // query each content item (e.g. text or image) separately
+    for (const item of query) {
+      const queryEmbedding = await embedModel.getQueryEmbedding(item);
+      if (queryEmbedding) {
+        const result = await vectorStore.query({
+          queryEmbedding,
+          mode: VectorStoreQueryMode.DEFAULT,
+          similarityTopK: this.topK[type],
+          filters: preFilters ?? undefined,
+        });
+        nodes = nodes.concat(this.buildNodeListFromQueryResult(result));
+      }
+    }
+    return nodes;
   }
 
   protected buildNodeListFromQueryResult(result: VectorStoreQueryResult) {

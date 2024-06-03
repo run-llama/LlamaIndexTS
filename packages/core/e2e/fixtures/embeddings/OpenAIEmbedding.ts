@@ -1,9 +1,14 @@
-import { BaseNode, SimilarityType, type BaseEmbedding } from "llamaindex";
+import {
+  BaseNode,
+  SimilarityType,
+  type BaseEmbedding,
+  type MessageContentDetail,
+} from "llamaindex";
 
 export class OpenAIEmbedding implements BaseEmbedding {
   embedBatchSize = 512;
 
-  async getQueryEmbedding(query: string) {
+  async getQueryEmbedding(query: MessageContentDetail) {
     return [0];
   }
 

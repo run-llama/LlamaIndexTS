@@ -1,4 +1,5 @@
 import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
+import type { ImageType } from "../Node.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type {
   ChatResponse,
@@ -6,6 +7,7 @@ import type {
   LLM,
   LLMChat,
   MessageContent,
+  MessageContentDetail,
   MessageContentTextDetail,
 } from "./types.js";
 
@@ -62,7 +64,7 @@ export async function* streamReducer<S, D>(params: {
 export function extractText(message: MessageContent): string {
   if (typeof message !== "string" && !Array.isArray(message)) {
     console.warn(
-      "extractText called with non-string message, this is likely a bug.",
+      "extractText called with non-MessageContent message, this is likely a bug.",
     );
     return `${message}`;
   } else if (typeof message !== "string" && Array.isArray(message)) {
@@ -75,6 +77,34 @@ export function extractText(message: MessageContent): string {
   } else {
     return message;
   }
+}
+
+/**
+ * Extracts a single text from a multi-modal message content
+ *
+ * @param message The message to extract images from.
+ * @returns The extracted images
+ */
+export function extractSingleText(
+  message: MessageContentDetail,
+): string | null {
+  if (message.type === "text") {
+    return message.text;
+  }
+  return null;
+}
+
+/**
+ * Extracts an image from a multi-modal message content
+ *
+ * @param message The message to extract images from.
+ * @returns The extracted images
+ */
+export function extractImage(message: MessageContentDetail): ImageType | null {
+  if (message.type === "image_url") {
+    return new URL(message.image_url.url);
+  }
+  return null;
 }
 
 export const extractDataUrlComponents = (

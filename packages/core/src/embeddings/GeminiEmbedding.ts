@@ -36,8 +36,4 @@ export class GeminiEmbedding extends BaseEmbedding {
   getTextEmbedding(text: string): Promise<number[]> {
     return this.getEmbedding(text);
   }
-
-  getQueryEmbedding(query: string): Promise<number[]> {
-    return this.getTextEmbedding(query);
-  }
 }

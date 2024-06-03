@@ -1,6 +1,8 @@
 import type { BaseNode } from "../Node.js";
 import { MetadataMode } from "../Node.js";
 import type { TransformComponent } from "../ingestion/types.js";
+import type { MessageContentDetail } from "../llm/types.js";
+import { extractSingleText } from "../llm/utils.js";
 import { SimilarityType, similarity } from "./utils.js";
 
 const DEFAULT_EMBED_BATCH_SIZE = 10;
@@ -19,7 +21,16 @@ export abstract class BaseEmbedding implements TransformComponent {
   }
 
   abstract getTextEmbedding(text: string): Promise<number[]>;
-  abstract getQueryEmbedding(query: string): Promise<number[]>;
+
+  async getQueryEmbedding(
+    query: MessageContentDetail,
+  ): Promise<number[] | null> {
+    const text = extractSingleText(query);
+    if (text) {
+      return await this.getTextEmbedding(text);
+    }
+    return null;
+  }
 
   /**
    * Optionally override this method to retrieve multiple embeddings in a single request
