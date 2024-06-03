@@ -1,3 +1,4 @@
+export { DeepInfraEmbedding } from "./DeepInfraEmbedding.js";
 export * from "./GeminiEmbedding.js";
 export * from "./JinaAIEmbedding.js";
 export * from "./MistralAIEmbedding.js";
