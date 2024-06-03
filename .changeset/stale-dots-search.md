@@ -2,4 +2,4 @@
 "llamaindex": patch
 ---
 
-add concurrency managment for SimpleDirectoryReader
+add concurrency management for SimpleDirectoryReader
