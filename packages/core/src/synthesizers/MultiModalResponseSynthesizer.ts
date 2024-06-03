@@ -2,6 +2,7 @@ import { MetadataMode } from "../Node.js";
 import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
+import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { TextQaPrompt } from "./../Prompt.js";
 import { defaultTextQaPrompt } from "./../Prompt.js";
@@ -57,9 +58,6 @@ export class MultiModalResponseSynthesizer
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
     AsyncIterable<Response> | Response
   > {
-    if (stream) {
-      throw new Error("streaming not implemented");
-    }
     const nodes = nodesWithScore.map(({ node }) => node);
     const prompt = await createMessageContent(
       this.textQATemplate,
@@ -70,10 +68,19 @@ export class MultiModalResponseSynthesizer
 
     const llm = llmFromSettingsOrContext(this.serviceContext);
 
+    if (stream) {
+      const response = await llm.complete({
+        prompt,
+        stream,
+      });
+      return streamConverter(
+        response,
+        ({ text }) => new Response(text, nodesWithScore),
+      );
+    }
     const response = await llm.complete({
       prompt,
     });
-
     return new Response(response.text, nodesWithScore);
   }
 }
