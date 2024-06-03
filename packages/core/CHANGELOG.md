@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.3.15
+
+### Patch Changes
+
+- 6e156ed: Use images in context chat engine
+- 265976d: fix bug with node decorator
+- 8e26f75: Add retrieval for images using multi-modal messages
+
 ## 0.3.14
 
 ### Patch Changes
