@@ -106,7 +106,7 @@ const SupportedFiles: { [key: string]: string } = {
  * See https://github.com/run-llama/llama_parse
  */
 export class LlamaParseReader implements FileReader {
-  // The API key for the LlamaParse API.
+  // The API key for the LlamaParse API. Can be set as an environment variable: LLAMA_CLOUD_API_KEY
   apiKey: string;
   // The base URL of the Llama Parsing API.
   baseUrl: string = "https://api.cloud.llamaindex.ai/api/parsing";
@@ -124,11 +124,11 @@ export class LlamaParseReader implements FileReader {
   parsingInstruction: string = "";
   // If set to true, the parser will ignore diagonal text (when the text rotation in degrees modulo 90 is not 0).
   skipDiagonalText: boolean = false;
-  // If set to true, the cache will be ignored and the document re-processes. All document are kept in cache for 48hours after the job was completed to avoid processing 2 time the same document.
+  // If set to true, the cache will be ignored and the document re-processes. All document are kept in cache for 48hours after the job was completed to avoid processing the same document twice.
   invalidateCache: boolean = false;
-  // Whether to use gpt-4o extract text from documents.
+  // Whether to use gpt-4o to extract text from documents.
   gpt4oMode: boolean = false;
-  // The API key for the GPT-4o API. Lowers the cost of parsing.
+  // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
   gpt4oApiKey?: string;
   // numWorkers is implemented in SimpleDirectoryReader
 
