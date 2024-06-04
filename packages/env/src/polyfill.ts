@@ -19,8 +19,6 @@ export interface SHA256 {
   digest(): string;
 }
 
-export const EOL = "\n";
-
 export function ok(value: unknown, message?: string): asserts value {
   if (!value) {
     const error = Error(message);
