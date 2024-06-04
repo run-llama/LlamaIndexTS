@@ -71,7 +71,7 @@
     "@swc/core": "^1.5.5",
     "concurrently": "^8.2.2",
     "glob": "^10.3.12",
-    "typescript": "^5.4.5"
+    "typescript": "5.4.5"
   },
   "engines": {
     "node": ">=18.0.0"

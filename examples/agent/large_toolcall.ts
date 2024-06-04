@@ -18,6 +18,7 @@ const userQuestion = "which are the best comedies after 2010?";
       console.log(
         `To answer the user's question, call the following code:\n${code}`,
       );
+      console.log("-----");
       return code;
     },
     {
@@ -44,12 +45,12 @@ const userQuestion = "which are the best comedies after 2010?";
     llm,
     tools: [interpreterTool],
     systemPrompt,
-    verbose: true,
+    verbose: false,
   });
 
   console.log(`User question: ${userQuestion}\n`);
 
-  await agent.chat({
+  const { response } = await agent.chat({
     message: [
       {
         type: "text",
@@ -61,4 +62,5 @@ const userQuestion = "which are the best comedies after 2010?";
       },
     ],
   });
+  console.log("response:", response.message.content);
 })();

@@ -16,7 +16,7 @@
     "@cloudflare/workers-types": "^4.20240502.0",
     "@vitest/runner": "1.3.0",
     "@vitest/snapshot": "1.3.0",
-    "typescript": "^5.4.5",
+    "typescript": "5.4.5",
     "vitest": "1.3.0",
     "wrangler": "^3.53.1"
   },

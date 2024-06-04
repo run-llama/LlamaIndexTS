@@ -134,20 +134,34 @@ export const extractDataUrlComponents = (
 export function wrapLLMEvent<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
+  Raw extends object = object,
+  StreamRaw extends object = object,
 >(
   originalMethod: LLMChat<
     AdditionalChatOptions,
-    AdditionalMessageOptions
+    AdditionalMessageOptions,
+    Raw,
+    StreamRaw
   >["chat"],
   _context: ClassMethodDecoratorContext,
 ) {
   return async function withLLMEvent(
     this: LLM<AdditionalChatOptions, AdditionalMessageOptions>,
     ...params: Parameters<
-      LLMChat<AdditionalChatOptions, AdditionalMessageOptions>["chat"]
+      LLMChat<
+        AdditionalChatOptions,
+        AdditionalMessageOptions,
+        Raw,
+        StreamRaw
+      >["chat"]
     >
   ): ReturnType<
-    LLMChat<AdditionalChatOptions, AdditionalMessageOptions>["chat"]
+    LLMChat<
+      AdditionalChatOptions,
+      AdditionalMessageOptions,
+      Raw,
+      StreamRaw
+    >["chat"]
   > {
     const id = randomUUID();
     getCallbackManager().dispatchEvent("llm-start", {

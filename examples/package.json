@@ -1,6 +1,7 @@
 {
   "name": "@llamaindex/examples",
   "private": true,
+  "type": "module",
   "version": "0.0.4",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
@@ -20,7 +21,7 @@
     "@types/node": "^20.12.11",
     "ts-node": "^10.9.2",
     "tsx": "^4.9.3",
-    "typescript": "^5.4.5"
+    "typescript": "5.4.5"
   },
   "scripts": {
     "lint": "eslint ."
