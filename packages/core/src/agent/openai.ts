@@ -76,29 +76,31 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
       });
       if ("toolCall" in options) {
         const { toolCall } = options;
-        const targetTool = tools.find(
-          (tool) => tool.metadata.name === toolCall.name,
-        );
-        const toolOutput = await callTool(
-          targetTool,
-          toolCall,
-          step.context.logger,
-        );
-        step.context.store.toolOutputs.push(toolOutput);
-        step.context.store.messages = [
-          ...step.context.store.messages,
-          {
-            role: "user" as const,
-            content: stringifyJSONToMessageContent(toolOutput.output),
-            options: {
-              toolResult: {
-                result: toolOutput.output,
-                isError: toolOutput.isError,
-                id: toolCall.id,
+        for (const call of toolCall) {
+          const targetTool = tools.find(
+            (tool) => tool.metadata.name === call.name,
+          );
+          const toolOutput = await callTool(
+            targetTool,
+            call,
+            step.context.logger,
+          );
+          step.context.store.toolOutputs.push(toolOutput);
+          step.context.store.messages = [
+            ...step.context.store.messages,
+            {
+              role: "user" as const,
+              content: stringifyJSONToMessageContent(toolOutput.output),
+              options: {
+                toolResult: {
+                  result: toolOutput.output,
+                  isError: toolOutput.isError,
+                  id: call.id,
+                },
               },
             },
-          },
-        ];
+          ];
+        }
       }
     } else {
       const responseChunkStream = new ReadableStream<
@@ -135,7 +137,9 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         for await (const chunk of pipStream) {
           if (chunk.options && "toolCall" in chunk.options) {
             const toolCall = chunk.options.toolCall;
-            toolCalls.set(toolCall.id, toolCall);
+            toolCall.forEach((toolCall) => {
+              toolCalls.set(toolCall.id, toolCall);
+            });
           }
         }
         for (const toolCall of toolCalls.values()) {
