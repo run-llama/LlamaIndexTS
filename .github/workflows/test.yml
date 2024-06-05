@@ -85,6 +85,7 @@ jobs:
           if-no-files-found: error
   e2e-core-examples:
     strategy:
+      fail-fast: false
       matrix:
         packages:
           - cloudflare-worker-agent
