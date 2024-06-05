@@ -166,7 +166,6 @@ For questions about more specific sections, please use the vector_tool.`,
 
   const originalCall = queryEngineTools[1].call.bind(queryEngineTools[1]);
   const mockCall = t.mock.fn(({ query }: { query: string }) => {
-    console.trace(1);
     return originalCall({ query });
   });
   queryEngineTools[1].call = mockCall;

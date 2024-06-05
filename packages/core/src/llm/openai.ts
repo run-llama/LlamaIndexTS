@@ -460,10 +460,10 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       yield {
         raw: part,
         options: shouldEmitToolCall
-          ? { toolCall: shouldEmitToolCall }
+          ? { toolCall: [shouldEmitToolCall] }
           : currentToolCall
             ? {
-                toolCall: currentToolCall,
+                toolCall: [currentToolCall],
               }
             : {},
         delta: choice.delta.content ?? "",

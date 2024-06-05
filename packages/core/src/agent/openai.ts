@@ -103,6 +103,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         }
       }
     } else {
+      debugger;
       const responseChunkStream = new ReadableStream<
         ChatResponseChunk<ToolCallLLMMessageOptions>
       >({
@@ -142,20 +143,20 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
             });
           }
         }
+        step.context.store.messages = [
+          ...step.context.store.messages,
+          {
+            role: "assistant" as const,
+            content: "",
+            options: {
+              toolCall: [...toolCalls.values()],
+            },
+          },
+        ];
         for (const toolCall of toolCalls.values()) {
           const targetTool = tools.find(
             (tool) => tool.metadata.name === toolCall.name,
           );
-          step.context.store.messages = [
-            ...step.context.store.messages,
-            {
-              role: "assistant" as const,
-              content: "",
-              options: {
-                toolCall,
-              },
-            },
-          ];
           const toolOutput = await callTool(
             targetTool,
             toolCall,
