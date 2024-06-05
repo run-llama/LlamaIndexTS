@@ -152,7 +152,6 @@ export class LlamaParseReader implements FileReader {
 
   // Create a job for the LlamaParse API
   private async createJob(file: string): Promise<string> {
-
     // Load data, set the mime type
     const data = await fs.readFile(file);
     const mimeType = await this.getMimeType(data);
@@ -200,14 +199,21 @@ export class LlamaParseReader implements FileReader {
     const start = Date.now();
     let tries = 0;
     while (true) {
-      await new Promise((resolve) => setTimeout(resolve, this.checkInterval * 1000));
+      await new Promise((resolve) =>
+        setTimeout(resolve, this.checkInterval * 1000),
+      );
 
       // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
-      const statusResponse = await fetch(statusUrl, { headers, signal: AbortSignal.timeout(this.maxTimeout * 1000) });
+      const statusResponse = await fetch(statusUrl, {
+        headers,
+        signal: AbortSignal.timeout(this.maxTimeout * 1000),
+      });
       if (!statusResponse.ok) {
         const end = Date.now();
         if (end - start > this.maxTimeout * 1000) {
-          throw new Error(`Timeout while parsing the file: ${await statusResponse.text()}`);
+          throw new Error(
+            `Timeout while parsing the file: ${await statusResponse.text()}`,
+          );
         }
         if (this.verbose && tries % 10 === 0) {
           process.stdout.write(".");
@@ -221,16 +227,23 @@ export class LlamaParseReader implements FileReader {
       const status = statusJson.status;
       // If job has completed, return the result
       if (status === "SUCCESS") {
-        const resultResponse = await fetch(resultUrl, { headers, signal: AbortSignal.timeout(this.maxTimeout * 1000) });
+        const resultResponse = await fetch(resultUrl, {
+          headers,
+          signal: AbortSignal.timeout(this.maxTimeout * 1000),
+        });
         if (!resultResponse.ok) {
-          throw new Error(`Failed to fetch result: ${await resultResponse.text()}`);
+          throw new Error(
+            `Failed to fetch result: ${await resultResponse.text()}`,
+          );
         }
         return resultResponse.json();
         // If job is still pending, check if maximum timeout has been reached. If reached, throws an error
       } else if (status === "PENDING") {
         const end = Date.now();
         if (end - start > this.maxTimeout * 1000) {
-          throw new Error(`Timeout while parsing the file: ${await statusResponse.text()}`);
+          throw new Error(
+            `Timeout while parsing the file: ${await statusResponse.text()}`,
+          );
         }
         if (this.verbose && tries % 10 === 0) {
           process.stdout.write(".");
@@ -238,15 +251,17 @@ export class LlamaParseReader implements FileReader {
         tries++;
         continue;
       } else {
-        throw new Error(`Failed to parse the file: ${jobId}, status: ${status}`);
+        throw new Error(
+          `Failed to parse the file: ${jobId}, status: ${status}`,
+        );
       }
     }
   }
 
-    /**
+  /**
    * Loads data from a file and returns an array of Document objects.
    * To be used with resultType = "text" and "markdown"
-   * 
+   *
    * @param {string} file - The path to the file to be loaded.
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
@@ -269,7 +284,7 @@ export class LlamaParseReader implements FileReader {
       }),
     ];
   }
-    /**
+  /**
    * Loads data from a file and returns its contents as a JSON object.
    * To be used with resultType = "json"
    *
@@ -290,7 +305,7 @@ export class LlamaParseReader implements FileReader {
     return resultJson;
   }
 
-    /**
+  /**
    * Downloads and saves images from a given JSON result to a specified download path.
    * Currently only supports resultType = "json"
    *
@@ -298,7 +313,10 @@ export class LlamaParseReader implements FileReader {
    * @param {string} downloadPath - The path to save the downloaded images.
    * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of image objects.
    */
-  async getImages(jsonResult: Record<string, any>[], downloadPath: string): Promise<Record<string, any>[]> {
+  async getImages(
+    jsonResult: Record<string, any>[],
+    downloadPath: string,
+  ): Promise<Record<string, any>[]> {
     const headers = { Authorization: `Bearer ${this.apiKey}` };
 
     // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
@@ -331,7 +349,9 @@ export class LlamaParseReader implements FileReader {
           const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
           const response = await fetch(imageUrl, { headers });
           if (!response.ok) {
-            throw new Error(`Failed to download image: ${await response.text()}`);
+            throw new Error(
+              `Failed to download image: ${await response.text()}`,
+            );
           }
           const arrayBuffer = await response.arrayBuffer();
           const buffer = Buffer.from(arrayBuffer);
