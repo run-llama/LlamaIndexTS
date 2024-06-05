@@ -110,7 +110,6 @@ export const GPT4_MODELS = {
   "gpt-4-1106-preview": { contextWindow: 128000 },
   "gpt-4-0125-preview": { contextWindow: 128000 },
   "gpt-4-vision-preview": { contextWindow: 128000 },
-  // fixme: wait for openai documentation
   "gpt-4o": { contextWindow: 128000 },
   "gpt-4o-2024-05-13": { contextWindow: 128000 },
 };
@@ -185,7 +184,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     },
   ) {
     super();
-    this.model = init?.model ?? "gpt-3.5-turbo";
+    this.model = init?.model ?? "gpt-4o";
     this.temperature = init?.temperature ?? 0.1;
     this.topP = init?.topP ?? 1;
     this.maxTokens = init?.maxTokens ?? undefined;
