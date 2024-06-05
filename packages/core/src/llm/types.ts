@@ -212,7 +212,7 @@ export type ToolResult = {
 };
 
 export type ToolCallOptions = {
-  toolCall: ToolCall | PartialToolCall;
+  toolCall: (ToolCall | PartialToolCall)[];
 };
 
 export type ToolResultOptions = {

@@ -178,13 +178,15 @@
           ],
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
-              "name": "getWeather",
-              "input": {
-                "city": "San Francisco"
+            "toolCall": [
+              {
+                "id": "toolu_017MxwaxaLYkmt4dpP5HKzFe",
+                "name": "getWeather",
+                "input": {
+                  "city": "San Francisco"
+                }
               }
-            }
+            ]
           }
         },
         {
@@ -194,7 +196,7 @@
             "toolResult": {
               "result": "The weather in San Francisco is 72 degrees",
               "isError": false,
-              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL"
+              "id": "toolu_017MxwaxaLYkmt4dpP5HKzFe"
             }
           }
         }
@@ -258,13 +260,15 @@
           ],
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
-              "name": "getWeather",
-              "input": {
-                "city": "San Francisco"
+            "toolCall": [
+              {
+                "id": "toolu_017MxwaxaLYkmt4dpP5HKzFe",
+                "name": "getWeather",
+                "input": {
+                  "city": "San Francisco"
+                }
               }
-            }
+            ]
           }
         },
         {
@@ -274,7 +278,7 @@
             "toolResult": {
               "result": "The weather in San Francisco is 72 degrees",
               "isError": false,
-              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL"
+              "id": "toolu_017MxwaxaLYkmt4dpP5HKzFe"
             }
           }
         },
@@ -352,13 +356,15 @@
           ],
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
-              "name": "getWeather",
-              "input": {
-                "city": "San Francisco"
+            "toolCall": [
+              {
+                "id": "toolu_017MxwaxaLYkmt4dpP5HKzFe",
+                "name": "getWeather",
+                "input": {
+                  "city": "San Francisco"
+                }
               }
-            }
+            ]
           }
         },
         {
@@ -368,7 +374,7 @@
             "toolResult": {
               "result": "The weather in San Francisco is 72 degrees",
               "isError": false,
-              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL"
+              "id": "toolu_017MxwaxaLYkmt4dpP5HKzFe"
             }
           }
         },
@@ -395,13 +401,15 @@
           ],
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "toolu_01NHyahSUqrPjxQk9mvCvvGe",
-              "name": "getWeather",
-              "input": {
-                "city": "Shanghai"
+            "toolCall": [
+              {
+                "id": "toolu_013ZnATGKhvPkt2jjxdFheDK",
+                "name": "getWeather",
+                "input": {
+                  "city": "Shanghai"
+                }
               }
-            }
+            ]
           }
         },
         {
@@ -411,7 +419,7 @@
             "toolResult": {
               "result": "The weather in Shanghai is 72 degrees",
               "isError": false,
-              "id": "toolu_01NHyahSUqrPjxQk9mvCvvGe"
+              "id": "toolu_013ZnATGKhvPkt2jjxdFheDK"
             }
           }
         }
@@ -480,13 +488,15 @@
           ],
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "toolu_01Gy7Gxbx7uGmjVncGH6pubL",
-              "name": "getWeather",
-              "input": {
-                "city": "San Francisco"
+            "toolCall": [
+              {
+                "id": "toolu_017MxwaxaLYkmt4dpP5HKzFe",
+                "name": "getWeather",
+                "input": {
+                  "city": "San Francisco"
+                }
               }
-            }
+            ]
           }
         }
       }
@@ -520,13 +530,15 @@
           ],
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "toolu_01NHyahSUqrPjxQk9mvCvvGe",
-              "name": "getWeather",
-              "input": {
-                "city": "Shanghai"
+            "toolCall": [
+              {
+                "id": "toolu_013ZnATGKhvPkt2jjxdFheDK",
+                "name": "getWeather",
+                "input": {
+                  "city": "Shanghai"
+                }
               }
-            }
+            ]
           }
         }
       }

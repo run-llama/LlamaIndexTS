@@ -191,7 +191,8 @@ For questions about more specific sections, please use the vector_tool.`,
     message:
       "What's the summary of Alex? Does he live in Brazil based on the brief information? Return yes or no.",
   });
-  strictEqual(mockCall.mock.callCount(), 1);
+  // not sure if AI calls twice("Alex", "Brazil") or once ("Alex in Brazil") or something else
+  ok(mockCall.mock.callCount() >= 1);
 
   consola.debug("response:", response.message.content);
   ok(extractText(response.message.content).toLowerCase().includes("no"));

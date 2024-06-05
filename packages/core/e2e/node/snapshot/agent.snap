@@ -20,21 +20,23 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_Enrc7RhNts0qxGaEATOEhV6F",
-              "name": "Weather",
-              "input": "{\"location\":\"San Francisco\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_sH6QfjsymHW7JFl68j8AY6xg",
+                "name": "Weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
           }
         },
         {
-          "content": "35 degrees and sunny in San Francisco",
           "role": "user",
+          "content": "35 degrees and sunny in San Francisco",
           "options": {
             "toolResult": {
               "result": "35 degrees and sunny in San Francisco",
               "isError": false,
-              "id": "call_Enrc7RhNts0qxGaEATOEhV6F"
+              "id": "call_sH6QfjsymHW7JFl68j8AY6xg"
             }
           }
         }
@@ -60,21 +62,23 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_OYo81prrpK2RLOS9d0Y6kiXB",
-              "name": "unique_id",
-              "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_V7zs8cyDT5FqJhjwBqcCydgA",
+                "name": "unique_id",
+                "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+              }
+            ]
           }
         },
         {
-          "content": "123456789",
           "role": "user",
+          "content": "123456789",
           "options": {
             "toolResult": {
               "result": "123456789",
               "isError": false,
-              "id": "call_OYo81prrpK2RLOS9d0Y6kiXB"
+              "id": "call_V7zs8cyDT5FqJhjwBqcCydgA"
             }
           }
         }
@@ -100,21 +104,23 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_YUXowHKwOJ6GIWV4EA59x8iF",
-              "name": "sumNumbers",
-              "input": "{\"a\":1,\"b\":1}"
-            }
+            "toolCall": [
+              {
+                "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt",
+                "name": "sumNumbers",
+                "input": "{\"a\":1,\"b\":1}"
+              }
+            ]
           }
         },
         {
-          "content": "2",
           "role": "user",
+          "content": "2",
           "options": {
             "toolResult": {
               "result": "2",
               "isError": false,
-              "id": "call_YUXowHKwOJ6GIWV4EA59x8iF"
+              "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt"
             }
           }
         }
@@ -130,11 +136,13 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_Enrc7RhNts0qxGaEATOEhV6F",
-              "name": "Weather",
-              "input": "{\"location\":\"San Francisco\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_sH6QfjsymHW7JFl68j8AY6xg",
+                "name": "Weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
           }
         }
       }
@@ -158,11 +166,13 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_OYo81prrpK2RLOS9d0Y6kiXB",
-              "name": "unique_id",
-              "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_V7zs8cyDT5FqJhjwBqcCydgA",
+                "name": "unique_id",
+                "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+              }
+            ]
           }
         }
       }
@@ -186,11 +196,13 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_YUXowHKwOJ6GIWV4EA59x8iF",
-              "name": "sumNumbers",
-              "input": "{\"a\":1,\"b\":1}"
-            }
+            "toolCall": [
+              {
+                "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt",
+                "name": "sumNumbers",
+                "input": "{\"a\":1,\"b\":1}"
+              }
+            ]
           }
         }
       }
@@ -200,7 +212,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "The sum of 1 + 1 is 2.",
+          "content": "1 + 1 is equal to 2.",
           "role": "assistant",
           "options": {}
         }

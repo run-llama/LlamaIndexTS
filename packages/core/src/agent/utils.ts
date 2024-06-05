@@ -16,10 +16,25 @@ export async function callTool(
   toolCall: ToolCall | PartialToolCall,
   logger: Logger,
 ): Promise<ToolOutput> {
-  const input: JSONObject =
-    typeof toolCall.input === "string"
-      ? JSON.parse(toolCall.input)
-      : toolCall.input;
+  let input: JSONObject;
+  if (typeof toolCall.input === "string") {
+    try {
+      input = JSON.parse(toolCall.input);
+    } catch (e) {
+      const output = `Tool ${toolCall.name} can't be called. Input is not a valid JSON object.`;
+      logger.error(
+        `${output} Try increasing the maxTokens parameter of your LLM. Invalid Input: ${toolCall.input}`,
+      );
+      return {
+        tool,
+        input: {},
+        output,
+        isError: true,
+      };
+    }
+  } else {
+    input = toolCall.input;
+  }
   if (!tool) {
     logger.error(`Tool ${toolCall.name} does not exist.`);
     const output = `Tool ${toolCall.name} does not exist.`;

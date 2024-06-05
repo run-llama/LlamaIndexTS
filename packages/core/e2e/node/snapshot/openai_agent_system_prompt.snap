@@ -28,21 +28,23 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_loaXnCH3WRnbnROZzNbrRkHS",
-              "name": "getWeather",
-              "input": "{\"city\":\"San Francisco\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe",
+                "name": "getWeather",
+                "input": "{\"city\":\"San Francisco\"}"
+              }
+            ]
           }
         },
         {
-          "content": "The weather in San Francisco is 72 degrees",
           "role": "user",
+          "content": "The weather in San Francisco is 72 degrees",
           "options": {
             "toolResult": {
               "result": "The weather in San Francisco is 72 degrees",
               "isError": false,
-              "id": "call_loaXnCH3WRnbnROZzNbrRkHS"
+              "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe"
             }
           }
         }
@@ -58,11 +60,13 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_loaXnCH3WRnbnROZzNbrRkHS",
-              "name": "getWeather",
-              "input": "{\"city\":\"San Francisco\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe",
+                "name": "getWeather",
+                "input": "{\"city\":\"San Francisco\"}"
+              }
+            ]
           }
         }
       }
@@ -72,7 +76,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "Arhgs! The weather in San Francisco is 72 degrees.",
+          "content": "Arhgs the weather in San Francisco be 72 degrees.",
           "role": "assistant",
           "options": {}
         }

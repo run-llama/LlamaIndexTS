@@ -1,9 +1,9 @@
 import { fs, path } from "@llamaindex/env";
-import pLimit from "p-limit";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader } from "./type.js";
+import pLimit from "./utils.js";
 
 type ReaderCallback = (
   category: "file" | "directory",
