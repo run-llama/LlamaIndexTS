@@ -138,7 +138,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
 
     await docStore.addDocuments(documents, true);
     for (const doc of documents) {
-      docStore.setDocumentHash(doc.id_, doc.hash);
+      await docStore.setDocumentHash(doc.id_, doc.hash);
     }
 
     const nodes =

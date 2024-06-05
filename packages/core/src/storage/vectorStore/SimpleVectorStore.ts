@@ -152,12 +152,19 @@ export class SimpleVectorStore
   async persist(
     persistPath: string = path.join(DEFAULT_PERSIST_DIR, "vector_store.json"),
   ): Promise<void> {
+    await SimpleVectorStore.persistData(persistPath, this.data);
+  }
+
+  protected static async persistData(
+    persistPath: string,
+    data: SimpleVectorStoreData,
+  ): Promise<void> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(dirPath))) {
       await fs.mkdir(dirPath);
     }
 
-    await fs.writeFile(persistPath, JSON.stringify(this.data));
+    await fs.writeFile(persistPath, JSON.stringify(data));
   }
 
   static async fromPersistPath(
@@ -176,6 +183,11 @@ export class SimpleVectorStore
     } catch (e) {
       console.error(
         `No valid data found at path: ${persistPath} starting new store.`,
+      );
+      // persist empty data, to ignore this error in the future
+      await SimpleVectorStore.persistData(
+        persistPath,
+        new SimpleVectorStoreData(),
       );
     }
 

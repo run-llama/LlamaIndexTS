@@ -19,7 +19,7 @@ export class DuplicatesStrategy implements TransformComponent {
 
     for (const node of nodes) {
       if (!(node.hash in hashes) && !currentHashes.has(node.hash)) {
-        this.docStore.setDocumentHash(node.id_, node.hash);
+        await this.docStore.setDocumentHash(node.id_, node.hash);
         nodesToRun.push(node);
         currentHashes.add(node.hash);
       }
