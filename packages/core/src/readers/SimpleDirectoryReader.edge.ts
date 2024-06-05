@@ -1,4 +1,5 @@
-import { fs, path, pLimit } from "@llamaindex/env";
+import { fs, path } from "@llamaindex/env";
+import pLimit from "p-limit";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
@@ -84,8 +85,8 @@ export class SimpleDirectoryReader implements BaseReader {
       overrideReader,
     };
 
-    // Uses pLimit to control number of parallel requests (note: pLimit is wrapped in @llamaindex/env)
-    const limit = await pLimit(numWorkers);
+    // Uses pLimit to control number of parallel requests
+    const limit = pLimit(numWorkers);
     const workerPromises = filePathQueue.map((filePath) =>
       limit(() => this.processFile(filePath, processFileParams)),
     );

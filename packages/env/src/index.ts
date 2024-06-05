@@ -20,7 +20,6 @@ import {
   TransformStream,
   WritableStream,
 } from "node:stream/web";
-import type { LimitFunction } from "p-limit";
 import { fs } from "./fs/node.js";
 import type { SHA256 } from "./polyfill.js";
 
@@ -34,11 +33,6 @@ export function createSHA256(): SHA256 {
       return hash.digest("base64");
     },
   };
-}
-
-export async function pLimit(numWorkers: number): Promise<LimitFunction> {
-  const { default: pLimit } = await import("p-limit");
-  return pLimit(numWorkers);
 }
 
 export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
