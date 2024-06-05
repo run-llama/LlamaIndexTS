@@ -1,6 +1,5 @@
 // Note: this code is taken from p-limit 5.0.0 and modified to work with non NodeJS envs by removing AsyncResource which seems not be needed in our case and also it's not recommended to used anymore. If we need to preserve some state between async calls better use `AsyncLocalStorage`.
-// TODO: remove dependency to yocto-queue (e.g. use normal Array)
-import Queue from "yocto-queue";
+// Also removed dependency to yocto-queue by using normal Array
 
 export type LimitFunction = {
   /**
@@ -44,14 +43,14 @@ export default function pLimit(concurrency: number): LimitFunction {
     throw new TypeError("Expected `concurrency` to be a number from 1 and up");
   }
 
-  const queue: any = new Queue();
+  const queue = new Array();
   let activeCount = 0;
 
   const next = () => {
     activeCount--;
 
-    if (queue.size > 0) {
-      queue.dequeue()();
+    if (queue.length > 0) {
+      queue.shift()();
     }
   };
 
@@ -69,7 +68,7 @@ export default function pLimit(concurrency: number): LimitFunction {
   };
 
   const enqueue = (function_: any, resolve: any, arguments_: any) => {
-    queue.enqueue(run.bind(undefined, function_, resolve, arguments_));
+    queue.push(run.bind(undefined, function_, resolve, arguments_));
 
     (async () => {
       // This function needs to wait until the next microtask before comparing
@@ -78,8 +77,8 @@ export default function pLimit(concurrency: number): LimitFunction {
       // needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
       await Promise.resolve();
 
-      if (activeCount < concurrency && queue.size > 0) {
-        queue.dequeue()();
+      if (activeCount < concurrency && queue.length > 0) {
+        queue.shift()();
       }
     })();
   };
@@ -94,11 +93,11 @@ export default function pLimit(concurrency: number): LimitFunction {
       get: () => activeCount,
     },
     pendingCount: {
-      get: () => queue.size,
+      get: () => queue.length,
     },
     clearQueue: {
       value() {
-        queue.clear();
+        queue.length = 0;
       },
     },
   });
