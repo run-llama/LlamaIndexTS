@@ -446,9 +446,6 @@ importers:
       openai:
         specifier: ^4.46.0
         version: 4.47.1(encoding@0.1.13)
-      p-limit:
-        specifier: ^5.0.0
-        version: 5.0.0
       papaparse:
         specifier: ^5.4.1
         version: 5.4.1
@@ -667,6 +664,9 @@ importers:
       '@types/node':
         specifier: ^20.12.11
         version: 20.12.11
+      p-limit:
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0

@@ -75,7 +75,8 @@
   },
   "dependencies": {
     "@types/lodash": "^4.17.1",
-    "@types/node": "^20.12.11"
+    "@types/node": "^20.12.11",
+    "p-limit": "^5.0.0"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
