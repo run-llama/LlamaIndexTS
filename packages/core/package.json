@@ -47,7 +47,7 @@
     "magic-bytes.js": "^1.10.0",
     "mammoth": "^1.7.2",
     "md-utils-ts": "^2.0.0",
-    "mongodb": "^6.6.2",
+    "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
     "openai": "^4.47.1",
     "papaparse": "^5.4.1",

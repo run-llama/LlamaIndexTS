@@ -13,7 +13,7 @@
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.11",
     "llamaindex": "*",
-    "mongodb": "^6.6.1",
+    "mongodb": "^6.7.0",
     "pathe": "^1.1.2"
   },
   "devDependencies": {
