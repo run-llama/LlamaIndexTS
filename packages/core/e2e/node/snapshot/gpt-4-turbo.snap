@@ -20,21 +20,23 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_TRC5kpzyVaV5n2R91sJsBAF1",
-              "name": "Weather",
-              "input": "{\"location\":\"San Jose\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_Xa2Kxa2zUE073mnougPWzRlh",
+                "name": "Weather",
+                "input": "{\"location\":\"San Jose\"}"
+              }
+            ]
           }
         },
         {
-          "content": "45 degrees and sunny in San Jose",
           "role": "user",
+          "content": "45 degrees and sunny in San Jose",
           "options": {
             "toolResult": {
               "result": "45 degrees and sunny in San Jose",
               "isError": false,
-              "id": "call_TRC5kpzyVaV5n2R91sJsBAF1"
+              "id": "call_Xa2Kxa2zUE073mnougPWzRlh"
             }
           }
         }
@@ -50,11 +52,13 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_TRC5kpzyVaV5n2R91sJsBAF1",
-              "name": "Weather",
-              "input": "{\"location\":\"San Jose\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_Xa2Kxa2zUE073mnougPWzRlh",
+                "name": "Weather",
+                "input": "{\"location\":\"San Jose\"}"
+              }
+            ]
           }
         }
       }
@@ -64,7 +68,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "The weather in San Jose is currently 45 degrees and sunny.",
+          "content": "The current weather in San Jose is 45 degrees and sunny.",
           "role": "assistant",
           "options": {}
         }
