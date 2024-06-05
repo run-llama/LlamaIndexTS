@@ -194,12 +194,15 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
                     } satisfies TextBlockParam,
                   ]
                 : []),
-              {
-                type: "tool_use",
-                id: options.toolCall.id,
-                name: options.toolCall.name,
-                input: options.toolCall.input,
-              } satisfies ToolUseBlockParam,
+              ...options.toolCall.map(
+                (toolCall) =>
+                  ({
+                    type: "tool_use",
+                    id: toolCall.id,
+                    name: toolCall.name,
+                    input: toolCall.input,
+                  }) satisfies ToolUseBlockParam,
+              ),
             ] satisfies ToolsBetaContentBlock[],
           } satisfies ToolsBetaMessageParam;
         }
@@ -326,7 +329,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
       }
       const response = await anthropic.beta.tools.messages.create(params);
 
-      const toolUseBlock = response.content.find(
+      const toolUseBlock = response.content.filter(
         (content): content is ToolUseBlock => content.type === "tool_use",
       );
 
@@ -340,15 +343,16 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
               text: content.text,
             })),
           role: "assistant",
-          options: toolUseBlock
-            ? {
-                toolCall: {
-                  id: toolUseBlock.id,
-                  name: toolUseBlock.name,
-                  input: toolUseBlock.input,
-                },
-              }
-            : {},
+          options:
+            toolUseBlock.length > 0
+              ? {
+                  toolCall: toolUseBlock.map((block) => ({
+                    id: block.id,
+                    name: block.name,
+                    input: block.input,
+                  })),
+                }
+              : {},
         },
       };
     } else {

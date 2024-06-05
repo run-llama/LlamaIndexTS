@@ -279,19 +279,19 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         return {
           role: "assistant",
           content: extractText(message.content),
-          tool_calls: [
-            {
-              id: options.toolCall.id,
+          tool_calls: options.toolCall.map((toolCall) => {
+            return {
+              id: toolCall.id,
               type: "function",
               function: {
-                name: options.toolCall.name,
+                name: toolCall.name,
                 arguments:
-                  typeof options.toolCall.input === "string"
-                    ? options.toolCall.input
-                    : JSON.stringify(options.toolCall.input),
+                  typeof toolCall.input === "string"
+                    ? toolCall.input
+                    : JSON.stringify(toolCall.input),
               },
-            },
-          ],
+            };
+          }),
         } satisfies ChatCompletionAssistantMessageParam;
       } else if (message.role === "user") {
         return {
@@ -380,12 +380,13 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         role: response.choices[0].message.role,
         options: response.choices[0].message?.tool_calls
           ? {
-              toolCall: {
-                id: response.choices[0].message.tool_calls[0].id,
-                name: response.choices[0].message.tool_calls[0].function.name,
-                input:
-                  response.choices[0].message.tool_calls[0].function.arguments,
-              },
+              toolCall: response.choices[0].message.tool_calls.map(
+                (toolCall) => ({
+                  id: toolCall.id,
+                  name: toolCall.function.name,
+                  input: toolCall.function.arguments,
+                }),
+              ),
             }
           : {},
       },
@@ -459,10 +460,10 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       yield {
         raw: part,
         options: shouldEmitToolCall
-          ? { toolCall: shouldEmitToolCall }
+          ? { toolCall: [shouldEmitToolCall] }
           : currentToolCall
             ? {
-                toolCall: currentToolCall,
+                toolCall: [currentToolCall],
               }
             : {},
         delta: choice.delta.content ?? "",

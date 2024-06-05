@@ -26,6 +26,15 @@
       "id": "PRESERVE_2",
       "messages": [
         {
+          "content": "Context information is below.\n---------------------\nAlex is a male. What's very important, Alex is not in the Brazil.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: Brazil\nAnswer:",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_3",
+      "messages": [
+        {
           "content": "Please always use the tools provided to answer a question. Do not rely on prior knowledge.",
           "role": "system"
         },
@@ -37,21 +46,39 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_VfgZS1NPKpbtzqhM3o1Buzx8",
-              "name": "summary_tool",
-              "input": "{\"query\": \"Alex\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_vv1XW3xv4j2us5sZOtzCU2lL",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Alex\"}"
+              },
+              {
+                "id": "call_V36LMHbwUJkEa20A3GoA4wIr",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Brazil\"}"
+              }
+            ]
           }
         },
         {
-          "content": "Alex is not in Brazil.",
           "role": "user",
+          "content": "Alex is not in Brazil.",
           "options": {
             "toolResult": {
               "result": "Alex is not in Brazil.",
               "isError": false,
-              "id": "call_VfgZS1NPKpbtzqhM3o1Buzx8"
+              "id": "call_vv1XW3xv4j2us5sZOtzCU2lL"
+            }
+          }
+        },
+        {
+          "role": "user",
+          "content": "Alex is not in Brazil.",
+          "options": {
+            "toolResult": {
+              "result": "Alex is not in Brazil.",
+              "isError": false,
+              "id": "call_V36LMHbwUJkEa20A3GoA4wIr"
             }
           }
         }
@@ -67,11 +94,18 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_VfgZS1NPKpbtzqhM3o1Buzx8",
-              "name": "summary_tool",
-              "input": "{\"query\": \"Alex\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_vv1XW3xv4j2us5sZOtzCU2lL",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Alex\"}"
+              },
+              {
+                "id": "call_V36LMHbwUJkEa20A3GoA4wIr",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Brazil\"}"
+              }
+            ]
           }
         }
       }
@@ -92,7 +126,18 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "No, Alex does not live in Brazil based on the brief information available.",
+          "content": "Alex is not in Brazil.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_3",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Based on the brief information, Alex is not in Brazil.",
           "role": "assistant",
           "options": {}
         }
