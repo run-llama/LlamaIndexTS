@@ -271,7 +271,7 @@ custom_edit_url: null
 
 ### setDocumentHash
 
-▸ `Abstract` **setDocumentHash**(`docId`, `docHash`): `void`
+▸ `Abstract` **setDocumentHash**(`docId`, `docHash`): `Promise`<`void`\>
 
 #### Parameters
 

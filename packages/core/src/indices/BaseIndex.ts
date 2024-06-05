@@ -95,7 +95,7 @@ export abstract class BaseIndex<T> {
       [nodeParserFromSettingsOrContext(this.serviceContext)],
     );
     await this.insertNodes(nodes);
-    this.docStore.setDocumentHash(document.id_, document.hash);
+    await this.docStore.setDocumentHash(document.id_, document.hash);
   }
 
   abstract insertNodes(nodes: BaseNode[]): Promise<void>;

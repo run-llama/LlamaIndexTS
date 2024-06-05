@@ -1,5 +1,4 @@
 import {
-  ImageType,
   MultiModalResponseSynthesizer,
   OpenAI,
   RetrievalEndEvent,
@@ -22,8 +21,6 @@ Settings.callbackManager.on("retrieve-end", (event: RetrievalEndEvent) => {
 });
 
 async function main() {
-  const images: ImageType[] = [];
-
   const storageContext = await getStorageContext();
   const index = await VectorStoreIndex.init({
     nodes: [],
@@ -34,13 +31,14 @@ async function main() {
     responseSynthesizer: new MultiModalResponseSynthesizer(),
     retriever: index.asRetriever({ topK: { TEXT: 3, IMAGE: 1 } }),
   });
-  const result = await queryEngine.query({
+  const stream = await queryEngine.query({
     query: "Tell me more about Vincent van Gogh's famous paintings",
+    stream: true,
   });
-  console.log(result.response, "\n");
-  images.forEach((image) =>
-    console.log(`Image retrieved and used in inference: ${image.toString()}`),
-  );
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.response);
+  }
+  process.stdout.write("\n");
 }
 
 main().catch(console.error);

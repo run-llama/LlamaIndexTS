@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "expectedMinorVersion": "3",
   "license": "MIT",
   "type": "module",
@@ -50,6 +50,7 @@
     "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
     "openai": "^4.48.1",
+    "p-limit": "^5.0.0",
     "papaparse": "^5.4.1",
     "pathe": "^1.1.2",
     "pdf2json": "3.1.3",
