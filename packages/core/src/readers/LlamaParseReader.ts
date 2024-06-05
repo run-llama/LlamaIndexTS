@@ -196,7 +196,7 @@ export class LlamaParseReader implements FileReader {
     const statusUrl = `${this.baseUrl}/job/${jobId}`;
     const headers = { Authorization: `Bearer ${this.apiKey}` };
 
-    const start = Date.now();
+    const signal = AbortSignal.timeout(this.maxTimeout * 1000);
     let tries = 0;
     while (true) {
       await new Promise((resolve) =>
@@ -206,15 +206,10 @@ export class LlamaParseReader implements FileReader {
       // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
       const statusResponse = await fetch(statusUrl, {
         headers,
-        signal: AbortSignal.timeout(this.maxTimeout * 1000),
+        signal,
       });
       if (!statusResponse.ok) {
-        const end = Date.now();
-        if (end - start > this.maxTimeout * 1000) {
-          throw new Error(
-            `Timeout while parsing the file: ${await statusResponse.text()}`,
-          );
-        }
+        signal.throwIfAborted();
         if (this.verbose && tries % 10 === 0) {
           process.stdout.write(".");
         }
@@ -229,7 +224,7 @@ export class LlamaParseReader implements FileReader {
       if (status === "SUCCESS") {
         const resultResponse = await fetch(resultUrl, {
           headers,
-          signal: AbortSignal.timeout(this.maxTimeout * 1000),
+          signal,
         });
         if (!resultResponse.ok) {
           throw new Error(
@@ -239,17 +234,11 @@ export class LlamaParseReader implements FileReader {
         return resultResponse.json();
         // If job is still pending, check if maximum timeout has been reached. If reached, throws an error
       } else if (status === "PENDING") {
-        const end = Date.now();
-        if (end - start > this.maxTimeout * 1000) {
-          throw new Error(
-            `Timeout while parsing the file: ${await statusResponse.text()}`,
-          );
-        }
+        signal.throwIfAborted();
         if (this.verbose && tries % 10 === 0) {
           process.stdout.write(".");
         }
         tries++;
-        continue;
       } else {
         throw new Error(
           `Failed to parse the file: ${jobId}, status: ${status}`,
