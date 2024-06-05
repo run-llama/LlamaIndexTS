@@ -50,7 +50,6 @@
     "mongodb": "^6.6.1",
     "notion-md-crawler": "^1.0.0",
     "openai": "^4.46.0",
-    "p-limit": "^5.0.0",
     "papaparse": "^5.4.1",
     "pathe": "^1.1.2",
     "pdf2json": "3.0.5",
@@ -60,7 +59,8 @@
     "rake-modified": "^1.0.8",
     "string-strip-html": "^13.4.8",
     "wikipedia": "^2.1.2",
-    "wink-nlp": "^2.2.2"
+    "wink-nlp": "^2.2.2",
+    "yocto-queue": "^1.0.0"
   },
   "peerDependencies": {
     "@notionhq/client": "^2.2.15"
