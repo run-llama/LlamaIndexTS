@@ -41,7 +41,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "Thought: I need to use a tool to help me answer the question.\nAction: getWeather\nAction Input: {\"city\": \"San Francisco\"}",
+          "content": "Thought: I need to use a tool to help me answer the question. \nAction: getWeather\nAction Input: {\"city\": \"San Francisco\"}",
           "role": "assistant",
           "options": {}
         }
@@ -177,7 +177,15 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": ".\n"
+        "delta": "."
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " \n"
       }
     },
     {

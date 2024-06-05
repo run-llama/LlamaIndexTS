@@ -20,16 +20,18 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_iY0VO4HvXDT2PtR3CvRSY1uK",
-              "name": "get_weather",
-              "input": "{\"location\":\"San Francisco\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_uERMumWlJLTO2GW93X6C2W3N",
+                "name": "get_weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
           }
         },
         {
-          "content": "{\n  location: San Francisco,\n  temperature: 72,\n  weather: cloudy,\n  rain_prediction: 0.89\n}",
           "role": "user",
+          "content": "{\n  location: San Francisco,\n  temperature: 72,\n  weather: cloudy,\n  rain_prediction: 0.89\n}",
           "options": {
             "toolResult": {
               "result": {
@@ -39,7 +41,7 @@
                 "rain_prediction": 0.89
               },
               "isError": false,
-              "id": "call_iY0VO4HvXDT2PtR3CvRSY1uK"
+              "id": "call_uERMumWlJLTO2GW93X6C2W3N"
             }
           }
         }
@@ -55,11 +57,13 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "id": "call_iY0VO4HvXDT2PtR3CvRSY1uK",
-              "name": "get_weather",
-              "input": "{\"location\":\"San Francisco\"}"
-            }
+            "toolCall": [
+              {
+                "id": "call_uERMumWlJLTO2GW93X6C2W3N",
+                "name": "get_weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
           }
         }
       }

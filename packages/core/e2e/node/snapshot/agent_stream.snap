@@ -20,14 +20,21 @@
           "role": "assistant",
           "content": "",
           "options": {
-            "toolCall": {
-              "name": "divideNumbers",
-              "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
-              "input": {
-                "a": 16,
-                "b": 2
+            "toolCall": [
+              {
+                "name": "divideNumbers",
+                "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+                "input": {
+                  "a": 16,
+                  "b": 2
+                }
+              },
+              {
+                "name": "sumNumbers",
+                "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+                "input": "{\"a\": 8, \"b\": 20}"
               }
-            }
+            ]
           }
         },
         {
@@ -37,18 +44,7 @@
             "toolResult": {
               "result": "8",
               "isError": false,
-              "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT"
-            }
-          }
-        },
-        {
-          "role": "assistant",
-          "content": "",
-          "options": {
-            "toolCall": {
-              "name": "sumNumbers",
-              "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
-              "input": "{\"a\": 8, \"b\": 20}"
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf"
             }
           }
         },
@@ -59,7 +55,7 @@
             "toolResult": {
               "result": "28",
               "isError": false,
-              "id": "call_C03ASSDxIFTrYmzSuTxCrItd"
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX"
             }
           }
         }
@@ -75,11 +71,13 @@
           "content": "",
           "role": "assistant",
           "options": {
-            "toolCall": {
-              "name": "sumNumbers",
-              "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
-              "input": "{\"a\": 8, \"b\": 20}"
-            }
+            "toolCall": [
+              {
+                "name": "sumNumbers",
+                "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
+            ]
           }
         }
       }
@@ -89,7 +87,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "The result of dividing 16 by 2 and then adding 20 is 28.",
+          "content": "The result of dividing 16 by 2 is 8. When you add 20 to 8, the total is 28.",
           "role": "assistant",
           "options": {}
         }
@@ -102,84 +100,13 @@
       "chunk": {
         "raw": null,
         "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
-            "input": ""
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
-            "input": "{\"a\""
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
-            "input": "{\"a\": 16,"
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
-            "input": "{\"a\": 16, \"b\": "
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
-            "input": "{\"a\": 16, \"b\": 2}"
-          }
-        },
-        "delta": ""
-      }
-    },
-    {
-      "id": "PRESERVE_0",
-      "chunk": {
-        "raw": null,
-        "options": {
-          "toolCall": {
-            "name": "divideNumbers",
-            "id": "call_QQh8uKzGHbgBlrhqxZNoWiQT",
-            "input": {
-              "a": 16,
-              "b": 2
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
             }
-          }
+          ]
         },
         "delta": ""
       }
@@ -189,11 +116,13 @@
       "chunk": {
         "raw": null,
         "options": {
-          "toolCall": {
-            "name": "sumNumbers",
-            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
-            "input": "{\"a\""
-          }
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
         },
         "delta": ""
       }
@@ -203,11 +132,13 @@
       "chunk": {
         "raw": null,
         "options": {
-          "toolCall": {
-            "name": "sumNumbers",
-            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
-            "input": "{\"a\": 8, "
-          }
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
         },
         "delta": ""
       }
@@ -217,11 +148,13 @@
       "chunk": {
         "raw": null,
         "options": {
-          "toolCall": {
-            "name": "sumNumbers",
-            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
-            "input": "{\"a\": 8, \"b\": 2"
-          }
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
         },
         "delta": ""
       }
@@ -231,11 +164,96 @@
       "chunk": {
         "raw": null,
         "options": {
-          "toolCall": {
-            "name": "sumNumbers",
-            "id": "call_C03ASSDxIFTrYmzSuTxCrItd",
-            "input": "{\"a\": 8, \"b\": 20}"
-          }
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": {
+                "a": 16,
+                "b": 2
+              }
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
         },
         "delta": ""
       }
@@ -317,7 +335,7 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": " and"
+        "delta": " is"
       }
     },
     {
@@ -325,7 +343,7 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": " then"
+        "delta": " "
       }
     },
     {
@@ -333,7 +351,39 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": " adding"
+        "delta": "8"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "."
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " When"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " you"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " add"
       }
     },
     {
@@ -350,6 +400,54 @@
         "raw": null,
         "options": {},
         "delta": "20"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " to"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "8"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": ","
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " the"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " total"
       }
     },
     {

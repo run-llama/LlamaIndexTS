@@ -24,24 +24,7 @@
     {
       "id": "PRESERVE_0",
       "response": {
-        "raw": {
-          "id": "HIDDEN",
-          "type": "message",
-          "role": "assistant",
-          "model": "claude-3-opus-20240229",
-          "stop_sequence": null,
-          "usage": {
-            "input_tokens": 8,
-            "output_tokens": 12
-          },
-          "content": [
-            {
-              "type": "text",
-              "text": "Hello! How can I assist you today?"
-            }
-          ],
-          "stop_reason": "end_turn"
-        },
+        "raw": null,
         "message": {
           "content": "Hello! How can I assist you today?",
           "role": "assistant",
@@ -52,116 +35,7 @@
     {
       "id": "PRESERVE_1",
       "response": {
-        "raw": [
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": "Hello"
-              }
-            },
-            "delta": "Hello",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": "!"
-              }
-            },
-            "delta": "!",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": " How"
-              }
-            },
-            "delta": " How",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": " can"
-              }
-            },
-            "delta": " can",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": " I"
-              }
-            },
-            "delta": " I",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": " assist"
-              }
-            },
-            "delta": " assist",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": " you"
-              }
-            },
-            "delta": " you",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": " today"
-              }
-            },
-            "delta": " today",
-            "options": {}
-          },
-          {
-            "raw": {
-              "type": "content_block_delta",
-              "index": 0,
-              "delta": {
-                "type": "text_delta",
-                "text": "?"
-              }
-            },
-            "delta": "?",
-            "options": {}
-          }
-        ],
+        "raw": null,
         "message": {
           "content": "Hello! How can I assist you today?",
           "role": "assistant",
@@ -174,14 +48,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": "Hello"
-          }
-        },
+        "raw": null,
         "delta": "Hello",
         "options": {}
       }
@@ -189,14 +56,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": "!"
-          }
-        },
+        "raw": null,
         "delta": "!",
         "options": {}
       }
@@ -204,14 +64,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": " How"
-          }
-        },
+        "raw": null,
         "delta": " How",
         "options": {}
       }
@@ -219,14 +72,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": " can"
-          }
-        },
+        "raw": null,
         "delta": " can",
         "options": {}
       }
@@ -234,14 +80,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": " I"
-          }
-        },
+        "raw": null,
         "delta": " I",
         "options": {}
       }
@@ -249,14 +88,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": " assist"
-          }
-        },
+        "raw": null,
         "delta": " assist",
         "options": {}
       }
@@ -264,14 +96,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": " you"
-          }
-        },
+        "raw": null,
         "delta": " you",
         "options": {}
       }
@@ -279,14 +104,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": " today"
-          }
-        },
+        "raw": null,
         "delta": " today",
         "options": {}
       }
@@ -294,14 +112,7 @@
     {
       "id": "PRESERVE_1",
       "chunk": {
-        "raw": {
-          "type": "content_block_delta",
-          "index": 0,
-          "delta": {
-            "type": "text_delta",
-            "text": "?"
-          }
-        },
+        "raw": null,
         "delta": "?",
         "options": {}
       }
