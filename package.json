@@ -19,15 +19,15 @@
     "new-snapshot": "pnpm run build:release && changeset version --snapshot"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@changesets/cli": "^2.27.5",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "^1.13.3",
     "eslint-plugin-react": "7.34.1",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
+    "lint-staged": "^15.2.5",
     "madge": "^7.0.0",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",

@@ -21,7 +21,7 @@ export class PDFReader implements BaseReader {
 
 async function readPDF(data: Buffer): Promise<string[]> {
   const parser = await import("pdf2json").then(
-    ({ default: Pdfparser }) => new Pdfparser(null, 1),
+    ({ default: Pdfparser }) => new Pdfparser(null, true),
   );
   const text = await new Promise<string>((resolve, reject) => {
     parser.on("pdfParser_dataError", (error) => {

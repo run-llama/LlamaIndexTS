@@ -4,22 +4,22 @@
   "version": "0.0.4",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
-    "@datastax/astra-db-ts": "^1.1.0",
+    "@datastax/astra-db-ts": "^1.2.1",
     "@notionhq/client": "^2.2.15",
-    "@pinecone-database/pinecone": "^2.2.0",
+    "@pinecone-database/pinecone": "^2.2.2",
     "@zilliz/milvus2-sdk-node": "^2.4.2",
-    "chromadb": "^1.7.3",
-    "commander": "^12.0.0",
+    "chromadb": "^1.8.1",
+    "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "js-tiktoken": "^1.0.11",
-    "llamaindex": "*",
-    "mongodb": "^6.6.1",
+    "js-tiktoken": "^1.0.12",
+    "llamaindex": "^0.3.14",
+    "mongodb": "^6.7.0",
     "pathe": "^1.1.2"
   },
   "devDependencies": {
-    "@types/node": "^20.12.11",
+    "@types/node": "^20.14.1",
     "ts-node": "^10.9.2",
-    "tsx": "^4.9.3",
+    "tsx": "^4.11.2",
     "typescript": "^5.4.5"
   },
   "scripts": {
