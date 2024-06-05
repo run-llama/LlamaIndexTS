@@ -476,9 +476,6 @@ importers:
       wink-nlp:
         specifier: ^2.2.2
         version: 2.2.2
-      yocto-queue:
-        specifier: ^1.0.0
-        version: 1.0.0
     devDependencies:
       '@notionhq/client':
         specifier: ^2.2.15
