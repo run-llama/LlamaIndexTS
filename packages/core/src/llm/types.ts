@@ -36,14 +36,16 @@ export type LLMStreamEvent = BaseEvent<{
 export interface LLMChat<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
+  Raw extends object = object,
+  StreamRaw extends object = object,
 > {
   chat(
     params:
       | LLMChatParamsStreaming<AdditionalChatOptions>
       | LLMChatParamsNonStreaming<AdditionalChatOptions>,
   ): Promise<
-    | ChatResponse<AdditionalMessageOptions>
-    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions>>
+    | ChatResponse<AdditionalMessageOptions, Raw>
+    | AsyncIterable<ChatResponseChunk<AdditionalMessageOptions, StreamRaw>>
   >;
 }
 
@@ -99,6 +101,7 @@ export type ChatMessage<AdditionalMessageOptions extends object = object> = {
 
 export interface ChatResponse<
   AdditionalMessageOptions extends object = object,
+  Raw extends object = object,
 > {
   message: ChatMessage<AdditionalMessageOptions>;
   /**
@@ -106,13 +109,14 @@ export interface ChatResponse<
    *
    * If LLM response an iterable of chunks, this will be an array of those chunks
    */
-  raw: object | null;
+  raw: Raw | null;
 }
 
 export type ChatResponseChunk<
   AdditionalMessageOptions extends object = object,
+  Raw extends object = object,
 > = {
-  raw: object | null;
+  raw: Raw | null;
   delta: string;
   options?: undefined | AdditionalMessageOptions;
 };
@@ -197,7 +201,8 @@ export type ToolCall = {
   id: string;
 };
 
-// happened in streaming response, the tool call is not ready yet
+// happened in streaming response or input is too large.
+// In this case, the tool call is not ready.
 export type PartialToolCall = {
   name: string;
   id: string;

@@ -1,18 +1,24 @@
 import { ReadableStream } from "@llamaindex/env";
+import type { ChatCompletionChunk } from "openai/resources/chat/completions";
 import { Settings } from "../Settings.js";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import type {
+  ChatMessage,
   ChatResponseChunk,
   PartialToolCall,
   ToolCall,
   ToolCallLLMMessageOptions,
+  ToolCallOptions,
 } from "../llm/index.js";
 import { OpenAI } from "../llm/openai.js";
 import { ObjectRetriever } from "../objects/index.js";
-import type { BaseToolWithCall } from "../types.js";
+import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 import { callTool } from "./utils.js";
+
+const continuePrompt =
+  "Please continue giving input in the next message with the continuation of the JSON.";
 
 type OpenAIParamsBase = AgentParamsBase<OpenAI>;
 
@@ -79,11 +85,79 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         const targetTool = tools.find(
           (tool) => tool.metadata.name === toolCall.name,
         );
-        const toolOutput = await callTool(
-          targetTool,
-          toolCall,
-          step.context.logger,
-        );
+        const unfinishedInput =
+          response.raw?.choices.at(0)?.finish_reason === "length";
+        let toolOutput: ToolOutput;
+        if (unfinishedInput) {
+          toolOutput = {
+            tool: targetTool,
+            input: toolCall,
+            isError: true,
+            output: continuePrompt,
+          };
+        } else {
+          const messages = [...step.context.store.messages].reverse();
+          const cutoffIdx = messages.findIndex(
+            (message) =>
+              message.options &&
+              "toolResult" in message.options &&
+              message.options.toolResult.result !== continuePrompt,
+          );
+          let restMessages = messages;
+          if (cutoffIdx !== -1) {
+            restMessages = messages.slice(0, cutoffIdx);
+          }
+          restMessages = restMessages.reverse();
+
+          const unfinishedMessages = restMessages.filter(
+            (
+              message,
+              index,
+              array,
+            ): message is ChatMessage & {
+              options: ToolCallOptions;
+            } => {
+              const prevMessage = array.at(index + 1);
+              return (
+                prevMessage !== undefined &&
+                prevMessage.options !== undefined &&
+                "toolResult" in prevMessage.options &&
+                prevMessage.options.toolResult.result === continuePrompt &&
+                message.options !== undefined &&
+                "toolCall" in message.options
+              );
+            },
+          );
+          unfinishedMessages.push(step.context.store.messages.at(-1) as any);
+          let resultInput: string = "";
+          for (let i = 0; i < unfinishedMessages.length - 1; i++) {
+            const prevInput = unfinishedMessages[i]!.options.toolCall
+              .input as string;
+            const nextInput = unfinishedMessages[i + 1].options.toolCall
+              .input as string;
+            let common = 0;
+            while (
+              common < prevInput.length &&
+              common < nextInput.length &&
+              prevInput[common] === nextInput[common]
+            ) {
+              common++;
+            }
+            if (resultInput === "") {
+              const commonPrefix = prevInput.slice(0, common);
+              resultInput += commonPrefix;
+            }
+            resultInput += prevInput.slice(common) + nextInput.slice(common);
+          }
+          if (resultInput !== "") {
+            toolCall.input = resultInput;
+          }
+          toolOutput = await callTool(
+            targetTool,
+            toolCall,
+            step.context.logger,
+          );
+        }
         step.context.store.toolOutputs.push(toolOutput);
         step.context.store.messages = [
           ...step.context.store.messages,
@@ -102,7 +176,7 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
       }
     } else {
       const responseChunkStream = new ReadableStream<
-        ChatResponseChunk<ToolCallLLMMessageOptions>
+        ChatResponseChunk<ToolCallLLMMessageOptions, ChatCompletionChunk>
       >({
         async start(controller) {
           for await (const chunk of response) {
@@ -136,6 +210,10 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
           if (chunk.options && "toolCall" in chunk.options) {
             const toolCall = chunk.options.toolCall;
             toolCalls.set(toolCall.id, toolCall);
+          }
+          if (chunk.raw?.choices.at(0)?.finish_reason === "length") {
+            // todo: how to deal with this case?
+            console.warn("tool call response is too long");
           }
         }
         for (const toolCall of toolCalls.values()) {

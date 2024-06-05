@@ -8,7 +8,9 @@ import type {
 import { OpenAI as OrigOpenAI } from "openai";
 
 import type {
+  ChatCompletion,
   ChatCompletionAssistantMessageParam,
+  ChatCompletionChunk,
   ChatCompletionMessageToolCall,
   ChatCompletionRole,
   ChatCompletionSystemMessageParam,
@@ -318,13 +320,17 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       OpenAIAdditionalChatOptions,
       ToolCallLLMMessageOptions
     >,
-  ): Promise<AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>>;
+  ): Promise<
+    AsyncIterable<
+      ChatResponseChunk<ToolCallLLMMessageOptions, ChatCompletionChunk>
+    >
+  >;
   chat(
     params: LLMChatParamsNonStreaming<
       OpenAIAdditionalChatOptions,
       ToolCallLLMMessageOptions
     >,
-  ): Promise<ChatResponse<ToolCallLLMMessageOptions>>;
+  ): Promise<ChatResponse<ToolCallLLMMessageOptions, ChatCompletion>>;
   @wrapEventCaller
   @wrapLLMEvent
   async chat(
@@ -338,8 +344,10 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
           ToolCallLLMMessageOptions
         >,
   ): Promise<
-    | ChatResponse<ToolCallLLMMessageOptions>
-    | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
+    | ChatResponse<ToolCallLLMMessageOptions, ChatCompletion>
+    | AsyncIterable<
+        ChatResponseChunk<ToolCallLLMMessageOptions, ChatCompletionChunk>
+      >
   > {
     const { messages, stream, tools, additionalChatOptions } = params;
     const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
@@ -396,7 +404,9 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   @wrapEventCaller
   protected async *streamChat(
     baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams,
-  ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
+  ): AsyncIterable<
+    ChatResponseChunk<ToolCallLLMMessageOptions, ChatCompletionChunk>
+  > {
     const stream: AsyncIterable<OpenAILLM.Chat.ChatCompletionChunk> =
       await this.session.openai.chat.completions.create({
         ...baseRequestParams,
