@@ -1,5 +1,20 @@
 # llamaindex
 
+## 0.3.16
+
+### Patch Changes
+
+- 11ae926: feat: add numCandidates setting to MongoDBAtlasVectorStore for tuning queries
+- 631f000: feat: DeepInfra LLM implementation
+- 1378ec4: feat: set default model to `gpt-4o`
+- 6b1ded4: add gpt4o-mode, invalidate cache and skip diagonal text to LlamaParseReader
+- 4d4bd85: Show error message if agent tool is called with partial JSON
+- 24a9d1e: add json mode and image retrieval to LlamaParseReader
+- 45952de: add concurrency management for SimpleDirectoryReader
+- 54230f0: feat: Gemini GA release models
+- a29d835: setDocumentHash should be async
+- 73819bf: Unify metadata and ID handling of documents, allow files to be read by `Buffer`
+
 ## 0.3.15
 
 ### Patch Changes
