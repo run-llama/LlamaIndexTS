@@ -1,5 +1,5 @@
 import { path } from "@llamaindex/env";
-import { Document, type Metadata } from "../Node.js";
+import { Document } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader, FileReader } from "./type.js";
@@ -136,7 +136,6 @@ export class SimpleDirectoryReader implements BaseReader {
       }
 
       const fileDocs = await reader.loadData(filePath);
-      fileDocs.forEach(addMetaData(filePath));
 
       // Observer can still cancel addition of the resulting docs from this file
       if (this.doObserverCheck("file", filePath, ReaderStatus.COMPLETE)) {
@@ -166,11 +165,4 @@ export class SimpleDirectoryReader implements BaseReader {
     }
     return true;
   }
-}
-
-function addMetaData(filePath: string): (doc: Document<Metadata>) => void {
-  return (doc: Document<Metadata>) => {
-    doc.metadata["file_path"] = path.resolve(filePath);
-    doc.metadata["file_name"] = path.basename(filePath);
-  };
 }

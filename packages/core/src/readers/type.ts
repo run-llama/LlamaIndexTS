@@ -1,3 +1,4 @@
+import { fs, path } from "@llamaindex/env";
 import type { Document } from "../Node.js";
 
 /**
@@ -8,10 +9,26 @@ export interface BaseReader {
 }
 
 /**
- * A reader takes file paths and imports data into Document objects.
+ * A FileReader takes file paths and imports data into Document objects.
  */
-export interface FileReader extends BaseReader {
-  loadData(filePath: string): Promise<Document[]>;
+export abstract class FileReader implements BaseReader {
+  abstract loadDataAsContent(fileContent: Buffer): Promise<Document[]>;
+
+  async loadData(filePath: string): Promise<Document[]> {
+    const fileContent = await fs.readFile(filePath);
+    const docs = await this.loadDataAsContent(fileContent);
+    docs.forEach(FileReader.addMetaData(filePath));
+    return docs;
+  }
+
+  static addMetaData(filePath: string) {
+    return (doc: Document, index: number) => {
+      // generate id as loadDataAsContent is only responsible for the content
+      doc.id_ = `${filePath}_${index + 1}`;
+      doc.metadata["file_path"] = path.resolve(filePath);
+      doc.metadata["file_name"] = path.basename(filePath);
+    };
+  }
 }
 
 // For LlamaParseReader.ts

@@ -1,7 +1,7 @@
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
-import type { FileReader, Language, ResultType } from "./type.js";
+import { FileReader, type Language, type ResultType } from "./type.js";
 
 const SupportedFiles: { [key: string]: string } = {
   ".pdf": "application/pdf",
@@ -105,7 +105,7 @@ const SupportedFiles: { [key: string]: string } = {
  * Represents a reader for parsing files using the LlamaParse API.
  * See https://github.com/run-llama/llama_parse
  */
-export class LlamaParseReader implements FileReader {
+export class LlamaParseReader extends FileReader {
   // The API key for the LlamaParse API. Can be set as an environment variable: LLAMA_CLOUD_API_KEY
   apiKey: string;
   // The base URL of the Llama Parsing API.
@@ -133,6 +133,7 @@ export class LlamaParseReader implements FileReader {
   // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
+    super();
     Object.assign(this, params);
     params.apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
     if (!params.apiKey) {
@@ -151,17 +152,16 @@ export class LlamaParseReader implements FileReader {
   }
 
   // Create a job for the LlamaParse API
-  private async createJob(file: string): Promise<string> {
+  private async createJob(data: Buffer): Promise<string> {
     // Load data, set the mime type
-    const data = await fs.readFile(file);
     const mimeType = await this.getMimeType(data);
 
     if (this.verbose) {
-      console.log(`Starting load for file: ${file}`);
+      console.log(`Starting load for file with mimeType: ${mimeType}`);
     }
 
     const body = new FormData();
-    body.set("file", new Blob([data], { type: mimeType }), file);
+    body.set("file", new Blob([data], { type: mimeType }));
     body.append("language", this.language);
     body.append("parsing_instruction", this.parsingInstruction);
     body.append("skip_diagonal_text", this.skipDiagonalText.toString());
@@ -251,15 +251,12 @@ export class LlamaParseReader implements FileReader {
    * Loads data from a file and returns an array of Document objects.
    * To be used with resultType = "text" and "markdown"
    *
-   * @param {string} file - The path to the file to be loaded.
+   * @param {Buffer} fileContent - The content of the file to be loaded.
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
-  async loadData(file: string): Promise<Document[]> {
-    // Set metadata to contain file_path
-    const metadata = { file_path: file };
-
+  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
     // Creates a job for the file
-    const jobId = await this.createJob(file);
+    const jobId = await this.createJob(fileContent);
     if (this.verbose) {
       console.log(`Started parsing the file under job id ${jobId}`);
     }
@@ -269,7 +266,6 @@ export class LlamaParseReader implements FileReader {
     return [
       new Document({
         text: resultJson[this.resultType],
-        metadata: metadata,
       }),
     ];
   }
@@ -281,8 +277,9 @@ export class LlamaParseReader implements FileReader {
    * @return {Promise<Record<string, any>>} A Promise that resolves to the JSON object.
    */
   async loadJson(file: string): Promise<Record<string, any>> {
+    const data = await fs.readFile(file);
     // Creates a job for the file
-    const jobId = await this.createJob(file);
+    const jobId = await this.createJob(data);
     if (this.verbose) {
       console.log(`Started parsing the file under job id ${jobId}`);
     }

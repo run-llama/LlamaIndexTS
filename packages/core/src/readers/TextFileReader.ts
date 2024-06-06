@@ -1,14 +1,13 @@
-import { fs } from "@llamaindex/env";
 import { Document } from "../Node.js";
-import type { FileReader } from "./type.js";
+import { FileReader } from "./type.js";
 
 /**
  * Read a .txt file
  */
 
-export class TextFileReader implements FileReader {
-  async loadData(file: string): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
-    return [new Document({ text: dataBuffer, id_: file })];
+export class TextFileReader extends FileReader {
+  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
+    const dataBuffer = fileContent.toString("utf-8");
+    return [new Document({ text: dataBuffer })];
   }
 }
