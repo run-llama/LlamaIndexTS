@@ -1,8 +1,8 @@
-import { fs, path } from "@llamaindex/env";
+import { path } from "@llamaindex/env";
 import { Document, type Metadata } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
-import type { BaseReader } from "./type.js";
+import type { BaseReader, FileReader } from "./type.js";
 import pLimit from "./utils.js";
 
 type ReaderCallback = (
@@ -20,13 +20,13 @@ enum ReaderStatus {
 export type SimpleDirectoryReaderLoadDataParams = {
   directoryPath: string;
   // Fallback Reader, defaults to TextFileReader
-  defaultReader?: BaseReader | null;
+  defaultReader?: FileReader | null;
   // Map file extensions individually to readers
-  fileExtToReader?: Record<string, BaseReader>;
+  fileExtToReader?: Record<string, FileReader>;
   // Number of workers, defaults to 1. Must be between 1 and 9.
   numWorkers?: number;
   // Overrides reader for all file extensions
-  overrideReader?: BaseReader;
+  overrideReader?: FileReader;
 };
 
 type ProcessFileParams = Omit<
@@ -115,7 +115,7 @@ export class SimpleDirectoryReader implements BaseReader {
         return [];
       }
 
-      let reader: BaseReader;
+      let reader: FileReader;
 
       if (params.overrideReader) {
         reader = params.overrideReader;
@@ -135,7 +135,7 @@ export class SimpleDirectoryReader implements BaseReader {
         return [];
       }
 
-      const fileDocs = await reader.loadData(filePath, fs);
+      const fileDocs = await reader.loadData(filePath);
       fileDocs.forEach(addMetaData(filePath));
 
       // Observer can still cancel addition of the resulting docs from this file
