@@ -155,9 +155,12 @@ export class LlamaParseReader extends FileReader {
   private async createJob(data: Buffer): Promise<string> {
     // Load data, set the mime type
     const mimeType = await this.getMimeType(data);
+    const matchingExtension = Object.keys(SupportedFiles).filter(
+      (ext) => SupportedFiles[ext] === mimeType,
+    );
 
     if (this.verbose) {
-      console.log(`Starting load for file with mimeType: ${mimeType}`);
+      console.log(`Starting load for ${matchingExtension} file`);
     }
 
     const body = new FormData();
