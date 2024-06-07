@@ -270,13 +270,13 @@ export class LlamaParseReader extends FileReader {
     ];
   }
   /**
-   * Loads data from a file and returns its contents as a JSON object.
+   * Loads data from a file and returns an array of JSON objects.
    * To be used with resultType = "json"
    *
    * @param {string} file - The path to the file to be loaded.
-   * @return {Promise<Record<string, any>>} A Promise that resolves to the JSON object.
+   * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of JSON objects.
    */
-  async loadJson(file: string): Promise<Record<string, any>> {
+  async loadJson(file: string): Promise<Record<string, any>[]> {
     const data = await fs.readFile(file);
     // Creates a job for the file
     const jobId = await this.createJob(data);
@@ -284,11 +284,11 @@ export class LlamaParseReader extends FileReader {
       console.log(`Started parsing the file under job id ${jobId}`);
     }
 
-    // Return results as JSON object
+    // Return results as an array of JSON objects
     const resultJson = await this.getJobResult(jobId, "json");
     resultJson.job_id = jobId;
     resultJson.file_path = file;
-    return resultJson;
+    return [resultJson];
   }
 
   /**
