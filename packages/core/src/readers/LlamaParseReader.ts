@@ -170,9 +170,9 @@ export class LlamaParseReader extends FileReader {
 
     const body = new FormData();
     body.set("file", new Blob([data], { type: mimeType }));
-    body.append("language", this.language);
 
     const LlamaParseBodyParams = {
+      language: this.language,
       parsing_instruction: this.parsingInstruction,
       skip_diagonal_text: this.skipDiagonalText?.toString(),
       invalidate_cache: this.invalidateCache?.toString(),
