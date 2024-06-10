@@ -8,10 +8,10 @@ import { FileReader } from "./type.js";
 export class PDFReader extends FileReader {
   async loadData(file: string): Promise<Document[]> {
     const content = await fs.readFile(file);
-    return this.loadDataAsContent(content);
+    return this.loadDataAsContent(new Uint8Array(content.buffer));
   }
 
-  async loadDataAsContent(content: Buffer): Promise<Document[]> {
+  async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
     const { totalPages, text } = await readPDF(content);
     return text.map((text, page) => {
       const metadata = {
