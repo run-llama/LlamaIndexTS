@@ -21,7 +21,13 @@ export OPENAI_API_KEY=your-api-key
 Import the required modules:
 
 ```ts
-import { RelevancyEvaluator, OpenAI, Settings } from "llamaindex";
+import {
+  RelevancyEvaluator,
+  OpenAI,
+  Settings,
+  Document,
+  VectorStoreIndex,
+} from "llamaindex";
 ```
 
 Let's setup gpt-4 for better results:
