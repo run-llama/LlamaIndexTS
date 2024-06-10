@@ -103,7 +103,6 @@ export class OpenAIAgent extends AgentRunner<OpenAI> {
         }
       }
     } else {
-      debugger;
       const responseChunkStream = new ReadableStream<
         ChatResponseChunk<ToolCallLLMMessageOptions>
       >({
