@@ -186,7 +186,9 @@ export class LlamaParseReader extends FileReader {
 
     // Appends body with any defined LlamaParseBodyParams
     Object.entries(LlamaParseBodyParams).forEach(([key, value]) => {
-      this.appendBody(body, key, value);
+      if (value !== undefined) {
+        body.append(key, value);
+      }
     });
 
     const headers = {
@@ -366,12 +368,6 @@ export class LlamaParseReader extends FileReader {
       }
     }
     return images;
-  }
-
-  private appendBody(body: FormData, key: string, value: any) {
-    if (value !== undefined) {
-      body.append(key, value);
-    }
   }
 
   private async getMimeType(data: Buffer): Promise<string> {
