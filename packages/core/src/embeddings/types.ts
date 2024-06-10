@@ -1,3 +1,4 @@
+import { type Tokenizers } from "../GlobalsHelper.js";
 import type { BaseNode } from "../Node.js";
 import { MetadataMode } from "../Node.js";
 import type { TransformComponent } from "../ingestion/types.js";
@@ -9,8 +10,15 @@ const DEFAULT_EMBED_BATCH_SIZE = 10;
 
 type EmbedFunc<T> = (values: T[]) => Promise<Array<number[]>>;
 
+export type EmbeddingInfo = {
+  dimensions?: number;
+  maxTokens?: number;
+  tokenizer?: Tokenizers;
+};
+
 export abstract class BaseEmbedding implements TransformComponent {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
+  embedInfo?: EmbeddingInfo;
 
   similarity(
     embedding1: number[],

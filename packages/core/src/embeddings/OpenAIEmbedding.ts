@@ -1,4 +1,5 @@
 import type { ClientOptions as OpenAIClientOptions } from "openai";
+import { Tokenizers, truncateMaxTokens } from "../GlobalsHelper.js";
 import type { AzureOpenAIConfig } from "../llm/azure.js";
 import {
   getAzureConfigFromEnv,
@@ -12,19 +13,24 @@ import { BaseEmbedding } from "./types.js";
 export const ALL_OPENAI_EMBEDDING_MODELS = {
   "text-embedding-ada-002": {
     dimensions: 1536,
-    maxTokens: 8191,
+    maxTokens: 8192,
+    tokenizer: Tokenizers.CL100K_BASE,
   },
   "text-embedding-3-small": {
     dimensions: 1536,
     dimensionOptions: [512, 1536],
-    maxTokens: 8191,
+    maxTokens: 8192,
+    tokenizer: Tokenizers.CL100K_BASE,
   },
   "text-embedding-3-large": {
     dimensions: 3072,
     dimensionOptions: [256, 1024, 3072],
-    maxTokens: 8191,
+    maxTokens: 8192,
+    tokenizer: Tokenizers.CL100K_BASE,
   },
 };
+
+type ModelKeys = keyof typeof ALL_OPENAI_EMBEDDING_MODELS;
 
 export class OpenAIEmbedding extends BaseEmbedding {
   /** embeddding model. defaults to "text-embedding-ada-002" */
@@ -65,6 +71,14 @@ export class OpenAIEmbedding extends BaseEmbedding {
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalSessionOptions = init?.additionalSessionOptions;
 
+    // find metadata for model
+    const key = Object.keys(ALL_OPENAI_EMBEDDING_MODELS).find(
+      (key) => key === this.model,
+    ) as ModelKeys | undefined;
+    if (key) {
+      this.embedInfo = ALL_OPENAI_EMBEDDING_MODELS[key];
+    }
+
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = {
         ...getAzureConfigFromEnv({
@@ -102,6 +116,16 @@ export class OpenAIEmbedding extends BaseEmbedding {
    * @param options
    */
   private async getOpenAIEmbedding(input: string[]): Promise<number[][]> {
+    // TODO: ensure this for every sub class by calling it in the base class
+    input = input.map((s) => {
+      // truncate to max tokens
+      if (!(this.embedInfo?.tokenizer && this.embedInfo?.maxTokens)) return s;
+      return truncateMaxTokens(
+        this.embedInfo.tokenizer,
+        s,
+        this.embedInfo.maxTokens,
+      );
+    });
     const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       dimensions: this.dimensions, // only sent to OpenAI if set by user

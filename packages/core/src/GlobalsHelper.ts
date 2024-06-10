@@ -46,4 +46,20 @@ class GlobalsHelper {
   }
 }
 
+export function truncateMaxTokens(
+  tokenizer: Tokenizers,
+  value: string,
+  maxTokens: number,
+): string {
+  const encoder = globalsHelper.tokenizer(tokenizer);
+  let tokens = encoder(value);
+  if (tokens.length > maxTokens) {
+    // truncate tokens
+    tokens = tokens.slice(0, maxTokens);
+    const decoder = globalsHelper.tokenizerDecoder(tokenizer);
+    return decoder(tokens);
+  }
+  return value;
+}
+
 export const globalsHelper = new GlobalsHelper();
