@@ -23,6 +23,7 @@ module.exports = {
         ignoreIIFE: true,
       },
     ],
+    "no-debugger": "error",
     "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-types": "off",
