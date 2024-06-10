@@ -1,6 +1,6 @@
 import { path } from "@llamaindex/env";
 import { ModalityType, ObjectType } from "../Node.js";
-import { ClipEmbedding } from "../embeddings/ClipEmbedding.js";
+import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
 import {
   DEFAULT_IMAGE_VECTOR_NAMESPACE,
   DEFAULT_NAMESPACE,
@@ -44,7 +44,7 @@ export async function storageContextFromDefaults({
     }
     if (storeImages && !(ModalityType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = new SimpleVectorStore({
-        embedModel: new ClipEmbedding(),
+        embedModel: new (await getImageEmbedModel())(),
       });
     }
   } else {
@@ -60,7 +60,7 @@ export async function storageContextFromDefaults({
     if (storeImages && !(ObjectType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = await SimpleVectorStore.fromPersistDir(
         path.join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
-        new ClipEmbedding(),
+        new (await getImageEmbedModel())(),
       );
     }
   }
