@@ -35,7 +35,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
   private visionModel: CLIPVisionModelWithProjection | null = null;
   private textModel: CLIPTextModelWithProjection | null = null;
 
-  private async getTokenizer() {
+  async getTokenizer() {
     const { AutoTokenizer } = await lazyLoadTransformers();
     if (!this.tokenizer) {
       this.tokenizer = await AutoTokenizer.from_pretrained(this.modelType);
@@ -43,7 +43,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
     return this.tokenizer;
   }
 
-  private async getProcessor() {
+  async getProcessor() {
     const { AutoProcessor } = await lazyLoadTransformers();
     if (!this.processor) {
       this.processor = await AutoProcessor.from_pretrained(this.modelType);
@@ -51,7 +51,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
     return this.processor;
   }
 
-  private async getVisionModel() {
+  async getVisionModel() {
     const { CLIPVisionModelWithProjection } = await lazyLoadTransformers();
     if (!this.visionModel) {
       this.visionModel = await CLIPVisionModelWithProjection.from_pretrained(
@@ -62,7 +62,7 @@ export class ClipEmbedding extends MultiModalEmbedding {
     return this.visionModel;
   }
 
-  private async getTextModel() {
+  async getTextModel() {
     const { CLIPTextModelWithProjection } = await lazyLoadTransformers();
     if (!this.textModel) {
       this.textModel = await CLIPTextModelWithProjection.from_pretrained(
