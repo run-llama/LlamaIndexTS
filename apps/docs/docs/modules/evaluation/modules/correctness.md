@@ -21,7 +21,7 @@ export OPENAI_API_KEY=your-api-key
 Import the required modules:
 
 ```ts
-import { CorrectnessEvaluator, OpenAI, Settings } from "llamaindex";
+import { CorrectnessEvaluator, OpenAI, Settings, Response } from "llamaindex";
 ```
 
 Let's setup gpt-4 for better results:
@@ -45,7 +45,7 @@ const evaluator = new CorrectnessEvaluator();
 
 const result = await evaluator.evaluateResponse({
   query,
-  response,
+  response: new Response(response),
 });
 
 console.log(
