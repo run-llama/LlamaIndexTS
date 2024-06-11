@@ -6,7 +6,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-type-checked-only",
   ],
   parserOptions: {
-    project: ["./tsconfig.json", "./tsconfig.script.json"],
+    project: ["./tsconfig.json"],
     __tsconfigRootDir: __dirname,
   },
   settings: {
