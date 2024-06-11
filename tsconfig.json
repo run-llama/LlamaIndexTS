@@ -21,6 +21,12 @@
       "path": "./apps/docs/tsconfig.json"
     },
     {
+      "path": "./packages/community/tsconfig.json"
+    },
+    {
+      "path": "./packages/community/tsconfig.script.json"
+    },
+    {
       "path": "./packages/core/tsconfig.json"
     },
     {

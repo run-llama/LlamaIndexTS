@@ -162,10 +162,10 @@ export class LlamaParseReader extends FileReader {
   // Create a job for the LlamaParse API
   private async createJob(data: Buffer): Promise<string> {
     // Load data, set the mime type
-    const mimeType = await this.getMimeType(data);
+    const { mimeType, extension } = await this.getMimeType(data);
 
     if (this.verbose) {
-      console.log(`Starting load for file with mimeType: ${mimeType}`);
+      console.log(`Starting load for ${extension} file`);
     }
 
     const body = new FormData();
@@ -290,13 +290,13 @@ export class LlamaParseReader extends FileReader {
     ];
   }
   /**
-   * Loads data from a file and returns its contents as a JSON object.
+   * Loads data from a file and returns an array of JSON objects.
    * To be used with resultType = "json"
    *
    * @param {string} file - The path to the file to be loaded.
-   * @return {Promise<Record<string, any>>} A Promise that resolves to the JSON object.
+   * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of JSON objects.
    */
-  async loadJson(file: string): Promise<Record<string, any>> {
+  async loadJson(file: string): Promise<Record<string, any>[]> {
     const data = await fs.readFile(file);
     // Creates a job for the file
     const jobId = await this.createJob(data);
@@ -304,11 +304,11 @@ export class LlamaParseReader extends FileReader {
       console.log(`Started parsing the file under job id ${jobId}`);
     }
 
-    // Return results as JSON object
+    // Return results as an array of JSON objects (same format as Python version of the reader)
     const resultJson = await this.getJobResult(jobId, "json");
     resultJson.job_id = jobId;
     resultJson.file_path = file;
-    return resultJson;
+    return [resultJson];
   }
 
   /**
@@ -370,18 +370,19 @@ export class LlamaParseReader extends FileReader {
     return images;
   }
 
-  private async getMimeType(data: Buffer): Promise<string> {
-    const mimes = filetypemime(data);
-    const validMime = mimes.find((mime) =>
-      Object.values(SupportedFiles).includes(mime),
-    );
-    if (!validMime) {
+  private async getMimeType(
+    data: Buffer,
+  ): Promise<{ mimeType: string; extension: string }> {
+    const mimes = filetypemime(data); // Get an array of possible MIME types
+    const extension = Object.keys(SupportedFiles).find(
+      (ext) => SupportedFiles[ext] === mimes[0],
+    ); // Find the extension for the first MIME type
+    if (!extension) {
       const supportedExtensions = Object.keys(SupportedFiles).join(", ");
       throw new Error(
-        `File has type "${mimes}" which does not match supported MIME Types. Supported formats include: ${supportedExtensions}`,
+        `File has type "${mimes[0]}" which does not match supported MIME Types. Supported formats include: ${supportedExtensions}`,
       );
     }
-
-    return validMime;
+    return { mimeType: mimes[0], extension }; // Return the first MIME type and its corresponding extension
   }
 }

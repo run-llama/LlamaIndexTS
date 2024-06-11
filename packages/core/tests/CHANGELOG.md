@@ -1,5 +1,11 @@
 # @llamaindex/core-test
 
+## 0.0.4
+
+### Patch Changes
+
+- e6d6576: chore: use `unpdf`
+
 ## 0.0.3
 
 ### Patch Changes

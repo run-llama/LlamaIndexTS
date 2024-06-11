@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.3.16",
+  "version": "0.3.17",
   "expectedMinorVersion": "3",
   "license": "MIT",
   "type": "module",
@@ -141,7 +141,8 @@
   "files": [
     "dist",
     "CHANGELOG.md",
-    "examples"
+    "examples",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",
