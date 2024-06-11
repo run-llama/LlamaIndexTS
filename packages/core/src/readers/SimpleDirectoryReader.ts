@@ -10,9 +10,9 @@ import {
   type SimpleDirectoryReaderLoadDataParams,
 } from "./SimpleDirectoryReader.edge.js";
 import { TextFileReader } from "./TextFileReader.js";
-import type { BaseReader } from "./type.js";
+import type { FileReader } from "./type.js";
 
-export const FILE_EXT_TO_READER: Record<string, BaseReader> = {
+export const FILE_EXT_TO_READER: Record<string, FileReader> = {
   txt: new TextFileReader(),
   pdf: new PDFReader(),
   csv: new PapaCSVReader(),

@@ -1,6 +1,5 @@
-import { fs } from "@llamaindex/env";
 import { Document } from "../Node.js";
-import type { FileReader } from "./type.js";
+import { FileReader } from "./type.js";
 
 type MarkdownTuple = [string | null, string];
 
@@ -8,7 +7,7 @@ type MarkdownTuple = [string | null, string];
  * Extract text from markdown files.
  * Returns dictionary with keys as headers and values as the text between headers.
  */
-export class MarkdownReader implements FileReader {
+export class MarkdownReader extends FileReader {
   private _removeHyperlinks: boolean;
   private _removeImages: boolean;
 
@@ -17,6 +16,7 @@ export class MarkdownReader implements FileReader {
    * @param {boolean} [removeImages=true] - Indicates whether images should be removed.
    */
   constructor(removeHyperlinks: boolean = true, removeImages: boolean = true) {
+    super();
     this._removeHyperlinks = removeHyperlinks;
     this._removeImages = removeImages;
   }
@@ -89,18 +89,17 @@ export class MarkdownReader implements FileReader {
     return this.markdownToTups(modifiedContent);
   }
 
-  async loadData(file: string): Promise<Document[]> {
-    const content = await fs.readFile(file, "utf-8");
+  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
+    const content = fileContent.toString("utf-8");
     const tups = this.parseTups(content);
     const results: Document[] = [];
     let counter = 0;
     for (const [header, value] of tups) {
-      const id_ = `${file}_${counter}`;
       if (header) {
         const text = `\n\n${header}\n${value}`;
-        results.push(new Document({ text, id_ }));
+        results.push(new Document({ text }));
       } else {
-        results.push(new Document({ text: value, id_ }));
+        results.push(new Document({ text: value }));
       }
       counter += 1;
     }

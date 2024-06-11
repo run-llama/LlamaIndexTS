@@ -1,7 +1,7 @@
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
-import type { FileReader, Language, ResultType } from "./type.js";
+import { FileReader, type Language, type ResultType } from "./type.js";
 
 const SupportedFiles: { [key: string]: string } = {
   ".pdf": "application/pdf",
@@ -105,7 +105,7 @@ const SupportedFiles: { [key: string]: string } = {
  * Represents a reader for parsing files using the LlamaParse API.
  * See https://github.com/run-llama/llama_parse
  */
-export class LlamaParseReader implements FileReader {
+export class LlamaParseReader extends FileReader {
   // The API key for the LlamaParse API. Can be set as an environment variable: LLAMA_CLOUD_API_KEY
   apiKey: string;
   // The base URL of the Llama Parsing API.
@@ -133,6 +133,7 @@ export class LlamaParseReader implements FileReader {
   // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
+    super();
     Object.assign(this, params);
     params.apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
     if (!params.apiKey) {
@@ -150,19 +151,17 @@ export class LlamaParseReader implements FileReader {
     }
   }
 
-  async loadData(file: string): Promise<Document[]> {
-    const metadata = { file_path: file };
-
+  // Create a job for the LlamaParse API
+  private async createJob(data: Buffer): Promise<string> {
     // Load data, set the mime type
-    const data = await fs.readFile(file);
     const mimeType = await this.getMimeType(data);
 
     if (this.verbose) {
-      console.log(`Starting load for file: ${file}`);
+      console.log(`Starting load for file with mimeType: ${mimeType}`);
     }
 
     const body = new FormData();
-    body.set("file", new Blob([data], { type: mimeType }), file);
+    body.set("file", new Blob([data], { type: mimeType }));
     body.append("language", this.language);
     body.append("parsing_instruction", this.parsingInstruction);
     body.append("skip_diagonal_text", this.skipDiagonalText.toString());
@@ -178,7 +177,7 @@ export class LlamaParseReader implements FileReader {
 
     // Send the request, start job
     const url = `${this.baseUrl}/upload`;
-    let response = await fetch(url, {
+    const response = await fetch(url, {
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
       method: "POST",
       body,
@@ -188,33 +187,29 @@ export class LlamaParseReader implements FileReader {
       throw new Error(`Failed to parse the file: ${await response.text()}`);
     }
     const jsonResponse = await response.json();
+    return jsonResponse.id;
+  }
 
-    // Check the status of the job, return when done
-    const jobId = jsonResponse.id;
-    if (this.verbose) {
-      console.log(`Started parsing the file under job id ${jobId}`);
-    }
+  // Get the result of the job
+  private async getJobResult(jobId: string, resultType: string): Promise<any> {
+    const resultUrl = `${this.baseUrl}/job/${jobId}/result/${resultType}`;
+    const statusUrl = `${this.baseUrl}/job/${jobId}`;
+    const headers = { Authorization: `Bearer ${this.apiKey}` };
 
-    const resultUrl = `${this.baseUrl}/job/${jobId}/result/${this.resultType}`;
-
-    const start = Date.now();
+    const signal = AbortSignal.timeout(this.maxTimeout * 1000);
     let tries = 0;
     while (true) {
       await new Promise((resolve) =>
         setTimeout(resolve, this.checkInterval * 1000),
       );
-      response = await fetch(resultUrl, {
-        headers,
-        signal: AbortSignal.timeout(this.maxTimeout * 1000),
-      });
 
-      if (!response.ok) {
-        const end = Date.now();
-        if (end - start > this.maxTimeout * 1000) {
-          throw new Error(
-            `Timeout while parsing the file: ${await response.text()}`,
-          );
-        }
+      // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
+      const statusResponse = await fetch(statusUrl, {
+        headers,
+        signal,
+      });
+      if (!statusResponse.ok) {
+        signal.throwIfAborted();
         if (this.verbose && tries % 10 === 0) {
           process.stdout.write(".");
         }
@@ -222,14 +217,137 @@ export class LlamaParseReader implements FileReader {
         continue;
       }
 
-      const resultJson = await response.json();
-      return [
-        new Document({
-          text: resultJson[this.resultType],
-          metadata: metadata,
-        }),
-      ];
+      // If response is succesful, check status of job. Allowed values "PENDING", "SUCCESS", "ERROR", "CANCELED"
+      const statusJson = await statusResponse.json();
+      const status = statusJson.status;
+      // If job has completed, return the result
+      if (status === "SUCCESS") {
+        const resultResponse = await fetch(resultUrl, {
+          headers,
+          signal,
+        });
+        if (!resultResponse.ok) {
+          throw new Error(
+            `Failed to fetch result: ${await resultResponse.text()}`,
+          );
+        }
+        return resultResponse.json();
+        // If job is still pending, check if maximum timeout has been reached. If reached, throws an error
+      } else if (status === "PENDING") {
+        signal.throwIfAborted();
+        if (this.verbose && tries % 10 === 0) {
+          process.stdout.write(".");
+        }
+        tries++;
+      } else {
+        throw new Error(
+          `Failed to parse the file: ${jobId}, status: ${status}`,
+        );
+      }
     }
+  }
+
+  /**
+   * Loads data from a file and returns an array of Document objects.
+   * To be used with resultType = "text" and "markdown"
+   *
+   * @param {Buffer} fileContent - The content of the file to be loaded.
+   * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
+   */
+  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
+    // Creates a job for the file
+    const jobId = await this.createJob(fileContent);
+    if (this.verbose) {
+      console.log(`Started parsing the file under job id ${jobId}`);
+    }
+
+    // Return results as Document objects
+    const resultJson = await this.getJobResult(jobId, this.resultType);
+    return [
+      new Document({
+        text: resultJson[this.resultType],
+      }),
+    ];
+  }
+  /**
+   * Loads data from a file and returns its contents as a JSON object.
+   * To be used with resultType = "json"
+   *
+   * @param {string} file - The path to the file to be loaded.
+   * @return {Promise<Record<string, any>>} A Promise that resolves to the JSON object.
+   */
+  async loadJson(file: string): Promise<Record<string, any>> {
+    const data = await fs.readFile(file);
+    // Creates a job for the file
+    const jobId = await this.createJob(data);
+    if (this.verbose) {
+      console.log(`Started parsing the file under job id ${jobId}`);
+    }
+
+    // Return results as JSON object
+    const resultJson = await this.getJobResult(jobId, "json");
+    resultJson.job_id = jobId;
+    resultJson.file_path = file;
+    return resultJson;
+  }
+
+  /**
+   * Downloads and saves images from a given JSON result to a specified download path.
+   * Currently only supports resultType = "json"
+   *
+   * @param {Record<string, any>[]} jsonResult - The JSON result containing image information.
+   * @param {string} downloadPath - The path to save the downloaded images.
+   * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of image objects.
+   */
+  async getImages(
+    jsonResult: Record<string, any>[],
+    downloadPath: string,
+  ): Promise<Record<string, any>[]> {
+    const headers = { Authorization: `Bearer ${this.apiKey}` };
+
+    // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
+    if (!fs.access(downloadPath)) {
+      await fs.mkdir(downloadPath, { recursive: true });
+    }
+
+    const images: Record<string, any>[] = [];
+    for (const result of jsonResult) {
+      const jobId = result.job_id;
+      for (const page of result.pages) {
+        if (this.verbose) {
+          console.log(`> Image for page ${page.page}: ${page.images}`);
+        }
+        for (const image of page.images) {
+          const imageName = image.name;
+          // Get the full path
+          let imagePath = `${downloadPath}/${jobId}-${imageName}`;
+
+          if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
+            imagePath += ".png";
+          }
+
+          // Get a valid image path
+          image.path = imagePath;
+          image.job_id = jobId;
+          image.original_pdf_path = result.file_path;
+          image.page_number = page.page;
+
+          const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
+          const response = await fetch(imageUrl, { headers });
+          if (!response.ok) {
+            throw new Error(
+              `Failed to download image: ${await response.text()}`,
+            );
+          }
+          const arrayBuffer = await response.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+          await fs.writeFile(imagePath, buffer);
+
+          images.push(image);
+        }
+      }
+    }
+    return images;
   }
 
   private async getMimeType(data: Buffer): Promise<string> {

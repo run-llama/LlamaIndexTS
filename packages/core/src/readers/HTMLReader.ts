@@ -1,6 +1,5 @@
-import { fs } from "@llamaindex/env";
 import { Document } from "../Node.js";
-import type { FileReader } from "./type.js";
+import { FileReader } from "./type.js";
 
 /**
  * Extract the significant text from an arbitrary HTML document.
@@ -9,18 +8,18 @@ import type { FileReader } from "./type.js";
  * All other tags are removed, and the inner text is kept intact.
  * Html entities (e.g., &amp;) are not decoded.
  */
-export class HTMLReader implements FileReader {
+export class HTMLReader extends FileReader {
   /**
    * Public method for this reader.
    * Required by BaseReader interface.
    * @param file Path/name of the file to be loaded.
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
    */
-  async loadData(file: string): Promise<Document[]> {
-    const dataBuffer = await fs.readFile(file, "utf-8");
+  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
+    const dataBuffer = fileContent.toString("utf-8");
     const htmlOptions = this.getOptions();
     const content = await this.parseContent(dataBuffer, htmlOptions);
-    return [new Document({ text: content, id_: file })];
+    return [new Document({ text: content })];
   }
 
   /**
