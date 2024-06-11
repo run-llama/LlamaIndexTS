@@ -154,13 +154,10 @@ export class LlamaParseReader extends FileReader {
   // Create a job for the LlamaParse API
   private async createJob(data: Buffer): Promise<string> {
     // Load data, set the mime type
-    const mimeType = await this.getMimeType(data);
-    const matchingExtension = Object.keys(SupportedFiles).filter(
-      (ext) => SupportedFiles[ext] === mimeType,
-    );
+    const { mimeType, extension } = await this.getMimeType(data);
 
     if (this.verbose) {
-      console.log(`Starting load for ${matchingExtension} file`);
+      console.log(`Starting load for ${extension} file`);
     }
 
     const body = new FormData();
@@ -353,18 +350,19 @@ export class LlamaParseReader extends FileReader {
     return images;
   }
 
-  private async getMimeType(data: Buffer): Promise<string> {
-    const mimes = filetypemime(data);
-    const validMime = mimes.find((mime) =>
-      Object.values(SupportedFiles).includes(mime),
-    );
-    if (!validMime) {
+  private async getMimeType(
+    data: Buffer,
+  ): Promise<{ mimeType: string; extension: string }> {
+    const mimes = filetypemime(data); // Get an array of possible MIME types
+    const extension = Object.keys(SupportedFiles).find(
+      (ext) => SupportedFiles[ext] === mimes[0],
+    ); // Find the extension for the first MIME type
+    if (!extension) {
       const supportedExtensions = Object.keys(SupportedFiles).join(", ");
       throw new Error(
-        `File has type "${mimes}" which does not match supported MIME Types. Supported formats include: ${supportedExtensions}`,
+        `File has type "${mimes[0]}" which does not match supported MIME Types. Supported formats include: ${supportedExtensions}`,
       );
     }
-
-    return validMime;
+    return { mimeType: mimes[0], extension }; // Return the first MIME type and its corresponding extension
   }
 }
