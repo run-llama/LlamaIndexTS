@@ -1,7 +1,6 @@
 import type { ClientOptions as OpenAIClientOptions } from "openai";
 import type { AzureOpenAIConfig } from "../llm/azure.js";
 import {
-  getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
@@ -67,28 +66,22 @@ export class OpenAIEmbedding extends BaseEmbedding {
     this.additionalSessionOptions = init?.additionalSessionOptions;
 
     if (init?.azure || shouldUseAzure()) {
-      const azureConfig = getAzureConfigFromEnv({
+      const azureConfig = {
+        ...getAzureConfigFromEnv({
+          model: getAzureModel(this.model),
+        }),
         ...init?.azure,
-        model: getAzureModel(this.model),
-      });
-
-      if (!azureConfig.apiKey) {
-        throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
-        );
-      }
+      };
 
       this.apiKey = azureConfig.apiKey;
       this.session =
         init?.session ??
         getOpenAISession({
           azure: true,
-          apiKey: this.apiKey,
-          baseURL: getAzureBaseUrl(azureConfig),
           maxRetries: this.maxRetries,
           timeout: this.timeout,
-          defaultQuery: { "api-version": azureConfig.apiVersion },
           ...this.additionalSessionOptions,
+          ...azureConfig,
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;

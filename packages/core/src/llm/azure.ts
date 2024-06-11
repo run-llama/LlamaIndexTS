@@ -1,9 +1,9 @@
 import { getEnv } from "@llamaindex/env";
 
-export interface AzureOpenAIConfig {
-  apiKey?: string;
-  endpoint?: string;
-  apiVersion?: string;
+import type { AzureClientOptions } from "openai";
+
+export interface AzureOpenAIConfig extends AzureClientOptions {
+  /** @deprecated use "deployment" instead */
   deploymentName?: string;
 }
 
@@ -81,6 +81,12 @@ const DEFAULT_API_VERSION = "2023-05-15";
 export function getAzureConfigFromEnv(
   init?: Partial<AzureOpenAIConfig> & { model?: string },
 ): AzureOpenAIConfig {
+  const deployment =
+    init?.deploymentName ??
+    init?.deployment ??
+    getEnv("AZURE_OPENAI_DEPLOYMENT") ?? // From Azure docs
+    getEnv("AZURE_OPENAI_API_DEPLOYMENT_NAME") ?? // LCJS compatible
+    init?.model; // Fall back to model name, Python compatible
   return {
     apiKey:
       init?.apiKey ??
@@ -98,11 +104,8 @@ export function getAzureConfigFromEnv(
       getEnv("OPENAI_API_VERSION") ?? // Python compatible
       getEnv("AZURE_OPENAI_API_VERSION") ?? // LCJS compatible
       DEFAULT_API_VERSION,
-    deploymentName:
-      init?.deploymentName ??
-      getEnv("AZURE_OPENAI_DEPLOYMENT") ?? // From Azure docs
-      getEnv("AZURE_OPENAI_API_DEPLOYMENT_NAME") ?? // LCJS compatible
-      init?.model, // Fall back to model name, Python compatible
+    deploymentName: deployment, // LCJS compatible
+    deployment, // For Azure OpenAI
   };
 }
 

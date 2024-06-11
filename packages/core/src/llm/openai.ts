@@ -5,7 +5,7 @@ import type {
   ClientOptions,
   ClientOptions as OpenAIClientOptions,
 } from "openai";
-import { OpenAI as OrigOpenAI } from "openai";
+import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
 
 import type {
   ChatCompletionAssistantMessageParam,
@@ -23,7 +23,6 @@ import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { BaseTool } from "../types.js";
 import type { AzureOpenAIConfig } from "./azure.js";
 import {
-  getAzureBaseUrl,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
@@ -43,30 +42,23 @@ import type {
 } from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
-export class AzureOpenAI extends OrigOpenAI {
-  protected override authHeaders() {
-    return { "api-key": this.apiKey };
-  }
-}
-
 export class OpenAISession {
   openai: OrigOpenAI;
 
   constructor(options: ClientOptions & { azure?: boolean } = {}) {
-    if (!options.apiKey) {
-      options.apiKey = getEnv("OPENAI_API_KEY");
-    }
-
-    if (!options.apiKey) {
-      throw new Error("Set OpenAI Key in OPENAI_API_KEY env variable"); // Overriding OpenAI package's error message
-    }
-
     if (options.azure) {
-      this.openai = new AzureOpenAI(options);
+      this.openai = new AzureOpenAI(options as AzureOpenAIConfig);
     } else {
+      if (!options.apiKey) {
+        options.apiKey = getEnv("OPENAI_API_KEY");
+      }
+
+      if (!options.apiKey) {
+        throw new Error("Set OpenAI Key in OPENAI_API_KEY env variable"); // Overriding OpenAI package's error message
+      }
+
       this.openai = new OrigOpenAI({
         ...options,
-        // defaultHeaders: { "OpenAI-Beta": "assistants=v1" },
       });
     }
   }
@@ -195,28 +187,22 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     this.additionalSessionOptions = init?.additionalSessionOptions;
 
     if (init?.azure || shouldUseAzure()) {
-      const azureConfig = getAzureConfigFromEnv({
+      const azureConfig = {
+        ...getAzureConfigFromEnv({
+          model: getAzureModel(this.model),
+        }),
         ...init?.azure,
-        model: getAzureModel(this.model),
-      });
-
-      if (!azureConfig.apiKey) {
-        throw new Error(
-          "Azure API key is required for OpenAI Azure models. Please set the AZURE_OPENAI_KEY environment variable.",
-        );
-      }
+      };
 
       this.apiKey = azureConfig.apiKey;
       this.session =
         init?.session ??
         getOpenAISession({
           azure: true,
-          apiKey: this.apiKey,
-          baseURL: getAzureBaseUrl(azureConfig),
           maxRetries: this.maxRetries,
           timeout: this.timeout,
-          defaultQuery: { "api-version": azureConfig.apiVersion },
           ...this.additionalSessionOptions,
+          ...azureConfig,
         });
     } else {
       this.apiKey = init?.apiKey ?? undefined;
