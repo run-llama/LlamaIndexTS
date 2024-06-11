@@ -5,11 +5,11 @@
     "outDir": "./dist/type",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "emitDeclarationOnly": true,
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "types": ["node"]
   },
-  "include": ["./src", "tsup.config.ts"],
+  "include": ["./src"],
   "exclude": ["node_modules"],
   "references": [
     {

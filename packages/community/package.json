@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.582.0",
+    "@types/node": "^20.14.2",
     "llamaindex": "workspace:*"
   }
 }

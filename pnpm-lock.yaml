@@ -337,6 +337,9 @@ importers:
       '@aws-sdk/client-bedrock-runtime':
         specifier: ^3.582.0
         version: 3.582.0
+      '@types/node':
+        specifier: ^20.14.2
+        version: 20.14.2
       llamaindex:
         specifier: workspace:*
         version: link:../core
