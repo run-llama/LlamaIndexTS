@@ -287,7 +287,7 @@ export class LlamaParseReader extends FileReader {
       console.log(`Started parsing the file under job id ${jobId}`);
     }
 
-    // Return results as an array of JSON objects
+    // Return results as an array of JSON objects (same format as Python version of the reader)
     const resultJson = await this.getJobResult(jobId, "json");
     resultJson.job_id = jobId;
     resultJson.file_path = file;
