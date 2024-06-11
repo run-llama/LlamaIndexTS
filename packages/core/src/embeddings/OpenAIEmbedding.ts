@@ -1,5 +1,5 @@
 import type { ClientOptions as OpenAIClientOptions } from "openai";
-import { Tokenizers, truncateMaxTokens } from "../GlobalsHelper.js";
+import { Tokenizers } from "../GlobalsHelper.js";
 import type { AzureOpenAIConfig } from "../llm/azure.js";
 import {
   getAzureConfigFromEnv,
@@ -117,15 +117,8 @@ export class OpenAIEmbedding extends BaseEmbedding {
    */
   private async getOpenAIEmbedding(input: string[]): Promise<number[][]> {
     // TODO: ensure this for every sub class by calling it in the base class
-    input = input.map((s) => {
-      // truncate to max tokens
-      if (!(this.embedInfo?.tokenizer && this.embedInfo?.maxTokens)) return s;
-      return truncateMaxTokens(
-        this.embedInfo.tokenizer,
-        s,
-        this.embedInfo.maxTokens,
-      );
-    });
+    input = this.truncateMaxTokens(input);
+
     const { data } = await this.session.openai.embeddings.create({
       model: this.model,
       dimensions: this.dimensions, // only sent to OpenAI if set by user

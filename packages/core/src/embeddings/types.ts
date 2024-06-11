@@ -1,4 +1,4 @@
-import { type Tokenizers } from "../GlobalsHelper.js";
+import { truncateMaxTokens, type Tokenizers } from "../GlobalsHelper.js";
 import type { BaseNode } from "../Node.js";
 import { MetadataMode } from "../Node.js";
 import type { TransformComponent } from "../ingestion/types.js";
@@ -84,6 +84,18 @@ export abstract class BaseEmbedding implements TransformComponent {
     }
 
     return nodes;
+  }
+
+  truncateMaxTokens(input: string[]): string[] {
+    return input.map((s) => {
+      // truncate to max tokens
+      if (!(this.embedInfo?.tokenizer && this.embedInfo?.maxTokens)) return s;
+      return truncateMaxTokens(
+        this.embedInfo.tokenizer,
+        s,
+        this.embedInfo.maxTokens,
+      );
+    });
   }
 }
 
