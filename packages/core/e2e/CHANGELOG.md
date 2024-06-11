@@ -1,5 +1,11 @@
 # @llamaindex/core-e2e
 
+## 0.0.7
+
+### Patch Changes
+
+- bf25ff6: fix: polyfill for cloudflare worker
+
 ## 0.0.6
 
 ### Patch Changes
