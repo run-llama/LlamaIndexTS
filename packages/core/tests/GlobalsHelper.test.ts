@@ -3,7 +3,7 @@ import {
   Tokenizers,
   globalsHelper,
   truncateMaxTokens,
-} from "../src/GlobalsHelper";
+} from "../src/GlobalsHelper.js";
 
 describe("truncateMaxTokens", () => {
   const tokenizer = globalsHelper.tokenizer(Tokenizers.CL100K_BASE);
