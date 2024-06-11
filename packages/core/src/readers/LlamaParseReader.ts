@@ -110,22 +110,30 @@ export class LlamaParseReader extends FileReader {
   apiKey: string;
   // The base URL of the Llama Parsing API.
   baseUrl: string = "https://api.cloud.llamaindex.ai/api/parsing";
-  // The maximum timeout in seconds to wait for the parsing to finish.
-  maxTimeout = 2000;
-  // The interval in seconds to check if the parsing is done.
-  checkInterval = 1;
-  // Whether to print the progress of the parsing.
-  verbose = true;
   // The result type for the parser.
   resultType: ResultType = "text";
+  // The interval in seconds to check if the parsing is done.
+  checkInterval = 1;
+  // The maximum timeout in seconds to wait for the parsing to finish.
+  maxTimeout = 2000;
+  // Whether to print the progress of the parsing.
+  verbose = true;
   // The language of the text to parse.
   language: Language = "en";
-  // The parsing instruction for the parser.
-  parsingInstruction: string = "";
-  // If set to true, the parser will ignore diagonal text (when the text rotation in degrees modulo 90 is not 0).
-  skipDiagonalText: boolean = false;
-  // If set to true, the cache will be ignored and the document re-processes. All document are kept in cache for 48hours after the job was completed to avoid processing the same document twice.
-  invalidateCache: boolean = false;
+  // The parsing instruction for the parser. Backend default is an empty string.
+  parsingInstruction?: string;
+  // Wether to ignore diagonal text (when the text rotation in degrees is not 0, 90, 180 or 270, so not a horizontal or vertical text). Backend default is false.
+  skipDiagonalText?: boolean;
+  // Wheter to ignore the cache and re-process the document. All documents are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Backend default is false.
+  invalidateCache?: boolean;
+  // Wether the document should not be cached in the first place. Backend default is false.
+  doNotCache?: boolean;
+  // Wether to use a faster mode to extract text from documents. This mode will skip OCR of images, and table/heading reconstruction. Note: Non-compatible with gpt4oMode. Backend default is false.
+  fastMode?: boolean;
+  // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases.
+  doNotUnrollColumns?: boolean;
+  // The page separator to use to split the text. Default is None, which means the parser will use the default separator '\\n---\\n'.
+  pageSeperator?: string;
   // Whether to use gpt-4o to extract text from documents.
   gpt4oMode: boolean = false;
   // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
@@ -162,14 +170,26 @@ export class LlamaParseReader extends FileReader {
 
     const body = new FormData();
     body.set("file", new Blob([data], { type: mimeType }));
-    body.append("language", this.language);
-    body.append("parsing_instruction", this.parsingInstruction);
-    body.append("skip_diagonal_text", this.skipDiagonalText.toString());
-    body.append("invalidate_cache", this.invalidateCache.toString());
-    body.append("gpt4o_mode", this.gpt4oMode.toString());
-    if (this.gpt4oMode && this.gpt4oApiKey) {
-      body.append("gpt4o_api_key", this.gpt4oApiKey);
-    }
+
+    const LlamaParseBodyParams = {
+      language: this.language,
+      parsing_instruction: this.parsingInstruction,
+      skip_diagonal_text: this.skipDiagonalText?.toString(),
+      invalidate_cache: this.invalidateCache?.toString(),
+      do_not_cache: this.doNotCache?.toString(),
+      fast_mode: this.fastMode?.toString(),
+      do_not_unroll_columns: this.doNotUnrollColumns?.toString(),
+      page_seperator: this.pageSeperator,
+      gpt4o_mode: this.gpt4oMode?.toString(),
+      gpt4o_api_key: this.gpt4oApiKey,
+    };
+
+    // Appends body with any defined LlamaParseBodyParams
+    Object.entries(LlamaParseBodyParams).forEach(([key, value]) => {
+      if (value !== undefined) {
+        body.append(key, value);
+      }
+    });
 
     const headers = {
       Authorization: `Bearer ${this.apiKey}`,
