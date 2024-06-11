@@ -1,3 +1,5 @@
+const { join } = require("node:path");
+
 module.exports = {
   root: true,
   extends: [
@@ -6,7 +8,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-type-checked-only",
   ],
   parserOptions: {
-    project: ["./tsconfig.json"],
+    project: join(__dirname, "tsconfig.eslint.json"),
     __tsconfigRootDir: __dirname,
   },
   settings: {
