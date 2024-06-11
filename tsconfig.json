@@ -15,13 +15,16 @@
     "types": [],
     "lib": ["ES2022"]
   },
-  "files": ["./packages/community/tsup.config.ts"],
+  "files": [],
   "references": [
     {
       "path": "./apps/docs/tsconfig.json"
     },
     {
       "path": "./packages/community/tsconfig.json"
+    },
+    {
+      "path": "./packages/community/tsconfig.script.json"
     },
     {
       "path": "./packages/core/tsconfig.json"
