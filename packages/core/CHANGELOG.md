@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.3.17
+
+### Patch Changes
+
+- 6bc5bdd: feat: add cache disabling, fast mode, do not unroll columns mode and custom page seperator to LlamaParseReader
+- bf25ff6: fix: polyfill for cloudflare worker
+- e6d6576: chore: use `unpdf`
+
 ## 0.3.16
 
 ### Patch Changes
