@@ -1,6 +1,7 @@
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
 import { Document } from "../Node.js";
+import type { UUID } from "../types.js";
 import { FileReader, type Language, type ResultType } from "./type.js";
 
 const SupportedFiles: { [key: string]: string } = {
@@ -102,6 +103,24 @@ const SupportedFiles: { [key: string]: string } = {
 };
 
 /**
+ * Represents the response structure for api-key related requests of the LlamaParse API
+ */
+interface LlamaParseApiResponse {
+  // The unique identifier of the API key.
+  id: UUID;
+  // The creation date of the API key.
+  created_at: Date;
+  // The last update date of the API key.
+  updated_at: Date;
+  // The name of the API key.
+  name: string;
+  // The user ID associated with the API key.
+  user_id: string;
+  // The redacted API key string. Non redacted response only in generateApiKey method.
+  redacted_api_key: string;
+}
+
+/**
  * Represents a reader for parsing files using the LlamaParse API.
  * See https://github.com/run-llama/llama_parse
  */
@@ -138,6 +157,10 @@ export class LlamaParseReader extends FileReader {
   gpt4oMode: boolean = false;
   // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
   gpt4oApiKey?: string;
+  // Whether or not to ignore and skip errors raised during parsing.
+  ignoreErrors: boolean = true;
+  // The URL for api_key interactions
+  apiKeyUrl: string = "https://api.cloud.llamaindex.ai/api/api_key";
   // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
@@ -275,19 +298,29 @@ export class LlamaParseReader extends FileReader {
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
   async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
-    // Creates a job for the file
-    const jobId = await this.createJob(fileContent);
-    if (this.verbose) {
-      console.log(`Started parsing the file under job id ${jobId}`);
-    }
+    let jobId;
+    try {
+      // Creates a job for the file
+      const jobId = await this.createJob(fileContent);
+      if (this.verbose) {
+        console.log(`Started parsing the file under job id ${jobId}`);
+      }
 
-    // Return results as Document objects
-    const resultJson = await this.getJobResult(jobId, this.resultType);
-    return [
-      new Document({
-        text: resultJson[this.resultType],
-      }),
-    ];
+      // Return results as Document objects
+      const resultJson = await this.getJobResult(jobId, this.resultType);
+      return [
+        new Document({
+          text: resultJson[this.resultType],
+        }),
+      ];
+    } catch (e) {
+      console.error(`Error while parsing file under job id ${jobId}`, e);
+      if (this.ignoreErrors) {
+        return [];
+      } else {
+        throw e;
+      }
+    }
   }
   /**
    * Loads data from a file and returns an array of JSON objects.
@@ -297,18 +330,28 @@ export class LlamaParseReader extends FileReader {
    * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of JSON objects.
    */
   async loadJson(file: string): Promise<Record<string, any>[]> {
-    const data = await fs.readFile(file);
-    // Creates a job for the file
-    const jobId = await this.createJob(data);
-    if (this.verbose) {
-      console.log(`Started parsing the file under job id ${jobId}`);
-    }
+    let jobId;
+    try {
+      const data = await fs.readFile(file);
+      // Creates a job for the file
+      const jobId = await this.createJob(data);
+      if (this.verbose) {
+        console.log(`Started parsing the file under job id ${jobId}`);
+      }
 
-    // Return results as an array of JSON objects (same format as Python version of the reader)
-    const resultJson = await this.getJobResult(jobId, "json");
-    resultJson.job_id = jobId;
-    resultJson.file_path = file;
-    return [resultJson];
+      // Return results as an array of JSON objects (same format as Python version of the reader)
+      const resultJson = await this.getJobResult(jobId, "json");
+      resultJson.job_id = jobId;
+      resultJson.file_path = file;
+      return [resultJson];
+    } catch (e) {
+      console.error(`Error while parsing the file under job id ${jobId}`, e);
+      if (this.ignoreErrors) {
+        return [];
+      } else {
+        throw e;
+      }
+    }
   }
 
   /**
@@ -325,49 +368,250 @@ export class LlamaParseReader extends FileReader {
   ): Promise<Record<string, any>[]> {
     const headers = { Authorization: `Bearer ${this.apiKey}` };
 
-    // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
-    if (!fs.access(downloadPath)) {
-      await fs.mkdir(downloadPath, { recursive: true });
-    }
+    try {
+      // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
+      try {
+        await fs.access(downloadPath);
+      } catch {
+        await fs.mkdir(downloadPath, { recursive: true });
+      }
 
-    const images: Record<string, any>[] = [];
-    for (const result of jsonResult) {
-      const jobId = result.job_id;
-      for (const page of result.pages) {
-        if (this.verbose) {
-          console.log(`> Image for page ${page.page}: ${page.images}`);
-        }
-        for (const image of page.images) {
-          const imageName = image.name;
-          // Get the full path
-          let imagePath = `${downloadPath}/${jobId}-${imageName}`;
-
-          if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
-            imagePath += ".png";
+      const images: Record<string, any>[] = [];
+      for (const result of jsonResult) {
+        const jobId = result.job_id;
+        for (const page of result.pages) {
+          if (this.verbose) {
+            console.log(`> Image for page ${page.page}: ${page.images}`);
           }
+          for (const image of page.images) {
+            const imageName = image.name;
+            // Get the full path
+            let imagePath = `${downloadPath}/${jobId}-${imageName}`;
 
-          // Get a valid image path
-          image.path = imagePath;
-          image.job_id = jobId;
-          image.original_pdf_path = result.file_path;
-          image.page_number = page.page;
+            if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
+              imagePath += ".png";
+            }
 
-          const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
-          const response = await fetch(imageUrl, { headers });
-          if (!response.ok) {
-            throw new Error(
-              `Failed to download image: ${await response.text()}`,
-            );
+            // Get a valid image path
+            image.path = imagePath;
+            image.job_id = jobId;
+            image.original_pdf_path = result.file_path;
+            image.page_number = page.page;
+
+            const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
+            const response = await fetch(imageUrl, { headers });
+            if (!response.ok) {
+              throw new Error(
+                `Failed to download image: ${await response.text()}`,
+              );
+            }
+            const arrayBuffer = await response.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            await fs.writeFile(imagePath, buffer);
+
+            images.push(image);
           }
-          const arrayBuffer = await response.arrayBuffer();
-          const buffer = Buffer.from(arrayBuffer);
-          await fs.writeFile(imagePath, buffer);
-
-          images.push(image);
         }
       }
+      return images;
+    } catch (e) {
+      console.error(`Error while downloading images from the parsed result`, e);
+      if (this.ignoreErrors) {
+        return [];
+      } else {
+        throw e;
+      }
     }
-    return images;
+  }
+
+  /**
+   * A function to generate an API key.
+   *
+   * @param {string} name - The name for the API key. Must be less than 150 characters.
+   * @param {string} [session] - Optional session information.
+   * @return {Promise<LlamaParseApiResponse>} A promise that resolves to the generated API key response.
+   */
+  async generateApiKey(
+    name: string,
+    session?: string,
+  ): Promise<LlamaParseApiResponse> {
+    const headers: { [key: string]: string } = {
+      Authorization: `Bearer ${this.apiKey}`,
+      // set explicit, no auto assign with json as with FormData
+      "Content-Type": "application/json",
+    };
+    if (session) {
+      headers["Cookie"] = `session=${session}`;
+    }
+
+    const body = JSON.stringify({ name });
+
+    const url = this.apiKeyUrl;
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(this.maxTimeout * 1000),
+      method: "POST",
+      body,
+      headers,
+    });
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      throw new Error(`Failed to generate API key: ${errorMsg}`);
+    }
+
+    const data = await response.json();
+
+    const generateApiKeyResponse: LlamaParseApiResponse = {
+      id: data.id,
+      created_at: new Date(data.created_at),
+      updated_at: new Date(data.updated_at),
+      name: data.name,
+      user_id: data.user_id,
+      redacted_api_key: data.redacted_api_key,
+    };
+    return generateApiKeyResponse;
+  }
+
+  /**
+   * A function to get all API Keys for a user.
+   *
+   * @param {string} [session] - Optional session information.
+   * @return {Promise<LlamaParseApiResponse[]>} A promise that resolves to an array of LlamaParseApiResponse objects.
+   */
+  async getApiKeys(session?: string): Promise<LlamaParseApiResponse[]> {
+    const headers: { [key: string]: string } = {
+      Authorization: `Bearer ${this.apiKey}`,
+    };
+    if (session) {
+      headers["Cookie"] = `session=${session}`;
+    }
+
+    const url = this.apiKeyUrl;
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(this.maxTimeout * 1000),
+      method: "GET",
+      headers,
+    });
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      throw new Error(`Failed to get API keys: ${errorMsg}`);
+    }
+
+    const data = await response.json();
+
+    const getApiKeysResponse: LlamaParseApiResponse[] = data.map(
+      (item: any) => ({
+        id: item.id,
+        created_at: new Date(item.created_at),
+        updated_at: new Date(item.updated_at),
+        name: item.name,
+        user_id: item.user_id,
+        redacted_api_key: item.redacted_api_key,
+      }),
+    );
+    return getApiKeysResponse;
+  }
+  /**
+   * Updates an API key with the provided ID and name.
+   *
+   * @param {UUID} api_key_id - The unique identifier of the API key to update.
+   * @param {string} name - The new name for the API key.
+   * @param {string} [session] - Optional session information.
+   * @return {Promise<LlamaParseApiResponse>} A promise that resolves to the updated API key response.
+   */
+  async updateApiKey(
+    api_key_id: UUID,
+    name: string,
+    session?: string,
+  ): Promise<LlamaParseApiResponse> {
+    const headers: { [key: string]: string } = {
+      Authorization: `Bearer ${this.apiKey}`,
+      // set explicit, no auto assign with json as with FormData
+      "Content-Type": "application/json",
+    };
+    if (session) {
+      headers["Cookie"] = `session=${session}`;
+    }
+
+    const body = JSON.stringify({ name });
+
+    const url = `${this.apiKeyUrl}/${api_key_id}`;
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(this.maxTimeout * 1000),
+      method: "PUT",
+      body,
+      headers,
+    });
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      throw new Error(`Failed to update API key: ${errorMsg}`);
+    }
+
+    const data = await response.json();
+
+    const updateApiKeyResponse: LlamaParseApiResponse = {
+      id: data.id,
+      created_at: new Date(data.created_at),
+      updated_at: new Date(data.updated_at),
+      name: data.name,
+      user_id: data.user_id,
+      redacted_api_key: data.redacted_api_key,
+    };
+    return updateApiKeyResponse;
+  }
+  /**
+   * Deletes an API key based on the provided ID.
+   *
+   * @param {UUID} api_key_id - The unique identifier of the API key to delete.
+   * @param {string} [session] - Optional session information.
+   * @return {Promise<void>} A promise that resolves when the API key is successfully deleted. (204 response)
+   */
+  async deleteApiKey(api_key_id: UUID, session?: string): Promise<void> {
+    const headers: { [key: string]: string } = {
+      Authorization: `Bearer ${this.apiKey}`,
+    };
+    if (session) {
+      headers["Cookie"] = `session=${session}`;
+    }
+
+    const url = `${this.apiKeyUrl}/${api_key_id}`;
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(this.maxTimeout * 1000),
+      method: "DELETE",
+      headers,
+    });
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      throw new Error(`Failed to delete API key: ${errorMsg}`);
+    }
+    // no need to return any value, succesfull response is emty (204)
+  }
+  /**
+   * Retrieves the parsing usage data.
+   *
+   * @param {string} session - Optional session information
+   * @return {Promise<{ usage_pdf_pages: number, max_pdf_pages: number }>} The parsed usage data
+   */
+  async getParsingUsage(
+    session?: string,
+  ): Promise<{ usage_pdf_pages: number; max_pdf_pages: number }> {
+    const headers: { [key: string]: string } = {
+      Authorization: `Bearer ${this.apiKey}`,
+    };
+    if (session) {
+      headers["Cookie"] = `session=${session}`;
+    }
+    const url = `${this.baseUrl}/usage`;
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(this.maxTimeout * 1000),
+      method: "GET",
+      headers,
+    });
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      throw new Error(`Failed to get usage: ${errorMsg}`);
+    }
+    const usageData = await response.json();
+    return usageData;
   }
 
   private async getMimeType(
