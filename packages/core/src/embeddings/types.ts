@@ -1,9 +1,10 @@
-import { truncateMaxTokens, type Tokenizers } from "../GlobalsHelper.js";
+import { type Tokenizers } from "@llamaindex/env";
 import type { BaseNode } from "../Node.js";
 import { MetadataMode } from "../Node.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import type { MessageContentDetail } from "../llm/types.js";
 import { extractSingleText } from "../llm/utils.js";
+import { truncateMaxTokens } from "./tokenizer.js";
 import { SimilarityType, similarity } from "./utils.js";
 
 const DEFAULT_EMBED_BATCH_SIZE = 10;

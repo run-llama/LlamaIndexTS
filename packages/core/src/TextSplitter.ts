@@ -1,6 +1,5 @@
-import { EOL } from "@llamaindex/env";
+import { EOL, tokenizers, type Tokenizer } from "@llamaindex/env";
 // GitHub translated
-import { globalsHelper } from "./GlobalsHelper.js";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants.js";
 
 class TextSplit {
@@ -69,8 +68,7 @@ export class SentenceSplitter {
   public chunkSize: number;
   public chunkOverlap: number;
 
-  private tokenizer: any;
-  private tokenizerDecoder: any;
+  private tokenizer: Tokenizer;
   private paragraphSeparator: string;
   private chunkingTokenizerFn: (text: string) => string[];
   private splitLongSentences: boolean;
@@ -102,9 +100,9 @@ export class SentenceSplitter {
     this.chunkSize = chunkSize;
     this.chunkOverlap = chunkOverlap;
 
-    this.tokenizer = tokenizer ?? globalsHelper.tokenizer();
-    this.tokenizerDecoder =
-      tokenizerDecoder ?? globalsHelper.tokenizerDecoder();
+    this.tokenizer = tokenizers.tokenizer();
+    this.tokenizer.encode = tokenizer ?? this.tokenizer.encode;
+    this.tokenizer.decode = tokenizerDecoder ?? this.tokenizer.decode;
 
     this.paragraphSeparator = paragraphSeparator;
     this.chunkingTokenizerFn = chunkingTokenizerFn ?? defaultSentenceTokenizer;
@@ -115,7 +113,8 @@ export class SentenceSplitter {
     // get "effective" chunk size by removing the metadata
     let effectiveChunkSize;
     if (extraInfoStr != undefined) {
-      const numExtraTokens = this.tokenizer(`${extraInfoStr}\n\n`).length + 1;
+      const numExtraTokens =
+        this.tokenizer.encode(`${extraInfoStr}\n\n`).length + 1;
       effectiveChunkSize = this.chunkSize - numExtraTokens;
       if (effectiveChunkSize <= 0) {
         throw new Error(
@@ -190,19 +189,19 @@ export class SentenceSplitter {
     if (!this.splitLongSentences) {
       return sentenceSplits.map((split) => ({
         text: split,
-        numTokens: this.tokenizer(split).length,
+        numTokens: this.tokenizer.encode(split).length,
       }));
     }
 
     const newSplits: SplitRep[] = [];
     for (const split of sentenceSplits) {
-      const splitTokens = this.tokenizer(split);
+      const splitTokens = this.tokenizer.encode(split);
       const splitLen = splitTokens.length;
       if (splitLen <= effectiveChunkSize) {
         newSplits.push({ text: split, numTokens: splitLen });
       } else {
         for (let i = 0; i < splitLen; i += effectiveChunkSize) {
-          const cur_split = this.tokenizerDecoder(
+          const cur_split = this.tokenizer.decode(
             splitTokens.slice(i, i + effectiveChunkSize),
           );
           newSplits.push({ text: cur_split, numTokens: effectiveChunkSize });

@@ -1,4 +1,4 @@
-import { globalsHelper } from "./GlobalsHelper.js";
+import { tokenizers } from "@llamaindex/env";
 import type { SummaryPrompt } from "./Prompt.js";
 import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
 import { OpenAI } from "./llm/openai.js";
@@ -70,8 +70,7 @@ export class SummaryChatHistory extends ChatHistory {
    * Tokenizer function that converts text to tokens,
    *  this is used to calculate the number of tokens in a message.
    */
-  tokenizer: (text: string) => Uint32Array =
-    globalsHelper.defaultTokenizer.encode;
+  tokenizer: (text: string) => Uint32Array = tokenizers.tokenizer().encode;
   tokensToSummarize: number;
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;

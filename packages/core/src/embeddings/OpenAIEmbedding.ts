@@ -1,5 +1,5 @@
+import { Tokenizers } from "@llamaindex/env";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
-import { Tokenizers } from "../GlobalsHelper.js";
 import type { AzureOpenAIConfig } from "../llm/azure.js";
 import {
   getAzureConfigFromEnv,

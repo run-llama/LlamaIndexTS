@@ -42,6 +42,7 @@
     "assemblyai": "^4.4.5",
     "chromadb": "1.8.1",
     "cohere-ai": "7.9.5",
+    "js-tiktoken": "^1.0.12",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
     "mammoth": "^1.7.2",

@@ -422,6 +422,9 @@ importers:
       cohere-ai:
         specifier: 7.9.5
         version: 7.9.5(encoding@0.1.13)
+      js-tiktoken:
+        specifier: ^1.0.12
+        version: 1.0.12
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -664,6 +667,12 @@ importers:
       '@types/node':
         specifier: ^20.12.11
         version: 20.12.11
+      js-tiktoken:
+        specifier: ^1.0.12
+        version: 1.0.12
+      tiktoken:
+        specifier: ^1.0.15
+        version: 1.0.15
     devDependencies:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0

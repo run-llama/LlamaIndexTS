@@ -1,4 +1,4 @@
-import { globalsHelper } from "./GlobalsHelper.js";
+import { tokenizers, type Tokenizer } from "@llamaindex/env";
 import type { SimplePrompt } from "./Prompt.js";
 import { SentenceSplitter } from "./TextSplitter.js";
 import {
@@ -34,7 +34,7 @@ export class PromptHelper {
   numOutput = DEFAULT_NUM_OUTPUTS;
   chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO;
   chunkSizeLimit?: number;
-  tokenizer: (text: string) => Uint32Array;
+  tokenizer: Tokenizer;
   separator = " ";
 
   // eslint-disable-next-line max-params
@@ -50,7 +50,8 @@ export class PromptHelper {
     this.numOutput = numOutput;
     this.chunkOverlapRatio = chunkOverlapRatio;
     this.chunkSizeLimit = chunkSizeLimit;
-    this.tokenizer = tokenizer || globalsHelper.tokenizer();
+    this.tokenizer = tokenizers.tokenizer();
+    this.tokenizer.encode = tokenizer ?? this.tokenizer.encode;
     this.separator = separator;
   }
 
@@ -61,7 +62,7 @@ export class PromptHelper {
    */
   private getAvailableContextSize(prompt: SimplePrompt) {
     const emptyPromptText = getEmptyPromptTxt(prompt);
-    const promptTokens = this.tokenizer(emptyPromptText);
+    const promptTokens = this.tokenizer.encode(emptyPromptText);
     const numPromptTokens = promptTokens.length;
 
     return this.contextWindow - numPromptTokens - this.numOutput;

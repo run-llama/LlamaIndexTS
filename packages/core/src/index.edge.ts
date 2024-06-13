@@ -1,5 +1,4 @@
 export * from "./ChatHistory.js";
-export * from "./GlobalsHelper.js";
 export * from "./Node.js";
 export * from "./OutputParser.js";
 export * from "./Prompt.js";
