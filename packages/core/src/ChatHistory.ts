@@ -1,4 +1,4 @@
-import { tokenizers } from "@llamaindex/env";
+import { tokenizers, type Tokenizer } from "@llamaindex/env";
 import type { SummaryPrompt } from "./Prompt.js";
 import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
 import { OpenAI } from "./llm/openai.js";
@@ -70,7 +70,7 @@ export class SummaryChatHistory extends ChatHistory {
    * Tokenizer function that converts text to tokens,
    *  this is used to calculate the number of tokens in a message.
    */
-  tokenizer: (text: string) => Uint32Array = tokenizers.tokenizer().encode;
+  tokenizer: Tokenizer;
   tokensToSummarize: number;
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
@@ -88,6 +88,7 @@ export class SummaryChatHistory extends ChatHistory {
         "LLM maxTokens is not set. Needed so the summarizer ensures the context window size of the LLM.",
       );
     }
+    this.tokenizer = init?.tokenizer ?? tokenizers.tokenizer();
     this.tokensToSummarize =
       this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
     if (this.tokensToSummarize < this.llm.metadata.contextWindow * 0.25) {
@@ -115,7 +116,8 @@ export class SummaryChatHistory extends ChatHistory {
       // remove oldest message until the chat history is short enough for the context window
       messagesToSummarize.shift();
     } while (
-      this.tokenizer(promptMessages[0].content).length > this.tokensToSummarize
+      this.tokenizer.encode(promptMessages[0].content).length >
+      this.tokensToSummarize
     );
 
     const response = await this.llm.chat({
@@ -194,7 +196,7 @@ export class SummaryChatHistory extends ChatHistory {
     // get tokens of current request messages and the transient messages
     const tokens = requestMessages.reduce(
       (count, message) =>
-        count + this.tokenizer(extractText(message.content)).length,
+        count + this.tokenizer.encode(extractText(message.content)).length,
       0,
     );
     if (tokens > this.tokensToSummarize) {

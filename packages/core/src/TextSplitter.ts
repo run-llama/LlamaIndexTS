@@ -76,8 +76,7 @@ export class SentenceSplitter {
   constructor(options?: {
     chunkSize?: number;
     chunkOverlap?: number;
-    tokenizer?: any;
-    tokenizerDecoder?: any;
+    tokenizer?: Tokenizer;
     paragraphSeparator?: string;
     chunkingTokenizerFn?: (text: string) => string[];
     splitLongSentences?: boolean;
@@ -86,7 +85,6 @@ export class SentenceSplitter {
       chunkSize = DEFAULT_CHUNK_SIZE,
       chunkOverlap = DEFAULT_CHUNK_OVERLAP,
       tokenizer = null,
-      tokenizerDecoder = null,
       paragraphSeparator = defaultParagraphSeparator,
       chunkingTokenizerFn,
       splitLongSentences = false,
@@ -100,9 +98,7 @@ export class SentenceSplitter {
     this.chunkSize = chunkSize;
     this.chunkOverlap = chunkOverlap;
 
-    this.tokenizer = tokenizers.tokenizer();
-    this.tokenizer.encode = tokenizer ?? this.tokenizer.encode;
-    this.tokenizer.decode = tokenizerDecoder ?? this.tokenizer.decode;
+    this.tokenizer = tokenizer ?? tokenizers.tokenizer();
 
     this.paragraphSeparator = paragraphSeparator;
     this.chunkingTokenizerFn = chunkingTokenizerFn ?? defaultSentenceTokenizer;

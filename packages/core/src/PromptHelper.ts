@@ -43,15 +43,14 @@ export class PromptHelper {
     numOutput = DEFAULT_NUM_OUTPUTS,
     chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
     chunkSizeLimit?: number,
-    tokenizer?: (text: string) => Uint32Array,
+    tokenizer?: Tokenizer,
     separator = " ",
   ) {
     this.contextWindow = contextWindow;
     this.numOutput = numOutput;
     this.chunkOverlapRatio = chunkOverlapRatio;
     this.chunkSizeLimit = chunkSizeLimit;
-    this.tokenizer = tokenizers.tokenizer();
-    this.tokenizer.encode = tokenizer ?? this.tokenizer.encode;
+    this.tokenizer = tokenizer ?? tokenizers.tokenizer();
     this.separator = separator;
   }
 
