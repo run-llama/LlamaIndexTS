@@ -65,6 +65,13 @@ export class SimpleChatHistory extends ChatHistory {
   }
 }
 
+export type SummaryChatHistoryOptions = {
+  /**
+   * some LLM instance (like Ollama) might doesn't have a maxTokens metadata, so you should set it manually
+   */
+  maxTokens: number;
+};
+
 export class SummaryChatHistory extends ChatHistory {
   /**
    * Tokenizer function that converts text to tokens,
@@ -77,20 +84,23 @@ export class SummaryChatHistory extends ChatHistory {
   summaryPrompt: SummaryPrompt;
   llm: LLM;
   private messagesBefore: number;
+  readonly #maxTokens: number;
 
-  constructor(init?: Partial<SummaryChatHistory>) {
+  constructor(
+    init?: Partial<SummaryChatHistory> & Partial<SummaryChatHistoryOptions>,
+  ) {
     super();
     this.messages = init?.messages ?? [];
     this.messagesBefore = this.messages.length;
     this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
     this.llm = init?.llm ?? new OpenAI();
-    if (!this.llm.metadata.maxTokens) {
+    if (!this.llm.metadata.maxTokens || !init?.maxTokens) {
       throw new Error(
         "LLM maxTokens is not set. Needed so the summarizer ensures the context window size of the LLM.",
       );
     }
-    this.tokensToSummarize =
-      this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
+    this.#maxTokens = this.llm.metadata.maxTokens ?? init?.maxTokens;
+    this.tokensToSummarize = this.llm.metadata.contextWindow - this.#maxTokens;
     if (this.tokensToSummarize < this.llm.metadata.contextWindow * 0.25) {
       throw new Error(
         "The number of tokens that trigger the summarize process are less than 25% of the context window. Try lowering maxTokens or use a model with a larger context window.",
