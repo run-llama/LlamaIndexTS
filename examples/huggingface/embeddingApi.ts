@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 
 import {
   Document,
-  HuggingFaceAPIEmbedding,
   HuggingFaceInferenceAPI,
+  HuggingFaceInferenceAPIEmbedding,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
@@ -13,7 +13,7 @@ if (!process.env.HUGGING_FACE_TOKEN) {
 }
 
 // Update embed model with HuggingFaceAPIEmbedding
-Settings.embedModel = new HuggingFaceAPIEmbedding({
+Settings.embedModel = new HuggingFaceInferenceAPIEmbedding({
   model: "mixedbread-ai/mxbai-embed-large-v1",
   accessToken: process.env.HUGGING_FACE_TOKEN,
 });

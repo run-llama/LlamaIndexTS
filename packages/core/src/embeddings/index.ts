@@ -1,6 +1,6 @@
 export { DeepInfraEmbedding } from "./DeepInfraEmbedding.js";
 export * from "./GeminiEmbedding.js";
-export { HuggingFaceAPIEmbedding } from "./HuggingFaceEmbedding.js";
+export { HuggingFaceInferenceAPIEmbedding } from "./HuggingFaceEmbedding.js";
 export * from "./JinaAIEmbedding.js";
 export * from "./MistralAIEmbedding.js";
 export * from "./MultiModalEmbedding.js";

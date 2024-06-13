@@ -71,7 +71,7 @@ export type HFConfig = HfInferenceOptions & {
  *
  * Set the `model` and `accessToken` parameter in the constructor, e.g.:
  * ```
- * new HuggingFaceAPIEmbedding({
+ * new HuggingFaceInferenceAPIEmbedding({
  *     model: HuggingFaceEmbeddingModelType.XENOVA_ALL_MPNET_BASE_V2,
  *     accessToken: "<your-access-token>"
  * });
@@ -79,7 +79,7 @@ export type HFConfig = HfInferenceOptions & {
  *
  * @extends BaseEmbedding
  */
-export class HuggingFaceAPIEmbedding extends BaseEmbedding {
+export class HuggingFaceInferenceAPIEmbedding extends BaseEmbedding {
   model: string;
   hf: HfInference;
 
