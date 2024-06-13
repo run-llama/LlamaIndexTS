@@ -1,5 +1,3 @@
-import { EOL } from "@llamaindex/env";
-// GitHub translated
 import { globalsHelper } from "./GlobalsHelper.js";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants.js";
 
@@ -55,10 +53,9 @@ export function cjkSentenceTokenizer(sentence: string): string[] {
   return slist.filter((s) => s.length > 0);
 }
 
-export const defaultParagraphSeparator = EOL + EOL + EOL;
-
-// In theory there's also Mac style \r only, but it's pre-OSX and I don't think
-// many documents will use it.
+// NOTE this is different from Python because in Python a lot of the heavy lifting for paragraph separation
+// is already handled by NLTK, but we don't have that option here.
+export const defaultParagraphSeparator = /\n\n|\r\n\r\n|\r\r/g;
 
 /**
  * SentenceSplitter is our default text splitter that supports splitting into sentences, paragraphs, or fixed length chunks with overlap.
@@ -71,7 +68,7 @@ export class SentenceSplitter {
 
   private tokenizer: any;
   private tokenizerDecoder: any;
-  private paragraphSeparator: string;
+  private paragraphSeparator: string | RegExp;
   private chunkingTokenizerFn: (text: string) => string[];
   private splitLongSentences: boolean;
 
@@ -80,7 +77,7 @@ export class SentenceSplitter {
     chunkOverlap?: number;
     tokenizer?: any;
     tokenizerDecoder?: any;
-    paragraphSeparator?: string;
+    paragraphSeparator?: string | RegExp;
     chunkingTokenizerFn?: (text: string) => string[];
     splitLongSentences?: boolean;
   }) {
@@ -129,8 +126,8 @@ export class SentenceSplitter {
   }
 
   getParagraphSplits(text: string, effectiveChunkSize?: number): string[] {
-    // get paragraph splits
-    const paragraphSplits: string[] = text.split(this.paragraphSeparator);
+    const paragraphSplits = text.split(this.paragraphSeparator);
+
     let idx = 0;
     if (effectiveChunkSize == undefined) {
       return paragraphSplits;
@@ -145,7 +142,11 @@ export class SentenceSplitter {
         paragraphSplits[idx] = [
           paragraphSplits[idx],
           paragraphSplits[idx + 1],
-        ].join(this.paragraphSeparator);
+        ].join(
+          typeof this.paragraphSeparator === "string"
+            ? this.paragraphSeparator
+            : "\n\n",
+        );
         paragraphSplits.splice(idx + 1, 1);
       } else {
         idx += 1;
