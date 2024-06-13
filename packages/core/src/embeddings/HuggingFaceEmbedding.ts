@@ -1,3 +1,4 @@
+import { HfInference } from "@huggingface/inference";
 import { lazyLoadTransformers } from "../internal/deps/transformers.js";
 import { BaseEmbedding } from "./types.js";
 
@@ -44,5 +45,66 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
     const extractor = await this.getExtractor();
     const output = await extractor(text, { pooling: "mean", normalize: true });
     return Array.from(output.data);
+  }
+}
+
+// TODO workaround issue with @huggingface/inference@2.7.0
+interface HfInferenceOptions {
+  /**
+   * (Default: true). Boolean. There is a cache layer on Inference API (serverless) to speedup requests we have already seen. Most models can use those results as is as models are deterministic (meaning the results will be the same anyway). However if you use a non deterministic model, you can set this parameter to prevent the caching mechanism from being used resulting in a real new query.
+   */
+  use_cache?: boolean;
+  /**
+   * (Default: false) Boolean. If the model is not ready, wait for it instead of receiving 503. It limits the number of requests required to get your inference done. It is advised to only set this flag to true after receiving a 503 error as it will limit hanging in your application to known places.
+   */
+  wait_for_model?: boolean;
+}
+
+export type HFConfig = HfInferenceOptions & {
+  model: string;
+  accessToken: string;
+  endpoint?: string;
+};
+
+/**
+ * Uses feature extraction from Hugging Face's Inference API to generate embeddings.
+ *
+ * Set the `model` and `accessToken` parameter in the constructor, e.g.:
+ * ```
+ * new HuggingFaceAPIEmbedding({
+ *     model: HuggingFaceEmbeddingModelType.XENOVA_ALL_MPNET_BASE_V2,
+ *     accessToken: "<your-access-token>"
+ * });
+ * ```
+ *
+ * @extends BaseEmbedding
+ */
+export class HuggingFaceAPIEmbedding extends BaseEmbedding {
+  model: string;
+  hf: HfInference;
+
+  constructor(init: HFConfig) {
+    super();
+    const { model, accessToken, endpoint, ...hfInferenceOpts } = init;
+
+    this.hf = new HfInference(accessToken, hfInferenceOpts);
+    this.model = model;
+    if (endpoint) this.hf.endpoint(endpoint);
+  }
+
+  async getTextEmbedding(text: string): Promise<number[]> {
+    const res = await this.hf.featureExtraction({
+      model: this.model,
+      inputs: text,
+    });
+    return res as number[];
+  }
+
+  async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
+    const res = await this.hf.featureExtraction({
+      model: this.model,
+      inputs: texts,
+    });
+    return res as number[][];
   }
 }
