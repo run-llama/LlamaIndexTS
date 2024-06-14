@@ -7,6 +7,7 @@ import type {
 } from "openai";
 import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
 
+import { Tokenizers } from "@llamaindex/env";
 import type {
   ChatCompletionAssistantMessageParam,
   ChatCompletionMessageToolCall,
@@ -17,7 +18,6 @@ import type {
   ChatCompletionUserMessageParam,
 } from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
-import { Tokenizers } from "../GlobalsHelper.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { BaseTool } from "../types.js";
