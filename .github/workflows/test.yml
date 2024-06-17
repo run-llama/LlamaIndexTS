@@ -71,7 +71,7 @@ jobs:
       - name: Build
         run: pnpm run build
       - name: Use Build For Examples
-        run: pnpm link ../packages/core/
+        run: pnpm link ../packages/llamaindex/
         working-directory: ./examples
       - name: Run Type Check
         run: pnpm run type-check
@@ -81,9 +81,9 @@ jobs:
         if: failure()
         with:
           name: typecheck-build-dist
-          path: ./packages/core/dist
+          path: ./packages/llamaindex/dist
           if-no-files-found: error
-  e2e-core-examples:
+  e2e-llamaindex-examples:
     strategy:
       fail-fast: false
       matrix:
@@ -93,7 +93,7 @@ jobs:
           - nextjs-edge-runtime
     #          - waku-query-engine
     runs-on: ubuntu-latest
-    name: Build Core Example (${{ matrix.packages }})
+    name: Build LlamaIndex Example (${{ matrix.packages }})
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -108,7 +108,7 @@ jobs:
         run: pnpm run build
       - name: Build ${{ matrix.packages }}
         run: pnpm run build
-        working-directory: packages/core/e2e/examples/${{ matrix.packages }}
+        working-directory: packages/llamaindex/e2e/examples/${{ matrix.packages }}
 
   typecheck-examples:
     runs-on: ubuntu-latest
@@ -132,7 +132,7 @@ jobs:
         working-directory: packages/env
       - name: Pack llamaindex
         run: pnpm pack --pack-destination ${{ runner.temp }}
-        working-directory: packages/core
+        working-directory: packages/llamaindex
       - name: Install
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}/examples

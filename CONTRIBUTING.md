@@ -41,7 +41,7 @@ To run them, run
 pnpm run test
 ```
 
-To write new test cases write them in [packages/core/src/tests](/packages/core/src/tests)
+To write new test cases write them in [packages/core/src/tests](/packages/llamaindex/src/tests)
 
 We use Jest https://jestjs.io/ to write our test cases. Jest comes with a bunch of built in assertions using the expect function: https://jestjs.io/docs/expect
 
