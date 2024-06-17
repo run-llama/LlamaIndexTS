@@ -1,5 +1,5 @@
 {
-  "name": "@llamaindex/core",
+  "name": "@llamaindex/llamaindex",
   "version": "0.3.17",
   "exports": "./src/index.ts",
   "imports": {
