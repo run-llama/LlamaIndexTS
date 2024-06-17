@@ -202,7 +202,7 @@ export class JSONQueryEngine implements QueryEngine {
       jsonPathResponseStr,
     };
 
-    const response = EngineResponse.fromResponse(responseStr);
+    const response = EngineResponse.fromResponse(responseStr, false);
 
     response.metadata = responseMetadata;
 
