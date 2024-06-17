@@ -1,5 +1,5 @@
+import { EngineResponse } from "../../EngineResponse.js";
 import type { NodeWithScore } from "../../Node.js";
-import { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import { PromptMixin } from "../../prompts/index.js";
@@ -24,10 +24,10 @@ type RouterQueryEngineMetadata = {
 
 async function combineResponses(
   summarizer: TreeSummarize,
-  responses: Response[],
+  responses: EngineResponse[],
   queryBundle: QueryBundle,
   verbose: boolean = false,
-): Promise<Response> {
+): Promise<EngineResponse> {
   if (verbose) {
     console.log("Combining responses from multiple query engines.");
   }
@@ -48,7 +48,7 @@ async function combineResponses(
     textChunks: responseStrs,
   });
 
-  return new Response(summary, sourceNodes);
+  return EngineResponse.fromResponse(summary, false, sourceNodes);
 }
 
 /**
@@ -108,11 +108,13 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     });
   }
 
-  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  query(
+    params: QueryEngineParamsStreaming,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
   async query(
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { query, stream } = params;
 
     const response = await this.queryRoute({ queryStr: query });
@@ -124,11 +126,11 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     return response;
   }
 
-  private async queryRoute(queryBundle: QueryBundle): Promise<Response> {
+  private async queryRoute(queryBundle: QueryBundle): Promise<EngineResponse> {
     const result = await this.selector.select(this.metadatas, queryBundle);
 
     if (result.selections.length > 1) {
-      const responses: Response[] = [];
+      const responses: EngineResponse[] = [];
       for (let i = 0; i < result.selections.length; i++) {
         const engineInd = result.selections[i];
         const logStr = `Selecting query engine ${engineInd}: ${result.selections[i]}.`;

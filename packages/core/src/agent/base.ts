@@ -1,4 +1,5 @@
 import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
+import { EngineResponse } from "../EngineResponse.js";
 import { Settings } from "../Settings.js";
 import {
   type ChatEngine,
@@ -9,13 +10,7 @@ import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-  LLM,
-  MessageContent,
-} from "../llm/index.js";
+import type { ChatMessage, LLM, MessageContent } from "../llm/index.js";
 import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
@@ -100,16 +95,6 @@ export function createTaskOutputStream<
     },
   });
 }
-
-export type AgentStreamChatResponse<Options extends object> = {
-  response: ChatResponseChunk<Options>;
-  sources: ToolOutput[];
-};
-
-export type AgentChatResponse<Options extends object> = {
-  response: ChatResponse<Options>;
-  sources: ToolOutput[];
-};
 
 export type AgentRunnerParams<
   AI extends LLM,
@@ -210,11 +195,7 @@ export abstract class AgentRunner<
   >
     ? AdditionalMessageOptions
     : never,
-> implements
-    ChatEngine<
-      AgentChatResponse<AdditionalMessageOptions>,
-      ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>
-    >
+> implements ChatEngine
 {
   readonly #llm: AI;
   readonly #tools:
@@ -320,47 +301,30 @@ export abstract class AgentRunner<
     });
   }
 
-  async chat(
-    params: ChatEngineParamsNonStreaming,
-  ): Promise<AgentChatResponse<AdditionalMessageOptions>>;
+  async chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   async chat(
     params: ChatEngineParamsStreaming,
-  ): Promise<ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>>;
+  ): Promise<ReadableStream<EngineResponse>>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
-  ): Promise<
-    | AgentChatResponse<AdditionalMessageOptions>
-    | ReadableStream<AgentStreamChatResponse<AdditionalMessageOptions>>
-  > {
+  ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
     const task = this.createTask(params.message, !!params.stream);
     for await (const stepOutput of task) {
       // update chat history for each round
       this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
       if (stepOutput.isLast) {
-        const { output, taskStep } = stepOutput;
+        const { output } = stepOutput;
         if (isAsyncIterable(output)) {
-          return output.pipeThrough<
-            AgentStreamChatResponse<AdditionalMessageOptions>
-          >(
+          return output.pipeThrough<EngineResponse>(
             new TransformStream({
               transform(chunk, controller) {
-                controller.enqueue({
-                  response: chunk,
-                  get sources() {
-                    return [...taskStep.context.store.toolOutputs];
-                  },
-                });
+                controller.enqueue(EngineResponse.fromChatResponseChunk(chunk));
               },
             }),
           );
         } else {
-          return {
-            response: output,
-            get sources() {
-              return [...taskStep.context.store.toolOutputs];
-            },
-          } satisfies AgentChatResponse<AdditionalMessageOptions>;
+          return EngineResponse.fromChatResponse(output);
         }
       }
     }

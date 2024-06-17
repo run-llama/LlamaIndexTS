@@ -16,9 +16,7 @@ async function main() {
     stream: true,
   });
 
-  for await (const {
-    response: { delta },
-  } of response) {
+  for await (const { delta } of response) {
     process.stdout.write(delta);
   }
 }

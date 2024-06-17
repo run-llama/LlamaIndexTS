@@ -2,7 +2,7 @@ import { consola } from "consola";
 import { Anthropic, FunctionTool, Settings, type LLM } from "llamaindex";
 import { AnthropicAgent } from "llamaindex/agent/anthropic";
 import { extractText } from "llamaindex/llm/utils";
-import { ok, strictEqual } from "node:assert";
+import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { getWeatherTool, sumNumbersTool } from "./fixtures/tools.js";
 import { mockLLMEvent } from "./utils.js";
@@ -71,12 +71,11 @@ await test("anthropic agent", async (t) => {
         },
       ],
     });
-    const { response, sources } = await agent.chat({
+    const response = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
     consola.debug("response:", response.message.content);
 
-    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("35"));
   });
 
@@ -110,7 +109,7 @@ await test("anthropic agent", async (t) => {
     const agent = new AnthropicAgent({
       tools: [showUniqueId],
     });
-    const { response } = await agent.chat({
+    const response = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
     consola.debug("response:", response.message.content);
@@ -122,7 +121,7 @@ await test("anthropic agent", async (t) => {
       tools: [sumNumbersTool],
     });
 
-    const { response } = await anthropicAgent.chat({
+    const response = await anthropicAgent.chat({
       message: "how much is 1 + 1?",
     });
 
@@ -137,35 +136,35 @@ await test("anthropic agent with multiple chat", async (t) => {
       tools: [getWeatherTool],
     });
     {
-      const { response } = await agent.chat({
+      const response = await agent.chat({
         message: 'Hello? Response to me "Yes"',
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("Yes"));
     }
     {
-      const { response } = await agent.chat({
+      const response = await agent.chat({
         message: 'Hello? Response to me "No"',
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("No"));
     }
     {
-      const { response } = await agent.chat({
+      const response = await agent.chat({
         message: 'Hello? Response to me "Maybe"',
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("Maybe"));
     }
     {
-      const { response } = await agent.chat({
+      const response = await agent.chat({
         message: "What is the weather in San Francisco?",
       });
       consola.debug("response:", response.message.content);
       ok(extractText(response.message.content).includes("72"));
     }
     {
-      const { response } = await agent.chat({
+      const response = await agent.chat({
         message: "What is the weather in Shanghai?",
       });
       consola.debug("response:", response.message.content);

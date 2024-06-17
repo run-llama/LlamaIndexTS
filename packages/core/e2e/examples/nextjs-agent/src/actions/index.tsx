@@ -23,7 +23,7 @@ export async function chatWithAgent(
           uiStream.update("response:");
         },
         write: async (message) => {
-          uiStream.append(message.response.delta);
+          uiStream.append(message.delta);
         },
       }),
     )

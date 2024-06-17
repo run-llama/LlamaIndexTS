@@ -1,6 +1,6 @@
 import type { ChatHistory } from "../../ChatHistory.js";
+import type { EngineResponse } from "../../EngineResponse.js";
 import type { NodeWithScore } from "../../Node.js";
-import type { Response } from "../../Response.js";
 import type { ChatMessage } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
 
@@ -33,7 +33,7 @@ export interface ChatEngineParamsNonStreaming extends ChatEngineParamsBase {
  */
 export interface ChatEngine<
   // synchronous response
-  R = Response,
+  R = EngineResponse,
   // asynchronous response
   AR extends AsyncIterable<unknown> = AsyncIterable<R>,
 > {

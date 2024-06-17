@@ -68,9 +68,7 @@ async function main() {
 
   console.log("Response:");
 
-  for await (const {
-    response: { delta },
-  } of stream) {
+  for await (const { delta } of stream) {
     process.stdout.write(delta);
   }
 }

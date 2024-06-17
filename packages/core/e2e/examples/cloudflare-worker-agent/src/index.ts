@@ -21,7 +21,7 @@ export default {
       // @ts-expect-error: see https://github.com/cloudflare/workerd/issues/2067
       new TransformStream({
         transform: (chunk, controller) => {
-          controller.enqueue(textEncoder.encode(chunk.response.delta));
+          controller.enqueue(textEncoder.encode(chunk.delta));
         },
       }),
     );

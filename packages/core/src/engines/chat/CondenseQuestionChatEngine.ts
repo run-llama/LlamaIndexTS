@@ -1,11 +1,11 @@
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
+import type { EngineResponse } from "../../EngineResponse.js";
 import type { CondenseQuestionPrompt } from "../../Prompt.js";
 import {
   defaultCondenseQuestionPrompt,
   messagesToHistoryStr,
 } from "../../Prompt.js";
-import type { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
@@ -80,12 +80,14 @@ export class CondenseQuestionChatEngine
     });
   }
 
-  chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  chat(
+    params: ChatEngineParamsStreaming,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { message, stream } = params;
     const chatHistory = params.chatHistory
       ? getHistory(params.chatHistory)
