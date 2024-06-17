@@ -130,7 +130,7 @@ export class LlamaParseReader extends FileReader {
   doNotCache?: boolean;
   // Wether to use a faster mode to extract text from documents. This mode will skip OCR of images, and table/heading reconstruction. Note: Non-compatible with gpt4oMode. Backend default is false.
   fastMode?: boolean;
-  // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases.
+  // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases. Backend default is false.
   doNotUnrollColumns?: boolean;
   // The page separator to use to split the text. Default is None, which means the parser will use the default separator '\\n---\\n'.
   pageSeperator?: string;
@@ -138,6 +138,10 @@ export class LlamaParseReader extends FileReader {
   gpt4oMode: boolean = false;
   // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
   gpt4oApiKey?: string;
+  // Whether to split by page. Default separator: `\n---\n` Can be overwritten using splitByPageSeperator
+  splitByPage: boolean = true;
+  // The page separator used when splitByPage is true. Does not exist in Python version. Not actually sure what pageSeperator is for. pageSeperator gets sent to the LlamaParse API, while splitByPageSeperator is used in the getSubDocs function.
+  splitByPageSeperator: string = "\n---\n";
   // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
@@ -283,11 +287,12 @@ export class LlamaParseReader extends FileReader {
 
     // Return results as Document objects
     const resultJson = await this.getJobResult(jobId, this.resultType);
-    return [
+    const docs = [
       new Document({
         text: resultJson[this.resultType],
       }),
     ];
+    return this.splitByPage ? await this.getSubDocs(docs) : docs;
   }
   /**
    * Loads data from a file and returns an array of JSON objects.
@@ -368,6 +373,30 @@ export class LlamaParseReader extends FileReader {
       }
     }
     return images;
+  }
+
+  /**
+   * Splits the document into sub-documents based on the page separator.
+   * @param {Document[]} docs - The documents to split.
+   * @return {Promise<Document[]>} An array of sub-documents.
+   */
+  private async getSubDocs(docs: Document[]): Promise<Document[]> {
+    let subDocs: Document[] = [];
+    const separator = this.splitByPageSeperator;
+
+    for (const doc of docs) {
+      const docChunks = doc.text.split(separator);
+      const newSubDocs = docChunks.map(
+        (docChunk) =>
+          new Document({
+            text: docChunk,
+            metadata: JSON.parse(JSON.stringify(doc.metadata)), // Using JSON for deep copy
+          }),
+      );
+      subDocs = subDocs.concat(newSubDocs);
+    }
+
+    return subDocs;
   }
 
   private async getMimeType(
