@@ -26,12 +26,12 @@ jobs:
       - name: Build tarball
         run: |
           pnpm pack
-        working-directory: packages/core
+        working-directory: packages/llamaindex
 
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "packages/core/llamaindex-*.tgz"
+          artifacts: "packages/llamaindex/llamaindex-*.tgz"
           name: Release ${{ github.ref }}
-          bodyFile: "packages/core/CHANGELOG.md"
+          bodyFile: "packages/llamaindex/CHANGELOG.md"
           token: ${{ secrets.GITHUB_TOKEN }}

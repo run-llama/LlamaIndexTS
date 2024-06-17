@@ -31,6 +31,6 @@ jobs:
 
       - name: Publish @llamaindex/core
         run: npx jsr publish --allow-slow-types
-        working-directory: packages/core
+        working-directory: packages/llamaindex
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
