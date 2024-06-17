@@ -1,4 +1,4 @@
-import { Response } from "../Response.js";
+import { EngineResponse } from "../EngineResponse.js";
 
 export type EvaluationResult = {
   query?: string;
@@ -22,7 +22,7 @@ export type EvaluatorParams = {
 
 export type EvaluatorResponseParams = {
   query: string | null;
-  response: Response;
+  response: EngineResponse;
 };
 export interface BaseEvaluator {
   evaluate(params: EvaluatorParams): Promise<EvaluationResult>;

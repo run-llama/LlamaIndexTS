@@ -1,7 +1,7 @@
+import type { EngineResponse } from "../../EngineResponse.js";
 import type { NodeWithScore } from "../../Node.js";
 import { TextNode } from "../../Node.js";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
-import type { Response } from "../../Response.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
@@ -74,12 +74,14 @@ export class SubQuestionQueryEngine extends PromptMixin implements QueryEngine {
     });
   }
 
-  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  query(
+    params: QueryEngineParamsStreaming,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async query(
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { query, stream } = params;
     const subQuestions = await this.questionGen.generate(this.metadatas, query);
 

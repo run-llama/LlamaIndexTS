@@ -1,5 +1,5 @@
 import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
-import { Response } from "../Response.js";
+import { EngineResponse } from "../EngineResponse.js";
 import { Settings } from "../Settings.js";
 import {
   type ChatEngine,
@@ -11,7 +11,6 @@ import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import type { ChatMessage, LLM, MessageContent } from "../llm/index.js";
-import { extractText } from "../llm/utils.js";
 import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
@@ -302,14 +301,14 @@ export abstract class AgentRunner<
     });
   }
 
-  async chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  async chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   async chat(
     params: ChatEngineParamsStreaming,
-  ): Promise<ReadableStream<Response>>;
+  ): Promise<ReadableStream<EngineResponse>>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
-  ): Promise<Response | ReadableStream<Response>> {
+  ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
     const task = this.createTask(params.message, !!params.stream);
     for await (const stepOutput of task) {
       // update chat history for each round
@@ -317,19 +316,15 @@ export abstract class AgentRunner<
       if (stepOutput.isLast) {
         const { output } = stepOutput;
         if (isAsyncIterable(output)) {
-          return output.pipeThrough<Response>(
+          return output.pipeThrough<EngineResponse>(
             new TransformStream({
               transform(chunk, controller) {
-                controller.enqueue(new Response(chunk.delta));
+                controller.enqueue(EngineResponse.fromChatResponseChunk(chunk));
               },
             }),
           );
         } else {
-          return new Response(
-            extractText(output.message.content),
-            undefined,
-            output,
-          );
+          return EngineResponse.fromChatResponse(output);
         }
       }
     }

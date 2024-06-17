@@ -1,5 +1,5 @@
+import { EngineResponse } from "../EngineResponse.js";
 import { MetadataMode } from "../Node.js";
-import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import { streamConverter } from "../llm/utils.js";
@@ -49,14 +49,14 @@ export class MultiModalResponseSynthesizer
 
   synthesize(
     params: SynthesizeParamsStreaming,
-  ): Promise<AsyncIterable<Response>>;
-  synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
+  ): Promise<AsyncIterable<EngineResponse>>;
+  synthesize(params: SynthesizeParamsNonStreaming): Promise<EngineResponse>;
   async synthesize({
     query,
     nodesWithScore,
     stream,
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
-    AsyncIterable<Response> | Response
+    AsyncIterable<EngineResponse> | EngineResponse
   > {
     const nodes = nodesWithScore.map(({ node }) => node);
     const prompt = await createMessageContent(
@@ -73,14 +73,13 @@ export class MultiModalResponseSynthesizer
         prompt,
         stream,
       });
-      return streamConverter(
-        response,
-        ({ text }) => new Response(text, nodesWithScore),
+      return streamConverter(response, ({ text }) =>
+        EngineResponse.fromResponse(text, nodesWithScore),
       );
     }
     const response = await llm.complete({
       prompt,
     });
-    return new Response(response.text, nodesWithScore);
+    return EngineResponse.fromResponse(response.text, nodesWithScore);
   }
 }

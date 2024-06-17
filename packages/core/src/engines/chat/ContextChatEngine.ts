@@ -1,11 +1,11 @@
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
+import { EngineResponse } from "../../EngineResponse.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
-import { Response } from "../../Response.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { Settings } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import type { ChatMessage, ChatResponseChunk, LLM } from "../../llm/index.js";
+import type { ChatMessage, LLM } from "../../llm/index.js";
 import type { MessageContent, MessageType } from "../../llm/types.js";
 import {
   extractText,
@@ -24,8 +24,7 @@ import type {
 
 /**
  * ContextChatEngine uses the Index to get the appropriate context for each query.
- * The context is stored in the system prompt, and the chat history is preserved,
- * ideally allowing the appropriate context to be surfaced for each query.
+ * The context is stored in the system prompt, and the chat history is chunk: ChatResponseChunk, nodes?: NodeWithScore<import("/Users/marcus/code/llamaindex/LlamaIndexTS/packages/core/src/Node").Metadata>[], nodes?: NodeWithScore<import("/Users/marcus/code/llamaindex/LlamaIndexTS/packages/core/src/Node").Metadata>[]lowing the appropriate context to be surfaced for each query.
  */
 export class ContextChatEngine extends PromptMixin implements ChatEngine {
   chatModel: LLM;
@@ -60,12 +59,14 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     };
   }
 
-  chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  chat(
+    params: ChatEngineParamsStreaming,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { message, stream } = params;
     const chatHistory = params.chatHistory
       ? getHistory(params.chatHistory)
@@ -88,17 +89,14 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
             chatHistory.addMessage({ content: accumulator, role: "assistant" });
           },
         }),
-        (r: ChatResponseChunk) => new Response(r.delta, requestMessages.nodes),
+        (r) => EngineResponse.fromChatResponseChunk(r, requestMessages.nodes),
       );
     }
     const response = await this.chatModel.chat({
       messages: requestMessages.messages,
     });
     chatHistory.addMessage(response.message);
-    return new Response(
-      extractText(response.message.content),
-      requestMessages.nodes,
-    );
+    return EngineResponse.fromChatResponse(response, requestMessages.nodes);
   }
 
   reset() {

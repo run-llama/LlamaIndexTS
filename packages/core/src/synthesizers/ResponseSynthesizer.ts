@@ -1,5 +1,5 @@
+import { EngineResponse } from "../EngineResponse.js";
 import { MetadataMode } from "../Node.js";
-import { Response } from "../Response.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
@@ -57,14 +57,14 @@ export class ResponseSynthesizer
 
   synthesize(
     params: SynthesizeParamsStreaming,
-  ): Promise<AsyncIterable<Response>>;
-  synthesize(params: SynthesizeParamsNonStreaming): Promise<Response>;
+  ): Promise<AsyncIterable<EngineResponse>>;
+  synthesize(params: SynthesizeParamsNonStreaming): Promise<EngineResponse>;
   async synthesize({
     query,
     nodesWithScore,
     stream,
   }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
-    AsyncIterable<Response> | Response
+    AsyncIterable<EngineResponse> | EngineResponse
   > {
     const textChunks: string[] = nodesWithScore.map(({ node }) =>
       node.getContent(this.metadataMode),
@@ -75,15 +75,14 @@ export class ResponseSynthesizer
         textChunks,
         stream,
       });
-      return streamConverter(
-        response,
-        (chunk) => new Response(chunk, nodesWithScore),
+      return streamConverter(response, (chunk) =>
+        EngineResponse.fromResponse(chunk, nodesWithScore),
       );
     }
     const response = await this.responseBuilder.getResponse({
       query,
       textChunks,
     });
-    return new Response(response, nodesWithScore);
+    return EngineResponse.fromResponse(response, nodesWithScore);
   }
 }

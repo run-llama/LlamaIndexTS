@@ -13,7 +13,6 @@ import {
   SummaryIndex,
   VectorStoreIndex,
   type LLM,
-  type ToolOutput,
 } from "llamaindex";
 import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
@@ -93,7 +92,7 @@ await test("gpt-4-turbo", async (t) => {
         },
       ],
     });
-    const { response } = await agent.chat({
+    const response = await agent.chat({
       message: "What is the weather in San Jose?",
     });
     consola.debug("response:", response.message.content);
@@ -109,7 +108,7 @@ await test("agent system prompt", async (t) => {
       systemPrompt:
         "You are a pirate. You MUST speak every words staring with a 'Arhgs'",
     });
-    const { response } = await agent.chat({
+    const response = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
     consola.debug("response:", response.message.content);
@@ -187,7 +186,7 @@ For questions about more specific sections, please use the vector_tool.`,
   });
 
   strictEqual(mockCall.mock.callCount(), 0);
-  const { response } = await agent.chat({
+  const response = await agent.chat({
     message:
       "What's the summary of Alex? Does he live in Brazil based on the brief information? Return yes or no.",
   });
@@ -224,12 +223,11 @@ await test("agent with object function call", async (t) => {
         ),
       ],
     });
-    const { response, sources } = await agent.chat({
+    const response = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
     consola.debug("response:", response.message.content);
 
-    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("72"));
   });
 });
@@ -257,12 +255,11 @@ await test("agent", async (t) => {
         },
       ],
     });
-    const { response, sources } = await agent.chat({
+    const response = await agent.chat({
       message: "What is the weather in San Francisco?",
     });
     consola.debug("response:", response.message.content);
 
-    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("35"));
   });
 
@@ -296,10 +293,9 @@ await test("agent", async (t) => {
     const agent = new OpenAIAgent({
       tools: [showUniqueId],
     });
-    const { response, sources } = await agent.chat({
+    const response = await agent.chat({
       message: "My name is Alex Yang. What is my unique id?",
     });
-    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes(uniqueId));
   });
 
@@ -308,11 +304,10 @@ await test("agent", async (t) => {
       tools: [sumNumbersTool],
     });
 
-    const { response, sources } = await openaiAgent.chat({
+    const response = await openaiAgent.chat({
       message: "how much is 1 + 1?",
     });
 
-    strictEqual(sources.length, 1);
     ok(extractText(response.message.content).includes("2"));
   });
 });
@@ -333,15 +328,12 @@ await test("agent stream", async (t) => {
     });
 
     let message = "";
-    let soruces: ToolOutput[] = [];
 
-    for await (const { response, sources: _sources } of stream) {
+    for await (const response of stream) {
       message += response.delta;
-      soruces = _sources;
     }
 
     strictEqual(fn.mock.callCount(), 2);
-    strictEqual(soruces.length, 2);
     ok(message.includes("28"));
     Settings.callbackManager.off("llm-tool-call", fn);
   });

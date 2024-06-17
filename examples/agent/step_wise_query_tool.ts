@@ -31,7 +31,7 @@ async function main() {
     tools: [queryEngineTool],
   });
 
-  const { response } = await agent.chat({
+  const response = await agent.chat({
     message: "What was his salary?",
   });
 

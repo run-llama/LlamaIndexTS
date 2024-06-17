@@ -1,14 +1,10 @@
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
-import { Response } from "../../Response.js";
+import { EngineResponse } from "../../EngineResponse.js";
 import { Settings } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import type { ChatResponseChunk, LLM } from "../../llm/index.js";
-import {
-  extractText,
-  streamConverter,
-  streamReducer,
-} from "../../llm/utils.js";
+import type { LLM } from "../../llm/index.js";
+import { streamConverter, streamReducer } from "../../llm/utils.js";
 import type {
   ChatEngine,
   ChatEngineParamsNonStreaming,
@@ -28,12 +24,14 @@ export class SimpleChatEngine implements ChatEngine {
     this.llm = init?.llm ?? Settings.llm;
   }
 
-  chat(params: ChatEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  chat(
+    params: ChatEngineParamsStreaming,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { message, stream } = params;
 
     const chatHistory = params.chatHistory
@@ -55,7 +53,7 @@ export class SimpleChatEngine implements ChatEngine {
             chatHistory.addMessage({ content: accumulator, role: "assistant" });
           },
         }),
-        (r: ChatResponseChunk) => new Response(r.delta),
+        EngineResponse.fromChatResponseChunk,
       );
     }
 
@@ -63,7 +61,7 @@ export class SimpleChatEngine implements ChatEngine {
       messages: await chatHistory.requestMessages(),
     });
     chatHistory.addMessage(response.message);
-    return new Response(extractText(response.message.content));
+    return EngineResponse.fromChatResponse(response);
   }
 
   reset() {

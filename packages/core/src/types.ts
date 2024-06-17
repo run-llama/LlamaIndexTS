@@ -2,7 +2,7 @@
  * Top level types to avoid circular dependencies
  */
 import { type JSONSchemaType } from "ajv";
-import type { Response } from "./Response.js";
+import type { EngineResponse } from "./EngineResponse.js";
 
 /**
  * Parameters for sending a query.
@@ -27,8 +27,10 @@ export interface QueryEngine {
    * Query the query engine and get a response.
    * @param params
    */
-  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  query(
+    params: QueryEngineParamsStreaming,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
 }
 
 type Known =

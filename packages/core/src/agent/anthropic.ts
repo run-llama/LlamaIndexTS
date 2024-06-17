@@ -1,4 +1,4 @@
-import { Response } from "../Response.js";
+import { EngineResponse } from "../EngineResponse.js";
 import { Settings } from "../Settings.js";
 import {
   type ChatEngineParamsNonStreaming,
@@ -51,7 +51,7 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
 
   createStore = AgentRunner.defaultCreateStore;
 
-  async chat(params: ChatEngineParamsNonStreaming): Promise<Response>;
+  async chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   async chat(params: ChatEngineParamsStreaming): Promise<never>;
   override async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
