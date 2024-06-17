@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const packageJson = JSON.parse(
-  fs.readFileSync("./packages/core/package.json", "utf8"),
+  fs.readFileSync("./packages/llamaindex/package.json", "utf8"),
 );
 
 const versions = packageJson.version.split(".");
