@@ -6,7 +6,7 @@ import type {
 } from "./llm/types.js";
 import { extractText } from "./llm/utils.js";
 
-export class EngineResponse implements ChatResponse {
+export class EngineResponse implements ChatResponse, ChatResponseChunk {
   sourceNodes?: NodeWithScore[];
   // TODO: remove and put in options of message?
   metadata: Record<string, unknown> = {};
@@ -14,21 +14,27 @@ export class EngineResponse implements ChatResponse {
   message: ChatMessage;
   raw: object | null;
 
+  #stream: boolean;
+
   private constructor(
     chatResponse: ChatResponse,
+    stream: boolean,
     sourceNodes?: NodeWithScore[],
   ) {
     this.message = chatResponse.message;
     this.raw = chatResponse.raw;
     this.sourceNodes = sourceNodes;
+    this.#stream = stream;
   }
 
   static fromResponse(
     response: string,
+    stream: boolean,
     sourceNodes?: NodeWithScore[],
   ): EngineResponse {
     return new EngineResponse(
       EngineResponse.toChatResponse(response),
+      stream,
       sourceNodes,
     );
   }
@@ -50,7 +56,7 @@ export class EngineResponse implements ChatResponse {
     chatResponse: ChatResponse,
     sourceNodes?: NodeWithScore[],
   ): EngineResponse {
-    return new EngineResponse(chatResponse, sourceNodes);
+    return new EngineResponse(chatResponse, false, sourceNodes);
   }
 
   static fromChatResponseChunk(
@@ -59,6 +65,7 @@ export class EngineResponse implements ChatResponse {
   ): EngineResponse {
     return new EngineResponse(
       this.toChatResponse(chunk.delta, chunk.raw),
+      true,
       sourceNodes,
     );
   }
@@ -68,8 +75,12 @@ export class EngineResponse implements ChatResponse {
     return extractText(this.message.content);
   }
 
-  // TODO: consider storing delta separately
   get delta(): string {
+    if (!this.#stream) {
+      console.warn(
+        "delta is only available for streaming responses. Consider using 'message' instead.",
+      );
+    }
     return extractText(this.message.content);
   }
 

@@ -76,13 +76,13 @@ export class ResponseSynthesizer
         stream,
       });
       return streamConverter(response, (chunk) =>
-        EngineResponse.fromResponse(chunk, nodesWithScore),
+        EngineResponse.fromResponse(chunk, true, nodesWithScore),
       );
     }
     const response = await this.responseBuilder.getResponse({
       query,
       textChunks,
     });
-    return EngineResponse.fromResponse(response, nodesWithScore);
+    return EngineResponse.fromResponse(response, false, nodesWithScore);
   }
 }

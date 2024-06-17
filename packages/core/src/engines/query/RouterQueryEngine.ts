@@ -48,7 +48,7 @@ async function combineResponses(
     textChunks: responseStrs,
   });
 
-  return EngineResponse.fromResponse(summary, sourceNodes);
+  return EngineResponse.fromResponse(summary, false, sourceNodes);
 }
 
 /**

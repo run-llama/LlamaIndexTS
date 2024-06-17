@@ -74,12 +74,12 @@ export class MultiModalResponseSynthesizer
         stream,
       });
       return streamConverter(response, ({ text }) =>
-        EngineResponse.fromResponse(text, nodesWithScore),
+        EngineResponse.fromResponse(text, true, nodesWithScore),
       );
     }
     const response = await llm.complete({
       prompt,
     });
-    return EngineResponse.fromResponse(response.text, nodesWithScore);
+    return EngineResponse.fromResponse(response.text, false, nodesWithScore);
   }
 }
