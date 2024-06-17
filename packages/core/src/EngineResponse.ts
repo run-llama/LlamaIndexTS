@@ -8,7 +8,7 @@ import { extractText } from "./llm/utils.js";
 
 export class EngineResponse implements ChatResponse, ChatResponseChunk {
   sourceNodes?: NodeWithScore[];
-  // TODO: remove and put in options of message?
+
   metadata: Record<string, unknown> = {};
 
   message: ChatMessage;
