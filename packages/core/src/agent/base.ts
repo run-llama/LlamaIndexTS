@@ -1,4 +1,5 @@
 import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
+import { ChatHistory } from "../ChatHistory.js";
 import { EngineResponse } from "../EngineResponse.js";
 import { Settings } from "../Settings.js";
 import {
@@ -266,8 +267,9 @@ export abstract class AgentRunner<
     message: MessageContent,
     stream: boolean = false,
     verbose: boolean | undefined = undefined,
+    chatHistory?: ChatMessage<AdditionalMessageOptions>[],
   ) {
-    const initialMessages = [...this.#chatHistory];
+    const initialMessages = [...(chatHistory ?? this.#chatHistory)];
     if (this.#systemPrompt !== null) {
       const systemPrompt = this.#systemPrompt;
       const alreadyHasSystemPrompt = initialMessages
@@ -309,7 +311,22 @@ export abstract class AgentRunner<
   async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
   ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
-    const task = this.createTask(params.message, !!params.stream);
+    let chatHistory: ChatMessage<AdditionalMessageOptions>[] | undefined = [];
+
+    if (params.chatHistory instanceof ChatHistory) {
+      chatHistory = params.chatHistory
+        .messages as ChatMessage<AdditionalMessageOptions>[];
+    } else {
+      chatHistory =
+        params.chatHistory as ChatMessage<AdditionalMessageOptions>[];
+    }
+
+    const task = this.createTask(
+      params.message,
+      !!params.stream,
+      false,
+      chatHistory,
+    );
     for await (const stepOutput of task) {
       // update chat history for each round
       this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
