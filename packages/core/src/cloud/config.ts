@@ -1,4 +1,4 @@
-import type { PlatformApi } from "@llamaindex/cloud";
+import * as PlatformApi from "@llamaindex/cloud";
 import { BaseNode, Document } from "../Node.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import type { TransformComponent } from "../ingestion/types.js";
@@ -16,7 +16,7 @@ function getTransformationConfig(
 ): PlatformApi.ConfiguredTransformationItem {
   if (transformation instanceof SimpleNodeParser) {
     return {
-      configurableTransformationType: "SENTENCE_AWARE_NODE_PARSER",
+      configurable_transformation_type: "SENTENCE_AWARE_NODE_PARSER",
       component: {
         // TODO: API doesnt accept camelCase
         chunk_size: transformation.textSplitter.chunkSize, // TODO: set to public in SentenceSplitter
@@ -28,7 +28,7 @@ function getTransformationConfig(
   }
   if (transformation instanceof OpenAIEmbedding) {
     return {
-      configurableTransformationType: "OPENAI_EMBEDDING",
+      configurable_transformation_type: "OPENAI_EMBEDDING",
       component: {
         // TODO: API doesnt accept camelCase
         model: transformation.model,
@@ -45,7 +45,7 @@ function getDataSourceConfig(node: BaseNode): PlatformApi.DataSourceCreate {
   if (node instanceof Document) {
     return {
       name: node.id_,
-      sourceType: "DOCUMENT",
+      source_type: "DOCUMENT",
       component: {
         id: node.id_,
         text: node.text,
@@ -65,20 +65,11 @@ function getDataSourceConfig(node: BaseNode): PlatformApi.DataSourceCreate {
 export async function getPipelineCreate(
   params: GetPipelineCreateParams,
 ): Promise<PlatformApi.PipelineCreate> {
-  const {
-    pipelineName,
-    pipelineType,
-    transformations = [],
-    inputNodes = [],
-  } = params;
-
-  const dataSources = inputNodes.map(getDataSourceConfig);
+  const { pipelineName, pipelineType, transformations = [] } = params;
 
   return {
     name: pipelineName,
-    configuredTransformations: transformations.map(getTransformationConfig),
-    dataSources,
-    dataSinks: [],
-    pipelineType,
+    configured_transformations: transformations.map(getTransformationConfig),
+    pipeline_type: pipelineType,
   };
 }

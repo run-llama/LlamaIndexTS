@@ -1,30 +1,28 @@
+import { LlamaCloudIndex } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
-
-import { LlamaCloudIndex } from "llamaindex";
 
 async function main() {
   const index = new LlamaCloudIndex({
     name: "test",
     projectName: "default",
-    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
-    apiKey: process.env.LLAMA_CLOUD_API_KEY,
+    apiKey: "llx-9xAW94gy4y2jj7iJhj0nlcYZvv0thTDDjkKgrjBW7LyO5Ygn",
+    baseUrl: "http://0.0.0.0:8000",
   });
-  const queryEngine = index.asQueryEngine({
-    denseSimilarityTopK: 5,
-  });
+  const queryEngine = index.asQueryEngine();
+
   const rl = readline.createInterface({ input, output });
 
   while (true) {
     const query = await rl.question("Query: ");
-    const stream = await queryEngine.query({
+
+    const resopnse = await queryEngine.query({
       query,
-      stream: true,
+      // stream: true,
     });
-    console.log();
-    for await (const chunk of stream) {
-      process.stdout.write(chunk.response);
-    }
+    console.log({
+      resopnse,
+    });
   }
 }
 

@@ -1,28 +1,37 @@
-import type { PlatformApi, PlatformApiClient } from "@llamaindex/cloud";
+import type { RetrievalParams, TextNodeWithScore } from "@llamaindex/cloud";
+import * as PlatformApiTypes from "@llamaindex/cloud";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import { Settings } from "../Settings.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
-import type { ClientParams, CloudConstructorParams } from "./types.js";
+import type {
+  ClientParams,
+  CloudConstructorParams,
+  ObjectToCamel,
+} from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
 import { getClient } from "./utils.js";
+
 export type CloudRetrieveParams = Omit<
-  PlatformApi.RetrievalParams,
-  "query" | "searchFilters" | "pipelineId" | "className"
+  ObjectToCamel<RetrievalParams>,
+  "query" | "search_filters" | "class_name" | "dense_similarity_top_k"
 > & { similarityTopK?: number };
 
+type PlatformApi = typeof PlatformApiTypes;
+
 export class LlamaCloudRetriever implements BaseRetriever {
-  client?: PlatformApiClient;
+  client?: PlatformApi;
   clientParams: ClientParams;
   retrieveParams: CloudRetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
+  pipelineId: string;
 
   private resultNodesToNodeWithScore(
-    nodes: PlatformApi.TextNodeWithScore[],
+    nodes: TextNodeWithScore[],
   ): NodeWithScore[] {
-    return nodes.map((node: PlatformApi.TextNodeWithScore) => {
+    return nodes.map((node: TextNodeWithScore) => {
       return {
         // Currently LlamaCloud only supports text nodes
         node: jsonToNode(node.node, ObjectType.TEXT),
@@ -38,14 +47,18 @@ export class LlamaCloudRetriever implements BaseRetriever {
     }
     this.retrieveParams = params;
     this.pipelineName = params.name;
+    if (!params.pipelineId) {
+      throw new Error("pipelineId is required for LlamaCloudRetriever");
+    }
+    this.pipelineId = params.pipelineId;
     if (params.projectName) {
       this.projectName = params.projectName;
     }
   }
 
-  private async getClient(): Promise<PlatformApiClient> {
+  private getClient(): PlatformApi {
     if (!this.client) {
-      this.client = await getClient(this.clientParams);
+      this.client = getClient(this.clientParams);
     }
     return this.client;
   }
@@ -55,26 +68,32 @@ export class LlamaCloudRetriever implements BaseRetriever {
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
-    const pipelines = await (
-      await this.getClient()
-    ).pipeline.searchPipelines({
-      projectName: this.projectName,
-      pipelineName: this.pipelineName,
-    });
-    if (pipelines.length !== 1 && !pipelines[0]?.id) {
+    const pipeline =
+      await this.getClient().getPipelineApiV1PipelinesPipelineIdGet({
+        pipelineId: this.pipelineId,
+      });
+
+    if (!pipeline) {
       throw new Error(
         `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
       );
     }
-    const results = await (
-      await this.getClient()
-    ).pipeline.runSearch(pipelines[0].id, {
-      ...this.retrieveParams,
-      query,
-      searchFilters: preFilters as Record<string, unknown[]>,
-    });
 
-    const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
+    console.log("Retrieving with pipeline", pipeline.id, "for query", query);
+
+    console.log("retrieveParams", this.retrieveParams);
+
+    const results =
+      await this.getClient().runSearchApiV1PipelinesPipelineIdRetrievePost({
+        pipelineId: pipeline.id,
+        requestBody: {
+          query,
+          search_filters: preFilters,
+          ...this.retrieveParams,
+        },
+      });
+
+    const nodes = this.resultNodesToNodeWithScore(results.retrieval_nodes);
 
     Settings.callbackManager.dispatchEvent("retrieve", {
       query,
