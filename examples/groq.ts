@@ -35,4 +35,4 @@ async function main() {
   console.log(response.response);
 }
 
-await main();
+main().catch(console.error);
