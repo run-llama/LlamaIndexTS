@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-const packages = ["llamaindex", "env", "core"];
+const packages = ["llamaindex", "env"];
 const envPackageJson = JSON.parse(
   await readFile("./packages/env/package.json", "utf8"),
 );
@@ -16,7 +16,7 @@ for (const pkg of packages) {
   });
 
   jsrJson.version = packageJson.version;
-  if (pkg === "core") {
+  if (pkg === "llamaindex") {
     jsrJson.imports["@llamaindex/env"] =
       `jsr:@llamaindex/env@${envPackageJson.version}`;
   }
