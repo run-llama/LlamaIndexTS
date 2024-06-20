@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -37,7 +37,7 @@
     "docusaurus-plugin-typedoc": "^1.0.1",
     "typedoc": "^0.25.13",
     "typedoc-plugin-markdown": "^4.0.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "browserslist": {
     "production": [

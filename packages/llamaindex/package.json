@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.3.17",
+  "version": "0.4.0",
   "expectedMinorVersion": "3",
   "license": "MIT",
   "type": "module",
@@ -34,7 +34,7 @@
     "@mistralai/mistralai": "^0.4.0",
     "@pinecone-database/pinecone": "^2.2.2",
     "@qdrant/js-client-rest": "^1.9.0",
-    "@types/lodash": "^4.17.4",
+    "@types/lodash": "^4.17.5",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.6",
     "@xenova/transformers": "^2.17.2",
@@ -50,7 +50,7 @@
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
-    "openai": "^4.48.1",
+    "openai": "^4.52.0",
     "papaparse": "^5.4.1",
     "pathe": "^1.1.2",
     "pg": "^8.12.0",
@@ -74,10 +74,10 @@
   "devDependencies": {
     "@notionhq/client": "^2.2.15",
     "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.5.24",
+    "@swc/core": "^1.6.3",
     "concurrently": "^8.2.2",
-    "glob": "^10.4.1",
-    "typescript": "^5.4.5"
+    "glob": "^10.4.2",
+    "typescript": "^5.5.2"
   },
   "engines": {
     "node": ">=18.0.0"
