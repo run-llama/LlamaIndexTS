@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.4.0
+
+### Minor Changes
+
+- 436bc41: Unify chat engine response and agent response
+
+### Patch Changes
+
+- a44e54f: Truncate text to embed for OpenAI if it exceeds maxTokens
+- a51ed8d: feat: add support for managed identity for Azure OpenAI
+- d3b635b: fix: agents to use chat history
+
 ## 0.3.17
 
 ### Patch Changes
