@@ -12,11 +12,15 @@ export interface BaseReader {
  * A FileReader takes file paths and imports data into Document objects.
  */
 export abstract class FileReader implements BaseReader {
-  abstract loadDataAsContent(fileContent: Buffer): Promise<Document[]>;
+  abstract loadDataAsContent(
+    fileContent: Buffer,
+    fileName?: string,
+  ): Promise<Document[]>;
 
   async loadData(filePath: string): Promise<Document[]> {
     const fileContent = await fs.readFile(filePath);
-    const docs = await this.loadDataAsContent(fileContent);
+    const fileName = path.basename(filePath);
+    const docs = await this.loadDataAsContent(fileContent, fileName);
     docs.forEach(FileReader.addMetaData(filePath));
     return docs;
   }

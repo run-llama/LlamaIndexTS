@@ -160,16 +160,17 @@ export class LlamaParseReader extends FileReader {
   }
 
   // Create a job for the LlamaParse API
-  private async createJob(data: Buffer): Promise<string> {
+  private async createJob(data: Buffer, fileName?: string): Promise<string> {
     // Load data, set the mime type
     const { mimeType, extension } = await this.getMimeType(data);
 
     if (this.verbose) {
-      console.log(`Starting load for ${extension} file`);
+      const name = fileName ? fileName : extension;
+      console.log(`Starting load for ${name} file`);
     }
 
     const body = new FormData();
-    body.set("file", new Blob([data], { type: mimeType }));
+    body.set("file", new Blob([data], { type: mimeType }), fileName);
 
     const LlamaParseBodyParams = {
       language: this.language,
@@ -272,11 +273,15 @@ export class LlamaParseReader extends FileReader {
    * To be used with resultType = "text" and "markdown"
    *
    * @param {Buffer} fileContent - The content of the file to be loaded.
+   * @param {string} [fileName] - The optional name of the file to be loaded.
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
-  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
+  async loadDataAsContent(
+    fileContent: Buffer,
+    fileName?: string,
+  ): Promise<Document[]> {
     // Creates a job for the file
-    const jobId = await this.createJob(fileContent);
+    const jobId = await this.createJob(fileContent, fileName);
     if (this.verbose) {
       console.log(`Started parsing the file under job id ${jobId}`);
     }
