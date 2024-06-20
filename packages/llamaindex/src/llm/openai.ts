@@ -43,7 +43,7 @@ import type {
 import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class OpenAISession {
-  openai: OrigOpenAI;
+  openai: Pick<OrigOpenAI, "chat" | "embeddings">;
 
   constructor(options: ClientOptions & { azure?: boolean } = {}) {
     if (options.azure) {
