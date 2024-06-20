@@ -1,15 +1,19 @@
+import { baseToolWithCallSchema } from "@llamaindex/core/schema";
 import { ReadableStream } from "@llamaindex/env";
+import { z } from "zod";
 import type { Logger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable, prettifyError } from "../internal/utils.js";
 import type {
   ChatMessage,
   ChatResponseChunk,
+  LLM,
   PartialToolCall,
   TextChatMessage,
   ToolCall,
 } from "../llm/index.js";
 import type { BaseTool, JSONObject, JSONValue, ToolOutput } from "../types.js";
+import type { AgentParamsBase } from "./base.js";
 
 export async function callTool(
   tool: BaseTool | undefined,
@@ -142,4 +146,14 @@ export function createReadableStream<T>(
       controller.close();
     },
   });
+}
+
+export function validateAgentParams<AI extends LLM>(
+  params: AgentParamsBase<AI>,
+) {
+  if ("tools" in params) {
+    z.array(baseToolWithCallSchema).parse(params.tools);
+  } else {
+    // todo: check `params.toolRetriever` when migrate to @llamaindex/core
+  }
 }

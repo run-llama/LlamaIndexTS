@@ -17,6 +17,20 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       }
+    },
+    "./schema": {
+      "require": {
+        "types": "./dist/schema/index.d.cts",
+        "default": "./dist/schema/index.cjs"
+      },
+      "import": {
+        "types": "./dist/schema/index.d.ts",
+        "default": "./dist/schema/index.js"
+      },
+      "default": {
+        "types": "./dist/schema/index.d.ts",
+        "default": "./dist/schema/index.js"
+      }
     }
   },
   "scripts": {

@@ -61,7 +61,8 @@
     "tiktoken": "^1.0.15",
     "unpdf": "^0.10.1",
     "wikipedia": "^2.1.2",
-    "wink-nlp": "^2.3.0"
+    "wink-nlp": "^2.3.0",
+    "zod": "^3.23.8"
   },
   "peerDependencies": {
     "@notionhq/client": "^2.2.15"

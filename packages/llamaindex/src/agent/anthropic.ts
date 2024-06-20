@@ -6,25 +6,11 @@ import {
 } from "../engines/chat/index.js";
 import { stringifyJSONToMessageContent } from "../internal/utils.js";
 import { Anthropic } from "../llm/anthropic.js";
-import { ObjectRetriever } from "../objects/index.js";
-import type { BaseToolWithCall } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
-import { callTool } from "./utils.js";
+import { callTool, validateAgentParams } from "./utils.js";
 
-type AnthropicParamsBase = AgentParamsBase<Anthropic>;
-
-type AnthropicParamsWithTools = AnthropicParamsBase & {
-  tools: BaseToolWithCall[];
-};
-
-type AnthropicParamsWithToolRetriever = AnthropicParamsBase & {
-  toolRetriever: ObjectRetriever<BaseToolWithCall>;
-};
-
-export type AnthropicAgentParams =
-  | AnthropicParamsWithTools
-  | AnthropicParamsWithToolRetriever;
+export type AnthropicAgentParams = AgentParamsBase<Anthropic>;
 
 export class AnthropicAgentWorker extends AgentWorker<Anthropic> {
   taskHandler = AnthropicAgent.taskHandler;
@@ -32,6 +18,7 @@ export class AnthropicAgentWorker extends AgentWorker<Anthropic> {
 
 export class AnthropicAgent extends AgentRunner<Anthropic> {
   constructor(params: AnthropicAgentParams) {
+    validateAgentParams(params);
     super({
       llm:
         params.llm ??

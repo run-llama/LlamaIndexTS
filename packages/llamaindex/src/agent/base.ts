@@ -12,6 +12,7 @@ import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import type { ChatMessage, LLM, MessageContent } from "../llm/index.js";
+import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
@@ -125,12 +126,21 @@ export type AgentParamsBase<
   >
     ? AdditionalMessageOptions
     : never,
-> = {
-  llm?: AI;
-  chatHistory?: ChatMessage<AdditionalMessageOptions>[];
-  systemPrompt?: MessageContent;
-  verbose?: boolean;
-};
+> =
+  | {
+      llm?: AI;
+      chatHistory?: ChatMessage<AdditionalMessageOptions>[];
+      systemPrompt?: MessageContent;
+      verbose?: boolean;
+      tools: BaseToolWithCall[];
+    }
+  | {
+      llm?: AI;
+      chatHistory?: ChatMessage<AdditionalMessageOptions>[];
+      systemPrompt?: MessageContent;
+      verbose?: boolean;
+      toolRetriever: ObjectRetriever<BaseToolWithCall>;
+    };
 
 /**
  * Worker will schedule tasks and handle the task execution

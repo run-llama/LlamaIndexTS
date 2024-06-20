@@ -1,6 +1,16 @@
 import { z } from "zod";
 
-export const refDocInfoSchema = z.object({
-  nodeIds: z.set(z.string()),
-  metadata: z.map(z.string(), z.any()),
+export const toolMetadataSchema = z.object({
+  description: z.string(),
+  name: z.string(),
+  parameters: z.record(z.any()),
+});
+
+export const baseToolSchema = z.object({
+  call: z.optional(z.function()),
+  metadata: toolMetadataSchema,
+});
+
+export const baseToolWithCallSchema = baseToolSchema.extend({
+  call: z.function(),
 });

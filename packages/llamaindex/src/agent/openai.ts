@@ -8,25 +8,11 @@ import type {
   ToolCallLLMMessageOptions,
 } from "../llm/index.js";
 import { OpenAI } from "../llm/openai.js";
-import { ObjectRetriever } from "../objects/index.js";
-import type { BaseToolWithCall } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
-import { callTool } from "./utils.js";
+import { callTool, validateAgentParams } from "./utils.js";
 
-type OpenAIParamsBase = AgentParamsBase<OpenAI>;
-
-type OpenAIParamsWithTools = OpenAIParamsBase & {
-  tools: BaseToolWithCall[];
-};
-
-type OpenAIParamsWithToolRetriever = OpenAIParamsBase & {
-  toolRetriever: ObjectRetriever<BaseToolWithCall>;
-};
-
-export type OpenAIAgentParams =
-  | OpenAIParamsWithTools
-  | OpenAIParamsWithToolRetriever;
+export type OpenAIAgentParams = AgentParamsBase<OpenAI>;
 
 export class OpenAIAgentWorker extends AgentWorker<OpenAI> {
   taskHandler = OpenAIAgent.taskHandler;
@@ -34,6 +20,7 @@ export class OpenAIAgentWorker extends AgentWorker<OpenAI> {
 
 export class OpenAIAgent extends AgentRunner<OpenAI> {
   constructor(params: OpenAIAgentParams) {
+    validateAgentParams(params);
     super({
       llm:
         params.llm ??
