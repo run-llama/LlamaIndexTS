@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import { Groq as GroqSDK, type ClientOptions } from "groq-sdk";
+import GroqSDK, { type ClientOptions } from "groq-sdk";
 import { OpenAI } from "./openai.js";
 
 export class Groq extends OpenAI {

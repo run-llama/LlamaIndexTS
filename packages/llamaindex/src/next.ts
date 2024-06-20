@@ -17,13 +17,6 @@
  */
 export default function withLlamaIndex(config: any) {
   const userWebpack = config.webpack;
-  config.experimental = {
-    ...config.experimental,
-    serverComponentsExternalPackages: [
-      "groq-sdk",
-      ...(config.experimental?.serverComponentsExternalPackages ?? []),
-    ],
-  };
   //#region hack for `@xenova/transformers`
   // Ignore node-specific modules when bundling for the browser
   // See https://webpack.js.org/configuration/resolve/#resolvealias
@@ -36,6 +29,7 @@ export default function withLlamaIndex(config: any) {
       sharp$: false,
       "onnxruntime-node$": false,
       "@google-cloud/vertexai": false,
+      "groq-sdk": false,
     };
     return webpackConfig;
   };
