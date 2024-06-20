@@ -153,7 +153,7 @@ importers:
         specifier: ^1.0.12
         version: 1.0.12
       llamaindex:
-        specifier: ^0.3.14
+        specifier: ^0.4.0
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
@@ -12906,7 +12906,7 @@ snapshots:
 
   '@docusaurus/react-loadable@6.0.0(react@18.3.1)':
     dependencies:
-      '@types/react': 18.3.1
+      '@types/react': 18.3.3
       react: 18.3.1
 
   '@docusaurus/remark-plugin-npm2yarn@3.3.2':
@@ -14747,7 +14747,7 @@ snapshots:
   '@types/react-router@5.1.20':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.3.1
+      '@types/react': 18.3.3
 
   '@types/react-syntax-highlighter@15.5.13':
     dependencies:
