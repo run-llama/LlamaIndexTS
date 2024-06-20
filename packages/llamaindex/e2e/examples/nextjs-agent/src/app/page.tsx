@@ -1,12 +1,12 @@
 "use client";
 import { chatWithAgent } from "@/actions";
-import type { JSX } from "react";
+import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
 
 export const runtime = "edge";
 
 export default function Home() {
-  const [state, action] = useFormState<JSX.Element | null>(async () => {
+  const [state, action] = useFormState<ReactNode>(async () => {
     return chatWithAgent("hello!", []);
   }, null);
   return (
