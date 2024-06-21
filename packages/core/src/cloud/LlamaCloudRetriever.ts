@@ -79,10 +79,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
-    console.log("Retrieving with pipeline", pipeline.id, "for query", query);
-
-    console.log("retrieveParams", this.retrieveParams);
-
     const results =
       await this.getClient().runSearchApiV1PipelinesPipelineIdRetrievePost({
         pipelineId: pipeline.id,

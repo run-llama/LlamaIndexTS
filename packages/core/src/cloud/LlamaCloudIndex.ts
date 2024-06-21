@@ -76,65 +76,42 @@ export class LlamaCloudIndex {
       console.log(`Created pipeline ${pipeline.id} with name ${params.name}`);
     }
 
-    const response =
-      await client.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
-        {
-          pipelineId: pipeline.id,
-          requestBody: params.documents.map((doc) => ({
-            metadata: doc.metadata,
-            text: doc.text,
-            excluded_llm_metadata_keys: doc.excludedLlmMetadataKeys,
-            excluded_embed_metadata_keys: doc.excludedEmbedMetadataKeys,
-            id: doc.id_,
-          })),
-        },
-      );
-
-    console.info({
-      response,
-    });
-
-    await client.syncPipelineApiV1PipelinesPipelineIdSyncPost({
-      pipelineId: pipeline.id,
-    });
+    await client.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
+      {
+        pipelineId: pipeline.id,
+        requestBody: params.documents.map((doc) => ({
+          metadata: doc.metadata,
+          text: doc.text,
+          excluded_llm_metadata_keys: doc.excludedLlmMetadataKeys,
+          excluded_embed_metadata_keys: doc.excludedEmbedMetadataKeys,
+          id: doc.id_,
+        })),
+      },
+    );
 
     while (true) {
-      const allDocumentsStatus = await Promise.all(
-        params.documents.map(async (doc) => {
-          return await client.getPipelineDocumentStatusApiV1PipelinesPipelineIdDocumentsDocumentIdStatusGet(
-            {
-              pipelineId: pipeline.id,
-              documentId: encodeURIComponent(doc.id_),
-            },
-          );
-        }),
-      );
+      const pipelineStatus =
+        await client.getPipelineStatusApiV1PipelinesPipelineIdStatusGet({
+          pipelineId: pipeline.id,
+        });
 
-      const allDocumentsCompleted = allDocumentsStatus.every(
-        (docStatus) => docStatus === ManagedIngestionStatus.SUCCESS,
-      );
-
-      const allDocumentsError = allDocumentsStatus.every(
-        (docStatus) => docStatus === ManagedIngestionStatus.ERROR,
-      );
-
-      const partialSuccess = allDocumentsStatus.some(
-        (docStatus) => docStatus === ManagedIngestionStatus.PARTIAL_SUCCESS,
-      );
-
-      if (allDocumentsCompleted) {
-        console.info("All documents has been ingested");
+      if (pipelineStatus.status === ManagedIngestionStatus.SUCCESS) {
+        console.info(
+          "Documents ingested successfully, pipeline is ready to use",
+        );
         break;
       }
 
-      if (allDocumentsError) {
-        console.error("Some documents failed to ingest");
+      if (pipelineStatus.status === ManagedIngestionStatus.ERROR) {
+        console.error(
+          `Some documents failed to ingest, check your pipeline logs at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+        );
         throw new Error("Some documents failed to ingest");
       }
 
-      if (partialSuccess) {
+      if (pipelineStatus.status === ManagedIngestionStatus.PARTIAL_SUCCESS) {
         console.info(
-          "Documents ingestion partially succeeded, to check a more complete status check your llamacloud pipeline",
+          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
         );
         break;
       }
