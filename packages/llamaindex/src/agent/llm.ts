@@ -1,9 +1,7 @@
-import {
-  Settings,
-  type BaseToolWithCall,
-  type LLM,
-  type ObjectRetriever,
-} from "../index.edge.js";
+import type { LLM } from "../llm/index.js";
+import { ObjectRetriever } from "../objects/index.js";
+import { Settings } from "../Settings.js";
+import type { BaseToolWithCall } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 
 type LLMParamsBase = AgentParamsBase<LLM>;
