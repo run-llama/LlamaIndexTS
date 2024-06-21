@@ -1,5 +1,15 @@
 # @llamaindex/community
 
+## 0.0.5
+
+### Patch Changes
+
+- ed467a9: Add model ids for Anthropic Claude 3.5 Sonnet model on Anthropic and Bedrock
+- Updated dependencies [3c47910]
+- Updated dependencies [ed467a9]
+- Updated dependencies [cba5406]
+  - llamaindex@0.4.1
+
 ## 0.0.4
 
 ### Patch Changes

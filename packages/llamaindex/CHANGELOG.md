@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.4.1
+
+### Patch Changes
+
+- 3c47910: fix: groq llm
+- ed467a9: Add model ids for Anthropic Claude 3.5 Sonnet model on Anthropic and Bedrock
+- cba5406: fix: every Llama Parse job being called "blob"
+- Updated dependencies [56fabbb]
+  - @llamaindex/env@0.1.4
+
 ## 0.4.0
 
 ### Minor Changes
