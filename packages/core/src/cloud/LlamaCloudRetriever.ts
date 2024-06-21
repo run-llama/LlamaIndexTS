@@ -11,15 +11,14 @@ import type {
   ObjectToCamel,
 } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
-import { getClient } from "./utils.js";
+import { getClient, paramsToSnakeCase } from "./utils.js";
 
 export type CloudRetrieveParams = Omit<
   ObjectToCamel<RetrievalParams>,
-  "query" | "search_filters" | "class_name" | "dense_similarity_top_k"
+  "query" | "searchFilters" | "className" | "denseSimilarityTopK"
 > & { similarityTopK?: number };
 
 type PlatformApi = typeof PlatformApiTypes;
-
 export class LlamaCloudRetriever implements BaseRetriever {
   client?: PlatformApi;
   clientParams: ClientParams;
@@ -42,9 +41,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
 
   constructor(params: CloudConstructorParams & CloudRetrieveParams) {
     this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
-    if (params.similarityTopK) {
-      params.denseSimilarityTopK = params.similarityTopK;
-    }
     this.retrieveParams = params;
     this.pipelineName = params.name;
     if (!params.pipelineId) {
@@ -79,13 +75,23 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
+    const search_params: RetrievalParams = {
+      query,
+      search_filters: preFilters,
+      ...this.retrieveParams,
+    };
+
+    if (this.retrieveParams.similarityTopK) {
+      search_params.dense_similarity_top_k = this.retrieveParams.similarityTopK;
+    }
+
     const results =
       await this.getClient().runSearchApiV1PipelinesPipelineIdRetrievePost({
         pipelineId: pipeline.id,
         requestBody: {
           query,
           search_filters: preFilters,
-          ...this.retrieveParams,
+          ...paramsToSnakeCase(this.retrieveParams),
         },
       });
 

@@ -23,6 +23,20 @@ export class LlamaCloudIndex {
     this.params = params;
   }
 
+  private async getPipelineId(
+    name: string,
+    projectName: string,
+  ): Promise<string> {
+    const client = getClient({ ...this.params, baseUrl: this.params.baseUrl });
+
+    const pipelines = await client.searchPipelinesApiV1PipelinesGet({
+      projectName,
+      pipelineName: name,
+    });
+
+    return pipelines[0].id;
+  }
+
   static async fromDocuments(
     params: {
       documents: Document[];
@@ -129,7 +143,7 @@ export class LlamaCloudIndex {
       );
     }
 
-    return new LlamaCloudIndex({ ...params, pipelineId: pipeline.id });
+    return new LlamaCloudIndex({ ...params });
   }
 
   asRetriever(params: CloudRetrieveParams = {}): BaseRetriever {
@@ -157,15 +171,21 @@ export class LlamaCloudIndex {
 
   async insert(document: Document) {
     const appUrl = getAppBaseUrl(this.params.baseUrl);
+
     const client = getClient({ ...this.params, baseUrl: appUrl });
 
-    if (!this.params.pipelineId) {
-      throw new Error("Pipeline ID must be defined");
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    if (!pipelineId) {
+      throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
     await client.createBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPost(
       {
-        pipelineId: this.params.pipelineId,
+        pipelineId: pipelineId,
         requestBody: [
           {
             metadata: document.metadata,
@@ -181,15 +201,21 @@ export class LlamaCloudIndex {
 
   async delete(document: Document) {
     const appUrl = getAppBaseUrl(this.params.baseUrl);
+
     const client = getClient({ ...this.params, baseUrl: appUrl });
 
-    if (!this.params.pipelineId) {
-      throw new Error("Pipeline ID must be defined");
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    if (!pipelineId) {
+      throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
     await client.deletePipelineDocumentApiV1PipelinesPipelineIdDocumentsDocumentIdDelete(
       {
-        pipelineId: this.params.pipelineId,
+        pipelineId: pipelineId,
         documentId: document.id_,
       },
     );

@@ -7,12 +7,14 @@ async function main() {
   const index = new LlamaCloudIndex({
     name: "test",
     projectName: "default",
-    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
+    baseUrl: "http://0.0.0.0:8000",
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
   });
+
   const queryEngine = index.asQueryEngine({
-    denseSimilarityTopK: 5,
+    similarityTopK: 5,
   });
+
   const rl = readline.createInterface({ input, output });
 
   while (true) {

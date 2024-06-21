@@ -8,8 +8,7 @@ export type ClientParams = { apiKey?: string; baseUrl?: string };
 
 export type CloudConstructorParams = {
   name: string;
-  pipelineId?: string;
-  projectName?: string;
+  projectName: string;
   serviceContext?: ServiceContext;
 } & ClientParams;
 
