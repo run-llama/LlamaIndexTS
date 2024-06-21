@@ -49,10 +49,5 @@ export function getClient({
     Authorization: `Bearer ${apiKey}`,
   });
 
-  console.log({
-    baseUrl: OpenAPI.BASE,
-    headers: OpenAPI.HEADERS,
-  });
-
   return LlamaCloud;
 }

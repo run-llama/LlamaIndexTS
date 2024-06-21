@@ -25,7 +25,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
   retrieveParams: CloudRetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
-  pipelineId: string;
 
   private resultNodesToNodeWithScore(
     nodes: TextNodeWithScore[],
@@ -43,10 +42,6 @@ export class LlamaCloudRetriever implements BaseRetriever {
     this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
     this.retrieveParams = params;
     this.pipelineName = params.name;
-    if (!params.pipelineId) {
-      throw new Error("pipelineId is required for LlamaCloudRetriever");
-    }
-    this.pipelineId = params.pipelineId;
     if (params.projectName) {
       this.projectName = params.projectName;
     }
@@ -64,9 +59,20 @@ export class LlamaCloudRetriever implements BaseRetriever {
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
+    const pipelines = await this.getClient()?.searchPipelinesApiV1PipelinesGet({
+      projectName: this.projectName,
+      pipelineName: this.pipelineName,
+    });
+
+    if (!pipelines) {
+      throw new Error(
+        `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
+      );
+    }
+
     const pipeline =
       await this.getClient().getPipelineApiV1PipelinesPipelineIdGet({
-        pipelineId: this.pipelineId,
+        pipelineId: pipelines[0].id,
       });
 
     if (!pipeline) {

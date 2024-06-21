@@ -5,7 +5,7 @@ import { LlamaCloudIndex } from "llamaindex";
 
 async function main() {
   const index = new LlamaCloudIndex({
-    name: "test-llamaparse-6",
+    name: "test",
     projectName: "Default",
     baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
