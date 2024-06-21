@@ -5,9 +5,9 @@ import { LlamaCloudIndex } from "llamaindex";
 
 async function main() {
   const index = new LlamaCloudIndex({
-    name: "test",
-    projectName: "default",
-    baseUrl: "http://0.0.0.0:8000",
+    name: "test-llamaparse-6",
+    projectName: "Default",
+    baseUrl: process.env.LLAMA_CLOUD_BASE_URL,
     apiKey: process.env.LLAMA_CLOUD_API_KEY,
   });
 
@@ -19,14 +19,11 @@ async function main() {
 
   while (true) {
     const query = await rl.question("Query: ");
-    const stream = await queryEngine.query({
+    const response = await queryEngine.query({
       query,
-      stream: true,
     });
-    console.log();
-    for await (const chunk of stream) {
-      process.stdout.write(chunk.response);
-    }
+
+    console.log(response.toString());
   }
 }
 
