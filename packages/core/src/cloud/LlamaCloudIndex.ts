@@ -23,6 +23,122 @@ export class LlamaCloudIndex {
     this.params = params;
   }
 
+  private async waitForPipelineIngestion(
+    verbose = false,
+    raiseOnError = false,
+  ): Promise<void> {
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    const client = getClient({ ...this.params, baseUrl: this.params.baseUrl });
+
+    if (verbose) {
+      console.log("Waiting for pipeline ingestion: ");
+    }
+
+    while (true) {
+      const pipelineStatus =
+        await client.getPipelineStatusApiV1PipelinesPipelineIdStatusGet({
+          pipelineId,
+        });
+
+      if (pipelineStatus.status === ManagedIngestionStatus.SUCCESS) {
+        if (verbose) {
+          console.log("Pipeline ingestion completed successfully");
+        }
+        break;
+      }
+
+      if (pipelineStatus.status === ManagedIngestionStatus.ERROR) {
+        if (verbose) {
+          console.error("Pipeline ingestion failed");
+        }
+
+        if (raiseOnError) {
+          throw new Error("Pipeline ingestion failed");
+        }
+      }
+
+      if (verbose) {
+        process.stdout.write(".");
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
+  private async waitForDocumentIngestion(
+    docIds: string[],
+    verbose = false,
+    raiseOnError = false,
+  ): Promise<void> {
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    const client = getClient({ ...this.params, baseUrl: this.params.baseUrl });
+
+    if (verbose) {
+      console.log("Loading data: ");
+    }
+
+    const pendingDocs = new Set(docIds);
+
+    while (pendingDocs.size) {
+      const docsToRemove = new Set<string>();
+
+      for (const doc of pendingDocs) {
+        const { status } =
+          await client.getPipelineDocumentStatusApiV1PipelinesPipelineIdDocumentsDocumentIdStatusGet(
+            {
+              pipelineId,
+              documentId: doc,
+            },
+          );
+
+        if (
+          status === ManagedIngestionStatus.NOT_STARTED ||
+          status === ManagedIngestionStatus.IN_PROGRESS
+        ) {
+          continue;
+        }
+
+        if (status === ManagedIngestionStatus.ERROR) {
+          if (verbose) {
+            console.error(`Document ingestion failed for ${doc}`);
+          }
+
+          if (raiseOnError) {
+            throw new Error(`Document ingestion failed for ${doc}`);
+          }
+        }
+
+        docsToRemove.add(doc);
+      }
+
+      for (const doc of docsToRemove) {
+        pendingDocs.delete(doc);
+      }
+
+      if (pendingDocs.size) {
+        if (verbose) {
+          process.stdout.write(".");
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+
+    if (verbose) {
+      console.log("Done!");
+    }
+
+    await this.waitForPipelineIngestion(verbose, raiseOnError);
+  }
+
   private async getPipelineId(
     name: string,
     projectName: string,
@@ -197,6 +313,8 @@ export class LlamaCloudIndex {
         ],
       },
     );
+
+    await this.waitForDocumentIngestion([document.id_]);
   }
 
   async delete(document: Document) {
@@ -219,5 +337,39 @@ export class LlamaCloudIndex {
         documentId: document.id_,
       },
     );
+
+    await this.waitForPipelineIngestion();
+  }
+
+  async refresh_doc(document: Document) {
+    const appUrl = getAppBaseUrl(this.params.baseUrl);
+
+    const client = getClient({ ...this.params, baseUrl: appUrl });
+
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    if (!pipelineId) {
+      throw new Error("We couldn't find the pipeline ID for the given name");
+    }
+
+    await client.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
+      {
+        pipelineId: pipelineId,
+        requestBody: [
+          {
+            metadata: document.metadata,
+            text: document.text,
+            excluded_llm_metadata_keys: document.excludedLlmMetadataKeys,
+            excluded_embed_metadata_keys: document.excludedEmbedMetadataKeys,
+            id: document.id_,
+          },
+        ],
+      },
+    );
+
+    await this.waitForDocumentIngestion([document.id_]);
   }
 }
