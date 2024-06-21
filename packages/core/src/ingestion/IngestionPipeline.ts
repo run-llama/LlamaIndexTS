@@ -1,10 +1,4 @@
-import type { PlatformApiClient } from "@llamaindex/cloud";
 import type { BaseNode, Document } from "../Node.js";
-import {
-  DEFAULT_PIPELINE_NAME,
-  DEFAULT_PROJECT_NAME,
-  type ClientParams,
-} from "../cloud/types.js";
 import type { BaseReader } from "../readers/type.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type { VectorStore } from "../storage/vectorStore/types.js";
@@ -65,16 +59,11 @@ export class IngestionPipeline {
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
   cache?: IngestionCache;
   disableCache: boolean = false;
-  client?: PlatformApiClient;
-  clientParams?: ClientParams;
-  projectName: string = DEFAULT_PROJECT_NAME;
-  name: string = DEFAULT_PIPELINE_NAME;
 
   private _docStoreStrategy?: TransformComponent;
 
-  constructor(init?: Partial<IngestionPipeline> & ClientParams) {
+  constructor(init?: Partial<IngestionPipeline>) {
     Object.assign(this, init);
-    this.clientParams = { apiKey: init?.apiKey, baseUrl: init?.baseUrl };
     if (!this.docStore) {
       this.docStoreStrategy = DocStoreStrategy.NONE;
     }

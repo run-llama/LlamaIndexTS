@@ -3,7 +3,7 @@ import type { ServiceContext } from "./ServiceContext.js";
 
 export type RetrieveParams = {
   query: string;
-  preFilters?: unknown;
+  preFilters?: any;
 };
 
 /**

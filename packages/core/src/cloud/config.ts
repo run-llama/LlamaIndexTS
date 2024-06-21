@@ -1,5 +1,5 @@
 import * as PlatformApi from "@llamaindex/cloud";
-import { BaseNode, Document } from "../Node.js";
+import { BaseNode } from "../Node.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
@@ -39,27 +39,6 @@ function getTransformationConfig(
     };
   }
   throw new Error(`Unsupported transformation: ${typeof transformation}`);
-}
-
-function getDataSourceConfig(node: BaseNode): PlatformApi.DataSourceCreate {
-  if (node instanceof Document) {
-    return {
-      name: node.id_,
-      source_type: "DOCUMENT",
-      component: {
-        id: node.id_,
-        text: node.text,
-        textTemplate: node.textTemplate,
-        startCharIdx: node.startCharIdx,
-        endCharIdx: node.endCharIdx,
-        metadataSeparator: node.metadataSeparator,
-        excludedEmbedMetadataKeys: node.excludedEmbedMetadataKeys,
-        excludedLlmMetadataKeys: node.excludedLlmMetadataKeys,
-        extraInfo: node.metadata,
-      },
-    };
-  }
-  throw new Error(`Unsupported node: ${typeof node}`);
 }
 
 export async function getPipelineCreate(
