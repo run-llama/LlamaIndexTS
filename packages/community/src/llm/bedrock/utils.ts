@@ -124,7 +124,6 @@ export const mapChatMessagesToMetaMessages = <T extends ChatMessage>(
 export const mapChatMessagesToMetaLlama3Messages = <T extends ChatMessage>(
   messages: T[],
 ): string => {
-  // use anthropic function the optimize the map (merge and filter), because is compatible
   const mapped = mapChatMessagesToMetaMessages(messages).map((message) => {
     const text = message.content;
     return `<|start_header_id|>${message.role}<|end_header_id|>\n${text}\n<|eot_id|>\n`;
