@@ -138,6 +138,8 @@ export class LlamaParseReader extends FileReader {
   gpt4oMode: boolean = false;
   // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
   gpt4oApiKey?: string;
+  // Whether or not to ignore and skip errors raised during parsing.
+  ignoreErrors: boolean = true;
   // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
@@ -280,19 +282,29 @@ export class LlamaParseReader extends FileReader {
     fileContent: Buffer,
     fileName?: string,
   ): Promise<Document[]> {
-    // Creates a job for the file
-    const jobId = await this.createJob(fileContent, fileName);
-    if (this.verbose) {
-      console.log(`Started parsing the file under job id ${jobId}`);
-    }
+    let jobId;
+    try {
+      // Creates a job for the file
+      const jobId = await this.createJob(fileContent, fileName);
+      if (this.verbose) {
+        console.log(`Started parsing the file under job id ${jobId}`);
+      }
 
-    // Return results as Document objects
-    const resultJson = await this.getJobResult(jobId, this.resultType);
-    return [
-      new Document({
-        text: resultJson[this.resultType],
-      }),
-    ];
+      // Return results as Document objects
+      const resultJson = await this.getJobResult(jobId, this.resultType);
+      return [
+        new Document({
+          text: resultJson[this.resultType],
+        }),
+      ];
+    } catch (e) {
+      console.error(`Error while parsing file under job id ${jobId}`, e);
+      if (this.ignoreErrors) {
+        return [];
+      } else {
+        throw e;
+      }
+    }
   }
   /**
    * Loads data from a file and returns an array of JSON objects.
@@ -302,18 +314,28 @@ export class LlamaParseReader extends FileReader {
    * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of JSON objects.
    */
   async loadJson(file: string): Promise<Record<string, any>[]> {
-    const data = await fs.readFile(file);
-    // Creates a job for the file
-    const jobId = await this.createJob(data);
-    if (this.verbose) {
-      console.log(`Started parsing the file under job id ${jobId}`);
-    }
+    let jobId;
+    try {
+      const data = await fs.readFile(file);
+      // Creates a job for the file
+      jobId = await this.createJob(data);
+      if (this.verbose) {
+        console.log(`Started parsing the file under job id ${jobId}`);
+      }
 
-    // Return results as an array of JSON objects (same format as Python version of the reader)
-    const resultJson = await this.getJobResult(jobId, "json");
-    resultJson.job_id = jobId;
-    resultJson.file_path = file;
-    return [resultJson];
+      // Return results as an array of JSON objects (same format as Python version of the reader)
+      const resultJson = await this.getJobResult(jobId, "json");
+      resultJson.job_id = jobId;
+      resultJson.file_path = file;
+      return [resultJson];
+    } catch (e) {
+      console.error(`Error while parsing the file under job id ${jobId}`, e);
+      if (this.ignoreErrors) {
+        return [];
+      } else {
+        throw e;
+      }
+    }
   }
 
   /**
@@ -330,49 +352,60 @@ export class LlamaParseReader extends FileReader {
   ): Promise<Record<string, any>[]> {
     const headers = { Authorization: `Bearer ${this.apiKey}` };
 
-    // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
-    if (!fs.access(downloadPath)) {
-      await fs.mkdir(downloadPath, { recursive: true });
-    }
+    try {
+      // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
+      try {
+        await fs.access(downloadPath);
+      } catch {
+        await fs.mkdir(downloadPath, { recursive: true });
+      }
 
-    const images: Record<string, any>[] = [];
-    for (const result of jsonResult) {
-      const jobId = result.job_id;
-      for (const page of result.pages) {
-        if (this.verbose) {
-          console.log(`> Image for page ${page.page}: ${page.images}`);
-        }
-        for (const image of page.images) {
-          const imageName = image.name;
-          // Get the full path
-          let imagePath = `${downloadPath}/${jobId}-${imageName}`;
-
-          if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
-            imagePath += ".png";
+      const images: Record<string, any>[] = [];
+      for (const result of jsonResult) {
+        const jobId = result.job_id;
+        for (const page of result.pages) {
+          if (this.verbose) {
+            console.log(`> Image for page ${page.page}: ${page.images}`);
           }
+          for (const image of page.images) {
+            const imageName = image.name;
+            // Get the full path
+            let imagePath = `${downloadPath}/${jobId}-${imageName}`;
 
-          // Get a valid image path
-          image.path = imagePath;
-          image.job_id = jobId;
-          image.original_pdf_path = result.file_path;
-          image.page_number = page.page;
+            if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
+              imagePath += ".png";
+            }
 
-          const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
-          const response = await fetch(imageUrl, { headers });
-          if (!response.ok) {
-            throw new Error(
-              `Failed to download image: ${await response.text()}`,
-            );
+            // Get a valid image path
+            image.path = imagePath;
+            image.job_id = jobId;
+            image.original_pdf_path = result.file_path;
+            image.page_number = page.page;
+
+            const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
+            const response = await fetch(imageUrl, { headers });
+            if (!response.ok) {
+              throw new Error(
+                `Failed to download image: ${await response.text()}`,
+              );
+            }
+            const arrayBuffer = await response.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            await fs.writeFile(imagePath, buffer);
+
+            images.push(image);
           }
-          const arrayBuffer = await response.arrayBuffer();
-          const buffer = Buffer.from(arrayBuffer);
-          await fs.writeFile(imagePath, buffer);
-
-          images.push(image);
         }
       }
+      return images;
+    } catch (e) {
+      console.error(`Error while downloading images from the parsed result`, e);
+      if (this.ignoreErrors) {
+        return [];
+      } else {
+        throw e;
+      }
     }
-    return images;
   }
 
   private async getMimeType(
