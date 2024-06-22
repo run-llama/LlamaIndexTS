@@ -70,6 +70,10 @@ export type StreamEvent =
 
 export type AnthropicContent = AnthropicTextContent | AnthropicImageContent;
 
+export type MetaTextContent = string;
+
+export type MetaContent = MetaTextContent;
+
 export type AnthropicTextContent = {
   type: "text";
   text: string;
@@ -97,6 +101,11 @@ export type AnthropicMessage = {
   content: AnthropicContent[];
 };
 
+export type MetaMessage = {
+  role: "user" | "assistant" | "system";
+  content: MetaTextContent;
+};
+
 export type AnthropicNoneStreamingResponse = {
   id: string;
   type: "message";
@@ -106,4 +115,11 @@ export type AnthropicNoneStreamingResponse = {
   stop_reason: "end_turn" | "max_tokens" | "stop_sequence";
   stop_sequence?: string;
   usage: { input_tokens: number; output_tokens: number };
+};
+
+export type MetaNoneStreamingResponse = {
+  generation: string;
+  prompt_token_count: number;
+  generation_token_count: number;
+  stop_reason: "stop" | "length";
 };

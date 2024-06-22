@@ -2,6 +2,7 @@ import type {
   ChatMessage,
   MessageContent,
   MessageContentDetail,
+  MessageContentTextDetail,
 } from "llamaindex";
 import type {
   AnthropicContent,
@@ -9,6 +10,7 @@ import type {
   AnthropicMediaTypes,
   AnthropicMessage,
   AnthropicTextContent,
+  MetaMessage,
 } from "./types.js";
 
 const ACCEPTED_IMAGE_MIME_TYPES = [
@@ -92,6 +94,87 @@ export const mapChatMessagesToAnthropicMessages = <T extends ChatMessage>(
     });
 
   return mergeNeighboringSameRoleMessages(mapped);
+};
+
+export const mapChatMessagesToMetaMessages = <T extends ChatMessage>(
+  messages: T[],
+): MetaMessage[] => {
+  return messages.map((msg) => {
+    let content: string;
+    if (typeof msg.content === "string") {
+      content = msg.content;
+    } else {
+      content = (msg.content[0] as MessageContentTextDetail).text;
+    }
+    return {
+      role:
+        msg.role === "assistant"
+          ? "assistant"
+          : msg.role === "user"
+            ? "user"
+            : "system",
+      content,
+    };
+  });
+};
+
+/**
+ * Documentation at https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-3
+ */
+export const mapChatMessagesToMetaLlama3Messages = <T extends ChatMessage>(
+  messages: T[],
+): string => {
+  // use anthropic function the optimize the map (merge and filter), because is compatible
+  const mapped = mapChatMessagesToMetaMessages(messages).map((message) => {
+    const text = message.content;
+    return `<|start_header_id|>${message.role}<|end_header_id|>\n${text}\n<|eot_id|>\n`;
+  });
+  return (
+    "<|begin_of_text|>" +
+    mapped.join("\n") +
+    "\n<|start_header_id|>assistant<|end_header_id|>\n"
+  );
+};
+
+/**
+ * Documentation at https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-2
+ */
+export const mapChatMessagesToMetaLlama2Messages = <T extends ChatMessage>(
+  messages: T[],
+): string => {
+  const mapped = mapChatMessagesToMetaMessages(messages);
+  let output = "<s>";
+  let insideInst = false;
+  let needsStartAgain = false;
+  for (const message of mapped) {
+    if (needsStartAgain) {
+      output += "<s>";
+      needsStartAgain = false;
+    }
+    const text = message.content;
+    if (message.role === "system") {
+      if (!insideInst) {
+        output += "[INST] ";
+        insideInst = true;
+      }
+      output += `<<SYS>>\n${text}\n<</SYS>>\n`;
+    } else if (message.role === "user") {
+      output += text;
+      if (insideInst) {
+        output += " [/INST]";
+        insideInst = false;
+      }
+    } else if (message.role === "assistant") {
+      if (insideInst) {
+        output += " [/INST]";
+        insideInst = false;
+      }
+      output += ` ${text} </s>\n`;
+      needsStartAgain = true;
+    }
+  }
+  debugger;
+  return output;
 };
 
 export const mapTextContent = (text: string): AnthropicTextContent => {

@@ -23,10 +23,13 @@ import { ToolCallLLM, streamConverter, wrapLLMEvent } from "llamaindex";
 import type {
   AnthropicNoneStreamingResponse,
   AnthropicTextContent,
+  MetaNoneStreamingResponse,
   StreamEvent,
 } from "./types.js";
 import {
   mapChatMessagesToAnthropicMessages,
+  mapChatMessagesToMetaLlama2Messages,
+  mapChatMessagesToMetaLlama3Messages,
   mapMessageContentToMessageContentDetails,
   toUtf8,
 } from "./utils.js";
@@ -194,9 +197,59 @@ class AnthropicProvider extends Provider {
   }
 }
 
+class MetaProvider extends Provider {
+  getResultFromResponse(
+    response: Record<string, any>,
+  ): MetaNoneStreamingResponse {
+    return JSON.parse(toUtf8(response.body));
+  }
+
+  getTextFromResponse(response: Record<string, any>): string {
+    const result = this.getResultFromResponse(response);
+    return result.generation;
+  }
+
+  getTextFromStreamResponse(response: Record<string, any>): string {
+    const event: StreamEvent | undefined = response.chunk?.bytes
+      ? JSON.parse(toUtf8(response.chunk?.bytes))
+      : undefined;
+
+    if (event?.type === "content_block_delta") return event.delta.text;
+    return "";
+  }
+
+  getRequestBody<T extends ChatMessage>(
+    metadata: LLMMetadata,
+    messages: T[],
+  ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput {
+    let promptFunction: (messages: ChatMessage[]) => string;
+
+    if (metadata.model.startsWith("meta.llama3")) {
+      promptFunction = mapChatMessagesToMetaLlama3Messages;
+    } else if (metadata.model.startsWith("meta.llama2")) {
+      promptFunction = mapChatMessagesToMetaLlama2Messages;
+    } else {
+      throw new Error(`Metal model ${metadata.model} is not supported`);
+    }
+
+    return {
+      modelId: metadata.model,
+      contentType: "application/json",
+      accept: "application/json",
+      body: JSON.stringify({
+        prompt: promptFunction(messages),
+        max_gen_len: metadata.maxTokens,
+        temperature: metadata.temperature,
+        top_p: metadata.topP,
+      }),
+    };
+  }
+}
+
 // Other providers could go here
 const PROVIDERS: { [key: string]: Provider } = {
   anthropic: new AnthropicProvider(),
+  meta: new MetaProvider(),
 };
 
 const getProvider = (model: string): Provider => {
