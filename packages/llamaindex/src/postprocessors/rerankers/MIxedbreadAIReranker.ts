@@ -96,6 +96,11 @@ export class MixedbreadAIReranker implements BaseNodePostprocessor {
     this.requestOptions = {
       maxRetries: params?.maxRetries ?? 3,
       timeoutInSeconds: params?.timeoutInSeconds,
+      // Support for this already exists in the python sdk and will be added to the js sdk soon
+      // @ts-ignore
+      additionalHeaders: {
+        "user-agent": "@mixedbread-ai/llamaindex-ts-sdk",
+      },
     };
     this.client = new MixedbreadAIClient({
       apiKey: apiKey,

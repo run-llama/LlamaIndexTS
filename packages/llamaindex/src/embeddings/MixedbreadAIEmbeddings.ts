@@ -117,6 +117,11 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
     this.requestOptions = {
       timeoutInSeconds: params?.timeoutInSeconds,
       maxRetries: params?.maxRetries ?? 3,
+      // Support for this already exists in the python sdk and will be added to the js sdk soon
+      // @ts-ignore
+      additionalHeaders: {
+        "user-agent": "@mixedbread-ai/llamaindex-ts-sdk",
+      },
     };
     this.client = new MixedbreadAIClient({
       apiKey,
