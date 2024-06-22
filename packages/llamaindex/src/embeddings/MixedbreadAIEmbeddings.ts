@@ -1,6 +1,6 @@
 import { getEnv } from "@llamaindex/env";
 import { MixedbreadAI, MixedbreadAIClient } from "@mixedbread-ai/sdk";
-import { BaseEmbedding } from "./types.js";
+import { BaseEmbedding, type EmbeddingInfo } from "./types.js";
 
 type EmbeddingsRequestWithoutInput = Omit<
   MixedbreadAI.EmbeddingsRequest,
@@ -20,12 +20,6 @@ export interface MixedbreadAIEmbeddingsParams
   model?: string;
 
   /**
-   * The maximum number of documents to embed in a single request.
-   * @default {128}
-   */
-  batchSize?: number;
-
-  /**
    * The API key to use.
    * @default {process.env.MXBAI_API_KEY}
    */
@@ -35,6 +29,28 @@ export interface MixedbreadAIEmbeddingsParams
    * The base URL for the API.
    */
   baseUrl?: string;
+
+  /**
+   * The maximum number of documents to embed in a single request.
+   * @default {128}
+   */
+  embedBatchSize?: number;
+
+  /**
+   * The embed info for the model.
+   */
+  embedInfo?: EmbeddingInfo;
+
+  /**
+   * The maximum number of retries to attempt.
+   * @default {3}
+   */
+  maxRetries?: number;
+
+  /**
+   * Timeouts for the request.
+   */
+  timeoutInSeconds?: number;
 }
 
 /**
@@ -64,6 +80,7 @@ export interface MixedbreadAIEmbeddingsParams
  */
 export class MixedbreadAIEmbeddings extends BaseEmbedding {
   requestParams: EmbeddingsRequestWithoutInput;
+  requestOptions: MixedbreadAIClient.RequestOptions;
   private client: MixedbreadAIClient;
 
   /**
@@ -81,13 +98,14 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
         "mixedbread ai API key not found. Either provide it in the constructor or set the 'MXBAI_API_KEY' environment variable.",
       );
     }
-    if (params?.batchSize && params?.batchSize > 256) {
+    if (params?.embedBatchSize && params?.embedBatchSize > 256) {
       throw new Error(
         "The maximum batch size for mixedbread ai embeddings API is 256.",
       );
     }
 
-    this.embedBatchSize = params?.batchSize ?? 128;
+    this.embedBatchSize = params?.embedBatchSize ?? 128;
+    this.embedInfo = params?.embedInfo;
     this.requestParams = {
       model: params?.model ?? "mixedbread-ai/mxbai-embed-large-v1",
       normalized: params?.normalized,
@@ -95,6 +113,10 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
       encodingFormat: params?.encodingFormat,
       truncationStrategy: params?.truncationStrategy,
       prompt: params?.prompt,
+    };
+    this.requestOptions = {
+      timeoutInSeconds: params?.timeoutInSeconds,
+      maxRetries: params?.maxRetries ?? 3,
     };
     this.client = new MixedbreadAIClient({
       apiKey,
@@ -131,10 +153,13 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
       return [];
     }
 
-    const response = await this.client.embeddings({
-      ...this.requestParams,
-      input: texts,
-    });
+    const response = await this.client.embeddings(
+      {
+        ...this.requestParams,
+        input: texts,
+      },
+      this.requestOptions,
+    );
     return response.data.map((d) => d.embedding as number[]);
   }
 }
