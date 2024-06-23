@@ -34,7 +34,7 @@ They can be divided into two groups.
 #### Advanced params:
 
 - `resultType` can be set to `markdown`, `text` or `json`. Defaults to `text`. More information about `json` mode on the next pages.
-- `language` primarly helps with OCR recognition. Defaults to `en`. Click [here](../api/type-aliases/Language.md) for a list of supported languages.
+- `language` primarly helps with OCR recognition. Defaults to `en`. Click [here](../../../api/type-aliases/Language.md) for a list of supported languages.
 - `parsingInstructions?` Optional. Can help with complicated document structures. See this [LlamaIndex Blog Post](https://www.llamaindex.ai/blog/launching-the-first-genai-native-document-parsing-platform) for an example.
 - `skipDiagonalText?` Optional. Set to true to ignore diagonal text. (Text that is not rotated 0, 90, 180 or 270 degrees)
 - `invalidateCache?` Optional. Set to true to ignore the LlamaCloud cache. All document are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Can be useful for testing when trying to re-parse the same document with, e.g. different `parsingInstructions`.
@@ -54,5 +54,5 @@ Below a full example of `LlamaParse` integrated in `SimpleDirectoryReader` with 
 
 ## API Reference
 
-- [SimpleDirectoryReader](../api/classes/SimpleDirectoryReader.md)
-- [LlamaParseReader](../api/classes/LlamaParseReader.md)
+- [SimpleDirectoryReader](../../../api/classes/SimpleDirectoryReader.md)
+- [LlamaParseReader](../../../api/classes/LlamaParseReader.md)

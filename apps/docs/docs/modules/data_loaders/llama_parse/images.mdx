@@ -8,7 +8,7 @@ LlamaParse `json` mode supports extracting any images found in a page object by 
 
 ## Usage
 
-We use the `getImages` method to input out array of JSON objects, download the images to a specified folder and get a list of ImageNodes.
+We use the `getImages` method to input our array of JSON objects, download the images to a specified folder and get a list of ImageNodes.
 
 ```ts
 const reader = new LlamaParseReader();
@@ -108,10 +108,10 @@ async function getImageTextDocs(
 }
 ```
 
-The returned `imageDocs` have the alt text assignes as text and the image path as metadata.
+The returned `imageDocs` have the alt text assigned as text and the image path as metadata.
 
 You can see the full example file [here](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/readers/src/llamaparse-json.ts).
 
 ## API Reference
 
-- [LlamaParseReader](../api/classes/LlamaParseReader.md)
+- [LlamaParseReader](../../../api/classes/LlamaParseReader.md)
