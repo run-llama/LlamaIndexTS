@@ -2,16 +2,27 @@
 sidebar_position: 1
 ---
 
-import CodeBlock from "@theme/CodeBlock";
-import CodeSource from "!!raw-loader!../../../../../../examples/readers/src/llamaparse-json?start=10&end=15";
-
 # JSON Mode
 
 In JSON mode, LlamaParse will return a data structure representing the parsed object.
 
-To use it you need to use `loadJson`. The `resultType` is automatically set using this method. Currently it can't be used with `SimpleDirectoryReader`.
+## Usage
 
-<CodeBlock language="ts">{CodeSource}</CodeBlock>
+For Json mode, you need to use `loadJson`. The `resultType` is automatically set with this method. Currently it can't be used with `SimpleDirectoryReader`.
+More information about indexing the results on the next page.
+
+```ts
+const reader = new LlamaParseReader();
+async function main() {
+  // Load the file and return an array of json objects
+  const jsonObjs = await reader.loadJson("../data/uber_10q_march_2022.pdf");
+  // Access the first "pages" (=a single parsed file) object in the array
+  const jsonList = jsonObjs[0]["pages"];
+  // Further process the jsonList object as needed.
+}
+```
+
+### Output
 
 The result format of the response, written to `jsonObjs` in the example, follows this structure:
 
@@ -33,7 +44,7 @@ The result format of the response, written to `jsonObjs` in the example, follows
 }
 ```
 
-##### Page objects
+#### Page objects
 
 Within page objects, the following keys may be present depending on your document.
 

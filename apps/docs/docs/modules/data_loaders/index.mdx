@@ -6,7 +6,7 @@ import CodeSource2 from "!raw-loader!../../../../../examples/readers/src/custom-
 
 Before you can start indexing your documents, you need to load them into memory.
 
-### SimpleDirectoryReader
+## SimpleDirectoryReader
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples/readers?file=src/simple-directory-reader.ts&title=Simple%20Directory%20Reader)
 
@@ -25,6 +25,8 @@ You can modify the reader three different ways:
 - `defaultReader` sets a fallback reader for files with unsupported extensions. By default it is `TextFileReader`.
 
 SimpleDirectoryReader supports up to 9 concurrent requests. Use the `numWorkers` option to set the number of concurrent requests. By default it runs in sequential mode, i.e. set to 1.
+
+### Example
 
 <CodeBlock language="ts" showLineNumbers metastring="{8-12,17-21}">
   {CodeSource2}
