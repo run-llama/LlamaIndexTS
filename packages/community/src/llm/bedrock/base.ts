@@ -229,7 +229,7 @@ class MetaProvider extends Provider {
     } else if (metadata.model.startsWith("meta.llama2")) {
       promptFunction = mapChatMessagesToMetaLlama2Messages;
     } else {
-      throw new Error(`Metal model ${metadata.model} is not supported`);
+      throw new Error(`Meta model ${metadata.model} is not supported`);
     }
 
     return {
