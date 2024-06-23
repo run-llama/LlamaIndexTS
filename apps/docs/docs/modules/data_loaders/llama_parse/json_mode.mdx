@@ -1,0 +1,48 @@
+---
+sidebar_position: 2
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!!raw-loader!../../../../examples/readers/src/llamaparse-json?start=10&end=15";
+
+# JSON Mode
+
+In JSON mode, LlamaParse will return a data structure representing the parsed object.
+
+To use it you need to use `loadJson`. The `resultType` is automatically set using this method. Currently it can't be used with `SimpleDirectoryReader`.
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+The result format of the response, written to `jsonObjs` in the example, follows this structure:
+
+```json
+{
+    "pages": [
+        ..page objects..
+    ],
+    "job_metadata": {
+        "credits_used": int,
+        "credits_max": int,
+        "job_credits_usage": int,
+        "job_pages": int,
+        "job_is_cache_hit": boolean
+    },
+    "job_id": string ,
+    "file_path": string,
+    }
+}
+```
+
+##### Page objects
+
+Within page objects, the following keys may be present depending on your document.
+
+- `page`: The page number of the document.
+- `text`: The text extracted from the page.
+- `md`: The markdown version of the extracted text.
+- `images`: Any images extracted from the page.
+- `items`: An array of heading, text and table objects in the order they appear on the page.
+
+## API Reference
+
+- [LlamaParseReader](../api/classes/LlamaParseReader.md)

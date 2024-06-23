@@ -1,0 +1,40 @@
+---
+sidebar_position: 3
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!!raw-loader!../../../../examples/readers/src/llamaparse-json?start=1&end=31";
+import CodeSource2 from "!!raw-loader!../../../../examples/readers/src/llamaparse-json?start=33&end=38";
+import CodeSource3 from "!!raw-loader!../../../../examples/readers/src/llamaparse-json?start=39&end=66";
+
+# Image Extraction
+
+LlamaParse `json` mode supports extracting any images found in a page object by using the `getImages` function. They are downloaded to a local folder and can then be sent to a multimodal LLM for further processing.
+
+#### Indexing
+
+You can create an index across both text and image nodes by requesting alternative text for the image from the multimodal LLM.
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+This uses two helper functions to create documents from the text and image nodes provided.
+
+##### Text Documents
+
+To create documents from the text nodes of the json object, we just map the needed vaues to a new `Document` object.
+
+<CodeBlock language="ts">{CodeSource2}</CodeBlock>
+
+##### Image Documents
+
+To create documents from the images, we need to use a multimodal LLM to generate alt text. This is also where we actually use the `getImages` function.
+
+For this we need to pass create `ImageNodes` and add them as part of our message.
+
+We can use the `createMessageContent` function to simplify this.
+
+<CodeBlock language="ts">{CodeSource3}</CodeBlock>
+
+## API Reference
+
+- [LlamaParseReader](../api/classes/LlamaParseReader.md)
