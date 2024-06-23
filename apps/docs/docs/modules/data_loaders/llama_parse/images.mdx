@@ -21,7 +21,7 @@ This uses two helper functions to create documents from the text and image nodes
 
 ##### Text Documents
 
-To create documents from the text nodes of the json object, we just map the needed vaues to a new `Document` object.
+To create documents from the text nodes of the json object, we just map the needed values to a new `Document` object.
 
 <CodeBlock language="ts">{CodeSource2}</CodeBlock>
 
@@ -29,7 +29,7 @@ To create documents from the text nodes of the json object, we just map the need
 
 To create documents from the images, we need to use a multimodal LLM to generate alt text. This is also where we actually use the `getImages` function.
 
-For this we need to pass create `ImageNodes` and add them as part of our message.
+For this we need to create `ImageNodes` and add them as part of our message.
 
 We can use the `createMessageContent` function to simplify this.
 

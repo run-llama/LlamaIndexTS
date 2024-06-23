@@ -37,7 +37,9 @@ function getTextDocs(jsonList: { text: string; page: number }[]): Document[] {
   );
 }
 // Download all images from jsonObjs, send them to OpenAI API to get alt text, return an array of Document objects
-async function getImageTextDocs(jsonObjs: any): Promise<Document[]> {
+async function getImageTextDocs(
+  jsonObjs: Record<string, any>[],
+): Promise<Document[]> {
   const llm = new OpenAI({
     model: "gpt-4o",
     temperature: 0.2,
