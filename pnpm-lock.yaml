@@ -453,7 +453,7 @@ importers:
         version: 2.7.0
       '@llamaindex/cloud':
         specifier: 0.0.5
-        version: 0.0.5
+        version: link:../../../platform/llama-cloud-ts
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
@@ -2813,14 +2813,6 @@ packages:
 
   '@leichtgewicht/ip-codec@2.0.4':
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
-
-  '@llamaindex/cloud@0.0.5':
-    resolution: {integrity: sha512-8HBSiAZkmX1RvpEM2czEVKqMUCKk7uvMSiDpMGWlEj3MUKBYCh+r8E2TtVhZfU4TunEI7nJRMcVBfXDyFz6Lpw==}
-    peerDependencies:
-      node-fetch: ^3.3.2
-    peerDependenciesMeta:
-      node-fetch:
-        optional: true
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -7143,9 +7135,6 @@ packages:
   js-base64@3.7.2:
     resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
 
-  js-base64@3.7.7:
-    resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
-
   js-tiktoken@1.0.12:
     resolution: {integrity: sha512-L7wURW1fH9Qaext0VzaUDpFGVQgjkdE3Dgsy9/+yXyGEpBKnylTd0mU0bfbNkKDlXRb6TEsZkwuflu1B8uQbJQ==}
 
@@ -8940,10 +8929,6 @@ packages:
 
   qs@6.11.2:
     resolution: {integrity: sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==}
-    engines: {node: '>=0.6'}
-
-  qs@6.12.0:
-    resolution: {integrity: sha512-trVZiI6RMOkO476zLGaBIzszOdFPnCCXHPG9kn0yuS1uz6xdVxPfZdB3vUig9pxPFDM9BRAgz/YUIVQ1/vuiUg==}
     engines: {node: '>=0.6'}
 
   querystringify@2.2.0:
@@ -13877,13 +13862,6 @@ snapshots:
   '@js-sdsl/ordered-map@4.4.2': {}
 
   '@leichtgewicht/ip-codec@2.0.4': {}
-
-  '@llamaindex/cloud@0.0.5':
-    dependencies:
-      '@types/qs': 6.9.12
-      form-data: 4.0.0
-      js-base64: 3.7.7
-      qs: 6.12.0
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -19011,8 +18989,6 @@ snapshots:
 
   js-base64@3.7.2: {}
 
-  js-base64@3.7.7: {}
-
   js-tiktoken@1.0.12:
     dependencies:
       base64-js: 1.5.1
@@ -21144,10 +21120,6 @@ snapshots:
       side-channel: 1.0.6
 
   qs@6.11.2:
-    dependencies:
-      side-channel: 1.0.6
-
-  qs@6.12.0:
     dependencies:
       side-channel: 1.0.6
 

@@ -11,7 +11,7 @@ import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./types.js";
 import { getAppBaseUrl, getClient } from "./utils.js";
 
-import { ManagedIngestionStatus } from "@llamaindex/cloud";
+import { LlamaCloudApi } from "@llamaindex/cloud";
 import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
@@ -40,18 +40,20 @@ export class LlamaCloudIndex {
 
     while (true) {
       const pipelineStatus =
-        await client.getPipelineStatusApiV1PipelinesPipelineIdStatusGet({
-          pipelineId,
-        });
+        await client.pipelines.getPipelineStatus(pipelineId);
 
-      if (pipelineStatus.status === ManagedIngestionStatus.SUCCESS) {
+      if (
+        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Success
+      ) {
         if (verbose) {
           console.log("Pipeline ingestion completed successfully");
         }
         break;
       }
 
-      if (pipelineStatus.status === ManagedIngestionStatus.ERROR) {
+      if (
+        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Error
+      ) {
         if (verbose) {
           console.error("Pipeline ingestion failed");
         }
@@ -91,22 +93,19 @@ export class LlamaCloudIndex {
       const docsToRemove = new Set<string>();
 
       for (const doc of pendingDocs) {
-        const { status } =
-          await client.getPipelineDocumentStatusApiV1PipelinesPipelineIdDocumentsDocumentIdStatusGet(
-            {
-              pipelineId,
-              documentId: doc,
-            },
-          );
+        const { status } = await client.pipelines.getPipelineDocumentStatus(
+          pipelineId,
+          doc,
+        );
 
         if (
-          status === ManagedIngestionStatus.NOT_STARTED ||
-          status === ManagedIngestionStatus.IN_PROGRESS
+          status === LlamaCloudApi.ManagedIngestionStatus.NotStarted ||
+          status === LlamaCloudApi.ManagedIngestionStatus.InProgress
         ) {
           continue;
         }
 
-        if (status === ManagedIngestionStatus.ERROR) {
+        if (status === LlamaCloudApi.ManagedIngestionStatus.Error) {
           if (verbose) {
             console.error(`Document ingestion failed for ${doc}`);
           }
@@ -145,7 +144,7 @@ export class LlamaCloudIndex {
   ): Promise<string> {
     const client = getClient({ ...this.params, baseUrl: this.params.baseUrl });
 
-    const pipelines = await client.searchPipelinesApiV1PipelinesGet({
+    const pipelines = await client.pipelines.searchPipelines({
       projectName,
       pipelineName: name,
     });
@@ -178,23 +177,21 @@ export class LlamaCloudIndex {
       transformations: params.transformations ?? defaultTransformations,
     });
 
-    const project = await client.upsertProjectApiV1ProjectsPut({
-      requestBody: {
-        name: params.projectName ?? "default",
-      },
+    const project = await client.projects.upsertProject({
+      name: params.projectName ?? "default",
     });
 
     if (!project.id) {
       throw new Error("Project ID should be defined");
     }
 
-    const pipeline = await client.upsertPipelineApiV1PipelinesPut({
+    const pipeline = await client.pipelines.upsertPipeline({
       projectId: project.id,
-      requestBody: {
+      body: {
         name: params.name,
-        configured_transformations:
+        configuredTransformations:
           pipelineCreateParams.configured_transformations,
-        pipeline_type: pipelineCreateParams.pipeline_type,
+        pipelineType: pipelineCreateParams.pipeline_type,
       },
     });
 
@@ -206,40 +203,44 @@ export class LlamaCloudIndex {
       console.log(`Created pipeline ${pipeline.id} with name ${params.name}`);
     }
 
-    await client.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
-      {
-        pipelineId: pipeline.id,
-        requestBody: params.documents.map((doc) => ({
-          metadata: doc.metadata,
-          text: doc.text,
-          excluded_llm_metadata_keys: doc.excludedLlmMetadataKeys,
-          excluded_embed_metadata_keys: doc.excludedEmbedMetadataKeys,
-          id: doc.id_,
-        })),
-      },
+    await client.pipelines.upsertBatchPipelineDocuments(
+      pipeline.id,
+      params.documents.map((doc) => ({
+        metadata: doc.metadata,
+        text: doc.text,
+        excludedEmbedMetadataKeys: doc.excludedLlmMetadataKeys,
+        excludedLlmMetadataKeys: doc.excludedEmbedMetadataKeys,
+        id: doc.id_,
+      })),
     );
 
     while (true) {
-      const pipelineStatus =
-        await client.getPipelineStatusApiV1PipelinesPipelineIdStatusGet({
-          pipelineId: pipeline.id,
-        });
+      const pipelineStatus = await client.pipelines.getPipelineStatus(
+        pipeline.id,
+      );
 
-      if (pipelineStatus.status === ManagedIngestionStatus.SUCCESS) {
+      if (
+        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Success
+      ) {
         console.info(
           "Documents ingested successfully, pipeline is ready to use",
         );
         break;
       }
 
-      if (pipelineStatus.status === ManagedIngestionStatus.ERROR) {
+      if (
+        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Error
+      ) {
         console.error(
           `Some documents failed to ingest, check your pipeline logs at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
         );
         throw new Error("Some documents failed to ingest");
       }
 
-      if (pipelineStatus.status === ManagedIngestionStatus.PARTIAL_SUCCESS) {
+      if (
+        pipelineStatus.status ===
+        LlamaCloudApi.ManagedIngestionStatus.PartialSuccess
+      ) {
         console.info(
           `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
         );
@@ -299,20 +300,15 @@ export class LlamaCloudIndex {
       throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
-    await client.createBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPost(
+    await client.pipelines.createBatchPipelineDocuments(pipelineId, [
       {
-        pipelineId: pipelineId,
-        requestBody: [
-          {
-            metadata: document.metadata,
-            text: document.text,
-            excluded_llm_metadata_keys: document.excludedLlmMetadataKeys,
-            excluded_embed_metadata_keys: document.excludedEmbedMetadataKeys,
-            id: document.id_,
-          },
-        ],
+        metadata: document.metadata,
+        text: document.text,
+        excludedEmbedMetadataKeys: document.excludedLlmMetadataKeys,
+        excludedLlmMetadataKeys: document.excludedEmbedMetadataKeys,
+        id: document.id_,
       },
-    );
+    ]);
 
     await this.waitForDocumentIngestion([document.id_]);
   }
@@ -331,12 +327,7 @@ export class LlamaCloudIndex {
       throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
-    await client.deletePipelineDocumentApiV1PipelinesPipelineIdDocumentsDocumentIdDelete(
-      {
-        pipelineId: pipelineId,
-        documentId: document.id_,
-      },
-    );
+    await client.pipelines.deletePipelineDocument(pipelineId, document.id_);
 
     await this.waitForPipelineIngestion();
   }
@@ -355,20 +346,15 @@ export class LlamaCloudIndex {
       throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
-    await client.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
+    await client.pipelines.upsertBatchPipelineDocuments(pipelineId, [
       {
-        pipelineId: pipelineId,
-        requestBody: [
-          {
-            metadata: document.metadata,
-            text: document.text,
-            excluded_llm_metadata_keys: document.excludedLlmMetadataKeys,
-            excluded_embed_metadata_keys: document.excludedEmbedMetadataKeys,
-            id: document.id_,
-          },
-        ],
+        metadata: document.metadata,
+        text: document.text,
+        excludedEmbedMetadataKeys: document.excludedLlmMetadataKeys,
+        excludedLlmMetadataKeys: document.excludedEmbedMetadataKeys,
+        id: document.id_,
       },
-    );
+    ]);
 
     await this.waitForDocumentIngestion([document.id_]);
   }
