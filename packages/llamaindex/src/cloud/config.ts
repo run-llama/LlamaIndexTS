@@ -1,4 +1,4 @@
-import * as PlatformApi from "@llamaindex/cloud";
+import { LlamaCloudApi } from "@llamaindex/cloud";
 import { BaseNode } from "../Node.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import type { TransformComponent } from "../ingestion/types.js";
@@ -13,10 +13,10 @@ export type GetPipelineCreateParams = {
 
 function getTransformationConfig(
   transformation: TransformComponent,
-): PlatformApi.ConfiguredTransformationItem {
+): LlamaCloudApi.ConfiguredTransformationItem {
   if (transformation instanceof SimpleNodeParser) {
     return {
-      configurable_transformation_type: "SENTENCE_AWARE_NODE_PARSER",
+      configurableTransformationType: "SENTENCE_AWARE_NODE_PARSER",
       component: {
         // TODO: API doesnt accept camelCase
         chunk_size: transformation.textSplitter.chunkSize, // TODO: set to public in SentenceSplitter
@@ -28,7 +28,7 @@ function getTransformationConfig(
   }
   if (transformation instanceof OpenAIEmbedding) {
     return {
-      configurable_transformation_type: "OPENAI_EMBEDDING",
+      configurableTransformationType: "OPENAI_EMBEDDING",
       component: {
         // TODO: API doesnt accept camelCase
         model: transformation.model,
@@ -43,12 +43,12 @@ function getTransformationConfig(
 
 export async function getPipelineCreate(
   params: GetPipelineCreateParams,
-): Promise<PlatformApi.PipelineCreate> {
+): Promise<LlamaCloudApi.PipelineCreate> {
   const { pipelineName, pipelineType, transformations = [] } = params;
 
   return {
     name: pipelineName,
-    configured_transformations: transformations.map(getTransformationConfig),
-    pipeline_type: pipelineType,
+    configuredTransformations: transformations.map(getTransformationConfig),
+    pipelineType: pipelineType,
   };
 }

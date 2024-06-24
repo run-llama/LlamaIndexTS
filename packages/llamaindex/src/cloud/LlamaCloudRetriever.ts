@@ -1,36 +1,30 @@
-import type { RetrievalParams, TextNodeWithScore } from "@llamaindex/cloud";
-import * as PlatformApiTypes from "@llamaindex/cloud";
+import { LlamaCloudApi, LlamaCloudApiClient } from "@llamaindex/cloud";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { extractText } from "../llm/utils.js";
-import type {
-  ClientParams,
-  CloudConstructorParams,
-  ObjectToCamel,
-} from "./types.js";
+import type { ClientParams, CloudConstructorParams } from "./types.js";
 import { DEFAULT_PROJECT_NAME } from "./types.js";
-import { getClient, paramsToSnakeCase } from "./utils.js";
+import { getClient } from "./utils.js";
 
 export type CloudRetrieveParams = Omit<
-  ObjectToCamel<RetrievalParams>,
+  LlamaCloudApi.RetrievalParams,
   "query" | "searchFilters" | "className" | "denseSimilarityTopK"
 > & { similarityTopK?: number };
 
-type PlatformApi = typeof PlatformApiTypes;
 export class LlamaCloudRetriever implements BaseRetriever {
-  client?: PlatformApi;
+  client?: LlamaCloudApiClient;
   clientParams: ClientParams;
   retrieveParams: CloudRetrieveParams;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
 
   private resultNodesToNodeWithScore(
-    nodes: TextNodeWithScore[],
+    nodes: LlamaCloudApi.TextNodeWithScore[],
   ): NodeWithScore[] {
-    return nodes.map((node: TextNodeWithScore) => {
+    return nodes.map((node: LlamaCloudApi.TextNodeWithScore) => {
       return {
         // Currently LlamaCloud only supports text nodes
         node: jsonToNode(node.node, ObjectType.TEXT),
@@ -48,7 +42,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
     }
   }
 
-  private getClient(): PlatformApi {
+  private getClient(): LlamaCloudApiClient {
     if (!this.client) {
       this.client = getClient(this.clientParams);
     }
@@ -60,7 +54,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
-    const pipelines = await this.getClient()?.searchPipelinesApiV1PipelinesGet({
+    const pipelines = await this.getClient()?.pipelines.searchPipelines({
       projectName: this.projectName,
       pipelineName: this.pipelineName,
     });
@@ -71,10 +65,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
-    const pipeline =
-      await this.getClient().getPipelineApiV1PipelinesPipelineIdGet({
-        pipelineId: pipelines[0].id,
-      });
+    const pipeline = await this.getClient().pipelines.getPipeline(
+      pipelines[0].id,
+    );
 
     if (!pipeline) {
       throw new Error(
@@ -82,27 +75,13 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
-    const search_params: RetrievalParams = {
-      query,
-      search_filters: preFilters,
+    const results = await this.getClient().pipelines.runSearch(pipeline.id, {
       ...this.retrieveParams,
-    };
+      query: extractText(query),
+      searchFilters: preFilters as LlamaCloudApi.MetadataFilters,
+    });
 
-    if (this.retrieveParams.similarityTopK) {
-      search_params.dense_similarity_top_k = this.retrieveParams.similarityTopK;
-    }
-
-    const results =
-      await this.getClient().runSearchApiV1PipelinesPipelineIdRetrievePost({
-        pipelineId: pipeline.id,
-        requestBody: {
-          ...paramsToSnakeCase(this.retrieveParams),
-          query: extractText(query),
-          search_filters: preFilters as Record<string, unknown[]>,
-        },
-      });
-
-    const nodes = this.resultNodesToNodeWithScore(results.retrieval_nodes);
+    const nodes = this.resultNodesToNodeWithScore(results.retrievalNodes);
 
     getCallbackManager().dispatchEvent("retrieve", {
       query,

@@ -190,8 +190,8 @@ export class LlamaCloudIndex {
       body: {
         name: params.name,
         configuredTransformations:
-          pipelineCreateParams.configured_transformations,
-        pipelineType: pipelineCreateParams.pipeline_type,
+          pipelineCreateParams.configuredTransformations,
+        pipelineType: pipelineCreateParams.pipelineType,
       },
     });
 
