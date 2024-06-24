@@ -70,3 +70,8 @@ const response = await queryEngine.query({
   query: "What did the author do in college?",
 });
 ```
+
+## API Reference
+
+- [ResponseSynthesizer](../../api/classes/ResponseSynthesizer.md)
+- [CompactAndRefine](../../api/classes/CompactAndRefine.md)

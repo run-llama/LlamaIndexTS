@@ -151,3 +151,8 @@ async function main() {
 
 main();
 ```
+
+## API Reference
+
+- [VectorStoreIndex](../../api/classes/VectorStoreIndex.md)
+- [ChromaVectorStore](../../api/classes/ChromaVectorStore.md)

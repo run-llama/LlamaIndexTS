@@ -77,3 +77,7 @@ main();
 ```
 
 For questions or feedback, please contact us at [feedback@deepinfra.com](mailto:feedback@deepinfra.com)
+
+## API Reference
+
+- [DeepInfraEmbedding](../../../api/classes/DeepInfraEmbedding.md)

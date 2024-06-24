@@ -63,3 +63,7 @@ async function main() {
   console.log(response.response);
 }
 ```
+
+## API Reference
+
+- [Anthropic](../../../api/classes/Anthropic.md)
