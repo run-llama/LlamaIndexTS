@@ -66,7 +66,11 @@ const config = {
             [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
           ],
         },
-        blog: false,
+        blog: {
+          blogTitle: "LlamaIndexTS blog",
+          blogDescription: "The official blog of LlamaIndexTS",
+          postsPerPage: "ALL",
+        },
         gtag: {
           trackingID: "G-NB9B8LW9W5",
           anonymizeIP: true,
@@ -97,6 +101,7 @@ const config = {
             type: "localeDropdown",
             position: "left",
           },
+          { to: "blog", label: "Blog", position: "right" },
           {
             href: "https://github.com/run-llama/LlamaIndexTS",
             label: "GitHub",
@@ -162,8 +167,8 @@ const config = {
     [
       "docusaurus-plugin-typedoc",
       {
-        entryPoints: ["../../packages/core/src/index.ts"],
-        tsconfig: "../../packages/core/tsconfig.json",
+        entryPoints: ["../../packages/llamaindex/src/index.ts"],
+        tsconfig: "../../tsconfig.json",
         readme: "none",
         sourceLinkTemplate:
           "https://github.com/run-llama/LlamaIndexTS/blob/{gitRevision}/{path}#L{line}",

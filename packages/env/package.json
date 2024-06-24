@@ -1,19 +1,40 @@
 {
   "name": "@llamaindex/env",
-  "description": "environment wrapper",
-  "version": "0.0.7",
+  "description": "environment wrapper, supports all JS environment including node, deno, bun, edge runtime, and cloudflare worker",
+  "version": "0.1.4",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
+  "keywords": [
+    "llm",
+    "llama",
+    "openai",
+    "gpt",
+    "data science",
+    "prompt",
+    "prompt engineering",
+    "chatgpt",
+    "machine learning",
+    "ml",
+    "embedding",
+    "vectorstore",
+    "data framework",
+    "llamaindex"
+  ],
   "exports": {
     ".": {
-      "workerd": {
+      "node": {
         "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.polyfill.js"
+        "import": "./dist/index.js",
+        "default": "./dist/cjs/index.js"
+      },
+      "workerd": {
+        "types": "./dist/type/index.workerd.d.ts",
+        "default": "./dist/index.workerd.js"
       },
       "edge-light": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.polyfill.js"
+        "types": "./dist/type/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
       },
       "import": {
         "types": "./dist/type/index.d.ts",
@@ -23,21 +44,12 @@
         "types": "./dist/type/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
-      },
-      "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
-      }
     }
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",
@@ -50,24 +62,34 @@
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
     "build:type": "tsc -p tsconfig.json",
     "postbuild": "node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\"",
+    "circular-check": "madge -c ./src/index.ts",
+    "test": "vitest"
   },
   "devDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
-    "@swc/cli": "^0.3.9",
-    "@swc/core": "^1.4.2",
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.6.3",
     "concurrently": "^8.2.2",
     "pathe": "^1.1.2",
-    "readable-stream": "^4.5.2"
+    "vitest": "^1.6.0"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^20.12.7",
-    "lodash": "^4.17.21"
+    "@types/lodash": "^4.17.5",
+    "@types/node": "^20.12.11"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
+    "js-tiktoken": "^1.0.12",
     "pathe": "^1.1.2",
-    "readable-stream": "^4.5.2"
+    "tiktoken": "^1.0.15"
+  },
+  "peerDependenciesMeta": {
+    "@aws-crypto/sha256-js": {
+      "optional": true
+    },
+    "pathe": {
+      "optional": true
+    }
   }
 }

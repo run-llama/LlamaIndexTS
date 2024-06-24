@@ -1,0 +1,41 @@
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../examples/mistral";
+
+# Using other LLM APIs
+
+By default LlamaIndex.TS uses OpenAI's LLMs and embedding models, but we support [lots of other LLMs](../modules/llms) including models from Mistral (Mistral, Mixtral), Anthropic (Claude) and Google (Gemini).
+
+If you don't want to use an API at all you can [run a local model](../../examples/local_llm)
+
+## Using another LLM
+
+You can specify what LLM LlamaIndex.TS will use on the `Settings` object, like this:
+
+```typescript
+import { MistralAI, Settings } from "llamaindex";
+
+Settings.llm = new MistralAI({
+  model: "mistral-tiny",
+  apiKey: "<YOUR_API_KEY>",
+});
+```
+
+You can see examples of other APIs we support by checking out "Available LLMs" in the sidebar of our [LLMs section](../modules/llms).
+
+## Using another embedding model
+
+A frequent gotcha when trying to use a different API as your LLM is that LlamaIndex will also by default index and embed your data using OpenAI's embeddings. To completely switch away from OpenAI you will need to set your embedding model as well, for example:
+
+```typescript
+import { MistralAIEmbedding, Settings } from "llamaindex";
+
+Settings.embedModel = new MistralAIEmbedding();
+```
+
+We support [many different embeddings](../modules/embeddings).
+
+## Full example
+
+This example uses Mistral's `mistral-tiny` model as the LLM and Mistral for embeddings as well.
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>

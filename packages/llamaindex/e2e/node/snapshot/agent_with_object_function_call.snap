@@ -1,0 +1,84 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_uERMumWlJLTO2GW93X6C2W3N",
+                "name": "get_weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "{\n  location: San Francisco,\n  temperature: 72,\n  weather: cloudy,\n  rain_prediction: 0.89\n}",
+          "options": {
+            "toolResult": {
+              "result": {
+                "location": "San Francisco",
+                "temperature": 72,
+                "weather": "cloudy",
+                "rain_prediction": 0.89
+              },
+              "isError": false,
+              "id": "call_uERMumWlJLTO2GW93X6C2W3N"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_uERMumWlJLTO2GW93X6C2W3N",
+                "name": "get_weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "The weather in San Francisco is currently cloudy with a temperature of 72°F. There is a 89% chance of rain.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

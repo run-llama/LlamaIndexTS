@@ -1,0 +1,41 @@
+---
+sidebar_position: 1
+---
+
+# Getting started
+
+In this guide we'll walk you through the process of building an Agent in JavaScript using the LlamaIndex.TS library, starting from nothing and adding complexity in stages.
+
+## What is an Agent?
+
+In LlamaIndex, an agent is a semi-autonomous piece of software powered by an LLM that is given a task and executes a series of steps towards solving that task. It is given a set of tools, which can be anything from arbitrary functions up to full LlamaIndex query engines, and it selects the best available tool to complete each step. When each step is completed, the agent judges whether the task is now complete, in which case it returns a result to the user, or whether it needs to take another step, in which case it loops back to the start.
+
+![agent flow](./images/agent_flow.png)
+
+## Install LlamaIndex.TS
+
+You'll need to have a recent version of [Node.js](https://nodejs.org/en) installed. Then you can install LlamaIndex.TS by running
+
+```bash
+npm install llamaindex
+```
+
+## Choose your model
+
+By default we'll be using OpenAI with GPT-4, as it's a powerful model and easy to get started with. If you'd prefer to run a local model, see [using a local model](local_model).
+
+## Get an OpenAI API key
+
+If you don't already have one, you can sign up for an [OpenAI API key](https://platform.openai.com/api-keys). You should then put the key in a `.env` file in the root of the project; the file should look like
+
+```
+OPENAI_API_KEY=sk-XXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+We'll use `dotenv` to pull the API key out of that .env file, so also run:
+
+```bash
+npm install dotenv
+```
+
+Now you're ready to [create your agent](create_agent).

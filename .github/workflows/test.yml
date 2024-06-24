@@ -17,16 +17,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.x, 20.x, 21.x]
+        node-version: [18.x, 20.x, 22.x]
     name: E2E on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+
+      - uses: pnpm/action-setup@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
@@ -37,13 +39,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.x, 20.x, 21.x]
+        node-version: [18.x, 20.x, 22.x]
     name: Test on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -58,7 +60,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -67,27 +69,34 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build --filter llamaindex
+        run: pnpm run build
       - name: Use Build For Examples
-        run: pnpm link ../packages/core/
+        run: pnpm link ../packages/llamaindex/
         working-directory: ./examples
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
-        run: pnpm run circular-check
-        working-directory: ./packages/core
+        run: pnpm dlx turbo run circular-check
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: typecheck-build-dist
-          path: ./packages/core/dist
+          path: ./packages/llamaindex/dist
           if-no-files-found: error
-  core-edge-runtime:
+  e2e-llamaindex-examples:
+    strategy:
+      fail-fast: false
+      matrix:
+        packages:
+          - cloudflare-worker-agent
+          - nextjs-agent
+          - nextjs-edge-runtime
+    #          - waku-query-engine
     runs-on: ubuntu-latest
-
+    name: Build LlamaIndex Example (${{ matrix.packages }})
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -95,17 +104,18 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: Build
-        run: pnpm run build --filter @llamaindex/edge
-      - name: Build Edge Runtime
+      - name: Build llamaindex
         run: pnpm run build
-        working-directory: ./packages/edge/e2e/test-edge-runtime
+      - name: Build ${{ matrix.packages }}
+        run: pnpm run build
+        working-directory: packages/llamaindex/e2e/examples/${{ matrix.packages }}
+
   typecheck-examples:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -114,7 +124,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build --filter llamaindex
+        run: pnpm run build
       - name: Copy examples
         run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
       - name: Pack @llamaindex/env
@@ -122,7 +132,7 @@ jobs:
         working-directory: packages/env
       - name: Pack llamaindex
         run: pnpm pack --pack-destination ${{ runner.temp }}
-        working-directory: packages/core
+        working-directory: packages/llamaindex
       - name: Install
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}/examples

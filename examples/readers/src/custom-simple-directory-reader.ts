@@ -1,12 +1,13 @@
-import type { BaseReader, Document, Metadata } from "llamaindex";
+import type { Document, Metadata } from "llamaindex";
+import { FileReader } from "llamaindex";
 import {
   FILE_EXT_TO_READER,
   SimpleDirectoryReader,
 } from "llamaindex/readers/SimpleDirectoryReader";
 import { TextFileReader } from "llamaindex/readers/TextFileReader";
 
-class ZipReader implements BaseReader {
-  loadData(...args: any[]): Promise<Document<Metadata>[]> {
+class ZipReader extends FileReader {
+  loadDataAsContent(fileContent: Buffer): Promise<Document<Metadata>[]> {
     throw new Error("Implement me");
   }
 }

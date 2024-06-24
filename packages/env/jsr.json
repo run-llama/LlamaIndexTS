@@ -1,8 +1,10 @@
 {
   "name": "@llamaindex/env",
-  "version": "0.0.6",
+  "version": "0.1.4",
   "exports": {
-    ".": "./src/index.ts",
-    "./type": "./src/type.ts"
+    ".": "./src/index.ts"
+  },
+  "publish": {
+    "include": ["LICENSE", "README.md", "src/**/*", "jsr.json"]
   }
 }

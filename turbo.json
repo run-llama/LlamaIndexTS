@@ -7,17 +7,12 @@
       "outputs": ["dist/**", "build/**"]
     },
     "lint": {
-      "inputs": ["packages/eslint-config-custom"]
-    },
-    "@llamaindex/edge#build": {
-      "dependsOn": ["llamaindex#build"]
-    },
-    "@llamaindex/experimental#build": {
-      "dependsOn": ["@llamaindex/edge#build"]
+      "dependsOn": ["^build"]
     },
     "test": {
-      "dependsOn": ["^build", "@llamaindex/edge#build"]
+      "dependsOn": ["^build"]
     },
+    "circular-check": {},
     "e2e": {
       "dependsOn": ["^build"]
     },

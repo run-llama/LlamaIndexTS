@@ -1,0 +1,148 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "content": "Please always use the tools provided to answer a question. Do not rely on prior knowledge.",
+          "role": "system"
+        },
+        {
+          "role": "user",
+          "content": "What's the summary of Alex? Does he live in Brazil based on the brief information? Return yes or no."
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "content": "Context information is below.\n---------------------\nAlex is a male. What's very important, Alex is not in the Brazil.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: Alex\nAnswer:",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "content": "Context information is below.\n---------------------\nAlex is a male. What's very important, Alex is not in the Brazil.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: Brazil\nAnswer:",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_3",
+      "messages": [
+        {
+          "content": "Please always use the tools provided to answer a question. Do not rely on prior knowledge.",
+          "role": "system"
+        },
+        {
+          "role": "user",
+          "content": "What's the summary of Alex? Does he live in Brazil based on the brief information? Return yes or no."
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_vv1XW3xv4j2us5sZOtzCU2lL",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Alex\"}"
+              },
+              {
+                "id": "call_V36LMHbwUJkEa20A3GoA4wIr",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Brazil\"}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "Alex is not in Brazil.",
+          "options": {
+            "toolResult": {
+              "result": "Alex is not in Brazil.",
+              "isError": false,
+              "id": "call_vv1XW3xv4j2us5sZOtzCU2lL"
+            }
+          }
+        },
+        {
+          "role": "user",
+          "content": "Alex is not in Brazil.",
+          "options": {
+            "toolResult": {
+              "result": "Alex is not in Brazil.",
+              "isError": false,
+              "id": "call_V36LMHbwUJkEa20A3GoA4wIr"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_vv1XW3xv4j2us5sZOtzCU2lL",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Alex\"}"
+              },
+              {
+                "id": "call_V36LMHbwUJkEa20A3GoA4wIr",
+                "name": "summary_tool",
+                "input": "{\"query\": \"Brazil\"}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Alex is not in Brazil.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Alex is not in Brazil.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_3",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Based on the brief information, Alex is not in Brazil.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

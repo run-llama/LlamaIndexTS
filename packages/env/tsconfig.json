@@ -5,9 +5,10 @@
     "outDir": "./dist/type",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "emitDeclarationOnly": true,
-    "module": "node16",
+    "module": "nodenext",
     "moduleResolution": "node16",
-    "types": ["node"]
+    "types": ["node"],
+    "resolveJsonModule": true
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

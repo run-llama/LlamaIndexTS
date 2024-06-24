@@ -8,6 +8,7 @@
     "strict": true,
     "skipLibCheck": true,
     "lib": ["ES2022"],
+    "types": ["node"],
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,

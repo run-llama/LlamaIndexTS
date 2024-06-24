@@ -41,7 +41,7 @@ To run them, run
 pnpm run test
 ```
 
-To write new test cases write them in [packages/core/src/tests](/packages/core/src/tests)
+To write new test cases write them in [packages/core/src/tests](/packages/llamaindex/src/tests)
 
 We use Jest https://jestjs.io/ to write our test cases. Jest comes with a bunch of built in assertions using the expect function: https://jestjs.io/docs/expect
 
@@ -91,16 +91,10 @@ Please send a descriptive changeset for each PR.
 
 ## Publishing (maintainers only)
 
-To publish a new version of the library, first create a new version:
+The [Release Github Action](.github/workflows/release.yml) is automatically generating and updating a
+PR called "Release {version}".
 
-```shell
-pnpm new-version
-```
+This PR will update the `package.json` and `CHANGELOG.md` files of each package according to
+the current changesets in the [.changeset](.changeset/) folder.
 
-If everything looks good, commit the generated files and release the new version:
-
-```shell
-pnpm release
-git push # push to the main branch
-git push --tags
-```
+If this PR is merged it will automatically add version tags to the repository and publish the updated packages to NPM.

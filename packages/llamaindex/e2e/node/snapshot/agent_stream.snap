@@ -1,0 +1,486 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Divide 16 by 2 then add 20"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Divide 16 by 2 then add 20"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "options": {
+            "toolCall": [
+              {
+                "name": "divideNumbers",
+                "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+                "input": {
+                  "a": 16,
+                  "b": 2
+                }
+              },
+              {
+                "name": "sumNumbers",
+                "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "8",
+          "options": {
+            "toolResult": {
+              "result": "8",
+              "isError": false,
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf"
+            }
+          }
+        },
+        {
+          "role": "user",
+          "content": "28",
+          "options": {
+            "toolResult": {
+              "result": "28",
+              "isError": false,
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "name": "sumNumbers",
+                "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+                "input": "{\"a\": 8, \"b\": 20}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "The result of dividing 16 by 2 is 8. When you add 20 to 8, the total is 28.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": [
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": "{\"a\": 16, \"b\": 2}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "divideNumbers",
+              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "input": {
+                "a": 16,
+                "b": 2
+              }
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_0",
+      "chunk": {
+        "raw": null,
+        "options": {
+          "toolCall": [
+            {
+              "name": "sumNumbers",
+              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "input": "{\"a\": 8, \"b\": 20}"
+            }
+          ]
+        },
+        "delta": ""
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "The"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " result"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " of"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " dividing"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "16"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " by"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "2"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " is"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "8"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "."
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " When"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " you"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " add"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "20"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " to"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "8"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": ","
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " the"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " total"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " is"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " "
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "28"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": "."
+      }
+    }
+  ]
+}

@@ -1,0 +1,284 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific location, San Francisco. The Weather tool is the relevant function to answer this request, as it returns weather information for a given location.\n\nThe Weather tool requires a single parameter:\n- location (string, required): The user has directly provided the location as \"San Francisco\".\n\nSince the required location parameter has been provided, we have enough information to call the Weather tool.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "toolu_011YcKkPygw2woJZrVWRRMwH",
+                "name": "Weather",
+                "input": {
+                  "location": "San Francisco"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "35 degrees and sunny in San Francisco",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "result": "35 degrees and sunny in San Francisco",
+              "isError": false,
+              "id": "toolu_011YcKkPygw2woJZrVWRRMwH"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_3",
+      "messages": [
+        {
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?"
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe unique_id function takes firstName and lastName as required parameters. The user has provided their first name (Alex) and last name (Yang) in the request, so we have all the necessary information to call the function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "toolu_012ZLUq5SWsghkXUjsEXsB1f",
+                "name": "unique_id",
+                "input": {
+                  "firstName": "Alex",
+                  "lastName": "Yang"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "123456789",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "result": "123456789",
+              "isError": false,
+              "id": "toolu_012ZLUq5SWsghkXUjsEXsB1f"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "how much is 1 + 1?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "how much is 1 + 1?"
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking to sum the numbers 1 and 1. The relevant tool is the sumNumbers function, which takes two number parameters a and b.\nThe user has directly provided the values for the required parameters:\na = 1 \nb = 1\nSince all the required parameters are provided, we can proceed with calling the function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "toolu_01SQD2XkaXkDNLQ2xaFzmguG",
+                "name": "sumNumbers",
+                "input": {
+                  "a": 1,
+                  "b": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "content": "2",
+          "role": "user",
+          "options": {
+            "toolResult": {
+              "result": "2",
+              "isError": false,
+              "id": "toolu_01SQD2XkaXkDNLQ2xaFzmguG"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user has asked for the weather in a specific location, San Francisco. The Weather tool is the relevant function to answer this request, as it returns weather information for a given location.\n\nThe Weather tool requires a single parameter:\n- location (string, required): The user has directly provided the location as \"San Francisco\".\n\nSince the required location parameter has been provided, we have enough information to call the Weather tool.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "toolu_011YcKkPygw2woJZrVWRRMwH",
+                "name": "Weather",
+                "input": {
+                  "location": "San Francisco"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The current weather in San Francisco is 35 degrees and sunny."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe unique_id function takes firstName and lastName as required parameters. The user has provided their first name (Alex) and last name (Yang) in the request, so we have all the necessary information to call the function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "toolu_012ZLUq5SWsghkXUjsEXsB1f",
+                "name": "unique_id",
+                "input": {
+                  "firstName": "Alex",
+                  "lastName": "Yang"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_3",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Your unique ID is 123456789."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_4",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "<thinking>\nThe user is asking to sum the numbers 1 and 1. The relevant tool is the sumNumbers function, which takes two number parameters a and b.\nThe user has directly provided the values for the required parameters:\na = 1 \nb = 1\nSince all the required parameters are provided, we can proceed with calling the function.\n</thinking>"
+            }
+          ],
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "toolu_01SQD2XkaXkDNLQ2xaFzmguG",
+                "name": "sumNumbers",
+                "input": {
+                  "a": 1,
+                  "b": 1
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_5",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": [
+            {
+              "type": "text",
+              "text": "So 1 + 1 = 2."
+            }
+          ],
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

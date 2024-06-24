@@ -1,0 +1,57 @@
+{
+  "name": "@llamaindex/community",
+  "description": "Community package for LlamaIndexTS",
+  "version": "0.0.5",
+  "type": "module",
+  "types": "dist/type/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./llm/bedrock": {
+      "import": {
+        "types": "./dist/type/llm/bedrock.d.ts",
+        "default": "./dist/llm/bedrock/base.js"
+      },
+      "require": {
+        "types": "./dist/type/llm/bedrock.d.ts",
+        "default": "./dist/llm/bedrock/base.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/community"
+  },
+  "scripts": {
+    "build": "rm -rf ./dist && pnpm run build:code && pnpm run build:type",
+    "build:code": "tsup",
+    "build:type": "tsc -p tsconfig.json",
+    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.6.3",
+    "concurrently": "^8.2.2",
+    "tsup": "^8.1.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.600.0",
+    "@types/node": "^20.14.2",
+    "llamaindex": "workspace:*"
+  }
+}

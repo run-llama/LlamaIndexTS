@@ -1,0 +1,121 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "content": "Hello",
+          "role": "user",
+          "options": {}
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "content": "hello",
+          "role": "user"
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Hello! How can I assist you today?",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Hello! How can I assist you today?",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": [
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": "Hello",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": "!",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": " How",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": " can",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": " I",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": " assist",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": " you",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": " today",
+        "options": {}
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "delta": "?",
+        "options": {}
+      }
+    }
+  ]
+}
