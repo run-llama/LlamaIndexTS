@@ -62,7 +62,3 @@ Features:
 - Provides comprehensive logs and detailed traces of all components.
 - Real-time monitoring of accuracy, evaluations, usage, costs, and latency.
 - For more configuration options and details, visit [Langtrace Docs](https://docs.langtrace.ai/introduction).
-
-## API Reference
-
-- [StorageContext](../api/interfaces/StorageContext.md)

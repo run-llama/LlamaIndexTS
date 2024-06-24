@@ -73,5 +73,6 @@ const response = await queryEngine.query({
 
 ## API Reference
 
+- [TextQaPrompt](../../api/type-aliases/TextQaPrompt.md)
 - [ResponseSynthesizer](../../api/classes/ResponseSynthesizer.md)
 - [CompactAndRefine](../../api/classes/CompactAndRefine.md)
