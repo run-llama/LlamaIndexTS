@@ -2,4 +2,4 @@
 "llamaindex": patch
 ---
 
-feat: add ignoreErros flag to LlamaParseReader
+feat: add ignoreErrors flag to LlamaParseReader

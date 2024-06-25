@@ -350,8 +350,6 @@ export class LlamaParseReader extends FileReader {
     jsonResult: Record<string, any>[],
     downloadPath: string,
   ): Promise<Record<string, any>[]> {
-    const headers = { Authorization: `Bearer ${this.apiKey}` };
-
     try {
       // Create download directory if it doesn't exist (Actually check for write access, not existence, since fsPromises does not have a `existsSync` method)
       try {
@@ -369,30 +367,17 @@ export class LlamaParseReader extends FileReader {
           }
           for (const image of page.images) {
             const imageName = image.name;
-            // Get the full path
-            let imagePath = `${downloadPath}/${jobId}-${imageName}`;
-
-            if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
-              imagePath += ".png";
-            }
-
-            // Get a valid image path
+            const imagePath = await this.getImagePath(
+              downloadPath,
+              jobId,
+              imageName,
+            );
+            await this.fetchAndSaveImage(imageName, imagePath, jobId);
+            // Assign metadata to the image
             image.path = imagePath;
             image.job_id = jobId;
             image.original_pdf_path = result.file_path;
             image.page_number = page.page;
-
-            const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
-            const response = await fetch(imageUrl, { headers });
-            if (!response.ok) {
-              throw new Error(
-                `Failed to download image: ${await response.text()}`,
-              );
-            }
-            const arrayBuffer = await response.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
-            await fs.writeFile(imagePath, buffer);
-
             images.push(image);
           }
         }
@@ -406,6 +391,40 @@ export class LlamaParseReader extends FileReader {
         throw e;
       }
     }
+  }
+
+  private async getImagePath(
+    downloadPath: string,
+    jobId: string,
+    imageName: string,
+  ): Promise<string> {
+    // Get the full path
+    let imagePath = `${downloadPath}/${jobId}-${imageName}`;
+    // Get a valid image path
+    if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
+      imagePath += ".png";
+    }
+
+    return imagePath;
+  }
+
+  private async fetchAndSaveImage(
+    imageName: string,
+    imagePath: string,
+    jobId: string,
+  ): Promise<void> {
+    const headers = { Authorization: `Bearer ${this.apiKey}` };
+    // Construct the image URL
+    const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
+    const response = await fetch(imageUrl, { headers });
+    if (!response.ok) {
+      throw new Error(`Failed to download image: ${await response.text()}`);
+    }
+    // Convert the response to an ArrayBuffer and then to a Buffer
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    // Write the image buffer to the specified imagePath
+    await fs.writeFile(imagePath, buffer);
   }
 
   private async getMimeType(
