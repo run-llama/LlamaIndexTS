@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.5
+
+### Patch Changes
+
+- f3b34b4: Use tiktoken instead of tiktoken/lite and disable WASM tiktoken for non-Node environments
+
 ## 0.1.4
 
 ### Patch Changes

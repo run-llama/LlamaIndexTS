@@ -1,5 +1,14 @@
 # @llamaindex/community
 
+## 0.0.6
+
+### Patch Changes
+
+- a87a4d1: feat: added tool support calling for Bedrock's Calude and general llm support for agents
+- Updated dependencies [a87a4d1]
+- Updated dependencies [0730140]
+  - llamaindex@0.4.2
+
 ## 0.0.5
 
 ### Patch Changes
