@@ -28,7 +28,7 @@
     "@google/generative-ai": "^0.12.0",
     "@grpc/grpc-js": "^1.10.8",
     "@huggingface/inference": "^2.7.0",
-    "@llamaindex/cloud": "0.0.5",
+    "@llamaindex/cloud": "0.0.7",
     "@llamaindex/env": "workspace:*",
     "@mistralai/mistralai": "^0.4.0",
     "@pinecone-database/pinecone": "^2.2.2",

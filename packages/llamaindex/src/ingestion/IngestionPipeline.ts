@@ -1,4 +1,3 @@
-import type { PlatformApiClient } from "@llamaindex/cloud";
 import {
   ModalityType,
   splitNodesByType,
@@ -6,13 +5,6 @@ import {
   type Document,
   type Metadata,
 } from "../Node.js";
-import { getPipelineCreate } from "../cloud/config.js";
-import {
-  DEFAULT_PIPELINE_NAME,
-  DEFAULT_PROJECT_NAME,
-  type ClientParams,
-} from "../cloud/types.js";
-import { getAppBaseUrl, getClient } from "../cloud/utils.js";
 import type { BaseReader } from "../readers/type.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type {
@@ -77,16 +69,11 @@ export class IngestionPipeline {
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
   cache?: IngestionCache;
   disableCache: boolean = false;
-  client?: PlatformApiClient;
-  clientParams?: ClientParams;
-  projectName: string = DEFAULT_PROJECT_NAME;
-  name: string = DEFAULT_PIPELINE_NAME;
 
   private _docStoreStrategy?: TransformComponent;
 
-  constructor(init?: Partial<IngestionPipeline> & ClientParams) {
+  constructor(init?: Partial<IngestionPipeline>) {
     Object.assign(this, init);
-    this.clientParams = { apiKey: init?.apiKey, baseUrl: init?.baseUrl };
     if (!this.docStore) {
       this.docStoreStrategy = DocStoreStrategy.NONE;
     }
@@ -141,52 +128,6 @@ export class IngestionPipeline {
       await addNodesToVectorStores(nodesToAdd, this.vectorStores);
     }
     return nodes;
-  }
-
-  private async getClient(): Promise<PlatformApiClient> {
-    if (!this.client) {
-      this.client = await getClient(this.clientParams);
-    }
-    return this.client;
-  }
-
-  async register(params: {
-    documents?: Document[];
-    nodes?: BaseNode[];
-    verbose?: boolean;
-  }): Promise<string> {
-    const client = await this.getClient();
-
-    const inputNodes = await this.prepareInput(params.documents, params.nodes);
-    const project = await client.project.upsertProject({
-      name: this.projectName,
-    });
-    if (!project.id) {
-      throw new Error("Project ID should be defined");
-    }
-
-    // upload
-    const pipeline = await client.project.upsertPipelineForProject(
-      project.id,
-      await getPipelineCreate({
-        pipelineName: this.name,
-        pipelineType: "PLAYGROUND",
-        transformations: this.transformations,
-        inputNodes,
-      }),
-    );
-    if (!pipeline.id) {
-      throw new Error("Pipeline ID must be defined");
-    }
-
-    // Print playground URL if not running remote
-    if (params.verbose) {
-      console.log(
-        `Pipeline available at: ${getAppBaseUrl(this.clientParams?.baseUrl)}/project/${project.id}/playground/${pipeline.id}`,
-      );
-    }
-
-    return pipeline.id;
   }
 }
 
