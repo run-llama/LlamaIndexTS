@@ -61,6 +61,7 @@ export async function stepToolsStreaming<Model extends LLM>({
   // check if first chunk has tool calls, if so, this is a function call
   // otherwise, it's a regular message
   const hasToolCall = !!(value.options && "toolCall" in value.options);
+
   enqueueOutput({
     taskStep: step,
     output: finalStream,
@@ -78,6 +79,14 @@ export async function stepToolsStreaming<Model extends LLM>({
         });
       }
     }
+
+    // If there are toolCalls but they didn't get read into the stream, used for Gemini
+    if (!toolCalls.size && value.options && "toolCall" in value.options) {
+      value.options.toolCall.forEach((toolCall) => {
+        toolCalls.set(toolCall.id, toolCall);
+      });
+    }
+
     step.context.store.messages = [
       ...step.context.store.messages,
       {

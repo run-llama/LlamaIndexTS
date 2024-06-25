@@ -110,10 +110,17 @@ export class GeminiSession implements IGeminiSession {
   async *getChatStream(
     result: GoogleStreamGenerateContentResult,
   ): GeminiChatStreamResponse {
-    yield* streamConverter(result.stream, (response) => ({
-      delta: this.getResponseText(response),
-      raw: response,
-    }));
+    yield* streamConverter(result.stream, (response) => {
+      const tools = this.getToolsFromResponse(response);
+      const options: ToolCallLLMMessageOptions = tools?.length
+        ? { toolCall: tools }
+        : {};
+      return {
+        delta: this.getResponseText(response),
+        raw: response,
+        options,
+      };
+    });
   }
 
   getCompletionStream(
@@ -244,6 +251,13 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     const client = this.session.getGenerativeModel(this.metadata);
     const chat = client.startChat({
       history: context.history,
+      tools: params.tools && [
+        {
+          functionDeclarations: params.tools.map(
+            mapBaseToolToGeminiFunctionDeclaration,
+          ),
+        },
+      ],
     });
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);
