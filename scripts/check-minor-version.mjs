@@ -1,7 +1,4 @@
 import { readFile, writeFile } from "node:fs/promises";
-import {
-  execSync
-} from 'node:child_process'
 
 const packages = ["llamaindex", "env"];
 const envPackageJson = JSON.parse(
