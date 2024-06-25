@@ -1,5 +1,5 @@
 // Note: This is using th WASM implementation of tiktoken which is 60x faster
-import cl100k_base from "tiktoken/encoders/cl100k_base.json";
+import cl100k_base from "tiktoken/encoders/cl100k_base.json" with { type: "json" };
 import { Tiktoken } from "tiktoken/lite";
 import type { Tokenizer } from "./types.js";
 import { Tokenizers } from "./types.js";

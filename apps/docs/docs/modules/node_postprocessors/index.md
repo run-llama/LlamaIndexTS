@@ -103,3 +103,7 @@ const processor = new SimilarityPostprocessor({
 
 const filteredNodes = processor.postprocessNodes(nodes);
 ```
+
+## API Reference
+
+- [SimilarityPostprocessor](../../api/classes/SimilarityPostprocessor.md)

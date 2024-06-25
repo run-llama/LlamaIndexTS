@@ -97,3 +97,7 @@ async function main() {
 
 main().catch(console.error);
 ```
+
+## API Reference
+
+- [IngestionPipeline](../../api/classes/IngestionPipeline.md)

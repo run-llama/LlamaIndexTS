@@ -70,3 +70,9 @@ const response = await queryEngine.query({
   query: "What did the author do in college?",
 });
 ```
+
+## API Reference
+
+- [TextQaPrompt](../../api/type-aliases/TextQaPrompt.md)
+- [ResponseSynthesizer](../../api/classes/ResponseSynthesizer.md)
+- [CompactAndRefine](../../api/classes/CompactAndRefine.md)

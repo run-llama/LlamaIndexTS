@@ -89,3 +89,8 @@ async function main() {
   console.log(response.response);
 }
 ```
+
+## API Reference
+
+- [LlamaDeuce](../../../api/variables/LlamaDeuce.md)
+- [DeuceChatStrategy](../../../api/variables/DeuceChatStrategy.md)

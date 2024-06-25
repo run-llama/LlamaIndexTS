@@ -56,3 +56,7 @@ console.log(
 ```bash
 the response is not correct with a score of 2.5
 ```
+
+## API Reference
+
+- [CorrectnessEvaluator](../../../api/classes/CorrectnessEvaluator.md)

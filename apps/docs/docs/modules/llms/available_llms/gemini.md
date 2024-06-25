@@ -99,3 +99,7 @@ async function main() {
   console.log(response.response);
 }
 ```
+
+## API Reference
+
+- [Gemini](../../../api/classes/Gemini.md)

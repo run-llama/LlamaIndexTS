@@ -21,3 +21,7 @@ const results = await queryEngine.query({
   query,
 });
 ```
+
+## API Reference
+
+- [TogetherEmbedding](../../../api/classes/TogetherEmbedding.md)

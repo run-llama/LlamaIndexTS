@@ -70,3 +70,7 @@ console.log(`the response is ${result.passing ? "relevant" : "not relevant"}`);
 ```bash
 the response is relevant
 ```
+
+## API Reference
+
+- [RelevancyEvaluator](../../../api/classes/RelevancyEvaluator.md)

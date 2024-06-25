@@ -71,3 +71,7 @@ async function main() {
   console.log(response.response);
 }
 ```
+
+## API Reference
+
+- [Ollama](../../../api/classes/Ollama.md)

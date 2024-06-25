@@ -84,3 +84,7 @@ async function main() {
 
 main().catch(console.error);
 ```
+
+## API Reference
+
+- [QdrantVectorStore](../../api/classes/QdrantVectorStore.md)

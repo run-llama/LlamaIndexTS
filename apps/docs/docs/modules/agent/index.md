@@ -18,3 +18,9 @@ LlamaIndex.TS comes with a few built-in agents, but you can also create your own
 ## Examples
 
 - [OpenAI Agent](../../examples/agent.mdx)
+
+## Api References
+
+- [OpenAIAgent](../../api/classes/OpenAIAgent.md)
+- [AnthropicAgent](../../api/classes/AnthropicAgent.md)
+- [ReActAgent](../../api/classes/ReActAgent.md)

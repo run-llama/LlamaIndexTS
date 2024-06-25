@@ -59,3 +59,7 @@ async function main() {
 
 main().catch(console.error);
 ```
+
+## API Reference
+
+- [FireworksLLM](../../../api/classes/FireworksLLM.md)

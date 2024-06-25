@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.4
+
+### Patch Changes
+
+- 56fabbb: Release env changes to tokenizer
+
 ## 0.1.3
 
 ### Patch Changes

@@ -165,3 +165,7 @@ async function main() {
 
 main().then(() => console.log("Done"));
 ```
+
+## API Reference
+
+- [RouterQueryEngine](../../api/classes/RouterQueryEngine.md)

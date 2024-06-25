@@ -43,3 +43,10 @@ async function main() {
 
 main().then(() => console.log("done"));
 ```
+
+## API Reference
+
+- [SummaryExtractor](../../api/classes/SummaryExtractor.md)
+- [QuestionsAnsweredExtractor](../../api/classes/QuestionsAnsweredExtractor.md)
+- [TitleExtractor](../../api/classes/TitleExtractor.md)
+- [KeywordExtractor](../../api/classes/KeywordExtractor.md)
