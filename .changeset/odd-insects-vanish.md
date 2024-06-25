@@ -2,4 +2,4 @@
 "@llamaindex/env": patch
 ---
 
-Fix TypeError: Module "..." needs an import attribute of "type: json"
+Use tiktoken instead of tiktoken/lite and disable WASM tiktoken for non-Node environments
