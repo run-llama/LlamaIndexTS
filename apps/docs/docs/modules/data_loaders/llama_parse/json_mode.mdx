@@ -54,6 +54,42 @@ Within page objects, the following keys may be present depending on your documen
 - `images`: Any images extracted from the page.
 - `items`: An array of heading, text and table objects in the order they appear on the page.
 
+### JSON Mode with SimpleDirectoryReader
+
+All Readers share a `loadData` method with `SimpleDirectoryReader` that promises to return a uniform Document with Metadata. This makes JSON mode incompatible with SimpleDirectoryReader.
+
+However, a simple work around is to create a new reader class that extends `LlamaParseReader` and adds a new method or overrides `loadData`, wrapping around JSON mode, extracting the required values, and returning a Document object.
+
+```ts
+import { LlamaParseReader, Document } from "llamaindex";
+
+class LlamaParseReaderWithJson extends LlamaParseReader {
+  // Override the loadData method
+  override async loadData(filePath: string): Promise<Document[]> {
+    // Call loadJson method that was inherited by LlamaParseReader
+    const jsonObjs = await super.loadJson(filePath);
+    let documents: Document[] = [];
+
+    jsonObjs.forEach((jsonObj) => {
+      // Making sure it's an array before iterating over it
+      if (Array.isArray(jsonObj.pages)) {
+      }
+      const docs = jsonObj.pages.map(
+        (page: { text: string; page: number }) =>
+          new Document({ text: page.text, metadata: { page: page.page } }),
+      );
+      documents = documents.concat(docs);
+    });
+    return documents;
+  }
+}
+```
+
+Now we have documents with page number as metadata. This new reader can be used like any other and be integrated with SimpleDirectoryReader. Since it extends `LlamaParseReader`, you can use the same params.
+
+You can assign any other values of the JSON response to the Document as needed.
+
 ## API Reference
 
 - [LlamaParseReader](../../../api/classes/LlamaParseReader.md)
+- [SimpleDirectoryReader](../../../api/classes/SimpleDirectoryReader.md)
