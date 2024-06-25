@@ -11,7 +11,7 @@ import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./types.js";
 import { getAppBaseUrl, getClient } from "./utils.js";
 
-import { LlamaCloudApi } from "@llamaindex/cloud";
+// import { LlamaCloudApi } from "@llamaindex/cloud";
 import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
@@ -32,7 +32,10 @@ export class LlamaCloudIndex {
       this.params.projectName,
     );
 
-    const client = getClient({ ...this.params, baseUrl: this.params.baseUrl });
+    const client = await getClient({
+      ...this.params,
+      baseUrl: this.params.baseUrl,
+    });
 
     if (verbose) {
       console.log("Waiting for pipeline ingestion: ");
@@ -42,18 +45,14 @@ export class LlamaCloudIndex {
       const pipelineStatus =
         await client.pipelines.getPipelineStatus(pipelineId);
 
-      if (
-        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Success
-      ) {
+      if (pipelineStatus.status === "SUCCESS") {
         if (verbose) {
           console.log("Pipeline ingestion completed successfully");
         }
         break;
       }
 
-      if (
-        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Error
-      ) {
+      if (pipelineStatus.status === "ERROR") {
         if (verbose) {
           console.error("Pipeline ingestion failed");
         }
@@ -81,7 +80,10 @@ export class LlamaCloudIndex {
       this.params.projectName,
     );
 
-    const client = getClient({ ...this.params, baseUrl: this.params.baseUrl });
+    const client = await getClient({
+      ...this.params,
+      baseUrl: this.params.baseUrl,
+    });
 
     if (verbose) {
       console.log("Loading data: ");
@@ -98,14 +100,11 @@ export class LlamaCloudIndex {
           doc,
         );
 
-        if (
-          status === LlamaCloudApi.ManagedIngestionStatus.NotStarted ||
-          status === LlamaCloudApi.ManagedIngestionStatus.InProgress
-        ) {
+        if (status === "NOT_STARTED" || status === "IN_PROGRESS") {
           continue;
         }
 
-        if (status === LlamaCloudApi.ManagedIngestionStatus.Error) {
+        if (status === "ERROR") {
           if (verbose) {
             console.error(`Document ingestion failed for ${doc}`);
           }
@@ -142,7 +141,10 @@ export class LlamaCloudIndex {
     name: string,
     projectName: string,
   ): Promise<string> {
-    const client = getClient({ ...this.params, baseUrl: this.params.baseUrl });
+    const client = await getClient({
+      ...this.params,
+      baseUrl: this.params.baseUrl,
+    });
 
     const pipelines = await client.pipelines.searchPipelines({
       projectName,
@@ -168,7 +170,7 @@ export class LlamaCloudIndex {
 
     const appUrl = getAppBaseUrl(params.baseUrl);
 
-    const client = getClient({ ...params, baseUrl: appUrl });
+    const client = await getClient({ ...params, baseUrl: appUrl });
 
     const pipelineCreateParams = await getPipelineCreate({
       pipelineName: params.name,
@@ -219,28 +221,21 @@ export class LlamaCloudIndex {
         pipeline.id,
       );
 
-      if (
-        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Success
-      ) {
+      if (pipelineStatus.status === "SUCCESS") {
         console.info(
           "Documents ingested successfully, pipeline is ready to use",
         );
         break;
       }
 
-      if (
-        pipelineStatus.status === LlamaCloudApi.ManagedIngestionStatus.Error
-      ) {
+      if (pipelineStatus.status === "ERROR") {
         console.error(
           `Some documents failed to ingest, check your pipeline logs at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
         );
         throw new Error("Some documents failed to ingest");
       }
 
-      if (
-        pipelineStatus.status ===
-        LlamaCloudApi.ManagedIngestionStatus.PartialSuccess
-      ) {
+      if (pipelineStatus.status === "PARTIAL_SUCCESS") {
         console.info(
           `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
         );
@@ -289,7 +284,7 @@ export class LlamaCloudIndex {
   async insert(document: Document) {
     const appUrl = getAppBaseUrl(this.params.baseUrl);
 
-    const client = getClient({ ...this.params, baseUrl: appUrl });
+    const client = await getClient({ ...this.params, baseUrl: appUrl });
 
     const pipelineId = await this.getPipelineId(
       this.params.name,
@@ -316,7 +311,7 @@ export class LlamaCloudIndex {
   async delete(document: Document) {
     const appUrl = getAppBaseUrl(this.params.baseUrl);
 
-    const client = getClient({ ...this.params, baseUrl: appUrl });
+    const client = await getClient({ ...this.params, baseUrl: appUrl });
 
     const pipelineId = await this.getPipelineId(
       this.params.name,
@@ -335,7 +330,7 @@ export class LlamaCloudIndex {
   async refresh_doc(document: Document) {
     const appUrl = getAppBaseUrl(this.params.baseUrl);
 
-    const client = getClient({ ...this.params, baseUrl: appUrl });
+    const client = await getClient({ ...this.params, baseUrl: appUrl });
 
     const pipelineId = await this.getPipelineId(
       this.params.name,

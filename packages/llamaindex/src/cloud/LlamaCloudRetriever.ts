@@ -1,4 +1,4 @@
-import { LlamaCloudApi, LlamaCloudApiClient } from "@llamaindex/cloud";
+import type { LlamaCloudApi, LlamaCloudApiClient } from "@llamaindex/cloud";
 import type { NodeWithScore } from "../Node.js";
 import { ObjectType, jsonToNode } from "../Node.js";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
@@ -42,9 +42,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
     }
   }
 
-  private getClient(): LlamaCloudApiClient {
+  private async getClient(): Promise<LlamaCloudApiClient> {
     if (!this.client) {
-      this.client = getClient(this.clientParams);
+      this.client = await getClient(this.clientParams);
     }
     return this.client;
   }
@@ -54,7 +54,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
-    const pipelines = await this.getClient()?.pipelines.searchPipelines({
+    const client = await this.getClient();
+
+    const pipelines = await client?.pipelines.searchPipelines({
       projectName: this.projectName,
       pipelineName: this.pipelineName,
     });
@@ -65,9 +67,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
-    const pipeline = await this.getClient().pipelines.getPipeline(
-      pipelines[0].id,
-    );
+    const pipeline = await client?.pipelines.getPipeline(pipelines[0].id);
 
     if (!pipeline) {
       throw new Error(
@@ -75,7 +75,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
-    const results = await this.getClient().pipelines.runSearch(pipeline.id, {
+    const results = await client?.pipelines.runSearch(pipeline.id, {
       ...this.retrieveParams,
       query: extractText(query),
       searchFilters: preFilters as LlamaCloudApi.MetadataFilters,
