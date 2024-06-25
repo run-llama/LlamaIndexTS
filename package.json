@@ -34,7 +34,7 @@
     "turbo": "^1.13.4",
     "typescript": "^5.5.2"
   },
-  "packageManager": "pnpm@9.0.5",
+  "packageManager": "pnpm@9.4.0",
   "pnpm": {
     "overrides": {
       "trim": "1.0.1",
