@@ -13,3 +13,5 @@ export {
 
 export { type VertexGeminiSessionOptions } from "./llm/gemini/types.js";
 export { GeminiVertexSession } from "./llm/gemini/vertex.js";
+// Fern only supports node.js runtime
+export * from "./cloud/index.js";

@@ -11,7 +11,6 @@ import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./types.js";
 import { getAppBaseUrl, getClient } from "./utils.js";
 
-// import { LlamaCloudApi } from "@llamaindex/cloud";
 import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
@@ -327,7 +326,7 @@ export class LlamaCloudIndex {
     await this.waitForPipelineIngestion();
   }
 
-  async refresh_doc(document: Document) {
+  async refreshDoc(document: Document) {
     const appUrl = getAppBaseUrl(this.params.baseUrl);
 
     const client = await getClient({ ...this.params, baseUrl: appUrl });
