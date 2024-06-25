@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.4.2
+
+### Patch Changes
+
+- a87a4d1: feat: added tool support calling for Bedrock's Calude and general llm support for agents
+- 0730140: include node relationships when converting jsonToDoc
+- Updated dependencies [f3b34b4]
+  - @llamaindex/env@0.1.5
+
 ## 0.4.1
 
 ### Patch Changes
