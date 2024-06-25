@@ -32,4 +32,4 @@ For local LLMs, currently we recommend the use of [Ollama](./available_llms/olla
 
 ## API Reference
 
-- [OpenAI](../api/classes/OpenAI.md)
+- [OpenAI](../../api/classes/OpenAI.md)

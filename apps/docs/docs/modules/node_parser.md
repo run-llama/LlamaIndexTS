@@ -95,3 +95,4 @@ The output metadata will be something like:
 
 - [SimpleNodeParser](../api/classes/SimpleNodeParser.md)
 - [SentenceSplitter](../api/classes/SentenceSplitter.md)
+- [MarkdownNodeParser](../api/classes/MarkdownNodeParser.md)

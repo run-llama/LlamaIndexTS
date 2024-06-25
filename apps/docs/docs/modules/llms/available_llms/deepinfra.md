@@ -81,3 +81,7 @@ async function main() {
 ## Feedback
 
 If you have any feedback, please reach out to us at [feedback@deepinfra.com](mailto:feedback@deepinfra.com)
+
+## API Reference
+
+- [DeepInfra](../../../api/classes/DeepInfra)

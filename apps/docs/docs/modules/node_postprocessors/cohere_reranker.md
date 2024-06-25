@@ -65,3 +65,7 @@ const queryEngine = index.asQueryEngine({
 // log the response
 const response = await queryEngine.query("Where did the author grown up?");
 ```
+
+## API Reference
+
+- [CohereRerank](../../api/classes/CohereRerank.md)
