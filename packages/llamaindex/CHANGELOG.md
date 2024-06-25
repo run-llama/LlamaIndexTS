@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.4.3
+
+### Patch Changes
+
+- 2ef62a9: feat: added support for embeddings via HuggingFace Inference API
+- Updated dependencies [d4e853c]
+- Updated dependencies [a94b8ec]
+  - @llamaindex/env@0.1.6
+
 ## 0.4.2
 
 ### Patch Changes

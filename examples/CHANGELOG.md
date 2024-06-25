@@ -1,5 +1,13 @@
 # examples
 
+## 0.0.6
+
+### Patch Changes
+
+- 2ef62a9: feat: added support for embeddings via HuggingFace Inference API
+- Updated dependencies [2ef62a9]
+  - llamaindex@0.4.3
+
 ## 0.0.5
 
 ### Patch Changes

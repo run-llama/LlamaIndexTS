@@ -1,5 +1,12 @@
 # @llamaindex/env
 
+## 0.1.6
+
+### Patch Changes
+
+- d4e853c: fix: stronger type declaration
+- a94b8ec: fix: jsr release
+
 ## 0.1.5
 
 ### Patch Changes
