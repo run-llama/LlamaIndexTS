@@ -2,7 +2,7 @@
   "name": "@llamaindex/env",
   "version": "0.1.5",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.edge-light.ts"
   },
   "publish": {
     "include": ["LICENSE", "README.md", "src/**/*", "jsr.json"]
