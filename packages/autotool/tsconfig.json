@@ -10,7 +10,7 @@
   "include": ["./src"],
   "references": [
     {
-      "path": "../core/tsconfig.json"
+      "path": "../llamaindex/tsconfig.json"
     },
     {
       "path": "../env/tsconfig.json"

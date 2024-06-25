@@ -53,7 +53,7 @@ async function main() {
     message: "How much is 5 + 5? then divide by 2",
   });
 
-  console.log(response.response.message);
+  console.log(response.message);
 }
 
 void main().then(() => {

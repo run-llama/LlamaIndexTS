@@ -23,7 +23,8 @@ ANTHROPIC_CLAUDE_2 = "anthropic.claude-v2";
 ANTHROPIC_CLAUDE_2_1 = "anthropic.claude-v2:1";
 ANTHROPIC_CLAUDE_3_SONNET = "anthropic.claude-3-sonnet-20240229-v1:0";
 ANTHROPIC_CLAUDE_3_HAIKU = "anthropic.claude-3-haiku-20240307-v1:0";
-ANTHROPIC_CLAUDE_3_OPUS = "anthropic.claude-3-opus-20240229-v1:0"; // Not currently on Bedrock
+ANTHROPIC_CLAUDE_3_OPUS = "anthropic.claude-3-opus-20240229-v1:0"; // available on us-west-2
+ANTHROPIC_CLAUDE_3_5_SONNET = "anthropic.claude-3-5-sonnet-20240620-v1:0";
 ```
 
 Sonnet, Haiku and Opus are multimodal, image_url only supports base64 data url format, e.g. `data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==`

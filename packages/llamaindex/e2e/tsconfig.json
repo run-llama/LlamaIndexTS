@@ -1,0 +1,20 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "target": "ESNext",
+    "lib": ["ES2022"],
+    "types": ["node"]
+  },
+  "include": ["./node", "./mock-module.js", "./mock-register.js", "./fixtures"],
+  "references": [
+    {
+      "path": "../tsconfig.json"
+    },
+    {
+      "path": "../../env/tsconfig.json"
+    }
+  ]
+}

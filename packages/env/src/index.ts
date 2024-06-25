@@ -35,14 +35,15 @@ export function createSHA256(): SHA256 {
   };
 }
 
+export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/node.js";
 export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
 export {
   EOL,
-  ReadableStream,
-  TransformStream,
-  WritableStream,
   fs,
   ok,
   path,
   randomUUID,
+  ReadableStream,
+  TransformStream,
+  WritableStream,
 };

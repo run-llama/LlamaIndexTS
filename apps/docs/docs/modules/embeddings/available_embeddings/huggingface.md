@@ -32,3 +32,7 @@ Settings.embedModel = new HuggingFaceEmbedding({
   quantized: false,
 });
 ```
+
+## API Reference
+
+- [HuggingFaceEmbedding](../../../api/classes/HuggingFaceEmbedding.md)

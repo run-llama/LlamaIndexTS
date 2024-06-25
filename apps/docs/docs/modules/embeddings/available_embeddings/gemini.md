@@ -31,3 +31,7 @@ Settings.embedModel = new GeminiEmbedding({
   model: GEMINI_MODEL.GEMINI_PRO_LATEST,
 });
 ```
+
+## API Reference
+
+- [GeminiEmbedding](../../../api/classes/GeminiEmbedding.md)

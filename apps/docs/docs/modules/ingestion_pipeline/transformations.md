@@ -4,9 +4,9 @@ A transformation is something that takes a list of nodes as an input, and return
 
 Currently, the following components are Transformation objects:
 
-- [SimpleNodeParser](../api/classes/SimpleNodeParser.md)
+- [SimpleNodeParser](../../api/classes/SimpleNodeParser.md)
 - [MetadataExtractor](../documents_and_nodes/metadata_extraction.md)
-- Embeddings
+- [Embeddings](../embeddings/index.md)
 
 ## Usage Pattern
 

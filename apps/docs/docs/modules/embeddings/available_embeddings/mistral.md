@@ -22,3 +22,7 @@ const results = await queryEngine.query({
   query,
 });
 ```
+
+## API Reference
+
+- [MistralAIEmbedding](../../../api/classes/MistralAIEmbedding.md)

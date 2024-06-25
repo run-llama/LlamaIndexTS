@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/community",
   "description": "Community package for LlamaIndexTS",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -45,12 +45,12 @@
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.5.5",
+    "@swc/core": "^1.6.3",
     "concurrently": "^8.2.2",
     "tsup": "^8.1.0"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.582.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.600.0",
     "@types/node": "^20.14.2",
     "llamaindex": "workspace:*"
   }
