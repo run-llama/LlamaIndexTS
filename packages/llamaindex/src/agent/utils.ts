@@ -1,15 +1,160 @@
 import { ReadableStream } from "@llamaindex/env";
 import type { Logger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import { isAsyncIterable, prettifyError } from "../internal/utils.js";
+import {
+  isAsyncIterable,
+  prettifyError,
+  stringifyJSONToMessageContent,
+} from "../internal/utils.js";
 import type {
   ChatMessage,
+  ChatResponse,
   ChatResponseChunk,
+  LLM,
   PartialToolCall,
   TextChatMessage,
   ToolCall,
+  ToolCallLLMMessageOptions,
 } from "../llm/index.js";
 import type { BaseTool, JSONObject, JSONValue, ToolOutput } from "../types.js";
+import type { TaskHandler } from "./types.js";
+
+type StepToolsResponseParams<Model extends LLM> = {
+  response: ChatResponse<ToolCallLLMMessageOptions>;
+  tools: BaseTool[];
+  step: Parameters<TaskHandler<Model, {}, ToolCallLLMMessageOptions>>[0];
+  enqueueOutput: Parameters<
+    TaskHandler<Model, {}, ToolCallLLMMessageOptions>
+  >[1];
+};
+
+type StepToolsStreamingResponseParams<Model extends LLM> =
+  StepToolsResponseParams<Model> & {
+    response: AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>;
+  };
+
+// #TODO stepTools and stepToolsStreaming should be moved to a better abstraction
+
+export async function stepToolsStreaming<Model extends LLM>({
+  response,
+  tools,
+  step,
+  enqueueOutput,
+}: StepToolsStreamingResponseParams<Model>) {
+  const responseChunkStream = new ReadableStream<
+    ChatResponseChunk<ToolCallLLMMessageOptions>
+  >({
+    async start(controller) {
+      for await (const chunk of response) {
+        controller.enqueue(chunk);
+      }
+      controller.close();
+    },
+  });
+  const [pipStream, finalStream] = responseChunkStream.tee();
+  const reader = pipStream.getReader();
+  const { value } = await reader.read();
+  reader.releaseLock();
+  if (value === undefined) {
+    throw new Error("first chunk value is undefined, this should not happen");
+  }
+  // check if first chunk has tool calls, if so, this is a function call
+  // otherwise, it's a regular message
+  const hasToolCall = !!(value.options && "toolCall" in value.options);
+  enqueueOutput({
+    taskStep: step,
+    output: finalStream,
+    isLast: !hasToolCall,
+  });
+
+  if (hasToolCall) {
+    // you need to consume the response to get the full toolCalls
+    const toolCalls = new Map<string, ToolCall | PartialToolCall>();
+    for await (const chunk of pipStream) {
+      if (chunk.options && "toolCall" in chunk.options) {
+        const toolCall = chunk.options.toolCall;
+        toolCall.forEach((toolCall) => {
+          toolCalls.set(toolCall.id, toolCall);
+        });
+      }
+    }
+    step.context.store.messages = [
+      ...step.context.store.messages,
+      {
+        role: "assistant" as const,
+        content: "",
+        options: {
+          toolCall: [...toolCalls.values()],
+        },
+      },
+    ];
+    for (const toolCall of toolCalls.values()) {
+      const targetTool = tools.find(
+        (tool) => tool.metadata.name === toolCall.name,
+      );
+      const toolOutput = await callTool(
+        targetTool,
+        toolCall,
+        step.context.logger,
+      );
+      step.context.store.messages = [
+        ...step.context.store.messages,
+        {
+          role: "user" as const,
+          content: stringifyJSONToMessageContent(toolOutput.output),
+          options: {
+            toolResult: {
+              result: toolOutput.output,
+              isError: toolOutput.isError,
+              id: toolCall.id,
+            },
+          },
+        },
+      ];
+      step.context.store.toolOutputs.push(toolOutput);
+    }
+  }
+}
+
+export async function stepTools<Model extends LLM>({
+  response,
+  tools,
+  step,
+  enqueueOutput,
+}: StepToolsResponseParams<Model>) {
+  step.context.store.messages = [
+    ...step.context.store.messages,
+    response.message,
+  ];
+  const options = response.message.options ?? {};
+  enqueueOutput({
+    taskStep: step,
+    output: response,
+    isLast: !("toolCall" in options),
+  });
+  if ("toolCall" in options) {
+    const { toolCall } = options;
+    for (const call of toolCall) {
+      const targetTool = tools.find((tool) => tool.metadata.name === call.name);
+      const toolOutput = await callTool(targetTool, call, step.context.logger);
+      step.context.store.toolOutputs.push(toolOutput);
+      step.context.store.messages = [
+        ...step.context.store.messages,
+        {
+          content: stringifyJSONToMessageContent(toolOutput.output),
+          role: "user",
+          options: {
+            toolResult: {
+              result: toolOutput.output,
+              isError: toolOutput.isError,
+              id: call.id,
+            },
+          },
+        },
+      ];
+    }
+  }
+}
 
 export async function callTool(
   tool: BaseTool | undefined,
