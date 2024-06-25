@@ -58,9 +58,11 @@ jobs:
 
       # Refs: https://github.com/changesets/changesets/issues/421
       - name: Update lock file
+        continue-on-error: true
         run: pnpm install --lockfile-only
 
       - name: Commit lock file
+        continue-on-error: true
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update lock file"
