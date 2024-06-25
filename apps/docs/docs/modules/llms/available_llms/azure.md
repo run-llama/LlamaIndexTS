@@ -74,3 +74,7 @@ async function main() {
   console.log(response.response);
 }
 ```
+
+## API Reference
+
+- [OpenAI](../../../api/classes/OpenAI.md)
