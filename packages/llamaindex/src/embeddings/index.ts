@@ -1,6 +1,7 @@
 export { DeepInfraEmbedding } from "./DeepInfraEmbedding.js";
 export { FireworksEmbedding } from "./fireworks.js";
 export * from "./GeminiEmbedding.js";
+export { HuggingFaceInferenceAPIEmbedding } from "./HuggingFaceEmbedding.js";
 export * from "./JinaAIEmbedding.js";
 export * from "./MistralAIEmbedding.js";
 export * from "./MultiModalEmbedding.js";
