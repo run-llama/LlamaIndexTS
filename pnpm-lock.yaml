@@ -153,7 +153,7 @@ importers:
         specifier: ^1.0.12
         version: 1.0.12
       llamaindex:
-        specifier: latest
+        specifier: ^0.4.1
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
