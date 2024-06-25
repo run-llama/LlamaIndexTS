@@ -1,0 +1,59 @@
+---
+sidebar_position: 1
+---
+
+# JSON Mode
+
+In JSON mode, LlamaParse will return a data structure representing the parsed object.
+
+## Usage
+
+For Json mode, you need to use `loadJson`. The `resultType` is automatically set with this method. Currently it can't be used with `SimpleDirectoryReader`.
+More information about indexing the results on the next page.
+
+```ts
+const reader = new LlamaParseReader();
+async function main() {
+  // Load the file and return an array of json objects
+  const jsonObjs = await reader.loadJson("../data/uber_10q_march_2022.pdf");
+  // Access the first "pages" (=a single parsed file) object in the array
+  const jsonList = jsonObjs[0]["pages"];
+  // Further process the jsonList object as needed.
+}
+```
+
+### Output
+
+The result format of the response, written to `jsonObjs` in the example, follows this structure:
+
+```json
+{
+    "pages": [
+        ..page objects..
+    ],
+    "job_metadata": {
+        "credits_used": int,
+        "credits_max": int,
+        "job_credits_usage": int,
+        "job_pages": int,
+        "job_is_cache_hit": boolean
+    },
+    "job_id": string ,
+    "file_path": string,
+    }
+}
+```
+
+#### Page objects
+
+Within page objects, the following keys may be present depending on your document.
+
+- `page`: The page number of the document.
+- `text`: The text extracted from the page.
+- `md`: The markdown version of the extracted text.
+- `images`: Any images extracted from the page.
+- `items`: An array of heading, text and table objects in the order they appear on the page.
+
+## API Reference
+
+- [LlamaParseReader](../../../api/classes/LlamaParseReader.md)
