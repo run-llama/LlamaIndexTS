@@ -1,4 +1,4 @@
-# Mixedbread ai Reranking Guide
+# MixedbreadAI
 
 Welcome to the mixedbread ai reranker guide! This guide will help you use mixedbread ai's API to rerank search query results, ensuring you get the most relevant information, just like picking the freshest bread from the bakery.
 
@@ -19,11 +19,11 @@ First, you will need to install the `llamaindex` package.
 pnpm install llamaindex
 ```
 
-Next, sign up for an API key at [mixedbread.ai](https://mixedbread.ai/). Once you have your API key, you can import the necessary modules and create a new instance of the `MixedbreadAIRerank` class.
+Next, sign up for an API key at [mixedbread.ai](https://mixedbread.ai/). Once you have your API key, you can import the necessary modules and create a new instance of the `MixedbreadAIReranker` class.
 
 ```ts
 import {
-  MixedbreadAIRerank,
+  MixedbreadAIReranker,
   Document,
   OpenAI,
   VectorStoreIndex,
@@ -61,10 +61,10 @@ retriever.similarityTopK = 5;
 
 ### Step 3: Create a MixedbreadAIReranker Instance
 
-Create a new instance of the `MixedbreadAIRerank` class.
+Create a new instance of the `MixedbreadAIReranker` class.
 
 ```ts
-const nodePostprocessor = new MixedbreadAIRerank({
+const nodePostprocessor = new MixedbreadAIReranker({
   apiKey: "<MIXEDBREAD_API_KEY>",
   topN: 4,
 });
@@ -91,12 +91,12 @@ With mixedbread's Reranker, you're all set to serve up the most relevant and wel
 
 This section will guide you through a simple reranking process using mixedbread ai.
 
-### Step 1: Create an Instance of MixedbreadAIRerank
+### Step 1: Create an Instance of MixedbreadAIReranker
 
-Create a new instance of the `MixedbreadAIRerank` class, passing in your API key and the number of results you want to return. It's like setting up your bakery to offer a specific number of freshly baked items.
+Create a new instance of the `MixedbreadAIReranker` class, passing in your API key and the number of results you want to return. It's like setting up your bakery to offer a specific number of freshly baked items.
 
 ```ts
-const reranker = new MixedbreadAIRerank({
+const reranker = new MixedbreadAIReranker({
   apiKey: "<MIXEDBREAD_API_KEY>",
   topN: 4,
 });
@@ -127,12 +127,12 @@ console.log(result); // Like pulling freshly baked nodes out of the oven.
 
 This section will guide you through reranking when working with objects.
 
-### Step 1: Create an Instance of MixedbreadAIRerank
+### Step 1: Create an Instance of MixedbreadAIReranker
 
-Create a new instance of the `MixedbreadAIRerank` class, just like before.
+Create a new instance of the `MixedbreadAIReranker` class, just like before.
 
 ```ts
-const reranker = new MixedbreadAIRerank({
+const reranker = new MixedbreadAIReranker({
   apiKey: "<MIXEDBREAD_API_KEY>",
   model: "mixedbread-ai/mxbai-rerank-large-v1",
   topK: 5,

@@ -1,4 +1,4 @@
-# Mixedbread ai Embeddings Guide
+# MixedbreadAI
 
 Welcome to the mixedbread embeddings guide! This guide will help you use the mixedbread ai's API to generate embeddings for your text documents, ensuring you get the most relevant information, just like picking the freshest bread from the bakery.
 
