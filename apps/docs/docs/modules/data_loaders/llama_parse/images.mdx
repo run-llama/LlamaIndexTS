@@ -1,3 +1,26 @@
+---
+sidebar_position: 2
+---
+
+# Image Retrieval
+
+LlamaParse `json` mode supports extracting any images found in a page object by using the `getImages` function. They are downloaded to a local folder and can then be sent to a multimodal LLM for further processing.
+
+## Usage
+
+We use the `getImages` method to input our array of JSON objects, download the images to a specified folder and get a list of ImageNodes.
+
+```ts
+const reader = new LlamaParseReader();
+const jsonObjs = await reader.loadJson("../data/uber_10q_march_2022.pdf");
+const imageDicts = await reader.getImages(jsonObjs, "images");
+```
+
+### Multimodal Indexing
+
+You can create an index across both text and image nodes by requesting alternative text for the image from a multimodal LLM.
+
+```ts
 import {
   Document,
   ImageNode,
@@ -29,14 +52,31 @@ async function main() {
 }
 
 main().catch(console.error);
+```
 
-// Extract and assign text and page number from jsonList, return an array of Document objects
+We use two helper functions to create documents from the text and image nodes provided.
+
+#### Text Documents
+
+To create documents from the text nodes of the json object, we just map the needed values to a new `Document` object. In this case we assign the text as text and the page number as metadata.
+
+```ts
 function getTextDocs(jsonList: { text: string; page: number }[]): Document[] {
   return jsonList.map(
     (page) => new Document({ text: page.text, metadata: { page: page.page } }),
   );
 }
-// Download all images from jsonObjs, send them to OpenAI API to get alt text, return an array of Document objects
+```
+
+#### Image Documents
+
+To create documents from the images, we need to use a multimodal LLM to generate alt text.
+
+For this we create `ImageNodes` and add them as part of our message.
+
+We can use the `createMessageContent` function to simplify this.
+
+```ts
 async function getImageTextDocs(
   jsonObjs: Record<string, any>[],
 ): Promise<Document[]> {
@@ -66,3 +106,12 @@ async function getImageTextDocs(
 
   return imageDocs;
 }
+```
+
+The returned `imageDocs` have the alt text assigned as text and the image path as metadata.
+
+You can see the full example file [here](https://github.com/run-llama/LlamaIndexTS/blob/main/examples/readers/src/llamaparse-json.ts).
+
+## API Reference
+
+- [LlamaParseReader](../../../api/classes/LlamaParseReader.md)
