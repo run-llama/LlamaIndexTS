@@ -64,7 +64,7 @@ export class EngineResponse implements ChatResponse, ChatResponseChunk {
     sourceNodes?: NodeWithScore[],
   ): EngineResponse {
     return new EngineResponse(
-      this.toChatResponse(chunk.delta, chunk.raw),
+      EngineResponse.toChatResponse(chunk.delta, chunk.raw),
       true,
       sourceNodes,
     );
