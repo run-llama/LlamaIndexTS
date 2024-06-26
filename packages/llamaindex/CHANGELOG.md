@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.4.4
+
+### Patch Changes
+
+- 42eb73a: Fix IngestionPipeline not working without vectorStores
+
 ## 0.4.3
 
 ### Patch Changes
