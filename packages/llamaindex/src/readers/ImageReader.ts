@@ -1,5 +1,5 @@
-import type { Document } from "../Node.js";
-import { ImageDocument } from "../Node.js";
+import type { Document } from "@llamaindex/core/schema";
+import { ImageDocument } from "@llamaindex/core/schema";
 import { FileReader } from "./type.js";
 
 /**

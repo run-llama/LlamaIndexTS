@@ -1,6 +1,6 @@
+import type { NodeWithScore } from "@llamaindex/core/schema";
+import { TextNode } from "@llamaindex/core/schema";
 import type { EngineResponse } from "../../EngineResponse.js";
-import type { NodeWithScore } from "../../Node.js";
-import { TextNode } from "../../Node.js";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { PromptMixin } from "../../prompts/Mixin.js";

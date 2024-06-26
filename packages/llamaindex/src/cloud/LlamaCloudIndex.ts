@@ -1,4 +1,4 @@
-import type { Document } from "../Node.js";
+import type { Document } from "@llamaindex/core/schema";
 import type { BaseRetriever } from "../Retriever.js";
 import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
 import type { TransformComponent } from "../ingestion/types.js";

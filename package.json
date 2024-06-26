@@ -24,14 +24,14 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.4",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-turbo": "^1.13.4",
+    "eslint-config-turbo": "^2.0.5",
     "eslint-plugin-react": "7.34.1",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "madge": "^7.0.0",
     "prettier": "^3.3.2",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "turbo": "^1.13.4",
+    "turbo": "^2.0.5",
     "typescript": "^5.5.2"
   },
   "packageManager": "pnpm@9.4.0",
@@ -40,6 +40,9 @@
       "trim": "1.0.1",
       "@babel/traverse": "7.23.2",
       "protobufjs": "7.2.6"
+    },
+    "patchedDependencies": {
+      "bunchee@5.2.1": "patches/bunchee@5.2.1.patch"
     }
   },
   "lint-staged": {

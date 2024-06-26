@@ -1,6 +1,6 @@
+import { Document } from "@llamaindex/core/schema";
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
-import { Document } from "../Node.js";
 import { FileReader, type Language, type ResultType } from "./type.js";
 
 const SupportedFiles: { [key: string]: string } = {

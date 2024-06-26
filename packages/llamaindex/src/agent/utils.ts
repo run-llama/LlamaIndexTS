@@ -1,4 +1,6 @@
+import { baseToolWithCallSchema } from "@llamaindex/core/schema";
 import { ReadableStream } from "@llamaindex/env";
+import { z } from "zod";
 import type { Logger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import {
@@ -17,6 +19,7 @@ import type {
   ToolCallLLMMessageOptions,
 } from "../llm/index.js";
 import type { BaseTool, JSONObject, JSONValue, ToolOutput } from "../types.js";
+import type { AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 
 type StepToolsResponseParams<Model extends LLM> = {
@@ -296,4 +299,14 @@ export function createReadableStream<T>(
       controller.close();
     },
   });
+}
+
+export function validateAgentParams<AI extends LLM>(
+  params: AgentParamsBase<AI>,
+) {
+  if ("tools" in params) {
+    z.array(baseToolWithCallSchema).parse(params.tools);
+  } else {
+    // todo: check `params.toolRetriever` when migrate to @llamaindex/core
+  }
 }

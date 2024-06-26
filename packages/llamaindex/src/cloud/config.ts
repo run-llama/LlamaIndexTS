@@ -1,5 +1,5 @@
 import { LlamaCloudApi } from "@llamaindex/cloud";
-import { BaseNode } from "../Node.js";
+import { BaseNode } from "@llamaindex/core/schema";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";

@@ -1,5 +1,5 @@
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { EngineResponse } from "../../EngineResponse.js";
-import type { NodeWithScore } from "../../Node.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";

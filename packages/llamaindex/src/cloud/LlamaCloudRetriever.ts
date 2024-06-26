@@ -1,6 +1,6 @@
 import type { LlamaCloudApi, LlamaCloudApiClient } from "@llamaindex/cloud";
-import type { NodeWithScore } from "../Node.js";
-import { ObjectType, jsonToNode } from "../Node.js";
+import type { NodeWithScore } from "@llamaindex/core/schema";
+import { ObjectType, jsonToNode } from "@llamaindex/core/schema";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";

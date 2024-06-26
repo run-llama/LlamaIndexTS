@@ -4,7 +4,7 @@ import {
   type BaseNode,
   type Document,
   type Metadata,
-} from "../Node.js";
+} from "@llamaindex/core/schema";
 import type { BaseReader } from "../readers/type.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type {

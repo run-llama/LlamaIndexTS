@@ -1,3 +1,4 @@
+export * from "@llamaindex/core/schema";
 export * from "./agent/index.js";
 export * from "./callbacks/CallbackManager.js";
 export * from "./ChatHistory.js";
@@ -11,7 +12,6 @@ export * from "./extractors/index.js";
 export * from "./indices/index.js";
 export * from "./ingestion/index.js";
 export * from "./llm/index.js";
-export * from "./Node.js";
 export * from "./nodeParsers/index.js";
 export * from "./objects/index.js";
 export * from "./OutputParser.js";

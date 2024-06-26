@@ -3,6 +3,7 @@ import { ObjectRetriever } from "../objects/index.js";
 import { Settings } from "../Settings.js";
 import type { BaseToolWithCall } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
+import { validateAgentParams } from "./utils.js";
 
 type LLMParamsBase = AgentParamsBase<LLM>;
 
@@ -22,6 +23,7 @@ export class LLMAgentWorker extends AgentWorker<LLM> {
 
 export class LLMAgent extends AgentRunner<LLM> {
   constructor(params: LLMAgentParams) {
+    validateAgentParams(params);
     const llm = params.llm ?? (Settings.llm ? (Settings.llm as LLM) : null);
     if (!llm)
       throw new Error(

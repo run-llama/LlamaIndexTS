@@ -1,5 +1,5 @@
-import type { BaseNode } from "../../Node.js";
-import { Document, ObjectType, TextNode } from "../../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
+import { Document, ObjectType, TextNode } from "@llamaindex/core/schema";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";

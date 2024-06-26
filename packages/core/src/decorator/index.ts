@@ -1,11 +1,11 @@
 import { getEnv } from "@llamaindex/env";
-import type { BaseNode } from "../../Node.js";
-import { getChunkSize } from "../settings/chunk-size.js";
+import { Settings } from "../global";
+import type { BaseNode } from "../schema/node";
 
 const emitOnce = false;
 
 export function chunkSizeCheck<
-  This extends BaseNode,
+  This extends { id_: string },
   Args extends any[],
   Return,
 >(
@@ -17,7 +17,7 @@ export function chunkSizeCheck<
 ) {
   return function (this: This, ...args: Args) {
     const content = contentGetter.call(this, ...args);
-    const chunkSize = getChunkSize();
+    const chunkSize = Settings.chunkSize;
     const enableChunkSizeCheck = getEnv("ENABLE_CHUNK_SIZE_CHECK") === "true";
     if (
       enableChunkSizeCheck &&
@@ -25,7 +25,7 @@ export function chunkSizeCheck<
       content.length > chunkSize
     ) {
       console.warn(
-        `Node (${this.id_}) is larger than chunk size: ${content.length}`,
+        `Node (${this.id_}) is larger than chunk size: ${content.length} > ${chunkSize}`,
       );
       if (!emitOnce) {
         console.warn(

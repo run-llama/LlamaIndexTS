@@ -27,6 +27,12 @@
       "path": "./packages/community/tsconfig.script.json"
     },
     {
+      "path": "./packages/core/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/tests/tsconfig.json"
+    },
+    {
       "path": "./packages/llamaindex/tsconfig.json"
     },
     {

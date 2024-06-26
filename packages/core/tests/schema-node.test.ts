@@ -1,4 +1,4 @@
-import { Document, TextNode } from "llamaindex/Node";
+import { Document, TextNode } from "@llamaindex/core/schema";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe("Document", () => {
@@ -50,7 +50,6 @@ describe("TextNode", () => {
       `
       {
         "embedding": undefined,
-        "endCharIdx": undefined,
         "excludedEmbedMetadataKeys": [],
         "excludedLlmMetadataKeys": [],
         "hash": "Z6SWgFPlalaeblMGQGw0KS3qKgmZdEWXKfzEp/K+QN0=",
@@ -62,7 +61,6 @@ describe("TextNode", () => {
         "metadataSeparator": "
       ",
         "relationships": {},
-        "startCharIdx": undefined,
         "text": "Hello World",
         "textTemplate": "",
         "type": "TEXT",

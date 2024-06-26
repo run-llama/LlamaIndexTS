@@ -1,5 +1,5 @@
 {
-  "name": "@llamaindex/core-test",
+  "name": "@llamaindex/llamaindex-test",
   "private": true,
   "version": "0.0.4",
   "type": "module",
