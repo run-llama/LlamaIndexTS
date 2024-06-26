@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.4.5
+
+### Patch Changes
+
+- 6c3e5d0: fix: switch to correct reference for a static function
+
 ## 0.4.4
 
 ### Patch Changes
