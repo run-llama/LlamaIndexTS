@@ -7,33 +7,6 @@ import {
 import { AzureDynamicSessionTool, OpenAI, ReActAgent } from "llamaindex";
 
 async function main() {
-  // Settings.callbackManager.on("llm-start", (event) => {
-  //   console.log("llm-start", event);
-  // });
-  // Settings.callbackManager.on("llm-end", (event) => {
-  //   console.log("llm-end", event);
-  // });
-  // Settings.callbackManager.on("llm-stream", (event) => {
-  //   console.log("llm-stream", event);
-  // });
-  // Settings.callbackManager.on("agent-start", (event) => {
-  //   console.log("agent-start", event);
-  // });
-  // Settings.callbackManager.on("agent-end", (event) => {
-  //   console.log("agent-end", event);
-  // });
-  // Settings.callbackManager.on("llm-tool-call", (event) => {
-  //   console.log(event.detail.payload);
-  // });
-  // Settings.callbackManager.on("llm-tool-result", async (event) => {
-  // await azureDynamicSession.downloadFile({
-  //   remoteFilename: "chart.png",
-  //   localFilename: "./chart.png",
-  // });
-  // console.log(await azureDynamicSession.listFiles());
-  // console.log(event.detail.payload);
-  // });
-
   const credential = new DefaultAzureCredential();
   const azureADTokenProvider = getBearerTokenProvider(
     credential,
