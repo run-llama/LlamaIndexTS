@@ -61,7 +61,6 @@
     "rake-modified": "^1.0.8",
     "string-strip-html": "^13.4.8",
     "tiktoken": "^1.0.15",
-    "undici": "^6.19.2",
     "unpdf": "^0.10.1",
     "wikipedia": "^2.1.2",
     "wink-nlp": "^2.3.0",

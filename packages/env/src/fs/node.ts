@@ -5,6 +5,7 @@
  *
  * @module
  */
+import { createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
 
-export { fs };
+export { createWriteStream, fs };

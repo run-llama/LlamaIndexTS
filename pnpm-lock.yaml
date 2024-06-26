@@ -133,6 +133,9 @@ importers:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
         version: 5.2.0
+      '@azure/identity':
+        specifier: ^4.2.1
+        version: 4.2.1
       '@datastax/astra-db-ts':
         specifier: ^1.2.1
         version: 1.2.1
@@ -589,9 +592,6 @@ importers:
       tiktoken:
         specifier: ^1.0.15
         version: 1.0.15
-      undici:
-        specifier: ^6.19.2
-        version: 6.19.2
       unpdf:
         specifier: ^0.10.1
         version: 0.10.1(encoding@0.1.13)
@@ -10329,10 +10329,6 @@ packages:
   undici@5.28.4:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
-
-  undici@6.19.2:
-    resolution: {integrity: sha512-JfjKqIauur3Q6biAtHJ564e3bWa8VvT+7cSiOJHFbX4Erv6CLGDpg8z+Fmg/1OI/47RA+GI2QZaF48SSaLvyBA==}
-    engines: {node: '>=18.17'}
 
   unenv-nightly@1.10.0-1717606461.a117952:
     resolution: {integrity: sha512-u3TfBX02WzbHTpaEfWEKwDijDSFAHcgXkayUZ+MVDrjhLFvgAJzFGTSTmwlEhwWi2exyRQey23ah9wELMM6etg==}
@@ -22821,8 +22817,6 @@ snapshots:
   undici@5.28.4:
     dependencies:
       '@fastify/busboy': 2.1.1
-
-  undici@6.19.2: {}
 
   unenv-nightly@1.10.0-1717606461.a117952:
     dependencies:

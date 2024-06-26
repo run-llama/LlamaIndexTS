@@ -2,23 +2,27 @@ import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
-import { getEnv } from "@llamaindex/env";
-import crypto from "node:crypto";
-import { createWriteStream } from "node:fs";
-import { readFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
-import { Readable } from "node:stream";
-import { fileURLToPath } from "node:url";
-import { FormData, fetch } from "undici";
+import {
+  Readable,
+  createWriteStream,
+  fileURLToPath,
+  fs,
+  getEnv,
+  path,
+  randomUUID,
+} from "@llamaindex/env";
 import type { BaseTool, ToolMetadata } from "../types.js";
-
-const uuidv4 = () => crypto.randomUUID();
-
 export type InterpreterParameter = {
   code: string;
 };
+
+export type InterpreterToolOutputImage = {
+  base64_data: string;
+  format: string;
+  type: "image";
+};
 export type InterpreterToolOutput = {
-  result: string;
+  result: InterpreterToolOutputImage | string;
   stdout: string;
   stderr: string;
 };
@@ -88,7 +92,7 @@ type UploadFileMetadata = {
   /**
    * The data to upload
    */
-  data: Buffer;
+  data: Blob;
 
   /**
    * The path to the local file to upload
@@ -110,11 +114,11 @@ async function getuserAgentSuffix(): Promise<string> {
   try {
     //@ts-ignore
     const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
+    const __dirname = path.dirname(__filename);
 
     if (!_userAgent) {
-      const data = await readFile(
-        join(__dirname, "..", "package.json"),
+      const data = await fs.readFile(
+        path.join(__dirname, "..", "package.json"),
         "utf8",
       );
       const json = await JSON.parse(data.toString());
@@ -134,7 +138,7 @@ function getAzureADTokenProvider() {
 }
 
 const DEFAULT_META_DATA: ToolMetadata = {
-  name: "azure_dynamic_sessions_python_interpreter",
+  name: "code_interpreter",
   description:
     "A Python shell. Use this to execute python commands " +
     "when you need to perform calculations or computations. " +
@@ -158,6 +162,8 @@ const DEFAULT_META_DATA: ToolMetadata = {
 export class AzureDynamicSessionTool
   implements BaseTool<AzureDynamicSessionToolParams>
 {
+  private readonly outputDir = path.normalize("tool-output");
+
   /**
    * The metadata for the tool.
    */
@@ -166,14 +172,14 @@ export class AzureDynamicSessionTool
   /**
    * The session ID to use for the session pool. Defaults to a random UUID.
    */
-  sessionId: string;
+  private sessionId: string;
 
   /**
    * The endpoint of the Azure pool management service.
    * This is where the tool will send requests to interact with the session pool.
    * If not provided, the tool will use the value of the `AZURE_CONTAINER_APP_SESSION_POOL_MANAGEMENT_ENDPOINT` environment variable.
    */
-  poolManagementEndpoint: string;
+  private poolManagementEndpoint: string;
 
   /**
    * A function that returns the access token to use for the session pool.
@@ -182,7 +188,7 @@ export class AzureDynamicSessionTool
 
   constructor(params?: AzureDynamicSessionToolParams) {
     this.metadata = params?.metadata || DEFAULT_META_DATA;
-    this.sessionId = params?.sessionId || uuidv4();
+    this.sessionId = params?.sessionId || randomUUID();
     this.poolManagementEndpoint =
       params?.poolManagementEndpoint ||
       (getEnv("AZURE_CONTAINER_APP_SESSION_POOL_MANAGEMENT_ENDPOINT") ?? "");
@@ -252,7 +258,6 @@ export class AzureDynamicSessionTool
       Authorization: `Bearer ${token}`,
       "User-Agent": await getuserAgentSuffix(),
     };
-
     try {
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -262,8 +267,9 @@ export class AzureDynamicSessionTool
       if (response.body) {
         // if localFilename is provided, save the file to the localFilename
         if (params.localFilename) {
-          const writer = createWriteStream(resolve(params.localFilename));
-          Readable.fromWeb(response.body).pipe(writer);
+          const writer = createWriteStream(path.resolve(params.localFilename));
+          const blob = await response.blob();
+          Readable.from(blob.stream()).pipe(writer);
           return;
         }
 
@@ -322,7 +328,7 @@ export class AzureDynamicSessionTool
     "code"
   >): Promise<InterpreterToolOutput> {
     const token = await this.azureADTokenProvider();
-    const apiUrl = this._buildUrl("/code/execute");
+    const apiUrl = this._buildUrl("python/execute");
     const headers = {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -337,19 +343,115 @@ export class AzureDynamicSessionTool
       },
     };
 
+    console.log("payload", { payload });
+
     try {
       const response = await fetch(apiUrl, {
         method: "POST",
         headers,
         body: JSON.stringify(payload),
       });
-      return (await response.json()) as InterpreterToolOutput;
+
+      const output = (await response.json()) as InterpreterToolOutput;
+      console.log({ output });
+
+      if (typeof output.result !== "string") {
+        const result = output.result as InterpreterToolOutputImage;
+
+        console.log("result", { result });
+
+        if (result.type === "image") {
+          const { outputPath, filename } = await this.saveToDisk(
+            (output.result as InterpreterToolOutputImage).base64_data,
+            result.format,
+          );
+          output.result = `${outputPath}/${filename}`;
+        }
+      }
+
+      return output;
     } catch (error) {
       return {
         result: "",
         stdout: "",
         stderr: "Error: Failed to execute Python code. " + error,
       };
+    }
+  }
+
+  /**
+   * Saves a base64 encoded file to the disk.
+   * @param base64Data The base64 encoded data to save.
+   * @param ext The file extension.
+   * @returns The path and filename to the saved file.
+   */
+  private async saveToDisk(
+    base64Data: string,
+    ext: string,
+  ): Promise<{
+    outputPath: string;
+    filename: string;
+  }> {
+    try {
+      const filename = `${randomUUID()}.${ext}`;
+      const buffer = Buffer.from(base64Data, "base64");
+      const outputPath = await this.getOutputPath(filename);
+      await fs.writeFile(outputPath, buffer);
+      console.log(
+        `[AzureDynamicSessionTool.saveToDisk] Saved file to ${outputPath}`,
+      );
+      return {
+        outputPath,
+        filename,
+      };
+    } catch (error) {
+      console.error(
+        `[AzureDynamicSessionTool.saveToDisk] Error saving file to disk: ${error}`,
+      );
+      return {
+        outputPath: "",
+        filename: "",
+      };
+    }
+  }
+
+  /**
+   * Get the output path for the file.
+   * @param filename The filename to save the file as.
+   * @returns The output path for the file.
+   */
+  private async getOutputPath(filename: string) {
+    if ((await this.exists(this.outputDir)) === false) {
+      try {
+        await fs.mkdir(this.outputDir, { recursive: true });
+        console.log(
+          "[AzureDynamicSessionTool.getOutputPath] Created output directory:",
+          this.outputDir,
+        );
+      } catch (e) {
+        throw new Error(
+          `[AzureDynamicSessionTool.getOutputPath] Failed to create output directory: ${this.outputDir}`,
+        );
+      }
+    }
+    return path.join(this.outputDir, filename);
+  }
+
+  /**
+   * Check if a file exists.
+   * @param file The file to check.
+   * @returns True if the file exists, false otherwise.
+   */
+  private async exists(file: string) {
+    try {
+      await fs.lstat(file);
+      console.log(`[AzureDynamicSessionTool.exists] File exists: ${file}`);
+      return true;
+    } catch {
+      console.log(
+        `[AzureDynamicSessionTool.exists] File does not exist: ${file}`,
+      );
+      return false;
     }
   }
 }
