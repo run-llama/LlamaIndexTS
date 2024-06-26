@@ -6,8 +6,9 @@ import { FileReader } from "./type.js";
  */
 
 export class TextFileReader extends FileReader {
-  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
-    const dataBuffer = fileContent.toString("utf-8");
+  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
+    const decoder = new TextDecoder("utf-8");
+    const dataBuffer = decoder.decode(fileContent);
     return [new Document({ text: dataBuffer })];
   }
 }

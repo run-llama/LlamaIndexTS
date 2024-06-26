@@ -7,7 +7,7 @@ import {
 import { TextFileReader } from "llamaindex/readers/TextFileReader";
 
 class ZipReader extends FileReader {
-  loadDataAsContent(fileContent: Buffer): Promise<Document<Metadata>[]> {
+  loadDataAsContent(fileContent: Uint8Array): Promise<Document<Metadata>[]> {
     throw new Error("Implement me");
   }
 }
