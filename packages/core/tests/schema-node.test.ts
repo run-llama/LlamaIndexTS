@@ -46,7 +46,8 @@ describe("TextNode", () => {
     expect(node.toJSON()).toMatchInlineSnapshot(
       {
         id_: expect.any(String),
-      }, `
+      },
+      `
       {
         "embedding": undefined,
         "excludedEmbedMetadataKeys": [],
@@ -64,6 +65,7 @@ describe("TextNode", () => {
         "textTemplate": "",
         "type": "TEXT",
       }
-    `);
+    `,
+    );
   });
 });
