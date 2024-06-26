@@ -1,11 +1,17 @@
-import { FunctionTool, Settings, WikipediaTool } from "llamaindex";
+import { Anthropic, FunctionTool, Settings, WikipediaTool } from "llamaindex";
 import { AnthropicAgent } from "llamaindex/agent/anthropic";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
   console.log("llm-tool-call", event.detail.payload.toolCall);
 });
 
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  model: "claude-3-5-sonnet",
+});
+
 const agent = new AnthropicAgent({
+  llm: anthropic,
   tools: [
     FunctionTool.from<{ location: string }>(
       (query) => {
@@ -31,7 +37,6 @@ const agent = new AnthropicAgent({
 });
 
 async function main() {
-  // https://docs.anthropic.com/claude/docs/tool-use#tool-use-best-practices-and-limitations
   const { response } = await agent.chat({
     message:
       "What is the weather in New York? What's the history of New York from Wikipedia in 3 sentences?",

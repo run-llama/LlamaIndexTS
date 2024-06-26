@@ -1,16 +1,10 @@
 import { Document } from "@llamaindex/core/schema";
-import { fs } from "@llamaindex/env";
 import { FileReader } from "./type.js";
 
 /**
  * Read the text of a PDF
  */
 export class PDFReader extends FileReader {
-  async loadData(file: string): Promise<Document[]> {
-    const content = await fs.readFile(file);
-    return this.loadDataAsContent(new Uint8Array(content.buffer));
-  }
-
   async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
     const { totalPages, text } = await readPDF(content);
     return text.map((text, page) => {

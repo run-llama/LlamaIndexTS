@@ -1,5 +1,45 @@
 # llamaindex
 
+## 0.4.5
+
+### Patch Changes
+
+- 6c3e5d0: fix: switch to correct reference for a static function
+
+## 0.4.4
+
+### Patch Changes
+
+- 42eb73a: Fix IngestionPipeline not working without vectorStores
+
+## 0.4.3
+
+### Patch Changes
+
+- 2ef62a9: feat: added support for embeddings via HuggingFace Inference API
+- Updated dependencies [d4e853c]
+- Updated dependencies [a94b8ec]
+  - @llamaindex/env@0.1.6
+
+## 0.4.2
+
+### Patch Changes
+
+- a87a4d1: feat: added tool support calling for Bedrock's Calude and general llm support for agents
+- 0730140: include node relationships when converting jsonToDoc
+- Updated dependencies [f3b34b4]
+  - @llamaindex/env@0.1.5
+
+## 0.4.1
+
+### Patch Changes
+
+- 3c47910: fix: groq llm
+- ed467a9: Add model ids for Anthropic Claude 3.5 Sonnet model on Anthropic and Bedrock
+- cba5406: fix: every Llama Parse job being called "blob"
+- Updated dependencies [56fabbb]
+  - @llamaindex/env@0.1.4
+
 ## 0.4.0
 
 ### Minor Changes

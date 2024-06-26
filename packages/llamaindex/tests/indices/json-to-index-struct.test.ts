@@ -19,7 +19,6 @@ describe("jsonToIndexStruct", () => {
     const expected = new IndexDict();
     expected.addNode(node);
 
-    console.log("expected.toJson()", expected.toJson());
     const actual = jsonToIndexStruct(expected.toJson());
 
     expect(isIndexDict(actual)).toBe(true);

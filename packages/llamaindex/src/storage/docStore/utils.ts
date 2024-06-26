@@ -44,6 +44,7 @@ export function jsonToDoc(docDict: DocJson): BaseNode {
       id_: dataDict.id_,
       hash: dataDict.hash,
       metadata: dataDict.metadata,
+      relationships: dataDict.relationships,
     });
   } else {
     throw new Error(`Unknown doc type: ${docType}`);

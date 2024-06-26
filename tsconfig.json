@@ -45,6 +45,9 @@
       "path": "./packages/llamaindex/e2e/examples/nextjs-edge-runtime/tsconfig.json"
     },
     {
+      "path": "./packages/llamaindex/e2e/examples/nextjs-node-runtime/tsconfig.json"
+    },
+    {
       "path": "./packages/llamaindex/e2e/examples/waku-query-engine/tsconfig.json"
     },
     {

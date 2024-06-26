@@ -1,18 +1,14 @@
 // Note: This is using th WASM implementation of tiktoken which is 60x faster
-import cl100k_base from "tiktoken/encoders/cl100k_base.json";
-import { Tiktoken } from "tiktoken/lite";
 import type { Tokenizer } from "./types.js";
 import { Tokenizers } from "./types.js";
+
+import { get_encoding } from "tiktoken";
 
 class TokenizerSingleton {
   private defaultTokenizer: Tokenizer;
 
   constructor() {
-    const encoding = new Tiktoken(
-      cl100k_base.bpe_ranks,
-      cl100k_base.special_tokens,
-      cl100k_base.pat_str,
-    );
+    const encoding = get_encoding("cl100k_base");
 
     this.defaultTokenizer = {
       encode: (text: string) => {

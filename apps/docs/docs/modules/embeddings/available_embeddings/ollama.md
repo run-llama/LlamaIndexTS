@@ -27,3 +27,7 @@ const results = await queryEngine.query({
   query,
 });
 ```
+
+## API Reference
+
+- [OllamaEmbedding](../../../api/classes/OllamaEmbedding.md)

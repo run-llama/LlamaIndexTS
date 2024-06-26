@@ -1,4 +1,3 @@
-import { PlatformApi } from "@llamaindex/cloud";
 import type { Document } from "@llamaindex/core/schema";
 import type { BaseRetriever } from "../Retriever.js";
 import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
@@ -23,6 +22,137 @@ export class LlamaCloudIndex {
     this.params = params;
   }
 
+  private async waitForPipelineIngestion(
+    verbose = false,
+    raiseOnError = false,
+  ): Promise<void> {
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    const client = await getClient({
+      ...this.params,
+      baseUrl: this.params.baseUrl,
+    });
+
+    if (verbose) {
+      console.log("Waiting for pipeline ingestion: ");
+    }
+
+    while (true) {
+      const pipelineStatus =
+        await client.pipelines.getPipelineStatus(pipelineId);
+
+      if (pipelineStatus.status === "SUCCESS") {
+        if (verbose) {
+          console.log("Pipeline ingestion completed successfully");
+        }
+        break;
+      }
+
+      if (pipelineStatus.status === "ERROR") {
+        if (verbose) {
+          console.error("Pipeline ingestion failed");
+        }
+
+        if (raiseOnError) {
+          throw new Error("Pipeline ingestion failed");
+        }
+      }
+
+      if (verbose) {
+        process.stdout.write(".");
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
+  private async waitForDocumentIngestion(
+    docIds: string[],
+    verbose = false,
+    raiseOnError = false,
+  ): Promise<void> {
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    const client = await getClient({
+      ...this.params,
+      baseUrl: this.params.baseUrl,
+    });
+
+    if (verbose) {
+      console.log("Loading data: ");
+    }
+
+    const pendingDocs = new Set(docIds);
+
+    while (pendingDocs.size) {
+      const docsToRemove = new Set<string>();
+
+      for (const doc of pendingDocs) {
+        const { status } = await client.pipelines.getPipelineDocumentStatus(
+          pipelineId,
+          doc,
+        );
+
+        if (status === "NOT_STARTED" || status === "IN_PROGRESS") {
+          continue;
+        }
+
+        if (status === "ERROR") {
+          if (verbose) {
+            console.error(`Document ingestion failed for ${doc}`);
+          }
+
+          if (raiseOnError) {
+            throw new Error(`Document ingestion failed for ${doc}`);
+          }
+        }
+
+        docsToRemove.add(doc);
+      }
+
+      for (const doc of docsToRemove) {
+        pendingDocs.delete(doc);
+      }
+
+      if (pendingDocs.size) {
+        if (verbose) {
+          process.stdout.write(".");
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+
+    if (verbose) {
+      console.log("Done!");
+    }
+
+    await this.waitForPipelineIngestion(verbose, raiseOnError);
+  }
+
+  private async getPipelineId(
+    name: string,
+    projectName: string,
+  ): Promise<string> {
+    const client = await getClient({
+      ...this.params,
+      baseUrl: this.params.baseUrl,
+    });
+
+    const pipelines = await client.pipelines.searchPipelines({
+      projectName,
+      pipelineName: name,
+    });
+
+    return pipelines[0].id;
+  }
+
   static async fromDocuments(
     params: {
       documents: Document[];
@@ -31,10 +161,10 @@ export class LlamaCloudIndex {
     } & CloudConstructorParams,
   ): Promise<LlamaCloudIndex> {
     const defaultTransformations: TransformComponent[] = [
+      new SimpleNodeParser(),
       new OpenAIEmbedding({
         apiKey: getEnv("OPENAI_API_KEY"),
       }),
-      new SimpleNodeParser(),
     ];
 
     const appUrl = getAppBaseUrl(params.baseUrl);
@@ -48,7 +178,7 @@ export class LlamaCloudIndex {
       transformations: params.transformations ?? defaultTransformations,
     });
 
-    const project = await client.project.upsertProject({
+    const project = await client.projects.upsertProject({
       name: params.projectName ?? "default",
     });
 
@@ -56,10 +186,15 @@ export class LlamaCloudIndex {
       throw new Error("Project ID should be defined");
     }
 
-    const pipeline = await client.project.upsertPipelineForProject(
-      project.id,
-      pipelineCreateParams,
-    );
+    const pipeline = await client.pipelines.upsertPipeline({
+      projectId: project.id,
+      body: {
+        name: params.name,
+        configuredTransformations:
+          pipelineCreateParams.configuredTransformations,
+        pipelineType: pipelineCreateParams.pipelineType,
+      },
+    });
 
     if (!pipeline.id) {
       throw new Error("Pipeline ID must be defined");
@@ -69,94 +204,48 @@ export class LlamaCloudIndex {
       console.log(`Created pipeline ${pipeline.id} with name ${params.name}`);
     }
 
-    const executionsIds: {
-      exectionId: string;
-      dataSourceId: string;
-    }[] = [];
-
-    for (const dataSource of pipeline.dataSources) {
-      const dataSourceExection =
-        await client.dataSource.createDataSourceExecution(dataSource.id);
-
-      if (!dataSourceExection.id) {
-        throw new Error("Data Source Execution ID must be defined");
-      }
-
-      executionsIds.push({
-        exectionId: dataSourceExection.id,
-        dataSourceId: dataSource.id,
-      });
-    }
-
-    let isDone = false;
-
-    while (!isDone) {
-      const statuses = [];
-
-      for await (const execution of executionsIds) {
-        const dataSourceExecution =
-          await client.dataSource.getDataSourceExecution(
-            execution.dataSourceId,
-            execution.exectionId,
-          );
-
-        statuses.push(dataSourceExecution.status);
-
-        if (
-          statuses.every((status) => status === PlatformApi.StatusEnum.Success)
-        ) {
-          isDone = true;
-          if (params.verbose) {
-            console.info("Data Source Execution completed");
-          }
-          break;
-        } else if (
-          statuses.some((status) => status === PlatformApi.StatusEnum.Error)
-        ) {
-          throw new Error("Data Source Execution failed");
-        } else {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          if (params.verbose) {
-            process.stdout.write(".");
-          }
-        }
-      }
-    }
-
-    isDone = false;
-
-    const execution = await client.pipeline.runManagedPipelineIngestion(
+    await client.pipelines.upsertBatchPipelineDocuments(
       pipeline.id,
+      params.documents.map((doc) => ({
+        metadata: doc.metadata,
+        text: doc.text,
+        excludedEmbedMetadataKeys: doc.excludedLlmMetadataKeys,
+        excludedLlmMetadataKeys: doc.excludedEmbedMetadataKeys,
+        id: doc.id_,
+      })),
     );
 
-    const ingestionId = execution.id;
-
-    if (!ingestionId) {
-      throw new Error("Ingestion ID must be defined");
-    }
-
-    while (!isDone) {
-      const pipelineStatus = await client.pipeline.getManagedIngestionExecution(
+    while (true) {
+      const pipelineStatus = await client.pipelines.getPipelineStatus(
         pipeline.id,
-        ingestionId,
       );
 
-      if (pipelineStatus.status === PlatformApi.StatusEnum.Success) {
-        isDone = true;
-
-        if (params.verbose) {
-          console.info("Ingestion completed");
-        }
-
+      if (pipelineStatus.status === "SUCCESS") {
+        console.info(
+          "Documents ingested successfully, pipeline is ready to use",
+        );
         break;
-      } else if (pipelineStatus.status === PlatformApi.StatusEnum.Error) {
-        throw new Error("Ingestion failed");
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        if (params.verbose) {
-          process.stdout.write(".");
-        }
       }
+
+      if (pipelineStatus.status === "ERROR") {
+        console.error(
+          `Some documents failed to ingest, check your pipeline logs at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+        );
+        throw new Error("Some documents failed to ingest");
+      }
+
+      if (pipelineStatus.status === "PARTIAL_SUCCESS") {
+        console.info(
+          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+        );
+        break;
+      }
+
+      if (params.verbose) {
+        process.stdout.write(".");
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     if (params.verbose) {
@@ -189,5 +278,78 @@ export class LlamaCloudIndex {
       params?.preFilters,
       params?.nodePostprocessors,
     );
+  }
+
+  async insert(document: Document) {
+    const appUrl = getAppBaseUrl(this.params.baseUrl);
+
+    const client = await getClient({ ...this.params, baseUrl: appUrl });
+
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    if (!pipelineId) {
+      throw new Error("We couldn't find the pipeline ID for the given name");
+    }
+
+    await client.pipelines.createBatchPipelineDocuments(pipelineId, [
+      {
+        metadata: document.metadata,
+        text: document.text,
+        excludedEmbedMetadataKeys: document.excludedLlmMetadataKeys,
+        excludedLlmMetadataKeys: document.excludedEmbedMetadataKeys,
+        id: document.id_,
+      },
+    ]);
+
+    await this.waitForDocumentIngestion([document.id_]);
+  }
+
+  async delete(document: Document) {
+    const appUrl = getAppBaseUrl(this.params.baseUrl);
+
+    const client = await getClient({ ...this.params, baseUrl: appUrl });
+
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    if (!pipelineId) {
+      throw new Error("We couldn't find the pipeline ID for the given name");
+    }
+
+    await client.pipelines.deletePipelineDocument(pipelineId, document.id_);
+
+    await this.waitForPipelineIngestion();
+  }
+
+  async refreshDoc(document: Document) {
+    const appUrl = getAppBaseUrl(this.params.baseUrl);
+
+    const client = await getClient({ ...this.params, baseUrl: appUrl });
+
+    const pipelineId = await this.getPipelineId(
+      this.params.name,
+      this.params.projectName,
+    );
+
+    if (!pipelineId) {
+      throw new Error("We couldn't find the pipeline ID for the given name");
+    }
+
+    await client.pipelines.upsertBatchPipelineDocuments(pipelineId, [
+      {
+        metadata: document.metadata,
+        text: document.text,
+        excludedEmbedMetadataKeys: document.excludedLlmMetadataKeys,
+        excludedLlmMetadataKeys: document.excludedEmbedMetadataKeys,
+        id: document.id_,
+      },
+    ]);
+
+    await this.waitForDocumentIngestion([document.id_]);
   }
 }

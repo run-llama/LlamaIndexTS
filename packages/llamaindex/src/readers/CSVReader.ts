@@ -39,8 +39,10 @@ export class PapaCSVReader extends FileReader {
    * @param {GenericFileSystem} [fs=DEFAULT_FS] - The file system to use for reading the file.
    * @returns {Promise<Document[]>}
    */
-  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
-    const result = Papa.parse(fileContent.toString("utf-8"), this.papaConfig);
+  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
+    const decoder = new TextDecoder("utf-8");
+    const fileContentString = decoder.decode(fileContent);
+    const result = Papa.parse(fileContentString, this.papaConfig);
     const textList = result.data.map((row: any) => {
       // Compatible with header row mode
       const rowValues = Object.values(row).map((value) => String(value));

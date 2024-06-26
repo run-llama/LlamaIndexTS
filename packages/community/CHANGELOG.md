@@ -1,5 +1,45 @@
 # @llamaindex/community
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [6c3e5d0]
+  - llamaindex@0.4.5
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [42eb73a]
+  - llamaindex@0.4.4
+
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [2ef62a9]
+  - llamaindex@0.4.3
+
+## 0.0.6
+
+### Patch Changes
+
+- a87a4d1: feat: added tool support calling for Bedrock's Calude and general llm support for agents
+- Updated dependencies [a87a4d1]
+- Updated dependencies [0730140]
+  - llamaindex@0.4.2
+
+## 0.0.5
+
+### Patch Changes
+
+- ed467a9: Add model ids for Anthropic Claude 3.5 Sonnet model on Anthropic and Bedrock
+- Updated dependencies [3c47910]
+- Updated dependencies [ed467a9]
+- Updated dependencies [cba5406]
+  - llamaindex@0.4.1
+
 ## 0.0.4
 
 ### Patch Changes

@@ -66,3 +66,7 @@ async function main() {
   console.log(response.response);
 }
 ```
+
+## API Reference
+
+- [MistralAI](../../../api/classes/MistralAI.md)

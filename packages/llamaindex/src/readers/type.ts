@@ -12,11 +12,16 @@ export interface BaseReader {
  * A FileReader takes file paths and imports data into Document objects.
  */
 export abstract class FileReader implements BaseReader {
-  abstract loadDataAsContent(fileContent: Buffer): Promise<Document[]>;
+  abstract loadDataAsContent(
+    fileContent: Uint8Array,
+    fileName?: string,
+  ): Promise<Document[]>;
 
   async loadData(filePath: string): Promise<Document[]> {
-    const fileContent = await fs.readFile(filePath);
-    const docs = await this.loadDataAsContent(fileContent);
+    // XXX: create a new Uint8Array to prevent "Please provide binary data as `Uint8Array`, rather than `Buffer`." error in PDFReader
+    const fileContent = new Uint8Array(await fs.readFile(filePath));
+    const fileName = path.basename(filePath);
+    const docs = await this.loadDataAsContent(fileContent, fileName);
     docs.forEach(FileReader.addMetaData(filePath));
     return docs;
   }

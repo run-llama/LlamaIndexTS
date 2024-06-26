@@ -1,4 +1,4 @@
-import type { PlatformApiClient } from "@llamaindex/cloud";
+import type { LlamaCloudApiClient } from "@llamaindex/cloud";
 import { getEnv } from "@llamaindex/env";
 import type { ClientParams } from "./types.js";
 import { DEFAULT_BASE_URL } from "./types.js";
@@ -14,15 +14,23 @@ export function getAppBaseUrl(baseUrl?: string): string {
 export async function getClient({
   apiKey,
   baseUrl,
-}: ClientParams = {}): Promise<PlatformApiClient> {
+}: ClientParams = {}): Promise<LlamaCloudApiClient> {
+  const { LlamaCloudApiClient } = await import("@llamaindex/cloud");
+
   // Get the environment variables or use defaults
   baseUrl = getBaseUrl(baseUrl);
   apiKey = apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
 
-  const { PlatformApiClient } = await import("@llamaindex/cloud");
+  if (!apiKey) {
+    throw new Error(
+      "API Key is required for LlamaCloudIndex. Please pass the apiKey parameter",
+    );
+  }
 
-  return new PlatformApiClient({
+  const client = new LlamaCloudApiClient({
     token: apiKey,
     environment: baseUrl,
   });
+
+  return client;
 }

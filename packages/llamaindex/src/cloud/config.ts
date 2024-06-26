@@ -1,5 +1,5 @@
-import type { PlatformApi } from "@llamaindex/cloud";
-import { BaseNode, Document } from "@llamaindex/core/schema";
+import { LlamaCloudApi } from "@llamaindex/cloud";
+import { BaseNode } from "@llamaindex/core/schema";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
@@ -13,7 +13,7 @@ export type GetPipelineCreateParams = {
 
 function getTransformationConfig(
   transformation: TransformComponent,
-): PlatformApi.ConfiguredTransformationItem {
+): LlamaCloudApi.ConfiguredTransformationItem {
   if (transformation instanceof SimpleNodeParser) {
     return {
       configurableTransformationType: "SENTENCE_AWARE_NODE_PARSER",
@@ -41,44 +41,14 @@ function getTransformationConfig(
   throw new Error(`Unsupported transformation: ${typeof transformation}`);
 }
 
-function getDataSourceConfig(node: BaseNode): PlatformApi.DataSourceCreate {
-  if (node instanceof Document) {
-    return {
-      name: node.id_,
-      sourceType: "DOCUMENT",
-      component: {
-        id: node.id_,
-        text: node.text,
-        textTemplate: node.textTemplate,
-        startCharIdx: node.startCharIdx,
-        endCharIdx: node.endCharIdx,
-        metadataSeparator: node.metadataSeparator,
-        excludedEmbedMetadataKeys: node.excludedEmbedMetadataKeys,
-        excludedLlmMetadataKeys: node.excludedLlmMetadataKeys,
-        extraInfo: node.metadata,
-      },
-    };
-  }
-  throw new Error(`Unsupported node: ${typeof node}`);
-}
-
 export async function getPipelineCreate(
   params: GetPipelineCreateParams,
-): Promise<PlatformApi.PipelineCreate> {
-  const {
-    pipelineName,
-    pipelineType,
-    transformations = [],
-    inputNodes = [],
-  } = params;
-
-  const dataSources = inputNodes.map(getDataSourceConfig);
+): Promise<LlamaCloudApi.PipelineCreate> {
+  const { pipelineName, pipelineType, transformations = [] } = params;
 
   return {
     name: pipelineName,
     configuredTransformations: transformations.map(getTransformationConfig),
-    dataSources,
-    dataSinks: [],
-    pipelineType,
+    pipelineType: pipelineType,
   };
 }
