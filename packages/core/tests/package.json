@@ -1,0 +1,7 @@
+{
+  "name": "@llamaindex/core-tests",
+  "private": true,
+  "devDependencies": {
+    "@llamaindex/core": "workspace:*"
+  }
+}
