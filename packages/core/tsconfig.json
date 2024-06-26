@@ -5,10 +5,10 @@
     "outDir": "./dist/type",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "emitDeclarationOnly": true,
-    "module": "ESNext",
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "types": ["node"]
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

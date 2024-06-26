@@ -29,7 +29,7 @@
     "@grpc/grpc-js": "^1.10.8",
     "@huggingface/inference": "^2.7.0",
     "@llamaindex/cloud": "0.0.5",
-    "@llamaindex/core": "workspace:^0.4.0",
+    "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@mistralai/mistralai": "^0.4.0",
     "@pinecone-database/pinecone": "^2.2.2",

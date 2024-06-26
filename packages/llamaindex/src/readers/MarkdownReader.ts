@@ -1,4 +1,4 @@
-import { Document } from "../Node.js";
+import { Document } from "@llamaindex/core/schema";
 import { FileReader } from "./type.js";
 
 type MarkdownTuple = [string | null, string];

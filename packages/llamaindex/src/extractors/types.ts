@@ -1,5 +1,5 @@
-import type { BaseNode } from "../Node.js";
-import { MetadataMode, TextNode } from "../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
+import { MetadataMode, TextNode } from "@llamaindex/core/schema";
 import type { TransformComponent } from "../ingestion/types.js";
 import { defaultNodeTextTemplate } from "./prompts.js";
 

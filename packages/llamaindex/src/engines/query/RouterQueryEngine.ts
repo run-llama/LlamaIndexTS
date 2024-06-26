@@ -1,5 +1,5 @@
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import { EngineResponse } from "../../EngineResponse.js";
-import type { NodeWithScore } from "../../Node.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import { PromptMixin } from "../../prompts/index.js";

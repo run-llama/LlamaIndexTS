@@ -1,4 +1,4 @@
-import type { NodeWithScore } from "./Node.js";
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type {
   ChatMessage,
   ChatResponse,

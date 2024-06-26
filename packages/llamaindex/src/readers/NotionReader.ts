@@ -1,6 +1,6 @@
+import { Document } from "@llamaindex/core/schema";
 import type { Crawler, CrawlerOptions, Page } from "notion-md-crawler";
 import { crawler, pageToString } from "notion-md-crawler";
-import { Document } from "../Node.js";
 import type { BaseReader } from "./type.js";
 
 type NotionReaderOptions = Pick<CrawlerOptions, "client" | "serializers">;

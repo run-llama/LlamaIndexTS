@@ -1,5 +1,5 @@
+import type { Document } from "@llamaindex/core/schema";
 import { fs, path } from "@llamaindex/env";
-import type { Document } from "../Node.js";
 
 /**
  * A reader takes imports data into Document objects.

@@ -1,4 +1,4 @@
-import { Document, TextNode } from "llamaindex/Node";
+import { Document, TextNode } from "@llamaindex/core/schema";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe("Document", () => {

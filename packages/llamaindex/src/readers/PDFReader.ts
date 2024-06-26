@@ -1,5 +1,5 @@
+import { Document } from "@llamaindex/core/schema";
 import { fs } from "@llamaindex/env";
-import { Document } from "../Node.js";
 import { FileReader } from "./type.js";
 
 /**

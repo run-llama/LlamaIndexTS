@@ -1,5 +1,9 @@
-import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
-import { MetadataMode } from "../../Node.js";
+import type {
+  BaseNode,
+  Document,
+  NodeWithScore,
+} from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import type {
   KeywordExtractPrompt,
   QueryKeywordExtractPrompt,

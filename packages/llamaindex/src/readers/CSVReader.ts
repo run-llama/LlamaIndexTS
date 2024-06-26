@@ -1,6 +1,6 @@
+import { Document } from "@llamaindex/core/schema";
 import type { ParseConfig } from "papaparse";
 import Papa from "papaparse";
-import { Document } from "../Node.js";
 import { FileReader } from "./type.js";
 
 /**

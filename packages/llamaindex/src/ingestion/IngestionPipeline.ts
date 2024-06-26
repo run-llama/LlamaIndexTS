@@ -5,7 +5,7 @@ import {
   type BaseNode,
   type Document,
   type Metadata,
-} from "../Node.js";
+} from "@llamaindex/core/schema";
 import { getPipelineCreate } from "../cloud/config.js";
 import {
   DEFAULT_PIPELINE_NAME,
