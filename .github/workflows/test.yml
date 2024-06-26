@@ -128,6 +128,9 @@ jobs:
         run: pnpm run build
       - name: Copy examples
         run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
+      - name: Pack @llamaindex/cloud
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/cloud
       - name: Pack @llamaindex/core
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core

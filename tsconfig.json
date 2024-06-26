@@ -24,6 +24,9 @@
       "path": "./packages/community/tsconfig.json"
     },
     {
+      "path": "./packages/cloud/tsconfig.json"
+    },
+    {
       "path": "./packages/community/tsconfig.script.json"
     },
     {
