@@ -227,7 +227,9 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
     if (startCharIdx) {
       this.startCharIdx = startCharIdx;
     }
-    this.endCharIdx = endCharIdx;
+    if (endCharIdx) {
+      this.endCharIdx = endCharIdx;
+    }
     this.metadataSeparator = metadataSeparator ?? "\n";
   }
 

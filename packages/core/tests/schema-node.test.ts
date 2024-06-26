@@ -46,11 +46,9 @@ describe("TextNode", () => {
     expect(node.toJSON()).toMatchInlineSnapshot(
       {
         id_: expect.any(String),
-      },
-      `
+      }, `
       {
         "embedding": undefined,
-        "endCharIdx": undefined,
         "excludedEmbedMetadataKeys": [],
         "excludedLlmMetadataKeys": [],
         "hash": "Z6SWgFPlalaeblMGQGw0KS3qKgmZdEWXKfzEp/K+QN0=",
@@ -62,12 +60,10 @@ describe("TextNode", () => {
         "metadataSeparator": "
       ",
         "relationships": {},
-        "startCharIdx": undefined,
         "text": "Hello World",
         "textTemplate": "",
         "type": "TEXT",
       }
-    `,
-    );
+    `);
   });
 });
