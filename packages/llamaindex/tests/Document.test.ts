@@ -1,4 +1,4 @@
-import { Document, ImageDocument } from "llamaindex/Node";
+import { Document, ImageDocument } from "@llamaindex/core/schema";
 import { describe, expect, test } from "vitest";
 
 describe("Document", () => {
