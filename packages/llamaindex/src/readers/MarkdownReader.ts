@@ -89,8 +89,9 @@ export class MarkdownReader extends FileReader {
     return this.markdownToTups(modifiedContent);
   }
 
-  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
-    const content = fileContent.toString("utf-8");
+  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
+    const decoder = new TextDecoder("utf-8");
+    const content = decoder.decode(fileContent);
     const tups = this.parseTups(content);
     const results: Document[] = [];
     let counter = 0;
