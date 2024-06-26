@@ -77,13 +77,15 @@ export class IngestionPipeline {
     if (!this.docStore) {
       this.docStoreStrategy = DocStoreStrategy.NONE;
     }
-    this.vectorStores = this.vectorStores ?? {
-      [ModalityType.TEXT]: this.vectorStore,
-    };
+    this.vectorStores =
+      this.vectorStores ??
+      (this.vectorStore
+        ? { [ModalityType.TEXT]: this.vectorStore }
+        : undefined);
     this._docStoreStrategy = createDocStoreStrategy(
       this.docStoreStrategy,
       this.docStore,
-      Object.values(this.vectorStores),
+      this.vectorStores ? Object.values(this.vectorStores) : undefined,
     );
     if (!this.disableCache) {
       this.cache = new IngestionCache();
