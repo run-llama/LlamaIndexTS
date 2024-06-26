@@ -1,6 +1,9 @@
 {
   "name": "@llamaindex/core-tests",
   "private": true,
+  "scripts": {
+    "test": "vitest"
+  },
   "devDependencies": {
     "@llamaindex/core": "workspace:*"
   }

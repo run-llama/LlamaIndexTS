@@ -49,8 +49,7 @@
   },
   "scripts": {
     "dev": "bunchee --watch",
-    "build": "bunchee",
-    "test": "vitest"
+    "build": "bunchee"
   },
   "repository": {
     "type": "git",
