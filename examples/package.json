@@ -4,6 +4,7 @@
   "version": "0.0.6",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
+    "@azure/identity": "^4.2.1",
     "@datastax/astra-db-ts": "^1.2.1",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^2.2.2",
