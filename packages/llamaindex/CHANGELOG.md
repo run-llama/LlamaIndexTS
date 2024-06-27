@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.4.6
+
+### Patch Changes
+
+- 1feb23b: feat: Gemini tool calling for agent support
+- 08c55ec: Add metadata to PDFs and use Uint8Array for readers content
+
 ## 0.4.5
 
 ### Patch Changes
