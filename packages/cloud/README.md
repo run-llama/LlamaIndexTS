@@ -5,7 +5,7 @@
 ## Usage
 
 ```ts
-import { OpenAPI, Service } from "@llamaindex/cloud/api";
+import { OpenAPI } from "@llamaindex/cloud/api";
 OpenAPI.TOKEN = "YOUR_API_KEY";
 OpenAPI.BASE = "https://api.cloud.llamaindex.ai/";
 // ...
