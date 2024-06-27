@@ -13,10 +13,15 @@ import type {
   VertexGeminiSessionOptions,
 } from "./types.js";
 
-import { getEnv } from "@llamaindex/env";
-import type { CompletionResponse } from "../types.js";
+import type { FunctionCall } from "@google/generative-ai";
+import { getEnv, randomUUID } from "@llamaindex/env";
+import type {
+  CompletionResponse,
+  ToolCall,
+  ToolCallLLMMessageOptions,
+} from "../types.js";
 import { streamConverter } from "../utils.js";
-import { getText } from "./utils.js";
+import { getFunctionCalls, getText } from "./utils.js";
 
 /* To use Google's Vertex AI backend, it doesn't use api key authentication.
  *
@@ -62,14 +67,35 @@ export class GeminiVertexSession implements IGeminiSession {
     return getText(response);
   }
 
+  getToolsFromResponse(
+    response: GenerateContentResponse,
+  ): ToolCall[] | undefined {
+    return getFunctionCalls(response)?.map(
+      (call: FunctionCall) =>
+        ({
+          name: call.name,
+          input: call.args,
+          id: randomUUID(),
+        }) as ToolCall,
+    );
+  }
+
   async *getChatStream(
     result: VertexStreamGenerateContentResult,
   ): GeminiChatStreamResponse {
-    yield* streamConverter(result.stream, (response) => ({
-      delta: this.getResponseText(response),
-      raw: response,
-    }));
+    yield* streamConverter(result.stream, (response) => {
+      const tools = this.getToolsFromResponse(response);
+      const options: ToolCallLLMMessageOptions = tools?.length
+        ? { toolCall: tools }
+        : {};
+      return {
+        delta: this.getResponseText(response),
+        raw: response,
+        options,
+      };
+    });
   }
+
   getCompletionStream(
     result: VertexStreamGenerateContentResult,
   ): AsyncIterable<CompletionResponse> {

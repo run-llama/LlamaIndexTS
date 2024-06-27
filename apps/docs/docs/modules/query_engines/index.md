@@ -38,4 +38,4 @@ You can learn more about Tools by taking a look at the LlamaIndex Python documen
 
 - [RetrieverQueryEngine](../../api/classes/RetrieverQueryEngine.md)
 - [SubQuestionQueryEngine](../../api/classes/SubQuestionQueryEngine.md)
-- [QueryEngineTool](../../api/interfaces/QueryEngineTool.md)
+- [QueryEngineTool](../../api/classes/QueryEngineTool.md)

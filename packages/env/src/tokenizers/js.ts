@@ -22,7 +22,7 @@ class TokenizerSingleton {
     };
   }
 
-  tokenizer(encoding?: Tokenizers) {
+  tokenizer(encoding?: Tokenizers): Tokenizer {
     if (encoding && encoding !== Tokenizers.CL100K_BASE) {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
@@ -31,5 +31,5 @@ class TokenizerSingleton {
   }
 }
 
-export const tokenizers = new TokenizerSingleton();
+export const tokenizers: TokenizerSingleton = new TokenizerSingleton();
 export { Tokenizers, type Tokenizer };

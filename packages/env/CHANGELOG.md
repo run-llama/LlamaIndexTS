@@ -1,5 +1,18 @@
 # @llamaindex/env
 
+## 0.1.6
+
+### Patch Changes
+
+- d4e853c: fix: stronger type declaration
+- a94b8ec: fix: jsr release
+
+## 0.1.5
+
+### Patch Changes
+
+- f3b34b4: Use tiktoken instead of tiktoken/lite and disable WASM tiktoken for non-Node environments
+
 ## 0.1.4
 
 ### Patch Changes

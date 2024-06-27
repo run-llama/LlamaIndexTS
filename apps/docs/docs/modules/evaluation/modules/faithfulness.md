@@ -76,3 +76,7 @@ console.log(`the response is ${result.passing ? "faithful" : "not faithful"}`);
 ```bash
 the response is faithful
 ```
+
+## API Reference
+
+- [FaithfulnessEvaluator](../../../api/classes/FaithfulnessEvaluator.md)

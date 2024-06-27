@@ -1,5 +1,5 @@
+import { ModalityType, ObjectType } from "@llamaindex/core/schema";
 import { path } from "@llamaindex/env";
-import { ModalityType, ObjectType } from "../Node.js";
 import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
 import {
   DEFAULT_IMAGE_VECTOR_NAMESPACE,

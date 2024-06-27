@@ -1,0 +1,67 @@
+{
+  "name": "@llamaindex/core",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "LlamaIndex Core Module",
+  "exports": {
+    "./decorator": {
+      "require": {
+        "types": "./dist/decorator/index.d.cts",
+        "default": "./dist/decorator/index.cjs"
+      },
+      "import": {
+        "types": "./dist/decorator/index.d.ts",
+        "default": "./dist/decorator/index.js"
+      },
+      "default": {
+        "types": "./dist/decorator/index.d.ts",
+        "default": "./dist/decorator/index.js"
+      }
+    },
+    "./global": {
+      "require": {
+        "types": "./dist/global/index.d.cts",
+        "default": "./dist/global/index.cjs"
+      },
+      "import": {
+        "types": "./dist/global/index.d.ts",
+        "default": "./dist/global/index.js"
+      },
+      "default": {
+        "types": "./dist/global/index.d.ts",
+        "default": "./dist/global/index.js"
+      }
+    },
+    "./schema": {
+      "require": {
+        "types": "./dist/schema/index.d.cts",
+        "default": "./dist/schema/index.cjs"
+      },
+      "import": {
+        "types": "./dist/schema/index.d.ts",
+        "default": "./dist/schema/index.js"
+      },
+      "default": {
+        "types": "./dist/schema/index.d.ts",
+        "default": "./dist/schema/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "dev": "bunchee --watch",
+    "build": "bunchee"
+  },
+  "repository": {
+    "type": "git",
+    "directory": "packages/core",
+    "url": "https://github.com/himself65/LlamaIndexTS.git"
+  },
+  "devDependencies": {
+    "bunchee": "^5.2.1"
+  },
+  "dependencies": {
+    "@llamaindex/env": "workspace:*",
+    "@types/node": "^20.14.9",
+    "zod": "^3.23.8"
+  }
+}

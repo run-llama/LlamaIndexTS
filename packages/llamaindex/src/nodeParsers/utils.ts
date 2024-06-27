@@ -1,11 +1,11 @@
-import _ from "lodash";
-import type { BaseNode } from "../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
 import {
   Document,
   ImageDocument,
   NodeRelationship,
   TextNode,
-} from "../Node.js";
+} from "@llamaindex/core/schema";
+import _ from "lodash";
 
 type TextSplitter = (s: string) => string[];
 

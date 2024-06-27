@@ -4,7 +4,7 @@ import {
   ModalityType,
   splitNodesByType,
   type BaseNode,
-} from "../Node.js";
+} from "@llamaindex/core/schema";
 import type { SimplePrompt } from "../Prompt.js";
 import { imageToDataUrl } from "../embeddings/utils.js";
 import type { MessageContentDetail } from "../llm/types.js";

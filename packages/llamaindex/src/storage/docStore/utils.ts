@@ -1,5 +1,5 @@
-import type { BaseNode } from "../../Node.js";
-import { Document, ObjectType, TextNode } from "../../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
+import { Document, ObjectType, TextNode } from "@llamaindex/core/schema";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
@@ -44,6 +44,7 @@ export function jsonToDoc(docDict: DocJson): BaseNode {
       id_: dataDict.id_,
       hash: dataDict.hash,
       metadata: dataDict.metadata,
+      relationships: dataDict.relationships,
     });
   } else {
     throw new Error(`Unknown doc type: ${docType}`);

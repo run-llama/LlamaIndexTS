@@ -1,7 +1,7 @@
 import { CohereClient } from "cohere-ai";
 
-import type { NodeWithScore } from "../../Node.js";
-import { MetadataMode } from "../../Node.js";
+import type { NodeWithScore } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import type { MessageContent } from "../../llm/types.js";
 import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../types.js";

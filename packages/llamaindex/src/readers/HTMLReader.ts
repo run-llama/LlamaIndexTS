@@ -1,4 +1,4 @@
-import { Document } from "../Node.js";
+import { Document } from "@llamaindex/core/schema";
 import { FileReader } from "./type.js";
 
 /**
@@ -15,8 +15,9 @@ export class HTMLReader extends FileReader {
    * @param file Path/name of the file to be loaded.
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
    */
-  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
-    const dataBuffer = fileContent.toString("utf-8");
+  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
+    const decoder = new TextDecoder("utf-8");
+    const dataBuffer = decoder.decode(fileContent);
     const htmlOptions = this.getOptions();
     const content = await this.parseContent(dataBuffer, htmlOptions);
     return [new Document({ text: content })];

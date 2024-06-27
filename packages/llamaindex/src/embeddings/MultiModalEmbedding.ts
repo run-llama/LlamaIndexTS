@@ -5,7 +5,7 @@ import {
   splitNodesByType,
   type BaseNode,
   type ImageType,
-} from "../Node.js";
+} from "@llamaindex/core/schema";
 import type { MessageContentDetail } from "../llm/types.js";
 import { extractImage, extractSingleText } from "../llm/utils.js";
 import { BaseEmbedding, batchEmbeddings } from "./types.js";

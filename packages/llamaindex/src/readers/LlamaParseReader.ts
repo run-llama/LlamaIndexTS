@@ -1,6 +1,6 @@
+import { Document } from "@llamaindex/core/schema";
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
-import { Document } from "../Node.js";
 import { FileReader, type Language, type ResultType } from "./type.js";
 
 const SupportedFiles: { [key: string]: string } = {
@@ -162,7 +162,10 @@ export class LlamaParseReader extends FileReader {
   }
 
   // Create a job for the LlamaParse API
-  private async createJob(data: Buffer, fileName?: string): Promise<string> {
+  private async createJob(
+    data: Uint8Array,
+    fileName?: string,
+  ): Promise<string> {
     // Load data, set the mime type
     const { mimeType, extension } = await this.getMimeType(data);
 
@@ -274,12 +277,12 @@ export class LlamaParseReader extends FileReader {
    * Loads data from a file and returns an array of Document objects.
    * To be used with resultType = "text" and "markdown"
    *
-   * @param {Buffer} fileContent - The content of the file to be loaded.
+   * @param {Uint8Array} fileContent - The content of the file to be loaded.
    * @param {string} [fileName] - The optional name of the file to be loaded.
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
   async loadDataAsContent(
-    fileContent: Buffer,
+    fileContent: Uint8Array,
     fileName?: string,
   ): Promise<Document[]> {
     let jobId;
@@ -422,13 +425,13 @@ export class LlamaParseReader extends FileReader {
     }
     // Convert the response to an ArrayBuffer and then to a Buffer
     const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const buffer = new Uint8Array(arrayBuffer);
     // Write the image buffer to the specified imagePath
     await fs.writeFile(imagePath, buffer);
   }
 
   private async getMimeType(
-    data: Buffer,
+    data: Uint8Array,
   ): Promise<{ mimeType: string; extension: string }> {
     const mimes = filetypemime(data); // Get an array of possible MIME types
     const extension = Object.keys(SupportedFiles).find(

@@ -32,7 +32,7 @@ LlamaIndex.TS help you prepare the knowledge base with a suite of data connector
 
 ![](../_static/concepts/indexing.jpg)
 
-[**Data Loaders**](../modules/data_loader.md):
+[**Data Loaders**](../modules/data_loaders/index.mdx):
 A data connector (i.e. `Reader`) ingest data from different data sources and data formats into a simple `Document` representation (text and simple metadata).
 
 [**Documents / Nodes**](../modules/documents_and_nodes/index.md): A `Document` is a generic container around any data source - for instance, a PDF, an API output, or retrieved data from a database. A `Node` is the atomic unit of data in LlamaIndex and represents a "chunk" of a source `Document`. It's a rich representation that includes metadata and relationships (to other nodes) to enable accurate and expressive retrieval operations.
