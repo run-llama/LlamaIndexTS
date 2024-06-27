@@ -9,6 +9,9 @@ export default defineConfig({
     format: "prettier",
     lint: "eslint",
   },
+  services: {
+    asClass: true,
+  },
   types: {
     enums: "javascript",
   },
