@@ -56,7 +56,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
       pipelineName: this.pipelineName,
     });
 
-    if (!pipelines) {
+    if (pipelines.length === 0 || !pipelines[0].id) {
       throw new Error(
         `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
       );
