@@ -11,8 +11,9 @@ import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./constants.js";
 import { getAppBaseUrl, initService } from "./utils.js";
 
-import { Service } from "@llamaindex/cloud/api";
+import { OpenAPI, Service } from "@llamaindex/cloud/api";
 import { getEnv } from "@llamaindex/env";
+import { Settings } from "../Settings.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
@@ -25,7 +26,7 @@ export class LlamaCloudIndex {
   }
 
   private async waitForPipelineIngestion(
-    verbose = false,
+    verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
     const pipelineId = await this.getPipelineId(
@@ -70,18 +71,13 @@ export class LlamaCloudIndex {
 
   private async waitForDocumentIngestion(
     docIds: string[],
-    verbose = false,
+    verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
     const pipelineId = await this.getPipelineId(
       this.params.name,
       this.params.projectName,
     );
-
-    const client = await initService({
-      ...this.params,
-      baseUrl: this.params.baseUrl,
-    });
 
     if (verbose) {
       console.log("Loading data: ");
@@ -161,10 +157,6 @@ export class LlamaCloudIndex {
       }),
     ];
 
-    const appUrl = getAppBaseUrl(params.baseUrl);
-
-    const client = await initService({ ...params, baseUrl: appUrl });
-
     const pipelineCreateParams = await getPipelineCreate({
       pipelineName: params.name,
       pipelineType: "MANAGED",
@@ -228,14 +220,14 @@ export class LlamaCloudIndex {
 
       if (pipelineStatus.status === "ERROR") {
         console.error(
-          `Some documents failed to ingest, check your pipeline logs at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+          `Some documents failed to ingest, check your pipeline logs at ${OpenAPI.BASE}/project/${project.id}/deploy/${pipeline.id}`,
         );
         throw new Error("Some documents failed to ingest");
       }
 
       if (pipelineStatus.status === "PARTIAL_SUCCESS") {
         console.info(
-          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${OpenAPI.BASE}/project/${project.id}/deploy/${pipeline.id}`,
         );
         break;
       }
@@ -249,7 +241,7 @@ export class LlamaCloudIndex {
 
     if (params.verbose) {
       console.info(
-        `Ingestion completed, find your index at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+        `Ingestion completed, find your index at ${OpenAPI.BASE}/project/${project.id}/deploy/${pipeline.id}`,
       );
     }
 
@@ -280,10 +272,6 @@ export class LlamaCloudIndex {
   }
 
   async insert(document: Document) {
-    const appUrl = getAppBaseUrl(this.params.baseUrl);
-
-    const client = await initService({ ...this.params, baseUrl: appUrl });
-
     const pipelineId = await this.getPipelineId(
       this.params.name,
       this.params.projectName,
@@ -312,10 +300,6 @@ export class LlamaCloudIndex {
   }
 
   async delete(document: Document) {
-    const appUrl = getAppBaseUrl(this.params.baseUrl);
-
-    const client = await initService({ ...this.params, baseUrl: appUrl });
-
     const pipelineId = await this.getPipelineId(
       this.params.name,
       this.params.projectName,
