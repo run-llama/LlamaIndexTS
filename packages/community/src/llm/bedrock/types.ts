@@ -158,7 +158,7 @@ type MetaResponse = {
   stop_reason: "stop" | "length";
 };
 
-export type MetaStreamingEvent = MetaResponse & {
+export type MetaStreamEvent = MetaResponse & {
   "amazon-bedrock-invocationMetrics": InvocationMetrics;
 };
 

@@ -3,7 +3,7 @@ import type {
   InvokeModelWithResponseStreamCommandInput,
 } from "@aws-sdk/client-bedrock-runtime";
 import type { ChatMessage, LLMMetadata } from "llamaindex";
-import type { MetaNoneStreamingResponse, MetaStreamingEvent } from "../types";
+import type { MetaNoneStreamingResponse, MetaStreamEvent } from "../types";
 import {
   mapChatMessagesToMetaLlama2Messages,
   mapChatMessagesToMetaLlama3Messages,
@@ -12,7 +12,7 @@ import {
 
 import { Provider } from "../provider";
 
-export class MetaProvider extends Provider<MetaStreamingEvent> {
+export class MetaProvider extends Provider<MetaStreamEvent> {
   constructor() {
     super();
   }
