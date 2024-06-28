@@ -79,7 +79,7 @@ export type ToolChoice =
   | { type: "auto" }
   | { type: "tool"; name: string };
 
-export type StreamEvent =
+export type AnthropicStreamEvent =
   | { type: "message_start"; message: Message }
   | ContentBlockStart
   | ContentBlockDelta
@@ -94,8 +94,6 @@ export type AnthropicContent =
   | AnthropicToolResultContent;
 
 export type MetaTextContent = string;
-
-export type MetaContent = MetaTextContent;
 
 export type AnthropicTextContent = {
   type: "text";
@@ -153,9 +151,15 @@ export type AnthropicNoneStreamingResponse = {
   usage: { input_tokens: number; output_tokens: number };
 };
 
-export type MetaNoneStreamingResponse = {
+type MetaResponse = {
   generation: string;
   prompt_token_count: number;
   generation_token_count: number;
   stop_reason: "stop" | "length";
 };
+
+export type MetaStreamingEvent = MetaResponse & {
+  "amazon-bedrock-invocationMetrics": InvocationMetrics;
+};
+
+export type MetaNoneStreamingResponse = MetaResponse;

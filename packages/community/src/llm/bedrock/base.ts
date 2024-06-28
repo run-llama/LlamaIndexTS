@@ -25,9 +25,10 @@ import type {
 import { ToolCallLLM, streamConverter, wrapLLMEvent } from "llamaindex";
 import type {
   AnthropicNoneStreamingResponse,
+  AnthropicStreamEvent,
   AnthropicTextContent,
   MetaNoneStreamingResponse,
-  StreamEvent,
+  MetaStreamingEvent,
   ToolBlock,
   ToolChoice,
 } from "./types.js";
@@ -192,7 +193,7 @@ abstract class Provider<ProviderStreamEvent extends {} = {}> {
   ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput;
 }
 
-class AnthropicProvider extends Provider<StreamEvent> {
+class AnthropicProvider extends Provider<AnthropicStreamEvent> {
   getResultFromResponse(
     response: Record<string, any>,
   ): AnthropicNoneStreamingResponse {
@@ -317,7 +318,7 @@ class AnthropicProvider extends Provider<StreamEvent> {
   }
 }
 
-class MetaProvider extends Provider<StreamEvent> {
+class MetaProvider extends Provider<MetaStreamingEvent> {
   getResultFromResponse(
     response: Record<string, any>,
   ): MetaNoneStreamingResponse {
@@ -335,10 +336,9 @@ class MetaProvider extends Provider<StreamEvent> {
 
   getTextFromStreamResponse(response: Record<string, any>): string {
     const event = this.getStreamingEventResponse(response);
-    if (event?.type === "content_block_delta") {
-      if (event.delta.type === "text_delta") return event.delta.text;
-      if (event.delta.type === "input_json_delta")
-        return event.delta.partial_json;
+    console.debug(JSON.stringify(event));
+    if (event?.generation) {
+      return event.generation;
     }
     return "";
   }
