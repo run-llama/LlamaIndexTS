@@ -226,7 +226,6 @@ export const mapChatMessagesToMetaLlama2Messages = <T extends ChatMessage>(
       needsStartAgain = true;
     }
   }
-  debugger;
   return output;
 };
 
