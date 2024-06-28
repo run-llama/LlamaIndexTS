@@ -1,0 +1,37 @@
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../../examples/readers/src/simple-directory-reader";
+import CodeSource2 from "!raw-loader!../../../../../examples/readers/src/custom-simple-directory-reader";
+
+# Loader
+
+Before you can start indexing your documents, you need to load them into memory.
+
+## SimpleDirectoryReader
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/run-llama/LlamaIndexTS/tree/main/examples/readers?file=src/simple-directory-reader.ts&title=Simple%20Directory%20Reader)
+
+LlamaIndex.TS supports easy loading of files from folders using the `SimpleDirectoryReader` class.
+
+It is a simple reader that reads all files from a directory and its subdirectories.
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+Currently, it supports reading `.txt`, `.pdf`, `.csv`, `.md`, `.docx`, `.htm`, `.html`, `.jpg`, `.jpeg`, `.png` and `.gif` files, but support for other file types is planned.
+
+You can modify the reader three different ways:
+
+- `overrideReader` overrides the reader for all file types, including unsupported ones.
+- `fileExtToReader` maps a reader to a specific file type. Can override reader for existing file types or add support for new file types.
+- `defaultReader` sets a fallback reader for files with unsupported extensions. By default it is `TextFileReader`.
+
+SimpleDirectoryReader supports up to 9 concurrent requests. Use the `numWorkers` option to set the number of concurrent requests. By default it runs in sequential mode, i.e. set to 1.
+
+### Example
+
+<CodeBlock language="ts" showLineNumbers metastring="{8-12,17-21}">
+  {CodeSource2}
+</CodeBlock>
+
+## API Reference
+
+- [SimpleDirectoryReader](../../api/classes/SimpleDirectoryReader.md)

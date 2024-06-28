@@ -8,8 +8,8 @@ import {
   type VectorStoreQueryResult,
 } from "./types.js";
 
-import type { BaseNode, Metadata } from "../../Node.js";
-import { Document, MetadataMode } from "../../Node.js";
+import type { BaseNode, Metadata } from "@llamaindex/core/schema";
+import { Document, MetadataMode } from "@llamaindex/core/schema";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";

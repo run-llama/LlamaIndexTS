@@ -1,5 +1,5 @@
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { Tokenizers } from "@llamaindex/env";
-import type { NodeWithScore } from "../Node.js";
 import type { BaseEvent } from "../internal/type.js";
 import type { BaseTool, JSONObject, ToolOutput, UUID } from "../types.js";
 

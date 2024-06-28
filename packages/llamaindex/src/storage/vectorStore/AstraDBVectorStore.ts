@@ -1,7 +1,7 @@
 import { Collection, DataAPIClient, Db } from "@datastax/astra-db-ts";
+import type { BaseNode } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
-import type { BaseNode } from "../../Node.js";
-import { MetadataMode } from "../../Node.js";
 import {
   VectorStoreBase,
   type IEmbedModel,

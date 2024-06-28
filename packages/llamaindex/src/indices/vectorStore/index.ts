@@ -6,7 +6,7 @@ import {
   type BaseNode,
   type Document,
   type NodeWithScore,
-} from "../../Node.js";
+} from "@llamaindex/core/schema";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";

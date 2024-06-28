@@ -19,3 +19,7 @@ const results = await queryEngine.query({
   query,
 });
 ```
+
+## API Reference
+
+- [OpenAIEmbedding](../../../api/classes/OpenAIEmbedding.md)

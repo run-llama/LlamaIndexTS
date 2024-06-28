@@ -14,19 +14,33 @@ type Message = {
   usage: Usage;
 };
 
+export type ToolBlock = {
+  id: string;
+  input: unknown;
+  name: string;
+  type: "tool_use";
+};
+
+export type TextBlock = {
+  type: "text";
+  text: string;
+};
+
 type ContentBlockStart = {
   type: "content_block_start";
   index: number;
-  content_block: {
-    type: string;
-    text: string;
-  };
+  content_block: ToolBlock | TextBlock;
 };
 
-type Delta = {
-  type: string;
-  text: string;
-};
+type Delta =
+  | {
+      type: "text_delta";
+      text: string;
+    }
+  | {
+      type: "input_json_delta";
+      partial_json: string;
+    };
 
 type ContentBlockDelta = {
   type: "content_block_delta";
@@ -60,6 +74,11 @@ type MessageStop = {
   "amazon-bedrock-invocationMetrics": InvocationMetrics;
 };
 
+export type ToolChoice =
+  | { type: "any" }
+  | { type: "auto" }
+  | { type: "tool"; name: string };
+
 export type StreamEvent =
   | { type: "message_start"; message: Message }
   | ContentBlockStart
@@ -68,7 +87,11 @@ export type StreamEvent =
   | MessageDelta
   | MessageStop;
 
-export type AnthropicContent = AnthropicTextContent | AnthropicImageContent;
+export type AnthropicContent =
+  | AnthropicTextContent
+  | AnthropicImageContent
+  | AnthropicToolContent
+  | AnthropicToolResultContent;
 
 export type MetaTextContent = string;
 
@@ -77,6 +100,19 @@ export type MetaContent = MetaTextContent;
 export type AnthropicTextContent = {
   type: "text";
   text: string;
+};
+
+export type AnthropicToolContent = {
+  type: "tool_use";
+  id: string;
+  name: string;
+  input: Record<string, unknown>;
+};
+
+export type AnthropicToolResultContent = {
+  type: "tool_result";
+  tool_use_id: string;
+  content: string;
 };
 
 export type AnthropicMediaTypes =

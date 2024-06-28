@@ -1,8 +1,12 @@
 import type {
+  BaseTool,
   ChatMessage,
+  JSONObject,
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
+  ToolCallLLMMessageOptions,
+  ToolMetadata,
 } from "llamaindex";
 import type {
   AnthropicContent,
@@ -70,11 +74,61 @@ export const mapMessageContentToAnthropicContent = <T extends MessageContent>(
   );
 };
 
-export const mapChatMessagesToAnthropicMessages = <T extends ChatMessage>(
+type AnthropicTool = {
+  name: string;
+  description: string;
+  input_schema: ToolMetadata["parameters"];
+};
+
+export const mapBaseToolsToAnthropicTools = (
+  tools?: BaseTool[],
+): AnthropicTool[] => {
+  if (!tools) return [];
+  return tools.map((tool: BaseTool) => {
+    const {
+      metadata: { parameters, ...options },
+    } = tool;
+    return {
+      ...options,
+      input_schema: parameters,
+    };
+  });
+};
+
+export const mapChatMessagesToAnthropicMessages = <
+  T extends ChatMessage<ToolCallLLMMessageOptions>,
+>(
   messages: T[],
 ): AnthropicMessage[] => {
   const mapped = messages
     .flatMap((msg: T): AnthropicMessage[] => {
+      if (msg.options && "toolCall" in msg.options) {
+        return [
+          {
+            role: "assistant",
+            content: msg.options.toolCall.map((call) => ({
+              type: "tool_use",
+              id: call.id,
+              name: call.name,
+              input: call.input as JSONObject,
+            })),
+          },
+        ];
+      }
+      if (msg.options && "toolResult" in msg.options) {
+        return [
+          {
+            role: "user",
+            content: [
+              {
+                type: "tool_result",
+                tool_use_id: msg.options.toolResult.id,
+                content: msg.options.toolResult.result,
+              },
+            ],
+          },
+        ];
+      }
       return mapMessageContentToMessageContentDetails(msg.content).map(
         (detail: MessageContentDetail): AnthropicMessage => {
           const content = mapMessageContentDetailToAnthropicContent(detail);

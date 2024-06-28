@@ -1,5 +1,5 @@
-import type { BaseNode, Metadata } from "../Node.js";
-import { MetadataMode, TextNode } from "../Node.js";
+import type { BaseNode, Metadata } from "@llamaindex/core/schema";
+import { MetadataMode, TextNode } from "@llamaindex/core/schema";
 import type { NodeParser } from "./types.js";
 
 export class MarkdownNodeParser implements NodeParser {

@@ -1,4 +1,4 @@
-import { Document } from "llamaindex/Node";
+import { Document } from "@llamaindex/core/schema";
 import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
 import { beforeEach, describe, expect, test } from "vitest";
 

@@ -8,6 +8,7 @@ import {
   type VectorStoreQueryResult,
 } from "./types.js";
 
+import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import type {
   FetchResponse,
@@ -15,7 +16,6 @@ import type {
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
 import { type Pinecone } from "@pinecone-database/pinecone";
-import type { BaseNode, Metadata } from "../../Node.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PineconeParams = {

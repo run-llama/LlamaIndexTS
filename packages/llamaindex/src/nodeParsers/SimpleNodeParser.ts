@@ -1,4 +1,4 @@
-import type { BaseNode } from "../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
 import { SentenceSplitter } from "../TextSplitter.js";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants.js";
 import type { NodeParser } from "./types.js";

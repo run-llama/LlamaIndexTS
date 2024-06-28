@@ -1,6 +1,6 @@
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { ChatHistory } from "../../ChatHistory.js";
 import type { EngineResponse } from "../../EngineResponse.js";
-import type { NodeWithScore } from "../../Node.js";
 import type { ChatMessage } from "../../llm/index.js";
 import type { MessageContent } from "../../llm/types.js";
 

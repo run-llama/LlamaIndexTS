@@ -1,3 +1,5 @@
+import type { BaseNode } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import type {
   AddParams,
   ChromaClientParams,
@@ -7,8 +9,6 @@ import type {
   WhereDocument,
 } from "chromadb";
 import { ChromaClient, IncludeEnum } from "chromadb";
-import type { BaseNode } from "../../Node.js";
-import { MetadataMode } from "../../Node.js";
 import {
   VectorStoreBase,
   VectorStoreQueryMode,

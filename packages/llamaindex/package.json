@@ -1,7 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.4.1",
-  "expectedMinorVersion": "3",
+  "version": "0.4.6",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -23,17 +22,20 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.21.1",
     "@aws-crypto/sha256-js": "^5.2.0",
+    "@azure/identity": "^4.2.1",
     "@datastax/astra-db-ts": "^1.2.1",
     "@google-cloud/vertexai": "^1.2.0",
     "@google/generative-ai": "^0.12.0",
     "@grpc/grpc-js": "^1.10.8",
     "@huggingface/inference": "^2.7.0",
-    "@llamaindex/cloud": "0.0.5",
+    "@llamaindex/cloud": "workspace:*",
+    "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@mistralai/mistralai": "^0.4.0",
     "@pinecone-database/pinecone": "^2.2.2",
     "@qdrant/js-client-rest": "^1.9.0",
-    "@types/lodash": "^4.17.5",
+    "@types/lodash": "^4.17.4",
+    "@types/node": "^20.14.5",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.6",
     "@xenova/transformers": "^2.17.2",
@@ -61,7 +63,8 @@
     "tiktoken": "^1.0.15",
     "unpdf": "^0.10.1",
     "wikipedia": "^2.1.2",
-    "wink-nlp": "^2.3.0"
+    "wink-nlp": "^2.3.0",
+    "zod": "^3.23.8"
   },
   "peerDependencies": {
     "@notionhq/client": "^2.2.15"
@@ -149,7 +152,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/core"
+    "directory": "packages/llamaindex"
   },
   "scripts": {
     "lint": "eslint .",
