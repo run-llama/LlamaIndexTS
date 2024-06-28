@@ -47,6 +47,9 @@
       }
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "bunchee --watch",
     "build": "bunchee"
