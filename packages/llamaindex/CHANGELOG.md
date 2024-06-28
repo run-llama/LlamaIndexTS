@@ -1,5 +1,19 @@
 # llamaindex
 
+## 0.4.7
+
+### Patch Changes
+
+- 41fe871: Add support for azure dynamic session tool
+- 321c39d: fix: generate api as class
+- f7f1af0: fix: throw error when no pipeline found
+- Updated dependencies [41fe871]
+- Updated dependencies [f10b41d]
+- Updated dependencies [321c39d]
+  - @llamaindex/env@0.1.7
+  - @llamaindex/core@0.0.2
+  - @llamaindex/cloud@0.1.1
+
 ## 0.4.6
 
 ### Patch Changes
