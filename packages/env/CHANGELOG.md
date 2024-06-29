@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.7
+
+### Patch Changes
+
+- 41fe871: Add support for azure dynamic session tool
+
 ## 0.1.6
 
 ### Patch Changes
