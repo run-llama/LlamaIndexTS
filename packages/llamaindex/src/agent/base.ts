@@ -12,6 +12,7 @@ import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import type { ChatMessage, LLM, MessageContent } from "../llm/index.js";
+import { ObjectRetriever } from "../objects/index.js";
 import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
@@ -19,6 +20,7 @@ import type {
   TaskStep,
   TaskStepOutput,
 } from "./types.js";
+import { stepTools, stepToolsStreaming } from "./utils.js";
 
 export const MAX_TOOL_CALLS = 10;
 
@@ -125,12 +127,21 @@ export type AgentParamsBase<
   >
     ? AdditionalMessageOptions
     : never,
-> = {
-  llm?: AI;
-  chatHistory?: ChatMessage<AdditionalMessageOptions>[];
-  systemPrompt?: MessageContent;
-  verbose?: boolean;
-};
+> =
+  | {
+      llm?: AI;
+      chatHistory?: ChatMessage<AdditionalMessageOptions>[];
+      systemPrompt?: MessageContent;
+      verbose?: boolean;
+      tools: BaseToolWithCall[];
+    }
+  | {
+      llm?: AI;
+      chatHistory?: ChatMessage<AdditionalMessageOptions>[];
+      systemPrompt?: MessageContent;
+      verbose?: boolean;
+      toolRetriever: ObjectRetriever<BaseToolWithCall>;
+    };
 
 /**
  * Worker will schedule tasks and handle the task execution
@@ -213,6 +224,33 @@ export abstract class AgentRunner<
   static defaultCreateStore(): object {
     return Object.create(null);
   }
+
+  static defaultTaskHandler: TaskHandler<LLM> = async (step, enqueueOutput) => {
+    const { llm, getTools, stream } = step.context;
+    const lastMessage = step.context.store.messages.at(-1)!.content;
+    const tools = await getTools(lastMessage);
+    const response = await llm.chat({
+      // @ts-expect-error
+      stream,
+      tools,
+      messages: [...step.context.store.messages],
+    });
+    if (!stream) {
+      await stepTools<LLM>({
+        response,
+        tools,
+        step,
+        enqueueOutput,
+      });
+    } else {
+      await stepToolsStreaming<LLM>({
+        response,
+        tools,
+        step,
+        enqueueOutput,
+      });
+    }
+  };
 
   protected constructor(
     params: AgentRunnerParams<AI, Store, AdditionalMessageOptions>,

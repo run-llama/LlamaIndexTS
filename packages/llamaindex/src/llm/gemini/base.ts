@@ -2,17 +2,20 @@ import {
   GoogleGenerativeAI,
   GenerativeModel as GoogleGenerativeModel,
   type EnhancedGenerateContentResponse,
+  type FunctionCall,
   type ModelParams as GoogleModelParams,
   type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
 } from "@google/generative-ai";
 
-import { getEnv } from "@llamaindex/env";
+import { getEnv, randomUUID } from "@llamaindex/env";
 import { ToolCallLLM } from "../base.js";
 import type {
   CompletionResponse,
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
+  ToolCall,
+  ToolCallLLMMessageOptions,
 } from "../types.js";
 import { streamConverter, wrapLLMEvent } from "../utils.js";
 import {
@@ -29,7 +32,12 @@ import {
   type GoogleGeminiSessionOptions,
   type IGeminiSession,
 } from "./types.js";
-import { GeminiHelper, getChatContext, getPartsText } from "./utils.js";
+import {
+  GeminiHelper,
+  getChatContext,
+  getPartsText,
+  mapBaseToolToGeminiFunctionDeclaration,
+} from "./utils.js";
 
 export const GEMINI_MODEL_INFO_MAP: Record<GEMINI_MODEL, GeminiModelInfo> = {
   [GEMINI_MODEL.GEMINI_PRO]: { contextWindow: 30720 },
@@ -86,13 +94,33 @@ export class GeminiSession implements IGeminiSession {
     return response.text();
   }
 
+  getToolsFromResponse(
+    response: EnhancedGenerateContentResponse,
+  ): ToolCall[] | undefined {
+    return response.functionCalls()?.map(
+      (call: FunctionCall) =>
+        ({
+          name: call.name,
+          input: call.args,
+          id: randomUUID(),
+        }) as ToolCall,
+    );
+  }
+
   async *getChatStream(
     result: GoogleStreamGenerateContentResult,
   ): GeminiChatStreamResponse {
-    yield* streamConverter(result.stream, (response) => ({
-      delta: this.getResponseText(response),
-      raw: response,
-    }));
+    yield* streamConverter(result.stream, (response) => {
+      const tools = this.getToolsFromResponse(response);
+      const options: ToolCallLLMMessageOptions = tools?.length
+        ? { toolCall: tools }
+        : {};
+      return {
+        delta: this.getResponseText(response),
+        raw: response,
+        options,
+      };
+    });
   }
 
   getCompletionStream(
@@ -188,9 +216,21 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     const client = this.session.getGenerativeModel(this.metadata);
     const chat = client.startChat({
       history: context.history,
+      tools: params.tools && [
+        {
+          functionDeclarations: params.tools.map(
+            mapBaseToolToGeminiFunctionDeclaration,
+          ),
+        },
+      ],
     });
     const { response } = await chat.sendMessage(context.message);
     const topCandidate = response.candidates![0];
+
+    const tools = this.session.getToolsFromResponse(response);
+    const options: ToolCallLLMMessageOptions = tools?.length
+      ? { toolCall: tools }
+      : {};
 
     return {
       raw: response,
@@ -199,6 +239,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
         role: GeminiHelper.ROLES_FROM_GEMINI[
           topCandidate.content.role as GeminiMessageRole
         ],
+        options,
       },
     };
   }
@@ -210,6 +251,13 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
     const client = this.session.getGenerativeModel(this.metadata);
     const chat = client.startChat({
       history: context.history,
+      tools: params.tools && [
+        {
+          functionDeclarations: params.tools.map(
+            mapBaseToolToGeminiFunctionDeclaration,
+          ),
+        },
+      ],
     });
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);
@@ -241,13 +289,17 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
 
     if (stream) {
       const result = await client.generateContentStream(
-        getPartsText(GeminiHelper.messageContentToGeminiParts(prompt)),
+        getPartsText(
+          GeminiHelper.messageContentToGeminiParts({ content: prompt }),
+        ),
       );
       return this.session.getCompletionStream(result);
     }
 
     const result = await client.generateContent(
-      getPartsText(GeminiHelper.messageContentToGeminiParts(prompt)),
+      getPartsText(
+        GeminiHelper.messageContentToGeminiParts({ content: prompt }),
+      ),
     );
     return {
       text: this.session.getResponseText(result.response),

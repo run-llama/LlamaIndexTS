@@ -1,4 +1,4 @@
-import type { BaseNode, Document } from "../Node.js";
+import type { BaseNode, Document } from "@llamaindex/core/schema";
 import type { BaseRetriever } from "../Retriever.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../Settings.js";

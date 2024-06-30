@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "packages/core/tests"
   - "packages/llamaindex/tests"
   - "packages/llamaindex/e2e"
   - "packages/llamaindex/e2e/examples/*"

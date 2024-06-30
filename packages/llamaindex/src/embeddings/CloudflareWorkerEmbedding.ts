@@ -1,4 +1,4 @@
-import type { ImageType } from "../Node.js";
+import type { ImageType } from "@llamaindex/core/schema";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 
 /**

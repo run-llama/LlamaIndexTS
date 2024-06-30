@@ -1,4 +1,4 @@
-import type { NodeWithScore } from "./Node.js";
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { ServiceContext } from "./ServiceContext.js";
 import type { MessageContent } from "./index.edge.js";
 

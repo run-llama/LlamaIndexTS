@@ -1,0 +1,23 @@
+diff --git a/dist/index.js b/dist/index.js
+index fc39a208226d1e7736701e72a769c4415e6d7099..cc4c4f724ed83820298ccda8ec3b35b693df7efb 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1331,13 +1331,17 @@ async function buildInputConfig(entry, bundleConfig, exportCondition, buildConte
+     const swcParserConfig = {
+         syntax: useTypeScript ? 'typescript' : 'ecmascript',
+         [useTypeScript ? 'tsx' : 'jsx']: true,
+-        exportDefaultFrom: true
++        exportDefaultFrom: true,
++        decorators: true
+     };
+     const swcOptions = {
+         jsc: {
+             ...!hasSpecifiedTsTarget && {
+                 target: jscTarget
+             },
++            transform: {
++                decoratorVersion: "2022-03"
++            },
+             loose: true,
+             externalHelpers: false,
+             parser: swcParserConfig,

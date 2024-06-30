@@ -1,4 +1,4 @@
-import { Document, MetadataMode } from "llamaindex/Node";
+import { Document, MetadataMode } from "@llamaindex/core/schema";
 import { MarkdownNodeParser } from "llamaindex/nodeParsers/index";
 import { describe, expect, test } from "vitest";
 

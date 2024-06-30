@@ -1,6 +1,6 @@
+import type { BaseNode } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import _ from "lodash";
-import type { BaseNode } from "../../Node.js";
-import { MetadataMode } from "../../Node.js";
 
 export type NodeFormatterFunction = (summaryNodes: BaseNode[]) => string;
 export const defaultFormatNodeBatchFn: NodeFormatterFunction = (

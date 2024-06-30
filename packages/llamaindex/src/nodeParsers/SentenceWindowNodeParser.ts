@@ -1,4 +1,4 @@
-import type { BaseNode } from "../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
 import { SentenceSplitter } from "../TextSplitter.js";
 import type { NodeParser } from "./types.js";
 import { getNodesFromDocument } from "./utils.js";

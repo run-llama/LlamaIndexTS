@@ -6,7 +6,9 @@ describe("pdf reader", () => {
   test("basic.pdf", async () => {
     const documents = await reader.loadData("../../../examples/data/basic.pdf");
     expect(documents.length).toBe(1);
-    expect(documents[0].metadata).toEqual({
+    expect(documents[0].metadata).toMatchObject({
+      file_path: expect.any(String),
+      file_name: "basic.pdf",
       page_number: 1,
       total_pages: 1,
     });

@@ -1,5 +1,6 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import type { ChannelOptions } from "@grpc/grpc-js";
+import { BaseNode, MetadataMode, type Metadata } from "@llamaindex/core/schema";
 import {
   DataType,
   MilvusClient,
@@ -7,7 +8,6 @@ import {
   type DeleteReq,
   type RowData,
 } from "@zilliz/milvus2-sdk-node";
-import { BaseNode, MetadataMode, type Metadata } from "../../Node.js";
 import {
   VectorStoreBase,
   type IEmbedModel,

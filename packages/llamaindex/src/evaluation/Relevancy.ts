@@ -1,4 +1,4 @@
-import { Document, MetadataMode } from "../Node.js";
+import { Document, MetadataMode } from "@llamaindex/core/schema";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
 import { PromptMixin } from "../prompts/Mixin.js";

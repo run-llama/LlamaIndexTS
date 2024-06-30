@@ -1,4 +1,4 @@
-import { type NodeWithScore } from "../../Node.js";
+import { type NodeWithScore } from "@llamaindex/core/schema";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { defaultContextSystemPrompt } from "../../Prompt.js";
 import type { BaseRetriever } from "../../Retriever.js";

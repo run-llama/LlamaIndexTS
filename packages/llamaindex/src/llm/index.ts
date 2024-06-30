@@ -7,7 +7,7 @@ export {
 export { ToolCallLLM } from "./base.js";
 export { FireworksLLM } from "./fireworks.js";
 export { Gemini, GeminiSession } from "./gemini/base.js";
-export { streamConverter, wrapLLMEvent } from "./utils.js";
+export { streamConverter, streamReducer, wrapLLMEvent } from "./utils.js";
 
 export {
   GEMINI_MODEL,

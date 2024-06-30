@@ -1,4 +1,4 @@
-import type { BaseNode } from "../../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 
 export async function classify(docStore: BaseDocumentStore, nodes: BaseNode[]) {

@@ -1,5 +1,5 @@
-import type { BaseNode } from "llamaindex/Node";
-import { TextNode } from "llamaindex/Node";
+import type { BaseNode } from "@llamaindex/core/schema";
+import { TextNode } from "@llamaindex/core/schema";
 import type { Mocked } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 

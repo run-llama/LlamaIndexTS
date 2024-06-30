@@ -1,6 +1,6 @@
+import type { BaseNode } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import { createSHA256 } from "@llamaindex/env";
-import type { BaseNode } from "../Node.js";
-import { MetadataMode } from "../Node.js";
 import { docToJson, jsonToDoc } from "../storage/docStore/utils.js";
 import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore.js";
 import type { BaseKVStore } from "../storage/kvStore/types.js";

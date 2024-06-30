@@ -1,3 +1,4 @@
+import { Settings as CoreSettings } from "@llamaindex/core/global";
 import { CallbackManager } from "./callbacks/CallbackManager.js";
 import { OpenAI } from "./llm/openai.js";
 
@@ -17,11 +18,6 @@ import {
   setEmbeddedModel,
   withEmbeddedModel,
 } from "./internal/settings/EmbedModel.js";
-import {
-  getChunkSize,
-  setChunkSize,
-  withChunkSize,
-} from "./internal/settings/chunk-size.js";
 import type { LLM } from "./llm/types.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
@@ -148,15 +144,15 @@ class GlobalSettings implements Config {
   }
 
   set chunkSize(chunkSize: number | undefined) {
-    setChunkSize(chunkSize);
+    CoreSettings.chunkSize = chunkSize;
   }
 
   get chunkSize(): number | undefined {
-    return getChunkSize();
+    return CoreSettings.chunkSize;
   }
 
   withChunkSize<Result>(chunkSize: number, fn: () => Result): Result {
-    return withChunkSize(chunkSize, fn);
+    return CoreSettings.withChunkSize(chunkSize, fn);
   }
 
   get chunkOverlap(): number | undefined {

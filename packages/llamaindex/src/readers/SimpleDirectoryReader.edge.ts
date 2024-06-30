@@ -1,5 +1,5 @@
+import { Document } from "@llamaindex/core/schema";
 import { path } from "@llamaindex/env";
-import { Document } from "../Node.js";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
 import type { BaseReader, FileReader } from "./type.js";

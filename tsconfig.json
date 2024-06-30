@@ -24,7 +24,16 @@
       "path": "./packages/community/tsconfig.json"
     },
     {
+      "path": "./packages/cloud/tsconfig.json"
+    },
+    {
       "path": "./packages/community/tsconfig.script.json"
+    },
+    {
+      "path": "./packages/core/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/tests/tsconfig.json"
     },
     {
       "path": "./packages/llamaindex/tsconfig.json"
@@ -40,6 +49,9 @@
     },
     {
       "path": "./packages/llamaindex/e2e/examples/nextjs-edge-runtime/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/e2e/examples/nextjs-node-runtime/tsconfig.json"
     },
     {
       "path": "./packages/llamaindex/e2e/examples/waku-query-engine/tsconfig.json"

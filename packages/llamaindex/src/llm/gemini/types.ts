@@ -3,6 +3,8 @@ import {
   type EnhancedGenerateContentResponse,
   type Content as GeminiMessageContent,
   type FileDataPart as GoogleFileDataPart,
+  type FunctionDeclaration as GoogleFunctionDeclaration,
+  type FunctionDeclarationSchema as GoogleFunctionDeclarationSchema,
   type InlineDataPart as GoogleInlineFileDataPart,
   type ModelParams as GoogleModelParams,
   type Part as GooglePart,
@@ -14,6 +16,8 @@ import {
   GenerativeModelPreview as VertexGenerativeModelPreview,
   type GenerateContentResponse,
   type FileDataPart as VertexFileDataPart,
+  type FunctionDeclaration as VertexFunctionDeclaration,
+  type FunctionDeclarationSchema as VertexFunctionDeclarationSchema,
   type VertexInit,
   type InlineDataPart as VertexInlineFileDataPart,
   type ModelParams as VertexModelParams,
@@ -27,6 +31,7 @@ import type {
   CompletionResponse,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
+  ToolCall,
   ToolCallLLMMessageOptions,
 } from "../types.js";
 
@@ -68,6 +73,14 @@ export type InlineDataPart =
   | VertexInlineFileDataPart;
 
 export type ModelParams = GoogleModelParams | VertexModelParams;
+
+export type FunctionDeclaration =
+  | VertexFunctionDeclaration
+  | GoogleFunctionDeclaration;
+
+export type FunctionDeclarationSchema =
+  | GoogleFunctionDeclarationSchema
+  | VertexFunctionDeclarationSchema;
 
 export type GenerativeModel =
   | VertexGenerativeModelPreview
@@ -112,4 +125,7 @@ export interface IGeminiSession {
       | GoogleStreamGenerateContentResult
       | VertexStreamGenerateContentResult,
   ): GeminiChatStreamResponse;
+  getToolsFromResponse(
+    response: EnhancedGenerateContentResponse | GenerateContentResponse,
+  ): ToolCall[] | undefined;
 }

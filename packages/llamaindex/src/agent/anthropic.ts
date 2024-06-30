@@ -1,55 +1,28 @@
-import { EngineResponse } from "../EngineResponse.js";
 import { Settings } from "../Settings.js";
-import {
-  type ChatEngineParamsNonStreaming,
-  type ChatEngineParamsStreaming,
-} from "../engines/chat/index.js";
-import { stringifyJSONToMessageContent } from "../internal/utils.js";
+import type {
+  ChatEngineParamsNonStreaming,
+  ChatEngineParamsStreaming,
+  EngineResponse,
+} from "../index.edge.js";
 import { Anthropic } from "../llm/anthropic.js";
-import { ObjectRetriever } from "../objects/index.js";
-import type { BaseToolWithCall } from "../types.js";
-import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
-import type { TaskHandler } from "./types.js";
-import { callTool } from "./utils.js";
+import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 
-type AnthropicParamsBase = AgentParamsBase<Anthropic>;
+export type AnthropicAgentParams = LLMAgentParams;
 
-type AnthropicParamsWithTools = AnthropicParamsBase & {
-  tools: BaseToolWithCall[];
-};
+export class AnthropicAgentWorker extends LLMAgentWorker {}
 
-type AnthropicParamsWithToolRetriever = AnthropicParamsBase & {
-  toolRetriever: ObjectRetriever<BaseToolWithCall>;
-};
-
-export type AnthropicAgentParams =
-  | AnthropicParamsWithTools
-  | AnthropicParamsWithToolRetriever;
-
-export class AnthropicAgentWorker extends AgentWorker<Anthropic> {
-  taskHandler = AnthropicAgent.taskHandler;
-}
-
-export class AnthropicAgent extends AgentRunner<Anthropic> {
+export class AnthropicAgent extends LLMAgent {
   constructor(params: AnthropicAgentParams) {
+    const llm =
+      params.llm ??
+      (Settings.llm instanceof Anthropic
+        ? (Settings.llm as Anthropic)
+        : new Anthropic());
     super({
-      llm:
-        params.llm ??
-        (Settings.llm instanceof Anthropic
-          ? (Settings.llm as Anthropic)
-          : new Anthropic()),
-      chatHistory: params.chatHistory ?? [],
-      systemPrompt: params.systemPrompt ?? null,
-      runner: new AnthropicAgentWorker(),
-      tools:
-        "tools" in params
-          ? params.tools
-          : params.toolRetriever.retrieve.bind(params.toolRetriever),
-      verbose: params.verbose ?? false,
+      ...params,
+      llm,
     });
   }
-
-  createStore = AgentRunner.defaultCreateStore;
 
   async chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   async chat(params: ChatEngineParamsStreaming): Promise<never>;
@@ -57,60 +30,9 @@ export class AnthropicAgent extends AgentRunner<Anthropic> {
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
   ) {
     if (params.stream) {
+      // Anthropic does support this, but looks like it's not supported in the LITS LLM
       throw new Error("Anthropic does not support streaming");
     }
     return super.chat(params);
   }
-
-  static taskHandler: TaskHandler<Anthropic> = async (step, enqueueOutput) => {
-    const { llm, getTools, stream } = step.context;
-    const lastMessage = step.context.store.messages.at(-1)!.content;
-    const tools = await getTools(lastMessage);
-    if (stream === true) {
-      throw new Error("Anthropic does not support streaming");
-    }
-    const response = await llm.chat({
-      stream,
-      tools,
-      messages: step.context.store.messages,
-    });
-    step.context.store.messages = [
-      ...step.context.store.messages,
-      response.message,
-    ];
-    const options = response.message.options ?? {};
-    enqueueOutput({
-      taskStep: step,
-      output: response,
-      isLast: !("toolCall" in options),
-    });
-    if ("toolCall" in options) {
-      const { toolCall } = options;
-      for (const call of toolCall) {
-        const targetTool = tools.find(
-          (tool) => tool.metadata.name === call.name,
-        );
-        const toolOutput = await callTool(
-          targetTool,
-          call,
-          step.context.logger,
-        );
-        step.context.store.toolOutputs.push(toolOutput);
-        step.context.store.messages = [
-          ...step.context.store.messages,
-          {
-            content: stringifyJSONToMessageContent(toolOutput.output),
-            role: "user",
-            options: {
-              toolResult: {
-                result: toolOutput.output,
-                isError: toolOutput.isError,
-                id: call.id,
-              },
-            },
-          },
-        ];
-      }
-    }
-  };
 }

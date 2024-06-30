@@ -21,7 +21,7 @@ export LLAMA_CLOUD_BASE_URL="https://api.staging.llamaindex.ai"
 This example is using the managed index named `test` from the project `default` to create a chat engine.
 
 ```shell
-pnpx ts-node cloud/chat.ts
+pnpx tsx cloud/chat.ts
 ```
 
 ## Query Engine
@@ -29,7 +29,7 @@ pnpx ts-node cloud/chat.ts
 This example shows how to use the managed index with a query engine.
 
 ```shell
-pnpx ts-node cloud/query.ts
+pnpx tsx cloud/query.ts
 ```
 
 ## Pipeline
@@ -37,5 +37,5 @@ pnpx ts-node cloud/query.ts
 This example shows how to create a managed index with a pipeline.
 
 ```shell
-pnpx ts-node cloud/pipeline.ts
+pnpx tsx cloud/pipeline.ts
 ```

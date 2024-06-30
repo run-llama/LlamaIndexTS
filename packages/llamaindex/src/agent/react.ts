@@ -11,35 +11,18 @@ import {
   type LLM,
 } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
-import { ObjectRetriever } from "../objects/index.js";
 import { Settings } from "../Settings.js";
-import type {
-  BaseTool,
-  BaseToolWithCall,
-  JSONObject,
-  JSONValue,
-} from "../types.js";
+import type { BaseTool, JSONObject, JSONValue } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 import {
   callTool,
   consumeAsyncIterable,
   createReadableStream,
+  validateAgentParams,
 } from "./utils.js";
 
-type ReACTAgentParamsBase = AgentParamsBase<LLM>;
-
-type ReACTAgentParamsWithTools = ReACTAgentParamsBase & {
-  tools: BaseToolWithCall[];
-};
-
-type ReACTAgentParamsWithToolRetriever = ReACTAgentParamsBase & {
-  toolRetriever: ObjectRetriever<BaseToolWithCall>;
-};
-
-export type ReACTAgentParams =
-  | ReACTAgentParamsWithTools
-  | ReACTAgentParamsWithToolRetriever;
+export type ReACTAgentParams = AgentParamsBase<LLM>;
 
 type BaseReason = {
   type: unknown;
@@ -342,9 +325,8 @@ export class ReACTAgentWorker extends AgentWorker<LLM, ReACTAgentStore> {
 }
 
 export class ReActAgent extends AgentRunner<LLM, ReACTAgentStore> {
-  constructor(
-    params: ReACTAgentParamsWithTools | ReACTAgentParamsWithToolRetriever,
-  ) {
+  constructor(params: ReACTAgentParams) {
+    validateAgentParams(params);
     super({
       llm: params.llm ?? Settings.llm,
       chatHistory: params.chatHistory ?? [],

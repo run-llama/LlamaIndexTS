@@ -1,5 +1,5 @@
+import type { ImageType } from "@llamaindex/core/schema";
 import _ from "lodash";
-import type { ImageType } from "../Node.js";
 import { lazyLoadTransformers } from "../internal/deps/transformers.js";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 // only import type, to avoid bundling error

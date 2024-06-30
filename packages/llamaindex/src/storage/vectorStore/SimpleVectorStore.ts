@@ -1,5 +1,5 @@
+import type { BaseNode } from "@llamaindex/core/schema";
 import { fs, path } from "@llamaindex/env";
-import type { BaseNode } from "../../Node.js";
 import { BaseEmbedding } from "../../embeddings/index.js";
 import {
   getTopKEmbeddings,

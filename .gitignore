@@ -48,3 +48,6 @@ playwright/.cache/
 
 # intellij
 **/.idea
+
+# generated API
+packages/cloud/src/client

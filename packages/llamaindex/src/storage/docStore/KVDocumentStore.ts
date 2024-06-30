@@ -1,6 +1,6 @@
+import type { BaseNode } from "@llamaindex/core/schema";
+import { ObjectType } from "@llamaindex/core/schema";
 import _ from "lodash";
-import type { BaseNode } from "../../Node.js";
-import { ObjectType } from "../../Node.js";
 import { DEFAULT_NAMESPACE } from "../constants.js";
 import type { BaseKVStore } from "../kvStore/types.js";
 import type { RefDocInfo } from "./types.js";

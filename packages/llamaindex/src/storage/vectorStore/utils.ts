@@ -1,5 +1,5 @@
-import type { BaseNode, Metadata } from "../../Node.js";
-import { ObjectType, jsonToNode } from "../../Node.js";
+import type { BaseNode, Metadata } from "@llamaindex/core/schema";
+import { ObjectType, jsonToNode } from "@llamaindex/core/schema";
 
 const DEFAULT_TEXT_KEY = "text";
 

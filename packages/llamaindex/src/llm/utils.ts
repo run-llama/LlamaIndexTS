@@ -1,5 +1,5 @@
+import type { ImageType } from "@llamaindex/core/schema";
 import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
-import type { ImageType } from "../Node.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type {
   ChatResponse,

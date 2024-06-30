@@ -37,7 +37,7 @@ Read and follow the instructions in the README.md file located one directory up 
 
 To import documents and save the embedding vectors to your database:
 
-> `npx ts-node pg-vector-store/load-docs.ts data`
+> `npx tsx pg-vector-store/load-docs.ts data`
 
 where data is the directory containing your input files. Using the `data` directory in the example above will read all of the files in that directory using the LlamaIndexTS default readers for each file type.
 
@@ -45,6 +45,6 @@ where data is the directory containing your input files. Using the `data` direct
 
 To query using the resulting vector store:
 
-> `npx ts-node pg-vector-store/query.ts`
+> `npx tsx pg-vector-store/query.ts`
 
 The script will prompt for a question, then process and present the answer using the PGVectorStore data and your OpenAI API key. It will continue to prompt until you enter `q`, `quit` or `exit` as the next query.

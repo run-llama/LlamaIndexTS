@@ -1,5 +1,5 @@
-import type { BaseNode } from "../Node.js";
-import { jsonToNode } from "../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
+import { jsonToNode } from "@llamaindex/core/schema";
 import { IndexStruct } from "./IndexStruct.js";
 
 export enum IndexStructType {

@@ -1,4 +1,4 @@
-import type { BaseNode, ModalityType } from "../../Node.js";
+import type { BaseNode, ModalityType } from "@llamaindex/core/schema";
 import type { BaseEmbedding } from "../../embeddings/types.js";
 import { getEmbeddedModel } from "../../internal/settings/EmbedModel.js";
 

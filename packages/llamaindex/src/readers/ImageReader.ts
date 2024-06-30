@@ -1,5 +1,5 @@
-import type { Document } from "../Node.js";
-import { ImageDocument } from "../Node.js";
+import type { Document } from "@llamaindex/core/schema";
+import { ImageDocument } from "@llamaindex/core/schema";
 import { FileReader } from "./type.js";
 
 /**
@@ -13,7 +13,7 @@ export class ImageReader extends FileReader {
    * @param fs fs wrapper interface for getting the file content.
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one ImageDocument of the specified file.
    */
-  async loadDataAsContent(fileContent: Buffer): Promise<Document[]> {
+  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
     const blob = new Blob([fileContent]);
     return [new ImageDocument({ image: blob })];
   }

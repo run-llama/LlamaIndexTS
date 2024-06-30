@@ -8,7 +8,7 @@ import {
   vi,
 } from "vitest";
 
-import { Document } from "llamaindex/Node";
+import { Document } from "@llamaindex/core/schema";
 import type { ServiceContext } from "llamaindex/ServiceContext";
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
 import { Settings } from "llamaindex/Settings";

@@ -1,5 +1,5 @@
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { EngineResponse } from "../EngineResponse.js";
-import type { NodeWithScore } from "../Node.js";
 import type { PromptMixin } from "../prompts/Mixin.js";
 
 export interface SynthesizeParamsBase {

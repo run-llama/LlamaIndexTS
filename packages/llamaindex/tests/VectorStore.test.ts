@@ -1,4 +1,4 @@
-import { Document, MetadataMode } from "llamaindex/Node";
+import { Document, MetadataMode } from "@llamaindex/core/schema";
 import {
   metadataDictToNode,
   nodeToMetadata,

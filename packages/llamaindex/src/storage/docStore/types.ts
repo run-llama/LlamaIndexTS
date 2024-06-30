@@ -1,4 +1,4 @@
-import { BaseNode } from "../../Node.js";
+import { BaseNode } from "@llamaindex/core/schema";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,

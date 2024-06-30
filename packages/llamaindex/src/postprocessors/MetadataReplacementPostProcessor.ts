@@ -1,5 +1,5 @@
-import type { NodeWithScore } from "../Node.js";
-import { MetadataMode } from "../Node.js";
+import type { NodeWithScore } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import type { BaseNodePostprocessor } from "./types.js";
 
 export class MetadataReplacementPostProcessor implements BaseNodePostprocessor {

@@ -1,4 +1,4 @@
-import { Document } from "llamaindex/Node";
+import { Document } from "@llamaindex/core/schema";
 import { IngestionPipeline } from "llamaindex/ingestion/IngestionPipeline";
 import { test } from "vitest";
 

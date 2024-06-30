@@ -13,3 +13,6 @@ export {
 
 export { type VertexGeminiSessionOptions } from "./llm/gemini/types.js";
 export { GeminiVertexSession } from "./llm/gemini/vertex.js";
+
+// Expose AzureDynamicSessionTool for node.js runtime only
+export { AzureDynamicSessionTool } from "./tools/AzureDynamicSessionTool.node.js";

@@ -1,4 +1,4 @@
-import { MetadataMode } from "../Node.js";
+import { MetadataMode } from "@llamaindex/core/schema";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import type { ChatMessage, LLM } from "../llm/types.js";

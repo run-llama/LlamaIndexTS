@@ -1,7 +1,7 @@
+import type { ImageType } from "@llamaindex/core/schema";
 import { fs } from "@llamaindex/env";
 import _ from "lodash";
 import { filetypemime } from "magic-bytes.js";
-import type { ImageType } from "../Node.js";
 import { DEFAULT_SIMILARITY_TOP_K } from "../constants.js";
 import type { VectorStoreQueryMode } from "../storage/vectorStore/types.js";
 

@@ -1,5 +1,9 @@
+import type {
+  BaseNode,
+  Document,
+  NodeWithScore,
+} from "@llamaindex/core/schema";
 import _ from "lodash";
-import type { BaseNode, Document, NodeWithScore } from "../../Node.js";
 import type { ChoiceSelectPrompt } from "../../Prompt.js";
 import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";

@@ -1,4 +1,4 @@
-import { Document } from "../Node.js";
+import { Document } from "@llamaindex/core/schema";
 import { PapaCSVReader } from "./CSVReader.js";
 import { DocxReader } from "./DocxReader.js";
 import { HTMLReader } from "./HTMLReader.js";

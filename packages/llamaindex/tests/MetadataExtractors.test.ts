@@ -1,5 +1,5 @@
+import { Document } from "@llamaindex/core/schema";
 import { Settings } from "llamaindex";
-import { Document } from "llamaindex/Node";
 import type { ServiceContext } from "llamaindex/ServiceContext";
 import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
 import { OpenAIEmbedding } from "llamaindex/embeddings/index";

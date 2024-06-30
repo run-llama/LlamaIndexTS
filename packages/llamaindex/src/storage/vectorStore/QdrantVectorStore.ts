@@ -1,4 +1,4 @@
-import type { BaseNode } from "../../Node.js";
+import type { BaseNode } from "@llamaindex/core/schema";
 import {
   VectorStoreBase,
   type IEmbedModel,

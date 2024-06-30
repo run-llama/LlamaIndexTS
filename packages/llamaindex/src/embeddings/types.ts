@@ -1,6 +1,6 @@
+import type { BaseNode } from "@llamaindex/core/schema";
+import { MetadataMode } from "@llamaindex/core/schema";
 import { type Tokenizers } from "@llamaindex/env";
-import type { BaseNode } from "../Node.js";
-import { MetadataMode } from "../Node.js";
 import type { TransformComponent } from "../ingestion/types.js";
 import type { MessageContentDetail } from "../llm/types.js";
 import { extractSingleText } from "../llm/utils.js";

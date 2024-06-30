@@ -1,9 +1,10 @@
 {
   "name": "@llamaindex/examples",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
+    "@azure/identity": "^4.2.1",
     "@datastax/astra-db-ts": "^1.2.1",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^2.2.2",
@@ -12,13 +13,12 @@
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "js-tiktoken": "^1.0.12",
-    "llamaindex": "^0.4.0",
+    "llamaindex": "^0.4.3",
     "mongodb": "^6.7.0",
     "pathe": "^1.1.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.1",
-    "ts-node": "^10.9.2",
     "tsx": "^4.15.6",
     "typescript": "^5.5.2"
   },

@@ -1,4 +1,4 @@
-import type { NodeWithScore } from "../Node.js";
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { MessageContent } from "../llm/types.js";
 
 export interface BaseNodePostprocessor {
