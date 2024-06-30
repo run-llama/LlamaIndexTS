@@ -88,7 +88,10 @@ export class GeminiSession implements IGeminiSession {
   }
 
   getGenerativeModel(metadata: GoogleModelParams): GoogleGenerativeModel {
-    return this.gemini.getGenerativeModel(metadata);
+    return this.gemini.getGenerativeModel({
+      safetySettings: DEFAULT_SAFETY_SETTINGS,
+      ...metadata,
+    });
   }
 
   getResponseText(response: EnhancedGenerateContentResponse): string {
