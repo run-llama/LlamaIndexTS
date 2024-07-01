@@ -1,5 +1,13 @@
 # @llamaindex/next-node-runtime
 
+## 0.0.8
+
+### Patch Changes
+
+- 83ebdfb: fix: next.js build error
+- Updated dependencies [83ebdfb]
+  - llamaindex@0.4.8
+
 ## 0.0.7
 
 ### Patch Changes
