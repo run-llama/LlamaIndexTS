@@ -219,7 +219,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
         return {
           content:
             typeof message.content === "string"
-              ? [{ type: "text", text: message.content }]
+              ? message.content
               : message.content.map(
                   (content): TextBlockParam | ImageBlockParam =>
                     content.type === "text"
