@@ -4,7 +4,7 @@ import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 import { imageToDataUrl } from "./utils.js";
 
 function isLocal(url: ImageType): boolean {
-  if (url instanceof Blob) return false;
+  if (url instanceof Blob) return true;
   return new URL(url).protocol === "file:";
 }
 
@@ -77,7 +77,8 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
     image: ImageType,
   ): Promise<{ bytes: string } | { url: string }> {
     if (isLocal(image)) {
-      const bytes = await imageToDataUrl(image);
+      const base64 = await imageToDataUrl(image);
+      const bytes = base64.split(",")[1];
       return { bytes };
     } else {
       return { url: image.toString() };
