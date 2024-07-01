@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.4.8
+
+### Patch Changes
+
+- 83ebdfb: fix: next.js build error
+
 ## 0.4.7
 
 ### Patch Changes
