@@ -34,21 +34,13 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   baseURL: string;
 
   async getTextEmbedding(text: string): Promise<number[]> {
-    const result = await this.getJinaEmbedding({
-      input: [{ text }],
-    });
+    const result = await this.getJinaEmbedding({ input: [{ text }] });
     return result.data[0].embedding;
   }
 
   async getImageEmbedding(image: ImageType): Promise<number[]> {
-    let input = [];
-    if (isLocal(image)) {
-      const bytes = await imageToDataUrl(image);
-      input = [{ bytes }];
-    } else {
-      input = [{ url: image.toString() }];
-    }
-    const result = await this.getJinaEmbedding({ input });
+    const img = await this.getImageInput(image);
+    const result = await this.getJinaEmbedding({ input: [img] });
     return result.data[0].embedding;
   }
 
@@ -63,6 +55,17 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
     this.apiKey = apiKey;
     this.model = init?.model ?? "jina-embeddings-v2-base-en";
     this.baseURL = init?.baseURL ?? "https://api.jina.ai/v1/embeddings";
+  }
+
+  private async getImageInput(
+    image: ImageType,
+  ): Promise<{ bytes: string } | { url: string }> {
+    if (isLocal(image)) {
+      const bytes = await imageToDataUrl(image);
+      return { bytes };
+    } else {
+      return { url: image.toString() };
+    }
   }
 
   private async getJinaEmbedding(
