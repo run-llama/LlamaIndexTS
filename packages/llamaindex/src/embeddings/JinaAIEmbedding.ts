@@ -44,6 +44,22 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
     return result.data[0].embedding;
   }
 
+  // Override to retrieve multiple text embeddings in a single request
+  async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
+    const input = texts.map((text) => ({ text }));
+    const result = await this.getJinaEmbedding({ input });
+    return result.data.map((d) => d.embedding);
+  }
+
+  // Override to retrieve multiple image embeddings in a single request
+  async getImageEmbeddings(images: ImageType[]): Promise<number[][]> {
+    const input = await Promise.all(
+      images.map((img) => this.getImageInput(img)),
+    );
+    const result = await this.getJinaEmbedding({ input });
+    return result.data.map((d) => d.embedding);
+  }
+
   constructor(init?: Partial<JinaAIEmbedding>) {
     super();
     const apiKey = init?.apiKey ?? getEnv("JINAAI_API_KEY");
