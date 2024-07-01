@@ -1,4 +1,11 @@
-import { JinaAIEmbedding, similarity, SimilarityType } from "llamaindex";
+import {
+  ImageDocument,
+  JinaAIEmbedding,
+  similarity,
+  SimilarityType,
+  SimpleDirectoryReader,
+} from "llamaindex";
+import path from "path";
 
 async function main() {
   const jina = new JinaAIEmbedding({
@@ -16,7 +23,7 @@ async function main() {
     "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/football-match.jpg";
   const imageEmbedding = await jina.getImageEmbedding(image);
 
-  // Calc similarity
+  // Calc similarity between text and image
   const sim1 = similarity(
     textEmbedding1,
     imageEmbedding,
@@ -33,9 +40,13 @@ async function main() {
 
   // Get multiple text embeddings
   const textEmbeddings = await jina.getTextEmbeddings([text1, text2]);
+  const sim3 = similarity(
+    textEmbeddings[0],
+    textEmbeddings[1],
+    SimilarityType.DEFAULT,
+  );
   console.log(
-    "Get multiple text embeddings in a single request",
-    textEmbeddings,
+    `Similarity between the two texts "${text1}" and "${text2}" is ${sim3}`,
   );
 
   // Get multiple image embeddings
@@ -44,10 +55,29 @@ async function main() {
   const catImg2 =
     "https://i.pinimg.com/736x/c9/f2/3e/c9f23e212529f13f19bad5602d84b78b.jpg";
   const imageEmbeddings = await jina.getImageEmbeddings([catImg1, catImg2]);
-  console.log(
-    "Get multiple image embeddings in a single request",
-    imageEmbeddings,
+  const sim4 = similarity(
+    imageEmbeddings[0],
+    imageEmbeddings[1],
+    SimilarityType.DEFAULT,
   );
+  console.log(`Similarity between the two online cat images is ${sim4}`);
+
+  // Get image embeddings from multiple local files
+  const documents = await new SimpleDirectoryReader().loadData({
+    directoryPath: path.join("multimodal", "data"),
+  });
+  const localImages = documents
+    .filter((doc) => doc instanceof ImageDocument)
+    .slice(0, 2); // Get only the first two images
+  const localImageEmbeddings = await jina.getImageEmbeddings(
+    localImages.map((doc) => (doc as ImageDocument).image),
+  );
+  const sim5 = similarity(
+    localImageEmbeddings[0],
+    localImageEmbeddings[1],
+    SimilarityType.DEFAULT,
+  );
+  console.log(`Similarity between the two local images is ${sim5}`);
 }
 
 void main();
