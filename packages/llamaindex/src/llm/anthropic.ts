@@ -13,7 +13,10 @@ import type {
   TextBlock,
   TextBlockParam,
 } from "@anthropic-ai/sdk/resources/index";
-import type { MessageParam } from "@anthropic-ai/sdk/resources/messages";
+import type {
+  ImageBlockParam,
+  MessageParam,
+} from "@anthropic-ai/sdk/resources/messages";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 import type { BaseTool } from "../types.js";
@@ -214,7 +217,32 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
         }
 
         return {
-          content: extractText(message.content),
+          content:
+            typeof message.content === "string"
+              ? message.content
+              : message.content.map(
+                  (content): TextBlockParam | ImageBlockParam =>
+                    content.type === "text"
+                      ? {
+                          type: "text",
+                          text: content.text,
+                        }
+                      : {
+                          type: "image",
+                          source: {
+                            data: content.image_url.url.substring(
+                              content.image_url.url.indexOf(",") + 1,
+                            ),
+                            media_type:
+                              `image/${content.image_url.url.substring("data:image/".length, content.image_url.url.indexOf(";base64"))}` as
+                                | "image/jpeg"
+                                | "image/png"
+                                | "image/gif"
+                                | "image/webp",
+                            type: "base64",
+                          },
+                        },
+                ),
           role: message.role as "user" | "assistant",
         } satisfies MessageParam;
       });
