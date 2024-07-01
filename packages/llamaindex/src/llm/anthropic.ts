@@ -230,7 +230,9 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
                       : {
                           type: "image",
                           source: {
-                            data: content.image_url.url,
+                            data: content.image_url.url.substring(
+                              content.image_url.url.indexOf(",") + 1,
+                            ),
                             media_type:
                               `image/${content.image_url.url.substring("data:image/".length, content.image_url.url.indexOf(";base64"))}` as
                                 | "image/jpeg"
