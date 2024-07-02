@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.4.11
+
+### Patch Changes
+
+- 8bf5b4a: fix: llama parse input spreadsheet
+
 ## 0.4.10
 
 ### Patch Changes
