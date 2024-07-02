@@ -45,6 +45,7 @@
     "chromadb": "1.8.1",
     "cohere-ai": "7.9.5",
     "groq-sdk": "^0.5.0",
+    "@mixedbread-ai/sdk": "^2.2.2",
     "js-tiktoken": "^1.0.12",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
