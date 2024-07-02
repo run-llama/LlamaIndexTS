@@ -23,15 +23,5 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Pre-release @llamaindex/cloud
-        run: pnpx pkg-pr-new publish
-        working-directory: packages/cloud
-      - name: Pre-release @llamaindex/core
-        run: pnpx pkg-pr-new publish
-        working-directory: packages/core
-      - name: Pre-release @llamaindex/env
-        run: pnpx pkg-pr-new publish
-        working-directory: packages/env
-      - name: Pre-release llamaindex
-        run: pnpx pkg-pr-new publish
-        working-directory: packages/llamaindex
+      - name: Pre-release
+        run: pnpx pkg-pr-new publish ./packages/*
