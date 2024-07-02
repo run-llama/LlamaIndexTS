@@ -1,8 +1,8 @@
 import {
+  type GenerateContentResponse,
   VertexAI,
   GenerativeModel as VertexGenerativeModel,
   GenerativeModelPreview as VertexGenerativeModelPreview,
-  type GenerateContentResponse,
   type ModelParams as VertexModelParams,
   type StreamGenerateContentResult as VertexStreamGenerateContentResult,
 } from "@google-cloud/vertexai";
@@ -21,7 +21,7 @@ import type {
   ToolCallLLMMessageOptions,
 } from "../types.js";
 import { streamConverter } from "../utils.js";
-import { getFunctionCalls, getText } from "./utils.js";
+import { DEFAULT_SAFETY_SETTINGS, getFunctionCalls, getText } from "./utils.js";
 
 /* To use Google's Vertex AI backend, it doesn't use api key authentication.
  *
@@ -59,8 +59,16 @@ export class GeminiVertexSession implements IGeminiSession {
   getGenerativeModel(
     metadata: VertexModelParams,
   ): VertexGenerativeModelPreview | VertexGenerativeModel {
-    if (this.preview) return this.vertex.preview.getGenerativeModel(metadata);
-    return this.vertex.getGenerativeModel(metadata);
+    if (this.preview) {
+      return this.vertex.preview.getGenerativeModel({
+        safetySettings: DEFAULT_SAFETY_SETTINGS,
+        ...metadata,
+      });
+    }
+    return this.vertex.getGenerativeModel({
+      safetySettings: DEFAULT_SAFETY_SETTINGS,
+      ...metadata,
+    });
   }
 
   getResponseText(response: GenerateContentResponse): string {
