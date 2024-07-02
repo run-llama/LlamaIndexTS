@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.4.10
+
+### Patch Changes
+
+- 7dce3d2: fix: disable External Filters for Gemini
+
 ## 0.4.9
 
 ### Patch Changes
