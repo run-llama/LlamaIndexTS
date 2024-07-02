@@ -1,5 +1,12 @@
 # @llamaindex/community
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [3a96a48]
+  - llamaindex@0.4.9
+
 ## 0.0.12
 
 ### Patch Changes
