@@ -1,105 +1,100 @@
 import { Document } from "@llamaindex/core/schema";
 import { fs, getEnv } from "@llamaindex/env";
-import { filetypemime } from "magic-bytes.js";
+import { filetypeinfo } from "magic-bytes.js";
 import { FileReader, type Language, type ResultType } from "./type.js";
 
-const SupportedFiles: { [key: string]: string } = {
-  ".pdf": "application/pdf",
-  // Documents and Presentations
-  ".602": "application/x-t602",
-  ".abw": "application/x-abiword",
-  ".cgm": "image/cgm",
-  ".cwk": "application/x-cwk",
-  ".doc": "application/msword",
-  ".docx":
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ".docm": "application/vnd.ms-word.document.macroEnabled.12",
-  ".dot": "application/msword",
-  ".dotm": "application/vnd.ms-word.template.macroEnabled.12",
-  ".dotx":
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-  ".hwp": "application/x-hwp",
-  ".key": "application/x-iwork-keynote-sffkey",
-  ".lwp": "application/vnd.lotus-wordpro",
-  ".mw": "application/macwriteii",
-  ".mcw": "application/macwriteii",
-  ".pages": "application/x-iwork-pages-sffpages",
-  ".pbd": "application/x-pagemaker",
-  ".ppt": "application/vnd.ms-powerpoint",
-  ".pptm": "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
-  ".pptx":
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-  ".pot": "application/vnd.ms-powerpoint",
-  ".potm": "application/vnd.ms-powerpoint.template.macroEnabled.12",
-  ".potx":
-    "application/vnd.openxmlformats-officedocument.presentationml.template",
-  ".rtf": "application/rtf",
-  ".sda": "application/vnd.stardivision.draw",
-  ".sdd": "application/vnd.stardivision.impress",
-  ".sdp": "application/sdp",
-  ".sdw": "application/vnd.stardivision.writer",
-  ".sgl": "application/vnd.stardivision.writer",
-  ".sti": "application/vnd.sun.xml.impress.template",
-  ".sxi": "application/vnd.sun.xml.impress",
-  ".sxw": "application/vnd.sun.xml.writer",
-  ".stw": "application/vnd.sun.xml.writer.template",
-  ".sxg": "application/vnd.sun.xml.writer.global",
-  ".txt": "text/plain",
-  ".uof": "application/vnd.uoml+xml",
-  ".uop": "application/vnd.openofficeorg.presentation",
-  ".uot": "application/x-uo",
-  ".vor": "application/vnd.stardivision.writer",
-  ".wpd": "application/wordperfect",
-  ".wps": "application/vnd.ms-works",
-  ".xml": "application/xml",
-  ".zabw": "application/x-abiword",
-  // Images
-  ".epub": "application/epub+zip",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".png": "image/png",
-  ".gif": "image/gif",
-  ".bmp": "image/bmp",
-  ".svg": "image/svg+xml",
-  ".tiff": "image/tiff",
-  ".webp": "image/webp",
-  // Web
-  ".htm": "text/html",
-  ".html": "text/html",
-  // Spreadsheets
-  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  ".xls": "application/vnd.ms-excel",
-  ".xlsm": "application/vnd.ms-excel.sheet.macroEnabled.12",
-  ".xlsb": "application/vnd.ms-excel.sheet.binary.macroEnabled.12",
-  ".xlw": "application/vnd.ms-excel",
-  ".csv": "text/csv",
-  ".dif": "application/x-dif",
-  ".sylk": "text/vnd.sylk",
-  ".slk": "text/vnd.sylk",
-  ".prn": "application/x-prn",
-  ".numbers": "application/x-iwork-numbers-sffnumbers",
-  ".et": "application/vnd.ms-excel",
-  ".ods": "application/vnd.oasis.opendocument.spreadsheet",
-  ".fods": "application/vnd.oasis.opendocument.spreadsheet",
-  ".uos1": "application/vnd.uoml+xml",
-  ".uos2": "application/vnd.uoml+xml",
-  ".dbf": "application/vnd.dbf",
-  ".wk1": "application/vnd.lotus-1-2-3",
-  ".wk2": "application/vnd.lotus-1-2-3",
-  ".wk3": "application/vnd.lotus-1-2-3",
-  ".wk4": "application/vnd.lotus-1-2-3",
-  ".wks": "application/vnd.lotus-1-2-3",
-  ".123": "application/vnd.lotus-1-2-3",
-  ".wq1": "application/x-lotus",
-  ".wq2": "application/x-lotus",
-  ".wb1": "application/x-quattro-pro",
-  ".wb2": "application/x-quattro-pro",
-  ".wb3": "application/x-quattro-pro",
-  ".qpw": "application/x-quattro-pro",
-  ".xlr": "application/vnd.ms-works",
-  ".eth": "application/ethos",
-  ".tsv": "text/tab-separated-values",
-};
+const SUPPORT_FILE_EXT: string[] = [
+  ".pdf",
+  // document and presentations
+  ".602",
+  ".abw",
+  ".cgm",
+  ".cwk",
+  ".doc",
+  ".docx",
+  ".docm",
+  ".dot",
+  ".dotm",
+  ".hwp",
+  ".key",
+  ".lwp",
+  ".mw",
+  ".mcw",
+  ".pages",
+  ".pbd",
+  ".ppt",
+  ".pptm",
+  ".pptx",
+  ".pot",
+  ".potm",
+  ".potx",
+  ".rtf",
+  ".sda",
+  ".sdd",
+  ".sdp",
+  ".sdw",
+  ".sgl",
+  ".sti",
+  ".sxi",
+  ".sxw",
+  ".stw",
+  ".sxg",
+  ".txt",
+  ".uof",
+  ".uop",
+  ".uot",
+  ".vor",
+  ".wpd",
+  ".wps",
+  ".xml",
+  ".zabw",
+  ".epub",
+  // images
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".gif",
+  ".bmp",
+  ".svg",
+  ".tiff",
+  ".webp",
+  // web
+  ".htm",
+  ".html",
+  // spreadsheets
+  ".xlsx",
+  ".xls",
+  ".xlsm",
+  ".xlsb",
+  ".xlw",
+  ".csv",
+  ".dif",
+  ".sylk",
+  ".slk",
+  ".prn",
+  ".numbers",
+  ".et",
+  ".ods",
+  ".fods",
+  ".uos1",
+  ".uos2",
+  ".dbf",
+  ".wk1",
+  ".wk2",
+  ".wk3",
+  ".wk4",
+  ".wks",
+  ".123",
+  ".wq1",
+  ".wq2",
+  ".wb1",
+  ".wb2",
+  ".wb3",
+  ".qpw",
+  ".xlr",
+  ".eth",
+  ".tsv",
+];
 
 /**
  * Represents a reader for parsing files using the LlamaParse API.
@@ -165,7 +160,7 @@ export class LlamaParseReader extends FileReader {
     fileName?: string,
   ): Promise<string> {
     // Load data, set the mime type
-    const { mimeType, extension } = await this.getMimeType(data);
+    const { mime, extension } = await LlamaParseReader.getMimeType(data);
 
     if (this.verbose) {
       const name = fileName ? fileName : extension;
@@ -173,7 +168,7 @@ export class LlamaParseReader extends FileReader {
     }
 
     const body = new FormData();
-    body.set("file", new Blob([data], { type: mimeType }), fileName);
+    body.set("file", new Blob([data], { type: mime }), fileName);
 
     const LlamaParseBodyParams = {
       language: this.language,
@@ -378,19 +373,23 @@ export class LlamaParseReader extends FileReader {
     return images;
   }
 
-  private async getMimeType(
+  static async getMimeType(
     data: Uint8Array,
-  ): Promise<{ mimeType: string; extension: string }> {
-    const mimes = filetypemime(data); // Get an array of possible MIME types
-    const extension = Object.keys(SupportedFiles).find(
-      (ext) => SupportedFiles[ext] === mimes[0],
-    ); // Find the extension for the first MIME type
-    if (!extension) {
-      const supportedExtensions = Object.keys(SupportedFiles).join(", ");
+  ): Promise<{ mime: string; extension: string }> {
+    const typeinfos = filetypeinfo(data);
+    // find the first type info that matches the supported MIME types
+    // It could be happened that docx file is recognized as zip file, so we need to check the mime type
+    const info = typeinfos.find((info) => {
+      if (info.extension && SUPPORT_FILE_EXT.includes(`.${info.extension}`)) {
+        return info;
+      }
+    });
+    if (!info || !info.mime || !info.extension) {
+      const ext = SUPPORT_FILE_EXT.join(", ");
       throw new Error(
-        `File has type "${mimes[0]}" which does not match supported MIME Types. Supported formats include: ${supportedExtensions}`,
+        `File has type which does not match supported MIME Types. Supported formats include: ${ext}`,
       );
     }
-    return { mimeType: mimes[0], extension }; // Return the first MIME type and its corresponding extension
+    return { mime: info.mime, extension: info.extension };
   }
 }
