@@ -17,18 +17,18 @@ import type {
   ImageBlockParam,
   MessageParam,
 } from "@anthropic-ai/sdk/resources/messages";
-import { getEnv } from "@llamaindex/env";
-import _ from "lodash";
-import type { BaseTool } from "../types.js";
-import { ToolCallLLM } from "./base.js";
 import type {
+  BaseTool,
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
   ToolCallLLMMessageOptions,
-} from "./types.js";
+} from "@llamaindex/core/llms";
+import { getEnv } from "@llamaindex/env";
+import _ from "lodash";
+import { ToolCallLLM } from "./base.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class AnthropicSession {

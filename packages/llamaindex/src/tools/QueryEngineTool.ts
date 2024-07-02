@@ -1,5 +1,6 @@
+import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { JSONSchemaType } from "ajv";
-import type { BaseTool, QueryEngine, ToolMetadata } from "../types.js";
+import type { QueryEngine } from "../types.js";
 
 const DEFAULT_NAME = "query_engine_tool";
 const DEFAULT_DESCRIPTION =

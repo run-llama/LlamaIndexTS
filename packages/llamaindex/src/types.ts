@@ -1,7 +1,7 @@
 /**
  * Top level types to avoid circular dependencies
  */
-import { type JSONSchemaType } from "ajv";
+import type { ToolMetadata } from "@llamaindex/core/llms";
 import type { EngineResponse } from "./EngineResponse.js";
 
 /**
@@ -32,46 +32,6 @@ export interface QueryEngine {
   ): Promise<AsyncIterable<EngineResponse>>;
   query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
 }
-
-type Known =
-  | { [key: string]: Known }
-  | [Known, ...Known[]]
-  | Known[]
-  | number
-  | string
-  | boolean
-  | null;
-
-export type ToolMetadata<
-  Parameters extends Record<string, unknown> = Record<string, unknown>,
-> = {
-  description: string;
-  name: string;
-  /**
-   * OpenAI uses JSON Schema to describe the parameters that a tool can take.
-   * @link https://json-schema.org/understanding-json-schema
-   */
-  parameters?: Parameters;
-};
-
-/**
- * Simple Tool interface. Likely to change.
- */
-export interface BaseTool<Input = any> {
-  /**
-   * This could be undefined if the implementation is not provided,
-   *  which might be the case when communicating with a llm.
-   *
-   * @return {JSONValue | Promise<JSONValue>} The output of the tool.
-   */
-  call?: (input: Input) => JSONValue | Promise<JSONValue>;
-  metadata: // if user input any, we cannot check the schema
-  Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
-}
-
-export type BaseToolWithCall<Input = any> = Omit<BaseTool<Input>, "call"> & {
-  call: NonNullable<Pick<BaseTool<Input>, "call">["call"]>;
-};
 
 /**
  * An OutputParser is used to extract structured data from the raw output of the LLM.
@@ -113,11 +73,3 @@ export type JSONObject = {
 };
 
 type JSONArray = Array<JSONValue>;
-
-export type ToolOutput = {
-  tool: BaseTool | undefined;
-  // all of existing function calling LLMs only support object input
-  input: JSONObject;
-  output: JSONValue;
-  isError: boolean;
-};

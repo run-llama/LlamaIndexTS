@@ -1,7 +1,7 @@
+import type { MessageContent } from "@llamaindex/core/llms";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
-import type { MessageContent } from "../../llm/types.js";
 import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../types.js";
 

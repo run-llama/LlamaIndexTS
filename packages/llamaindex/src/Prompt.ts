@@ -1,6 +1,5 @@
+import type { ChatMessage, ToolMetadata } from "@llamaindex/core/llms";
 import type { SubQuestion } from "./engines/query/types.js";
-import type { ChatMessage } from "./llm/types.js";
-import type { ToolMetadata } from "./types.js";
 
 /**
  * A SimplePrompt is a function that takes a dictionary of inputs and returns a string.

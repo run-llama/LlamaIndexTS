@@ -1,3 +1,9 @@
+import type {
+  ChatMessage,
+  LLM,
+  MessageContent,
+  MessageType,
+} from "@llamaindex/core/llms";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
 import { EngineResponse } from "../../EngineResponse.js";
@@ -5,8 +11,6 @@ import type { ContextSystemPrompt } from "../../Prompt.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { Settings } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import type { ChatMessage, LLM } from "../../llm/index.js";
-import type { MessageContent, MessageType } from "../../llm/types.js";
 import {
   extractText,
   streamConverter,

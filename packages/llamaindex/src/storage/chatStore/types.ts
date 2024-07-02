@@ -1,4 +1,4 @@
-import type { ChatMessage } from "../../llm/index.js";
+import type { ChatMessage } from "@llamaindex/core/llms";
 
 export interface BaseChatStore<
   AdditionalMessageOptions extends object = object,

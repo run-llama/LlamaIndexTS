@@ -1,4 +1,4 @@
-import type { LLM } from "../llm/index.js";
+import type { LLM } from "@llamaindex/core/llms";
 import type { Answer } from "../outputParsers/selectors.js";
 import { SelectionOutputParser } from "../outputParsers/selectors.js";
 import type {

@@ -1,9 +1,9 @@
+import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import { MetadataMode } from "@llamaindex/core/schema";
-import type { ServiceContext } from "../ServiceContext.js";
-import { llmFromSettingsOrContext } from "../Settings.js";
-import type { ChatMessage, LLM } from "../llm/types.js";
 import { extractText } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
+import type { ServiceContext } from "../ServiceContext.js";
+import { llmFromSettingsOrContext } from "../Settings.js";
 import type { CorrectnessSystemPrompt } from "./prompts.js";
 import {
   defaultCorrectnessSystemPrompt,

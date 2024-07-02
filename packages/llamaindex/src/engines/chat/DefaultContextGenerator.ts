@@ -1,10 +1,10 @@
+import type { MessageContent, MessageType } from "@llamaindex/core/llms";
 import { type NodeWithScore } from "@llamaindex/core/schema";
+import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { defaultContextSystemPrompt } from "../../Prompt.js";
-import type { BaseRetriever } from "../../Retriever.js";
-import type { MessageContent, MessageType } from "../../llm/types.js";
-import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/index.js";
+import type { BaseRetriever } from "../../Retriever.js";
 import { createMessageContent } from "../../synthesizers/utils.js";
 import type { Context, ContextGenerator } from "./types.js";
 

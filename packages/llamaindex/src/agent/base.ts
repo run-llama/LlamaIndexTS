@@ -1,3 +1,10 @@
+import type {
+  BaseToolWithCall,
+  ChatMessage,
+  LLM,
+  MessageContent,
+  ToolOutput,
+} from "@llamaindex/core/llms";
 import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
 import { ChatHistory } from "../ChatHistory.js";
 import { EngineResponse } from "../EngineResponse.js";
@@ -11,9 +18,7 @@ import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
-import type { ChatMessage, LLM, MessageContent } from "../llm/index.js";
 import { ObjectRetriever } from "../objects/index.js";
-import type { BaseToolWithCall, ToolOutput } from "../types.js";
 import type {
   AgentTaskContext,
   TaskHandler,
@@ -229,13 +234,12 @@ export abstract class AgentRunner<
     const { llm, getTools, stream } = step.context;
     const lastMessage = step.context.store.messages.at(-1)!.content;
     const tools = await getTools(lastMessage);
-    const response = await llm.chat({
-      // @ts-expect-error
-      stream,
-      tools,
-      messages: [...step.context.store.messages],
-    });
     if (!stream) {
+      const response = await llm.chat({
+        stream,
+        tools,
+        messages: [...step.context.store.messages],
+      });
       await stepTools<LLM>({
         response,
         tools,
@@ -243,6 +247,11 @@ export abstract class AgentRunner<
         enqueueOutput,
       });
     } else {
+      const response = await llm.chat({
+        stream,
+        tools,
+        messages: [...step.context.store.messages],
+      });
       await stepToolsStreaming<LLM>({
         response,
         tools,

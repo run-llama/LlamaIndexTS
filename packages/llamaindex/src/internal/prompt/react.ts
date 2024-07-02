@@ -1,4 +1,4 @@
-import type { BaseTool } from "../../types.js";
+import type { BaseTool } from "@llamaindex/core/llms";
 
 export const getReACTAgentSystemHeader = (tools: BaseTool[]) => {
   const description = tools

@@ -1,18 +1,19 @@
+import type {
+  BaseTool,
+  ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
+  LLM,
+} from "@llamaindex/core/llms";
 import { randomUUID, ReadableStream } from "@llamaindex/env";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
 import {
   isAsyncIterable,
   stringifyJSONToMessageContent,
 } from "../internal/utils.js";
-import {
-  type ChatMessage,
-  type ChatResponse,
-  type ChatResponseChunk,
-  type LLM,
-} from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
 import { Settings } from "../Settings.js";
-import type { BaseTool, JSONObject, JSONValue } from "../types.js";
+import type { JSONObject, JSONValue } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 import {

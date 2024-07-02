@@ -11,13 +11,12 @@ import {
 } from "../../synthesizers/index.js";
 
 import type {
-  BaseTool,
   QueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
-  ToolMetadata,
 } from "../../types.js";
 
+import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 

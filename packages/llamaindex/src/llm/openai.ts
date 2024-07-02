@@ -7,6 +7,19 @@ import type {
 } from "openai";
 import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
 
+import type {
+  BaseTool,
+  ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
+  LLM,
+  LLMChatParamsNonStreaming,
+  LLMChatParamsStreaming,
+  LLMMetadata,
+  MessageType,
+  PartialToolCall,
+  ToolCallLLMMessageOptions,
+} from "@llamaindex/core/llms";
 import { Tokenizers } from "@llamaindex/env";
 import type {
   ChatCompletionAssistantMessageParam,
@@ -20,7 +33,6 @@ import type {
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import type { BaseTool } from "../types.js";
 import type { AzureOpenAIConfig } from "./azure.js";
 import {
   getAzureConfigFromEnv,
@@ -28,18 +40,6 @@ import {
   shouldUseAzure,
 } from "./azure.js";
 import { ToolCallLLM } from "./base.js";
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-  LLM,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
-  LLMMetadata,
-  MessageType,
-  PartialToolCall,
-  ToolCallLLMMessageOptions,
-} from "./types.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class OpenAISession {

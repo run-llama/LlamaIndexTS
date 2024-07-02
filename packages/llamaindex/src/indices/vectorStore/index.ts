@@ -1,3 +1,4 @@
+import type { MessageContent } from "@llamaindex/core/llms";
 import {
   ImageNode,
   ModalityType,
@@ -23,7 +24,6 @@ import {
 } from "../../ingestion/strategies/index.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import { getCallbackManager } from "../../internal/settings/CallbackManager.js";
-import type { MessageContent } from "../../llm/types.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";

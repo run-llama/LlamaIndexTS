@@ -1,14 +1,16 @@
-import { ReadableStream } from "@llamaindex/env";
-import type { Logger } from "../internal/logger.js";
-import type { BaseEvent } from "../internal/type.js";
 import type {
+  BaseToolWithCall,
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLM,
   MessageContent,
-} from "../llm/types.js";
-import type { BaseToolWithCall, ToolOutput, UUID } from "../types.js";
+  ToolOutput,
+} from "@llamaindex/core/llms";
+import { ReadableStream } from "@llamaindex/env";
+import type { Logger } from "../internal/logger.js";
+import type { BaseEvent } from "../internal/type.js";
+import type { UUID } from "../types.js";
 
 export type AgentTaskContext<
   Model extends LLM,

@@ -1,3 +1,4 @@
+import type { MessageContentDetail } from "@llamaindex/core/llms";
 import {
   ImageNode,
   MetadataMode,
@@ -7,7 +8,6 @@ import {
 } from "@llamaindex/core/schema";
 import type { SimplePrompt } from "../Prompt.js";
 import { imageToDataUrl } from "../embeddings/utils.js";
-import type { MessageContentDetail } from "../llm/types.js";
 
 export async function createMessageContent(
   prompt: SimplePrompt,

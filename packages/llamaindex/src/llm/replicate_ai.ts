@@ -1,6 +1,3 @@
-import { getEnv } from "@llamaindex/env";
-import Replicate from "../internal/deps/replicate.js";
-import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
   ChatResponse,
@@ -8,7 +5,10 @@ import type {
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
   MessageType,
-} from "./types.js";
+} from "@llamaindex/core/llms";
+import { getEnv } from "@llamaindex/env";
+import Replicate from "../internal/deps/replicate.js";
+import { BaseLLM } from "./base.js";
 import {
   extractText,
   streamCallbacks,

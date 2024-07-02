@@ -1,12 +1,5 @@
 import { HfInference } from "@huggingface/inference";
 import type {
-  PreTrainedModel,
-  PreTrainedTokenizer,
-  Tensor,
-} from "@xenova/transformers";
-import { lazyLoadTransformers } from "../internal/deps/transformers.js";
-import { BaseLLM } from "./base.js";
-import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
@@ -14,7 +7,14 @@ import type {
   LLMChatParamsStreaming,
   LLMMetadata,
   ToolCallLLMMessageOptions,
-} from "./types.js";
+} from "@llamaindex/core/llms";
+import type {
+  PreTrainedModel,
+  PreTrainedTokenizer,
+  Tensor,
+} from "@xenova/transformers";
+import { lazyLoadTransformers } from "../internal/deps/transformers.js";
+import { BaseLLM } from "./base.js";
 import { streamConverter, wrapLLMEvent } from "./utils.js";
 
 // TODO workaround issue with @huggingface/inference@2.7.0

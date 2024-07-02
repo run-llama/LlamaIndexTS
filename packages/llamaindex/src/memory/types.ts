@@ -1,4 +1,4 @@
-import type { ChatMessage } from "../llm/index.js";
+import type { ChatMessage } from "@llamaindex/core/llms";
 
 export interface BaseMemory<AdditionalMessageOptions extends object = object> {
   tokenLimit: number;

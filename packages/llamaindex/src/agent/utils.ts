@@ -1,3 +1,15 @@
+import type {
+  BaseTool,
+  ChatMessage,
+  ChatResponse,
+  ChatResponseChunk,
+  LLM,
+  PartialToolCall,
+  TextChatMessage,
+  ToolCall,
+  ToolCallLLMMessageOptions,
+  ToolOutput,
+} from "@llamaindex/core/llms";
 import { baseToolWithCallSchema } from "@llamaindex/core/schema";
 import { ReadableStream } from "@llamaindex/env";
 import { z } from "zod";
@@ -8,17 +20,7 @@ import {
   prettifyError,
   stringifyJSONToMessageContent,
 } from "../internal/utils.js";
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-  LLM,
-  PartialToolCall,
-  TextChatMessage,
-  ToolCall,
-  ToolCallLLMMessageOptions,
-} from "../llm/index.js";
-import type { BaseTool, JSONObject, JSONValue, ToolOutput } from "../types.js";
+import type { JSONObject, JSONValue } from "../types.js";
 import type { AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 
@@ -31,10 +33,12 @@ type StepToolsResponseParams<Model extends LLM> = {
   >[1];
 };
 
-type StepToolsStreamingResponseParams<Model extends LLM> =
-  StepToolsResponseParams<Model> & {
-    response: AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>;
-  };
+type StepToolsStreamingResponseParams<Model extends LLM> = Omit<
+  StepToolsResponseParams<Model>,
+  "response"
+> & {
+  response: AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>;
+};
 
 // #TODO stepTools and stepToolsStreaming should be moved to a better abstraction
 
@@ -83,7 +87,7 @@ export async function stepToolsStreaming<Model extends LLM>({
       }
     }
 
-    // If there are toolCalls but they didn't get read into the stream, used for Gemini
+    // If there are toolCalls, but they didn't get read into the stream, used for Gemini
     if (!toolCalls.size && value.options && "toolCall" in value.options) {
       value.options.toolCall.forEach((toolCall) => {
         toolCalls.set(toolCall.id, toolCall);
