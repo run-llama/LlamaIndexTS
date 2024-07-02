@@ -1,9 +1,23 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "LlamaIndex Core Module",
   "exports": {
+    "./llms": {
+      "require": {
+        "types": "./dist/llms/index.d.cts",
+        "default": "./dist/llms/index.cjs"
+      },
+      "import": {
+        "types": "./dist/llms/index.d.ts",
+        "default": "./dist/llms/index.js"
+      },
+      "default": {
+        "types": "./dist/llms/index.d.ts",
+        "default": "./dist/llms/index.js"
+      }
+    },
     "./decorator": {
       "require": {
         "types": "./dist/decorator/index.d.cts",
@@ -47,6 +61,9 @@
       }
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "bunchee --watch",
     "build": "bunchee"
@@ -57,6 +74,7 @@
     "url": "https://github.com/himself65/LlamaIndexTS.git"
   },
   "devDependencies": {
+    "ajv": "^8.16.0",
     "bunchee": "^5.2.1"
   },
   "dependencies": {

@@ -1,10 +1,9 @@
+import type { BaseTool, MessageContent } from "@llamaindex/core/llms";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { TextNode } from "@llamaindex/core/schema";
 import type { BaseRetriever } from "../Retriever.js";
 import type { VectorStoreIndex } from "../indices/vectorStore/index.js";
-import type { MessageContent } from "../llm/index.js";
 import { extractText } from "../llm/utils.js";
-import type { BaseTool } from "../types.js";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
 // Import statements (e.g., for TextNode, BaseNode) should be added based on your project's structure

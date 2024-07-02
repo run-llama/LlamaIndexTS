@@ -1,5 +1,6 @@
+import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { JSONSchemaType } from "ajv";
-import type { BaseTool, JSONValue, ToolMetadata } from "../types.js";
+import type { JSONValue } from "../types.js";
 
 export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
   implements BaseTool<T>

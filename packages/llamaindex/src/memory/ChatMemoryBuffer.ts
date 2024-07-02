@@ -1,5 +1,5 @@
+import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import type { ChatHistory } from "../ChatHistory.js";
-import type { ChatMessage, LLM } from "../llm/index.js";
 import { SimpleChatStore } from "../storage/chatStore/SimpleChatStore.js";
 import type { BaseChatStore } from "../storage/chatStore/types.js";
 import type { BaseMemory } from "./types.js";

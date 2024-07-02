@@ -1,9 +1,9 @@
-import type { NodeWithScore } from "@llamaindex/core/schema";
 import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
-} from "./llm/types.js";
+} from "@llamaindex/core/llms";
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "./llm/utils.js";
 
 export class EngineResponse implements ChatResponse, ChatResponseChunk {

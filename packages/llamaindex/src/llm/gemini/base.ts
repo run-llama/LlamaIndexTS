@@ -7,8 +7,6 @@ import {
   type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
 } from "@google/generative-ai";
 
-import { getEnv, randomUUID } from "@llamaindex/env";
-import { ToolCallLLM } from "../base.js";
 import type {
   CompletionResponse,
   LLMCompletionParamsNonStreaming,
@@ -16,7 +14,9 @@ import type {
   LLMMetadata,
   ToolCall,
   ToolCallLLMMessageOptions,
-} from "../types.js";
+} from "@llamaindex/core/llms";
+import { getEnv, randomUUID } from "@llamaindex/env";
+import { ToolCallLLM } from "../base.js";
 import { streamConverter, wrapLLMEvent } from "../utils.js";
 import {
   GEMINI_BACKENDS,
@@ -33,6 +33,7 @@ import {
   type IGeminiSession,
 } from "./types.js";
 import {
+  DEFAULT_SAFETY_SETTINGS,
   GeminiHelper,
   getChatContext,
   getPartsText,
@@ -87,7 +88,10 @@ export class GeminiSession implements IGeminiSession {
   }
 
   getGenerativeModel(metadata: GoogleModelParams): GoogleGenerativeModel {
-    return this.gemini.getGenerativeModel(metadata);
+    return this.gemini.getGenerativeModel({
+      safetySettings: DEFAULT_SAFETY_SETTINGS,
+      ...metadata,
+    });
   }
 
   getResponseText(response: EnhancedGenerateContentResponse): string {
@@ -143,8 +147,9 @@ export class GeminiSessionStore {
   }> = [];
 
   private static getSessionId(options: GeminiSessionOptions): string {
-    if (options.backend === GEMINI_BACKENDS.GOOGLE)
+    if (options.backend === GEMINI_BACKENDS.GOOGLE) {
       return options?.apiKey ?? "";
+    }
     return "";
   }
   private static sessionMatched(
@@ -223,6 +228,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
           ),
         },
       ],
+      safetySettings: DEFAULT_SAFETY_SETTINGS,
     });
     const { response } = await chat.sendMessage(context.message);
     const topCandidate = response.candidates![0];
@@ -258,6 +264,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
           ),
         },
       ],
+      safetySettings: DEFAULT_SAFETY_SETTINGS,
     });
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);

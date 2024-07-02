@@ -1,5 +1,37 @@
 # llamaindex
 
+## 0.4.10
+
+### Patch Changes
+
+- 7dce3d2: fix: disable External Filters for Gemini
+
+## 0.4.9
+
+### Patch Changes
+
+- 3a96a48: fix: anthroipic image input
+
+## 0.4.8
+
+### Patch Changes
+
+- 83ebdfb: fix: next.js build error
+
+## 0.4.7
+
+### Patch Changes
+
+- 41fe871: Add support for azure dynamic session tool
+- 321c39d: fix: generate api as class
+- f7f1af0: fix: throw error when no pipeline found
+- Updated dependencies [41fe871]
+- Updated dependencies [f10b41d]
+- Updated dependencies [321c39d]
+  - @llamaindex/env@0.1.7
+  - @llamaindex/core@0.0.2
+  - @llamaindex/cloud@0.1.1
+
 ## 0.4.6
 
 ### Patch Changes

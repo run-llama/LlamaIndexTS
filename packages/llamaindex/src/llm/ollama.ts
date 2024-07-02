@@ -1,3 +1,14 @@
+import type {
+  ChatResponse,
+  ChatResponseChunk,
+  CompletionResponse,
+  LLM,
+  LLMChatParamsNonStreaming,
+  LLMChatParamsStreaming,
+  LLMCompletionParamsNonStreaming,
+  LLMCompletionParamsStreaming,
+  LLMMetadata,
+} from "@llamaindex/core/llms";
 import { BaseEmbedding } from "../embeddings/types.js";
 import {
   Ollama as OllamaBase,
@@ -19,17 +30,6 @@ import {
   type ShowResponse,
   type StatusResponse,
 } from "../internal/deps/ollama.js";
-import type {
-  ChatResponse,
-  ChatResponseChunk,
-  CompletionResponse,
-  LLM,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
-  LLMCompletionParamsNonStreaming,
-  LLMCompletionParamsStreaming,
-  LLMMetadata,
-} from "./types.js";
 import { extractText, streamConverter } from "./utils.js";
 
 const messageAccessor = (part: OllamaChatResponse): ChatResponseChunk => {

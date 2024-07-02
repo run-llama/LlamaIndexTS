@@ -9,7 +9,7 @@ import type {
   LLMCompletionParamsStreaming,
   LLMMetadata,
   ToolCallLLMMessageOptions,
-} from "./types.js";
+} from "@llamaindex/core/llms";
 import { extractText, streamConverter } from "./utils.js";
 
 export abstract class BaseLLM<

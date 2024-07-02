@@ -1,3 +1,4 @@
+import type { MessageContentDetail } from "@llamaindex/core/llms";
 import {
   ImageNode,
   MetadataMode,
@@ -6,7 +7,6 @@ import {
   type BaseNode,
   type ImageType,
 } from "@llamaindex/core/schema";
-import type { MessageContentDetail } from "../llm/types.js";
 import { extractImage, extractSingleText } from "../llm/utils.js";
 import { BaseEmbedding, batchEmbeddings } from "./types.js";
 

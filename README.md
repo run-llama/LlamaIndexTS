@@ -76,7 +76,7 @@ main();
 node --import tsx ./main.ts
 ```
 
-### Next.js
+### React Server Component (Next.js, Waku, Redwood.JS...)
 
 First, you will need to add a llamaindex plugin to your Next.js project.
 
@@ -152,40 +152,6 @@ export async function chatWithAgent(
     .catch(console.error);
   return uiStream.value;
 }
-```
-
-### Cloudflare Workers
-
-```ts
-// src/index.ts
-export default {
-  async fetch(
-    request: Request,
-    env: Env,
-    ctx: ExecutionContext,
-  ): Promise<Response> {
-    const { setEnvs } = await import("@llamaindex/env");
-    // set environment variables so that the OpenAIAgent can use them
-    setEnvs(env);
-    const { OpenAIAgent } = await import("llamaindex");
-    const agent = new OpenAIAgent({
-      tools: [],
-    });
-    const responseStream = await agent.chat({
-      stream: true,
-      message: "Hello? What is the weather today?",
-    });
-    const textEncoder = new TextEncoder();
-    const response = responseStream.pipeThrough(
-      new TransformStream({
-        transform: (chunk, controller) => {
-          controller.enqueue(textEncoder.encode(chunk.response.delta));
-        },
-      }),
-    );
-    return new Response(response);
-  },
-};
 ```
 
 ## Playground

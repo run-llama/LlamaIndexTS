@@ -7,7 +7,7 @@ import type {
   LLMChatParamsStreaming,
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
-} from "llamaindex/llm/types";
+} from "llamaindex";
 import { extractText } from "llamaindex/llm/utils";
 import { deepStrictEqual, strictEqual } from "node:assert";
 import { llmCompleteMockStorage } from "../../node/utils.js";

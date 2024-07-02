@@ -1,7 +1,7 @@
 import {
   type MetadataFilters,
+  PipelinesService,
   type RetrievalParams,
-  Service,
   type TextNodeWithScore,
 } from "@llamaindex/cloud/api";
 import type { NodeWithScore } from "@llamaindex/core/schema";
@@ -51,20 +51,21 @@ export class LlamaCloudRetriever implements BaseRetriever {
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
-    const pipelines = await Service.searchPipelinesApiV1PipelinesGet({
+    const pipelines = await PipelinesService.searchPipelinesApiV1PipelinesGet({
       projectName: this.projectName,
       pipelineName: this.pipelineName,
     });
 
-    if (!pipelines) {
+    if (pipelines.length === 0 || !pipelines[0].id) {
       throw new Error(
         `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
       );
     }
 
-    const pipeline = await Service.getPipelineApiV1PipelinesPipelineIdGet({
-      pipelineId: pipelines[0].id,
-    });
+    const pipeline =
+      await PipelinesService.getPipelineApiV1PipelinesPipelineIdGet({
+        pipelineId: pipelines[0].id,
+      });
 
     if (!pipeline) {
       throw new Error(
@@ -72,16 +73,15 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
-    const results = await Service.runSearchApiV1PipelinesPipelineIdRetrievePost(
-      {
+    const results =
+      await PipelinesService.runSearchApiV1PipelinesPipelineIdRetrievePost({
         pipelineId: pipeline.id,
         requestBody: {
           ...this.retrieveParams,
           query: extractText(query),
           search_filters: preFilters as MetadataFilters,
         },
-      },
-    );
+      });
 
     return this.resultNodesToNodeWithScore(results.retrieval_nodes);
   }

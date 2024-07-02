@@ -1,5 +1,35 @@
 # docs
 
+## 0.0.36
+
+### Patch Changes
+
+- Updated dependencies [7dce3d2]
+  - llamaindex@0.4.10
+
+## 0.0.35
+
+### Patch Changes
+
+- Updated dependencies [3a96a48]
+  - llamaindex@0.4.9
+
+## 0.0.34
+
+### Patch Changes
+
+- Updated dependencies [83ebdfb]
+  - llamaindex@0.4.8
+
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [41fe871]
+- Updated dependencies [321c39d]
+- Updated dependencies [f7f1af0]
+  - llamaindex@0.4.7
+
 ## 0.0.32
 
 ### Patch Changes

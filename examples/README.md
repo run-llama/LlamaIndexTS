@@ -9,7 +9,7 @@ make sure you have basic knowledge of the [LlamaIndexTS](https://ts.llamaindex.a
 # export your API key
 export OPENAI_API_KEY="sk-..."
 
-npx ts-node ./chatEngine.ts
+npx tsx ./chatEngine.ts
 ```
 
 ## Build your own RAG app

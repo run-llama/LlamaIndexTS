@@ -1,14 +1,14 @@
-import { getEnv } from "@llamaindex/env";
-import { Settings } from "../Settings.js";
-import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
-import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
   ChatResponse,
   ChatResponseChunk,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
-} from "./types.js";
+} from "@llamaindex/core/llms";
+import { getEnv } from "@llamaindex/env";
+import { Settings } from "../Settings.js";
+import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
+import { BaseLLM } from "./base.js";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },

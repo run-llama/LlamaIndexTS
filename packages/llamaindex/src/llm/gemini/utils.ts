@@ -1,17 +1,20 @@
 import {
   type FunctionCall,
   type Content as GeminiMessageContent,
+  HarmBlockThreshold,
+  HarmCategory,
+  type SafetySetting,
 } from "@google/generative-ai";
 
 import { type GenerateContentResponse } from "@google-cloud/vertexai";
-import type { BaseTool } from "../../types.js";
 import type {
+  BaseTool,
   ChatMessage,
   MessageContentImageDetail,
   MessageContentTextDetail,
   MessageType,
   ToolCallLLMMessageOptions,
-} from "../types.js";
+} from "@llamaindex/core/llms";
 import { extractDataUrlComponents } from "../utils.js";
 import type {
   ChatContext,
@@ -53,10 +56,13 @@ const getImageParts = (
     const { mimeType, base64: data } = extractDataUrlComponents(
       message.image_url.url,
     );
-    if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType))
+    if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType)) {
       throw new Error(
-        `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join("\n")}`,
+        `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join(
+          "\n",
+        )}`,
       );
+    }
     return {
       inlineData: {
         mimeType,
@@ -65,10 +71,13 @@ const getImageParts = (
     };
   }
   const mimeType = getFileURLMimeType(message.image_url.url);
-  if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType))
+  if (!mimeType || !ACCEPTED_IMAGE_MIME_TYPES.includes(mimeType)) {
     throw new Error(
-      `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join("\n")}`,
+      `Gemini only accepts the following mimeTypes: ${ACCEPTED_IMAGE_MIME_TYPES.join(
+        "\n",
+      )}`,
     );
+  }
   return {
     fileData: { mimeType, fileUri: message.image_url.url },
   };
@@ -124,10 +133,11 @@ export const getChatContext = (
   // 2. Parts that have empty text
   const fnMap = params.messages.reduce(
     (result, message) => {
-      if (message.options && "toolCall" in message.options)
+      if (message.options && "toolCall" in message.options) {
         message.options.toolCall.forEach((call) => {
           result[call.id] = call.name;
         });
+      }
 
       return result;
     },
@@ -224,10 +234,11 @@ export class GeminiHelper {
     if (options && "toolResult" in options) {
       if (!fnMap) throw Error("fnMap must be set");
       const name = fnMap[options.toolResult.id];
-      if (!name)
+      if (!name) {
         throw Error(
           `Could not find the name for fn call with id ${options.toolResult.id}`,
         );
+      }
 
       return [
         {
@@ -299,3 +310,26 @@ export function getFunctionCalls(
     return undefined;
   }
 }
+
+/**
+ * Safety settings to disable external filters
+ * Documentation: https://ai.google.dev/gemini-api/docs/safety-settings
+ */
+export const DEFAULT_SAFETY_SETTINGS: SafetySetting[] = [
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+];

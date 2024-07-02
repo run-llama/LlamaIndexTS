@@ -1,9 +1,9 @@
+import type { LLM } from "@llamaindex/core/llms";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
 import { EngineResponse } from "../../EngineResponse.js";
 import { Settings } from "../../Settings.js";
 import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import type { LLM } from "../../llm/index.js";
 import { streamConverter, streamReducer } from "../../llm/utils.js";
 import type {
   ChatEngine,

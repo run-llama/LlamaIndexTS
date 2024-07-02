@@ -1,10 +1,3 @@
-import { getEnv } from "@llamaindex/env";
-import _ from "lodash";
-import type { LLMOptions } from "portkey-ai";
-import { Portkey as OrigPortKey } from "portkey-ai";
-import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import { BaseLLM } from "./base.js";
 import type {
   ChatMessage,
   ChatResponse,
@@ -13,7 +6,14 @@ import type {
   LLMChatParamsStreaming,
   LLMMetadata,
   MessageType,
-} from "./types.js";
+} from "@llamaindex/core/llms";
+import { getEnv } from "@llamaindex/env";
+import _ from "lodash";
+import type { LLMOptions } from "portkey-ai";
+import { Portkey as OrigPortKey } from "portkey-ai";
+import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
+import { getCallbackManager } from "../internal/settings/CallbackManager.js";
+import { BaseLLM } from "./base.js";
 import { extractText, wrapLLMEvent } from "./utils.js";
 
 interface PortkeyOptions {

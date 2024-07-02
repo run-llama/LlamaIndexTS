@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const anyFunctionSchema = z.function(z.tuple([]).rest(z.any()), z.any());
+
 export const toolMetadataSchema = z.object({
   description: z.string(),
   name: z.string(),
@@ -7,7 +9,7 @@ export const toolMetadataSchema = z.object({
 });
 
 export const baseToolSchema = z.object({
-  call: z.optional(z.function()),
+  call: anyFunctionSchema.optional(),
   metadata: toolMetadataSchema,
 });
 

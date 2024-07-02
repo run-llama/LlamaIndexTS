@@ -11,8 +11,9 @@ import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./constants.js";
 import { getAppBaseUrl, initService } from "./utils.js";
 
-import { Service } from "@llamaindex/cloud/api";
+import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
 import { getEnv } from "@llamaindex/env";
+import { Settings } from "../Settings.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
@@ -25,7 +26,7 @@ export class LlamaCloudIndex {
   }
 
   private async waitForPipelineIngestion(
-    verbose = false,
+    verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
     const pipelineId = await this.getPipelineId(
@@ -39,9 +40,11 @@ export class LlamaCloudIndex {
 
     while (true) {
       const pipelineStatus =
-        await Service.getPipelineStatusApiV1PipelinesPipelineIdStatusGet({
-          pipelineId,
-        });
+        await PipelinesService.getPipelineStatusApiV1PipelinesPipelineIdStatusGet(
+          {
+            pipelineId,
+          },
+        );
 
       if (pipelineStatus.status === "SUCCESS") {
         if (verbose) {
@@ -70,18 +73,13 @@ export class LlamaCloudIndex {
 
   private async waitForDocumentIngestion(
     docIds: string[],
-    verbose = false,
+    verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
     const pipelineId = await this.getPipelineId(
       this.params.name,
       this.params.projectName,
     );
-
-    const client = await initService({
-      ...this.params,
-      baseUrl: this.params.baseUrl,
-    });
 
     if (verbose) {
       console.log("Loading data: ");
@@ -94,7 +92,7 @@ export class LlamaCloudIndex {
 
       for (const doc of pendingDocs) {
         const { status } =
-          await Service.getPipelineDocumentStatusApiV1PipelinesPipelineIdDocumentsDocumentIdStatusGet(
+          await PipelinesService.getPipelineDocumentStatusApiV1PipelinesPipelineIdDocumentsDocumentIdStatusGet(
             { pipelineId, documentId: doc },
           );
 
@@ -139,7 +137,7 @@ export class LlamaCloudIndex {
     name: string,
     projectName: string,
   ): Promise<string> {
-    const pipelines = await Service.searchPipelinesApiV1PipelinesGet({
+    const pipelines = await PipelinesService.searchPipelinesApiV1PipelinesGet({
       projectName,
       pipelineName: name,
     });
@@ -160,10 +158,7 @@ export class LlamaCloudIndex {
         apiKey: getEnv("OPENAI_API_KEY"),
       }),
     ];
-
-    const appUrl = getAppBaseUrl(params.baseUrl);
-
-    const client = await initService({ ...params, baseUrl: appUrl });
+    const apiUrl = getAppBaseUrl();
 
     const pipelineCreateParams = await getPipelineCreate({
       pipelineName: params.name,
@@ -172,7 +167,7 @@ export class LlamaCloudIndex {
       transformations: params.transformations ?? defaultTransformations,
     });
 
-    const project = await Service.upsertProjectApiV1ProjectsPut({
+    const project = await ProjectsService.upsertProjectApiV1ProjectsPut({
       requestBody: {
         name: params.projectName ?? "default",
       },
@@ -182,7 +177,7 @@ export class LlamaCloudIndex {
       throw new Error("Project ID should be defined");
     }
 
-    const pipeline = await Service.upsertPipelineApiV1PipelinesPut({
+    const pipeline = await PipelinesService.upsertPipelineApiV1PipelinesPut({
       projectId: project.id,
       requestBody: {
         name: params.name,
@@ -200,7 +195,7 @@ export class LlamaCloudIndex {
       console.log(`Created pipeline ${pipeline.id} with name ${params.name}`);
     }
 
-    await Service.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
+    await PipelinesService.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
       {
         pipelineId: pipeline.id,
         requestBody: params.documents.map((doc) => ({
@@ -215,9 +210,11 @@ export class LlamaCloudIndex {
 
     while (true) {
       const pipelineStatus =
-        await Service.getPipelineStatusApiV1PipelinesPipelineIdStatusGet({
-          pipelineId: pipeline.id,
-        });
+        await PipelinesService.getPipelineStatusApiV1PipelinesPipelineIdStatusGet(
+          {
+            pipelineId: pipeline.id,
+          },
+        );
 
       if (pipelineStatus.status === "SUCCESS") {
         console.info(
@@ -228,14 +225,14 @@ export class LlamaCloudIndex {
 
       if (pipelineStatus.status === "ERROR") {
         console.error(
-          `Some documents failed to ingest, check your pipeline logs at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+          `Some documents failed to ingest, check your pipeline logs at ${apiUrl}/project/${project.id}/deploy/${pipeline.id}`,
         );
         throw new Error("Some documents failed to ingest");
       }
 
       if (pipelineStatus.status === "PARTIAL_SUCCESS") {
         console.info(
-          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${apiUrl}/project/${project.id}/deploy/${pipeline.id}`,
         );
         break;
       }
@@ -249,7 +246,7 @@ export class LlamaCloudIndex {
 
     if (params.verbose) {
       console.info(
-        `Ingestion completed, find your index at ${appUrl}/project/${project.id}/deploy/${pipeline.id}`,
+        `Ingestion completed, find your index at ${apiUrl}/project/${project.id}/deploy/${pipeline.id}`,
       );
     }
 
@@ -280,10 +277,6 @@ export class LlamaCloudIndex {
   }
 
   async insert(document: Document) {
-    const appUrl = getAppBaseUrl(this.params.baseUrl);
-
-    const client = await initService({ ...this.params, baseUrl: appUrl });
-
     const pipelineId = await this.getPipelineId(
       this.params.name,
       this.params.projectName,
@@ -293,7 +286,7 @@ export class LlamaCloudIndex {
       throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
-    await Service.createBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPost(
+    await PipelinesService.createBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPost(
       {
         pipelineId: pipelineId,
         requestBody: [
@@ -312,10 +305,6 @@ export class LlamaCloudIndex {
   }
 
   async delete(document: Document) {
-    const appUrl = getAppBaseUrl(this.params.baseUrl);
-
-    const client = await initService({ ...this.params, baseUrl: appUrl });
-
     const pipelineId = await this.getPipelineId(
       this.params.name,
       this.params.projectName,
@@ -325,7 +314,7 @@ export class LlamaCloudIndex {
       throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
-    await Service.deletePipelineDocumentApiV1PipelinesPipelineIdDocumentsDocumentIdDelete(
+    await PipelinesService.deletePipelineDocumentApiV1PipelinesPipelineIdDocumentsDocumentIdDelete(
       {
         pipelineId,
         documentId: document.id_,
@@ -336,10 +325,6 @@ export class LlamaCloudIndex {
   }
 
   async refreshDoc(document: Document) {
-    const appUrl = getAppBaseUrl(this.params.baseUrl);
-
-    const client = await initService({ ...this.params, baseUrl: appUrl });
-
     const pipelineId = await this.getPipelineId(
       this.params.name,
       this.params.projectName,
@@ -349,7 +334,7 @@ export class LlamaCloudIndex {
       throw new Error("We couldn't find the pipeline ID for the given name");
     }
 
-    await Service.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
+    await PipelinesService.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
       {
         pipelineId,
         requestBody: [

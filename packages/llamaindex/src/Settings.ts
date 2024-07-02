@@ -5,6 +5,7 @@ import { OpenAI } from "./llm/openai.js";
 import { PromptHelper } from "./PromptHelper.js";
 import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
 
+import type { LLM } from "@llamaindex/core/llms";
 import { AsyncLocalStorage, getEnv } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import type { BaseEmbedding } from "./embeddings/types.js";
@@ -18,7 +19,6 @@ import {
   setEmbeddedModel,
   withEmbeddedModel,
 } from "./internal/settings/EmbedModel.js";
-import type { LLM } from "./llm/types.js";
 import type { NodeParser } from "./nodeParsers/types.js";
 
 export type PromptConfig = {

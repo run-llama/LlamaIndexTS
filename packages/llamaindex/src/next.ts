@@ -16,23 +16,23 @@
  * @module
  */
 export default function withLlamaIndex(config: any) {
+  config.experimental = config.experimental ?? {};
+  config.experimental.serverComponentsExternalPackages =
+    config.experimental.serverComponentsExternalPackages ?? [];
+  config.experimental.serverComponentsExternalPackages.push(
+    "@xenova/transformers",
+  );
   const userWebpack = config.webpack;
-  //#region hack for `@xenova/transformers`
-  // Ignore node-specific modules when bundling for the browser
-  // See https://webpack.js.org/configuration/resolve/#resolvealias
   config.webpack = function (webpackConfig: any) {
     if (userWebpack) {
       webpackConfig = userWebpack(webpackConfig);
     }
     webpackConfig.resolve.alias = {
       ...webpackConfig.resolve.alias,
-      sharp$: false,
-      "onnxruntime-node$": false,
       "@google-cloud/vertexai": false,
       "groq-sdk": false,
     };
     return webpackConfig;
   };
-  //#endregion
   return config;
 }

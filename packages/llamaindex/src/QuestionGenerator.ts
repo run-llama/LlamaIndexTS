@@ -1,3 +1,4 @@
+import type { LLM, ToolMetadata } from "@llamaindex/core/llms";
 import { SubQuestionOutputParser } from "./OutputParser.js";
 import type { SubQuestionPrompt } from "./Prompt.js";
 import { buildToolsText, defaultSubQuestionPrompt } from "./Prompt.js";
@@ -6,13 +7,8 @@ import type {
   SubQuestion,
 } from "./engines/query/types.js";
 import { OpenAI } from "./llm/openai.js";
-import type { LLM } from "./llm/types.js";
 import { PromptMixin } from "./prompts/index.js";
-import type {
-  BaseOutputParser,
-  StructuredOutput,
-  ToolMetadata,
-} from "./types.js";
+import type { BaseOutputParser, StructuredOutput } from "./types.js";
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.
