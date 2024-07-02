@@ -33,7 +33,7 @@ import type {
   LLMChatParamsStreaming,
   ToolCall,
   ToolCallLLMMessageOptions,
-} from "../types.js";
+} from "@llamaindex/core/llms";
 
 export enum GEMINI_BACKENDS {
   GOOGLE = "google",

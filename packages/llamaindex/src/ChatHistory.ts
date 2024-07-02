@@ -1,8 +1,8 @@
+import type { ChatMessage, LLM, MessageType } from "@llamaindex/core/llms";
 import { tokenizers, type Tokenizer } from "@llamaindex/env";
 import type { SummaryPrompt } from "./Prompt.js";
 import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
 import { OpenAI } from "./llm/openai.js";
-import type { ChatMessage, LLM, MessageType } from "./llm/types.js";
 import { extractText } from "./llm/utils.js";
 
 /**

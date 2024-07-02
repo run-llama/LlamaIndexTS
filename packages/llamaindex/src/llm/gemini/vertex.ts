@@ -14,12 +14,12 @@ import type {
 } from "./types.js";
 
 import type { FunctionCall } from "@google/generative-ai";
-import { getEnv, randomUUID } from "@llamaindex/env";
 import type {
   CompletionResponse,
   ToolCall,
   ToolCallLLMMessageOptions,
-} from "../types.js";
+} from "@llamaindex/core/llms";
+import { getEnv, randomUUID } from "@llamaindex/env";
 import { streamConverter } from "../utils.js";
 import { DEFAULT_SAFETY_SETTINGS, getFunctionCalls, getText } from "./utils.js";
 

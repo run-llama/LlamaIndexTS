@@ -1,6 +1,3 @@
-import type { ImageType } from "@llamaindex/core/schema";
-import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -9,7 +6,10 @@ import type {
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
-} from "./types.js";
+} from "@llamaindex/core/llms";
+import type { ImageType } from "@llamaindex/core/schema";
+import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
+import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,

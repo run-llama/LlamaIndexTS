@@ -1,4 +1,5 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
+import type { MessageContent } from "@llamaindex/core/llms";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import { CustomEvent } from "@llamaindex/env";
 import type { AgentEndEvent, AgentStartEvent } from "../agent/types.js";
@@ -12,7 +13,6 @@ import type {
   LLMStreamEvent,
   LLMToolCallEvent,
   LLMToolResultEvent,
-  MessageContent,
   RetrievalEndEvent,
   RetrievalStartEvent,
 } from "../llm/types.js";

@@ -1,5 +1,5 @@
+import type { MessageContentDetail } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
-import type { MessageContentDetail } from "../llm/index.js";
 import { extractSingleText } from "../llm/utils.js";
 import { BaseEmbedding } from "./types.js";
 

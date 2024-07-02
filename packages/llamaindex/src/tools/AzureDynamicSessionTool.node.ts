@@ -2,6 +2,7 @@ import {
   DefaultAzureCredential,
   getBearerTokenProvider,
 } from "@azure/identity";
+import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import {
   Readable,
   createWriteStream,
@@ -11,7 +12,6 @@ import {
   path,
   randomUUID,
 } from "@llamaindex/env";
-import type { BaseTool, ToolMetadata } from "../types.js";
 export type InterpreterParameter = {
   code: string;
 };

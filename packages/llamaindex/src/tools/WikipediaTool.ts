@@ -1,6 +1,6 @@
+import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { JSONSchemaType } from "ajv";
 import { default as wiki } from "wikipedia";
-import type { BaseTool, ToolMetadata } from "../types.js";
 
 type WikipediaParameter = {
   query: string;

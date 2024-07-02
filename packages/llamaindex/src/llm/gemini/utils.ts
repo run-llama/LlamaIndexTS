@@ -7,14 +7,14 @@ import {
 } from "@google/generative-ai";
 
 import { type GenerateContentResponse } from "@google-cloud/vertexai";
-import type { BaseTool } from "../../types.js";
 import type {
+  BaseTool,
   ChatMessage,
   MessageContentImageDetail,
   MessageContentTextDetail,
   MessageType,
   ToolCallLLMMessageOptions,
-} from "../types.js";
+} from "@llamaindex/core/llms";
 import { extractDataUrlComponents } from "../utils.js";
 import type {
   ChatContext,
