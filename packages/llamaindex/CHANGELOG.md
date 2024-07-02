@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.4.9
+
+### Patch Changes
+
+- 3a96a48: fix: anthroipic image input
+
 ## 0.4.8
 
 ### Patch Changes
