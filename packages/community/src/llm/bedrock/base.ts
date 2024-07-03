@@ -186,6 +186,10 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     this.temperature = temperature ?? DEFAULT_BEDROCK_PARAMS.temperature;
     this.topP = topP ?? DEFAULT_BEDROCK_PARAMS.topP;
     this.client = new BedrockRuntimeClient(params);
+
+    if (!this.supportToolCall) {
+      console.warn(`The model "${this.model}" doesn't support ToolCall`);
+    }
   }
 
   get supportToolCall(): boolean {
@@ -215,10 +219,13 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     );
     const command = new InvokeModelCommand(input);
     const response = await this.client.send(command);
-    const tools = this.provider.getToolsFromResponse(response);
-    const options: ToolCallLLMMessageOptions = tools.length
-      ? { toolCall: tools }
-      : {};
+    let options: ToolCallLLMMessageOptions = {};
+    if (this.supportToolCall) {
+      const tools = this.provider.getToolsFromResponse(response);
+      if (tools.length) {
+        options = { toolCall: tools };
+      }
+    }
     return {
       raw: response,
       message: {
