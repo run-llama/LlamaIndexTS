@@ -1,51 +1,32 @@
 import {
   BedrockRuntimeClient,
+  type BedrockRuntimeClientConfig,
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
-  ResponseStream,
-  type BedrockRuntimeClientConfig,
-  type InvokeModelCommandInput,
-  type InvokeModelWithResponseStreamCommandInput,
 } from "@aws-sdk/client-bedrock-runtime";
 import type {
-  BaseTool,
   ChatMessage,
   ChatResponse,
-  ChatResponseChunk,
   CompletionResponse,
   LLMChatParamsNonStreaming,
   LLMChatParamsStreaming,
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
   LLMMetadata,
-  PartialToolCall,
-  ToolCall,
   ToolCallLLMMessageOptions,
 } from "llamaindex";
-import { ToolCallLLM, streamConverter, wrapLLMEvent } from "llamaindex";
-import type {
-  AnthropicNoneStreamingResponse,
-  AnthropicTextContent,
-  StreamEvent,
-  ToolBlock,
-  ToolChoice,
-} from "./types.js";
+import { streamConverter, ToolCallLLM, wrapLLMEvent } from "llamaindex";
 import {
-  mapBaseToolsToAnthropicTools,
-  mapChatMessagesToAnthropicMessages,
-  mapMessageContentToMessageContentDetails,
-  toUtf8,
-} from "./utils.js";
-
-export type BedrockAdditionalChatOptions = { toolChoice: ToolChoice };
+  type BedrockAdditionalChatOptions,
+  type BedrockChatStreamResponse,
+  Provider,
+} from "./provider";
+import { PROVIDERS } from "./providers";
+import { mapMessageContentToMessageContentDetails } from "./utils.js";
 
 export type BedrockChatParamsStreaming = LLMChatParamsStreaming<
   BedrockAdditionalChatOptions,
   ToolCallLLMMessageOptions
->;
-
-export type BedrockChatStreamResponse = AsyncIterable<
-  ChatResponseChunk<ToolCallLLMMessageOptions>
 >;
 
 export type BedrockChatParamsNonStreaming = LLMChatParamsNonStreaming<
@@ -151,174 +132,6 @@ export const TOOL_CALL_MODELS = [
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_5_SONNET,
 ];
 
-abstract class Provider<ProviderStreamEvent extends {} = {}> {
-  abstract getTextFromResponse(response: Record<string, any>): string;
-
-  abstract getToolsFromResponse<T extends {} = {}>(
-    response: Record<string, any>,
-  ): T[];
-
-  getStreamingEventResponse(
-    response: Record<string, any>,
-  ): ProviderStreamEvent | undefined {
-    return response.chunk?.bytes
-      ? (JSON.parse(toUtf8(response.chunk?.bytes)) as ProviderStreamEvent)
-      : undefined;
-  }
-
-  async *reduceStream(
-    stream: AsyncIterable<ResponseStream>,
-  ): BedrockChatStreamResponse {
-    yield* streamConverter(stream, (response) => {
-      return {
-        delta: this.getTextFromStreamResponse(response),
-        raw: response,
-      };
-    });
-  }
-
-  getTextFromStreamResponse(response: Record<string, any>): string {
-    return this.getTextFromResponse(response);
-  }
-
-  abstract getRequestBody<T extends ChatMessage>(
-    metadata: LLMMetadata,
-    messages: T[],
-    tools?: BaseTool[],
-    options?: BedrockAdditionalChatOptions,
-  ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput;
-}
-
-class AnthropicProvider extends Provider<StreamEvent> {
-  getResultFromResponse(
-    response: Record<string, any>,
-  ): AnthropicNoneStreamingResponse {
-    return JSON.parse(toUtf8(response.body));
-  }
-
-  getToolsFromResponse<AnthropicToolContent>(
-    response: Record<string, any>,
-  ): AnthropicToolContent[] {
-    const result = this.getResultFromResponse(response);
-    return result.content
-      .filter((item) => item.type === "tool_use")
-      .map((item) => item as AnthropicToolContent);
-  }
-
-  getTextFromResponse(response: Record<string, any>): string {
-    const result = this.getResultFromResponse(response);
-    return result.content
-      .filter((item) => item.type === "text")
-      .map((item) => (item as AnthropicTextContent).text)
-      .join(" ");
-  }
-
-  getTextFromStreamResponse(response: Record<string, any>): string {
-    const event = this.getStreamingEventResponse(response);
-    if (event?.type === "content_block_delta") {
-      if (event.delta.type === "text_delta") return event.delta.text;
-      if (event.delta.type === "input_json_delta")
-        return event.delta.partial_json;
-    }
-    return "";
-  }
-
-  async *reduceStream(
-    stream: AsyncIterable<ResponseStream>,
-  ): BedrockChatStreamResponse {
-    let collecting = [];
-    let tool: ToolBlock | undefined = undefined;
-    // #TODO this should be broken down into a separate consumer
-    for await (const response of stream) {
-      const event = this.getStreamingEventResponse(response);
-      if (
-        event?.type === "content_block_start" &&
-        event.content_block.type === "tool_use"
-      ) {
-        tool = event.content_block;
-        continue;
-      }
-
-      if (
-        event?.type === "content_block_delta" &&
-        event.delta.type === "input_json_delta"
-      ) {
-        collecting.push(event.delta.partial_json);
-      }
-
-      let options: undefined | ToolCallLLMMessageOptions = undefined;
-      if (tool && collecting.length) {
-        const input = collecting.filter((item) => item).join("");
-        // We have all we need to parse the tool_use json
-        if (event?.type === "content_block_stop") {
-          options = {
-            toolCall: [
-              {
-                id: tool.id,
-                name: tool.name,
-                input: JSON.parse(input),
-              } as ToolCall,
-            ],
-          };
-          // reset the collection/tool
-          collecting = [];
-          tool = undefined;
-        } else {
-          options = {
-            toolCall: [
-              {
-                id: tool.id,
-                name: tool.name,
-                input,
-              } as PartialToolCall,
-            ],
-          };
-        }
-      }
-      const delta = this.getTextFromStreamResponse(response);
-      if (!delta && !options) continue;
-
-      yield {
-        delta,
-        options,
-        raw: response,
-      };
-    }
-  }
-
-  getRequestBody<T extends ChatMessage<ToolCallLLMMessageOptions>>(
-    metadata: LLMMetadata,
-    messages: T[],
-    tools?: BaseTool[],
-    options?: BedrockAdditionalChatOptions,
-  ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput {
-    const extra: Record<string, unknown> = {};
-    if (options?.toolChoice) {
-      extra["tool_choice"] = options?.toolChoice;
-    }
-    const mapped = mapChatMessagesToAnthropicMessages(messages);
-    return {
-      modelId: metadata.model,
-      contentType: "application/json",
-      accept: "application/json",
-      body: JSON.stringify({
-        anthropic_version: "bedrock-2023-05-31",
-        messages: mapped,
-        tools: mapBaseToolsToAnthropicTools(tools),
-        max_tokens: metadata.maxTokens,
-        temperature: metadata.temperature,
-        top_p: metadata.topP,
-        ...extra,
-      }),
-    };
-  }
-}
-
-// Other providers could go here
-const PROVIDERS: { [key: string]: Provider } = {
-  anthropic: new AnthropicProvider(),
-};
-
 const getProvider = (model: string): Provider => {
   const providerName = model.split(".")[0];
   if (!(providerName in PROVIDERS)) {
@@ -373,6 +186,10 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     this.temperature = temperature ?? DEFAULT_BEDROCK_PARAMS.temperature;
     this.topP = topP ?? DEFAULT_BEDROCK_PARAMS.topP;
     this.client = new BedrockRuntimeClient(params);
+
+    if (!this.supportToolCall) {
+      console.warn(`The model "${this.model}" doesn't support ToolCall`);
+    }
   }
 
   get supportToolCall(): boolean {
@@ -402,10 +219,13 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     );
     const command = new InvokeModelCommand(input);
     const response = await this.client.send(command);
-    const tools = this.provider.getToolsFromResponse(response);
-    const options: ToolCallLLMMessageOptions = tools.length
-      ? { toolCall: tools }
-      : {};
+    let options: ToolCallLLMMessageOptions = {};
+    if (this.supportToolCall) {
+      const tools = this.provider.getToolsFromResponse(response);
+      if (tools.length) {
+        options = { toolCall: tools };
+      }
+    }
     return {
       raw: response,
       message: {
