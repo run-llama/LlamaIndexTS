@@ -28,6 +28,8 @@ export type JinaEmbeddingResponse = {
   }>;
 };
 
+const JINA_MULTIMODAL_MODELS = ["jina-clip-v1"];
+
 export class JinaAIEmbedding extends MultiModalEmbedding {
   apiKey: string;
   model: string;
@@ -44,14 +46,14 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
     return result.data[0].embedding;
   }
 
-  // Override to retrieve multiple text embeddings in a single request
+  // Retrieve multiple text embeddings in a single request
   async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
     const input = texts.map((text) => ({ text }));
     const result = await this.getJinaEmbedding({ input });
     return result.data.map((d) => d.embedding);
   }
 
-  // Override to retrieve multiple image embeddings in a single request
+  // Retrieve multiple image embeddings in a single request
   async getImageEmbeddings(images: ImageType[]): Promise<number[][]> {
     const input = await Promise.all(
       images.map((img) => this.getImageInput(img)),
@@ -71,6 +73,7 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
     this.apiKey = apiKey;
     this.model = init?.model ?? "jina-embeddings-v2-base-en";
     this.baseURL = init?.baseURL ?? "https://api.jina.ai/v1/embeddings";
+    init?.embedBatchSize && (this.embedBatchSize = init?.embedBatchSize);
   }
 
   private async getImageInput(
@@ -88,6 +91,23 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   private async getJinaEmbedding(
     input: JinaEmbeddingRequest,
   ): Promise<JinaEmbeddingResponse> {
+    // if input includes image, check if model supports multimodal embeddings
+    if (
+      input.input.some((i) => "url" in i || "bytes" in i) &&
+      !JINA_MULTIMODAL_MODELS.includes(this.model)
+    ) {
+      throw new Error(
+        `Model ${this.model} does not support image embeddings. Use ${JINA_MULTIMODAL_MODELS.join(", ")}`,
+      );
+    }
+
+    // check number of inputs each request
+    if (input.input.length > this.embedBatchSize) {
+      throw new Error(
+        `Input length is too large. Maximum batch size is ${this.embedBatchSize}`,
+      );
+    }
+
     const response = await fetch(this.baseURL, {
       method: "POST",
       headers: {
