@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.4.12
+
+### Patch Changes
+
+- f326ab8: chore: bump version
+- Updated dependencies [f326ab8]
+  - @llamaindex/cloud@0.1.2
+  - @llamaindex/core@0.0.3
+  - @llamaindex/env@0.1.8
+
 ## 0.4.11
 
 ### Patch Changes

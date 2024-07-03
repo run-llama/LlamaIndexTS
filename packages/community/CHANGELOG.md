@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.16
+
+### Patch Changes
+
+- f326ab8: chore: bump version
+- Updated dependencies [f326ab8]
+  - llamaindex@0.4.12
+
 ## 0.0.15
 
 ### Patch Changes
