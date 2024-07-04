@@ -44,6 +44,8 @@ They can be divided into two groups.
 - `pageSeperator?` Optional. The page seperator to use. Defaults is `\\n---\\n`.
 - `gpt4oMode` set to true to use GPT-4o to extract content. Default is `false`.
 - `gpt4oApiKey?` Optional. Set the GPT-4o API key. Lowers the cost of parsing by using your own API key. Your OpenAI account will be charged. Can also be set in the environment variable `LLAMA_CLOUD_GPT4O_API_KEY`.
+- `boundingBox?` Optional. Specify an area of the document to parse. Expects the bounding box margins as a string in clockwise order, e.g. `boundingBox = "0.1,0,0,0"` to not parse the top 10% of the document.
+- `targetPages?` Optional. Specify which pages to parse by specifying them as a comma-seperated list. First page is `0`.
 - `numWorkers` as in the python version, is set in `SimpleDirectoryReader`. Default is 1.
 
 ### LlamaParse with SimpleDirectoryReader
