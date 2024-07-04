@@ -62,7 +62,7 @@ These building blocks can be customized to reflect ranking preferences, as well 
 
 [**Retrievers**](../modules/retriever.md):
 A retriever defines how to efficiently retrieve relevant context from a knowledge base (i.e. index) when given a query.
-The specific retrieval logic differs for difference indices, the most popular being dense retrieval against a vector index.
+The specific retrieval logic differs for different indices, the most popular being dense retrieval against a vector index.
 
 [**Response Synthesizers**](../modules/response_synthesizer.md):
 A response synthesizer generates a response from an LLM, using a user query and a given set of retrieved text chunks.
