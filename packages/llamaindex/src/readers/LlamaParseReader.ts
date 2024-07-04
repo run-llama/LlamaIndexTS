@@ -283,7 +283,7 @@ export class LlamaParseReader extends FileReader {
     let jobId;
     try {
       // Creates a job for the file
-      const jobId = await this.createJob(fileContent, fileName);
+      jobId = await this.createJob(fileContent, fileName);
       if (this.verbose) {
         console.log(`Started parsing the file under job id ${jobId}`);
       }
