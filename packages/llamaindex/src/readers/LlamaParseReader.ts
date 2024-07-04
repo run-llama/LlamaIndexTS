@@ -133,6 +133,10 @@ export class LlamaParseReader extends FileReader {
   gpt4oMode: boolean = false;
   // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
   gpt4oApiKey?: string;
+  // The bounding box to use to extract text from documents. Describe as a string containing the bounding box margins.
+  boundingBox?: string;
+  // The target pages to extract text from documents. Describe as a comma separated list of page numbers. The first page of the document is page 0
+  targetPages?: string;
   // Whether or not to ignore and skip errors raised during parsing.
   ignoreErrors: boolean = true;
   // numWorkers is implemented in SimpleDirectoryReader
@@ -183,6 +187,8 @@ export class LlamaParseReader extends FileReader {
       page_seperator: this.pageSeperator,
       gpt4o_mode: this.gpt4oMode?.toString(),
       gpt4o_api_key: this.gpt4oApiKey,
+      bounding_box: this.boundingBox,
+      target_pages: this.targetPages,
     };
 
     // Appends body with any defined LlamaParseBodyParams
