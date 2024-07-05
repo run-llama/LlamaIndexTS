@@ -8,6 +8,7 @@ import type { NodeWithScore } from "@llamaindex/core/schema";
 import { jsonToNode, ObjectType } from "@llamaindex/core/schema";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import { wrapEventCaller } from "../internal/context/EventCaller.js";
+import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { extractText } from "../llm/utils.js";
 import type { ClientParams, CloudConstructorParams } from "./constants.js";
 import { DEFAULT_PROJECT_NAME } from "./constants.js";
@@ -28,9 +29,14 @@ export class LlamaCloudRetriever implements BaseRetriever {
     nodes: TextNodeWithScore[],
   ): NodeWithScore[] {
     return nodes.map((node: TextNodeWithScore) => {
+      const textNode = jsonToNode(node.node, ObjectType.TEXT);
+      textNode.metadata = {
+        ...textNode.metadata,
+        ...node.node.extra_info, // append LlamaCloud extra_info to node metadata (file_name, pipeline_id, etc.)
+      };
       return {
         // Currently LlamaCloud only supports text nodes
-        node: jsonToNode(node.node, ObjectType.TEXT),
+        node: textNode,
         score: node.score,
       };
     });
@@ -83,6 +89,15 @@ export class LlamaCloudRetriever implements BaseRetriever {
         },
       });
 
-    return this.resultNodesToNodeWithScore(results.retrieval_nodes);
+    const nodesWithScores = this.resultNodesToNodeWithScore(
+      results.retrieval_nodes,
+    );
+    getCallbackManager().dispatchEvent("retrieve-end", {
+      payload: {
+        query,
+        nodes: nodesWithScores,
+      },
+    });
+    return nodesWithScores;
   }
 }
