@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.4.13
+
+### Patch Changes
+
+- e8f8bea: feat: add boundingBox and targetPages to LlamaParseReader
+- 304484b: feat: add ignoreErrors flag to LlamaParseReader
+
 ## 0.4.12
 
 ### Patch Changes
