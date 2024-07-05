@@ -12,6 +12,223 @@
     }
   ],
   "paths": {
+    "/api/v1/api-keys": {
+      "get": {
+        "tags": ["API Keys"],
+        "summary": "List Keys",
+        "description": "List API Keys for a user.",
+        "operationId": "list_keys_api_v1_api_keys_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/APIKey"
+                  },
+                  "type": "array",
+                  "title": "Response List Keys Api V1 Api Keys Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["API Keys"],
+        "summary": "Generate Key",
+        "description": "Generate a new API Key.",
+        "operationId": "generate_key_api_v1_api_keys_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/APIKeyCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIKey"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/api-keys/{api_key_id}": {
+      "put": {
+        "tags": ["API Keys"],
+        "summary": "Update Existing Api Key",
+        "description": "Update name of an existing API Key.",
+        "operationId": "update_existing_api_key_api_v1_api_keys__api_key_id__put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Api Key Id"
+            },
+            "name": "api_key_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/APIKeyUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIKey"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["API Keys"],
+        "summary": "Delete Api Key",
+        "description": "Delete an API Key by ID.",
+        "operationId": "delete_api_key_api_v1_api_keys__api_key_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Api Key Id"
+            },
+            "name": "api_key_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/data-sinks": {
       "get": {
         "tags": ["Data Sinks"],
@@ -2927,6 +3144,26 @@
             "required": false,
             "schema": {
               "type": "string",
+              "format": "uuid",
+              "title": "Data Source Id"
+            },
+            "name": "data_source_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "title": "Only Manually Uploaded",
+              "default": false
+            },
+            "name": "only_manually_uploaded",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
               "title": "Session"
             },
             "name": "session",
@@ -5438,10 +5675,1429 @@
           }
         }
       }
+    },
+    "/api/v1/billing/checkout-session": {
+      "post": {
+        "tags": ["Billing"],
+        "summary": "Create Checkout Session",
+        "description": "Create a new checkout session.",
+        "operationId": "create_checkout_session_api_v1_billing_checkout_session_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutSessionCreatePayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Create Checkout Session Api V1 Billing Checkout Session Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billing/customer-portal-session": {
+      "post": {
+        "tags": ["Billing"],
+        "summary": "Create Customer Portal Session",
+        "description": "Create a new customer portal session.",
+        "operationId": "create_customer_portal_session_api_v1_billing_customer_portal_session_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerPortalSessionCreatePayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Create Customer Portal Session Api V1 Billing Customer Portal Session Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/billing/webhook": {
+      "post": {
+        "tags": ["Billing"],
+        "summary": "Stripe Webhook",
+        "description": "Stripe webhook endpoint.",
+        "operationId": "stripe_webhook_api_v1_billing_webhook_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Stripe-Signature"
+            },
+            "name": "stripe-signature",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/extraction/schemas/infer": {
+      "post": {
+        "tags": ["Extraction"],
+        "summary": "Infer Schema",
+        "operationId": "infer_schema_api_v1_extraction_schemas_infer_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractionSchemaCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionSchema"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/extraction/schemas": {
+      "get": {
+        "tags": ["Extraction"],
+        "summary": "List Schemas",
+        "operationId": "list_schemas_api_v1_extraction_schemas_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            },
+            "name": "project_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractionSchema"
+                  },
+                  "type": "array",
+                  "title": "Response List Schemas Api V1 Extraction Schemas Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/extraction/schemas/{schema_id}": {
+      "get": {
+        "tags": ["Extraction"],
+        "summary": "Get Schema",
+        "operationId": "get_schema_api_v1_extraction_schemas__schema_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Schema Id"
+            },
+            "name": "schema_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionSchema"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Extraction"],
+        "summary": "Update Schema",
+        "operationId": "update_schema_api_v1_extraction_schemas__schema_id__put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Schema Id"
+            },
+            "name": "schema_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractionSchemaUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionSchema"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/extraction/jobs": {
+      "get": {
+        "tags": ["Extraction"],
+        "summary": "List Jobs",
+        "operationId": "list_jobs_api_v1_extraction_jobs_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Schema Id"
+            },
+            "name": "schema_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractionResult"
+                  },
+                  "type": "array",
+                  "title": "Response List Jobs Api V1 Extraction Jobs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Extraction"],
+        "summary": "Run Job",
+        "operationId": "run_job_api_v1_extraction_jobs_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractionResultCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/extraction/jobs/{job_id}": {
+      "get": {
+        "tags": ["Extraction"],
+        "summary": "Get Job",
+        "operationId": "get_job_api_v1_extraction_jobs__job_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/extraction/jobs/batch": {
+      "post": {
+        "tags": ["Extraction"],
+        "summary": "Run Jobs In Batch",
+        "operationId": "run_jobs_in_batch_api_v1_extraction_jobs_batch_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractionResultCreateBatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractionResult"
+                  },
+                  "type": "array",
+                  "title": "Response Run Jobs In Batch Api V1 Extraction Jobs Batch Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/extraction/jobs/{job_id}/result": {
+      "get": {
+        "tags": ["Extraction"],
+        "summary": "Get Job Result",
+        "operationId": "get_job_result_api_v1_extraction_jobs__job_id__result_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/result/image/{name}": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Image Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_image_result_api_parsing_job__job_id__result_image__name__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            },
+            "name": "name",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "image/jpeg": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/supported_file_extensions": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Supported File Extensions",
+        "description": "Get a list of supported file extensions",
+        "operationId": "get_supported_file_extensions_api_parsing_supported_file_extensions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LlamaParseSupportedFileExtensions"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/parsing/upload": {
+      "post": {
+        "tags": ["Deprecated"],
+        "summary": "Upload File",
+        "description": "Upload a file to s3 and create a job. return a job id",
+        "operationId": "upload_file_api_parsing_upload_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_file_api_parsing_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/usage": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Usage",
+        "description": "Get parsing usage for user",
+        "operationId": "usage_api_parsing_usage_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingUsage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job",
+        "description": "Get a job by id",
+        "operationId": "get_job_api_parsing_job__job_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/result/text": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Text Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_text_result_api_parsing_job__job_id__result_text_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingJobTextResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/result/raw/text": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Raw Text Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_text_result_api_parsing_job__job_id__result_raw_text_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/result/markdown": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_result_api_parsing_job__job_id__result_markdown_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingJobMarkdownResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/result/raw/markdown": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Raw Md Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_raw_md_result_api_parsing_job__job_id__result_raw_markdown_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/result/json": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Json Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_json_result_api_parsing_job__job_id__result_json_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParsingJobJsonResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/result/raw/json": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Job Json Raw Result",
+        "description": "Get a job by id",
+        "operationId": "get_job_json_raw_result_api_parsing_job__job_id__result_raw_json_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/history": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Parsing History Result",
+        "description": "Get parsing history for user",
+        "operationId": "get_parsing_history_result_api_parsing_history_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ParsingHistoryItem"
+                  },
+                  "type": "array",
+                  "title": "Response Get Parsing History Result Api Parsing History Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/read/{filename}": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Generate Presigned Url",
+        "description": "Generate a presigned URL for a job",
+        "operationId": "generate_presigned_url_api_parsing_job__job_id__read__filename__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Filename"
+            },
+            "name": "filename",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresignedUrl"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "APIKey": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 0,
+            "title": "Name"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "redacted_api_key": {
+            "type": "string",
+            "title": "Redacted Api Key"
+          }
+        },
+        "type": "object",
+        "required": ["id", "user_id", "redacted_api_key"],
+        "title": "APIKey",
+        "description": "Schema for an API Key."
+      },
+      "APIKeyCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 0,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "title": "APIKeyCreate",
+        "description": "Schema for creating an API key."
+      },
+      "APIKeyUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 0,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "title": "APIKeyUpdate",
+        "description": "Schema for updating an API key."
+      },
       "AzureOpenAIEmbedding": {
         "properties": {
           "model_name": {
@@ -5677,6 +7333,79 @@
         "title": "BedrockEmbedding",
         "description": "Base class for embeddings."
       },
+      "Body_upload_file_api_parsing_upload_post": {
+        "properties": {
+          "language": {
+            "items": {
+              "$ref": "#/components/schemas/ParserLanguages"
+            },
+            "type": "array",
+            "default": ["en"]
+          },
+          "parsing_instruction": {
+            "type": "string",
+            "title": "Parsing Instruction",
+            "default": ""
+          },
+          "skip_diagonal_text": {
+            "type": "boolean",
+            "title": "Skip Diagonal Text",
+            "default": false
+          },
+          "invalidate_cache": {
+            "type": "boolean",
+            "title": "Invalidate Cache",
+            "default": false
+          },
+          "do_not_cache": {
+            "type": "boolean",
+            "title": "Do Not Cache",
+            "default": false
+          },
+          "gpt4o_mode": {
+            "type": "boolean",
+            "title": "Gpt4O Mode",
+            "default": false
+          },
+          "fast_mode": {
+            "type": "boolean",
+            "title": "Fast Mode",
+            "default": false
+          },
+          "gpt4o_api_key": {
+            "type": "string",
+            "title": "Gpt4O Api Key",
+            "default": ""
+          },
+          "do_not_unroll_columns": {
+            "type": "boolean",
+            "title": "Do Not Unroll Columns",
+            "default": false
+          },
+          "page_separator": {
+            "type": "string",
+            "title": "Page Separator"
+          },
+          "bounding_box": {
+            "type": "string",
+            "title": "Bounding Box",
+            "default": ""
+          },
+          "target_pages": {
+            "type": "string",
+            "title": "Target Pages",
+            "default": ""
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": ["file"],
+        "title": "Body_upload_file_api_parsing_upload_post"
+      },
       "Body_upload_file_api_v1_files_post": {
         "properties": {
           "upload_file": {
@@ -5785,6 +7514,27 @@
         "title": "ChatMessage",
         "description": "Chat message."
       },
+      "CheckoutSessionCreatePayload": {
+        "properties": {
+          "success_url": {
+            "type": "string",
+            "maxLength": 65536,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Success Url"
+          },
+          "cancel_url": {
+            "type": "string",
+            "maxLength": 65536,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Cancel Url"
+          }
+        },
+        "type": "object",
+        "required": ["success_url", "cancel_url"],
+        "title": "CheckoutSessionCreatePayload"
+      },
       "CloudAzStorageBlobDataSource": {
         "properties": {
           "container_name": {
@@ -5833,6 +7583,52 @@
         ],
         "title": "CloudAzStorageBlobDataSource",
         "description": "Base component object to capture class names."
+      },
+      "CloudAzureAISearchVectorStore": {
+        "properties": {
+          "supports_nested_metadata_filters": {
+            "type": "boolean",
+            "const": false,
+            "title": "Supports Nested Metadata Filters",
+            "default": false
+          },
+          "search_service_api_key": {
+            "type": "string",
+            "title": "Search Service Api Key"
+          },
+          "search_service_endpoint": {
+            "type": "string",
+            "title": "Search Service Endpoint"
+          },
+          "search_service_api_version": {
+            "type": "string",
+            "title": "Search Service Api Version"
+          },
+          "index_name": {
+            "type": "string",
+            "title": "Index Name"
+          },
+          "filterable_metadata_field_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Filterable Metadata Field Keys"
+          },
+          "embedding_dimension": {
+            "type": "integer",
+            "title": "Embedding Dimension"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudAzureAISearchVectorStore"
+          }
+        },
+        "type": "object",
+        "required": ["search_service_api_key", "search_service_endpoint"],
+        "title": "CloudAzureAISearchVectorStore",
+        "description": "Cloud Azure AI Search Vector Store."
       },
       "CloudChromaVectorStore": {
         "properties": {
@@ -5899,14 +7695,16 @@
               "type": "string"
             },
             "type": "array",
-            "title": "Excluded Embed Metadata Keys"
+            "title": "Excluded Embed Metadata Keys",
+            "default": []
           },
           "excluded_llm_metadata_keys": {
             "items": {
               "type": "string"
             },
             "type": "array",
-            "title": "Excluded Llm Metadata Keys"
+            "title": "Excluded Llm Metadata Keys",
+            "default": []
           },
           "id": {
             "type": "string",
@@ -5933,14 +7731,16 @@
               "type": "string"
             },
             "type": "array",
-            "title": "Excluded Embed Metadata Keys"
+            "title": "Excluded Embed Metadata Keys",
+            "default": []
           },
           "excluded_llm_metadata_keys": {
             "items": {
               "type": "string"
             },
             "type": "array",
-            "title": "Excluded Llm Metadata Keys"
+            "title": "Excluded Llm Metadata Keys",
+            "default": []
           },
           "id": {
             "type": "string",
@@ -5951,6 +7751,34 @@
         "required": ["text", "metadata"],
         "title": "CloudDocumentCreate",
         "description": "Create a new cloud document."
+      },
+      "CloudNotionPageDataSource": {
+        "properties": {
+          "integration_token": {
+            "type": "string",
+            "title": "Integration Token",
+            "description": "The integration token to use for authentication."
+          },
+          "database_ids": {
+            "type": "string",
+            "title": "Database Ids",
+            "description": "The Notion Database Id to read content from."
+          },
+          "page_ids": {
+            "type": "string",
+            "title": "Page Ids",
+            "description": "The Page ID's of the Notion to read from."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudNotionPageDataSource"
+          }
+        },
+        "type": "object",
+        "required": ["integration_token"],
+        "title": "CloudNotionPageDataSource",
+        "description": "Base component object to capture class names."
       },
       "CloudOneDriveDataSource": {
         "properties": {
@@ -6231,6 +8059,54 @@
         "title": "CloudSharepointDataSource",
         "description": "Base component object to capture class names."
       },
+      "CloudSlackDataSource": {
+        "properties": {
+          "slack_token": {
+            "type": "string",
+            "title": "Slack Token",
+            "description": "Slack Bot Token."
+          },
+          "channel_ids": {
+            "type": "string",
+            "title": "Channel Ids",
+            "description": "Slack Channel."
+          },
+          "latest_date": {
+            "type": "string",
+            "title": "Latest Date",
+            "description": "Latest date."
+          },
+          "earliest_date": {
+            "type": "string",
+            "title": "Earliest Date",
+            "description": "Earliest date."
+          },
+          "earliest_date_timestamp": {
+            "type": "number",
+            "title": "Earliest Date Timestamp",
+            "description": "Earliest date timestamp."
+          },
+          "latest_date_timestamp": {
+            "type": "number",
+            "title": "Latest Date Timestamp",
+            "description": "Latest date timestamp."
+          },
+          "channel_patterns": {
+            "type": "string",
+            "title": "Channel Patterns",
+            "description": "Slack Channel name pattern."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudSlackDataSource"
+          }
+        },
+        "type": "object",
+        "required": ["slack_token"],
+        "title": "CloudSlackDataSource",
+        "description": "Base component object to capture class names."
+      },
       "CloudWeaviateVectorStore": {
         "properties": {
           "supports_nested_metadata_filters": {
@@ -6385,7 +8261,14 @@
       },
       "ConfigurableDataSinkNames": {
         "type": "string",
-        "enum": ["CHROMA", "PINECONE", "POSTGRES", "QDRANT", "WEAVIATE"],
+        "enum": [
+          "CHROMA",
+          "PINECONE",
+          "POSTGRES",
+          "QDRANT",
+          "WEAVIATE",
+          "AZUREAI_SEARCH"
+        ],
         "title": "ConfigurableDataSinkNames",
         "description": "An enumeration."
       },
@@ -6395,7 +8278,9 @@
           "S3",
           "AZURE_STORAGE_BLOB",
           "MICROSOFT_ONEDRIVE",
-          "MICROSOFT_SHAREPOINT"
+          "MICROSOFT_SHAREPOINT",
+          "SLACK",
+          "NOTION_PAGE"
         ],
         "title": "ConfigurableDataSourceNames",
         "description": "An enumeration."
@@ -6536,6 +8421,20 @@
         "title": "ConfiguredTransformationItem",
         "description": "Configured transformations for pipelines.\n\nSimilar to ConfigurableTransformation but includes a few\nmore fields that are useful to the platform."
       },
+      "CustomerPortalSessionCreatePayload": {
+        "properties": {
+          "return_url": {
+            "type": "string",
+            "maxLength": 65536,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Return Url"
+          }
+        },
+        "type": "object",
+        "required": ["return_url"],
+        "title": "CustomerPortalSessionCreatePayload"
+      },
       "DataSink": {
         "properties": {
           "id": {
@@ -6585,6 +8484,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudWeaviateVectorStore"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
                   }
                 ]
               }
@@ -6633,6 +8535,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudWeaviateVectorStore"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
                   }
                 ]
               }
@@ -6702,6 +8607,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudWeaviateVectorStore"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
                   }
                 ]
               }
@@ -6788,6 +8696,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudSharepointDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudSlackDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudNotionPageDataSource"
                   }
                 ]
               }
@@ -6861,6 +8775,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudSharepointDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudSlackDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudNotionPageDataSource"
                   }
                 ]
               }
@@ -6955,6 +8875,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudSharepointDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudSlackDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudNotionPageDataSource"
                   }
                 ]
               }
@@ -7380,6 +9306,250 @@
         "title": "EvalQuestionResult",
         "description": "Schema for the result of an eval question job."
       },
+      "ExtractionResult": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "schema_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Schema Id",
+            "description": "The id of the schema"
+          },
+          "data": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data",
+            "description": "The data extracted from the file"
+          },
+          "file": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/File"
+              }
+            ],
+            "title": "File",
+            "description": "The file that the extract was extracted from"
+          }
+        },
+        "type": "object",
+        "required": ["id", "schema_id", "data", "file"],
+        "title": "ExtractionResult",
+        "description": "Schema for an extraction result."
+      },
+      "ExtractionResultCreate": {
+        "properties": {
+          "schema_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Schema Id",
+            "description": "The id of the schema"
+          },
+          "file_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "File Id",
+            "description": "The id of the file"
+          }
+        },
+        "type": "object",
+        "required": ["schema_id", "file_id"],
+        "title": "ExtractionResultCreate",
+        "description": "Schema for creating an extraction result."
+      },
+      "ExtractionResultCreateBatch": {
+        "properties": {
+          "schema_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Schema Id",
+            "description": "The id of the schema"
+          },
+          "file_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "File Ids",
+            "description": "The ids of the files"
+          }
+        },
+        "type": "object",
+        "required": ["schema_id", "file_ids"],
+        "title": "ExtractionResultCreateBatch",
+        "description": "Schema for creating extraction results in batch."
+      },
+      "ExtractionSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the extraction schema"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id",
+            "description": "The ID of the project that the extraction schema belongs to"
+          },
+          "data_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data Schema",
+            "description": "The schema of the data"
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "project_id", "data_schema"],
+        "title": "ExtractionSchema",
+        "description": "Schema for extraction schema."
+      },
+      "ExtractionSchemaCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "The name of the extraction schema"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id",
+            "description": "The ID of the project that the extraction schema belongs to"
+          },
+          "file_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "File Ids",
+            "description": "The IDs of the files that the extraction schema contains"
+          }
+        },
+        "type": "object",
+        "required": ["name", "file_ids"],
+        "title": "ExtractionSchemaCreate",
+        "description": "Schema for creating an extraction schema."
+      },
+      "ExtractionSchemaUpdate": {
+        "properties": {
+          "data_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data Schema",
+            "description": "The schema of the data"
+          }
+        },
+        "type": "object",
+        "title": "ExtractionSchemaUpdate",
+        "description": "Schema for updating an extraction schema."
+      },
       "File": {
         "properties": {
           "id": {
@@ -7726,7 +9896,7 @@
               }
             ],
             "title": "Token",
-            "description": "Hugging Face token. Will default to the locally saved token. Pass token=False if you don\u2019t want to send your token to the server."
+            "description": "Hugging Face token. Will default to the locally saved token. Pass token=False if you don’t want to send your token to the server."
           },
           "timeout": {
             "type": "number",
@@ -8970,6 +11140,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudSharepointDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudSlackDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudNotionPageDataSource"
                   }
                 ]
               }
@@ -9771,7 +11947,7 @@
             "type": "string",
             "title": "Secondary Chunking Regex",
             "description": "Backup regex for splitting into sentences.",
-            "default": "[^,.;\u3002\uff1f\uff01]+[,.;\u3002\uff1f\uff01]?"
+            "default": "[^,.;。？！]+[,.;。？！]?"
           },
           "class_name": {
             "type": "string",
