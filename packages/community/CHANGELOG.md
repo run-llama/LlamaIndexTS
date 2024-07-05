@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.18
+
+### Patch Changes
+
+- llamaindex@0.4.14
+
 ## 0.0.17
 
 ### Patch Changes
