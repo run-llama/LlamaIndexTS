@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.1.3
+
+### Patch Changes
+
+- 1c444d5: feat(cloud): update openapi.json
+
 ## 0.1.2
 
 ### Patch Changes
