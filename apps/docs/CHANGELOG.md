@@ -1,5 +1,16 @@
 # docs
 
+## 0.0.41
+
+### Patch Changes
+
+- 36ddec4: fix: typo in custom page separator parameter for LlamaParse
+- Updated dependencies [16ef5dd]
+- Updated dependencies [16ef5dd]
+- Updated dependencies [36ddec4]
+  - llamaindex@0.5.0
+  - @llamaindex/examples@0.0.7
+
 ## 0.0.40
 
 ### Patch Changes

@@ -1,5 +1,27 @@
 # llamaindex
 
+## 0.5.0
+
+### Minor Changes
+
+- 16ef5dd: refactor: simplify callback manager
+
+  Change `event.detail.payload` to `event.detail`
+
+### Patch Changes
+
+- 16ef5dd: refactor: move callback manager & llm to core module
+
+  For people who import `llamaindex/llms/base` or `llamaindex/llms/utils`,
+  use `@llamaindex/core/llms` and `@llamaindex/core/utils` instead.
+
+- 36ddec4: fix: typo in custom page separator parameter for LlamaParse
+- Updated dependencies [16ef5dd]
+- Updated dependencies [16ef5dd]
+- Updated dependencies [36ddec4]
+  - @llamaindex/core@0.1.0
+  - @llamaindex/cloud@0.1.4
+
 ## 0.4.14
 
 ### Patch Changes

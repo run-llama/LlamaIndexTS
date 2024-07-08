@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.1.4
+
+### Patch Changes
+
+- 36ddec4: fix: typo in custom page separator parameter for LlamaParse
+
 ## 0.1.3
 
 ### Patch Changes
