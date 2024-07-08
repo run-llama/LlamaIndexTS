@@ -4,12 +4,11 @@ import {
   type RetrievalParams,
   type TextNodeWithScore,
 } from "@llamaindex/cloud/api";
+import { Settings } from "@llamaindex/core/global";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import { jsonToNode, ObjectType } from "@llamaindex/core/schema";
+import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
-import { wrapEventCaller } from "../internal/context/EventCaller.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import { extractText } from "../llm/utils.js";
 import type { ClientParams, CloudConstructorParams } from "./constants.js";
 import { DEFAULT_PROJECT_NAME } from "./constants.js";
 import { initService } from "./utils.js";
@@ -92,7 +91,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
     const nodesWithScores = this.resultNodesToNodeWithScore(
       results.retrieval_nodes,
     );
-    getCallbackManager().dispatchEvent("retrieve-end", {
+    Settings.callbackManager.dispatchEvent("retrieve-end", {
       payload: {
         query,
         nodes: nodesWithScores,

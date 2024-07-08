@@ -1,5 +1,7 @@
-import { Settings as CoreSettings } from "@llamaindex/core/global";
-import { CallbackManager } from "./callbacks/CallbackManager.js";
+import {
+  type CallbackManager,
+  Settings as CoreSettings,
+} from "@llamaindex/core/global";
 import { OpenAI } from "./llm/openai.js";
 
 import { PromptHelper } from "./PromptHelper.js";
@@ -9,11 +11,6 @@ import type { LLM } from "@llamaindex/core/llms";
 import { AsyncLocalStorage, getEnv } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import type { BaseEmbedding } from "./embeddings/types.js";
-import {
-  getCallbackManager,
-  setCallbackManager,
-  withCallbackManager,
-} from "./internal/settings/CallbackManager.js";
 import {
   getEmbeddedModel,
   setEmbeddedModel,
@@ -129,18 +126,18 @@ class GlobalSettings implements Config {
   }
 
   get callbackManager(): CallbackManager {
-    return getCallbackManager();
+    return CoreSettings.callbackManager;
   }
 
   set callbackManager(callbackManager: CallbackManager) {
-    setCallbackManager(callbackManager);
+    CoreSettings.callbackManager = callbackManager;
   }
 
   withCallbackManager<Result>(
     callbackManager: CallbackManager,
     fn: () => Result,
   ): Result {
-    return withCallbackManager(callbackManager, fn);
+    return CoreSettings.withCallbackManager(callbackManager, fn);
   }
 
   set chunkSize(chunkSize: number | undefined) {

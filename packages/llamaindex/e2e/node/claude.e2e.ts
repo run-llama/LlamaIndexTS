@@ -1,7 +1,7 @@
+import { extractText } from "@llamaindex/core/utils";
 import { consola } from "consola";
 import { Anthropic, FunctionTool, Settings, type LLM } from "llamaindex";
 import { AnthropicAgent } from "llamaindex/agent/anthropic";
-import { extractText } from "llamaindex/llm/utils";
 import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { getWeatherTool, sumNumbersTool } from "./fixtures/tools.js";

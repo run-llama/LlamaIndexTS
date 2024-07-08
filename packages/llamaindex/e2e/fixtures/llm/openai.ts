@@ -1,3 +1,4 @@
+import { extractText } from "@llamaindex/core/utils";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -8,7 +9,6 @@ import type {
   LLMCompletionParamsNonStreaming,
   LLMCompletionParamsStreaming,
 } from "llamaindex";
-import { extractText } from "llamaindex/llm/utils";
 import { deepStrictEqual, strictEqual } from "node:assert";
 import { llmCompleteMockStorage } from "../../node/utils.js";
 

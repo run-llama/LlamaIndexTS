@@ -1,3 +1,4 @@
+import type { BaseEvent } from "@llamaindex/core/global";
 import type {
   BaseToolWithCall,
   ChatMessage,
@@ -9,7 +10,6 @@ import type {
 } from "@llamaindex/core/llms";
 import { ReadableStream } from "@llamaindex/env";
 import type { Logger } from "../internal/logger.js";
-import type { BaseEvent } from "../internal/type.js";
 import type { UUID } from "../types.js";
 
 export type AgentTaskContext<

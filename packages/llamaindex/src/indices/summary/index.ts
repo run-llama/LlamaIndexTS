@@ -3,19 +3,17 @@ import type {
   Document,
   NodeWithScore,
 } from "@llamaindex/core/schema";
+import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
 import _ from "lodash";
 import type { ChoiceSelectPrompt } from "../../Prompt.js";
 import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
-  Settings,
   llmFromSettingsOrContext,
   nodeParserFromSettingsOrContext,
 } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
-import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import { extractText } from "../../llm/utils.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -296,17 +294,10 @@ export class SummaryIndexRetriever implements BaseRetriever {
   async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const nodes = await this.index.docStore.getNodes(nodeIds);
-    const result = nodes.map((node) => ({
+    return nodes.map((node) => ({
       node: node,
       score: 1,
     }));
-
-    Settings.callbackManager.dispatchEvent("retrieve", {
-      query,
-      nodes: result,
-    });
-
-    return result;
   }
 }
 
@@ -375,11 +366,6 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
 
       results.push(...nodeWithScores);
     }
-
-    Settings.callbackManager.dispatchEvent("retrieve", {
-      query,
-      nodes: results,
-    });
 
     return results;
   }

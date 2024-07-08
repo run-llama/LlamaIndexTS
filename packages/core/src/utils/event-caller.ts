@@ -1,5 +1,14 @@
 import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
-import { isAsyncIterable, isIterable } from "../utils.js";
+
+export const isAsyncIterable = (
+  obj: unknown,
+): obj is AsyncIterable<unknown> => {
+  return obj != null && typeof obj === "object" && Symbol.asyncIterator in obj;
+};
+
+export const isIterable = (obj: unknown): obj is Iterable<unknown> => {
+  return obj != null && typeof obj === "object" && Symbol.iterator in obj;
+};
 
 const eventReasonAsyncLocalStorage = new AsyncLocalStorage<EventCaller>();
 

@@ -1,7 +1,7 @@
+import type { CallbackManager } from "@llamaindex/core/global";
 import type { LLMChatParamsBase } from "llamaindex";
 import { Settings } from "llamaindex";
-import type { CallbackManager } from "llamaindex/callbacks/CallbackManager";
-import type { OpenAIEmbedding } from "llamaindex/embeddings/index";
+import type { OpenAIEmbedding } from "llamaindex/embeddings/OpenAIEmbedding";
 import { OpenAI } from "llamaindex/llm/openai";
 import { vi } from "vitest";
 
@@ -9,12 +9,9 @@ export const DEFAULT_LLM_TEXT_OUTPUT = "MOCK_TOKEN_1-MOCK_TOKEN_2";
 
 export function mockLlmGeneration({
   languageModel,
-  callbackManager,
 }: {
   languageModel?: OpenAI;
-  callbackManager?: CallbackManager;
 } = {}) {
-  callbackManager = callbackManager || Settings.callbackManager;
   if (!languageModel && Settings.llm instanceof OpenAI) {
     languageModel = Settings.llm;
   }
@@ -24,34 +21,6 @@ export function mockLlmGeneration({
   vi.spyOn(languageModel, "chat").mockImplementation(
     async ({ messages }: LLMChatParamsBase) => {
       const text = DEFAULT_LLM_TEXT_OUTPUT;
-      if (callbackManager?.onLLMStream) {
-        const chunks = text.split("-");
-        for (let i = 0; i < chunks.length; i++) {
-          const chunk = chunks[i];
-          await callbackManager?.onLLMStream({
-            index: i,
-            token: {
-              id: "id",
-              object: "object",
-              created: 1,
-              model: "model",
-              choices: [
-                {
-                  index: 0,
-                  delta: {
-                    content: chunk,
-                  },
-                  finish_reason: null,
-                },
-              ],
-            },
-          });
-        }
-        await callbackManager?.onLLMStream({
-          index: chunks.length,
-          isDone: true,
-        });
-      }
       return new Promise((resolve) => {
         resolve({
           get raw() {
@@ -133,34 +102,6 @@ export function mocStructuredkLlmGeneration({
   vi.spyOn(languageModel, "chat").mockImplementation(
     async ({ messages }: LLMChatParamsBase) => {
       const text = structuredOutput;
-      if (callbackManager?.onLLMStream) {
-        const chunks = text.split("-");
-        for (let i = 0; i < chunks.length; i++) {
-          const chunk = chunks[i];
-          await callbackManager?.onLLMStream({
-            index: i,
-            token: {
-              id: "id",
-              object: "object",
-              created: 1,
-              model: "model",
-              choices: [
-                {
-                  index: 0,
-                  delta: {
-                    content: chunk,
-                  },
-                  finish_reason: null,
-                },
-              ],
-            },
-          });
-        }
-        await callbackManager?.onLLMStream({
-          index: chunks.length,
-          isDone: true,
-        });
-      }
       return new Promise((resolve) => {
         resolve({
           get raw() {

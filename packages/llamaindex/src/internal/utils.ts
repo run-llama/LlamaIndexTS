@@ -1,4 +1,4 @@
-import type { JSONValue } from "../types.js";
+import type { JSONValue } from "@llamaindex/core/global";
 
 export const isAsyncIterable = (
   obj: unknown,

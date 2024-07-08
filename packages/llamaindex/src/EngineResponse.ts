@@ -4,7 +4,7 @@ import type {
   ChatResponseChunk,
 } from "@llamaindex/core/llms";
 import type { NodeWithScore } from "@llamaindex/core/schema";
-import { extractText } from "./llm/utils.js";
+import { extractText } from "@llamaindex/core/utils";
 
 export class EngineResponse implements ChatResponse, ChatResponseChunk {
   sourceNodes?: NodeWithScore[];

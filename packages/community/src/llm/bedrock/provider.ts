@@ -8,9 +8,9 @@ import {
   type ChatMessage,
   type ChatResponseChunk,
   type LLMMetadata,
-  streamConverter,
   type ToolCallLLMMessageOptions,
-} from "llamaindex";
+} from "@llamaindex/core/llms";
+import { streamConverter } from "@llamaindex/core/utils";
 import type { ToolChoice } from "./types";
 import { toUtf8 } from "./utils";
 

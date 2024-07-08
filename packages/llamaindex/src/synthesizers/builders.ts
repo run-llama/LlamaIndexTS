@@ -1,5 +1,5 @@
 import type { LLM } from "@llamaindex/core/llms";
-import { streamConverter } from "../llm/utils.js";
+import { streamConverter } from "@llamaindex/core/utils";
 import type {
   RefinePrompt,
   SimplePrompt,

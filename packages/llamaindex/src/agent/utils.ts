@@ -1,3 +1,8 @@
+import {
+  type JSONObject,
+  type JSONValue,
+  Settings,
+} from "@llamaindex/core/global";
 import type {
   BaseTool,
   ChatMessage,
@@ -14,13 +19,11 @@ import { baseToolWithCallSchema } from "@llamaindex/core/schema";
 import { ReadableStream } from "@llamaindex/env";
 import { z } from "zod";
 import type { Logger } from "../internal/logger.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import {
   isAsyncIterable,
   prettifyError,
   stringifyJSONToMessageContent,
 } from "../internal/utils.js";
-import type { JSONObject, JSONValue } from "../types.js";
 import type { AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 
@@ -221,7 +224,7 @@ export async function callTool(
     };
   }
   try {
-    getCallbackManager().dispatchEvent("llm-tool-call", {
+    Settings.callbackManager.dispatchEvent("llm-tool-call", {
       payload: {
         toolCall: { ...toolCall, input },
       },
@@ -237,7 +240,7 @@ export async function callTool(
       output,
       isError: false,
     };
-    getCallbackManager().dispatchEvent("llm-tool-result", {
+    Settings.callbackManager.dispatchEvent("llm-tool-result", {
       payload: {
         toolCall: { ...toolCall, input },
         toolResult: { ...toolOutput },

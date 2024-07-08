@@ -32,8 +32,8 @@ import {
 } from "./utils.js";
 
 import type { LLM } from "@llamaindex/core/llms";
+import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
-import { extractText } from "../../llm/utils.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];

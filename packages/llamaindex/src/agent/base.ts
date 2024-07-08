@@ -5,6 +5,7 @@ import type {
   MessageContent,
   ToolOutput,
 } from "@llamaindex/core/llms";
+import { wrapEventCaller } from "@llamaindex/core/utils";
 import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
 import { ChatHistory } from "../ChatHistory.js";
 import { EngineResponse } from "../EngineResponse.js";
@@ -14,9 +15,7 @@ import {
   type ChatEngineParamsNonStreaming,
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
-import { wrapEventCaller } from "../internal/context/EventCaller.js";
 import { consoleLogger, emptyLogger } from "../internal/logger.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import { isAsyncIterable } from "../internal/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type {
@@ -69,7 +68,7 @@ export function createTaskOutputStream<
         taskOutputs.push(output);
         controller.enqueue(output);
       };
-      getCallbackManager().dispatchEvent("agent-start", {
+      Settings.callbackManager.dispatchEvent("agent-start", {
         payload: {
           startStep: step,
         },
@@ -93,7 +92,7 @@ export function createTaskOutputStream<
           "Final step(id, %s) reached, closing task.",
           step.id,
         );
-        getCallbackManager().dispatchEvent("agent-end", {
+        Settings.callbackManager.dispatchEvent("agent-end", {
           payload: {
             endStep: step,
           },

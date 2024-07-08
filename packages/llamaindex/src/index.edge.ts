@@ -1,7 +1,31 @@
+import type { AgentEndEvent, AgentStartEvent } from "./agent/types.js";
+import type { RetrievalEndEvent, RetrievalStartEvent } from "./llm/types.js";
+
+declare module "@llamaindex/core/global" {
+  export interface LlamaIndexEventMaps {
+    "retrieve-start": RetrievalStartEvent;
+    "retrieve-end": RetrievalEndEvent;
+    // agent events
+    "agent-start": AgentStartEvent;
+    "agent-end": AgentEndEvent;
+  }
+}
+
+export { CallbackManager } from "@llamaindex/core/global";
+export type {
+  BaseEvent,
+  JSONArray,
+  JSONObject,
+  JSONValue,
+  LLMEndEvent,
+  LLMStartEvent,
+  LLMStreamEvent,
+  LLMToolCallEvent,
+  LLMToolResultEvent,
+} from "@llamaindex/core/global";
 export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/schema";
 export * from "./agent/index.js";
-export * from "./callbacks/CallbackManager.js";
 export * from "./ChatHistory.js";
 export * from "./cloud/index.js";
 export * from "./constants.js";

@@ -1,14 +1,12 @@
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
+import {
+  BaseLLM,
+  type ChatMessage,
+  type ChatResponse,
+  type ChatResponseChunk,
+  type LLMChatParamsNonStreaming,
+  type LLMChatParamsStreaming,
 } from "@llamaindex/core/llms";
 import { getEnv } from "@llamaindex/env";
-import { Settings } from "../Settings.js";
-import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
-import { BaseLLM } from "./base.js";
 
 export const ALL_AVAILABLE_MISTRAL_MODELS = {
   "mistral-tiny": { contextWindow: 32000 },
@@ -123,16 +121,6 @@ export class MistralAI extends BaseLLM {
       if (!part.choices.length) continue;
 
       part.choices[0].index = idx_counter;
-      const isDone: boolean =
-        part.choices[0].finish_reason === "stop" ? true : false;
-
-      const stream_callback: StreamCallbackResponse = {
-        index: idx_counter,
-        isDone: isDone,
-        token: part,
-      };
-
-      Settings.callbackManager.dispatchEvent("stream", stream_callback);
 
       idx_counter++;
 

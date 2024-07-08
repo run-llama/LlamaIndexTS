@@ -1,9 +1,9 @@
 import type { NodeWithScore } from "@llamaindex/core/schema";
+import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { EngineResponse } from "../../EngineResponse.js";
-import type { BaseRetriever } from "../../Retriever.js";
-import { wrapEventCaller } from "../../internal/context/EventCaller.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
+import type { BaseRetriever } from "../../Retriever.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import { ResponseSynthesizer } from "../../synthesizers/index.js";
 import type {

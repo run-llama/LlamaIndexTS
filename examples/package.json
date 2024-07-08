@@ -6,6 +6,7 @@
     "@aws-crypto/sha256-js": "^5.2.0",
     "@azure/identity": "^4.2.1",
     "@datastax/astra-db-ts": "^1.2.1",
+    "@llamaindex/core": "^0.0.3",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^2.2.2",
     "@zilliz/milvus2-sdk-node": "^2.4.2",

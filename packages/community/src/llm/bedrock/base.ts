@@ -4,18 +4,19 @@ import {
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from "@aws-sdk/client-bedrock-runtime";
-import type {
-  ChatMessage,
-  ChatResponse,
-  CompletionResponse,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
-  LLMCompletionParamsNonStreaming,
-  LLMCompletionParamsStreaming,
-  LLMMetadata,
-  ToolCallLLMMessageOptions,
-} from "llamaindex";
-import { streamConverter, ToolCallLLM, wrapLLMEvent } from "llamaindex";
+import {
+  type ChatMessage,
+  type ChatResponse,
+  type CompletionResponse,
+  type LLMChatParamsNonStreaming,
+  type LLMChatParamsStreaming,
+  type LLMCompletionParamsNonStreaming,
+  type LLMCompletionParamsStreaming,
+  type LLMMetadata,
+  ToolCallLLM,
+  type ToolCallLLMMessageOptions,
+} from "@llamaindex/core/llms";
+import { streamConverter, wrapLLMEvent } from "@llamaindex/core/utils";
 import {
   type BedrockAdditionalChatOptions,
   type BedrockChatStreamResponse,

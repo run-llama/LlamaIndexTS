@@ -9,6 +9,7 @@ import type {
   LLMCompletionParamsStreaming,
   LLMMetadata,
 } from "@llamaindex/core/llms";
+import { extractText, streamConverter } from "@llamaindex/core/utils";
 import { BaseEmbedding } from "../embeddings/types.js";
 import {
   Ollama as OllamaBase,
@@ -30,7 +31,6 @@ import {
   type ShowResponse,
   type StatusResponse,
 } from "../internal/deps/ollama.js";
-import { extractText, streamConverter } from "./utils.js";
 
 const messageAccessor = (part: OllamaChatResponse): ChatResponseChunk => {
   return {
