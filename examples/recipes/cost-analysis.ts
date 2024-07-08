@@ -24,7 +24,7 @@ Settings.callbackManager.on("llm-start", (event) => {
 });
 
 Settings.callbackManager.on("llm-stream", (event) => {
-  const { chunk } = event.detail.payload;
+  const { chunk } = event.detail;
   const { delta } = chunk;
   tokenCount += encoding.encode(extractText(delta)).length;
   if (tokenCount > 20) {
