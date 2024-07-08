@@ -414,9 +414,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
     Settings.callbackManager.dispatchEvent("retrieve-start", {
-      payload: {
-        query,
-      },
+      query,
     });
     const vectorStores = this.index.vectorStores;
     let nodesWithScores: NodeWithScore[] = [];
@@ -433,10 +431,8 @@ export class VectorIndexRetriever implements BaseRetriever {
       );
     }
     Settings.callbackManager.dispatchEvent("retrieve-end", {
-      payload: {
-        query,
-        nodes: nodesWithScores,
-      },
+      query,
+      nodes: nodesWithScores,
     });
     return nodesWithScores;
   }

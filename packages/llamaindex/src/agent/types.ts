@@ -1,4 +1,3 @@
-import type { BaseEvent } from "@llamaindex/core/global";
 import type {
   BaseToolWithCall,
   ChatMessage,
@@ -90,9 +89,9 @@ export type TaskHandler<
   ) => void,
 ) => Promise<void>;
 
-export type AgentStartEvent = BaseEvent<{
+export type AgentStartEvent = {
   startStep: TaskStep;
-}>;
-export type AgentEndEvent = BaseEvent<{
+};
+export type AgentEndEvent = {
   endStep: TaskStep;
-}>;
+};

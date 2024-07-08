@@ -1,6 +1,6 @@
 import { extractText } from "@llamaindex/core/utils";
 import { encodingForModel } from "js-tiktoken";
-import { ChatMessage, OpenAI, type LLMStartEvent } from "llamaindex";
+import { ChatMessage, OpenAI } from "llamaindex";
 import { Settings } from "llamaindex/Settings";
 
 const encoding = encodingForModel("gpt-4-0125-preview");
@@ -12,8 +12,8 @@ const llm = new OpenAI({
 
 let tokenCount = 0;
 
-Settings.callbackManager.on("llm-start", (event: LLMStartEvent) => {
-  const { messages } = event.detail.payload;
+Settings.callbackManager.on("llm-start", (event) => {
+  const { messages } = event.detail;
   messages.reduce((count: number, message: ChatMessage) => {
     return count + encoding.encode(extractText(message.content)).length;
   }, 0);

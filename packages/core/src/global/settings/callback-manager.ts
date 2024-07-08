@@ -9,29 +9,29 @@ import type {
 import { EventCaller, getEventCaller } from "../../utils/event-caller";
 import type { UUID } from "../type";
 
-export type BaseEvent<Payload> = CustomEvent<{
-  payload: Readonly<Payload>;
-}>;
-
-export type LLMStartEvent = BaseEvent<{
+export type LLMStartEvent = {
   id: UUID;
   messages: ChatMessage[];
-}>;
-export type LLMToolCallEvent = BaseEvent<{
+};
+
+export type LLMToolCallEvent = {
   toolCall: ToolCall;
-}>;
-export type LLMToolResultEvent = BaseEvent<{
+};
+
+export type LLMToolResultEvent = {
   toolCall: ToolCall;
   toolResult: ToolOutput;
-}>;
-export type LLMEndEvent = BaseEvent<{
+};
+
+export type LLMEndEvent = {
   id: UUID;
   response: ChatResponse;
-}>;
-export type LLMStreamEvent = BaseEvent<{
+};
+
+export type LLMStreamEvent = {
   id: UUID;
   chunk: ChatResponseChunk;
-}>;
+};
 
 export interface LlamaIndexEventMaps {
   "llm-start": LLMStartEvent;
@@ -55,7 +55,7 @@ export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
 
   static fromEvent<Type extends keyof LlamaIndexEventMaps>(
     type: Type,
-    detail: LlamaIndexEventMaps[Type]["detail"],
+    detail: LlamaIndexEventMaps[Type],
   ) {
     return new LlamaIndexCustomEvent(type, {
       detail: detail,
@@ -64,10 +64,10 @@ export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   }
 }
 
-type EventHandler<Event> = (event: Event) => void;
+type EventHandler<Event> = (event: LlamaIndexCustomEvent<Event>) => void;
 
 export class CallbackManager {
-  #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<CustomEvent>[]>();
+  #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<any>[]>();
 
   on<K extends keyof LlamaIndexEventMaps>(
     event: K,
@@ -97,7 +97,7 @@ export class CallbackManager {
 
   dispatchEvent<K extends keyof LlamaIndexEventMaps>(
     event: K,
-    detail: LlamaIndexEventMaps[K]["detail"],
+    detail: LlamaIndexEventMaps[K],
   ) {
     const cbs = this.#handlers.get(event);
     if (!cbs) {

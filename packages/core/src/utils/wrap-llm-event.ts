@@ -22,10 +22,8 @@ export function wrapLLMEvent<
   > {
     const id = randomUUID();
     getCallbackManager().dispatchEvent("llm-start", {
-      payload: {
-        id,
-        messages: params[0].messages,
-      },
+      id,
+      messages: params[0].messages,
     });
     const response = await originalMethod.call(this, ...params);
     if (Symbol.asyncIterator in response) {
@@ -58,29 +56,23 @@ export function wrapLLMEvent<
             };
           }
           getCallbackManager().dispatchEvent("llm-stream", {
-            payload: {
-              id,
-              chunk,
-            },
+            id,
+            chunk,
           });
           finalResponse.raw.push(chunk);
           yield chunk;
         }
         snapshot(() => {
           getCallbackManager().dispatchEvent("llm-end", {
-            payload: {
-              id,
-              response: finalResponse,
-            },
+            id,
+            response: finalResponse,
           });
         });
       };
     } else {
       getCallbackManager().dispatchEvent("llm-end", {
-        payload: {
-          id,
-          response,
-        },
+        id,
+        response,
       });
     }
     return response;
