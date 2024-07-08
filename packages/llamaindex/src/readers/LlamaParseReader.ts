@@ -128,7 +128,7 @@ export class LlamaParseReader extends FileReader {
   // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases.
   doNotUnrollColumns?: boolean;
   // The page separator to use to split the text. Default is None, which means the parser will use the default separator '\\n---\\n'.
-  pageSeperator?: string;
+  pageSeparator?: string;
   // Whether to use gpt-4o to extract text from documents.
   gpt4oMode: boolean = false;
   // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
@@ -184,7 +184,7 @@ export class LlamaParseReader extends FileReader {
       do_not_cache: this.doNotCache?.toString(),
       fast_mode: this.fastMode?.toString(),
       do_not_unroll_columns: this.doNotUnrollColumns?.toString(),
-      page_seperator: this.pageSeperator,
+      page_separator: this.pageSeparator,
       gpt4o_mode: this.gpt4oMode?.toString(),
       gpt4o_api_key: this.gpt4oApiKey,
       bounding_box: this.boundingBox,
