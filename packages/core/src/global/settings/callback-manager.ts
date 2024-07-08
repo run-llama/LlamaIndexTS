@@ -1,4 +1,4 @@
-import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
+import { AsyncLocalStorage } from "@llamaindex/env";
 import type {
   ChatMessage,
   ChatResponse,
@@ -8,7 +8,7 @@ import type {
 } from "../../llms";
 import type { UUID } from "../type";
 
-export type BaseEvent<Payload extends Record<string, unknown>> = CustomEvent<{
+export type BaseEvent<Payload> = CustomEvent<{
   payload: Readonly<Payload>;
 }>;
 
@@ -55,85 +55,56 @@ export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   }
 }
 
-export interface CallbackManager {
-  on<
-    K extends keyof LlamaIndexEventMaps,
-    H extends EventHandler<LlamaIndexEventMaps[K]>,
-  >(
-    event: K,
-    handler: H,
-  ): this;
+type EventHandler<Event> = (event: Event) => void;
 
-  off<
-    K extends keyof LlamaIndexEventMaps,
-    H extends EventHandler<LlamaIndexEventMaps[K]>,
-  >(
+export class CallbackManager {
+  #handlers = new Map<keyof LlamaIndexEventMaps, EventHandler<CustomEvent>[]>();
+
+  on<K extends keyof LlamaIndexEventMaps>(
     event: K,
-    handler: H,
-  ): this;
+    handler: EventHandler<LlamaIndexEventMaps[K]>,
+  ) {
+    if (!this.#handlers.has(event)) {
+      this.#handlers.set(event, []);
+    }
+    this.#handlers.get(event)!.push(handler);
+    return this;
+  }
+
+  off<K extends keyof LlamaIndexEventMaps>(
+    event: K,
+    handler: EventHandler<LlamaIndexEventMaps[K]>,
+  ) {
+    if (!this.#handlers.has(event)) {
+      return this;
+    }
+    const cbs = this.#handlers.get(event)!;
+    const index = cbs.indexOf(handler);
+    if (index > -1) {
+      cbs.splice(index, 1);
+    }
+    return this;
+  }
 
   dispatchEvent<K extends keyof LlamaIndexEventMaps>(
     event: K,
     detail: LlamaIndexEventMaps[K]["detail"],
-  ): void;
+  ) {
+    const cbs = this.#handlers.get(event);
+    if (!cbs) {
+      return;
+    }
+    queueMicrotask(() => {
+      cbs.forEach((handler) =>
+        handler(
+          LlamaIndexCustomEvent.fromEvent(event, structuredClone(detail)),
+        ),
+      );
+    });
+  }
 }
 
-type EventHandler<Event extends CustomEvent> = (event: Event) => void;
-
-const createCallbackManager = (): CallbackManager => {
-  const handlers = new Map<
-    keyof LlamaIndexEventMaps,
-    EventHandler<CustomEvent>[]
-  >();
-  return {
-    on<
-      K extends keyof LlamaIndexEventMaps,
-      H extends EventHandler<LlamaIndexEventMaps[K]>,
-    >(event: K, handler: H) {
-      if (!handlers.has(event)) {
-        handlers.set(event, []);
-      }
-      handlers.get(event)!.push(handler);
-      return this;
-    },
-
-    off<
-      K extends keyof LlamaIndexEventMaps,
-      H extends EventHandler<LlamaIndexEventMaps[K]>,
-    >(event: K, handler: H) {
-      if (!handlers.has(event)) {
-        return this;
-      }
-      const cbs = handlers.get(event)!;
-      const index = cbs.indexOf(handler);
-      if (index > -1) {
-        cbs.splice(index, 1);
-      }
-      return this;
-    },
-
-    dispatchEvent<K extends keyof LlamaIndexEventMaps>(
-      event: K,
-      detail: LlamaIndexEventMaps[K]["detail"],
-    ) {
-      const cbs = handlers.get(event);
-      if (!cbs) {
-        return;
-      }
-      queueMicrotask(() => {
-        cbs.forEach((handler) =>
-          handler(
-            LlamaIndexCustomEvent.fromEvent(event, {
-              ...detail,
-            }),
-          ),
-        );
-      });
-    },
-  };
-};
-
-export const globalCallbackManager = createCallbackManager();
+export const globalCallbackManager = new CallbackManager();
 
 const callbackManagerAsyncLocalStorage =
   new AsyncLocalStorage<CallbackManager>();

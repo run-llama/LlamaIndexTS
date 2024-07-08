@@ -1,3 +1,4 @@
+import { extractText } from "@llamaindex/core/utils";
 import { consola } from "consola";
 import {
   Document,
@@ -14,7 +15,6 @@ import {
   VectorStoreIndex,
   type LLM,
 } from "llamaindex";
-import { extractText } from "llamaindex/llm/utils";
 import { ok, strictEqual } from "node:assert";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";

@@ -1,5 +1,5 @@
+import { extractText } from "@llamaindex/core/utils";
 import { OpenAI, ReActAgent, Settings, type LLM } from "llamaindex";
-import { extractText } from "llamaindex/llm/utils";
 import { ok } from "node:assert";
 import { beforeEach, test } from "node:test";
 import { getWeatherTool } from "./fixtures/tools.js";

@@ -4,7 +4,7 @@ import {
   type LLMEndEvent,
   type LLMStartEvent,
   type LLMStreamEvent,
-} from "llamaindex";
+} from "@llamaindex/core/global";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { type test } from "node:test";
