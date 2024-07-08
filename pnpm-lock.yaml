@@ -498,8 +498,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(encoding@0.1.13)
       '@mixedbread-ai/sdk':
-        specifier: ^2.2.2
-        version: 2.2.2(encoding@0.1.13)
+        specifier: ^2.2.10
+        version: 2.2.10(encoding@0.1.13)
       '@pinecone-database/pinecone':
         specifier: ^2.2.2
         version: 2.2.2
@@ -2818,8 +2818,8 @@ packages:
   '@mistralai/mistralai@0.4.0':
     resolution: {integrity: sha512-KmFzNro1RKxIFh19J3osmUQhucefBBauMXN5fa9doG6dT9OHR/moBvvn+riVlR7c0AVfuxO8Dfa03AyLYYzbyg==}
 
-  '@mixedbread-ai/sdk@2.2.2':
-    resolution: {integrity: sha512-I2ec97hEAAZON8GU0pZxke6/PZCOORTdWgO/D7Rhdhs0/RvEVjwLZQGc3ATvxEUO/nAey56s7fHymgo7a6oZ2g==}
+  '@mixedbread-ai/sdk@2.2.10':
+    resolution: {integrity: sha512-ZqH40mlMy37wFzhLOXj+MsFH0E05aQBujQgtGeXfg2DgDI7VM44qr/egyV+bfkzsdCwVYDt0CIihn5iR5WiliA==}
 
   '@mole-inc/bin-wrapper@8.0.1':
     resolution: {integrity: sha512-sTGoeZnjI8N4KS+sW2AN95gDBErhAguvkw/tWdCjeM8bvxpz5lqrnd0vOJABA1A+Ic3zED7PYoLP/RANLgVotA==}
@@ -6153,6 +6153,10 @@ packages:
   formdata-node@4.4.1:
     resolution: {integrity: sha512-0iirZp3uVDjVGt9p49aTaqjk84TrglENEDuqfdlZQ1roC9CWlPk6Avf8EEnZNcAqPonwkG35x4n3ww/1THYAeQ==}
     engines: {node: '>= 12.20'}
+
+  formdata-node@6.0.3:
+    resolution: {integrity: sha512-8e1++BCiTzUno9v5IZ2J6bv4RU+3UKDmqWUQD0MIMVCd9AdhWkO1gw57oo1mNEX1dMq2EGI+FbWz4B92pscSQg==}
+    engines: {node: '>= 18'}
 
   forwarded@0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
@@ -13805,9 +13809,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@mixedbread-ai/sdk@2.2.2(encoding@0.1.13)':
+  '@mixedbread-ai/sdk@2.2.10(encoding@0.1.13)':
     dependencies:
       form-data: 4.0.0
+      formdata-node: 6.0.3
       js-base64: 3.7.2
       node-fetch: 2.7.0(encoding@0.1.13)
       qs: 6.11.2
@@ -17729,6 +17734,8 @@ snapshots:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 4.0.0-beta.3
+
+  formdata-node@6.0.3: {}
 
   forwarded@0.2.0: {}
 
