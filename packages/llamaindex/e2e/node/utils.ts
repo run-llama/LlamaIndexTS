@@ -5,15 +5,16 @@ import {
   type LLMStartEvent,
   type LLMStreamEvent,
 } from "@llamaindex/core/global";
+import { CustomEvent } from "@llamaindex/env";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { type test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 type MockStorage = {
-  llmEventStart: LLMStartEvent["detail"]["payload"][];
-  llmEventEnd: LLMEndEvent["detail"]["payload"][];
-  llmEventStream: LLMStreamEvent["detail"]["payload"][];
+  llmEventStart: LLMStartEvent[];
+  llmEventEnd: LLMEndEvent[];
+  llmEventStream: LLMStreamEvent[];
 };
 
 export const llmCompleteMockStorage: MockStorage = {
@@ -36,35 +37,35 @@ export async function mockLLMEvent(
     llmEventStream: [],
   };
 
-  function captureLLMStart(event: LLMStartEvent) {
-    idMap.set(event.detail.payload.id, `PRESERVE_${counter++}`);
+  function captureLLMStart(event: CustomEvent<LLMStartEvent>) {
+    idMap.set(event.detail.id, `PRESERVE_${counter++}`);
     newLLMCompleteMockStorage.llmEventStart.push({
-      ...event.detail.payload,
+      ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
       id: idMap.get(event.detail.payload.id)!,
     });
   }
 
-  function captureLLMEnd(event: LLMEndEvent) {
+  function captureLLMEnd(event: CustomEvent<LLMEndEvent>) {
     newLLMCompleteMockStorage.llmEventEnd.push({
-      ...event.detail.payload,
+      ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
       id: idMap.get(event.detail.payload.id)!,
       response: {
-        ...event.detail.payload.response,
+        ...event.detail.response,
         // hide raw object since it might too big
         raw: null,
       },
     });
   }
 
-  function captureLLMStream(event: LLMStreamEvent) {
+  function captureLLMStream(event: CustomEvent<LLMStreamEvent>) {
     newLLMCompleteMockStorage.llmEventStream.push({
-      ...event.detail.payload,
+      ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
       id: idMap.get(event.detail.payload.id)!,
       chunk: {
-        ...event.detail.payload.chunk,
+        ...event.detail.chunk,
         // hide raw object since it might too big
         raw: null,
       },
