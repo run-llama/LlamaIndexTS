@@ -1,3 +1,4 @@
+import { Settings } from "@llamaindex/core/global";
 import type { MessageContent } from "@llamaindex/core/llms";
 import {
   ImageNode,
@@ -8,6 +9,7 @@ import {
   type Document,
   type NodeWithScore,
 } from "@llamaindex/core/schema";
+import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
@@ -22,8 +24,6 @@ import {
   DocStoreStrategy,
   createDocStoreStrategy,
 } from "../../ingestion/strategies/index.js";
-import { wrapEventCaller } from "../../internal/context/EventCaller.js";
-import { getCallbackManager } from "../../internal/settings/CallbackManager.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
@@ -413,7 +413,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
-    getCallbackManager().dispatchEvent("retrieve-start", {
+    Settings.callbackManager.dispatchEvent("retrieve-start", {
       payload: {
         query,
       },
@@ -432,16 +432,11 @@ export class VectorIndexRetriever implements BaseRetriever {
         ),
       );
     }
-    getCallbackManager().dispatchEvent("retrieve-end", {
+    Settings.callbackManager.dispatchEvent("retrieve-end", {
       payload: {
         query,
         nodes: nodesWithScores,
       },
-    });
-    // send deprecated event
-    getCallbackManager().dispatchEvent("retrieve", {
-      query,
-      nodes: nodesWithScores,
     });
     return nodesWithScores;
   }

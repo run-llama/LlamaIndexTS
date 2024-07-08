@@ -1,9 +1,9 @@
 import type { MessageContentDetail } from "@llamaindex/core/llms";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
+import { extractSingleText } from "@llamaindex/core/utils";
 import { type Tokenizers } from "@llamaindex/env";
 import type { TransformComponent } from "../ingestion/types.js";
-import { extractSingleText } from "../llm/utils.js";
 import { truncateMaxTokens } from "./tokenizer.js";
 import { SimilarityType, similarity } from "./utils.js";
 

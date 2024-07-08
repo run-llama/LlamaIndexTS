@@ -1,20 +1,20 @@
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
-  MessageType,
+import {
+  BaseLLM,
+  type ChatMessage,
+  type ChatResponse,
+  type ChatResponseChunk,
+  type LLMChatParamsNonStreaming,
+  type LLMChatParamsStreaming,
+  type MessageType,
 } from "@llamaindex/core/llms";
-import { getEnv } from "@llamaindex/env";
-import Replicate from "../internal/deps/replicate.js";
-import { BaseLLM } from "./base.js";
 import {
   extractText,
   streamCallbacks,
   streamConverter,
   wrapLLMEvent,
-} from "./utils.js";
+} from "@llamaindex/core/utils";
+import { getEnv } from "@llamaindex/env";
+import Replicate from "../internal/deps/replicate.js";
 
 export class ReplicateSession {
   replicateKey: string | null = null;

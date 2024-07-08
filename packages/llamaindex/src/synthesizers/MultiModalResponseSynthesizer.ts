@@ -1,8 +1,8 @@
 import { MetadataMode } from "@llamaindex/core/schema";
+import { streamConverter } from "@llamaindex/core/utils";
 import { EngineResponse } from "../EngineResponse.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
-import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { TextQaPrompt } from "./../Prompt.js";
 import { defaultTextQaPrompt } from "./../Prompt.js";

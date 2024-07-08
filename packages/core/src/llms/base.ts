@@ -1,3 +1,5 @@
+import { streamConverter } from "../utils";
+import { extractText } from "../utils/llms";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -9,8 +11,7 @@ import type {
   LLMCompletionParamsStreaming,
   LLMMetadata,
   ToolCallLLMMessageOptions,
-} from "@llamaindex/core/llms";
-import { extractText, streamConverter } from "./utils.js";
+} from "./type";
 
 export abstract class BaseLLM<
   AdditionalChatOptions extends object = object,

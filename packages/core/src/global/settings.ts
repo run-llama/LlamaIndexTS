@@ -1,4 +1,10 @@
 import {
+  type CallbackManager,
+  getCallbackManager,
+  setCallbackManager,
+  withCallbackManager,
+} from "./settings/callback-manager";
+import {
   getChunkSize,
   setChunkSize,
   withChunkSize,
@@ -13,5 +19,20 @@ export const Settings = {
   },
   withChunkSize<Result>(chunkSize: number, fn: () => Result): Result {
     return withChunkSize(chunkSize, fn);
+  },
+
+  get callbackManager(): CallbackManager {
+    return getCallbackManager();
+  },
+
+  set callbackManager(callbackManager: CallbackManager) {
+    setCallbackManager(callbackManager);
+  },
+
+  withCallbackManager<Result>(
+    callbackManager: CallbackManager,
+    fn: () => Result,
+  ): Result {
+    return withCallbackManager(callbackManager, fn);
   },
 };

@@ -1,20 +1,18 @@
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
-  LLMMetadata,
-  MessageType,
+import {
+  BaseLLM,
+  type ChatMessage,
+  type ChatResponse,
+  type ChatResponseChunk,
+  type LLMChatParamsNonStreaming,
+  type LLMChatParamsStreaming,
+  type LLMMetadata,
+  type MessageType,
 } from "@llamaindex/core/llms";
+import { extractText, wrapLLMEvent } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 import type { LLMOptions } from "portkey-ai";
 import { Portkey as OrigPortKey } from "portkey-ai";
-import { type StreamCallbackResponse } from "../callbacks/CallbackManager.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
-import { BaseLLM } from "./base.js";
-import { extractText, wrapLLMEvent } from "./utils.js";
 
 interface PortkeyOptions {
   apiKey?: string;
@@ -136,18 +134,7 @@ export class Portkey extends BaseLLM {
     //Indices
     let idx_counter: number = 0;
     for await (const part of chunkStream) {
-      //Increment
       part.choices[0].index = idx_counter;
-      const is_done: boolean =
-        part.choices[0].finish_reason === "stop" ? true : false;
-      //onLLMStream Callback
-
-      const stream_callback: StreamCallbackResponse = {
-        index: idx_counter,
-        isDone: is_done,
-        // token: part,
-      };
-      getCallbackManager().dispatchEvent("stream", stream_callback);
 
       idx_counter++;
 

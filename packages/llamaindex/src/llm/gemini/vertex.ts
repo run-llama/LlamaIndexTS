@@ -19,8 +19,8 @@ import type {
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
-import { streamConverter } from "../utils.js";
 import { DEFAULT_SAFETY_SETTINGS, getFunctionCalls, getText } from "./utils.js";
 
 /* To use Google's Vertex AI backend, it doesn't use api key authentication.

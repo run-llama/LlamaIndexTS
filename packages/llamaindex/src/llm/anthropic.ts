@@ -26,10 +26,10 @@ import type {
   LLMChatParamsStreaming,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import { ToolCallLLM } from "@llamaindex/core/llms";
+import { extractText, wrapLLMEvent } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
-import { ToolCallLLM } from "./base.js";
-import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class AnthropicSession {
   anthropic: SDKAnthropic;

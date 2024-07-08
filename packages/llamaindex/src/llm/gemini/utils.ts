@@ -15,7 +15,7 @@ import type {
   MessageType,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { extractDataUrlComponents } from "../utils.js";
+import { extractDataUrlComponents } from "@llamaindex/core/utils";
 import type {
   ChatContext,
   FileDataPart,

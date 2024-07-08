@@ -1,3 +1,4 @@
+export { BaseLLM, ToolCallLLM } from "./base";
 export type {
   BaseTool,
   BaseToolWithCall,

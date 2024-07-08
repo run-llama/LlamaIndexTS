@@ -17,7 +17,7 @@ import type {
 } from "../../types.js";
 
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
-import { wrapEventCaller } from "../../internal/context/EventCaller.js";
+import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 
 /**

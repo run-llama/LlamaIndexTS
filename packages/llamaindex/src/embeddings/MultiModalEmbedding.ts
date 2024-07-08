@@ -7,7 +7,7 @@ import {
   type BaseNode,
   type ImageType,
 } from "@llamaindex/core/schema";
-import { extractImage, extractSingleText } from "../llm/utils.js";
+import { extractImage, extractSingleText } from "@llamaindex/core/utils";
 import { BaseEmbedding, batchEmbeddings } from "./types.js";
 
 /*

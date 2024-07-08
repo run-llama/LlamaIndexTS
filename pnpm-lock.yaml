@@ -346,13 +346,13 @@ importers:
       '@aws-sdk/client-bedrock-runtime':
         specifier: ^3.600.0
         version: 3.602.0
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.2
-      llamaindex:
-        specifier: workspace:*
-        version: link:../llamaindex
-    devDependencies:
       bunchee:
         specifier: 5.3.0-beta.0
         version: 5.3.0-beta.0(typescript@5.5.2)

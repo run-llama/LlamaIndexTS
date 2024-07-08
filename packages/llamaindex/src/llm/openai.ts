@@ -7,19 +7,25 @@ import type {
 } from "openai";
 import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
 
-import type {
-  BaseTool,
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-  LLM,
-  LLMChatParamsNonStreaming,
-  LLMChatParamsStreaming,
-  LLMMetadata,
-  MessageType,
-  PartialToolCall,
-  ToolCallLLMMessageOptions,
+import {
+  type BaseTool,
+  type ChatMessage,
+  type ChatResponse,
+  type ChatResponseChunk,
+  type LLM,
+  type LLMChatParamsNonStreaming,
+  type LLMChatParamsStreaming,
+  type LLMMetadata,
+  type MessageType,
+  type PartialToolCall,
+  ToolCallLLM,
+  type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import {
+  extractText,
+  wrapEventCaller,
+  wrapLLMEvent,
+} from "@llamaindex/core/utils";
 import { Tokenizers } from "@llamaindex/env";
 import type {
   ChatCompletionAssistantMessageParam,
@@ -31,16 +37,12 @@ import type {
   ChatCompletionUserMessageParam,
 } from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
-import { wrapEventCaller } from "../internal/context/EventCaller.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import type { AzureOpenAIConfig } from "./azure.js";
 import {
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
 } from "./azure.js";
-import { ToolCallLLM } from "./base.js";
-import { extractText, wrapLLMEvent } from "./utils.js";
 
 export class OpenAISession {
   openai: Pick<OrigOpenAI, "chat" | "embeddings">;
@@ -390,8 +392,6 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       });
 
     // TODO: add callback to streamConverter and use streamConverter here
-    //Indices
-    let idxCounter: number = 0;
     // this will be used to keep track of the current tool call, make sure input are valid json object.
     let currentToolCall: PartialToolCall | null = null;
     const toolCallMap = new Map<string, PartialToolCall>();
@@ -427,12 +427,6 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       }
 
       const isDone: boolean = choice.finish_reason !== null;
-
-      getCallbackManager().dispatchEvent("stream", {
-        index: idxCounter++,
-        isDone: isDone,
-        token: part,
-      });
 
       if (isDone && currentToolCall) {
         // for the last one, we need to emit the tool call

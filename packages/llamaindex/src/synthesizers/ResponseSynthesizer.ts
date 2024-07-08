@@ -1,7 +1,7 @@
 import { MetadataMode } from "@llamaindex/core/schema";
+import { streamConverter } from "@llamaindex/core/utils";
 import { EngineResponse } from "../EngineResponse.js";
 import type { ServiceContext } from "../ServiceContext.js";
-import { streamConverter } from "../llm/utils.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { ResponseBuilderPrompts } from "./builders.js";
 import { getResponseBuilder } from "./builders.js";

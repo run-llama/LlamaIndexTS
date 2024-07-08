@@ -5,13 +5,13 @@ import type {
   ChatResponseChunk,
   LLM,
 } from "@llamaindex/core/llms";
+import { extractText } from "@llamaindex/core/utils";
 import { randomUUID, ReadableStream } from "@llamaindex/env";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
 import {
   isAsyncIterable,
   stringifyJSONToMessageContent,
 } from "../internal/utils.js";
-import { extractText } from "../llm/utils.js";
 import { Settings } from "../Settings.js";
 import type { JSONObject, JSONValue } from "../types.js";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";

@@ -15,9 +15,9 @@ import type {
   ToolCall,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import { ToolCallLLM } from "@llamaindex/core/llms";
+import { streamConverter, wrapLLMEvent } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
-import { ToolCallLLM } from "../base.js";
-import { streamConverter, wrapLLMEvent } from "../utils.js";
 import {
   GEMINI_BACKENDS,
   GEMINI_MODEL,

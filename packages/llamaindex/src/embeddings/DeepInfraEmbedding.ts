@@ -1,6 +1,6 @@
 import type { MessageContentDetail } from "@llamaindex/core/llms";
+import { extractSingleText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
-import { extractSingleText } from "../llm/utils.js";
 import { BaseEmbedding } from "./types.js";
 
 const DEFAULT_MODEL = "sentence-transformers/clip-ViT-B-32";

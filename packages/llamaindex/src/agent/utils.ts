@@ -1,3 +1,4 @@
+import { Settings } from "@llamaindex/core/global";
 import type {
   BaseTool,
   ChatMessage,
@@ -14,7 +15,6 @@ import { baseToolWithCallSchema } from "@llamaindex/core/schema";
 import { ReadableStream } from "@llamaindex/env";
 import { z } from "zod";
 import type { Logger } from "../internal/logger.js";
-import { getCallbackManager } from "../internal/settings/CallbackManager.js";
 import {
   isAsyncIterable,
   prettifyError,
@@ -221,7 +221,7 @@ export async function callTool(
     };
   }
   try {
-    getCallbackManager().dispatchEvent("llm-tool-call", {
+    Settings.callbackManager.dispatchEvent("llm-tool-call", {
       payload: {
         toolCall: { ...toolCall, input },
       },
@@ -237,7 +237,7 @@ export async function callTool(
       output,
       isError: false,
     };
-    getCallbackManager().dispatchEvent("llm-tool-result", {
+    Settings.callbackManager.dispatchEvent("llm-tool-result", {
       payload: {
         toolCall: { ...toolCall, input },
         toolResult: { ...toolOutput },
