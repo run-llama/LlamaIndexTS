@@ -1,7 +1,7 @@
 export { Settings } from "./settings";
+export { CallbackManager } from "./settings/callback-manager";
 export type {
   BaseEvent,
-  CallbackManager,
   LLMEndEvent,
   LLMStartEvent,
   LLMStreamEvent,
