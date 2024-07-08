@@ -125,7 +125,7 @@
 
 ### Patch Changes
 
-- 6bc5bdd: feat: add cache disabling, fast mode, do not unroll columns mode and custom page seperator to LlamaParseReader
+- 6bc5bdd: feat: add cache disabling, fast mode, do not unroll columns mode and custom page separator to LlamaParseReader
 - bf25ff6: fix: polyfill for cloudflare worker
 - e6d6576: chore: use `unpdf`
 

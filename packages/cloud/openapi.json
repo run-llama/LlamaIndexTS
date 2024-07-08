@@ -12113,9 +12113,9 @@
             "description": "Template for how metadata is formatted, with {key} and {value} placeholders.",
             "default": "{key}: {value}"
           },
-          "metadata_seperator": {
+          "metadata_separator": {
             "type": "string",
-            "title": "Metadata Seperator",
+            "title": "Metadata Separator",
             "description": "Separator between metadata fields when converting to string.",
             "default": "\n"
           },
