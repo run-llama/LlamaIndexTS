@@ -4,3 +4,4 @@ export type {
   CallbackManager,
   LlamaIndexEventMaps,
 } from "./settings/callback-manager";
+export type { JSONArray, JSONObject, JSONValue } from "./type";

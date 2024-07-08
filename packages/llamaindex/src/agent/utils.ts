@@ -1,4 +1,8 @@
-import { Settings } from "@llamaindex/core/global";
+import {
+  type JSONObject,
+  type JSONValue,
+  Settings,
+} from "@llamaindex/core/global";
 import type {
   BaseTool,
   ChatMessage,
@@ -20,7 +24,6 @@ import {
   prettifyError,
   stringifyJSONToMessageContent,
 } from "../internal/utils.js";
-import type { JSONObject, JSONValue } from "../types.js";
 import type { AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 

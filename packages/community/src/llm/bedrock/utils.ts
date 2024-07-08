@@ -1,13 +1,13 @@
+import type { JSONObject } from "@llamaindex/core/global";
 import type {
   BaseTool,
   ChatMessage,
-  JSONObject,
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
   ToolCallLLMMessageOptions,
   ToolMetadata,
-} from "llamaindex";
+} from "@llamaindex/core/llms";
 import type {
   AnthropicContent,
   AnthropicImageContent,
