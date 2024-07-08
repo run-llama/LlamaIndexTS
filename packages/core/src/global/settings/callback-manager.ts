@@ -1,4 +1,4 @@
-import { AsyncLocalStorage } from "@llamaindex/env";
+import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
 import type {
   ChatMessage,
   ChatResponse,
