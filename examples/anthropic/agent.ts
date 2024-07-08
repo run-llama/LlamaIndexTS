@@ -2,7 +2,7 @@ import { Anthropic, FunctionTool, Settings, WikipediaTool } from "llamaindex";
 import { AnthropicAgent } from "llamaindex/agent/anthropic";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
-  console.log("llm-tool-call", event.detail.payload.toolCall);
+  console.log("llm-tool-call", event.detail.toolCall);
 });
 
 const anthropic = new Anthropic({

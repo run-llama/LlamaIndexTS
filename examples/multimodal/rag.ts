@@ -1,7 +1,6 @@
 import {
   MultiModalResponseSynthesizer,
   OpenAI,
-  RetrievalEndEvent,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
@@ -15,8 +14,8 @@ Settings.chunkOverlap = 20;
 Settings.llm = new OpenAI({ model: "gpt-4-turbo", maxTokens: 512 });
 
 // Update callbackManager
-Settings.callbackManager.on("retrieve-end", (event: RetrievalEndEvent) => {
-  const { nodes, query } = event.detail.payload;
+Settings.callbackManager.on("retrieve-end", (event) => {
+  const { nodes, query } = event.detail;
   console.log(`Retrieved ${nodes.length} nodes for query: ${query}`);
 });
 

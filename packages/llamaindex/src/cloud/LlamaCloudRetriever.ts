@@ -92,10 +92,8 @@ export class LlamaCloudRetriever implements BaseRetriever {
       results.retrieval_nodes,
     );
     Settings.callbackManager.dispatchEvent("retrieve-end", {
-      payload: {
-        query,
-        nodes: nodesWithScores,
-      },
+      query,
+      nodes: nodesWithScores,
     });
     return nodesWithScores;
   }

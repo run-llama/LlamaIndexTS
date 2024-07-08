@@ -69,9 +69,7 @@ export function createTaskOutputStream<
         controller.enqueue(output);
       };
       Settings.callbackManager.dispatchEvent("agent-start", {
-        payload: {
-          startStep: step,
-        },
+        startStep: step,
       });
 
       context.logger.log("Starting step(id, %s).", step.id);
@@ -93,9 +91,7 @@ export function createTaskOutputStream<
           step.id,
         );
         Settings.callbackManager.dispatchEvent("agent-end", {
-          payload: {
-            endStep: step,
-          },
+          endStep: step,
         });
         controller.close();
       }

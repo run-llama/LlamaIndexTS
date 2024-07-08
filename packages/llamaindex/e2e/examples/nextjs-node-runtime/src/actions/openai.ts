@@ -19,10 +19,10 @@ Settings.embedModel = new HuggingFaceEmbedding({
   quantized: false,
 });
 Settings.callbackManager.on("llm-tool-call", (event) => {
-  console.log(event.detail.payload);
+  console.log(event.detail);
 });
 Settings.callbackManager.on("llm-tool-result", (event) => {
-  console.log(event.detail.payload);
+  console.log(event.detail);
 });
 
 export async function getOpenAIModelRequest(query: string) {

@@ -4,7 +4,6 @@ import {
   NodeWithScore,
   ObjectType,
   OpenAI,
-  RetrievalEndEvent,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
@@ -18,8 +17,8 @@ Settings.chunkOverlap = 20;
 Settings.llm = new OpenAI({ model: "gpt-4-turbo", maxTokens: 512 });
 
 // Update callbackManager
-Settings.callbackManager.on("retrieve-end", (event: RetrievalEndEvent) => {
-  const { nodes, query } = event.detail.payload;
+Settings.callbackManager.on("retrieve-end", (event) => {
+  const { nodes, query } = event.detail;
   const imageNodes = nodes.filter(
     (node: NodeWithScore) => node.node.type === ObjectType.IMAGE_DOCUMENT,
   );

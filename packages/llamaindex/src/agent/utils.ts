@@ -225,9 +225,7 @@ export async function callTool(
   }
   try {
     Settings.callbackManager.dispatchEvent("llm-tool-call", {
-      payload: {
-        toolCall: { ...toolCall, input },
-      },
+      toolCall: { ...toolCall, input },
     });
     output = await call.call(tool, input);
     logger.log(
@@ -241,10 +239,8 @@ export async function callTool(
       isError: false,
     };
     Settings.callbackManager.dispatchEvent("llm-tool-result", {
-      payload: {
-        toolCall: { ...toolCall, input },
-        toolResult: { ...toolOutput },
-      },
+      toolCall: { ...toolCall, input },
+      toolResult: { ...toolOutput },
     });
     return toolOutput;
   } catch (e) {

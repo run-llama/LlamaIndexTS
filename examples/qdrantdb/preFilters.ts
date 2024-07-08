@@ -11,12 +11,10 @@ import {
 
 // Update callback manager
 Settings.callbackManager.on("retrieve-end", (event) => {
-  const data = event.detail.payload;
+  const { nodes } = event.detail;
   console.log(
     "The retrieved nodes are:",
-    data.nodes.map((node: NodeWithScore) =>
-      node.node.getContent(MetadataMode.NONE),
-    ),
+    nodes.map((node: NodeWithScore) => node.node.getContent(MetadataMode.NONE)),
   );
 });
 

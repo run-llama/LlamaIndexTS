@@ -13,7 +13,6 @@ declare module "@llamaindex/core/global" {
 
 export { CallbackManager } from "@llamaindex/core/global";
 export type {
-  BaseEvent,
   JSONArray,
   JSONObject,
   JSONValue,
