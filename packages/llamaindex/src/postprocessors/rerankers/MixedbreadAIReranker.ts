@@ -1,10 +1,11 @@
 import { getEnv } from "@llamaindex/env";
 import { MixedbreadAI, MixedbreadAIClient } from "@mixedbread-ai/sdk";
 
-import type { NodeWithScore } from "../../Node.js";
-import { BaseNode, MetadataMode } from "../../Node.js";
-import type { MessageContent } from "../../llm/types.js";
+import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "../../llm/utils.js";
+
+import type { MessageContent } from "@llamaindex/core/llms";
+import type { BaseNode, NodeWithScore } from "@llamaindex/core/schema";
 import type { BaseNodePostprocessor } from "../types.js";
 
 type RerankingRequestWithoutInput = Omit<
