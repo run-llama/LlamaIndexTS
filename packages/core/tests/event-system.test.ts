@@ -9,7 +9,7 @@ declare module "@llamaindex/core/global" {
   }
 }
 
-describe("event caller", () => {
+describe("event system", () => {
   beforeEach(() => {
     Settings.callbackManager = new CallbackManager();
   });
