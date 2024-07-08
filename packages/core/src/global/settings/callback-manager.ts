@@ -6,6 +6,7 @@ import type {
   ToolCall,
   ToolOutput,
 } from "../../llms";
+import { EventCaller, getEventCaller } from "../../utils/event-caller";
 import type { UUID } from "../type";
 
 export type BaseEvent<Payload> = CustomEvent<{
@@ -41,8 +42,15 @@ export interface LlamaIndexEventMaps {
 }
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
-  private constructor(event: string, options?: CustomEventInit) {
+  reason: EventCaller | null = null;
+  private constructor(
+    event: string,
+    options?: CustomEventInit & {
+      reason?: EventCaller | null;
+    },
+  ) {
     super(event, options);
+    this.reason = options?.reason ?? null;
   }
 
   static fromEvent<Type extends keyof LlamaIndexEventMaps>(
@@ -51,6 +59,7 @@ export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
   ) {
     return new LlamaIndexCustomEvent(type, {
       detail: detail,
+      reason: getEventCaller(),
     });
   }
 }
