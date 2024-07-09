@@ -1,5 +1,14 @@
 # docs
 
+## 0.0.42
+
+### Patch Changes
+
+- 2774681: Add mixedbread's embeddings and reranking API
+- Updated dependencies [2774681]
+- Updated dependencies [a0f424e]
+  - llamaindex@0.5.1
+
 ## 0.0.41
 
 ### Patch Changes

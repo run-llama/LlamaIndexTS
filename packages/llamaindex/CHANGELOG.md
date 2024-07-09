@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.5.1
+
+### Patch Changes
+
+- 2774681: Add mixedbread's embeddings and reranking API
+- a0f424e: corrected the regex in the react.ts file in extractToolUse & extractJsonStr functions, as mentioned in https://github.com/run-llama/LlamaIndexTS/issues/1019
+
 ## 0.5.0
 
 ### Minor Changes
