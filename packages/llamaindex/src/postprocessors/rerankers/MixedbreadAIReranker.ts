@@ -2,7 +2,7 @@ import { getEnv } from "@llamaindex/env";
 import { MixedbreadAI, MixedbreadAIClient } from "@mixedbread-ai/sdk";
 
 import { MetadataMode } from "@llamaindex/core/schema";
-import { extractText } from "../../llm/utils.js";
+import { extractText } from "@llamaindex/core/utils";
 
 import type { MessageContent } from "@llamaindex/core/llms";
 import type { BaseNode, NodeWithScore } from "@llamaindex/core/schema";
