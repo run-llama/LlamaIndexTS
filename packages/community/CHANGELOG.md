@@ -1,5 +1,14 @@
 # @llamaindex/community
 
+## 0.0.19
+
+### Patch Changes
+
+- 16ef5dd: refactor: depends on core pacakge instead of llamaindex
+- Updated dependencies [16ef5dd]
+- Updated dependencies [16ef5dd]
+  - @llamaindex/core@0.1.0
+
 ## 0.0.18
 
 ### Patch Changes
