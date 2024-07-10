@@ -15,6 +15,7 @@ import {
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
+import { nodeToMetadata } from "./utils.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -27,6 +28,7 @@ const MMR_MODE = VectorStoreQueryMode.MMR;
 class SimpleVectorStoreData {
   embeddingDict: Record<string, number[]> = {};
   textIdToRefDocId: Record<string, string> = {};
+  metadataDict: Record<string, Record<string, any>> = {};
 }
 
 export class SimpleVectorStore
@@ -67,6 +69,11 @@ export class SimpleVectorStore
       }
 
       this.data.textIdToRefDocId[node.id_] = node.sourceNode?.nodeId;
+
+      // Add metadata to the metadataDict
+      const metadata = nodeToMetadata(node, true, undefined, false);
+      delete metadata["_node_content"];
+      this.data.metadataDict[node.id_] = metadata;
     }
 
     if (this.persistPath) {
@@ -83,6 +90,7 @@ export class SimpleVectorStore
     for (const textId of textIdsToDelete) {
       delete this.data.embeddingDict[textId];
       delete this.data.textIdToRefDocId[textId];
+      if (this.data.metadataDict) delete this.data.metadataDict[textId];
     }
     if (this.persistPath) {
       await this.persist(this.persistPath);
@@ -91,25 +99,47 @@ export class SimpleVectorStore
   }
 
   async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
-    if (!(query.filters == null)) {
-      throw new Error(
-        "Metadata filters not implemented for SimpleVectorStore yet.",
-      );
-    }
-
     const items = Object.entries(this.data.embeddingDict);
-
     let nodeIds: string[], embeddings: number[][];
-    if (query.docIds) {
+
+    const metadataLookup = {
+      ExactMatch: (
+        metadata: Record<string, any>,
+        key: string,
+        value: string | number,
+      ) => {
+        return String(metadata[key]) === value.toString(); // compare as string
+      },
+    };
+
+    const queryFilterFn = (nodeId: string) => {
+      if (!query.filters) return true;
+      console.log({ qf: query.filters, medaDict: this.data.metadataDict });
+      const filters = query.filters.filters;
+      for (const filter of filters) {
+        const { key, value, filterType } = filter;
+        const metadataLookupFn = metadataLookup[filterType];
+        const metadata = this.data.metadataDict[nodeId];
+        const isMatch =
+          metadataLookupFn &&
+          metadata &&
+          metadataLookupFn(metadata, key, value);
+        if (!isMatch) return false; // TODO: handle condition OR AND
+      }
+      return true;
+    };
+
+    const nodeFilterFn = (nodeId: string) => {
+      if (!query.docIds) return true;
       const availableIds = new Set(query.docIds);
-      const queriedItems = items.filter((item) => availableIds.has(item[0]));
-      nodeIds = queriedItems.map((item) => item[0]);
-      embeddings = queriedItems.map((item) => item[1]);
-    } else {
-      // No docIds specified, so use all available items
-      nodeIds = items.map((item) => item[0]);
-      embeddings = items.map((item) => item[1]);
-    }
+      return availableIds.has(nodeId);
+    };
+
+    const queriedItems = items.filter(
+      (item) => nodeFilterFn(item[0]) && queryFilterFn(item[0]),
+    );
+    nodeIds = queriedItems.map((item) => item[0]);
+    embeddings = queriedItems.map((item) => item[1]);
 
     const queryEmbedding = query.queryEmbedding!;
 
@@ -191,6 +221,7 @@ export class SimpleVectorStore
     const data = new SimpleVectorStoreData();
     data.embeddingDict = dataDict.embeddingDict ?? {};
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
+    data.metadataDict = dataDict.metadataDict ?? {};
     const store = new SimpleVectorStore({ data, embedModel });
     store.persistPath = persistPath;
     return store;
@@ -203,6 +234,7 @@ export class SimpleVectorStore
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
+    data.metadataDict = saveDict.metadataDict;
     return new SimpleVectorStore({ data, embedModel });
   }
 
@@ -210,6 +242,7 @@ export class SimpleVectorStore
     return {
       embeddingDict: this.data.embeddingDict,
       textIdToRefDocId: this.data.textIdToRefDocId,
+      metadataDict: this.data.metadataDict,
     };
   }
 }
