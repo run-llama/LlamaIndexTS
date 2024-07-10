@@ -98,9 +98,11 @@ export class SimpleVectorStore
     return Promise.resolve();
   }
 
-  async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
+  private async filterNodes(query: VectorStoreQuery): Promise<{
+    nodeIds: string[];
+    embeddings: number[][];
+  }> {
     const items = Object.entries(this.data.embeddingDict);
-    let nodeIds: string[], embeddings: number[][];
 
     const metadataLookup = {
       ExactMatch: (
@@ -138,9 +140,14 @@ export class SimpleVectorStore
     const queriedItems = items.filter(
       (item) => nodeFilterFn(item[0]) && queryFilterFn(item[0]),
     );
-    nodeIds = queriedItems.map((item) => item[0]);
-    embeddings = queriedItems.map((item) => item[1]);
+    const nodeIds = queriedItems.map((item) => item[0]);
+    const embeddings = queriedItems.map((item) => item[1]);
 
+    return { nodeIds, embeddings };
+  }
+
+  async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
+    const { nodeIds, embeddings } = await this.filterNodes(query);
     const queryEmbedding = query.queryEmbedding!;
 
     let topSimilarities: number[], topIds: string[];
