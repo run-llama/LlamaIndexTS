@@ -67,3 +67,4 @@ jobs:
         with:
           commit_message: "chore: update lock file"
           branch: changeset-release/main
+          file_pattern: "pnpm-lock.yaml"
