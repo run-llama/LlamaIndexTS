@@ -116,7 +116,6 @@ export class SimpleVectorStore
 
     const queryFilterFn = (nodeId: string) => {
       if (!query.filters) return true;
-      console.log({ qf: query.filters, medaDict: this.data.metadataDict });
       const filters = query.filters.filters;
       for (const filter of filters) {
         const { key, value, filterType } = filter;
