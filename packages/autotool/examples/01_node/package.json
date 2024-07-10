@@ -5,7 +5,7 @@
   "dependencies": {
     "@llamaindex/autotool": "workspace:*",
     "llamaindex": "workspace:*",
-    "openai": "^4.52.0"
+    "openai": "^4.52.5"
   },
   "devDependencies": {
     "tsx": "^4.15.6"
