@@ -55,9 +55,11 @@ async function getDataSource() {
 async function main() {
   const index = await getDataSource();
   console.log(
-    "=============\nQuerying index with no filters. The output should be brown or red.",
+    "=============\nQuerying index with no filters. The output should be any color.",
   );
-  const queryEngineNoFilters = index.asQueryEngine();
+  const queryEngineNoFilters = index.asQueryEngine({
+    similarityTopK: 3,
+  });
   const noFilterResponse = await queryEngineNoFilters.query({
     query: "What is the color of the dog?",
   });
@@ -81,6 +83,7 @@ async function main() {
         },
       ],
     },
+    similarityTopK: 3,
   });
   const response = await queryEngineDogId2.query({
     query: "What is the color of the dog?",
