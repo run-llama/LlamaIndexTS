@@ -134,18 +134,22 @@ export class SimpleVectorStore
 
     const queryFilterFn = (nodeId: string) => {
       if (!query.filters) return true;
-      const filters = query.filters.filters;
-      for (const filter of filters) {
+      const { filters, condition } = query.filters;
+      const queryCondition = condition || "and"; // default to and
+
+      const queryFilterItemFn = (filter: MetadataFilter) => {
         const { key, value, operator } = filter;
         const metadataLookupFn = operatorToFilterFn[operator];
         const metadata = this.data.metadataDict[nodeId];
-        const isMatch =
+        return (
           metadataLookupFn &&
           metadata &&
-          metadataLookupFn({ metadata, key, value });
-        if (!isMatch) return false; // TODO: handle condition OR AND
-      }
-      return true;
+          metadataLookupFn({ metadata, key, value })
+        );
+      };
+
+      if (queryCondition === "and") return filters.every(queryFilterItemFn);
+      return filters.some(queryFilterItemFn);
     };
 
     const nodeFilterFn = (nodeId: string) => {

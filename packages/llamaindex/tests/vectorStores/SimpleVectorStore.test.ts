@@ -99,5 +99,29 @@ describe("SimpleVectorStore", () => {
       });
       expect(result.similarities).length(2);
     });
+    it("able to query nodes with filter condition OR", async () => {
+      await store.add(nodes);
+      const result = await store.query({
+        queryEmbedding: [0.1, 0.2],
+        similarityTopK: 3,
+        mode: VectorStoreQueryMode.DEFAULT,
+        filters: {
+          filters: [
+            {
+              key: "private",
+              value: "false",
+              operator: "==",
+            },
+            {
+              key: "dogId",
+              value: ["1", "3"],
+              operator: "in",
+            },
+          ],
+          condition: "or",
+        },
+      });
+      expect(result.similarities).length(3);
+    });
   });
 });
