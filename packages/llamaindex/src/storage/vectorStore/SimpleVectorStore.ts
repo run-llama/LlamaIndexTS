@@ -117,8 +117,18 @@ export class SimpleVectorStore
         },
       ) => boolean
     > = {
-      "==": (input) => {
+      [FilterOperator.EQ]: function (input): boolean {
         return String(input.metadata[input.key]) === input.value.toString(); // compare as string
+      },
+      [FilterOperator.IN]: function (input): boolean {
+        if (!Array.isArray(input.value)) {
+          throw new Error(
+            "To use IN, value must be an array of strings or numbers",
+          );
+        }
+        return input.value
+          .map(String)
+          .includes(String(input.metadata[input.key]));
       },
     };
 

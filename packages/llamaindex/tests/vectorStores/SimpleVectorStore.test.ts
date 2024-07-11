@@ -63,7 +63,7 @@ describe("SimpleVectorStore", () => {
       });
       expect(result.similarities).length(3);
     });
-    it("able to query nodes with filter", async () => {
+    it("able to query nodes with filter EQ", async () => {
       await store.add(nodes);
       const result = await store.query({
         queryEmbedding: [0.1, 0.2],
@@ -75,6 +75,24 @@ describe("SimpleVectorStore", () => {
               key: "private",
               value: "false",
               operator: "==",
+            },
+          ],
+        },
+      });
+      expect(result.similarities).length(2);
+    });
+    it("able to query nodes with filter IN", async () => {
+      await store.add(nodes);
+      const result = await store.query({
+        queryEmbedding: [0.1, 0.2],
+        similarityTopK: 3,
+        mode: VectorStoreQueryMode.DEFAULT,
+        filters: {
+          filters: [
+            {
+              key: "dogId",
+              value: ["1", "3"],
+              operator: "in",
             },
           ],
         },

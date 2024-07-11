@@ -31,12 +31,12 @@ export interface ExactMatchFilter {
 
 export enum FilterOperator {
   EQ = "==", // default operator (string, number)
+  IN = "in", // In array (string or number)
   // GT = ">", // greater than (number)
   // LT = "<", // less than (number)
   // NE = "!=", // not equal to (string, number)
   // GTE = ">=", // greater than or equal to (number)
   // LTE = "<=", // less than or equal to (number)
-  // IN = "in", // In array (string or number)
   // NIN = "nin", // Not in array (string or number)
   // ANY = "any", // Contains any (array of strings)
   // ALL = "all", // Contains all (array of strings)
