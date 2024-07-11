@@ -74,12 +74,12 @@ async function main() {
         {
           key: "private",
           value: "false",
-          filterType: "ExactMatch",
+          operator: "==",
         },
         {
           key: "dogId",
           value: "3",
-          filterType: "ExactMatch",
+          operator: "==",
         },
       ],
     },

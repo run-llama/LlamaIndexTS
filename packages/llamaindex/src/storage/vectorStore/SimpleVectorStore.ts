@@ -9,9 +9,11 @@ import {
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
+  FilterOperator,
   VectorStoreBase,
   VectorStoreQueryMode,
   type IEmbedModel,
+  type MetadataFilter,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
@@ -26,10 +28,12 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
+type MetadataValue = Record<string, any>;
+
 class SimpleVectorStoreData {
   embeddingDict: Record<string, number[]> = {};
   textIdToRefDocId: Record<string, string> = {};
-  metadataDict: Record<string, Record<string, any>> = {};
+  metadataDict: Record<string, MetadataValue> = {};
 }
 
 export class SimpleVectorStore
@@ -105,13 +109,16 @@ export class SimpleVectorStore
   }> {
     const items = Object.entries(this.data.embeddingDict);
 
-    const metadataLookup = {
-      ExactMatch: (
-        metadata: Record<string, any>,
-        key: string,
-        value: string | number,
-      ) => {
-        return String(metadata[key]) === value.toString(); // compare as string
+    const operatorToFilterFn: Record<
+      FilterOperator,
+      (
+        input: Omit<MetadataFilter, "operator"> & {
+          metadata: MetadataValue;
+        },
+      ) => boolean
+    > = {
+      "==": (input) => {
+        return String(input.metadata[input.key]) === input.value.toString(); // compare as string
       },
     };
 
@@ -119,13 +126,13 @@ export class SimpleVectorStore
       if (!query.filters) return true;
       const filters = query.filters.filters;
       for (const filter of filters) {
-        const { key, value, filterType } = filter;
-        const metadataLookupFn = metadataLookup[filterType];
+        const { key, value, operator } = filter;
+        const metadataLookupFn = operatorToFilterFn[operator];
         const metadata = this.data.metadataDict[nodeId];
         const isMatch =
           metadataLookupFn &&
           metadata &&
-          metadataLookupFn(metadata, key, value);
+          metadataLookupFn({ metadata, key, value });
         if (!isMatch) return false; // TODO: handle condition OR AND
       }
       return true;

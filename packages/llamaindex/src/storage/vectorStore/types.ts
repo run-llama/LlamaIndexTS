@@ -20,19 +20,51 @@ export enum VectorStoreQueryMode {
   MMR = "mmr",
 }
 
+/**
+ * @deprecated Use MetadataFilter with operator EQ instead
+ */
 export interface ExactMatchFilter {
   filterType: "ExactMatch";
   key: string;
   value: string | number;
 }
 
+export enum FilterOperator {
+  EQ = "==", // default operator (string, number)
+  // GT = ">", // greater than (number)
+  // LT = "<", // less than (number)
+  // NE = "!=", // not equal to (string, number)
+  // GTE = ">=", // greater than or equal to (number)
+  // LTE = "<=", // less than or equal to (number)
+  // IN = "in", // In array (string or number)
+  // NIN = "nin", // Not in array (string or number)
+  // ANY = "any", // Contains any (array of strings)
+  // ALL = "all", // Contains all (array of strings)
+  // TEXT_MATCH = "text_match", // full text match (allows you to search for a specific substring, token or phrase within the text field)
+  // CONTAINS = "contains", // metadata array contains value (string or number)
+}
+
+export enum FilterCondition {
+  AND = "and",
+  OR = "or",
+}
+
+export type MetadataFilterValue = string | number | string[] | number[];
+
+export interface MetadataFilter {
+  key: string;
+  value: MetadataFilterValue;
+  operator: `${FilterOperator}`; // ==, any, all,...
+}
+
 export interface MetadataFilters {
-  filters: ExactMatchFilter[];
+  filters: Array<MetadataFilter>;
+  condition?: `${FilterCondition}`; // and, or
 }
 
 export interface VectorStoreQuerySpec {
   query: string;
-  filters: ExactMatchFilter[];
+  filters: MetadataFilter[];
   topK?: number;
 }
 

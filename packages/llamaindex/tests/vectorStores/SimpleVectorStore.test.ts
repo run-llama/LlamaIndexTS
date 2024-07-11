@@ -74,7 +74,7 @@ describe("SimpleVectorStore", () => {
             {
               key: "private",
               value: "false",
-              filterType: "ExactMatch",
+              operator: "==",
             },
           ],
         },
