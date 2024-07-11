@@ -11,11 +11,43 @@ import {
 import {
   VectorStoreBase,
   type IEmbedModel,
+  type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+
+function parseScalarFilters(scalarFilters: MetadataFilters): string {
+  const condition = scalarFilters.condition ?? "and";
+  const filters: string[] = [];
+
+  for (const filter of scalarFilters.filters) {
+    switch (filter.operator) {
+      case "==": {
+        if (Array.isArray(filter.value)) {
+          throw new Error("Operator '==' does not support array value");
+        }
+        const filterValue = String(filter.value);
+        filters.push(`metadata["${filter.key}"] == "${filterValue}"`); // Eg: metadata["doc_id"] == "./data/movie_reviews.csv_95"
+        break;
+      }
+      case "in": {
+        if (!Array.isArray(filter.value)) {
+          throw new Error("Operator 'in' requires array value");
+        }
+        const filterValue = filter.value.map((v) => `"${v}"`).join(", ");
+        filters.push(`metadata["${filter.key}"] in [${filterValue}]`); // Eg: metadata["doc_id"] in ["./data/movie_reviews.csv_95"]
+        break;
+      }
+      // TODO: Add support for other operators
+      default:
+        throw new Error(`Operator ${filter.operator} is not supported.`);
+    }
+  }
+
+  return filters.join(` ${condition} `);
+}
 
 export class MilvusVectorStore
   extends VectorStoreBase
@@ -183,6 +215,12 @@ export class MilvusVectorStore
     });
   }
 
+  private toMilvusFilter(filters?: MetadataFilters): string | undefined {
+    if (!filters) return undefined;
+    // TODO: Milvus also support standard filters, we can add it later
+    return parseScalarFilters(filters);
+  }
+
   public async query(
     query: VectorStoreQuery,
     _options?: any,
@@ -193,6 +231,7 @@ export class MilvusVectorStore
       collection_name: this.collectionName,
       limit: query.similarityTopK,
       vector: query.queryEmbedding,
+      filter: this.toMilvusFilter(query.filters),
     });
 
     const nodes: BaseNode<Metadata>[] = [];
