@@ -12,13 +12,13 @@
     "cf-typegen": "wrangler types"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.4.3",
-    "@cloudflare/workers-types": "^4.20240605.0",
-    "@vitest/runner": "1.3.0",
-    "@vitest/snapshot": "1.3.0",
-    "typescript": "^5.5.2",
-    "vitest": "1.3.0",
-    "wrangler": "^3.60.1"
+    "@cloudflare/vitest-pool-workers": "^0.4.10",
+    "@cloudflare/workers-types": "^4.20240620.0",
+    "@vitest/runner": "1.5.3",
+    "@vitest/snapshot": "1.5.3",
+    "typescript": "^5.5.3",
+    "vitest": "1.5.3",
+    "wrangler": "^3.63.2"
   },
   "dependencies": {
     "llamaindex": "workspace:*"

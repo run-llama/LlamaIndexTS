@@ -34,10 +34,10 @@
     "@docusaurus/types": "3.4.0",
     "@tsconfig/docusaurus": "2.0.3",
     "@types/node": "^20.12.11",
-    "docusaurus-plugin-typedoc": "1.0.2",
-    "typedoc": "0.26.3",
+    "docusaurus-plugin-typedoc": "1.0.3",
+    "typedoc": "0.26.4",
     "typedoc-plugin-markdown": "4.1.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "browserslist": {
     "production": [

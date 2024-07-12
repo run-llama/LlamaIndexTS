@@ -8,6 +8,6 @@
   },
   "devDependencies": {
     "llamaindex": "workspace:*",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.2"
   }
 }

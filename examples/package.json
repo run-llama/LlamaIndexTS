@@ -9,7 +9,7 @@
     "@llamaindex/core": "^0.1.0",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^2.2.2",
-    "@zilliz/milvus2-sdk-node": "^2.4.2",
+    "@zilliz/milvus2-sdk-node": "^2.4.4",
     "chromadb": "^1.8.1",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/node": "^20.14.1",
     "tsx": "^4.15.6",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "scripts": {
     "lint": "eslint ."
