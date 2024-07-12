@@ -154,10 +154,10 @@ export const mapChatMessagesToMetaMessages = <T extends ChatMessage>(
   messages: T[],
 ): MetaMessage[] => {
   return messages.map((msg) => {
-    let content: string;
+    let content: string = "";
     if (typeof msg.content === "string") {
       content = msg.content;
-    } else {
+    } else if (msg.content.length) {
       content = (msg.content[0] as MessageContentTextDetail).text;
     }
     return {
