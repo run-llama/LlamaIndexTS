@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.2.0
+
+### Minor Changes
+
+- 3ed6acc: feat: cloud api change
+
 ## 0.1.4
 
 ### Patch Changes
