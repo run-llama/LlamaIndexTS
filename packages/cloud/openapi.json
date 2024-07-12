@@ -308,6 +308,16 @@
             "required": false,
             "schema": {
               "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
               "title": "Session"
             },
             "name": "session",
@@ -366,6 +376,16 @@
               "title": "Project Id"
             },
             "name": "project_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
             "in": "query"
           },
           {
@@ -605,6 +625,16 @@
             "required": false,
             "schema": {
               "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
               "title": "Session"
             },
             "name": "session",
@@ -657,6 +687,16 @@
               "title": "Project Id"
             },
             "name": "project_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
             "in": "query"
           },
           {
@@ -721,6 +761,16 @@
               "title": "Project Id"
             },
             "name": "project_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
             "in": "query"
           },
           {
@@ -939,6 +989,621 @@
         ]
       }
     },
+    "/api/v1/organizations": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "List Organizations",
+        "description": "List organizations for a user.",
+        "operationId": "list_organizations_api_v1_organizations_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Organization"
+                  },
+                  "type": "array",
+                  "title": "Response List Organizations Api V1 Organizations Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Organizations"],
+        "summary": "Upsert Organization",
+        "description": "Upsert a new organization.",
+        "operationId": "upsert_organization_api_v1_organizations_put",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Organizations"],
+        "summary": "Create Organization",
+        "description": "Create a new organization.",
+        "operationId": "create_organization_api_v1_organizations_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/default": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "Get Default Organization",
+        "description": "Get the default organization for the user.",
+        "operationId": "get_default_organization_api_v1_organizations_default_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Organizations"],
+        "summary": "Set Default Organization",
+        "description": "Set the default organization for the user.",
+        "operationId": "set_default_organization_api_v1_organizations_default_put",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultOrganizationUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{organization_id}": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "Get Organization",
+        "description": "Get an organization by ID.",
+        "operationId": "get_organization_api_v1_organizations__organization_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Organizations"],
+        "summary": "Update Organization",
+        "description": "Update an existing organization.",
+        "operationId": "update_organization_api_v1_organizations__organization_id__put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Organizations"],
+        "summary": "Delete Organization",
+        "description": "Delete an organization by ID.",
+        "operationId": "delete_organization_api_v1_organizations__organization_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "List Organization Users",
+        "description": "Get all users in an organization.",
+        "operationId": "list_organization_users_api_v1_organizations__organization_id__users_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UserOrganization"
+                  },
+                  "type": "array",
+                  "title": "Response List Organization Users Api V1 Organizations  Organization Id  Users Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Organizations"],
+        "summary": "Add Users To Organization",
+        "description": "Add a user to an organization.",
+        "operationId": "add_users_to_organization_api_v1_organizations__organization_id__users_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/UserOrganizationCreate"
+                },
+                "type": "array",
+                "title": "Payload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UserOrganization"
+                  },
+                  "type": "array",
+                  "title": "Response Add Users To Organization Api V1 Organizations  Organization Id  Users Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users/{member_user_id}": {
+      "delete": {
+        "tags": ["Organizations"],
+        "summary": "Remove Users From Organization",
+        "description": "Remove users from an organization by email.",
+        "operationId": "remove_users_from_organization_api_v1_organizations__organization_id__users__member_user_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Member User Id"
+            },
+            "name": "member_user_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/projects": {
       "get": {
         "tags": ["Projects"],
@@ -946,6 +1611,16 @@
         "description": "List projects or get one by name",
         "operationId": "list_projects_api_v1_projects_get",
         "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "query"
+          },
           {
             "required": false,
             "schema": {
@@ -1007,6 +1682,16 @@
             "required": false,
             "schema": {
               "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
               "title": "Session"
             },
             "name": "session",
@@ -1057,6 +1742,16 @@
         "description": "Create a new project.",
         "operationId": "create_project_api_v1_projects_post",
         "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "query"
+          },
           {
             "required": false,
             "schema": {
@@ -2358,7 +3053,7 @@
         "operationId": "search_pipelines_api_v1_pipelines_get",
         "parameters": [
           {
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "title": "Project Name"
@@ -2381,6 +3076,16 @@
               "$ref": "#/components/schemas/PipelineType"
             },
             "name": "pipeline_type",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            },
+            "name": "project_id",
             "in": "query"
           },
           {
@@ -3474,6 +4179,123 @@
         ]
       }
     },
+    "/api/v1/pipelines/{pipeline_id}/metadata": {
+      "put": {
+        "tags": ["Pipelines"],
+        "summary": "Import Pipeline Metadata",
+        "description": "Import metadata for a pipeline.",
+        "operationId": "import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Import Pipeline Metadata Api V1 Pipelines  Pipeline Id  Metadata Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Pipelines"],
+        "summary": "Delete Pipeline Files Metadata",
+        "description": "Delete metadata for all files in a pipeline.",
+        "operationId": "delete_pipeline_files_metadata_api_v1_pipelines__pipeline_id__metadata_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/pipelines/{pipeline_id}/data-sources": {
       "get": {
         "tags": ["Pipelines"],
@@ -3902,6 +4724,69 @@
                 "schema": {
                   "$ref": "#/components/schemas/PipelineDeployment"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pipelines/{pipeline_id}/chat": {
+      "post": {
+        "tags": ["Pipelines"],
+        "summary": "Chat",
+        "operationId": "chat_api_v1_pipelines__pipeline_id__chat_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_chat_api_v1_pipelines__pipeline_id__chat_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -7333,6 +8218,31 @@
         "title": "BedrockEmbedding",
         "description": "Base class for embeddings."
       },
+      "Body_chat_api_v1_pipelines__pipeline_id__chat_post": {
+        "properties": {
+          "retrieval_parameters": {
+            "$ref": "#/components/schemas/PresetRetrievalParams"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ChatParams"
+          }
+        },
+        "type": "object",
+        "required": ["retrieval_parameters", "data"],
+        "title": "Body_chat_api_v1_pipelines__pipeline_id__chat_post"
+      },
+      "Body_import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put": {
+        "properties": {
+          "upload_file": {
+            "type": "string",
+            "format": "binary",
+            "title": "Upload File"
+          }
+        },
+        "type": "object",
+        "required": ["upload_file"],
+        "title": "Body_import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put"
+      },
       "Body_upload_file_api_parsing_upload_post": {
         "properties": {
           "language": {
@@ -7394,6 +8304,20 @@
           "target_pages": {
             "type": "string",
             "title": "Target Pages",
+            "default": ""
+          },
+          "use_vendor_multimodal_model": {
+            "type": "boolean",
+            "title": "Use Vendor Multimodal Model",
+            "default": false
+          },
+          "vendor_multimodal_model_name": {
+            "type": "string",
+            "title": "Vendor Multimodal Model Name"
+          },
+          "vendor_multimodal_api_key": {
+            "type": "string",
+            "title": "Vendor Multimodal Api Key",
             "default": ""
           },
           "file": {
@@ -7481,6 +8405,20 @@
             "title": "Target Pages",
             "default": ""
           },
+          "use_vendor_multimodal_model": {
+            "type": "boolean",
+            "title": "Use Vendor Multimodal Model",
+            "default": false
+          },
+          "vendor_multimodal_model_name": {
+            "type": "string",
+            "title": "Vendor Multimodal Model Name"
+          },
+          "vendor_multimodal_api_key": {
+            "type": "string",
+            "title": "Vendor Multimodal Api Key",
+            "default": ""
+          },
           "file": {
             "type": "string",
             "format": "binary",
@@ -7513,6 +8451,26 @@
         "type": "object",
         "title": "ChatMessage",
         "description": "Chat message."
+      },
+      "ChatParams": {
+        "properties": {
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "type": "array",
+            "title": "Messages"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
+          }
+        },
+        "type": "object",
+        "required": ["messages"],
+        "title": "ChatParams",
+        "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
       },
       "CheckoutSessionCreatePayload": {
         "properties": {
@@ -7751,6 +8709,49 @@
         "required": ["text", "metadata"],
         "title": "CloudDocumentCreate",
         "description": "Create a new cloud document."
+      },
+      "CloudJiraDataSource": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "The email address to use for authentication."
+          },
+          "api_token": {
+            "type": "string",
+            "title": "Api Token",
+            "description": "The API/ Access Token used for Basic, PAT and OAuth2 authentication."
+          },
+          "server_url": {
+            "type": "string",
+            "title": "Server Url",
+            "description": "The server url for Jira Cloud."
+          },
+          "cloud_id": {
+            "type": "string",
+            "title": "Cloud Id",
+            "description": "The cloud ID, used in case of OAuth2."
+          },
+          "authentication_mechanism": {
+            "type": "string",
+            "title": "Authentication Mechanism",
+            "description": "Type of Authentication for connecting to Jira APIs."
+          },
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "JQL (Jira Query Language) query to search."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudJiraDataSource"
+          }
+        },
+        "type": "object",
+        "required": ["authentication_mechanism", "query"],
+        "title": "CloudJiraDataSource",
+        "description": "Cloud Jira Data Source integrating JiraReader."
       },
       "CloudNotionPageDataSource": {
         "properties": {
@@ -8033,6 +9034,11 @@
             "title": "Folder Id",
             "description": "The ID of the Sharepoint folder to read from."
           },
+          "drive_name": {
+            "type": "string",
+            "title": "Drive Name",
+            "description": "The name of the Sharepoint drive to read from."
+          },
           "client_id": {
             "type": "string",
             "title": "Client Id",
@@ -8280,7 +9286,8 @@
           "MICROSOFT_ONEDRIVE",
           "MICROSOFT_SHAREPOINT",
           "SLACK",
-          "NOTION_PAGE"
+          "NOTION_PAGE",
+          "JIRA"
         ],
         "title": "ConfigurableDataSourceNames",
         "description": "An enumeration."
@@ -8702,6 +9709,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudJiraDataSource"
                   }
                 ]
               }
@@ -8781,6 +9791,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudJiraDataSource"
                   }
                 ]
               }
@@ -8881,6 +9894,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudJiraDataSource"
                   }
                 ]
               }
@@ -8892,6 +9908,20 @@
         "required": ["source_type"],
         "title": "DataSourceUpdate",
         "description": "Schema for updating a data source."
+      },
+      "DefaultOrganizationUpdate": {
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Organization Id",
+            "description": "The organization's ID."
+          }
+        },
+        "type": "object",
+        "required": ["organization_id"],
+        "title": "DefaultOrganizationUpdate",
+        "description": "Schema for updating the default organization for a user."
       },
       "EvalDataset": {
         "properties": {
@@ -9017,6 +10047,11 @@
             "format": "uuid",
             "title": "Parent Job Execution Id",
             "description": "The ID of the parent job execution."
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "The ID of the user that created this job"
           },
           "created_at": {
             "type": "string",
@@ -10075,6 +11110,21 @@
             "type": "string",
             "title": "Target Pages",
             "default": ""
+          },
+          "use_vendor_multimodal_model": {
+            "type": "string",
+            "title": "Use Vendor Multimodal Model",
+            "default": false
+          },
+          "vendor_multimodal_model_name": {
+            "type": "string",
+            "title": "Vendor Multimodal Model Name",
+            "default": ""
+          },
+          "vendor_multimodal_api_key": {
+            "type": "string",
+            "title": "Vendor Multimodal Api Key",
+            "default": ""
           }
         },
         "type": "object",
@@ -10663,6 +11713,68 @@
         "title": "OpenAIEmbedding",
         "description": "OpenAI class for embeddings.\n\nArgs:\n    mode (str): Mode for embedding.\n        Defaults to OpenAIEmbeddingMode.TEXT_SEARCH_MODE.\n        Options are:\n\n        - OpenAIEmbeddingMode.SIMILARITY_MODE\n        - OpenAIEmbeddingMode.TEXT_SEARCH_MODE\n\n    model (str): Model for embedding.\n        Defaults to OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002.\n        Options are:\n\n        - OpenAIEmbeddingModelType.DAVINCI\n        - OpenAIEmbeddingModelType.CURIE\n        - OpenAIEmbeddingModelType.BABBAGE\n        - OpenAIEmbeddingModelType.ADA\n        - OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002"
       },
+      "Organization": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "A name for the organization."
+          }
+        },
+        "type": "object",
+        "required": ["id", "name"],
+        "title": "Organization",
+        "description": "Schema for an organization."
+      },
+      "OrganizationCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "A name for the organization."
+          }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "OrganizationCreate",
+        "description": "Schema for creating an organization."
+      },
+      "OrganizationUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "A name for the organization."
+          }
+        },
+        "type": "object",
+        "title": "OrganizationUpdate",
+        "description": "Schema for updating an organization."
+      },
       "ParserLanguages": {
         "type": "string",
         "enum": [
@@ -11146,6 +12258,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudJiraDataSource"
                   }
                 ]
               }
@@ -11582,6 +12697,23 @@
             ],
             "title": "Search Filters",
             "description": "Search filters for retrieval."
+          },
+          "files_top_k": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Files Top K",
+            "description": "Number of files to retrieve (only for retrieval mode files_via_metadata and files_via_content).",
+            "default": 1
+          },
+          "retrieval_mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RetrievalMode"
+              }
+            ],
+            "description": "The retrieval mode for the query.",
+            "default": "chunks"
           }
         },
         "type": "object",
@@ -11649,10 +12781,11 @@
             "format": "uuid",
             "title": "Ad Hoc Eval Dataset Id"
           },
-          "user_id": {
+          "organization_id": {
             "type": "string",
-            "title": "User Id",
-            "description": "The user ID of the project owner."
+            "format": "uuid",
+            "title": "Organization Id",
+            "description": "The Organization ID the project is under."
           },
           "is_default": {
             "type": "boolean",
@@ -11662,7 +12795,7 @@
           }
         },
         "type": "object",
-        "required": ["name", "id", "user_id"],
+        "required": ["name", "id", "organization_id"],
         "title": "Project",
         "description": "Schema for a project."
       },
@@ -11803,6 +12936,12 @@
         "title": "RelatedNodeInfo",
         "description": "Base component object to capture class names."
       },
+      "RetrievalMode": {
+        "type": "string",
+        "enum": ["chunks", "files_via_metadata", "files_via_content"],
+        "title": "RetrievalMode",
+        "description": "An enumeration."
+      },
       "RetrievalParams": {
         "properties": {
           "dense_similarity_top_k": {
@@ -11851,6 +12990,23 @@
             ],
             "title": "Search Filters",
             "description": "Search filters for retrieval."
+          },
+          "files_top_k": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Files Top K",
+            "description": "Number of files to retrieve (only for retrieval mode files_via_metadata and files_via_content).",
+            "default": 1
+          },
+          "retrieval_mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RetrievalMode"
+              }
+            ],
+            "description": "The retrieval mode for the query.",
+            "default": "chunks"
           },
           "query": {
             "type": "string",
@@ -12113,9 +13269,9 @@
             "description": "Template for how metadata is formatted, with {key} and {value} placeholders.",
             "default": "{key}: {value}"
           },
-          "metadata_separator": {
+          "metadata_seperator": {
             "type": "string",
-            "title": "Metadata Separator",
+            "title": "Metadata Seperator",
             "description": "Separator between metadata fields when converting to string.",
             "default": "\n"
           },
@@ -12209,6 +13365,67 @@
         "enum": ["NODE_PARSER", "EMBEDDING"],
         "title": "TransformationCategoryNames",
         "description": "An enumeration."
+      },
+      "UserOrganization": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email",
+            "description": "The user's email address."
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "The user's ID."
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Organization Id",
+            "description": "The organization's ID."
+          }
+        },
+        "type": "object",
+        "required": ["id", "email", "user_id", "organization_id"],
+        "title": "UserOrganization",
+        "description": "Schema for a user's membership to an organization."
+      },
+      "UserOrganizationCreate": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "The user's ID."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email",
+            "description": "The user's email address."
+          }
+        },
+        "type": "object",
+        "title": "UserOrganizationCreate",
+        "description": "Schema for creating a user's membership to an organization."
       },
       "ValidationError": {
         "properties": {
