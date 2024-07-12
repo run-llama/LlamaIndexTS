@@ -105,9 +105,7 @@ export class CallbackManager {
     }
     queueMicrotask(() => {
       cbs.forEach((handler) =>
-        handler(
-          LlamaIndexCustomEvent.fromEvent(event, structuredClone(detail)),
-        ),
+        handler(LlamaIndexCustomEvent.fromEvent(event, { ...detail })),
       );
     });
   }
