@@ -20,7 +20,7 @@ describe("pdf reader", () => {
     const documents = await reader.loadData(
       "../../../examples/data/brk-2022.pdf",
     );
-    expect(documents.length).toBe(140);
+    expect(documents.length).toBe(144);
   });
   test("manga.pdf", async () => {
     const documents = await reader.loadData("../../../examples/data/manga.pdf");
