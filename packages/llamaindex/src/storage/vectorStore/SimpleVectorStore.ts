@@ -15,12 +15,16 @@ import {
   type IEmbedModel,
   type MetadataFilter,
   type MetadataFilters,
-  type MetadataFilterValue,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
-import { nodeToMetadata } from "./utils.js";
+import {
+  nodeToMetadata,
+  parseArrayValue,
+  parseNumberValue,
+  parsePrimitiveValue,
+} from "./utils.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -31,28 +35,6 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
 type MetadataValue = Record<string, any>;
-
-const parseNumberValue = (value: MetadataFilterValue): number => {
-  if (typeof value !== "number") throw new Error("Value must be a number");
-  return value;
-};
-
-const parsePrimitiveValue = (value: MetadataFilterValue): string => {
-  if (typeof value !== "number" && typeof value !== "string") {
-    throw new Error("Value must be a string or number");
-  }
-  return value.toString();
-};
-
-const parseArrayValue = (value: MetadataFilterValue): string[] => {
-  const isPrimitiveArray =
-    Array.isArray(value) &&
-    value.every((v) => typeof v === "string" || typeof v === "number");
-  if (!isPrimitiveArray) {
-    throw new Error("Value must be an array of strings or numbers");
-  }
-  return value.map(String);
-};
 
 // Mapping of filter operators to metadata filter functions
 const OPERATOR_TO_FILTER: {

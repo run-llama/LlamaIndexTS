@@ -16,7 +16,13 @@ import {
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
+  parseNumberValue,
+  parsePrimitiveValue,
+} from "./utils.js";
 
 function parseScalarFilters(scalarFilters: MetadataFilters): string {
   const condition = scalarFilters.condition ?? "and";
@@ -24,23 +30,32 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
 
   for (const filter of scalarFilters.filters) {
     switch (filter.operator) {
-      case "==": {
-        if (Array.isArray(filter.value)) {
-          throw new Error("Operator '==' does not support array value");
-        }
-        const filterValue = String(filter.value);
-        filters.push(`metadata["${filter.key}"] == "${filterValue}"`); // Eg: metadata["doc_id"] == "./data/movie_reviews.csv_95"
+      case "==":
+      case "!=": {
+        filters.push(
+          `metadata["${filter.key}"] ${filter.operator} "${parsePrimitiveValue(filter.value)}"`,
+        );
         break;
       }
-      case "in": {
-        if (!Array.isArray(filter.value)) {
-          throw new Error("Operator 'in' requires array value");
-        }
-        const filterValue = filter.value.map((v) => `"${v}"`).join(", ");
-        filters.push(`metadata["${filter.key}"] in [${filterValue}]`); // Eg: metadata["doc_id"] in ["./data/movie_reviews.csv_95"]
+      case "in":
+      case "nin": {
+        const filterValue = parseArrayValue(filter.value)
+          .map((v) => `"${v}"`)
+          .join(", ");
+        filters.push(
+          `metadata["${filter.key}"] ${filter.operator} [${filterValue}]`,
+        );
         break;
       }
-      // TODO: Add support for other operators
+      case "<":
+      case "<=":
+      case ">":
+      case ">=": {
+        filters.push(
+          `metadata["${filter.key}"] ${filter.operator} ${parseNumberValue(filter.value)}`,
+        );
+        break;
+      }
       default:
         throw new Error(`Operator ${filter.operator} is not supported.`);
     }
