@@ -14,6 +14,8 @@ import {
   VectorStoreQueryMode,
   type IEmbedModel,
   type MetadataFilter,
+  type MetadataFilters,
+  type MetadataFilterValue,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
@@ -29,6 +31,58 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
 type MetadataValue = Record<string, any>;
+
+const parsePrimitiveValue = (value: MetadataFilterValue): string | number => {
+  if (Array.isArray(value)) throw new Error("Value must be a string or number");
+  return value.toString();
+};
+
+const parseArrayValue = (value: MetadataFilterValue): string[] | number[] => {
+  if (!Array.isArray(value))
+    throw new Error("Value must be an array of strings or numbers");
+  return value.map(String);
+};
+
+const OPERATOR_TO_FILTER_FN: {
+  [key in FilterOperator]?: (
+    input: MetadataFilter & {
+      metadata: MetadataValue;
+    },
+  ) => boolean;
+} = {
+  [FilterOperator.EQ]: function (input): boolean {
+    return (
+      String(input.metadata[input.key]) === parsePrimitiveValue(input.value)
+    );
+  },
+  [FilterOperator.IN]: function (input): boolean {
+    return !!parseArrayValue(input.value).find(
+      (i) => i === String(input.metadata[input.key]),
+    );
+  },
+};
+
+// Build a filter function based on the metadata and the preFilters
+const buildFilterFn = (
+  metadata: MetadataValue | undefined,
+  preFilters: MetadataFilters | undefined,
+) => {
+  if (!preFilters) return true;
+  if (!metadata) return false;
+
+  const { filters, condition } = preFilters;
+  const queryCondition = condition || "and"; // default to and
+
+  const itemFilterFn = (filter: MetadataFilter) => {
+    const { key, value, operator } = filter;
+    const metadataLookupFn = OPERATOR_TO_FILTER_FN[operator];
+    if (!metadataLookupFn) throw new Error(`Unsupported operator: ${operator}`);
+    return metadataLookupFn({ metadata, key, value, operator });
+  };
+
+  if (queryCondition === "and") return filters.every(itemFilterFn);
+  return filters.some(itemFilterFn);
+};
 
 class SimpleVectorStoreData {
   embeddingDict: Record<string, number[]> = {};
@@ -108,48 +162,9 @@ export class SimpleVectorStore
     embeddings: number[][];
   }> {
     const items = Object.entries(this.data.embeddingDict);
-
-    const operatorToFilterFn: Record<
-      FilterOperator,
-      (
-        input: Omit<MetadataFilter, "operator"> & {
-          metadata: MetadataValue;
-        },
-      ) => boolean
-    > = {
-      [FilterOperator.EQ]: function (input): boolean {
-        return String(input.metadata[input.key]) === input.value.toString(); // compare as string
-      },
-      [FilterOperator.IN]: function (input): boolean {
-        if (!Array.isArray(input.value)) {
-          throw new Error(
-            "To use IN, value must be an array of strings or numbers",
-          );
-        }
-        return input.value
-          .map(String)
-          .includes(String(input.metadata[input.key]));
-      },
-    };
-
     const queryFilterFn = (nodeId: string) => {
-      if (!query.filters) return true;
-      const { filters, condition } = query.filters;
-      const queryCondition = condition || "and"; // default to and
-
-      const queryFilterItemFn = (filter: MetadataFilter) => {
-        const { key, value, operator } = filter;
-        const metadataLookupFn = operatorToFilterFn[operator];
-        const metadata = this.data.metadataDict[nodeId];
-        return (
-          metadataLookupFn &&
-          metadata &&
-          metadataLookupFn({ metadata, key, value })
-        );
-      };
-
-      if (queryCondition === "and") return filters.every(queryFilterItemFn);
-      return filters.some(queryFilterItemFn);
+      const metadata = this.data.metadataDict[nodeId];
+      return buildFilterFn(metadata, query.filters);
     };
 
     const nodeFilterFn = (nodeId: string) => {
