@@ -32,33 +32,76 @@ const MMR_MODE = VectorStoreQueryMode.MMR;
 
 type MetadataValue = Record<string, any>;
 
-const parsePrimitiveValue = (value: MetadataFilterValue): string | number => {
-  if (Array.isArray(value)) throw new Error("Value must be a string or number");
+const parseNumberValue = (value: MetadataFilterValue): number => {
+  if (typeof value !== "number") throw new Error("Value must be a number");
+  return value;
+};
+
+const parsePrimitiveValue = (value: MetadataFilterValue): string => {
+  if (typeof value !== "number" && typeof value !== "string") {
+    throw new Error("Value must be a string or number");
+  }
   return value.toString();
 };
 
-const parseArrayValue = (value: MetadataFilterValue): string[] | number[] => {
-  if (!Array.isArray(value))
+const parseArrayValue = (value: MetadataFilterValue): string[] => {
+  const isPrimitiveArray =
+    Array.isArray(value) &&
+    value.every((v) => typeof v === "string" || typeof v === "number");
+  if (!isPrimitiveArray) {
     throw new Error("Value must be an array of strings or numbers");
+  }
   return value.map(String);
 };
 
-const OPERATOR_TO_FILTER_FN: {
-  [key in FilterOperator]?: (
-    input: MetadataFilter & {
-      metadata: MetadataValue;
-    },
+// Mapping of filter operators to metadata filter functions
+const OPERATOR_TO_FILTER: {
+  [key in FilterOperator]: (
+    { key, value }: MetadataFilter,
+    metadata: MetadataValue,
   ) => boolean;
 } = {
-  [FilterOperator.EQ]: function (input): boolean {
-    return (
-      String(input.metadata[input.key]) === parsePrimitiveValue(input.value)
+  [FilterOperator.EQ]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]) === parsePrimitiveValue(value);
+  },
+  [FilterOperator.NE]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]) !== parsePrimitiveValue(value);
+  },
+  [FilterOperator.IN]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+  },
+  [FilterOperator.NIN]: ({ key, value }, metadata) => {
+    return !parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+  },
+  [FilterOperator.ANY]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).some((v) =>
+      parseArrayValue(metadata[key]).includes(v),
     );
   },
-  [FilterOperator.IN]: function (input): boolean {
-    return !!parseArrayValue(input.value).find(
-      (i) => i === String(input.metadata[input.key]),
+  [FilterOperator.ALL]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).every((v) =>
+      parseArrayValue(metadata[key]).includes(v),
     );
+  },
+  [FilterOperator.TEXT_MATCH]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]).includes(
+      parsePrimitiveValue(value),
+    );
+  },
+  [FilterOperator.CONTAINS]: ({ key, value }, metadata) => {
+    return parseArrayValue(metadata[key]).includes(parsePrimitiveValue(value));
+  },
+  [FilterOperator.GT]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) > parseNumberValue(value);
+  },
+  [FilterOperator.LT]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) < parseNumberValue(value);
+  },
+  [FilterOperator.GTE]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) >= parseNumberValue(value);
+  },
+  [FilterOperator.LTE]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) <= parseNumberValue(value);
   },
 };
 
@@ -74,10 +117,10 @@ const buildFilterFn = (
   const queryCondition = condition || "and"; // default to and
 
   const itemFilterFn = (filter: MetadataFilter) => {
-    const { key, value, operator } = filter;
-    const metadataLookupFn = OPERATOR_TO_FILTER_FN[operator];
-    if (!metadataLookupFn) throw new Error(`Unsupported operator: ${operator}`);
-    return metadataLookupFn({ metadata, key, value, operator });
+    const metadataLookupFn = OPERATOR_TO_FILTER[filter.operator];
+    if (!metadataLookupFn)
+      throw new Error(`Unsupported operator: ${filter.operator}`);
+    return metadataLookupFn(filter, metadata);
   };
 
   if (queryCondition === "and") return filters.every(itemFilterFn);
