@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.20
+
+### Patch Changes
+
+- 56746c2: fix: llama3 patched to handle empty content (can happen with system) and added max tokens export
+
 ## 0.0.19
 
 ### Patch Changes
