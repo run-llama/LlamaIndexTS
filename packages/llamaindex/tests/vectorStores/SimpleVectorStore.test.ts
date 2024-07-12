@@ -19,19 +19,19 @@ describe("SimpleVectorStore", () => {
         id_: "1",
         embedding: [0.1, 0.2],
         text: "The dog is brown",
-        metadata: { dogId: "1", private: true },
+        metadata: { dogId: "1", private: "true" },
       }),
       new TextNode({
         id_: "2",
         embedding: [0.2, 0.3],
         text: "The dog is yellow",
-        metadata: { dogId: "2", private: false },
+        metadata: { dogId: "2", private: "false" },
       }),
       new TextNode({
         id_: "3",
         embedding: [0.3, 0.1],
         text: "The dog is red",
-        metadata: { dogId: "3", private: false },
+        metadata: { dogId: "3", private: "false" },
       }),
     ];
     store = new SimpleVectorStore({
@@ -41,9 +41,9 @@ describe("SimpleVectorStore", () => {
         textIdToRefDocId: {},
         metadataDict: {
           // Mocking the metadataDict
-          "1": { dogId: "1", private: true },
-          "2": { dogId: "2", private: false },
-          "3": { dogId: "3", private: false },
+          "1": { dogId: "1", private: "true" },
+          "2": { dogId: "2", private: "false" },
+          "3": { dogId: "3", private: "false" },
         },
       },
     });
