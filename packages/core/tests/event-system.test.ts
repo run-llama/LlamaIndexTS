@@ -6,6 +6,9 @@ declare module "@llamaindex/core/global" {
     test: {
       value: number;
     };
+    functionTest: {
+      fn: ({ x }: { x: number }) => string;
+    };
   }
 }
 
@@ -36,6 +39,25 @@ describe("event system", () => {
 
     Settings.callbackManager.dispatchEvent("test", {
       value: 42,
+    });
+    expect(callback).toHaveBeenCalledTimes(0);
+    await new Promise((resolve) => process.nextTick(resolve));
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  test("dispatch function tool event", async () => {
+    const testFunction = ({ x }: { x: number }) => `${x * 2}`;
+    let callback;
+    Settings.callbackManager.on(
+      "functionTest",
+      (callback = vi.fn((event) => {
+        const data = event.detail;
+        expect(data.fn).toBe(testFunction);
+      })),
+    );
+
+    Settings.callbackManager.dispatchEvent("functionTest", {
+      fn: testFunction,
     });
     expect(callback).toHaveBeenCalledTimes(0);
     await new Promise((resolve) => process.nextTick(resolve));
