@@ -4,6 +4,7 @@ import {
   SimpleVectorStore,
   TextNode,
   VectorStoreQueryMode,
+  type Metadata,
   type MetadataFilters,
 } from "llamaindex";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -26,19 +27,37 @@ describe("SimpleVectorStore", () => {
         id_: "1",
         embedding: [0.1, 0.2],
         text: "The dog is brown",
-        metadata: { dogId: "1", private: "true" },
+        metadata: {
+          name: "Anakin",
+          dogId: "1",
+          private: "true",
+          weight: 1.2,
+          type: ["husky", "puppy"],
+        },
       }),
       new TextNode({
         id_: "2",
-        embedding: [0.2, 0.3],
+        embedding: [0.1, 0.2],
         text: "The dog is yellow",
-        metadata: { dogId: "2", private: "false" },
+        metadata: {
+          name: "Luke",
+          dogId: "2",
+          private: "false",
+          weight: 2.3,
+          type: ["puppy"],
+        },
       }),
       new TextNode({
         id_: "3",
-        embedding: [0.3, 0.1],
+        embedding: [0.1, 0.2],
         text: "The dog is red",
-        metadata: { dogId: "3", private: "false" },
+        metadata: {
+          name: "Leia",
+          dogId: "3",
+          private: "false",
+          weight: 3.4,
+          type: ["husky"],
+        },
       }),
     ];
     store = new SimpleVectorStore({
@@ -46,12 +65,13 @@ describe("SimpleVectorStore", () => {
       data: {
         embeddingDict: {},
         textIdToRefDocId: {},
-        metadataDict: {
-          // Mocking the metadataDict
-          "1": { dogId: "1", private: "true" },
-          "2": { dogId: "2", private: "false" },
-          "3": { dogId: "3", private: "false" },
-        },
+        metadataDict: nodes.reduce(
+          (acc, node) => {
+            acc[node.id_] = node.metadata;
+            return acc;
+          },
+          {} as Record<string, Metadata>,
+        ),
       },
     });
   });
@@ -83,6 +103,71 @@ describe("SimpleVectorStore", () => {
         expected: 2,
       },
       {
+        title: "Filter NE",
+        filters: {
+          filters: [
+            {
+              key: "private",
+              value: "false",
+              operator: "!=",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter GT",
+        filters: {
+          filters: [
+            {
+              key: "weight",
+              value: 2.3,
+              operator: ">",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter GTE",
+        filters: {
+          filters: [
+            {
+              key: "weight",
+              value: 2.3,
+              operator: ">=",
+            },
+          ],
+        },
+        expected: 2,
+      },
+      {
+        title: "Filter LT",
+        filters: {
+          filters: [
+            {
+              key: "weight",
+              value: 2.3,
+              operator: "<",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter LTE",
+        filters: {
+          filters: [
+            {
+              key: "weight",
+              value: 2.3,
+              operator: "<=",
+            },
+          ],
+        },
+        expected: 2,
+      },
+      {
         title: "Filter IN",
         filters: {
           filters: [
@@ -94,6 +179,71 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 2,
+      },
+      {
+        title: "Filter NIN",
+        filters: {
+          filters: [
+            {
+              key: "name",
+              value: ["Anakin", "Leia"],
+              operator: "nin",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter ANY",
+        filters: {
+          filters: [
+            {
+              key: "type",
+              value: ["husky", "puppy"],
+              operator: "any",
+            },
+          ],
+        },
+        expected: 3,
+      },
+      {
+        title: "Filter ALL",
+        filters: {
+          filters: [
+            {
+              key: "type",
+              value: ["husky", "puppy"],
+              operator: "all",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter CONTAINS",
+        filters: {
+          filters: [
+            {
+              key: "type",
+              value: "puppy",
+              operator: "contains",
+            },
+          ],
+        },
+        expected: 2,
+      },
+      {
+        title: "Filter TEXT_MATCH",
+        filters: {
+          filters: [
+            {
+              key: "name",
+              value: "Luk",
+              operator: "text_match",
+            },
+          ],
+        },
+        expected: 1,
       },
       {
         title: "Filter OR",
@@ -113,6 +263,25 @@ describe("SimpleVectorStore", () => {
           condition: "or",
         },
         expected: 3,
+      },
+      {
+        title: "Filter OR",
+        filters: {
+          filters: [
+            {
+              key: "private",
+              value: "false",
+              operator: "==",
+            },
+            {
+              key: "dogId",
+              value: "10",
+              operator: "==",
+            },
+          ],
+          condition: "and",
+        },
+        expected: 0,
       },
     ];
 
