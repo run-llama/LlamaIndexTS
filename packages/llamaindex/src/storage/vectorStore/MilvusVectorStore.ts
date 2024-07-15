@@ -69,8 +69,6 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
     }
   }
 
-  console.log({ filterStr: filters.join(` ${condition} `) });
-
   return filters.join(` ${condition} `);
 }
 
@@ -240,7 +238,7 @@ export class MilvusVectorStore
     });
   }
 
-  private toMilvusFilter(filters?: MetadataFilters): string | undefined {
+  public toMilvusFilter(filters?: MetadataFilters): string | undefined {
     if (!filters) return undefined;
     // TODO: Milvus also support standard filters, we can add it later
     return parseScalarFilters(filters);
