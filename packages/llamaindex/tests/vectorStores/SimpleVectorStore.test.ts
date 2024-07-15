@@ -4,10 +4,17 @@ import {
   SimpleVectorStore,
   TextNode,
   VectorStoreQueryMode,
+  type MetadataFilters,
 } from "llamaindex";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@qdrant/js-client-rest");
+
+type FilterTestCase = {
+  title: string;
+  filters?: MetadataFilters;
+  expected: number;
+};
 
 describe("SimpleVectorStore", () => {
   let nodes: BaseNode[];
@@ -49,26 +56,21 @@ describe("SimpleVectorStore", () => {
     });
   });
 
-  describe("[SimpleVectorStore]", () => {
+  describe("[SimpleVectorStore] manage nodes", () => {
     it("able to add nodes to store", async () => {
       const ids = await store.add(nodes);
       expect(ids).length(3);
     });
-    it("able to query nodes without filter", async () => {
-      await store.add(nodes);
-      const result = await store.query({
-        queryEmbedding: [0.1, 0.2],
-        similarityTopK: 3,
-        mode: VectorStoreQueryMode.DEFAULT,
-      });
-      expect(result.similarities).length(3);
-    });
-    it("able to query nodes with filter EQ", async () => {
-      await store.add(nodes);
-      const result = await store.query({
-        queryEmbedding: [0.1, 0.2],
-        similarityTopK: 3,
-        mode: VectorStoreQueryMode.DEFAULT,
+  });
+
+  describe("[SimpleVectorStore] query nodes", () => {
+    const testcases: FilterTestCase[] = [
+      {
+        title: "No filter",
+        expected: 3,
+      },
+      {
+        title: "Filter EQ",
         filters: {
           filters: [
             {
@@ -78,15 +80,10 @@ describe("SimpleVectorStore", () => {
             },
           ],
         },
-      });
-      expect(result.similarities).length(2);
-    });
-    it("able to query nodes with filter IN", async () => {
-      await store.add(nodes);
-      const result = await store.query({
-        queryEmbedding: [0.1, 0.2],
-        similarityTopK: 3,
-        mode: VectorStoreQueryMode.DEFAULT,
+        expected: 2,
+      },
+      {
+        title: "Filter IN",
         filters: {
           filters: [
             {
@@ -96,15 +93,10 @@ describe("SimpleVectorStore", () => {
             },
           ],
         },
-      });
-      expect(result.similarities).length(2);
-    });
-    it("able to query nodes with filter condition OR", async () => {
-      await store.add(nodes);
-      const result = await store.query({
-        queryEmbedding: [0.1, 0.2],
-        similarityTopK: 3,
-        mode: VectorStoreQueryMode.DEFAULT,
+        expected: 2,
+      },
+      {
+        title: "Filter OR",
         filters: {
           filters: [
             {
@@ -120,8 +112,21 @@ describe("SimpleVectorStore", () => {
           ],
           condition: "or",
         },
+        expected: 3,
+      },
+    ];
+
+    testcases.forEach((tc) => {
+      it(`[${tc.title}] should return ${tc.expected} nodes`, async () => {
+        await store.add(nodes);
+        const result = await store.query({
+          queryEmbedding: [0.1, 0.2],
+          similarityTopK: 3,
+          mode: VectorStoreQueryMode.DEFAULT,
+          filters: tc.filters,
+        });
+        expect(result.ids).length(tc.expected);
       });
-      expect(result.similarities).length(3);
     });
   });
 });
