@@ -1,14 +1,12 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { TextNode } from "@llamaindex/core/schema";
-import type { MilvusClient } from "@zilliz/milvus2-sdk-node";
 import {
   MilvusVectorStore,
   VectorStoreQueryMode,
   type MetadataFilters,
 } from "llamaindex";
-import { beforeEach, describe, expect, it, vi, type Mocked } from "vitest";
-
-vi.mock("@qdrant/js-client-rest");
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { TestableMilvusVectorStore } from "../mocks/TestableMilvusVectorStore.js";
 
 type FilterTestCase = {
   title: string;
@@ -17,26 +15,6 @@ type FilterTestCase = {
   expectedFilterStr: string | undefined;
   mockResultIds: string[];
 };
-
-export class TestableMilvusVectorStore extends MilvusVectorStore {
-  public nodes: BaseNode[] = [];
-
-  private fakeTimeout = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-
-  public async add(nodes: BaseNode[]): Promise<string[]> {
-    this.nodes.push(...nodes);
-    await this.fakeTimeout(100);
-    return nodes.map((node) => node.id_);
-  }
-
-  constructor() {
-    super({
-      milvusClient: {} as Mocked<MilvusClient>,
-    });
-  }
-}
 
 describe("MilvusVectorStore", () => {
   let store: MilvusVectorStore;
