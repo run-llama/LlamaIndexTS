@@ -37,14 +37,22 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
         );
         break;
       }
-      case "in":
-      case "nin": {
+      case "in": {
         const filterValue = parseArrayValue(filter.value)
           .map((v) => `"${v}"`)
           .join(", ");
         filters.push(
           `metadata["${filter.key}"] ${filter.operator} [${filterValue}]`,
         );
+        break;
+      }
+      case "nin": {
+        // Milmus does not support `nin` operator, so we need to manually check every value
+        // Expected: not metadata["key"] != "value1" and not metadata["key"] != "value2"
+        const filterStr = parseArrayValue(filter.value)
+          .map((v) => `metadata["${filter.key}"] != "${v}"`)
+          .join(" && ");
+        filters.push(filterStr);
         break;
       }
       case "<":
@@ -60,6 +68,8 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
         throw new Error(`Operator ${filter.operator} is not supported.`);
     }
   }
+
+  console.log({ filterStr: filters.join(` ${condition} `) });
 
   return filters.join(` ${condition} `);
 }
