@@ -265,7 +265,7 @@ describe("SimpleVectorStore", () => {
         expected: 3,
       },
       {
-        title: "Filter OR",
+        title: "Filter AND",
         filters: {
           filters: [
             {
