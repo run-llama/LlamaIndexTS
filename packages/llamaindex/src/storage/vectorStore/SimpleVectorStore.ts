@@ -1,11 +1,10 @@
+import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { fs, path } from "@llamaindex/env";
-import { BaseEmbedding } from "../../embeddings/index.js";
 import {
   getTopKEmbeddings,
-  getTopKEmbeddingsLearner,
   getTopKMMREmbeddings,
-} from "../../embeddings/utils.js";
+} from "../../internal/utils.js";
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
@@ -116,11 +115,9 @@ export class SimpleVectorStore
 
     let topSimilarities: number[], topIds: string[];
     if (LEARNER_MODES.has(query.mode)) {
-      [topSimilarities, topIds] = getTopKEmbeddingsLearner(
-        queryEmbedding,
-        embeddings,
-        query.similarityTopK,
-        nodeIds,
+      // fixme: unfinished
+      throw new Error(
+        "Learner modes not implemented for SimpleVectorStore yet.",
       );
     } else if (query.mode === MMR_MODE) {
       const mmrThreshold = query.mmrThreshold;

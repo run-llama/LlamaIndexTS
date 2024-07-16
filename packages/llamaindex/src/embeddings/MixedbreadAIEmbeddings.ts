@@ -1,6 +1,6 @@
+import { BaseEmbedding, type EmbeddingInfo } from "@llamaindex/core/embeddings";
 import { getEnv } from "@llamaindex/env";
 import { MixedbreadAI, MixedbreadAIClient } from "@mixedbread-ai/sdk";
-import { BaseEmbedding, type EmbeddingInfo } from "./types.js";
 
 type EmbeddingsRequestWithoutInput = Omit<
   MixedbreadAI.EmbeddingsRequest,
@@ -153,7 +153,7 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
    * const result = await mxbai.getTextEmbeddings(texts);
    * console.log(result);
    */
-  async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
+  getTextEmbeddings = async (texts: string[]): Promise<Array<number[]>> => {
     if (texts.length === 0) {
       return [];
     }
@@ -166,5 +166,5 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
       this.requestOptions,
     );
     return response.data.map((d) => d.embedding as number[]);
-  }
+  };
 }

@@ -1,7 +1,7 @@
+import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { MessageContentDetail } from "@llamaindex/core/llms";
 import { extractSingleText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
-import { BaseEmbedding } from "./types.js";
 
 const DEFAULT_MODEL = "sentence-transformers/clip-ViT-B-32";
 
@@ -103,10 +103,10 @@ export class DeepInfraEmbedding extends BaseEmbedding {
     }
   }
 
-  async getTextEmbeddings(texts: string[]): Promise<number[][]> {
+  getTextEmbeddings = async (texts: string[]): Promise<number[][]> => {
     const textsWithPrefix = mapPrefixWithInputs(this.textPrefix, texts);
-    return await this.getDeepInfraEmbedding(textsWithPrefix);
-  }
+    return this.getDeepInfraEmbedding(textsWithPrefix);
+  };
 
   async getQueryEmbeddings(queries: string[]): Promise<number[][]> {
     const queriesWithPrefix = mapPrefixWithInputs(this.queryPrefix, queries);

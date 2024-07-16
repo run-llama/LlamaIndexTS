@@ -1,12 +1,11 @@
-import type { BaseNode } from "@llamaindex/core/schema";
+import type { BaseNode, TransformComponent } from "@llamaindex/core/schema";
 import { MetadataMode, TextNode } from "@llamaindex/core/schema";
-import type { TransformComponent } from "../ingestion/types.js";
 import { defaultNodeTextTemplate } from "./prompts.js";
 
 /*
  * Abstract class for all extractors.
  */
-export abstract class BaseExtractor implements TransformComponent {
+export abstract class BaseExtractor implements TransformComponent<any> {
   isTextNodeOnly: boolean = true;
   showProgress: boolean = true;
   metadataMode: MetadataMode = MetadataMode.ALL;

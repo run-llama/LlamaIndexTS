@@ -1,3 +1,7 @@
+import {
+  DEFAULT_SIMILARITY_TOP_K,
+  type BaseEmbedding,
+} from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
 import type { MessageContent } from "@llamaindex/core/llms";
 import {
@@ -13,8 +17,6 @@ import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
-import { DEFAULT_SIMILARITY_TOP_K } from "../../constants.js";
-import type { BaseEmbedding } from "../../embeddings/index.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
 import {
   addNodesToVectorStores,

@@ -32,6 +32,20 @@
         "default": "./dist/decorator/index.js"
       }
     },
+    "./embeddings": {
+      "require": {
+        "types": "./dist/embeddings/index.d.cts",
+        "default": "./dist/embeddings/index.cjs"
+      },
+      "import": {
+        "types": "./dist/embeddings/index.d.ts",
+        "default": "./dist/embeddings/index.js"
+      },
+      "default": {
+        "types": "./dist/embeddings/index.d.ts",
+        "default": "./dist/embeddings/index.js"
+      }
+    },
     "./global": {
       "require": {
         "types": "./dist/global/index.d.cts",

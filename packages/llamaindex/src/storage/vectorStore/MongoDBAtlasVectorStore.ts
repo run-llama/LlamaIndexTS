@@ -1,9 +1,9 @@
+import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
-import { BaseEmbedding } from "../../embeddings/types.js";
 import {
   VectorStoreBase,
   type MetadataFilters,

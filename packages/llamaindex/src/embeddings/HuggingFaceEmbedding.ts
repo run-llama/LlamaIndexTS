@@ -1,6 +1,6 @@
 import { HfInference } from "@huggingface/inference";
+import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { lazyLoadTransformers } from "../internal/deps/transformers.js";
-import { BaseEmbedding } from "./types.js";
 
 export enum HuggingFaceEmbeddingModelType {
   XENOVA_ALL_MINILM_L6_V2 = "Xenova/all-MiniLM-L6-v2",
@@ -91,11 +91,11 @@ export class HuggingFaceInferenceAPIEmbedding extends BaseEmbedding {
     return res as number[];
   }
 
-  async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
+  getTextEmbeddings = async (texts: string[]): Promise<Array<number[]>> => {
     const res = await this.hf.featureExtraction({
       model: this.model,
       inputs: texts,
     });
     return res as number[][];
-  }
+  };
 }

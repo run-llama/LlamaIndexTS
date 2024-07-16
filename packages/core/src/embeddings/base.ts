@@ -1,9 +1,8 @@
-import type { MessageContentDetail } from "@llamaindex/core/llms";
-import type { BaseNode } from "@llamaindex/core/schema";
-import { MetadataMode } from "@llamaindex/core/schema";
-import { extractSingleText } from "@llamaindex/core/utils";
 import { type Tokenizers } from "@llamaindex/env";
-import type { TransformComponent } from "../ingestion/types.js";
+import type { MessageContentDetail } from "../llms";
+import type { TransformComponent } from "../schema";
+import { BaseNode, MetadataMode } from "../schema";
+import { extractSingleText } from "../utils";
 import { truncateMaxTokens } from "./tokenizer.js";
 import { SimilarityType, similarity } from "./utils.js";
 
@@ -17,7 +16,13 @@ export type EmbeddingInfo = {
   tokenizer?: Tokenizers;
 };
 
-export abstract class BaseEmbedding implements TransformComponent {
+export type BaseEmbeddingOptions = {
+  logProgress?: boolean;
+};
+
+export abstract class BaseEmbedding
+  implements TransformComponent<BaseEmbeddingOptions>
+{
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
   embedInfo?: EmbeddingInfo;
 
@@ -45,7 +50,7 @@ export abstract class BaseEmbedding implements TransformComponent {
    * Optionally override this method to retrieve multiple embeddings in a single request
    * @param texts
    */
-  async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
+  getTextEmbeddings = async (texts: string[]): Promise<Array<number[]>> => {
     const embeddings: number[][] = [];
 
     for (const text of texts) {
@@ -54,7 +59,7 @@ export abstract class BaseEmbedding implements TransformComponent {
     }
 
     return embeddings;
-  }
+  };
 
   /**
    * Get embeddings for a batch of texts
@@ -63,22 +68,23 @@ export abstract class BaseEmbedding implements TransformComponent {
    */
   async getTextEmbeddingsBatch(
     texts: string[],
-    options?: {
-      logProgress?: boolean;
-    },
+    options?: BaseEmbeddingOptions,
   ): Promise<Array<number[]>> {
     return await batchEmbeddings(
       texts,
-      this.getTextEmbeddings.bind(this),
+      this.getTextEmbeddings,
       this.embedBatchSize,
       options,
     );
   }
 
-  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+  async transform(
+    nodes: BaseNode[],
+    options?: BaseEmbeddingOptions,
+  ): Promise<BaseNode[]> {
     const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
 
-    const embeddings = await this.getTextEmbeddingsBatch(texts, _options);
+    const embeddings = await this.getTextEmbeddingsBatch(texts, options);
 
     for (let i = 0; i < nodes.length; i++) {
       nodes[i].embedding = embeddings[i];
@@ -104,9 +110,7 @@ export async function batchEmbeddings<T>(
   values: T[],
   embedFunc: EmbedFunc<T>,
   chunkSize: number,
-  options?: {
-    logProgress?: boolean;
-  },
+  options?: BaseEmbeddingOptions,
 ): Promise<Array<number[]>> {
   const resultEmbeddings: Array<number[]> = [];
 

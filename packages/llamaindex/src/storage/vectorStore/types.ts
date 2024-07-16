@@ -1,5 +1,5 @@
+import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode, ModalityType } from "@llamaindex/core/schema";
-import type { BaseEmbedding } from "../../embeddings/types.js";
 import { getEmbeddedModel } from "../../internal/settings/EmbedModel.js";
 
 export interface VectorStoreQueryResult {

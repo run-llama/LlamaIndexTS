@@ -1,5 +1,5 @@
+import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { MistralAISession } from "../llm/mistral.js";
-import { BaseEmbedding } from "./types.js";
 
 export enum MistralAIEmbeddingModelType {
   MISTRAL_EMBED = "mistral-embed",

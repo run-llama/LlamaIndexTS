@@ -1,14 +1,13 @@
-import type { BaseNode } from "@llamaindex/core/schema";
+import type { BaseNode, TransformComponent } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 import type { VectorStore } from "../../storage/vectorStore/types.js";
-import type { TransformComponent } from "../types.js";
 import { classify } from "./classify.js";
 
 /**
  * Handle docstore upserts by checking hashes and ids.
  * Identify missing docs and delete them from docstore and vector store
  */
-export class UpsertsAndDeleteStrategy implements TransformComponent {
+export class UpsertsAndDeleteStrategy implements TransformComponent<any> {
   protected docStore: BaseDocumentStore;
   protected vectorStores?: VectorStore[];
 

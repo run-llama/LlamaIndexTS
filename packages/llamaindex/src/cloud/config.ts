@@ -3,20 +3,19 @@ import type {
   PipelineCreate,
   PipelineType,
 } from "@llamaindex/cloud/api";
-import { BaseNode } from "@llamaindex/core/schema";
+import { BaseNode, type TransformComponent } from "@llamaindex/core/schema";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
-import type { TransformComponent } from "../ingestion/types.js";
 import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
 export type GetPipelineCreateParams = {
   pipelineName: string;
   pipelineType: PipelineType;
-  transformations?: TransformComponent[];
+  transformations?: TransformComponent<any>[];
   inputNodes?: BaseNode[];
 };
 
 function getTransformationConfig(
-  transformation: TransformComponent,
+  transformation: TransformComponent<any>,
 ): ConfiguredTransformationItem {
   if (transformation instanceof SimpleNodeParser) {
     return {

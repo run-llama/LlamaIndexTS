@@ -1,6 +1,6 @@
+import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { GeminiSession, GeminiSessionStore } from "../llm/gemini/base.js";
 import { GEMINI_BACKENDS } from "../llm/gemini/types.js";
-import { BaseEmbedding } from "./types.js";
 
 export enum GEMINI_EMBEDDING_MODEL {
   EMBEDDING_001 = "embedding-001",

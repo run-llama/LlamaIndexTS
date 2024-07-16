@@ -1,3 +1,4 @@
+import { BaseEmbedding, batchEmbeddings } from "@llamaindex/core/embeddings";
 import type { MessageContentDetail } from "@llamaindex/core/llms";
 import {
   ImageNode,
@@ -8,7 +9,6 @@ import {
   type ImageType,
 } from "@llamaindex/core/schema";
 import { extractImage, extractSingleText } from "@llamaindex/core/utils";
-import { BaseEmbedding, batchEmbeddings } from "./types.js";
 
 /*
  * Base class for Multi Modal embeddings.

@@ -1,3 +1,4 @@
+export * from "@llamaindex/core/embeddings";
 export { DeepInfraEmbedding } from "./DeepInfraEmbedding.js";
 export { FireworksEmbedding } from "./fireworks.js";
 export * from "./GeminiEmbedding.js";
@@ -9,5 +10,3 @@ export * from "./MultiModalEmbedding.js";
 export { OllamaEmbedding } from "./OllamaEmbedding.js";
 export * from "./OpenAIEmbedding.js";
 export { TogetherEmbedding } from "./together.js";
-export * from "./types.js";
-export * from "./utils.js";
