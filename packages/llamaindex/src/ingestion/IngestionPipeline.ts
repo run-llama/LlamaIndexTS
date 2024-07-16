@@ -26,13 +26,13 @@ type IngestionRunArgs = {
 type TransformRunArgs = {
   inPlace?: boolean;
   cache?: IngestionCache;
-  docStoreStrategy?: TransformComponent<IngestionRunArgs & TransformRunArgs>;
+  docStoreStrategy?: TransformComponent<any>;
 };
 
 export async function runTransformations(
   nodesToRun: BaseNode[],
-  transformations: TransformComponent<IngestionRunArgs & TransformRunArgs>[],
-  transformOptions: IngestionRunArgs & TransformRunArgs = {},
+  transformations: TransformComponent<any>[],
+  transformOptions: any = {},
   { inPlace = true, cache, docStoreStrategy }: TransformRunArgs = {},
 ): Promise<BaseNode[]> {
   let nodes = nodesToRun;
@@ -60,8 +60,7 @@ export async function runTransformations(
 }
 
 export class IngestionPipeline {
-  transformations: TransformComponent<IngestionRunArgs & TransformRunArgs>[] =
-    [];
+  transformations: TransformComponent<any>[] = [];
   documents?: Document[];
   reader?: BaseReader;
   vectorStore?: VectorStore;
@@ -113,10 +112,7 @@ export class IngestionPipeline {
     return inputNodes.flat();
   }
 
-  async run(
-    args: IngestionRunArgs & TransformRunArgs = {},
-    transformOptions?: any,
-  ): Promise<BaseNode[]> {
+  async run(args: any = {}, transformOptions?: any): Promise<BaseNode[]> {
     args.cache = args.cache ?? this.cache;
     args.docStoreStrategy = args.docStoreStrategy ?? this._docStoreStrategy;
     const inputNodes = await this.prepareInput(args.documents, args.nodes);
