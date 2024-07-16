@@ -1,3 +1,4 @@
+import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type {
   ChatResponse,
   ChatResponseChunk,
@@ -10,7 +11,6 @@ import type {
   LLMMetadata,
 } from "@llamaindex/core/llms";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
-import { BaseEmbedding } from "../embeddings/types.js";
 import {
   Ollama as OllamaBase,
   type Config,

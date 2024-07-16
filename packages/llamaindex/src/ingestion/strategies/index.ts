@@ -1,6 +1,6 @@
+import type { TransformComponent } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 import type { VectorStore } from "../../storage/vectorStore/types.js";
-import type { TransformComponent } from "../types.js";
 import { DuplicatesStrategy } from "./DuplicatesStrategy.js";
 import { UpsertsAndDeleteStrategy } from "./UpsertsAndDeleteStrategy.js";
 import { UpsertsStrategy } from "./UpsertsStrategy.js";
@@ -19,7 +19,7 @@ export enum DocStoreStrategy {
   NONE = "none", // no-op strategy
 }
 
-class NoOpStrategy implements TransformComponent {
+class NoOpStrategy implements TransformComponent<any> {
   async transform(nodes: any[]): Promise<any[]> {
     return nodes;
   }
@@ -29,7 +29,7 @@ export function createDocStoreStrategy(
   docStoreStrategy: DocStoreStrategy,
   docStore?: BaseDocumentStore,
   vectorStores: VectorStore[] = [],
-): TransformComponent {
+): TransformComponent<any> {
   if (docStoreStrategy === DocStoreStrategy.NONE) {
     return new NoOpStrategy();
   }

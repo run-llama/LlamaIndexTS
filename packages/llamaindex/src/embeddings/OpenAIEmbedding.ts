@@ -1,3 +1,4 @@
+import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Tokenizers } from "@llamaindex/env";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
 import type { AzureOpenAIConfig } from "../llm/azure.js";
@@ -8,7 +9,6 @@ import {
 } from "../llm/azure.js";
 import type { OpenAISession } from "../llm/openai.js";
 import { getOpenAISession } from "../llm/openai.js";
-import { BaseEmbedding } from "./types.js";
 
 export const ALL_OPENAI_EMBEDDING_MODELS = {
   "text-embedding-ada-002": {
@@ -132,9 +132,9 @@ export class OpenAIEmbedding extends BaseEmbedding {
    * Get embeddings for a batch of texts
    * @param texts
    */
-  async getTextEmbeddings(texts: string[]): Promise<number[][]> {
-    return await this.getOpenAIEmbedding(texts);
-  }
+  getTextEmbeddings = async (texts: string[]): Promise<number[][]> => {
+    return this.getOpenAIEmbedding(texts);
+  };
 
   /**
    * Get embeddings for a single text

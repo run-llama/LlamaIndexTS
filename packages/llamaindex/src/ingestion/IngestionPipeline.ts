@@ -1,3 +1,4 @@
+import type { TransformComponent } from "@llamaindex/core/schema";
 import {
   ModalityType,
   splitNodesByType,
@@ -16,7 +17,6 @@ import {
   DocStoreStrategy,
   createDocStoreStrategy,
 } from "./strategies/index.js";
-import type { TransformComponent } from "./types.js";
 
 type IngestionRunArgs = {
   documents?: Document[];
@@ -26,12 +26,12 @@ type IngestionRunArgs = {
 type TransformRunArgs = {
   inPlace?: boolean;
   cache?: IngestionCache;
-  docStoreStrategy?: TransformComponent;
+  docStoreStrategy?: TransformComponent<any>;
 };
 
 export async function runTransformations(
   nodesToRun: BaseNode[],
-  transformations: TransformComponent[],
+  transformations: TransformComponent<any>[],
   transformOptions: any = {},
   { inPlace = true, cache, docStoreStrategy }: TransformRunArgs = {},
 ): Promise<BaseNode[]> {
@@ -60,7 +60,7 @@ export async function runTransformations(
 }
 
 export class IngestionPipeline {
-  transformations: TransformComponent[] = [];
+  transformations: TransformComponent<any>[] = [];
   documents?: Document[];
   reader?: BaseReader;
   vectorStore?: VectorStore;
@@ -70,7 +70,7 @@ export class IngestionPipeline {
   cache?: IngestionCache;
   disableCache: boolean = false;
 
-  private _docStoreStrategy?: TransformComponent;
+  private _docStoreStrategy?: TransformComponent<any>;
 
   constructor(init?: Partial<IngestionPipeline>) {
     Object.assign(this, init);
@@ -112,10 +112,7 @@ export class IngestionPipeline {
     return inputNodes.flat();
   }
 
-  async run(
-    args: IngestionRunArgs & TransformRunArgs = {},
-    transformOptions?: any,
-  ): Promise<BaseNode[]> {
+  async run(args: any = {}, transformOptions?: any): Promise<BaseNode[]> {
     args.cache = args.cache ?? this.cache;
     args.docStoreStrategy = args.docStoreStrategy ?? this._docStoreStrategy;
     const inputNodes = await this.prepareInput(args.documents, args.nodes);

@@ -1,7 +1,6 @@
-import type { Document } from "@llamaindex/core/schema";
+import type { Document, TransformComponent } from "@llamaindex/core/schema";
 import type { BaseRetriever } from "../Retriever.js";
 import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
-import type { TransformComponent } from "../ingestion/types.js";
 import type { BaseNodePostprocessor } from "../postprocessors/types.js";
 import type { BaseSynthesizer } from "../synthesizers/types.js";
 import type { QueryEngine } from "../types.js";
@@ -148,11 +147,11 @@ export class LlamaCloudIndex {
   static async fromDocuments(
     params: {
       documents: Document[];
-      transformations?: TransformComponent[];
+      transformations?: TransformComponent<any>[];
       verbose?: boolean;
     } & CloudConstructorParams,
   ): Promise<LlamaCloudIndex> {
-    const defaultTransformations: TransformComponent[] = [
+    const defaultTransformations: TransformComponent<any>[] = [
       new SimpleNodeParser(),
       new OpenAIEmbedding({
         apiKey: getEnv("OPENAI_API_KEY"),

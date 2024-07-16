@@ -1,11 +1,10 @@
-import type { BaseNode } from "@llamaindex/core/schema";
+import type { BaseNode, TransformComponent } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
-import type { TransformComponent } from "../types.js";
 
 /**
  * Handle doc store duplicates by checking all hashes.
  */
-export class DuplicatesStrategy implements TransformComponent {
+export class DuplicatesStrategy implements TransformComponent<any> {
   private docStore: BaseDocumentStore;
 
   constructor(docStore: BaseDocumentStore) {

@@ -7,7 +7,7 @@ import {
   type BaseNode,
 } from "@llamaindex/core/schema";
 import type { SimplePrompt } from "../Prompt.js";
-import { imageToDataUrl } from "../embeddings/utils.js";
+import { imageToDataUrl } from "../internal/utils.js";
 
 export async function createMessageContent(
   prompt: SimplePrompt,
