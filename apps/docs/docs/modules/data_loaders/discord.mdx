@@ -1,0 +1,27 @@
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../../examples/readers/src/discord";
+
+# DiscordReader
+
+DiscordReader is a simple data loader that reads all messages in a given Discord channel and returns them as Document objects.
+It uses the [@discordjs/rest](https://github.com/discordjs/discord.js/tree/main/packages/rest) library to fetch the messages.
+
+## Usage
+
+First step is to create a Discord Application and generating a bot token. You can do that [here](https://discord.com/developers/applications).
+In your Discord Application, go to the `OAuth2` tab and generate an invite URL by selecting `bot` and `Read Messages/View Channels` as wells as `Read Message History` bot permissions.
+This will invite the bot with the necessary permissions to read messages.
+Copy the URL in your browser and select the server you want your bot to join.
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+### Params
+
+- `channelIDs`: The ID(s) of discord channels as an array of strings.
+- `limit?`: Optionally limit the number of messages to read
+- `additionalInfo?`: An optional flag to include embedded messages and attachment urls in the document.
+- `oldestFirst?`: An optional flag to return the oldest messages first.
+
+## API Reference
+
+- [DiscordReader](../../api/classes/DiscordReader.md)
