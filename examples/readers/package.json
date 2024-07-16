@@ -12,7 +12,8 @@
     "start:llamaparse": "node --import tsx ./src/llamaparse.ts",
     "start:notion": "node --import tsx ./src/notion.ts",
     "start:llamaparse-dir": "node --import tsx ./src/simple-directory-reader-with-llamaparse.ts",
-    "start:llamaparse-json": "node --import tsx ./src/llamaparse-json.ts"
+    "start:llamaparse-json": "node --import tsx ./src/llamaparse-json.ts",
+    "start:discord": "node --import tsx ./src/discord.ts"
   },
   "dependencies": {
     "llamaindex": "*"
