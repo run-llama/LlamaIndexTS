@@ -129,9 +129,9 @@ export class LlamaParseReader extends FileReader {
   doNotUnrollColumns?: boolean;
   // The page separator to use to split the text. Default is None, which means the parser will use the default separator '\\n---\\n'.
   pageSeparator?: string;
-  // Whether to use gpt-4o to extract text from documents.
+  // Deprecated. Use vendorMultimodal params. Whether to use gpt-4o to extract text from documents.
   gpt4oMode: boolean = false;
-  // The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
+  // Deprecated. Use vendorMultimodal params. The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
   gpt4oApiKey?: string;
   // The bounding box to use to extract text from documents. Describe as a string containing the bounding box margins.
   boundingBox?: string;
@@ -139,6 +139,12 @@ export class LlamaParseReader extends FileReader {
   targetPages?: string;
   // Whether or not to ignore and skip errors raised during parsing.
   ignoreErrors: boolean = true;
+  // Whether to use the vendor multimodal API.
+  useVendorMultimodalModel: boolean = false;
+  // The model name for the vendor multimodal API
+  vendorMultimodalModelName?: string;
+  // The API key for the multimodal API. Can also be set as an env variable: LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY
+  vendorMultimodalApiKey?: string;
   // numWorkers is implemented in SimpleDirectoryReader
 
   constructor(params: Partial<LlamaParseReader> = {}) {
@@ -157,6 +163,13 @@ export class LlamaParseReader extends FileReader {
         params.gpt4oApiKey ?? getEnv("LLAMA_CLOUD_GPT4O_API_KEY");
 
       this.gpt4oApiKey = params.gpt4oApiKey;
+    }
+    if (params.useVendorMultimodalModel) {
+      params.vendorMultimodalApiKey =
+        params.vendorMultimodalApiKey ??
+        getEnv("LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY");
+
+      this.vendorMultimodalApiKey = params.vendorMultimodalApiKey;
     }
   }
 
@@ -189,6 +202,9 @@ export class LlamaParseReader extends FileReader {
       gpt4o_api_key: this.gpt4oApiKey,
       bounding_box: this.boundingBox,
       target_pages: this.targetPages,
+      use_vendor_multimodal_model: this.useVendorMultimodalModel?.toString(),
+      vendor_multimodal_model_name: this.vendorMultimodalModelName,
+      vendor_multimodal_api_key: this.vendorMultimodalApiKey,
     };
 
     // Appends body with any defined LlamaParseBodyParams
