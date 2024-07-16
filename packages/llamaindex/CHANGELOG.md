@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.5.4
+
+### Patch Changes
+
+- 1a65ead: feat: add vendorMultimodal params to LlamaParseReader
+
 ## 0.5.3
 
 ### Patch Changes
