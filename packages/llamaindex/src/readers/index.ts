@@ -1,5 +1,6 @@
 export * from "./AssemblyAIReader.js";
 export * from "./CSVReader.js";
+export * from "./DiscordReader.js";
 export * from "./DocxReader.js";
 export * from "./HTMLReader.js";
 export * from "./ImageReader.js";
