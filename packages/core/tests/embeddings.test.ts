@@ -1,6 +1,6 @@
+import { truncateMaxTokens } from "@llamaindex/core/embeddings";
 import { Tokenizers, tokenizers } from "@llamaindex/env";
 import { describe, expect, test } from "vitest";
-import { truncateMaxTokens } from "../../src/embeddings/tokenizer.js";
 
 describe("truncateMaxTokens", () => {
   const tokenizer = tokenizers.tokenizer(Tokenizers.CL100K_BASE);
