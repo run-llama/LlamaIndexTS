@@ -1,10 +1,10 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { TextNode } from "@llamaindex/core/schema";
+import type { TransformComponent } from "llamaindex";
 import {
   IngestionCache,
   getTransformationHash,
 } from "llamaindex/ingestion/IngestionCache";
-import type { TransformComponent } from "llamaindex/ingestion/index";
 import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
 import { beforeAll, describe, expect, test } from "vitest";
 
@@ -28,7 +28,7 @@ describe("IngestionCache", () => {
 });
 
 describe("getTransformationHash", () => {
-  let nodes: BaseNode[], transform: TransformComponent;
+  let nodes: BaseNode[], transform: TransformComponent<any>;
 
   beforeAll(() => {
     nodes = [new TextNode({ text: "some text", id_: "some id" })];
