@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.5.3
+
+### Patch Changes
+
+- 9bbbc67: feat: add a reader for Discord messages
+- b3681bf: fix: DataCloneError when using FunctionTool
+- Updated dependencies [b3681bf]
+  - @llamaindex/core@0.1.1
+
 ## 0.5.2
 
 ### Patch Changes
