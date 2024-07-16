@@ -8,14 +8,21 @@ It uses the [@discordjs/rest](https://github.com/discordjs/discord.js/tree/main/
 
 ## Usage
 
-First step is to create a Discord Application and generating a bot token. You can do that [here](https://discord.com/developers/applications).
-In your Discord Application, go to the `OAuth2` tab and generate an invite URL by selecting `bot` and `Read Messages/View Channels` as wells as `Read Message History` bot permissions.
+First step is to create a Discord Application and generating a bot token [here](https://discord.com/developers/applications).
+In your Discord Application, go to the `OAuth2` tab and generate an invite URL by selecting `bot` and click `Read Messages/View Channels` as wells as `Read Message History`.
 This will invite the bot with the necessary permissions to read messages.
 Copy the URL in your browser and select the server you want your bot to join.
 
 <CodeBlock language="ts">{CodeSource}</CodeBlock>
 
 ### Params
+
+#### DiscordReader()
+
+- `discordToken?`: The Discord bot token.
+- `makeRequest?`: Optionally provide a custom request function for edge environments, e.g. `fetch`. See discord.js for more info.
+
+#### DiscordReader.loadData
 
 - `channelIDs`: The ID(s) of discord channels as an array of strings.
 - `limit?`: Optionally limit the number of messages to read

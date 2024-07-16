@@ -1,4 +1,4 @@
-import { REST } from "@discordjs/rest";
+import { REST, type RESTOptions } from "@discordjs/rest";
 import { Document } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import { Routes, type APIEmbed, type APIMessage } from "discord-api-types/v10";
@@ -10,14 +10,25 @@ import { Routes, type APIEmbed, type APIMessage } from "discord-api-types/v10";
 export class DiscordReader {
   private client: REST;
 
-  constructor(discordToken?: string) {
+  constructor(
+    discordToken?: string,
+    requestHandler?: RESTOptions["makeRequest"],
+  ) {
     const token = discordToken ?? getEnv("DISCORD_TOKEN");
     if (!token) {
       throw new Error(
         "Must specify `discordToken` or set environment variable `DISCORD_TOKEN`.",
       );
     }
-    this.client = new REST({ version: "10" }).setToken(token);
+
+    const restOptions: Partial<RESTOptions> = { version: "10" };
+
+    // Use the provided request handler if specified
+    if (requestHandler) {
+      restOptions.makeRequest = requestHandler;
+    }
+
+    this.client = new REST(restOptions).setToken(token);
   }
 
   // Read all messages in a channel given a channel ID

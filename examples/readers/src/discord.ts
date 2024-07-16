@@ -11,7 +11,7 @@ async function main() {
   const limit = 10;
 
   // Load messages from the specified channel
-  const messages = await discordReader.loadData(channelIds, limit);
+  const messages = await discordReader.loadData(channelIds, limit, true);
 
   // Print out the messages
   console.log(messages);
