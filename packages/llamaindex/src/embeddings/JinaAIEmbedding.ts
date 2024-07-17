@@ -101,13 +101,6 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
       );
     }
 
-    // check number of inputs each request
-    if (input.input.length > this.embedBatchSize) {
-      throw new Error(
-        `Input length is too large. Maximum batch size is ${this.embedBatchSize}`,
-      );
-    }
-
     const response = await fetch(this.baseURL, {
       method: "POST",
       headers: {
