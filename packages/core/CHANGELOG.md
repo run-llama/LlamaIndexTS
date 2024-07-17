@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.1.2
+
+### Patch Changes
+
+- b974eea: Add support for Metadata filters
+
 ## 0.1.1
 
 ### Patch Changes
