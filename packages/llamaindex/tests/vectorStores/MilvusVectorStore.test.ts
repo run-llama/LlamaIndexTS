@@ -1,27 +1,27 @@
+import type { BaseNode } from "@llamaindex/core/schema";
+import { TextNode } from "@llamaindex/core/schema";
 import {
-  BaseEmbedding,
-  BaseNode,
-  SimpleVectorStore,
-  TextNode,
+  MilvusVectorStore,
   VectorStoreQueryMode,
-  type Metadata,
   type MetadataFilters,
 } from "llamaindex";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
-vi.mock("@qdrant/js-client-rest");
+import { TestableMilvusVectorStore } from "../mocks/TestableMilvusVectorStore.js";
 
 type FilterTestCase = {
   title: string;
   filters?: MetadataFilters;
   expected: number;
+  expectedFilterStr: string | undefined;
+  mockResultIds: string[];
 };
 
-describe("SimpleVectorStore", () => {
+describe("MilvusVectorStore", () => {
+  let store: MilvusVectorStore;
   let nodes: BaseNode[];
-  let store: SimpleVectorStore;
 
   beforeEach(() => {
+    store = new TestableMilvusVectorStore();
     nodes = [
       new TextNode({
         id_: "1",
@@ -60,34 +60,22 @@ describe("SimpleVectorStore", () => {
         },
       }),
     ];
-    store = new SimpleVectorStore({
-      embedModel: {} as BaseEmbedding, // Mocking the embedModel
-      data: {
-        embeddingDict: {},
-        textIdToRefDocId: {},
-        metadataDict: nodes.reduce(
-          (acc, node) => {
-            acc[node.id_] = node.metadata;
-            return acc;
-          },
-          {} as Record<string, Metadata>,
-        ),
-      },
-    });
   });
 
-  describe("[SimpleVectorStore] manage nodes", () => {
+  describe("[MilvusVectorStore] manage nodes", () => {
     it("able to add nodes to store", async () => {
       const ids = await store.add(nodes);
       expect(ids).length(3);
     });
   });
 
-  describe("[SimpleVectorStore] query nodes", () => {
+  describe("[MilvusVectorStore] filter nodes with supported operators", () => {
     const testcases: FilterTestCase[] = [
       {
         title: "No filter",
         expected: 3,
+        mockResultIds: ["1", "2", "3"],
+        expectedFilterStr: undefined,
       },
       {
         title: "Filter EQ",
@@ -101,6 +89,8 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 2,
+        mockResultIds: ["2", "3"],
+        expectedFilterStr: 'metadata["private"] == "false"',
       },
       {
         title: "Filter NE",
@@ -114,6 +104,8 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 1,
+        mockResultIds: ["1"],
+        expectedFilterStr: 'metadata["private"] != "false"',
       },
       {
         title: "Filter GT",
@@ -127,6 +119,8 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 1,
+        mockResultIds: ["3"],
+        expectedFilterStr: 'metadata["weight"] > 2.3',
       },
       {
         title: "Filter GTE",
@@ -140,6 +134,8 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 2,
+        mockResultIds: ["2", "3"],
+        expectedFilterStr: 'metadata["weight"] >= 2.3',
       },
       {
         title: "Filter LT",
@@ -153,6 +149,8 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 1,
+        mockResultIds: ["1"],
+        expectedFilterStr: 'metadata["weight"] < 2.3',
       },
       {
         title: "Filter LTE",
@@ -166,6 +164,8 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 2,
+        mockResultIds: ["1", "2"],
+        expectedFilterStr: 'metadata["weight"] <= 2.3',
       },
       {
         title: "Filter IN",
@@ -179,6 +179,8 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 2,
+        mockResultIds: ["1", "3"],
+        expectedFilterStr: 'metadata["dogId"] in ["1", "3"]',
       },
       {
         title: "Filter NIN",
@@ -192,7 +194,81 @@ describe("SimpleVectorStore", () => {
           ],
         },
         expected: 1,
+        mockResultIds: ["2"],
+        expectedFilterStr:
+          'metadata["name"] != "Anakin" && metadata["name"] != "Leia"',
       },
+      {
+        title: "Filter OR",
+        filters: {
+          filters: [
+            {
+              key: "private",
+              value: "false",
+              operator: "==",
+            },
+            {
+              key: "dogId",
+              value: ["1", "3"],
+              operator: "in",
+            },
+          ],
+          condition: "or",
+        },
+        expected: 3,
+        mockResultIds: ["1", "2", "3"],
+        expectedFilterStr:
+          'metadata["private"] == "false" or metadata["dogId"] in ["1", "3"]',
+      },
+      {
+        title: "Filter AND",
+        filters: {
+          filters: [
+            {
+              key: "private",
+              value: "false",
+              operator: "==",
+            },
+            {
+              key: "dogId",
+              value: "10",
+              operator: "==",
+            },
+          ],
+          condition: "and",
+        },
+        expected: 0,
+        mockResultIds: [],
+        expectedFilterStr:
+          'metadata["private"] == "false" and metadata["dogId"] == "10"',
+      },
+    ];
+
+    testcases.forEach((tc) => {
+      it(`[${tc.title}] should return ${tc.expected} nodes`, async () => {
+        expect(store.toMilvusFilter(tc.filters)).toBe(tc.expectedFilterStr);
+
+        vi.spyOn(store, "query").mockResolvedValue({
+          ids: tc.mockResultIds,
+          similarities: [0.1, 0.2, 0.3],
+        });
+
+        await store.add(nodes);
+        const result = await store.query({
+          queryEmbedding: [0.1, 0.2],
+          similarityTopK: 3,
+          mode: VectorStoreQueryMode.DEFAULT,
+          filters: tc.filters,
+        });
+        expect(result.ids).length(tc.expected);
+      });
+    });
+  });
+
+  describe("[MilvusVectorStore] filter nodes with unsupported operators", () => {
+    const testcases: Array<
+      Omit<FilterTestCase, "expectedFilterStr" | "mockResultIds">
+    > = [
       {
         title: "Filter ANY",
         filters: {
@@ -245,56 +321,12 @@ describe("SimpleVectorStore", () => {
         },
         expected: 1,
       },
-      {
-        title: "Filter OR",
-        filters: {
-          filters: [
-            {
-              key: "private",
-              value: "false",
-              operator: "==",
-            },
-            {
-              key: "dogId",
-              value: ["1", "3"],
-              operator: "in",
-            },
-          ],
-          condition: "or",
-        },
-        expected: 3,
-      },
-      {
-        title: "Filter AND",
-        filters: {
-          filters: [
-            {
-              key: "private",
-              value: "false",
-              operator: "==",
-            },
-            {
-              key: "dogId",
-              value: "10",
-              operator: "==",
-            },
-          ],
-          condition: "and",
-        },
-        expected: 0,
-      },
     ];
 
     testcases.forEach((tc) => {
-      it(`[${tc.title}] should return ${tc.expected} nodes`, async () => {
-        await store.add(nodes);
-        const result = await store.query({
-          queryEmbedding: [0.1, 0.2],
-          similarityTopK: 3,
-          mode: VectorStoreQueryMode.DEFAULT,
-          filters: tc.filters,
-        });
-        expect(result.ids).length(tc.expected);
+      it(`[Unsupported Operator] [${tc.title}] should throw error`, async () => {
+        const errorMsg = `Operator ${tc.filters?.filters[0].operator} is not supported.`;
+        expect(() => store.toMilvusFilter(tc.filters)).toThrow(errorMsg);
       });
     });
   });

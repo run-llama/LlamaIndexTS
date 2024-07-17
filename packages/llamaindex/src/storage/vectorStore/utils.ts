@@ -1,5 +1,6 @@
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { ObjectType, jsonToNode } from "@llamaindex/core/schema";
+import type { MetadataFilterValue } from "./types.js";
 
 const DEFAULT_TEXT_KEY = "text";
 
@@ -77,3 +78,25 @@ export function metadataDictToNode(
       return jsonToNode(nodeObj, ObjectType.TEXT);
   }
 }
+
+export const parseNumberValue = (value: MetadataFilterValue): number => {
+  if (typeof value !== "number") throw new Error("Value must be a number");
+  return value;
+};
+
+export const parsePrimitiveValue = (value: MetadataFilterValue): string => {
+  if (typeof value !== "number" && typeof value !== "string") {
+    throw new Error("Value must be a string or number");
+  }
+  return value.toString();
+};
+
+export const parseArrayValue = (value: MetadataFilterValue): string[] => {
+  const isPrimitiveArray =
+    Array.isArray(value) &&
+    value.every((v) => typeof v === "string" || typeof v === "number");
+  if (!isPrimitiveArray) {
+    throw new Error("Value must be an array of strings or numbers");
+  }
+  return value.map(String);
+};

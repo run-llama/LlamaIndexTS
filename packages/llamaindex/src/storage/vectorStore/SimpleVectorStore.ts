@@ -8,14 +8,22 @@ import {
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
+  FilterOperator,
   VectorStoreBase,
   VectorStoreQueryMode,
   type IEmbedModel,
+  type MetadataFilter,
+  type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
-import { nodeToMetadata } from "./utils.js";
+import {
+  nodeToMetadata,
+  parseArrayValue,
+  parseNumberValue,
+  parsePrimitiveValue,
+} from "./utils.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -25,10 +33,85 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
+type MetadataValue = Record<string, any>;
+
+// Mapping of filter operators to metadata filter functions
+const OPERATOR_TO_FILTER: {
+  [key in FilterOperator]: (
+    { key, value }: MetadataFilter,
+    metadata: MetadataValue,
+  ) => boolean;
+} = {
+  [FilterOperator.EQ]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]) === parsePrimitiveValue(value);
+  },
+  [FilterOperator.NE]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]) !== parsePrimitiveValue(value);
+  },
+  [FilterOperator.IN]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+  },
+  [FilterOperator.NIN]: ({ key, value }, metadata) => {
+    return !parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+  },
+  [FilterOperator.ANY]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).some((v) =>
+      parseArrayValue(metadata[key]).includes(v),
+    );
+  },
+  [FilterOperator.ALL]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).every((v) =>
+      parseArrayValue(metadata[key]).includes(v),
+    );
+  },
+  [FilterOperator.TEXT_MATCH]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]).includes(
+      parsePrimitiveValue(value),
+    );
+  },
+  [FilterOperator.CONTAINS]: ({ key, value }, metadata) => {
+    return parseArrayValue(metadata[key]).includes(parsePrimitiveValue(value));
+  },
+  [FilterOperator.GT]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) > parseNumberValue(value);
+  },
+  [FilterOperator.LT]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) < parseNumberValue(value);
+  },
+  [FilterOperator.GTE]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) >= parseNumberValue(value);
+  },
+  [FilterOperator.LTE]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) <= parseNumberValue(value);
+  },
+};
+
+// Build a filter function based on the metadata and the preFilters
+const buildFilterFn = (
+  metadata: MetadataValue | undefined,
+  preFilters: MetadataFilters | undefined,
+) => {
+  if (!preFilters) return true;
+  if (!metadata) return false;
+
+  const { filters, condition } = preFilters;
+  const queryCondition = condition || "and"; // default to and
+
+  const itemFilterFn = (filter: MetadataFilter) => {
+    const metadataLookupFn = OPERATOR_TO_FILTER[filter.operator];
+    if (!metadataLookupFn)
+      throw new Error(`Unsupported operator: ${filter.operator}`);
+    return metadataLookupFn(filter, metadata);
+  };
+
+  if (queryCondition === "and") return filters.every(itemFilterFn);
+  return filters.some(itemFilterFn);
+};
+
 class SimpleVectorStoreData {
   embeddingDict: Record<string, number[]> = {};
   textIdToRefDocId: Record<string, string> = {};
-  metadataDict: Record<string, Record<string, any>> = {};
+  metadataDict: Record<string, MetadataValue> = {};
 }
 
 export class SimpleVectorStore
@@ -103,31 +186,9 @@ export class SimpleVectorStore
     embeddings: number[][];
   }> {
     const items = Object.entries(this.data.embeddingDict);
-
-    const metadataLookup = {
-      ExactMatch: (
-        metadata: Record<string, any>,
-        key: string,
-        value: string | number,
-      ) => {
-        return String(metadata[key]) === value.toString(); // compare as string
-      },
-    };
-
     const queryFilterFn = (nodeId: string) => {
-      if (!query.filters) return true;
-      const filters = query.filters.filters;
-      for (const filter of filters) {
-        const { key, value, filterType } = filter;
-        const metadataLookupFn = metadataLookup[filterType];
-        const metadata = this.data.metadataDict[nodeId];
-        const isMatch =
-          metadataLookupFn &&
-          metadata &&
-          metadataLookupFn(metadata, key, value);
-        if (!isMatch) return false; // TODO: handle condition OR AND
-      }
-      return true;
+      const metadata = this.data.metadataDict[nodeId];
+      return buildFilterFn(metadata, query.filters);
     };
 
     const nodeFilterFn = (nodeId: string) => {

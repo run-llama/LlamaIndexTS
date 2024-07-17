@@ -1,7 +1,7 @@
 import {
   VectorStoreBase,
-  type ExactMatchFilter,
   type IEmbedModel,
+  type MetadataFilter,
   type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
@@ -199,8 +199,12 @@ export class PineconeVectorStore
   }
 
   toPineconeFilter(stdFilters?: MetadataFilters) {
-    return stdFilters?.filters?.reduce((carry: any, item: ExactMatchFilter) => {
-      carry[item.key] = item.value;
+    return stdFilters?.filters?.reduce((carry: any, item: MetadataFilter) => {
+      // Use MetadataFilter with EQ operator to replace ExactMatchFilter
+      // TODO: support filter with other operators
+      if (item.operator === "==") {
+        carry[item.key] = item.value;
+      }
       return carry;
     }, {});
   }

@@ -66,29 +66,78 @@ async function main() {
   console.log("No filter response:", noFilterResponse.toString());
 
   console.log(
-    "\n=============\nQuerying index with dogId 2. The output always should be red.",
+    "\n=============\nQuerying index with dogId 2 and private false. The output always should be red.",
   );
-  const queryEngineDogId2 = index.asQueryEngine({
+  const queryEngineEQ = index.asQueryEngine({
     preFilters: {
       filters: [
         {
           key: "private",
           value: "false",
-          filterType: "ExactMatch",
+          operator: "==",
         },
         {
           key: "dogId",
           value: "3",
-          filterType: "ExactMatch",
+          operator: "==",
         },
       ],
     },
     similarityTopK: 3,
   });
-  const response = await queryEngineDogId2.query({
+  const responseEQ = await queryEngineEQ.query({
     query: "What is the color of the dog?",
   });
-  console.log("Filter with dogId 2 response:", response.toString());
+  console.log("Filter with dogId 2 response:", responseEQ.toString());
+
+  console.log(
+    "\n=============\nQuerying index with dogId IN (1, 3). The output should be brown and red.",
+  );
+  const queryEngineIN = index.asQueryEngine({
+    preFilters: {
+      filters: [
+        {
+          key: "dogId",
+          value: ["1", "3"],
+          operator: "in",
+        },
+      ],
+    },
+    similarityTopK: 3,
+  });
+  const responseIN = await queryEngineIN.query({
+    query: "What is the color of the dog?",
+  });
+  console.log("Filter with dogId IN (1, 3) response:", responseIN.toString());
+
+  console.log(
+    "\n=============\nQuerying index with dogId IN (1, 3). The output should be any.",
+  );
+  const queryEngineOR = index.asQueryEngine({
+    preFilters: {
+      filters: [
+        {
+          key: "private",
+          value: "false",
+          operator: "==",
+        },
+        {
+          key: "dogId",
+          value: ["1", "3"],
+          operator: "in",
+        },
+      ],
+      condition: "or",
+    },
+    similarityTopK: 3,
+  });
+  const responseOR = await queryEngineOR.query({
+    query: "What is the color of the dog?",
+  });
+  console.log(
+    "Filter with dogId with OR operator response:",
+    responseOR.toString(),
+  );
 }
 
 void main();
