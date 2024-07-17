@@ -11,11 +11,66 @@ import {
 import {
   VectorStoreBase,
   type IEmbedModel,
+  type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
+  parseNumberValue,
+  parsePrimitiveValue,
+} from "./utils.js";
+
+function parseScalarFilters(scalarFilters: MetadataFilters): string {
+  const condition = scalarFilters.condition ?? "and";
+  const filters: string[] = [];
+
+  for (const filter of scalarFilters.filters) {
+    switch (filter.operator) {
+      case "==":
+      case "!=": {
+        filters.push(
+          `metadata["${filter.key}"] ${filter.operator} "${parsePrimitiveValue(filter.value)}"`,
+        );
+        break;
+      }
+      case "in": {
+        const filterValue = parseArrayValue(filter.value)
+          .map((v) => `"${v}"`)
+          .join(", ");
+        filters.push(
+          `metadata["${filter.key}"] ${filter.operator} [${filterValue}]`,
+        );
+        break;
+      }
+      case "nin": {
+        // Milvus does not support `nin` operator, so we need to manually check every value
+        // Expected: not metadata["key"] != "value1" and not metadata["key"] != "value2"
+        const filterStr = parseArrayValue(filter.value)
+          .map((v) => `metadata["${filter.key}"] != "${v}"`)
+          .join(" && ");
+        filters.push(filterStr);
+        break;
+      }
+      case "<":
+      case "<=":
+      case ">":
+      case ">=": {
+        filters.push(
+          `metadata["${filter.key}"] ${filter.operator} ${parseNumberValue(filter.value)}`,
+        );
+        break;
+      }
+      default:
+        throw new Error(`Operator ${filter.operator} is not supported.`);
+    }
+  }
+
+  return filters.join(` ${condition} `);
+}
 
 export class MilvusVectorStore
   extends VectorStoreBase
@@ -183,6 +238,12 @@ export class MilvusVectorStore
     });
   }
 
+  public toMilvusFilter(filters?: MetadataFilters): string | undefined {
+    if (!filters) return undefined;
+    // TODO: Milvus also support standard filters, we can add it later
+    return parseScalarFilters(filters);
+  }
+
   public async query(
     query: VectorStoreQuery,
     _options?: any,
@@ -193,6 +254,7 @@ export class MilvusVectorStore
       collection_name: this.collectionName,
       limit: query.similarityTopK,
       vector: query.queryEmbedding,
+      filter: this.toMilvusFilter(query.filters),
     });
 
     const nodes: BaseNode<Metadata>[] = [];

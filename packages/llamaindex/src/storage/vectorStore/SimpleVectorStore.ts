@@ -8,13 +8,22 @@ import {
 import { exists } from "../FileSystem.js";
 import { DEFAULT_PERSIST_DIR } from "../constants.js";
 import {
+  FilterOperator,
   VectorStoreBase,
   VectorStoreQueryMode,
   type IEmbedModel,
+  type MetadataFilter,
+  type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
+import {
+  nodeToMetadata,
+  parseArrayValue,
+  parseNumberValue,
+  parsePrimitiveValue,
+} from "./utils.js";
 
 const LEARNER_MODES = new Set<VectorStoreQueryMode>([
   VectorStoreQueryMode.SVM,
@@ -24,9 +33,85 @@ const LEARNER_MODES = new Set<VectorStoreQueryMode>([
 
 const MMR_MODE = VectorStoreQueryMode.MMR;
 
+type MetadataValue = Record<string, any>;
+
+// Mapping of filter operators to metadata filter functions
+const OPERATOR_TO_FILTER: {
+  [key in FilterOperator]: (
+    { key, value }: MetadataFilter,
+    metadata: MetadataValue,
+  ) => boolean;
+} = {
+  [FilterOperator.EQ]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]) === parsePrimitiveValue(value);
+  },
+  [FilterOperator.NE]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]) !== parsePrimitiveValue(value);
+  },
+  [FilterOperator.IN]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+  },
+  [FilterOperator.NIN]: ({ key, value }, metadata) => {
+    return !parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+  },
+  [FilterOperator.ANY]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).some((v) =>
+      parseArrayValue(metadata[key]).includes(v),
+    );
+  },
+  [FilterOperator.ALL]: ({ key, value }, metadata) => {
+    return parseArrayValue(value).every((v) =>
+      parseArrayValue(metadata[key]).includes(v),
+    );
+  },
+  [FilterOperator.TEXT_MATCH]: ({ key, value }, metadata) => {
+    return parsePrimitiveValue(metadata[key]).includes(
+      parsePrimitiveValue(value),
+    );
+  },
+  [FilterOperator.CONTAINS]: ({ key, value }, metadata) => {
+    return parseArrayValue(metadata[key]).includes(parsePrimitiveValue(value));
+  },
+  [FilterOperator.GT]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) > parseNumberValue(value);
+  },
+  [FilterOperator.LT]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) < parseNumberValue(value);
+  },
+  [FilterOperator.GTE]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) >= parseNumberValue(value);
+  },
+  [FilterOperator.LTE]: ({ key, value }, metadata) => {
+    return parseNumberValue(metadata[key]) <= parseNumberValue(value);
+  },
+};
+
+// Build a filter function based on the metadata and the preFilters
+const buildFilterFn = (
+  metadata: MetadataValue | undefined,
+  preFilters: MetadataFilters | undefined,
+) => {
+  if (!preFilters) return true;
+  if (!metadata) return false;
+
+  const { filters, condition } = preFilters;
+  const queryCondition = condition || "and"; // default to and
+
+  const itemFilterFn = (filter: MetadataFilter) => {
+    const metadataLookupFn = OPERATOR_TO_FILTER[filter.operator];
+    if (!metadataLookupFn)
+      throw new Error(`Unsupported operator: ${filter.operator}`);
+    return metadataLookupFn(filter, metadata);
+  };
+
+  if (queryCondition === "and") return filters.every(itemFilterFn);
+  return filters.some(itemFilterFn);
+};
+
 class SimpleVectorStoreData {
   embeddingDict: Record<string, number[]> = {};
   textIdToRefDocId: Record<string, string> = {};
+  metadataDict: Record<string, MetadataValue> = {};
 }
 
 export class SimpleVectorStore
@@ -67,6 +152,11 @@ export class SimpleVectorStore
       }
 
       this.data.textIdToRefDocId[node.id_] = node.sourceNode?.nodeId;
+
+      // Add metadata to the metadataDict
+      const metadata = nodeToMetadata(node, true, undefined, false);
+      delete metadata["_node_content"];
+      this.data.metadataDict[node.id_] = metadata;
     }
 
     if (this.persistPath) {
@@ -83,6 +173,7 @@ export class SimpleVectorStore
     for (const textId of textIdsToDelete) {
       delete this.data.embeddingDict[textId];
       delete this.data.textIdToRefDocId[textId];
+      if (this.data.metadataDict) delete this.data.metadataDict[textId];
     }
     if (this.persistPath) {
       await this.persist(this.persistPath);
@@ -90,27 +181,33 @@ export class SimpleVectorStore
     return Promise.resolve();
   }
 
-  async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
-    if (!(query.filters == null)) {
-      throw new Error(
-        "Metadata filters not implemented for SimpleVectorStore yet.",
-      );
-    }
-
+  private async filterNodes(query: VectorStoreQuery): Promise<{
+    nodeIds: string[];
+    embeddings: number[][];
+  }> {
     const items = Object.entries(this.data.embeddingDict);
+    const queryFilterFn = (nodeId: string) => {
+      const metadata = this.data.metadataDict[nodeId];
+      return buildFilterFn(metadata, query.filters);
+    };
 
-    let nodeIds: string[], embeddings: number[][];
-    if (query.docIds) {
+    const nodeFilterFn = (nodeId: string) => {
+      if (!query.docIds) return true;
       const availableIds = new Set(query.docIds);
-      const queriedItems = items.filter((item) => availableIds.has(item[0]));
-      nodeIds = queriedItems.map((item) => item[0]);
-      embeddings = queriedItems.map((item) => item[1]);
-    } else {
-      // No docIds specified, so use all available items
-      nodeIds = items.map((item) => item[0]);
-      embeddings = items.map((item) => item[1]);
-    }
+      return availableIds.has(nodeId);
+    };
 
+    const queriedItems = items.filter(
+      (item) => nodeFilterFn(item[0]) && queryFilterFn(item[0]),
+    );
+    const nodeIds = queriedItems.map((item) => item[0]);
+    const embeddings = queriedItems.map((item) => item[1]);
+
+    return { nodeIds, embeddings };
+  }
+
+  async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
+    const { nodeIds, embeddings } = await this.filterNodes(query);
     const queryEmbedding = query.queryEmbedding!;
 
     let topSimilarities: number[], topIds: string[];
@@ -191,6 +288,7 @@ export class SimpleVectorStore
     const data = new SimpleVectorStoreData();
     data.embeddingDict = dataDict.embeddingDict ?? {};
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
+    data.metadataDict = dataDict.metadataDict ?? {};
     const store = new SimpleVectorStore({ data, embedModel });
     store.persistPath = persistPath;
     return store;
@@ -203,6 +301,7 @@ export class SimpleVectorStore
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
+    data.metadataDict = saveDict.metadataDict;
     return new SimpleVectorStore({ data, embedModel });
   }
 
@@ -210,6 +309,7 @@ export class SimpleVectorStore
     return {
       embeddingDict: this.data.embeddingDict,
       textIdToRefDocId: this.data.textIdToRefDocId,
+      metadataDict: this.data.metadataDict,
     };
   }
 }

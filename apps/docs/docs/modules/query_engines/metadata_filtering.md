@@ -75,7 +75,7 @@ const queryEngine = index.asQueryEngine({
       {
         key: "dogId",
         value: "2",
-        filterType: "ExactMatch",
+        operator: "==",
       },
     ],
   },
@@ -135,7 +135,7 @@ async function main() {
           {
             key: "dogId",
             value: "2",
-            filterType: "ExactMatch",
+            operator: "==",
           },
         ],
       },
