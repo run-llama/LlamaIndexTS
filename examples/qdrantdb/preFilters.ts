@@ -64,7 +64,7 @@ async function main() {
           {
             key: "dogId",
             value: "2",
-            filterType: "ExactMatch",
+            operator: "==",
           },
         ],
       },
