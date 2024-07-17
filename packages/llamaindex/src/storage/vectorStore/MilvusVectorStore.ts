@@ -47,7 +47,7 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
         break;
       }
       case "nin": {
-        // Milmus does not support `nin` operator, so we need to manually check every value
+        // Milvus does not support `nin` operator, so we need to manually check every value
         // Expected: not metadata["key"] != "value1" and not metadata["key"] != "value2"
         const filterStr = parseArrayValue(filter.value)
           .map((v) => `metadata["${filter.key}"] != "${v}"`)
