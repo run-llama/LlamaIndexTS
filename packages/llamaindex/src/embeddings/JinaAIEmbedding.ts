@@ -1,7 +1,7 @@
 import { getEnv } from "@llamaindex/env";
+import { imageToDataUrl } from "../internal/utils.js";
 import type { ImageType } from "../Node.js";
 import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
-import { imageToDataUrl } from "./utils.js";
 
 function isLocal(url: ImageType): boolean {
   if (url instanceof Blob) return true;
@@ -47,11 +47,11 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   }
 
   // Retrieve multiple text embeddings in a single request
-  async getTextEmbeddings(texts: string[]): Promise<Array<number[]>> {
+  getTextEmbeddings = async (texts: string[]): Promise<Array<number[]>> => {
     const input = texts.map((text) => ({ text }));
     const result = await this.getJinaEmbedding({ input });
     return result.data.map((d) => d.embedding);
-  }
+  };
 
   // Retrieve multiple image embeddings in a single request
   async getImageEmbeddings(images: ImageType[]): Promise<number[][]> {
