@@ -88,6 +88,8 @@ const response = await queryEngine.query({
 console.log(response.toString());
 ```
 
+Besides using the equal operator (`==`), you can also use a whole set of different [operators](../../api/interfaces/MetadataFilter.md#operator) to filter your documents.
+
 ## Full Code
 
 ```ts
@@ -156,3 +158,4 @@ main();
 
 - [VectorStoreIndex](../../api/classes/VectorStoreIndex.md)
 - [ChromaVectorStore](../../api/classes/ChromaVectorStore.md)
+- [MetadataFilter](../../api/interfaces/MetadataFilter.md)
