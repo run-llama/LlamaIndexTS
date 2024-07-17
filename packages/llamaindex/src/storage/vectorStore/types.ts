@@ -20,15 +20,6 @@ export enum VectorStoreQueryMode {
   MMR = "mmr",
 }
 
-/**
- * @deprecated Use MetadataFilter with operator EQ instead
- */
-export interface ExactMatchFilter {
-  filterType: "ExactMatch";
-  key: string;
-  value: string | number;
-}
-
 export enum FilterOperator {
   EQ = "==", // default operator (string, number)
   IN = "in", // In array (string or number)
@@ -60,12 +51,6 @@ export interface MetadataFilter {
 export interface MetadataFilters {
   filters: Array<MetadataFilter>;
   condition?: `${FilterCondition}`; // and, or
-}
-
-export interface VectorStoreQuerySpec {
-  query: string;
-  filters: MetadataFilter[];
-  topK?: number;
 }
 
 export interface MetadataInfo {
