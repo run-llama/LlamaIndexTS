@@ -323,6 +323,7 @@ If a question does not make any sense, or is not factually coherent, explain why
         prompt,
         system_prompt: systemPrompt,
         temperature: this.temperature,
+        max_tokens: this.maxTokens,
         top_p: this.topP,
       },
     };
