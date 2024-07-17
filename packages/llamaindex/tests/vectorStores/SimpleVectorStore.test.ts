@@ -7,9 +7,7 @@ import {
   type Metadata,
   type MetadataFilters,
 } from "llamaindex";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-
-vi.mock("@qdrant/js-client-rest");
+import { beforeEach, describe, expect, it } from "vitest";
 
 type FilterTestCase = {
   title: string;
