@@ -74,7 +74,7 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
       {
         role: "user",
         content: defaultUserPrompt({
-          query,
+          query: extractText(query),
           generatedAnswer: response,
           referenceAnswer: reference || "(NO REFERENCE ANSWER SUPPLIED)",
         }),
@@ -106,7 +106,7 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
     query,
     response,
   }: EvaluatorResponseParams): Promise<EvaluationResult> {
-    const responseStr = response?.response;
+    const responseStr = extractText(response?.message.content);
     const contexts = [];
 
     if (response) {

@@ -3,15 +3,22 @@ import type {
   MessageContentDetail,
   MessageContentTextDetail,
 } from "../llms";
+import type { QueryType } from "../query-engine";
 import type { ImageType } from "../schema";
 
 /**
- * Extracts just the text from a multi-modal message or the message itself if it's just text.
+ * Extracts just the text whether from
+ *  a multi-modal message
+ *  a single text message
+ *  or a query
  *
  * @param message The message to extract text from.
  * @returns The extracted text
  */
-export function extractText(message: MessageContent): string {
+export function extractText(message: MessageContent | QueryType): string {
+  if (typeof message === "object" && "query" in message) {
+    return extractText(message.query);
+  }
   if (typeof message !== "string" && !Array.isArray(message)) {
     console.warn(
       "extractText called with non-MessageContent message, this is likely a bug.",

@@ -1,4 +1,5 @@
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
+import type { EngineResponse } from "@llamaindex/core/schema";
 import {
   extractText,
   streamReducer,
@@ -6,7 +7,6 @@ import {
 } from "@llamaindex/core/utils";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
-import type { EngineResponse } from "../../EngineResponse.js";
 import type { CondenseQuestionPrompt } from "../../Prompt.js";
 import {
   defaultCondenseQuestionPrompt,
@@ -109,7 +109,8 @@ export class CondenseQuestionChatEngine
       return streamReducer({
         stream,
         initialValue: "",
-        reducer: (accumulator, part) => (accumulator += part.response),
+        reducer: (accumulator, part) =>
+          (accumulator += extractText(part.message.content)),
         finished: (accumulator) => {
           chatHistory.addMessage({ content: accumulator, role: "assistant" });
         },
@@ -118,7 +119,10 @@ export class CondenseQuestionChatEngine
     const response = await this.queryEngine.query({
       query: condensedQuestion,
     });
-    chatHistory.addMessage({ content: response.response, role: "assistant" });
+    chatHistory.addMessage({
+      content: response.message.content,
+      role: "assistant",
+    });
 
     return response;
   }

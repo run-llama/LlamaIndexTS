@@ -1,8 +1,8 @@
 /**
  * Top level types to avoid circular dependencies
  */
-import type { MessageContent, ToolMetadata } from "@llamaindex/core/llms";
-import type { EngineResponse } from "./EngineResponse.js";
+import type { ToolMetadata } from "@llamaindex/core/llms";
+import type { EngineResponse } from "@llamaindex/core/schema";
 
 /**
  * Parameters for sending a query.
@@ -51,16 +51,5 @@ export interface StructuredOutput<T> {
 }
 
 export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
-
-/**
- * @link https://docs.llamaindex.ai/en/stable/api_reference/schema/?h=querybundle#llama_index.core.schema.QueryBundle
- *
- *  We don't have `image_path` here, because it is included in the `query` field.
- */
-export type QueryBundle = {
-  query: string | MessageContent;
-  customEmbedding?: string[];
-  embeddings?: number[];
-};
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
