@@ -1,5 +1,5 @@
 import type { LLM } from "@llamaindex/core/llms";
-import { streamConverter } from "@llamaindex/core/utils";
+import { extractQuery, streamConverter } from '@llamaindex/core/utils';
 import type {
   RefinePrompt,
   SimplePrompt,
@@ -20,10 +20,9 @@ import {
   promptHelperFromSettingsOrContext,
 } from "../Settings.js";
 import type {
-  ResponseBuilder,
-  ResponseBuilderParamsNonStreaming,
-  ResponseBuilderParamsStreaming,
-} from "./types.js";
+  ResponseBuilder, ResponseBuilderQuery
+} from './types.js';
+import type { QueryType } from '@llamaindex/core/query-engine';
 
 /**
  * Response modes of the response synthesizer
@@ -48,20 +47,20 @@ export class SimpleResponseBuilder implements ResponseBuilder {
   }
 
   getResponse(
-    params: ResponseBuilderParamsStreaming,
+    query: ResponseBuilderQuery,
+    stream: true,
   ): Promise<AsyncIterable<string>>;
-  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
+  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
   async getResponse({
     query,
     textChunks,
-    stream,
-  }:
-    | ResponseBuilderParamsStreaming
-    | ResponseBuilderParamsNonStreaming): Promise<
+  }: ResponseBuilderQuery,
+    stream?: boolean,
+  ): Promise<
     AsyncIterable<string> | string
   > {
     const input = {
-      query,
+      query: extractQuery(query),
       context: textChunks.join("\n\n"),
     };
 
@@ -122,17 +121,20 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   getResponse(
-    params: ResponseBuilderParamsStreaming,
+    query: ResponseBuilderQuery,
+    stream: true,
   ): Promise<AsyncIterable<string>>;
-  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
+  getResponse(
+    query: ResponseBuilderQuery,
+    stream?: false,
+  ): Promise<string>;
   async getResponse({
     query,
     textChunks,
     prevResponse,
-    stream,
-  }:
-    | ResponseBuilderParamsStreaming
-    | ResponseBuilderParamsNonStreaming): Promise<
+  }: ResponseBuilderQuery,
+    stream?: boolean,
+  ): Promise<
     AsyncIterable<string> | string
   > {
     let response: AsyncIterable<string> | string | undefined = prevResponse;
@@ -160,7 +162,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   private async giveResponseSingle(
-    queryStr: string,
+    queryType: QueryType,
     textChunk: string,
     stream: boolean,
   ) {
@@ -196,7 +198,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   // eslint-disable-next-line max-params
   private async refineResponseSingle(
     initialReponse: string,
-    queryStr: string,
+    queryType: QueryType,
     textChunk: string,
     stream: boolean,
   ) {

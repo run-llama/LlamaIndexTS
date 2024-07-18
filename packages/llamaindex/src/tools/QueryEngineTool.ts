@@ -1,6 +1,6 @@
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { JSONSchemaType } from "ajv";
-import type { QueryEngine } from "../types.js";
+import type { BaseQueryEngine } from '@llamaindex/core/query-engine';
 
 const DEFAULT_NAME = "query_engine_tool";
 const DEFAULT_DESCRIPTION =
@@ -18,7 +18,7 @@ const DEFAULT_PARAMETERS: JSONSchemaType<QueryEngineParam> = {
 };
 
 export type QueryEngineToolParams = {
-  queryEngine: QueryEngine;
+  queryEngine: BaseQueryEngine;
   metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
 };
 
@@ -27,7 +27,7 @@ export type QueryEngineParam = {
 };
 
 export class QueryEngineTool implements BaseTool<QueryEngineParam> {
-  private queryEngine: QueryEngine;
+  private queryEngine: BaseQueryEngine;
   metadata: ToolMetadata<JSONSchemaType<QueryEngineParam>>;
 
   constructor({ queryEngine, metadata }: QueryEngineToolParams) {
@@ -42,6 +42,6 @@ export class QueryEngineTool implements BaseTool<QueryEngineParam> {
   async call({ query }: QueryEngineParam) {
     const response = await this.queryEngine.query({ query });
 
-    return response.response;
+    return response.message.content;
   }
 }

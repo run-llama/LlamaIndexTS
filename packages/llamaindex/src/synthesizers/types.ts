@@ -1,44 +1,31 @@
-import type { NodeWithScore } from "@llamaindex/core/schema";
-import type { EngineResponse } from "../EngineResponse.js";
+import { EngineResponse, type NodeWithScore } from '@llamaindex/core/schema';
 import type { PromptMixin } from "../prompts/Mixin.js";
+import type { QueryType } from '@llamaindex/core/query-engine';
 
-export interface SynthesizeParamsBase {
-  query: string;
+export interface SynthesizeQuery {
+  query: QueryType;
   nodesWithScore: NodeWithScore[];
 }
 
-export interface SynthesizeParamsStreaming extends SynthesizeParamsBase {
-  stream: true;
-}
-
-export interface SynthesizeParamsNonStreaming extends SynthesizeParamsBase {
-  stream?: false | null;
-}
-
+// todo(himself65): Move this to @llamaindex/core/schema
 /**
  * A BaseSynthesizer is used to generate a response from a query and a list of nodes.
  */
 export interface BaseSynthesizer {
   synthesize(
-    params: SynthesizeParamsStreaming,
+    query: SynthesizeQuery,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  synthesize(params: SynthesizeParamsNonStreaming): Promise<EngineResponse>;
+  synthesize(
+    query: SynthesizeQuery,
+    stream?: false
+  ): Promise<EngineResponse>;
 }
 
-export interface ResponseBuilderParamsBase {
-  query: string;
+export interface ResponseBuilderQuery {
+  query: QueryType;
   textChunks: string[];
   prevResponse?: string;
-}
-
-export interface ResponseBuilderParamsStreaming
-  extends ResponseBuilderParamsBase {
-  stream: true;
-}
-
-export interface ResponseBuilderParamsNonStreaming
-  extends ResponseBuilderParamsBase {
-  stream?: false | null;
 }
 
 /**
@@ -47,10 +34,13 @@ export interface ResponseBuilderParamsNonStreaming
 export interface ResponseBuilder extends Partial<PromptMixin> {
   /**
    * Get the response from a query and a list of text chunks.
-   * @param params
    */
   getResponse(
-    params: ResponseBuilderParamsStreaming,
+    query: ResponseBuilderQuery,
+    stream: true
   ): Promise<AsyncIterable<string>>;
-  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
+  getResponse(
+    query: ResponseBuilderQuery,
+    stream?: false
+  ): Promise<string>;
 }

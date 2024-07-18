@@ -1,16 +1,13 @@
-import { MetadataMode } from "@llamaindex/core/schema";
+import { EngineResponse, MetadataMode } from '@llamaindex/core/schema';
 import { streamConverter } from "@llamaindex/core/utils";
-import { EngineResponse } from "../EngineResponse.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import { PromptMixin } from "../prompts/Mixin.js";
 import type { TextQaPrompt } from "./../Prompt.js";
 import { defaultTextQaPrompt } from "./../Prompt.js";
 import type {
-  BaseSynthesizer,
-  SynthesizeParamsNonStreaming,
-  SynthesizeParamsStreaming,
-} from "./types.js";
+  BaseSynthesizer, SynthesizeQuery
+} from './types.js';
 import { createMessageContent } from "./utils.js";
 
 export class MultiModalResponseSynthesizer
@@ -48,21 +45,27 @@ export class MultiModalResponseSynthesizer
   }
 
   synthesize(
-    params: SynthesizeParamsStreaming,
+    query: SynthesizeQuery,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  synthesize(params: SynthesizeParamsNonStreaming): Promise<EngineResponse>;
-  async synthesize({
-    query,
-    nodesWithScore,
-    stream,
-  }: SynthesizeParamsStreaming | SynthesizeParamsNonStreaming): Promise<
+  synthesize(
+    query: SynthesizeQuery,
+    stream?: false
+  ): Promise<EngineResponse>;
+  async synthesize(
+    query: SynthesizeQuery,
+    stream?: boolean
+  ): Promise<
     AsyncIterable<EngineResponse> | EngineResponse
   > {
+    const { nodesWithScore } = query;
     const nodes = nodesWithScore.map(({ node }) => node);
     const prompt = await createMessageContent(
       this.textQATemplate,
       nodes,
-      { query },
+      // fixme: wtf type is this?
+      // { query },
+      {},
       this.metadataMode,
     );
 

@@ -1,4 +1,4 @@
-import { EngineResponse } from "../EngineResponse.js";
+import type { EngineResponse } from '@llamaindex/core/schema';
 
 export type EvaluationResult = {
   query?: string;

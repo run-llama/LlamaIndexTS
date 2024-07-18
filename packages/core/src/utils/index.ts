@@ -52,3 +52,5 @@ export {
   extractSingleText,
   extractText,
 } from "./llms";
+
+export { extractQuery } from './query-engine'

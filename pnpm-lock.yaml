@@ -163,7 +163,7 @@ importers:
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.613.0(@aws-sdk/client-sso-oidc@3.613.0(@aws-sdk/client-sts@3.613.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.613.0)
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
@@ -562,7 +562,7 @@ importers:
         version: 2.0.0
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.613.0(@aws-sdk/client-sso-oidc@3.613.0(@aws-sdk/client-sts@3.613.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.613.0)
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
@@ -587,6 +587,9 @@ importers:
       rake-modified:
         specifier: ^1.0.8
         version: 1.0.8
+      sqlite-vec:
+        specifier: 0.0.1-alpha.36
+        version: 0.0.1-alpha.36
       string-strip-html:
         specifier: ^13.4.8
         version: 13.4.8
@@ -9612,6 +9615,29 @@ packages:
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
 
+  sqlite-vec-darwin-arm64@0.0.1-alpha.36:
+    resolution: {integrity: sha512-gaBiRTXlHFjKchsi9L/lyI9x0NgWqRqpNsZo8QCX5CUWFIe9upqg74dskxJWK7BA3i9/Aq8WukGnOpRqe/lcww==}
+    cpu: [arm64]
+    os: [darwin]
+
+  sqlite-vec-darwin-x64@0.0.1-alpha.36:
+    resolution: {integrity: sha512-lsVxqnYBm62iKZsTnh/AvjmfA12DOIhT2pgM/9vlVD2DgQFbsXXSjoHlEG3x1tv0FlhQ1tPiCqyTdeLfXTvvpg==}
+    cpu: [x64]
+    os: [darwin]
+
+  sqlite-vec-linux-x64@0.0.1-alpha.36:
+    resolution: {integrity: sha512-Seqp9f/yUBQ7fDacvCbx7fOrZ3Nx17n+y6zM9jkzzyIZMZC6REwkTXb2JeXwVQTWsmnD8D0D4NUPsgfGmvtY5g==}
+    cpu: [x64]
+    os: [linux]
+
+  sqlite-vec-windows-x64@0.0.1-alpha.36:
+    resolution: {integrity: sha512-U3SxzXR8G1n6mlIU6iPe/DoeAuij8eRLpfNZACOXiRP5FP0QK82u/eEsCvH9bUUU7XiiS0mKk76lFxksqwvcWQ==}
+    cpu: [x64]
+    os: [windows]
+
+  sqlite-vec@0.0.1-alpha.36:
+    resolution: {integrity: sha512-ngD4e1lkovD/R1hEI/hEWMzhMM1hoFWFtIxkrkjEFEmcre+mOQOJpQ2zpT2kBSHiqKkPcKs7iAfP5B/qXc5ocw==}
+
   srcset@4.0.0:
     resolution: {integrity: sha512-wvLeHgcVHKO8Sc/H/5lkGreJQVeYMm9rlmt8PuR1xE31rIuXhuzznUUqAt8MqLhB3MqJdFzlNAfpcWnxiFUcPw==}
     engines: {node: '>=12'}
@@ -17297,16 +17323,6 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.16.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
-    dependencies:
-      debug: 3.2.7
-    optionalDependencies:
-      '@typescript-eslint/parser': 7.16.0(eslint@8.57.0)(typescript@5.5.3)
-      eslint: 8.57.0
-      eslint-import-resolver-node: 0.3.9
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-module-utils@2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
@@ -17328,7 +17344,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.16.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.14.0
       is-glob: 4.0.3
@@ -19983,7 +19999,7 @@ snapshots:
       '@types/whatwg-url': 11.0.5
       whatwg-url: 13.0.0
 
-  mongodb@6.8.0(@aws-sdk/credential-providers@3.613.0(@aws-sdk/client-sso-oidc@3.613.0(@aws-sdk/client-sts@3.613.0))):
+  mongodb@6.8.0(@aws-sdk/credential-providers@3.613.0):
     dependencies:
       '@mongodb-js/saslprep': 1.1.7
       bson: 6.8.0
@@ -22039,6 +22055,25 @@ snapshots:
   split2@4.2.0: {}
 
   sprintf-js@1.0.3: {}
+
+  sqlite-vec-darwin-arm64@0.0.1-alpha.36:
+    optional: true
+
+  sqlite-vec-darwin-x64@0.0.1-alpha.36:
+    optional: true
+
+  sqlite-vec-linux-x64@0.0.1-alpha.36:
+    optional: true
+
+  sqlite-vec-windows-x64@0.0.1-alpha.36:
+    optional: true
+
+  sqlite-vec@0.0.1-alpha.36:
+    optionalDependencies:
+      sqlite-vec-darwin-arm64: 0.0.1-alpha.36
+      sqlite-vec-darwin-x64: 0.0.1-alpha.36
+      sqlite-vec-linux-x64: 0.0.1-alpha.36
+      sqlite-vec-windows-x64: 0.0.1-alpha.36
 
   srcset@4.0.0: {}
 

@@ -1,5 +1,4 @@
-import type { NodeWithScore } from "@llamaindex/core/schema";
-import { EngineResponse } from "../../EngineResponse.js";
+import { EngineResponse, type NodeWithScore } from '@llamaindex/core/schema';
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import { PromptMixin } from "../../prompts/index.js";
@@ -7,14 +6,13 @@ import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 import { TreeSummarize } from "../../synthesizers/index.js";
 import type {
+  BaseQueryEngine,
   QueryBundle,
-  QueryEngine,
-  QueryEngineParamsNonStreaming,
-  QueryEngineParamsStreaming,
-} from "../../types.js";
+} from '@llamaindex/core/query-engine';
+import { extractText } from '@llamaindex/core/utils';
 
 type RouterQueryEngineTool = {
-  queryEngine: QueryEngine;
+  queryEngine: BaseQueryEngine;
   description: string;
 };
 
@@ -40,11 +38,11 @@ async function combineResponses(
       sourceNodes.push(...response.sourceNodes);
     }
 
-    responseStrs.push(response.response);
+    responseStrs.push(extractText(response.message.content));
   }
 
   const summary = await summarizer.getResponse({
-    query: queryBundle.queryStr,
+    query: queryBundle.query,
     textChunks: responseStrs,
   });
 
@@ -54,9 +52,9 @@ async function combineResponses(
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
-export class RouterQueryEngine extends PromptMixin implements QueryEngine {
+export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   private selector: BaseSelector;
-  private queryEngines: QueryEngine[];
+  private queryEngines: BaseQueryEngine[];
   private metadatas: RouterQueryEngineMetadata[];
   private summarizer: TreeSummarize;
   private verbose: boolean;
@@ -109,15 +107,16 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   }
 
   query(
-    params: QueryEngineParamsStreaming,
+    query: QueryBundle,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
+  query(params: QueryBundle): Promise<EngineResponse>;
   async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+    query: QueryBundle,
+    stream?: boolean,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { query, stream } = params;
 
-    const response = await this.queryRoute({ queryStr: query });
+    const response = await this.queryRoute(query);
 
     if (stream) {
       throw new Error("Streaming is not supported yet.");
@@ -141,9 +140,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
 
         const selectedQueryEngine = this.queryEngines[engineInd.index];
         responses.push(
-          await selectedQueryEngine.query({
-            query: queryBundle.queryStr,
-          }),
+          await selectedQueryEngine.query(queryBundle),
         );
       }
 
@@ -178,9 +175,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
         throw new Error("Selected query engine is null");
       }
 
-      const finalResponse = await selectedQueryEngine.query({
-        query: queryBundle.queryStr,
-      });
+      const finalResponse = await selectedQueryEngine.query(queryBundle);
 
       // add selected result
       finalResponse.metadata = finalResponse.metadata || {};
