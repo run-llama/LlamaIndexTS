@@ -3,6 +3,7 @@ import type { JSONValue } from "@llamaindex/core/global";
 import type { ImageType } from "@llamaindex/core/schema";
 import { fs } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
+import type { QueryBundle } from "../types.js";
 
 export const isAsyncIterable = (
   obj: unknown,
@@ -201,4 +202,11 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
     }
   }
   return await blobToDataUrl(input);
+}
+
+export function toQueryBundle(query: QueryBundle | string): QueryBundle {
+  if (typeof query === "string") {
+    return { query };
+  }
+  return query;
 }

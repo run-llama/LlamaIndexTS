@@ -1,5 +1,6 @@
 import type { LLM } from "@llamaindex/core/llms";
-import { streamConverter } from "@llamaindex/core/utils";
+import { extractText, streamConverter } from "@llamaindex/core/utils";
+import { toQueryBundle } from "../internal/utils.js";
 import type {
   RefinePrompt,
   SimplePrompt,
@@ -61,7 +62,7 @@ export class SimpleResponseBuilder implements ResponseBuilder {
     AsyncIterable<string> | string
   > {
     const input = {
-      query,
+      query: extractText(toQueryBundle(query).query),
       context: textChunks.join("\n\n"),
     };
 
@@ -142,14 +143,14 @@ export class Refine extends PromptMixin implements ResponseBuilder {
       const lastChunk = i === textChunks.length - 1;
       if (!response) {
         response = await this.giveResponseSingle(
-          query,
+          extractText(toQueryBundle(query).query),
           chunk,
           !!stream && lastChunk,
         );
       } else {
         response = await this.refineResponseSingle(
           response as string,
-          query,
+          extractText(toQueryBundle(query).query),
           chunk,
           !!stream && lastChunk,
         );
@@ -254,9 +255,15 @@ export class CompactAndRefine extends Refine {
     AsyncIterable<string> | string
   > {
     const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate({ ...input, query: query });
+      this.textQATemplate({
+        ...input,
+        query: extractText(toQueryBundle(query).query),
+      });
     const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate({ ...input, query: query });
+      this.refineTemplate({
+        ...input,
+        query: extractText(toQueryBundle(query).query),
+      });
 
     const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
     const newTexts = this.promptHelper.repack(maxPrompt, textChunks);
@@ -335,7 +342,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
       const params = {
         prompt: this.summaryTemplate({
           context: packedTextChunks[0],
-          query,
+          query: extractText(toQueryBundle(query).query),
         }),
       };
       if (stream) {
@@ -349,7 +356,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
           this.llm.complete({
             prompt: this.summaryTemplate({
               context: chunk,
-              query,
+              query: extractText(toQueryBundle(query).query),
             }),
           }),
         ),
