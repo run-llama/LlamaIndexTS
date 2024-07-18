@@ -2,7 +2,7 @@
  * Top level types to avoid circular dependencies
  */
 import type { ToolMetadata } from "@llamaindex/core/llms";
-import type { EngineResponse } from "./EngineResponse.js";
+import type { EngineResponse } from "@llamaindex/core/schema";
 
 /**
  * Parameters for sending a query.
@@ -51,17 +51,5 @@ export interface StructuredOutput<T> {
 }
 
 export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
-
-export class QueryBundle {
-  queryStr: string;
-
-  constructor(queryStr: string) {
-    this.queryStr = queryStr;
-  }
-
-  toString(): string {
-    return this.queryStr;
-  }
-}
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;

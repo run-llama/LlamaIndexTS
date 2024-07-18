@@ -1,9 +1,10 @@
 import type { LLM } from "@llamaindex/core/llms";
+import type { QueryBundle } from "@llamaindex/core/query-engine";
+import { extractText } from "@llamaindex/core/utils";
 import type { Answer } from "../outputParsers/selectors.js";
 import { SelectionOutputParser } from "../outputParsers/selectors.js";
 import type {
   BaseOutputParser,
-  QueryBundle,
   StructuredOutput,
   ToolMetadataOnlyDescription,
 } from "../types.js";
@@ -39,19 +40,17 @@ function structuredOutputToSelectorResult(
   return { selections };
 }
 
-type LLMPredictorType = LLM;
-
 /**
  * A selector that uses the LLM to select a single or multiple choices from a list of choices.
  */
 export class LLMMultiSelector extends BaseSelector {
-  llm: LLMPredictorType;
+  llm: LLM;
   prompt: MultiSelectPrompt;
   maxOutputs: number;
   outputParser: BaseOutputParser<StructuredOutput<Answer[]>>;
 
   constructor(init: {
-    llm: LLMPredictorType;
+    llm: LLM;
     prompt?: MultiSelectPrompt;
     maxOutputs?: number;
     outputParser?: BaseOutputParser<StructuredOutput<Answer[]>>;
@@ -88,7 +87,7 @@ export class LLMMultiSelector extends BaseSelector {
     const prompt = this.prompt(
       choicesText.length,
       choicesText,
-      query.queryStr,
+      extractText(query.query),
       this.maxOutputs,
     );
 
@@ -116,12 +115,12 @@ export class LLMMultiSelector extends BaseSelector {
  * A selector that uses the LLM to select a single choice from a list of choices.
  */
 export class LLMSingleSelector extends BaseSelector {
-  llm: LLMPredictorType;
+  llm: LLM;
   prompt: SingleSelectPrompt;
   outputParser: BaseOutputParser<StructuredOutput<Answer[]>>;
 
   constructor(init: {
-    llm: LLMPredictorType;
+    llm: LLM;
     prompt?: SingleSelectPrompt;
     outputParser?: BaseOutputParser<StructuredOutput<Answer[]>>;
   }) {
@@ -152,7 +151,11 @@ export class LLMSingleSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(choicesText.length, choicesText, query.queryStr);
+    const prompt = this.prompt(
+      choicesText.length,
+      choicesText,
+      extractText(query.query),
+    );
 
     const formattedPrompt = this.outputParser.format(prompt);
 

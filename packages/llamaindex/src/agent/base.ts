@@ -5,10 +5,10 @@ import type {
   MessageContent,
   ToolOutput,
 } from "@llamaindex/core/llms";
+import { EngineResponse } from "@llamaindex/core/schema";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
 import { ChatHistory } from "../ChatHistory.js";
-import { EngineResponse } from "../EngineResponse.js";
 import { Settings } from "../Settings.js";
 import {
   type ChatEngine,

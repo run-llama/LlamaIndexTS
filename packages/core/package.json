@@ -4,6 +4,20 @@
   "version": "0.1.2",
   "description": "LlamaIndex Core Module",
   "exports": {
+    "./query-engine": {
+      "require": {
+        "types": "./dist/query-engine/index.d.cts",
+        "default": "./dist/query-engine/index.cjs"
+      },
+      "import": {
+        "types": "./dist/query-engine/index.d.ts",
+        "default": "./dist/query-engine/index.js"
+      },
+      "default": {
+        "types": "./dist/query-engine/index.d.ts",
+        "default": "./dist/query-engine/index.js"
+      }
+    },
     "./llms": {
       "require": {
         "types": "./dist/llms/index.d.cts",
