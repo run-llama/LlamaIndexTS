@@ -81,4 +81,8 @@ export class EngineResponse implements ChatResponse, ChatResponseChunk {
     }
     return extractText(this.message.content);
   }
+
+  toString(): string {
+    return this.response ?? "";
+  }
 }
