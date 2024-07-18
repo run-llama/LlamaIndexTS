@@ -1,7 +1,8 @@
-import type { EngineResponse } from '@llamaindex/core/schema';
+import type { QueryType } from "@llamaindex/core/query-engine";
+import type { EngineResponse } from "@llamaindex/core/schema";
 
 export type EvaluationResult = {
-  query?: string;
+  query?: QueryType;
   contexts?: string[];
   response: string | null;
   score: number;
@@ -13,7 +14,7 @@ export type EvaluationResult = {
 };
 
 export type EvaluatorParams = {
-  query: string | null;
+  query: QueryType;
   response: string;
   contexts?: string[];
   reference?: string;
@@ -21,7 +22,7 @@ export type EvaluatorParams = {
 };
 
 export type EvaluatorResponseParams = {
-  query: string | null;
+  query: QueryType;
   response: EngineResponse;
 };
 export interface BaseEvaluator {

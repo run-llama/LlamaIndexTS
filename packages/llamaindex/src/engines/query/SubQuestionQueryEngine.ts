@@ -1,5 +1,8 @@
-import { EngineResponse, type NodeWithScore } from '@llamaindex/core/schema';
-import { TextNode } from "@llamaindex/core/schema";
+import {
+  EngineResponse,
+  TextNode,
+  type NodeWithScore,
+} from "@llamaindex/core/schema";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
@@ -10,14 +13,17 @@ import {
 } from "../../synthesizers/index.js";
 
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
+import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
-import type { BaseQueryEngine, QueryType } from '@llamaindex/core/query-engine';
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
-export class SubQuestionQueryEngine extends PromptMixin implements BaseQueryEngine {
+export class SubQuestionQueryEngine
+  extends PromptMixin
+  implements BaseQueryEngine
+{
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: BaseTool[];
@@ -67,14 +73,8 @@ export class SubQuestionQueryEngine extends PromptMixin implements BaseQueryEngi
     });
   }
 
-  query(
-    query: QueryType,
-    stream: true,
-  ): Promise<AsyncIterable<EngineResponse>>;
-  query(
-    query: QueryType,
-    stream?: false,
-  ): Promise<EngineResponse>;
+  query(query: QueryType, stream: true): Promise<AsyncIterable<EngineResponse>>;
+  query(query: QueryType, stream?: false): Promise<EngineResponse>;
   @wrapEventCaller
   async query(
     query: QueryType,
@@ -90,15 +90,21 @@ export class SubQuestionQueryEngine extends PromptMixin implements BaseQueryEngi
       .filter((node) => node !== null)
       .map((node) => node as NodeWithScore);
     if (stream) {
-      return this.responseSynthesizer.synthesize({
+      return this.responseSynthesizer.synthesize(
+        {
+          query,
+          nodesWithScore,
+        },
+        true,
+      );
+    }
+    return this.responseSynthesizer.synthesize(
+      {
         query,
         nodesWithScore,
-      }, true);
-    }
-    return this.responseSynthesizer.synthesize({
-      query,
-      nodesWithScore,
-    }, false);
+      },
+      false,
+    );
   }
 
   private async querySubQ(subQ: SubQuestion): Promise<NodeWithScore | null> {

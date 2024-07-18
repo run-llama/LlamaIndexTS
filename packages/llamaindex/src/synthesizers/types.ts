@@ -1,6 +1,6 @@
-import { EngineResponse, type NodeWithScore } from '@llamaindex/core/schema';
+import type { QueryType } from "@llamaindex/core/query-engine";
+import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import type { PromptMixin } from "../prompts/Mixin.js";
-import type { QueryType } from '@llamaindex/core/query-engine';
 
 export interface SynthesizeQuery {
   query: QueryType;
@@ -16,10 +16,7 @@ export interface BaseSynthesizer {
     query: SynthesizeQuery,
     stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  synthesize(
-    query: SynthesizeQuery,
-    stream?: false
-  ): Promise<EngineResponse>;
+  synthesize(query: SynthesizeQuery, stream?: false): Promise<EngineResponse>;
 }
 
 export interface ResponseBuilderQuery {
@@ -37,10 +34,7 @@ export interface ResponseBuilder extends Partial<PromptMixin> {
    */
   getResponse(
     query: ResponseBuilderQuery,
-    stream: true
+    stream: true,
   ): Promise<AsyncIterable<string>>;
-  getResponse(
-    query: ResponseBuilderQuery,
-    stream?: false
-  ): Promise<string>;
+  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
 }

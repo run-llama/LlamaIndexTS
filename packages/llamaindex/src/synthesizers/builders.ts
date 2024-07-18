@@ -1,5 +1,6 @@
 import type { LLM } from "@llamaindex/core/llms";
-import { extractQuery, streamConverter } from '@llamaindex/core/utils';
+import type { QueryType } from "@llamaindex/core/query-engine";
+import { extractText, streamConverter } from "@llamaindex/core/utils";
 import type {
   RefinePrompt,
   SimplePrompt,
@@ -19,10 +20,7 @@ import {
   llmFromSettingsOrContext,
   promptHelperFromSettingsOrContext,
 } from "../Settings.js";
-import type {
-  ResponseBuilder, ResponseBuilderQuery
-} from './types.js';
-import type { QueryType } from '@llamaindex/core/query-engine';
+import type { ResponseBuilder, ResponseBuilderQuery } from "./types.js";
 
 /**
  * Response modes of the response synthesizer
@@ -51,16 +49,12 @@ export class SimpleResponseBuilder implements ResponseBuilder {
     stream: true,
   ): Promise<AsyncIterable<string>>;
   getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
-  async getResponse({
-    query,
-    textChunks,
-  }: ResponseBuilderQuery,
+  async getResponse(
+    { query, textChunks }: ResponseBuilderQuery,
     stream?: boolean,
-  ): Promise<
-    AsyncIterable<string> | string
-  > {
+  ): Promise<AsyncIterable<string> | string> {
     const input = {
-      query: extractQuery(query),
+      query: extractText(query),
       context: textChunks.join("\n\n"),
     };
 
@@ -124,19 +118,11 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     query: ResponseBuilderQuery,
     stream: true,
   ): Promise<AsyncIterable<string>>;
-  getResponse(
-    query: ResponseBuilderQuery,
-    stream?: false,
-  ): Promise<string>;
-  async getResponse({
-    query,
-    textChunks,
-    prevResponse,
-  }: ResponseBuilderQuery,
+  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
+  async getResponse(
+    { query, textChunks, prevResponse }: ResponseBuilderQuery,
     stream?: boolean,
-  ): Promise<
-    AsyncIterable<string> | string
-  > {
+  ): Promise<AsyncIterable<string> | string> {
     let response: AsyncIterable<string> | string | undefined = prevResponse;
 
     for (let i = 0; i < textChunks.length; i++) {
@@ -162,12 +148,12 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   private async giveResponseSingle(
-    queryType: QueryType,
+    query: QueryType,
     textChunk: string,
     stream: boolean,
   ) {
     const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate({ ...input, query: queryStr });
+      this.textQATemplate({ ...input, query: extractText(query) });
     const textChunks = this.promptHelper.repack(textQATemplate, [textChunk]);
 
     let response: AsyncIterable<string> | string | undefined = undefined;
@@ -185,7 +171,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
       } else {
         response = await this.refineResponseSingle(
           response as string,
-          queryStr,
+          query,
           chunk,
           stream && lastChunk,
         );
@@ -198,12 +184,12 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   // eslint-disable-next-line max-params
   private async refineResponseSingle(
     initialReponse: string,
-    queryType: QueryType,
+    query: QueryType,
     textChunk: string,
     stream: boolean,
   ) {
     const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate({ ...input, query: queryStr });
+      this.refineTemplate({ ...input, query: extractText(query) });
 
     const textChunks = this.promptHelper.repack(refineTemplate, [textChunk]);
 
@@ -242,23 +228,24 @@ export class Refine extends PromptMixin implements ResponseBuilder {
  */
 export class CompactAndRefine extends Refine {
   getResponse(
-    params: ResponseBuilderParamsStreaming,
+    query: ResponseBuilderQuery,
+    stream: true,
   ): Promise<AsyncIterable<string>>;
-  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
-  async getResponse({
-    query,
-    textChunks,
-    prevResponse,
-    stream,
-  }:
-    | ResponseBuilderParamsStreaming
-    | ResponseBuilderParamsNonStreaming): Promise<
-    AsyncIterable<string> | string
-  > {
+  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
+  async getResponse(
+    { query, textChunks, prevResponse }: ResponseBuilderQuery,
+    stream?: boolean,
+  ): Promise<AsyncIterable<string> | string> {
     const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate({ ...input, query: query });
+      this.textQATemplate({
+        ...input,
+        query: extractText(query),
+      });
     const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate({ ...input, query: query });
+      this.refineTemplate({
+        ...input,
+        query: extractText(query),
+      });
 
     const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
     const newTexts = this.promptHelper.repack(maxPrompt, textChunks);
@@ -268,10 +255,12 @@ export class CompactAndRefine extends Refine {
       prevResponse,
     };
     if (stream) {
-      return super.getResponse({
-        ...params,
-        stream,
-      });
+      return super.getResponse(
+        {
+          ...params,
+        },
+        true,
+      );
     }
     return super.getResponse(params);
   }
@@ -311,18 +300,14 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
   }
 
   getResponse(
-    params: ResponseBuilderParamsStreaming,
+    query: ResponseBuilderQuery,
+    stream: true,
   ): Promise<AsyncIterable<string>>;
-  getResponse(params: ResponseBuilderParamsNonStreaming): Promise<string>;
-  async getResponse({
-    query,
-    textChunks,
-    stream,
-  }:
-    | ResponseBuilderParamsStreaming
-    | ResponseBuilderParamsNonStreaming): Promise<
-    AsyncIterable<string> | string
-  > {
+  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
+  async getResponse(
+    { query, textChunks }: ResponseBuilderQuery,
+    stream?: boolean,
+  ): Promise<AsyncIterable<string> | string> {
     if (!textChunks || textChunks.length === 0) {
       throw new Error("Must have at least one text chunk");
     }
@@ -337,7 +322,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
       const params = {
         prompt: this.summaryTemplate({
           context: packedTextChunks[0],
-          query,
+          query: extractText(query),
         }),
       };
       if (stream) {
@@ -351,7 +336,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
           this.llm.complete({
             prompt: this.summaryTemplate({
               context: chunk,
-              query,
+              query: extractText(query),
             }),
           }),
         ),
@@ -362,10 +347,12 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
         textChunks: summaries.map((s) => s.text),
       };
       if (stream) {
-        return this.getResponse({
-          ...params,
-          stream,
-        });
+        return this.getResponse(
+          {
+            ...params,
+          },
+          true,
+        );
       }
       return this.getResponse(params);
     }

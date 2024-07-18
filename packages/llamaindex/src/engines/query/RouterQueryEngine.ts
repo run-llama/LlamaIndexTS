@@ -1,4 +1,6 @@
-import { EngineResponse, type NodeWithScore } from '@llamaindex/core/schema';
+import type { QueryType } from "@llamaindex/core/query-engine";
+import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
+import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import { PromptMixin } from "../../prompts/index.js";
@@ -6,13 +8,13 @@ import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 import { TreeSummarize } from "../../synthesizers/index.js";
 import type {
-  BaseQueryEngine,
-  QueryBundle,
-} from '@llamaindex/core/query-engine';
-import { extractText } from '@llamaindex/core/utils';
+  QueryEngine,
+  QueryEngineParamsNonStreaming,
+  QueryEngineParamsStreaming,
+} from "../../types.js";
 
 type RouterQueryEngineTool = {
-  queryEngine: BaseQueryEngine;
+  queryEngine: QueryEngine;
   description: string;
 };
 
@@ -23,7 +25,7 @@ type RouterQueryEngineMetadata = {
 async function combineResponses(
   summarizer: TreeSummarize,
   responses: EngineResponse[],
-  queryBundle: QueryBundle,
+  queryType: QueryType,
   verbose: boolean = false,
 ): Promise<EngineResponse> {
   if (verbose) {
@@ -42,7 +44,7 @@ async function combineResponses(
   }
 
   const summary = await summarizer.getResponse({
-    query: queryBundle.query,
+    query: extractText(queryType),
     textChunks: responseStrs,
   });
 
@@ -52,9 +54,9 @@ async function combineResponses(
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
-export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
+export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   private selector: BaseSelector;
-  private queryEngines: BaseQueryEngine[];
+  private queryEngines: QueryEngine[];
   private metadatas: RouterQueryEngineMetadata[];
   private summarizer: TreeSummarize;
   private verbose: boolean;
@@ -107,14 +109,13 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   }
 
   query(
-    query: QueryBundle,
-    stream: true,
+    params: QueryEngineParamsStreaming,
   ): Promise<AsyncIterable<EngineResponse>>;
-  query(params: QueryBundle): Promise<EngineResponse>;
+  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
   async query(
-    query: QueryBundle,
-    stream?: boolean,
+    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
+    const { query, stream } = params;
 
     const response = await this.queryRoute(query);
 
@@ -125,8 +126,8 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
     return response;
   }
 
-  private async queryRoute(queryBundle: QueryBundle): Promise<EngineResponse> {
-    const result = await this.selector.select(this.metadatas, queryBundle);
+  private async queryRoute(query: QueryType): Promise<EngineResponse> {
+    const result = await this.selector.select(this.metadatas, query);
 
     if (result.selections.length > 1) {
       const responses: EngineResponse[] = [];
@@ -140,7 +141,9 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
 
         const selectedQueryEngine = this.queryEngines[engineInd.index];
         responses.push(
-          await selectedQueryEngine.query(queryBundle),
+          await selectedQueryEngine.query({
+            query: extractText(query),
+          }),
         );
       }
 
@@ -148,7 +151,7 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
         const finalResponse = await combineResponses(
           this.summarizer,
           responses,
-          queryBundle,
+          query,
           this.verbose,
         );
 
@@ -175,7 +178,9 @@ export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
         throw new Error("Selected query engine is null");
       }
 
-      const finalResponse = await selectedQueryEngine.query(queryBundle);
+      const finalResponse = await selectedQueryEngine.query({
+        query: extractText(query),
+      });
 
       // add selected result
       finalResponse.metadata = finalResponse.metadata || {};

@@ -1,4 +1,4 @@
-import { EngineResponse, MetadataMode } from '@llamaindex/core/schema';
+import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import { streamConverter } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
 import { PromptMixin } from "../prompts/Mixin.js";
@@ -7,7 +7,7 @@ import { getResponseBuilder } from "./builders.js";
 import type {
   BaseSynthesizer,
   ResponseBuilder,
-  SynthesizeQuery
+  SynthesizeQuery,
 } from "./types.js";
 
 /**
@@ -55,35 +55,36 @@ export class ResponseSynthesizer
 
   synthesize(
     query: SynthesizeQuery,
-    stream: true
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  synthesize(
-    query: SynthesizeQuery,
-    stream?: false
-  ): Promise<EngineResponse>;
+  synthesize(query: SynthesizeQuery, stream?: false): Promise<EngineResponse>;
   async synthesize(
     query: SynthesizeQuery,
-    stream?: boolean
-  ): Promise<
-    AsyncIterable<EngineResponse> | EngineResponse
-  > {
+    stream?: boolean,
+  ): Promise<AsyncIterable<EngineResponse> | EngineResponse> {
     const { nodesWithScore } = query;
     const textChunks: string[] = nodesWithScore.map(({ node }) =>
       node.getContent(this.metadataMode),
     );
     if (stream) {
-      const response = await this.responseBuilder.getResponse({
-        ...query,
-        textChunks,
-      }, true);
+      const response = await this.responseBuilder.getResponse(
+        {
+          ...query,
+          textChunks,
+        },
+        true,
+      );
       return streamConverter(response, (chunk) =>
         EngineResponse.fromResponse(chunk, true, nodesWithScore),
       );
     }
-    const response = await this.responseBuilder.getResponse({
-      ...query,
-      textChunks,
-    }, false);
+    const response = await this.responseBuilder.getResponse(
+      {
+        ...query,
+        textChunks,
+      },
+      false,
+    );
     return EngineResponse.fromResponse(response, false, nodesWithScore);
   }
 }
