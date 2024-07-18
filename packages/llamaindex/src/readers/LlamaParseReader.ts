@@ -223,7 +223,7 @@ export class LlamaParseReader extends FileReader {
     ]);
 
     // Appends body with any defined LlamaParseBodyParams
-    Object.entries(LlamaParseBodyParams).forEach(([key, value]) => {
+    Object.entries(filteredParams).forEach(([key, value]) => {
       if (value !== undefined) {
         body.append(key, value);
       }
