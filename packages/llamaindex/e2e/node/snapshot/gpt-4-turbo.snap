@@ -1,0 +1,79 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Jose?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Jose?"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_Xa2Kxa2zUE073mnougPWzRlh",
+                "name": "Weather",
+                "input": "{\"location\":\"San Jose\"}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "45 degrees and sunny in San Jose",
+          "options": {
+            "toolResult": {
+              "result": "45 degrees and sunny in San Jose",
+              "isError": false,
+              "id": "call_Xa2Kxa2zUE073mnougPWzRlh"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_Xa2Kxa2zUE073mnougPWzRlh",
+                "name": "Weather",
+                "input": "{\"location\":\"San Jose\"}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "The current weather in San Jose is 45 degrees and sunny.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

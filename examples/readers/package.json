@@ -3,20 +3,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm ./src/simple-directory-reader.ts",
-    "start:csv": "node --loader ts-node/esm ./src/csv.ts",
-    "start:docx": "node --loader ts-node/esm ./src/docx.ts",
-    "start:html": "node --loader ts-node/esm ./src/html.ts",
-    "start:markdown": "node --loader ts-node/esm ./src/markdown.ts",
-    "start:pdf": "node --loader ts-node/esm ./src/pdf.ts",
-    "start:llamaparse": "node --loader ts-node/esm ./src/llamaparse.ts"
+    "start": "node --import tsx ./src/simple-directory-reader.ts",
+    "start:csv": "node --import tsx ./src/csv.ts",
+    "start:docx": "node --import tsx ./src/docx.ts",
+    "start:html": "node --import tsx ./src/html.ts",
+    "start:markdown": "node --import tsx ./src/markdown.ts",
+    "start:pdf": "node --import tsx ./src/pdf.ts",
+    "start:llamaparse": "node --import tsx ./src/llamaparse.ts",
+    "start:notion": "node --import tsx ./src/notion.ts",
+    "start:llamaparse-dir": "node --import tsx ./src/simple-directory-reader-with-llamaparse.ts",
+    "start:llamaparse-json": "node --import tsx ./src/llamaparse-json.ts",
+    "start:discord": "node --import tsx ./src/discord.ts"
   },
   "dependencies": {
-    "llamaindex": "latest"
+    "llamaindex": "*"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "@types/node": "^20.12.11",
+    "tsx": "^4.15.6",
+    "typescript": "^5.5.3"
   }
 }

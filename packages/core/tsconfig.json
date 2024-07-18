@@ -5,16 +5,12 @@
     "outDir": "./dist/type",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "emitDeclarationOnly": true,
-    "module": "node16",
-    "moduleResolution": "node16",
+    "moduleResolution": "Bundler",
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "lib": ["ESNext", "DOM"],
+    "types": ["node"]
   },
   "include": ["./src"],
-  "exclude": ["node_modules"],
-  "references": [
-    {
-      "path": "../env/tsconfig.json"
-    }
-  ]
+  "exclude": ["node_modules"]
 }

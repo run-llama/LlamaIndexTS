@@ -1,0 +1,223 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_sH6QfjsymHW7JFl68j8AY6xg",
+                "name": "Weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "35 degrees and sunny in San Francisco",
+          "options": {
+            "toolResult": {
+              "result": "35 degrees and sunny in San Francisco",
+              "isError": false,
+              "id": "call_sH6QfjsymHW7JFl68j8AY6xg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_3",
+      "messages": [
+        {
+          "role": "user",
+          "content": "My name is Alex Yang. What is my unique id?"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_V7zs8cyDT5FqJhjwBqcCydgA",
+                "name": "unique_id",
+                "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "123456789",
+          "options": {
+            "toolResult": {
+              "result": "123456789",
+              "isError": false,
+              "id": "call_V7zs8cyDT5FqJhjwBqcCydgA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "how much is 1 + 1?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "how much is 1 + 1?"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt",
+                "name": "sumNumbers",
+                "input": "{\"a\":1,\"b\":1}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "2",
+          "options": {
+            "toolResult": {
+              "result": "2",
+              "isError": false,
+              "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_sH6QfjsymHW7JFl68j8AY6xg",
+                "name": "Weather",
+                "input": "{\"location\":\"San Francisco\"}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "The weather in San Francisco is currently 35 degrees and sunny.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_V7zs8cyDT5FqJhjwBqcCydgA",
+                "name": "unique_id",
+                "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_3",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Your unique id is 123456789.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_4",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt",
+                "name": "sumNumbers",
+                "input": "{\"a\":1,\"b\":1}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_5",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "1 + 1 is equal to 2.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv";
 import {
-  CallbackManager,
   Document,
   MetadataMode,
+  NodeWithScore,
   QdrantVectorStore,
   Settings,
   VectorStoreIndex,
@@ -10,13 +10,12 @@ import {
 } from "llamaindex";
 
 // Update callback manager
-Settings.callbackManager = new CallbackManager({
-  onRetrieve: (data) => {
-    console.log(
-      "The retrieved nodes are:",
-      data.nodes.map((node) => node.node.getContent(MetadataMode.NONE)),
-    );
-  },
+Settings.callbackManager.on("retrieve-end", (event) => {
+  const { nodes } = event.detail;
+  console.log(
+    "The retrieved nodes are:",
+    nodes.map((node: NodeWithScore) => node.node.getContent(MetadataMode.NONE)),
+  );
 });
 
 // Load environment variables from local .env file
@@ -65,7 +64,7 @@ async function main() {
           {
             key: "dogId",
             value: "2",
-            filterType: "ExactMatch",
+            operator: "==",
           },
         ],
       },

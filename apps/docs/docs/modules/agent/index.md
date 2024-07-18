@@ -11,4 +11,18 @@ An “agent” is an automated reasoning and decision engine. It takes in a user
 
 LlamaIndex.TS comes with a few built-in agents, but you can also create your own. The built-in agents include:
 
-- [OpenAI Agent](./openai.mdx)
+- OpenAI Agent
+- Anthropic Agent both via Anthropic and Bedrock (in `@llamaIndex/community`)
+- Gemini Agent
+- ReACT Agent
+
+## Examples
+
+- [OpenAI Agent](../../examples/agent.mdx)
+- [Gemini Agent](../../examples/agent_gemini.mdx)
+
+## Api References
+
+- [OpenAIAgent](../../api/classes/OpenAIAgent.md)
+- [AnthropicAgent](../../api/classes/AnthropicAgent.md)
+- [ReActAgent](../../api/classes/ReActAgent.md)

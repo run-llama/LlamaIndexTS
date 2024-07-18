@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es2022",
     "module": "esnext",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
@@ -11,7 +11,9 @@
     "outDir": "./lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
-    "composite": true
+    "composite": true,
+    "types": [],
+    "lib": ["ES2022"]
   },
   "files": [],
   "references": [
@@ -19,19 +21,52 @@
       "path": "./apps/docs/tsconfig.json"
     },
     {
+      "path": "./packages/community/tsconfig.json"
+    },
+    {
+      "path": "./packages/cloud/tsconfig.json"
+    },
+    {
       "path": "./packages/core/tsconfig.json"
-    },
-    {
-      "path": "./packages/edge/e2e/test-edge-runtime/tsconfig.json"
-    },
-    {
-      "path": "./packages/core/e2e/tsconfig.json"
     },
     {
       "path": "./packages/core/tests/tsconfig.json"
     },
     {
+      "path": "./packages/llamaindex/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/e2e/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/e2e/examples/cloudflare-worker-agent/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/e2e/examples/nextjs-agent/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/e2e/examples/nextjs-edge-runtime/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/e2e/examples/nextjs-node-runtime/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/e2e/examples/waku-query-engine/tsconfig.json"
+    },
+    {
+      "path": "./packages/llamaindex/tests/tsconfig.json"
+    },
+    {
+      "path": "./packages/autotool/tsconfig.json"
+    },
+    {
+      "path": "./packages/autotool/examples/01_node/tsconfig.json"
+    },
+    {
       "path": "./packages/env/tsconfig.json"
+    },
+    {
+      "path": "./packages/env/tests/tsconfig.json"
     },
     {
       "path": "./examples"

@@ -34,10 +34,9 @@ async function main() {
     ];
 
     const astraVS = new AstraDBVectorStore();
-    await astraVS.create(collectionName, {
+    await astraVS.createAndConnect(collectionName, {
       vector: { dimension: 1536, metric: "cosine" },
     });
-    await astraVS.connect(collectionName);
 
     const ctx = await storageContextFromDefaults({ vectorStore: astraVS });
     const index = await VectorStoreIndex.fromDocuments(docs, {

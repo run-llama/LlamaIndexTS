@@ -1,0 +1,52 @@
+{
+  "name": "@llamaindex/community",
+  "description": "Community package for LlamaIndexTS",
+  "version": "0.0.22",
+  "type": "module",
+  "types": "dist/type/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/type/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./llm/bedrock": {
+      "import": {
+        "types": "./dist/type/llm/bedrock.d.ts",
+        "default": "./dist/llm/bedrock/base.js"
+      },
+      "require": {
+        "types": "./dist/type/llm/bedrock.d.ts",
+        "default": "./dist/llm/bedrock/base.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/community"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "bunchee": "5.3.0-beta.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.613.0",
+    "@llamaindex/core": "workspace:*"
+  }
+}

@@ -3,7 +3,7 @@
 ## Usage
 
 ```ts
-import { Ollama, Settings } from "llamaindex";
+import { MistralAI, Settings } from "llamaindex";
 
 Settings.llm = new MistralAI({
   model: "mistral-tiny",
@@ -66,3 +66,7 @@ async function main() {
   console.log(response.response);
 }
 ```
+
+## API Reference
+
+- [MistralAI](../../../api/classes/MistralAI.md)

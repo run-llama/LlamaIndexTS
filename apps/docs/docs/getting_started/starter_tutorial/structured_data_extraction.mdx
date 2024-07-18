@@ -1,0 +1,52 @@
+---
+sidebar_position: 3
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../../examples/jsonExtract";
+
+# Structured data extraction tutorial
+
+Make sure you have installed LlamaIndex.TS and have an OpenAI key. If you haven't, check out the [installation](../installation) guide.
+
+You can use [other LLMs](../../examples/other_llms) via their APIs; if you would prefer to use local models check out our [local LLM example](../../examples/local_llm).
+
+## Set up
+
+In a new folder:
+
+```bash npm2yarn
+npm init
+npm install -D typescript @types/node
+```
+
+## Extract data
+
+Create the file `example.ts`. This code will:
+
+- Set up an LLM connection to GPT-4
+- Give an example of the data structure we wish to generate
+- Prompt the LLM with instructions and the example, plus a sample transcript
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+To run the code:
+
+```bash
+npx tsx example.ts
+```
+
+You should expect output something like:
+
+```json
+{
+  "summary": "Sarah from XYZ Company called John to introduce the XYZ Widget, a tool designed to automate tasks and improve productivity. John expressed interest and requested case studies and a product demo. Sarah agreed to send the information and follow up to schedule the demo.",
+  "products": ["XYZ Widget"],
+  "rep_name": "Sarah",
+  "prospect_name": "John",
+  "action_items": [
+    "Send case studies and additional product information to John",
+    "Follow up with John to schedule a product demo"
+  ]
+}
+```

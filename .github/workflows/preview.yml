@@ -1,0 +1,28 @@
+name: Publish Preview
+on: [pull_request]
+
+jobs:
+  pre_release:
+    name: Pre Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Pre Release
+        run: pnpx pkg-pr-new publish ./packages/*

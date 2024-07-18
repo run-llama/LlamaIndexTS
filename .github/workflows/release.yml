@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Add auth token to .npmrc file
+        run: |
+          cat << EOF >> ".npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Get changeset status
+        id: get-changeset-status
+        run: |
+          pnpm changeset status --output .changeset/status.json
+          new_version=$(jq -r '.releases[] | select(.name == "llamaindex") | .newVersion' < .changeset/status.json)
+          rm -v .changeset/status.json
+          echo "new-version=${new_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          commit: Release ${{ steps.get-changeset-status.outputs.new-version }}
+          title: Release ${{ steps.get-changeset-status.outputs.new-version }}
+          # update version PR with the latest changesets
+          version: pnpm new-version
+          # build package and call changeset publish
+          publish: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Refs: https://github.com/changesets/changesets/issues/421
+      - name: Update lock file
+        continue-on-error: true
+        run: pnpm install --lockfile-only
+
+      - name: Commit lock file
+        continue-on-error: true
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update lock file"
+          branch: changeset-release/main
+          file_pattern: "pnpm-lock.yaml"

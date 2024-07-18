@@ -6,7 +6,7 @@ This is a monorepo built with Turborepo
 
 Right now there are two packages of importance:
 
-packages/core which is the main NPM library llamaindex
+packages/llamaindex which is the main NPM library llamaindex
 
 examples is where the demo code lives
 
@@ -41,7 +41,7 @@ To run them, run
 pnpm run test
 ```
 
-To write new test cases write them in [packages/core/src/tests](/packages/core/src/tests)
+To write new test cases write them in [packages/llamaindex/tests](/packages/llamaindex/tests)
 
 We use Jest https://jestjs.io/ to write our test cases. Jest comes with a bunch of built in assertions using the expect function: https://jestjs.io/docs/expect
 
@@ -56,7 +56,7 @@ You can create new demo applications in the apps folder. Just run pnpm init in t
 To install packages for a specific package or demo application, run
 
 ```
-pnpm add [NPM Package] --filter [package or application i.e. core or docs]
+pnpm add [NPM Package] --filter [package or application i.e. llamaindex or docs]
 ```
 
 To install packages for every package or application run
@@ -91,16 +91,10 @@ Please send a descriptive changeset for each PR.
 
 ## Publishing (maintainers only)
 
-To publish a new version of the library, first create a new version:
+The [Release Github Action](.github/workflows/release.yml) is automatically generating and updating a
+PR called "Release {version}".
 
-```shell
-pnpm new-version
-```
+This PR will update the `package.json` and `CHANGELOG.md` files of each package according to
+the current changesets in the [.changeset](.changeset/) folder.
 
-If everything looks good, commit the generated files and release the new version:
-
-```shell
-pnpm release
-git push # push to the main branch
-git push --tags
-```
+If this PR is merged it will automatically add version tags to the repository and publish the updated packages to NPM.

@@ -1,108 +1,113 @@
 {
-  "name": "llamaindex",
-  "version": "0.2.8",
-  "expectedMinorVersion": "2",
-  "license": "MIT",
+  "name": "@llamaindex/core",
   "type": "module",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.20.4",
-    "@aws-crypto/sha256-js": "^5.2.0",
-    "@datastax/astra-db-ts": "^0.1.4",
-    "@grpc/grpc-js": "^1.10.6",
-    "@llamaindex/cloud": "0.0.5",
-    "@llamaindex/env": "workspace:*",
-    "@mistralai/mistralai": "^0.1.3",
-    "@notionhq/client": "^2.2.15",
-    "@pinecone-database/pinecone": "^2.2.0",
-    "@qdrant/js-client-rest": "^1.8.2",
-    "@types/lodash": "^4.17.0",
-    "@types/node": "^20.12.7",
-    "@types/papaparse": "^5.3.14",
-    "@types/pg": "^8.11.5",
-    "@xenova/transformers": "^2.16.1",
-    "@zilliz/milvus2-sdk-node": "^2.3.5",
-    "ajv": "^8.12.0",
-    "assemblyai": "^4.3.4",
-    "chromadb": "~1.7.3",
-    "cohere-ai": "^7.9.3",
-    "js-tiktoken": "^1.0.10",
-    "lodash": "^4.17.21",
-    "magic-bytes.js": "^1.10.0",
-    "mammoth": "^1.7.1",
-    "md-utils-ts": "^2.0.0",
-    "mongodb": "^6.5.0",
-    "notion-md-crawler": "^0.0.2",
-    "openai": "^4.33.0",
-    "papaparse": "^5.4.1",
-    "pathe": "^1.1.2",
-    "pdf2json": "^3.0.5",
-    "pg": "^8.11.5",
-    "pgvector": "^0.1.8",
-    "portkey-ai": "^0.1.16",
-    "rake-modified": "^1.0.8",
-    "replicate": "^0.25.2",
-    "string-strip-html": "^13.4.8",
-    "wikipedia": "^2.1.2",
-    "wink-nlp": "^1.14.3"
-  },
-  "devDependencies": {
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.4.13",
-    "concurrently": "^8.2.2",
-    "glob": "^10.3.12",
-    "madge": "^6.1.0",
-    "typescript": "^5.4.5"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "types": "./dist/type/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "version": "0.1.2",
+  "description": "LlamaIndex Core Module",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/index.js"
-      },
+    "./llms": {
       "require": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "types": "./dist/llms/index.d.cts",
+        "default": "./dist/llms/index.cjs"
+      },
+      "import": {
+        "types": "./dist/llms/index.d.ts",
+        "default": "./dist/llms/index.js"
+      },
+      "default": {
+        "types": "./dist/llms/index.d.ts",
+        "default": "./dist/llms/index.js"
       }
     },
-    "./internal/*": {
-      "import": "./dist/not-allow.js",
-      "require": "./dist/cjs/not-allow.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
-      },
+    "./decorator": {
       "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
+        "types": "./dist/decorator/index.d.cts",
+        "default": "./dist/decorator/index.cjs"
+      },
+      "import": {
+        "types": "./dist/decorator/index.d.ts",
+        "default": "./dist/decorator/index.js"
+      },
+      "default": {
+        "types": "./dist/decorator/index.d.ts",
+        "default": "./dist/decorator/index.js"
+      }
+    },
+    "./embeddings": {
+      "require": {
+        "types": "./dist/embeddings/index.d.cts",
+        "default": "./dist/embeddings/index.cjs"
+      },
+      "import": {
+        "types": "./dist/embeddings/index.d.ts",
+        "default": "./dist/embeddings/index.js"
+      },
+      "default": {
+        "types": "./dist/embeddings/index.d.ts",
+        "default": "./dist/embeddings/index.js"
+      }
+    },
+    "./global": {
+      "require": {
+        "types": "./dist/global/index.d.cts",
+        "default": "./dist/global/index.cjs"
+      },
+      "import": {
+        "types": "./dist/global/index.d.ts",
+        "default": "./dist/global/index.js"
+      },
+      "default": {
+        "types": "./dist/global/index.d.ts",
+        "default": "./dist/global/index.js"
+      }
+    },
+    "./schema": {
+      "require": {
+        "types": "./dist/schema/index.d.cts",
+        "default": "./dist/schema/index.cjs"
+      },
+      "import": {
+        "types": "./dist/schema/index.d.ts",
+        "default": "./dist/schema/index.js"
+      },
+      "default": {
+        "types": "./dist/schema/index.d.ts",
+        "default": "./dist/schema/index.js"
+      }
+    },
+    "./utils": {
+      "require": {
+        "types": "./dist/utils/index.d.cts",
+        "default": "./dist/utils/index.cjs"
+      },
+      "import": {
+        "types": "./dist/utils/index.d.ts",
+        "default": "./dist/utils/index.js"
+      },
+      "default": {
+        "types": "./dist/utils/index.d.ts",
+        "default": "./dist/utils/index.js"
       }
     }
   },
   "files": [
-    "dist",
-    "CHANGELOG.md",
-    "examples"
+    "dist"
   ],
+  "scripts": {
+    "dev": "bunchee --watch",
+    "build": "bunchee"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/core"
+    "directory": "packages/core",
+    "url": "https://github.com/himself65/LlamaIndexTS.git"
   },
-  "scripts": {
-    "lint": "eslint .",
-    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
-    "build:type": "tsc -p tsconfig.json",
-    "copy": "cp -r ../../README.md ../../LICENSE .",
-    "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "circular-check": "madge -c ./src/index.ts",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+  "devDependencies": {
+    "ajv": "^8.16.0",
+    "bunchee": "5.3.0-beta.0"
+  },
+  "dependencies": {
+    "@llamaindex/env": "workspace:*",
+    "@types/node": "^20.14.9",
+    "zod": "^3.23.8"
   }
 }

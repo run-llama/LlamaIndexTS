@@ -1,0 +1,179 @@
+# Create a basic agent
+
+We want to use `await` so we're going to wrap all of our code in a `main` function, like this:
+
+```typescript
+// Your imports go here
+
+async function main() {
+  // the rest of your code goes here
+}
+
+main().catch(console.error);
+```
+
+For the rest of this guide we'll assume your code is wrapped like this so we can use `await`. You can run the code this way:
+
+```bash
+npx tsx example.ts
+```
+
+### Load your dependencies
+
+First we'll need to pull in our dependencies. These are:
+
+- The OpenAI class to use the OpenAI LLM
+- FunctionTool to provide tools to our agent
+- OpenAIAgent to create the agent itself
+- Settings to define some global settings for the library
+- Dotenv to load our API key from the .env file
+
+```javascript
+import { OpenAI, FunctionTool, OpenAIAgent, Settings } from "llamaindex";
+import "dotenv/config";
+```
+
+### Initialize your LLM
+
+We need to tell our OpenAI class where its API key is, and which of OpenAI's models to use. We'll be using `gpt-4o`, which is capable while still being pretty cheap. This is a global setting, so anywhere an LLM is needed will use the same model.
+
+```javascript
+Settings.llm = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  model: "gpt-4o",
+});
+```
+
+### Turn on logging
+
+We want to see what our agent is up to, so we're going to hook into some events that the library generates and print them out. There are several events possible, but we'll specifically tune in to `llm-tool-call` (when a tool is called) and `llm-tool-result` (when it responds).
+
+```javascript
+Settings.callbackManager.on("llm-tool-call", (event) => {
+  console.log(event.detail.payload);
+});
+Settings.callbackManager.on("llm-tool-result", (event) => {
+  console.log(event.detail.payload);
+});
+```
+
+### Create a function
+
+We're going to create a very simple function that adds two numbers together. This will be the tool we ask our agent to use.
+
+```javascript
+const sumNumbers = ({ a, b }) => {
+  return `${a + b}`;
+};
+```
+
+Note that we're passing in an object with two named parameters, `a` and `b`. This is a little unusual, but important for defining a tool that an LLM can use.
+
+### Turn the function into a tool for the agent
+
+This is the most complicated part of creating an agent. We need to define a `FunctionTool`. We have to pass in:
+
+- The function itself (`sumNumbers`)
+- A name for the function, which the LLM will use to call it
+- A description of the function. The LLM will read this description to figure out what the tool does, and if it needs to call it
+- A schema for function. We tell the LLM that the parameter is an `object`, and we tell it about the two named parameters we gave it, `a` and `b`. We describe each parameter as a `number`, and we say that both are required.
+- You can see [more examples of function schemas](https://cookbook.openai.com/examples/how_to_call_functions_with_chat_models).
+
+```javascript
+const tool = FunctionTool.from(sumNumbers, {
+  name: "sumNumbers",
+  description: "Use this function to sum two numbers",
+  parameters: {
+    type: "object",
+    properties: {
+      a: {
+        type: "number",
+        description: "First number to sum",
+      },
+      b: {
+        type: "number",
+        description: "Second number to sum",
+      },
+    },
+    required: ["a", "b"],
+  },
+});
+```
+
+We then wrap up the tools into an array. We could provide lots of tools this way, but for this example we're just using the one.
+
+```javascript
+const tools = [tool];
+```
+
+### Create the agent
+
+With your LLM already set up and your tools defined, creating an agent is simple:
+
+```javascript
+const agent = new OpenAIAgent({ tools });
+```
+
+### Ask the agent a question
+
+We can use the `chat` interface to ask our agent a question, and it will use the tools we've defined to find an answer.
+
+```javascript
+let response = await agent.chat({
+  message: "Add 101 and 303",
+});
+
+console.log(response);
+```
+
+Let's see what running this looks like using `npx tsx agent.ts`
+
+**_Output_**
+
+```javascript
+{
+  toolCall: {
+    id: 'call_ze6A8C3mOUBG4zmXO8Z4CPB5',
+    name: 'sumNumbers',
+    input: { a: 101, b: 303 }
+  },
+  toolResult: {
+    tool: FunctionTool { _fn: [Function: sumNumbers], _metadata: [Object] },
+    input: { a: 101, b: 303 },
+    output: '404',
+    isError: false
+  }
+}
+```
+
+```javascript
+{
+  response: {
+    raw: {
+      id: 'chatcmpl-9KwauZku3QOvH78MNvxJs81mDvQYK',
+      object: 'chat.completion',
+      created: 1714778824,
+      model: 'gpt-4-turbo-2024-04-09',
+      choices: [Array],
+      usage: [Object],
+      system_fingerprint: 'fp_ea6eb70039'
+    },
+    message: {
+      content: 'The sum of 101 and 303 is 404.',
+      role: 'assistant',
+      options: {}
+    }
+  },
+  sources: [Getter]
+}
+```
+
+We're seeing two pieces of output here. The first is our callback firing when the tool is called. You can see in `toolResult` that the LLM has correctly passed `101` and `303` to our `sumNumbers` function, which adds them up and returns `404`.
+
+The second piece of output is the response from the LLM itself, where the `message.content` key is giving us the answer.
+
+Great! We've built an agent with tool use! Next you can:
+
+- [See the full code](https://github.com/run-llama/ts-agents/blob/main/1_agent/agent.ts)
+- [Switch to a local LLM](local_model)
+- Move on to [add Retrieval-Augmented Generation to your agent](agentic_rag)

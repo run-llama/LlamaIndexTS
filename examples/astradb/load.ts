@@ -13,7 +13,7 @@ async function main() {
     const docs = await reader.loadData("./data/movie_reviews.csv");
 
     const astraVS = new AstraDBVectorStore({ contentKey: "reviewtext" });
-    await astraVS.create(collectionName, {
+    await astraVS.createAndConnect(collectionName, {
       vector: { dimension: 1536, metric: "cosine" },
     });
     await astraVS.connect(collectionName);

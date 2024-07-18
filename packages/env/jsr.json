@@ -1,8 +1,0 @@
-{
-  "name": "@llamaindex/env",
-  "version": "0.0.6",
-  "exports": {
-    ".": "./src/index.ts",
-    "./type": "./src/type.ts"
-  }
-}

@@ -25,30 +25,6 @@ const config = {
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
 
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: "en",
-    locales: [
-      "en",
-      "zh-Hans",
-      "es",
-      "fr",
-      "de",
-      "ja",
-      "ko",
-      "pt",
-      "ar",
-      "it",
-      "tr",
-      "pl",
-      "nl",
-      "vi",
-      "th",
-    ], // "fa", "ru", "ro", "sv", "hu", "cs", "el", "da", "fi", "he", "no", "hi", "in", "sl", "se", "sk", "uk", "bg", "hr", "lt", "lv", "et", "cat"
-  },
-
   presets: [
     [
       "@docusaurus/preset-classic",
@@ -66,7 +42,11 @@ const config = {
             [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
           ],
         },
-        blog: false,
+        blog: {
+          blogTitle: "LlamaIndexTS blog",
+          blogDescription: "The official blog of LlamaIndexTS",
+          postsPerPage: "ALL",
+        },
         gtag: {
           trackingID: "G-NB9B8LW9W5",
           anonymizeIP: true,
@@ -97,6 +77,7 @@ const config = {
             type: "localeDropdown",
             position: "left",
           },
+          { to: "blog", label: "Blog", position: "right" },
           {
             href: "https://github.com/run-llama/LlamaIndexTS",
             label: "GitHub",
@@ -162,8 +143,8 @@ const config = {
     [
       "docusaurus-plugin-typedoc",
       {
-        entryPoints: ["../../packages/core/src/index.ts"],
-        tsconfig: "../../packages/core/tsconfig.json",
+        entryPoints: ["../../packages/llamaindex/src/index.ts"],
+        tsconfig: "../../tsconfig.json",
         readme: "none",
         sourceLinkTemplate:
           "https://github.com/run-llama/LlamaIndexTS/blob/{gitRevision}/{path}#L{line}",

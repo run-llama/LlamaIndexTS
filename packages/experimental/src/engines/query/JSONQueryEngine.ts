@@ -1,11 +1,11 @@
 import jsonpath from "jsonpath";
 
-import { Response } from "llamaindex";
+import { EngineResponse } from "llamaindex";
 
 import { serviceContextFromDefaults, type ServiceContext } from "llamaindex";
 
 import type {
-  BaseQueryEngine,
+  QueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
 } from "llamaindex";
@@ -89,7 +89,7 @@ type OutputProcessor = typeof defaultOutputProcessor;
 /**
  * A JSON query engine that uses JSONPath to query a JSON object.
  */
-export class JSONQueryEngine implements BaseQueryEngine {
+export class JSONQueryEngine implements QueryEngine {
   jsonValue: JSONSchemaType;
   jsonSchema: JSONSchemaType;
   serviceContext: ServiceContext;
@@ -147,11 +147,13 @@ export class JSONQueryEngine implements BaseQueryEngine {
     return JSON.stringify(this.jsonSchema);
   }
 
-  query(params: QueryEngineParamsStreaming): Promise<AsyncIterable<Response>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<Response>;
+  query(
+    params: QueryEngineParamsStreaming,
+  ): Promise<AsyncIterable<EngineResponse>>;
+  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
   async query(
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
-  ): Promise<Response | AsyncIterable<Response>> {
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { query, stream } = params;
 
     if (stream) {
@@ -200,7 +202,7 @@ export class JSONQueryEngine implements BaseQueryEngine {
       jsonPathResponseStr,
     };
 
-    const response = new Response(responseStr, []);
+    const response = EngineResponse.fromResponse(responseStr, false);
 
     response.metadata = responseMetadata;
 

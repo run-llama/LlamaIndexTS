@@ -1,0 +1,18 @@
+# Adding LlamaParse
+
+Complicated PDFs can be very tricky for LLMs to understand. To help with this, LlamaIndex provides LlamaParse, a hosted service that parses complex documents including PDFs. To use it, get a `LLAMA_CLOUD_API_KEY` by [signing up for LlamaCloud](https://cloud.llamaindex.ai/) (it's free for up to 1000 pages/day) and adding it to your `.env` file just as you did for your OpenAI key:
+
+```bash
+LLAMA_CLOUD_API_KEY=llx-XXXXXXXXXXXXXXXX
+```
+
+Then replace `SimpleDirectoryReader` with `LlamaParseReader`:
+
+```javascript
+const reader = new LlamaParseReader({ resultType: "markdown" });
+const documents = await reader.loadData("../data/sf_budget_2023_2024.pdf");
+```
+
+Now you will be able to ask more complicated questions of the same PDF and get better results. You can find this code [in our repo](https://github.com/run-llama/ts-agents/blob/main/4_llamaparse/agent.ts).
+
+Next up, let's persist our embedded data so we don't have to re-parse every time by [using a vector store](qdrant).

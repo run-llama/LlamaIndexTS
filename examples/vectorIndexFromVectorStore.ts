@@ -1,5 +1,6 @@
 import {
   OpenAI,
+  OpenAIEmbedding,
   ResponseSynthesizer,
   RetrieverQueryEngine,
   Settings,
@@ -28,6 +29,7 @@ class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
 {
   storesText = true;
   isEmbeddingQuery = false;
+  embedModel = new OpenAIEmbedding();
 
   indexName!: string;
   pineconeClient!: Pinecone;
