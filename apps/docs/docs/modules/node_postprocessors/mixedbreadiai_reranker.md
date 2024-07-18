@@ -55,8 +55,9 @@ const index = await VectorStoreIndex.fromDocuments([document]);
 The default value for `similarityTopK` is 2, which means only the most similar document will be returned. To get more results, like picking a variety of fresh breads, you can increase the value of `similarityTopK`.
 
 ```ts
-const retriever = index.asRetriever();
-retriever.similarityTopK = 5;
+const retriever = index.asRetriever({
+  similarityTopK: 5,
+});
 ```
 
 ### Step 3: Create a MixedbreadAIReranker Instance
