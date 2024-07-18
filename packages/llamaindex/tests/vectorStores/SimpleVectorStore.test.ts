@@ -88,6 +88,19 @@ describe("SimpleVectorStore", () => {
         expected: 3,
       },
       {
+        title: "Filter with non-exist key",
+        filters: {
+          filters: [
+            {
+              key: "non-exist-key",
+              value: "cat",
+              operator: "==",
+            },
+          ],
+        },
+        expected: 0,
+      },
+      {
         title: "Filter EQ",
         filters: {
           filters: [
