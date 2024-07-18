@@ -66,6 +66,13 @@ export class EngineResponse implements ChatResponse, ChatResponseChunk {
     );
   }
 
+  /**
+   * @deprecated Use `message` instead.
+   */
+  get response(): string {
+    return extractText(this.message.content);
+  }
+
   get delta(): string {
     if (!this.stream) {
       console.warn(
