@@ -37,27 +37,20 @@ They can be divided into two groups.
 - `language` primarily helps with OCR recognition. Defaults to `en`. Click [here](../../../api/type-aliases/Language.md) for a list of supported languages.
 - `parsingInstructions?` Optional. Can help with complicated document structures. See this [LlamaIndex Blog Post](https://www.llamaindex.ai/blog/launching-the-first-genai-native-document-parsing-platform) for an example.
 - `skipDiagonalText?` Optional. Set to true to ignore diagonal text. (Text that is not rotated 0, 90, 180 or 270 degrees)
-
 - `invalidateCache?` Optional. Set to true to ignore the LlamaCloud cache. All document are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Can be useful for testing when trying to re-parse the same document with, e.g. different `parsingInstructions`.
 - `doNotCache?` Optional. Set to true to not cache the document.
-
 - `fastMode?` Optional. Set to true to use the fast mode. This mode will skip OCR of images, and table/heading reconstruction. Note: Non-compatible with `gpt4oMode`.
 - `doNotUnrollColumns?` Optional. Set to true to keep the text according to document layout. Reduce reconstruction accuracy, and LLMs/embeddings performances in most cases.
-
 - `pageSeparator?` Optional. A templated page separator to use to split the text. If it contain `{page_number}`, it will be replaced by the next page number. If not set the default separator `\\n---\\n` will be used.
 - `pagePrefix?` Optional. A templated prefix to add to the beginning of each page. If it contain `{page_number}`, it will be replaced by the page number.
 - `pageSuffix?` Optional. A templated suffix to add to the end of each page. If it contain `{page_number}`, it will be replaced by the page number.
-
 - `gpt4oMode` Deprecated. Use vendorMultimodal params. Set to true to use GPT-4o to extract content. Default is `false`.
 - `gpt4oApiKey?` Deprecated. Use vendorMultimodal params. Optional. Set the GPT-4o API key. Lowers the cost of parsing by using your own API key. Your OpenAI account will be charged. Can also be set in the environment variable `LLAMA_CLOUD_GPT4O_API_KEY`.
-
 - `boundingBox?` Optional. Specify an area of the document to parse. Expects the bounding box margins as a string in clockwise order, e.g. `boundingBox = "0.1,0,0,0"` to not parse the top 10% of the document.
 - `targetPages?` Optional. Specify which pages to parse by specifying them as a comma-separated list. First page is `0`.
-
 - `useVendorMultimodalModel` set to true to use a multimodal model. Default is `false`.
 - `vendorMultimodalModel?` Optional. Specify which multimodal model to use. Default is GPT4o. See [here](https://docs.cloud.llamaindex.ai/llamaparse/features/multimodal) for a list of available models and cost.
 - `vendorMultimodalApiKey?` Optional. Set the multimodal model API key. Can also be set in the environment variable `LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY`.
-
 - `numWorkers` as in the python version, is set in `SimpleDirectoryReader`. Default is 1.
 
 ### LlamaParse with SimpleDirectoryReader
