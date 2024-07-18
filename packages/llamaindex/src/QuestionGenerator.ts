@@ -1,4 +1,6 @@
 import type { LLM, ToolMetadata } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
+import { extractText } from "@llamaindex/core/utils";
 import { SubQuestionOutputParser } from "./OutputParser.js";
 import type { SubQuestionPrompt } from "./Prompt.js";
 import { buildToolsText, defaultSubQuestionPrompt } from "./Prompt.js";
@@ -9,8 +11,6 @@ import type {
 import { OpenAI } from "./llm/openai.js";
 import { PromptMixin } from "./prompts/index.js";
 import type { BaseOutputParser, StructuredOutput } from "./types.js";
-import type { QueryType } from '@llamaindex/core/query-engine';
-import { extractText } from '@llamaindex/core/utils';
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.
@@ -45,7 +45,10 @@ export class LLMQuestionGenerator
     }
   }
 
-  async generate(tools: ToolMetadata[], query: QueryType): Promise<SubQuestion[]> {
+  async generate(
+    tools: ToolMetadata[],
+    query: QueryType,
+  ): Promise<SubQuestion[]> {
     const toolsStr = buildToolsText(tools);
     const queryStr = extractText(query);
     const prediction = (
