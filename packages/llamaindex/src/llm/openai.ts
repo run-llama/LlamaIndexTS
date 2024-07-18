@@ -106,6 +106,8 @@ export const GPT4_MODELS = {
   "gpt-4-vision-preview": { contextWindow: 128000 },
   "gpt-4o": { contextWindow: 128000 },
   "gpt-4o-2024-05-13": { contextWindow: 128000 },
+  "gpt-4o-mini": { contextWindow: 128000 },
+  "gpt-4o-mini-2024-07-18": { contextWindow: 128000 },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
