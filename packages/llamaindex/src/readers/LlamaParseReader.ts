@@ -127,8 +127,12 @@ export class LlamaParseReader extends FileReader {
   fastMode?: boolean;
   // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases.
   doNotUnrollColumns?: boolean;
-  // The page separator to use to split the text. Default is None, which means the parser will use the default separator '\\n---\\n'.
+  // A templated page separator to use to split the text. If it contain `{page_number}`, it will be replaced by the next page number. If not set the default separator '\\n---\\n' will be used.
   pageSeparator?: string;
+  //A templated prefix to add to the beginning of each page. If it contain `{page_number}`, it will be replaced by the page number.>
+  pagePrefix?: string;
+  // A templated suffix to add to the end of each page. If it contain `{page_number}`, it will be replaced by the page number.
+  pageSuffix?: string;
   // Deprecated. Use vendorMultimodal params. Whether to use gpt-4o to extract text from documents.
   gpt4oMode: boolean = false;
   // Deprecated. Use vendorMultimodal params. The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
@@ -198,6 +202,8 @@ export class LlamaParseReader extends FileReader {
       fast_mode: this.fastMode?.toString(),
       do_not_unroll_columns: this.doNotUnrollColumns?.toString(),
       page_separator: this.pageSeparator,
+      page_prefix: this.pagePrefix,
+      page_suffix: this.pageSuffix,
       gpt4o_mode: this.gpt4oMode?.toString(),
       gpt4o_api_key: this.gpt4oApiKey,
       bounding_box: this.boundingBox,
@@ -206,6 +212,15 @@ export class LlamaParseReader extends FileReader {
       vendor_multimodal_model_name: this.vendorMultimodalModelName,
       vendor_multimodal_api_key: this.vendorMultimodalApiKey,
     };
+
+    // Filter out invalid specific parameters
+    const filteredParams = this.filterSpecificParams(LlamaParseBodyParams, [
+      "page_separator",
+      "page_prefix",
+      "page_suffix",
+      "bounding_box",
+      "target_pages",
+    ]);
 
     // Appends body with any defined LlamaParseBodyParams
     Object.entries(LlamaParseBodyParams).forEach(([key, value]) => {
@@ -445,6 +460,24 @@ export class LlamaParseReader extends FileReader {
     const buffer = new Uint8Array(arrayBuffer);
     // Write the image buffer to the specified imagePath
     await fs.writeFile(imagePath, buffer);
+  }
+
+  // Filters out invalid values (null, undefined, empty string) of specific params.
+  private filterSpecificParams(
+    params: Record<string, any>,
+    keysToCheck: string[],
+  ): Record<string, any> {
+    const filteredParams: Record<string, any> = {};
+    for (const [key, value] of Object.entries(params)) {
+      if (keysToCheck.includes(key)) {
+        if (value !== null && value !== undefined && value !== "") {
+          filteredParams[key] = value;
+        }
+      } else {
+        filteredParams[key] = value;
+      }
+    }
+    return filteredParams;
   }
 
   static async getMimeType(
