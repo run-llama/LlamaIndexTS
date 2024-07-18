@@ -2,4 +2,4 @@
 "llamaindex": patch
 ---
 
-feat: add pageSeperator params to LlamaParseReader
+feat: add pageSeparator params to LlamaParseReader
