@@ -8,7 +8,7 @@ A retriever in LlamaIndex is what is used to fetch `Node`s from an index using a
 
 ```typescript
 const retriever = vector_index.asRetriever();
-retriever.similarityTopK = 3;
+retriever.topK = { TEXT: 3, IMAGE: 1 };
 
 // Fetch nodes!
 const nodesWithScore = await retriever.retrieve({ query: "query string" });
