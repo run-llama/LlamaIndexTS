@@ -1,7 +1,7 @@
 /**
  * Top level types to avoid circular dependencies
  */
-import type { ToolMetadata } from "@llamaindex/core/llms";
+import type { MessageContent, ToolMetadata } from "@llamaindex/core/llms";
 import type { EngineResponse } from "./EngineResponse.js";
 
 /**
@@ -58,8 +58,7 @@ export type ToolMetadataOnlyDescription = Pick<ToolMetadata, "description">;
  *  We don't have `image_path` here, because it is included in the `query` field.
  */
 export type QueryBundle = {
-  query: string;
-  imagePath?: string;
+  query: string | MessageContent;
   customEmbedding?: string[];
   embeddings?: number[];
 };

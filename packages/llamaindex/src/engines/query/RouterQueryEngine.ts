@@ -1,4 +1,5 @@
 import type { NodeWithScore } from "@llamaindex/core/schema";
+import { extractText } from "@llamaindex/core/utils";
 import { EngineResponse } from "../../EngineResponse.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
@@ -45,7 +46,7 @@ async function combineResponses(
   }
 
   const summary = await summarizer.getResponse({
-    query: queryBundle.query,
+    query: extractText(queryBundle.query),
     textChunks: responseStrs,
   });
 
@@ -143,7 +144,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
         const selectedQueryEngine = this.queryEngines[engineInd.index];
         responses.push(
           await selectedQueryEngine.query({
-            query: queryBundle.query,
+            query: extractText(queryBundle.query),
           }),
         );
       }
@@ -180,7 +181,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
       }
 
       const finalResponse = await selectedQueryEngine.query({
-        query: queryBundle.query,
+        query: extractText(queryBundle.query),
       });
 
       // add selected result

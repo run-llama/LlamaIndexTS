@@ -1,4 +1,5 @@
 import type { LLM } from "@llamaindex/core/llms";
+import { extractText } from "@llamaindex/core/utils";
 import type { Answer } from "../outputParsers/selectors.js";
 import { SelectionOutputParser } from "../outputParsers/selectors.js";
 import type {
@@ -88,7 +89,7 @@ export class LLMMultiSelector extends BaseSelector {
     const prompt = this.prompt(
       choicesText.length,
       choicesText,
-      query.query,
+      extractText(query.query),
       this.maxOutputs,
     );
 
@@ -152,7 +153,11 @@ export class LLMSingleSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(choicesText.length, choicesText, query.query);
+    const prompt = this.prompt(
+      choicesText.length,
+      choicesText,
+      extractText(query.query),
+    );
 
     const formattedPrompt = this.outputParser.format(prompt);
 
