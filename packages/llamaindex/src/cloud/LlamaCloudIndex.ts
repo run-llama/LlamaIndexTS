@@ -151,6 +151,7 @@ export class LlamaCloudIndex {
       verbose?: boolean;
     } & CloudConstructorParams,
   ): Promise<LlamaCloudIndex> {
+    initService(params);
     const defaultTransformations: TransformComponent<any>[] = [
       new SimpleNodeParser(),
       new OpenAIEmbedding({

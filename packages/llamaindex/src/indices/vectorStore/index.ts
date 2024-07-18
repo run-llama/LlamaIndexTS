@@ -404,7 +404,7 @@ export class VectorIndexRetriever implements BaseRetriever {
   }
 
   /**
-   * @deprecated, pass topK in constructor instead
+   * @deprecated, pass similarityTopK or topK in constructor instead or directly modify topK
    */
   set similarityTopK(similarityTopK: number) {
     this.topK[ModalityType.TEXT] = similarityTopK;
