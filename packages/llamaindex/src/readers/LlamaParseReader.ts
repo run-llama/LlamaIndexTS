@@ -127,11 +127,11 @@ export class LlamaParseReader extends FileReader {
   fastMode?: boolean;
   // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases.
   doNotUnrollColumns?: boolean;
-  // A templated page separator to use to split the text. If it contain `{page_number}`, it will be replaced by the next page number. If not set the default separator '\\n---\\n' will be used.
+  // A templated page separator to use to split the text. If the results contain `{page_number}` (e.g. JSON mode), it will be replaced by the next page number. If not set the default separator '\\n---\\n' will be used.
   pageSeparator?: string;
-  //A templated prefix to add to the beginning of each page. If it contain `{page_number}`, it will be replaced by the page number.>
+  //A templated prefix to add to the beginning of each page. If the results contain `{page_number}`, it will be replaced by the page number.>
   pagePrefix?: string;
-  // A templated suffix to add to the end of each page. If it contain `{page_number}`, it will be replaced by the page number.
+  // A templated suffix to add to the end of each page. If the results contain `{page_number}`, it will be replaced by the page number.
   pageSuffix?: string;
   // Deprecated. Use vendorMultimodal params. Whether to use gpt-4o to extract text from documents.
   gpt4oMode: boolean = false;
@@ -213,7 +213,7 @@ export class LlamaParseReader extends FileReader {
       vendor_multimodal_api_key: this.vendorMultimodalApiKey,
     };
 
-    // Filter out invalid specific parameters
+    // Filter out params with invalid values that would cause issues on the backend.
     const filteredParams = this.filterSpecificParams(LlamaParseBodyParams, [
       "page_separator",
       "page_prefix",
