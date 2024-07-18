@@ -21,7 +21,6 @@ import {
 import {
   nodeToMetadata,
   parseArrayValue,
-  parseNumberValue,
   parsePrimitiveValue,
 } from "./utils.js";
 
@@ -43,46 +42,43 @@ const OPERATOR_TO_FILTER: {
   ) => boolean;
 } = {
   [FilterOperator.EQ]: ({ key, value }, metadata) => {
-    return parsePrimitiveValue(metadata[key]) === parsePrimitiveValue(value);
+    return metadata[key] === parsePrimitiveValue(value);
   },
   [FilterOperator.NE]: ({ key, value }, metadata) => {
-    return parsePrimitiveValue(metadata[key]) !== parsePrimitiveValue(value);
+    return metadata[key] !== parsePrimitiveValue(value);
   },
   [FilterOperator.IN]: ({ key, value }, metadata) => {
-    return parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+    return !!parseArrayValue(value).find((v) => metadata[key] === v);
   },
   [FilterOperator.NIN]: ({ key, value }, metadata) => {
-    return !parseArrayValue(value).includes(parsePrimitiveValue(metadata[key]));
+    return !parseArrayValue(value).find((v) => metadata[key] === v);
   },
   [FilterOperator.ANY]: ({ key, value }, metadata) => {
-    return parseArrayValue(value).some((v) =>
-      parseArrayValue(metadata[key]).includes(v),
-    );
+    if (!Array.isArray(metadata[key])) return false;
+    return parseArrayValue(value).some((v) => metadata[key].includes(v));
   },
   [FilterOperator.ALL]: ({ key, value }, metadata) => {
-    return parseArrayValue(value).every((v) =>
-      parseArrayValue(metadata[key]).includes(v),
-    );
+    if (!Array.isArray(metadata[key])) return false;
+    return parseArrayValue(value).every((v) => metadata[key].includes(v));
   },
   [FilterOperator.TEXT_MATCH]: ({ key, value }, metadata) => {
-    return parsePrimitiveValue(metadata[key]).includes(
-      parsePrimitiveValue(value),
-    );
+    return metadata[key].includes(parsePrimitiveValue(value));
   },
   [FilterOperator.CONTAINS]: ({ key, value }, metadata) => {
-    return parseArrayValue(metadata[key]).includes(parsePrimitiveValue(value));
+    if (!Array.isArray(metadata[key])) return false;
+    return !!parseArrayValue(metadata[key]).find((v) => v === value);
   },
   [FilterOperator.GT]: ({ key, value }, metadata) => {
-    return parseNumberValue(metadata[key]) > parseNumberValue(value);
+    return metadata[key] > parsePrimitiveValue(value);
   },
   [FilterOperator.LT]: ({ key, value }, metadata) => {
-    return parseNumberValue(metadata[key]) < parseNumberValue(value);
+    return metadata[key] < parsePrimitiveValue(value);
   },
   [FilterOperator.GTE]: ({ key, value }, metadata) => {
-    return parseNumberValue(metadata[key]) >= parseNumberValue(value);
+    return metadata[key] >= parsePrimitiveValue(value);
   },
   [FilterOperator.LTE]: ({ key, value }, metadata) => {
-    return parseNumberValue(metadata[key]) <= parseNumberValue(value);
+    return metadata[key] <= parsePrimitiveValue(value);
   },
 };
 
@@ -97,7 +93,8 @@ const buildFilterFn = (
   const { filters, condition } = preFilters;
   const queryCondition = condition || "and"; // default to and
 
-  const itemFilterFn = (filter: MetadataFilter) => {
+  const itemFilterFn = (filter: MetadataFilter): boolean => {
+    if (metadata[filter.key] === undefined) return false; // always return false if the metadata key is not present
     const metadataLookupFn = OPERATOR_TO_FILTER[filter.operator];
     if (!metadataLookupFn)
       throw new Error(`Unsupported operator: ${filter.operator}`);
