@@ -31,6 +31,7 @@ describe("SimpleVectorStore", () => {
           private: "true",
           weight: 1.2,
           type: ["husky", "puppy"],
+          height: 50,
         },
       }),
       new TextNode({
@@ -86,19 +87,6 @@ describe("SimpleVectorStore", () => {
       {
         title: "No filter",
         expected: 3,
-      },
-      {
-        title: "Filter with non-exist key",
-        filters: {
-          filters: [
-            {
-              key: "non-exist-key",
-              value: "cat",
-              operator: "==",
-            },
-          ],
-        },
-        expected: 0,
       },
       {
         title: "Filter EQ",
@@ -291,6 +279,180 @@ describe("SimpleVectorStore", () => {
             },
           ],
           condition: "and",
+        },
+        expected: 0,
+      },
+    ];
+
+    testcases.forEach((tc) => {
+      it(`[${tc.title}] should return ${tc.expected} nodes`, async () => {
+        await store.add(nodes);
+        const result = await store.query({
+          queryEmbedding: [0.1, 0.2],
+          similarityTopK: 3,
+          mode: VectorStoreQueryMode.DEFAULT,
+          filters: tc.filters,
+        });
+        expect(result.ids).length(tc.expected);
+      });
+    });
+  });
+
+  describe("[SimpleVectorStore] query nodes with optional key in metadata", () => {
+    const testcases: FilterTestCase[] = [
+      {
+        title: "Filter EQ with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "height",
+              value: 50,
+              operator: "==",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter NE with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "height",
+              value: 50,
+              operator: "!=",
+            },
+          ],
+        },
+        expected: 2,
+      },
+      {
+        title: "Filter GT with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "height",
+              value: 48,
+              operator: ">",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter GTE with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "height",
+              value: 50,
+              operator: ">=",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter LT with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "height",
+              value: 50,
+              operator: "<",
+            },
+          ],
+        },
+        expected: 0,
+      },
+      {
+        title: "Filter LTE with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "height",
+              value: 50,
+              operator: "<=",
+            },
+          ],
+        },
+        expected: 1,
+      },
+      {
+        title: "Filter IN with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "non-existing-key",
+              value: ["a", "b"],
+              operator: "in",
+            },
+          ],
+        },
+        expected: 0,
+      },
+      {
+        title: "Filter NIN with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "non-existing-key",
+              value: ["a", "b"],
+              operator: "nin",
+            },
+          ],
+        },
+        expected: 3,
+      },
+      {
+        title: "Filter ANY with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "non-existing-key",
+              value: ["a", "b"],
+              operator: "any",
+            },
+          ],
+        },
+        expected: 0,
+      },
+      {
+        title: "Filter ALL with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "non-existing-key",
+              value: ["a", "b"],
+              operator: "all",
+            },
+          ],
+        },
+        expected: 0,
+      },
+      {
+        title: "Filter CONTAINS with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "non-existing-key",
+              value: "a",
+              operator: "contains",
+            },
+          ],
+        },
+        expected: 0,
+      },
+      {
+        title: "Filter TEXT_MATCH with an optional key",
+        filters: {
+          filters: [
+            {
+              key: "non-existing-key",
+              value: "a",
+              operator: "text_match",
+            },
+          ],
         },
         expected: 0,
       },
