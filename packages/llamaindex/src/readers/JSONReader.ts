@@ -1,4 +1,5 @@
 import { Document } from "@llamaindex/core/schema";
+import type { JSONSchemaType } from "openai/lib/jsonschema.mjs";
 import { FileReader } from "./type.js";
 
 interface JSONReaderOptions {
@@ -17,64 +18,62 @@ interface JSONReaderOptions {
   isJsonLines?: boolean;
 
   /**
-   * Whether to clean the JSON.
-   * If set to false, it will just parse the JSON, not removing JsonData structural characters.
+   * Whether to clean the JSON by filtering out structural characters (`{}, [], and ,`).
+   * If set to false, it will just parse the JSON, not removing structural characters.
    * @default true
    */
   cleanJson?: boolean;
 
   /**
-   * How many levels to go back when recursively traversing the JSON. cleanJson will be ignored.
-   * If set to 0, it will traverse all levels. Default is undefined, which formats the entire JSON and treats each line as an embedding.
+   * Specifies how many levels up the JSON structure to include in the output. cleanJson will be ignored.
+   * If set to 0, all levels are included. If undefined, parses the entire JSON and treats each line as an embedding.
    * @default undefined
    */
   levelsBack?: number;
 
   /**
-   * The maximum number of characters of a JSON fragment that should be collapsed into one line.
+   * The maximum length of JSON string representation to be collapsed into a single line.
+   * Only applicable when `levelsBack` is set.
    * E.g. collapseLength=10 and jsonData = {a: [1, 2, 3], b: {"hello": "world", "foo": "bar"}},
-   * a would be collapsed into one line, while b would not. LevelsBack must be set.
+   * a would be collapsed into one line, while b would not.
    * @default undefined
    */
   collapseLength?: number;
 }
 
-type JsonData =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: JsonData }
-  | Array<JsonData>;
-
-class JSONReaderError extends Error {}
-class JSONParseError extends JSONReaderError {}
-class JSONStringifyError extends JSONReaderError {}
+export class JSONReaderError extends Error {}
+export class JSONParseError extends JSONReaderError {}
+export class JSONStringifyError extends JSONReaderError {}
 
 /**
  * A reader that reads JSON data and returns an array of Document objects.
+ * Supports various options to modify the output.
  */
 export class JSONReader extends FileReader {
   private options: JSONReaderOptions;
 
+  /**
+   * Constructs a new JSONReader with the given options.
+   *
+   * @param {JSONReaderOptions} options - The options for the JSONReader.
+   */
   constructor(options: JSONReaderOptions = {}) {
     super();
     this.options = {
-      ensureAscii: options.ensureAscii ?? false,
-      isJsonLines: options.isJsonLines ?? false,
-      cleanJson: options.cleanJson ?? true,
-      levelsBack: options.levelsBack,
-      collapseLength: options.collapseLength,
+      ensureAscii: false,
+      isJsonLines: false,
+      cleanJson: true,
+      ...options,
     };
     this.validateOptions();
   }
-
   private validateOptions(): void {
-    if (this.options.levelsBack !== undefined && this.options.levelsBack < 0) {
-      throw new JSONReaderError("levelsBack must be a non-negative number");
+    const { levelsBack, collapseLength } = this.options;
+    if (levelsBack !== undefined && levelsBack < 0) {
+      throw new JSONReaderError("levelsBack must not be a negative number");
     }
-    if (this.options.collapseLength !== undefined && this.options.collapseLength < 0) {
-      throw new JSONReaderError("collapseLength must be a non-negative number");
+    if (collapseLength !== undefined && collapseLength < 0) {
+      throw new JSONReaderError("collapseLength must not be a negative number");
     }
   }
 
@@ -86,48 +85,16 @@ export class JSONReader extends FileReader {
    */
   async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
     const jsonStr = new TextDecoder("utf-8").decode(content);
-    let parsedData: JsonData[];
+    let parsedData: JSONSchemaType[];
     try {
       parsedData = this.parseJsonString(jsonStr);
     } catch (e) {
-      throw new JSONParseError(`Error parsing JSON in loadDataAsContent: ${e}`);
+      throw new JSONParseError(`Error parsing JSON: ${e}`);
     }
     return parsedData.map((data) => this.createDocument(data));
   }
 
-  private createDocument(data: JsonData): Document {
-    const levelsBack = this.options.levelsBack ?? 0;
-    let docText: string;
-    if (levelsBack === undefined) {
-      docText = this.formatJsonString(data);
-    } else {
-      docText = [
-        ...this.depthFirstYield(
-          data,
-          levelsBack === 0
-            ? Infinity
-            : levelsBack,
-          [],
-          this.options.collapseLength,
-        ),
-      ].join("\n");
-    }
-    return new Document({
-      text: this.options.ensureAscii ? this.convertToAscii(docText) : docText,
-      metadata: {},
-    });
-  }
-
-  /**
-   * Parses a JSON or JSON Lines (JSONL) string into an array of objects.
-   * Standard JSON strings work by returning a single-element array
-   * JSON Lines strings are split by new lines and each line is parsed as a separate JSON object.
-   *
-   * @param {string} jsonStr - The input string in JSON or JSONL format.
-   * @returns {JsonData[]} An array of parsed JSON objects.
-   * @throws {JSONParseError} if the input string cannot be parsed as JSON or JSONL.
-   */
-  private parseJsonString(jsonStr: string): JsonData[] {
+  private parseJsonString(jsonStr: string): JSONSchemaType[] {
     if (this.options.isJsonLines) {
       return jsonStr
         .split("\n")
@@ -149,20 +116,37 @@ export class JSONReader extends FileReader {
     }
   }
 
+  private createDocument(data: JSONSchemaType): Document {
+    let docText: string;
+    if (this.options.levelsBack === undefined) {
+      docText = this.formatJsonString(data);
+    } else {
+      const levelsBack = this.options.levelsBack ?? 0;
+      docText = [
+        ...this.depthFirstYield(
+          data,
+          levelsBack === 0 ? Infinity : levelsBack,
+          [],
+          this.options.collapseLength,
+        ),
+      ].join("\n");
+    }
+    return new Document({
+      text: this.options.ensureAscii ? this.convertToAscii(docText) : docText,
+      metadata: {
+        doc_length: docText.length,
+        traversal_data: {
+          levels_back: this.options.levelsBack,
+          collapse_length: this.options.collapseLength,
+        },
+      },
+    });
+  }
+
   // Note: JSON.stringify does not differentiate between indent "undefined/null"(= no whitespaces) and "0"(= no whitespaces, but linebreaks)
   // as python json.dumps does. Thats why we use indent 1 and remove the leading spaces.
 
-  /**
-   * Converts JsonData JavaScript value to a JSON string with minimal formatting.
-   * If 'cleanJson' option is enabled, filters out lines containing only JSON structural characters
-   * (i.e., {}, [], and ,) and trims leading spaces from each line.
-   * Otherwise a standard JSON.stringify operation is performed.
-   *
-   * @param {JsonData} data - The data to be stringified.
-   * @returns {string} A JSON string representation of the input data
-   * @throws {Error}  if the data cannot be converted to a JSON string.
-   */
-  private formatJsonString(data: JsonData): string {
+  private formatJsonString(data: JSONSchemaType): string {
     try {
       const jsonStr = JSON.stringify(
         data,
@@ -171,39 +155,42 @@ export class JSONReader extends FileReader {
       );
       if (this.options.cleanJson) {
         return jsonStr
-        .split("\n")
-        .filter((line) => {
-          const trimmedLine = line.trim();
-          return trimmedLine !== "" && !/^[{}\[\],]*$/.test(trimmedLine);
-        })
-        .join("\n");
-    }
+          .split("\n")
+          .filter((line) => {
+            const trimmedLine = line.trim();
+            return trimmedLine !== "" && !/^[{}\[\],]*$/.test(trimmedLine);
+          })
+          .map((line) => line.trimStart()) // Removes the indent
+          .join("\n");
+      }
       return jsonStr;
     } catch (e) {
-      throw new JSONStringifyError(`Error stringifying JSON: ${e} in "${data}"`);
+      throw new JSONStringifyError(
+        `Error stringifying JSON: ${e} in "${data}"`,
+      );
     }
   }
 
   /**
-   * Recursively performs a depth-first traversal of a given JSON structure, yielding string representations of each element.
-   * Optionally, elements shorter than the set `collapseLength` value are collapsed into a single line; otherwise, elements are recursively processed.
-   * This method allows for detailed exploration of complex JSON objects, providing a mechanism to selectively simplify output.
+   * A generator function that determines the next step in traversing the JSON data.
+   * If the serialized JSON string is not null, it yields the string and returns.
+   * If the JSON data is an object, it delegates the traversal to the depthFirstTraversal method.
+   * Otherwise, it yields the JSON data as a string.
    *
-   * @param {JsonData} jsonData - The JSON data to traverse.
-   * @param {number} levelsBack - How many levels up the path should be included. 0 traverses all levels.
-   * @param {string[]} path - The current traversal path, used for building string representations.
-   * @param {number} [collapseLength] - The maximum length of stringified JSON elements to collapse into a single line.
-   * @yields {Generator<string>} Yields string representations of each json element.
-   * @throws {JSONReaderError} Throws an error if the traversal or stringification process fails.
+   * @param jsonData - The JSON data to traverse.
+   * @param levelsBack - The number of levels up the JSON structure to include in the output.
+   * @param path - The current path in the JSON structure.
+   * @param collapseLength - The maximum length of JSON string representation to be collapsed into a single line.
+   * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal.
    */
   private *depthFirstYield(
-    jsonData: JsonData,
+    jsonData: JSONSchemaType,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
   ): Generator<string> {
     try {
-      const jsonStr = this.serializeAndCheckCollapse(
+      const jsonStr = this.serializeAndCollapse(
         jsonData,
         levelsBack,
         path,
@@ -229,8 +216,8 @@ export class JSONReader extends FileReader {
     }
   }
 
-  private serializeAndCheckCollapse(
-    jsonData: JsonData,
+  private serializeAndCollapse(
+    jsonData: JSONSchemaType,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
@@ -249,8 +236,20 @@ export class JSONReader extends FileReader {
     return null;
   }
 
+  /**
+   * A generator function that performs a depth-first traversal of the JSON data.
+   * If the JSON data is an array, it traverses each item in the array.
+   * If the JSON data is an object, it traverses each key-value pair in the object.
+   * For each traversed item or value, it performs a depth-first yield.
+   *
+   * @param jsonData - The JSON data to traverse.
+   * @param levelsBack - The number of levels up the JSON structure to include in the output.
+   * @param path - The current path in the JSON structure.
+   * @param collapseLength - The maximum length of JSON string representation to be collapsed into a single line.
+   * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal of the object.
+   */
   private *depthFirstTraversal(
-    jsonData: JsonData,
+    jsonData: JSONSchemaType,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
@@ -264,24 +263,28 @@ export class JSONReader extends FileReader {
         for (const [key, value] of Object.entries(jsonData)) {
           const newPath = [...path, key];
           if (Array.isArray(value) || typeof value === "object") {
-            yield* this.depthFirstYield(value, levelsBack, newPath, collapseLength);
+            yield* this.depthFirstYield(
+              value,
+              levelsBack,
+              newPath,
+              collapseLength,
+            );
           } else {
             yield `${newPath.slice(-levelsBack).join(" ")} ${value === null ? "null" : String(value)}`;
           }
         }
       }
     } catch (e) {
-      throw new JSONReaderError(`Error during depth-first traversal of object: ${e}`);
+      throw new JSONReaderError(
+        `Error during depth-first traversal of object: ${e}`,
+      );
     }
   }
 
-  /**
-   * Convert non-ASCII characters to their unicode escape sequences.
-   */
   private convertToAscii(str: string): string {
     return str.replace(
       /[\u007F-\uFFFF]/g,
-      (char) => "\\u" + ("0000" + char.charCodeAt(0).toString(16)).slice(-4),
+      (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`,
     );
   }
 }
