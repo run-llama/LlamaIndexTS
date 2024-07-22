@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.5.7
+
+### Patch Changes
+
+- ec59acd: fix: bundling issue with pnpm
+
 ## 0.5.6
 
 ### Patch Changes
