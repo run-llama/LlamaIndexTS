@@ -1,8 +1,8 @@
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { MetadataMode, TextNode } from "@llamaindex/core/schema";
-import type { NodeParser } from "./types.js";
+import type { NodeParser } from '@llamaindex/core/node-parser';
 
-export class MarkdownNodeParser implements NodeParser {
+export class MarkdownNodeParser implements NodeParser<{}> {
   includeMetadata: boolean;
   includePrevNextRel: boolean;
 
@@ -14,7 +14,7 @@ export class MarkdownNodeParser implements NodeParser {
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
   }
 
-  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+  async transform(nodes: BaseNode[]): Promise<BaseNode[]> {
     return this.getNodesFromDocuments(nodes);
   }
 

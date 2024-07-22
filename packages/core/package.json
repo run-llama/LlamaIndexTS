@@ -4,6 +4,20 @@
   "version": "0.1.3",
   "description": "LlamaIndex Core Module",
   "exports": {
+    "./node-parser": {
+      "require": {
+        "types": "./dist/node-parser/index.d.cts",
+        "default": "./dist/node-parser/index.cjs"
+      },
+      "import": {
+        "types": "./dist/node-parser/index.d.ts",
+        "default": "./dist/node-parser/index.js"
+      },
+      "default": {
+        "types": "./dist/node-parser/index.d.ts",
+        "default": "./dist/node-parser/index.js"
+      }
+    },
     "./query-engine": {
       "require": {
         "types": "./dist/query-engine/index.d.cts",

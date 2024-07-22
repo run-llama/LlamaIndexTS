@@ -1,13 +1,13 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { SentenceSplitter } from "../TextSplitter.js";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "../constants.js";
-import type { NodeParser } from "./types.js";
 import { getNodesFromDocument } from "./utils.js";
+import type { NodeParser } from '@llamaindex/core/node-parser';
 
 /**
  * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
  */
-export class SimpleNodeParser implements NodeParser {
+export class SimpleNodeParser implements NodeParser<{}> {
   /**
    * The text splitter to use.
    */
@@ -40,7 +40,7 @@ export class SimpleNodeParser implements NodeParser {
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
   }
 
-  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+  async transform(nodes: BaseNode[]): Promise<BaseNode[]> {
     return this.getNodesFromDocuments(nodes);
   }
 

@@ -1,13 +1,13 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { SentenceSplitter } from "../TextSplitter.js";
-import type { NodeParser } from "./types.js";
 import { getNodesFromDocument } from "./utils.js";
+import type { NodeParser } from '@llamaindex/core/node-parser';
 
 export const DEFAULT_WINDOW_SIZE = 3;
 export const DEFAULT_WINDOW_METADATA_KEY = "window";
 export const DEFAULT_OG_TEXT_METADATA_KEY = "original_text";
 
-export class SentenceWindowNodeParser implements NodeParser {
+export class SentenceWindowNodeParser implements NodeParser<{}> {
   /**
    * The text splitter to use.
    */
@@ -44,7 +44,7 @@ export class SentenceWindowNodeParser implements NodeParser {
     return new SentenceWindowNodeParser(init);
   }
 
-  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
+  async transform(nodes: BaseNode[]): Promise<BaseNode[]> {
     return this.getNodesFromDocuments(nodes);
   }
 
