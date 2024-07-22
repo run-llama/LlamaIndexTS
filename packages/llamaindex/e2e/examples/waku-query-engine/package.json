@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/waku-query-engine-test",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "type": "module",
   "private": true,
   "scripts": {
