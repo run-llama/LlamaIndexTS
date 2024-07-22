@@ -1,6 +1,8 @@
-import type { NodeWithScore } from "@llamaindex/core/schema";
-import { TextNode } from "@llamaindex/core/schema";
-import type { EngineResponse } from "../../EngineResponse.js";
+import {
+  EngineResponse,
+  TextNode,
+  type NodeWithScore,
+} from "@llamaindex/core/schema";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
@@ -10,20 +12,18 @@ import {
   ResponseSynthesizer,
 } from "../../synthesizers/index.js";
 
-import type {
-  QueryEngine,
-  QueryEngineParamsNonStreaming,
-  QueryEngineParamsStreaming,
-} from "../../types.js";
-
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
+import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
-export class SubQuestionQueryEngine extends PromptMixin implements QueryEngine {
+export class SubQuestionQueryEngine
+  extends PromptMixin
+  implements BaseQueryEngine
+{
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: BaseTool[];
@@ -73,15 +73,13 @@ export class SubQuestionQueryEngine extends PromptMixin implements QueryEngine {
     });
   }
 
-  query(
-    params: QueryEngineParamsStreaming,
-  ): Promise<AsyncIterable<EngineResponse>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
+  query(query: QueryType, stream: true): Promise<AsyncIterable<EngineResponse>>;
+  query(query: QueryType, stream?: false): Promise<EngineResponse>;
   @wrapEventCaller
   async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+    query: QueryType,
+    stream?: boolean,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { query, stream } = params;
     const subQuestions = await this.questionGen.generate(this.metadatas, query);
 
     const subQNodes = await Promise.all(
@@ -92,16 +90,21 @@ export class SubQuestionQueryEngine extends PromptMixin implements QueryEngine {
       .filter((node) => node !== null)
       .map((node) => node as NodeWithScore);
     if (stream) {
-      return this.responseSynthesizer.synthesize({
+      return this.responseSynthesizer.synthesize(
+        {
+          query,
+          nodesWithScore,
+        },
+        true,
+      );
+    }
+    return this.responseSynthesizer.synthesize(
+      {
         query,
         nodesWithScore,
-        stream: true,
-      });
-    }
-    return this.responseSynthesizer.synthesize({
-      query,
-      nodesWithScore,
-    });
+      },
+      false,
+    );
   }
 
   private async querySubQ(subQ: SubQuestion): Promise<NodeWithScore | null> {

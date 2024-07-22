@@ -1,15 +1,13 @@
-import type { NodeWithScore } from "@llamaindex/core/schema";
+import type { QueryType } from "@llamaindex/core/query-engine";
+import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import { EngineResponse } from "../../EngineResponse.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
-import { toQueryBundle } from "../../internal/utils.js";
 import { PromptMixin } from "../../prompts/index.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 import { TreeSummarize } from "../../synthesizers/index.js";
 import type {
-  QueryBundle,
   QueryEngine,
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
@@ -27,7 +25,7 @@ type RouterQueryEngineMetadata = {
 async function combineResponses(
   summarizer: TreeSummarize,
   responses: EngineResponse[],
-  queryBundle: QueryBundle,
+  queryType: QueryType,
   verbose: boolean = false,
 ): Promise<EngineResponse> {
   if (verbose) {
@@ -42,11 +40,11 @@ async function combineResponses(
       sourceNodes.push(...response.sourceNodes);
     }
 
-    responseStrs.push(response.response);
+    responseStrs.push(extractText(response.message.content));
   }
 
   const summary = await summarizer.getResponse({
-    query: extractText(queryBundle.query),
+    query: extractText(queryType),
     textChunks: responseStrs,
   });
 
@@ -119,7 +117,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { query, stream } = params;
 
-    const response = await this.queryRoute(toQueryBundle(query));
+    const response = await this.queryRoute(query);
 
     if (stream) {
       throw new Error("Streaming is not supported yet.");
@@ -128,8 +126,8 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     return response;
   }
 
-  private async queryRoute(queryBundle: QueryBundle): Promise<EngineResponse> {
-    const result = await this.selector.select(this.metadatas, queryBundle);
+  private async queryRoute(query: QueryType): Promise<EngineResponse> {
+    const result = await this.selector.select(this.metadatas, query);
 
     if (result.selections.length > 1) {
       const responses: EngineResponse[] = [];
@@ -144,7 +142,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
         const selectedQueryEngine = this.queryEngines[engineInd.index];
         responses.push(
           await selectedQueryEngine.query({
-            query: extractText(queryBundle.query),
+            query: extractText(query),
           }),
         );
       }
@@ -153,7 +151,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
         const finalResponse = await combineResponses(
           this.summarizer,
           responses,
-          queryBundle,
+          query,
           this.verbose,
         );
 
@@ -181,7 +179,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
       }
 
       const finalResponse = await selectedQueryEngine.query({
-        query: extractText(queryBundle.query),
+        query: extractText(query),
       });
 
       // add selected result

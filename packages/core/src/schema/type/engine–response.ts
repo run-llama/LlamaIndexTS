@@ -1,20 +1,16 @@
-import type {
-  ChatMessage,
-  ChatResponse,
-  ChatResponseChunk,
-} from "@llamaindex/core/llms";
-import type { NodeWithScore } from "@llamaindex/core/schema";
-import { extractText } from "@llamaindex/core/utils";
+import type { ChatMessage, ChatResponse, ChatResponseChunk } from "../../llms";
+import { extractText } from "../../utils";
+import type { Metadata, NodeWithScore } from "../node";
 
 export class EngineResponse implements ChatResponse, ChatResponseChunk {
   sourceNodes?: NodeWithScore[];
 
-  metadata: Record<string, unknown> = {};
+  metadata: Metadata = {};
 
   message: ChatMessage;
   raw: object | null;
 
-  #stream: boolean;
+  readonly stream: boolean;
 
   private constructor(
     chatResponse: ChatResponse,
@@ -24,7 +20,7 @@ export class EngineResponse implements ChatResponse, ChatResponseChunk {
     this.message = chatResponse.message;
     this.raw = chatResponse.raw;
     this.sourceNodes = sourceNodes;
-    this.#stream = stream;
+    this.stream = stream;
   }
 
   static fromResponse(
@@ -70,13 +66,15 @@ export class EngineResponse implements ChatResponse, ChatResponseChunk {
     );
   }
 
-  // @deprecated use 'message' instead
+  /**
+   * @deprecated Use `message` instead.
+   */
   get response(): string {
     return extractText(this.message.content);
   }
 
   get delta(): string {
-    if (!this.#stream) {
+    if (!this.stream) {
       console.warn(
         "delta is only available for streaming responses. Consider using 'message' instead.",
       );
@@ -84,7 +82,7 @@ export class EngineResponse implements ChatResponse, ChatResponseChunk {
     return extractText(this.message.content);
   }
 
-  toString() {
+  toString(): string {
     return this.response ?? "";
   }
 }

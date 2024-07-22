@@ -1,7 +1,6 @@
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
-import type { NodeWithScore } from "@llamaindex/core/schema";
+import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import type { ChatHistory } from "../../ChatHistory.js";
-import type { EngineResponse } from "../../EngineResponse.js";
 
 /**
  * Represents the base parameters for ChatEngine.

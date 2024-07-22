@@ -1,4 +1,6 @@
 import type { LLM, ToolMetadata } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
+import { extractText } from "@llamaindex/core/utils";
 import { SubQuestionOutputParser } from "./OutputParser.js";
 import type { SubQuestionPrompt } from "./Prompt.js";
 import { buildToolsText, defaultSubQuestionPrompt } from "./Prompt.js";
@@ -43,9 +45,12 @@ export class LLMQuestionGenerator
     }
   }
 
-  async generate(tools: ToolMetadata[], query: string): Promise<SubQuestion[]> {
+  async generate(
+    tools: ToolMetadata[],
+    query: QueryType,
+  ): Promise<SubQuestion[]> {
     const toolsStr = buildToolsText(tools);
-    const queryStr = query;
+    const queryStr = extractText(query);
     const prediction = (
       await this.llm.complete({
         prompt: this.prompt({

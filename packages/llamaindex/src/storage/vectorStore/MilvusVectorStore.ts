@@ -20,7 +20,6 @@ import {
   metadataDictToNode,
   nodeToMetadata,
   parseArrayValue,
-  parseNumberValue,
   parsePrimitiveValue,
 } from "./utils.js";
 
@@ -60,7 +59,7 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
       case ">":
       case ">=": {
         filters.push(
-          `metadata["${filter.key}"] ${filter.operator} ${parseNumberValue(filter.value)}`,
+          `metadata["${filter.key}"] ${filter.operator} ${parsePrimitiveValue(filter.value)}`,
         );
         break;
       }

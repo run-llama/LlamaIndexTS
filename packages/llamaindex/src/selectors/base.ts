@@ -1,6 +1,6 @@
-import { toQueryBundle } from "../internal/utils.js";
+import type { QueryType } from "@llamaindex/core/query-engine";
 import { PromptMixin } from "../prompts/Mixin.js";
-import type { QueryBundle, ToolMetadataOnlyDescription } from "../types.js";
+import type { ToolMetadataOnlyDescription } from "../types.js";
 
 export interface SingleSelection {
   index: number;
@@ -24,14 +24,13 @@ function wrapChoice(
 type MetadataType = string | ToolMetadataOnlyDescription;
 
 export abstract class BaseSelector extends PromptMixin {
-  async select(choices: MetadataType[], query: string | QueryBundle) {
+  async select(choices: MetadataType[], query: QueryType) {
     const metadata = choices.map((choice) => wrapChoice(choice));
-    const queryBundle = toQueryBundle(query);
-    return await this._select(metadata, queryBundle);
+    return await this._select(metadata, query);
   }
 
   abstract _select(
     choices: ToolMetadataOnlyDescription[],
-    query: QueryBundle,
+    query: QueryType,
   ): Promise<SelectorResult>;
 }

@@ -29,7 +29,6 @@ export * from "./ChatHistory.js";
 export * from "./cloud/index.js";
 export * from "./constants.js";
 export * from "./embeddings/index.js";
-export * from "./EngineResponse.js";
 export * from "./engines/chat/index.js";
 export * from "./engines/query/index.js";
 export * from "./evaluation/index.js";
