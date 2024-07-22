@@ -8,10 +8,10 @@
     "@types/node": "^20.12.11"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.5.5",
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.6.3",
     "assemblyscript": "^0.27.27",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.3"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -42,7 +42,8 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",

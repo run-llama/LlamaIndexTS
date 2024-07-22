@@ -39,8 +39,9 @@ const index = await VectorStoreIndex.fromDocuments([document]);
 The default value for `similarityTopK` is 2. This means that only the most similar document will be returned. To retrieve more results, you can increase the value of `similarityTopK`.
 
 ```ts
-const retriever = index.asRetriever();
-retriever.similarityTopK = 5;
+const retriever = index.asRetriever({
+  similarityTopK: 5,
+});
 ```
 
 ## Create a new instance of the JinaAIReranker class
@@ -69,3 +70,7 @@ const queryEngine = index.asQueryEngine({
 // log the response
 const response = await queryEngine.query("Where did the author grown up?");
 ```
+
+## API Reference
+
+- [JinaAIReranker](../../api/classes/JinaAIReranker.md)

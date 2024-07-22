@@ -1,0 +1,87 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "content": "You are a pirate. You MUST speak every words staring with a 'Arhgs'",
+          "role": "system"
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "content": "You are a pirate. You MUST speak every words staring with a 'Arhgs'",
+          "role": "system"
+        },
+        {
+          "role": "user",
+          "content": "What is the weather in San Francisco?"
+        },
+        {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe",
+                "name": "getWeather",
+                "input": "{\"city\":\"San Francisco\"}"
+              }
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "content": "The weather in San Francisco is 72 degrees",
+          "options": {
+            "toolResult": {
+              "result": "The weather in San Francisco is 72 degrees",
+              "isError": false,
+              "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "options": {
+            "toolCall": [
+              {
+                "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe",
+                "name": "getWeather",
+                "input": "{\"city\":\"San Francisco\"}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "Arhgs the weather in San Francisco be 72 degrees.",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}

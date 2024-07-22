@@ -34,7 +34,7 @@ MONGODB_COLLECTION=tiny_tweets_collection
 You are now ready to import our ready-made data set into Mongo. This is the file `tinytweets.json`, a selection of approximately 1000 tweets from @seldo on Twitter in mid-2019. With your environment set up you can do this by running
 
 ```
-npx ts-node mongodb/1_import.ts
+npx tsx mongodb/1_import.ts
 ```
 
 If you don't want to use tweets, you can replace `json_file` with any other array of JSON objects, but you will need to modify some code later to make sure the correct field gets indexed. There is no LlamaIndex-specific code here; you can load your data into Mongo any way you want to.
@@ -59,7 +59,7 @@ MONGODB_VECTOR_INDEX=tiny_tweets_vector_index
 If the data you're indexing is the tweets we gave you, you're ready to go:
 
 ```bash
-npx ts-node mongodb/2_load_and_index.ts
+npx tsx mongodb/2_load_and_index.ts
 ```
 
 > Note: this script is running a couple of minutes and currently doesn't show any progress.
@@ -112,7 +112,7 @@ Now you're ready to query your data!
 You can do this by running
 
 ```bash
-npx ts-node mongodb/3_query.ts
+npx tsx mongodb/3_query.ts
 ```
 
 This sets up a connection to Atlas just like `2_load_and_index.ts` did, then it creates a [query engine](https://docs.llamaindex.ai/en/stable/understanding/querying/querying.html#getting-started) and runs a query against it.

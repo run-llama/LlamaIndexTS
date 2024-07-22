@@ -1,0 +1,75 @@
+# Adding persistent vector storage
+
+In the previous examples, we've been loading our data into memory each time we run the agent. This is fine for small datasets, but for larger datasets you'll want to store your embeddings in a database. LlamaIndex.TS provides a `VectorStore` class that can store your embeddings in a variety of databases. We're going to use [Qdrant](https://qdrant.tech/), a popular vector store, for this example.
+
+We can get a local instance of Qdrant running very simply with Docker (make sure you [install Docker](https://www.docker.com/products/docker-desktop/) first):
+
+```bash
+docker pull qdrant/qdrant
+docker run -p 6333:6333 qdrant/qdrant
+```
+
+And in our code we initialize a `VectorStore` with the Qdrant URL:
+
+```javascript
+// initialize qdrant vector store
+const vectorStore = new QdrantVectorStore({
+  url: "http://localhost:6333",
+});
+```
+
+Now once we have loaded our documents, we can instantiate an index with the vector store:
+
+```javascript
+// create a query engine from our documents
+const index = await VectorStoreIndex.fromDocuments(documents, { vectorStore });
+```
+
+In [the final iteration](https://github.com/run-llama/ts-agents/blob/main/5_qdrant/agent.ts) you can see that we have also implemented a very naive caching mechanism to avoid re-parsing the PDF each time we run the agent:
+
+```javascript
+// load cache.json and parse it
+let cache = {};
+let cacheExists = false;
+try {
+  await fs.access(PARSING_CACHE, fs.constants.F_OK);
+  cacheExists = true;
+} catch (e) {
+  console.log("No cache found");
+}
+if (cacheExists) {
+  cache = JSON.parse(await fs.readFile(PARSING_CACHE, "utf-8"));
+}
+
+const filesToParse = ["../data/sf_budget_2023_2024.pdf"];
+
+// load our data, reading only files we haven't seen before
+let documents = [];
+const reader = new LlamaParseReader({ resultType: "markdown" });
+for (let file of filesToParse) {
+  if (!cache[file]) {
+    documents = documents.concat(await reader.loadData(file));
+    cache[file] = true;
+  }
+}
+
+// write the cache back to disk
+await fs.writeFile(PARSING_CACHE, JSON.stringify(cache));
+```
+
+Since parsing a PDF can be slow, especially a large one, using the pre-parsed chunks in Qdrant can significantly speed up your agent.
+
+## Next steps
+
+In this guide you've learned how to
+
+- [Create an agent](create_agent)
+- Use remote LLMs like GPT-4
+- [Use local LLMs like Mixtral](local_model)
+- [Create a RAG query engine](agentic_rag)
+- [Turn functions and query engines into agent tools](rag_and_tools)
+- Combine those tools
+- [Enhance your parsing with LlamaParse](llamaparse)
+- Persist your data in a vector store
+
+The next steps are up to you! Try creating more complex functions and query engines, and set your agent loose on the world.

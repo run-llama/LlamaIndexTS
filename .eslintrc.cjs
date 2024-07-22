@@ -1,3 +1,5 @@
+const { join } = require("node:path");
+
 module.exports = {
   root: true,
   extends: [
@@ -6,7 +8,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-type-checked-only",
   ],
   parserOptions: {
-    project: true,
+    project: join(__dirname, "tsconfig.eslint.json"),
     __tsconfigRootDir: __dirname,
   },
   settings: {
@@ -23,6 +25,7 @@ module.exports = {
         ignoreIIFE: true,
       },
     ],
+    "no-debugger": "error",
     "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-types": "off",

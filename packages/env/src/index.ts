@@ -15,13 +15,14 @@ import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
 import { EOL } from "node:os";
 import path from "node:path";
-import { pipeline } from "node:stream/promises";
+import { Readable } from "node:stream";
 import {
   ReadableStream,
   TransformStream,
   WritableStream,
 } from "node:stream/web";
-import { fs } from "./fs/node.js";
+import { fileURLToPath } from "node:url";
+import { createWriteStream, fs } from "./fs/node.js";
 import type { SHA256 } from "./polyfill.js";
 
 export function createSHA256(): SHA256 {
@@ -36,15 +37,18 @@ export function createSHA256(): SHA256 {
   };
 }
 
+export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/node.js";
 export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
 export {
+  createWriteStream,
   EOL,
-  ReadableStream,
-  TransformStream,
-  WritableStream,
+  fileURLToPath,
   fs,
   ok,
   path,
-  pipeline,
   randomUUID,
+  Readable,
+  ReadableStream,
+  TransformStream,
+  WritableStream,
 };

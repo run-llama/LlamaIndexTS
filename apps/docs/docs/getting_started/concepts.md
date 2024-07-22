@@ -32,7 +32,7 @@ LlamaIndex.TS help you prepare the knowledge base with a suite of data connector
 
 ![](../_static/concepts/indexing.jpg)
 
-[**Data Loaders**](../modules/data_loader.md):
+[**Data Loaders**](../modules/data_loaders/index.mdx):
 A data connector (i.e. `Reader`) ingest data from different data sources and data formats into a simple `Document` representation (text and simple metadata).
 
 [**Documents / Nodes**](../modules/documents_and_nodes/index.md): A `Document` is a generic container around any data source - for instance, a PDF, an API output, or retrieved data from a database. A `Node` is the atomic unit of data in LlamaIndex and represents a "chunk" of a source `Document`. It's a rich representation that includes metadata and relationships (to other nodes) to enable accurate and expressive retrieval operations.
@@ -62,7 +62,7 @@ These building blocks can be customized to reflect ranking preferences, as well 
 
 [**Retrievers**](../modules/retriever.md):
 A retriever defines how to efficiently retrieve relevant context from a knowledge base (i.e. index) when given a query.
-The specific retrieval logic differs for difference indices, the most popular being dense retrieval against a vector index.
+The specific retrieval logic differs for different indices, the most popular being dense retrieval against a vector index.
 
 [**Response Synthesizers**](../modules/response_synthesizer.md):
 A response synthesizer generates a response from an LLM, using a user query and a given set of retrieved text chunks.

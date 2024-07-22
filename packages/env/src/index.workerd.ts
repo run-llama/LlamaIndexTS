@@ -12,3 +12,5 @@ export * from "./polyfill.js";
 export function getEnv(name: string): string | undefined {
   return INTERNAL_ENV[name];
 }
+
+export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";

@@ -75,7 +75,7 @@ const queryEngine = index.asQueryEngine({
       {
         key: "dogId",
         value: "2",
-        filterType: "ExactMatch",
+        operator: "==",
       },
     ],
   },
@@ -87,6 +87,8 @@ const response = await queryEngine.query({
 
 console.log(response.toString());
 ```
+
+Besides using the equal operator (`==`), you can also use a whole set of different [operators](../../api/interfaces/MetadataFilter.md#operator) to filter your documents.
 
 ## Full Code
 
@@ -135,7 +137,7 @@ async function main() {
           {
             key: "dogId",
             value: "2",
-            filterType: "ExactMatch",
+            operator: "==",
           },
         ],
       },
@@ -151,3 +153,9 @@ async function main() {
 
 main();
 ```
+
+## API Reference
+
+- [VectorStoreIndex](../../api/classes/VectorStoreIndex.md)
+- [ChromaVectorStore](../../api/classes/ChromaVectorStore.md)
+- [MetadataFilter](../../api/interfaces/MetadataFilter.md)

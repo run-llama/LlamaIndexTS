@@ -9,13 +9,9 @@
  */
 import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
-// @ts-expect-error
-import { promises } from "readable-stream";
 import { fs } from "./fs/memory.js";
 
-const { pipeline } = promises;
-
-export { fs, pathe as path, pipeline };
+export { fs, pathe as path };
 
 export interface SHA256 {
   update(data: string | Uint8Array): void;

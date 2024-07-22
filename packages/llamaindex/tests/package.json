@@ -1,0 +1,13 @@
+{
+  "name": "@llamaindex/llamaindex-test",
+  "private": true,
+  "version": "0.0.5",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "llamaindex": "workspace:*",
+    "vitest": "^2.0.2"
+  }
+}

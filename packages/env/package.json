@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/env",
   "description": "environment wrapper, supports all JS environment including node, deno, bun, edge runtime, and cloudflare worker",
-  "version": "0.1.2",
+  "version": "0.1.8",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -48,7 +48,8 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",
@@ -62,34 +63,32 @@
     "build:type": "tsc -p tsconfig.json",
     "postbuild": "node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
     "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\"",
+    "circular-check": "madge -c ./src/index.ts",
     "test": "vitest"
   },
   "devDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.5.5",
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.6.3",
     "concurrently": "^8.2.2",
     "pathe": "^1.1.2",
-    "readable-stream": "^4.5.2",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.2"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.1",
+    "@types/lodash": "^4.17.5",
     "@types/node": "^20.12.11"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
+    "js-tiktoken": "^1.0.12",
     "pathe": "^1.1.2",
-    "readable-stream": "^4.5.2"
+    "tiktoken": "^1.0.15"
   },
   "peerDependenciesMeta": {
     "@aws-crypto/sha256-js": {
       "optional": true
     },
     "pathe": {
-      "optional": true
-    },
-    "readable-stream": {
       "optional": true
     }
   }

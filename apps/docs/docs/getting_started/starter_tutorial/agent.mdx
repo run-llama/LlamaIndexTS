@@ -1,0 +1,49 @@
+---
+sidebar_position: 4
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import CodeSource from "!raw-loader!../../../../../examples/agent/openai";
+
+# Agent tutorial
+
+We have a comprehensive, step-by-step [guide to building agents in LlamaIndex.TS](../../guides/agents/setup) that we recommend to learn what agents are and how to build them for production. But building a basic agent is simple:
+
+## Set up
+
+In a new folder:
+
+```bash npm2yarn
+npm init
+npm install -D typescript @types/node
+```
+
+## Run agent
+
+Create the file `example.ts`. This code will:
+
+- Create two tools for use by the agent:
+  - A `sumNumbers` tool that adds two numbers
+  - A `divideNumbers` tool that divides numbers
+-
+- Give an example of the data structure we wish to generate
+- Prompt the LLM with instructions and the example, plus a sample transcript
+
+<CodeBlock language="ts">{CodeSource}</CodeBlock>
+
+To run the code:
+
+```bash
+npx tsx example.ts
+```
+
+You should expect output something like:
+
+```
+{
+  content: 'The sum of 5 + 5 is 10. When you divide 10 by 2, you get 5.',
+  role: 'assistant',
+  options: {}
+}
+Done
+```

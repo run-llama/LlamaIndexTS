@@ -18,8 +18,9 @@ async function main() {
 
   const index = await VectorStoreIndex.fromDocuments([document]);
 
-  const retriever = index.asRetriever();
-  retriever.similarityTopK = 5;
+  const retriever = index.asRetriever({
+    similarityTopK: 5,
+  });
   const nodePostprocessor = new SimilarityPostprocessor({
     similarityCutoff: 0.7,
   });

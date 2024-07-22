@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/experimental",
   "description": "Experimental package for LlamaIndexTS",
-  "version": "0.0.27",
+  "version": "0.0.56",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -37,7 +37,8 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
   ],
   "repository": {
     "type": "git",
@@ -55,14 +56,14 @@
   },
   "devDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
-    "@swc/cli": "^0.3.12",
-    "@swc/core": "^1.5.5",
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.6.3",
     "@types/jsonpath": "^0.2.4",
     "concurrently": "^8.2.2",
     "pathe": "^1.1.2"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.1",
+    "@types/lodash": "^4.17.5",
     "@types/node": "^20.12.11",
     "jsonpath": "^1.1.1",
     "llamaindex": "workspace:*",
