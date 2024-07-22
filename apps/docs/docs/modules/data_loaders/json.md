@@ -9,26 +9,28 @@ Either parses the entire string, cleaning it and treat each line as an embedding
 import { JSONReader } from "llamaindex";
 
 const file = "../../PATH/TO/FILE";
+const content = new TextEncoder().encode("JSON_CONTENT");
 
 const reader = new JSONReader({ levelsBack: 0, collapseLength: 100 });
-const docs = reader.loadData(file);
+const docsFromFile = reader.loadData(file);
+const docsFromContent = reader.loadDataAsContent(content);
 ```
 
 ### Options
 
 Basic:
 
--`ensureAscii?`: Wether to ensure only ASCII characters be present in the output by converting non-ASCII characters to their unicode escape sequence. Default is `false`.
+- `ensureAscii?`: Wether to ensure only ASCII characters be present in the output by converting non-ASCII characters to their unicode escape sequence. Default is `false`.
 
--`isJsonLines?`: Wether the JSON is in JSON Lines format. If true, will split into lines, remove empty one and parse each line as JSON. Default is `false`
+- `isJsonLines?`: Wether the JSON is in JSON Lines format. If true, will split into lines, remove empty one and parse each line as JSON. Default is `false`
 
--`cleanJson?`: Whether to clean the JSON by filtering out structural characters (`{}, [], and ,`). If set to false, it will just parse the JSON, not removing structural characters. Default is `true`.
+- `cleanJson?`: Whether to clean the JSON by filtering out structural characters (`{}, [], and ,`). If set to false, it will just parse the JSON, not removing structural characters. Default is `true`.
 
 Depth-First-Traversal:
 
--`levelsBack?`: Specifies how many levels up the JSON structure to include in the output. `cleanJson` will be ignored. If set to 0, all levels are included. If undefined, parses the entire JSON, treat each line as an embedding and create a document per top-level array. Default is `undefined`
+- `levelsBack?`: Specifies how many levels up the JSON structure to include in the output. `cleanJson` will be ignored. If set to 0, all levels are included. If undefined, parses the entire JSON, treat each line as an embedding and create a document per top-level array. Default is `undefined`
 
--`collapseLength?`: The maximum length of JSON string representation to be collapsed into a single line. Only applicable when `levelsBack` is set. Default is `undefined`
+- `collapseLength?`: The maximum length of JSON string representation to be collapsed into a single line. Only applicable when `levelsBack` is set. Default is `undefined`
 
 #### Examples
 
@@ -40,6 +42,7 @@ Input:
 ```
 
 Default options:
+
 `LevelsBack` = `undefined` & `cleanJson` = `true`
 
 Output:
@@ -58,6 +61,7 @@ Output:
 ```
 
 Depth-First Traversal all levels:
+
 `levelsBack` = `0`
 
 Output:
@@ -70,6 +74,7 @@ b 4 k4 v4
 ```
 
 Depth-First Traversal and Collapse:
+
 `levelsBack` = `0` & `collapseLength` = `35`
 
 Output:
@@ -81,6 +86,7 @@ b {"3":{"k3":"v3"},"4":{"k4":"v4"}}
 ```
 
 Depth-First Traversal limited levels:
+
 `levelsBack` = `2`
 
 Output:
@@ -93,6 +99,7 @@ Output:
 ```
 
 Uncleaned JSON:
+
 `levelsBack` = `undefined` & `cleanJson` = `false`
 
 Output:
