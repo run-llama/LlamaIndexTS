@@ -89,26 +89,42 @@ export class JSONReader<T extends JSONValue> extends FileReader {
 
   private *parseJsonString(jsonStr: string): Generator<T> {
     if (this.options.isJsonLines) {
-      // Process each line as a separate JSON object for JSON Lines format
-      for (const line of jsonStr.split("\n")) {
-        if (line.trim() !== "") {
-          try {
-            yield JSON.parse(line.trim());
-          } catch (e) {
-            throw new JSONParseError(
-              `Error parsing JSON Line: ${e} in "${line.trim()}"`,
-            );
-          }
+      yield* this.parseJsonLines(jsonStr);
+    } else {
+      yield* this.parseJson(jsonStr);
+    }
+  }
+
+  private *parseJsonLines(jsonStr: string): Generator<T> {
+    // Process each line as a separate JSON object for JSON Lines format
+    for (const line of jsonStr.split("\n")) {
+      if (line.trim() !== "") {
+        try {
+          yield JSON.parse(line.trim());
+        } catch (e) {
+          throw new JSONParseError(
+            `Error parsing JSON Line: ${e} in "${line.trim()}"`,
+          );
         }
       }
-    } else {
-      // Parse the entire string as a single JSON object
-      try {
-        // TODO: Add streaming to handle large JSON files
-        yield JSON.parse(jsonStr);
-      } catch (e) {
-        throw new JSONParseError(`Error parsing JSON: ${e} in "${jsonStr}"`);
+    }
+  }
+
+  private *parseJson(jsonStr: string): Generator<T> {
+    try {
+      // TODO: Add streaming to handle large JSON files
+      const parsedData = JSON.parse(jsonStr);
+      // Check if it's an Array, if so yield each item seperately, i.e. create a document per top-level array of the json
+      if (Array.isArray(parsedData)) {
+        for (const item of parsedData) {
+          yield item;
+        }
+      } else {
+        // If not an array, just yield the parsed data
+        yield parsedData;
       }
+    } catch (e) {
+      throw new JSONParseError(`Error parsing JSON: ${e} in "${jsonStr}"`);
     }
   }
 
