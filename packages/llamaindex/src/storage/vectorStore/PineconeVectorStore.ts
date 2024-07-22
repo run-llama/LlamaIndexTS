@@ -209,8 +209,8 @@ export class PineconeVectorStore
     }, {});
   }
 
-  textFromResultRow(row: ScoredPineconeRecord<Record<string, any>>): string {
-    return row.metadata?.[this.textKey] ?? "";
+  textFromResultRow(row: ScoredPineconeRecord): string {
+    return (row.metadata?.[this.textKey] as string) ?? "";
   }
 
   metaWithoutText(meta: Metadata): any {

@@ -1,6 +1,6 @@
 import { createSHA256, path, randomUUID } from "@llamaindex/env";
 import { chunkSizeCheck, lazyInitHash } from "../decorator";
-import type { JSONValue } from "./types.js";
+import type { JSONValue } from "../global";
 
 export enum NodeRelationship {
   SOURCE = "SOURCE",
