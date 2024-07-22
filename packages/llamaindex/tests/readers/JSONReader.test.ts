@@ -1,4 +1,9 @@
-import { JSONParseError, JSONReader, JSONReaderError } from "llamaindex";
+import {
+  JSONParseError,
+  JSONReader,
+  JSONReaderError,
+  type JSONValue,
+} from "llamaindex";
 import { beforeEach, describe, expect, it } from "vitest";
 
 const content = new TextEncoder().encode(
@@ -6,7 +11,7 @@ const content = new TextEncoder().encode(
 );
 
 describe("JSONReader", () => {
-  let reader: JSONReader;
+  let reader: JSONReader<JSONValue>;
 
   beforeEach(() => {
     reader = new JSONReader();
