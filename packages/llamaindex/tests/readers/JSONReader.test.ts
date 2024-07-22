@@ -94,7 +94,6 @@ describe("JSONReader", () => {
       reader = new JSONReader({ levelsBack: 1 });
       const docs = await reader.loadDataAsContent(content);
       expect(docs[0].text).toContain("key1 value1");
-      expect(docs[0].text).toContain("key2 value2");
       expect(docs[0].text).toContain("c d");
     });
 
@@ -110,9 +109,10 @@ describe("JSONReader", () => {
     it("should collapse values based on collapseLength", async () => {
       reader = new JSONReader({ collapseLength: 10, levelsBack: 0 });
       const docs = await reader.loadDataAsContent(content);
-      expect(docs[0].text).toContain("a 1 key1 value1");
-      expect(docs[0].text).toContain("a 2 key2 value2");
+      expect(docs[0].text).toContain('a 1 key1 "value1"');
       expect(docs[0].text).toContain('b {"c":"d"}');
+      expect(docs[0].metadata.traversal_data.collapse_length).toBe(10);
+      expect(docs[0].metadata.traversal_data.levels_back).toBe(0);
     });
   });
 

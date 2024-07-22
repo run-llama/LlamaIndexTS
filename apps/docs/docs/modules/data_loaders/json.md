@@ -26,7 +26,7 @@ Basic:
 
 Depth-First-Traversal:
 
--`levelsBack?`: Specifies how many levels up the JSON structure to include in the output. `cleanJson` will be ignored. If set to 0, all levels are included. If undefined, parses the entire JSON and treats each line as an embedding. Default is `undefined`
+-`levelsBack?`: Specifies how many levels up the JSON structure to include in the output. `cleanJson` will be ignored. If set to 0, all levels are included. If undefined, parses the entire JSON, treat each line as an embedding and create a document per top-level array. Default is `undefined`
 
 -`collapseLength?`: The maximum length of JSON string representation to be collapsed into a single line. Only applicable when `levelsBack` is set. Default is `undefined`
 
