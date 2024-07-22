@@ -1,5 +1,5 @@
+import type { JSONValue } from "@llamaindex/core/global";
 import { Document } from "@llamaindex/core/schema";
-import type { JSONSchemaType } from "openai/lib/jsonschema.mjs";
 import { FileReader } from "./type.js";
 
 interface JSONReaderOptions {
@@ -34,8 +34,6 @@ interface JSONReaderOptions {
   /**
    * The maximum length of JSON string representation to be collapsed into a single line.
    * Only applicable when `levelsBack` is set.
-   * E.g. collapseLength=10 and jsonData = {a: [1, 2, 3], b: {"hello": "world", "foo": "bar"}},
-   * a would be collapsed into one line, while b would not.
    * @default undefined
    */
   collapseLength?: number;
@@ -49,14 +47,9 @@ export class JSONStringifyError extends JSONReaderError {}
  * A reader that reads JSON data and returns an array of Document objects.
  * Supports various options to modify the output.
  */
-export class JSONReader extends FileReader {
+export class JSONReader<T extends JSONValue> extends FileReader {
   private options: JSONReaderOptions;
 
-  /**
-   * Constructs a new JSONReader with the given options.
-   *
-   * @param {JSONReaderOptions} options - The options for the JSONReader.
-   */
   constructor(options: JSONReaderOptions = {}) {
     super();
     this.options = {
@@ -70,10 +63,10 @@ export class JSONReader extends FileReader {
   private validateOptions(): void {
     const { levelsBack, collapseLength } = this.options;
     if (levelsBack !== undefined && levelsBack < 0) {
-      throw new JSONReaderError("levelsBack must not be a negative number");
+      throw new JSONReaderError("levelsBack must not be negative");
     }
     if (collapseLength !== undefined && collapseLength < 0) {
-      throw new JSONReaderError("collapseLength must not be a negative number");
+      throw new JSONReaderError("collapseLength must not be negative");
     }
   }
 
@@ -85,52 +78,46 @@ export class JSONReader extends FileReader {
    */
   async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
     const jsonStr = new TextDecoder("utf-8").decode(content);
-    let parsedData: JSONSchemaType[];
-    try {
-      parsedData = this.parseJsonString(jsonStr);
-    } catch (e) {
-      throw new JSONParseError(`Error parsing JSON: ${e}`);
+    const parser = this.parseJsonString(jsonStr);
+    const documents: Document[] = [];
+
+    for await (const data of parser) {
+      documents.push(this.createDocument(data));
     }
-    return parsedData.map((data) => this.createDocument(data));
+    return documents;
   }
 
-  private parseJsonString(jsonStr: string): JSONSchemaType[] {
+  private *parseJsonString(jsonStr: string): Generator<T> {
     if (this.options.isJsonLines) {
-      return jsonStr
-        .split("\n")
-        .filter((line) => line.trim() !== "")
-        .map((line, index) => {
+      // Process each line as a separate JSON object for JSON Lines format
+      for (const line of jsonStr.split("\n")) {
+        if (line.trim() !== "") {
           try {
-            return JSON.parse(line.trim());
+            yield JSON.parse(line.trim());
           } catch (e) {
             throw new JSONParseError(
-              `Error parsing JSON Line at line ${index + 1}: ${e} in "${line}"`,
+              `Error parsing JSON Line: ${e} in "${line.trim()}"`,
             );
           }
-        });
-    }
-    try {
-      return [JSON.parse(jsonStr)];
-    } catch (e) {
-      throw new JSONParseError(`Error parsing JSON: ${e} in "${jsonStr}"`);
+        }
+      }
+    } else {
+      // Parse the entire string as a single JSON object
+      try {
+        // TODO: Add streaming to handle large JSON files
+        yield JSON.parse(jsonStr);
+      } catch (e) {
+        throw new JSONParseError(`Error parsing JSON: ${e} in "${jsonStr}"`);
+      }
     }
   }
 
-  private createDocument(data: JSONSchemaType): Document {
-    let docText: string;
-    if (this.options.levelsBack === undefined) {
-      docText = this.formatJsonString(data);
-    } else {
-      const levelsBack = this.options.levelsBack ?? 0;
-      docText = [
-        ...this.depthFirstYield(
-          data,
-          levelsBack === 0 ? Infinity : levelsBack,
-          [],
-          this.options.collapseLength,
-        ),
-      ].join("\n");
-    }
+  private createDocument(data: T): Document {
+    const docText: string =
+      this.options.levelsBack === undefined
+        ? this.formatJsonString(data)
+        : this.prepareDepthFirstYield(data);
+
     return new Document({
       text: this.options.ensureAscii ? this.convertToAscii(docText) : docText,
       metadata: {
@@ -143,10 +130,22 @@ export class JSONReader extends FileReader {
     });
   }
 
+  private prepareDepthFirstYield(data: T): string {
+    const levelsBack = this.options.levelsBack ?? 0;
+    return [
+      ...this.depthFirstYield(
+        data,
+        levelsBack === 0 ? Infinity : levelsBack,
+        [],
+        this.options.collapseLength,
+      ),
+    ].join("\n");
+  }
+
   // Note: JSON.stringify does not differentiate between indent "undefined/null"(= no whitespaces) and "0"(= no whitespaces, but linebreaks)
   // as python json.dumps does. Thats why we use indent 1 and remove the leading spaces.
 
-  private formatJsonString(data: JSONSchemaType): string {
+  private formatJsonString(data: T): string {
     try {
       const jsonStr = JSON.stringify(
         data,
@@ -154,12 +153,10 @@ export class JSONReader extends FileReader {
         this.options.cleanJson ? 1 : 0,
       );
       if (this.options.cleanJson) {
+        // Clean JSON by removing structural characters and unnecessary whitespace
         return jsonStr
           .split("\n")
-          .filter((line) => {
-            const trimmedLine = line.trim();
-            return trimmedLine !== "" && !/^[{}\[\],]*$/.test(trimmedLine);
-          })
+          .filter((line) => !/^[{}\[\],]*$/.test(line.trim()))
           .map((line) => line.trimStart()) // Removes the indent
           .join("\n");
       }
@@ -184,7 +181,7 @@ export class JSONReader extends FileReader {
    * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal.
    */
   private *depthFirstYield(
-    jsonData: JSONSchemaType,
+    jsonData: T,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
@@ -212,30 +209,27 @@ export class JSONReader extends FileReader {
         yield `${path.slice(-levelsBack).join(" ")} ${String(jsonData)}`;
       }
     } catch (e) {
-      throw new JSONReaderError(`Error during depth first traversal: ${e}`);
+      throw new JSONReaderError(
+        `Error during depth first traversal at path ${path.join(" ")}: ${e}`,
+      );
     }
   }
 
   private serializeAndCollapse(
-    jsonData: JSONSchemaType,
+    jsonData: T,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
   ): string | null {
-    let jsonStr: string;
     try {
-      jsonStr = JSON.stringify(jsonData);
+      const jsonStr = JSON.stringify(jsonData);
+      return collapseLength !== undefined && jsonStr.length <= collapseLength
+        ? `${path.slice(-levelsBack).join(" ")} ${jsonStr}`
+        : null;
     } catch (e) {
       throw new JSONStringifyError(`Error stringifying JSON data: ${e}`);
     }
-
-    if (collapseLength !== undefined && jsonStr.length <= collapseLength) {
-      return `${path.slice(-levelsBack).join(" ")} ${jsonStr}`;
-    }
-
-    return null;
   }
-
   /**
    * A generator function that performs a depth-first traversal of the JSON data.
    * If the JSON data is an array, it traverses each item in the array.
@@ -249,7 +243,7 @@ export class JSONReader extends FileReader {
    * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal of the object.
    */
   private *depthFirstTraversal(
-    jsonData: JSONSchemaType,
+    jsonData: T,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
@@ -259,19 +253,19 @@ export class JSONReader extends FileReader {
         for (const item of jsonData) {
           yield* this.depthFirstYield(item, levelsBack, path, collapseLength);
         }
-      } else if (jsonData !== null) {
+      } else if (jsonData !== null && typeof jsonData === "object") {
+        const originalLength = path.length;
         for (const [key, value] of Object.entries(jsonData)) {
-          const newPath = [...path, key];
-          if (Array.isArray(value) || typeof value === "object") {
+          path.push(key);
+          if (value !== null) {
             yield* this.depthFirstYield(
-              value,
+              value as T,
               levelsBack,
-              newPath,
+              path,
               collapseLength,
             );
-          } else {
-            yield `${newPath.slice(-levelsBack).join(" ")} ${value === null ? "null" : String(value)}`;
           }
+          path.length = originalLength; // Reset path length to original. Avoids cloning the path array every time.
         }
       }
     } catch (e) {
