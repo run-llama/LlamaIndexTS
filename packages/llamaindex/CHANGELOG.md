@@ -1,5 +1,24 @@
 # llamaindex
 
+## 0.5.7
+
+### Patch Changes
+
+- ec59acd: fix: bundling issue with pnpm
+
+## 0.5.6
+
+### Patch Changes
+
+- 2562244: feat: add gpt4o-mini
+- 325aa51: Implement Jina embedding through Jina api
+- ab700ea: Add missing authentication to LlamaCloudIndex.fromDocuments
+- 92f0782: feat: use query bundle
+- 6cf6ae6: feat: abstract query type
+- b7cfe5b: fix: passing max_token option to replicate's api call
+- Updated dependencies [6cf6ae6]
+  - @llamaindex/core@0.1.3
+
 ## 0.5.5
 
 ### Patch Changes

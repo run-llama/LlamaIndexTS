@@ -1,9 +1,23 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "LlamaIndex Core Module",
   "exports": {
+    "./query-engine": {
+      "require": {
+        "types": "./dist/query-engine/index.d.cts",
+        "default": "./dist/query-engine/index.cjs"
+      },
+      "import": {
+        "types": "./dist/query-engine/index.d.ts",
+        "default": "./dist/query-engine/index.js"
+      },
+      "default": {
+        "types": "./dist/query-engine/index.d.ts",
+        "default": "./dist/query-engine/index.js"
+      }
+    },
     "./llms": {
       "require": {
         "types": "./dist/llms/index.d.cts",

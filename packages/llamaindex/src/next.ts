@@ -32,6 +32,12 @@ export default function withLlamaIndex(config: any) {
       "@google-cloud/vertexai": false,
       "groq-sdk": false,
     };
+    // Following lines will fix issues with onnxruntime-node when using pnpm
+    // See: https://github.com/vercel/next.js/issues/43433
+    webpackConfig.externals.push({
+      "onnxruntime-node": "commonjs onnxruntime-node",
+      sharp: "commonjs sharp",
+    });
     return webpackConfig;
   };
   return config;

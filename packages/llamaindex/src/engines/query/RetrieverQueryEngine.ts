@@ -1,6 +1,5 @@
-import type { NodeWithScore } from "@llamaindex/core/schema";
+import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { wrapEventCaller } from "@llamaindex/core/utils";
-import type { EngineResponse } from "../../EngineResponse.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseRetriever } from "../../Retriever.js";
@@ -78,11 +77,13 @@ export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
     const { query, stream } = params;
     const nodesWithScore = await this.retrieve(query);
     if (stream) {
-      return this.responseSynthesizer.synthesize({
-        query,
-        nodesWithScore,
-        stream: true,
-      });
+      return this.responseSynthesizer.synthesize(
+        {
+          query,
+          nodesWithScore,
+        },
+        true,
+      );
     }
     return this.responseSynthesizer.synthesize({
       query,

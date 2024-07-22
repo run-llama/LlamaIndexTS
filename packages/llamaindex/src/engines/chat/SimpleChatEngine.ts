@@ -1,4 +1,5 @@
 import type { LLM } from "@llamaindex/core/llms";
+import { EngineResponse } from "@llamaindex/core/schema";
 import {
   streamConverter,
   streamReducer,
@@ -6,7 +7,6 @@ import {
 } from "@llamaindex/core/utils";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
-import { EngineResponse } from "../../EngineResponse.js";
 import { Settings } from "../../Settings.js";
 import type {
   ChatEngine,

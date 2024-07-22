@@ -4,6 +4,7 @@ import type {
   MessageContent,
   MessageType,
 } from "@llamaindex/core/llms";
+import { EngineResponse } from "@llamaindex/core/schema";
 import {
   extractText,
   streamConverter,
@@ -12,7 +13,6 @@ import {
 } from "@llamaindex/core/utils";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
-import { EngineResponse } from "../../EngineResponse.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { Settings } from "../../Settings.js";
