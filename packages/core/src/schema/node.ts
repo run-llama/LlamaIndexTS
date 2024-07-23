@@ -469,11 +469,11 @@ export function buildNodeFromSplits(
         text: textChunk,
         image: doc.image,
         embedding: doc.embedding,
-        excludedEmbedMetadataKeys: doc.excludedEmbedMetadataKeys,
-        excludedLlmMetadataKeys: doc.excludedLlmMetadataKeys,
+        excludedEmbedMetadataKeys: [...doc.excludedEmbedMetadataKeys],
+        excludedLlmMetadataKeys: [...doc.excludedLlmMetadataKeys],
         metadataSeparator: doc.metadataSeparator,
         textTemplate: doc.textTemplate,
-        relationships: relationships,
+        relationships: { ...relationships },
       });
       nodes.push(imageNode);
     } else if (doc instanceof Document || doc instanceof TextNode) {
@@ -481,11 +481,11 @@ export function buildNodeFromSplits(
         id_: idGenerator(i, doc),
         text: textChunk,
         embedding: doc.embedding,
-        excludedEmbedMetadataKeys: doc.excludedEmbedMetadataKeys,
-        excludedLlmMetadataKeys: doc.excludedLlmMetadataKeys,
+        excludedEmbedMetadataKeys: [...doc.excludedEmbedMetadataKeys],
+        excludedLlmMetadataKeys: [...doc.excludedLlmMetadataKeys],
         metadataSeparator: doc.metadataSeparator,
         textTemplate: doc.textTemplate,
-        relationships: relationships,
+        relationships: { ...relationships },
       });
       nodes.push(node);
     } else {

@@ -136,6 +136,7 @@
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@types/node": "^20.14.9",
+    "natural": "^7.1.0",
     "zod": "^3.23.8"
   }
 }

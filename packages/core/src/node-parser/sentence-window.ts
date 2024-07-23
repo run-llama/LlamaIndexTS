@@ -10,15 +10,17 @@ import { NodeParser } from "./base";
 import { splitBySentenceTokenizer, type TextSplitterFn } from "./utils";
 
 export class SentenceWindowNodeParser extends NodeParser {
+  static DEFAULT_WINDOW_SIZE = 3;
+  static DEFAULT_WINDOW_METADATA_KEY = "window";
+  static DEFAULT_ORIGINAL_TEXT_METADATA_KEY = "originalText";
+
   windowSize: number;
   windowMetadataKey: string;
   originalTextMetadataKey: string;
   sentenceSplitter: TextSplitterFn = splitBySentenceTokenizer();
   idGenerator: () => string = () => randomUUID();
 
-  protected constructor(
-    params?: z.input<typeof sentenceWindowNodeParserSchema>,
-  ) {
+  constructor(params?: z.input<typeof sentenceWindowNodeParserSchema>) {
     super();
     if (params) {
       const parsedParams = sentenceWindowNodeParserSchema.parse(params);
@@ -26,9 +28,11 @@ export class SentenceWindowNodeParser extends NodeParser {
       this.windowMetadataKey = parsedParams.windowMetadataKey;
       this.originalTextMetadataKey = parsedParams.originalTextMetadataKey;
     } else {
-      this.windowSize = 3;
-      this.windowMetadataKey = "window";
-      this.originalTextMetadataKey = "originalText";
+      this.windowSize = SentenceWindowNodeParser.DEFAULT_WINDOW_SIZE;
+      this.windowMetadataKey =
+        SentenceWindowNodeParser.DEFAULT_WINDOW_METADATA_KEY;
+      this.originalTextMetadataKey =
+        SentenceWindowNodeParser.DEFAULT_ORIGINAL_TEXT_METADATA_KEY;
     }
   }
 

@@ -1,3 +1,4 @@
+import { SentenceTokenizerNew } from "natural";
 import type { TextSplitter } from "./base";
 
 export type TextSplitterFn = (text: string) => string[];
@@ -32,14 +33,8 @@ export const splitByChar = (): TextSplitterFn => {
 
 export const splitBySentenceTokenizer = (): TextSplitterFn => {
   return (text: string) => {
-    const spans = void 0 as any; // todo
-    const sentences = [];
-    for (let i = 0; i < spans.length; i++) {
-      const start = spans[i][0];
-      const end = i < spans.length - 1 ? spans[i + 1][0] : text.length;
-      sentences.push(text.substring(start, end));
-    }
-    return sentences;
+    const tokenizer = new SentenceTokenizerNew();
+    return tokenizer.tokenize(text);
   };
 };
 

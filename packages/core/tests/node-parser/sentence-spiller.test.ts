@@ -1,12 +1,12 @@
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { Document } from "@llamaindex/core/schema";
-import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
 import { beforeEach, describe, expect, test } from "vitest";
 
-describe("SimpleNodeParser", () => {
-  let simpleNodeParser: SimpleNodeParser;
+describe("SentenceSplitter", () => {
+  let sentenceSplitter: SentenceSplitter;
 
   beforeEach(() => {
-    simpleNodeParser = new SimpleNodeParser({
+    sentenceSplitter = new SentenceSplitter({
       chunkSize: 1024,
       chunkOverlap: 20,
     });
@@ -19,7 +19,7 @@ describe("SimpleNodeParser", () => {
       excludedLlmMetadataKeys: ["animals"],
       excludedEmbedMetadataKeys: ["animals"],
     });
-    const result = simpleNodeParser.getNodesFromDocuments([doc]);
+    const result = sentenceSplitter.getNodesFromDocuments([doc]);
     expect(result.length).toEqual(1);
     const node = result[0];
     // check not the same object
