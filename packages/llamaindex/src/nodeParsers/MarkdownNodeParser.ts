@@ -1,6 +1,6 @@
+import type { NodeParser } from "@llamaindex/core/node-parser";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { MetadataMode, TextNode } from "@llamaindex/core/schema";
-import type { NodeParser } from '@llamaindex/core/node-parser';
 
 export class MarkdownNodeParser implements NodeParser<{}> {
   includeMetadata: boolean;

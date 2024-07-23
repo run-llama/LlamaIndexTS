@@ -20,9 +20,7 @@ export type BaseEmbeddingOptions = {
   logProgress?: boolean;
 };
 
-export abstract class BaseEmbedding
-  implements TransformComponent<BaseEmbeddingOptions>
-{
+export abstract class BaseEmbedding implements TransformComponent {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
   embedInfo?: EmbeddingInfo;
 

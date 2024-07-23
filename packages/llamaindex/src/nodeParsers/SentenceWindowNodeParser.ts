@@ -1,7 +1,7 @@
+import type { NodeParser } from "@llamaindex/core/node-parser";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { SentenceSplitter } from "../TextSplitter.js";
 import { getNodesFromDocument } from "./utils.js";
-import type { NodeParser } from '@llamaindex/core/node-parser';
 
 export const DEFAULT_WINDOW_SIZE = 3;
 export const DEFAULT_WINDOW_METADATA_KEY = "window";
