@@ -1,5 +1,5 @@
-import { SentenceTokenizerNew } from "natural/lib/natural/tokenizers";
 import type { TextSplitter } from "./base";
+import SentenceTokenizerNew from "./sentence-tokenizer-parser.js";
 
 export type TextSplitterFn = (text: string) => string[];
 
@@ -31,9 +31,14 @@ export const splitByChar = (): TextSplitterFn => {
   return (text: string) => text.split("");
 };
 
+let sentenceTokenizer: SentenceTokenizerNew | null = null;
+
 export const splitBySentenceTokenizer = (): TextSplitterFn => {
+  if (!sentenceTokenizer) {
+    sentenceTokenizer = new SentenceTokenizerNew();
+  }
+  const tokenizer = sentenceTokenizer;
   return (text: string) => {
-    const tokenizer = new SentenceTokenizerNew();
     return tokenizer.tokenize(text);
   };
 };
