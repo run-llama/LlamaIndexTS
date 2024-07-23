@@ -62,7 +62,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
       this.secondaryChunkingRegex = parsedParams.secondaryChunkingRegex;
     }
     this.#tokenizer = params?.tokenizer ?? getTokenizer();
-    this.#splitFns.add(splitBySep(this.separator));
+    this.#splitFns.add(splitBySep(this.paragraphSeparator));
     this.#splitFns.add(this.#chunkingTokenizerFn);
 
     this.#subSentenceSplitFns.add(splitByRegex(this.secondaryChunkingRegex));
