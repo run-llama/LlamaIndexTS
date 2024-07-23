@@ -82,12 +82,12 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     const documents: Document[] = [];
 
     for await (const data of parser) {
-      documents.push(this.createDocument(data));
+      documents.push(await this.createDocument(data));
     }
     return documents;
   }
 
-  private *parseJsonString(jsonStr: string): Generator<T> {
+  private async *parseJsonString(jsonStr: string): AsyncGenerator<T> {
     if (this.options.isJsonLines) {
       yield* this.parseJsonLines(jsonStr);
     } else {
@@ -95,7 +95,7 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     }
   }
 
-  private *parseJsonLines(jsonStr: string): Generator<T> {
+  private async *parseJsonLines(jsonStr: string): AsyncGenerator<T> {
     // Process each line as a separate JSON object for JSON Lines format
     for (const line of jsonStr.split("\n")) {
       if (line.trim() !== "") {
@@ -110,12 +110,16 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     }
   }
 
-  private *parseJson(jsonStr: string): Generator<T> {
+  private async *parseJson(jsonStr: string): AsyncGenerator<T> {
     try {
       // TODO: Add streaming to handle large JSON files
       const parsedData = JSON.parse(jsonStr);
-      // Check if it's an Array, if so yield each item seperately, i.e. create a document per top-level array of the json
-      if (Array.isArray(parsedData)) {
+
+      if (!this.options.cleanJson) {
+        // Yield the parsed data directly if cleanJson is false
+        yield parsedData;
+      } else if (Array.isArray(parsedData)) {
+        // Check if it's an Array, if so yield each item seperately, i.e. create a document per top-level array of the json
         for (const item of parsedData) {
           yield item;
         }
@@ -128,11 +132,11 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     }
   }
 
-  private createDocument(data: T): Document {
+  private async createDocument(data: T): Promise<Document> {
     const docText: string =
       this.options.levelsBack === undefined
         ? this.formatJsonString(data)
-        : this.prepareDepthFirstYield(data);
+        : await this.prepareDepthFirstYield(data);
 
     return new Document({
       text: this.options.ensureAscii ? this.convertToAscii(docText) : docText,
@@ -146,16 +150,18 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     });
   }
 
-  private prepareDepthFirstYield(data: T): string {
+  private async prepareDepthFirstYield(data: T): Promise<string> {
     const levelsBack = this.options.levelsBack ?? 0;
-    return [
-      ...this.depthFirstYield(
-        data,
-        levelsBack === 0 ? Infinity : levelsBack,
-        [],
-        this.options.collapseLength,
-      ),
-    ].join("\n");
+    const results: string[] = [];
+    for await (const value of this.depthFirstYield(
+      data,
+      levelsBack === 0 ? Infinity : levelsBack,
+      [],
+      this.options.collapseLength,
+    )) {
+      results.push(value);
+    }
+    return results.join("\n");
   }
 
   // Note: JSON.stringify does not differentiate between indent "undefined/null"(= no whitespaces) and "0"(= no whitespaces, but linebreaks)
@@ -196,12 +202,12 @@ export class JSONReader<T extends JSONValue> extends FileReader {
    * @param collapseLength - The maximum length of JSON string representation to be collapsed into a single line.
    * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal.
    */
-  private *depthFirstYield(
+  private async *depthFirstYield(
     jsonData: T,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
-  ): Generator<string> {
+  ): AsyncGenerator<string> {
     try {
       const jsonStr = this.serializeAndCollapse(
         jsonData,
@@ -258,12 +264,12 @@ export class JSONReader<T extends JSONValue> extends FileReader {
    * @param collapseLength - The maximum length of JSON string representation to be collapsed into a single line.
    * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal of the object.
    */
-  private *depthFirstTraversal(
+  private async *depthFirstTraversal(
     jsonData: T,
     levelsBack: number,
     path: string[],
     collapseLength?: number,
-  ): Generator<string> {
+  ): AsyncGenerator<string> {
     try {
       if (Array.isArray(jsonData)) {
         for (const item of jsonData) {
