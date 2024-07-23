@@ -1,5 +1,14 @@
-export { SentenceSplitter } from "./sentense-spliter";
-export type { SplitterParams, TextSplitter } from "./type";
+import { SentenceSplitter } from "./sentence-splitter";
+
+/**
+ * @deprecated Use `SentenceSplitter` instead
+ */
+export const SimpleNodeParser = SentenceSplitter;
+
+export { MetadataAwareTextSplitter, NodeParser, TextSplitter } from "./base";
+export { SentenceSplitter } from "./sentence-splitter";
+export { SentenceWindowNodeParser } from "./sentence-window";
+export type { SplitterParams } from "./type";
 export {
   splitByChar,
   splitByPhraseRegex,

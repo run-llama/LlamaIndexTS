@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getCallbackManager } from "../global/settings/callback-manager";
 import { getTokenizer } from "../global/settings/tokenizer";
 import { sentenceSplitterSchema } from "../schema";
-import { NodeParser } from "./base";
+import { MetadataAwareTextSplitter } from "./base";
 import type { SplitterParams } from "./type";
 import {
   splitByChar,
@@ -24,7 +24,7 @@ type _Split = {
  *
  * @link https://github.com/run-llama/llama_index/blob/cc0ea90e7e72b8e4f5069aac981d56bb1d568323/llama-index-core/llama_index/core/node_parser/text/sentence.py
  */
-export class SentenceSplitter extends NodeParser {
+export class SentenceSplitter extends MetadataAwareTextSplitter {
   /**
    * The token chunk size for each chunk.
    */
@@ -52,7 +52,7 @@ export class SentenceSplitter extends NodeParser {
   #tokenizer: Tokenizer;
 
   constructor(
-    params?: z.infer<typeof sentenceSplitterSchema> & SplitterParams,
+    params?: z.input<typeof sentenceSplitterSchema> & SplitterParams,
   ) {
     super();
     if (params) {
@@ -70,6 +70,21 @@ export class SentenceSplitter extends NodeParser {
     this.#subSentenceSplitFns.add(splitByRegex(this.secondaryChunkingRegex));
     this.#subSentenceSplitFns.add(splitBySep(this.separator));
     this.#subSentenceSplitFns.add(splitByChar());
+  }
+
+  splitTextMetadataAware(text: string, metadata: string): string[] {
+    const metadataLength = this.tokenSize(metadata);
+    const effectiveChunkSize = this.chunkSize - metadataLength;
+    if (effectiveChunkSize <= 0) {
+      throw new Error(
+        `Metadata length (${metadataLength}) is longer than chunk size (${this.chunkSize}). Consider increasing the chunk size or decreasing the size of your metadata to avoid this.`,
+      );
+    } else if (effectiveChunkSize < 50) {
+      console.log(
+        `Metadata length (${metadataLength}) is close to chunk size (${this.chunkSize}). Resulting chunks are less than 50 tokens. Consider increasing the chunk size or decreasing the size of your metadata to avoid this.`,
+      );
+    }
+    return this._splitText(text, effectiveChunkSize);
   }
 
   splitText(text: string): string[] {

@@ -7,7 +7,7 @@ import { classify } from "./classify.js";
  * Handle docstore upserts by checking hashes and ids.
  * Identify missing docs and delete them from docstore and vector store
  */
-export class UpsertsAndDeleteStrategy implements TransformComponent<any> {
+export class UpsertsAndDeleteStrategy implements TransformComponent {
   protected docStore: BaseDocumentStore;
   protected vectorStores?: VectorStore[];
 

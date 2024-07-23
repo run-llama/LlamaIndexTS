@@ -1,4 +1,4 @@
-import type { TextSplitter } from "./type";
+import type { TextSplitter } from "./base";
 
 export type TextSplitterFn = (text: string) => string[];
 

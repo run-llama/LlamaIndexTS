@@ -23,12 +23,14 @@ export const sentenceSplitterSchema = z.object({
       description: "The token chunk size for each chunk.",
     })
     .gt(0)
+    .optional()
     .default(1024),
   chunkOverlap: z
     .number({
       description: "The token overlap of each chunk when splitting.",
     })
     .gt(0)
+    .optional()
     .default(200),
   separator: z
     .string({
@@ -39,10 +41,32 @@ export const sentenceSplitterSchema = z.object({
     .string({
       description: "Separator between paragraphs.",
     })
+    .optional()
     .default("\n\n\n"),
   secondaryChunkingRegex: z
     .string({
       description: "Backup regex for splitting into sentences.",
     })
+    .optional()
     .default("[^,.;。？！]+[,.;。？！]?"),
+});
+
+export const sentenceWindowNodeParserSchema = z.object({
+  windowSize: z
+    .number({
+      description:
+        "The number of sentences on each side of a sentence to capture.",
+    })
+    .gt(0)
+    .default(3),
+  windowMetadataKey: z
+    .string({
+      description: "The metadata key to store the sentence window under.",
+    })
+    .default("window"),
+  originalTextMetadataKey: z
+    .string({
+      description: "The metadata key to store the original sentence in.",
+    })
+    .default("originalText"),
 });
