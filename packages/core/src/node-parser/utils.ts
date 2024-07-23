@@ -1,4 +1,4 @@
-import { SentenceTokenizerNew } from "natural";
+import { SentenceTokenizerNew } from "natural/lib/natural/tokenizers";
 import type { TextSplitter } from "./base";
 
 export type TextSplitterFn = (text: string) => string[];
