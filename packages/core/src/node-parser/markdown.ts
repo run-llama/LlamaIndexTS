@@ -26,7 +26,7 @@ export class MarkdownNodeParser extends NodeParser {
       if (line.trim().startsWith("```")) {
         codeBlock = !codeBlock;
       }
-      const headerMatch = /^#+\s(.*)/.exec(line);
+      const headerMatch = /^(#+)\s(.*)/.exec(line);
       if (headerMatch && !codeBlock) {
         if (currentSection !== "") {
           markdownNodes.push(
@@ -36,7 +36,7 @@ export class MarkdownNodeParser extends NodeParser {
         metadata = this.updateMetadata(
           metadata,
           headerMatch[1],
-          headerMatch[0].trim().length,
+          headerMatch[2].trim().length,
         );
         currentSection = `${headerMatch[1]}\n`;
       } else {
