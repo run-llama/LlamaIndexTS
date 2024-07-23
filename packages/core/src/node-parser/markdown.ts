@@ -35,10 +35,10 @@ export class MarkdownNodeParser extends NodeParser {
         }
         metadata = this.updateMetadata(
           metadata,
-          headerMatch[1],
-          headerMatch[2].trim().length,
+          headerMatch[2],
+          headerMatch[1].trim().length,
         );
-        currentSection = `${headerMatch[1]}\n`;
+        currentSection = `${headerMatch[2]}\n`;
       } else {
         currentSection += line + "\n";
       }
