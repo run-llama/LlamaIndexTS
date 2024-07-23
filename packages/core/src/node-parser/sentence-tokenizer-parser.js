@@ -1,6 +1,6 @@
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __commonJS = (cb, mod) =>
-  function __require() {
+var cjs = (cb, mod) =>
+  function _r() {
     return (
       mod ||
         (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod),
@@ -9,7 +9,7 @@ var __commonJS = (cb, mod) =>
   };
 
 // lib/natural/util/abbreviations_en.js
-var require_abbreviations_en = __commonJS({
+var require_abbreviations_en = cjs({
   "lib/natural/util/abbreviations_en.js"(exports) {
     "use strict";
     var knownAbbreviations = [
@@ -40,7 +40,7 @@ var require_abbreviations_en = __commonJS({
 });
 
 // lib/natural/tokenizers/parser_sentence_tokenizer.js
-var require_parser_sentence_tokenizer = __commonJS({
+var require_parser_sentence_tokenizer = cjs({
   "lib/natural/tokenizers/parser_sentence_tokenizer.js"(exports, module) {
     "use strict";
     function peg$subclass(child, parent) {
@@ -1537,7 +1537,7 @@ var require_parser_sentence_tokenizer = __commonJS({
 });
 
 // lib/natural/tokenizers/tokenizer.js
-var require_tokenizer = __commonJS({
+var require_tokenizer = cjs({
   "lib/natural/tokenizers/tokenizer.js"(exports, module) {
     "use strict";
     var Tokenizer = class {
@@ -1556,7 +1556,7 @@ var require_tokenizer = __commonJS({
 });
 
 // lib/natural/tokenizers/sentence_tokenizer_parser.js
-var require_sentence_tokenizer_parser = __commonJS({
+var require_sentence_tokenizer_parser = cjs({
   "lib/natural/tokenizers/sentence_tokenizer_parser.js"(exports, module) {
     var parser = require_parser_sentence_tokenizer();
     var Tokenizer = require_tokenizer();
