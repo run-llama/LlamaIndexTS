@@ -1,3 +1,7 @@
+/**
+ * Current logic is based on the following implementation:
+ * @link @link https://github.com/run-llama/llama_index/blob/cc0ea90e7e72b8e4f5069aac981d56bb1d568323/llama-index-core/llama_index/core/node_parser
+ */
 import { SentenceSplitter } from "./sentence-splitter";
 
 /**

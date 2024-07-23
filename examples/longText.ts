@@ -1,17 +1,16 @@
 import {
   Document,
+  SentenceSplitter,
   Settings,
-  SimpleNodeParser,
   VectorStoreIndex,
 } from "llamaindex";
 
 export const STORAGE_DIR = "./data";
 
 // Update node parser
-Settings.nodeParser = new SimpleNodeParser({
+Settings.nodeParser = new SentenceSplitter({
   chunkSize: 512,
   chunkOverlap: 20,
-  splitLongSentences: true,
 });
 (async () => {
   // generate a document with a very long sentence (9000 words long)
