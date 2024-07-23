@@ -196,9 +196,7 @@ export class AzureDynamicSessionTool
       params?.azureADTokenProvider ?? getAzureADTokenProvider();
 
     if (!this.poolManagementEndpoint) {
-      throw new Error(
-        "AZURE_POOL_MANAGEMENT_ENDPOINT must be defined.",
-      );
+      throw new Error("AZURE_POOL_MANAGEMENT_ENDPOINT must be defined.");
     }
   }
 
