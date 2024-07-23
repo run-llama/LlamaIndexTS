@@ -2,7 +2,7 @@ import type { JSONValue } from "@llamaindex/core/global";
 import { Document } from "@llamaindex/core/schema";
 import { FileReader } from "./type.js";
 
-interface JSONReaderOptions {
+export interface JSONReaderOptions {
   /**
    * Whether to ensure only ASCII characters.
    * Converts non-ASCII characters to their unicode escape sequence.
