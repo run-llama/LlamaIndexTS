@@ -177,7 +177,7 @@ export class AzureDynamicSessionTool
   /**
    * The endpoint of the Azure pool management service.
    * This is where the tool will send requests to interact with the session pool.
-   * If not provided, the tool will use the value of the `AZURE_CONTAINER_APP_SESSION_POOL_MANAGEMENT_ENDPOINT` environment variable.
+   * If not provided, the tool will use the value of the `AZURE_POOL_MANAGEMENT_ENDPOINT` environment variable.
    */
   private poolManagementEndpoint: string;
 
@@ -191,14 +191,12 @@ export class AzureDynamicSessionTool
     this.sessionId = params?.sessionId || randomUUID();
     this.poolManagementEndpoint =
       params?.poolManagementEndpoint ||
-      (getEnv("AZURE_CONTAINER_APP_SESSION_POOL_MANAGEMENT_ENDPOINT") ?? "");
+      (getEnv("AZURE_POOL_MANAGEMENT_ENDPOINT") ?? "");
     this.azureADTokenProvider =
       params?.azureADTokenProvider ?? getAzureADTokenProvider();
 
     if (!this.poolManagementEndpoint) {
-      throw new Error(
-        "AZURE_CONTAINER_APP_SESSION_POOL_MANAGEMENT_ENDPOINT must be defined.",
-      );
+      throw new Error("AZURE_POOL_MANAGEMENT_ENDPOINT must be defined.");
     }
   }
 
