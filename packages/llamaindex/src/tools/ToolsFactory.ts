@@ -1,12 +1,18 @@
-import { WikipediaTool } from "./WikipediaTool.js";
+import {
+  AzureDynamicSessionTool,
+  type AzureDynamicSessionToolParams,
+} from "./AzureDynamicSessionTool.node.js";
+import { WikipediaTool, type WikipediaToolParams } from "./WikipediaTool.js";
 
 export namespace ToolsFactory {
   type ToolsMap = {
     [Tools.Wikipedia]: typeof WikipediaTool;
+    [Tools.AzureCodeInterpreter]: typeof AzureDynamicSessionTool;
   };
 
   export enum Tools {
     Wikipedia = "wikipedia.WikipediaToolSpec",
+    AzureCodeInterpreter = "azure_code_interpreter.AzureCodeInterpreterToolSpec",
   }
 
   export async function createTool<Tool extends Tools>(
@@ -14,7 +20,15 @@ export namespace ToolsFactory {
     ...params: ConstructorParameters<ToolsMap[Tool]>
   ): Promise<InstanceType<ToolsMap[Tool]>> {
     if (key === Tools.Wikipedia) {
-      return new WikipediaTool(...params) as InstanceType<ToolsMap[Tool]>;
+      return new WikipediaTool(
+        ...(params as WikipediaToolParams[]),
+      ) as InstanceType<ToolsMap[Tool]>;
+    }
+
+    if (key === Tools.AzureCodeInterpreter) {
+      return new AzureDynamicSessionTool(
+        ...(params as AzureDynamicSessionToolParams[]),
+      ) as InstanceType<ToolsMap[Tool]>;
     }
 
     throw new Error(
