@@ -121,7 +121,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
     const textSplits: _Split[] = [];
 
     for (const textSplit of textSplitsByFns) {
-      const tokenSize = this.tokenSize(text);
+      const tokenSize = this.tokenSize(textSplit);
       if (tokenSize <= chunkSize) {
         textSplits.push({
           text: textSplit,

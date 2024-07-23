@@ -1,5 +1,6 @@
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { Document } from "@llamaindex/core/schema";
+import { tokenizers } from "@llamaindex/env";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe("SentenceSplitter", () => {
@@ -36,5 +37,16 @@ describe("SentenceSplitter", () => {
     );
     // check relationship
     expect(node.sourceNode?.nodeId).toBe(doc.id_);
+  });
+
+  test("split long text", async () => {
+    const longSentence = "is ".repeat(9000) + ".";
+    const document = new Document({ text: longSentence, id_: "1" });
+    const result = sentenceSplitter.getNodesFromDocuments([document]);
+    expect(result.length).toEqual(9);
+    result.forEach((node) => {
+      const { length } = tokenizers.tokenizer().encode(node.text);
+      expect(length).toBeLessThanOrEqual(1024);
+    });
   });
 });
