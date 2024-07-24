@@ -1,9 +1,9 @@
 import { AsyncLocalStorage } from "@llamaindex/env";
 
 const chunkSizeAsyncLocalStorage = new AsyncLocalStorage<number | undefined>();
-let globalChunkSize: number | null = null;
+let globalChunkSize: number = 1024;
 
-export function getChunkSize(): number | undefined {
+export function getChunkSize(): number {
   return globalChunkSize ?? chunkSizeAsyncLocalStorage.getStore();
 }
 

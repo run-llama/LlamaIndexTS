@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Settings } from "../global";
 
 export const anyFunctionSchema = z.function(z.tuple([]).rest(z.any()), z.any());
 
@@ -25,7 +26,7 @@ export const sentenceSplitterSchema = z
       })
       .gt(0)
       .optional()
-      .default(1024),
+      .default(() => Settings.chunkSize ?? 1024),
     chunkOverlap: z
       .number({
         description: "The token overlap of each chunk when splitting.",
