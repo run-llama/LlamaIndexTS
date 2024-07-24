@@ -11,7 +11,14 @@ import { AssemblyAI } from "assemblyai";
 import type { BaseReader } from "./type.js";
 
 type AssemblyAIOptions = Partial<BaseServiceParams>;
-
+const defaultOptions = {
+  userAgent: {
+    integration: {
+      name: "LlamaIndexTS",
+      version: "1.0.1",
+    },
+  },
+};
 /**
  * Base class for AssemblyAI Readers.
  */
@@ -37,7 +44,10 @@ abstract class AssemblyAIReader implements BaseReader {
       );
     }
 
-    this.client = new AssemblyAI(options as BaseServiceParams);
+    this.client = new AssemblyAI({
+      ...defaultOptions,
+      ...options,
+    } as BaseServiceParams);
   }
 
   abstract loadData(params: TranscribeParams | string): Promise<Document[]>;
