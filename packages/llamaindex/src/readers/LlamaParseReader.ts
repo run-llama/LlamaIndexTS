@@ -333,11 +333,15 @@ export class LlamaParseReader extends FileReader {
    * @param {string} filePathOrContent - The file path to the file or the content of the file as a Buffer
    * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of JSON objects.
    */
-  async loadJson(filePathOrContent: string | Uint8Array): Promise<Record<string, any>[]> {
+  async loadJson(
+    filePathOrContent: string | Uint8Array,
+  ): Promise<Record<string, any>[]> {
     let jobId;
-    const isFilePath = typeof filePathOrContent === 'string';
+    const isFilePath = typeof filePathOrContent === "string";
     try {
-      const data = isFilePath ? await fs.readFile(filePathOrContent) : filePathOrContent;
+      const data = isFilePath
+        ? await fs.readFile(filePathOrContent)
+        : filePathOrContent;
       // Creates a job for the file
       jobId = await this.createJob(data);
       if (this.verbose) {
