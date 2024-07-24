@@ -42,7 +42,7 @@ export async function mockLLMEvent(
     newLLMCompleteMockStorage.llmEventStart.push({
       ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
-      id: idMap.get(event.detail.payload.id)!,
+      id: idMap.get(event.detail.id)!,
     });
   }
 
@@ -50,7 +50,7 @@ export async function mockLLMEvent(
     newLLMCompleteMockStorage.llmEventEnd.push({
       ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
-      id: idMap.get(event.detail.payload.id)!,
+      id: idMap.get(event.detail.id)!,
       response: {
         ...event.detail.response,
         // hide raw object since it might too big
@@ -63,7 +63,7 @@ export async function mockLLMEvent(
     newLLMCompleteMockStorage.llmEventStream.push({
       ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
-      id: idMap.get(event.detail.payload.id)!,
+      id: idMap.get(event.detail.id)!,
       chunk: {
         ...event.detail.chunk,
         // hide raw object since it might too big
@@ -98,9 +98,9 @@ export async function mockLLMEvent(
   Settings.callbackManager.on("llm-stream", captureLLMStream);
 
   t.after(async () => {
-    Settings.callbackManager.off("llm-stream", captureLLMStream);
-    Settings.callbackManager.off("llm-end", captureLLMEnd);
-    Settings.callbackManager.off("llm-start", captureLLMStart);
+    // Settings.callbackManager.off("llm-stream", captureLLMStream);
+    // Settings.callbackManager.off("llm-end", captureLLMEnd);
+    // Settings.callbackManager.off("llm-start", captureLLMStart);
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     if (process.env.UPDATE_SNAPSHOT === "1") {
       const data = JSON.stringify(newLLMCompleteMockStorage, null, 2);

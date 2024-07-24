@@ -137,14 +137,10 @@ export const globalCallbackManager = new CallbackManager();
 const callbackManagerAsyncLocalStorage =
   new AsyncLocalStorage<CallbackManager>();
 
-let currentCallbackManager: CallbackManager | null = null;
+let currentCallbackManager: CallbackManager = globalCallbackManager;
 
 export function getCallbackManager(): CallbackManager {
-  return (
-    callbackManagerAsyncLocalStorage.getStore() ??
-    currentCallbackManager ??
-    globalCallbackManager
-  );
+  return callbackManagerAsyncLocalStorage.getStore() ?? currentCallbackManager;
 }
 
 export function setCallbackManager(callbackManager: CallbackManager) {

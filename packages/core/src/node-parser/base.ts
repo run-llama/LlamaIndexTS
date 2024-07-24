@@ -1,4 +1,4 @@
-import { getCallbackManager } from "../global/settings/callback-manager";
+import { Settings } from "../global";
 import {
   BaseNode,
   buildNodeFromSplits,
@@ -73,7 +73,7 @@ export abstract class NodeParser implements TransformComponent {
     const docsId: Map<string, TextNode> = new Map(
       documents.map((doc) => [doc.id_, doc]),
     );
-    const callbackManager = getCallbackManager();
+    const callbackManager = Settings.callbackManager;
 
     callbackManager.dispatchEvent("node-parsing-start", {
       documents,

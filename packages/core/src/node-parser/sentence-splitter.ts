@@ -1,7 +1,6 @@
 import type { Tokenizer } from "@llamaindex/env";
 import { z } from "zod";
-import { getCallbackManager } from "../global/settings/callback-manager";
-import { getTokenizer } from "../global/settings/tokenizer";
+import { Settings } from "../global";
 import { sentenceSplitterSchema } from "../schema";
 import { MetadataAwareTextSplitter } from "./base";
 import type { SplitterParams } from "./type";
@@ -61,7 +60,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
       this.paragraphSeparator = parsedParams.paragraphSeparator;
       this.secondaryChunkingRegex = parsedParams.secondaryChunkingRegex;
     }
-    this.#tokenizer = params?.tokenizer ?? getTokenizer();
+    this.#tokenizer = params?.tokenizer ?? Settings.tokenizer;
     this.#splitFns.add(splitBySep(this.paragraphSeparator));
     this.#splitFns.add(this.#chunkingTokenizerFn);
 
@@ -92,7 +91,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
   _splitText(text: string, chunkSize: number): string[] {
     if (text === "") return [text];
 
-    const callbackManager = getCallbackManager();
+    const callbackManager = Settings.callbackManager;
 
     callbackManager.dispatchEvent("chunking-start", {
       text: [text],

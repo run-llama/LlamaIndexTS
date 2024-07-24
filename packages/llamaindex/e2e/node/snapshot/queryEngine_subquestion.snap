@@ -13,7 +13,7 @@
       "id": "PRESERVE_1",
       "messages": [
         {
-          "content": "Context information is below.\n---------------------\nBill Gates stole from Apple. Steve Jobs stole from Xerox.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What is Bill Gates' idea\nAnswer:",
+          "content": "Context information is below.\n---------------------\nBill Gates stole from Apple.\n Steve Jobs stole from Xerox.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What idea did Bill Gates get?\nAnswer:",
           "role": "user"
         }
       ]
@@ -22,7 +22,7 @@
       "id": "PRESERVE_2",
       "messages": [
         {
-          "content": "Context information is below.\n---------------------\nSub question: What is Bill Gates' idea\nResponse: Bill Gates' idea was to steal from Apple.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What did Bill Gates steal from?\nAnswer:",
+          "content": "Context information is below.\n---------------------\nSub question: What idea did Bill Gates get?\nResponse: Bill Gates got the idea from Apple.\n---------------------\nGiven the context information and not prior knowledge, answer the query.\nQuery: What did Bill Gates steal from?\nAnswer:",
           "role": "user"
         }
       ]
@@ -34,7 +34,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "```json\n[\n    {\n        \"subQuestion\": \"What is Bill Gates' idea\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]\n```",
+          "content": "```json\n[\n    {\n        \"subQuestion\": \"What idea did Bill Gates get?\",\n        \"toolName\": \"bill_gates_idea\"\n    }\n]\n```",
           "role": "assistant",
           "options": {}
         }
@@ -45,7 +45,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "Bill Gates' idea was to steal from Apple.",
+          "content": "Bill Gates got the idea from Apple.",
           "role": "assistant",
           "options": {}
         }
@@ -56,7 +56,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "Bill Gates stole from Apple.",
+          "content": "Bill Gates stole the idea from Apple.",
           "role": "assistant",
           "options": {}
         }

@@ -1,5 +1,5 @@
 import { AsyncLocalStorage, randomUUID } from "@llamaindex/env";
-import { getCallbackManager } from "../global/settings/callback-manager";
+import { Settings } from "../global";
 import type { ChatResponse, ChatResponseChunk, LLM, LLMChat } from "../llms";
 
 export function wrapLLMEvent<
@@ -21,7 +21,7 @@ export function wrapLLMEvent<
     LLMChat<AdditionalChatOptions, AdditionalMessageOptions>["chat"]
   > {
     const id = randomUUID();
-    getCallbackManager().dispatchEvent("llm-start", {
+    Settings.callbackManager.dispatchEvent("llm-start", {
       id,
       messages: params[0].messages,
     });
@@ -55,7 +55,7 @@ export function wrapLLMEvent<
               ...chunk.options,
             };
           }
-          getCallbackManager().dispatchEvent("llm-stream", {
+          Settings.callbackManager.dispatchEvent("llm-stream", {
             id,
             chunk,
           });
@@ -63,14 +63,14 @@ export function wrapLLMEvent<
           yield chunk;
         }
         snapshot(() => {
-          getCallbackManager().dispatchEvent("llm-end", {
+          Settings.callbackManager.dispatchEvent("llm-end", {
             id,
             response: finalResponse,
           });
         });
       };
     } else {
-      getCallbackManager().dispatchEvent("llm-end", {
+      Settings.callbackManager.dispatchEvent("llm-end", {
         id,
         response,
       });

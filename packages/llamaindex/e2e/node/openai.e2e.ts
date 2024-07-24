@@ -7,8 +7,8 @@ import {
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
+  SentenceSplitter,
   Settings,
-  SimpleNodeParser,
   SimpleToolNodeMapping,
   SubQuestionQueryEngine,
   SummaryIndex,
@@ -124,7 +124,7 @@ await test("agent with object retriever", async (t) => {
   const alexInfoText = await readFile(alexInfoPath, "utf-8");
   const alexDocument = new Document({ text: alexInfoText, id_: alexInfoPath });
 
-  const nodes = new SimpleNodeParser({
+  const nodes = new SentenceSplitter({
     chunkSize: 200,
     chunkOverlap: 20,
   }).getNodesFromDocuments([alexDocument]);

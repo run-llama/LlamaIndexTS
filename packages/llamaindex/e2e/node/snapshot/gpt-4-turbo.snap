@@ -22,7 +22,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_Xa2Kxa2zUE073mnougPWzRlh",
+                "id": "call_UMsqyh51lvDjy2JvMKFoyai3",
                 "name": "Weather",
                 "input": "{\"location\":\"San Jose\"}"
               }
@@ -30,13 +30,13 @@
           }
         },
         {
-          "role": "user",
           "content": "45 degrees and sunny in San Jose",
+          "role": "user",
           "options": {
             "toolResult": {
               "result": "45 degrees and sunny in San Jose",
               "isError": false,
-              "id": "call_Xa2Kxa2zUE073mnougPWzRlh"
+              "id": "call_UMsqyh51lvDjy2JvMKFoyai3"
             }
           }
         }
@@ -54,7 +54,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_Xa2Kxa2zUE073mnougPWzRlh",
+                "id": "call_UMsqyh51lvDjy2JvMKFoyai3",
                 "name": "Weather",
                 "input": "{\"location\":\"San Jose\"}"
               }
