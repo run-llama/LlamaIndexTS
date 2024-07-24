@@ -1,12 +1,13 @@
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { Document } from "@llamaindex/core/schema";
-import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
+import { tokenizers } from "@llamaindex/env";
 import { beforeEach, describe, expect, test } from "vitest";
 
-describe("SimpleNodeParser", () => {
-  let simpleNodeParser: SimpleNodeParser;
+describe("SentenceSplitter", () => {
+  let sentenceSplitter: SentenceSplitter;
 
   beforeEach(() => {
-    simpleNodeParser = new SimpleNodeParser({
+    sentenceSplitter = new SentenceSplitter({
       chunkSize: 1024,
       chunkOverlap: 20,
     });
@@ -19,7 +20,7 @@ describe("SimpleNodeParser", () => {
       excludedLlmMetadataKeys: ["animals"],
       excludedEmbedMetadataKeys: ["animals"],
     });
-    const result = simpleNodeParser.getNodesFromDocuments([doc]);
+    const result = sentenceSplitter.getNodesFromDocuments([doc]);
     expect(result.length).toEqual(1);
     const node = result[0];
     // check not the same object
@@ -36,5 +37,16 @@ describe("SimpleNodeParser", () => {
     );
     // check relationship
     expect(node.sourceNode?.nodeId).toBe(doc.id_);
+  });
+
+  test("split long text", async () => {
+    const longSentence = "is ".repeat(9000) + ".";
+    const document = new Document({ text: longSentence, id_: "1" });
+    const result = sentenceSplitter.getNodesFromDocuments([document]);
+    expect(result.length).toEqual(9);
+    result.forEach((node) => {
+      const { length } = tokenizers.tokenizer().encode(node.text);
+      expect(length).toBeLessThanOrEqual(1024);
+    });
   });
 });

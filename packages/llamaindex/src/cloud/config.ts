@@ -3,26 +3,26 @@ import type {
   PipelineCreate,
   PipelineType,
 } from "@llamaindex/cloud/api";
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { BaseNode, type TransformComponent } from "@llamaindex/core/schema";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
-import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
 export type GetPipelineCreateParams = {
   pipelineName: string;
   pipelineType: PipelineType;
-  transformations?: TransformComponent<any>[];
+  transformations?: TransformComponent[];
   inputNodes?: BaseNode[];
 };
 
 function getTransformationConfig(
-  transformation: TransformComponent<any>,
+  transformation: TransformComponent,
 ): ConfiguredTransformationItem {
-  if (transformation instanceof SimpleNodeParser) {
+  if (transformation instanceof SentenceSplitter) {
     return {
       configurable_transformation_type: "SENTENCE_AWARE_NODE_PARSER",
       component: {
-        chunk_size: transformation.textSplitter.chunkSize, // TODO: set to public in SentenceSplitter
-        chunk_overlap: transformation.textSplitter.chunkOverlap, // TODO: set to public in SentenceSplitter
+        chunk_size: transformation.chunkSize, // TODO: set to public in SentenceSplitter
+        chunk_overlap: transformation.chunkOverlap, // TODO: set to public in SentenceSplitter
         include_metadata: transformation.includeMetadata,
         include_prev_next_rel: transformation.includePrevNextRel,
       },

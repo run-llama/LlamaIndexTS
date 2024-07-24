@@ -1,6 +1,6 @@
-import { tokenizers, type Tokenizer } from "@llamaindex/env";
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import { type Tokenizer, tokenizers } from "@llamaindex/env";
 import type { SimplePrompt } from "./Prompt.js";
-import { SentenceSplitter } from "./TextSplitter.js";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
@@ -107,8 +107,7 @@ export class PromptHelper {
       throw new Error("Got 0 as available chunk size");
     }
     const chunkOverlap = this.chunkOverlapRatio * chunkSize;
-    const textSplitter = new SentenceSplitter({ chunkSize, chunkOverlap });
-    return textSplitter;
+    return new SentenceSplitter({ chunkSize, chunkOverlap });
   }
 
   /**

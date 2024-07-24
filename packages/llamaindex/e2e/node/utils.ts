@@ -42,7 +42,7 @@ export async function mockLLMEvent(
     newLLMCompleteMockStorage.llmEventStart.push({
       ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
-      id: idMap.get(event.detail.payload.id)!,
+      id: idMap.get(event.detail.id)!,
     });
   }
 
@@ -50,7 +50,7 @@ export async function mockLLMEvent(
     newLLMCompleteMockStorage.llmEventEnd.push({
       ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
-      id: idMap.get(event.detail.payload.id)!,
+      id: idMap.get(event.detail.id)!,
       response: {
         ...event.detail.response,
         // hide raw object since it might too big
@@ -63,7 +63,7 @@ export async function mockLLMEvent(
     newLLMCompleteMockStorage.llmEventStream.push({
       ...event.detail,
       // @ts-expect-error id is not UUID, but it is fine for testing
-      id: idMap.get(event.detail.payload.id)!,
+      id: idMap.get(event.detail.id)!,
       chunk: {
         ...event.detail.chunk,
         // hide raw object since it might too big

@@ -5,10 +5,13 @@ import {
 import { OpenAI } from "./llm/openai.js";
 
 import { PromptHelper } from "./PromptHelper.js";
-import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
 
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { LLM } from "@llamaindex/core/llms";
+import {
+  type NodeParser,
+  SentenceSplitter,
+} from "@llamaindex/core/node-parser";
 import { AsyncLocalStorage, getEnv } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import {
@@ -16,7 +19,6 @@ import {
   setEmbeddedModel,
   withEmbeddedModel,
 } from "./internal/settings/EmbedModel.js";
-import type { NodeParser } from "./nodeParsers/types.js";
 
 export type PromptConfig = {
   llm?: string;
@@ -108,7 +110,7 @@ class GlobalSettings implements Config {
 
   get nodeParser(): NodeParser {
     if (this.#nodeParser === null) {
-      this.#nodeParser = new SimpleNodeParser({
+      this.#nodeParser = new SentenceSplitter({
         chunkSize: this.chunkSize,
         chunkOverlap: this.chunkOverlap,
       });

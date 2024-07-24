@@ -5,7 +5,7 @@ import { defaultNodeTextTemplate } from "./prompts.js";
 /*
  * Abstract class for all extractors.
  */
-export abstract class BaseExtractor implements TransformComponent<any> {
+export abstract class BaseExtractor implements TransformComponent {
   isTextNodeOnly: boolean = true;
   showProgress: boolean = true;
   metadataMode: MetadataMode = MetadataMode.ALL;

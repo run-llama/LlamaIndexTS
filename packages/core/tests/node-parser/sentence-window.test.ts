@@ -1,8 +1,5 @@
+import { SentenceWindowNodeParser } from "@llamaindex/core/node-parser";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
-import {
-  DEFAULT_WINDOW_METADATA_KEY,
-  SentenceWindowNodeParser,
-} from "llamaindex/nodeParsers/index";
 import { describe, expect, test } from "vitest";
 
 describe("Tests for the SentenceWindowNodeParser class", () => {
@@ -11,7 +8,7 @@ describe("Tests for the SentenceWindowNodeParser class", () => {
     expect(sentenceWindowNodeParser).toBeDefined();
   });
   test("testing the getNodesFromDocuments method", () => {
-    const sentenceWindowNodeParser = SentenceWindowNodeParser.fromDefaults({
+    const sentenceWindowNodeParser = new SentenceWindowNodeParser({
       windowSize: 1,
     });
     const doc = new Document({ text: "Hello. Cat Mouse. Dog." });
@@ -25,7 +22,9 @@ describe("Tests for the SentenceWindowNodeParser class", () => {
       "Dog.",
     ]);
     expect(
-      resultingNodes.map((n) => n.metadata[DEFAULT_WINDOW_METADATA_KEY]),
+      resultingNodes.map(
+        (n) => n.metadata[SentenceWindowNodeParser.DEFAULT_WINDOW_METADATA_KEY],
+      ),
     ).toEqual([
       "Hello. Cat Mouse.",
       "Hello. Cat Mouse. Dog.",

@@ -49,7 +49,7 @@
       "id": "PRESERVE_1",
       "chunk": {
         "raw": null,
-        "delta": "Hello",
+        "delta": "Hello! How can",
         "options": {}
       }
     },
@@ -57,55 +57,7 @@
       "id": "PRESERVE_1",
       "chunk": {
         "raw": null,
-        "delta": "!",
-        "options": {}
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "delta": " How",
-        "options": {}
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "delta": " can",
-        "options": {}
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "delta": " I",
-        "options": {}
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "delta": " assist",
-        "options": {}
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "delta": " you",
-        "options": {}
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "delta": " today",
+        "delta": " I assist you today",
         "options": {}
       }
     },

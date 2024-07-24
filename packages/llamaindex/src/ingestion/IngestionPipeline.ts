@@ -26,12 +26,12 @@ type IngestionRunArgs = {
 type TransformRunArgs = {
   inPlace?: boolean;
   cache?: IngestionCache;
-  docStoreStrategy?: TransformComponent<any>;
+  docStoreStrategy?: TransformComponent;
 };
 
 export async function runTransformations(
   nodesToRun: BaseNode[],
-  transformations: TransformComponent<any>[],
+  transformations: TransformComponent[],
   transformOptions: any = {},
   { inPlace = true, cache, docStoreStrategy }: TransformRunArgs = {},
 ): Promise<BaseNode[]> {
@@ -60,7 +60,7 @@ export async function runTransformations(
 }
 
 export class IngestionPipeline {
-  transformations: TransformComponent<any>[] = [];
+  transformations: TransformComponent[] = [];
   documents?: Document[];
   reader?: BaseReader;
   vectorStore?: VectorStore;
@@ -70,7 +70,7 @@ export class IngestionPipeline {
   cache?: IngestionCache;
   disableCache: boolean = false;
 
-  private _docStoreStrategy?: TransformComponent<any>;
+  private _docStoreStrategy?: TransformComponent;
 
   constructor(init?: Partial<IngestionPipeline>) {
     Object.assign(this, init);

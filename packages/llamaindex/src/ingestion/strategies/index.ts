@@ -19,7 +19,7 @@ export enum DocStoreStrategy {
   NONE = "none", // no-op strategy
 }
 
-class NoOpStrategy implements TransformComponent<any> {
+class NoOpStrategy implements TransformComponent {
   async transform(nodes: any[]): Promise<any[]> {
     return nodes;
   }
@@ -29,7 +29,7 @@ export function createDocStoreStrategy(
   docStoreStrategy: DocStoreStrategy,
   docStore?: BaseDocumentStore,
   vectorStores: VectorStore[] = [],
-): TransformComponent<any> {
+): TransformComponent {
   if (docStoreStrategy === DocStoreStrategy.NONE) {
     return new NoOpStrategy();
   }

@@ -450,3 +450,48 @@ export function splitNodesByType(nodes: BaseNode[]): NodesByType {
   }
   return result;
 }
+
+export function buildNodeFromSplits(
+  textSplits: string[],
+  doc: BaseNode,
+  refDoc: BaseNode = doc,
+  idGenerator: (idx: number, refDoc: BaseNode) => string = () => randomUUID(),
+) {
+  const nodes: TextNode[] = [];
+  const relationships = {
+    [NodeRelationship.SOURCE]: refDoc.asRelatedNodeInfo(),
+  };
+
+  textSplits.forEach((textChunk, i) => {
+    if (doc instanceof ImageDocument) {
+      const imageNode = new ImageNode({
+        id_: idGenerator(i, doc),
+        text: textChunk,
+        image: doc.image,
+        embedding: doc.embedding,
+        excludedEmbedMetadataKeys: [...doc.excludedEmbedMetadataKeys],
+        excludedLlmMetadataKeys: [...doc.excludedLlmMetadataKeys],
+        metadataSeparator: doc.metadataSeparator,
+        textTemplate: doc.textTemplate,
+        relationships: { ...relationships },
+      });
+      nodes.push(imageNode);
+    } else if (doc instanceof Document || doc instanceof TextNode) {
+      const node = new TextNode({
+        id_: idGenerator(i, doc),
+        text: textChunk,
+        embedding: doc.embedding,
+        excludedEmbedMetadataKeys: [...doc.excludedEmbedMetadataKeys],
+        excludedLlmMetadataKeys: [...doc.excludedLlmMetadataKeys],
+        metadataSeparator: doc.metadataSeparator,
+        textTemplate: doc.textTemplate,
+        relationships: { ...relationships },
+      });
+      nodes.push(node);
+    } else {
+      throw new Error(`Unknown document type: ${doc.type}`);
+    }
+  });
+
+  return nodes;
+}

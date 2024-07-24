@@ -6,7 +6,7 @@ import { classify } from "./classify.js";
 /**
  * Handles doc store upserts by checking hashes and ids.
  */
-export class UpsertsStrategy implements TransformComponent<any> {
+export class UpsertsStrategy implements TransformComponent {
   protected docStore: BaseDocumentStore;
   protected vectorStores?: VectorStore[];
 

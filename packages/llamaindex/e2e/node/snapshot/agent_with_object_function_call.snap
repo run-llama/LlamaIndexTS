@@ -22,7 +22,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_uERMumWlJLTO2GW93X6C2W3N",
+                "id": "call_FNnPEPNeSDmdDj7b5x4LIxBG",
                 "name": "get_weather",
                 "input": "{\"location\":\"San Francisco\"}"
               }
@@ -30,8 +30,8 @@
           }
         },
         {
-          "role": "user",
           "content": "{\n  location: San Francisco,\n  temperature: 72,\n  weather: cloudy,\n  rain_prediction: 0.89\n}",
+          "role": "user",
           "options": {
             "toolResult": {
               "result": {
@@ -41,7 +41,7 @@
                 "rain_prediction": 0.89
               },
               "isError": false,
-              "id": "call_uERMumWlJLTO2GW93X6C2W3N"
+              "id": "call_FNnPEPNeSDmdDj7b5x4LIxBG"
             }
           }
         }
@@ -59,7 +59,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_uERMumWlJLTO2GW93X6C2W3N",
+                "id": "call_FNnPEPNeSDmdDj7b5x4LIxBG",
                 "name": "get_weather",
                 "input": "{\"location\":\"San Francisco\"}"
               }

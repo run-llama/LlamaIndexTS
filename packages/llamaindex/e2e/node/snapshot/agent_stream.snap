@@ -23,7 +23,7 @@
             "toolCall": [
               {
                 "name": "divideNumbers",
-                "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+                "id": "call_XgB0tixgYDhGXXSgdY19XDmt",
                 "input": {
                   "a": 16,
                   "b": 2
@@ -31,7 +31,7 @@
               },
               {
                 "name": "sumNumbers",
-                "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+                "id": "call_nXP1Rc85Ntdv5XcI6FBWmB6d",
                 "input": "{\"a\": 8, \"b\": 20}"
               }
             ]
@@ -44,7 +44,7 @@
             "toolResult": {
               "result": "8",
               "isError": false,
-              "id": "call_V4daSdWk9QeYeSMKLBisNbSf"
+              "id": "call_XgB0tixgYDhGXXSgdY19XDmt"
             }
           }
         },
@@ -55,7 +55,7 @@
             "toolResult": {
               "result": "28",
               "isError": false,
-              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX"
+              "id": "call_nXP1Rc85Ntdv5XcI6FBWmB6d"
             }
           }
         }
@@ -74,7 +74,7 @@
             "toolCall": [
               {
                 "name": "sumNumbers",
-                "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+                "id": "call_nXP1Rc85Ntdv5XcI6FBWmB6d",
                 "input": "{\"a\": 8, \"b\": 20}"
               }
             ]
@@ -87,7 +87,7 @@
       "response": {
         "raw": null,
         "message": {
-          "content": "The result of dividing 16 by 2 is 8. When you add 20 to 8, the total is 28.",
+          "content": "After dividing 16 by 2, we get 8. Adding 20 to 8 gives us 28.",
           "role": "assistant",
           "options": {}
         }
@@ -103,7 +103,7 @@
           "toolCall": [
             {
               "name": "divideNumbers",
-              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "id": "call_XgB0tixgYDhGXXSgdY19XDmt",
               "input": "{\"a\": 16, \"b\": 2}"
             }
           ]
@@ -119,7 +119,7 @@
           "toolCall": [
             {
               "name": "divideNumbers",
-              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "id": "call_XgB0tixgYDhGXXSgdY19XDmt",
               "input": "{\"a\": 16, \"b\": 2}"
             }
           ]
@@ -135,7 +135,7 @@
           "toolCall": [
             {
               "name": "divideNumbers",
-              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "id": "call_XgB0tixgYDhGXXSgdY19XDmt",
               "input": "{\"a\": 16, \"b\": 2}"
             }
           ]
@@ -151,7 +151,7 @@
           "toolCall": [
             {
               "name": "divideNumbers",
-              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "id": "call_XgB0tixgYDhGXXSgdY19XDmt",
               "input": "{\"a\": 16, \"b\": 2}"
             }
           ]
@@ -167,7 +167,7 @@
           "toolCall": [
             {
               "name": "divideNumbers",
-              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "id": "call_XgB0tixgYDhGXXSgdY19XDmt",
               "input": "{\"a\": 16, \"b\": 2}"
             }
           ]
@@ -183,7 +183,7 @@
           "toolCall": [
             {
               "name": "divideNumbers",
-              "id": "call_V4daSdWk9QeYeSMKLBisNbSf",
+              "id": "call_XgB0tixgYDhGXXSgdY19XDmt",
               "input": {
                 "a": 16,
                 "b": 2
@@ -202,7 +202,7 @@
           "toolCall": [
             {
               "name": "sumNumbers",
-              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "id": "call_nXP1Rc85Ntdv5XcI6FBWmB6d",
               "input": "{\"a\": 8, \"b\": 20}"
             }
           ]
@@ -218,7 +218,7 @@
           "toolCall": [
             {
               "name": "sumNumbers",
-              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "id": "call_nXP1Rc85Ntdv5XcI6FBWmB6d",
               "input": "{\"a\": 8, \"b\": 20}"
             }
           ]
@@ -234,7 +234,7 @@
           "toolCall": [
             {
               "name": "sumNumbers",
-              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "id": "call_nXP1Rc85Ntdv5XcI6FBWmB6d",
               "input": "{\"a\": 8, \"b\": 20}"
             }
           ]
@@ -250,7 +250,7 @@
           "toolCall": [
             {
               "name": "sumNumbers",
-              "id": "call_n2OlBxlaoeMIMVeU9DeDfiPX",
+              "id": "call_nXP1Rc85Ntdv5XcI6FBWmB6d",
               "input": "{\"a\": 8, \"b\": 20}"
             }
           ]
@@ -263,23 +263,7 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": "The"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "options": {},
-        "delta": " result"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "options": {},
-        "delta": " of"
+        "delta": "After"
       }
     },
     {
@@ -335,7 +319,23 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": " is"
+        "delta": ","
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " we"
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "chunk": {
+        "raw": null,
+        "options": {},
+        "delta": " get"
       }
     },
     {
@@ -367,23 +367,7 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": " When"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "options": {},
-        "delta": " you"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "options": {},
-        "delta": " add"
+        "delta": " Adding"
       }
     },
     {
@@ -431,7 +415,7 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": ","
+        "delta": " gives"
       }
     },
     {
@@ -439,23 +423,7 @@
       "chunk": {
         "raw": null,
         "options": {},
-        "delta": " the"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "options": {},
-        "delta": " total"
-      }
-    },
-    {
-      "id": "PRESERVE_1",
-      "chunk": {
-        "raw": null,
-        "options": {},
-        "delta": " is"
+        "delta": " us"
       }
     },
     {
