@@ -1,8 +1,6 @@
 ---
 "@llamaindex/core": patch
 "llamaindex": patch
-"@llamaindex/core-tests": patch
-"@llamaindex/core-e2e": patch
 ---
 
 feat: node parser refactor
