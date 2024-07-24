@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.24
+
+### Patch Changes
+
+- 3d9a802: feat: added llama 3.1
+- Updated dependencies [15962b3]
+  - @llamaindex/core@0.1.4
+
 ## 0.0.23
 
 ### Patch Changes
