@@ -6,6 +6,7 @@ import type {
   ToolCall,
   ToolOutput,
 } from "../../llms";
+import { TextNode } from "../../schema";
 import { EventCaller, getEventCaller } from "../../utils/event-caller";
 import type { UUID } from "../type";
 
@@ -33,12 +34,32 @@ export type LLMStreamEvent = {
   chunk: ChatResponseChunk;
 };
 
+export type ChunkingStartEvent = {
+  text: string[];
+};
+
+export type ChunkingEndEvent = {
+  chunks: string[];
+};
+
+export type NodeParsingStartEvent = {
+  documents: TextNode[];
+};
+
+export type NodeParsingEndEvent = {
+  nodes: TextNode[];
+};
+
 export interface LlamaIndexEventMaps {
   "llm-start": LLMStartEvent;
   "llm-end": LLMEndEvent;
   "llm-tool-call": LLMToolCallEvent;
   "llm-tool-result": LLMToolResultEvent;
   "llm-stream": LLMStreamEvent;
+  "chunking-start": ChunkingStartEvent;
+  "chunking-end": ChunkingEndEvent;
+  "node-parsing-start": NodeParsingStartEvent;
+  "node-parsing-end": NodeParsingEndEvent;
 }
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
@@ -116,14 +137,10 @@ export const globalCallbackManager = new CallbackManager();
 const callbackManagerAsyncLocalStorage =
   new AsyncLocalStorage<CallbackManager>();
 
-let currentCallbackManager: CallbackManager | null = null;
+let currentCallbackManager: CallbackManager = globalCallbackManager;
 
 export function getCallbackManager(): CallbackManager {
-  return (
-    callbackManagerAsyncLocalStorage.getStore() ??
-    currentCallbackManager ??
-    globalCallbackManager
-  );
+  return callbackManagerAsyncLocalStorage.getStore() ?? currentCallbackManager;
 }
 
 export function setCallbackManager(callbackManager: CallbackManager) {

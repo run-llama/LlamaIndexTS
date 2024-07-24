@@ -1,5 +1,5 @@
+import { MarkdownNodeParser } from "@llamaindex/core/node-parser";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
-import { MarkdownNodeParser } from "llamaindex/nodeParsers/index";
 import { describe, expect, test } from "vitest";
 
 describe("MarkdownNodeParser", () => {
@@ -19,8 +19,8 @@ Header 2 content
     ]);
 
     expect(splits.length).toBe(2);
-    expect(splits[0].metadata).toEqual({ "Header 1": "Main Header" });
-    expect(splits[1].metadata).toEqual({ "Header 1": "Header 2" });
+    expect(splits[0].metadata).toEqual({ Header_1: "Main Header" });
+    expect(splits[1].metadata).toEqual({ Header_1: "Header 2" });
     expect(splits[0].getContent(MetadataMode.NONE)).toStrictEqual(
       "Main Header\n\nHeader 1 content",
     );
@@ -89,16 +89,16 @@ Content
       }),
     ]);
     expect(splits.length).toBe(4);
-    expect(splits[0].metadata).toEqual({ "Header 1": "Main Header" });
+    expect(splits[0].metadata).toEqual({ Header_1: "Main Header" });
     expect(splits[1].metadata).toEqual({
-      "Header 1": "Main Header",
-      "Header 2": "Sub-header",
+      Header_1: "Main Header",
+      Header_2: "Sub-header",
     });
     expect(splits[2].metadata).toEqual({
-      "Header 1": "Main Header",
-      "Header 2": "Sub-header",
-      "Header 3": "Sub-sub header",
+      Header_1: "Main Header",
+      Header_2: "Sub-header",
+      Header_3: "Sub-sub header",
     });
-    expect(splits[3].metadata).toEqual({ "Header 1": "New title" });
+    expect(splits[3].metadata).toEqual({ Header_1: "New title" });
   });
 });

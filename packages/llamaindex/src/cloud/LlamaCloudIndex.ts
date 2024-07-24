@@ -11,10 +11,10 @@ import type { CloudConstructorParams } from "./constants.js";
 import { getAppBaseUrl, initService } from "./utils.js";
 
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { getEnv } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
 import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
-import { SimpleNodeParser } from "../nodeParsers/SimpleNodeParser.js";
 
 export class LlamaCloudIndex {
   params: CloudConstructorParams;
@@ -147,13 +147,13 @@ export class LlamaCloudIndex {
   static async fromDocuments(
     params: {
       documents: Document[];
-      transformations?: TransformComponent<any>[];
+      transformations?: TransformComponent[];
       verbose?: boolean;
     } & CloudConstructorParams,
   ): Promise<LlamaCloudIndex> {
     initService(params);
-    const defaultTransformations: TransformComponent<any>[] = [
-      new SimpleNodeParser(),
+    const defaultTransformations: TransformComponent[] = [
+      new SentenceSplitter(),
       new OpenAIEmbedding({
         apiKey: getEnv("OPENAI_API_KEY"),
       }),

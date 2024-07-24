@@ -30,7 +30,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe",
+                "id": "call_i3rlYaBlvhTf60phYJh8irvZ",
                 "name": "getWeather",
                 "input": "{\"city\":\"San Francisco\"}"
               }
@@ -38,13 +38,13 @@
           }
         },
         {
-          "role": "user",
           "content": "The weather in San Francisco is 72 degrees",
+          "role": "user",
           "options": {
             "toolResult": {
               "result": "The weather in San Francisco is 72 degrees",
               "isError": false,
-              "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe"
+              "id": "call_i3rlYaBlvhTf60phYJh8irvZ"
             }
           }
         }
@@ -62,7 +62,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_1SlugFuJ7rhwsmXd5aRnJhPe",
+                "id": "call_i3rlYaBlvhTf60phYJh8irvZ",
                 "name": "getWeather",
                 "input": "{\"city\":\"San Francisco\"}"
               }

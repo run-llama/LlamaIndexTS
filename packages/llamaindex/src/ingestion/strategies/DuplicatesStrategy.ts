@@ -4,7 +4,7 @@ import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 /**
  * Handle doc store duplicates by checking all hashes.
  */
-export class DuplicatesStrategy implements TransformComponent<any> {
+export class DuplicatesStrategy implements TransformComponent {
   private docStore: BaseDocumentStore;
 
   constructor(docStore: BaseDocumentStore) {

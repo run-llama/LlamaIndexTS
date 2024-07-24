@@ -22,7 +22,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_sH6QfjsymHW7JFl68j8AY6xg",
+                "id": "call_8kF02T5eJKwUL5hCGF8upWgn",
                 "name": "Weather",
                 "input": "{\"location\":\"San Francisco\"}"
               }
@@ -30,13 +30,13 @@
           }
         },
         {
-          "role": "user",
           "content": "35 degrees and sunny in San Francisco",
+          "role": "user",
           "options": {
             "toolResult": {
               "result": "35 degrees and sunny in San Francisco",
               "isError": false,
-              "id": "call_sH6QfjsymHW7JFl68j8AY6xg"
+              "id": "call_8kF02T5eJKwUL5hCGF8upWgn"
             }
           }
         }
@@ -64,7 +64,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_V7zs8cyDT5FqJhjwBqcCydgA",
+                "id": "call_xsgmMFgliEDiOmZuLaBjUiXE",
                 "name": "unique_id",
                 "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
               }
@@ -72,13 +72,13 @@
           }
         },
         {
-          "role": "user",
           "content": "123456789",
+          "role": "user",
           "options": {
             "toolResult": {
               "result": "123456789",
               "isError": false,
-              "id": "call_V7zs8cyDT5FqJhjwBqcCydgA"
+              "id": "call_xsgmMFgliEDiOmZuLaBjUiXE"
             }
           }
         }
@@ -106,7 +106,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt",
+                "id": "call_OTMrLMikpT37PLm6KOIG5LCF",
                 "name": "sumNumbers",
                 "input": "{\"a\":1,\"b\":1}"
               }
@@ -114,13 +114,13 @@
           }
         },
         {
-          "role": "user",
           "content": "2",
+          "role": "user",
           "options": {
             "toolResult": {
               "result": "2",
               "isError": false,
-              "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt"
+              "id": "call_OTMrLMikpT37PLm6KOIG5LCF"
             }
           }
         }
@@ -138,7 +138,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_sH6QfjsymHW7JFl68j8AY6xg",
+                "id": "call_8kF02T5eJKwUL5hCGF8upWgn",
                 "name": "Weather",
                 "input": "{\"location\":\"San Francisco\"}"
               }
@@ -168,7 +168,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_V7zs8cyDT5FqJhjwBqcCydgA",
+                "id": "call_xsgmMFgliEDiOmZuLaBjUiXE",
                 "name": "unique_id",
                 "input": "{\"firstName\":\"Alex\",\"lastName\":\"Yang\"}"
               }
@@ -198,7 +198,7 @@
           "options": {
             "toolCall": [
               {
-                "id": "call_BrlGGU6GDGWr0hrwXt9qZKyt",
+                "id": "call_OTMrLMikpT37PLm6KOIG5LCF",
                 "name": "sumNumbers",
                 "input": "{\"a\":1,\"b\":1}"
               }

@@ -28,7 +28,7 @@ describe("IngestionCache", () => {
 });
 
 describe("getTransformationHash", () => {
-  let nodes: BaseNode[], transform: TransformComponent<any>;
+  let nodes: BaseNode[], transform: TransformComponent;
 
   beforeAll(() => {
     nodes = [new TextNode({ text: "some text", id_: "some id" })];

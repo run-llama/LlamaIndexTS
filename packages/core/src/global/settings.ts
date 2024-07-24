@@ -1,3 +1,4 @@
+import type { Tokenizer } from "@llamaindex/env";
 import {
   type CallbackManager,
   getCallbackManager,
@@ -9,8 +10,22 @@ import {
   setChunkSize,
   withChunkSize,
 } from "./settings/chunk-size";
+import {
+  getTokenizer,
+  setTokenizer,
+  withTokenizer,
+} from "./settings/tokenizer";
 
 export const Settings = {
+  get tokenizer() {
+    return getTokenizer();
+  },
+  set tokenizer(tokenizer) {
+    setTokenizer(tokenizer);
+  },
+  withTokenizer<Result>(tokenizer: Tokenizer, fn: () => Result): Result {
+    return withTokenizer(tokenizer, fn);
+  },
   get chunkSize(): number | undefined {
     return getChunkSize();
   },

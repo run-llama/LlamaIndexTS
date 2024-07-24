@@ -1,10 +1,12 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { LLM } from "@llamaindex/core/llms";
+import {
+  type NodeParser,
+  SentenceSplitter,
+} from "@llamaindex/core/node-parser";
 import { PromptHelper } from "./PromptHelper.js";
 import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
 import { OpenAI } from "./llm/openai.js";
-import { SimpleNodeParser } from "./nodeParsers/SimpleNodeParser.js";
-import type { NodeParser } from "./nodeParsers/types.js";
 
 /**
  * The ServiceContext is a collection of components that are used in different parts of the application.
@@ -33,7 +35,7 @@ export function serviceContextFromDefaults(options?: ServiceContextOptions) {
     embedModel: options?.embedModel ?? new OpenAIEmbedding(),
     nodeParser:
       options?.nodeParser ??
-      new SimpleNodeParser({
+      new SentenceSplitter({
         chunkSize: options?.chunkSize,
         chunkOverlap: options?.chunkOverlap,
       }),

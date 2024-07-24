@@ -1,7 +1,4 @@
-import {
-  SentenceSplitter,
-  cjkSentenceTokenizer,
-} from "llamaindex/TextSplitter";
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { describe, expect, test } from "vitest";
 
 describe("SentenceSplitter", () => {
@@ -10,14 +7,16 @@ describe("SentenceSplitter", () => {
     expect(sentenceSplitter).toBeDefined();
   });
 
+  test("chunk size should less than chunk", async () => {});
+
   test("splits paragraphs w/o effective chunk size", () => {
     const sentenceSplitter = new SentenceSplitter({
-      paragraphSeparator: "\n\n\n",
+      chunkSize: 9,
+      chunkOverlap: 0,
     });
     // generate the same line as above but correct syntax errors
-    const splits = sentenceSplitter.getParagraphSplits(
+    const splits = sentenceSplitter.splitText(
       "This is a paragraph.\n\n\nThis is another paragraph.",
-      undefined,
     );
     expect(splits).toEqual([
       "This is a paragraph.",
@@ -30,9 +29,8 @@ describe("SentenceSplitter", () => {
       paragraphSeparator: "\n",
     });
     // generate the same line as above but correct syntax errors
-    const splits = sentenceSplitter.getParagraphSplits(
+    const splits = sentenceSplitter.splitText(
       "This is a paragraph.\nThis is another paragraph.",
-      1000,
     );
     expect(splits).toEqual([
       "This is a paragraph.\nThis is another paragraph.",
@@ -40,10 +38,12 @@ describe("SentenceSplitter", () => {
   });
 
   test("splits sentences", () => {
-    const sentenceSplitter = new SentenceSplitter();
-    const splits = sentenceSplitter.getSentenceSplits(
+    const sentenceSplitter = new SentenceSplitter({
+      chunkSize: 9,
+      chunkOverlap: 0,
+    });
+    const splits = sentenceSplitter.splitText(
       "This is a sentence. This is another sentence.",
-      undefined,
     );
     expect(splits).toEqual([
       "This is a sentence.",
@@ -89,9 +89,10 @@ describe("SentenceSplitter", () => {
 
   test("splits cjk", () => {
     const sentenceSplitter = new SentenceSplitter({
-      chunkSize: 12,
+      chunkSize: 30,
       chunkOverlap: 0,
-      chunkingTokenizerFn: cjkSentenceTokenizer,
+      secondaryChunkingRegex:
+        '.*?([﹒﹔﹖﹗．；。！？]["’”」』]{0,2}|：(?=["‘“「『]{1,2}|$))',
     });
 
     const splits = sentenceSplitter.splitText(
