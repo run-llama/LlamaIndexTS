@@ -98,9 +98,9 @@ export async function mockLLMEvent(
   Settings.callbackManager.on("llm-stream", captureLLMStream);
 
   t.after(async () => {
-    // Settings.callbackManager.off("llm-stream", captureLLMStream);
-    // Settings.callbackManager.off("llm-end", captureLLMEnd);
-    // Settings.callbackManager.off("llm-start", captureLLMStart);
+    Settings.callbackManager.off("llm-stream", captureLLMStream);
+    Settings.callbackManager.off("llm-end", captureLLMEnd);
+    Settings.callbackManager.off("llm-start", captureLLMStart);
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     if (process.env.UPDATE_SNAPSHOT === "1") {
       const data = JSON.stringify(newLLMCompleteMockStorage, null, 2);
