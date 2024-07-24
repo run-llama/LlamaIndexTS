@@ -31,7 +31,7 @@ META_LLAMA3_8B_INSTRUCT = "meta.llama3-8b-instruct-v1:0";
 META_LLAMA3_70B_INSTRUCT = "meta.llama3-70b-instruct-v1:0";
 META_LLAMA3_1_8B_INSTRUCT = "meta.llama3-1-8b-instruct-v1:0"; // available on us-west-2
 META_LLAMA3_1_70B_INSTRUCT = "meta.llama3-1-70b-instruct-v1:0"; // available on us-west-2
-META_LLAMA3_1_405B_INSTRUCT = "meta.llama3-1-405b-instruct-v1"; // preview only, available on us-west-2
+META_LLAMA3_1_405B_INSTRUCT = "meta.llama3-1-405b-instruct-v1:0"; // preview only, available on us-west-2
 ```
 
 Sonnet, Haiku and Opus are multimodal, image_url only supports base64 data url format, e.g. `data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==`
