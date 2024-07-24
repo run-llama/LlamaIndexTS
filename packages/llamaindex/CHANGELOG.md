@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.5.8
+
+### Patch Changes
+
+- 3d5ba08: fix: update user agent in AssemblyAI
+- d917cdc: Add azure interpreter tool to tool factory
+
 ## 0.5.7
 
 ### Patch Changes
