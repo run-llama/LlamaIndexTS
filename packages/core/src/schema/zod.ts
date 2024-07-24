@@ -52,7 +52,10 @@ export const sentenceSplitterSchema = z
       .optional()
       .default("[^,.;。？！]+[,.;。？！]?"),
   })
-  .refine((data) => data.chunkOverlap < data.chunkSize);
+  .refine(
+    (data) => data.chunkOverlap < data.chunkSize,
+    "Chunk overlap must be less than chunk size.",
+  );
 
 export const sentenceWindowNodeParserSchema = z.object({
   windowSize: z
