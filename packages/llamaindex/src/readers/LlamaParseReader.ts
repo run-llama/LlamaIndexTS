@@ -143,6 +143,8 @@ export class LlamaParseReader extends FileReader {
   targetPages?: string;
   // Whether or not to ignore and skip errors raised during parsing.
   ignoreErrors: boolean = true;
+  // Whether to split by page using the pageSeparator or '\n---\n' as default.
+  splitByPage: boolean = true;
   // Whether to use the vendor multimodal API.
   useVendorMultimodalModel: boolean = false;
   // The model name for the vendor multimodal API
@@ -326,10 +328,17 @@ export class LlamaParseReader extends FileReader {
       }
 
       // Return results as Document objects
-      const resultJson = await this.getJobResult(jobId, this.resultType);
+      const jobResults = await this.getJobResult(jobId, this.resultType);
+      const resultText = jobResults[this.resultType];
+
+      // Split the text by separator if splitByPage is true
+      if (this.splitByPage) {
+        return this.splitTextBySeparator(resultText);
+      }
+
       return [
         new Document({
-          text: resultJson[this.resultType],
+          text: resultText,
         }),
       ];
     } catch (e) {
@@ -483,6 +492,17 @@ export class LlamaParseReader extends FileReader {
       }
     }
     return filteredParams;
+  }
+
+  private splitTextBySeparator(text: string): Document[] {
+    const separator = this.pageSeparator ?? "\n---\n";
+    const textChunks = text.split(separator);
+    return textChunks.map(
+      (docChunk: string) =>
+        new Document({
+          text: docChunk,
+        }),
+    );
   }
 
   static async getMimeType(
