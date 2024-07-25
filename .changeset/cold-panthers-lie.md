@@ -1,6 +1,6 @@
 ---
-"llamaindex": minor
-"docs": minor
+"llamaindex": patch
+"docs": patch
 ---
 
-add DeepSeek LLM class and documentation
+feat: add DeepSeek LLM
