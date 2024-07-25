@@ -5,12 +5,18 @@ import {
   MetadataMode,
   NodeRelationship,
   TextNode,
-  type TransformComponent,
+  TransformComponent,
 } from "../schema";
 
-export abstract class NodeParser implements TransformComponent {
+export abstract class NodeParser extends TransformComponent {
   includeMetadata: boolean = true;
   includePrevNextRel: boolean = true;
+
+  constructor() {
+    super(async (nodes: BaseNode[]): Promise<BaseNode[]> => {
+      return this.getNodesFromDocuments(nodes as TextNode[]);
+    });
+  }
 
   protected postProcessParsedNodes(
     nodes: TextNode[],
@@ -89,10 +95,6 @@ export abstract class NodeParser implements TransformComponent {
     });
 
     return nodes;
-  }
-
-  async transform(nodes: BaseNode[], options?: {}): Promise<BaseNode[]> {
-    return this.getNodesFromDocuments(nodes as TextNode[]);
   }
 }
 

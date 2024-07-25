@@ -1,14 +1,25 @@
+import { TransformComponent } from "@llamaindex/core/schema";
 import {
+  BaseEmbedding,
   BaseNode,
   SimilarityType,
-  type BaseEmbedding,
   type EmbeddingInfo,
   type MessageContentDetail,
 } from "llamaindex";
 
-export class OpenAIEmbedding implements BaseEmbedding {
+export class OpenAIEmbedding
+  extends TransformComponent
+  implements BaseEmbedding
+{
   embedInfo?: EmbeddingInfo | undefined;
   embedBatchSize = 512;
+
+  constructor() {
+    super(async (nodes: BaseNode[], _options?: any): Promise<BaseNode[]> => {
+      nodes.forEach((node) => (node.embedding = [0]));
+      return nodes;
+    });
+  }
 
   async getQueryEmbedding(query: MessageContentDetail) {
     return [0];
@@ -32,11 +43,6 @@ export class OpenAIEmbedding implements BaseEmbedding {
     mode?: SimilarityType,
   ) {
     return 1;
-  }
-
-  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
-    nodes.forEach((node) => (node.embedding = [0]));
-    return nodes;
   }
 
   truncateMaxTokens(input: string[]): string[] {

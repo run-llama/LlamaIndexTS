@@ -1,11 +1,15 @@
-import type { BaseNode, TransformComponent } from "@llamaindex/core/schema";
-import { MetadataMode, TextNode } from "@llamaindex/core/schema";
+import {
+  BaseNode,
+  MetadataMode,
+  TextNode,
+  TransformComponent,
+} from "@llamaindex/core/schema";
 import { defaultNodeTextTemplate } from "./prompts.js";
 
 /*
  * Abstract class for all extractors.
  */
-export abstract class BaseExtractor implements TransformComponent {
+export abstract class BaseExtractor extends TransformComponent {
   isTextNodeOnly: boolean = true;
   showProgress: boolean = true;
   metadataMode: MetadataMode = MetadataMode.ALL;
@@ -13,15 +17,17 @@ export abstract class BaseExtractor implements TransformComponent {
   inPlace: boolean = true;
   numWorkers: number = 4;
 
-  abstract extract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
-
-  async transform(nodes: BaseNode[], options?: any): Promise<BaseNode[]> {
-    return this.processNodes(
-      nodes,
-      options?.excludedEmbedMetadataKeys,
-      options?.excludedLlmMetadataKeys,
-    );
+  constructor() {
+    super(async (nodes: BaseNode[], options?: any): Promise<BaseNode[]> => {
+      return this.processNodes(
+        nodes,
+        options?.excludedEmbedMetadataKeys,
+        options?.excludedLlmMetadataKeys,
+      );
+    });
   }
+
+  abstract extract(nodes: BaseNode[]): Promise<Record<string, any>[]>;
 
   /**
    *

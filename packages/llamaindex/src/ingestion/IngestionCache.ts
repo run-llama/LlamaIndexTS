@@ -35,7 +35,7 @@ export function getTransformationHash(
   const transformString: string = transformToJSON(transform);
 
   const hash = createSHA256();
-  hash.update(nodesStr + transformString);
+  hash.update(nodesStr + transformString + transform.id);
   return hash.digest();
 }
 
