@@ -40,7 +40,7 @@ export async function runTransformations(
     nodes = [...nodesToRun];
   }
   if (docStoreStrategy) {
-    nodes = await docStoreStrategy.transform(nodes);
+    nodes = await docStoreStrategy(nodes);
   }
   for (const transform of transformations) {
     if (cache) {
@@ -49,11 +49,11 @@ export async function runTransformations(
       if (cachedNodes) {
         nodes = cachedNodes;
       } else {
-        nodes = await transform.transform(nodes, transformOptions);
+        nodes = await transform(nodes, transformOptions);
         await cache.put(hash, nodes);
       }
     } else {
-      nodes = await transform.transform(nodes, transformOptions);
+      nodes = await transform(nodes, transformOptions);
     }
   }
   return nodes;

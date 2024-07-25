@@ -1,7 +1,6 @@
 import { type Tokenizers } from "@llamaindex/env";
 import type { MessageContentDetail } from "../llms";
-import type { TransformComponent } from "../schema";
-import { BaseNode, MetadataMode } from "../schema";
+import { BaseNode, MetadataMode, TransformComponent } from "../schema";
 import { extractSingleText } from "../utils";
 import { truncateMaxTokens } from "./tokenizer.js";
 import { SimilarityType, similarity } from "./utils.js";
@@ -20,9 +19,28 @@ export type BaseEmbeddingOptions = {
   logProgress?: boolean;
 };
 
-export abstract class BaseEmbedding implements TransformComponent {
+export abstract class BaseEmbedding extends TransformComponent {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
   embedInfo?: EmbeddingInfo;
+
+  constructor() {
+    super(
+      async (
+        nodes: BaseNode[],
+        options?: BaseEmbeddingOptions,
+      ): Promise<BaseNode[]> => {
+        const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
+
+        const embeddings = await this.getTextEmbeddingsBatch(texts, options);
+
+        for (let i = 0; i < nodes.length; i++) {
+          nodes[i].embedding = embeddings[i];
+        }
+
+        return nodes;
+      },
+    );
+  }
 
   similarity(
     embedding1: number[],
@@ -74,21 +92,6 @@ export abstract class BaseEmbedding implements TransformComponent {
       this.embedBatchSize,
       options,
     );
-  }
-
-  async transform(
-    nodes: BaseNode[],
-    options?: BaseEmbeddingOptions,
-  ): Promise<BaseNode[]> {
-    const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
-
-    const embeddings = await this.getTextEmbeddingsBatch(texts, options);
-
-    for (let i = 0; i < nodes.length; i++) {
-      nodes[i].embedding = embeddings[i];
-    }
-
-    return nodes;
   }
 
   truncateMaxTokens(input: string[]): string[] {

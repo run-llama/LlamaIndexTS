@@ -1,4 +1,4 @@
-import type { TransformComponent } from "@llamaindex/core/schema";
+import { TransformComponent } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 import type { VectorStore } from "../../storage/vectorStore/types.js";
 import { DuplicatesStrategy } from "./DuplicatesStrategy.js";
@@ -19,9 +19,9 @@ export enum DocStoreStrategy {
   NONE = "none", // no-op strategy
 }
 
-class NoOpStrategy implements TransformComponent {
-  async transform(nodes: any[]): Promise<any[]> {
-    return nodes;
+class NoOpStrategy extends TransformComponent {
+  constructor() {
+    super(async (nodes) => nodes);
   }
 }
 

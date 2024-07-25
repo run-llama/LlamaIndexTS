@@ -1,8 +1,16 @@
 import type { BaseNode } from "./node";
 
-export interface TransformComponent {
-  transform<Options extends Record<string, unknown>>(
+interface TransformComponentSignature {
+  <Options extends Record<string, unknown>>(
     nodes: BaseNode[],
     options?: Options,
   ): Promise<BaseNode[]>;
+}
+
+export interface TransformComponent extends TransformComponentSignature {}
+
+export class TransformComponent {
+  constructor(transformFn: TransformComponentSignature) {
+    return transformFn;
+  }
 }
