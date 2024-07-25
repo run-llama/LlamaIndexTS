@@ -15,7 +15,10 @@ export class OpenAIEmbedding
   embedBatchSize = 512;
 
   constructor() {
-    super(async (nodes) => nodes);
+    super(async (nodes: BaseNode[], _options?: any): Promise<BaseNode[]> => {
+      nodes.forEach((node) => (node.embedding = [0]));
+      return nodes;
+    });
   }
 
   async getQueryEmbedding(query: MessageContentDetail) {
@@ -40,11 +43,6 @@ export class OpenAIEmbedding
     mode?: SimilarityType,
   ) {
     return 1;
-  }
-
-  async transform(nodes: BaseNode[], _options?: any): Promise<BaseNode[]> {
-    nodes.forEach((node) => (node.embedding = [0]));
-    return nodes;
   }
 
   truncateMaxTokens(input: string[]): string[] {
