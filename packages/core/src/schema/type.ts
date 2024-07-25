@@ -1,3 +1,4 @@
+import { randomUUID } from "@llamaindex/env";
 import type { BaseNode } from "./node";
 
 interface TransformComponentSignature {
@@ -21,6 +22,7 @@ export class TransformComponent {
       return transformFn(...args);
     };
     Reflect.setPrototypeOf(transform, new.target.prototype);
+    transform.id = randomUUID();
     return transform;
   }
 }

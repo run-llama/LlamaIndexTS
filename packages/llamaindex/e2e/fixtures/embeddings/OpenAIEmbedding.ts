@@ -1,14 +1,22 @@
+import { TransformComponent } from "@llamaindex/core/schema";
 import {
+  BaseEmbedding,
   BaseNode,
   SimilarityType,
-  type BaseEmbedding,
   type EmbeddingInfo,
   type MessageContentDetail,
 } from "llamaindex";
 
-export class OpenAIEmbedding implements BaseEmbedding {
+export class OpenAIEmbedding
+  extends TransformComponent
+  implements BaseEmbedding
+{
   embedInfo?: EmbeddingInfo | undefined;
   embedBatchSize = 512;
+
+  constructor() {
+    super(async (nodes) => nodes);
+  }
 
   async getQueryEmbedding(query: MessageContentDetail) {
     return [0];
