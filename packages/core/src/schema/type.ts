@@ -11,6 +11,16 @@ export interface TransformComponent extends TransformComponentSignature {}
 
 export class TransformComponent {
   constructor(transformFn: TransformComponentSignature) {
-    return transformFn;
+    Object.defineProperties(
+      transformFn,
+      Object.getOwnPropertyDescriptors(this.constructor.prototype),
+    );
+    const transform = function transform(
+      ...args: Parameters<TransformComponentSignature>
+    ) {
+      return transformFn(...args);
+    };
+    Reflect.setPrototypeOf(transform, new.target.prototype);
+    return transform;
   }
 }
