@@ -330,13 +330,18 @@ export class LlamaParseReader extends FileReader {
    * Loads data from a file and returns an array of JSON objects.
    * To be used with resultType = "json"
    *
-   * @param {string} file - The path to the file to be loaded.
+   * @param {string} filePathOrContent - The file path to the file or the content of the file as a Buffer
    * @return {Promise<Record<string, any>[]>} A Promise that resolves to an array of JSON objects.
    */
-  async loadJson(file: string): Promise<Record<string, any>[]> {
+  async loadJson(
+    filePathOrContent: string | Uint8Array,
+  ): Promise<Record<string, any>[]> {
     let jobId;
+    const isFilePath = typeof filePathOrContent === "string";
     try {
-      const data = await fs.readFile(file);
+      const data = isFilePath
+        ? await fs.readFile(filePathOrContent)
+        : filePathOrContent;
       // Creates a job for the file
       jobId = await this.createJob(data);
       if (this.verbose) {
@@ -346,7 +351,7 @@ export class LlamaParseReader extends FileReader {
       // Return results as an array of JSON objects (same format as Python version of the reader)
       const resultJson = await this.getJobResult(jobId, "json");
       resultJson.job_id = jobId;
-      resultJson.file_path = file;
+      resultJson.file_path = isFilePath ? filePathOrContent : undefined;
       return [resultJson];
     } catch (e) {
       console.error(`Error while parsing the file under job id ${jobId}`, e);
