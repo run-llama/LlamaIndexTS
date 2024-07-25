@@ -34,5 +34,6 @@ export {
   ReplicateSession,
 } from "./replicate_ai.js";
 
+export { DeepSeekLLM } from "./deepseek.js";
 export { TogetherLLM } from "./together.js";
 export * from "./types.js";
