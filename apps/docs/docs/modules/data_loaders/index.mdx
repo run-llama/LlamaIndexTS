@@ -16,7 +16,15 @@ It is a simple reader that reads all files from a directory and its subdirectori
 
 <CodeBlock language="ts">{CodeSource}</CodeBlock>
 
-Currently, it supports reading `.txt`, `.pdf`, `.csv`, `.md`, `.docx`, `.htm`, `.html`, `.jpg`, `.jpeg`, `.png` and `.gif` files, but support for other file types is planned.
+Currently, the following readers are mapped to specific file types:
+
+- [TextFileReader](../../api/classes/TextFileReader.md): `.txt`
+- [PDFReader](../../api/classes/PDFReader.md): `.pdf`
+- [PapaCSVReader](../../api/classes/PapaCSVReader.md): `.csv`
+- [MarkdownReader](../../api/classes/MarkdownReader.md): `.md`
+- [DocxReader](../../api/classes/DocxReader.md): `.docx`
+- [HTMLReader](../../api/classes/HTMLReader.md): `.htm`, `.html`
+- [ImageReader](../../api/classes/ImageReader.md): `.jpg`, `.jpeg`, `.png`, `.gif`
 
 You can modify the reader three different ways:
 
