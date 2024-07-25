@@ -8,7 +8,9 @@ interface TransformComponentSignature {
   ): Promise<BaseNode[]>;
 }
 
-export interface TransformComponent extends TransformComponentSignature {}
+export interface TransformComponent extends TransformComponentSignature {
+  id: string;
+}
 
 export class TransformComponent {
   constructor(transformFn: TransformComponentSignature) {
