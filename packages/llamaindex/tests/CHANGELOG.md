@@ -1,5 +1,11 @@
 # @llamaindex/core-test
 
+## 0.0.6
+
+### Patch Changes
+
+- 5d5716b: feat: add a reader for JSON data
+
 ## 0.0.5
 
 ### Patch Changes

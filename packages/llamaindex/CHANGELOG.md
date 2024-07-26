@@ -1,5 +1,16 @@
 # llamaindex
 
+## 0.5.10
+
+### Patch Changes
+
+- 086b940: feat: add DeepSeek LLM
+- 5d5716b: feat: add a reader for JSON data
+- 91d02a4: feat: support transform component callable
+- fb6db45: feat: add pageSeparator params to LlamaParseReader
+- Updated dependencies [91d02a4]
+  - @llamaindex/core@0.1.5
+
 ## 0.5.9
 
 ### Patch Changes
