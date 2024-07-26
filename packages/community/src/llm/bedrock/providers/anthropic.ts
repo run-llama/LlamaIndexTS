@@ -118,7 +118,7 @@ export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
       if (!delta && !options) continue;
 
       yield {
-        delta,
+        delta: options ? "" : delta,
         options,
         raw: response,
       };
