@@ -1604,6 +1604,69 @@
         ]
       }
     },
+    "/api/v1/organizations/{organization_id}/users/remove": {
+      "put": {
+        "tags": ["Organizations"],
+        "summary": "Batch Remove Users From Organization",
+        "description": "Remove a batch of users from an organization.",
+        "operationId": "batch_remove_users_from_organization_api_v1_organizations__organization_id__users_remove_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            },
+            "name": "organization_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/UserOrganizationDelete"
+                },
+                "type": "array",
+                "title": "Payload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/projects": {
       "get": {
         "tags": ["Projects"],
@@ -3538,6 +3601,62 @@
         ]
       }
     },
+    "/api/v1/pipelines/{pipeline_id}/copy": {
+      "post": {
+        "tags": ["Pipelines"],
+        "summary": "Copy Pipeline",
+        "description": "Copy a pipeline by ID.",
+        "operationId": "copy_pipeline_api_v1_pipelines__pipeline_id__copy_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pipeline"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/pipelines/{pipeline_id}/eval-datasets/{eval_dataset_id}/execute": {
       "get": {
         "tags": ["Pipelines"],
@@ -4775,7 +4894,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_chat_api_v1_pipelines__pipeline_id__chat_post"
+                "$ref": "#/components/schemas/ChatParams"
               }
             }
           },
@@ -4845,6 +4964,26 @@
               "default": 10
             },
             "name": "limit",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "File Id"
+            },
+            "name": "file_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "title": "Only Direct Upload",
+              "default": false
+            },
+            "name": "only_direct_upload",
             "in": "query"
           },
           {
@@ -5198,6 +5337,75 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ManagedIngestionStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pipelines/{pipeline_id}/documents/{document_id}/chunks": {
+      "get": {
+        "tags": ["Pipelines"],
+        "summary": "List Pipeline Document Chunks",
+        "description": "Return a list of chunks for a pipeline document.",
+        "operationId": "list_pipeline_document_chunks_api_v1_pipelines__pipeline_id__documents__document_id__chunks_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Document Id"
+            },
+            "name": "document_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TextNode"
+                  },
+                  "type": "array",
+                  "title": "Response List Pipeline Document Chunks Api V1 Pipelines  Pipeline Id  Documents  Document Id  Chunks Get"
                 }
               }
             }
@@ -6044,6 +6252,62 @@
         ]
       }
     },
+    "/api/v1/parsing/job/{job_id}/details": {
+      "get": {
+        "tags": ["Parsing"],
+        "summary": "Get Parsing Job Details",
+        "description": "Get a job by id",
+        "operationId": "get_parsing_job_details_api_v1_parsing_job__job_id__details_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Parsing Job Details Api V1 Parsing Job  Job Id  Details Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/parsing/job/{job_id}/result/text": {
       "get": {
         "tags": ["Parsing"],
@@ -6714,11 +6978,68 @@
         }
       }
     },
-    "/api/v1/extraction/schemas/infer": {
+    "/api/v1/extraction/schemas": {
+      "get": {
+        "tags": ["Extraction"],
+        "summary": "List Schemas",
+        "operationId": "list_schemas_api_v1_extraction_schemas_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            },
+            "name": "project_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ExtractionSchema"
+                  },
+                  "type": "array",
+                  "title": "Response List Schemas Api V1 Extraction Schemas Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
       "post": {
         "tags": ["Extraction"],
-        "summary": "Infer Schema",
-        "operationId": "infer_schema_api_v1_extraction_schemas_infer_post",
+        "summary": "Create Schema",
+        "operationId": "create_schema_api_v1_extraction_schemas_post",
         "parameters": [
           {
             "required": false,
@@ -6769,22 +7090,12 @@
         ]
       }
     },
-    "/api/v1/extraction/schemas": {
-      "get": {
+    "/api/v1/extraction/schemas/infer": {
+      "post": {
         "tags": ["Extraction"],
-        "summary": "List Schemas",
-        "operationId": "list_schemas_api_v1_extraction_schemas_get",
+        "summary": "Infer Schema",
+        "operationId": "infer_schema_api_v1_extraction_schemas_infer_post",
         "parameters": [
-          {
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Project Id"
-            },
-            "name": "project_id",
-            "in": "query"
-          },
           {
             "required": false,
             "schema": {
@@ -6795,17 +7106,23 @@
             "in": "cookie"
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractionSchemaInfer"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/ExtractionSchema"
-                  },
-                  "type": "array",
-                  "title": "Response List Schemas Api V1 Extraction Schemas Get"
+                  "$ref": "#/components/schemas/ExtractionSchema"
                 }
               }
             }
@@ -6953,7 +7270,7 @@
         "operationId": "list_jobs_api_v1_extraction_jobs_get",
         "parameters": [
           {
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string",
               "format": "uuid",
@@ -6979,7 +7296,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/ExtractionResult"
+                    "$ref": "#/components/schemas/ExtractionJob"
                   },
                   "type": "array",
                   "title": "Response List Jobs Api V1 Extraction Jobs Get"
@@ -7023,7 +7340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExtractionResultCreate"
+                "$ref": "#/components/schemas/ExtractionJobCreate"
               }
             }
           },
@@ -7035,7 +7352,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExtractionResult"
+                  "$ref": "#/components/schemas/ExtractionJob"
                 }
               }
             }
@@ -7090,7 +7407,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExtractionResult"
+                  "$ref": "#/components/schemas/ExtractionJob"
                 }
               }
             }
@@ -7133,7 +7450,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExtractionResultCreateBatch"
+                "$ref": "#/components/schemas/ExtractionJobCreateBatch"
               }
             }
           },
@@ -7146,7 +7463,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/ExtractionResult"
+                    "$ref": "#/components/schemas/ExtractionJob"
                   },
                   "type": "array",
                   "title": "Response Run Jobs In Batch Api V1 Extraction Jobs Batch Post"
@@ -7447,6 +7764,62 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ParsingJob"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/parsing/job/{job_id}/details": {
+      "get": {
+        "tags": ["Deprecated"],
+        "summary": "Get Parsing Job Details",
+        "description": "Get a job by id",
+        "operationId": "get_parsing_job_details_api_parsing_job__job_id__details_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            },
+            "name": "job_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Parsing Job Details Api Parsing Job  Job Id  Details Get"
                 }
               }
             }
@@ -7983,6 +8356,24 @@
         "title": "APIKeyUpdate",
         "description": "Schema for updating an API key."
       },
+      "AutoTransformConfig": {
+        "properties": {
+          "chunk_size": {
+            "type": "integer",
+            "title": "Chunk Size",
+            "description": "Chunk size for the transformation.",
+            "default": 1024
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "description": "Chunk overlap for the transformation.",
+            "default": 20
+          }
+        },
+        "type": "object",
+        "title": "AutoTransformConfig"
+      },
       "AzureOpenAIEmbedding": {
         "properties": {
           "model_name": {
@@ -8218,19 +8609,6 @@
         "title": "BedrockEmbedding",
         "description": "Base class for embeddings."
       },
-      "Body_chat_api_v1_pipelines__pipeline_id__chat_post": {
-        "properties": {
-          "retrieval_parameters": {
-            "$ref": "#/components/schemas/PresetRetrievalParams"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ChatParams"
-          }
-        },
-        "type": "object",
-        "required": ["retrieval_parameters", "data"],
-        "title": "Body_chat_api_v1_pipelines__pipeline_id__chat_post"
-      },
       "Body_import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put": {
         "properties": {
           "upload_file": {
@@ -8318,6 +8696,16 @@
           "vendor_multimodal_api_key": {
             "type": "string",
             "title": "Vendor Multimodal Api Key",
+            "default": ""
+          },
+          "page_prefix": {
+            "type": "string",
+            "title": "Page Prefix",
+            "default": ""
+          },
+          "page_suffix": {
+            "type": "string",
+            "title": "Page Suffix",
             "default": ""
           },
           "file": {
@@ -8419,6 +8807,16 @@
             "title": "Vendor Multimodal Api Key",
             "default": ""
           },
+          "page_prefix": {
+            "type": "string",
+            "title": "Page Prefix",
+            "default": ""
+          },
+          "page_suffix": {
+            "type": "string",
+            "title": "Page Suffix",
+            "default": ""
+          },
           "file": {
             "type": "string",
             "format": "binary",
@@ -8428,6 +8826,22 @@
         "type": "object",
         "required": ["file"],
         "title": "Body_upload_file_api_v1_parsing_upload_post"
+      },
+      "ChatData": {
+        "properties": {
+          "retrieval_parameters": {
+            "$ref": "#/components/schemas/PresetRetrievalParams"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
+          }
+        },
+        "type": "object",
+        "required": ["retrieval_parameters"],
+        "title": "ChatData",
+        "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
       },
       "ChatMessage": {
         "properties": {
@@ -8461,6 +8875,9 @@
             "type": "array",
             "title": "Messages"
           },
+          "data": {
+            "$ref": "#/components/schemas/ChatData"
+          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -8468,7 +8885,7 @@
           }
         },
         "type": "object",
-        "required": ["messages"],
+        "required": ["messages", "data"],
         "title": "ChatParams",
         "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
       },
@@ -8546,9 +8963,9 @@
         "properties": {
           "supports_nested_metadata_filters": {
             "type": "boolean",
-            "const": false,
+            "const": true,
             "title": "Supports Nested Metadata Filters",
-            "default": false
+            "default": true
           },
           "search_service_api_key": {
             "type": "string",
@@ -8567,10 +8984,7 @@
             "title": "Index Name"
           },
           "filterable_metadata_field_keys": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
+            "type": "object",
             "title": "Filterable Metadata Field Keys"
           },
           "embedding_dimension": {
@@ -8637,6 +9051,59 @@
         "required": ["ssl"],
         "title": "CloudChromaVectorStore",
         "description": "Base class for cloud vector stores."
+      },
+      "CloudConfluenceDataSource": {
+        "properties": {
+          "server_url": {
+            "type": "string",
+            "title": "Server Url",
+            "description": "The server URL of the Confluence instance."
+          },
+          "authentication_mechanism": {
+            "type": "string",
+            "title": "Authentication Mechanism",
+            "description": "Type of Authentication for connecting to Confluence APIs."
+          },
+          "user_name": {
+            "type": "string",
+            "title": "User Name",
+            "description": "The username to use for authentication."
+          },
+          "api_token": {
+            "type": "string",
+            "title": "Api Token",
+            "description": "The API token to use for authentication."
+          },
+          "space_key": {
+            "type": "string",
+            "title": "Space Key",
+            "description": "The space key to read from."
+          },
+          "page_ids": {
+            "type": "string",
+            "title": "Page Ids",
+            "description": "The page IDs of the Confluence to read from."
+          },
+          "cql": {
+            "type": "string",
+            "title": "Cql",
+            "description": "The CQL query to use for fetching pages."
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "The label to use for fetching pages."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudConfluenceDataSource"
+          }
+        },
+        "type": "object",
+        "required": ["server_url", "authentication_mechanism"],
+        "title": "CloudConfluenceDataSource",
+        "description": "Base component object to capture class names."
       },
       "CloudDocument": {
         "properties": {
@@ -9287,6 +9754,7 @@
           "MICROSOFT_SHAREPOINT",
           "SLACK",
           "NOTION_PAGE",
+          "CONFLUENCE",
           "JIRA"
         ],
         "title": "ConfigurableDataSourceNames",
@@ -9711,6 +10179,9 @@
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
                   },
                   {
+                    "$ref": "#/components/schemas/CloudConfluenceDataSource"
+                  },
+                  {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
                   }
                 ]
@@ -9791,6 +10262,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudConfluenceDataSource"
                   },
                   {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
@@ -9896,6 +10370,9 @@
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
                   },
                   {
+                    "$ref": "#/components/schemas/CloudConfluenceDataSource"
+                  },
+                  {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
                   }
                 ]
@@ -9922,6 +10399,58 @@
         "required": ["organization_id"],
         "title": "DefaultOrganizationUpdate",
         "description": "Schema for updating the default organization for a user."
+      },
+      "EmbeddingConfig": {
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmbeddingConfigType"
+              }
+            ],
+            "description": "Type of the embedding model.",
+            "default": "OPENAI_EMBEDDING"
+          },
+          "component": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OpenAIEmbedding"
+              },
+              {
+                "$ref": "#/components/schemas/AzureOpenAIEmbedding"
+              },
+              {
+                "$ref": "#/components/schemas/BedrockEmbedding"
+              },
+              {
+                "$ref": "#/components/schemas/CohereEmbedding"
+              },
+              {
+                "$ref": "#/components/schemas/GeminiEmbedding"
+              },
+              {
+                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the transformation."
+          }
+        },
+        "type": "object",
+        "title": "EmbeddingConfig"
+      },
+      "EmbeddingConfigType": {
+        "type": "string",
+        "enum": [
+          "OPENAI_EMBEDDING",
+          "AZURE_EMBEDDING",
+          "BEDROCK_EMBEDDING",
+          "COHERE_EMBEDDING",
+          "GEMINI_EMBEDDING",
+          "HUGGINGFACE_API_EMBEDDING"
+        ],
+        "title": "EmbeddingConfigType",
+        "description": "An enumeration."
       },
       "EvalDataset": {
         "properties": {
@@ -10341,6 +10870,80 @@
         "title": "EvalQuestionResult",
         "description": "Schema for the result of an eval question job."
       },
+      "ExtractionJob": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "The id of the extraction job"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusEnum"
+              }
+            ],
+            "description": "The status of the extraction job"
+          },
+          "file": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/File"
+              }
+            ],
+            "title": "File",
+            "description": "The file that the extract was extracted from"
+          }
+        },
+        "type": "object",
+        "required": ["id", "status", "file"],
+        "title": "ExtractionJob"
+      },
+      "ExtractionJobCreate": {
+        "properties": {
+          "schema_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Schema Id",
+            "description": "The id of the schema"
+          },
+          "file_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "File Id",
+            "description": "The id of the file"
+          }
+        },
+        "type": "object",
+        "required": ["schema_id", "file_id"],
+        "title": "ExtractionJobCreate",
+        "description": "Schema for creating an extraction job."
+      },
+      "ExtractionJobCreateBatch": {
+        "properties": {
+          "schema_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Schema Id",
+            "description": "The id of the schema"
+          },
+          "file_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "File Ids",
+            "description": "The ids of the files"
+          }
+        },
+        "type": "object",
+        "required": ["schema_id", "file_ids"],
+        "title": "ExtractionJobCreateBatch",
+        "description": "Schema for creating extraction jobs in batch."
+      },
       "ExtractionResult": {
         "properties": {
           "id": {
@@ -10410,50 +11013,6 @@
         "title": "ExtractionResult",
         "description": "Schema for an extraction result."
       },
-      "ExtractionResultCreate": {
-        "properties": {
-          "schema_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Schema Id",
-            "description": "The id of the schema"
-          },
-          "file_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "File Id",
-            "description": "The id of the file"
-          }
-        },
-        "type": "object",
-        "required": ["schema_id", "file_id"],
-        "title": "ExtractionResultCreate",
-        "description": "Schema for creating an extraction result."
-      },
-      "ExtractionResultCreateBatch": {
-        "properties": {
-          "schema_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Schema Id",
-            "description": "The id of the schema"
-          },
-          "file_ids": {
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "type": "array",
-            "minItems": 1,
-            "title": "File Ids",
-            "description": "The ids of the files"
-          }
-        },
-        "type": "object",
-        "required": ["schema_id", "file_ids"],
-        "title": "ExtractionResultCreateBatch",
-        "description": "Schema for creating extraction results in batch."
-      },
       "ExtractionSchema": {
         "properties": {
           "id": {
@@ -10515,12 +11074,67 @@
           }
         },
         "type": "object",
-        "required": ["id", "name", "project_id", "data_schema"],
+        "required": ["id", "name", "project_id"],
         "title": "ExtractionSchema",
         "description": "Schema for extraction schema."
       },
       "ExtractionSchemaCreate": {
         "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "The name of the extraction schema"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id",
+            "description": "The ID of the project that the extraction schema belongs to"
+          },
+          "data_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data Schema",
+            "description": "The schema of the data"
+          }
+        },
+        "type": "object",
+        "required": ["name", "data_schema"],
+        "title": "ExtractionSchemaCreate",
+        "description": "Schema for creating an extraction schema."
+      },
+      "ExtractionSchemaInfer": {
+        "properties": {
+          "schema_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Schema Id",
+            "description": "The ID of a schema to update with the new schema"
+          },
           "name": {
             "type": "string",
             "maxLength": 3000,
@@ -10543,12 +11157,18 @@
             "minItems": 1,
             "title": "File Ids",
             "description": "The IDs of the files that the extraction schema contains"
+          },
+          "stream": {
+            "type": "boolean",
+            "title": "Stream",
+            "description": "Whether to stream the results of the extraction schema",
+            "default": false
           }
         },
         "type": "object",
         "required": ["name", "file_ids"],
-        "title": "ExtractionSchemaCreate",
-        "description": "Schema for creating an extraction schema."
+        "title": "ExtractionSchemaInfer",
+        "description": "Schema for inferring an extraction schema."
       },
       "ExtractionSchemaUpdate": {
         "properties": {
@@ -11075,7 +11695,7 @@
           "fast_mode": {
             "type": "boolean",
             "title": "Fast Mode",
-            "default": false
+            "default": true
           },
           "skip_diagonal_text": {
             "type": "boolean",
@@ -11124,6 +11744,16 @@
           "vendor_multimodal_api_key": {
             "type": "string",
             "title": "Vendor Multimodal Api Key",
+            "default": ""
+          },
+          "page_prefix": {
+            "type": "string",
+            "title": "Page Prefix",
+            "default": ""
+          },
+          "page_suffix": {
+            "type": "string",
+            "title": "Page Suffix",
             "default": ""
           }
         },
@@ -12063,12 +12693,6 @@
             "title": "Eval Parameters",
             "description": "Eval parameters for the pipeline."
           },
-          "llama_parse_enabled": {
-            "type": "boolean",
-            "title": "Llama Parse Enabled",
-            "description": "Whether to use LlamaParse during pipeline execution.",
-            "default": true
-          },
           "llama_parse_parameters": {
             "allOf": [
               {
@@ -12095,6 +12719,24 @@
       },
       "PipelineCreate": {
         "properties": {
+          "embedding_config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmbeddingConfig"
+              }
+            ],
+            "title": "Embedding Config",
+            "description": "Configuration for the embedding model."
+          },
+          "transform_config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformConfig"
+              }
+            ],
+            "title": "Transform Config",
+            "description": "Configuration for the transformation."
+          },
           "configured_transformations": {
             "items": {
               "$ref": "#/components/schemas/ConfiguredTransformationItem"
@@ -12135,12 +12777,6 @@
             ],
             "title": "Eval Parameters",
             "description": "Eval parameters for the pipeline."
-          },
-          "llama_parse_enabled": {
-            "type": "boolean",
-            "title": "Llama Parse Enabled",
-            "description": "Whether to use LlamaParse during pipeline execution.",
-            "default": true
           },
           "llama_parse_parameters": {
             "allOf": [
@@ -12258,6 +12894,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudNotionPageDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudConfluenceDataSource"
                   },
                   {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
@@ -12574,12 +13213,31 @@
       },
       "PipelineUpdate": {
         "properties": {
+          "embedding_config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmbeddingConfig"
+              }
+            ],
+            "title": "Embedding Config",
+            "description": "Configuration for the embedding model."
+          },
+          "transform_config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformConfig"
+              }
+            ],
+            "title": "Transform Config",
+            "description": "Configuration for the transformation."
+          },
           "configured_transformations": {
             "items": {
               "$ref": "#/components/schemas/ConfiguredTransformationItem"
             },
             "type": "array",
-            "title": "Configured Transformations"
+            "title": "Configured Transformations",
+            "description": "List of configured transformations."
           },
           "data_sink_id": {
             "type": "string",
@@ -12613,11 +13271,6 @@
             ],
             "title": "Eval Parameters",
             "description": "Eval parameters for the pipeline."
-          },
-          "llama_parse_enabled": {
-            "type": "boolean",
-            "title": "Llama Parse Enabled",
-            "description": "Whether to use LlamaParse during pipeline execution."
           },
           "llama_parse_parameters": {
             "allOf": [
@@ -13360,6 +14013,36 @@
         "title": "TokenTextSplitter",
         "description": "Implementation of splitting text that looks at word tokens."
       },
+      "TransformConfig": {
+        "properties": {
+          "mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformConfigMode"
+              }
+            ],
+            "description": "Mode for the transformation configuration.",
+            "default": "AUTO"
+          },
+          "config": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AutoTransformConfig"
+              }
+            ],
+            "title": "Config",
+            "description": "Configuration for the transformation."
+          }
+        },
+        "type": "object",
+        "title": "TransformConfig"
+      },
+      "TransformConfigMode": {
+        "type": "string",
+        "enum": ["AUTO", "ADVANCED"],
+        "title": "TransformConfigMode",
+        "description": "An enumeration."
+      },
       "TransformationCategoryNames": {
         "type": "string",
         "enum": ["NODE_PARSER", "EMBEDDING"],
@@ -13402,10 +14085,27 @@
             "format": "uuid",
             "title": "Organization Id",
             "description": "The organization's ID."
+          },
+          "pending": {
+            "type": "boolean",
+            "title": "Pending",
+            "description": "Whether the user's membership is pending account signup.",
+            "default": true
+          },
+          "invited_by_user_id": {
+            "type": "string",
+            "title": "Invited By User Id",
+            "description": "The user ID of the user who added the user to the organization."
+          },
+          "invited_by_user_email": {
+            "type": "string",
+            "format": "email",
+            "title": "Invited By User Email",
+            "description": "The email address of the user who added the user to the organization."
           }
         },
         "type": "object",
-        "required": ["id", "email", "user_id", "organization_id"],
+        "required": ["id", "email", "organization_id"],
         "title": "UserOrganization",
         "description": "Schema for a user's membership to an organization."
       },
@@ -13426,6 +14126,24 @@
         "type": "object",
         "title": "UserOrganizationCreate",
         "description": "Schema for creating a user's membership to an organization."
+      },
+      "UserOrganizationDelete": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "The user's ID."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email",
+            "description": "The user's email address."
+          }
+        },
+        "type": "object",
+        "title": "UserOrganizationDelete",
+        "description": "Schema for deleting a user's membership to an organization."
       },
       "ValidationError": {
         "properties": {
