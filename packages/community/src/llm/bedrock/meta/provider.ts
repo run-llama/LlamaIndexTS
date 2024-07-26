@@ -29,13 +29,25 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
   }
 
   getToolsFromResponse<ToolContent>(
-    _response: Record<string, any>,
+    response: Record<string, any>,
   ): ToolContent[] {
-    return [];
+    const result = this.getResultFromResponse(response);
+    if (!result.generation.trim().startsWith(TOKENS.TOOL_CALL)) return [];
+    const tool = JSON.parse(
+      result.generation.trim().split(TOKENS.TOOL_CALL)[1],
+    );
+    return [
+      {
+        id: randomUUID(),
+        name: tool.name,
+        input: tool.parameters,
+      } as ToolContent,
+    ];
   }
 
   getTextFromResponse(response: Record<string, any>): string {
     const result = this.getResultFromResponse(response);
+    if (result.generation.trim().startsWith(TOKENS.TOOL_CALL)) return "";
     return result.generation;
   }
 
