@@ -1,7 +1,9 @@
 "use server";
-import { Document, VectorStoreIndex, type QueryEngine } from "llamaindex";
+import { Document, VectorStoreIndex } from "llamaindex";
 import { readFile } from "node:fs/promises";
-let _queryEngine: QueryEngine;
+import { BaseQueryEngine } from '@llamaindex/core/query-engine';
+import { extractText } from '@llamaindex/core/utils';
+let _queryEngine: BaseQueryEngine;
 
 async function lazyLoadQueryEngine() {
   if (!_queryEngine) {
@@ -22,6 +24,6 @@ async function lazyLoadQueryEngine() {
 
 export async function chatWithAI(question: string): Promise<string> {
   const queryEngine = await lazyLoadQueryEngine();
-  const { response } = await queryEngine.query({ query: question });
-  return response;
+  const { message } = await queryEngine.query({ query: question });
+  return extractText(message.content);
 }

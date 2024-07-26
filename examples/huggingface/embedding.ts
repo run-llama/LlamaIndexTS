@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 
+import { extractText } from "@llamaindex/core/utils";
 import {
   Document,
   HuggingFaceEmbedding,
@@ -27,14 +28,16 @@ async function main() {
 
   // Query the index
   const queryEngine = index.asQueryEngine();
-  const stream = await queryEngine.query({
-    query: "What did the author do in college?",
-    stream: true,
-  });
+  const stream = await queryEngine.query(
+    {
+      query: "What did the author do in college?",
+    },
+    true,
+  );
 
   // Output response
   for await (const chunk of stream) {
-    process.stdout.write(chunk.response);
+    process.stdout.write(extractText(chunk.message.content));
   }
 }
 
