@@ -16,17 +16,18 @@ import {
   type BedrockChatStreamResponse,
   Provider,
 } from "../provider";
+import { toUtf8 } from "../utils";
 import type {
   AnthropicNoneStreamingResponse,
   AnthropicStreamEvent,
   AnthropicTextContent,
   ToolBlock,
-} from "../types";
+} from "./types";
+
 import {
   mapBaseToolsToAnthropicTools,
   mapChatMessagesToAnthropicMessages,
-  toUtf8,
-} from "../utils";
+} from "./utils";
 
 export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
   getResultFromResponse(

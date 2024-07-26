@@ -19,11 +19,11 @@
     "./llm/bedrock": {
       "import": {
         "types": "./dist/type/llm/bedrock.d.ts",
-        "default": "./dist/llm/bedrock/base.js"
+        "default": "./dist/llm/bedrock/index.js"
       },
       "require": {
         "types": "./dist/type/llm/bedrock.d.ts",
-        "default": "./dist/llm/bedrock/base.cjs"
+        "default": "./dist/llm/bedrock/index.cjs"
       }
     }
   },

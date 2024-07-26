@@ -22,8 +22,16 @@ import {
   type BedrockChatStreamResponse,
   Provider,
 } from "./provider";
-import { PROVIDERS } from "./providers";
-import { mapMessageContentToMessageContentDetails } from "./utils.js";
+import { mapMessageContentToMessageContentDetails } from "./utils";
+
+import { AnthropicProvider } from "./anthropic/provider";
+import { MetaProvider } from "./meta/provider";
+
+// Other providers should go here
+export const PROVIDERS: { [key: string]: Provider } = {
+  anthropic: new AnthropicProvider(),
+  meta: new MetaProvider(),
+};
 
 export type BedrockChatParamsStreaming = LLMChatParamsStreaming<
   BedrockAdditionalChatOptions,
@@ -140,6 +148,7 @@ export const TOOL_CALL_MODELS = [
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_HAIKU,
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_OPUS,
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_5_SONNET,
+  BEDROCK_MODELS.META_LLAMA3_1_405B_INSTRUCT,
 ];
 
 const getProvider = (model: string): Provider => {

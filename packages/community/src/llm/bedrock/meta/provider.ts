@@ -2,15 +2,15 @@ import type {
   InvokeModelCommandInput,
   InvokeModelWithResponseStreamCommandInput,
 } from "@aws-sdk/client-bedrock-runtime";
-import type { ChatMessage, LLMMetadata } from "@llamaindex/core/llms";
-import type { MetaNoneStreamingResponse, MetaStreamEvent } from "../types";
+import type { BaseTool, ChatMessage, LLMMetadata } from "@llamaindex/core/llms";
+import { toUtf8 } from "../utils";
+import type { MetaNoneStreamingResponse, MetaStreamEvent } from "./types";
+
+import { Provider } from "../provider";
 import {
   mapChatMessagesToMetaLlama2Messages,
   mapChatMessagesToMetaLlama3Messages,
-  toUtf8,
-} from "../utils";
-
-import { Provider } from "../provider";
+} from "./utils";
 
 export class MetaProvider extends Provider<MetaStreamEvent> {
   constructor() {
@@ -43,13 +43,13 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
   getRequestBody<T extends ChatMessage>(
     metadata: LLMMetadata,
     messages: T[],
+    tools?: BaseTool[],
   ): InvokeModelCommandInput | InvokeModelWithResponseStreamCommandInput {
-    let promptFunction: (messages: ChatMessage[]) => string;
-
+    let prompt: string = "";
     if (metadata.model.startsWith("meta.llama3")) {
-      promptFunction = mapChatMessagesToMetaLlama3Messages;
+      prompt = mapChatMessagesToMetaLlama3Messages(messages, tools);
     } else if (metadata.model.startsWith("meta.llama2")) {
-      promptFunction = mapChatMessagesToMetaLlama2Messages;
+      prompt = mapChatMessagesToMetaLlama2Messages(messages);
     } else {
       throw new Error(`Meta model ${metadata.model} is not supported`);
     }
@@ -59,7 +59,7 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
       contentType: "application/json",
       accept: "application/json",
       body: JSON.stringify({
-        prompt: promptFunction(messages),
+        prompt,
         max_gen_len: metadata.maxTokens,
         temperature: metadata.temperature,
         top_p: metadata.topP,
