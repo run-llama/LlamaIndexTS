@@ -1,5 +1,17 @@
 # docs
 
+## 0.0.51
+
+### Patch Changes
+
+- 086b940: feat: add DeepSeek LLM
+- 5d5716b: feat: add a reader for JSON data
+- Updated dependencies [086b940]
+- Updated dependencies [5d5716b]
+- Updated dependencies [91d02a4]
+- Updated dependencies [fb6db45]
+  - llamaindex@0.5.10
+
 ## 0.0.50
 
 ### Patch Changes

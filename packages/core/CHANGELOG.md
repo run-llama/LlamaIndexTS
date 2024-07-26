@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.1.5
+
+### Patch Changes
+
+- 91d02a4: feat: support transform component callable
+
 ## 0.1.4
 
 ### Patch Changes
