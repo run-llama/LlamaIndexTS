@@ -1,9 +1,9 @@
+import type { QueryType } from "@llamaindex/core/query-engine";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { ServiceContext } from "./ServiceContext.js";
-import type { MessageContent } from "./index.edge.js";
 
 export type RetrieveParams = {
-  query: MessageContent;
+  query: QueryType;
   preFilters?: unknown;
 };
 

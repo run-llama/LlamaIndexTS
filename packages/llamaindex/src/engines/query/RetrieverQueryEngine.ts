@@ -1,3 +1,4 @@
+import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
@@ -5,16 +6,14 @@ import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import { ResponseSynthesizer } from "../../synthesizers/index.js";
-import type {
-  QueryEngine,
-  QueryEngineParamsNonStreaming,
-  QueryEngineParamsStreaming,
-} from "../../types.js";
 
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.
  */
-export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
+export class RetrieverQueryEngine
+  extends PromptMixin
+  implements BaseQueryEngine
+{
   retriever: BaseRetriever;
   responseSynthesizer: BaseSynthesizer;
   nodePostprocessors: BaseNodePostprocessor[];
@@ -44,7 +43,10 @@ export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
     };
   }
 
-  private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {
+  private async applyNodePostprocessors(
+    nodes: NodeWithScore[],
+    query: QueryType,
+  ) {
     let nodesWithScore = nodes;
 
     for (const postprocessor of this.nodePostprocessors) {
@@ -57,7 +59,7 @@ export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
     return nodesWithScore;
   }
 
-  private async retrieve(query: string) {
+  private async retrieve(query: QueryType) {
     const nodes = await this.retriever.retrieve({
       query,
       preFilters: this.preFilters,
@@ -67,26 +69,27 @@ export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
   }
 
   query(
-    params: QueryEngineParamsStreaming,
+    queryType: QueryType,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
+  query(queryType: QueryType, stream?: false): Promise<EngineResponse>;
   @wrapEventCaller
   async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+    queryType: QueryType,
+    stream?: boolean,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { query, stream } = params;
-    const nodesWithScore = await this.retrieve(query);
+    const nodesWithScore = await this.retrieve(queryType);
     if (stream) {
       return this.responseSynthesizer.synthesize(
         {
-          query,
+          query: queryType,
           nodesWithScore,
         },
         true,
       );
     }
     return this.responseSynthesizer.synthesize({
-      query,
+      query: queryType,
       nodesWithScore,
     });
   }

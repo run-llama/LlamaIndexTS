@@ -1,7 +1,7 @@
-import { Document } from "@llamaindex/core/schema";
+import { Document, FileReader } from "@llamaindex/core/schema";
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypeinfo } from "magic-bytes.js";
-import { FileReader, type Language, type ResultType } from "./type.js";
+import { type Language, type ResultType } from "./type.js";
 
 const SUPPORT_FILE_EXT: string[] = [
   ".pdf",

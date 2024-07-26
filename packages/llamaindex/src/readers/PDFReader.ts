@@ -1,5 +1,4 @@
-import { Document } from "@llamaindex/core/schema";
-import { FileReader } from "./type.js";
+import { Document, FileReader } from "@llamaindex/core/schema";
 
 /**
  * Read the text of a PDF

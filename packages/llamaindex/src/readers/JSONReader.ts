@@ -1,6 +1,5 @@
 import type { JSONValue } from "@llamaindex/core/global";
-import { Document } from "@llamaindex/core/schema";
-import { FileReader } from "./type.js";
+import { Document, FileReader } from "@llamaindex/core/schema";
 
 export interface JSONReaderOptions {
   /**

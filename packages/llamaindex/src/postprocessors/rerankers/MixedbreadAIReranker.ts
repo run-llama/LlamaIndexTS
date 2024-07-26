@@ -5,6 +5,7 @@ import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 
 import type { MessageContent } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
 import type { BaseNode, NodeWithScore } from "@llamaindex/core/schema";
 import type { BaseNodePostprocessor } from "../types.js";
 
@@ -131,7 +132,7 @@ export class MixedbreadAIReranker implements BaseNodePostprocessor {
    */
   async postprocessNodes(
     nodes: NodeWithScore[],
-    query?: MessageContent,
+    query?: QueryType,
   ): Promise<NodeWithScore[]> {
     if (query === undefined) {
       throw new Error("MixedbreadAIReranker requires a query");

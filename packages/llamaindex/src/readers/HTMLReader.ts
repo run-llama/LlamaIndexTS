@@ -1,5 +1,4 @@
-import { Document } from "@llamaindex/core/schema";
-import { FileReader } from "./type.js";
+import { Document, FileReader } from "@llamaindex/core/schema";
 
 /**
  * Extract the significant text from an arbitrary HTML document.

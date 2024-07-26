@@ -1,6 +1,6 @@
 import { CohereClient } from "cohere-ai";
 
-import type { MessageContent } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
@@ -48,7 +48,7 @@ export class CohereRerank implements BaseNodePostprocessor {
    */
   async postprocessNodes(
     nodes: NodeWithScore[],
-    query?: MessageContent,
+    query?: QueryType,
   ): Promise<NodeWithScore[]> {
     if (this.client === null) {
       throw new Error("CohereRerank client is null");
