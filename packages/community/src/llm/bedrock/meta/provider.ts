@@ -1,30 +1,37 @@
 import type {
   InvokeModelCommandInput,
   InvokeModelWithResponseStreamCommandInput,
+  ResponseStream,
 } from "@aws-sdk/client-bedrock-runtime";
-import type { BaseTool, ChatMessage, LLMMetadata } from "@llamaindex/core/llms";
+import type {
+  BaseTool,
+  ChatMessage,
+  LLMMetadata,
+  ToolCall,
+  ToolCallLLMMessageOptions,
+} from "@llamaindex/core/llms";
 import { toUtf8 } from "../utils";
 import type { MetaNoneStreamingResponse, MetaStreamEvent } from "./types";
 
-import { Provider } from "../provider";
+import { randomUUID } from "@llamaindex/env";
+import { Provider, type BedrockChatStreamResponse } from "../provider";
+import { TOKENS } from "./constants";
 import {
   mapChatMessagesToMetaLlama2Messages,
   mapChatMessagesToMetaLlama3Messages,
 } from "./utils";
 
 export class MetaProvider extends Provider<MetaStreamEvent> {
-  constructor() {
-    super();
-  }
-
   getResultFromResponse(
     response: Record<string, any>,
   ): MetaNoneStreamingResponse {
     return JSON.parse(toUtf8(response.body));
   }
 
-  getToolsFromResponse(_response: Record<string, any>): never {
-    throw new Error("Not supported by this provider.");
+  getToolsFromResponse<ToolContent>(
+    _response: Record<string, any>,
+  ): ToolContent[] {
+    return [];
   }
 
   getTextFromResponse(response: Record<string, any>): string {
@@ -38,6 +45,54 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
       return event.generation;
     }
     return "";
+  }
+
+  async *reduceStream(
+    stream: AsyncIterable<ResponseStream>,
+  ): BedrockChatStreamResponse {
+    const collecting: string[] = [];
+    let toolId: string | undefined = undefined;
+    for await (const response of stream) {
+      const event = this.getStreamingEventResponse(response);
+      const delta = this.getTextFromStreamResponse(response);
+      // odd quirk of llama3.1, start token is \n\n
+      if (
+        !event?.generation.trim() &&
+        event?.generation_token_count === 1 &&
+        event.prompt_token_count !== null
+      )
+        continue;
+
+      if (delta === TOKENS.TOOL_CALL) {
+        toolId = randomUUID();
+        continue;
+      }
+
+      let options: undefined | ToolCallLLMMessageOptions = undefined;
+      if (toolId && event?.stop_reason === "stop") {
+        const tool = JSON.parse(collecting.join(""));
+        options = {
+          toolCall: [
+            {
+              id: toolId,
+              name: tool.name,
+              input: tool.parameters,
+            } as ToolCall,
+          ],
+        };
+      } else if (toolId && !event?.stop_reason) {
+        collecting.push(delta);
+        continue;
+      }
+
+      if (!delta && !options) continue;
+
+      yield {
+        delta: options ? "" : delta,
+        options,
+        raw: response,
+      };
+    }
   }
 
   getRequestBody<T extends ChatMessage>(

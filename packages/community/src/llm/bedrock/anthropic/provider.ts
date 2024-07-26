@@ -70,6 +70,7 @@ export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
     let tool: ToolBlock | undefined = undefined;
     // #TODO this should be broken down into a separate consumer
     for await (const response of stream) {
+      const delta = this.getTextFromStreamResponse(response);
       const event = this.getStreamingEventResponse(response);
       if (
         event?.type === "content_block_start" &&
@@ -115,7 +116,6 @@ export class AnthropicProvider extends Provider<AnthropicStreamEvent> {
           };
         }
       }
-      const delta = this.getTextFromStreamResponse(response);
       if (!delta && !options) continue;
 
       yield {

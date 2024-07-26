@@ -352,6 +352,9 @@ importers:
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../env
     devDependencies:
       '@types/node':
         specifier: ^20.14.2

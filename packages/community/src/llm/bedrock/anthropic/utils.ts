@@ -131,6 +131,8 @@ export const mapChatMessagesToAnthropicMessages = <
       const content = message.content[0];
       if (content.type === "text" && !content.text) return false;
       if (content.type === "image" && !content.source.data) return false;
+      if (content.type === "image" && message.role === "assistant")
+        return false;
       return true;
     });
 
