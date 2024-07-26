@@ -4,12 +4,8 @@ import { EngineResponse } from "llamaindex";
 
 import { serviceContextFromDefaults, type ServiceContext } from "llamaindex";
 
-import type {
-  QueryEngine,
-  QueryEngineParamsNonStreaming,
-  QueryEngineParamsStreaming,
-} from "llamaindex";
-
+import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
+import { extractText } from "@llamaindex/core/utils";
 import {
   defaultJsonPathPrompt,
   defaultResponseSynthesizePrompt,
@@ -89,7 +85,7 @@ type OutputProcessor = typeof defaultOutputProcessor;
 /**
  * A JSON query engine that uses JSONPath to query a JSON object.
  */
-export class JSONQueryEngine implements QueryEngine {
+export class JSONQueryEngine implements BaseQueryEngine {
   jsonValue: JSONSchemaType;
   jsonSchema: JSONSchemaType;
   serviceContext: ServiceContext;
@@ -148,14 +144,14 @@ export class JSONQueryEngine implements QueryEngine {
   }
 
   query(
-    params: QueryEngineParamsStreaming,
+    queryType: QueryType,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
+  query(queryType: QueryType, stream?: false): Promise<EngineResponse>;
   async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+    queryType: QueryType,
+    stream?: boolean,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { query, stream } = params;
-
     if (stream) {
       throw new Error("Streaming is not supported");
     }
@@ -163,7 +159,7 @@ export class JSONQueryEngine implements QueryEngine {
     const schema = this.getSchemaContext();
 
     const jsonPathResponseStr = await this.serviceContext.llm.complete({
-      prompt: this.jsonPathPrompt({ query, schema }),
+      prompt: this.jsonPathPrompt({ query: extractText(queryType), schema }),
     });
 
     if (this.verbose) {
@@ -186,7 +182,7 @@ export class JSONQueryEngine implements QueryEngine {
     if (this.synthesizeResponse) {
       responseStr = await this.serviceContext.llm.complete({
         prompt: this.responseSynthesisPrompt({
-          query,
+          query: extractText(queryType),
           jsonSchema: schema,
           jsonPath: jsonPathResponseStr.text,
           jsonPathValue: JSON.stringify(jsonPathOutput),
