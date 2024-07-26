@@ -1,8 +1,8 @@
 "use server";
+import { BaseQueryEngine } from "@llamaindex/core/query-engine";
+import { extractText } from "@llamaindex/core/utils";
 import { Document, VectorStoreIndex } from "llamaindex";
 import { readFile } from "node:fs/promises";
-import { BaseQueryEngine } from '@llamaindex/core/query-engine';
-import { extractText } from '@llamaindex/core/utils';
 let _queryEngine: BaseQueryEngine;
 
 async function lazyLoadQueryEngine() {
