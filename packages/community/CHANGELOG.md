@@ -1,5 +1,12 @@
 # @llamaindex/community
 
+## 0.0.26
+
+### Patch Changes
+
+- 224d507: fix: prevent tool calling getting mixed with conversation
+- 376d29a: feat: added tool calling and agent support for llama3.1 504B
+
 ## 0.0.25
 
 ### Patch Changes

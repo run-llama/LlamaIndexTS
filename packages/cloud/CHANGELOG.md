@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.2.1
+
+### Patch Changes
+
+- 1f680d7: chore: bump llamacloud api
+
 ## 0.2.0
 
 ### Minor Changes

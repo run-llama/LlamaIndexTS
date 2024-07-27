@@ -1,5 +1,12 @@
 # docs
 
+## 0.0.52
+
+### Patch Changes
+
+- 376d29a: feat: added tool calling and agent support for llama3.1 504B
+  - llamaindex@0.5.11
+
 ## 0.0.51
 
 ### Patch Changes
