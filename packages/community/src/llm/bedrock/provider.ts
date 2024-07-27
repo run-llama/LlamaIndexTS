@@ -23,6 +23,7 @@ export type BedrockChatStreamResponse = AsyncIterable<
 export abstract class Provider<ProviderStreamEvent extends {} = {}> {
   abstract getTextFromResponse(response: Record<string, any>): string;
 
+  // Return tool calls from none streaming calls
   abstract getToolsFromResponse<T extends {} = {}>(
     response: Record<string, any>,
   ): T[];

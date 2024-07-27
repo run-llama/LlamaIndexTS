@@ -15,6 +15,7 @@ LlamaIndex.TS comes with a few built-in agents, but you can also create your own
 - Anthropic Agent both via Anthropic and Bedrock (in `@llamaIndex/community`)
 - Gemini Agent
 - ReACT Agent
+- Meta3.1 504B via Bedrock (in `@llamaIndex/community`)
 
 ## Examples
 

@@ -19,11 +19,11 @@
     "./llm/bedrock": {
       "import": {
         "types": "./dist/type/llm/bedrock.d.ts",
-        "default": "./dist/llm/bedrock/base.js"
+        "default": "./dist/llm/bedrock/index.js"
       },
       "require": {
         "types": "./dist/type/llm/bedrock.d.ts",
-        "default": "./dist/llm/bedrock/base.cjs"
+        "default": "./dist/llm/bedrock/index.cjs"
       }
     }
   },
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.613.0",
-    "@llamaindex/core": "workspace:*"
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   }
 }

@@ -31,7 +31,7 @@ META_LLAMA3_8B_INSTRUCT = "meta.llama3-8b-instruct-v1:0";
 META_LLAMA3_70B_INSTRUCT = "meta.llama3-70b-instruct-v1:0";
 META_LLAMA3_1_8B_INSTRUCT = "meta.llama3-1-8b-instruct-v1:0"; // available on us-west-2
 META_LLAMA3_1_70B_INSTRUCT = "meta.llama3-1-70b-instruct-v1:0"; // available on us-west-2
-META_LLAMA3_1_405B_INSTRUCT = "meta.llama3-1-405b-instruct-v1:0"; // preview only, available on us-west-2
+META_LLAMA3_1_405B_INSTRUCT = "meta.llama3-1-405b-instruct-v1:0"; // preview only, available on us-west-2, tool calling supported
 ```
 
 Sonnet, Haiku and Opus are multimodal, image_url only supports base64 data url format, e.g. `data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==`
@@ -65,5 +65,74 @@ async function main() {
 
   // Log the response
   console.log(response.response);
+}
+```
+
+## Agent Example
+
+```ts
+import { BEDROCK_MODELS, Bedrock } from "@llamaindex/community";
+import { FunctionTool, LLMAgent } from "llamaindex";
+
+const sumNumbers = FunctionTool.from(
+  ({ a, b }: { a: number; b: number }) => `${a + b}`,
+  {
+    name: "sumNumbers",
+    description: "Use this function to sum two numbers",
+    parameters: {
+      type: "object",
+      properties: {
+        a: {
+          type: "number",
+          description: "The first number",
+        },
+        b: {
+          type: "number",
+          description: "The second number",
+        },
+      },
+      required: ["a", "b"],
+    },
+  },
+);
+
+const divideNumbers = FunctionTool.from(
+  ({ a, b }: { a: number; b: number }) => `${a / b}`,
+  {
+    name: "divideNumbers",
+    description: "Use this function to divide two numbers",
+    parameters: {
+      type: "object",
+      properties: {
+        a: {
+          type: "number",
+          description: "The dividend a to divide",
+        },
+        b: {
+          type: "number",
+          description: "The divisor b to divide by",
+        },
+      },
+      required: ["a", "b"],
+    },
+  },
+);
+
+const bedrock = new Bedrock({
+  model: BEDROCK_MODELS.META_LLAMA3_1_405B_INSTRUCT,
+  ...
+});
+
+async function main() {
+  const agent = new LLMAgent({
+    llm: bedrock,
+    tools: [sumNumbers, divideNumbers],
+  });
+
+  const response = await agent.chat({
+    message: "How much is 5 + 5? then divide by 2",
+  });
+
+  console.log(response.message);
 }
 ```
