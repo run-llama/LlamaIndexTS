@@ -1,10 +1,10 @@
-import type { MessageContent } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 
 export type RetrievalStartEvent = {
-  query: MessageContent;
+  query: QueryType;
 };
 export type RetrievalEndEvent = {
-  query: MessageContent;
+  query: QueryType;
   nodes: NodeWithScore[];
 };

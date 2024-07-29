@@ -1,4 +1,4 @@
-import { Document } from "@llamaindex/core/schema";
+import { type BaseReader, Document } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import type {
   BaseServiceParams,
@@ -8,7 +8,6 @@ import type {
   TranscriptSentence,
 } from "assemblyai";
 import { AssemblyAI } from "assemblyai";
-import type { BaseReader } from "./type.js";
 
 type AssemblyAIOptions = Partial<BaseServiceParams>;
 const defaultOptions = {

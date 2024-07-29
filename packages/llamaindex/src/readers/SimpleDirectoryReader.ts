@@ -1,4 +1,4 @@
-import { Document } from "@llamaindex/core/schema";
+import { Document, FileReader } from "@llamaindex/core/schema";
 import { PapaCSVReader } from "./CSVReader.js";
 import { DocxReader } from "./DocxReader.js";
 import { HTMLReader } from "./HTMLReader.js";
@@ -10,7 +10,6 @@ import {
   type SimpleDirectoryReaderLoadDataParams,
 } from "./SimpleDirectoryReader.edge.js";
 import { TextFileReader } from "./TextFileReader.js";
-import type { FileReader } from "./type.js";
 
 export const FILE_EXT_TO_READER: Record<string, FileReader> = {
   txt: new TextFileReader(),

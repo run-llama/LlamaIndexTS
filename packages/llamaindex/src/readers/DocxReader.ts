@@ -1,6 +1,5 @@
-import { Document } from "@llamaindex/core/schema";
+import { Document, FileReader } from "@llamaindex/core/schema";
 import mammoth from "mammoth";
-import { FileReader } from "./type.js";
 
 export class DocxReader extends FileReader {
   /** DocxParser */

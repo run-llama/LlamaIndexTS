@@ -1,4 +1,5 @@
 import type { MessageContent, MessageType } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
 import { type NodeWithScore } from "@llamaindex/core/schema";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
@@ -48,7 +49,7 @@ export class DefaultContextGenerator
 
   private async applyNodePostprocessors(
     nodes: NodeWithScore[],
-    query: MessageContent,
+    query: QueryType,
   ) {
     let nodesWithScore = nodes;
 
@@ -64,13 +65,12 @@ export class DefaultContextGenerator
 
   async generate(message: MessageContent): Promise<Context> {
     const sourceNodesWithScore = await this.retriever.retrieve({
-      query: message,
+      query: { query: message },
     });
 
-    const nodes = await this.applyNodePostprocessors(
-      sourceNodesWithScore,
-      message,
-    );
+    const nodes = await this.applyNodePostprocessors(sourceNodesWithScore, {
+      query: message,
+    });
 
     const content = await createMessageContent(
       this.contextSystemPrompt,

@@ -1,7 +1,6 @@
-import type { Metadata } from "@llamaindex/core/schema";
+import type { BaseReader, Metadata } from "@llamaindex/core/schema";
 import { Document } from "@llamaindex/core/schema";
 import type { MongoClient } from "mongodb";
-import type { BaseReader } from "./type.js";
 
 /**
  * Read in from MongoDB

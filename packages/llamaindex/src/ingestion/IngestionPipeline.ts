@@ -1,4 +1,4 @@
-import type { TransformComponent } from "@llamaindex/core/schema";
+import type { BaseReader, TransformComponent } from "@llamaindex/core/schema";
 import {
   ModalityType,
   splitNodesByType,
@@ -6,7 +6,6 @@ import {
   type Document,
   type Metadata,
 } from "@llamaindex/core/schema";
-import type { BaseReader } from "../readers/type.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type {
   VectorStore,

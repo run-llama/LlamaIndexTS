@@ -1,6 +1,8 @@
-import type { Document } from "@llamaindex/core/schema";
-import { ImageDocument } from "@llamaindex/core/schema";
-import { FileReader } from "./type.js";
+import {
+  type Document,
+  FileReader,
+  ImageDocument,
+} from "@llamaindex/core/schema";
 
 /**
  * Reads the content of an image file into a Document object (which stores the image file as a Blob).

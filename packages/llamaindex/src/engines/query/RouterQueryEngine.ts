@@ -1,4 +1,4 @@
-import type { QueryType } from "@llamaindex/core/query-engine";
+import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
@@ -7,14 +7,9 @@ import { PromptMixin } from "../../prompts/index.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 import { TreeSummarize } from "../../synthesizers/index.js";
-import type {
-  QueryEngine,
-  QueryEngineParamsNonStreaming,
-  QueryEngineParamsStreaming,
-} from "../../types.js";
 
 type RouterQueryEngineTool = {
-  queryEngine: QueryEngine;
+  queryEngine: BaseQueryEngine;
   description: string;
 };
 
@@ -54,9 +49,9 @@ async function combineResponses(
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
-export class RouterQueryEngine extends PromptMixin implements QueryEngine {
+export class RouterQueryEngine extends PromptMixin implements BaseQueryEngine {
   private selector: BaseSelector;
-  private queryEngines: QueryEngine[];
+  private queryEngines: BaseQueryEngine[];
   private metadatas: RouterQueryEngineMetadata[];
   private summarizer: TreeSummarize;
   private verbose: boolean;
@@ -109,15 +104,15 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   }
 
   query(
-    params: QueryEngineParamsStreaming,
+    queryType: QueryType,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
+  query(queryType: QueryType, stream?: false): Promise<EngineResponse>;
   async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
+    queryType: QueryType,
+    stream?: boolean,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { query, stream } = params;
-
-    const response = await this.queryRoute(query);
+    const response = await this.queryRoute(queryType);
 
     if (stream) {
       throw new Error("Streaming is not supported yet.");

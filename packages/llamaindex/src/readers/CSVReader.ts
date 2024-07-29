@@ -1,7 +1,6 @@
-import { Document } from "@llamaindex/core/schema";
+import { Document, FileReader } from "@llamaindex/core/schema";
 import type { ParseConfig } from "papaparse";
 import Papa from "papaparse";
-import { FileReader } from "./type.js";
 
 /**
  * papaparse-based csv parser

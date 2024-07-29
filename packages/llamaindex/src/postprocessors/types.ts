@@ -1,4 +1,4 @@
-import type { MessageContent } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 
 export interface BaseNodePostprocessor {
@@ -10,6 +10,6 @@ export interface BaseNodePostprocessor {
    */
   postprocessNodes(
     nodes: NodeWithScore[],
-    query?: MessageContent,
+    query?: QueryType,
   ): Promise<NodeWithScore[]>;
 }

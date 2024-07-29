@@ -3,7 +3,7 @@ import {
   type BaseEmbedding,
 } from "@llamaindex/core/embeddings";
 import { Settings } from "@llamaindex/core/global";
-import type { MessageContent } from "@llamaindex/core/llms";
+import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
 import {
   ImageNode,
   ModalityType,
@@ -38,7 +38,6 @@ import type {
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
 import type { BaseSynthesizer } from "../../synthesizers/types.js";
-import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
@@ -288,7 +287,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     preFilters?: MetadataFilters;
     nodePostprocessors?: BaseNodePostprocessor[];
     similarityTopK?: number;
-  }): QueryEngine & RetrieverQueryEngine {
+  }): BaseQueryEngine & RetrieverQueryEngine {
     const {
       retriever,
       responseSynthesizer,
@@ -440,21 +439,26 @@ export class VectorIndexRetriever implements BaseRetriever {
   }
 
   protected async retrieveQuery(
-    query: MessageContent,
+    query: QueryType,
     type: ModalityType,
     vectorStore: VectorStore,
     preFilters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
     // convert string message to multi-modal format
     if (typeof query === "string") {
-      query = [{ type: "text", text: query }];
+      query = {
+        query: [{ type: "text", text: query }],
+      };
     }
     // overwrite embed model if specified, otherwise use the one from the vector store
     const embedModel = this.index.embedModel ?? vectorStore.embedModel;
     let nodes: NodeWithScore[] = [];
     // query each content item (e.g. text or image) separately
-    for (const item of query) {
-      const queryEmbedding = await embedModel.getQueryEmbedding(item);
+    for (const message of query.query) {
+      const queryEmbedding: number[] | null =
+        typeof message === "string"
+          ? await embedModel.getTextEmbedding(message)
+          : await embedModel.getQueryEmbedding(message);
       if (queryEmbedding) {
         const result = await vectorStore.query({
           queryEmbedding,
