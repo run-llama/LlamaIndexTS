@@ -41,8 +41,7 @@ export const splitBySentenceTokenizer = (): TextSplitterFn => {
   return (text: string) => {
     try {
       return tokenizer.tokenize(text);
-    } catch (e) {
-      console.warn(`Can't use sentence tokenizer to split '${text}'`, e);
+    } catch {
       return [text];
     }
   };
