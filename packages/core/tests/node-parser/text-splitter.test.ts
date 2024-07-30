@@ -1,7 +1,10 @@
-import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import {
+  SentenceSplitter,
+  splitBySentenceTokenizer,
+} from "@llamaindex/core/node-parser";
 import { describe, expect, test } from "vitest";
 
-describe("SentenceSplitter", () => {
+describe("sentence splitter", () => {
   test("initializes", () => {
     const sentenceSplitter = new SentenceSplitter();
     expect(sentenceSplitter).toBeDefined();
@@ -104,5 +107,12 @@ describe("SentenceSplitter", () => {
       "不但毫无不平，而且还要随喜赞美这炬火或太阳；",
       "因为他照了人类，连我都在内。",
     ]);
+  });
+
+  test("issue 1087 - edge case when input with brackets", () => {
+    const text =
+      "A card must be of uniform thickness and made of unfolded and uncreased paper or cardstock of approximately the quality and weight of a stamped card (i.e., a card available from USPS).";
+    const split = splitBySentenceTokenizer();
+    expect(split(text)).toEqual([text]);
   });
 });
