@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.1.6
+
+### Patch Changes
+
+- 0452af9: fix: handling errors in splitBySentenceTokenizer
+
 ## 0.1.5
 
 ### Patch Changes

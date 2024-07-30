@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.5.12
+
+### Patch Changes
+
+- 345300f: feat: add splitByPage mode to LlamaParseReader
+- da5cfc4: Add metadatafilter options to retriever constructors
+- da5cfc4: Fix system prompt not used in ContextChatEngine
+- Updated dependencies [0452af9]
+  - @llamaindex/core@0.1.6
+
 ## 0.5.11
 
 ### Patch Changes
