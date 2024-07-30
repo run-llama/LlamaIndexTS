@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
-    "bunchee": "5.3.0-beta.0"
+    "bunchee": "5.3.1"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.613.0",
