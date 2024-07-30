@@ -126,7 +126,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     if (!this.systemPrompt) return message;
     return {
       ...message,
-      content: this.systemPrompt.trim() + "\n" + message.content,
+      content: this.systemPrompt.trim() + "\n" + extractText(message.content),
     };
   }
 }
