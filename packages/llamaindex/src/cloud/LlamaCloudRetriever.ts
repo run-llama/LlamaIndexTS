@@ -15,8 +15,8 @@ import { initService } from "./utils.js";
 
 export type CloudRetrieveParams = Omit<
   RetrievalParams,
-  "query" | "searchFilters" | "className" | "denseSimilarityTopK"
-> & { similarityTopK?: number };
+  "query" | "search_filters" | "dense_similarity_top_k"
+> & { similarityTopK?: number; filters?: MetadataFilters };
 
 export class LlamaCloudRetriever implements BaseRetriever {
   clientParams: ClientParams;
@@ -84,7 +84,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
         requestBody: {
           ...this.retrieveParams,
           query: extractText(query),
-          search_filters: preFilters as MetadataFilters,
+          search_filters:
+            this.retrieveParams.filters ?? (preFilters as MetadataFilters),
+          dense_similarity_top_k: this.retrieveParams.similarityTopK,
         },
       });
 

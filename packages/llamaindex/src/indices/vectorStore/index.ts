@@ -386,6 +386,7 @@ export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   similarityTopK?: number;
   topK?: TopKMap;
+  filters?: MetadataFilters;
 };
 
 export class VectorIndexRetriever implements BaseRetriever {
@@ -393,14 +394,21 @@ export class VectorIndexRetriever implements BaseRetriever {
   topK: TopKMap;
 
   serviceContext?: ServiceContext;
+  filters?: MetadataFilters;
 
-  constructor({ index, similarityTopK, topK }: VectorIndexRetrieverOptions) {
+  constructor({
+    index,
+    similarityTopK,
+    topK,
+    filters,
+  }: VectorIndexRetrieverOptions) {
     this.index = index;
     this.serviceContext = this.index.serviceContext;
     this.topK = topK ?? {
       [ModalityType.TEXT]: similarityTopK ?? DEFAULT_SIMILARITY_TOP_K,
       [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
     };
+    this.filters = filters;
   }
 
   /**
@@ -443,7 +451,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     query: MessageContent,
     type: ModalityType,
     vectorStore: VectorStore,
-    preFilters?: MetadataFilters,
+    filters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
     // convert string message to multi-modal format
     if (typeof query === "string") {
@@ -460,7 +468,7 @@ export class VectorIndexRetriever implements BaseRetriever {
           queryEmbedding,
           mode: VectorStoreQueryMode.DEFAULT,
           similarityTopK: this.topK[type],
-          filters: preFilters ?? undefined,
+          filters: this.filters ?? filters ?? undefined,
         });
         nodes = nodes.concat(this.buildNodeListFromQueryResult(result));
       }
