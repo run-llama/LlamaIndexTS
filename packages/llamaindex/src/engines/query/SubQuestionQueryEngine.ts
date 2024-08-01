@@ -127,7 +127,7 @@ export class SubQuestionQueryEngine
         return null;
       }
 
-      const nodeText = `Sub question: ${question}\nResponse: ${responseText}`;
+      const nodeText = `Sub question: ${question}\nResponse: ${JSON.stringify(responseText)}`;
       const node = new TextNode({ text: nodeText });
       return { node, score: 0 };
     } catch (error) {

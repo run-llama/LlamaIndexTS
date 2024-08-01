@@ -133,7 +133,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
       const responses: EngineResponse[] = [];
       for (let i = 0; i < result.selections.length; i++) {
         const engineInd = result.selections[i];
-        const logStr = `Selecting query engine ${engineInd}: ${result.selections[i]}.`;
+        const logStr = `Selecting query engine ${engineInd.index}: ${result.selections[i].index}.`;
 
         if (this.verbose) {
           console.log(logStr + "\n");

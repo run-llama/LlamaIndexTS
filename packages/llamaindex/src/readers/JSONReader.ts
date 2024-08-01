@@ -185,7 +185,7 @@ export class JSONReader<T extends JSONValue> extends FileReader {
       return jsonStr;
     } catch (e) {
       throw new JSONStringifyError(
-        `Error stringifying JSON: ${e} in "${data}"`,
+        `Error stringifying JSON: ${e} in "${JSON.stringify(data)}"`,
       );
     }
   }

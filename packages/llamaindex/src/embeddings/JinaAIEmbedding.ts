@@ -79,7 +79,7 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   private async getImageInput(
     image: ImageType,
   ): Promise<{ bytes: string } | { url: string }> {
-    if (isLocal(image)) {
+    if (isLocal(image) || image instanceof Blob) {
       const base64 = await imageToDataUrl(image);
       const bytes = base64.split(",")[1];
       return { bytes };
