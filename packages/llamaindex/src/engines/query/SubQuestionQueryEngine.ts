@@ -119,15 +119,15 @@ export class SubQuestionQueryEngine
         return null;
       }
 
-      const responseText = await queryEngine?.call?.({
+      const responseValue = await queryEngine?.call?.({
         query: question,
       });
 
-      if (!responseText) {
+      if (responseValue == null) {
         return null;
       }
 
-      const nodeText = `Sub question: ${question}\nResponse: ${JSON.stringify(responseText)}`;
+      const nodeText = `Sub question: ${question}\nResponse: ${typeof responseValue === "string" ? responseValue : JSON.stringify(responseValue)}`;
       const node = new TextNode({ text: nodeText });
       return { node, score: 0 };
     } catch (error) {
