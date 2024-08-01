@@ -78,7 +78,7 @@ export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
       serviceContext: this.serviceContext,
     });
 
-    const queryResponse = `Question: ${query}\nResponse: ${response}`;
+    const queryResponse = `Question: ${extractText(query)}\nResponse: ${response}`;
 
     const queryEngine = index.asQueryEngine();
 

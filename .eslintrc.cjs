@@ -31,7 +31,12 @@ module.exports = {
     "@typescript-eslint/ban-types": "off",
     "no-array-constructor": "off",
     "@typescript-eslint/no-array-constructor": "off",
-    "@typescript-eslint/no-base-to-string": "off",
+    "@typescript-eslint/no-base-to-string": [
+      "error",
+      {
+        ignoredTypeNames: ["Error", "RegExp", "URL", "URLSearchParams"],
+      },
+    ],
     "@typescript-eslint/no-duplicate-enum-values": "off",
     "@typescript-eslint/no-duplicate-type-constituents": "off",
     "@typescript-eslint/no-explicit-any": "off",
