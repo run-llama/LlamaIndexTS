@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.5.13
+
+### Patch Changes
+
+- Updated dependencies [04b2f8e]
+  - @llamaindex/core@0.1.7
+
 ## 0.5.12
 
 ### Patch Changes
