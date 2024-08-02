@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.1.7
+
+### Patch Changes
+
+- 04b2f8e: Fix issue with metadata included after sentence splitter
+
 ## 0.1.6
 
 ### Patch Changes
