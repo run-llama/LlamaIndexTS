@@ -140,7 +140,7 @@ export abstract class MetadataAwareTextSplitter extends TextSplitter {
     return nodes.reduce<TextNode[]>((allNodes, node) => {
       const metadataStr = this.getMetadataString(node);
       const splits = this.splitTextMetadataAware(
-        node.getContent(MetadataMode.ALL),
+        node.getContent(MetadataMode.NONE),
         metadataStr,
       );
       return allNodes.concat(buildNodeFromSplits(splits, node));
