@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.5.14
+
+### Patch Changes
+
+- c825a2f: Add gpt-4o-mini to Azure. Add 2024-06-01 API version for Azure
+
 ## 0.5.13
 
 ### Patch Changes
