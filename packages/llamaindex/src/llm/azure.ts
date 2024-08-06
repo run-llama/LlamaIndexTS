@@ -18,6 +18,7 @@ const ALL_AZURE_OPENAI_CHAT_MODELS = {
     openAIModel: "gpt-3.5-turbo-16k",
   },
   "gpt-4o": { contextWindow: 128000, openAIModel: "gpt-4o" },
+  "gpt-4o-mini": { contextWindow: 128000, openAIModel: "gpt-4o-mini" },
   "gpt-4": { contextWindow: 8192, openAIModel: "gpt-4" },
   "gpt-4-32k": { contextWindow: 32768, openAIModel: "gpt-4-32k" },
   "gpt-4-turbo": {
@@ -39,6 +40,10 @@ const ALL_AZURE_OPENAI_CHAT_MODELS = {
   "gpt-4o-2024-05-13": {
     contextWindow: 128000,
     openAIModel: "gpt-4o-2024-05-13",
+  },
+  "gpt-4o-mini-2024-07-18": {
+    contextWindow: 128000,
+    openAIModel: "gpt-4o-mini-2024-07-18",
   },
 };
 
@@ -73,6 +78,7 @@ const ALL_AZURE_API_VERSIONS = [
   "2024-03-01-preview",
   "2024-04-01-preview",
   "2024-05-01-preview",
+  "2024-06-01",
 ];
 
 const DEFAULT_API_VERSION = "2023-05-15";
