@@ -62,23 +62,32 @@ const OPERATOR_TO_FILTER: {
     return parseArrayValue(value).every((v) => metadata[key].includes(v));
   },
   [FilterOperator.TEXT_MATCH]: ({ key, value }, metadata) => {
-    return metadata[key].includes(parsePrimitiveValue(value));
+    if (typeof metadata[key] !== "string") return false;
+    return metadata[key].includes(parsePrimitiveValue(value).toString());
   },
   [FilterOperator.CONTAINS]: ({ key, value }, metadata) => {
     if (!Array.isArray(metadata[key])) return false;
     return !!parseArrayValue(metadata[key]).find((v) => v === value);
   },
   [FilterOperator.GT]: ({ key, value }, metadata) => {
-    return metadata[key] > parsePrimitiveValue(value);
+    const val = metadata[key];
+    if (typeof val !== "string" && typeof val !== "number") return false;
+    return val > parsePrimitiveValue(value);
   },
   [FilterOperator.LT]: ({ key, value }, metadata) => {
-    return metadata[key] < parsePrimitiveValue(value);
+    const val = metadata[key];
+    if (typeof val !== "string" && typeof val !== "number") return false;
+    return val < parsePrimitiveValue(value);
   },
   [FilterOperator.GTE]: ({ key, value }, metadata) => {
-    return metadata[key] >= parsePrimitiveValue(value);
+    const val = metadata[key];
+    if (typeof val !== "string" && typeof val !== "number") return false;
+    return val >= parsePrimitiveValue(value);
   },
   [FilterOperator.LTE]: ({ key, value }, metadata) => {
-    return metadata[key] <= parsePrimitiveValue(value);
+    const val = metadata[key];
+    if (typeof val !== "string" && typeof val !== "number") return false;
+    return val <= parsePrimitiveValue(value);
   },
 };
 
@@ -94,7 +103,14 @@ const buildFilterFn = (
   const queryCondition = condition || "and"; // default to and
 
   const itemFilterFn = (filter: MetadataFilter): boolean => {
-    if (metadata[filter.key] === undefined) return false; // always return false if the metadata key is not present
+    // for all operators except != and nin, if the metadata key is not present, return false
+    if (
+      metadata[filter.key] === undefined &&
+      filter.operator !== FilterOperator.NE &&
+      filter.operator !== FilterOperator.NIN
+    ) {
+      return false;
+    }
     const metadataLookupFn = OPERATOR_TO_FILTER[filter.operator];
     if (!metadataLookupFn)
       throw new Error(`Unsupported operator: ${filter.operator}`);
