@@ -273,7 +273,7 @@ export class PGVectorStore
       const paramIndex = params.length + 1;
       whereClauses.push(`metadata->>'${filter.key}' = $${paramIndex}`);
       // TODO: support filter with other operators
-      if (!Array.isArray(filter.value)) {
+      if (!Array.isArray(filter.value) && filter.value) {
         params.push(filter.value);
       }
     });

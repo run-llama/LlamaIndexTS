@@ -36,7 +36,7 @@ type MetadataValue = Record<string, any>;
 
 // Mapping of filter operators to metadata filter functions
 const OPERATOR_TO_FILTER: {
-  [key in FilterOperator]: (
+  [key in FilterOperator]?: (
     { key, value }: MetadataFilter,
     metadata: MetadataValue,
   ) => boolean;
@@ -94,7 +94,20 @@ const buildFilterFn = (
   const queryCondition = condition || "and"; // default to and
 
   const itemFilterFn = (filter: MetadataFilter): boolean => {
-    if (metadata[filter.key] === undefined) return false; // always return false if the metadata key is not present
+    if (filter.operator === FilterOperator.IS_EMPTY) {
+      // for `is_empty` operator, return true if the metadata key is not present or the value is empty
+      const value = metadata[filter.key];
+      return (
+        value === undefined ||
+        value === null ||
+        value === "" ||
+        (Array.isArray(value) && value.length === 0)
+      );
+    }
+    if (metadata[filter.key] === undefined) {
+      // for other operators, always return false if the metadata key is not present
+      return false;
+    }
     const metadataLookupFn = OPERATOR_TO_FILTER[filter.operator];
     if (!metadataLookupFn)
       throw new Error(`Unsupported operator: ${filter.operator}`);
