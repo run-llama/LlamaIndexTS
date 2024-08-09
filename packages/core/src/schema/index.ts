@@ -1,4 +1,4 @@
 export * from "./node";
-export { TransformComponent } from "./type";
+export { FileReader, TransformComponent, type BaseReader } from "./type";
 export { EngineResponse } from "./type/engine–response";
 export * from "./zod";
