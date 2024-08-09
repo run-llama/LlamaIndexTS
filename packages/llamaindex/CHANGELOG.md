@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.5.15
+
+### Patch Changes
+
+- 01c184c: Add is_empty operator for filtering vector store
+- 07a275f: chore: bump openai
+
 ## 0.5.14
 
 ### Patch Changes
