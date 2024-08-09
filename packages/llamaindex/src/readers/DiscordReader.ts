@@ -1,5 +1,5 @@
 import { REST, type RESTOptions } from "@discordjs/rest";
-import { Document } from "@llamaindex/core/schema";
+import { Document, type BaseReader } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import { Routes, type APIEmbed, type APIMessage } from "discord-api-types/v10";
 
@@ -7,7 +7,7 @@ import { Routes, type APIEmbed, type APIMessage } from "discord-api-types/v10";
  * Represents a reader for Discord messages using @discordjs/rest
  * See https://github.com/discordjs/discord.js/tree/main/packages/rest
  */
-export class DiscordReader {
+export class DiscordReader implements BaseReader {
   private client: REST;
 
   constructor(

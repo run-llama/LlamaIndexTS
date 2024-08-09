@@ -1,8 +1,8 @@
+import type { BaseReader, FileReader } from "@llamaindex/core/schema";
 import { Document } from "@llamaindex/core/schema";
 import { path } from "@llamaindex/env";
 import { walk } from "../storage/FileSystem.js";
 import { TextFileReader } from "./TextFileReader.js";
-import type { BaseReader, FileReader } from "./type.js";
 import pLimit from "./utils.js";
 
 type ReaderCallback = (
