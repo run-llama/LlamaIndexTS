@@ -1,6 +1,5 @@
 import type { Tokenizers } from "@llamaindex/env";
 import type { JSONSchemaType } from "ajv";
-import { ZodFunction } from "zod";
 import type { JSONObject, JSONValue } from "../global/type";
 
 /**
@@ -232,10 +231,6 @@ export interface BaseTool<Input = any> {
   metadata: // if user input any, we cannot check the schema
   Input extends Known ? ToolMetadata<JSONSchemaType<Input>> : ToolMetadata;
 }
-
-export type ZodBaseTool = {
-  metadata: ZodFunction<any, any>;
-};
 
 export type BaseToolWithCall<Input = any> = Omit<BaseTool<Input>, "call"> & {
   call: NonNullable<Pick<BaseTool<Input>, "call">["call"]>;
