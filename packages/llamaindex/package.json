@@ -55,7 +55,7 @@
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
-    "openai": "^4.52.5",
+    "openai": "^4.55.3",
     "papaparse": "^5.4.1",
     "pathe": "^1.1.2",
     "pg": "^8.12.0",

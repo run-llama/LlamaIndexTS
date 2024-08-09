@@ -6,6 +6,7 @@ import type {
   ClientOptions as OpenAIClientOptions,
 } from "openai";
 import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
+import type { ChatModel } from "openai/resources/chat/chat";
 
 import {
   type BaseTool,
@@ -108,16 +109,24 @@ export const GPT4_MODELS = {
   "gpt-4o-2024-05-13": { contextWindow: 128000 },
   "gpt-4o-mini": { contextWindow: 128000 },
   "gpt-4o-mini-2024-07-18": { contextWindow: 128000 },
+  "gpt-4o-2024-08-06": { contextWindow: 128000 },
+  "gpt-4o-2024-09-14": { contextWindow: 128000 },
+  "gpt-4o-2024-10-14": { contextWindow: 128000 },
+  "gpt-4-0613": { contextWindow: 128000 },
+  "gpt-4-turbo-2024-04-09": { contextWindow: 128000 },
+  "gpt-4-0314": { contextWindow: 128000 },
+  "gpt-4-32k-0314": { contextWindow: 32768 },
 };
 
 // NOTE we don't currently support gpt-3.5-turbo-instruct and don't plan to in the near future
 export const GPT35_MODELS = {
-  "gpt-3.5-turbo": { contextWindow: 4096 },
+  "gpt-3.5-turbo": { contextWindow: 16385 },
   "gpt-3.5-turbo-0613": { contextWindow: 4096 },
-  "gpt-3.5-turbo-16k": { contextWindow: 16384 },
-  "gpt-3.5-turbo-16k-0613": { contextWindow: 16384 },
-  "gpt-3.5-turbo-1106": { contextWindow: 16384 },
-  "gpt-3.5-turbo-0125": { contextWindow: 16384 },
+  "gpt-3.5-turbo-16k": { contextWindow: 16385 },
+  "gpt-3.5-turbo-16k-0613": { contextWindow: 16385 },
+  "gpt-3.5-turbo-1106": { contextWindow: 16385 },
+  "gpt-3.5-turbo-0125": { contextWindow: 16385 },
+  "gpt-3.5-turbo-0301": { contextWindow: 16385 },
 };
 
 /**
@@ -126,7 +135,7 @@ export const GPT35_MODELS = {
 export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
-};
+} satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   let model: string;
@@ -157,8 +166,10 @@ export type OpenAIAdditionalChatOptions = Omit<
 >;
 
 export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
-  // Per completion OpenAI params
-  model: keyof typeof ALL_AVAILABLE_OPENAI_MODELS | string;
+  model:
+    | ChatModel
+    // string & {} is a hack to allow any string, but still give autocomplete
+    | (string & {});
   temperature: number;
   topP: number;
   maxTokens?: number;
