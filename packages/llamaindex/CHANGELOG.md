@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.5.15
+
+### Patch Changes
+
+- 01c184c: Add is_empty operator for filtering vector store
+
 ## 0.5.14
 
 ### Patch Changes

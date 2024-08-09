@@ -1,5 +1,11 @@
 # @llamaindex/core-test
 
+## 0.0.7
+
+### Patch Changes
+
+- 01c184c: Add is_empty operator for filtering vector store
+
 ## 0.0.6
 
 ### Patch Changes
