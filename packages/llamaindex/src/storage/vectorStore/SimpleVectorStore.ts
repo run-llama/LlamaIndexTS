@@ -95,7 +95,7 @@ const buildFilterFn = (
 
   const itemFilterFn = (filter: MetadataFilter): boolean => {
     if (filter.operator === FilterOperator.IS_EMPTY) {
-      // for `is_empty` operator, return true if the metadata key is not present or the valus is empty
+      // for `is_empty` operator, return true if the metadata key is not present or the value is empty
       const value = metadata[filter.key];
       return (
         value === undefined ||
