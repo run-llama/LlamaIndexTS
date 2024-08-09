@@ -262,7 +262,6 @@ describe("SimpleVectorStore", () => {
           filters: [
             {
               key: "not-exist-key",
-              value: "",
               operator: "is_empty",
             },
           ],

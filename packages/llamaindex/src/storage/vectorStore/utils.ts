@@ -80,7 +80,7 @@ export function metadataDictToNode(
 }
 
 export const parsePrimitiveValue = (
-  value: MetadataFilterValue,
+  value?: MetadataFilterValue,
 ): string | number => {
   if (typeof value !== "number" && typeof value !== "string") {
     throw new Error("Value must be a string or number");
@@ -89,7 +89,7 @@ export const parsePrimitiveValue = (
 };
 
 export const parseArrayValue = (
-  value: MetadataFilterValue,
+  value?: MetadataFilterValue,
 ): string[] | number[] => {
   const isPrimitiveArray =
     Array.isArray(value) &&

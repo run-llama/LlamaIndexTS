@@ -45,7 +45,7 @@ export type MetadataFilterValue = string | number | string[] | number[];
 
 export interface MetadataFilter {
   key: string;
-  value: MetadataFilterValue;
+  value?: MetadataFilterValue;
   operator: `${FilterOperator}`; // ==, any, all,...
 }
 
