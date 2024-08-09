@@ -33,6 +33,7 @@ export enum FilterOperator {
   ALL = "all", // Contains all (array of strings)
   TEXT_MATCH = "text_match", // full text match (allows you to search for a specific substring, token or phrase within the text field)
   CONTAINS = "contains", // metadata array contains value (string or number)
+  IS_EMPTY = "is_empty", // the field is not exist or empty (null or empty array)
 }
 
 export enum FilterCondition {

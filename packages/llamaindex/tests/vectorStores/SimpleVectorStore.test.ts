@@ -257,6 +257,19 @@ describe("SimpleVectorStore", () => {
         expected: 1,
       },
       {
+        title: "Filter IS_EMPTY",
+        filters: {
+          filters: [
+            {
+              key: "not-exist-key",
+              value: "",
+              operator: "is_empty",
+            },
+          ],
+        },
+        expected: 3,
+      },
+      {
         title: "Filter OR",
         filters: {
           filters: [
