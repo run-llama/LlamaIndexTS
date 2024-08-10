@@ -36,6 +36,7 @@
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^2.2.2",
     "@qdrant/js-client-rest": "^1.9.0",
+    "@streamparser/json-whatwg": "^0.0.21",
     "@types/lodash": "^4.17.4",
     "@types/node": "^20.14.5",
     "@types/papaparse": "^5.3.14",

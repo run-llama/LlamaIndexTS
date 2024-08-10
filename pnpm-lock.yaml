@@ -515,6 +515,9 @@ importers:
       '@qdrant/js-client-rest':
         specifier: ^1.9.0
         version: 1.10.0(typescript@5.5.3)
+      '@streamparser/json-whatwg':
+        specifier: ^0.0.21
+        version: 0.0.21
       '@types/lodash':
         specifier: ^4.17.4
         version: 4.17.6
@@ -568,7 +571,7 @@ importers:
         version: 2.0.0
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.613.0(@aws-sdk/client-sso-oidc@3.613.0(@aws-sdk/client-sts@3.613.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.613.0)
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
@@ -3641,6 +3644,12 @@ packages:
   '@smithy/util-waiter@3.1.2':
     resolution: {integrity: sha512-4pP0EV3iTsexDx+8PPGAKCQpd/6hsQBaQhqWzU4hqKPHN5epPsxKbvUTIiYIHTxaKt6/kEaqPBpu/ufvfbrRzw==}
     engines: {node: '>=16.0.0'}
+
+  '@streamparser/json-whatwg@0.0.21':
+    resolution: {integrity: sha512-XMn/aAz5lIwtY63ssMWgSdTCnV5jkSceu58StvBIZQ1cM54lgbVaYv6jhM+Z0HhydUDFwtsE4s7X/LgaLbThWQ==}
+
+  '@streamparser/json@0.0.21':
+    resolution: {integrity: sha512-v+49JBiG1kmc/9Ug79Lz9wyKaRocBgCnpRaLpdy7p0d3ICKtOAfc/H/Epa1j3F6YdnzjnZKKrnJ8xnh/v1P8Aw==}
 
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0':
     resolution: {integrity: sha512-b9MIk7yhdS1pMCZM8VeNfUlSKVRhsHZNMl5O9SfaX0l0t5wjdgu4IDzGB8bpnGBBOjGST3rRFVsaaEtI4W6f7g==}
@@ -14980,6 +14989,12 @@ snapshots:
       '@smithy/abort-controller': 3.1.1
       '@smithy/types': 3.3.0
       tslib: 2.6.3
+
+  '@streamparser/json-whatwg@0.0.21':
+    dependencies:
+      '@streamparser/json': 0.0.21
+
+  '@streamparser/json@0.0.21': {}
 
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0(@babel/core@7.24.7)':
     dependencies:
