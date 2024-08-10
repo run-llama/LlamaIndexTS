@@ -1,15 +1,15 @@
 import type { JSONValue } from "@llamaindex/core/global";
 import { Document, FileReader } from "@llamaindex/core/schema";
-import { JSONParser} from "@streamparser/json-whatwg";
+import { JSONParser } from "@streamparser/json-whatwg";
 
 export interface JSONReaderOptions {
   /**
- * The threshold for using streaming mode. 
- * Give the approximate size of the JSON data in MB. Estimates character length by calculating: "(streamingThreshold * 1024 * 1024) / 2" and comparing against string.length
- * Streaming mode avoids memory issues when parsing large JSON data. Set "undefined" to disable streaming. Set "0" to always use streaming.
- * 
- * @default 100 MB
- */
+   * The threshold for using streaming mode.
+   * Give the approximate size of the JSON data in MB. Estimates character length by calculating: "(streamingThreshold * 1024 * 1024) / 2" and comparing against string.length
+   * Streaming mode avoids memory issues when parsing large JSON data. Set "undefined" to disable streaming. Set "0" to always use streaming.
+   *
+   * @default 100 MB
+   */
   streamingThreshold?: number;
 
   /**
@@ -106,23 +106,25 @@ export class JSONReader<T extends JSONValue> extends FileReader {
    */
   async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
     const jsonStr = new TextDecoder("utf-8").decode(content);
-    
-    const limit = ((this.options.streamingThreshold ?? Infinity) * 1024 * 1024) / 2;
 
-    
-    if (jsonStr.length > (limit)) {
-      console.log(`Using streaming to parse JSON as character length exceeds calculated limit: "${limit}"`);
+    const limit =
+      ((this.options.streamingThreshold ?? Infinity) * 1024 * 1024) / 2;
+
+    if (jsonStr.length > limit) {
+      console.log(
+        `Using streaming to parse JSON as character length exceeds calculated limit: "${limit}"`,
+      );
       const stream = new ReadableStream({
         async start(controller) {
           controller.enqueue(content);
           controller.close();
-        }
-      })
+        },
+      });
       return await this.streamParseJsonString(stream);
     } else {
       const parser = this.parseJsonString(jsonStr);
       const documents: Document[] = [];
-  
+
       for await (const data of parser) {
         documents.push(await this.createDocument(data));
       }
@@ -130,8 +132,14 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     }
   }
 
-  private async streamParseJsonString(stream: ReadableStream<Uint8Array>): Promise<Document[]> {
-    const parser = new JSONParser({paths: ['$'], stringBufferSize: this.options.stringBufferSize, numberBufferSize: this.options.numberBufferSize});
+  private async streamParseJsonString(
+    stream: ReadableStream<Uint8Array>,
+  ): Promise<Document[]> {
+    const parser = new JSONParser({
+      paths: ["$"],
+      stringBufferSize: this.options.stringBufferSize,
+      numberBufferSize: this.options.numberBufferSize,
+    });
     const reader = stream.pipeThrough(parser).getReader();
     const documents: Document[] = [];
 
@@ -148,13 +156,11 @@ export class JSONReader<T extends JSONValue> extends FileReader {
           }
         }
         documents.push(await this.createDocument(value as T));
-    }
-
+      }
     }
 
     return documents;
   }
-
 
   private async *parseJsonString(jsonStr: string): AsyncGenerator<T> {
     if (this.options.isJsonLines) {
