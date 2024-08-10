@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.2.2
+
+### Patch Changes
+
+- 58abc57: fix: align version
+
 ## 0.2.1
 
 ### Patch Changes

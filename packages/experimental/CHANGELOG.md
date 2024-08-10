@@ -1,5 +1,13 @@
 # @llamaindex/experimental
 
+## 0.0.66
+
+### Patch Changes
+
+- 58abc57: fix: align version
+- Updated dependencies [58abc57]
+  - llamaindex@0.5.16
+
 ## 0.0.65
 
 ### Patch Changes

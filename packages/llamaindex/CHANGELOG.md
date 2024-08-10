@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.5.16
+
+### Patch Changes
+
+- 58abc57: fix: align version
+- Updated dependencies [58abc57]
+  - @llamaindex/cloud@0.2.2
+  - @llamaindex/core@0.1.8
+  - @llamaindex/env@0.1.9
+
 ## 0.5.15
 
 ### Patch Changes
