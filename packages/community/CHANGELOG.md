@@ -1,5 +1,14 @@
 # @llamaindex/community
 
+## 0.0.29
+
+### Patch Changes
+
+- 58abc57: fix: align version
+- Updated dependencies [58abc57]
+  - @llamaindex/core@0.1.8
+  - @llamaindex/env@0.1.9
+
 ## 0.0.28
 
 ### Patch Changes
