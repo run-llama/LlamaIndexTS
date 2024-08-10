@@ -1,35 +1,21 @@
+import { parseChunked } from "@discoveryjs/json-ext";
 import type { JSONValue } from "@llamaindex/core/global";
 import { Document, FileReader } from "@llamaindex/core/schema";
-import { JSONParser } from "@streamparser/json-whatwg";
 
 export interface JSONReaderOptions {
   /**
    * The threshold for using streaming mode.
    * Give the approximate size of the JSON data in MB. Estimates character length by calculating: "(streamingThreshold * 1024 * 1024) / 2" and comparing against string.length
-   * Streaming mode avoids memory issues when parsing large JSON data. Set "undefined" to disable streaming. Set "0" to always use streaming.
+   * Streaming mode avoids memory issues when parsing large JSON data. Set "undefined" to disable streaming or "0" to always use streaming.
    *
    * @default 100 MB
    */
   streamingThreshold?: number;
 
   /**
-   * The size of the buffer used to store strings. Passthrough parameter of "@streamparser/json-whatwg"
-   * Useful for edge evnironments, see https://github.com/juanjoDiaz/streamparser-json/tree/main/packages/whatwg for more details.
-   *
-   * @default undefined
-   */
-  stringBufferSize?: number;
-
-  /**
-   * The size of the buffer used to store numbers. Passthrough parameter of "@streamparser/json-whatwg
-   * Useful for edge evnironments, see https://github.com/juanjoDiaz/streamparser-json/tree/main/packages/whatwg for more details.
-   *
-   * @default undefined
-   */
-  numberBufferSize?: number;
-  /**
    * Whether to ensure only ASCII characters.
    * Converts non-ASCII characters to their unicode escape sequence.
+   *
    * @default false
    */
   ensureAscii?: boolean;
@@ -37,6 +23,8 @@ export interface JSONReaderOptions {
   /**
    * Whether the JSON is in JSON Lines format.
    * Split into lines, remove empty lines, parse each line as JSON.
+   * Note: Uses a custom streaming parser, most likely less robust than json-ext
+   *
    * @default false
    */
   isJsonLines?: boolean;
@@ -44,6 +32,7 @@ export interface JSONReaderOptions {
   /**
    * Whether to clean the JSON by filtering out structural characters (`{}, [], and ,`).
    * If set to false, it will just parse the JSON, not removing structural characters.
+   *
    * @default true
    */
   cleanJson?: boolean;
@@ -51,6 +40,7 @@ export interface JSONReaderOptions {
   /**
    * Specifies how many levels up the JSON structure to include in the output. cleanJson will be ignored.
    * If set to 0, all levels are included. If undefined, parses the entire JSON and treats each line as an embedding.
+   *
    * @default undefined
    */
   levelsBack?: number;
@@ -58,6 +48,7 @@ export interface JSONReaderOptions {
   /**
    * The maximum length of JSON string representation to be collapsed into a single line.
    * Only applicable when `levelsBack` is set.
+   *
    * @default undefined
    */
   collapseLength?: number;
@@ -105,68 +96,79 @@ export class JSONReader<T extends JSONValue> extends FileReader {
    * @return {Promise<Document[]>} A Promise that resolves to an array of Document objects.
    */
   async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
-    const jsonStr = new TextDecoder("utf-8").decode(content);
-
-    const limit =
-      ((this.options.streamingThreshold ?? Infinity) * 1024 * 1024) / 2;
-
-    if (jsonStr.length > limit) {
-      console.log(
-        `Using streaming to parse JSON as character length exceeds calculated limit: "${limit}"`,
-      );
-      const stream = new ReadableStream({
-        async start(controller) {
-          controller.enqueue(content);
-          controller.close();
-        },
-      });
-      return await this.streamParseJsonString(stream);
-    } else {
-      const parser = this.parseJsonString(jsonStr);
-      const documents: Document[] = [];
-
-      for await (const data of parser) {
-        documents.push(await this.createDocument(data));
-      }
-      return documents;
-    }
-  }
-
-  private async streamParseJsonString(
-    stream: ReadableStream<Uint8Array>,
-  ): Promise<Document[]> {
-    const parser = new JSONParser({
-      paths: ["$"],
-      stringBufferSize: this.options.stringBufferSize,
-      numberBufferSize: this.options.numberBufferSize,
-    });
-    const reader = stream.pipeThrough(parser).getReader();
     const documents: Document[] = [];
 
-    while (true) {
-      const { done, value: parsedElementInfo } = await reader.read();
-      if (done) break;
-
-      const { value, partial } = parsedElementInfo;
-
-      if (!partial) {
-        if (Array.isArray(value)) {
-          for (const item of value) {
-            documents.push(await this.createDocument(item as T));
-          }
-        }
-        documents.push(await this.createDocument(value as T));
-      }
+    const parser = this.parseJson(content);
+    for await (const document of parser) {
+      documents.push(document);
     }
 
     return documents;
   }
 
-  private async *parseJsonString(jsonStr: string): AsyncGenerator<T> {
-    if (this.options.isJsonLines) {
-      yield* this.parseJsonLines(jsonStr);
+  private async *parseJson(content: Uint8Array): AsyncGenerator<Document> {
+    const jsonStr = new TextDecoder("utf-8").decode(content);
+    const limit =
+      ((this.options.streamingThreshold ?? Infinity) * 1024 * 1024) / 2;
+
+    let parsedData: AsyncGenerator<JSONValue>;
+
+    if (jsonStr.length > limit) {
+      parsedData = this.parseJsonStream(content);
+      console.log(
+        `Using streaming parser as estimated character length exceeds: "${limit}"`,
+      );
     } else {
-      yield* this.parseJson(jsonStr);
+      parsedData = this.parseJsonString(jsonStr);
+      console.log(
+        `Using "JSON.parse" as estimated character length is less than: "${limit}"`,
+      );
+    }
+
+    for await (const value of parsedData) {
+      if (!this.options.cleanJson || !Array.isArray(value)) {
+        yield await this.createDocument(value as T);
+      } else {
+        for (const item of value) {
+          yield await this.createDocument(item as T);
+        }
+      }
+    }
+  }
+
+  private async *parseJsonString(jsonStr: string): AsyncGenerator<JSONValue> {
+    try {
+      if (this.options.isJsonLines) {
+        for await (const value of this.parseJsonLines(jsonStr)) {
+          yield value;
+        }
+      } else {
+        const parsedData = JSON.parse(jsonStr);
+        yield parsedData;
+      }
+    } catch (e) {
+      throw new JSONParseError(`Error parsing JSON: ${e} in "${jsonStr}"`);
+    }
+  }
+
+  private async *parseJsonStream(
+    content: Uint8Array,
+  ): AsyncGenerator<JSONValue> {
+    const stream = new ReadableStream({
+      async start(controller) {
+        controller.enqueue(content);
+        controller.close();
+      },
+    });
+
+    if (this.options.isJsonLines) {
+      yield* this.parseJsonLinesStream(stream);
+      return;
+    }
+    const parser = await parseChunked(stream);
+
+    for await (const value of parser) {
+      yield value;
     }
   }
 
@@ -185,25 +187,33 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     }
   }
 
-  private async *parseJson(jsonStr: string): AsyncGenerator<T> {
-    try {
-      // TODO: Add streaming to handle large JSON files
-      const parsedData = JSON.parse(jsonStr);
+  private async *parseJsonLinesStream(
+    stream: ReadableStream<Uint8Array>,
+  ): AsyncGenerator<JSONValue> {
+    const reader = stream.getReader();
+    let buffer = "";
 
-      if (!this.options.cleanJson) {
-        // Yield the parsed data directly if cleanJson is false
-        yield parsedData;
-      } else if (Array.isArray(parsedData)) {
-        // Check if it's an Array, if so yield each item seperately, i.e. create a document per top-level array of the json
-        for (const item of parsedData) {
-          yield item;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += new TextDecoder("utf-8").decode(value);
+
+      const lines = buffer.split("\n");
+
+      // Keep the last partial line in the buffer
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        if (line.trim() !== "") {
+          yield JSON.parse(line.trim());
         }
-      } else {
-        // If not an array, just yield the parsed data
-        yield parsedData;
       }
-    } catch (e) {
-      throw new JSONParseError(`Error parsing JSON: ${e} in "${jsonStr}"`);
+    }
+
+    // Parse any remaining content in the buffer
+    if (buffer.trim() !== "") {
+      yield JSON.parse(buffer.trim());
     }
   }
 
