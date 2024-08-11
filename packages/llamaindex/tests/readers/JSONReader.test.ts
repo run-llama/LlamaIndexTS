@@ -20,9 +20,11 @@ describe("JSONReader", () => {
   describe("constructor", () => {
     it("should set default options", () => {
       expect(reader["options"]).toEqual({
+        streamingThreshold: 50,
         ensureAscii: false,
         isJsonLines: false,
         cleanJson: true,
+        verbose: false,
       });
     });
 
