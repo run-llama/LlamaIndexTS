@@ -52,6 +52,7 @@ export interface JSONReaderOptions {
    * @default undefined
    */
   collapseLength?: number;
+  verbose?: boolean;
 }
 
 export class JSONReaderError extends Error {}
@@ -72,9 +73,13 @@ export class JSONReader<T extends JSONValue> extends FileReader {
       ensureAscii: false,
       isJsonLines: false,
       cleanJson: true,
+      verbose: false,
       ...options,
     };
     this.validateOptions();
+    this.log(
+      `JSONReader initialized with options: ${JSON.stringify(this.options)}`,
+    );
   }
   private validateOptions(): void {
     const { levelsBack, collapseLength, streamingThreshold } = this.options;
@@ -111,19 +116,14 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     const limit =
       ((this.options.streamingThreshold ?? Infinity) * 1024 * 1024) / 2;
 
-    let parsedData: AsyncGenerator<JSONValue>;
+    const parsedData =
+      jsonStr.length > limit
+        ? this.parseJsonStream(content)
+        : this.parseJsonString(jsonStr);
 
-    if (jsonStr.length > limit) {
-      parsedData = this.parseJsonStream(content);
-      console.log(
-        `Using streaming parser as estimated character length exceeds: "${limit}"`,
-      );
-    } else {
-      parsedData = this.parseJsonString(jsonStr);
-      console.log(
-        `Using "JSON.parse" as estimated character length is less than: "${limit}"`,
-      );
-    }
+    this.log(
+      `Using ${jsonStr.length > limit ? "streaming parser" : "JSON.parse"} as estimated character length ${jsonStr.length > limit ? "exceeds" : "is less than"}: "${limit}"`,
+    );
 
     for await (const value of parsedData) {
       if (!this.options.cleanJson || !Array.isArray(value)) {
@@ -140,6 +140,7 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     try {
       if (this.options.isJsonLines) {
         for await (const value of this.parseJsonLines(jsonStr)) {
+          // Yield each JSON line separately if in JSON Lines format
           yield value;
         }
       } else {
@@ -162,9 +163,11 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     });
 
     if (this.options.isJsonLines) {
+      this.log("Parsing JSON Stream in JSON Lines format");
       yield* this.parseJsonLinesStream(stream);
       return;
     }
+    this.log("Parsing JSON Stream");
     const parser = await parseChunked(stream);
 
     for await (const value of parser) {
@@ -191,28 +194,29 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     stream: ReadableStream<Uint8Array>,
   ): AsyncGenerator<JSONValue> {
     const reader = stream.getReader();
+    const decoder = new TextDecoder("utf-8");
     let buffer = "";
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
 
-      buffer += new TextDecoder("utf-8").decode(value);
-
+      // Decode the streamed data incrementally
+      buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
 
-      // Keep the last partial line in the buffer
+      // Keep the incomplete line in the buffer
       buffer = lines.pop() || "";
 
       for (const line of lines) {
-        if (line.trim() !== "") {
+        if (line.trim()) {
           yield JSON.parse(line.trim());
         }
       }
     }
 
-    // Parse any remaining content in the buffer
-    if (buffer.trim() !== "") {
+    // Parse any remaining data in the buffer
+    if (buffer.trim()) {
       yield JSON.parse(buffer.trim());
     }
   }
@@ -238,6 +242,7 @@ export class JSONReader<T extends JSONValue> extends FileReader {
   private async prepareDepthFirstYield(data: T): Promise<string> {
     const levelsBack = this.options.levelsBack ?? 0;
     const results: string[] = [];
+
     for await (const value of this.depthFirstYield(
       data,
       levelsBack === 0 ? Infinity : levelsBack,
@@ -387,5 +392,10 @@ export class JSONReader<T extends JSONValue> extends FileReader {
       /[\u007F-\uFFFF]/g,
       (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`,
     );
+  }
+  private log(message: string): void {
+    if (this.options.verbose) {
+      console.log(message);
+    }
   }
 }
