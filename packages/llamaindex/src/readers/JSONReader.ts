@@ -8,7 +8,7 @@ export interface JSONReaderOptions {
    * Give the approximate size of the JSON data in MB. Estimates character length by calculating: "(streamingThreshold * 1024 * 1024) / 2" and comparing against string.length
    * Streaming mode avoids memory issues when parsing large JSON data. Set "undefined" to disable streaming or "0" to always use streaming.
    *
-   * @default 100 MB
+   * @default 50 MB
    */
   streamingThreshold?: number;
 
@@ -52,6 +52,11 @@ export interface JSONReaderOptions {
    * @default undefined
    */
   collapseLength?: number;
+  /**
+   * Whether to enable verbose logging.
+   *
+   * @default false
+   */
   verbose?: boolean;
 }
 
@@ -69,7 +74,7 @@ export class JSONReader<T extends JSONValue> extends FileReader {
   constructor(options: JSONReaderOptions = {}) {
     super();
     this.options = {
-      streamingThreshold: 100,
+      streamingThreshold: 50,
       ensureAscii: false,
       isJsonLines: false,
       cleanJson: true,
@@ -122,7 +127,7 @@ export class JSONReader<T extends JSONValue> extends FileReader {
         : this.parseJsonString(jsonStr);
 
     this.log(
-      `Using ${jsonStr.length > limit ? "streaming parser" : "JSON.parse"} as estimated character length ${jsonStr.length > limit ? "exceeds" : "is less than"}: "${limit}"`,
+      `Using ${jsonStr.length > limit ? "streaming parser" : "JSON.parse"} as string length ${jsonStr.length > limit ? "exceeds" : "is less than"} calculated character limit: "${limit}"`,
     );
 
     for await (const value of parsedData) {
@@ -139,11 +144,13 @@ export class JSONReader<T extends JSONValue> extends FileReader {
   private async *parseJsonString(jsonStr: string): AsyncGenerator<JSONValue> {
     try {
       if (this.options.isJsonLines) {
+        this.log("Parsing JSON String in JSON Lines format");
         for await (const value of this.parseJsonLines(jsonStr)) {
           // Yield each JSON line separately if in JSON Lines format
           yield value;
         }
       } else {
+        this.log("Parsing JSON String");
         const parsedData = JSON.parse(jsonStr);
         yield parsedData;
       }
@@ -168,11 +175,7 @@ export class JSONReader<T extends JSONValue> extends FileReader {
       return;
     }
     this.log("Parsing JSON Stream");
-    const parser = await parseChunked(stream);
-
-    for await (const value of parser) {
-      yield value;
-    }
+    yield await parseChunked(stream);
   }
 
   private async *parseJsonLines(jsonStr: string): AsyncGenerator<T> {
