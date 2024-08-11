@@ -2,6 +2,10 @@ import { parseChunked } from "@discoveryjs/json-ext";
 import type { JSONValue } from "@llamaindex/core/global";
 import { Document, FileReader } from "@llamaindex/core/schema";
 
+// Possible improvements:
+// - use `json-ext` for streaming JSON.stringify. Currently once JSON.stringify is called, the data is already chunked, so there should be no high risk of memory issues
+// --> json-ext can use `stringifyInfo` to get the minimum byte lengths as well as return any circular references found, could be used to avoid erroring on circular references
+
 export interface JSONReaderOptions {
   /**
    * The threshold for using streaming mode.
@@ -52,17 +56,125 @@ export interface JSONReaderOptions {
    * @default undefined
    */
   collapseLength?: number;
+
   /**
    * Whether to enable verbose logging.
    *
    * @default false
    */
   verbose?: boolean;
+
+  /**
+   * Provide a custom logger function.
+   *
+   * @default undefined
+   */
+  logger?: (level: string, message: string) => void;
 }
 
 export class JSONReaderError extends Error {}
 export class JSONParseError extends JSONReaderError {}
 export class JSONStringifyError extends JSONReaderError {}
+
+class JSONParser {
+  static async *parseJsonString(
+    jsonStr: string,
+    isJsonLines: boolean,
+  ): AsyncGenerator<JSONValue> {
+    try {
+      if (isJsonLines) {
+        for await (const value of JSONParser.parseJsonLines(jsonStr)) {
+          yield value;
+        }
+      } else {
+        yield JSON.parse(jsonStr);
+      }
+    } catch (e) {
+      throw new JSONParseError(
+        `Error parsing JSON string: ${e instanceof Error ? e.message : "Unknown error occurred"}`,
+        { cause: e },
+      );
+    }
+  }
+
+  static async *parseJsonStream(
+    content: Uint8Array,
+    isJsonLines: boolean,
+  ): AsyncGenerator<JSONValue> {
+    const stream = new ReadableStream({
+      async start(controller) {
+        controller.enqueue(content);
+        controller.close();
+      },
+    });
+
+    try {
+      if (isJsonLines) {
+        yield* JSONParser.parseJsonLinesStream(stream);
+      } else {
+        yield* await parseChunked(stream);
+      }
+    } catch (e) {
+      throw new JSONParseError(
+        `Error parsing JSON stream: ${e instanceof Error ? e.message : "Unknown error occurred"}`,
+        { cause: e },
+      );
+    }
+  }
+
+  static async *parseJsonLines(jsonStr: string): AsyncGenerator<JSONValue> {
+    try {
+      for (const line of jsonStr.split("\n")) {
+        if (line.trim() !== "") {
+          yield JSON.parse(line.trim());
+        }
+      }
+    } catch (e) {
+      throw new JSONParseError(
+        `Error parsing JSON Line: ${
+          e instanceof Error ? e.message : "Unknown error occurred"
+        }`,
+        { cause: e },
+      );
+    }
+  }
+
+  static async *parseJsonLinesStream(
+    stream: ReadableStream<Uint8Array>,
+  ): AsyncGenerator<JSONValue> {
+    const reader = stream.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (line.trim()) {
+            yield JSON.parse(line.trim());
+          }
+        }
+      }
+
+      if (buffer.trim()) {
+        yield JSON.parse(buffer.trim());
+      }
+    } catch (e) {
+      throw new JSONParseError(
+        `Error parsing JSON Line in stream: ${
+          e instanceof Error ? e.message : "Unknown error occurred"
+        }`,
+        { cause: e },
+      );
+    }
+  }
+}
 
 /**
  * A reader that reads JSON data and returns an array of Document objects.
@@ -73,29 +185,57 @@ export class JSONReader<T extends JSONValue> extends FileReader {
 
   constructor(options: JSONReaderOptions = {}) {
     super();
-    this.options = {
+    this.options = this.initializeOptions(options);
+    this.log(
+      "info",
+      `JSONReader initialized with options: ${JSON.stringify(this.options)}`,
+    );
+  }
+
+  private initializeOptions(
+    providedOptions: JSONReaderOptions,
+  ): JSONReaderOptions {
+    const defaultOptions: JSONReaderOptions = {
       streamingThreshold: 50,
       ensureAscii: false,
       isJsonLines: false,
       cleanJson: true,
       verbose: false,
-      ...options,
     };
-    this.validateOptions();
-    this.log(
-      `JSONReader initialized with options: ${JSON.stringify(this.options)}`,
-    );
+
+    const options = { ...defaultOptions, ...providedOptions };
+
+    // Validate options immediately after merging
+    this.validateOptions(options, [
+      "streamingThreshold",
+      "collapseLength",
+      "levelsBack",
+    ]);
+
+    return options;
   }
-  private validateOptions(): void {
-    const { levelsBack, collapseLength, streamingThreshold } = this.options;
-    if (levelsBack !== undefined && levelsBack < 0) {
-      throw new JSONReaderError("levelsBack must not be negative");
+
+  private validateOptions(
+    options: JSONReaderOptions,
+    keys: (keyof JSONReaderOptions)[],
+  ): void {
+    for (const key of keys) {
+      const value = options[key];
+      if (typeof value === "number" && value < 0) {
+        throw new JSONReaderError(`${key} must not be negative`);
+      }
     }
-    if (collapseLength !== undefined && collapseLength < 0) {
-      throw new JSONReaderError("collapseLength must not be negative");
-    }
-    if (streamingThreshold !== undefined && streamingThreshold < 0) {
-      throw new JSONReaderError("streamingThreshold must not be negative");
+  }
+
+  private log(level: string, message: string): void {
+    if (this.options.logger) {
+      this.options.logger(level, message); // Use custom logger if provided
+    } else {
+      const timestamp = new Date().toISOString();
+      const formattedMessage = `[${timestamp}] [${level.toUpperCase()}]: ${message}`;
+      if (this.options.verbose || level !== "debug") {
+        console.log(`${formattedMessage}`);
+      }
     }
   }
 
@@ -123,104 +263,27 @@ export class JSONReader<T extends JSONValue> extends FileReader {
 
     const parsedData =
       jsonStr.length > limit
-        ? this.parseJsonStream(content)
-        : this.parseJsonString(jsonStr);
+        ? JSONParser.parseJsonStream(content, this.options.isJsonLines ?? false)
+        : JSONParser.parseJsonString(
+            jsonStr,
+            this.options.isJsonLines ?? false,
+          );
 
     this.log(
+      "debug",
       `Using ${jsonStr.length > limit ? "streaming parser" : "JSON.parse"} as string length ${jsonStr.length > limit ? "exceeds" : "is less than"} calculated character limit: "${limit}"`,
     );
 
     for await (const value of parsedData) {
+      // Yield the parsed data directly if cleanJson is false or the value is not an array.
       if (!this.options.cleanJson || !Array.isArray(value)) {
         yield await this.createDocument(value as T);
       } else {
+        // If it's an Array, yield each item seperately, i.e. create a document per top-level array of the json
         for (const item of value) {
           yield await this.createDocument(item as T);
         }
       }
-    }
-  }
-
-  private async *parseJsonString(jsonStr: string): AsyncGenerator<JSONValue> {
-    try {
-      if (this.options.isJsonLines) {
-        this.log("Parsing JSON String in JSON Lines format");
-        for await (const value of this.parseJsonLines(jsonStr)) {
-          // Yield each JSON line separately if in JSON Lines format
-          yield value;
-        }
-      } else {
-        this.log("Parsing JSON String");
-        const parsedData = JSON.parse(jsonStr);
-        yield parsedData;
-      }
-    } catch (e) {
-      throw new JSONParseError(`Error parsing JSON: ${e} in "${jsonStr}"`);
-    }
-  }
-
-  private async *parseJsonStream(
-    content: Uint8Array,
-  ): AsyncGenerator<JSONValue> {
-    const stream = new ReadableStream({
-      async start(controller) {
-        controller.enqueue(content);
-        controller.close();
-      },
-    });
-
-    if (this.options.isJsonLines) {
-      this.log("Parsing JSON Stream in JSON Lines format");
-      yield* this.parseJsonLinesStream(stream);
-      return;
-    }
-    this.log("Parsing JSON Stream");
-    yield await parseChunked(stream);
-  }
-
-  private async *parseJsonLines(jsonStr: string): AsyncGenerator<T> {
-    // Process each line as a separate JSON object for JSON Lines format
-    for (const line of jsonStr.split("\n")) {
-      if (line.trim() !== "") {
-        try {
-          yield JSON.parse(line.trim());
-        } catch (e) {
-          throw new JSONParseError(
-            `Error parsing JSON Line: ${e} in "${line.trim()}"`,
-          );
-        }
-      }
-    }
-  }
-
-  private async *parseJsonLinesStream(
-    stream: ReadableStream<Uint8Array>,
-  ): AsyncGenerator<JSONValue> {
-    const reader = stream.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let buffer = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      // Decode the streamed data incrementally
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-
-      // Keep the incomplete line in the buffer
-      buffer = lines.pop() || "";
-
-      for (const line of lines) {
-        if (line.trim()) {
-          yield JSON.parse(line.trim());
-        }
-      }
-    }
-
-    // Parse any remaining data in the buffer
-    if (buffer.trim()) {
-      yield JSON.parse(buffer.trim());
     }
   }
 
@@ -268,17 +331,19 @@ export class JSONReader<T extends JSONValue> extends FileReader {
         this.options.cleanJson ? 1 : 0,
       );
       if (this.options.cleanJson) {
-        // Clean JSON by removing structural characters and unnecessary whitespace
         return jsonStr
           .split("\n")
           .filter((line) => !/^[{}\[\],]*$/.test(line.trim()))
-          .map((line) => line.trimStart()) // Removes the indent
+          .map((line) => line.trimStart())
           .join("\n");
       }
       return jsonStr;
     } catch (e) {
       throw new JSONStringifyError(
-        `Error stringifying JSON: ${e} in "${JSON.stringify(data)}"`,
+        `Error stringifying JSON data: ${
+          e instanceof Error ? e.message : "Unknown error occurred"
+        }`,
+        { cause: e },
       );
     }
   }
@@ -301,18 +366,18 @@ export class JSONReader<T extends JSONValue> extends FileReader {
     path: string[],
     collapseLength?: number,
   ): AsyncGenerator<string> {
-    try {
-      const jsonStr = this.serializeAndCollapse(
-        jsonData,
-        levelsBack,
-        path,
-        collapseLength,
-      );
-      if (jsonStr !== null) {
-        yield jsonStr;
-        return;
-      }
+    const jsonStr = this.serializeAndCollapse(
+      jsonData,
+      levelsBack,
+      path,
+      collapseLength,
+    );
+    if (jsonStr !== null) {
+      yield jsonStr;
+      return;
+    }
 
+    try {
       if (jsonData !== null && typeof jsonData === "object") {
         yield* this.depthFirstTraversal(
           jsonData,
@@ -325,7 +390,10 @@ export class JSONReader<T extends JSONValue> extends FileReader {
       }
     } catch (e) {
       throw new JSONReaderError(
-        `Error during depth first traversal at path ${path.join(" ")}: ${e}`,
+        `Error during depth-first traversal at path ${path.join(" ")}: ${
+          e instanceof Error ? e.message : "Unknown error occurred"
+        }`,
+        { cause: e },
       );
     }
   }
@@ -342,9 +410,15 @@ export class JSONReader<T extends JSONValue> extends FileReader {
         ? `${path.slice(-levelsBack).join(" ")} ${jsonStr}`
         : null;
     } catch (e) {
-      throw new JSONStringifyError(`Error stringifying JSON data: ${e}`);
+      throw new JSONStringifyError(
+        `Error stringifying JSON data: ${
+          e instanceof Error ? e.message : "Unknown error occurred"
+        }`,
+        { cause: e },
+      );
     }
   }
+
   /**
    * A generator function that performs a depth-first traversal of the JSON data.
    * If the JSON data is an array, it traverses each item in the array.
@@ -385,20 +459,17 @@ export class JSONReader<T extends JSONValue> extends FileReader {
       }
     } catch (e) {
       throw new JSONReaderError(
-        `Error during depth-first traversal of object: ${e}`,
+        `Error during depth-first traversal of object: ${
+          e instanceof Error ? e.message : "Unknown error occurred"
+        }`,
+        { cause: e },
       );
     }
   }
-
   private convertToAscii(str: string): string {
     return str.replace(
       /[\u007F-\uFFFF]/g,
       (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`,
     );
-  }
-  private log(message: string): void {
-    if (this.options.verbose) {
-      console.log(message);
-    }
   }
 }
