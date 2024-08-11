@@ -571,7 +571,7 @@ importers:
         version: 2.0.0
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.613.0)
+        version: 6.8.0(@aws-sdk/credential-providers@3.613.0(@aws-sdk/client-sso-oidc@3.613.0(@aws-sdk/client-sts@3.613.0)))
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
