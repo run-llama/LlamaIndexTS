@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.5.17
+
+### Patch Changes
+
+- c654398: Implement Weaviate Vector Store in TS
+
 ## 0.5.16
 
 ### Patch Changes
