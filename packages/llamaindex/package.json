@@ -65,6 +65,7 @@
     "string-strip-html": "^13.4.8",
     "tiktoken": "^1.0.15",
     "unpdf": "^0.11.0",
+    "weaviate-client": "^3.1.4",
     "wikipedia": "^2.1.2",
     "wink-nlp": "^2.3.0",
     "zod": "^3.23.8"
