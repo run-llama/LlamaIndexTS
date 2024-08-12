@@ -1,6 +1,8 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { BaseNode, MetadataMode, type Metadata } from "@llamaindex/core/schema";
 import weaviate, {
+  Filters,
+  type Collection,
   type DeleteManyOptions,
   type FilterValue,
   type WeaviateClient,
@@ -11,12 +13,18 @@ import {
   VectorStoreBase,
   VectorStoreQueryMode,
   type IEmbedModel,
+  type MetadataFilter,
   type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
+  parseNumberValue,
+} from "./utils.js";
 
 const NODE_SCHEMA = [
   {
@@ -46,6 +54,68 @@ const SIMILARITY_KEYS: {
 } = {
   [VectorStoreQueryMode.DEFAULT]: "distance",
   [VectorStoreQueryMode.HYBRID]: "score",
+};
+
+const buildFilterItem = (
+  collection: Collection,
+  filter: MetadataFilter,
+): FilterValue => {
+  const { key, operator, value } = filter;
+
+  switch (operator) {
+    case "==": {
+      return collection.filter.byProperty(key).equal(value);
+    }
+    case "!=": {
+      return collection.filter.byProperty(key).notEqual(value);
+    }
+    case ">": {
+      return collection.filter
+        .byProperty(key)
+        .greaterThan(parseNumberValue(value));
+    }
+    case "<": {
+      return collection.filter
+        .byProperty(key)
+        .lessThan(parseNumberValue(value));
+    }
+    case ">=": {
+      return collection.filter
+        .byProperty(key)
+        .greaterOrEqual(parseNumberValue(value));
+    }
+    case "<=": {
+      return collection.filter
+        .byProperty(key)
+        .lessOrEqual(parseNumberValue(value));
+    }
+    case "any": {
+      return collection.filter
+        .byProperty(key)
+        .containsAny(parseArrayValue(value).map(String));
+    }
+    case "all": {
+      return collection.filter
+        .byProperty(key)
+        .containsAll(parseArrayValue(value).map(String));
+    }
+    default: {
+      throw new Error(`Operator ${operator} is not supported.`);
+    }
+  }
+};
+
+const toWeaviateFilter = (
+  collection: Collection,
+  standardFilters?: MetadataFilters,
+): FilterValue | undefined => {
+  if (!standardFilters?.filters.length) return undefined;
+  const filtersList = standardFilters.filters.map((filter) =>
+    buildFilterItem(collection, filter),
+  );
+  if (filtersList.length === 1) return filtersList[0];
+  const condition = standardFilters.condition ?? "and";
+  return Filters[condition](...filtersList);
 };
 
 export class WeaviateVectorStore
@@ -162,17 +232,17 @@ export class WeaviateVectorStore
     }
 
     if (query.filters) {
-      filters = this.toWeaviateFilter(query.filters);
+      filters = toWeaviateFilter(collection, query.filters);
     }
 
     const queryResult = await collection.query.hybrid(query.queryStr!, {
       vector: query.queryEmbedding,
       alpha: this.getQueryAlpha(query),
       limit: query.similarityTopK,
-      filters,
       returnMetadata: Object.values(SIMILARITY_KEYS),
       returnProperties: allProperties,
       includeVector: true,
+      filters,
     });
 
     const entries = queryResult.objects;
@@ -197,10 +267,6 @@ export class WeaviateVectorStore
       similarities,
       ids,
     };
-  }
-
-  private toWeaviateFilter(filters: MetadataFilters): FilterValue {
-    throw new Error("Method not implemented.");
   }
 
   private async getClient(): Promise<WeaviateClient> {
