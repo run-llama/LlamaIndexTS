@@ -52,14 +52,14 @@ export class WeaviateVectorStore
   extends VectorStoreBase
   implements VectorStoreNoEmbedModel
 {
-  private weaviateClient?: WeaviateClient;
-  private clusterURL!: string;
-  private apiKey!: string;
-
   public storesText: boolean = true;
   private flatMetadata: boolean = true;
 
+  private weaviateClient?: WeaviateClient;
+  private clusterURL!: string;
+  private apiKey!: string;
   private indexName: string;
+
   private idKey: string;
   private contentKey: string;
   private embeddingKey: string;
@@ -104,15 +104,6 @@ export class WeaviateVectorStore
     this.contentKey = init?.contentKey ?? "text";
     this.embeddingKey = init?.embeddingKey ?? "vectors";
     this.metadataKey = init?.metadataKey ?? "node_info";
-  }
-
-  private async getClient(): Promise<WeaviateClient> {
-    if (this.weaviateClient) return this.weaviateClient;
-    const client = await weaviate.connectToWeaviateCloud(this.clusterURL, {
-      authCredentials: new weaviate.ApiKey(this.apiKey),
-    });
-    this.weaviateClient = client;
-    return client;
   }
 
   public client() {
@@ -193,10 +184,10 @@ export class WeaviateVectorStore
 
     entries.forEach((entry, index) => {
       if (index < query.similarityTopK && entry.metadata) {
-        ids.push(entry.uuid);
         const node = metadataDictToNode(entry.properties);
         node.setContent(entry.properties[this.contentKey]);
         nodes.push(node);
+        ids.push(entry.uuid);
         similarities.push(this.getNodeSimilarity(entry, similarityKey));
       }
     });
@@ -210,6 +201,15 @@ export class WeaviateVectorStore
 
   private toWeaviateFilter(filters: MetadataFilters): FilterValue {
     throw new Error("Method not implemented.");
+  }
+
+  private async getClient(): Promise<WeaviateClient> {
+    if (this.weaviateClient) return this.weaviateClient;
+    const client = await weaviate.connectToWeaviateCloud(this.clusterURL, {
+      authCredentials: new weaviate.ApiKey(this.apiKey),
+    });
+    this.weaviateClient = client;
+    return client;
   }
 
   private async ensureCollection({ createIfNotExists = false } = {}) {
