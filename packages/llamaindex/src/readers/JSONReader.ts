@@ -65,7 +65,7 @@ export interface JSONReaderOptions {
   verbose?: boolean;
 
   /**
-   * Provide a custom logger function.
+   * A placeholder for a custom logging function.
    *
    * @default undefined
    */
@@ -77,65 +77,46 @@ export class JSONParseError extends JSONReaderError {}
 export class JSONStringifyError extends JSONReaderError {}
 
 class JSONParser {
-  static async *parseJsonString(
-    jsonStr: string,
+  static async *parse(
+    content: string | Uint8Array,
     isJsonLines: boolean,
+    isStream: boolean,
+    log: (level: string, message: string) => void,
   ): AsyncGenerator<JSONValue> {
     try {
-      if (isJsonLines) {
-        for await (const value of JSONParser.parseJsonLines(jsonStr)) {
-          yield value;
-        }
+      log("debug", `Parsing JSON ${isJsonLines ? "as JSON Lines" : ""}`);
+
+      if (isStream) {
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(content as Uint8Array);
+            controller.close();
+          },
+        });
+        yield* isJsonLines
+          ? this.parseJsonLinesStream(stream)
+          : (async function* () {
+              yield parseChunked(stream);
+            })();
       } else {
-        yield JSON.parse(jsonStr);
+        const jsonStr = content as string;
+        yield* isJsonLines
+          ? this.parseJsonLines(jsonStr)
+          : (async function* () {
+              yield JSON.parse(jsonStr);
+            })();
       }
     } catch (e) {
       throw new JSONParseError(
-        `Error parsing JSON string: ${e instanceof Error ? e.message : "Unknown error occurred"}`,
-        { cause: e },
-      );
-    }
-  }
-
-  static async *parseJsonStream(
-    content: Uint8Array,
-    isJsonLines: boolean,
-  ): AsyncGenerator<JSONValue> {
-    const stream = new ReadableStream({
-      async start(controller) {
-        controller.enqueue(content);
-        controller.close();
-      },
-    });
-
-    try {
-      if (isJsonLines) {
-        yield* JSONParser.parseJsonLinesStream(stream);
-      } else {
-        yield* await parseChunked(stream);
-      }
-    } catch (e) {
-      throw new JSONParseError(
-        `Error parsing JSON stream: ${e instanceof Error ? e.message : "Unknown error occurred"}`,
+        `Error parsing JSON: ${e instanceof Error ? e.message : "Unknown error occurred"}`,
         { cause: e },
       );
     }
   }
 
   static async *parseJsonLines(jsonStr: string): AsyncGenerator<JSONValue> {
-    try {
-      for (const line of jsonStr.split("\n")) {
-        if (line.trim() !== "") {
-          yield JSON.parse(line.trim());
-        }
-      }
-    } catch (e) {
-      throw new JSONParseError(
-        `Error parsing JSON Line: ${
-          e instanceof Error ? e.message : "Unknown error occurred"
-        }`,
-        { cause: e },
-      );
+    for (const line of jsonStr.split("\n").filter((l) => l.trim())) {
+      yield JSON.parse(line.trim());
     }
   }
 
@@ -146,32 +127,23 @@ class JSONParser {
     const decoder = new TextDecoder("utf-8");
     let buffer = "";
 
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || "";
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
 
-        for (const line of lines) {
-          if (line.trim()) {
-            yield JSON.parse(line.trim());
-          }
+      for (const line of lines) {
+        if (line.trim()) {
+          yield JSON.parse(line.trim());
         }
       }
+    }
 
-      if (buffer.trim()) {
-        yield JSON.parse(buffer.trim());
-      }
-    } catch (e) {
-      throw new JSONParseError(
-        `Error parsing JSON Line in stream: ${
-          e instanceof Error ? e.message : "Unknown error occurred"
-        }`,
-        { cause: e },
-      );
+    if (buffer.trim()) {
+      yield JSON.parse(buffer.trim());
     }
   }
 }
@@ -182,19 +154,16 @@ class JSONParser {
  */
 export class JSONReader<T extends JSONValue> extends FileReader {
   private options: JSONReaderOptions;
+  private initialized: Promise<void>;
 
   constructor(options: JSONReaderOptions = {}) {
     super();
-    this.options = this.initializeOptions(options);
-    this.log(
-      "info",
-      `JSONReader initialized with options: ${JSON.stringify(this.options)}`,
-    );
+    this.options = this.initializeAndValidateOptions(options);
+    this.initialized = this.initialize(); // Kick off async initialization
   }
 
-  private initializeOptions(
-    providedOptions: JSONReaderOptions,
-  ): JSONReaderOptions {
+  // Initialize options with validation
+  private initializeAndValidateOptions(providedOptions: JSONReaderOptions): JSONReaderOptions {
     const defaultOptions: JSONReaderOptions = {
       streamingThreshold: 50,
       ensureAscii: false,
@@ -205,37 +174,52 @@ export class JSONReader<T extends JSONValue> extends FileReader {
 
     const options = { ...defaultOptions, ...providedOptions };
 
-    // Validate options immediately after merging
-    this.validateOptions(options, [
-      "streamingThreshold",
-      "collapseLength",
-      "levelsBack",
-    ]);
+    // Validation logic for numeric options
+    const numericOptions: (keyof JSONReaderOptions)[] = ['streamingThreshold', 'collapseLength', 'levelsBack'];
+    for (const key of numericOptions) {
+      if (typeof options[key] === 'number' && options[key]! < 0) {
+        throw new JSONReaderError(`${key} must not be negative`);
+      }
+    }
 
     return options;
   }
 
-  private validateOptions(
-    options: JSONReaderOptions,
-    keys: (keyof JSONReaderOptions)[],
-  ): void {
-    for (const key of keys) {
-      const value = options[key];
-      if (typeof value === "number" && value < 0) {
-        throw new JSONReaderError(`${key} must not be negative`);
-      }
+  // Asynchronous initialization
+  private async initialize(): Promise<void> {
+    try {
+      await this.log(
+        "info",
+        `JSONReader initialized with options: "${JSON.stringify(this.options)}"`,
+      );
+      // Additional async initialization can be performed here if necessary
+    } catch (e) {
+      throw new JSONReaderError(
+        `Error initializing JSONReader: ${e instanceof Error ? e.message : "Unknown error occurred"}`,
+        { cause: e },
+      );
     }
   }
 
-  private log(level: string, message: string): void {
+  /**
+   * Method to ensure initialization is complete before proceeding.
+   * Can be called externally to ensure any async operations during initialization have completed.
+   *
+   * @return {Promise<void>} A promise that resolves when initialization is complete.
+   */
+  public async ensureInitialized(): Promise<void> {
+    return this.initialized;
+  }
+
+  protected async log(level: string, message: string): Promise<void> {
+    const shouldLog = this.options.verbose || level !== "debug";
+    const timestamp = new Date().toISOString();
+    const formattedMessage = `[${timestamp}] [${level.toUpperCase()}]: ${message}`;
+
     if (this.options.logger) {
-      this.options.logger(level, message); // Use custom logger if provided
-    } else {
-      const timestamp = new Date().toISOString();
-      const formattedMessage = `[${timestamp}] [${level.toUpperCase()}]: ${message}`;
-      if (this.options.verbose || level !== "debug") {
-        console.log(`${formattedMessage}`);
-      }
+      this.options.logger(level, message);
+    } else if (shouldLog) {
+      console.log(formattedMessage);
     }
   }
 
@@ -247,14 +231,14 @@ export class JSONReader<T extends JSONValue> extends FileReader {
    */
   async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
     const documents: Document[] = [];
-
-    const parser = this.parseJson(content);
-    for await (const document of parser) {
+  
+    for await (const document of this.parseJson(content)) {
       documents.push(document);
     }
-
+  
     return documents;
   }
+  
 
   private async *parseJson(content: Uint8Array): AsyncGenerator<Document> {
     const jsonStr = new TextDecoder("utf-8").decode(content);
@@ -263,13 +247,20 @@ export class JSONReader<T extends JSONValue> extends FileReader {
 
     const parsedData =
       jsonStr.length > limit
-        ? JSONParser.parseJsonStream(content, this.options.isJsonLines ?? false)
-        : JSONParser.parseJsonString(
+        ? JSONParser.parse(
+            content,
+            this.options.isJsonLines ?? false,
+            true,
+            this.log.bind(this),
+          )
+        : JSONParser.parse(
             jsonStr,
             this.options.isJsonLines ?? false,
+            false,
+            this.log.bind(this),
           );
 
-    this.log(
+    await this.log(
       "debug",
       `Using ${jsonStr.length > limit ? "streaming parser" : "JSON.parse"} as string length ${jsonStr.length > limit ? "exceeds" : "is less than"} calculated character limit: "${limit}"`,
     );
