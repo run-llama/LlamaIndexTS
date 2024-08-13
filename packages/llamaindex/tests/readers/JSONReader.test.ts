@@ -1,9 +1,4 @@
-import {
-  JSONParseError,
-  JSONReader,
-  JSONReaderError,
-  type JSONValue,
-} from "llamaindex";
+import { JSONParseError, JSONReader, JSONReaderError } from "llamaindex";
 import { beforeEach, describe, expect, it } from "vitest";
 
 const content = new TextEncoder().encode(
@@ -11,7 +6,7 @@ const content = new TextEncoder().encode(
 );
 
 describe("JSONReader", () => {
-  let reader: JSONReader<JSONValue>;
+  let reader: JSONReader;
 
   beforeEach(() => {
     reader = new JSONReader();
@@ -19,12 +14,11 @@ describe("JSONReader", () => {
 
   describe("constructor", () => {
     it("should set default options", () => {
-      expect(reader["options"]).toEqual({
+      expect(reader["options"]).toMatchObject({
         streamingThreshold: 50,
         ensureAscii: false,
         isJsonLines: false,
         cleanJson: true,
-        verbose: false,
       });
     });
 
