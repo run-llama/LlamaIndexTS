@@ -29,7 +29,7 @@ Basic:
 
 - `cleanJson?`: Whether to clean the JSON by filtering out structural characters (`{}, [], and ,`). If set to false, it will just parse the JSON, not removing structural characters. Default is `true`.
 
-- `verbose?`: Whether to enable verbose logging. Default is `false`
+- `logger?`: A placeholder for a custom logger function.
 
 Depth-First-Traversal:
 
