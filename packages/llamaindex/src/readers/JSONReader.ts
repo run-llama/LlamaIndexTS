@@ -77,45 +77,57 @@ class JSONParser {
     isStream: boolean,
     logger?: Logger,
   ): AsyncGenerator<JSONValue> {
-      logger?.log(`Parsing JSON ${isJsonLines ? "as JSON Lines" : ""}`);
-
-        if (isStream) {
-          const stream = new ReadableStream({
-            start(controller) {
-              controller.enqueue(content as Uint8Array);
-              controller.close();
-            },
-          });
-          yield* this.parseStream(stream, isJsonLines);
-        } else {
-          yield* this.parseString(content as string, isJsonLines);
-        }
+    logger?.log(`Parsing JSON ${isJsonLines ? "as JSON Lines" : ""}`);
+    try {
+      if (isStream) {
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(content as Uint8Array);
+            controller.close();
+          },
+        });
+        yield* this.parseStream(stream, isJsonLines);
+      } else {
+        yield* this.parseString(content as string, isJsonLines);
       }
-        
-        
-        private static async *parseStream(stream: ReadableStream<Uint8Array>, isJsonLines: boolean) {
-          if (isJsonLines) {
-            yield* this.parseJsonLinesStream(stream);
-          } else {
-            yield await parseChunked(stream);
-          }
-        }
-        
-        private static async *parseString(jsonStr: string, isJsonLines: boolean) {
-          if (isJsonLines) {
-            yield* this.parseJsonLines(jsonStr);
-          } else {
-            yield JSON.parse(jsonStr);
-          }
-        }
-        
-  static async *parseJsonLines(jsonStr: string): AsyncGenerator<JSONValue> {
+    } catch (e) {
+      throw new JSONParseError(
+        `Failed to parse JSON ${isJsonLines ? "as JSON Lines" : ""} ${isStream ? "while streaming" : ""}:  ${
+          e instanceof Error ? e.message : "Unknown error occurred"
+        }`,
+        { cause: e },
+      );
+    }
+  }
+
+  private static async *parseStream(
+    stream: ReadableStream<Uint8Array>,
+    isJsonLines: boolean,
+  ) {
+    if (isJsonLines) {
+      yield* this.parseJsonLinesStream(stream);
+    } else {
+      yield await parseChunked(stream);
+    }
+  }
+
+  private static async *parseString(jsonStr: string, isJsonLines: boolean) {
+    if (isJsonLines) {
+      yield* this.parseJsonLines(jsonStr);
+    } else {
+      yield JSON.parse(jsonStr);
+    }
+  }
+
+  private static async *parseJsonLines(
+    jsonStr: string,
+  ): AsyncGenerator<JSONValue> {
     for (const line of jsonStr.split("\n").filter((l) => l.trim())) {
       yield JSON.parse(line.trim());
     }
   }
 
-  static async *parseJsonLinesStream(
+  private static async *parseJsonLinesStream(
     stream: ReadableStream<Uint8Array>,
   ): AsyncGenerator<JSONValue> {
     const reader = stream.getReader();
@@ -190,7 +202,7 @@ export class JSONReader extends FileReader {
    * @param {Uint8Array} content - The JSON data as a Uint8Array.
    * @return {Promise<Document[]>} A Promise that resolves to an array of Document objects.
    */
-  async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
+  public async loadDataAsContent(content: Uint8Array): Promise<Document[]> {
     const documents: Document[] = [];
 
     for await (const document of this.parseJson(content)) {
@@ -248,21 +260,6 @@ export class JSONReader extends FileReader {
     });
   }
 
-  private async prepareDepthFirstYield(data: JSONValue): Promise<string> {
-    const levelsBack = this.options.levelsBack ?? 0;
-    const results: string[] = [];
-
-    for await (const value of this.depthFirstYield(
-      data,
-      levelsBack === 0 ? Infinity : levelsBack,
-      [],
-      this.options.collapseLength,
-    )) {
-      results.push(value);
-    }
-    return results.join("\n");
-  }
-
   // Note: JSON.stringify does not differentiate between indent "undefined/null"(= no whitespaces) and "0"(= no whitespaces, but linebreaks)
   // as python json.dumps does. Thats why we use indent 1 and remove the leading spaces.
 
@@ -291,17 +288,25 @@ export class JSONReader extends FileReader {
     }
   }
 
+  private async prepareDepthFirstYield(data: JSONValue): Promise<string> {
+    const levelsBack = this.options.levelsBack ?? 0;
+    const results: string[] = [];
+
+    for await (const value of this.depthFirstYield(
+      data,
+      levelsBack === 0 ? Infinity : levelsBack,
+      [],
+      this.options.collapseLength,
+    )) {
+      results.push(value);
+    }
+    return results.join("\n");
+  }
+
   /**
    * A generator function that determines the next step in traversing the JSON data.
-   * If the serialized JSON string is not null, it yields the string and returns.
-   * If the JSON data is an object, it delegates the traversal to the depthFirstTraversal method.
-   * Otherwise, it yields the JSON data as a string.
-   *
-   * @param jsonData - The JSON data to traverse.
-   * @param levelsBack - The number of levels up the JSON structure to include in the output.
-   * @param path - The current path in the JSON structure.
-   * @param collapseLength - The maximum length of JSON string representation to be collapsed into a single line.
-   * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal.
+   * If collapseLength is set and the serialized JSON string is not null, it yields the collapsed string.
+   * Otherwise it delegates traversal to the `traverseJsonData` function.
    */
   private async *depthFirstYield(
     jsonData: JSONValue,
@@ -317,27 +322,46 @@ export class JSONReader extends FileReader {
     );
     if (jsonStr !== null) {
       yield jsonStr;
-      return;
+    } else {
+      yield* this.traverseJsonData(jsonData, levelsBack, path, collapseLength);
     }
+  }
 
-    try {
-      if (jsonData !== null && typeof jsonData === "object") {
-        yield* this.depthFirstTraversal(
-          jsonData,
-          levelsBack,
-          path,
-          collapseLength,
-        );
-      } else {
-        yield `${path.slice(-levelsBack).join(" ")} ${String(jsonData)}`;
+  /**
+   * Traverse the JSON data.
+   * If the data is an array, it traverses each item in the array.
+   * If the data is an object, it delegates traversal to the `traverseObject` function.
+   * If the data is a primitive value, it yields the value with the path.
+   *
+   */
+  private async *traverseJsonData(
+    jsonData: JSONValue,
+    levelsBack: number,
+    path: string[],
+    collapseLength?: number,
+  ): AsyncGenerator<string> {
+    if (Array.isArray(jsonData)) {
+      for (const item of jsonData) {
+        yield* this.depthFirstYield(item, levelsBack, path, collapseLength);
       }
-    } catch (e) {
-      throw new JSONReaderError(
-        `Error during depth-first traversal at path ${path.join(" ")}: ${
-          e instanceof Error ? e.message : "Unknown error occurred"
-        }`,
-        { cause: e },
-      );
+    } else if (jsonData !== null && typeof jsonData === "object") {
+      yield* this.traverseObject(jsonData, levelsBack, path, collapseLength);
+    } else {
+      yield `${path.slice(-levelsBack).join(" ")} ${String(jsonData)}`;
+    }
+  }
+
+  private async *traverseObject(
+    jsonObject: Record<string, any>,
+    levelsBack: number,
+    path: string[],
+    collapseLength?: number,
+  ): AsyncGenerator<string> {
+    const originalLength = path.length;
+    for (const [key, value] of Object.entries(jsonObject)) {
+      path.push(key);
+      yield* this.depthFirstYield(value, levelsBack, path, collapseLength);
+      path.length = originalLength; // Reset path length to original. Avoids cloning the path array every time.
     }
   }
 
@@ -362,55 +386,8 @@ export class JSONReader extends FileReader {
     }
   }
 
-  /**
-   * A generator function that performs a depth-first traversal of the JSON data.
-   * If the JSON data is an array, it traverses each item in the array.
-   * If the JSON data is an object, it traverses each key-value pair in the object.
-   * For each traversed item or value, it performs a depth-first yield.
-   *
-   * @param jsonData - The JSON data to traverse.
-   * @param levelsBack - The number of levels up the JSON structure to include in the output.
-   * @param path - The current path in the JSON structure.
-   * @param collapseLength - The maximum length of JSON string representation to be collapsed into a single line.
-   * @throws {JSONReaderError} - Throws an error if there is an issue during the depth-first traversal of the object.
-   */
-  private async *depthFirstTraversal(
-    jsonData: JSONValue,
-    levelsBack: number,
-    path: string[],
-    collapseLength?: number,
-  ): AsyncGenerator<string> {
-    try {
-      if (Array.isArray(jsonData)) {
-        for (const item of jsonData) {
-          yield* this.depthFirstYield(item, levelsBack, path, collapseLength);
-        }
-      } else if (jsonData !== null && typeof jsonData === "object") {
-        const originalLength = path.length;
-        for (const [key, value] of Object.entries(jsonData)) {
-          path.push(key);
-          if (value !== null) {
-            yield* this.depthFirstYield(
-              value,
-              levelsBack,
-              path,
-              collapseLength,
-            );
-          }
-          path.length = originalLength; // Reset path length to original. Avoids cloning the path array every time.
-        }
-      }
-    } catch (e) {
-      throw new JSONReaderError(
-        `Error during depth-first traversal of object: ${
-          e instanceof Error ? e.message : "Unknown error occurred"
-        }`,
-        { cause: e },
-      );
-    }
-  }
   private convertToAscii(str: string): string {
-    return str.replace(
+    return str.replaceAll(
       /[\u007F-\uFFFF]/g,
       (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`,
     );
