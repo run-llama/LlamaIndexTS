@@ -137,7 +137,7 @@ export class LlamaCloudIndex {
     projectName?: string,
   ): Promise<string> {
     const pipelines = await PipelinesService.searchPipelinesApiV1PipelinesGet({
-      projectName: projectName ?? this.params.projectName,
+      projectId: await this.getProjectId(projectName),
       pipelineName: name ?? this.params.name,
     });
 
@@ -145,12 +145,12 @@ export class LlamaCloudIndex {
   }
 
   public async getProjectId(
-    organizationId?: string,
     projectName?: string,
+    organizationId?: string,
   ): Promise<string> {
     const projects = await ProjectsService.listProjectsApiV1ProjectsGet({
-      organizationId: organizationId ?? this.params.organizationId,
       projectName: projectName ?? this.params.projectName,
+      organizationId: organizationId ?? this.params.organizationId,
     });
 
     if (projects.length === 0) {
