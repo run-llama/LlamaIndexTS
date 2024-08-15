@@ -119,37 +119,9 @@ export class LLamaCloudFileService {
   }
 
   /**
-   * Get the local download URL for a file in LlamaCloud
+   * Download a file from LlamaCloud
    */
-  public getLocalFileUrl(pipelineId: string, fileName: string, host?: string) {
-    const downloadFilename = this.toDownloadFilename(pipelineId, fileName);
-    return `${host ?? getEnv("FILESERVER_URL_PREFIX")}/${this.configs.outputDir}/${downloadFilename}`;
-  }
-
-  private toDownloadFilename(pipelineId: string, fileName: string) {
-    return `${pipelineId}${this.configs.fileDelimiter}${fileName}`;
-  }
-
-  private nodesToDownloadFiles(nodes: NodeWithScore<Metadata>[]) {
-    const downloadFiles: Array<{
-      pipelineId: string;
-      fileName: string;
-    }> = [];
-    for (const node of nodes) {
-      const pipelineId = node.node.metadata["pipeline_id"];
-      const fileName = node.node.metadata["file_name"];
-      if (!pipelineId || !fileName) continue;
-      const isDuplicate = downloadFiles.some(
-        (f) => f.pipelineId === pipelineId && f.fileName === fileName,
-      );
-      if (!isDuplicate) {
-        downloadFiles.push({ pipelineId, fileName });
-      }
-    }
-    return downloadFiles;
-  }
-
-  private async downloadFile(
+  public async downloadFile(
     pipelineId: string,
     fileName: string,
     downloadedName?: string,
@@ -185,6 +157,37 @@ export class LLamaCloudFileService {
     } catch (error) {
       throw new Error(`Error downloading file from LlamaCloud: ${error}`);
     }
+  }
+
+  /**
+   * Get local download URL for a file in LlamaCloud
+   */
+  public getLocalFileUrl(pipelineId: string, fileName: string, host?: string) {
+    const downloadFilename = this.toDownloadFilename(pipelineId, fileName);
+    return `${host ?? getEnv("FILESERVER_URL_PREFIX")}/${this.configs.outputDir}/${downloadFilename}`;
+  }
+
+  private toDownloadFilename(pipelineId: string, fileName: string) {
+    return `${pipelineId}${this.configs.fileDelimiter}${fileName}`;
+  }
+
+  private nodesToDownloadFiles(nodes: NodeWithScore<Metadata>[]) {
+    const downloadFiles: Array<{
+      pipelineId: string;
+      fileName: string;
+    }> = [];
+    for (const node of nodes) {
+      const pipelineId = node.node.metadata["pipeline_id"];
+      const fileName = node.node.metadata["file_name"];
+      if (!pipelineId || !fileName) continue;
+      const isDuplicate = downloadFiles.some(
+        (f) => f.pipelineId === pipelineId && f.fileName === fileName,
+      );
+      if (!isDuplicate) {
+        downloadFiles.push({ pipelineId, fileName });
+      }
+    }
+    return downloadFiles;
   }
 
   private async getDownloadFileUrl(
