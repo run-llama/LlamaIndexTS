@@ -4,8 +4,6 @@ import {
   ProjectsService,
 } from "@llamaindex/cloud/api";
 import type { Metadata, NodeWithScore } from "@llamaindex/core/schema";
-import { createWriteStream, fs, getEnv, path } from "@llamaindex/env";
-import https from "node:https";
 import type { CloudConstructorParams } from "./constants.js";
 import { initService } from "./utils.js";
 
@@ -103,94 +101,37 @@ export class LLamaCloudFileService {
   }
 
   /**
-   * Download unique files from a list of nodes
+   * Get download URLs for a list of nodes
    */
-  public async downloadFilesFromNodes(nodes: NodeWithScore<Metadata>[]) {
-    const files = this.nodesToDownloadFiles(nodes);
-    if (!files.length) return;
-    for (const file of files) {
-      await this.downloadFile(file.pipelineId, file.fileName);
-    }
-  }
-
-  /**
-   * Download a file from LlamaCloud
-   */
-  public async downloadFile(
-    pipelineId: string,
-    fileName: string,
-    downloadedName?: string,
-  ) {
-    try {
-      const downloadedPath = path.join(
-        this.configs.outputDir,
-        downloadedName ?? this.toDownloadFilename(pipelineId, fileName),
-      );
-
-      try {
-        // check for write access, not existence, since fsPromises does not have a `existsSync` method
-        await fs.access(downloadedPath);
-        return;
-      } catch {}
-
-      const urlToDownload = await this.getDownloadFileUrl(pipelineId, fileName);
-      if (!urlToDownload) throw new Error("File not found in LlamaCloud");
-
-      const file = createWriteStream(downloadedPath);
-      https
-        .get(urlToDownload, (response) => {
-          response.pipe(file);
-          file.on("finish", () => {
-            file.close(() => {
-              console.log("File downloaded successfully");
-            });
-          });
-        })
-        .on("error", (err) => {
-          fs.unlink(downloadedPath).catch((err) => {
-            console.error("Error deleting downloaded file:", err);
-          });
+  public async getDownloadFileUrls(nodes: NodeWithScore<Metadata>[]) {
+    const downloadFiles = this.nodesToLlamaCloudFiles(nodes);
+    const result = [];
+    for (const { pipelineId, fileName } of downloadFiles) {
+      const fileUrl = await this.getFileUrl(pipelineId, fileName);
+      if (fileUrl) {
+        result.push({
+          url: fileUrl.url,
+          name: this.toDownloadFilename(pipelineId, fileName),
         });
-    } catch (error) {
-      throw new Error(`Error downloading file from LlamaCloud: ${error}`);
+      }
     }
+    return result;
   }
 
   /**
    * Get local download URL for a file in LlamaCloud
    */
-  public getLocalFileUrl(pipelineId: string, fileName: string, host?: string) {
-    const downloadFilename = this.toDownloadFilename(pipelineId, fileName);
-    return `${host ?? getEnv("FILESERVER_URL_PREFIX")}/${this.configs.outputDir}/${downloadFilename}`;
-  }
-
-  private toDownloadFilename(pipelineId: string, fileName: string) {
-    return `${pipelineId}${this.configs.fileDelimiter}${fileName}`;
-  }
-
-  private nodesToDownloadFiles(nodes: NodeWithScore<Metadata>[]) {
-    const downloadFiles: Array<{
-      pipelineId: string;
-      fileName: string;
-    }> = [];
-    for (const node of nodes) {
-      const pipelineId = node.node.metadata["pipeline_id"];
-      const fileName = node.node.metadata["file_name"];
-      if (!pipelineId || !fileName) continue;
-      const isDuplicate = downloadFiles.some(
-        (f) => f.pipelineId === pipelineId && f.fileName === fileName,
-      );
-      if (!isDuplicate) {
-        downloadFiles.push({ pipelineId, fileName });
-      }
-    }
-    return downloadFiles;
-  }
-
-  private async getDownloadFileUrl(
+  public getLocalFilePath(
     pipelineId: string,
-    name: string,
-  ): Promise<string | null> {
+    fileName: string,
+    folder?: string,
+  ) {
+    const downloadFilename = this.toDownloadFilename(pipelineId, fileName);
+    const outputDir = folder ?? this.configs.outputDir;
+    return `${outputDir}/${downloadFilename}`;
+  }
+
+  private async getFileUrl(pipelineId: string, name: string) {
     const allPipelineFiles =
       await PipelinesService.listPipelineFilesApiV1PipelinesPipelineIdFilesGet({
         pipelineId,
@@ -202,6 +143,29 @@ export class LLamaCloudFileService {
         id: file.file_id,
         projectId: file.project_id,
       });
-    return fileContent.url;
+    return {
+      url: fileContent.url,
+      filename: this.toDownloadFilename(pipelineId, name),
+    };
+  }
+
+  private toDownloadFilename(pipelineId: string, fileName: string) {
+    return `${pipelineId}${this.configs.fileDelimiter}${fileName}`;
+  }
+
+  private nodesToLlamaCloudFiles(nodes: NodeWithScore<Metadata>[]) {
+    const files: Array<{ pipelineId: string; fileName: string }> = [];
+    for (const node of nodes) {
+      const pipelineId = node.node.metadata["pipeline_id"];
+      const fileName = node.node.metadata["file_name"];
+      if (!pipelineId || !fileName) continue;
+      const isDuplicate = files.some(
+        (f) => f.pipelineId === pipelineId && f.fileName === fileName,
+      );
+      if (!isDuplicate) {
+        files.push({ pipelineId, fileName });
+      }
+    }
+    return files;
   }
 }
