@@ -104,9 +104,9 @@ export class LLamaCloudFileService {
    * Get download URLs for a list of nodes
    */
   public async getDownloadFileUrls(nodes: NodeWithScore<Metadata>[]) {
-    const downloadFiles = this.nodesToLlamaCloudFiles(nodes);
+    const files = this.nodesToLlamaCloudFiles(nodes);
     const result = [];
-    for (const { pipelineId, fileName } of downloadFiles) {
+    for (const { pipelineId, fileName } of files) {
       const fileUrl = await this.getFileUrl(pipelineId, fileName);
       if (fileUrl) {
         result.push({
@@ -131,7 +131,7 @@ export class LLamaCloudFileService {
     return `${outputDir}/${downloadFilename}`;
   }
 
-  private async getFileUrl(pipelineId: string, name: string) {
+  public async getFileUrl(pipelineId: string, name: string) {
     const allPipelineFiles =
       await PipelinesService.listPipelineFilesApiV1PipelinesPipelineIdFilesGet({
         pipelineId,
