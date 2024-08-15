@@ -8,7 +8,7 @@ import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
 import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
 import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./constants.js";
-import { getAppBaseUrl, initService } from "./utils.js";
+import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
 
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
@@ -148,28 +148,10 @@ export class LlamaCloudIndex {
     projectName?: string,
     organizationId?: string,
   ): Promise<string> {
-    const projects = await ProjectsService.listProjectsApiV1ProjectsGet({
-      projectName: projectName ?? this.params.projectName,
-      organizationId: organizationId ?? this.params.organizationId,
-    });
-
-    if (projects.length === 0) {
-      throw new Error(
-        `Unknown project name ${this.params.projectName}. Please confirm a managed project with this name exists.`,
-      );
-    } else if (projects.length > 1) {
-      throw new Error(
-        `Multiple projects found with name ${this.params.projectName}. Please specify organization_id.`,
-      );
-    }
-
-    const project = projects[0];
-
-    if (!project.id) {
-      throw new Error(`No project found with name ${this.params.projectName}`);
-    }
-
-    return project.id;
+    return await getProjectId(
+      projectName ?? this.params.projectName,
+      organizationId ?? this.params.organizationId,
+    );
   }
 
   static async fromDocuments(

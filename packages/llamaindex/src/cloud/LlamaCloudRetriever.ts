@@ -11,7 +11,7 @@ import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
 import type { ClientParams, CloudConstructorParams } from "./constants.js";
 import { DEFAULT_PROJECT_NAME } from "./constants.js";
-import { initService } from "./utils.js";
+import { getProjectId, initService } from "./utils.js";
 
 export type CloudRetrieveParams = Omit<
   RetrievalParams,
@@ -21,6 +21,7 @@ export type CloudRetrieveParams = Omit<
 export class LlamaCloudRetriever implements BaseRetriever {
   clientParams: ClientParams;
   retrieveParams: CloudRetrieveParams;
+  organizationId?: string;
   projectName: string = DEFAULT_PROJECT_NAME;
   pipelineName: string;
 
@@ -49,6 +50,9 @@ export class LlamaCloudRetriever implements BaseRetriever {
     if (params.projectName) {
       this.projectName = params.projectName;
     }
+    if (params.organizationId) {
+      this.organizationId = params.organizationId;
+    }
   }
 
   @wrapEventCaller
@@ -57,7 +61,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
     const pipelines = await PipelinesService.searchPipelinesApiV1PipelinesGet({
-      projectName: this.projectName,
+      projectId: await getProjectId(this.projectName, this.organizationId),
       pipelineName: this.pipelineName,
     });
 
