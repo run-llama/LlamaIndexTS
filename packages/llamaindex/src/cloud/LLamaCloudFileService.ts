@@ -3,15 +3,13 @@ import {
   PipelinesService,
   ProjectsService,
 } from "@llamaindex/cloud/api";
-import { getEnv } from "@llamaindex/env";
+import { createWriteStream, fs, getEnv, path } from "@llamaindex/env";
 import type {
   CloudConstructorParams,
   Metadata,
   NodeWithScore,
 } from "llamaindex";
-import fs from "node:fs";
 import https from "node:https";
-import path from "node:path";
 import { initService } from "./utils.js";
 
 const OUTPUT_DIR = "output/llamacloud";
@@ -132,13 +130,15 @@ export class LLamaCloudFileService {
         downloadedName ?? this.toDownloadFilename(pipelineId, fileName),
       );
 
-      // Check if file already exists
-      if (fs.existsSync(downloadedPath)) return;
+      try {
+        await fs.access(downloadedPath);
+        return;
+      } catch {}
 
       const urlToDownload = await this.getDownloadFileUrl(pipelineId, fileName);
       if (!urlToDownload) throw new Error("File not found in LlamaCloud");
 
-      const file = fs.createWriteStream(downloadedPath);
+      const file = createWriteStream(downloadedPath);
       https
         .get(urlToDownload, (response) => {
           response.pipe(file);
@@ -149,9 +149,8 @@ export class LLamaCloudFileService {
           });
         })
         .on("error", (err) => {
-          fs.unlink(downloadedPath, () => {
-            console.error("Error downloading file:", err);
-            throw err;
+          fs.unlink(downloadedPath).catch((err) => {
+            console.error("Error deleting downloaded file:", err);
           });
         });
     } catch (error) {
