@@ -3,13 +3,10 @@ import {
   PipelinesService,
   ProjectsService,
 } from "@llamaindex/cloud/api";
+import type { Metadata, NodeWithScore } from "@llamaindex/core/schema";
 import { createWriteStream, fs, getEnv, path } from "@llamaindex/env";
-import type {
-  CloudConstructorParams,
-  Metadata,
-  NodeWithScore,
-} from "llamaindex";
 import https from "node:https";
+import type { CloudConstructorParams } from "./constants.js";
 import { initService } from "./utils.js";
 
 const OUTPUT_DIR = "output/llamacloud";
@@ -131,6 +128,7 @@ export class LLamaCloudFileService {
       );
 
       try {
+        // check for write access, not existence, since fsPromises does not have a `existsSync` method
         await fs.access(downloadedPath);
         return;
       } catch {}
