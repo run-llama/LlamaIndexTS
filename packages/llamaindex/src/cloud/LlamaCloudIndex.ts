@@ -8,7 +8,7 @@ import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
 import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
 import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./constants.js";
-import { getAppBaseUrl, initService } from "./utils.js";
+import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
 
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
@@ -132,16 +132,26 @@ export class LlamaCloudIndex {
     await this.waitForPipelineIngestion(verbose, raiseOnError);
   }
 
-  private async getPipelineId(
-    name: string,
-    projectName: string,
+  public async getPipelineId(
+    name?: string,
+    projectName?: string,
   ): Promise<string> {
     const pipelines = await PipelinesService.searchPipelinesApiV1PipelinesGet({
-      projectName,
-      pipelineName: name,
+      projectId: await this.getProjectId(projectName),
+      pipelineName: name ?? this.params.name,
     });
 
     return pipelines[0].id;
+  }
+
+  public async getProjectId(
+    projectName?: string,
+    organizationId?: string,
+  ): Promise<string> {
+    return await getProjectId(
+      projectName ?? this.params.projectName,
+      organizationId ?? this.params.organizationId,
+    );
   }
 
   static async fromDocuments(
@@ -168,6 +178,7 @@ export class LlamaCloudIndex {
     });
 
     const project = await ProjectsService.upsertProjectApiV1ProjectsPut({
+      organizationId: params.organizationId,
       requestBody: {
         name: params.projectName ?? "default",
       },
