@@ -35,7 +35,13 @@ let sentenceTokenizer: SentenceTokenizer | null = null;
 
 export const splitBySentenceTokenizer = (): TextSplitterFn => {
   if (!sentenceTokenizer) {
-    sentenceTokenizer = new SentenceTokenizer();
+    sentenceTokenizer = new SentenceTokenizer([
+      "i.e.",
+      "etc.",
+      "vs.",
+      "Inc.",
+      "A.S.A.P.",
+    ]);
   }
   const tokenizer = sentenceTokenizer;
   return (text: string) => {
