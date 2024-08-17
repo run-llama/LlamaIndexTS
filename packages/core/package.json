@@ -122,8 +122,7 @@
   ],
   "scripts": {
     "dev": "bunchee --watch",
-    "build": "bunchee",
-    "test": "vitest"
+    "build": "bunchee"
   },
   "repository": {
     "type": "git",
@@ -133,8 +132,7 @@
   "devDependencies": {
     "ajv": "^8.16.0",
     "bunchee": "5.3.1",
-    "natural": "^8.0.1",
-    "vitest": "^2.0.5"
+    "natural": "^8.0.1"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
