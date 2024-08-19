@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.5.19
+
+### Patch Changes
+
+- fcbf183: implement llamacloud file service
+
 ## 0.5.18
 
 ### Patch Changes
