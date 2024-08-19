@@ -3,37 +3,14 @@ import {
   PipelinesService,
   ProjectsService,
 } from "@llamaindex/cloud/api";
-import type { Metadata, NodeWithScore } from "@llamaindex/core/schema";
-import type { CloudConstructorParams } from "./constants.js";
 import { initService } from "./utils.js";
 
-const OUTPUT_DIR = "output/llamacloud";
-const FILE_DELIMITER = "$";
-
-export type LLamaCloudFileServiceConfigs = {
-  outputDir: string;
-  fileDelimiter: string;
-};
-
+initService();
 export class LLamaCloudFileService {
-  params?: CloudConstructorParams;
-  configs: LLamaCloudFileServiceConfigs;
-
-  constructor(
-    params?: CloudConstructorParams & Partial<LLamaCloudFileServiceConfigs>,
-  ) {
-    this.configs = {
-      outputDir: params?.outputDir ?? OUTPUT_DIR,
-      fileDelimiter: params?.fileDelimiter ?? FILE_DELIMITER,
-    };
-    if (params) this.params = params;
-    initService(params);
-  }
-
   /**
-   * get list of projects, each project contains a list of pipelines
+   * Get list of projects, each project contains a list of pipelines
    */
-  public async getAllProjectsWithPipelines() {
+  public static async getAllProjectsWithPipelines() {
     try {
       const projects = await ProjectsService.listProjectsApiV1ProjectsGet();
       const pipelines =
@@ -51,7 +28,7 @@ export class LLamaCloudFileService {
   /**
    * Upload a file to a pipeline in LlamaCloud
    */
-  public async addFileToPipeline(
+  public static async addFileToPipeline(
     projectId: string,
     pipelineId: string,
     uploadFile: File | Blob,
@@ -101,71 +78,20 @@ export class LLamaCloudFileService {
   }
 
   /**
-   * Get download URLs for a list of nodes
+   * Get download URL for a file in LlamaCloud
    */
-  public async getDownloadFileUrls(nodes: NodeWithScore<Metadata>[]) {
-    const files = this.nodesToLlamaCloudFiles(nodes);
-    const result = [];
-    for (const { pipelineId, fileName } of files) {
-      const fileUrl = await this.getFileUrl(pipelineId, fileName);
-      if (fileUrl) {
-        result.push({
-          url: fileUrl.url,
-          name: this.toDownloadFilename(pipelineId, fileName),
-        });
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Get local download URL for a file in LlamaCloud
-   */
-  public getLocalFilePath(
-    pipelineId: string,
-    fileName: string,
-    folder?: string,
-  ) {
-    const downloadFilename = this.toDownloadFilename(pipelineId, fileName);
-    const outputDir = folder ?? this.configs.outputDir;
-    return `${outputDir}/${downloadFilename}`;
-  }
-
-  public async getFileUrl(pipelineId: string, name: string) {
+  public static async getFileUrl(pipelineId: string, filename: string) {
     const allPipelineFiles =
       await PipelinesService.listPipelineFilesApiV1PipelinesPipelineIdFilesGet({
         pipelineId,
       });
-    const file = allPipelineFiles.find((file) => file.name === name);
+    const file = allPipelineFiles.find((file) => file.name === filename);
     if (!file?.file_id) return null;
     const fileContent =
       await FilesService.readFileContentApiV1FilesIdContentGet({
         id: file.file_id,
         projectId: file.project_id,
       });
-    return {
-      url: fileContent.url,
-      filename: this.toDownloadFilename(pipelineId, name),
-    };
-  }
-
-  private toDownloadFilename(pipelineId: string, fileName: string) {
-    return `${pipelineId}${this.configs.fileDelimiter}${fileName}`;
-  }
-
-  private nodesToLlamaCloudFiles(nodes: NodeWithScore<Metadata>[]) {
-    const files: Array<{ pipelineId: string; fileName: string }> = [];
-    for (const node of nodes) {
-      const pipelineId = node.node.metadata["pipeline_id"];
-      const fileName = node.node.metadata["file_name"];
-      if (!pipelineId || !fileName) continue;
-      const isDuplicate = files.some(
-        (f) => f.pipelineId === pipelineId && f.fileName === fileName,
-      );
-      if (!isDuplicate) {
-        files.push({ pipelineId, fileName });
-      }
-    }
-    return files;
+    return fileContent.url;
   }
 }
