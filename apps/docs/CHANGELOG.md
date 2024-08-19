@@ -1,5 +1,12 @@
 # docs
 
+## 0.0.60
+
+### Patch Changes
+
+- Updated dependencies [fcbf183]
+  - llamaindex@0.5.19
+
 ## 0.0.59
 
 ### Patch Changes
