@@ -5,12 +5,12 @@ import {
 } from "@llamaindex/cloud/api";
 import { initService } from "./utils.js";
 
-initService();
 export class LLamaCloudFileService {
   /**
    * Get list of projects, each project contains a list of pipelines
    */
   public static async getAllProjectsWithPipelines() {
+    initService();
     try {
       const projects = await ProjectsService.listProjectsApiV1ProjectsGet();
       const pipelines =
@@ -34,6 +34,7 @@ export class LLamaCloudFileService {
     uploadFile: File | Blob,
     customMetadata: Record<string, any> = {},
   ) {
+    initService();
     const file = await FilesService.uploadFileApiV1FilesPost({
       projectId,
       formData: {
@@ -81,6 +82,7 @@ export class LLamaCloudFileService {
    * Get download URL for a file in LlamaCloud
    */
   public static async getFileUrl(pipelineId: string, filename: string) {
+    initService();
     const allPipelineFiles =
       await PipelinesService.listPipelineFilesApiV1PipelinesPipelineIdFilesGet({
         pipelineId,
