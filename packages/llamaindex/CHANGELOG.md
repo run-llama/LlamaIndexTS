@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.5.18
+
+### Patch Changes
+
+- 8b66cf4: feat: support organization id in llamacloud index
+- Updated dependencies [e27e7dd]
+  - @llamaindex/core@0.1.9
+
 ## 0.5.17
 
 ### Patch Changes

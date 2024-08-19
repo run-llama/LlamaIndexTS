@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./node-parser": {
@@ -132,7 +132,7 @@
   "devDependencies": {
     "ajv": "^8.16.0",
     "bunchee": "5.3.1",
-    "natural": "^7.1.0"
+    "natural": "^8.0.1"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",

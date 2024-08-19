@@ -1,5 +1,5 @@
 import type { TextSplitter } from "./base";
-import SentenceTokenizerNew from "./sentence-tokenizer-parser.js";
+import SentenceTokenizer from "./sentence_tokenizer";
 
 export type TextSplitterFn = (text: string) => string[];
 
@@ -31,11 +31,17 @@ export const splitByChar = (): TextSplitterFn => {
   return (text: string) => text.split("");
 };
 
-let sentenceTokenizer: SentenceTokenizerNew | null = null;
+let sentenceTokenizer: SentenceTokenizer | null = null;
 
 export const splitBySentenceTokenizer = (): TextSplitterFn => {
   if (!sentenceTokenizer) {
-    sentenceTokenizer = new SentenceTokenizerNew();
+    sentenceTokenizer = new SentenceTokenizer([
+      "i.e.",
+      "etc.",
+      "vs.",
+      "Inc.",
+      "A.S.A.P.",
+    ]);
   }
   const tokenizer = sentenceTokenizer;
   return (text: string) => {
