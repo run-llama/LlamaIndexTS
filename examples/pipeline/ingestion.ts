@@ -5,7 +5,7 @@ import {
   IngestionPipeline,
   MetadataMode,
   OpenAIEmbedding,
-  SimpleNodeParser,
+  SentenceSplitter,
 } from "llamaindex";
 
 async function main() {
@@ -18,7 +18,7 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
   const pipeline = new IngestionPipeline({
     transformations: [
-      new SimpleNodeParser({ chunkSize: 1024, chunkOverlap: 20 }),
+      new SentenceSplitter({ chunkSize: 1024, chunkOverlap: 20 }),
       new OpenAIEmbedding(),
     ],
   });

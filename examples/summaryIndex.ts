@@ -1,7 +1,7 @@
 import {
   Document,
+  SentenceSplitter,
   Settings,
-  SimpleNodeParser,
   SummaryIndex,
   SummaryRetrieverMode,
 } from "llamaindex";
@@ -9,7 +9,7 @@ import {
 import essay from "./essay";
 
 // Update node parser
-Settings.nodeParser = new SimpleNodeParser({
+Settings.nodeParser = new SentenceSplitter({
   chunkSize: 40,
 });
 

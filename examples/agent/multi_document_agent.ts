@@ -6,8 +6,8 @@ import {
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
+  SentenceSplitter,
   Settings,
-  SimpleNodeParser,
   SimpleToolNodeMapping,
   SummaryIndex,
   VectorStoreIndex,
@@ -23,7 +23,7 @@ Settings.llm = new OpenAI({ model: "gpt-4" });
 async function main() {
   await extractWikipedia(wikiTitles);
 
-  const countryDocs: Record<string, Document> = {};
+  const countryDocs: Record = {};
 
   for (const title of wikiTitles) {
     const path = `./agent/helpers/tmp_data/${title}.txt`;
@@ -43,7 +43,7 @@ async function main() {
   for (const title of wikiTitles) {
     console.log(`Processing ${title}`);
 
-    const nodes = new SimpleNodeParser({
+    const nodes = new SentenceSplitter({
       chunkSize: 200,
       chunkOverlap: 20,
     }).getNodesFromDocuments([countryDocs[title]]);

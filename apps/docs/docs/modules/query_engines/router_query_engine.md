@@ -15,7 +15,7 @@ import {
   OpenAI,
   RouterQueryEngine,
   SimpleDirectoryReader,
-  SimpleNodeParser,
+  SentenceSplitter,
   SummaryIndex,
   VectorStoreIndex,
   Settings,
@@ -34,11 +34,11 @@ const documents = await new SimpleDirectoryReader().loadData({
 
 ## Service Context
 
-Next, we need to define some basic rules and parse the documents into nodes. We will use the `SimpleNodeParser` to parse the documents into nodes and `Settings` to define the rules (eg. LLM API key, chunk size, etc.):
+Next, we need to define some basic rules and parse the documents into nodes. We will use the `SentenceSplitter` to parse the documents into nodes and `Settings` to define the rules (eg. LLM API key, chunk size, etc.):
 
 ```ts
 Settings.llm = new OpenAI();
-Settings.nodeParser = new SimpleNodeParser({
+Settings.nodeParser = new SentenceSplitter({
   chunkSize: 1024,
 });
 ```
@@ -104,14 +104,14 @@ import {
   OpenAI,
   RouterQueryEngine,
   SimpleDirectoryReader,
-  SimpleNodeParser,
+  SentenceSplitter,
   SummaryIndex,
   VectorStoreIndex,
   Settings,
 } from "llamaindex";
 
 Settings.llm = new OpenAI();
-Settings.nodeParser = new SimpleNodeParser({
+Settings.nodeParser = new SentenceSplitter({
   chunkSize: 1024,
 });
 
