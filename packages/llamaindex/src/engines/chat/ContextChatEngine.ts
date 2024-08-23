@@ -4,7 +4,7 @@ import type {
   MessageContent,
   MessageType,
 } from "@llamaindex/core/llms";
-import { EngineResponse } from "@llamaindex/core/schema";
+import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import {
   extractText,
   streamConverter,
@@ -53,6 +53,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
       contextSystemPrompt: init?.contextSystemPrompt,
       nodePostprocessors: init?.nodePostprocessors,
       contextRole: init?.contextRole,
+      metadataMode: MetadataMode.LLM,
     });
     this.systemPrompt = init.systemPrompt;
   }

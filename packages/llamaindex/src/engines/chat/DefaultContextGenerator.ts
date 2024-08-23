@@ -1,5 +1,5 @@
 import type { MessageContent, MessageType } from "@llamaindex/core/llms";
-import { type NodeWithScore } from "@llamaindex/core/schema";
+import { MetadataMode, type NodeWithScore } from "@llamaindex/core/schema";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { ContextSystemPrompt } from "../../Prompt.js";
 import { defaultContextSystemPrompt } from "../../Prompt.js";
@@ -16,12 +16,14 @@ export class DefaultContextGenerator
   contextSystemPrompt: ContextSystemPrompt;
   nodePostprocessors: BaseNodePostprocessor[];
   contextRole: MessageType;
+  metadataMode?: MetadataMode;
 
   constructor(init: {
     retriever: BaseRetriever;
     contextSystemPrompt?: ContextSystemPrompt;
     nodePostprocessors?: BaseNodePostprocessor[];
     contextRole?: MessageType;
+    metadataMode?: MetadataMode;
   }) {
     super();
 
@@ -30,6 +32,7 @@ export class DefaultContextGenerator
       init?.contextSystemPrompt ?? defaultContextSystemPrompt;
     this.nodePostprocessors = init.nodePostprocessors || [];
     this.contextRole = init.contextRole ?? "system";
+    this.metadataMode = init.metadataMode ?? MetadataMode.NONE;
   }
 
   protected _getPrompts(): { contextSystemPrompt: ContextSystemPrompt } {
@@ -75,6 +78,8 @@ export class DefaultContextGenerator
     const content = await createMessageContent(
       this.contextSystemPrompt,
       nodes.map((r) => r.node),
+      undefined,
+      this.metadataMode,
     );
 
     return {
