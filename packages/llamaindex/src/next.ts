@@ -17,6 +17,13 @@
  */
 export default function withLlamaIndex(config: any) {
   config.experimental = config.experimental ?? {};
+  // copy WASM files to the NextJS build (needed or tiktoken)
+  config.experimental.outputFileTracingIncludes =
+    config.experimental.outputFileTracingIncludes ?? {};
+  config.experimental.outputFileTracingIncludes["/**/*"] = [
+    "./node_modules/**/*.wasm",
+  ];
+  // needed for transformers, see https://huggingface.co/docs/transformers.js/en/tutorials/next#step-2-install-and-configure-transformersjs
   config.experimental.serverComponentsExternalPackages =
     config.experimental.serverComponentsExternalPackages ?? [];
   config.experimental.serverComponentsExternalPackages.push(
