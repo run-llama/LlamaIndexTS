@@ -23,7 +23,7 @@ Settings.llm = new OpenAI({ model: "gpt-4" });
 async function main() {
   await extractWikipedia(wikiTitles);
 
-  const countryDocs: Record = {};
+  const countryDocs: Record<string, Document> = {};
 
   for (const title of wikiTitles) {
     const path = `./agent/helpers/tmp_data/${title}.txt`;
