@@ -28,6 +28,11 @@ const PYTHON_TO_JS_TYPE_MAP = {
   "4": ObjectType.DOCUMENT,
 };
 
+export type DocJson = {
+  [TYPE_KEY]: string;
+  [DATA_KEY]: string;
+};
+
 async function fromPythonImpl(data: Record<string, unknown>) {
   const convertedJson = await camelCaseJson(data);
   if (convertedJson.relationships) {
@@ -47,20 +52,17 @@ async function fromPythonImpl(data: Record<string, unknown>) {
 export async function fromPythonDocStore({
   [TYPE_KEY]: type,
   [DATA_KEY]: data,
-}: {
-  [TYPE_KEY]: string;
-  [DATA_KEY]: Record<string, unknown>;
-}) {
+}: DocJson) {
   if (!(type in PYTHON_TO_JS_TYPE_MAP)) {
     throw new Error("");
   }
   const objectType =
     PYTHON_TO_JS_TYPE_MAP[type as keyof typeof PYTHON_TO_JS_TYPE_MAP];
-  const convertedJson = fromPythonImpl(data);
+  const convertedJson = fromPythonImpl(JSON.parse(data));
   return jsonToNode(convertedJson, objectType);
 }
 
-export async function fromPythonVectorStore(json: Record<any, unknown>) {
+export async function fromPythonNode(json: Record<any, unknown>) {
   const convertedJson = await fromPythonImpl(json);
   const type = convertedJson["metadata"]?.["_node_type"];
   if (!(type in PYTHON_TO_JS_TYPE_MAP)) {

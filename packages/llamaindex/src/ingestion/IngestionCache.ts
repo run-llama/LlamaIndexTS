@@ -63,6 +63,6 @@ export class IngestionCache {
     if (!json || !json[this.nodesKey] || !Array.isArray(json[this.nodesKey])) {
       return undefined;
     }
-    return json[this.nodesKey].map((doc: any) => jsonToDoc(doc));
+    return Promise.all(json[this.nodesKey].map((doc: any) => jsonToDoc(doc)));
   }
 }

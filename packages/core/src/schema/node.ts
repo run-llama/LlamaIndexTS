@@ -10,11 +10,11 @@ export enum NodeRelationship {
 }
 
 export enum ObjectType {
-  TEXT = "TEXT",
-  IMAGE = "IMAGE",
-  INDEX = "INDEX",
-  DOCUMENT = "DOCUMENT",
-  IMAGE_DOCUMENT = "IMAGE_DOCUMENT",
+  TEXT = "1",
+  IMAGE = "2",
+  INDEX = "3",
+  DOCUMENT = "4",
+  IMAGE_DOCUMENT = "5", // Python side doesn't have this enum
 }
 
 export enum MetadataMode {

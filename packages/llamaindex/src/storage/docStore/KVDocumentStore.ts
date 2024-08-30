@@ -29,7 +29,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     for (const key in jsonDict) {
       const value = jsonDict[key];
       if (isValidDocJson(value)) {
-        docs[key] = jsonToDoc(value);
+        docs[key] = await jsonToDoc(value);
       } else {
         console.warn(`Invalid JSON for docId ${key}`);
       }

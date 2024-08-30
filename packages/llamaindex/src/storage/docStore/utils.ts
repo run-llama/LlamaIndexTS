@@ -1,5 +1,5 @@
 import type { BaseNode } from "@llamaindex/core/schema";
-import { Document, ObjectType, TextNode } from "@llamaindex/core/schema";
+import { ObjectType, fromPythonDocStore } from "@llamaindex/core/schema";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
@@ -25,30 +25,4 @@ export function docToJson(doc: BaseNode): DocJson {
   };
 }
 
-export function jsonToDoc(docDict: DocJson): BaseNode {
-  const docType = docDict[TYPE_KEY];
-  const dataDict = JSON.parse(docDict[DATA_KEY]);
-  let doc: BaseNode;
-
-  if (docType === ObjectType.DOCUMENT) {
-    doc = new Document({
-      text: dataDict.text,
-      id_: dataDict.id_,
-      embedding: dataDict.embedding,
-      hash: dataDict.hash,
-      metadata: dataDict.metadata,
-    });
-  } else if (docType === ObjectType.TEXT) {
-    doc = new TextNode({
-      text: dataDict.text,
-      id_: dataDict.id_,
-      hash: dataDict.hash,
-      metadata: dataDict.metadata,
-      relationships: dataDict.relationships,
-    });
-  } else {
-    throw new Error(`Unknown doc type: ${docType}`);
-  }
-
-  return doc;
-}
+export const jsonToDoc = fromPythonDocStore;
