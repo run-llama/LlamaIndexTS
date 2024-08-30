@@ -19,7 +19,18 @@ async function query() {
   const index = await VectorStoreIndex.fromVectorStore(store);
 
   const retriever = index.asRetriever({ similarityTopK: 20 });
-  const queryEngine = index.asQueryEngine({ retriever });
+  const queryEngine = index.asQueryEngine({
+    retriever,
+    preFilters: {
+      filters: [
+        {
+          key: "_node_type",
+          value: "TextNode",
+          operator: "==",
+        },
+      ],
+    },
+  });
   const result = await queryEngine.query({
     query: "What does author receive when he was 11 years old?", // Isaac Asimov's "Foundation" for Christmas
   });

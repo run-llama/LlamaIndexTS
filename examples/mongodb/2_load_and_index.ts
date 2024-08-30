@@ -34,6 +34,7 @@ async function loadAndIndex() {
     dbName: databaseName,
     collectionName: vectorCollectionName, // this is where your embeddings will be stored
     indexName: indexName, // this is the name of the index you will need to create
+    populatedMetadataFields: ["_node_type", "document_id"], // this is the field that will be used for the query
   });
 
   // now create an index from all the Documents and store them in Atlas
@@ -46,5 +47,3 @@ async function loadAndIndex() {
 }
 
 loadAndIndex().catch(console.error);
-
-// you can't query your index yet because you need to create a vector search index in mongodb's UI now

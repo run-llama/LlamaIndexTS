@@ -13,6 +13,14 @@ import {
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
+// define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
+const DEFAULT_EMBEDDING_DEFINITION = {
+  type: "knnVector",
+  dimensions: 1536,
+  similarity: "cosine",
+};
+
+// TODO: Build filters based on the operator
 // Utility function to convert metadata filters to MongoDB filter
 function toMongoDBFilter(
   standardFilters: MetadataFilters,
@@ -38,6 +46,8 @@ export class MongoDBAtlasVectorSearch
   dbName: string;
   collectionName: string;
   autoCreateIndex: boolean;
+  embeddingDefinition: Record<string, unknown>;
+  populatedMetadataFields: string[];
 
   /**
    * The used MongoClient. If not given, a new MongoClient is created based on the MONGODB_URI env variable.
@@ -98,26 +108,14 @@ export class MongoDBAtlasVectorSearch
   numCandidates: (query: VectorStoreQuery) => number;
   private collection?: Collection;
 
-  // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
-  readonly SEARCH_INDEX_DEFINITION = {
-    mappings: {
-      dynamic: true,
-      fields: {
-        embedding: {
-          type: "knnVector",
-          dimensions: 1536,
-          similarity: "cosine",
-        },
-      },
-    },
-  };
-
   constructor(
     init: Partial<MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
       embedModel?: BaseEmbedding;
       autoCreateIndex?: boolean;
+      populatedMetadataFields?: string[];
+      embeddingDefinition?: Record<string, unknown>;
     },
   ) {
     super(init.embedModel);
@@ -136,6 +134,9 @@ export class MongoDBAtlasVectorSearch
     this.dbName = init.dbName ?? "default_db";
     this.collectionName = init.collectionName ?? "default_collection";
     this.autoCreateIndex = init.autoCreateIndex ?? true;
+    this.populatedMetadataFields = init.populatedMetadataFields ?? [];
+    this.embeddingDefinition =
+      init.embeddingDefinition ?? DEFAULT_EMBEDDING_DEFINITION;
     this.indexName = init.indexName ?? "default";
     this.embeddingKey = init.embeddingKey ?? "embedding";
     this.idKey = init.idKey ?? "id";
@@ -161,9 +162,30 @@ export class MongoDBAtlasVectorSearch
         (index) => index.name === this.indexName,
       );
       if (!indexExists) {
+        const additionalDefinition: Record<string, { type: string }> = {};
+        this.populatedMetadataFields.forEach((field) => {
+          additionalDefinition[field] = { type: "token" };
+        });
+        console.log("createSearchIndex", {
+          mappings: {
+            dynamic: true,
+            fields: {
+              embedding: this.embeddingDefinition,
+              ...additionalDefinition,
+            },
+          },
+        });
         await this.collection.createSearchIndex({
           name: this.indexName,
-          definition: this.SEARCH_INDEX_DEFINITION,
+          definition: {
+            mappings: {
+              dynamic: true,
+              fields: {
+                embedding: this.embeddingDefinition,
+                ...additionalDefinition,
+              },
+            },
+          },
         });
         console.log("Created search index: ", this.indexName);
       }
@@ -190,11 +212,18 @@ export class MongoDBAtlasVectorSearch
         this.flatMetadata,
       );
 
+      // Include the specified metadata fields in the top level of the document (to help filter)
+      const populatedMetadata: Record<string, unknown> = {};
+      for (const field of this.populatedMetadataFields) {
+        populatedMetadata[field] = metadata[field];
+      }
+
       return {
         [this.idKey]: node.id_,
         [this.embeddingKey]: node.getEmbedding(),
         [this.textKey]: node.getContent(MetadataMode.NONE) || "",
         [this.metadataKey]: metadata,
+        ...populatedMetadata,
       };
     });
 
