@@ -35,6 +35,10 @@ export class MongoDBAtlasVectorSearch
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
+  dbName: string;
+  collectionName: string;
+  autoCreateIndex: boolean;
+
   /**
    * The used MongoClient. If not given, a new MongoClient is created based on the MONGODB_URI env variable.
    */
@@ -92,13 +96,28 @@ export class MongoDBAtlasVectorSearch
    * Default: query.similarityTopK * 10
    */
   numCandidates: (query: VectorStoreQuery) => number;
-  private collection: Collection;
+  private collection?: Collection;
+
+  // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
+  readonly SEARCH_INDEX_DEFINITION = {
+    mappings: {
+      dynamic: true,
+      fields: {
+        embedding: {
+          type: "knnVector",
+          dimensions: 1536,
+          similarity: "cosine",
+        },
+      },
+    },
+  };
 
   constructor(
     init: Partial<MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
       embedModel?: BaseEmbedding;
+      autoCreateIndex?: boolean;
     },
   ) {
     super(init.embedModel);
@@ -114,9 +133,9 @@ export class MongoDBAtlasVectorSearch
       this.mongodbClient = new MongoClient(mongoUri);
     }
 
-    this.collection = this.mongodbClient
-      .db(init.dbName ?? "default_db")
-      .collection(init.collectionName ?? "default_collection");
+    this.dbName = init.dbName ?? "default_db";
+    this.collectionName = init.collectionName ?? "default_collection";
+    this.autoCreateIndex = init.autoCreateIndex ?? true;
     this.indexName = init.indexName ?? "default";
     this.embeddingKey = init.embeddingKey ?? "embedding";
     this.idKey = init.idKey ?? "id";
@@ -125,6 +144,32 @@ export class MongoDBAtlasVectorSearch
     this.numCandidates =
       init.numCandidates ?? ((query) => query.similarityTopK * 10);
     this.insertOptions = init.insertOptions;
+  }
+
+  async ensureCollection() {
+    if (!this.collection) {
+      const collection = await this.mongodbClient
+        .db(this.dbName)
+        .createCollection(this.collectionName);
+
+      this.collection = collection;
+    }
+
+    if (this.autoCreateIndex) {
+      const searchIndexes = await this.collection.listSearchIndexes().toArray();
+      const indexExists = searchIndexes.some(
+        (index) => index.name === this.indexName,
+      );
+      if (!indexExists) {
+        await this.collection.createSearchIndex({
+          name: this.indexName,
+          definition: this.SEARCH_INDEX_DEFINITION,
+        });
+        console.log("Created search index: ", this.indexName);
+      }
+    }
+
+    return this.collection;
   }
 
   /**
@@ -154,7 +199,8 @@ export class MongoDBAtlasVectorSearch
     });
 
     console.debug("Inserting data into MongoDB: ", dataToInsert);
-    const insertResult = await this.collection.insertMany(
+    const collection = await this.ensureCollection();
+    const insertResult = await collection.insertMany(
       dataToInsert,
       this.insertOptions,
     );
@@ -169,7 +215,8 @@ export class MongoDBAtlasVectorSearch
    * @param deleteOptions Options to pass to the deleteOne function
    */
   async delete(refDocId: string, deleteOptions?: any): Promise<void> {
-    await this.collection.deleteMany(
+    const collection = await this.ensureCollection();
+    await collection.deleteMany(
       {
         [`${this.metadataKey}.ref_doc_id`]: refDocId,
       },
@@ -215,7 +262,8 @@ export class MongoDBAtlasVectorSearch
     ];
 
     console.debug("Running query pipeline: ", pipeline);
-    const cursor = await this.collection.aggregate(pipeline);
+    const collection = await this.ensureCollection();
+    const cursor = await collection.aggregate(pipeline);
 
     const nodes: BaseNode[] = [];
     const ids: string[] = [];
