@@ -5,7 +5,7 @@ import {
   IngestionCache,
   getTransformationHash,
 } from "llamaindex/ingestion/IngestionCache";
-import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
+import { SentenceSplitter } from "llamaindex/nodeParsers/index";
 import { beforeAll, describe, expect, test } from "vitest";
 
 describe("IngestionCache", () => {
@@ -32,7 +32,7 @@ describe("getTransformationHash", () => {
 
   beforeAll(() => {
     nodes = [new TextNode({ text: "some text", id_: "some id" })];
-    transform = new SimpleNodeParser({
+    transform = new SentenceSplitter({
       chunkOverlap: 10,
       chunkSize: 1024,
     });
@@ -66,7 +66,7 @@ describe("getTransformationHash", () => {
     const result1 = getTransformationHash(nodes, transform);
     const result2 = getTransformationHash(
       nodes,
-      new SimpleNodeParser({
+      new SentenceSplitter({
         chunkOverlap: 10,
         chunkSize: 512,
       }),

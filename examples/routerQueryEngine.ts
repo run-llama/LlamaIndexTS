@@ -1,9 +1,9 @@
 import {
   OpenAI,
   RouterQueryEngine,
+  SentenceSplitter,
   Settings,
   SimpleDirectoryReader,
-  SimpleNodeParser,
   SummaryIndex,
   VectorStoreIndex,
 } from "llamaindex";
@@ -12,7 +12,7 @@ import {
 Settings.llm = new OpenAI();
 
 // Update node parser
-Settings.nodeParser = new SimpleNodeParser({
+Settings.nodeParser = new SentenceSplitter({
   chunkSize: 1024,
 });
 

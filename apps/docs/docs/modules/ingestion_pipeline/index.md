@@ -16,7 +16,7 @@ import {
   MetadataMode,
   OpenAIEmbedding,
   TitleExtractor,
-  SimpleNodeParser,
+  SentenceSplitter,
 } from "llamaindex";
 
 async function main() {
@@ -29,7 +29,7 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
   const pipeline = new IngestionPipeline({
     transformations: [
-      new SimpleNodeParser({ chunkSize: 1024, chunkOverlap: 20 }),
+      new SentenceSplitter({ chunkSize: 1024, chunkOverlap: 20 }),
       new TitleExtractor(),
       new OpenAIEmbedding(),
     ],
@@ -62,7 +62,7 @@ import {
   MetadataMode,
   OpenAIEmbedding,
   TitleExtractor,
-  SimpleNodeParser,
+  SentenceSplitter,
   QdrantVectorStore,
   VectorStoreIndex,
 } from "llamaindex";
@@ -81,7 +81,7 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
   const pipeline = new IngestionPipeline({
     transformations: [
-      new SimpleNodeParser({ chunkSize: 1024, chunkOverlap: 20 }),
+      new SentenceSplitter({ chunkSize: 1024, chunkOverlap: 20 }),
       new TitleExtractor(),
       new OpenAIEmbedding(),
     ],

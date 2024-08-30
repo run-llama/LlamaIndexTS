@@ -10,7 +10,7 @@ import {
   TitleExtractor,
 } from "llamaindex/extractors/index";
 import { OpenAI } from "llamaindex/llm/openai";
-import { SimpleNodeParser } from "llamaindex/nodeParsers/index";
+import { SentenceSplitter } from "llamaindex/nodeParsers/index";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,
@@ -45,7 +45,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   });
 
   test("[MetadataExtractor] KeywordExtractor returns excerptKeywords metadata", async () => {
-    const nodeParser = new SimpleNodeParser();
+    const nodeParser = new SentenceSplitter();
 
     const nodes = nodeParser.getNodesFromDocuments([
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
@@ -64,7 +64,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   });
 
   test("[MetadataExtractor] TitleExtractor returns documentTitle metadata", async () => {
-    const nodeParser = new SimpleNodeParser();
+    const nodeParser = new SentenceSplitter();
 
     const nodes = nodeParser.getNodesFromDocuments([
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
@@ -83,7 +83,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   });
 
   test("[MetadataExtractor] QuestionsAnsweredExtractor returns questionsThisExcerptCanAnswer metadata", async () => {
-    const nodeParser = new SimpleNodeParser();
+    const nodeParser = new SentenceSplitter();
 
     const nodes = nodeParser.getNodesFromDocuments([
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),
@@ -103,7 +103,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
   });
 
   test("[MetadataExtractor] SumamryExtractor returns sectionSummary metadata", async () => {
-    const nodeParser = new SimpleNodeParser();
+    const nodeParser = new SentenceSplitter();
 
     const nodes = nodeParser.getNodesFromDocuments([
       new Document({ text: DEFAULT_LLM_TEXT_OUTPUT }),

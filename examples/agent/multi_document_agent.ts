@@ -6,8 +6,8 @@ import {
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
+  SentenceSplitter,
   Settings,
-  SimpleNodeParser,
   SimpleToolNodeMapping,
   SummaryIndex,
   VectorStoreIndex,
@@ -43,7 +43,7 @@ async function main() {
   for (const title of wikiTitles) {
     console.log(`Processing ${title}`);
 
-    const nodes = new SimpleNodeParser({
+    const nodes = new SentenceSplitter({
       chunkSize: 200,
       chunkOverlap: 20,
     }).getNodesFromDocuments([countryDocs[title]]);
