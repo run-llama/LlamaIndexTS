@@ -132,6 +132,7 @@
   "devDependencies": {
     "ajv": "^8.17.1",
     "bunchee": "5.3.2",
+    "change-case": "^5.4.4",
     "natural": "^8.0.1"
   },
   "dependencies": {
