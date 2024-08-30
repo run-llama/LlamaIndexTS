@@ -42,7 +42,6 @@ async function loadAndIndex() {
   console.log(
     `Successfully created embeddings in the MongoDB collection ${vectorCollectionName}.`,
   );
-  await vectorStore.createSearchIndex();
   await client.close();
 }
 
