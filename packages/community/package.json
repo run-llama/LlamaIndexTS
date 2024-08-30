@@ -42,11 +42,11 @@
     "dev": "bunchee --watch"
   },
   "devDependencies": {
-    "@types/node": "^20.14.2",
-    "bunchee": "5.3.1"
+    "@types/node": "^22.5.1",
+    "bunchee": "5.3.2"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.613.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.642.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   }

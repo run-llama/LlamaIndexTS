@@ -5,13 +5,13 @@
   "dependencies": {
     "@llamaindex/autotool": "workspace:*",
     "llamaindex": "workspace:*",
-    "openai": "^4.52.5"
+    "openai": "^4.57.0"
   },
   "devDependencies": {
-    "tsx": "^4.15.6"
+    "tsx": "^4.19.0"
   },
   "scripts": {
     "start": "node --import tsx --import @llamaindex/autotool/node ./src/index.ts"
   },
-  "version": null
+  "version": "0.0.1"
 }

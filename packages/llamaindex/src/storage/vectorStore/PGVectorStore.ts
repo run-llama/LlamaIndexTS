@@ -115,9 +115,9 @@ export class PGVectorStore
 
         // All good?  Keep the connection reference
         this.db = db;
-      } catch (err: any) {
+      } catch (err) {
         console.error(err);
-        return Promise.reject(err);
+        return Promise.reject(err instanceof Error ? err : new Error(`${err}`));
       }
     }
 

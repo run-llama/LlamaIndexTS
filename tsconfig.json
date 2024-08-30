@@ -13,7 +13,7 @@
     "incremental": true,
     "composite": true,
     "types": [],
-    "lib": ["ES2022"]
+    "lib": ["ES2022", "DOM.AsyncIterable"]
   },
   "files": [],
   "references": [

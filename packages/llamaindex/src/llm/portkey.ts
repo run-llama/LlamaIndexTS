@@ -11,15 +11,9 @@ import {
 import { extractText, wrapLLMEvent } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
-import type { LLMOptions } from "portkey-ai";
 import { Portkey as OrigPortKey } from "portkey-ai";
 
-interface PortkeyOptions {
-  apiKey?: string;
-  baseURL?: string;
-  mode?: string;
-  llms?: [LLMOptions] | null;
-}
+type PortkeyOptions = ConstructorParameters<typeof OrigPortKey>[0];
 
 export class PortkeySession {
   portkey: OrigPortKey;
@@ -34,7 +28,6 @@ export class PortkeySession {
     }
 
     this.portkey = new OrigPortKey({});
-    this.portkey.llms = [{}];
     if (!options.apiKey) {
       throw new Error("Set Portkey ApiKey in PORTKEY_API_KEY env variable");
     }
@@ -69,21 +62,17 @@ export function getPortkeySession(options: PortkeyOptions = {}) {
 export class Portkey extends BaseLLM {
   apiKey?: string = undefined;
   baseURL?: string = undefined;
-  mode?: string = undefined;
-  llms?: [LLMOptions] | null = undefined;
   session: PortkeySession;
 
-  constructor(init?: Partial<Portkey>) {
+  constructor(init?: Partial<Portkey> & PortkeyOptions) {
     super();
-    this.apiKey = init?.apiKey;
-    this.baseURL = init?.baseURL;
-    this.mode = init?.mode;
-    this.llms = init?.llms;
+    const { apiKey, baseURL, ...rest } = init || {};
+    this.apiKey = apiKey;
+    this.baseURL = baseURL;
     this.session = getPortkeySession({
+      ...rest,
       apiKey: this.apiKey,
       baseURL: this.baseURL,
-      llms: this.llms,
-      mode: this.mode,
     });
   }
 
