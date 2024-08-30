@@ -63,7 +63,7 @@
     "portkey-ai": "0.1.16",
     "rake-modified": "^1.0.8",
     "string-strip-html": "^13.4.8",
-    "tiktoken": "^1.0.16",
+    "tiktoken": "1.0.14",
     "unpdf": "^0.11.0",
     "weaviate-client": "^3.1.4",
     "wikipedia": "^2.1.2",
