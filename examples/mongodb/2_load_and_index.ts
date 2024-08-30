@@ -42,49 +42,10 @@ async function loadAndIndex() {
   console.log(
     `Successfully created embeddings in the MongoDB collection ${vectorCollectionName}.`,
   );
+  await vectorStore.createSearchIndex();
   await client.close();
 }
 
-/**
- * This method is document in https://www.mongodb.com/docs/atlas/atlas-search/create-index/#create-an-fts-index-programmatically
- * But, while testing a 'CommandNotFound' error occurred, so we're not using this here.
- */
-async function createSearchIndex() {
-  const client = new MongoClient(mongoUri);
-  const database = client.db(databaseName);
-  const collection = database.collection(vectorCollectionName);
-
-  // define your Atlas Search index
-  // See detail in: https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
-  const index = {
-    name: indexName,
-    definition: {
-      /* search index definition fields */
-      mappings: {
-        dynamic: true,
-        fields: {
-          embedding: {
-            type: "knnVector",
-            dimensions: 1536,
-            similarity: "cosine",
-          },
-        },
-      },
-    },
-  };
-  // run the helper method
-  const result = await collection.createSearchIndex(index);
-  console.log("Successfully created search index:", result);
-  await client.close();
-}
-
-(async () => {
-  try {
-    await loadAndIndex();
-    await createSearchIndex();
-  } catch (error) {
-    console.error("Error loading and indexing documents:", error);
-  }
-})();
+loadAndIndex().catch(console.error);
 
 // you can't query your index yet because you need to create a vector search index in mongodb's UI now

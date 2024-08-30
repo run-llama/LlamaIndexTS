@@ -244,4 +244,26 @@ export class MongoDBAtlasVectorSearch
     console.debug("Result of query (ids):", ids);
     return result;
   }
+
+  async createSearchIndex() {
+    // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
+    const index = {
+      name: this.indexName,
+      definition: {
+        /* search index definition fields */
+        mappings: {
+          dynamic: true,
+          fields: {
+            embedding: {
+              type: "knnVector",
+              dimensions: 1536,
+              similarity: "cosine",
+            },
+          },
+        },
+      },
+    };
+    const result = await this.collection.createSearchIndex(index);
+    console.log("Successfully created search index:", result);
+  }
 }
