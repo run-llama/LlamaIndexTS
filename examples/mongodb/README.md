@@ -88,14 +88,16 @@ Now under "database and collection" select `tiny_tweets_db` and within that sele
 
 ```json
 {
-  "fields": [
-    {
-      "type": "vector",
-      "path": "embedding",
-      "numDimensions": 1536,
-      "similarity": "cosine"
+  "mappings": {
+    "dynamic": true,
+    "fields": {
+      "embedding": {
+        "dimensions": 1536,
+        "similarity": "cosine",
+        "type": "knnVector"
+      }
     }
-  ]
+  }
 }
 ```
 

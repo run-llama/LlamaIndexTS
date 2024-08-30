@@ -21,7 +21,7 @@ async function query() {
   const retriever = index.asRetriever({ similarityTopK: 20 });
   const queryEngine = index.asQueryEngine({ retriever });
   const result = await queryEngine.query({
-    query: "What does the author think of web frameworks?",
+    query: "What does author receive when he was 11 years old?", // Isaac Asimov's "Foundation" for Christmas
   });
   console.log(result.response);
   await client.close();

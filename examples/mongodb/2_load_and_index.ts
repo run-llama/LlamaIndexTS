@@ -55,20 +55,20 @@ async function createSearchIndex() {
   const collection = database.collection(vectorCollectionName);
 
   // define your Atlas Search index
+  // See detail in: https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
   const index = {
     name: indexName,
     definition: {
       /* search index definition fields */
       mappings: {
         dynamic: true,
-        fields: [
-          {
-            type: "vector",
-            path: "embedding",
-            numDimensions: 1536,
+        fields: {
+          embedding: {
+            type: "knnVector",
+            dimensions: 1536,
             similarity: "cosine",
           },
-        ],
+        },
       },
     },
   };
@@ -78,6 +78,13 @@ async function createSearchIndex() {
   await client.close();
 }
 
-loadAndIndex().catch(console.error);
+(async () => {
+  try {
+    await loadAndIndex();
+    await createSearchIndex();
+  } catch (error) {
+    console.error("Error loading and indexing documents:", error);
+  }
+})();
 
 // you can't query your index yet because you need to create a vector search index in mongodb's UI now
