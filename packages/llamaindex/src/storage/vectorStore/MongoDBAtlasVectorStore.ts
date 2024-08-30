@@ -166,15 +166,6 @@ export class MongoDBAtlasVectorSearch
         this.populatedMetadataFields.forEach((field) => {
           additionalDefinition[field] = { type: "token" };
         });
-        console.log("createSearchIndex", {
-          mappings: {
-            dynamic: true,
-            fields: {
-              embedding: this.embeddingDefinition,
-              ...additionalDefinition,
-            },
-          },
-        });
         await this.collection.createSearchIndex({
           name: this.indexName,
           definition: {
