@@ -238,8 +238,6 @@ export class MongoDBAtlasVectorSearch
     query: VectorStoreQuery,
     options?: any,
   ): Promise<VectorStoreQueryResult> {
-    // await this.ensureSearchIndex();
-
     const params: any = {
       queryVector: query.queryEmbedding,
       path: this.embeddingKey,
