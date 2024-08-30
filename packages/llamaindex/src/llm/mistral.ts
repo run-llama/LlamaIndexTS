@@ -30,9 +30,11 @@ export class MistralAISession {
   }
 
   async getClient() {
-    const { default: MistralClient } = await import("@mistralai/mistralai");
+    const { Mistral } = await import("@mistralai/mistralai");
     if (!this.client) {
-      this.client = new MistralClient(this.apiKey);
+      this.client = new Mistral({
+        apiKey: this.apiKey,
+      });
     }
     return this.client;
   }

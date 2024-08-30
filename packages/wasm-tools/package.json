@@ -5,13 +5,13 @@
   "type": "module",
   "dependencies": {
     "@assemblyscript/loader": "^0.27.27",
-    "@types/node": "^20.12.11"
+    "@types/node": "^22.5.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.4.0",
-    "@swc/core": "^1.6.3",
+    "@swc/core": "^1.7.22",
     "assemblyscript": "^0.27.27",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "engines": {
     "node": ">=18.0.0"

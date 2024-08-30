@@ -4,24 +4,24 @@
   "version": "0.0.7",
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
-    "@azure/identity": "^4.2.1",
-    "@datastax/astra-db-ts": "^1.2.1",
+    "@azure/identity": "^4.4.1",
+    "@datastax/astra-db-ts": "^1.4.1",
     "@llamaindex/core": "^0.1.0",
     "@notionhq/client": "^2.2.15",
-    "@pinecone-database/pinecone": "^2.2.2",
-    "@zilliz/milvus2-sdk-node": "^2.4.4",
+    "@pinecone-database/pinecone": "^3.0.2",
+    "@zilliz/milvus2-sdk-node": "^2.4.6",
     "chromadb": "^1.8.1",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "js-tiktoken": "^1.0.12",
+    "js-tiktoken": "^1.0.14",
     "llamaindex": "^0.5.0",
     "mongodb": "^6.7.0",
     "pathe": "^1.1.2"
   },
   "devDependencies": {
-    "@types/node": "^20.14.1",
-    "tsx": "^4.15.6",
-    "typescript": "^5.5.3"
+    "@types/node": "^22.5.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
   },
   "scripts": {
     "lint": "eslint ."

@@ -11,9 +11,9 @@
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@llamaindex/core": "workspace:*",
-    "@types/node": "^20.12.11",
+    "@types/node": "^22.5.1",
     "consola": "^3.2.3",
     "llamaindex": "workspace:*",
-    "tsx": "^4.15.6"
+    "tsx": "^4.19.0"
   }
 }
