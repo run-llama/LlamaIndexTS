@@ -29,7 +29,7 @@ export function nodeToMetadata(
   }
 
   metadata["_node_content"] = JSON.stringify(rest);
-  metadata["_node_type"] = node.type;
+  metadata["_node_type"] = node.constructor.name.replace("_", "");
 
   metadata["document_id"] = node.sourceNode?.nodeId || "None";
   metadata["doc_id"] = node.sourceNode?.nodeId || "None";
