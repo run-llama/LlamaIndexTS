@@ -165,7 +165,6 @@ export class MongoDBAtlasVectorSearch
           name: this.indexName,
           definition: this.SEARCH_INDEX_DEFINITION,
         });
-        console.log("Created search index: ", this.indexName);
       }
     }
 
@@ -198,13 +197,11 @@ export class MongoDBAtlasVectorSearch
       };
     });
 
-    console.debug("Inserting data into MongoDB: ", dataToInsert);
     const collection = await this.ensureCollection();
     const insertResult = await collection.insertMany(
       dataToInsert,
       this.insertOptions,
     );
-    console.debug("Result of insert: ", insertResult);
     return nodes.map((node) => node.id_);
   }
 
@@ -261,7 +258,6 @@ export class MongoDBAtlasVectorSearch
       },
     ];
 
-    console.debug("Running query pipeline: ", pipeline);
     const collection = await this.ensureCollection();
     const cursor = await collection.aggregate(pipeline);
 
@@ -289,7 +285,6 @@ export class MongoDBAtlasVectorSearch
       ids,
     };
 
-    console.debug("Result of query (ids):", ids);
     return result;
   }
 }
