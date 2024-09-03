@@ -61,6 +61,7 @@ describe("Python", () => {
         "textTemplate": "{metadata_str}
 
       {content}",
+        "type": "1",
       }
     `);
     expect(node.id_).toBe("e86be4a7-2ad0-4c3c-937b-3140f562e7a7");
