@@ -130,6 +130,7 @@ describe("TextNode", () => {
         "relationships": {},
         "text": "Hello World",
         "textTemplate": "",
+        "type": "1",
       }
     `,
     );
