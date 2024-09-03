@@ -236,18 +236,10 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
     this.metadataSeparator = metadataSeparator ?? "\n";
   }
 
-  /**
-   * Generate a hash of the text node.
-   * The ID is not part of the hash as it can change independent of content.
-   * @returns
-   */
   generateHash() {
     const hashFunction = createSHA256();
-    hashFunction.update(`type=${this.type}`);
-    hashFunction.update(
-      `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
-    );
-    hashFunction.update(this.getContent(MetadataMode.ALL));
+    const docIdentity = this.text + JSON.stringify(this.metadata);
+    hashFunction.update(docIdentity);
     return hashFunction.digest();
   }
 
