@@ -179,7 +179,8 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   toJSON(): Record<string, any> {
     return {
       ...this,
-      // no `type` and `hash` here to align with Python side
+      type: this.type,
+      // no `hash` here to align with Python side
     };
   }
 
