@@ -58,7 +58,7 @@ export async function fromPythonDocStore({
   }
   const objectType =
     PYTHON_TO_JS_TYPE_MAP[type as keyof typeof PYTHON_TO_JS_TYPE_MAP];
-  const convertedJson = fromPythonImpl(JSON.parse(data));
+  const convertedJson = await fromPythonImpl(JSON.parse(data));
   return jsonToNode(convertedJson, objectType);
 }
 

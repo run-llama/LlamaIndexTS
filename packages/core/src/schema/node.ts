@@ -85,6 +85,9 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
     this.excludedLlmMetadataKeys = excludedLlmMetadataKeys ?? [];
     this.relationships = relationships ?? {};
     this.embedding = embedding;
+    if (hash !== undefined) {
+      this.hash = hash;
+    }
   }
 
   abstract get type(): ObjectType;
@@ -224,10 +227,10 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
       init;
     this.text = text ?? "";
     this.textTemplate = textTemplate ?? "";
-    if (startCharIdx) {
+    if (startCharIdx !== undefined) {
       this.startCharIdx = startCharIdx;
     }
-    if (endCharIdx) {
+    if (endCharIdx !== undefined) {
       this.endCharIdx = endCharIdx;
     }
     this.metadataSeparator = metadataSeparator ?? "\n";

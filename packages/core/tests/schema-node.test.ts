@@ -9,7 +9,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 describe("Python", () => {
   test("from python doc store", async () => {
     const node = await fromPythonDocStore({
-      __data__: {
+      __data__: JSON.stringify({
         id_: "e86be4a7-2ad0-4c3c-937b-3140f562e7a7",
         embedding: null,
         metadata: {},
@@ -32,36 +32,39 @@ describe("Python", () => {
         metadata_template: "{key}: {value}",
         metadata_seperator: "\n",
         class_name: "TextNode",
-      },
+      }),
       __type__: "1",
     });
+    expect(node.startCharIdx).toBe(0);
+    expect(node.endCharIdx).toBe(1599);
     expect(node).toMatchInlineSnapshot(`
-			{
-			  "embedding": null,
-			  "endCharIdx": 1599,
-			  "excludedEmbedMetadataKeys": [],
-			  "excludedLlmMetadataKeys": [],
-			  "hash": "e+X0sEK9rsmaY1GwfOQnloy69/UrsmG7mhihpwPPfS4=",
-			  "id_": "e86be4a7-2ad0-4c3c-937b-3140f562e7a7",
-			  "metadata": {},
-			  "metadataSeparator": "
-			",
-			  "relationships": {
-			    "1": {
-			      "className": "RelatedNodeInfo",
-			      "hash": "191a8fdcf068d3ac831da23cde07a92efe1432243c7f628d1009aa2ecdf6cb03",
-			      "metadata": {},
-			      "nodeId": "e1fe8fd0-f470-40cd-bc2e-be3a220cef94",
-			      "nodeType": "4",
-			    },
-			  },
-			  "text": "This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test.",
-			  "textTemplate": "{metadata_str}
+      {
+        "embedding": null,
+        "endCharIdx": 1599,
+        "excludedEmbedMetadataKeys": [],
+        "excludedLlmMetadataKeys": [],
+        "hash": "RCOOuYzMV1p6fQdVbg1750LB9BbqECFI0IkEriAyZYc=",
+        "id_": "e86be4a7-2ad0-4c3c-937b-3140f562e7a7",
+        "metadata": {},
+        "metadataSeparator": "
+      ",
+        "relationships": {
+          "1": {
+            "className": "RelatedNodeInfo",
+            "hash": "191a8fdcf068d3ac831da23cde07a92efe1432243c7f628d1009aa2ecdf6cb03",
+            "metadata": {},
+            "nodeId": "e1fe8fd0-f470-40cd-bc2e-be3a220cef94",
+            "nodeType": "4",
+          },
+        },
+        "startCharIdx": 0,
+        "text": "This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test. This is a test.",
+        "textTemplate": "{metadata_str}
 
-			{content}",
-			  "type": "TEXT",
-			}
-		`);
+      {content}",
+        "type": "1",
+      }
+    `);
     expect(node.id_).toBe("e86be4a7-2ad0-4c3c-937b-3140f562e7a7");
     expect(node.type).toBe(ObjectType.TEXT);
   });
