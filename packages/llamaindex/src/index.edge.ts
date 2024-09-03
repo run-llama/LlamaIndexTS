@@ -37,6 +37,7 @@ export * from "./evaluation/index.js";
 export * from "./extractors/index.js";
 export * from "./indices/index.js";
 export * from "./ingestion/index.js";
+export { imageToDataUrl } from "./internal/utils.js";
 export * from "./llm/index.js";
 export * from "./nodeParsers/index.js";
 export * from "./objects/index.js";
