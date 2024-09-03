@@ -182,7 +182,9 @@ export function stringToImage(input: string): ImageType {
   }
 }
 
-export async function imageToDataUrl(input: ImageType): Promise<string> {
+export async function imageToDataUrl(
+  input: ImageType | Uint8Array,
+): Promise<string> {
   // first ensure, that the input is a Blob
   if (
     (input instanceof URL && input.protocol === "file:") ||
@@ -196,6 +198,8 @@ export async function imageToDataUrl(input: ImageType): Promise<string> {
   } else if (!(input instanceof Blob)) {
     if (input instanceof URL) {
       throw new Error(`Unsupported URL with protocol: ${input.protocol}`);
+    } else if (input instanceof Uint8Array) {
+      input = new Blob([input]); // convert Uint8Array to Blob
     } else {
       throw new Error(`Unsupported input type: ${typeof input}`);
     }
