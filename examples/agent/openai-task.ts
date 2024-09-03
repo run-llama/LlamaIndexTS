@@ -1,5 +1,4 @@
-import { ChatResponseChunk, OpenAIAgent } from "llamaindex";
-import { ReadableStream } from "node:stream/web";
+import { OpenAIAgent } from "llamaindex";
 import {
   getCurrentIDTool,
   getUserInfoTool,
@@ -18,7 +17,7 @@ async function main() {
   );
 
   for await (const stepOutput of task) {
-    const stream = stepOutput.output as ReadableStream<ChatResponseChunk>;
+    const stream = stepOutput.output;
     if (stepOutput.isLast) {
       for await (const chunk of stream) {
         process.stdout.write(chunk.delta);

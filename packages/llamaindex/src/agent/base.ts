@@ -7,7 +7,7 @@ import type {
 } from "@llamaindex/core/llms";
 import { EngineResponse } from "@llamaindex/core/schema";
 import { wrapEventCaller } from "@llamaindex/core/utils";
-import { ReadableStream, TransformStream, randomUUID } from "@llamaindex/env";
+import { randomUUID } from "@llamaindex/env";
 import { ChatHistory } from "../ChatHistory.js";
 import { Settings } from "../Settings.js";
 import {
@@ -16,7 +16,7 @@ import {
   type ChatEngineParamsStreaming,
 } from "../engines/chat/index.js";
 import { consoleLogger, emptyLogger } from "../internal/logger.js";
-import { isAsyncIterable } from "../internal/utils.js";
+import { isReadableStream } from "../internal/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
 import type {
   AgentTaskContext,
@@ -374,7 +374,7 @@ export abstract class AgentRunner<
       this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
       if (stepOutput.isLast) {
         const { output } = stepOutput;
-        if (isAsyncIterable(output)) {
+        if (isReadableStream(output)) {
           return output.pipeThrough<EngineResponse>(
             new TransformStream({
               transform(chunk, controller) {

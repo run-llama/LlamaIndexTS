@@ -10,6 +10,10 @@ export const isAsyncIterable = (
   return obj != null && typeof obj === "object" && Symbol.asyncIterator in obj;
 };
 
+export const isReadableStream = (obj: unknown): obj is ReadableStream => {
+  return obj instanceof ReadableStream;
+};
+
 export const isIterable = (obj: unknown): obj is Iterable<unknown> => {
   return obj != null && typeof obj === "object" && Symbol.iterator in obj;
 };

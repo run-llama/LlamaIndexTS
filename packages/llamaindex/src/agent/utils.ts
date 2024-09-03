@@ -16,7 +16,6 @@ import type {
   ToolOutput,
 } from "@llamaindex/core/llms";
 import { baseToolWithCallSchema } from "@llamaindex/core/schema";
-import { ReadableStream } from "@llamaindex/env";
 import { z } from "zod";
 import type { Logger } from "../internal/logger.js";
 import {
