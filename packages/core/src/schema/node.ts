@@ -179,14 +179,12 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
   toJSON(): Record<string, any> {
     return {
       ...this,
-      type: this.type,
-      // hash is an accessor property, so it's not included in the rest operator
-      hash: this.hash,
+      // no `type` and `hash` here to align with Python side
     };
   }
 
   clone(): BaseNode {
-    return jsonToNode(this.toMutableJSON()) as BaseNode;
+    return jsonToNode(this.toMutableJSON(), this.type);
   }
 
   /**

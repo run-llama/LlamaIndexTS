@@ -43,7 +43,6 @@ describe("Python", () => {
         "endCharIdx": 1599,
         "excludedEmbedMetadataKeys": [],
         "excludedLlmMetadataKeys": [],
-        "hash": "RCOOuYzMV1p6fQdVbg1750LB9BbqECFI0IkEriAyZYc=",
         "id_": "e86be4a7-2ad0-4c3c-937b-3140f562e7a7",
         "metadata": {},
         "metadataSeparator": "
@@ -62,7 +61,6 @@ describe("Python", () => {
         "textTemplate": "{metadata_str}
 
       {content}",
-        "type": "1",
       }
     `);
     expect(node.id_).toBe("e86be4a7-2ad0-4c3c-937b-3140f562e7a7");
@@ -79,7 +77,7 @@ describe("Document", () => {
 
   test("should generate a hash", () => {
     expect(document.hash).toMatchInlineSnapshot(
-      `"1mkNkQC30mZlBBG48DNuG2WSKcTQ32DImC+4JUoVijg="`,
+      `"oznYDHYUGHArYnhRy9lj63IvEt/rNg1EH5EjwtPU/Pc="`,
     );
   });
 
@@ -121,7 +119,6 @@ describe("TextNode", () => {
         "embedding": undefined,
         "excludedEmbedMetadataKeys": [],
         "excludedLlmMetadataKeys": [],
-        "hash": "Z6SWgFPlalaeblMGQGw0KS3qKgmZdEWXKfzEp/K+QN0=",
         "id_": Any<String>,
         "metadata": {
           "something": 1,
@@ -132,7 +129,6 @@ describe("TextNode", () => {
         "relationships": {},
         "text": "Hello World",
         "textTemplate": "",
-        "type": "TEXT",
       }
     `,
     );
