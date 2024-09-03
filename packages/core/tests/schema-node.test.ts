@@ -99,7 +99,7 @@ describe("TextNode", () => {
 
   test("should generate a hash", () => {
     expect(node.hash).toMatchInlineSnapshot(
-      `"nTSKdUTYqR52MPv/brvb4RTGeqedTEqG9QN8KSAj2Do="`,
+      `"oznYDHYUGHArYnhRy9lj63IvEt/rNg1EH5EjwtPU/Pc="`,
     );
   });
 
