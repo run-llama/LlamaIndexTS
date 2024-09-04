@@ -18,14 +18,12 @@ export default {
     console.log(2);
     const textEncoder = new TextEncoder();
     const response = responseStream.pipeThrough<Uint8Array>(
-      // @ts-expect-error: see https://github.com/cloudflare/workerd/issues/2067
       new TransformStream({
         transform: (chunk, controller) => {
           controller.enqueue(textEncoder.encode(chunk.delta));
         },
       }),
     );
-    // @ts-expect-error: see https://github.com/cloudflare/workerd/issues/2067
     return new Response(response);
   },
 };

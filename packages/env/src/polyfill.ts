@@ -46,12 +46,4 @@ export function randomUUID(): string {
   return crypto.randomUUID();
 }
 
-// @ts-expect-error
-const ReadableStream = globalThis.ReadableStream;
-// @ts-expect-error
-const TransformStream = globalThis.TransformStream;
-// @ts-expect-error
-const WritableStream = globalThis.WritableStream;
-
 export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
-export { ReadableStream, TransformStream, WritableStream };
