@@ -76,7 +76,6 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
       excludedEmbedMetadataKeys,
       excludedLlmMetadataKeys,
       relationships,
-      hash,
       embedding,
     } = init || {};
     this.id_ = id_ ?? randomUUID();
@@ -85,9 +84,6 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
     this.excludedLlmMetadataKeys = excludedLlmMetadataKeys ?? [];
     this.relationships = relationships ?? {};
     this.embedding = embedding;
-    if (hash !== undefined) {
-      this.hash = hash;
-    }
   }
 
   abstract get type(): ObjectType;
