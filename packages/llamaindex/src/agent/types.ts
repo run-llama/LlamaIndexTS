@@ -7,7 +7,6 @@ import type {
   MessageContent,
   ToolOutput,
 } from "@llamaindex/core/llms";
-import { ReadableStream } from "@llamaindex/env";
 import type { Logger } from "../internal/logger.js";
 import type { UUID } from "../types.js";
 
