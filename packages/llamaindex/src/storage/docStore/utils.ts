@@ -1,5 +1,5 @@
 import type { BaseNode } from "@llamaindex/core/schema";
-import { ObjectType, fromPythonDocStore } from "@llamaindex/core/schema";
+import { ObjectType } from "@llamaindex/core/schema";
 
 const TYPE_KEY = "__type__";
 const DATA_KEY = "__data__";
@@ -24,5 +24,3 @@ export function docToJson(doc: BaseNode): DocJson {
     [TYPE_KEY]: doc.type,
   };
 }
-
-export const jsonToDoc = fromPythonDocStore;

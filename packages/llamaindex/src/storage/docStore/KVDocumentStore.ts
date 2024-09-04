@@ -1,11 +1,14 @@
-import type { BaseNode } from "@llamaindex/core/schema";
-import { ObjectType } from "@llamaindex/core/schema";
+import {
+  type BaseNode,
+  fromDocStore,
+  ObjectType,
+} from "@llamaindex/core/schema";
 import _ from "lodash";
 import { DEFAULT_NAMESPACE } from "../constants.js";
 import type { BaseKVStore } from "../kvStore/types.js";
 import type { RefDocInfo } from "./types.js";
 import { BaseDocumentStore } from "./types.js";
-import { docToJson, isValidDocJson, jsonToDoc } from "./utils.js";
+import { docToJson, isValidDocJson } from "./utils.js";
 
 type DocMetaData = { docHash: string; refDocId?: string };
 
@@ -29,7 +32,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     for (const key in jsonDict) {
       const value = jsonDict[key];
       if (isValidDocJson(value)) {
-        docs[key] = await jsonToDoc(value);
+        docs[key] = await fromDocStore(value);
       } else {
         console.warn(`Invalid JSON for docId ${key}`);
       }
@@ -94,7 +97,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     if (!isValidDocJson(json)) {
       throw new Error(`Invalid JSON for docId ${docId}`);
     }
-    return jsonToDoc(json);
+    return fromDocStore(json);
   }
 
   async getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined> {
