@@ -167,8 +167,10 @@ export class MongoDBAtlasVectorSearch
     this.collectionName = init.collectionName ?? "default_collection";
     this.autoCreateIndex = init.autoCreateIndex ?? true;
     this.indexedMetadataFields = init.indexedMetadataFields ?? [];
-    this.embeddingDefinition =
-      init.embeddingDefinition ?? DEFAULT_EMBEDDING_DEFINITION;
+    this.embeddingDefinition = {
+      ...DEFAULT_EMBEDDING_DEFINITION,
+      ...(init.embeddingDefinition ?? {}),
+    };
     this.indexName = init.indexName ?? "default";
     this.embeddingKey = init.embeddingKey ?? "embedding";
     this.idKey = init.idKey ?? "id";
