@@ -5,7 +5,10 @@ import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import {
+  FilterCondition,
   VectorStoreBase,
+  type FilterOperator,
+  type MetadataFilter,
   type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
@@ -13,15 +16,51 @@ import {
 } from "./types.js";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-// Utility function to convert metadata filters to MongoDB filter
-function toMongoDBFilter(
-  standardFilters: MetadataFilters,
-): Record<string, any> {
-  const filters: Record<string, any> = {};
-  for (const filter of standardFilters?.filters ?? []) {
-    filters[filter.key] = filter.value;
+// define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
+const DEFAULT_EMBEDDING_DEFINITION = {
+  type: "knnVector",
+  dimensions: 1536,
+  similarity: "cosine",
+};
+
+function mapLcMqlFilterOperators(operator: string): string {
+  const operatorMap: { [key in FilterOperator]?: string } = {
+    "==": "$eq",
+    "<": "$lt",
+    "<=": "$lte",
+    ">": "$gt",
+    ">=": "$gte",
+    "!=": "$ne",
+    in: "$in",
+    nin: "$nin",
+  };
+  const mqlOperator = operatorMap[operator as FilterOperator];
+  if (!mqlOperator) throw new Error(`Unsupported operator: ${operator}`);
+  return mqlOperator;
+}
+
+function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
+  if (!filters) return {};
+
+  const createFilterObject = (mf: MetadataFilter) => ({
+    [mf.key]: {
+      [mapLcMqlFilterOperators(mf.operator)]: mf.value,
+    },
+  });
+
+  if (filters.filters.length === 1) {
+    return createFilterObject(filters.filters[0]);
   }
-  return filters;
+
+  if (filters.condition === FilterCondition.AND) {
+    return { $and: filters.filters.map(createFilterObject) };
+  }
+
+  if (filters.condition === FilterCondition.OR) {
+    return { $or: filters.filters.map(createFilterObject) };
+  }
+
+  throw new Error("filters condition not recognized. Must be AND or OR");
 }
 
 /**
@@ -38,6 +77,8 @@ export class MongoDBAtlasVectorSearch
   dbName: string;
   collectionName: string;
   autoCreateIndex: boolean;
+  embeddingDefinition: Record<string, unknown>;
+  indexedMetadataFields: string[];
 
   /**
    * The used MongoClient. If not given, a new MongoClient is created based on the MONGODB_URI env variable.
@@ -98,26 +139,14 @@ export class MongoDBAtlasVectorSearch
   numCandidates: (query: VectorStoreQuery) => number;
   private collection?: Collection;
 
-  // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
-  readonly SEARCH_INDEX_DEFINITION = {
-    mappings: {
-      dynamic: true,
-      fields: {
-        embedding: {
-          type: "knnVector",
-          dimensions: 1536,
-          similarity: "cosine",
-        },
-      },
-    },
-  };
-
   constructor(
     init: Partial<MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
       embedModel?: BaseEmbedding;
       autoCreateIndex?: boolean;
+      indexedMetadataFields?: string[];
+      embeddingDefinition?: Record<string, unknown>;
     },
   ) {
     super(init.embedModel);
@@ -136,6 +165,11 @@ export class MongoDBAtlasVectorSearch
     this.dbName = init.dbName ?? "default_db";
     this.collectionName = init.collectionName ?? "default_collection";
     this.autoCreateIndex = init.autoCreateIndex ?? true;
+    this.indexedMetadataFields = init.indexedMetadataFields ?? [];
+    this.embeddingDefinition = {
+      ...DEFAULT_EMBEDDING_DEFINITION,
+      ...(init.embeddingDefinition ?? {}),
+    };
     this.indexName = init.indexName ?? "default";
     this.embeddingKey = init.embeddingKey ?? "embedding";
     this.idKey = init.idKey ?? "id";
@@ -161,9 +195,21 @@ export class MongoDBAtlasVectorSearch
         (index) => index.name === this.indexName,
       );
       if (!indexExists) {
+        const additionalDefinition: Record<string, { type: string }> = {};
+        this.indexedMetadataFields.forEach((field) => {
+          additionalDefinition[field] = { type: "token" };
+        });
         await this.collection.createSearchIndex({
           name: this.indexName,
-          definition: this.SEARCH_INDEX_DEFINITION,
+          definition: {
+            mappings: {
+              dynamic: true,
+              fields: {
+                embedding: this.embeddingDefinition,
+                ...additionalDefinition,
+              },
+            },
+          },
         });
       }
     }
@@ -189,11 +235,18 @@ export class MongoDBAtlasVectorSearch
         this.flatMetadata,
       );
 
+      // Include the specified metadata fields in the top level of the document (to help filter)
+      const populatedMetadata: Record<string, unknown> = {};
+      for (const field of this.indexedMetadataFields) {
+        populatedMetadata[field] = metadata[field];
+      }
+
       return {
         [this.idKey]: node.id_,
         [this.embeddingKey]: node.getEmbedding(),
         [this.textKey]: node.getContent(MetadataMode.NONE) || "",
         [this.metadataKey]: metadata,
+        ...populatedMetadata,
       };
     });
 
