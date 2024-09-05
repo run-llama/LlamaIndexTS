@@ -5,7 +5,10 @@ import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import {
+  FilterCondition,
   VectorStoreBase,
+  type FilterOperator,
+  type MetadataFilter,
   type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
@@ -20,16 +23,45 @@ const DEFAULT_EMBEDDING_DEFINITION = {
   similarity: "cosine",
 };
 
-// TODO: Build filters based on the operator
-// Utility function to convert metadata filters to MongoDB filter
-function toMongoDBFilter(
-  standardFilters: MetadataFilters,
-): Record<string, any> {
-  const filters: Record<string, any> = {};
-  for (const filter of standardFilters?.filters ?? []) {
-    filters[filter.key] = filter.value;
+function mapLcMqlFilterOperators(operator: string): string {
+  const operatorMap: { [key in FilterOperator]?: string } = {
+    "==": "$eq",
+    "<": "$lt",
+    "<=": "$lte",
+    ">": "$gt",
+    ">=": "$gte",
+    "!=": "$ne",
+    in: "$in",
+    nin: "$nin",
+  };
+  const mqlOperator = operatorMap[operator as FilterOperator];
+  if (!mqlOperator) throw new Error(`Unsupported operator: ${operator}`);
+  return mqlOperator;
+}
+
+function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
+  if (!filters) return {};
+
+  const createFilterObject = (mf: MetadataFilter) => ({
+    [mf.key]: {
+      [mapLcMqlFilterOperators(mf.operator)]: mf.value,
+    },
+  });
+
+  if (filters.filters.length === 1) {
+    return createFilterObject(filters.filters[0]);
   }
-  return filters;
+
+  if (filters.condition === FilterCondition.AND) {
+    return { $and: filters.filters.map(createFilterObject) };
+  }
+
+  if (filters.condition === FilterCondition.OR) {
+    return { $or: filters.filters.map(createFilterObject) };
+  }
+
+  console.debug("filters.condition not recognized. Returning empty object");
+  return {};
 }
 
 /**
@@ -267,6 +299,7 @@ export class MongoDBAtlasVectorSearch
     };
 
     if (query.filters) {
+      console.log("query.filters", toMongoDBFilter(query.filters));
       params.filter = toMongoDBFilter(query.filters);
     }
 
