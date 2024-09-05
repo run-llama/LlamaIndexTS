@@ -28,13 +28,23 @@ async function loadAndIndex() {
     "full_text",
   ]);
 
+  const FILTER_METADATA_FIELD = "content_type";
+
+  documents.forEach((document, index) => {
+    const contentType = ["tweet", "post", "story"][index % 3]; // assign a random content type to each document
+    document.metadata = {
+      ...document.metadata,
+      [FILTER_METADATA_FIELD]: contentType,
+    };
+  });
+
   // create Atlas as a vector store
   const vectorStore = new MongoDBAtlasVectorSearch({
     mongodbClient: client,
     dbName: databaseName,
     collectionName: vectorCollectionName, // this is where your embeddings will be stored
     indexName: indexName, // this is the name of the index you will need to create
-    populatedMetadataFields: ["_node_type", "document_id"], // this is the field that will be used for the query
+    indexedMetadataFields: [FILTER_METADATA_FIELD], // this is the field that will be used for the query
   });
 
   // now create an index from all the Documents and store them in Atlas

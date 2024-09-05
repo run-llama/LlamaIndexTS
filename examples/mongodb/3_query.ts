@@ -14,7 +14,7 @@ async function query() {
     dbName: process.env.MONGODB_DATABASE!,
     collectionName: process.env.MONGODB_VECTORS!,
     indexName: process.env.MONGODB_VECTOR_INDEX!,
-    populatedMetadataFields: ["_node_type", "document_id"],
+    indexedMetadataFields: ["content_type"],
   });
 
   const index = await VectorStoreIndex.fromVectorStore(store);
@@ -25,8 +25,8 @@ async function query() {
     preFilters: {
       filters: [
         {
-          key: "_node_type",
-          value: "TextNode",
+          key: "content_type",
+          value: "story", // try "tweet" or "post" to see the difference
           operator: "==",
         },
       ],

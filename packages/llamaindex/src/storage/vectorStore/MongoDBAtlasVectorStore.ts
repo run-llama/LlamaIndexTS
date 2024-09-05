@@ -47,7 +47,7 @@ export class MongoDBAtlasVectorSearch
   collectionName: string;
   autoCreateIndex: boolean;
   embeddingDefinition: Record<string, unknown>;
-  populatedMetadataFields: string[];
+  indexedMetadataFields: string[];
 
   /**
    * The used MongoClient. If not given, a new MongoClient is created based on the MONGODB_URI env variable.
@@ -114,7 +114,7 @@ export class MongoDBAtlasVectorSearch
       collectionName: string;
       embedModel?: BaseEmbedding;
       autoCreateIndex?: boolean;
-      populatedMetadataFields?: string[];
+      indexedMetadataFields?: string[];
       embeddingDefinition?: Record<string, unknown>;
     },
   ) {
@@ -134,7 +134,7 @@ export class MongoDBAtlasVectorSearch
     this.dbName = init.dbName ?? "default_db";
     this.collectionName = init.collectionName ?? "default_collection";
     this.autoCreateIndex = init.autoCreateIndex ?? true;
-    this.populatedMetadataFields = init.populatedMetadataFields ?? [];
+    this.indexedMetadataFields = init.indexedMetadataFields ?? [];
     this.embeddingDefinition =
       init.embeddingDefinition ?? DEFAULT_EMBEDDING_DEFINITION;
     this.indexName = init.indexName ?? "default";
@@ -163,7 +163,7 @@ export class MongoDBAtlasVectorSearch
       );
       if (!indexExists) {
         const additionalDefinition: Record<string, { type: string }> = {};
-        this.populatedMetadataFields.forEach((field) => {
+        this.indexedMetadataFields.forEach((field) => {
           additionalDefinition[field] = { type: "token" };
         });
         await this.collection.createSearchIndex({
@@ -205,7 +205,7 @@ export class MongoDBAtlasVectorSearch
 
       // Include the specified metadata fields in the top level of the document (to help filter)
       const populatedMetadata: Record<string, unknown> = {};
-      for (const field of this.populatedMetadataFields) {
+      for (const field of this.indexedMetadataFields) {
         populatedMetadata[field] = metadata[field];
       }
 
