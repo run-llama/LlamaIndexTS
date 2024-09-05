@@ -115,6 +115,34 @@
         "types": "./dist/utils/index.d.ts",
         "default": "./dist/utils/index.js"
       }
+    },
+    "./response-synthesizers": {
+      "require": {
+        "types": "./dist/response-synthesizers/index.d.cts",
+        "default": "./dist/response-synthesizers/index.cjs"
+      },
+      "import": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      },
+      "default": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      }
+    },
+    "./indices": {
+      "require": {
+        "types": "./dist/indices/index.d.cts",
+        "default": "./dist/indices/index.cjs"
+      },
+      "import": {
+        "types": "./dist/indices/index.d.ts",
+        "default": "./dist/indices/index.js"
+      },
+      "default": {
+        "types": "./dist/indices/index.d.ts",
+        "default": "./dist/indices/index.js"
+      }
     }
   },
   "files": [

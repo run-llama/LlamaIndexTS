@@ -15,8 +15,19 @@ import {
   setTokenizer,
   withTokenizer,
 } from "./settings/tokenizer";
+import { getLLM, setLLM, withLLM } from './settings/llm';
+import type { LLM } from '../llms';
 
 export const Settings = {
+  get llm() {
+    return getLLM();
+  },
+  set llm(llm) {
+    setLLM(llm);
+  },
+  withLLM<Result>(llm: LLM, fn: () => Result): Result {
+    return withLLM(llm, fn);
+  },
   get tokenizer() {
     return getTokenizer();
   },

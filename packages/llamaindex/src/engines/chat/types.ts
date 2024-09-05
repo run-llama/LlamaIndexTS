@@ -1,5 +1,9 @@
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
-import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
+import {
+  EngineResponse,
+  type NodeWithScore,
+  StreamEngineResponse
+} from '@llamaindex/core/schema';
 import type { ChatHistory } from "../../ChatHistory.js";
 
 /**
@@ -33,7 +37,7 @@ export interface ChatEngine<
   // synchronous response
   R = EngineResponse,
   // asynchronous response
-  AR extends AsyncIterable<unknown> = AsyncIterable<R>,
+  AR = StreamEngineResponse,
 > {
   /**
    * Send message along with the class's current chat history to the LLM.

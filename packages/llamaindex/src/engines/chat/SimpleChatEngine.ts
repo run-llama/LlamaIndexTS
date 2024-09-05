@@ -1,8 +1,7 @@
 import type { LLM } from "@llamaindex/core/llms";
-import { EngineResponse } from "@llamaindex/core/schema";
+import { EngineResponse, StreamEngineResponse } from "@llamaindex/core/schema";
 import {
   streamConverter,
-  streamReducer,
   wrapEventCaller,
 } from "@llamaindex/core/utils";
 import type { ChatHistory } from "../../ChatHistory.js";
@@ -29,12 +28,12 @@ export class SimpleChatEngine implements ChatEngine {
 
   chat(
     params: ChatEngineParamsStreaming,
-  ): Promise<AsyncIterable<EngineResponse>>;
+  ): Promise<StreamEngineResponse>;
   chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
-  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
+  ): Promise<EngineResponse | StreamEngineResponse> {
     const { message, stream } = params;
 
     const chatHistory = params.chatHistory
@@ -47,24 +46,19 @@ export class SimpleChatEngine implements ChatEngine {
         messages: await chatHistory.requestMessages(),
         stream: true,
       });
-      return streamConverter(
-        streamReducer({
+      return StreamEngineResponse.from(
+        streamConverter(
           stream,
-          initialValue: "",
-          reducer: (accumulator, part) => accumulator + part.delta,
-          finished: (accumulator) => {
-            chatHistory.addMessage({ content: accumulator, role: "assistant" });
-          },
-        }),
-        EngineResponse.fromChatResponseChunk,
-      );
+          r => r.delta
+        ),
+      )
     }
 
     const response = await this.llm.chat({
       messages: await chatHistory.requestMessages(),
     });
     chatHistory.addMessage(response.message);
-    return EngineResponse.fromChatResponse(response);
+    return EngineResponse.from(response.message.content);
   }
 
   reset() {
