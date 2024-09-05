@@ -52,3 +52,5 @@ export {
   extractSingleText,
   extractText,
 } from "./llms";
+
+export {objectEntries} from './object-entries'

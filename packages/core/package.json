@@ -115,6 +115,20 @@
         "types": "./dist/utils/index.d.ts",
         "default": "./dist/utils/index.js"
       }
+    },
+    "./prompts": {
+      "require": {
+        "types": "./dist/prompts/index.d.cts",
+        "default": "./dist/prompts/index.cjs"
+      },
+      "import": {
+        "types": "./dist/prompts/index.d.ts",
+        "default": "./dist/prompts/index.js"
+      },
+      "default": {
+        "types": "./dist/prompts/index.d.ts",
+        "default": "./dist/prompts/index.js"
+      }
     }
   },
   "files": [
@@ -132,7 +146,8 @@
   "devDependencies": {
     "ajv": "^8.17.1",
     "bunchee": "5.3.2",
-    "natural": "^8.0.1"
+    "natural": "^8.0.1",
+    "python-format-js": "^1.4.3"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
