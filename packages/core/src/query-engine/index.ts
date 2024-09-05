@@ -1,1 +1,2 @@
-export type { BaseQueryEngine, QueryBundle, QueryType } from "./base";
+export type { QueryBundle, QueryType } from "./base";
+export { BaseQueryEngine } from './base'

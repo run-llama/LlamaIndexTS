@@ -4,11 +4,10 @@ import type {
   MessageContent,
   MessageType,
 } from "@llamaindex/core/llms";
-import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
+import { EngineResponse, StreamEngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import {
   extractText,
   streamConverter,
-  streamReducer,
   wrapEventCaller,
 } from "@llamaindex/core/utils";
 import type { ChatHistory } from "../../ChatHistory.js";
@@ -66,12 +65,12 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
 
   chat(
     params: ChatEngineParamsStreaming,
-  ): Promise<AsyncIterable<EngineResponse>>;
+  ): Promise<StreamEngineResponse>;
   chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async chat(
     params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
-  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
+  ): Promise<EngineResponse | StreamEngineResponse> {
     const { message, stream } = params;
     const chatHistory = params.chatHistory
       ? getHistory(params.chatHistory)
@@ -85,23 +84,16 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
         messages: requestMessages.messages,
         stream: true,
       });
-      return streamConverter(
-        streamReducer({
-          stream,
-          initialValue: "",
-          reducer: (accumulator, part) => (accumulator += part.delta),
-          finished: (accumulator) => {
-            chatHistory.addMessage({ content: accumulator, role: "assistant" });
-          },
-        }),
-        (r) => EngineResponse.fromChatResponseChunk(r, requestMessages.nodes),
+      return StreamEngineResponse.from(
+        streamConverter(stream, (r) => r.delta),
+        requestMessages.nodes,
       );
     }
     const response = await this.chatModel.chat({
       messages: requestMessages.messages,
     });
     chatHistory.addMessage(response.message);
-    return EngineResponse.fromChatResponse(response, requestMessages.nodes);
+    return EngineResponse.from(response.message.content, requestMessages.nodes);
   }
 
   reset() {

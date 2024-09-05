@@ -1,6 +1,6 @@
 import { getEnv } from "@llamaindex/env";
 import { Settings } from "../global";
-import type { BaseNode } from "../schema/node";
+import type { BaseNode } from '../schema';
 
 const emitOnce = false;
 

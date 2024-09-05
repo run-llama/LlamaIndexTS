@@ -1,22 +1,10 @@
 import type { QueryType } from "@llamaindex/core/query-engine";
-import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
+import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { PromptMixin } from "../prompts/Mixin.js";
 
 export interface SynthesizeQuery {
   query: QueryType;
   nodesWithScore: NodeWithScore[];
-}
-
-// todo(himself65): Move this to @llamaindex/core/schema
-/**
- * A BaseSynthesizer is used to generate a response from a query and a list of nodes.
- */
-export interface BaseSynthesizer {
-  synthesize(
-    query: SynthesizeQuery,
-    stream: true,
-  ): Promise<AsyncIterable<EngineResponse>>;
-  synthesize(query: SynthesizeQuery, stream?: false): Promise<EngineResponse>;
 }
 
 export interface ResponseBuilderQuery {

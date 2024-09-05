@@ -33,7 +33,6 @@ import type {
  */
 
 export class CondenseQuestionChatEngine
-  extends PromptMixin
   implements ChatEngine
 {
   queryEngine: QueryEngine;
@@ -110,7 +109,7 @@ export class CondenseQuestionChatEngine
         stream,
         initialValue: "",
         reducer: (accumulator, part) =>
-          (accumulator += extractText(part.message.content)),
+          (accumulator += extractText(part.message)),
         finished: (accumulator) => {
           chatHistory.addMessage({ content: accumulator, role: "assistant" });
         },
@@ -120,7 +119,7 @@ export class CondenseQuestionChatEngine
       query: condensedQuestion,
     });
     chatHistory.addMessage({
-      content: response.message.content,
+      content: response.message,
       role: "assistant",
     });
 
