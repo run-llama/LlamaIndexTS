@@ -301,7 +301,6 @@ export class MongoDBAtlasVectorSearch
     };
 
     if (query.filters) {
-      console.log("query.filters", toMongoDBFilter(query.filters));
       params.filter = toMongoDBFilter(query.filters);
     }
 
