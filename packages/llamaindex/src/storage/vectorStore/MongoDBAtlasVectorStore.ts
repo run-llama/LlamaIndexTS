@@ -60,7 +60,7 @@ function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
     return { $or: filters.filters.map(createFilterObject) };
   }
 
-  throw new Error("filters condition not recognized. Returning empty object");
+  throw new Error("filters condition not recognized. Must be AND or OR");
 }
 
 /**
