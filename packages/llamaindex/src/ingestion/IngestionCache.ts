@@ -1,7 +1,11 @@
-import type { BaseNode, TransformComponent } from "@llamaindex/core/schema";
-import { MetadataMode } from "@llamaindex/core/schema";
+import {
+  type BaseNode,
+  fromDocStore,
+  MetadataMode,
+  type TransformComponent,
+} from "@llamaindex/core/schema";
 import { createSHA256 } from "@llamaindex/env";
-import { docToJson, jsonToDoc } from "../storage/docStore/utils.js";
+import { docToJson } from "../storage/docStore/utils.js";
 import { SimpleKVStore } from "../storage/kvStore/SimpleKVStore.js";
 import type { BaseKVStore } from "../storage/kvStore/types.js";
 
@@ -63,6 +67,8 @@ export class IngestionCache {
     if (!json || !json[this.nodesKey] || !Array.isArray(json[this.nodesKey])) {
       return undefined;
     }
-    return json[this.nodesKey].map((doc: any) => jsonToDoc(doc));
+    return Promise.all(
+      json[this.nodesKey].map((doc: any) => fromDocStore(doc)),
+    );
   }
 }

@@ -162,7 +162,7 @@ importers:
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.637.0)
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
@@ -380,6 +380,9 @@ importers:
       bunchee:
         specifier: 5.3.2
         version: 5.3.2(typescript@5.5.4)
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
       natural:
         specifier: ^8.0.1
         version: 8.0.1(@aws-sdk/credential-providers@3.637.0)
@@ -567,7 +570,7 @@ importers:
         version: 2.0.0
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.637.0)
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
@@ -4926,6 +4929,9 @@ packages:
   chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
 
   char-regex@1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
@@ -11920,7 +11926,7 @@ snapshots:
       '@babel/helpers': 7.25.6
       '@babel/parser': 7.25.6
       '@babel/template': 7.25.0
-      '@babel/traverse': 7.25.6
+      '@babel/traverse': 7.23.2
       '@babel/types': 7.25.6
       convert-source-map: 2.0.0
       debug: 4.3.6
@@ -11964,7 +11970,7 @@ snapshots:
       '@babel/helper-optimise-call-expression': 7.24.7
       '@babel/helper-replace-supers': 7.25.0(@babel/core@7.25.2)
       '@babel/helper-skip-transparent-expression-wrappers': 7.24.7
-      '@babel/traverse': 7.25.6
+      '@babel/traverse': 7.23.2
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
@@ -12002,7 +12008,7 @@ snapshots:
 
   '@babel/helper-member-expression-to-functions@7.24.8':
     dependencies:
-      '@babel/traverse': 7.25.6
+      '@babel/traverse': 7.23.2
       '@babel/types': 7.25.6
     transitivePeerDependencies:
       - supports-color
@@ -12035,7 +12041,7 @@ snapshots:
       '@babel/core': 7.25.2
       '@babel/helper-annotate-as-pure': 7.24.7
       '@babel/helper-wrap-function': 7.25.0
-      '@babel/traverse': 7.25.6
+      '@babel/traverse': 7.23.2
     transitivePeerDependencies:
       - supports-color
 
@@ -12044,7 +12050,7 @@ snapshots:
       '@babel/core': 7.25.2
       '@babel/helper-member-expression-to-functions': 7.24.8
       '@babel/helper-optimise-call-expression': 7.24.7
-      '@babel/traverse': 7.25.6
+      '@babel/traverse': 7.23.2
     transitivePeerDependencies:
       - supports-color
 
@@ -12057,7 +12063,7 @@ snapshots:
 
   '@babel/helper-skip-transparent-expression-wrappers@7.24.7':
     dependencies:
-      '@babel/traverse': 7.25.6
+      '@babel/traverse': 7.23.2
       '@babel/types': 7.25.6
     transitivePeerDependencies:
       - supports-color
@@ -16565,6 +16571,8 @@ snapshots:
 
   chalk@5.3.0: {}
 
+  change-case@5.4.4: {}
+
   char-regex@1.0.2: {}
 
   character-entities-html4@2.1.0: {}
@@ -17719,16 +17727,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.2(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
-    dependencies:
-      debug: 3.2.7
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.3.0(eslint@8.57.0)(typescript@5.5.4)
-      eslint: 8.57.0
-      eslint-import-resolver-node: 0.3.9
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
@@ -17739,7 +17737,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.2(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
+      eslint-module-utils: 2.8.2(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -20467,7 +20465,7 @@ snapshots:
     optionalDependencies:
       '@aws-sdk/credential-providers': 3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0))
 
-  mongodb@6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0))):
+  mongodb@6.8.0(@aws-sdk/credential-providers@3.637.0):
     dependencies:
       '@mongodb-js/saslprep': 1.1.7
       bson: 6.8.0

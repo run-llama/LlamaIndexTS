@@ -10,11 +10,11 @@ export enum NodeRelationship {
 }
 
 export enum ObjectType {
-  TEXT = "TEXT",
-  IMAGE = "IMAGE",
-  INDEX = "INDEX",
-  DOCUMENT = "DOCUMENT",
-  IMAGE_DOCUMENT = "IMAGE_DOCUMENT",
+  TEXT = "1",
+  IMAGE = "2",
+  INDEX = "3",
+  DOCUMENT = "4",
+  IMAGE_DOCUMENT = "5", // Python side doesn't have this enum
 }
 
 export enum MetadataMode {
@@ -76,7 +76,6 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
       excludedEmbedMetadataKeys,
       excludedLlmMetadataKeys,
       relationships,
-      hash,
       embedding,
     } = init || {};
     this.id_ = id_ ?? randomUUID();
@@ -177,13 +176,12 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
     return {
       ...this,
       type: this.type,
-      // hash is an accessor property, so it's not included in the rest operator
-      hash: this.hash,
+      // no `hash` here to align with Python side
     };
   }
 
   clone(): BaseNode {
-    return jsonToNode(this.toMutableJSON()) as BaseNode;
+    return jsonToNode(this.toMutableJSON(), this.type);
   }
 
   /**
@@ -224,27 +222,19 @@ export class TextNode<T extends Metadata = Metadata> extends BaseNode<T> {
       init;
     this.text = text ?? "";
     this.textTemplate = textTemplate ?? "";
-    if (startCharIdx) {
+    if (startCharIdx !== undefined) {
       this.startCharIdx = startCharIdx;
     }
-    if (endCharIdx) {
+    if (endCharIdx !== undefined) {
       this.endCharIdx = endCharIdx;
     }
     this.metadataSeparator = metadataSeparator ?? "\n";
   }
 
-  /**
-   * Generate a hash of the text node.
-   * The ID is not part of the hash as it can change independent of content.
-   * @returns
-   */
   generateHash() {
     const hashFunction = createSHA256();
-    hashFunction.update(`type=${this.type}`);
-    hashFunction.update(
-      `startCharIdx=${this.startCharIdx} endCharIdx=${this.endCharIdx}`,
-    );
-    hashFunction.update(this.getContent(MetadataMode.ALL));
+    const docIdentity = this.text + JSON.stringify(this.metadata);
+    hashFunction.update(docIdentity);
     return hashFunction.digest();
   }
 

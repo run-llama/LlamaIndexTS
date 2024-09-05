@@ -1,4 +1,10 @@
-import { Document, MetadataMode } from "@llamaindex/core/schema";
+import {
+  Document,
+  ImageNode,
+  IndexNode,
+  MetadataMode,
+  TextNode,
+} from "@llamaindex/core/schema";
 import {
   metadataDictToNode,
   nodeToMetadata,
@@ -44,5 +50,38 @@ describe("Testing VectorStore utils", () => {
     expect(() => {
       metadataDictToNode(faultyMetadata);
     }).toThrow();
+  });
+});
+
+describe("vector store utilities", () => {
+  test("nodeToMetadata", () => {
+    {
+      const node = new Document({
+        text: "text",
+      });
+      const metadata = nodeToMetadata(node);
+      expect(metadata["_node_type"]).toBe("Document");
+    }
+    {
+      const node = new TextNode({
+        text: "text",
+      });
+      const metadata = nodeToMetadata(node);
+      expect(metadata["_node_type"]).toBe("TextNode");
+    }
+    {
+      const node = new IndexNode({
+        indexId: "indexId",
+      });
+      const metadata = nodeToMetadata(node);
+      expect(metadata["_node_type"]).toBe("IndexNode");
+    }
+    {
+      const node = new ImageNode({
+        image: "image",
+      });
+      const metadata = nodeToMetadata(node);
+      expect(metadata["_node_type"]).toBe("ImageNode");
+    }
   });
 });

@@ -12,14 +12,17 @@ describe("chunkSizeCheck", () => {
     env.ENABLE_CHUNK_SIZE_CHECK = "true";
 
     let message = "";
-    const consoleMock = vi
-      .spyOn(console, "warn")
-      .mockImplementation((msg) => (message += msg + "\n"));
+    vi.spyOn(console, "warn").mockImplementation(
+      (msg) => (message += msg + "\n"),
+    );
 
     Settings.chunkSize = 0;
+
     const node = new TextNode();
     expect(message).toEqual("");
     node.setContent("a".repeat(1024));
+    expect(message).toBe("");
+    node.getContent();
     expect(message).toContain("is larger than chunk size");
   });
 });
