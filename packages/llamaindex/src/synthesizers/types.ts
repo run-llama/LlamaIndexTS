@@ -1,6 +1,6 @@
+import type { PromptMixin } from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
-import type { PromptMixin } from '@llamaindex/core/prompts';
 
 export interface SynthesizeQuery {
   query: QueryType;

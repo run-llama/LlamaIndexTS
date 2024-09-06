@@ -53,4 +53,4 @@ export {
   extractText,
 } from "./llms";
 
-export {objectEntries} from './object-entries'
+export { objectEntries } from "./object-entries";

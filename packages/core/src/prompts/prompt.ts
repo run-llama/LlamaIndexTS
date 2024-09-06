@@ -1,125 +1,127 @@
-import { PromptTemplate, type StringTemplate } from './base';
+import type { ChatMessage, ToolMetadata } from "../llms";
+import { PromptTemplate, type StringTemplate } from "./base";
 
-type TextQAPrompt = PromptTemplate<['context', 'query'], string[], StringTemplate<['context', 'query']>>;
+export type TextQAPrompt = PromptTemplate<
+  ["context", "query"],
+  string[],
+  StringTemplate<["context", "query"]>
+>;
+export type SummaryPrompt = PromptTemplate<
+  ["context"],
+  string[],
+  StringTemplate<["context"]>
+>;
+export type RefinePrompt = PromptTemplate<
+  ["query", "existingAnswer", "context"],
+  string[],
+  StringTemplate<["query", "existingAnswer", "context"]>
+>;
+export type TreeSummarizePrompt = PromptTemplate<
+  ["context", "query"],
+  string[],
+  StringTemplate<["context", "query"]>
+>;
+export type ChoiceSelectPrompt = PromptTemplate<
+  ["context", "query"],
+  string[],
+  StringTemplate<["context", "query"]>
+>;
+export type SubQuestionPrompt = PromptTemplate<
+  ["toolsStr", "queryStr"],
+  string[],
+  StringTemplate<["toolsStr", "queryStr"]>
+>;
+export type CondenseQuestionPrompt = PromptTemplate<
+  ["chatHistory", "question"],
+  string[],
+  StringTemplate<["chatHistory", "question"]>
+>;
+export type ContextSystemPrompt = PromptTemplate<
+  ["context"],
+  string[],
+  StringTemplate<["context"]>
+>;
+export type KeywordExtractPrompt = PromptTemplate<
+  ["context"],
+  string[],
+  StringTemplate<["context"]>
+>;
+export type QueryKeywordExtractPrompt = PromptTemplate<
+  ["question"],
+  string[],
+  StringTemplate<["question"]>
+>;
 
 export const defaultTextQAPrompt: TextQAPrompt = new PromptTemplate({
-	templateVars: ['context', 'query'],
-	template: `Context information is below.
+  templateVars: ["context", "query"],
+  template: `Context information is below.
 ---------------------
 {context}
 ---------------------
 Given the context information and not prior knowledge, answer the query.
 Query: {query}
-Answer:`
+Answer:`,
 });
 
 export const anthropicTextQaPrompt: TextQAPrompt = new PromptTemplate({
-	templateVars: ['context', 'query'],
-	template: `Context information:
+  templateVars: ["context", "query"],
+  template: `Context information:
 <context>
 {context}
 </context>
 Given the context information and not prior knowledge, answer the query.
-Query: {query}`
+Query: {query}`,
 });
 
-/*
-DEFAULT_SUMMARY_PROMPT_TMPL = (
-    "Write a summary of the following. Try to use only the "
-    "information provided. "
-    "Try to include as many key details as possible.\n"
-    "\n"
-    "\n"
-    "{context_str}\n"
-    "\n"
-    "\n"
-    'SUMMARY:"""\n'
-)
-*/
-
-export const defaultSummaryPrompt = ({ context = '' }) => {
-	return `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
+export const defaultSummaryPrompt: SummaryPrompt = new PromptTemplate({
+  templateVars: ["context"],
+  template: `Write a summary of the following. Try to use only the information provided. Try to include as many key details as possible.
 
 
-${context}
+{context}
 
 
 SUMMARY:"""
-`;
-};
+`,
+});
 
-export type SummaryPrompt = typeof defaultSummaryPrompt;
-
-export const anthropicSummaryPrompt: SummaryPrompt = ({ context = '' }) => {
-	return `Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
+export const anthropicSummaryPrompt: SummaryPrompt = new PromptTemplate({
+  templateVars: ["context"],
+  template: `Summarize the following text. Try to use only the information provided. Try to include as many key details as possible.
 <original-text>
-${context}
+{context}
 </original-text>
 
 SUMMARY:
-`;
-};
+`,
+});
 
-/*
-DEFAULT_REFINE_PROMPT_TMPL = (
-    "The original query is as follows: {query_str}\n"
-    "We have provided an existing answer: {existing_answer}\n"
-    "We have the opportunity to refine the existing answer "
-    "(only if needed) with some more context below.\n"
-    "------------\n"
-    "{context_msg}\n"
-    "------------\n"
-    "Given the new context, refine the original answer to better "
-    "answer the query. "
-    "If the context isn't useful, return the original answer.\n"
-    "Refined Answer: "
-)
-*/
-
-export const defaultRefinePrompt = ({
-	query = '',
-	existingAnswer = '',
-	context = ''
-}) => {
-	return `The original query is as follows: ${query}
-We have provided an existing answer: ${existingAnswer}
+export const defaultRefinePrompt: RefinePrompt = new PromptTemplate({
+  templateVars: ["query", "existingAnswer", "context"],
+  template: `The original query is as follows: {query}
+We have provided an existing answer: {existingAnswer}
 We have the opportunity to refine the existing answer (only if needed) with some more context below.
 ------------
-${context}
+{context}
 ------------
 Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
-Refined Answer:`;
-};
+Refined Answer:`,
+});
 
-export type RefinePrompt = typeof defaultRefinePrompt;
-
-/*
-DEFAULT_TREE_SUMMARIZE_TMPL = (
-  "Context information from multiple sources is below.\n"
-  "---------------------\n"
-  "{context_str}\n"
-  "---------------------\n"
-  "Given the information from multiple sources and not prior knowledge, "
-  "answer the query.\n"
-  "Query: {query_str}\n"
-  "Answer: "
-)
-*/
-
-export const defaultTreeSummarizePrompt = ({ context = '', query = '' }) => {
-	return `Context information from multiple sources is below.
+export const defaultTreeSummarizePrompt = new PromptTemplate({
+  templateVars: ["context", "query"],
+  template: `Context information from multiple sources is below.
 ---------------------
-${context}
+{context}
 ---------------------
 Given the information from multiple sources and not prior knowledge, answer the query.
-Query: ${query}
-Answer:`;
-};
+Query: {query}
+Answer:`,
+});
 
-export type TreeSummarizePrompt = typeof defaultTreeSummarizePrompt;
-
-export const defaultChoiceSelectPrompt = ({ context = '', query = '' }) => {
-	return `A list of documents is shown below. Each document has a number next to it along 
+export const defaultChoiceSelectPrompt = new PromptTemplate({
+  templateVars: ["context", "query"],
+  template: `A list of documents is shown below. Each document has a number next to it along 
 with a summary of the document. A question is also provided.
 Respond with the numbers of the documents
 you should consult to answer the question, in order of relevance, as well
@@ -145,132 +147,55 @@ Doc: 7, Relevance: 3
 
 Let's try this now:
 
-${context}
-Question: ${query}
-Answer:`;
-};
+{context}
+Question: {query}
+Answer:`,
+});
 
-export type ChoiceSelectPrompt = typeof defaultChoiceSelectPrompt;
+export function buildToolsText(tools: ToolMetadata[]) {
+  const toolsObj = tools.reduce<Record<string, string>>((acc, tool) => {
+    acc[tool.name] = tool.description;
+    return acc;
+  }, {});
 
-/*
-PREFIX = """\
-Given a user question, and a list of tools, output a list of relevant sub-questions \
-that when composed can help answer the full user question:
-
-"""
-
-
-example_query_str = (
-    "Compare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021"
-)
-example_tools = [
-    ToolMetadata(
-        name="uber_10k",
-        description="Provides information about Uber financials for year 2021",
-    ),
-    ToolMetadata(
-        name="lyft_10k",
-        description="Provides information about Lyft financials for year 2021",
-    ),
-]
-example_tools_str = build_tools_text(example_tools)
-example_output = [
-    SubQuestion(
-        sub_question="What is the revenue growth of Uber", tool_name="uber_10k"
-    ),
-    SubQuestion(sub_question="What is the EBITDA of Uber", tool_name="uber_10k"),
-    SubQuestion(
-        sub_question="What is the revenue growth of Lyft", tool_name="lyft_10k"
-    ),
-    SubQuestion(sub_question="What is the EBITDA of Lyft", tool_name="lyft_10k"),
-]
-example_output_str = json.dumps([x.dict() for x in example_output], indent=4)
-
-EXAMPLES = (
-    """\
-# Example 1
-<Tools>
-```json
-{tools_str}
-```
-
-<User Question>
-{query_str}
-
-
-<Output>
-```json
-{output_str}
-```
-
-""".format(
-        query_str=example_query_str,
-        tools_str=example_tools_str,
-        output_str=example_output_str,
-    )
-    .replace("{", "{{")
-    .replace("}", "}}")
-)
-
-SUFFIX = """\
-# Example 2
-<Tools>
-```json
-{tools_str}
-```
-
-<User Question>
-{query_str}
-
-<Output>
-"""
-
-DEFAULT_SUB_QUESTION_PROMPT_TMPL = PREFIX + EXAMPLES + SUFFIX
-*/
-
-export function buildToolsText (tools: ToolMetadata[]) {
-	const toolsObj = tools.reduce<Record<string, string>>((acc, tool) => {
-		acc[tool.name] = tool.description;
-		return acc;
-	}, {});
-
-	return JSON.stringify(toolsObj, null, 4);
+  return JSON.stringify(toolsObj, null, 4);
 }
 
 const exampleTools: ToolMetadata[] = [
-	{
-		name: 'uber_10k',
-		description: 'Provides information about Uber financials for year 2021'
-	},
-	{
-		name: 'lyft_10k',
-		description: 'Provides information about Lyft financials for year 2021'
-	}
+  {
+    name: "uber_10k",
+    description: "Provides information about Uber financials for year 2021",
+  },
+  {
+    name: "lyft_10k",
+    description: "Provides information about Lyft financials for year 2021",
+  },
 ];
 
 const exampleQueryStr = `Compare and contrast the revenue growth and EBITDA of Uber and Lyft for year 2021`;
 
-const exampleOutput: SubQuestion[] = [
-	{
-		subQuestion: 'What is the revenue growth of Uber',
-		toolName: 'uber_10k'
-	},
-	{
-		subQuestion: 'What is the EBITDA of Uber',
-		toolName: 'uber_10k'
-	},
-	{
-		subQuestion: 'What is the revenue growth of Lyft',
-		toolName: 'lyft_10k'
-	},
-	{
-		subQuestion: 'What is the EBITDA of Lyft',
-		toolName: 'lyft_10k'
-	}
-];
+const exampleOutput = [
+  {
+    subQuestion: "What is the revenue growth of Uber",
+    toolName: "uber_10k",
+  },
+  {
+    subQuestion: "What is the EBITDA of Uber",
+    toolName: "uber_10k",
+  },
+  {
+    subQuestion: "What is the revenue growth of Lyft",
+    toolName: "lyft_10k",
+  },
+  {
+    subQuestion: "What is the EBITDA of Lyft",
+    toolName: "lyft_10k",
+  },
+] as const;
 
-export const defaultSubQuestionPrompt = ({ toolsStr = '', queryStr = '' }) => {
-	return `Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:
+export const defaultSubQuestionPrompt: SubQuestionPrompt = new PromptTemplate({
+  templateVars: ["toolsStr", "queryStr"],
+  template: `Given a user question, and a list of tools, output a list of relevant sub-questions that when composed can help answer the full user question:
 
 # Example 1
 <Tools>
@@ -289,99 +214,74 @@ ${JSON.stringify(exampleOutput, null, 4)}
 # Example 2
 <Tools>
 \`\`\`json
-${toolsStr}
+{toolsStr}
 \`\`\`
 
 <User Question>
-${queryStr}
+{queryStr}
 
 <Output>
-`;
-};
+`,
+});
 
-export type SubQuestionPrompt = typeof defaultSubQuestionPrompt;
-
-// DEFAULT_TEMPLATE = """\
-// Given a conversation (between Human and Assistant) and a follow up message from Human, \
-// rewrite the message to be a standalone question that captures all relevant context \
-// from the conversation.
-
-// <Chat History>
-// {chat_history}
-
-// <Follow Up Message>
-// {question}
-
-// <Standalone question>
-// """
-
-export const defaultCondenseQuestionPrompt = ({
-	chatHistory = '',
-	question = ''
-}) => {
-	return `Given a conversation (between Human and Assistant) and a follow up message from Human, rewrite the message to be a standalone question that captures all relevant context from the conversation.
+export const defaultCondenseQuestionPrompt = new PromptTemplate({
+  templateVars: ["chatHistory", "question"],
+  template: `Given a conversation (between Human and Assistant) and a follow up message from Human, rewrite the message to be a standalone question that captures all relevant context from the conversation.
 
 <Chat History>
-${chatHistory}
+{chatHistory}
 
 <Follow Up Message>
-${question}
+{question}
 
 <Standalone question>
-`;
-};
+`,
+});
 
-export type CondenseQuestionPrompt = typeof defaultCondenseQuestionPrompt;
-
-export function messagesToHistoryStr (messages: ChatMessage[]) {
-	return messages.reduce((acc, message) => {
-		acc += acc ? '\n' : '';
-		if (message.role === 'user') {
-			acc += `Human: ${message.content}`;
-		} else {
-			acc += `Assistant: ${message.content}`;
-		}
-		return acc;
-	}, '');
+export function messagesToHistoryStr(messages: ChatMessage[]) {
+  return messages.reduce((acc, message) => {
+    acc += acc ? "\n" : "";
+    if (message.role === "user") {
+      acc += `Human: ${message.content}`;
+    } else {
+      acc += `Assistant: ${message.content}`;
+    }
+    return acc;
+  }, "");
 }
 
-export const defaultContextSystemPrompt = ({ context = '' }) => {
-	if (!context) return '';
-	return `Context information is below.
+export const defaultContextSystemPrompt = new PromptTemplate({
+  templateVars: ["context"],
+  template: `Context information is below.
 ---------------------
-${context}
----------------------`;
-};
+{context}
+---------------------`,
+});
 
-export type ContextSystemPrompt = typeof defaultContextSystemPrompt;
-
-export const defaultKeywordExtractPrompt = ({
-	context = '',
-	maxKeywords = 10
-}) => {
-	return `
-Some text is provided below. Given the text, extract up to ${maxKeywords} keywords from the text. Avoid stopwords.
+export const defaultKeywordExtractPrompt = new PromptTemplate({
+  templateVars: ["maxKeywords", "context"],
+  template: `
+Some text is provided below. Given the text, extract up to {maxKeywords} keywords from the text. Avoid stopwords.
 ---------------------
-${context}
+{context}
 ---------------------
 Provide keywords in the following comma-separated format: 'KEYWORDS: <keywords>'
-`;
-};
+`,
+}).partialFormat({
+  maxKeywords: "10",
+});
 
-export type KeywordExtractPrompt = typeof defaultKeywordExtractPrompt;
-
-export const defaultQueryKeywordExtractPrompt = ({
-	question = '',
-	maxKeywords = 10
-}) => {
-	return `(
-  "A question is provided below. Given the question, extract up to ${maxKeywords} "
+export const defaultQueryKeywordExtractPrompt = new PromptTemplate({
+  templateVars: ["maxKeywords", "question"],
+  template: `(
+  "A question is provided below. Given the question, extract up to {maxKeywords} "
   "keywords from the text. Focus on extracting the keywords that we can use "
   "to best lookup answers to the question. Avoid stopwords."
   "---------------------"
-  "${question}"
+  "{question}"
   "---------------------"
   "Provide keywords in the following comma-separated format: 'KEYWORDS: <keywords>'"
-)`;
-};
-export type QueryKeywordExtractPrompt = typeof defaultQueryKeywordExtractPrompt;
+)`,
+}).partialFormat({
+  maxKeywords: "10",
+});
