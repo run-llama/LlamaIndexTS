@@ -19,12 +19,12 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install
       - name: Install Extism
         run: |
           curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
           sh install.sh
+      - name: Install dependencies
+        run: pnpm install
       - name: Run lint
         run: pnpm run lint
       - name: Run Prettier
