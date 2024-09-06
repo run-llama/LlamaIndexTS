@@ -6,6 +6,7 @@ import {
   type SubQuestionPrompt,
 } from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
+import type { BaseOutputParser } from "@llamaindex/core/schema";
 import { extractText, toToolDescriptions } from "@llamaindex/core/utils";
 import { SubQuestionOutputParser } from "./OutputParser.js";
 import type {
@@ -13,7 +14,7 @@ import type {
   SubQuestion,
 } from "./engines/query/types.js";
 import { OpenAI } from "./llm/openai.js";
-import type { BaseOutputParser, StructuredOutput } from "./types.js";
+import type { StructuredOutput } from "./types.js";
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.

@@ -1,11 +1,11 @@
 import type { LLM } from "@llamaindex/core/llms";
 import type { ModuleRecord } from "@llamaindex/core/prompts";
 import type { QueryBundle } from "@llamaindex/core/query-engine";
+import type { BaseOutputParser } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { Answer } from "../outputParsers/selectors.js";
 import { SelectionOutputParser } from "../outputParsers/selectors.js";
 import type {
-  BaseOutputParser,
   StructuredOutput,
   ToolMetadataOnlyDescription,
 } from "../types.js";

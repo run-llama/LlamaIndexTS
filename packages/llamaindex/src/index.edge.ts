@@ -53,3 +53,4 @@ export { Settings } from "./Settings.js";
 export * from "./storage/StorageContext.js";
 export * from "./synthesizers/index.js";
 export * from "./tools/index.js";
+export * from "./types.js";
