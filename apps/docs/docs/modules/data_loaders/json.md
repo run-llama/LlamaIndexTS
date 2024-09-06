@@ -2,6 +2,7 @@
 
 A simple JSON data loader with various options.
 Either parses the entire string, cleaning it and treat each line as an embedding or performs a recursive depth-first traversal yielding JSON paths.
+Supports streaming of large JSON data using [@discoveryjs/json-ext](https://github.com/discoveryjs/json-ext)
 
 ## Usage
 
@@ -20,11 +21,15 @@ const docsFromContent = reader.loadDataAsContent(content);
 
 Basic:
 
+- `streamingThreshold?`: The threshold for using streaming mode in MB of the JSON Data. CEstimates characters by calculating bytes: `(streamingThreshold * 1024 * 1024) / 2` and comparing against `.length` of the JSON string. Set `undefined` to disable streaming or `0` to always use streaming. Default is `50` MB.
+
 - `ensureAscii?`: Wether to ensure only ASCII characters be present in the output by converting non-ASCII characters to their unicode escape sequence. Default is `false`.
 
-- `isJsonLines?`: Wether the JSON is in JSON Lines format. If true, will split into lines, remove empty one and parse each line as JSON. Default is `false`
+- `isJsonLines?`: Wether the JSON is in JSON Lines format. If true, will split into lines, remove empty one and parse each line as JSON. Note: Uses a custom streaming parser, most likely less robust than json-ext. Default is `false`
 
 - `cleanJson?`: Whether to clean the JSON by filtering out structural characters (`{}, [], and ,`). If set to false, it will just parse the JSON, not removing structural characters. Default is `true`.
+
+- `logger?`: A placeholder for a custom logger function.
 
 Depth-First-Traversal:
 
