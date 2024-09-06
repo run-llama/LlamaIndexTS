@@ -1,5 +1,29 @@
 # llamaindex
 
+## 0.5.21
+
+### Patch Changes
+
+- ae1149f: feat: add JSON streaming to JSONReader
+- 2411c9f: Auto-create index for MongoDB vector store (if not exists)
+- e8f229c: Remove logging from MongoDB Atlas Vector Store
+- 11b3856: implement filters for MongoDBAtlasVectorSearch
+- 83d7f41: Fix database insertion for `PGVectorStore`
+
+  It will now:
+
+  - throw an error if there is an insertion error.
+  - Upsert documents with the same id.
+  - add all documents to the database as a single `INSERT` call (inside a transaction).
+
+- 0148354: refactor: prompt system
+
+  Add `PromptTemplate` module with strong type check.
+
+- 1711f6d: Export imageToDataUrl for using images in chat
+- Updated dependencies [0148354]
+  - @llamaindex/core@0.1.10
+
 ## 0.5.20
 
 ### Patch Changes

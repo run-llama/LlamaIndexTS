@@ -1,5 +1,13 @@
 # @llamaindex/core
 
+## 0.1.10
+
+### Patch Changes
+
+- 0148354: refactor: prompt system
+
+  Add `PromptTemplate` module with strong type check.
+
 ## 0.1.9
 
 ### Patch Changes
