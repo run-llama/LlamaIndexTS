@@ -1,7 +1,6 @@
 import { parseChunked } from "@discoveryjs/json-ext";
 import type { JSONValue } from "@llamaindex/core/global";
 import { Document, FileReader } from "@llamaindex/core/schema";
-import { ReadableStream } from "@llamaindex/env";
 import { type Logger, consoleLogger } from "../internal/logger.js";
 
 // Possible improvements:
