@@ -1,5 +1,33 @@
 # llamaindex
 
+## 0.5.20
+
+### Patch Changes
+
+- d9d6c56: Add support for MetadataFilters for PostgreSQL
+- 22ff486: Add tiktoken WASM to withLlamaIndex
+- eed0b04: fix: use LLM metadata mode for generating context of ContextChatEngine
+
+## 0.5.19
+
+### Patch Changes
+
+- fcbf183: implement llamacloud file service
+
+## 0.5.18
+
+### Patch Changes
+
+- 8b66cf4: feat: support organization id in llamacloud index
+- Updated dependencies [e27e7dd]
+  - @llamaindex/core@0.1.9
+
+## 0.5.17
+
+### Patch Changes
+
+- c654398: Implement Weaviate Vector Store in TS
+
 ## 0.5.16
 
 ### Patch Changes

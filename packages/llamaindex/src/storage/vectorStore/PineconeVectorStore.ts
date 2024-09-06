@@ -110,7 +110,7 @@ export class PineconeVectorStore
       const chunk = nodes.slice(i, i + this.chunkSize);
       const result = await this.saveChunk(idx, chunk);
       if (!result) {
-        return Promise.reject();
+        return Promise.reject(new Error("Failed to save chunk"));
       }
     }
     return Promise.resolve([]);

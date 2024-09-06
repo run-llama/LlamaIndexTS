@@ -14,14 +14,26 @@ async function query() {
     dbName: process.env.MONGODB_DATABASE!,
     collectionName: process.env.MONGODB_VECTORS!,
     indexName: process.env.MONGODB_VECTOR_INDEX!,
+    indexedMetadataFields: ["content_type"],
   });
 
   const index = await VectorStoreIndex.fromVectorStore(store);
 
   const retriever = index.asRetriever({ similarityTopK: 20 });
-  const queryEngine = index.asQueryEngine({ retriever });
+  const queryEngine = index.asQueryEngine({
+    retriever,
+    preFilters: {
+      filters: [
+        {
+          key: "content_type",
+          value: "story", // try "tweet" or "post" to see the difference
+          operator: "==",
+        },
+      ],
+    },
+  });
   const result = await queryEngine.query({
-    query: "What does the author think of web frameworks?",
+    query: "What does author receive when he was 11 years old?", // Isaac Asimov's "Foundation" for Christmas
   });
   console.log(result.response);
   await client.close();

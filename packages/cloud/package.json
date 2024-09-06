@@ -34,7 +34,7 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.48.0",
-    "bunchee": "5.3.1"
+    "@hey-api/openapi-ts": "^0.52.11",
+    "bunchee": "5.3.2"
   }
 }

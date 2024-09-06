@@ -18,3 +18,4 @@ export { PineconeVectorStore } from "./vectorStore/PineconeVectorStore.js";
 export { QdrantVectorStore } from "./vectorStore/QdrantVectorStore.js";
 export { SimpleVectorStore } from "./vectorStore/SimpleVectorStore.js";
 export * from "./vectorStore/types.js";
+export { WeaviateVectorStore } from "./vectorStore/WeaviateVectorStore.js";

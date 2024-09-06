@@ -2,12 +2,12 @@ import {
   Document,
   NodeWithScore,
   ResponseSynthesizer,
-  SimpleNodeParser,
+  SentenceSplitter,
   TextNode,
 } from "llamaindex";
 
 (async () => {
-  const nodeParser = new SimpleNodeParser();
+  const nodeParser = new SentenceSplitter();
   const nodes = nodeParser.getNodesFromDocuments([
     new Document({ text: "I am 10 years old. John is 20 years old." }),
   ]);

@@ -1,12 +1,18 @@
 import type pg from "pg";
 
 import {
+  FilterCondition,
+  FilterOperator,
   VectorStoreBase,
   type IEmbedModel,
+  type MetadataFilter,
+  type MetadataFilterValue,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
+
+import { escapeLikeString } from "./utils.js";
 
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
@@ -109,9 +115,9 @@ export class PGVectorStore
 
         // All good?  Keep the connection reference
         this.db = db;
-      } catch (err: any) {
+      } catch (err) {
         console.error(err);
-        return Promise.reject(err);
+        return Promise.reject(err instanceof Error ? err : new Error(`${err}`));
       }
     }
 
@@ -246,6 +252,120 @@ export class PGVectorStore
     return Promise.resolve();
   }
 
+  private toPostgresCondition(condition: `${FilterCondition}`) {
+    if (condition === FilterCondition.AND) {
+      return "AND";
+    }
+    if (condition === FilterCondition.OR) {
+      return "OR";
+    }
+    // fallback to AND
+    else {
+      return "AND";
+    }
+  }
+
+  private toPostgresOperator(operator: `${FilterOperator}`) {
+    if (operator === FilterOperator.EQ) {
+      return "=";
+    }
+    if (operator === FilterOperator.GT) {
+      return ">";
+    }
+    if (operator === FilterOperator.LT) {
+      return "<";
+    }
+    if (operator === FilterOperator.NE) {
+      return "!=";
+    }
+    if (operator === FilterOperator.GTE) {
+      return ">=";
+    }
+    if (operator === FilterOperator.LTE) {
+      return "<=";
+    }
+    if (operator === FilterOperator.IN) {
+      return "= ANY";
+    }
+    if (operator === FilterOperator.NIN) {
+      return "!= ANY";
+    }
+    if (operator === FilterOperator.CONTAINS) {
+      return "@>";
+    }
+    if (operator === FilterOperator.ANY) {
+      return "?|";
+    }
+    if (operator === FilterOperator.ALL) {
+      return "?&";
+    }
+    // fallback to "="
+    return "=";
+  }
+
+  private buildFilterClause(
+    filter: MetadataFilter,
+    paramIndex: number,
+  ): {
+    clause: string;
+    param: string | string[] | number | number[] | undefined;
+  } {
+    if (
+      filter.operator === FilterOperator.IN ||
+      filter.operator === FilterOperator.NIN
+    ) {
+      return {
+        clause: `metadata->>'${filter.key}' ${this.toPostgresOperator(filter.operator)}($${paramIndex})`,
+        param: filter.value,
+      };
+    }
+
+    if (
+      filter.operator === FilterOperator.ALL ||
+      filter.operator === FilterOperator.ANY
+    ) {
+      return {
+        clause: `metadata->'${filter.key}' ${this.toPostgresOperator(filter.operator)} $${paramIndex}::text[]`,
+        param: filter.value,
+      };
+    }
+
+    if (filter.operator === FilterOperator.CONTAINS) {
+      return {
+        clause: `metadata->'${filter.key}' ${this.toPostgresOperator(filter.operator)} $${paramIndex}::jsonb`,
+        param: JSON.stringify([filter.value]),
+      };
+    }
+
+    if (filter.operator === FilterOperator.IS_EMPTY) {
+      return {
+        clause: `(NOT (metadata ? '${filter.key}') OR metadata->>'${filter.key}' IS NULL OR metadata->>'${filter.key}' = '' OR metadata->'${filter.key}' = '[]'::jsonb)`,
+        param: undefined,
+      };
+    }
+
+    if (filter.operator === FilterOperator.TEXT_MATCH) {
+      const escapedValue = escapeLikeString(filter.value as string);
+      return {
+        clause: `metadata->>'${filter.key}' LIKE $${paramIndex}`,
+        param: `%${escapedValue}%`,
+      };
+    }
+
+    // if value is number, coerce metadata value to float
+    if (typeof filter.value === "number") {
+      return {
+        clause: `(metadata->>'${filter.key}')::float ${this.toPostgresOperator(filter.operator)} $${paramIndex}`,
+        param: filter.value,
+      };
+    }
+
+    return {
+      clause: `metadata->>'${filter.key}' ${this.toPostgresOperator(filter.operator)} $${paramIndex}`,
+      param: filter.value,
+    };
+  }
+
   /**
    * Query the vector store for the closest matching data to the query embeddings
    * @param query The VectorStoreQuery to be used
@@ -265,18 +385,26 @@ export class PGVectorStore
     const max = query.similarityTopK ?? 2;
     const whereClauses = this.collection.length ? ["collection = $2"] : [];
 
-    const params: Array<string | number> = this.collection.length
+    const params: Array<MetadataFilterValue> = this.collection.length
       ? [embedding, this.collection]
       : [embedding];
 
+    const filterClauses: string[] = [];
     query.filters?.filters.forEach((filter, index) => {
       const paramIndex = params.length + 1;
-      whereClauses.push(`metadata->>'${filter.key}' = $${paramIndex}`);
-      // TODO: support filter with other operators
-      if (!Array.isArray(filter.value) && filter.value) {
-        params.push(filter.value);
+      const { clause, param } = this.buildFilterClause(filter, paramIndex);
+      filterClauses.push(clause);
+      if (param) {
+        params.push(param);
       }
     });
+
+    if (filterClauses.length > 0) {
+      const condition = this.toPostgresCondition(
+        query.filters?.condition ?? FilterCondition.AND,
+      );
+      whereClauses.push(`(${filterClauses.join(` ${condition} `)})`);
+    }
 
     const where =
       whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";

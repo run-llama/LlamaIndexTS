@@ -99,3 +99,12 @@ export const parseArrayValue = (
   }
   return value;
 };
+
+export const parseNumberValue = (value?: MetadataFilterValue): number => {
+  if (typeof value !== "number") throw new Error("Value must be a number");
+  return value;
+};
+
+export const escapeLikeString = (value: string) => {
+  return value.replace(/[%_\\]/g, "\\$&");
+};

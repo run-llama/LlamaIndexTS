@@ -7,7 +7,7 @@ import type {
   LLM,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
-import { randomUUID, ReadableStream } from "@llamaindex/env";
+import { randomUUID } from "@llamaindex/env";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
 import {
   isAsyncIterable,

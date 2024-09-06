@@ -16,11 +16,6 @@ import { createHash, randomUUID } from "node:crypto";
 import { EOL } from "node:os";
 import path from "node:path";
 import { Readable } from "node:stream";
-import {
-  ReadableStream,
-  TransformStream,
-  WritableStream,
-} from "node:stream/web";
 import { fileURLToPath } from "node:url";
 import { createWriteStream, fs } from "./fs/node.js";
 import type { SHA256 } from "./polyfill.js";
@@ -48,7 +43,4 @@ export {
   path,
   randomUUID,
   Readable,
-  ReadableStream,
-  TransformStream,
-  WritableStream,
 };

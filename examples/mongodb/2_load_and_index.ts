@@ -28,12 +28,23 @@ async function loadAndIndex() {
     "full_text",
   ]);
 
+  const FILTER_METADATA_FIELD = "content_type";
+
+  documents.forEach((document, index) => {
+    const contentType = ["tweet", "post", "story"][index % 3]; // assign a random content type to each document
+    document.metadata = {
+      ...document.metadata,
+      [FILTER_METADATA_FIELD]: contentType,
+    };
+  });
+
   // create Atlas as a vector store
   const vectorStore = new MongoDBAtlasVectorSearch({
     mongodbClient: client,
     dbName: databaseName,
     collectionName: vectorCollectionName, // this is where your embeddings will be stored
     indexName: indexName, // this is the name of the index you will need to create
+    indexedMetadataFields: [FILTER_METADATA_FIELD], // this is the field that will be used for the query
   });
 
   // now create an index from all the Documents and store them in Atlas
@@ -45,39 +56,4 @@ async function loadAndIndex() {
   await client.close();
 }
 
-/**
- * This method is document in https://www.mongodb.com/docs/atlas/atlas-search/create-index/#create-an-fts-index-programmatically
- * But, while testing a 'CommandNotFound' error occurred, so we're not using this here.
- */
-async function createSearchIndex() {
-  const client = new MongoClient(mongoUri);
-  const database = client.db(databaseName);
-  const collection = database.collection(vectorCollectionName);
-
-  // define your Atlas Search index
-  const index = {
-    name: indexName,
-    definition: {
-      /* search index definition fields */
-      mappings: {
-        dynamic: true,
-        fields: [
-          {
-            type: "vector",
-            path: "embedding",
-            numDimensions: 1536,
-            similarity: "cosine",
-          },
-        ],
-      },
-    },
-  };
-  // run the helper method
-  const result = await collection.createSearchIndex(index);
-  console.log("Successfully created search index:", result);
-  await client.close();
-}
-
 loadAndIndex().catch(console.error);
-
-// you can't query your index yet because you need to create a vector search index in mongodb's UI now

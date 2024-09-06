@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.1.9
+
+### Patch Changes
+
+- e27e7dd: chore: bump `natural` to 8.0.1
+
 ## 0.1.8
 
 ### Patch Changes

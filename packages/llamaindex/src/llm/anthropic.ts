@@ -1,21 +1,17 @@
 import type { ClientOptions } from "@anthropic-ai/sdk";
 import { Anthropic as SDKAnthropic } from "@anthropic-ai/sdk";
 import type {
-  MessageCreateParamsNonStreaming,
-  Tool,
-  ToolResultBlockParam,
-  ToolUseBlock,
-  ToolUseBlockParam,
-  ToolsBetaContentBlock,
-  ToolsBetaMessageParam,
-} from "@anthropic-ai/sdk/resources/beta/tools/messages";
-import type {
   TextBlock,
   TextBlockParam,
 } from "@anthropic-ai/sdk/resources/index";
 import type {
   ImageBlockParam,
+  MessageCreateParamsNonStreaming,
   MessageParam,
+  Tool,
+  ToolResultBlockParam,
+  ToolUseBlock,
+  ToolUseBlockParam,
 } from "@anthropic-ai/sdk/resources/messages";
 import type {
   BaseTool,
@@ -162,10 +158,10 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
     return model;
   };
 
-  formatMessages<Beta = false>(
+  formatMessages(
     messages: ChatMessage<ToolCallLLMMessageOptions>[],
-  ): Beta extends true ? ToolsBetaMessageParam[] : MessageParam[] {
-    const result: ToolsBetaMessageParam[] = messages
+  ): MessageParam[] {
+    const result: MessageParam[] = messages
       .filter(
         (message) => message.role === "user" || message.role === "assistant",
       )
@@ -188,7 +184,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
                 tool_use_id: id,
               },
             ] satisfies ToolResultBlockParam[],
-          } satisfies ToolsBetaMessageParam;
+          } satisfies MessageParam;
         } else if ("toolCall" in options) {
           const aiThinkingText = extractText(message.content);
           return {
@@ -212,8 +208,8 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
                     input: toolCall.input,
                   }) satisfies ToolUseBlockParam,
               ),
-            ] satisfies ToolsBetaContentBlock[],
-          } satisfies ToolsBetaMessageParam;
+            ],
+          } satisfies MessageParam;
         }
 
         return {
@@ -248,7 +244,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
       });
     // merge messages with the same role
     // in case of 'messages: roles must alternate between "user" and "assistant", but found multiple "user" roles in a row'
-    const realResult: ToolsBetaMessageParam[] = [];
+    const realResult: MessageParam[] = [];
     for (let i = 0; i < result.length; i++) {
       if (i === 0) {
         realResult.push(result[i]);
@@ -288,9 +284,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
       }
     }
 
-    return realResult as Beta extends true
-      ? ToolsBetaMessageParam[]
-      : MessageParam[];
+    return realResult;
   }
 
   chat(
@@ -349,7 +343,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
 
     if (tools) {
       const params: MessageCreateParamsNonStreaming = {
-        messages: this.formatMessages<true>(messages),
+        messages: this.formatMessages(messages),
         tools: tools.map(Anthropic.toTool),
         model: this.getModelName(this.model),
         temperature: this.temperature,
@@ -361,7 +355,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
       if (tools.length === 0) {
         delete params.tools;
       }
-      const response = await anthropic.beta.tools.messages.create(params);
+      const response = await anthropic.messages.create(params);
 
       const toolUseBlock = response.content.filter(
         (content): content is ToolUseBlock => content.type === "tool_use",
@@ -402,7 +396,12 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
       return {
         raw: response,
         message: {
-          content: response.content[0].text,
+          content: response.content
+            .filter((content): content is TextBlock => content.type === "text")
+            .map((content) => ({
+              type: "text",
+              text: content.text,
+            })),
           role: "assistant",
           options: {},
         },
@@ -416,7 +415,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
     const stream = await this.session.anthropic.messages.create({
       model: this.getModelName(this.model),
-      messages: this.formatMessages<false>(messages),
+      messages: this.formatMessages(messages),
       max_tokens: this.maxTokens ?? 4096,
       temperature: this.temperature,
       top_p: this.topP,
@@ -427,7 +426,11 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
     let idx_counter: number = 0;
     for await (const part of stream) {
       const content =
-        part.type === "content_block_delta" ? part.delta.text : null;
+        part.type === "content_block_delta"
+          ? part.delta.type === "text_delta"
+            ? part.delta.text
+            : part.delta
+          : undefined;
 
       if (typeof content !== "string") continue;
 

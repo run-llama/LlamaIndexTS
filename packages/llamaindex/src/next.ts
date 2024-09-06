@@ -17,6 +17,13 @@
  */
 export default function withLlamaIndex(config: any) {
   config.experimental = config.experimental ?? {};
+  // copy tiktoken WASM files to the NextJS build
+  config.experimental.outputFileTracingIncludes =
+    config.experimental.outputFileTracingIncludes ?? {};
+  config.experimental.outputFileTracingIncludes["/**/*"] = [
+    "./node_modules/tiktoken/*.wasm",
+  ];
+  // needed for transformers, see https://huggingface.co/docs/transformers.js/en/tutorials/next#step-2-install-and-configure-transformersjs
   config.experimental.serverComponentsExternalPackages =
     config.experimental.serverComponentsExternalPackages ?? [];
   config.experimental.serverComponentsExternalPackages.push(
