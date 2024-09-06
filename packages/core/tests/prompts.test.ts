@@ -103,7 +103,6 @@ JSON Data:` as const;
 
       prompt.partialFormat({
         foo: "bar",
-        // @ts-expect-error
         goo: "baz",
       });
     }
