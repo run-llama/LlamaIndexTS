@@ -136,7 +136,11 @@ type WrapStringWithBracket<T extends string> = `{${T}}`;
 export type StringTemplate<Var extends readonly string[]> =
   Var["length"] extends 0
     ? string
-    : `${string}${Join<Permutation<WrapStringWithBracket<Var[number]>>, `${string}`>}${string}`;
+    : Var["length"] extends number
+      ? number extends Var["length"]
+        ? string
+        : `${string}${Join<Permutation<WrapStringWithBracket<Var[number]>>, `${string}`>}${string}`
+      : never;
 
 export type PromptTemplateOptions<
   TemplatesVar extends readonly string[],

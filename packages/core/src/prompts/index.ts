@@ -6,6 +6,8 @@ export type {
 } from "./base";
 export { PromptMixin, type ModuleRecord, type PromptsRecord } from "./mixin";
 export {
+  anthropicSummaryPrompt,
+  anthropicTextQaPrompt,
   defaultChoiceSelectPrompt,
   defaultCondenseQuestionPrompt,
   defaultContextSystemPrompt,
