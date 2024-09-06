@@ -1,9 +1,11 @@
 import type { ChatMessage, LLM, MessageType } from "@llamaindex/core/llms";
-import { extractText } from "@llamaindex/core/utils";
+import { extractText, messagesToHistory } from '@llamaindex/core/utils';
 import { tokenizers, type Tokenizer } from "@llamaindex/env";
-import type { SummaryPrompt } from "./Prompt.js";
-import { defaultSummaryPrompt, messagesToHistoryStr } from "./Prompt.js";
 import { OpenAI } from "./llm/openai.js";
+import {
+  defaultSummaryPrompt,
+  type SummaryPrompt
+} from '@llamaindex/core/prompts';
 
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages
@@ -106,8 +108,8 @@ export class SummaryChatHistory extends ChatHistory {
     do {
       promptMessages = [
         {
-          content: this.summaryPrompt({
-            context: messagesToHistoryStr(messagesToSummarize),
+          content: this.summaryPrompt.format({
+            context: messagesToHistory(messagesToSummarize),
           }),
           role: "user" as MessageType,
           options: {},

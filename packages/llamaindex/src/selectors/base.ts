@@ -1,6 +1,6 @@
 import type { QueryType } from "@llamaindex/core/query-engine";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type { ToolMetadataOnlyDescription } from "../types.js";
+import { PromptMixin } from '@llamaindex/core/prompts';
 
 export interface SingleSelection {
   index: number;

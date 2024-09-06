@@ -2,54 +2,34 @@ import type { ChatMessage, ToolMetadata } from "../llms";
 import { PromptTemplate, type StringTemplate } from "./base";
 
 export type TextQAPrompt = PromptTemplate<
-  ["context", "query"],
-  string[],
-  StringTemplate<["context", "query"]>
+  ["context", "query"]
 >;
 export type SummaryPrompt = PromptTemplate<
-  ["context"],
-  string[],
-  StringTemplate<["context"]>
+  ["context"]
 >;
 export type RefinePrompt = PromptTemplate<
-  ["query", "existingAnswer", "context"],
-  string[],
-  StringTemplate<["query", "existingAnswer", "context"]>
+  ["query", "existingAnswer", "context"]
 >;
 export type TreeSummarizePrompt = PromptTemplate<
-  ["context", "query"],
-  string[],
-  StringTemplate<["context", "query"]>
+  ["context", "query"]
 >;
 export type ChoiceSelectPrompt = PromptTemplate<
-  ["context", "query"],
-  string[],
-  StringTemplate<["context", "query"]>
+  ["context", "query"]
 >;
 export type SubQuestionPrompt = PromptTemplate<
-  ["toolsStr", "queryStr"],
-  string[],
-  StringTemplate<["toolsStr", "queryStr"]>
+  ["toolsStr", "queryStr"]
 >;
 export type CondenseQuestionPrompt = PromptTemplate<
-  ["chatHistory", "question"],
-  string[],
-  StringTemplate<["chatHistory", "question"]>
+  ["chatHistory", "question"]
 >;
 export type ContextSystemPrompt = PromptTemplate<
-  ["context"],
-  string[],
-  StringTemplate<["context"]>
+  ["context"]
 >;
 export type KeywordExtractPrompt = PromptTemplate<
-  ["context"],
-  string[],
-  StringTemplate<["context"]>
+  ["context"]
 >;
 export type QueryKeywordExtractPrompt = PromptTemplate<
-  ["question"],
-  string[],
-  StringTemplate<["question"]>
+  ["question"]
 >;
 
 export const defaultTextQAPrompt: TextQAPrompt = new PromptTemplate({

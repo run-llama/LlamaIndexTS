@@ -1,4 +1,4 @@
-import { PromptMixin } from "@llamaindex/core/prompts";
+import { PromptMixin, type PromptsRecord } from '@llamaindex/core/prompts';
 import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import { streamConverter } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
@@ -40,17 +40,15 @@ export class ResponseSynthesizer
     return {};
   }
 
-  protected _getPrompts(): { [x: string]: ResponseBuilderPrompts } {
+  protected _getPrompts() {
     const prompts = this.responseBuilder.getPrompts?.();
     return {
       ...prompts,
     };
   }
 
-  protected _updatePrompts(promptsDict: {
-    [x: string]: ResponseBuilderPrompts;
-  }): void {
-    this.responseBuilder.updatePrompts?.(promptsDict);
+  protected _updatePrompts(promptsRecord: PromptsRecord): void {
+    this.responseBuilder.updatePrompts?.(promptsRecord);
   }
 
   synthesize(

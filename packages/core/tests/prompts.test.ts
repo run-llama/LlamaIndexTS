@@ -44,6 +44,16 @@ JSON Data:` as const;
       type Test = StringTemplate<["selection"]>;
       expectTypeOf(template).toMatchTypeOf<Test>();
     }
+    {
+      // matrix
+      type Test = StringTemplate<['a', 'b', 'c']>;
+      expectTypeOf<"{a}{b}{c}">().toMatchTypeOf<Test>();
+      expectTypeOf<"{a}{c}{b}">().toMatchTypeOf<Test>();
+      expectTypeOf<"{b}{a}{c}">().toMatchTypeOf<Test>();
+      expectTypeOf<"{b}{c}{a}">().toMatchTypeOf<Test>();
+      expectTypeOf<"{c}{a}{b}">().toMatchTypeOf<Test>();
+      expectTypeOf<"{c}{b}{a}">().toMatchTypeOf<Test>();
+    }
   });
 
   test("PromptTemplate", () => {

@@ -3,7 +3,6 @@ import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
-import { PromptMixin } from "../../prompts/index.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 import { TreeSummarize } from "../../synthesizers/index.js";
@@ -12,6 +11,7 @@ import type {
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
 } from "../../types.js";
+import { PromptMixin, type PromptsRecord } from '@llamaindex/core/prompts';
 
 type RouterQueryEngineTool = {
   queryEngine: QueryEngine;
@@ -22,14 +22,14 @@ type RouterQueryEngineMetadata = {
   description: string;
 };
 
-async function combineResponses(
+async function combineResponses (
   summarizer: TreeSummarize,
   responses: EngineResponse[],
   queryType: QueryType,
-  verbose: boolean = false,
+  verbose: boolean = false
 ): Promise<EngineResponse> {
   if (verbose) {
-    console.log("Combining responses from multiple query engines.");
+    console.log('Combining responses from multiple query engines.');
   }
 
   const responseStrs: string[] = [];
@@ -45,7 +45,7 @@ async function combineResponses(
 
   const summary = await summarizer.getResponse({
     query: extractText(queryType),
-    textChunks: responseStrs,
+    textChunks: responseStrs
   });
 
   return EngineResponse.fromResponse(summary, false, sourceNodes);
@@ -79,7 +79,11 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     this.verbose = init.verbose ?? false;
   }
 
-  _getPromptModules(): Record<string, any> {
+  protected _getPrompts() {return  {}}
+
+  protected _updatePrompts() {}
+
+  protected _getPromptModules() {
     return {
       selector: this.selector,
       summarizer: this.summarizer,

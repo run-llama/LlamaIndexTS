@@ -15,19 +15,20 @@ import {
   defaultMultiSelectPrompt,
   defaultSingleSelectPrompt,
 } from "./prompts.js";
+import type { ModuleRecord } from "@llamaindex/core/prompts";
 
-function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
+function buildChoicesText (choices: ToolMetadataOnlyDescription[]): string {
   const texts: string[] = [];
   for (const [ind, choice] of choices.entries()) {
-    let text = choice.description.split("\n").join(" ");
+    let text = choice.description.split('\n').join(' ');
     text = `(${ind + 1}) ${text}`; // to one indexing
     texts.push(text);
   }
-  return texts.join("");
+  return texts.join('');
 }
 
-function structuredOutputToSelectorResult(
-  output: StructuredOutput<Answer[]>,
+function structuredOutputToSelectorResult (
+  output: StructuredOutput<Answer[]>
 ): SelectorResult {
   const structuredOutput = output;
   const answers = structuredOutput.parsedOutput;
@@ -63,14 +64,20 @@ export class LLMMultiSelector extends BaseSelector {
     this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, MultiSelectPrompt> {
+  _getPrompts() {
     return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, MultiSelectPrompt>): void {
+  _updatePrompts(prompts: {
+    prompt: MultiSelectPrompt;
+  }) {
     if ("prompt" in prompts) {
       this.prompt = prompts.prompt;
     }
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    throw new Error("Method not implemented.");
   }
 
   /**
@@ -84,11 +91,13 @@ export class LLMMultiSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(
-      choicesText.length,
-      choicesText,
-      extractText(query.query),
-      this.maxOutputs,
+    const prompt = this.prompt.format(
+      {
+        contextList: choicesText,
+        query: extractText(query.query),
+        maxOutputs: `${this.maxOutputs}`,
+        numChoices: `${choicesText.length}`,
+      },
     );
 
     const formattedPrompt = this.outputParser?.format(prompt);
@@ -151,11 +160,11 @@ export class LLMSingleSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(
-      choicesText.length,
-      choicesText,
-      extractText(query.query),
-    );
+    const prompt = this.prompt.format({
+      numChoices: `${choicesText.length}`,
+      context: choicesText,
+      query: extractText(query.query),
+    });
 
     const formattedPrompt = this.outputParser.format(prompt);
 
@@ -174,5 +183,9 @@ export class LLMSingleSelector extends BaseSelector {
 
   asQueryComponent(): unknown {
     throw new Error("Method not implemented.");
+  }
+
+  protected _getPromptModules () {
+    return {}
   }
 }

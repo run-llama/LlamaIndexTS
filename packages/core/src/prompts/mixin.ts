@@ -36,25 +36,25 @@ export abstract class PromptMixin {
     return allPrompts;
   }
 
-  updatePrompts(promptsDict: PromptsRecord): void {
+  updatePrompts(prompts: PromptsRecord): void {
     const promptModules = this._getPromptModules();
 
-    this._updatePrompts(promptsDict);
+    this._updatePrompts(prompts);
 
-    const subPromptDicts: Record<string, PromptsRecord> = {};
+    const subPrompt: Record<string, PromptsRecord> = {};
 
-    for (const key in promptsDict) {
+    for (const key in prompts) {
       if (key.includes(":")) {
         const [module_name, sub_key] = key.split(":");
 
-        if (!subPromptDicts[module_name]) {
-          subPromptDicts[module_name] = {};
+        if (!subPrompt[module_name]) {
+          subPrompt[module_name] = {};
         }
-        subPromptDicts[module_name][sub_key] = promptsDict[key];
+        subPrompt[module_name][sub_key] = prompts[key];
       }
     }
 
-    for (const [module_name, subPromptDict] of Object.entries(subPromptDicts)) {
+    for (const [module_name, subPromptDict] of Object.entries(subPrompt)) {
       if (!promptModules[module_name]) {
         throw new Error(`Module ${module_name} not found.`);
       }
@@ -66,8 +66,14 @@ export abstract class PromptMixin {
   }
 
   protected abstract _getPrompts(): PromptsRecord;
+  protected abstract _updatePrompts(prompts: PromptsRecord): void;
 
+  /**
+   *
+   * Return a dictionary of sub-modules within the current module
+   * that also implement PromptMixin (so that their prompts can also be get/set).
+   *
+   * Can be blank if no sub-modules.
+   */
   protected abstract _getPromptModules(): ModuleRecord;
-
-  protected abstract _updatePrompts(promptsDict: PromptsRecord): void;
 }

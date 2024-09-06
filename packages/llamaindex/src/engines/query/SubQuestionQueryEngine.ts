@@ -5,7 +5,6 @@ import {
 } from "@llamaindex/core/schema";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import {
   CompactAndRefine,
@@ -16,14 +15,14 @@ import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
+import { PromptMixin, type PromptsRecord } from '@llamaindex/core/prompts';
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
 export class SubQuestionQueryEngine
   extends PromptMixin
-  implements BaseQueryEngine
-{
+  implements BaseQueryEngine {
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: BaseTool[];
@@ -42,6 +41,12 @@ export class SubQuestionQueryEngine
     this.queryEngines = init.queryEngineTools;
     this.metadatas = init.queryEngineTools.map((tool) => tool.metadata);
   }
+
+  protected _getPrompts(): PromptsRecord {
+    return {}
+  }
+
+  protected _updatePrompts() {}
 
   protected _getPromptModules(): Record<string, any> {
     return {

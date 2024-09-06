@@ -11,7 +11,7 @@ export interface SynthesizeQuery {
 /**
  * A BaseSynthesizer is used to generate a response from a query and a list of nodes.
  */
-export interface BaseSynthesizer {
+export interface BaseSynthesizer extends PromptMixin {
   synthesize(
     query: SynthesizeQuery,
     stream: true,
@@ -28,7 +28,7 @@ export interface ResponseBuilderQuery {
 /**
  * A ResponseBuilder is used in a response synthesizer to generate a response from multiple response chunks.
  */
-export interface ResponseBuilder extends Partial<PromptMixin> {
+export interface ResponseBuilder extends PromptMixin {
   /**
    * Get the response from a query and a list of text chunks.
    */

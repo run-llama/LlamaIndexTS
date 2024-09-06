@@ -51,6 +51,8 @@ export {
   extractImage,
   extractSingleText,
   extractText,
+  messagesToHistory,
+  toToolDescriptions
 } from "./llms";
 
 export { objectEntries } from "./object-entries";

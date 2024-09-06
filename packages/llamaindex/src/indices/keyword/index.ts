@@ -4,14 +4,6 @@ import type {
   NodeWithScore,
 } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import type {
-  KeywordExtractPrompt,
-  QueryKeywordExtractPrompt,
-} from "../../Prompt.js";
-import {
-  defaultKeywordExtractPrompt,
-  defaultQueryKeywordExtractPrompt,
-} from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
@@ -34,6 +26,12 @@ import {
 import type { LLM } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
+import {
+  defaultKeywordExtractPrompt,
+  defaultQueryKeywordExtractPrompt,
+  type KeywordExtractPrompt,
+  type QueryKeywordExtractPrompt
+} from '@llamaindex/core/prompts';
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];

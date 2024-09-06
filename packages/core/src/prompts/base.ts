@@ -107,23 +107,22 @@ export abstract class BasePromptTemplate<
   abstract get template(): string;
 }
 
-type ObjectPresent<T extends string> = `{${T}}`;
+type Permutation<T, K=T> =
+  [T] extends [never]
+    ? []
+    : K extends K
+      ? [K, ...Permutation<Exclude<T, K>>]
+      : never;
 
-type JoinStrings<T extends readonly string[]> = T extends readonly [
-  infer F,
-  ...infer R,
-]
-  ? F extends string
-    ? R extends string[]
-      ? // order doesn't matter
-        | `${string}${ObjectPresent<F>}${JoinStrings<R>}`
-          | `${JoinStrings<R>}${string}${ObjectPresent<F>}`
-      : never
-    : never
-  : "";
+type Join<T extends any[], U extends string> = T extends [infer F, ...infer R]
+  ? R['length'] extends 0
+    ? `${F & string}`
+    : `${F & string}${U}${Join<R, U>}`
+  : never
 
-export type StringTemplate<Var extends readonly string[]> =
-  `${JoinStrings<Var>}${string}`;
+type WrapStringWithBracket<T extends string> = `{${T}}`
+
+export type StringTemplate<Var extends readonly string[]> = `${string}${Join<Permutation<WrapStringWithBracket<Var[number]>>, `${string}`>}${string}`
 
 export type PromptTemplateOptions<
   TemplatesVar extends readonly string[],
@@ -135,9 +134,9 @@ export type PromptTemplateOptions<
 };
 
 export class PromptTemplate<
-  const TemplatesVar extends readonly string[],
-  const Vars extends readonly string[],
-  const Template extends StringTemplate<TemplatesVar>,
+  const TemplatesVar extends readonly string[] = string[],
+  const Vars extends readonly string[] = string[],
+  const Template extends StringTemplate<TemplatesVar> = StringTemplate<TemplatesVar>,
 > extends BasePromptTemplate<TemplatesVar, Vars> {
   #template: Template;
   promptType: PromptType;

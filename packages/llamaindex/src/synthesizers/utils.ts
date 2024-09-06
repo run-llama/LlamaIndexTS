@@ -6,11 +6,11 @@ import {
   splitNodesByType,
   type BaseNode,
 } from "@llamaindex/core/schema";
-import type { SimplePrompt } from "../Prompt.js";
 import { imageToDataUrl } from "../internal/utils.js";
+import type { BasePromptTemplate } from '@llamaindex/core/prompts';
 
 export async function createMessageContent(
-  prompt: SimplePrompt,
+  prompt: BasePromptTemplate,
   nodes: BaseNode[],
   extraParams: Record<string, string | undefined> = {},
   metadataMode: MetadataMode = MetadataMode.NONE,
@@ -37,7 +37,7 @@ export async function createMessageContent(
 
 // eslint-disable-next-line max-params
 async function createContentPerModality(
-  prompt: SimplePrompt,
+  prompt: BasePromptTemplate,
   type: ModalityType,
   nodes: BaseNode[],
   extraParams: Record<string, string | undefined>,
@@ -48,7 +48,7 @@ async function createContentPerModality(
       return [
         {
           type: "text",
-          text: prompt({
+          text: prompt.format({
             ...extraParams,
             context: nodes.map((r) => r.getContent(metadataMode)).join("\n\n"),
           }),

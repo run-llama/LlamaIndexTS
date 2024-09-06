@@ -1,26 +1,26 @@
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import type { EngineResponse } from "@llamaindex/core/schema";
 import {
-  extractText,
+  extractText, messagesToHistory,
   streamReducer,
-  wrapEventCaller,
-} from "@llamaindex/core/utils";
+  wrapEventCaller
+} from '@llamaindex/core/utils';
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
-import type { CondenseQuestionPrompt } from "../../Prompt.js";
-import {
-  defaultCondenseQuestionPrompt,
-  messagesToHistoryStr,
-} from "../../Prompt.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
-import { PromptMixin } from "../../prompts/index.js";
 import type { QueryEngine } from "../../types.js";
 import type {
   ChatEngine,
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
 } from "./types.js";
+import {
+  type CondenseQuestionPrompt, defaultCondenseQuestionPrompt,
+  type ModuleRecord,
+  PromptMixin
+} from '@llamaindex/core/prompts';
+
 /**
  * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorStoreIndex).
  * It does two steps on taking a user's chat message: first, it condenses the chat message
@@ -34,8 +34,7 @@ import type {
 
 export class CondenseQuestionChatEngine
   extends PromptMixin
-  implements ChatEngine
-{
+  implements ChatEngine {
   queryEngine: QueryEngine;
   chatHistory: ChatHistory;
   llm: LLM;
@@ -56,6 +55,10 @@ export class CondenseQuestionChatEngine
       init?.condenseMessagePrompt ?? defaultCondenseQuestionPrompt;
   }
 
+  protected _getPromptModules(): ModuleRecord {
+    return {}
+  }
+
   protected _getPrompts(): { condenseMessagePrompt: CondenseQuestionPrompt } {
     return {
       condenseMessagePrompt: this.condenseMessagePrompt,
@@ -71,12 +74,12 @@ export class CondenseQuestionChatEngine
   }
 
   private async condenseQuestion(chatHistory: ChatHistory, question: string) {
-    const chatHistoryStr = messagesToHistoryStr(
+    const chatHistoryStr = messagesToHistory(
       await chatHistory.requestMessages(),
     );
 
     return this.llm.complete({
-      prompt: this.condenseMessagePrompt({
+      prompt: this.condenseMessagePrompt.format({
         question: question,
         chatHistory: chatHistoryStr,
       }),

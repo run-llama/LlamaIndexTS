@@ -1,47 +1,66 @@
 import type { LLM } from "@llamaindex/core/llms";
 import type { QueryType } from "@llamaindex/core/query-engine";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
-import type {
-  RefinePrompt,
-  SimplePrompt,
-  TextQaPrompt,
-  TreeSummarizePrompt,
-} from "../Prompt.js";
-import {
-  defaultRefinePrompt,
-  defaultTextQaPrompt,
-  defaultTreeSummarizePrompt,
-} from "../Prompt.js";
-import type { PromptHelper } from "../PromptHelper.js";
+import  { type PromptHelper } from "../PromptHelper.js";
 import { getBiggestPrompt } from "../PromptHelper.js";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import {
   llmFromSettingsOrContext,
   promptHelperFromSettingsOrContext,
 } from "../Settings.js";
 import type { ResponseBuilder, ResponseBuilderQuery } from "./types.js";
+import {
+  type TextQAPrompt,
+  type RefinePrompt,
+  type ModuleRecord,
+  PromptMixin,
+  defaultTextQAPrompt,
+  defaultRefinePrompt,
+  type TreeSummarizePrompt, defaultTreeSummarizePrompt,
+  type PromptsRecord
+} from '@llamaindex/core/prompts';
+import { chunk } from 'lodash';
+import { undefined } from 'zod';
 
 /**
  * Response modes of the response synthesizer
  */
 enum ResponseMode {
-  REFINE = "refine",
-  COMPACT = "compact",
-  TREE_SUMMARIZE = "tree_summarize",
-  SIMPLE = "simple",
+  REFINE = 'refine',
+  COMPACT = 'compact',
+  TREE_SUMMARIZE = 'tree_summarize',
+  SIMPLE = 'simple',
 }
 
 /**
  * A response builder that just concatenates responses.
  */
-export class SimpleResponseBuilder implements ResponseBuilder {
+export class SimpleResponseBuilder extends PromptMixin implements ResponseBuilder {
   llm: LLM;
-  textQATemplate: TextQaPrompt;
+  textQATemplate: TextQAPrompt;
 
-  constructor(serviceContext?: ServiceContext, textQATemplate?: TextQaPrompt) {
+  constructor(
+    serviceContext?: ServiceContext,
+    textQATemplate?: TextQAPrompt) {
+    super();
     this.llm = llmFromSettingsOrContext(serviceContext);
-    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
+    this.textQATemplate = textQATemplate ?? defaultTextQAPrompt;
+  }
+
+  protected _getPrompts(): PromptsRecord {
+    return {
+      textQATemplate: this.textQATemplate,
+    }
+  }
+  protected _updatePrompts(prompts: {
+    textQATemplate: TextQAPrompt;
+  }): void {
+    if (prompts.textQATemplate) {
+      this.textQATemplate = prompts.textQATemplate
+    }
+  }
+  protected _getPromptModules(): ModuleRecord {
+    return {}
   }
 
   getResponse(
@@ -53,12 +72,11 @@ export class SimpleResponseBuilder implements ResponseBuilder {
     { query, textChunks }: ResponseBuilderQuery,
     stream?: boolean,
   ): Promise<AsyncIterable<string> | string> {
-    const input = {
+
+    const prompt = this.textQATemplate.format({
       query: extractText(query),
       context: textChunks.join("\n\n"),
-    };
-
-    const prompt = this.textQATemplate(input);
+    });
     if (stream) {
       const response = await this.llm.complete({ prompt, stream });
       return streamConverter(response, (chunk) => chunk.text);
@@ -75,24 +93,28 @@ export class SimpleResponseBuilder implements ResponseBuilder {
 export class Refine extends PromptMixin implements ResponseBuilder {
   llm: LLM;
   promptHelper: PromptHelper;
-  textQATemplate: TextQaPrompt;
+  textQATemplate: TextQAPrompt;
   refineTemplate: RefinePrompt;
 
   constructor(
     serviceContext?: ServiceContext,
-    textQATemplate?: TextQaPrompt,
+    textQATemplate?: TextQAPrompt,
     refineTemplate?: RefinePrompt,
   ) {
     super();
 
     this.llm = llmFromSettingsOrContext(serviceContext);
     this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
-    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
+    this.textQATemplate = textQATemplate ?? defaultTextQAPrompt;
     this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
   }
 
+  protected _getPromptModules (): ModuleRecord {
+    return {};
+  }
+
   protected _getPrompts(): {
-    textQATemplate: RefinePrompt;
+    textQATemplate: TextQAPrompt;
     refineTemplate: RefinePrompt;
   } {
     return {
@@ -102,7 +124,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   }
 
   protected _updatePrompts(prompts: {
-    textQATemplate: RefinePrompt;
+    textQATemplate: TextQAPrompt;
     refineTemplate: RefinePrompt;
   }): void {
     if (prompts.textQATemplate) {
@@ -151,19 +173,18 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     query: QueryType,
     textChunk: string,
     stream: boolean,
-  ) {
-    const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate({ ...input, query: extractText(query) });
+  ): Promise<AsyncIterable<string> | string> {
+    const textQATemplate: TextQAPrompt = this.textQATemplate.partialFormat({ query: extractText(query) });
     const textChunks = this.promptHelper.repack(textQATemplate, [textChunk]);
 
-    let response: AsyncIterable<string> | string | undefined = undefined;
+    let response: AsyncIterable<string> | string = undefined;
 
     for (let i = 0; i < textChunks.length; i++) {
       const chunk = textChunks[i];
       const lastChunk = i === textChunks.length - 1;
       if (!response) {
         response = await this.complete({
-          prompt: textQATemplate({
+          prompt: textQATemplate.format({
             context: chunk,
           }),
           stream: stream && lastChunk,
@@ -178,7 +199,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
       }
     }
 
-    return response;
+    return response as AsyncIterable<string> | string;
   }
 
   // eslint-disable-next-line max-params
@@ -188,8 +209,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     textChunk: string,
     stream: boolean,
   ) {
-    const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate({ ...input, query: extractText(query) });
+    const refineTemplate: RefinePrompt = this.refineTemplate.partialFormat({ query: extractText(query) });
 
     const textChunks = this.promptHelper.repack(refineTemplate, [textChunk]);
 
@@ -199,7 +219,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
       const chunk = textChunks[i];
       const lastChunk = i === textChunks.length - 1;
       response = await this.complete({
-        prompt: refineTemplate({
+        prompt: refineTemplate.format({
           context: chunk,
           existingAnswer: response as string,
         }),
@@ -236,14 +256,12 @@ export class CompactAndRefine extends Refine {
     { query, textChunks, prevResponse }: ResponseBuilderQuery,
     stream?: boolean,
   ): Promise<AsyncIterable<string> | string> {
-    const textQATemplate: SimplePrompt = (input) =>
-      this.textQATemplate({
-        ...input,
+    const textQATemplate: TextQAPrompt =
+      this.textQATemplate.partialFormat({
         query: extractText(query),
       });
-    const refineTemplate: SimplePrompt = (input) =>
-      this.refineTemplate({
-        ...input,
+    const refineTemplate: RefinePrompt =
+      this.refineTemplate.partialFormat({
         query: extractText(query),
       });
 
@@ -285,6 +303,10 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
     this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
+  protected _getPromptModules (): ModuleRecord {
+    return {};
+  }
+
   protected _getPrompts(): { summaryTemplate: TreeSummarizePrompt } {
     return {
       summaryTemplate: this.summaryTemplate,
@@ -320,7 +342,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
 
     if (packedTextChunks.length === 1) {
       const params = {
-        prompt: this.summaryTemplate({
+        prompt: this.summaryTemplate.format({
           context: packedTextChunks[0],
           query: extractText(query),
         }),
@@ -334,7 +356,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
           this.llm.complete({
-            prompt: this.summaryTemplate({
+            prompt: this.summaryTemplate.format({
               context: chunk,
               query: extractText(query),
             }),
@@ -376,6 +398,6 @@ export function getResponseBuilder(
 }
 
 export type ResponseBuilderPrompts =
-  | TextQaPrompt
+  | TextQAPrompt
   | TreeSummarizePrompt
   | RefinePrompt;

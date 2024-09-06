@@ -1,24 +1,27 @@
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { type Tokenizer, tokenizers } from "@llamaindex/env";
-import type { SimplePrompt } from "./Prompt.js";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
   DEFAULT_PADDING,
 } from "./constants.js";
+import type { PromptTemplate } from '@llamaindex/core/prompts';
 
-export function getEmptyPromptTxt(prompt: SimplePrompt) {
-  return prompt({});
+/**
+ * Get the empty prompt text given a prompt.
+ */
+export function getEmptyPromptTxt(prompt: PromptTemplate) {
+  return prompt.format({
+    ...Object.fromEntries([...prompt.templateVars.keys()].map((key) => [key, ""])),
+  });
 }
 
 /**
  * Get biggest empty prompt size from a list of prompts.
  * Used to calculate the maximum size of inputs to the LLM.
- * @param prompts
- * @returns
  */
-export function getBiggestPrompt(prompts: SimplePrompt[]) {
+export function getBiggestPrompt(prompts: PromptTemplate[]) {
   const emptyPromptTexts = prompts.map(getEmptyPromptTxt);
   const emptyPromptLengths = emptyPromptTexts.map((text) => text.length);
   const maxEmptyPromptLength = Math.max(...emptyPromptLengths);
@@ -59,7 +62,7 @@ export class PromptHelper {
    * @param prompt
    * @returns
    */
-  private getAvailableContextSize(prompt: SimplePrompt) {
+  private getAvailableContextSize(prompt: PromptTemplate) {
     const emptyPromptText = getEmptyPromptTxt(prompt);
     const promptTokens = this.tokenizer.encode(emptyPromptText);
     const numPromptTokens = promptTokens.length;
@@ -69,13 +72,9 @@ export class PromptHelper {
 
   /**
    * Find the maximum size of each chunk given a prompt.
-   * @param prompt
-   * @param numChunks
-   * @param padding
-   * @returns
    */
   private getAvailableChunkSize(
-    prompt: SimplePrompt,
+    prompt: PromptTemplate,
     numChunks = 1,
     padding = 5,
   ) {
@@ -92,13 +91,9 @@ export class PromptHelper {
 
   /**
    * Creates a text splitter with the correct chunk sizes and overlaps given a prompt.
-   * @param prompt
-   * @param numChunks
-   * @param padding
-   * @returns
    */
   getTextSplitterGivenPrompt(
-    prompt: SimplePrompt,
+    prompt: PromptTemplate,
     numChunks = 1,
     padding = DEFAULT_PADDING,
   ) {
@@ -112,13 +107,9 @@ export class PromptHelper {
 
   /**
    * Repack resplits the strings based on the optimal text splitter.
-   * @param prompt
-   * @param textChunks
-   * @param padding
-   * @returns
    */
   repack(
-    prompt: SimplePrompt,
+    prompt: PromptTemplate,
     textChunks: string[],
     padding = DEFAULT_PADDING,
   ) {

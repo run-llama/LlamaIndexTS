@@ -1,7 +1,6 @@
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
-import { PromptMixin } from "../../prompts/Mixin.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import { ResponseSynthesizer } from "../../synthesizers/index.js";
@@ -10,6 +9,7 @@ import type {
   QueryEngineParamsNonStreaming,
   QueryEngineParamsStreaming,
 } from "../../types.js";
+import { PromptMixin, type PromptsRecord } from '@llamaindex/core/prompts';
 
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.
@@ -37,6 +37,12 @@ export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
     this.preFilters = preFilters;
     this.nodePostprocessors = nodePostprocessors || [];
   }
+
+  protected _getPrompts() {
+    return {}
+  }
+
+  protected _updatePrompts() {}
 
   _getPromptModules() {
     return {
