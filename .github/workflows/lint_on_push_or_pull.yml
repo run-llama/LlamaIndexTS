@@ -21,6 +21,10 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Install Extism
+        run: |
+          curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
+          sh install.sh
       - name: Run lint
         run: pnpm run lint
       - name: Run Prettier
