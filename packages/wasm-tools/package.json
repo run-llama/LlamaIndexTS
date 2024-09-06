@@ -4,8 +4,8 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@assemblyscript/loader": "^0.27.27",
-    "@types/node": "^22.5.1"
+    "@types/node": "^22.5.1",
+    "@extism/extism": "^2.0.0-rc7"
   },
   "devDependencies": {
     "@swc/cli": "^0.4.0",
