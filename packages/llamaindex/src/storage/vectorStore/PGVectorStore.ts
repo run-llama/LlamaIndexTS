@@ -200,34 +200,53 @@ export class PGVectorStore
    * @returns A list of zero or more id values for the created records.
    */
   async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
-    if (embeddingResults.length == 0) {
+    if (embeddingResults.length === 0) {
       console.debug("Empty list sent to PGVectorStore::add");
-      return Promise.resolve([]);
+      return [];
     }
-
-    const sql: string = `INSERT INTO ${this.schemaName}.${this.tableName}
-                           (id, external_id, collection, document, metadata, embeddings)
-                         VALUES ($1, $2, $3, $4, $5, $6)`;
 
     const db = await this.getDb();
-    const data = this.getDataToInsert(embeddingResults);
 
-    const ret: string[] = [];
-    for (let index = 0; index < data.length; index++) {
-      const params = data[index];
-      try {
-        const result = await db.query(sql, params);
-        if (result.rows.length) {
-          const id = result.rows[0].id as string;
-          ret.push(id);
-        }
-      } catch (err) {
-        const msg = `${err}`;
-        console.log(msg, err);
-      }
+    try {
+      await db.query("BEGIN");
+
+      const data = this.getDataToInsert(embeddingResults);
+
+      const placeholders = data
+        .map(
+          (_, index) =>
+            `($${index * 6 + 1}, ` +
+            `$${index * 6 + 2}, ` +
+            `$${index * 6 + 3}, ` +
+            `$${index * 6 + 4}, ` +
+            `$${index * 6 + 5}, ` +
+            `$${index * 6 + 6})`,
+        )
+        .join(", ");
+
+      const sql = `
+        INSERT INTO ${this.schemaName}.${this.tableName}
+          (id, external_id, collection, document, metadata, embeddings)
+        VALUES ${placeholders}
+        ON CONFLICT (id) DO UPDATE SET
+          external_id = EXCLUDED.external_id,
+          collection = EXCLUDED.collection,
+          document = EXCLUDED.document,
+          metadata = EXCLUDED.metadata,
+          embeddings = EXCLUDED.embeddings
+        RETURNING id
+      `;
+
+      const flattenedParams = data.flat();
+      const result = await db.query(sql, flattenedParams);
+
+      await db.query("COMMIT");
+
+      return result.rows.map((row) => row.id as string);
+    } catch (error) {
+      await db.query("ROLLBACK");
+      throw error;
     }
-
-    return Promise.resolve(ret);
   }
 
   /**
