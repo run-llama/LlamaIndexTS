@@ -1,9 +1,9 @@
+import { PromptMixin } from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
-import { PromptMixin } from "../../prompts/index.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
 import { TreeSummarize } from "../../synthesizers/index.js";
@@ -79,7 +79,13 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     this.verbose = init.verbose ?? false;
   }
 
-  _getPromptModules(): Record<string, any> {
+  protected _getPrompts() {
+    return {};
+  }
+
+  protected _updatePrompts() {}
+
+  protected _getPromptModules() {
     return {
       selector: this.selector,
       summarizer: this.summarizer,

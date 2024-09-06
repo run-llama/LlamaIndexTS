@@ -1,10 +1,13 @@
+import {
+  defaultTextQAPrompt,
+  PromptMixin,
+  type ModuleRecord,
+  type TextQAPrompt,
+} from "@llamaindex/core/prompts";
 import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import { streamConverter } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
-import { PromptMixin } from "../prompts/Mixin.js";
-import type { TextQaPrompt } from "./../Prompt.js";
-import { defaultTextQaPrompt } from "./../Prompt.js";
 import type { BaseSynthesizer, SynthesizeQuery } from "./types.js";
 import { createMessageContent } from "./utils.js";
 
@@ -14,7 +17,7 @@ export class MultiModalResponseSynthesizer
 {
   serviceContext?: ServiceContext;
   metadataMode: MetadataMode;
-  textQATemplate: TextQaPrompt;
+  textQATemplate: TextQAPrompt;
 
   constructor({
     serviceContext,
@@ -25,17 +28,21 @@ export class MultiModalResponseSynthesizer
 
     this.serviceContext = serviceContext;
     this.metadataMode = metadataMode ?? MetadataMode.NONE;
-    this.textQATemplate = textQATemplate ?? defaultTextQaPrompt;
+    this.textQATemplate = textQATemplate ?? defaultTextQAPrompt;
   }
 
-  protected _getPrompts(): { textQATemplate: TextQaPrompt } {
+  protected _getPromptModules(): ModuleRecord {
+    return {};
+  }
+
+  protected _getPrompts(): { textQATemplate: TextQAPrompt } {
     return {
       textQATemplate: this.textQATemplate,
     };
   }
 
   protected _updatePrompts(promptsDict: {
-    textQATemplate: TextQaPrompt;
+    textQATemplate: TextQAPrompt;
   }): void {
     if (promptsDict.textQATemplate) {
       this.textQATemplate = promptsDict.textQATemplate;

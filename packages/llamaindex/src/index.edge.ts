@@ -1,6 +1,7 @@
 import type { AgentEndEvent, AgentStartEvent } from "./agent/types.js";
 import type { RetrievalEndEvent, RetrievalStartEvent } from "./llm/types.js";
 
+export * from "@llamaindex/core/prompts";
 export * from "@llamaindex/core/schema";
 
 declare module "@llamaindex/core/global" {
@@ -43,9 +44,7 @@ export * from "./nodeParsers/index.js";
 export * from "./objects/index.js";
 export * from "./OutputParser.js";
 export * from "./postprocessors/index.js";
-export * from "./Prompt.js";
 export * from "./PromptHelper.js";
-export * from "./prompts/index.js";
 export * from "./QuestionGenerator.js";
 export * from "./Retriever.js";
 export * from "./selectors/index.js";

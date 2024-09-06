@@ -1,5 +1,6 @@
+import type { BaseOutputParser } from "@llamaindex/core/schema";
 import { parseJsonMarkdown } from "../OutputParser.js";
-import type { BaseOutputParser, StructuredOutput } from "../types.js";
+import type { StructuredOutput } from "../types.js";
 
 export type Answer = {
   choice: number;

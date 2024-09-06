@@ -1,8 +1,8 @@
+import { PromptMixin, type ModuleRecord } from "@llamaindex/core/prompts";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type {
   FaithfulnessRefinePrompt,
   FaithfulnessTextQAPrompt,
@@ -41,6 +41,10 @@ export class FaithfulnessEvaluator
       params?.faithfulnessSystemPrompt ?? defaultFaithfulnessTextQaPrompt;
     this.refineTemplate =
       params?.faithFulnessRefinePrompt ?? defaultFaithfulnessRefinePrompt;
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 
   protected _getPrompts(): { [x: string]: any } {

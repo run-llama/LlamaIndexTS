@@ -1,45 +1,52 @@
-import { PromptMixin } from "llamaindex/prompts/index";
+import {
+  type ModuleRecord,
+  PromptMixin,
+  PromptTemplate,
+} from "@llamaindex/core/prompts";
 import { describe, expect, it } from "vitest";
 
-type MockPrompt = {
-  context: string;
-  query: string;
-};
+const mockPrompt = new PromptTemplate({
+  templateVars: ["context", "query"],
+  template: `context: {context} query: {query}`,
+});
 
-const mockPrompt = ({ context, query }: MockPrompt) =>
-  `context: ${context} query: ${query}`;
+const mockPrompt2 = new PromptTemplate({
+  templateVars: ["context", "query"],
+  template: `query: {query} context: {context}`,
+});
 
-const mockPrompt2 = ({ context, query }: MockPrompt) =>
-  `query: ${query} context: ${context}`;
-
-type MockPromptFunction = typeof mockPrompt;
+type MockPrompt = typeof mockPrompt;
 
 class MockObject2 extends PromptMixin {
-  _prompt_dict_2: MockPromptFunction;
+  _prompt_dict_2: MockPrompt;
 
   constructor() {
     super();
     this._prompt_dict_2 = mockPrompt;
   }
 
-  protected _getPrompts(): { [x: string]: MockPromptFunction } {
+  protected _getPrompts() {
     return {
       abc: this._prompt_dict_2,
     };
   }
 
-  _updatePrompts(promptsDict: { [x: string]: MockPromptFunction }): void {
-    if ("abc" in promptsDict) {
-      this._prompt_dict_2 = promptsDict["abc"];
+  protected _updatePrompts(prompts: { abc: MockPrompt }): void {
+    if ("abc" in prompts) {
+      this._prompt_dict_2 = prompts["abc"];
     }
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 }
 
 class MockObject1 extends PromptMixin {
   mockObject2: MockObject2;
 
-  fooPrompt: MockPromptFunction;
-  barPrompt: MockPromptFunction;
+  fooPrompt: MockPrompt;
+  barPrompt: MockPrompt;
 
   constructor() {
     super();
@@ -76,14 +83,14 @@ describe("PromptMixin", () => {
     const prompts = mockObj1.getPrompts();
 
     expect(
-      mockObj1.fooPrompt({
+      mockObj1.fooPrompt.format({
         context: "{foo}",
         query: "{foo}",
       }),
     ).toEqual("context: {foo} query: {foo}");
 
     expect(
-      mockObj1.barPrompt({
+      mockObj1.barPrompt.format({
         context: "{foo} {bar}",
         query: "{foo} {bar}",
       }),
@@ -103,18 +110,22 @@ describe("PromptMixin", () => {
     const mockObj1 = new MockObject1();
 
     expect(
-      mockObj1.barPrompt({
+      mockObj1.barPrompt.format({
         context: "{foo} {bar}",
         query: "{foo} {bar}",
       }),
-    ).toEqual(mockPrompt({ context: "{foo} {bar}", query: "{foo} {bar}" }));
+    ).toEqual(
+      mockPrompt.format({ context: "{foo} {bar}", query: "{foo} {bar}" }),
+    );
 
     expect(
-      mockObj1.mockObject2._prompt_dict_2({
+      mockObj1.mockObject2._prompt_dict_2.format({
         context: "{bar} testing",
         query: "{bar} testing",
       }),
-    ).toEqual(mockPrompt({ context: "{bar} testing", query: "{bar} testing" }));
+    ).toEqual(
+      mockPrompt.format({ context: "{bar} testing", query: "{bar} testing" }),
+    );
 
     mockObj1.updatePrompts({
       bar: mockPrompt2,
@@ -122,18 +133,20 @@ describe("PromptMixin", () => {
     });
 
     expect(
-      mockObj1.barPrompt({
+      mockObj1.barPrompt.format({
         context: "{foo} {bar}",
         query: "{bar} {foo}",
       }),
-    ).toEqual(mockPrompt2({ context: "{foo} {bar}", query: "{bar} {foo}" }));
+    ).toEqual(
+      mockPrompt2.format({ context: "{foo} {bar}", query: "{bar} {foo}" }),
+    );
     expect(
-      mockObj1.mockObject2._prompt_dict_2({
+      mockObj1.mockObject2._prompt_dict_2.format({
         context: "{bar} testing",
         query: "{bar} testing",
       }),
     ).toEqual(
-      mockPrompt2({ context: "{bar} testing", query: "{bar} testing" }),
+      mockPrompt2.format({ context: "{bar} testing", query: "{bar} testing" }),
     );
   });
 });

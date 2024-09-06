@@ -1,9 +1,12 @@
 import type { MessageContent, MessageType } from "@llamaindex/core/llms";
+import {
+  type ContextSystemPrompt,
+  defaultContextSystemPrompt,
+  type ModuleRecord,
+  PromptMixin,
+} from "@llamaindex/core/prompts";
 import { MetadataMode, type NodeWithScore } from "@llamaindex/core/schema";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
-import type { ContextSystemPrompt } from "../../Prompt.js";
-import { defaultContextSystemPrompt } from "../../Prompt.js";
-import { PromptMixin } from "../../prompts/index.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { createMessageContent } from "../../synthesizers/utils.js";
 import type { Context, ContextGenerator } from "./types.js";
@@ -33,6 +36,10 @@ export class DefaultContextGenerator
     this.nodePostprocessors = init.nodePostprocessors || [];
     this.contextRole = init.contextRole ?? "system";
     this.metadataMode = init.metadataMode ?? MetadataMode.NONE;
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 
   protected _getPrompts(): { contextSystemPrompt: ContextSystemPrompt } {

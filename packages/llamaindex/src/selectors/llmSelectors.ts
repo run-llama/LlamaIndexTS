@@ -1,10 +1,11 @@
 import type { LLM } from "@llamaindex/core/llms";
+import type { ModuleRecord } from "@llamaindex/core/prompts";
 import type { QueryBundle } from "@llamaindex/core/query-engine";
+import type { BaseOutputParser } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { Answer } from "../outputParsers/selectors.js";
 import { SelectionOutputParser } from "../outputParsers/selectors.js";
 import type {
-  BaseOutputParser,
   StructuredOutput,
   ToolMetadataOnlyDescription,
 } from "../types.js";
@@ -63,14 +64,18 @@ export class LLMMultiSelector extends BaseSelector {
     this.outputParser = init.outputParser ?? new SelectionOutputParser();
   }
 
-  _getPrompts(): Record<string, MultiSelectPrompt> {
+  _getPrompts() {
     return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: Record<string, MultiSelectPrompt>): void {
+  _updatePrompts(prompts: { prompt: MultiSelectPrompt }) {
     if ("prompt" in prompts) {
       this.prompt = prompts.prompt;
     }
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    throw new Error("Method not implemented.");
   }
 
   /**
@@ -84,12 +89,12 @@ export class LLMMultiSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(
-      choicesText.length,
-      choicesText,
-      extractText(query.query),
-      this.maxOutputs,
-    );
+    const prompt = this.prompt.format({
+      contextList: choicesText,
+      query: extractText(query.query),
+      maxOutputs: `${this.maxOutputs}`,
+      numChoices: `${choicesText.length}`,
+    });
 
     const formattedPrompt = this.outputParser?.format(prompt);
 
@@ -151,11 +156,11 @@ export class LLMSingleSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt(
-      choicesText.length,
-      choicesText,
-      extractText(query.query),
-    );
+    const prompt = this.prompt.format({
+      numChoices: `${choicesText.length}`,
+      context: choicesText,
+      query: extractText(query.query),
+    });
 
     const formattedPrompt = this.outputParser.format(prompt);
 
@@ -174,5 +179,9 @@ export class LLMSingleSelector extends BaseSelector {
 
   asQueryComponent(): unknown {
     throw new Error("Method not implemented.");
+  }
+
+  protected _getPromptModules() {
+    return {};
   }
 }

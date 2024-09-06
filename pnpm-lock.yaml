@@ -162,7 +162,7 @@ importers:
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.637.0)
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
@@ -383,6 +383,9 @@ importers:
       natural:
         specifier: ^8.0.1
         version: 8.0.1(@aws-sdk/credential-providers@3.637.0)
+      python-format-js:
+        specifier: ^1.4.3
+        version: 1.4.3
 
   packages/core/tests:
     devDependencies:
@@ -567,7 +570,7 @@ importers:
         version: 2.0.0
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.637.0)
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
@@ -9142,6 +9145,9 @@ packages:
   pupa@3.1.0:
     resolution: {integrity: sha512-FLpr4flz5xZTSJxSeaheeMKN/EDzMdK7b8PTOC6a5PYFKTucWbdqjgqaEyH0shFiSJrVB1+Qqi4Tk19ccU6Aug==}
     engines: {node: '>=12.20'}
+
+  python-format-js@1.4.3:
+    resolution: {integrity: sha512-0iK5zP5HMf4F3Xc3Uo6hggPu4ylEQCKNoLXUYe3S1YfYkFG6DxGDO3KozCrySntAZTPmP9yRI+eMq0MXweHqIw==}
 
   qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
@@ -17719,16 +17725,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.2(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
-    dependencies:
-      debug: 3.2.7
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.3.0(eslint@8.57.0)(typescript@5.5.4)
-      eslint: 8.57.0
-      eslint-import-resolver-node: 0.3.9
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
@@ -17739,7 +17735,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.2(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
+      eslint-module-utils: 2.8.2(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -20467,7 +20463,7 @@ snapshots:
     optionalDependencies:
       '@aws-sdk/credential-providers': 3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0))
 
-  mongodb@6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0))):
+  mongodb@6.8.0(@aws-sdk/credential-providers@3.637.0):
     dependencies:
       '@mongodb-js/saslprep': 1.1.7
       bson: 6.8.0
@@ -21673,6 +21669,8 @@ snapshots:
   pupa@3.1.0:
     dependencies:
       escape-goat: 4.0.0
+
+  python-format-js@1.4.3: {}
 
   qs@6.11.0:
     dependencies:

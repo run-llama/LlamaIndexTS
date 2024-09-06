@@ -1,3 +1,7 @@
+import {
+  type ChoiceSelectPrompt,
+  defaultChoiceSelectPrompt,
+} from "@llamaindex/core/prompts";
 import type {
   BaseNode,
   Document,
@@ -5,8 +9,6 @@ import type {
 } from "@llamaindex/core/schema";
 import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
 import _ from "lodash";
-import type { ChoiceSelectPrompt } from "../../Prompt.js";
-import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
@@ -345,7 +347,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
 
       const rawResponse = (
         await llm.complete({
-          prompt: this.choiceSelectPrompt(input),
+          prompt: this.choiceSelectPrompt.format(input),
         })
       ).text;
 
