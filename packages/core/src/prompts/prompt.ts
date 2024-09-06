@@ -1,36 +1,20 @@
 import type { ChatMessage, ToolMetadata } from "../llms";
-import { PromptTemplate, type StringTemplate } from "./base";
+import { PromptTemplate } from "./base";
 
-export type TextQAPrompt = PromptTemplate<
-  ["context", "query"]
->;
-export type SummaryPrompt = PromptTemplate<
-  ["context"]
->;
+export type TextQAPrompt = PromptTemplate<["context", "query"]>;
+export type SummaryPrompt = PromptTemplate<["context"]>;
 export type RefinePrompt = PromptTemplate<
   ["query", "existingAnswer", "context"]
 >;
-export type TreeSummarizePrompt = PromptTemplate<
-  ["context", "query"]
->;
-export type ChoiceSelectPrompt = PromptTemplate<
-  ["context", "query"]
->;
-export type SubQuestionPrompt = PromptTemplate<
-  ["toolsStr", "queryStr"]
->;
+export type TreeSummarizePrompt = PromptTemplate<["context", "query"]>;
+export type ChoiceSelectPrompt = PromptTemplate<["context", "query"]>;
+export type SubQuestionPrompt = PromptTemplate<["toolsStr", "queryStr"]>;
 export type CondenseQuestionPrompt = PromptTemplate<
   ["chatHistory", "question"]
 >;
-export type ContextSystemPrompt = PromptTemplate<
-  ["context"]
->;
-export type KeywordExtractPrompt = PromptTemplate<
-  ["context"]
->;
-export type QueryKeywordExtractPrompt = PromptTemplate<
-  ["question"]
->;
+export type ContextSystemPrompt = PromptTemplate<["context"]>;
+export type KeywordExtractPrompt = PromptTemplate<["context"]>;
+export type QueryKeywordExtractPrompt = PromptTemplate<["question"]>;
 
 export const defaultTextQAPrompt: TextQAPrompt = new PromptTemplate({
   templateVars: ["context", "query"],
@@ -230,26 +214,28 @@ export function messagesToHistoryStr(messages: ChatMessage[]) {
   }, "");
 }
 
-export const defaultContextSystemPrompt = new PromptTemplate({
-  templateVars: ["context"],
-  template: `Context information is below.
+export const defaultContextSystemPrompt: ContextSystemPrompt =
+  new PromptTemplate({
+    templateVars: ["context"],
+    template: `Context information is below.
 ---------------------
 {context}
 ---------------------`,
-});
+  });
 
-export const defaultKeywordExtractPrompt = new PromptTemplate({
-  templateVars: ["maxKeywords", "context"],
-  template: `
+export const defaultKeywordExtractPrompt: KeywordExtractPrompt =
+  new PromptTemplate({
+    templateVars: ["maxKeywords", "context"],
+    template: `
 Some text is provided below. Given the text, extract up to {maxKeywords} keywords from the text. Avoid stopwords.
 ---------------------
 {context}
 ---------------------
 Provide keywords in the following comma-separated format: 'KEYWORDS: <keywords>'
 `,
-}).partialFormat({
-  maxKeywords: "10",
-});
+  }).partialFormat({
+    maxKeywords: "10",
+  });
 
 export const defaultQueryKeywordExtractPrompt = new PromptTemplate({
   templateVars: ["maxKeywords", "question"],

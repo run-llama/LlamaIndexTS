@@ -1,3 +1,4 @@
+import { PromptMixin, type ModuleRecord } from "@llamaindex/core/prompts";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
@@ -16,11 +17,11 @@ import type {
   EvaluatorParams,
   EvaluatorResponseParams,
 } from "./types.js";
-import { PromptMixin, type ModuleRecord } from '@llamaindex/core/prompts';
 
 export class FaithfulnessEvaluator
   extends PromptMixin
-  implements BaseEvaluator {
+  implements BaseEvaluator
+{
   private serviceContext?: ServiceContext;
   private raiseError: boolean;
   private evalTemplate: FaithfulnessTextQAPrompt;
@@ -43,7 +44,7 @@ export class FaithfulnessEvaluator
   }
 
   protected _getPromptModules(): ModuleRecord {
-    return {}
+    return {};
   }
 
   protected _getPrompts(): { [x: string]: any } {

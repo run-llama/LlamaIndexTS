@@ -1,15 +1,15 @@
+import {
+  defaultTextQAPrompt,
+  PromptMixin,
+  type ModuleRecord,
+  type TextQAPrompt,
+} from "@llamaindex/core/prompts";
 import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import { streamConverter } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import type { BaseSynthesizer, SynthesizeQuery } from "./types.js";
 import { createMessageContent } from "./utils.js";
-import {
-  PromptMixin,
-  type TextQAPrompt,
-  defaultTextQAPrompt,
-  type ModuleRecord
-} from '@llamaindex/core/prompts';
 
 export class MultiModalResponseSynthesizer
   extends PromptMixin
@@ -31,8 +31,8 @@ export class MultiModalResponseSynthesizer
     this.textQATemplate = textQATemplate ?? defaultTextQAPrompt;
   }
 
-  protected _getPromptModules (): ModuleRecord {
-    return {}
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 
   protected _getPrompts(): { textQATemplate: TextQAPrompt } {

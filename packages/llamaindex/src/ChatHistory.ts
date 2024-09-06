@@ -1,11 +1,11 @@
 import type { ChatMessage, LLM, MessageType } from "@llamaindex/core/llms";
-import { extractText, messagesToHistory } from '@llamaindex/core/utils';
-import { tokenizers, type Tokenizer } from "@llamaindex/env";
-import { OpenAI } from "./llm/openai.js";
 import {
   defaultSummaryPrompt,
-  type SummaryPrompt
-} from '@llamaindex/core/prompts';
+  type SummaryPrompt,
+} from "@llamaindex/core/prompts";
+import { extractText, messagesToHistory } from "@llamaindex/core/utils";
+import { tokenizers, type Tokenizer } from "@llamaindex/env";
+import { OpenAI } from "./llm/openai.js";
 
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages

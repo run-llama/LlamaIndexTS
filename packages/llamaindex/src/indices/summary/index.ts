@@ -1,3 +1,7 @@
+import {
+  type ChoiceSelectPrompt,
+  defaultChoiceSelectPrompt,
+} from "@llamaindex/core/prompts";
 import type {
   BaseNode,
   Document,
@@ -36,10 +40,6 @@ import {
   defaultFormatNodeBatchFn,
   defaultParseChoiceSelectAnswerFn,
 } from "./utils.js";
-import {
-  type ChoiceSelectPrompt,
-  defaultChoiceSelectPrompt
-} from '@llamaindex/core/prompts';
 
 export enum SummaryRetrieverMode {
   DEFAULT = "default",

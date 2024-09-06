@@ -4,6 +4,12 @@ import type {
   MessageContent,
   MessageType,
 } from "@llamaindex/core/llms";
+import {
+  type ContextSystemPrompt,
+  type ModuleRecord,
+  PromptMixin,
+  type PromptsRecord,
+} from "@llamaindex/core/prompts";
 import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import {
   extractText,
@@ -23,12 +29,6 @@ import type {
   ChatEngineParamsStreaming,
   ContextGenerator,
 } from "./types.js";
-import {
-  type ContextSystemPrompt,
-  type ModuleRecord,
-  PromptMixin,
-  type PromptsRecord
-} from '@llamaindex/core/prompts';
 
 /**
  * ContextChatEngine uses the Index to get the appropriate context for each query.
@@ -68,7 +68,9 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     };
   }
 
-  protected _updatePrompts(prompts: { contextSystemPrompt: ContextSystemPrompt }): void {
+  protected _updatePrompts(prompts: {
+    contextSystemPrompt: ContextSystemPrompt;
+  }): void {
     this.contextGenerator.updatePrompts(prompts);
   }
 

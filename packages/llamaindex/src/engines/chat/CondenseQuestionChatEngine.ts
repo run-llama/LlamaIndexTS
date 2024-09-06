@@ -1,10 +1,17 @@
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
+import {
+  type CondenseQuestionPrompt,
+  defaultCondenseQuestionPrompt,
+  type ModuleRecord,
+  PromptMixin,
+} from "@llamaindex/core/prompts";
 import type { EngineResponse } from "@llamaindex/core/schema";
 import {
-  extractText, messagesToHistory,
+  extractText,
+  messagesToHistory,
   streamReducer,
-  wrapEventCaller
-} from '@llamaindex/core/utils';
+  wrapEventCaller,
+} from "@llamaindex/core/utils";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
 import type { ServiceContext } from "../../ServiceContext.js";
@@ -15,11 +22,6 @@ import type {
   ChatEngineParamsNonStreaming,
   ChatEngineParamsStreaming,
 } from "./types.js";
-import {
-  type CondenseQuestionPrompt, defaultCondenseQuestionPrompt,
-  type ModuleRecord,
-  PromptMixin
-} from '@llamaindex/core/prompts';
 
 /**
  * CondenseQuestionChatEngine is used in conjunction with a Index (for example VectorStoreIndex).
@@ -34,7 +36,8 @@ import {
 
 export class CondenseQuestionChatEngine
   extends PromptMixin
-  implements ChatEngine {
+  implements ChatEngine
+{
   queryEngine: QueryEngine;
   chatHistory: ChatHistory;
   llm: LLM;
@@ -56,7 +59,7 @@ export class CondenseQuestionChatEngine
   }
 
   protected _getPromptModules(): ModuleRecord {
-    return {}
+    return {};
   }
 
   protected _getPrompts(): { condenseMessagePrompt: CondenseQuestionPrompt } {

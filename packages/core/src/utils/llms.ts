@@ -2,8 +2,9 @@ import type {
   ChatMessage,
   MessageContent,
   MessageContentDetail,
-  MessageContentTextDetail, ToolMetadata
-} from '../llms';
+  MessageContentTextDetail,
+  ToolMetadata,
+} from "../llms";
 import type { QueryType } from "../query-engine";
 import type { ImageType } from "../schema";
 

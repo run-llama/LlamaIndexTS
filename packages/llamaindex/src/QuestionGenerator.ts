@@ -1,4 +1,10 @@
 import type { LLM, ToolMetadata } from "@llamaindex/core/llms";
+import {
+  defaultSubQuestionPrompt,
+  type ModuleRecord,
+  PromptMixin,
+  type SubQuestionPrompt,
+} from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
 import { extractText, toToolDescriptions } from "@llamaindex/core/utils";
 import { SubQuestionOutputParser } from "./OutputParser.js";
@@ -8,12 +14,6 @@ import type {
 } from "./engines/query/types.js";
 import { OpenAI } from "./llm/openai.js";
 import type { BaseOutputParser, StructuredOutput } from "./types.js";
-import {
-  defaultSubQuestionPrompt,
-  type ModuleRecord,
-  PromptMixin,
-  type SubQuestionPrompt
-} from '@llamaindex/core/prompts';
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.
@@ -68,7 +68,7 @@ export class LLMQuestionGenerator
     return structuredOutput.parsedOutput;
   }
 
-  protected _getPromptModules (): ModuleRecord {
-    return {}
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 }

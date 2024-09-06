@@ -1,8 +1,7 @@
-import { PromptMixin, type PromptsRecord } from '@llamaindex/core/prompts';
+import { PromptMixin, type PromptsRecord } from "@llamaindex/core/prompts";
 import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import { streamConverter } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
-import type { ResponseBuilderPrompts } from "./builders.js";
 import { getResponseBuilder } from "./builders.js";
 import type {
   BaseSynthesizer,

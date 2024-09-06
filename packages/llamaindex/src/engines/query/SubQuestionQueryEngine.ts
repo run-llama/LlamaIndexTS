@@ -12,17 +12,18 @@ import {
 } from "../../synthesizers/index.js";
 
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
+import { PromptMixin, type PromptsRecord } from "@llamaindex/core/prompts";
 import type { BaseQueryEngine, QueryType } from "@llamaindex/core/query-engine";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
-import { PromptMixin, type PromptsRecord } from '@llamaindex/core/prompts';
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
 export class SubQuestionQueryEngine
   extends PromptMixin
-  implements BaseQueryEngine {
+  implements BaseQueryEngine
+{
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: BaseTool[];
@@ -43,7 +44,7 @@ export class SubQuestionQueryEngine
   }
 
   protected _getPrompts(): PromptsRecord {
-    return {}
+    return {};
   }
 
   protected _updatePrompts() {}

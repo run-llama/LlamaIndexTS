@@ -46,7 +46,7 @@ JSON Data:` as const;
     }
     {
       // matrix
-      type Test = StringTemplate<['a', 'b', 'c']>;
+      type Test = StringTemplate<["a", "b", "c"]>;
       expectTypeOf<"{a}{b}{c}">().toMatchTypeOf<Test>();
       expectTypeOf<"{a}{c}{b}">().toMatchTypeOf<Test>();
       expectTypeOf<"{b}{a}{c}">().toMatchTypeOf<Test>();

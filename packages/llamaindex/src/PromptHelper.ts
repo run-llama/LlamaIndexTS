@@ -1,4 +1,5 @@
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import type { PromptTemplate } from "@llamaindex/core/prompts";
 import { type Tokenizer, tokenizers } from "@llamaindex/env";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
@@ -6,14 +7,15 @@ import {
   DEFAULT_NUM_OUTPUTS,
   DEFAULT_PADDING,
 } from "./constants.js";
-import type { PromptTemplate } from '@llamaindex/core/prompts';
 
 /**
  * Get the empty prompt text given a prompt.
  */
 export function getEmptyPromptTxt(prompt: PromptTemplate) {
   return prompt.format({
-    ...Object.fromEntries([...prompt.templateVars.keys()].map((key) => [key, ""])),
+    ...Object.fromEntries(
+      [...prompt.templateVars.keys()].map((key) => [key, ""]),
+    ),
   });
 }
 

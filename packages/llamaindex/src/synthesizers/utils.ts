@@ -1,4 +1,5 @@
 import type { MessageContentDetail } from "@llamaindex/core/llms";
+import type { BasePromptTemplate } from "@llamaindex/core/prompts";
 import {
   ImageNode,
   MetadataMode,
@@ -7,7 +8,6 @@ import {
   type BaseNode,
 } from "@llamaindex/core/schema";
 import { imageToDataUrl } from "../internal/utils.js";
-import type { BasePromptTemplate } from '@llamaindex/core/prompts';
 
 export async function createMessageContent(
   prompt: BasePromptTemplate,

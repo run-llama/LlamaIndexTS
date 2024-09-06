@@ -17,10 +17,14 @@ export type BasePromptTemplateOptions<
     | TemplatesVar
     // loose type for better type inference
     | readonly string[];
-  options?: Partial<Record<TemplatesVar[number], string>>;
+  options?: Partial<Record<TemplatesVar[number] | (string & {}), string>>;
   outputParser?: BaseOutputParser;
-  templateVarMappings?: Partial<Record<Vars[number], TemplatesVar[number]>>;
-  functionMappings?: Partial<Record<TemplatesVar[number], MappingFn>>;
+  templateVarMappings?: Partial<
+    Record<Vars[number] | (string & {}), TemplatesVar[number] | (string & {})>
+  >;
+  functionMappings?: Partial<
+    Record<TemplatesVar[number] | (string & {}), MappingFn>
+  >;
 };
 
 export abstract class BasePromptTemplate<
@@ -29,10 +33,14 @@ export abstract class BasePromptTemplate<
 > {
   metadata: Metadata = {};
   templateVars: Set<string> = new Set();
-  options: Partial<Record<TemplatesVar[number], string>> = {};
+  options: Partial<Record<TemplatesVar[number] | (string & {}), string>> = {};
   outputParser?: BaseOutputParser;
-  templateVarMappings: Partial<Record<Vars[number], TemplatesVar[number]>> = {};
-  functionMappings: Partial<Record<TemplatesVar[number], MappingFn>> = {};
+  templateVarMappings: Partial<
+    Record<Vars[number] | (string & {}), TemplatesVar[number] | (string & {})>
+  > = {};
+  functionMappings: Partial<
+    Record<TemplatesVar[number] | (string & {}), MappingFn>
+  > = {};
 
   protected constructor(
     options: BasePromptTemplateOptions<TemplatesVar, Vars>,
@@ -62,14 +70,18 @@ export abstract class BasePromptTemplate<
     }
   }
 
-  protected mapTemplateVars(options: Record<TemplatesVar[number], string>) {
+  protected mapTemplateVars(
+    options: Record<TemplatesVar[number] | (string & {}), string>,
+  ) {
     const templateVarMappings = this.templateVarMappings;
     return Object.fromEntries(
       objectEntries(options).map(([k, v]) => [templateVarMappings[k] || k, v]),
     );
   }
 
-  protected mapFunctionVars(options: Record<TemplatesVar[number], string>) {
+  protected mapFunctionVars(
+    options: Record<TemplatesVar[number] | (string & {}), string>,
+  ) {
     const functionMappings = this.functionMappings;
     const newOptions = {} as Record<TemplatesVar[number], string>;
     for (const [k, v] of objectEntries(functionMappings)) {
@@ -86,43 +98,45 @@ export abstract class BasePromptTemplate<
   }
 
   protected mapAllVars(
-    options: Record<TemplatesVar[number], string>,
+    options: Record<TemplatesVar[number] | (string & {}), string>,
   ): Record<string, string> {
     const newOptions = this.mapFunctionVars(options);
     return this.mapTemplateVars(newOptions);
   }
 
   abstract partialFormat(
-    options: Partial<Record<TemplatesVar[number], string>>,
+    options: Partial<Record<TemplatesVar[number] | (string & {}), string>>,
   ): BasePromptTemplate<TemplatesVar, Vars>;
 
   abstract format(
-    options?: Partial<Record<TemplatesVar[number], string>>,
+    options?: Partial<Record<TemplatesVar[number] | (string & {}), string>>,
   ): string;
 
   abstract formatMessages(
-    options?: Partial<Record<TemplatesVar[number], string>>,
+    options?: Partial<Record<TemplatesVar[number] | (string & {}), string>>,
   ): ChatMessage[];
 
   abstract get template(): string;
 }
 
-type Permutation<T, K=T> =
-  [T] extends [never]
-    ? []
-    : K extends K
-      ? [K, ...Permutation<Exclude<T, K>>]
-      : never;
+type Permutation<T, K = T> = [T] extends [never]
+  ? []
+  : K extends K
+    ? [K, ...Permutation<Exclude<T, K>>]
+    : never;
 
 type Join<T extends any[], U extends string> = T extends [infer F, ...infer R]
-  ? R['length'] extends 0
+  ? R["length"] extends 0
     ? `${F & string}`
     : `${F & string}${U}${Join<R, U>}`
-  : never
+  : never;
 
-type WrapStringWithBracket<T extends string> = `{${T}}`
+type WrapStringWithBracket<T extends string> = `{${T}}`;
 
-export type StringTemplate<Var extends readonly string[]> = `${string}${Join<Permutation<WrapStringWithBracket<Var[number]>>, `${string}`>}${string}`
+export type StringTemplate<Var extends readonly string[]> =
+  Var["length"] extends 0
+    ? string
+    : `${string}${Join<Permutation<WrapStringWithBracket<Var[number]>>, `${string}`>}${string}`;
 
 export type PromptTemplateOptions<
   TemplatesVar extends readonly string[],
@@ -136,7 +150,8 @@ export type PromptTemplateOptions<
 export class PromptTemplate<
   const TemplatesVar extends readonly string[] = string[],
   const Vars extends readonly string[] = string[],
-  const Template extends StringTemplate<TemplatesVar> = StringTemplate<TemplatesVar>,
+  const Template extends
+    StringTemplate<TemplatesVar> = StringTemplate<TemplatesVar>,
 > extends BasePromptTemplate<TemplatesVar, Vars> {
   #template: Template;
   promptType: PromptType;
@@ -149,7 +164,7 @@ export class PromptTemplate<
   }
 
   partialFormat(
-    options: Partial<Record<TemplatesVar[number], string>>,
+    options: Partial<Record<TemplatesVar[number] | (string & {}), string>>,
   ): PromptTemplate<TemplatesVar, Vars, Template> {
     const prompt = new PromptTemplate({
       template: this.template,
@@ -170,7 +185,9 @@ export class PromptTemplate<
     return prompt;
   }
 
-  format(options?: Partial<Record<TemplatesVar[number], string>>): string {
+  format(
+    options?: Partial<Record<TemplatesVar[number] | (string & {}), string>>,
+  ): string {
     const allOptions = {
       ...this.options,
       ...options,
@@ -187,7 +204,7 @@ export class PromptTemplate<
   }
 
   formatMessages(
-    options?: Partial<Record<TemplatesVar[number], string>>,
+    options?: Partial<Record<TemplatesVar[number] | (string & {}), string>>,
   ): ChatMessage[] {
     const prompt = this.format(options);
     return [

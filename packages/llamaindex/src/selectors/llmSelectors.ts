@@ -1,4 +1,5 @@
 import type { LLM } from "@llamaindex/core/llms";
+import type { ModuleRecord } from "@llamaindex/core/prompts";
 import type { QueryBundle } from "@llamaindex/core/query-engine";
 import { extractText } from "@llamaindex/core/utils";
 import type { Answer } from "../outputParsers/selectors.js";
@@ -15,20 +16,19 @@ import {
   defaultMultiSelectPrompt,
   defaultSingleSelectPrompt,
 } from "./prompts.js";
-import type { ModuleRecord } from "@llamaindex/core/prompts";
 
-function buildChoicesText (choices: ToolMetadataOnlyDescription[]): string {
+function buildChoicesText(choices: ToolMetadataOnlyDescription[]): string {
   const texts: string[] = [];
   for (const [ind, choice] of choices.entries()) {
-    let text = choice.description.split('\n').join(' ');
+    let text = choice.description.split("\n").join(" ");
     text = `(${ind + 1}) ${text}`; // to one indexing
     texts.push(text);
   }
-  return texts.join('');
+  return texts.join("");
 }
 
-function structuredOutputToSelectorResult (
-  output: StructuredOutput<Answer[]>
+function structuredOutputToSelectorResult(
+  output: StructuredOutput<Answer[]>,
 ): SelectorResult {
   const structuredOutput = output;
   const answers = structuredOutput.parsedOutput;
@@ -68,9 +68,7 @@ export class LLMMultiSelector extends BaseSelector {
     return { prompt: this.prompt };
   }
 
-  _updatePrompts(prompts: {
-    prompt: MultiSelectPrompt;
-  }) {
+  _updatePrompts(prompts: { prompt: MultiSelectPrompt }) {
     if ("prompt" in prompts) {
       this.prompt = prompts.prompt;
     }
@@ -91,14 +89,12 @@ export class LLMMultiSelector extends BaseSelector {
   ): Promise<SelectorResult> {
     const choicesText = buildChoicesText(choices);
 
-    const prompt = this.prompt.format(
-      {
-        contextList: choicesText,
-        query: extractText(query.query),
-        maxOutputs: `${this.maxOutputs}`,
-        numChoices: `${choicesText.length}`,
-      },
-    );
+    const prompt = this.prompt.format({
+      contextList: choicesText,
+      query: extractText(query.query),
+      maxOutputs: `${this.maxOutputs}`,
+      numChoices: `${choicesText.length}`,
+    });
 
     const formattedPrompt = this.outputParser?.format(prompt);
 
@@ -185,7 +181,7 @@ export class LLMSingleSelector extends BaseSelector {
     throw new Error("Method not implemented.");
   }
 
-  protected _getPromptModules () {
-    return {}
+  protected _getPromptModules() {
+    return {};
   }
 }

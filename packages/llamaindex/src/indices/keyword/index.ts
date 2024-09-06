@@ -24,14 +24,14 @@ import {
 } from "./utils.js";
 
 import type { LLM } from "@llamaindex/core/llms";
-import { extractText } from "@llamaindex/core/utils";
-import { llmFromSettingsOrContext } from "../../Settings.js";
 import {
   defaultKeywordExtractPrompt,
   defaultQueryKeywordExtractPrompt,
   type KeywordExtractPrompt,
-  type QueryKeywordExtractPrompt
-} from '@llamaindex/core/prompts';
+  type QueryKeywordExtractPrompt,
+} from "@llamaindex/core/prompts";
+import { extractText } from "@llamaindex/core/utils";
+import { llmFromSettingsOrContext } from "../../Settings.js";
 
 export interface KeywordIndexOptions {
   nodes?: BaseNode[];
@@ -114,9 +114,9 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
 export class KeywordTableLLMRetriever extends BaseKeywordTableRetriever {
   async getKeywords(query: string): Promise<string[]> {
     const response = await this.llm.complete({
-      prompt: this.queryKeywordExtractTemplate({
+      prompt: this.queryKeywordExtractTemplate.format({
         question: query,
-        maxKeywords: this.maxKeywordsPerQuery,
+        maxKeywords: `${this.maxKeywordsPerQuery}`,
       }),
     });
     const keywords = extractKeywordsGivenResponse(response.text, "KEYWORDS:");
@@ -254,7 +254,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     const llm = llmFromSettingsOrContext(serviceContext);
 
     const response = await llm.complete({
-      prompt: defaultKeywordExtractPrompt({
+      prompt: defaultKeywordExtractPrompt.format({
         context: text,
       }),
     });

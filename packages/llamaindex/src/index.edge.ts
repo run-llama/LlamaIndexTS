@@ -1,8 +1,8 @@
 import type { AgentEndEvent, AgentStartEvent } from "./agent/types.js";
 import type { RetrievalEndEvent, RetrievalStartEvent } from "./llm/types.js";
 
-export * from "@llamaindex/core/schema";
 export * from "@llamaindex/core/prompts";
+export * from "@llamaindex/core/schema";
 
 declare module "@llamaindex/core/global" {
   export interface LlamaIndexEventMaps {
