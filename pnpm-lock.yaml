@@ -478,6 +478,9 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
+      llamaindex:
+        specifier: workspace:*
+        version: link:../llamaindex
     devDependencies:
       '@swc/cli':
         specifier: ^0.4.0

@@ -7,7 +7,8 @@
     "@extism/extism": "^2.0.0-rc7",
     "ajv": "^8.17.1",
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:*"
+    "@llamaindex/env": "workspace:*",
+    "llamaindex": "workspace:*"
   },
   "devDependencies": {
     "@swc/cli": "^0.4.0",
