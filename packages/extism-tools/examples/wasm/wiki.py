@@ -4,7 +4,7 @@ from os.path import join, dirname
 
 
 def read_local_wasm(file_name):
-    path = join(dirname(__file__), file_name)
+    path = join(dirname(__file__), file_name)  # Change this to your wasm file path
     with open(path, "rb") as wasm_file:
         return wasm_file.read()
 

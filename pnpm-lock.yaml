@@ -464,6 +464,34 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
 
+  packages/extism-tools:
+    dependencies:
+      '@extism/extism':
+        specifier: ^2.0.0-rc7
+        version: 2.0.0-rc7
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../env
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
+    devDependencies:
+      '@swc/cli':
+        specifier: ^0.4.0
+        version: 0.4.0(@swc/core@1.7.22(@swc/helpers@0.5.12))(chokidar@3.6.0)
+      '@swc/core':
+        specifier: ^1.7.22
+        version: 1.7.22(@swc/helpers@0.5.12)
+      '@types/node':
+        specifier: ^22.5.1
+        version: 22.5.1
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+
   packages/llamaindex:
     dependencies:
       '@anthropic-ai/sdk':

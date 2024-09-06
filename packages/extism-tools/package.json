@@ -1,17 +1,19 @@
 {
-  "name": "@llamaindex/wasm-tools",
+  "name": "@llamaindex/extism-tools",
   "version": "0.0.1",
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@assemblyscript/loader": "^0.27.27",
-    "@types/node": "^22.5.1"
+    "@extism/extism": "^2.0.0-rc7",
+    "ajv": "^8.17.1",
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*"
   },
   "devDependencies": {
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.22",
-    "assemblyscript": "^0.27.27",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@types/node": "^22.5.1"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -42,16 +44,15 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md",
-    "!**/*.tsbuildinfo"
+    "CHANGELOG.md"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/tools"
+    "directory": "packages/extism-tools"
   },
   "scripts": {
-    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type && pnpm run build:wasm",
+    "build": "rm -rf ./dist && pnpm run build:wasm && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
     "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
     "build:type": "tsc -p tsconfig.json",
