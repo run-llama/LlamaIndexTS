@@ -7,7 +7,7 @@ import type { QueryEngine } from "../types.js";
 import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
 import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
 import { getPipelineCreate } from "./config.js";
-import type { CloudConstructorParams } from "./constants.js";
+import type { CloudConstructorParams } from "./type.js";
 import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
 
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";

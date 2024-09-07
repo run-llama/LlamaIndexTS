@@ -1,6 +1,6 @@
+import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import { fs, path } from "@llamaindex/env";
 import { exists } from "../FileSystem.js";
-import { DEFAULT_COLLECTION } from "../constants.js";
 import { BaseKVStore } from "./types.js";
 
 export type DataType = Record<string, Record<string, any>>;

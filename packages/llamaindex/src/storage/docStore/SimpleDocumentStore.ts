@@ -1,10 +1,10 @@
-import { path } from "@llamaindex/env";
-import _ from "lodash";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_NAMESPACE,
   DEFAULT_PERSIST_DIR,
-} from "../constants.js";
+} from "@llamaindex/core/global";
+import { path } from "@llamaindex/env";
+import _ from "lodash";
 import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
 import { BaseInMemoryKVStore } from "../kvStore/types.js";
 import { KVDocumentStore } from "./KVDocumentStore.js";

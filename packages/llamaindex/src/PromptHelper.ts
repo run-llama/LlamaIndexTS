@@ -1,12 +1,12 @@
-import { SentenceSplitter } from "@llamaindex/core/node-parser";
-import type { PromptTemplate } from "@llamaindex/core/prompts";
-import { type Tokenizer, tokenizers } from "@llamaindex/env";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
   DEFAULT_PADDING,
-} from "./constants.js";
+} from "@llamaindex/core/global";
+import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import type { PromptTemplate } from "@llamaindex/core/prompts";
+import { type Tokenizer, tokenizers } from "@llamaindex/env";
 
 /**
  * Get the empty prompt text given a prompt.

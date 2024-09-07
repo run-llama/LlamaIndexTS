@@ -4,13 +4,12 @@ import {
   type RetrievalParams,
   type TextNodeWithScore,
 } from "@llamaindex/cloud/api";
-import { Settings } from "@llamaindex/core/global";
+import { DEFAULT_PROJECT_NAME, Settings } from "@llamaindex/core/global";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import { jsonToNode, ObjectType } from "@llamaindex/core/schema";
 import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
-import type { ClientParams, CloudConstructorParams } from "./constants.js";
-import { DEFAULT_PROJECT_NAME } from "./constants.js";
+import type { ClientParams, CloudConstructorParams } from "./type.js";
 import { getProjectId, initService } from "./utils.js";
 
 export type CloudRetrieveParams = Omit<

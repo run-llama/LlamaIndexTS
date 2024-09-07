@@ -1,8 +1,8 @@
-import { BaseNode } from "@llamaindex/core/schema";
 import {
   DEFAULT_DOC_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,
-} from "../constants.js";
+} from "@llamaindex/core/global";
+import { BaseNode } from "@llamaindex/core/schema";
 
 const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_DOC_STORE_PERSIST_FILENAME}`;
 

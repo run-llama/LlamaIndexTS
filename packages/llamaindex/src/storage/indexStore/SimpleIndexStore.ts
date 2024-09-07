@@ -1,8 +1,8 @@
-import { path } from "@llamaindex/env";
 import {
   DEFAULT_INDEX_STORE_PERSIST_FILENAME,
   DEFAULT_PERSIST_DIR,
-} from "../constants.js";
+} from "@llamaindex/core/global";
+import { path } from "@llamaindex/env";
 import type { DataType } from "../kvStore/SimpleKVStore.js";
 import { SimpleKVStore } from "../kvStore/SimpleKVStore.js";
 import type { BaseInMemoryKVStore } from "../kvStore/types.js";
