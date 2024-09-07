@@ -1,7 +1,7 @@
+import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
 import _ from "lodash";
 import type { IndexStruct } from "../../indices/IndexStruct.js";
 import { jsonToIndexStruct } from "../../indices/json-to-index-struct.js";
-import { DEFAULT_NAMESPACE } from "../constants.js";
 import type { BaseKVStore } from "../kvStore/types.js";
 import { BaseIndexStore } from "./types.js";
 

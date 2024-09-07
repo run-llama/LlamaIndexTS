@@ -1,7 +1,7 @@
 import { OpenAPI, ProjectsService } from "@llamaindex/cloud/api";
+import { DEFAULT_BASE_URL } from "@llamaindex/core/global";
 import { getEnv } from "@llamaindex/env";
-import type { ClientParams } from "./constants.js";
-import { DEFAULT_BASE_URL } from "./constants.js";
+import type { ClientParams } from "./type.js";
 
 function getBaseUrl(baseUrl?: string): string {
   return baseUrl ?? getEnv("LLAMA_CLOUD_BASE_URL") ?? DEFAULT_BASE_URL;

@@ -1,10 +1,10 @@
-import { ModalityType, ObjectType } from "@llamaindex/core/schema";
-import { path } from "@llamaindex/env";
-import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
 import {
   DEFAULT_IMAGE_VECTOR_NAMESPACE,
   DEFAULT_NAMESPACE,
-} from "./constants.js";
+} from "@llamaindex/core/global";
+import { ModalityType, ObjectType } from "@llamaindex/core/schema";
+import { path } from "@llamaindex/env";
+import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 import type { BaseDocumentStore } from "./docStore/types.js";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
