@@ -19,5 +19,7 @@ const index = await VectorStoreIndex.fromDocuments([document]);
 
 ## API Reference
 
+- [BaseIndex](../api/classes/BaseIndex.md)
 - [SummaryIndex](../api/classes/SummaryIndex.md)
 - [VectorStoreIndex](../api/classes/VectorStoreIndex.md)
+- [KeywordTableIndex](../api/classes/KeywordTableIndex.md)

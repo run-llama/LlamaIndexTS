@@ -75,3 +75,7 @@ async function main() {
 
 main().catch(console.error);
 ```
+
+## API Reference
+
+- [TransformComponent](../../api/classes/TransformComponent.md)
