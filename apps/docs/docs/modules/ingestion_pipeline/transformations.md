@@ -36,7 +36,7 @@ main().catch(console.error);
 
 You can implement any transformation yourself by implementing the `TransformComponent`.
 
-The following custom transformation will remove any special characters or punctutation in text.
+The following custom transformation will remove any special characters or punctuation in text.
 
 ```ts
 import { TransformComponent, TextNode } from "llamaindex";
