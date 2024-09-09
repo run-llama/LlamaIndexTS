@@ -1,3 +1,4 @@
 declare module "main" {
-  export function summary(): I32;
+  export function getMetadata(): I32;
+  export function call(): I32;
 }
