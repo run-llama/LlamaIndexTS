@@ -21,3 +21,4 @@ const index = await VectorStoreIndex.fromDocuments([document]);
 
 - [SummaryIndex](../api/classes/SummaryIndex.md)
 - [VectorStoreIndex](../api/classes/VectorStoreIndex.md)
+- [KeywordTableIndex](../api/classes/KeywordTableIndex.md)

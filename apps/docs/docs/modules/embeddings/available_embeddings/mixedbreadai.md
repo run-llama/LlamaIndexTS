@@ -98,3 +98,7 @@ Use the `embedDocuments` method to generate embeddings for the texts.
 const result = await embeddings.embedDocuments(texts);
 console.log(result); // Perfectly customized embeddings, ready to serve.
 ```
+
+## API Reference
+
+- [MixedbreadAIEmbeddings](../../../api/classes/MixedbreadAIEmbeddings.md)
