@@ -1,3 +1,4 @@
+import { getBiggestPrompt, type PromptHelper } from "@llamaindex/core/indices";
 import type { LLM } from "@llamaindex/core/llms";
 import {
   PromptMixin,
@@ -12,7 +13,6 @@ import {
 } from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
-import { getBiggestPrompt, type PromptHelper } from "../PromptHelper.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import {
   llmFromSettingsOrContext,
