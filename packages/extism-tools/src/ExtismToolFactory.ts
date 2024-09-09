@@ -77,7 +77,7 @@ export class ExtismToolFactory {
       };
     } catch (e) {
       console.error(e);
-      throw new Error("Failed to create WikipediaTool instance.");
+      throw new Error("Failed to create Tool instance.");
     } finally {
       await plugin.close();
     }
