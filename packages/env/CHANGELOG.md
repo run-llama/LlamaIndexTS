@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.10
+
+### Patch Changes
+
+- 4648da6: fix: wrong tiktoken version caused NextJs CL template run fail
+
 ## 0.1.9
 
 ### Patch Changes
