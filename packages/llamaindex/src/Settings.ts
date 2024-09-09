@@ -27,7 +27,6 @@ export type PromptConfig = {
 
 export interface Config {
   prompt: PromptConfig;
-  llm: LLM | null;
   promptHelper: PromptHelper | null;
   embedModel: BaseEmbedding | null;
   nodeParser: NodeParser | null;
@@ -41,12 +40,10 @@ export interface Config {
  */
 class GlobalSettings implements Config {
   #prompt: PromptConfig = {};
-  #llm: LLM | null = null;
   #promptHelper: PromptHelper | null = null;
   #nodeParser: NodeParser | null = null;
   #chunkOverlap?: number;
 
-  #llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
   #promptHelperAsyncLocalStorage = new AsyncLocalStorage<PromptHelper>();
   #nodeParserAsyncLocalStorage = new AsyncLocalStorage<NodeParser>();
   #chunkOverlapAsyncLocalStorage = new AsyncLocalStorage<number>();
@@ -62,19 +59,19 @@ class GlobalSettings implements Config {
   }
 
   get llm(): LLM {
-    if (this.#llm === null) {
-      this.#llm = new OpenAI();
+    if (CoreSettings.llm === null) {
+      CoreSettings.llm = new OpenAI();
     }
 
-    return this.#llmAsyncLocalStorage.getStore() ?? this.#llm;
+    return CoreSettings.llm;
   }
 
   set llm(llm: LLM) {
-    this.#llm = llm;
+    CoreSettings.llm = llm;
   }
 
   withLLM<Result>(llm: LLM, fn: () => Result): Result {
-    return this.#llmAsyncLocalStorage.run(llm, fn);
+    return CoreSettings.withLLM(llm, fn);
   }
 
   get promptHelper(): PromptHelper {
