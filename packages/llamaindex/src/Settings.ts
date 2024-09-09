@@ -4,7 +4,7 @@ import {
 } from "@llamaindex/core/global";
 import { OpenAI } from "./llm/openai.js";
 
-import { PromptHelper } from "./PromptHelper.js";
+import { PromptHelper } from "@llamaindex/core/indices";
 
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { LLM } from "@llamaindex/core/llms";

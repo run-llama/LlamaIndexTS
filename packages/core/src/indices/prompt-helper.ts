@@ -1,17 +1,17 @@
+import { type Tokenizer, tokenizers } from "@llamaindex/env";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
   DEFAULT_PADDING,
-} from "@llamaindex/core/global";
-import { SentenceSplitter } from "@llamaindex/core/node-parser";
-import type { PromptTemplate } from "@llamaindex/core/prompts";
-import { type Tokenizer, tokenizers } from "@llamaindex/env";
+} from "../global";
+import { SentenceSplitter } from "../node-parser";
+import type { PromptTemplate } from "../prompts";
 
 /**
  * Get the empty prompt text given a prompt.
  */
-export function getEmptyPromptTxt(prompt: PromptTemplate) {
+function getEmptyPromptTxt(prompt: PromptTemplate) {
   return prompt.format({
     ...Object.fromEntries(
       [...prompt.templateVars.keys()].map((key) => [key, ""]),
@@ -31,6 +31,15 @@ export function getBiggestPrompt(prompts: PromptTemplate[]) {
   return prompts[maxEmptyPromptIndex];
 }
 
+export type PromptHelperOptions = {
+  contextWindow?: number;
+  numOutput?: number;
+  chunkOverlapRatio?: number;
+  chunkSizeLimit?: number;
+  tokenizer?: Tokenizer;
+  separator?: string;
+};
+
 /**
  * A collection of helper functions for working with prompts.
  */
@@ -42,15 +51,15 @@ export class PromptHelper {
   tokenizer: Tokenizer;
   separator = " ";
 
-  // eslint-disable-next-line max-params
-  constructor(
-    contextWindow = DEFAULT_CONTEXT_WINDOW,
-    numOutput = DEFAULT_NUM_OUTPUTS,
-    chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
-    chunkSizeLimit?: number,
-    tokenizer?: Tokenizer,
-    separator = " ",
-  ) {
+  constructor(options: PromptHelperOptions = {}) {
+    const {
+      contextWindow = DEFAULT_CONTEXT_WINDOW,
+      numOutput = DEFAULT_NUM_OUTPUTS,
+      chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
+      chunkSizeLimit,
+      tokenizer,
+      separator = " ",
+    } = options;
     this.contextWindow = contextWindow;
     this.numOutput = numOutput;
     this.chunkOverlapRatio = chunkOverlapRatio;
@@ -79,7 +88,7 @@ export class PromptHelper {
     prompt: PromptTemplate,
     numChunks = 1,
     padding = 5,
-  ) {
+  ): number {
     const availableContextSize = this.getAvailableContextSize(prompt);
 
     const result = Math.floor(availableContextSize / numChunks) - padding;
@@ -104,7 +113,12 @@ export class PromptHelper {
       throw new Error("Got 0 as available chunk size");
     }
     const chunkOverlap = this.chunkOverlapRatio * chunkSize;
-    return new SentenceSplitter({ chunkSize, chunkOverlap });
+    return new SentenceSplitter({
+      chunkSize,
+      chunkOverlap,
+      separator: this.separator,
+      tokenizer: this.tokenizer,
+    });
   }
 
   /**
