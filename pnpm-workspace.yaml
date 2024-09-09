@@ -8,3 +8,4 @@ packages:
   - "packages/autotool/examples/*"
   - "examples/"
   - "examples/*"
+  - "packages/extism-tools/examples"

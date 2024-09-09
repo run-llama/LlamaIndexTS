@@ -1,5 +1,5 @@
+import { ExtismToolFactory } from "@llamaindex/extism-tools/ExtismToolFactory";
 import { OpenAIAgent } from "llamaindex";
-import { ExtismToolFactory } from "../../dist/ExtismToolFactory.js";
 
 async function main() {
   const WikiTool = await ExtismToolFactory.createToolClass("wiki");

@@ -1,8 +1,12 @@
 import createPlugin, { type Plugin } from "@extism/extism";
 import type { JSONSchemaType } from "ajv";
-import type { BaseTool, ToolMetadata } from "llamaindex";
+import type { BaseToolWithCall, ToolMetadata } from "llamaindex";
+import path from "path";
+import { fileURLToPath } from "url";
 
-export const WASM_DIRECTORY = "./dist/wasm";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+export const WASM_DIRECTORY = path.join(__dirname, "..", "dist", "wasm");
 export const DEFAULT_MAX_HTTP_RESPONSE_BYTES = 100 * 1024 * 1024; // 100 MB
 
 export type ToolParams = Record<string, any>;
@@ -47,7 +51,7 @@ export const createPluginInstance = async (
 export class ExtismToolFactory {
   static async createToolClass(
     toolName: `${ExtismTool}`,
-  ): Promise<new (params: ToolClassParams) => BaseTool<ToolParams>> {
+  ): Promise<new (params?: ToolClassParams) => BaseToolWithCall<ToolParams>> {
     const config = ToolMap[toolName];
     if (!config) throw new Error(`Tool ${toolName} not supported yet`);
 
@@ -59,10 +63,10 @@ export class ExtismToolFactory {
       }
       const defaultMetadata = wasmMetadata.json();
 
-      return class implements BaseTool<ToolParams> {
+      return class implements BaseToolWithCall<ToolParams> {
         metadata: ToolMetadata<JSONSchemaType<ToolParams>>;
 
-        constructor(params: ToolClassParams) {
+        constructor(params?: ToolClassParams) {
           this.metadata = params?.metadata || defaultMetadata;
         }
 

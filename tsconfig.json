@@ -76,6 +76,12 @@
     },
     {
       "path": "./packages/experimental/tsconfig.json"
+    },
+    {
+      "path": "./packages/extism-tools/tsconfig.json"
+    },
+    {
+      "path": "./packages/extism-tools/examples/tsconfig.json"
     }
   ]
 }
