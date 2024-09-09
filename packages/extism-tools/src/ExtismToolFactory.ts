@@ -2,32 +2,36 @@ import createPlugin, { type Plugin } from "@extism/extism";
 import type { JSONSchemaType } from "ajv";
 import type { BaseTool, ToolMetadata } from "llamaindex";
 
-const WASM_DIRECTORY = "./dist/wasm";
-const MAX_HTTP_RESPONSE_BYTES = 100 * 1024 * 1024; // 100 MB
+export const WASM_DIRECTORY = "./dist/wasm";
+export const DEFAULT_MAX_HTTP_RESPONSE_BYTES = 100 * 1024 * 1024; // 100 MB
 
-type ToolParams = Record<string, any>;
+export type ToolParams = Record<string, any>;
 
-type ToolClassParams = {
+export type ToolClassParams = {
   metadata?: ToolMetadata<JSONSchemaType<ToolParams>>;
 };
 
-type CreateToolClassParams = {
+export type CreateToolClassParams = {
   wasmFilename: string;
   allowedHosts: string[];
   maxHttpResponseBytes: number;
   transformResponse: (response: any) => any;
 };
 
-const ToolMap: Record<string, CreateToolClassParams> = {
-  wiki: {
+export enum ExtismTool {
+  WIKI = "wiki",
+}
+
+export const ToolMap: Record<`${ExtismTool}`, CreateToolClassParams> = {
+  [ExtismTool.WIKI]: {
     wasmFilename: "wiki.wasm",
     allowedHosts: ["*.wikipedia.org"],
-    maxHttpResponseBytes: MAX_HTTP_RESPONSE_BYTES,
+    maxHttpResponseBytes: DEFAULT_MAX_HTTP_RESPONSE_BYTES,
     transformResponse: (response: any) => response.extract,
   },
 };
 
-const createPluginInstance = async (
+export const createPluginInstance = async (
   params: Omit<CreateToolClassParams, "transformResponse">,
 ): Promise<Plugin> => {
   const { wasmFilename, allowedHosts, maxHttpResponseBytes } = params;
@@ -42,7 +46,7 @@ const createPluginInstance = async (
 
 export class ExtismToolFactory {
   static async createToolClass(
-    toolName: string,
+    toolName: `${ExtismTool}`,
   ): Promise<new (params: ToolClassParams) => BaseTool<ToolParams>> {
     const config = ToolMap[toolName];
     if (!config) throw new Error(`Tool ${toolName} not supported yet`);
