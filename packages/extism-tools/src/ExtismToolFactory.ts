@@ -18,6 +18,15 @@ type CreateToolClassParams = {
   transformResponse: (response: any) => any;
 };
 
+const ToolMap: Record<string, CreateToolClassParams> = {
+  wiki: {
+    wasmFilename: "wiki.wasm",
+    allowedHosts: ["*.wikipedia.org"],
+    maxHttpResponseBytes: MAX_HTTP_RESPONSE_BYTES,
+    transformResponse: (response: any) => response.extract,
+  },
+};
+
 const createPluginInstance = async (
   params: Omit<CreateToolClassParams, "transformResponse">,
 ): Promise<Plugin> => {
@@ -32,19 +41,13 @@ const createPluginInstance = async (
 };
 
 export class ExtismToolFactory {
-  static async createToolClass({
-    wasmFilename,
-    allowedHosts = [],
-    maxHttpResponseBytes = MAX_HTTP_RESPONSE_BYTES,
-    transformResponse = (response: any) => response,
-  }: CreateToolClassParams): Promise<
-    new (params: ToolClassParams) => BaseTool<ToolParams>
-  > {
-    const plugin = await createPluginInstance({
-      wasmFilename,
-      allowedHosts,
-      maxHttpResponseBytes,
-    });
+  static async createToolClass(
+    toolName: string,
+  ): Promise<new (params: ToolClassParams) => BaseTool<ToolParams>> {
+    const config = ToolMap[toolName];
+    if (!config) throw new Error(`Tool ${toolName} not supported yet`);
+
+    const plugin = await createPluginInstance(config);
     try {
       const wasmMetadata = await plugin.call("getMetadata");
       if (!wasmMetadata) {
@@ -60,14 +63,10 @@ export class ExtismToolFactory {
         }
 
         async call(input: ToolParams): Promise<string> {
-          const pluginInstance = await createPluginInstance({
-            wasmFilename,
-            allowedHosts,
-            maxHttpResponseBytes,
-          });
+          const pluginInstance = await createPluginInstance(config);
           const data = await pluginInstance.call("call", JSON.stringify(input));
           if (!data) return "No result";
-          const result = transformResponse(data.json());
+          const result = config.transformResponse(data.json());
           await pluginInstance.close();
           return result;
         }
