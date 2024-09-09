@@ -3,7 +3,7 @@ import { DeepInfraEmbedding } from "llamaindex";
 async function main() {
   // API token can be provided as an environment variable too
   // using DEEPINFRA_API_TOKEN variable
-  const apiToken = "YOUR_API_TOKEN" ?? process.env.DEEPINFRA_API_TOKEN;
+  const apiToken = process.env.DEEPINFRA_API_TOKEN ?? "YOUR_API_TOKEN";
   const model = "BAAI/bge-large-en-v1.5";
   const embedModel = new DeepInfraEmbedding({
     model,
