@@ -19,9 +19,16 @@ def _manifest(file_name):
 
 manifest = _manifest("wiki.wasm")
 with extism.Plugin(manifest, wasi=True) as plugin:
+    metadata = plugin.call(
+        "getMetadata",
+        "",
+        parse=lambda output: json.loads(bytes(output).decode("utf-8")),
+    )
     data = plugin.call(
-        "wikiCall",
+        "call",
         json.dumps({"query": "Ho Chi Minh City"}),
         parse=lambda output: json.loads(bytes(output).decode("utf-8")),
     )
+
+print(metadata)
 print(data)
