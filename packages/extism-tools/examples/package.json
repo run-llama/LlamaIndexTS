@@ -1,10 +1,10 @@
 {
-  "name": "extism-tools-examples",
+  "name": "@llamaindex/extism-tools-examples",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "tsx ./src/wiki.ts"
+    "test:wiki": "tsx ./src/wiki.ts"
   },
   "dependencies": {
     "@llamaindex/extism-tools": "workspace:*",

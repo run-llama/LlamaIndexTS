@@ -13,7 +13,8 @@ pnpm run build
 ### Run WASM files in Node.js using Extism SDK (https://github.com/extism/js-sdk)
 
 ```bash
-node examples/wasm/wiki.js
+cd examples
+pnpm run test:wiki
 ```
 
 ### Test using WASM tool with OpenAI Agent
