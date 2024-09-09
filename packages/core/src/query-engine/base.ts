@@ -3,6 +3,7 @@ import { Settings } from "../global";
 import type { MessageContent } from "../llms";
 import { EngineResponse } from "../schema";
 import { wrapEventCaller } from "../utils";
+import { PromptMixin } from '../prompts';
 
 /**
  * @link https://docs.llamaindex.ai/en/stable/api_reference/schema/?h=querybundle#llama_index.core.schema.QueryBundle
@@ -17,13 +18,17 @@ export type QueryBundle = {
 
 export type QueryType = string | QueryBundle;
 
-export abstract class BaseQueryEngine {
+export type QueryFn = (
+  strOrQueryBundle: QueryType,
+  stream?: boolean,
+) => Promise<AsyncIterable<EngineResponse> | EngineResponse>;
+
+export abstract class BaseQueryEngine extends PromptMixin {
   protected constructor(
-    protected readonly _query: (
-      strOrQueryBundle: QueryType,
-      stream: boolean,
-    ) => Promise<EngineResponse>,
-  ) {}
+    protected readonly _query: QueryFn,
+  ) {
+    super();
+  }
 
   query(
     strOrQueryBundle: QueryType,

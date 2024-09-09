@@ -143,6 +143,20 @@
         "types": "./dist/indices/index.d.ts",
         "default": "./dist/indices/index.js"
       }
+    },
+    "./response-synthesizers": {
+      "require": {
+        "types": "./dist/response-synthesizers/index.d.cts",
+        "default": "./dist/response-synthesizers/index.cjs"
+      },
+      "import": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      },
+      "default": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      }
     }
   },
   "files": [

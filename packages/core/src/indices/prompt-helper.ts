@@ -1,12 +1,13 @@
 import { type Tokenizer, tokenizers } from "@llamaindex/env";
 import {
-  DEFAULT_CHUNK_OVERLAP_RATIO,
+  DEFAULT_CHUNK_OVERLAP_RATIO, DEFAULT_CHUNK_SIZE,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
-  DEFAULT_PADDING,
-} from "../global";
+  DEFAULT_PADDING
+} from '../global';
 import { SentenceSplitter } from "../node-parser";
 import type { PromptTemplate } from "../prompts";
+import type { LLMMetadata } from '../llms';
 
 /**
  * Get the empty prompt text given a prompt.
@@ -132,5 +133,32 @@ export class PromptHelper {
     const textSplitter = this.getTextSplitterGivenPrompt(prompt, 1, padding);
     const combinedStr = textChunks.join("\n\n");
     return textSplitter.splitText(combinedStr);
+  }
+
+  static fromLLMMetadata (
+    metadata: LLMMetadata,
+    options?: {
+      chunkOverlapRatio?: number;
+      chunkSizeLimit?: number;
+      tokenizer?: Tokenizer;
+      separator?: string;
+    }
+  ) {
+    const {
+      chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
+      chunkSizeLimit = DEFAULT_CHUNK_SIZE,
+      tokenizer,
+      separator = " ",
+    } = options ?? {};
+    return new PromptHelper(
+      {
+        contextWindow: metadata.contextWindow,
+        numOutput: metadata.maxTokens ?? DEFAULT_NUM_OUTPUTS,
+        chunkOverlapRatio,
+        chunkSizeLimit,
+        tokenizer,
+        separator,
+      }
+    );
   }
 }
