@@ -1,4 +1,4 @@
-export { wrapEventCaller } from "./event-caller";
+export { EventCaller, getEventCaller, wrapEventCaller } from "./event-caller";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
