@@ -9,7 +9,11 @@ Before you can start indexing your documents, you need to load them into memory.
 All "basic" data loaders can be seen below mapped to their respective filetypes. More loaders are shown in the sidebar on the left.
 Additionally the following loaders exist without separate documentation:
 
-- [AssemblyAIReader](../../api/classes/AssemblyAiReader.md) transcribes audio using [AssemblyAI](https://www.assemblyai.com/).
+- `AssemblyAIReader` transcribes audio using [AssemblyAI](https://www.assemblyai.com/).
+  - [AudioTranscriptReader](../../api/classes/AudioTranscriptReader.md): loads entire transcript as a single document.
+  - [AudioTranscriptParagraphsReader](../../api/classes/AudioTranscriptParagraphsReader.md): creates a document per paragraph.
+  - [AudioTranscriptSentencesReader](../../apu/classes/AudioTranscriptSentencesReader.md): creates a document per sentence.
+  - [AudioSubtitlesReader](../../api/classes/AudioTranscriptParagraphsReader.md): creates a document containing the subtitles of a transcript.
 - [NotionReader](../../api/classes/NotionReader.md) loads [Notion](https://www.notion.so/) pages.
 - [SimpleMongoReader](../../api/classes/SimpleMongoReader) loads data from a [MongoDB](https://www.mongodb.com/).
 

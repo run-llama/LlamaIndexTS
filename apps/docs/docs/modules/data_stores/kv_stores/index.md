@@ -4,6 +4,6 @@ Key-Value Stores represent underlying storage components used in [Document Store
 
 ## Available Key-Value Stores
 
-- [SimpleKVStore](../../../SimpleKVStore.md): A simple Key-Value store with support of [persisting](../index.md) data to disk.
+- [SimpleKVStore](../../../api/classes/SimpleKVStore.md): A simple Key-Value store with support of [persisting](../index.md) data to disk.
 
 Check the [LlamaIndexTS Github](https://github.com/run-llama/LlamaIndexTS) for the most up to date overview of integrations.

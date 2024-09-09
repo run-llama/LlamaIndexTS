@@ -7,7 +7,3 @@ Index stores are underlying storage components that contain metadata(i.e. inform
 - [SimpleIndexStore](../../../api/classes/SimpleIndexStore.md): A simple in-memory index store with support for [persisting](../index.md) data to disk.
 
 Check the [LlamaIndexTS Github](https://github.com/run-llama/LlamaIndexTS) for the most up to date overview of integrations.
-
-## API Reference
-
-- [KVIndexStore](../../../api/classes/KVIndexStore.md)
