@@ -1,10 +1,6 @@
----
-sidebar_position: 7
----
-
 # Storage
 
-Storage in LlamaIndex.TS works automatically once you've configured a `StorageContext` object. Just configure the `persistDir` and attach it to an index.
+Storage in LlamaIndex.TS works automatically once you've configured a `StorageContext` object. Just configure the `persistDir` and attach it to an index. You can also enable image storage with `storeImages`
 
 Right now, only saving and loading from disk is supported, with future integrations planned!
 
@@ -23,4 +19,4 @@ const index = await VectorStoreIndex.fromDocuments([document], {
 
 ## API Reference
 
-- [StorageContext](../api/interfaces/StorageContext.md)
+- [StorageContext](../../api/interfaces/StorageContext.md)

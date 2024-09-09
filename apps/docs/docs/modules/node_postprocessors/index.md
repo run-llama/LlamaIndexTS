@@ -107,3 +107,4 @@ const filteredNodes = processor.postprocessNodes(nodes);
 ## API Reference
 
 - [SimilarityPostprocessor](../../api/classes/SimilarityPostprocessor.md)
+- [MetadataReplacementPostProcessor](../../api/classes/MetadataReplacementPostProcessor.md)

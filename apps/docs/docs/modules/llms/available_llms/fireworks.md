@@ -1,6 +1,6 @@
 # Fireworks LLM
 
-Fireworks.ai focus on production use cases for open source LLMs, offering speed and quality.
+[Fireworks.ai](https://fireworks.ai/) focus on production use cases for open source LLMs, offering speed and quality.
 
 ## Usage
 
