@@ -59,20 +59,27 @@ export class LlamaCloudRetriever implements BaseRetriever {
     query,
     preFilters,
   }: RetrieveParams): Promise<NodeWithScore[]> {
-    const pipelines = await PipelinesService.searchPipelinesApiV1PipelinesGet({
-      projectId: await getProjectId(this.projectName, this.organizationId),
-      pipelineName: this.pipelineName,
-    });
+    const { data: pipelines } =
+      await PipelinesService.searchPipelinesApiV1PipelinesGet({
+        query: {
+          project_id: await getProjectId(this.projectName, this.organizationId),
+          project_name: this.pipelineName,
+        },
+        throwOnError: true,
+      });
 
-    if (pipelines.length === 0 || !pipelines[0].id) {
+    if (pipelines.length === 0 || !pipelines[0]!.id) {
       throw new Error(
         `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
       );
     }
 
-    const pipeline =
+    const { data: pipeline } =
       await PipelinesService.getPipelineApiV1PipelinesPipelineIdGet({
-        pipelineId: pipelines[0].id,
+        path: {
+          pipeline_id: pipelines[0]!.id,
+        },
+        throwOnError: true,
       });
 
     if (!pipeline) {
@@ -81,15 +88,18 @@ export class LlamaCloudRetriever implements BaseRetriever {
       );
     }
 
-    const results =
+    const { data: results } =
       await PipelinesService.runSearchApiV1PipelinesPipelineIdRetrievePost({
-        pipelineId: pipeline.id,
-        requestBody: {
+        throwOnError: true,
+        path: {
+          pipeline_id: pipeline.id,
+        },
+        body: {
           ...this.retrieveParams,
           query: extractText(query),
           search_filters:
             this.retrieveParams.filters ?? (preFilters as MetadataFilters),
-          dense_similarity_top_k: this.retrieveParams.similarityTopK,
+          dense_similarity_top_k: this.retrieveParams.similarityTopK!,
         },
       });
 

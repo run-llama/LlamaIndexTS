@@ -4,7 +4,7 @@ import type { AzureClientOptions } from "openai";
 
 export interface AzureOpenAIConfig extends AzureClientOptions {
   /** @deprecated use "deployment" instead */
-  deploymentName?: string;
+  deploymentName?: string | undefined;
 }
 
 // NOTE we're not supporting the legacy models as they're not available for new deployments

@@ -37,13 +37,13 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
 
   async getTextEmbedding(text: string): Promise<number[]> {
     const result = await this.getJinaEmbedding({ input: [{ text }] });
-    return result.data[0].embedding;
+    return result.data[0]!.embedding;
   }
 
   async getImageEmbedding(image: ImageType): Promise<number[]> {
     const img = await this.getImageInput(image);
     const result = await this.getJinaEmbedding({ input: [img] });
-    return result.data[0].embedding;
+    return result.data[0]!.embedding;
   }
 
   // Retrieve multiple text embeddings in a single request
@@ -81,7 +81,7 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   ): Promise<{ bytes: string } | { url: string }> {
     if (isLocal(image) || image instanceof Blob) {
       const base64 = await imageToDataUrl(image);
-      const bytes = base64.split(",")[1];
+      const bytes = base64.split(",")[1]!;
       return { bytes };
     } else {
       return { url: image.toString() };

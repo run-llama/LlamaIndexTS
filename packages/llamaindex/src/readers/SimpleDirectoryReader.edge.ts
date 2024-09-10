@@ -79,7 +79,7 @@ export class SimpleDirectoryReader implements BaseReader {
       filePathQueue.push(filePath);
     }
 
-    const processFileParams: ProcessFileParams = {
+    const processFileParams = <ProcessFileParams>{
       defaultReader,
       fileExtToReader,
       overrideReader,
@@ -120,7 +120,7 @@ export class SimpleDirectoryReader implements BaseReader {
       if (params.overrideReader) {
         reader = params.overrideReader;
       } else if (params.fileExtToReader && fileExt in params.fileExtToReader) {
-        reader = params.fileExtToReader[fileExt];
+        reader = params.fileExtToReader[fileExt]!;
       } else if (params.defaultReader != null) {
         reader = params.defaultReader;
       } else {

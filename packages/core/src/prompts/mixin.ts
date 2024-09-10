@@ -45,21 +45,21 @@ export abstract class PromptMixin {
 
     for (const key in prompts) {
       if (key.includes(":")) {
-        const [module_name, sub_key] = key.split(":");
+        const [moduleName, subKey] = key.split(":") as [string, string];
 
-        if (!subPrompt[module_name]) {
-          subPrompt[module_name] = {};
+        if (!subPrompt[moduleName]) {
+          subPrompt[moduleName] = {};
         }
-        subPrompt[module_name][sub_key] = prompts[key];
+        subPrompt[moduleName][subKey] = prompts[key]!;
       }
     }
 
-    for (const [module_name, subPromptDict] of Object.entries(subPrompt)) {
-      if (!promptModules[module_name]) {
-        throw new Error(`Module ${module_name} not found.`);
+    for (const [moduleName, subPromptDict] of Object.entries(subPrompt)) {
+      if (!promptModules[moduleName]) {
+        throw new Error(`Module ${moduleName} not found.`);
       }
 
-      const moduleToUpdate = promptModules[module_name];
+      const moduleToUpdate = promptModules[moduleName];
 
       moduleToUpdate.updatePrompts(subPromptDict);
     }

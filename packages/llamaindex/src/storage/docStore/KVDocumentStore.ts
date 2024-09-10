@@ -42,7 +42,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     allowUpdate: boolean = true,
   ): Promise<void> {
     for (let idx = 0; idx < docs.length; idx++) {
-      const doc = docs[idx];
+      const doc = docs[idx]!;
       if (doc.id_ === null) {
         throw new Error("doc_id not set");
       }

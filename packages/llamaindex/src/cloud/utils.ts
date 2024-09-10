@@ -25,10 +25,15 @@ export async function getProjectId(
   projectName: string,
   organizationId?: string,
 ): Promise<string> {
-  const projects = await ProjectsService.listProjectsApiV1ProjectsGet({
-    projectName: projectName,
-    organizationId: organizationId,
-  });
+  const { data: projects } = await ProjectsService.listProjectsApiV1ProjectsGet(
+    {
+      path: {
+        project_name: projectName,
+        organization_id: organizationId,
+      },
+      throwOnError: true,
+    },
+  );
 
   if (projects.length === 0) {
     throw new Error(
@@ -40,7 +45,7 @@ export async function getProjectId(
     );
   }
 
-  const project = projects[0];
+  const project = projects[0]!;
 
   if (!project.id) {
     throw new Error(`No project found with name ${projectName}`);

@@ -201,31 +201,31 @@ export class LlamaParseReader extends FileReader {
   // The language of the text to parse.
   language: Language = "en";
   // The parsing instruction for the parser. Backend default is an empty string.
-  parsingInstruction?: string;
+  parsingInstruction?: string | undefined;
   // Wether to ignore diagonal text (when the text rotation in degrees is not 0, 90, 180 or 270, so not a horizontal or vertical text). Backend default is false.
-  skipDiagonalText?: boolean;
+  skipDiagonalText?: boolean | undefined;
   // Wheter to ignore the cache and re-process the document. All documents are kept in cache for 48hours after the job was completed to avoid processing the same document twice. Backend default is false.
-  invalidateCache?: boolean;
+  invalidateCache?: boolean | undefined;
   // Wether the document should not be cached in the first place. Backend default is false.
-  doNotCache?: boolean;
+  doNotCache?: boolean | undefined;
   // Wether to use a faster mode to extract text from documents. This mode will skip OCR of images, and table/heading reconstruction. Note: Non-compatible with gpt4oMode. Backend default is false.
-  fastMode?: boolean;
+  fastMode?: boolean | undefined;
   // Wether to keep column in the text according to document layout. Reduce reconstruction accuracy, and LLM's/embedings performances in most cases.
-  doNotUnrollColumns?: boolean;
+  doNotUnrollColumns?: boolean | undefined;
   // A templated page separator to use to split the text. If the results contain `{page_number}` (e.g. JSON mode), it will be replaced by the next page number. If not set the default separator '\\n---\\n' will be used.
-  pageSeparator?: string;
+  pageSeparator?: string | undefined;
   //A templated prefix to add to the beginning of each page. If the results contain `{page_number}`, it will be replaced by the page number.>
-  pagePrefix?: string;
+  pagePrefix?: string | undefined;
   // A templated suffix to add to the end of each page. If the results contain `{page_number}`, it will be replaced by the page number.
-  pageSuffix?: string;
+  pageSuffix?: string | undefined;
   // Deprecated. Use vendorMultimodal params. Whether to use gpt-4o to extract text from documents.
   gpt4oMode: boolean = false;
   // Deprecated. Use vendorMultimodal params. The API key for the GPT-4o API. Optional, lowers the cost of parsing. Can be set as an env variable: LLAMA_CLOUD_GPT4O_API_KEY.
-  gpt4oApiKey?: string;
+  gpt4oApiKey?: string | undefined;
   // The bounding box to use to extract text from documents. Describe as a string containing the bounding box margins.
-  boundingBox?: string;
+  boundingBox?: string | undefined;
   // The target pages to extract text from documents. Describe as a comma separated list of page numbers. The first page of the document is page 0
-  targetPages?: string;
+  targetPages?: string | undefined;
   // Whether or not to ignore and skip errors raised during parsing.
   ignoreErrors: boolean = true;
   // Whether to split by page using the pageSeparator or '\n---\n' as default.
@@ -233,12 +233,16 @@ export class LlamaParseReader extends FileReader {
   // Whether to use the vendor multimodal API.
   useVendorMultimodalModel: boolean = false;
   // The model name for the vendor multimodal API
-  vendorMultimodalModelName?: string;
+  vendorMultimodalModelName?: string | undefined;
   // The API key for the multimodal API. Can also be set as an env variable: LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY
-  vendorMultimodalApiKey?: string;
+  vendorMultimodalApiKey?: string | undefined;
   // numWorkers is implemented in SimpleDirectoryReader
 
-  constructor(params: Partial<LlamaParseReader> = {}) {
+  constructor(
+    params: Partial<LlamaParseReader> & {
+      apiKey?: string | undefined;
+    } = {},
+  ) {
     super();
     Object.assign(this, params);
     params.apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");

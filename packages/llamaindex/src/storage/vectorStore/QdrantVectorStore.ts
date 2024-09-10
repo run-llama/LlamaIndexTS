@@ -7,6 +7,7 @@ import {
   type VectorStoreQueryResult,
 } from "./types.js";
 
+import type { QdrantClientParams } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
@@ -74,7 +75,7 @@ export class QdrantVectorStore
     if (client) {
       this.db = client;
     } else {
-      this.db = new QdrantClient({
+      this.db = new QdrantClient(<QdrantClientParams>{
         url: url,
         apiKey: apiKey,
       });
@@ -150,7 +151,7 @@ export class QdrantVectorStore
       const payloads = [];
 
       for (let j = 0; j < this.batchSize && i < nodes.length; j++, i++) {
-        const node = nodes[i];
+        const node = nodes[i]!;
 
         nodeIds.push(node);
 
@@ -163,9 +164,9 @@ export class QdrantVectorStore
 
       for (let k = 0; k < nodeIds.length; k++) {
         const point: PointStruct = {
-          id: nodeIds[k].id_,
-          payload: payloads[k],
-          vector: vectors[k],
+          id: nodeIds[k]!.id_,
+          payload: payloads[k]!,
+          vector: vectors[k]!,
         };
 
         points.push(point);
@@ -188,7 +189,7 @@ export class QdrantVectorStore
   async add(embeddingResults: BaseNode[]): Promise<string[]> {
     if (embeddingResults.length > 0 && !this.collectionInitialized) {
       await this.initializeCollection(
-        embeddingResults[0].getEmbedding().length,
+        embeddingResults[0]!.getEmbedding().length,
       );
     }
 
@@ -242,7 +243,7 @@ export class QdrantVectorStore
     const ids = [];
 
     for (let i = 0; i < response.length; i++) {
-      const item = response[i];
+      const item = response[i]!;
       const payload = item.payload;
 
       const node = metadataDictToNode(payload);
@@ -321,7 +322,7 @@ export class QdrantVectorStore
     const metadataFilters = query.filters.filters;
 
     for (let i = 0; i < metadataFilters.length; i++) {
-      const filter = metadataFilters[i];
+      const filter = metadataFilters[i]!;
 
       if (typeof filter.key === "number") {
         mustConditions.push({

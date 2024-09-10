@@ -4,7 +4,7 @@ export const transformObject = (
 ) => {
   const newObj: Record<string, any> = {};
   for (const key in transfomer) {
-    newObj[key] = transfomer[key](obj[key]);
+    newObj[key] = transfomer[key]!(obj[key]);
   }
   return newObj;
 };

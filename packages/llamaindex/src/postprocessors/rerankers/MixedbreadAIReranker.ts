@@ -103,16 +103,26 @@ export class MixedbreadAIReranker implements BaseNodePostprocessor {
         "user-agent": "@mixedbread-ai/llamaindex-ts-sdk",
       },
     };
-    this.client = new MixedbreadAIClient({
-      apiKey: apiKey,
-      environment: params?.baseUrl,
-    });
+    this.client = new MixedbreadAIClient(
+      params?.baseUrl
+        ? {
+            apiKey,
+            environment: params?.baseUrl,
+          }
+        : {
+            apiKey,
+          },
+    );
     this.requestParams = {
       model: params?.model ?? "default",
       returnInput: params?.returnInput ?? false,
-      topK: params?.topK,
-      rankFields: params?.rankFields,
     };
+    if (params?.topK) {
+      this.requestParams.topK = params.topK;
+    }
+    if (params?.rankFields) {
+      this.requestParams.rankFields = params.rankFields;
+    }
   }
 
   /**
@@ -152,7 +162,7 @@ export class MixedbreadAIReranker implements BaseNodePostprocessor {
 
     const newNodes: NodeWithScore[] = [];
     for (const document of result.data) {
-      const node = nodes[document.index];
+      const node = nodes[document.index]!;
       node.score = document.score;
       newNodes.push(node);
     }

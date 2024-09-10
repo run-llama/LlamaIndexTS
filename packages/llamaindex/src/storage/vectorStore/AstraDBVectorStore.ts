@@ -1,4 +1,9 @@
-import { Collection, DataAPIClient, Db } from "@datastax/astra-db-ts";
+import {
+  Collection,
+  DataAPIClient,
+  Db,
+  type FindOptions,
+} from "@datastax/astra-db-ts";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
@@ -183,7 +188,7 @@ export class AstraDBVectorStore
       filters[f.key] = f.value;
     });
 
-    const cursor = await collection.find(filters, {
+    const cursor = await collection.find(filters, <FindOptions>{
       ...options,
       sort: query.queryEmbedding
         ? { $vector: query.queryEmbedding }

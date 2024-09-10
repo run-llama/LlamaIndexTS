@@ -2,9 +2,9 @@ import type { NodeWithScore } from "@llamaindex/core/schema";
 import type { BaseNodePostprocessor } from "./types.js";
 
 export class SimilarityPostprocessor implements BaseNodePostprocessor {
-  similarityCutoff?: number;
+  similarityCutoff?: number | undefined;
 
-  constructor(options?: { similarityCutoff?: number }) {
+  constructor(options?: { similarityCutoff?: number | undefined }) {
     this.similarityCutoff = options?.similarityCutoff;
   }
 

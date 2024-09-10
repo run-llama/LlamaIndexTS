@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { BaseNode, MetadataMode, type Metadata } from "@llamaindex/core/schema";
 import weaviate, {
   Filters,
@@ -9,6 +8,8 @@ import weaviate, {
   type WeaviateNonGenericObject,
 } from "weaviate-client";
 
+import { getEnv } from "@llamaindex/env";
+import type { BaseHybridOptions } from "weaviate-client";
 import {
   VectorStoreBase,
   VectorStoreQueryMode,
@@ -113,7 +114,7 @@ const toWeaviateFilter = (
   const filtersList = standardFilters.filters.map((filter) =>
     buildFilterItem(collection, filter),
   );
-  if (filtersList.length === 1) return filtersList[0];
+  if (filtersList.length === 1) return filtersList[0]!;
   const condition = standardFilters.condition ?? "and";
   return Filters[condition](...filtersList);
 };
@@ -157,8 +158,8 @@ export class WeaviateVectorStore
     } else {
       // Load client cloud options from config or env
       const clusterURL =
-        init?.cloudOptions?.clusterURL ?? process.env.WEAVIATE_CLUSTER_URL;
-      const apiKey = init?.cloudOptions?.apiKey ?? process.env.WEAVIATE_API_KEY;
+        init?.cloudOptions?.clusterURL ?? getEnv("WEAVIATE_CLUSTER_URL");
+      const apiKey = init?.cloudOptions?.apiKey ?? getEnv("WEAVIATE_API_KEY");
       if (!clusterURL || !apiKey) {
         throw new Error(
           "Must specify WEAVIATE_CLUSTER_URL and WEAVIATE_API_KEY via env variable.",
@@ -219,7 +220,11 @@ export class WeaviateVectorStore
     );
   }
 
-  public async query(query: VectorStoreQuery): Promise<VectorStoreQueryResult> {
+  public async query(
+    query: VectorStoreQuery & {
+      queryStr: string;
+    },
+  ): Promise<VectorStoreQueryResult> {
     const collection = await this.ensureCollection();
     const allProperties = await this.getAllProperties();
 
@@ -235,15 +240,29 @@ export class WeaviateVectorStore
       filters = toWeaviateFilter(collection, query.filters);
     }
 
-    const queryResult = await collection.query.hybrid(query.queryStr!, {
-      vector: query.queryEmbedding,
-      alpha: this.getQueryAlpha(query),
-      limit: query.similarityTopK,
+    const hybridOptions: BaseHybridOptions<undefined> = {
       returnMetadata: Object.values(SIMILARITY_KEYS),
       returnProperties: allProperties,
       includeVector: true,
-      filters,
-    });
+    };
+    const alpha = this.getQueryAlpha(query);
+    if (query.queryEmbedding) {
+      hybridOptions.vector = query.queryEmbedding;
+    }
+    if (query.similarityTopK) {
+      hybridOptions.limit = query.similarityTopK;
+    }
+    if (alpha) {
+      hybridOptions.alpha = alpha;
+    }
+    if (filters) {
+      hybridOptions.filters = filters;
+    }
+
+    const queryResult = await collection.query.hybrid(
+      query.queryStr,
+      hybridOptions,
+    );
 
     const entries = queryResult.objects;
 
@@ -320,7 +339,7 @@ export class WeaviateVectorStore
   }
 
   private checkIndexName(indexName?: string) {
-    if (indexName && indexName[0] !== indexName[0].toUpperCase()) {
+    if (indexName && indexName[0] !== indexName[0]!.toUpperCase()) {
       throw new Error(
         "Index name must start with a capital letter, e.g. 'LlamaIndex'",
       );

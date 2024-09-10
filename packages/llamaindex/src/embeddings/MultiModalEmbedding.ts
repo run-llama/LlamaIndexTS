@@ -39,7 +39,7 @@ export abstract class MultiModalEmbedding extends BaseEmbedding {
       _options,
     );
     for (let i = 0; i < textNodes.length; i++) {
-      textNodes[i].embedding = embeddings[i];
+      textNodes[i]!.embedding = embeddings[i];
     }
 
     const imageEmbeddings = await batchEmbeddings(
@@ -49,7 +49,7 @@ export abstract class MultiModalEmbedding extends BaseEmbedding {
       _options,
     );
     for (let i = 0; i < imageNodes.length; i++) {
-      imageNodes[i].embedding = imageEmbeddings[i];
+      imageNodes[i]!.embedding = imageEmbeddings[i];
     }
 
     return nodes;
