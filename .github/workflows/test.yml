@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ankane/setup-postgres@v1
         with:
-          database: pgvector_node_test
+          database: llamaindex_node_test
           dev-files: true
       - run: |
           cd /tmp
