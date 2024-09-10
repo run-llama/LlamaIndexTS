@@ -8,6 +8,11 @@ overrides:
   trim: 1.0.1
   protobufjs: 7.2.6
 
+patchedDependencies:
+  python-format-js@1.4.3:
+    hash: th6l7y4oiguwssg6vyt7e3sc3i
+    path: patches/python-format-js@1.4.3.patch
+
 importers:
 
   .:
@@ -388,7 +393,7 @@ importers:
         version: 8.0.1(@aws-sdk/credential-providers@3.637.0)
       python-format-js:
         specifier: ^1.4.3
-        version: 1.4.3
+        version: 1.4.3(patch_hash=th6l7y4oiguwssg6vyt7e3sc3i)
 
   packages/core/tests:
     devDependencies:
@@ -21697,7 +21702,7 @@ snapshots:
     dependencies:
       escape-goat: 4.0.0
 
-  python-format-js@1.4.3: {}
+  python-format-js@1.4.3(patch_hash=th6l7y4oiguwssg6vyt7e3sc3i): {}
 
   qs@6.11.0:
     dependencies:
