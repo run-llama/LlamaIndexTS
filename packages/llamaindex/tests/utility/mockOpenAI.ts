@@ -87,8 +87,8 @@ export function mockEmbeddingModel(
 
 const structuredOutput = JSON.stringify([
   {
-    choice: 1,
-    reason: "apple",
+    "choice": 1,
+    "reason": "apple",
   },
 ]);
 

@@ -12,8 +12,8 @@ const formatStr = `The output should be ONLY JSON formatted as a JSON instance.
 Here is an example:
 [
     {
-        choice: 1,
-        reason: "<insert reason for choice>"
+        "choice": 1,
+        "reason": "<insert reason for choice>"
     },
     ...
 ]
