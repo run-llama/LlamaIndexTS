@@ -19,6 +19,11 @@ jobs:
       matrix:
         node-version: [18.x, 20.x, 22.x]
     name: E2E on Node.js ${{ matrix.node-version }}
+
+    env: POSTGRES_DB=vectordb
+      POSTGRES_USER=testuser
+      POSTGRES_PASSWORD=testpwd
+      POSTGRES_HOST_AUTH_METHOD=trust
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
