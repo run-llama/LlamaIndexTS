@@ -1,4 +1,4 @@
-import { OpenAPI, ProjectsService } from "@llamaindex/cloud/api";
+import { client, ProjectsService } from "@llamaindex/cloud/api";
 import { DEFAULT_BASE_URL } from "@llamaindex/core/global";
 import { getEnv } from "@llamaindex/env";
 import type { ClientParams } from "./type.js";
@@ -8,13 +8,26 @@ function getBaseUrl(baseUrl?: string): string {
 }
 
 export function getAppBaseUrl(): string {
-  return OpenAPI.BASE.replace(/api\./, "");
+  return client.getConfig().baseUrl?.replace(/api\./, "") ?? '';
 }
 
+// fixme: refactor this to init at the top level or module level
+let initOnce = false;
 export function initService({ apiKey, baseUrl }: ClientParams = {}) {
-  OpenAPI.TOKEN = apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
-  OpenAPI.BASE = getBaseUrl(baseUrl);
-  if (!OpenAPI.TOKEN) {
+  if (initOnce) {
+    return;
+  }
+  initOnce = true;
+  client.setConfig({
+    baseUrl: getBaseUrl(baseUrl),
+    throwOnError: true
+  })
+  const token = apiKey ?? getEnv("LLAMA_CLOUD_API_KEY")
+  client.interceptors.request.use((request) => {
+    request.headers.set('Authorization', `Bearer ${token}`);
+    return request;
+  })
+  if (!token) {
     throw new Error(
       "API Key is required for LlamaCloudIndex. Please pass the apiKey parameter",
     );
