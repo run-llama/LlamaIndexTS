@@ -70,7 +70,7 @@ describe("QdrantVectorStore", () => {
         const ids = await store.add(nodes);
 
         expect(mockInitializeCollection).toHaveBeenCalledWith(
-          nodes[0].getEmbedding().length,
+          nodes[0]!.getEmbedding().length,
         );
         expect(mockBuildPoints).toHaveBeenCalledWith(nodes);
         expect(mockQdrantClient.upsert).toHaveBeenCalled();

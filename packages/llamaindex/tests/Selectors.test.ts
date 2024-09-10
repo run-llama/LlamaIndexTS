@@ -27,6 +27,6 @@ describe("LLMSelector", () => {
       "what is the best fruit?",
     );
 
-    expect(result.selections[0].reason).toBe("apple");
+    expect(result.selections[0]!.reason).toBe("apple");
   });
 });

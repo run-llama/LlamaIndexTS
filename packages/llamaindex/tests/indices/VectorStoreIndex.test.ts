@@ -43,7 +43,7 @@ describe("VectorStoreIndex", () => {
 
   test("fromDocuments stores duplicates without a doc store strategy", async () => {
     const entries = await testStrategy(DocStoreStrategy.NONE);
-    expect(entries[0] + 1).toBe(entries[1]);
+    expect(entries[0]! + 1).toBe(entries[1]);
   });
 
   test("fromDocuments ignores duplicates with upserts doc store strategy", async () => {

@@ -11,7 +11,7 @@ export class OpenAIEmbedding
   extends TransformComponent
   implements BaseEmbedding
 {
-  embedInfo?: EmbeddingInfo | undefined;
+  embedInfo?: EmbeddingInfo;
   embedBatchSize = 512;
 
   constructor() {

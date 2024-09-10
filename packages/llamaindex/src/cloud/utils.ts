@@ -8,7 +8,7 @@ function getBaseUrl(baseUrl?: string): string {
 }
 
 export function getAppBaseUrl(): string {
-  return client.getConfig().baseUrl?.replace(/api\./, "") ?? '';
+  return client.getConfig().baseUrl?.replace(/api\./, "") ?? "";
 }
 
 // fixme: refactor this to init at the top level or module level
@@ -20,13 +20,13 @@ export function initService({ apiKey, baseUrl }: ClientParams = {}) {
   initOnce = true;
   client.setConfig({
     baseUrl: getBaseUrl(baseUrl),
-    throwOnError: true
-  })
-  const token = apiKey ?? getEnv("LLAMA_CLOUD_API_KEY")
+    throwOnError: true,
+  });
+  const token = apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
   client.interceptors.request.use((request) => {
-    request.headers.set('Authorization', `Bearer ${token}`);
+    request.headers.set("Authorization", `Bearer ${token}`);
     return request;
-  })
+  });
   if (!token) {
     throw new Error(
       "API Key is required for LlamaCloudIndex. Please pass the apiKey parameter",
