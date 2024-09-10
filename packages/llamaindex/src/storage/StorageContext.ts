@@ -5,12 +5,12 @@ import {
 import { ModalityType, ObjectType } from "@llamaindex/core/schema";
 import { path } from "@llamaindex/env";
 import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
+import { SimpleVectorStore } from "../vector-store/index.js";
+import type { VectorStore, VectorStoreByType } from "../vector-store/types.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 import type { BaseDocumentStore } from "./docStore/types.js";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
 import type { BaseIndexStore } from "./indexStore/types.js";
-import { SimpleVectorStore } from "./vectorStore/SimpleVectorStore.js";
-import type { VectorStore, VectorStoreByType } from "./vectorStore/types.js";
 
 export interface StorageContext {
   docStore: BaseDocumentStore;

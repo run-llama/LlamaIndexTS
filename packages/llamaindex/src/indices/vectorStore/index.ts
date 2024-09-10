@@ -29,16 +29,16 @@ import {
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
+import type { BaseIndexStore } from "../../storage/indexStore/types.js";
+import type { BaseSynthesizer } from "../../synthesizers/types.js";
+import type { QueryEngine } from "../../types.js";
 import type {
   MetadataFilters,
   VectorStore,
   VectorStoreByType,
   VectorStoreQueryResult,
-} from "../../storage/index.js";
-import type { BaseIndexStore } from "../../storage/indexStore/types.js";
-import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
-import type { BaseSynthesizer } from "../../synthesizers/types.js";
-import type { QueryEngine } from "../../types.js";
+} from "../../vector-store/index.js";
+import { VectorStoreQueryMode } from "../../vector-store/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
