@@ -20,6 +20,14 @@ import { Document, MetadataMode } from "@llamaindex/core/schema";
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
 
+export type PGVectorStoreConfig = {
+  schemaName?: string;
+  tableName?: string;
+  database?: string;
+  connectionString?: string;
+  dimensions?: number;
+} & Partial<IEmbedModel>;
+
 /**
  * Provides support for writing and querying vector data in Postgres.
  * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
@@ -33,6 +41,8 @@ export class PGVectorStore
   private collection: string = "";
   private schemaName: string = PGVECTOR_SCHEMA;
   private tableName: string = PGVECTOR_TABLE;
+
+  private database: string | undefined = undefined;
   private connectionString: string | undefined = undefined;
   private dimensions: number = 1536;
 
@@ -55,19 +65,22 @@ export class PGVectorStore
    * @param {string} config.connectionString - The connection string (optional).
    * @param {number} config.dimensions - The dimensions of the embedding model.
    */
-  constructor(
-    config?: {
-      schemaName?: string;
-      tableName?: string;
-      connectionString?: string;
-      dimensions?: number;
-    } & Partial<IEmbedModel>,
-  ) {
-    super(config?.embedModel);
-    this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
-    this.tableName = config?.tableName ?? PGVECTOR_TABLE;
-    this.connectionString = config?.connectionString;
-    this.dimensions = config?.dimensions ?? 1536;
+  constructor(config?: PGVectorStoreConfig | pg.Client) {
+    // We cannot import pg from top level, it might have side effects
+    //  so we only check if the config.connect function exists
+    if (config && "connect" in config && typeof config.connect === "function") {
+      super();
+      this.db = config;
+      return;
+    } else {
+      config = config as PGVectorStoreConfig;
+      super(config?.embedModel);
+      this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
+      this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+      this.database = config?.database;
+      this.connectionString = config?.connectionString;
+      this.dimensions = config?.dimensions ?? 1536;
+    }
   }
 
   /**
@@ -102,6 +115,7 @@ export class PGVectorStore
         // Create DB connection
         // Read connection params from env - see comment block above
         const db = new Client({
+          database: this.database,
           connectionString: this.connectionString,
         });
         await db.connect();
@@ -110,9 +124,6 @@ export class PGVectorStore
         await db.query("CREATE EXTENSION IF NOT EXISTS vector");
         await registerType(db);
 
-        // Check schema, table(s), index(es)
-        await this.checkSchema(db);
-
         // All good?  Keep the connection reference
         this.db = db;
       } catch (err) {
@@ -120,6 +131,11 @@ export class PGVectorStore
         return Promise.reject(err instanceof Error ? err : new Error(`${err}`));
       }
     }
+
+    const db = this.db;
+
+    // Check schema, table(s), index(es)
+    await this.checkSchema(db);
 
     return Promise.resolve(this.db);
   }
