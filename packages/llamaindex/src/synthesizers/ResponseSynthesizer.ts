@@ -24,9 +24,9 @@ export class ResponseSynthesizer
     serviceContext,
     metadataMode = MetadataMode.NONE,
   }: {
-    responseBuilder?: ResponseBuilder;
-    serviceContext?: ServiceContext;
-    metadataMode?: MetadataMode;
+    responseBuilder?: ResponseBuilder | undefined;
+    serviceContext?: ServiceContext | undefined;
+    metadataMode?: MetadataMode | undefined;
   } = {}) {
     super();
 

@@ -11,7 +11,6 @@ import {
   FilterOperator,
   VectorStoreBase,
   VectorStoreQueryMode,
-  type IEmbedModel,
   type MetadataFilter,
   type MetadataFilters,
   type VectorStoreNoEmbedModel,
@@ -132,7 +131,10 @@ export class SimpleVectorStore
   private data: SimpleVectorStoreData;
   private persistPath: string | undefined;
 
-  constructor(init?: { data?: SimpleVectorStoreData } & Partial<IEmbedModel>) {
+  constructor(init?: {
+    data?: SimpleVectorStoreData | undefined;
+    embedModel?: BaseEmbedding | undefined;
+  }) {
     super(init?.embedModel);
     this.data = init?.data || new SimpleVectorStoreData();
   }
@@ -150,7 +152,7 @@ export class SimpleVectorStore
   }
 
   async get(textId: string): Promise<number[]> {
-    return this.data.embeddingDict[textId];
+    return this.data.embeddingDict[textId]!;
   }
 
   async add(embeddingResults: BaseNode[]): Promise<string[]> {

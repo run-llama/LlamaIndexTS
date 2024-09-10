@@ -109,10 +109,10 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
   model: keyof typeof ALL_AVAILABLE_ANTHROPIC_MODELS;
   temperature: number;
   topP: number;
-  maxTokens?: number;
+  maxTokens?: number | undefined;
 
   // Anthropic session params
-  apiKey?: string = undefined;
+  apiKey?: string | undefined;
   maxRetries: number;
   timeout?: number;
   session: AnthropicSession;
@@ -153,7 +153,7 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
 
   getModelName = (model: string): string => {
     if (Object.keys(AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE).includes(model)) {
-      return AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE[model];
+      return AVAILABLE_ANTHROPIC_MODELS_WITHOUT_DATE[model]!;
     }
     return model;
   };
@@ -247,11 +247,11 @@ export class Anthropic extends ToolCallLLM<AnthropicAdditionalChatOptions> {
     const realResult: MessageParam[] = [];
     for (let i = 0; i < result.length; i++) {
       if (i === 0) {
-        realResult.push(result[i]);
+        realResult.push(result[i]!);
         continue;
       }
-      const current = result[i];
-      const previous = result[i - 1];
+      const current = result[i]!;
+      const previous = result[i - 1]!;
       if (current.role === previous.role) {
         // merge two messages with the same role
         if (Array.isArray(previous.content)) {

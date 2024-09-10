@@ -8,7 +8,7 @@ import { classify } from "./classify.js";
  */
 export class UpsertsStrategy extends TransformComponent {
   protected docStore: BaseDocumentStore;
-  protected vectorStores?: VectorStore[];
+  protected vectorStores: VectorStore[] | undefined;
 
   constructor(docStore: BaseDocumentStore, vectorStores?: VectorStore[]) {
     super(async (nodes: BaseNode[]): Promise<BaseNode[]> => {

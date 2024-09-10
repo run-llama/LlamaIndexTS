@@ -336,9 +336,12 @@ importers:
 
   packages/cloud:
     devDependencies:
+      '@hey-api/client-fetch':
+        specifier: ^0.2.4
+        version: 0.2.4
       '@hey-api/openapi-ts':
-        specifier: ^0.52.11
-        version: 0.52.11(typescript@5.5.4)
+        specifier: ^0.53.0
+        version: 0.53.0(typescript@5.5.4)
       bunchee:
         specifier: 5.3.2
         version: 5.3.2(typescript@5.5.4)
@@ -2734,8 +2737,11 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
-  '@hey-api/openapi-ts@0.52.11':
-    resolution: {integrity: sha512-S3NrCQDxy7AtW5sx8OVoBaqpaYNqYsD0y6YNwhUXPUahbrW7Wxm/N4RIEsRtXVbcjUqdAjo1FmFmeyEKYziJkw==}
+  '@hey-api/client-fetch@0.2.4':
+    resolution: {integrity: sha512-SGTVAVw3PlKDLw+IyhNhb/jCH3P1P2xJzLxA8Kyz1g95HrkYOJdRpl9F5I7LLwo9aCIB7nwR2NrSeX7QaQD7vQ==}
+
+  '@hey-api/openapi-ts@0.53.0':
+    resolution: {integrity: sha512-5pDd/s0yHJniruYyKYmEsAMbY10Nh/EwhHlgIrdpQ1KZWQdyTbH/tn8rVHT5Mopr1dMuYX0kq0TzpjcNlvrROQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -14065,7 +14071,9 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  '@hey-api/openapi-ts@0.52.11(typescript@5.5.4)':
+  '@hey-api/client-fetch@0.2.4': {}
+
+  '@hey-api/openapi-ts@0.53.0(typescript@5.5.4)':
     dependencies:
       '@apidevtools/json-schema-ref-parser': 11.7.0
       c12: 1.11.1

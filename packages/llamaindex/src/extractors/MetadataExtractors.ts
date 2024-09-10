@@ -173,7 +173,7 @@ export class TitleExtractor extends BaseExtractor {
 
     return nodesToExtractTitle.map((node) => {
       return {
-        documentTitle: titlesByDocument[node.sourceNode?.nodeId ?? ""],
+        documentTitle: titlesByDocument[node.sourceNode?.nodeId ?? ""]!,
       };
     });
   }

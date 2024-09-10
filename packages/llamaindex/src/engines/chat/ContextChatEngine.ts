@@ -38,16 +38,16 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
   chatModel: LLM;
   chatHistory: ChatHistory;
   contextGenerator: ContextGenerator & PromptMixin;
-  systemPrompt?: string;
+  systemPrompt?: string | undefined;
 
   constructor(init: {
     retriever: BaseRetriever;
-    chatModel?: LLM;
-    chatHistory?: ChatMessage[];
-    contextSystemPrompt?: ContextSystemPrompt;
-    nodePostprocessors?: BaseNodePostprocessor[];
-    systemPrompt?: string;
-    contextRole?: MessageType;
+    chatModel?: LLM | undefined;
+    chatHistory?: ChatMessage[] | undefined;
+    contextSystemPrompt?: ContextSystemPrompt | undefined;
+    nodePostprocessors?: BaseNodePostprocessor[] | undefined;
+    systemPrompt?: string | undefined;
+    contextRole?: MessageType | undefined;
   }) {
     super();
     this.chatModel = init.chatModel ?? Settings.llm;

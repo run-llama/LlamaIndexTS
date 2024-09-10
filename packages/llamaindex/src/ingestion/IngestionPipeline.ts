@@ -60,13 +60,13 @@ export async function runTransformations(
 
 export class IngestionPipeline {
   transformations: TransformComponent[] = [];
-  documents?: Document[];
-  reader?: BaseReader;
-  vectorStore?: VectorStore;
-  vectorStores?: VectorStoreByType;
+  documents?: Document[] | undefined;
+  reader?: BaseReader | undefined;
+  vectorStore?: VectorStore | undefined;
+  vectorStores?: VectorStoreByType | undefined;
   docStore?: BaseDocumentStore;
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
-  cache?: IngestionCache;
+  cache?: IngestionCache | undefined;
   disableCache: boolean = false;
 
   private _docStoreStrategy?: TransformComponent;

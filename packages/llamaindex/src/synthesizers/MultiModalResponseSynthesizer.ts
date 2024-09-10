@@ -15,7 +15,7 @@ export class MultiModalResponseSynthesizer
   extends PromptMixin
   implements BaseSynthesizer
 {
-  serviceContext?: ServiceContext;
+  serviceContext?: ServiceContext | undefined;
   metadataMode: MetadataMode;
   textQATemplate: TextQAPrompt;
 

@@ -122,7 +122,7 @@ export abstract class MetadataAwareTextSplitter extends TextSplitter {
       throw new TypeError("`texts` and `metadata` must have the same length");
     }
     return texts.flatMap((text, i) =>
-      this.splitTextMetadataAware(text, metadata[i]),
+      this.splitTextMetadataAware(text, metadata[i]!),
     );
   }
 

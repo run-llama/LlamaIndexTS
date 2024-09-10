@@ -64,9 +64,9 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   constructor(init: {
     selector: BaseSelector;
     queryEngineTools: RouterQueryEngineTool[];
-    serviceContext?: ServiceContext;
-    summarizer?: TreeSummarize;
-    verbose?: boolean;
+    serviceContext?: ServiceContext | undefined;
+    summarizer?: TreeSummarize | undefined;
+    verbose?: boolean | undefined;
   }) {
     super();
 
@@ -138,14 +138,14 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     if (result.selections.length > 1) {
       const responses: EngineResponse[] = [];
       for (let i = 0; i < result.selections.length; i++) {
-        const engineInd = result.selections[i];
-        const logStr = `Selecting query engine ${engineInd.index}: ${result.selections[i].index}.`;
+        const engineInd = result.selections[i]!;
+        const logStr = `Selecting query engine ${engineInd.index}: ${result.selections[i]!.index}.`;
 
         if (this.verbose) {
           console.log(logStr + "\n");
         }
 
-        const selectedQueryEngine = this.queryEngines[engineInd.index];
+        const selectedQueryEngine = this.queryEngines[engineInd.index]!;
         responses.push(
           await selectedQueryEngine.query({
             query: extractText(query),
@@ -163,15 +163,15 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
 
         return finalResponse;
       } else {
-        return responses[0];
+        return responses[0]!;
       }
     } else {
       let selectedQueryEngine;
 
       try {
-        selectedQueryEngine = this.queryEngines[result.selections[0].index];
+        selectedQueryEngine = this.queryEngines[result.selections[0]!.index];
 
-        const logStr = `Selecting query engine ${result.selections[0].index}: ${result.selections[0].reason}`;
+        const logStr = `Selecting query engine ${result.selections[0]!.index}: ${result.selections[0]!.reason}`;
 
         if (this.verbose) {
           console.log(logStr + "\n");

@@ -172,18 +172,17 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     | (string & {});
   temperature: number;
   topP: number;
-  maxTokens?: number;
-  additionalChatOptions?: OpenAIAdditionalChatOptions;
+  maxTokens?: number | undefined;
+  additionalChatOptions?: OpenAIAdditionalChatOptions | undefined;
 
   // OpenAI session params
-  apiKey?: string = undefined;
+  apiKey?: string | undefined = undefined;
   maxRetries: number;
   timeout?: number;
   session: OpenAISession;
-  additionalSessionOptions?: Omit<
-    Partial<OpenAIClientOptions>,
-    "apiKey" | "maxRetries" | "timeout"
-  >;
+  additionalSessionOptions?:
+    | undefined
+    | Omit<Partial<OpenAIClientOptions>, "apiKey" | "maxRetries" | "timeout">;
 
   constructor(
     init?: Partial<OpenAI> & {
@@ -342,7 +341,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     | AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>>
   > {
     const { messages, stream, tools, additionalChatOptions } = params;
-    const baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams = {
+    const baseRequestParams = <OpenAILLM.Chat.ChatCompletionCreateParams>{
       model: this.model,
       temperature: this.temperature,
       max_tokens: this.maxTokens,
@@ -371,16 +370,16 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       stream: false,
     });
 
-    const content = response.choices[0].message?.content ?? "";
+    const content = response.choices[0]!.message?.content ?? "";
 
     return {
       raw: response,
       message: {
         content,
-        role: response.choices[0].message.role,
-        options: response.choices[0].message?.tool_calls
+        role: response.choices[0]!.message.role,
+        options: response.choices[0]!.message?.tool_calls
           ? {
-              toolCall: response.choices[0].message.tool_calls.map(
+              toolCall: response.choices[0]!.message.tool_calls.map(
                 (toolCall) => ({
                   id: toolCall.id,
                   name: toolCall.function.name,
@@ -410,13 +409,13 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     const toolCallMap = new Map<string, PartialToolCall>();
     for await (const part of stream) {
       if (part.choices.length === 0) continue;
-      const choice = part.choices[0];
+      const choice = part.choices[0]!;
       // skip parts that don't have any content
       if (!(choice.delta.content || choice.delta.tool_calls)) continue;
 
       let shouldEmitToolCall: PartialToolCall | null = null;
       if (
-        choice.delta.tool_calls?.[0].id &&
+        choice.delta.tool_calls?.[0]!.id &&
         currentToolCall &&
         choice.delta.tool_calls?.[0].id !== currentToolCall.id
       ) {
@@ -425,7 +424,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
           input: JSON.parse(currentToolCall.input),
         };
       }
-      if (choice.delta.tool_calls?.[0].id) {
+      if (choice.delta.tool_calls?.[0]!.id) {
         currentToolCall = {
           name: choice.delta.tool_calls[0].function!.name!,
           id: choice.delta.tool_calls[0].id,
@@ -433,7 +432,7 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         };
         toolCallMap.set(choice.delta.tool_calls[0].id, currentToolCall);
       } else {
-        if (choice.delta.tool_calls?.[0].function?.arguments) {
+        if (choice.delta.tool_calls?.[0]!.function?.arguments) {
           currentToolCall!.input +=
             choice.delta.tool_calls[0].function.arguments;
         }
@@ -468,11 +467,16 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   static toTool(tool: BaseTool): ChatCompletionTool {
     return {
       type: "function",
-      function: {
-        name: tool.metadata.name,
-        description: tool.metadata.description,
-        parameters: tool.metadata.parameters,
-      },
+      function: tool.metadata.parameters
+        ? {
+            name: tool.metadata.name,
+            description: tool.metadata.description,
+            parameters: tool.metadata.parameters,
+          }
+        : {
+            name: tool.metadata.name,
+            description: tool.metadata.description,
+          },
     };
   }
 }
