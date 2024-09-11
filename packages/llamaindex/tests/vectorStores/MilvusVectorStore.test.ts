@@ -325,7 +325,7 @@ describe("MilvusVectorStore", () => {
 
     testcases.forEach((tc) => {
       it(`[Unsupported Operator] [${tc.title}] should throw error`, async () => {
-        const errorMsg = `Operator ${tc.filters?.filters[0].operator} is not supported.`;
+        const errorMsg = `Operator ${tc.filters?.filters[0]!.operator} is not supported.`;
         expect(() => store.toMilvusFilter(tc.filters)).toThrow(errorMsg);
       });
     });

@@ -34,7 +34,7 @@ export abstract class BaseEmbedding extends TransformComponent {
         const embeddings = await this.getTextEmbeddingsBatch(texts, options);
 
         for (let i = 0; i < nodes.length; i++) {
-          nodes[i].embedding = embeddings[i];
+          nodes[i]!.embedding = embeddings[i];
         }
 
         return nodes;
@@ -120,7 +120,7 @@ export async function batchEmbeddings<T>(
   const curBatch: T[] = [];
 
   for (let i = 0; i < queue.length; i++) {
-    curBatch.push(queue[i]);
+    curBatch.push(queue[i]!);
     if (i == queue.length - 1 || curBatch.length == chunkSize) {
       const embeddings = await embedFunc(curBatch);
 

@@ -105,8 +105,10 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
     }
 
     this.embedBatchSize = params?.embedBatchSize ?? 128;
-    this.embedInfo = params?.embedInfo;
-    this.requestParams = {
+    if (params?.embedInfo) {
+      this.embedInfo = params?.embedInfo;
+    }
+    this.requestParams = <EmbeddingsRequestWithoutInput>{
       model: params?.model ?? "mixedbread-ai/mxbai-embed-large-v1",
       normalized: params?.normalized,
       dimensions: params?.dimensions,
@@ -123,10 +125,16 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
         "user-agent": "@mixedbread-ai/llamaindex-ts-sdk",
       },
     };
-    this.client = new MixedbreadAIClient({
-      apiKey,
-      environment: params?.baseUrl,
-    });
+    this.client = new MixedbreadAIClient(
+      params?.baseUrl
+        ? {
+            apiKey,
+            environment: params?.baseUrl,
+          }
+        : {
+            apiKey,
+          },
+    );
   }
 
   /**
@@ -140,7 +148,7 @@ export class MixedbreadAIEmbeddings extends BaseEmbedding {
    * console.log(result);
    */
   async getTextEmbedding(text: string): Promise<number[]> {
-    return (await this.getTextEmbeddings([text]))[0];
+    return (await this.getTextEmbeddings([text]))[0]!;
   }
 
   /**

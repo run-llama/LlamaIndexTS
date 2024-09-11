@@ -35,8 +35,8 @@ export class MarkdownNodeParser extends NodeParser {
         }
         metadata = this.updateMetadata(
           metadata,
-          headerMatch[2],
-          headerMatch[1].trim().length,
+          headerMatch[2]!,
+          headerMatch[1]!.trim().length,
         );
         currentSection = `${headerMatch[2]}\n`;
       } else {
@@ -63,7 +63,7 @@ export class MarkdownNodeParser extends NodeParser {
     for (let i = 1; i < newHeaderLevel; i++) {
       const key = `Header_${i}`;
       if (key in headersMetadata) {
-        updatedHeaders[key] = headersMetadata[key];
+        updatedHeaders[key] = headersMetadata[key]!;
       }
     }
 
@@ -76,10 +76,10 @@ export class MarkdownNodeParser extends NodeParser {
     node: TextNode,
     metadata: Metadata,
   ): TextNode {
-    const newNode = buildNodeFromSplits([textSplit], node, undefined)[0];
+    const newNode = buildNodeFromSplits([textSplit], node, undefined)[0]!;
 
     if (this.includeMetadata) {
-      newNode.metadata = { ...newNode.metadata, ...metadata };
+      newNode.metadata = { ...newNode!.metadata, ...metadata };
     }
 
     return newNode;

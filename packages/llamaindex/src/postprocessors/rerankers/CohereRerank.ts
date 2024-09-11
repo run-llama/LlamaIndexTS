@@ -72,7 +72,7 @@ export class CohereRerank implements BaseNodePostprocessor {
     const newNodes: NodeWithScore[] = [];
 
     for (const result of results.results) {
-      const node = nodes[result.index];
+      const node = nodes[result.index]!;
 
       newNodes.push({
         node: node.node,

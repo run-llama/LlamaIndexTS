@@ -23,10 +23,10 @@ export class DefaultContextGenerator
 
   constructor(init: {
     retriever: BaseRetriever;
-    contextSystemPrompt?: ContextSystemPrompt;
-    nodePostprocessors?: BaseNodePostprocessor[];
-    contextRole?: MessageType;
-    metadataMode?: MetadataMode;
+    contextSystemPrompt?: ContextSystemPrompt | undefined;
+    nodePostprocessors?: BaseNodePostprocessor[] | undefined;
+    contextRole?: MessageType | undefined;
+    metadataMode?: MetadataMode | undefined;
   }) {
     super();
 

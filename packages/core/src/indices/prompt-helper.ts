@@ -23,12 +23,12 @@ function getEmptyPromptTxt(prompt: PromptTemplate) {
  * Get biggest empty prompt size from a list of prompts.
  * Used to calculate the maximum size of inputs to the LLM.
  */
-export function getBiggestPrompt(prompts: PromptTemplate[]) {
+export function getBiggestPrompt(prompts: PromptTemplate[]): PromptTemplate {
   const emptyPromptTexts = prompts.map(getEmptyPromptTxt);
   const emptyPromptLengths = emptyPromptTexts.map((text) => text.length);
   const maxEmptyPromptLength = Math.max(...emptyPromptLengths);
   const maxEmptyPromptIndex = emptyPromptLengths.indexOf(maxEmptyPromptLength);
-  return prompts[maxEmptyPromptIndex];
+  return prompts[maxEmptyPromptIndex]!;
 }
 
 export type PromptHelperOptions = {
@@ -47,7 +47,7 @@ export class PromptHelper {
   contextWindow = DEFAULT_CONTEXT_WINDOW;
   numOutput = DEFAULT_NUM_OUTPUTS;
   chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO;
-  chunkSizeLimit?: number;
+  chunkSizeLimit: number | undefined;
   tokenizer: Tokenizer;
   separator = " ";
 

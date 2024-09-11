@@ -153,12 +153,15 @@ export const TOOL_CALL_MODELS = [
 
 const getProvider = (model: string): Provider => {
   const providerName = model.split(".")[0];
+  if (!providerName) {
+    throw new Error(`Model ${model} is not supported`);
+  }
   if (!(providerName in PROVIDERS)) {
     throw new Error(
       `Provider ${providerName} for model ${model} is not supported`,
     );
   }
-  return PROVIDERS[providerName];
+  return PROVIDERS[providerName]!;
 };
 
 export type BedrockModelParams = {

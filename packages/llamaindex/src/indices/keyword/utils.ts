@@ -58,7 +58,7 @@ export function simpleExtractKeywords(
 
   // Sorting tokens by frequency
   const sortedTokens: string[] = Object.keys(valueCounts).sort(
-    (a, b) => valueCounts[b] - valueCounts[a],
+    (a, b) => valueCounts[b]! - valueCounts[a]!,
   );
 
   const keywords: string[] = maxKeywords

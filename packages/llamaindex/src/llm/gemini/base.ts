@@ -79,7 +79,7 @@ export class GeminiSession implements IGeminiSession {
 
   constructor(options: GoogleGeminiSessionOptions) {
     if (!options.apiKey) {
-      options.apiKey = getEnv("GOOGLE_API_KEY");
+      options.apiKey = getEnv("GOOGLE_API_KEY")!;
     }
     if (!options.apiKey) {
       throw new Error("Set Google API Key in GOOGLE_API_KEY env variable");
@@ -187,7 +187,7 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   model: GEMINI_MODEL;
   temperature: number;
   topP: number;
-  maxTokens?: number;
+  maxTokens?: number | undefined;
   session: IGeminiSession;
 
   constructor(init?: GeminiConfig) {
@@ -219,19 +219,26 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): Promise<GeminiChatNonStreamResponse> {
     const context = getChatContext(params);
     const client = this.session.getGenerativeModel(this.metadata);
-    const chat = client.startChat({
-      history: context.history,
-      tools: params.tools && [
-        {
-          functionDeclarations: params.tools.map(
-            mapBaseToolToGeminiFunctionDeclaration,
-          ),
-        },
-      ],
-      safetySettings: DEFAULT_SAFETY_SETTINGS,
-    });
+    const chat = client.startChat(
+      params.tools
+        ? {
+            history: context.history,
+            tools: [
+              {
+                functionDeclarations: params.tools.map(
+                  mapBaseToolToGeminiFunctionDeclaration,
+                ),
+              },
+            ],
+            safetySettings: DEFAULT_SAFETY_SETTINGS,
+          }
+        : {
+            history: context.history,
+            safetySettings: DEFAULT_SAFETY_SETTINGS,
+          },
+    );
     const { response } = await chat.sendMessage(context.message);
-    const topCandidate = response.candidates![0];
+    const topCandidate = response.candidates![0]!;
 
     const tools = this.session.getToolsFromResponse(response);
     const options: ToolCallLLMMessageOptions = tools?.length
@@ -255,17 +262,24 @@ export class Gemini extends ToolCallLLM<GeminiAdditionalChatOptions> {
   ): GeminiChatStreamResponse {
     const context = getChatContext(params);
     const client = this.session.getGenerativeModel(this.metadata);
-    const chat = client.startChat({
-      history: context.history,
-      tools: params.tools && [
-        {
-          functionDeclarations: params.tools.map(
-            mapBaseToolToGeminiFunctionDeclaration,
-          ),
-        },
-      ],
-      safetySettings: DEFAULT_SAFETY_SETTINGS,
-    });
+    const chat = client.startChat(
+      params.tools
+        ? {
+            history: context.history,
+            tools: [
+              {
+                functionDeclarations: params.tools.map(
+                  mapBaseToolToGeminiFunctionDeclaration,
+                ),
+              },
+            ],
+            safetySettings: DEFAULT_SAFETY_SETTINGS,
+          }
+        : {
+            history: context.history,
+            safetySettings: DEFAULT_SAFETY_SETTINGS,
+          },
+    );
     const result = await chat.sendMessageStream(context.message);
     yield* this.session.getChatStream(result);
   }

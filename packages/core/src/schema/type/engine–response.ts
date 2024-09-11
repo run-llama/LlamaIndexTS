@@ -3,7 +3,7 @@ import { extractText } from "../../utils";
 import type { Metadata, NodeWithScore } from "../node";
 
 export class EngineResponse implements ChatResponse, ChatResponseChunk {
-  sourceNodes?: NodeWithScore[];
+  sourceNodes: NodeWithScore[] | undefined;
 
   metadata: Metadata = {};
 

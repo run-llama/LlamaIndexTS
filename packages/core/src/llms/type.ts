@@ -103,7 +103,7 @@ export type LLMMetadata = {
   model: string;
   temperature: number;
   topP: number;
-  maxTokens?: number;
+  maxTokens?: number | undefined;
   contextWindow: number;
   tokenizer: Tokenizers | undefined;
 };
@@ -141,7 +141,7 @@ export interface LLMCompletionParamsStreaming extends LLMCompletionParamsBase {
 
 export interface LLMCompletionParamsNonStreaming
   extends LLMCompletionParamsBase {
-  stream?: false | null;
+  stream?: false | null | undefined;
 }
 
 export type MessageContentTextDetail = {

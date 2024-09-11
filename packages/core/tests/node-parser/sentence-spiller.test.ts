@@ -22,7 +22,7 @@ describe("SentenceSplitter", () => {
     });
     const result = sentenceSplitter.getNodesFromDocuments([doc]);
     expect(result.length).toEqual(1);
-    const node = result[0];
+    const node = result[0]!;
     // check not the same object
     expect(node.metadata).not.toBe(doc.metadata);
     expect(node.excludedLlmMetadataKeys).not.toBe(doc.excludedLlmMetadataKeys);

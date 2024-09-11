@@ -28,9 +28,9 @@ export const mergeNeighboringSameRoleMessages = (
 ): AnthropicMessage[] => {
   return messages.reduce(
     (result: AnthropicMessage[], current: AnthropicMessage, index: number) => {
-      if (index > 0 && messages[index - 1].role === current.role) {
-        result[result.length - 1].content = [
-          ...result[result.length - 1].content,
+      if (index > 0 && messages[index - 1]!.role === current.role) {
+        result[result.length - 1]!.content = [
+          ...result[result.length - 1]!.content,
           ...current.content,
         ];
       } else {
@@ -128,7 +128,7 @@ export const mapChatMessagesToAnthropicMessages = <
       );
     })
     .filter((message: AnthropicMessage) => {
-      const content = message.content[0];
+      const content = message.content[0]!;
       if (content.type === "text" && !content.text) return false;
       if (content.type === "image" && !content.source.data) return false;
       if (content.type === "image" && message.role === "assistant")
@@ -151,12 +151,12 @@ export const extractDataUrlComponents = (
 } => {
   const parts = dataUrl.split(";base64,");
 
-  if (parts.length !== 2 || !parts[0].startsWith("data:")) {
+  if (parts.length !== 2 || !parts[0]!.startsWith("data:")) {
     throw new Error("Invalid data URL");
   }
 
-  const mimeType = parts[0].slice(5);
-  const base64 = parts[1];
+  const mimeType = parts[0]!.slice(5);
+  const base64 = parts[1]!;
 
   return {
     mimeType,

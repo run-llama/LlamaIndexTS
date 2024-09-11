@@ -163,11 +163,11 @@ For questions about more specific sections, please use the vector_tool.`,
     }),
   ];
 
-  const originalCall = queryEngineTools[1].call.bind(queryEngineTools[1]);
+  const originalCall = queryEngineTools[1]!.call.bind(queryEngineTools[1]);
   const mockCall = t.mock.fn(({ query }: { query: string }) => {
     return originalCall({ query });
   });
-  queryEngineTools[1].call = mockCall;
+  queryEngineTools[1]!.call = mockCall;
 
   const toolMapping = SimpleToolNodeMapping.fromObjects(queryEngineTools);
 

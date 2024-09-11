@@ -51,8 +51,8 @@ export const defaultParseChoiceSelectAnswerFn: ChoiceSelectParserFunction = (
   return lineTokens.reduce(
     (parseResult: ChoiceSelectParseResult, lineToken: string[]) => {
       try {
-        const docNum = parseInt(lineToken[0].split(":")[1].trim());
-        const answerRelevance = parseFloat(lineToken[1].split(":")[1].trim());
+        const docNum = parseInt(lineToken[0]!.split(":")[1]!.trim());
+        const answerRelevance = parseFloat(lineToken[1]!.split(":")[1]!.trim());
         if (docNum < 1 || docNum > numChoices) {
           if (raiseErr) {
             throw new Error(

@@ -12,9 +12,14 @@ export class LLamaCloudFileService {
   public static async getAllProjectsWithPipelines() {
     initService();
     try {
-      const projects = await ProjectsService.listProjectsApiV1ProjectsGet();
-      const pipelines =
-        await PipelinesService.searchPipelinesApiV1PipelinesGet();
+      const { data: projects } =
+        await ProjectsService.listProjectsApiV1ProjectsGet({
+          throwOnError: true,
+        });
+      const { data: pipelines } =
+        await PipelinesService.searchPipelinesApiV1PipelinesGet({
+          throwOnError: true,
+        });
       return projects.map((project) => ({
         ...project,
         pipelines: pipelines.filter((p) => p.project_id === project.id),
@@ -35,11 +40,12 @@ export class LLamaCloudFileService {
     customMetadata: Record<string, any> = {},
   ) {
     initService();
-    const file = await FilesService.uploadFileApiV1FilesPost({
-      projectId,
-      formData: {
+    const { data: file } = await FilesService.uploadFileApiV1FilesPost({
+      path: { project_id: projectId },
+      body: {
         upload_file: uploadFile,
       },
+      throwOnError: true,
     });
     const files = [
       {
@@ -48,19 +54,24 @@ export class LLamaCloudFileService {
       },
     ];
     await PipelinesService.addFilesToPipelineApiV1PipelinesPipelineIdFilesPut({
-      pipelineId,
-      requestBody: files,
+      path: {
+        pipeline_id: pipelineId,
+      },
+      body: files,
     });
 
     // Wait 2s for the file to be processed
     const maxAttempts = 20;
     let attempt = 0;
     while (attempt < maxAttempts) {
-      const result =
+      const { data: result } =
         await PipelinesService.getPipelineFileStatusApiV1PipelinesPipelineIdFilesFileIdStatusGet(
           {
-            pipelineId,
-            fileId: file.id,
+            path: {
+              pipeline_id: pipelineId,
+              file_id: file.id,
+            },
+            throwOnError: true,
           },
         );
       if (result.status === "ERROR") {
@@ -83,16 +94,24 @@ export class LLamaCloudFileService {
    */
   public static async getFileUrl(pipelineId: string, filename: string) {
     initService();
-    const allPipelineFiles =
+    const { data: allPipelineFiles } =
       await PipelinesService.listPipelineFilesApiV1PipelinesPipelineIdFilesGet({
-        pipelineId,
+        path: {
+          pipeline_id: pipelineId,
+        },
+        throwOnError: true,
       });
     const file = allPipelineFiles.find((file) => file.name === filename);
     if (!file?.file_id) return null;
-    const fileContent =
+    const { data: fileContent } =
       await FilesService.readFileContentApiV1FilesIdContentGet({
-        id: file.file_id,
-        projectId: file.project_id,
+        path: {
+          id: file.file_id,
+        },
+        query: {
+          project_id: file.project_id,
+        },
+        throwOnError: true,
       });
     return fileContent.url;
   }

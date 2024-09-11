@@ -31,8 +31,8 @@ export interface Config {
   embedModel: BaseEmbedding | null;
   nodeParser: NodeParser | null;
   callbackManager: CallbackManager | null;
-  chunkSize?: number;
-  chunkOverlap?: number;
+  chunkSize: number | undefined;
+  chunkOverlap: number | undefined;
 }
 
 /**
@@ -156,7 +156,9 @@ class GlobalSettings implements Config {
   }
 
   set chunkOverlap(chunkOverlap: number | undefined) {
-    this.#chunkOverlap = chunkOverlap;
+    if (typeof chunkOverlap === "number") {
+      this.#chunkOverlap = chunkOverlap;
+    }
   }
 
   withChunkOverlap<Result>(chunkOverlap: number, fn: () => Result): Result {

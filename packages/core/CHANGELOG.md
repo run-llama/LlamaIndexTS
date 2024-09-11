@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.1.12
+
+### Patch Changes
+
+- 711c814: fix: patch `python-format-js`
+
 ## 0.1.11
 
 ### Patch Changes

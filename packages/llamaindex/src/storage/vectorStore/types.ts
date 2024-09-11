@@ -72,7 +72,7 @@ export interface VectorStoreQuery {
   queryStr?: string;
   mode: VectorStoreQueryMode;
   alpha?: number;
-  filters?: MetadataFilters;
+  filters?: MetadataFilters | undefined;
   mmrThreshold?: number;
 }
 

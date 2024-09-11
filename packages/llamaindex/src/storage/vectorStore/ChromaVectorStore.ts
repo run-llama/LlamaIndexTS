@@ -1,14 +1,17 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import type {
-  AddParams,
-  ChromaClientParams,
-  Collection,
-  QueryResponse,
-  Where,
-  WhereDocument,
+import {
+  ChromaClient,
+  IncludeEnum,
+  type AddParams,
+  type ChromaClientParams,
+  type Collection,
+  type DeleteParams,
+  type QueryParams,
+  type QueryResponse,
+  type Where,
+  type WhereDocument,
 } from "chromadb";
-import { ChromaClient, IncludeEnum } from "chromadb";
 import {
   VectorStoreBase,
   VectorStoreQueryMode,
@@ -96,7 +99,7 @@ export class ChromaVectorStore
     deleteOptions?: ChromaDeleteOptions,
   ): Promise<void> {
     const collection = await this.getCollection();
-    await collection.delete({
+    await collection.delete(<DeleteParams>{
       ids: [refDocId],
       where: deleteOptions?.where,
       whereDocument: deleteOptions?.whereDocument,
@@ -144,7 +147,7 @@ export class ChromaVectorStore
     }
 
     const collection = await this.getCollection();
-    const queryResponse: QueryResponse = await collection.query({
+    const queryResponse: QueryResponse = await collection.query(<QueryParams>{
       queryEmbeddings: query.queryEmbedding ?? undefined,
       queryTexts: query.queryStr ?? undefined,
       nResults: query.similarityTopK,
@@ -160,17 +163,17 @@ export class ChromaVectorStore
     });
 
     const vectorStoreQueryResult: VectorStoreQueryResult = {
-      nodes: queryResponse.ids[0].map((id, index) => {
-        const text = (queryResponse.documents as string[][])[0][index];
-        const metaData = queryResponse.metadatas[0][index] ?? {};
+      nodes: queryResponse.ids[0]!.map((id, index) => {
+        const text = (queryResponse.documents as string[][])[0]![index];
+        const metaData = queryResponse.metadatas[0]![index] ?? {};
         const node = metadataDictToNode(metaData);
         node.setContent(text);
         return node;
       }),
-      similarities: (queryResponse.distances as number[][])[0].map(
+      similarities: (queryResponse.distances as number[][])[0]!.map(
         (distance) => 1 - distance,
       ),
-      ids: queryResponse.ids[0],
+      ids: queryResponse.ids[0]!,
     };
     return vectorStoreQueryResult;
   }

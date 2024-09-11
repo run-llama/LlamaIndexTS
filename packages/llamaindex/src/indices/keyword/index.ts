@@ -101,7 +101,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     }
 
     const sortedChunkIndices = Object.keys(chunkIndicesCount)
-      .sort((a, b) => chunkIndicesCount[b] - chunkIndicesCount[a])
+      .sort((a, b) => chunkIndicesCount[b]! - chunkIndicesCount[a]!)
       .slice(0, this.numChunksPerQuery);
 
     const sortedNodes = await this.docstore.getNodes(sortedChunkIndices);
@@ -175,7 +175,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     if (options.indexStruct) {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
-      indexStruct = indexStructs[0];
+      indexStruct = indexStructs[0]!;
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
         options.indexId,

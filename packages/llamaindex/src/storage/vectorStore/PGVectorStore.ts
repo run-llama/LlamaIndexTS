@@ -173,7 +173,7 @@ export class PGVectorStore
   private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
     const result = [];
     for (let index = 0; index < embeddingResults.length; index++) {
-      const row = embeddingResults[index];
+      const row = embeddingResults[index]!;
 
       const id: any = row.id_.length ? row.id_ : null;
       const meta = row.metadata || {};

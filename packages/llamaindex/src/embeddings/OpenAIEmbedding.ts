@@ -36,21 +36,20 @@ export class OpenAIEmbedding extends BaseEmbedding {
   /** embeddding model. defaults to "text-embedding-ada-002" */
   model: string;
   /** number of dimensions of the resulting vector, for models that support choosing fewer dimensions. undefined will default to model default */
-  dimensions: number | undefined;
+  dimensions?: number | undefined;
 
   // OpenAI session params
 
   /** api key */
-  apiKey?: string = undefined;
+  apiKey?: string | undefined = undefined;
   /** maximum number of retries, default 10 */
   maxRetries: number;
   /** timeout in ms, default 60 seconds  */
-  timeout?: number;
+  timeout?: number | undefined;
   /** other session options for OpenAI */
-  additionalSessionOptions?: Omit<
-    Partial<OpenAIClientOptions>,
-    "apiKey" | "maxRetries" | "timeout"
-  >;
+  additionalSessionOptions?:
+    | Omit<Partial<OpenAIClientOptions>, "apiKey" | "maxRetries" | "timeout">
+    | undefined;
 
   /** session object */
   session: OpenAISession;
@@ -119,11 +118,18 @@ export class OpenAIEmbedding extends BaseEmbedding {
     // TODO: ensure this for every sub class by calling it in the base class
     input = this.truncateMaxTokens(input);
 
-    const { data } = await this.session.openai.embeddings.create({
-      model: this.model,
-      dimensions: this.dimensions, // only sent to OpenAI if set by user
-      input,
-    });
+    const { data } = await this.session.openai.embeddings.create(
+      this.dimensions
+        ? {
+            model: this.model,
+            dimensions: this.dimensions, // only sent to OpenAI if set by user
+            input,
+          }
+        : {
+            model: this.model,
+            input,
+          },
+    );
 
     return data.map((d) => d.embedding);
   }
@@ -141,6 +147,6 @@ export class OpenAIEmbedding extends BaseEmbedding {
    * @param texts
    */
   async getTextEmbedding(text: string): Promise<number[]> {
-    return (await this.getOpenAIEmbedding([text]))[0];
+    return (await this.getOpenAIEmbedding([text]))[0]!;
   }
 }

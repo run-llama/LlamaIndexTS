@@ -11,7 +11,7 @@ export class PapaCSVReader extends FileReader {
   private concatRows: boolean;
   private colJoiner: string;
   private rowJoiner: string;
-  private papaConfig?: ParseConfig;
+  private papaConfig: ParseConfig | undefined;
 
   /**
    * Constructs a new instance of the class.
