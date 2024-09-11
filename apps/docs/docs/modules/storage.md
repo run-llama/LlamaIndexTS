@@ -30,12 +30,10 @@ const index = await VectorStoreIndex.fromDocuments([document], {
 
 ## PostgreSQL Storage
 
-You can configure the `schemaName`, `tableName` and `connectionString` in the
-first parameter. If a `connectionString` is not provided, it will use the
-environment variables `PGHOST`, `PGUSER`, `PGPASSWORD`, `PGDATABASE` and `PGPORT`.
-
-You can also supply a custom `namespace` parameter to the
-`PostgresDocumentStore` and `PostgresIndexStore` classes.
+You can configure the `schemaName`, `tableName`, `namespace`, and
+`connectionString`. If a `connectionString` is not
+provided, it will use the environment variables `PGHOST`, `PGUSER`,
+`PGPASSWORD`, `PGDATABASE` and `PGPORT`.
 
 ```typescript
 import {
@@ -46,11 +44,9 @@ import {
   storageContextFromDefaults,
 } from "llamaindex";
 
-const connectionString = "postgres://user:password@localhost:5432/database";
-
 const storageContext = await storageContextFromDefaults({
-  docStore: new PostgresDocumentStore({ connectionString }, "custom_namespace"),
-  indexStore: new PostgresIndexStore({ connectionString }),
+  docStore: new PostgresDocumentStore(),
+  indexStore: new PostgresIndexStore(),
 });
 
 const document = new Document({ text: "Test Text" });
