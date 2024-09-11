@@ -2,11 +2,8 @@ import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { DEFAULT_PERSIST_DIR } from "@llamaindex/core/global";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { fs, path } from "@llamaindex/env";
-import {
-  getTopKEmbeddings,
-  getTopKMMREmbeddings,
-} from "../../internal/utils.js";
-import { exists } from "../FileSystem.js";
+import { getTopKEmbeddings, getTopKMMREmbeddings } from "../internal/utils.js";
+import { exists } from "../storage/FileSystem.js";
 import {
   FilterOperator,
   VectorStoreBase,

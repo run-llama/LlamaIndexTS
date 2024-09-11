@@ -1,6 +1,6 @@
 import { TransformComponent } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
-import type { VectorStore } from "../../storage/vectorStore/types.js";
+import type { VectorStore } from "../../vector-store/types.js";
 import { DuplicatesStrategy } from "./DuplicatesStrategy.js";
 import { UpsertsAndDeleteStrategy } from "./UpsertsAndDeleteStrategy.js";
 import { UpsertsStrategy } from "./UpsertsStrategy.js";

@@ -7,10 +7,7 @@ import {
   type Metadata,
 } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
-import type {
-  VectorStore,
-  VectorStoreByType,
-} from "../storage/vectorStore/types.js";
+import type { VectorStore, VectorStoreByType } from "../vector-store/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
   DocStoreStrategy,
