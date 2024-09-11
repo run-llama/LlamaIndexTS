@@ -12,6 +12,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  POSTGRES_USER: runneradmin
+  POSTGRES_HOST_AUTH_METHOD: trust
+
 jobs:
   e2e:
     strategy:
@@ -42,9 +46,6 @@ jobs:
         node-version: [18.x, 20.x, 22.x]
     name: Test on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
-    env:
-      POSTGRES_USER: ${{ env.USER }}
-      POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - uses: actions/checkout@v4
       - uses: ankane/setup-postgres@v1
