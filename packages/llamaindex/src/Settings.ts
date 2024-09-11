@@ -59,10 +59,12 @@ class GlobalSettings implements Config {
   }
 
   get llm(): LLM {
-    if (CoreSettings.llm === null) {
+    // fixme: we might need check internal error instead of try-catch here
+    try {
+      CoreSettings.llm;
+    } catch (error) {
       CoreSettings.llm = new OpenAI();
     }
-
     return CoreSettings.llm;
   }
 
