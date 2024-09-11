@@ -99,7 +99,11 @@ export class PGVectorStore
         const { Client } = pg.default ? pg.default : pg;
 
         const { registerType } = await import("pgvector/pg");
-        const db = new Client({ connectionString: this.connectionString });
+        // Create DB connection
+        // Read connection params from env - see comment block above
+        const db = new Client({
+          connectionString: this.connectionString,
+        });
         await db.connect();
 
         // Check vector extension
@@ -123,18 +127,18 @@ export class PGVectorStore
   private async checkSchema(db: pg.Client) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
-    const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName} (
-      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
+                                                                                  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       external_id VARCHAR,
       collection VARCHAR,
       document TEXT,
       metadata JSONB DEFAULT '{}',
       embeddings VECTOR(${this.dimensions})
-    )`;
+      )`;
     await db.query(tbl);
 
     const idxs = `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_external_id ON ${this.schemaName}.${this.tableName} (external_id);
-      CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
+    CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
     await db.query(idxs);
 
     // TODO add IVFFlat or HNSW indexing?
@@ -158,7 +162,7 @@ export class PGVectorStore
    */
   async clearCollection() {
     const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
-      WHERE collection = $1`;
+                         WHERE collection = $1`;
 
     const db = await this.getDb();
     const ret = await db.query(sql, [this.collection]);
@@ -252,7 +256,7 @@ export class PGVectorStore
    * @param deleteKwargs Required by VectorStore interface.  Currently ignored.
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, _deleteKwargs?: any): Promise<void> {
+  async delete(refDocId: string, deleteKwargs?: any): Promise<void> {
     const collectionCriteria = this.collection.length
       ? "AND collection = $2"
       : "";
@@ -384,12 +388,12 @@ export class PGVectorStore
   /**
    * Query the vector store for the closest matching data to the query embeddings
    * @param query The VectorStoreQuery to be used
-   * @param _options Required by VectorStore interface.  Currently ignored.
+   * @param options Required by VectorStore interface.  Currently ignored.
    * @returns Zero or more Document instances with data from the vector store.
    */
   async query(
     query: VectorStoreQuery,
-    _options?: any,
+    options?: any,
   ): Promise<VectorStoreQueryResult> {
     // TODO QUERY TYPES:
     //    Distance:       SELECT embedding <=> $1 AS distance FROM items;
@@ -405,7 +409,7 @@ export class PGVectorStore
       : [embedding];
 
     const filterClauses: string[] = [];
-    query.filters?.filters.forEach((filter) => {
+    query.filters?.filters.forEach((filter, index) => {
       const paramIndex = params.length + 1;
       const { clause, param } = this.buildFilterClause(filter, paramIndex);
       filterClauses.push(clause);
@@ -456,10 +460,11 @@ export class PGVectorStore
 
   /**
    * Required by VectorStore interface.  Currently ignored.
-   * @param _persistPath
+   * @param persistPath
+   * @param fs
    * @returns Resolved Promise.
    */
-  persist(_persistPath: string): Promise<void> {
+  persist(persistPath: string): Promise<void> {
     return Promise.resolve();
   }
 }
