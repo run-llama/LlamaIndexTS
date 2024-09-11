@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.2.4
+
+### Patch Changes
+
+- 4810364: fix: bump version
+
 ## 0.2.3
 
 ### Patch Changes

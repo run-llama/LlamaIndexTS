@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.5.25
+
+### Patch Changes
+
+- 4810364: fix: handle `RouterQueryEngine` with string query
+- d3bc663: refactor: export vector store only in nodejs environment on top level
+
+  If you see some missing modules error, please change vector store related imports to `llamaindex/vector-store`
+
+- Updated dependencies [4810364]
+  - @llamaindex/cloud@0.2.4
+
 ## 0.5.24
 
 ### Patch Changes
