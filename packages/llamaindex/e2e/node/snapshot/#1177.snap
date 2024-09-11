@@ -1,0 +1,67 @@
+{
+  "llmEventStart": [
+    {
+      "id": "PRESERVE_0",
+      "messages": [
+        {
+          "content": "Some choices are given below. It is provided in a numbered list (1 to 42), where each item in the list corresponds to a summary.\n---------------------\n(1) Math calculation(2) Search from google\n---------------------\nUsing only the choices above and not prior knowledge, return the choice that is most relevant to the question: 'calculate 2 + 2'\n\n\nThe output should be ONLY JSON formatted as a JSON instance.\n\nHere is an example:\n[\n    {\n        \"choice\": 1,\n        \"reason\": \"<insert reason for choice>\"\n    },\n    ...\n]\n",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_1",
+      "messages": [
+        {
+          "content": "Some choices are given below. It is provided in a numbered list (1 to 42), where each item in the list corresponds to a summary.\n---------------------\n(1) Math calculation(2) Search from google\n---------------------\nUsing only the choices above and not prior knowledge, return the choice that is most relevant to the question: 'calculate 2 + 2'\n\n\nThe output should be ONLY JSON formatted as a JSON instance.\n\nHere is an example:\n[\n    {\n        \"choice\": 1,\n        \"reason\": \"<insert reason for choice>\"\n    },\n    ...\n]\n",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_2",
+      "messages": [
+        {
+          "content": "Some choices are given below. It is provided in a numbered list (1 to 42), where each item in the list corresponds to a summary.\n---------------------\n(1) Math calculation(2) Search from google\n---------------------\nUsing only the choices above and not prior knowledge, return the choice that is most relevant to the question: 'calculate 2 + 2'\n\n\nThe output should be ONLY JSON formatted as a JSON instance.\n\nHere is an example:\n[\n    {\n        \"choice\": 1,\n        \"reason\": \"<insert reason for choice>\"\n    },\n    ...\n]\n",
+          "role": "user"
+        }
+      ]
+    }
+  ],
+  "llmEventEnd": [
+    {
+      "id": "PRESERVE_0",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "[\n    {\n        \"choice\": 1,\n        \"reason\": \"The question 'calculate 2 + 2' is directly asking for a math calculation, which corresponds to choice 1.\"\n    }\n]",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_1",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "[\n    {\n        \"choice\": 1,\n        \"reason\": \"The question 'calculate 2 + 2' is asking for a mathematical calculation, which directly corresponds to choice 1: Math calculation.\"\n    }\n]",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    },
+    {
+      "id": "PRESERVE_2",
+      "response": {
+        "raw": null,
+        "message": {
+          "content": "[\n    {\n        \"choice\": 1,\n        \"reason\": \"The question 'calculate 2 + 2' is asking for a mathematical calculation, which directly corresponds to choice 1: Math calculation.\"\n    }\n]",
+          "role": "assistant",
+          "options": {}
+        }
+      }
+    }
+  ],
+  "llmEventStream": []
+}
