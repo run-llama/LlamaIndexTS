@@ -21,9 +21,7 @@ jobs:
     name: E2E on Node.js ${{ matrix.node-version }}
 
     env:
-      POSTGRES_DB: vectordb
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: testpwd
+      POSTGRES_USER: runneradmin
       POSTGRES_HOST_AUTH_METHOD: trust
     runs-on: ubuntu-latest
     steps:
