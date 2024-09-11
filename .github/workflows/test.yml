@@ -104,7 +104,7 @@ jobs:
           - nextjs-agent
           - nextjs-edge-runtime
           - nextjs-node-runtime
-    #          - waku-query-engine
+          - waku-query-engine
     runs-on: ubuntu-latest
     name: Build LlamaIndex Example (${{ matrix.packages }})
     steps:
