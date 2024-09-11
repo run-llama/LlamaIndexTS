@@ -3,10 +3,10 @@ import type pg from "pg";
 import {
   FilterCondition,
   FilterOperator,
-  VectorStoreBase,
   type IEmbedModel,
   type MetadataFilter,
   type MetadataFilterValue,
+  VectorStoreBase,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
@@ -187,26 +187,20 @@ export class PGVectorStore
   }
 
   private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
-    const result = [];
-    for (let index = 0; index < embeddingResults.length; index++) {
-      const row = embeddingResults[index]!;
-
-      const id: any = row.id_.length ? row.id_ : null;
-      const meta = row.metadata || {};
+    return embeddingResults.map((node) => {
+      const id: any = node.id_.length ? node.id_ : null;
+      const meta = node.metadata || {};
       meta.create_date = new Date();
 
-      const params = [
+      return [
         id,
         "",
         this.collection,
-        row.getContent(MetadataMode.EMBED),
+        node.getContent(MetadataMode.NONE),
         meta,
-        "[" + row.getEmbedding().join(",") + "]",
+        "[" + node.getEmbedding().join(",") + "]",
       ];
-
-      result.push(params);
-    }
-    return result;
+    });
   }
 
   /**
@@ -217,7 +211,7 @@ export class PGVectorStore
    */
   async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
     if (embeddingResults.length === 0) {
-      console.debug("Empty list sent to PGVectorStore::add");
+      console.warn("Empty list sent to PGVectorStore::add");
       return [];
     }
 
