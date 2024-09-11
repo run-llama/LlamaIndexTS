@@ -52,19 +52,34 @@ describe("pg - save data", () => {
       dimensions,
       schemaName,
     });
+
     await vectorStore.add([node]);
-    const result = await vectorStore.query({
-      mode: VectorStoreQueryMode.DEFAULT,
-      similarityTopK: 1,
-      queryEmbedding: [1, 2, 3],
-    });
-    const actualJSON = result.nodes![0]!.toJSON();
-    expect(actualJSON).toEqual({
-      ...node.toJSON(),
-      hash: actualJSON.hash,
-      metadata: actualJSON.metadata,
-    });
-    expect(result.ids).toEqual([nodeId]);
-    expect(result.similarities).toEqual([1]);
+
+    {
+      const result = await vectorStore.query({
+        mode: VectorStoreQueryMode.DEFAULT,
+        similarityTopK: 1,
+        queryEmbedding: [1, 2, 3],
+      });
+      const actualJSON = result.nodes![0]!.toJSON();
+      expect(actualJSON).toEqual({
+        ...node.toJSON(),
+        hash: actualJSON.hash,
+        metadata: actualJSON.metadata,
+      });
+      expect(result.ids).toEqual([nodeId]);
+      expect(result.similarities).toEqual([1]);
+    }
+
+    await vectorStore.delete(nodeId);
+
+    {
+      const result = await vectorStore.query({
+        mode: VectorStoreQueryMode.DEFAULT,
+        similarityTopK: 1,
+        queryEmbedding: [1, 2, 3],
+      });
+      expect(result.nodes).toEqual([]);
+    }
   });
 });

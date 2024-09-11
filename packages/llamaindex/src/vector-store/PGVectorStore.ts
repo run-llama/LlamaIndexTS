@@ -3,7 +3,6 @@ import type pg from "pg";
 import {
   FilterCondition,
   FilterOperator,
-  type IEmbedModel,
   type MetadataFilter,
   type MetadataFilterValue,
   VectorStoreBase,
@@ -14,6 +13,7 @@ import {
 
 import { escapeLikeString } from "./utils.js";
 
+import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 
@@ -21,12 +21,13 @@ export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
 
 export type PGVectorStoreConfig = {
-  schemaName?: string;
-  tableName?: string;
-  database?: string;
-  connectionString?: string;
-  dimensions?: number;
-} & Partial<IEmbedModel>;
+  schemaName?: string | undefined;
+  tableName?: string | undefined;
+  database?: string | undefined;
+  connectionString?: string | undefined;
+  dimensions?: number | undefined;
+  embedModel?: BaseEmbedding | undefined;
+};
 
 /**
  * Provides support for writing and querying vector data in Postgres.
@@ -58,22 +59,20 @@ export class PGVectorStore
    * PGPASSWORD=your database password
    * PGDATABASE=your database name
    * PGPORT=your database port
-   *
-   * @param {object} config - The configuration settings for the instance.
-   * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
-   * @param {string} config.tableName - The name of the table (optional). Defaults to PGVECTOR_TABLE.
-   * @param {string} config.connectionString - The connection string (optional).
-   * @param {number} config.dimensions - The dimensions of the embedding model.
    */
-  constructor(config?: PGVectorStoreConfig | pg.ClientBase) {
+  constructor(configOrClient?: PGVectorStoreConfig | pg.ClientBase) {
     // We cannot import pg from top level, it might have side effects
     //  so we only check if the config.connect function exists
-    if (config && "connect" in config && typeof config.connect === "function") {
+    if (
+      configOrClient &&
+      "connect" in configOrClient &&
+      typeof configOrClient.connect === "function"
+    ) {
+      const db = configOrClient as pg.ClientBase;
       super();
-      this.db = config;
-      return;
+      this.db = db;
     } else {
-      config = config as PGVectorStoreConfig;
+      const config = configOrClient as PGVectorStoreConfig;
       super(config?.embedModel);
       this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
       this.tableName = config?.tableName ?? PGVECTOR_TABLE;
@@ -190,7 +189,9 @@ export class PGVectorStore
     return embeddingResults.map((node) => {
       const id: any = node.id_.length ? node.id_ : null;
       const meta = node.metadata || {};
-      meta.create_date = new Date();
+      if (!meta.create_date) {
+        meta.create_date = new Date();
+      }
 
       return [
         id,
