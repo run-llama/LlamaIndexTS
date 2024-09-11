@@ -1,7 +1,9 @@
 import type {
+  ChatMessage,
   MessageContent,
   MessageContentDetail,
   MessageContentTextDetail,
+  ToolMetadata,
 } from "../llms";
 import type { QueryType } from "../query-engine";
 import type { ImageType } from "../schema";
@@ -72,15 +74,36 @@ export const extractDataUrlComponents = (
 } => {
   const parts = dataUrl.split(";base64,");
 
-  if (parts.length !== 2 || !parts[0].startsWith("data:")) {
+  if (parts.length !== 2 || !parts[0]!.startsWith("data:")) {
     throw new Error("Invalid data URL");
   }
 
-  const mimeType = parts[0].slice(5);
-  const base64 = parts[1];
+  const mimeType = parts[0]!.slice(5);
+  const base64 = parts[1]!;
 
   return {
     mimeType,
     base64,
   };
 };
+
+export function messagesToHistory(messages: ChatMessage[]): string {
+  return messages.reduce((acc, message) => {
+    acc += acc ? "\n" : "";
+    if (message.role === "user") {
+      acc += `Human: ${message.content}`;
+    } else {
+      acc += `Assistant: ${message.content}`;
+    }
+    return acc;
+  }, "");
+}
+
+export function toToolDescriptions(tools: ToolMetadata[]): string {
+  const toolsObj = tools.reduce<Record<string, string>>((acc, tool) => {
+    acc[tool.name] = tool.description;
+    return acc;
+  }, {});
+
+  return JSON.stringify(toolsObj, null, 4);
+}

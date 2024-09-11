@@ -1,8 +1,8 @@
+import { PromptMixin, type ModuleRecord } from "@llamaindex/core/prompts";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type {
   FaithfulnessRefinePrompt,
   FaithfulnessTextQAPrompt,
@@ -22,16 +22,16 @@ export class FaithfulnessEvaluator
   extends PromptMixin
   implements BaseEvaluator
 {
-  private serviceContext?: ServiceContext;
+  private serviceContext?: ServiceContext | undefined;
   private raiseError: boolean;
   private evalTemplate: FaithfulnessTextQAPrompt;
   private refineTemplate: FaithfulnessRefinePrompt;
 
   constructor(params?: {
-    serviceContext?: ServiceContext;
-    raiseError?: boolean;
-    faithfulnessSystemPrompt?: FaithfulnessTextQAPrompt;
-    faithFulnessRefinePrompt?: FaithfulnessRefinePrompt;
+    serviceContext?: ServiceContext | undefined;
+    raiseError?: boolean | undefined;
+    faithfulnessSystemPrompt?: FaithfulnessTextQAPrompt | undefined;
+    faithFulnessRefinePrompt?: FaithfulnessRefinePrompt | undefined;
   }) {
     super();
     this.serviceContext = params?.serviceContext;
@@ -41,6 +41,10 @@ export class FaithfulnessEvaluator
       params?.faithfulnessSystemPrompt ?? defaultFaithfulnessTextQaPrompt;
     this.refineTemplate =
       params?.faithFulnessRefinePrompt ?? defaultFaithfulnessRefinePrompt;
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 
   protected _getPrompts(): { [x: string]: any } {

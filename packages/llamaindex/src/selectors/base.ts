@@ -1,5 +1,5 @@
+import { PromptMixin } from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type { ToolMetadataOnlyDescription } from "../types.js";
 
 export interface SingleSelection {

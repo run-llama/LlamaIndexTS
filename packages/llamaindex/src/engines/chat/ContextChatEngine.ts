@@ -4,6 +4,12 @@ import type {
   MessageContent,
   MessageType,
 } from "@llamaindex/core/llms";
+import {
+  type ContextSystemPrompt,
+  type ModuleRecord,
+  PromptMixin,
+  type PromptsRecord,
+} from "@llamaindex/core/prompts";
 import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import {
   extractText,
@@ -13,11 +19,9 @@ import {
 } from "@llamaindex/core/utils";
 import type { ChatHistory } from "../../ChatHistory.js";
 import { getHistory } from "../../ChatHistory.js";
-import type { ContextSystemPrompt } from "../../Prompt.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { Settings } from "../../Settings.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
-import { PromptMixin } from "../../prompts/Mixin.js";
 import { DefaultContextGenerator } from "./DefaultContextGenerator.js";
 import type {
   ChatEngine,
@@ -33,17 +37,17 @@ import type {
 export class ContextChatEngine extends PromptMixin implements ChatEngine {
   chatModel: LLM;
   chatHistory: ChatHistory;
-  contextGenerator: ContextGenerator;
-  systemPrompt?: string;
+  contextGenerator: ContextGenerator & PromptMixin;
+  systemPrompt?: string | undefined;
 
   constructor(init: {
     retriever: BaseRetriever;
-    chatModel?: LLM;
-    chatHistory?: ChatMessage[];
-    contextSystemPrompt?: ContextSystemPrompt;
-    nodePostprocessors?: BaseNodePostprocessor[];
-    systemPrompt?: string;
-    contextRole?: MessageType;
+    chatModel?: LLM | undefined;
+    chatHistory?: ChatMessage[] | undefined;
+    contextSystemPrompt?: ContextSystemPrompt | undefined;
+    nodePostprocessors?: BaseNodePostprocessor[] | undefined;
+    systemPrompt?: string | undefined;
+    contextRole?: MessageType | undefined;
   }) {
     super();
     this.chatModel = init.chatModel ?? Settings.llm;
@@ -58,7 +62,19 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     this.systemPrompt = init.systemPrompt;
   }
 
-  protected _getPromptModules(): Record<string, ContextGenerator> {
+  protected _getPrompts(): PromptsRecord {
+    return {
+      ...this.contextGenerator.getPrompts(),
+    };
+  }
+
+  protected _updatePrompts(prompts: {
+    contextSystemPrompt: ContextSystemPrompt;
+  }): void {
+    this.contextGenerator.updatePrompts(prompts);
+  }
+
+  protected _getPromptModules(): ModuleRecord {
     return {
       contextGenerator: this.contextGenerator,
     };

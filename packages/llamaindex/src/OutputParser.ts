@@ -1,5 +1,6 @@
+import type { BaseOutputParser } from "@llamaindex/core/schema";
 import type { SubQuestion } from "./engines/query/types.js";
-import type { BaseOutputParser, StructuredOutput } from "./types.js";
+import type { StructuredOutput } from "./types.js";
 
 /**
  * Error class for output parsing. Due to the nature of LLMs, anytime we use LLM

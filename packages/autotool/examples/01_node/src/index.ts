@@ -16,7 +16,7 @@ const openai = new OpenAI();
     stream: false,
   });
 
-  const toolCalls = response.choices[0].message.tool_calls ?? [];
+  const toolCalls = response.choices[0]!.message.tool_calls ?? [];
   for (const toolCall of toolCalls) {
     toolCall.function.name;
   }

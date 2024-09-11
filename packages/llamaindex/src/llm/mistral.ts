@@ -15,14 +15,14 @@ export const ALL_AVAILABLE_MISTRAL_MODELS = {
 };
 
 export class MistralAISession {
-  apiKey?: string;
+  apiKey: string;
   private client: any;
 
-  constructor(init?: Partial<MistralAISession>) {
+  constructor(init?: { apiKey?: string | undefined }) {
     if (init?.apiKey) {
       this.apiKey = init?.apiKey;
     } else {
-      this.apiKey = getEnv("MISTRAL_API_KEY");
+      this.apiKey = getEnv("MISTRAL_API_KEY")!;
     }
     if (!this.apiKey) {
       throw new Error("Set Mistral API key in MISTRAL_API_KEY env variable"); // Overriding MistralAI package's error message
@@ -48,10 +48,10 @@ export class MistralAI extends BaseLLM {
   model: keyof typeof ALL_AVAILABLE_MISTRAL_MODELS;
   temperature: number;
   topP: number;
-  maxTokens?: number;
+  maxTokens?: number | undefined;
   apiKey?: string;
   safeMode: boolean;
-  randomSeed?: number;
+  randomSeed?: number | undefined;
 
   private session: MistralAISession;
 

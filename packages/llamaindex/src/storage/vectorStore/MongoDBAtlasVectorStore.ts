@@ -49,7 +49,7 @@ function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
   });
 
   if (filters.filters.length === 1) {
-    return createFilterObject(filters.filters[0]);
+    return createFilterObject(filters.filters[0]!);
   }
 
   if (filters.condition === FilterCondition.AND) {
@@ -123,15 +123,15 @@ export class MongoDBAtlasVectorSearch
   /**
    * Options to pass to the insertMany function when adding nodes.
    */
-  insertOptions?: BulkWriteOptions;
+  insertOptions?: BulkWriteOptions | undefined;
 
   /**
    * Function to determine the number of candidates to retrieve for a given query.
    * In case your results are not good, you might tune this value.
    *
-   * {@link https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/|Run Vector Search Queries}
+   * {@link https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/ | Run Vector Search Queries}
    *
-   * {@link https://arxiv.org/abs/1603.09320|Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs}
+   * {@link https://arxiv.org/abs/1603.09320 | Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs}
    *
    *
    * Default: query.similarityTopK * 10

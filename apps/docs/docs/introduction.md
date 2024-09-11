@@ -21,7 +21,7 @@ LlamaIndex.TS handles several major use cases:
 
 - **Structured Data Extraction**: turning complex, unstructured and semi-structured data into uniform, programmatically accessible formats.
 - **Retrieval-Augmented Generation (RAG)**: answering queries across your internal data by providing LLMs with up-to-date, semantically relevant context including Question and Answer systems and chat bots.
-- **Autonomous Agents**: building software that is capable of intelligently selecting and using tools to accomplish tasks in an interative, unsupervised manner.
+- **Autonomous Agents**: building software that is capable of intelligently selecting and using tools to accomplish tasks in an interactive, unsupervised manner.
 
 ## 👨‍👩‍👧‍👦 Who is LlamaIndex for?
 

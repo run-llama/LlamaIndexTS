@@ -9,7 +9,7 @@ import { classify } from "./classify.js";
  */
 export class UpsertsAndDeleteStrategy extends TransformComponent {
   protected docStore: BaseDocumentStore;
-  protected vectorStores?: VectorStore[];
+  protected vectorStores: VectorStore[] | undefined;
 
   constructor(docStore: BaseDocumentStore, vectorStores?: VectorStore[]) {
     super(async (nodes: BaseNode[]): Promise<BaseNode[]> => {

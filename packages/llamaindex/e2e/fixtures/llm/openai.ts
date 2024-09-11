@@ -48,8 +48,8 @@ export class OpenAI implements LLM {
         llmCompleteMockStorage.llmEventStart.shift()!["messages"];
       strictEqual(params.messages.length, chatMessage.length);
       for (let i = 0; i < chatMessage.length; i++) {
-        strictEqual(params.messages[i].role, chatMessage[i].role);
-        deepStrictEqual(params.messages[i].content, chatMessage[i].content);
+        strictEqual(params.messages[i]!.role, chatMessage[i]!.role);
+        deepStrictEqual(params.messages[i]!.content, chatMessage[i]!.content);
       }
 
       if (llmCompleteMockStorage.llmEventEnd.length > 0) {
@@ -64,7 +64,7 @@ export class OpenAI implements LLM {
                 if (idx === -1) {
                   break;
                 }
-                const chunk = llmCompleteMockStorage.llmEventStream[idx].chunk;
+                const chunk = llmCompleteMockStorage.llmEventStream[idx]!.chunk;
                 llmCompleteMockStorage.llmEventStream.splice(idx, 1);
                 yield chunk;
               }
@@ -90,8 +90,8 @@ export class OpenAI implements LLM {
       const chatMessage =
         llmCompleteMockStorage.llmEventStart.shift()!["messages"];
       strictEqual(1, chatMessage.length);
-      strictEqual("user", chatMessage[0].role);
-      strictEqual(params.prompt, chatMessage[0].content);
+      strictEqual("user", chatMessage[0]!.role);
+      strictEqual(params.prompt, chatMessage[0]!.content);
     }
     if (llmCompleteMockStorage.llmEventEnd.length > 0) {
       const response = llmCompleteMockStorage.llmEventEnd.shift()!["response"];

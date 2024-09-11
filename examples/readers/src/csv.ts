@@ -1,6 +1,7 @@
 import {
   CompactAndRefine,
   OpenAI,
+  PromptTemplate,
   ResponseSynthesizer,
   Settings,
   VectorStoreIndex,
@@ -18,14 +19,15 @@ async function main() {
   // Split text and create embeddings. Store them in a VectorStoreIndex
   const index = await VectorStoreIndex.fromDocuments(documents);
 
-  const csvPrompt = ({ context = "", query = "" }) => {
-    return `The following CSV file is loaded from ${path}
+  const csvPrompt = new PromptTemplate({
+    templateVars: ["query", "context"],
+    template: `The following CSV file is loaded from ${path}
 \`\`\`csv
-${context}
+{context}
 \`\`\`
-Given the CSV file, generate me Typescript code to answer the question: ${query}. You can use built in NodeJS functions but avoid using third party libraries.
-`;
-  };
+Given the CSV file, generate me Typescript code to answer the question: {query}. You can use built in NodeJS functions but avoid using third party libraries.
+`,
+  });
 
   const responseSynthesizer = new ResponseSynthesizer({
     responseBuilder: new CompactAndRefine(undefined, csvPrompt),

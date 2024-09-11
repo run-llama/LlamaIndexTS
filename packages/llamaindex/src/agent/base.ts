@@ -53,7 +53,7 @@ export function createTaskOutputStream<
         nextSteps: new Set(),
       };
       if (steps.length > 0) {
-        step.prevStep = steps[steps.length - 1];
+        step.prevStep = steps[steps.length - 1]!;
       }
       const taskOutputs: TaskStepOutput<
         Model,
@@ -77,7 +77,7 @@ export function createTaskOutputStream<
       context.logger.log("Finished step(id, %s).", step.id);
       // fixme: support multi-thread when there are multiple outputs
       // todo: for now we pretend there is only one task output
-      const { isLast, taskStep } = taskOutputs[0];
+      const { isLast, taskStep } = taskOutputs[0]!;
       context = {
         ...taskStep.context,
         store: {

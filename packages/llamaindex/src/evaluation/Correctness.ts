@@ -1,7 +1,7 @@
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
+import { PromptMixin } from "@llamaindex/core/prompts";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../Settings.js";
 import type { CorrectnessSystemPrompt } from "./prompts.js";
@@ -41,9 +41,18 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
     this.parserFunction = params?.parserFunction ?? defaultEvaluationParser;
   }
 
-  _updatePrompts(prompts: {
+  protected _getPrompts() {
+    return {
+      correctnessPrompt: this.correctnessPrompt,
+    };
+  }
+  protected _getPromptModules() {
+    return {};
+  }
+
+  protected _updatePrompts(prompts: {
     correctnessPrompt: CorrectnessSystemPrompt;
-  }): void {
+  }) {
     if ("correctnessPrompt" in prompts) {
       this.correctnessPrompt = prompts["correctnessPrompt"];
     }
@@ -69,11 +78,11 @@ export class CorrectnessEvaluator extends PromptMixin implements BaseEvaluator {
     const messages: ChatMessage[] = [
       {
         role: "system",
-        content: this.correctnessPrompt(),
+        content: this.correctnessPrompt.format(),
       },
       {
         role: "user",
-        content: defaultUserPrompt({
+        content: defaultUserPrompt.format({
           query: extractText(query),
           generatedAnswer: response,
           referenceAnswer: reference || "(NO REFERENCE ANSWER SUPPLIED)",

@@ -1,20 +1,33 @@
-import { OpenAPI, ProjectsService } from "@llamaindex/cloud/api";
+import { client, ProjectsService } from "@llamaindex/cloud/api";
+import { DEFAULT_BASE_URL } from "@llamaindex/core/global";
 import { getEnv } from "@llamaindex/env";
-import type { ClientParams } from "./constants.js";
-import { DEFAULT_BASE_URL } from "./constants.js";
+import type { ClientParams } from "./type.js";
 
 function getBaseUrl(baseUrl?: string): string {
   return baseUrl ?? getEnv("LLAMA_CLOUD_BASE_URL") ?? DEFAULT_BASE_URL;
 }
 
 export function getAppBaseUrl(): string {
-  return OpenAPI.BASE.replace(/api\./, "");
+  return client.getConfig().baseUrl?.replace(/api\./, "") ?? "";
 }
 
+// fixme: refactor this to init at the top level or module level
+let initOnce = false;
 export function initService({ apiKey, baseUrl }: ClientParams = {}) {
-  OpenAPI.TOKEN = apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
-  OpenAPI.BASE = getBaseUrl(baseUrl);
-  if (!OpenAPI.TOKEN) {
+  if (initOnce) {
+    return;
+  }
+  initOnce = true;
+  client.setConfig({
+    baseUrl: getBaseUrl(baseUrl),
+    throwOnError: true,
+  });
+  const token = apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
+  client.interceptors.request.use((request) => {
+    request.headers.set("Authorization", `Bearer ${token}`);
+    return request;
+  });
+  if (!token) {
     throw new Error(
       "API Key is required for LlamaCloudIndex. Please pass the apiKey parameter",
     );
@@ -25,10 +38,15 @@ export async function getProjectId(
   projectName: string,
   organizationId?: string,
 ): Promise<string> {
-  const projects = await ProjectsService.listProjectsApiV1ProjectsGet({
-    projectName: projectName,
-    organizationId: organizationId,
-  });
+  const { data: projects } = await ProjectsService.listProjectsApiV1ProjectsGet(
+    {
+      path: {
+        project_name: projectName,
+        organization_id: organizationId,
+      },
+      throwOnError: true,
+    },
+  );
 
   if (projects.length === 0) {
     throw new Error(
@@ -40,7 +58,7 @@ export async function getProjectId(
     );
   }
 
-  const project = projects[0];
+  const project = projects[0]!;
 
   if (!project.id) {
     throw new Error(`No project found with name ${projectName}`);

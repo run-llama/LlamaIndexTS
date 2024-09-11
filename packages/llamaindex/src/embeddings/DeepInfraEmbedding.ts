@@ -87,7 +87,7 @@ export class DeepInfraEmbedding extends BaseEmbedding {
   async getTextEmbedding(text: string): Promise<number[]> {
     const texts = mapPrefixWithInputs(this.textPrefix, [text]);
     const embeddings = await this.getDeepInfraEmbedding(texts);
-    return embeddings[0];
+    return embeddings[0]!;
   }
 
   async getQueryEmbedding(
@@ -97,7 +97,7 @@ export class DeepInfraEmbedding extends BaseEmbedding {
     if (text) {
       const queries = mapPrefixWithInputs(this.queryPrefix, [text]);
       const embeddings = await this.getDeepInfraEmbedding(queries);
-      return embeddings[0];
+      return embeddings[0]!;
     } else {
       return null;
     }

@@ -43,10 +43,10 @@ export class KeywordTable extends IndexStruct {
 }
 
 export interface BaseIndexInit<T> {
-  serviceContext?: ServiceContext;
+  serviceContext?: ServiceContext | undefined;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  indexStore?: BaseIndexStore;
+  indexStore?: BaseIndexStore | undefined;
   indexStruct: T;
 }
 
@@ -55,10 +55,10 @@ export interface BaseIndexInit<T> {
  * they can be retrieved for our queries.
  */
 export abstract class BaseIndex<T> {
-  serviceContext?: ServiceContext;
+  serviceContext?: ServiceContext | undefined;
   storageContext: StorageContext;
   docStore: BaseDocumentStore;
-  indexStore?: BaseIndexStore;
+  indexStore?: BaseIndexStore | undefined;
   indexStruct: T;
 
   constructor(init: BaseIndexInit<T>) {

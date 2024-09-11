@@ -163,3 +163,7 @@ Use the `rerank` method to reorder the documents based on the query.
 const result = await reranker.rerank(documents, query);
 console.log(result); // Perfectly customized results, ready to serve.
 ```
+
+## API Reference
+
+- [MixedbreadAIReranker](../../api/classes/MixedbreadAIReranker.md)
