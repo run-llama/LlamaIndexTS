@@ -17,7 +17,18 @@ describe("pg - init", () => {
     expect(await vectorStore.client()).toBe(client);
   });
 
-  test("init without", async () => {
+  test("init with pool", async () => {
+    const pool = new pg.Pool({
+      database: "llamaindex_node_test",
+    });
+    await pool.query("CREATE EXTENSION IF NOT EXISTS vector");
+    const client = await pool.connect();
+    await registerTypes(client);
+    const vectorStore = new PGVectorStore(client);
+    expect(await vectorStore.client()).toBe(client);
+  });
+
+  test("init without client", async () => {
     const vectorStore = new PGVectorStore({
       database: "llamaindex_node_test",
     });

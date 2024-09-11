@@ -46,7 +46,7 @@ export class PGVectorStore
   private connectionString: string | undefined = undefined;
   private dimensions: number = 1536;
 
-  private db?: pg.Client;
+  private db?: pg.ClientBase;
 
   /**
    * Constructs a new instance of the PGVectorStore
@@ -65,7 +65,7 @@ export class PGVectorStore
    * @param {string} config.connectionString - The connection string (optional).
    * @param {number} config.dimensions - The dimensions of the embedding model.
    */
-  constructor(config?: PGVectorStoreConfig | pg.Client) {
+  constructor(config?: PGVectorStoreConfig | pg.ClientBase) {
     // We cannot import pg from top level, it might have side effects
     //  so we only check if the config.connect function exists
     if (config && "connect" in config && typeof config.connect === "function") {
@@ -105,7 +105,7 @@ export class PGVectorStore
     return this.collection;
   }
 
-  private async getDb(): Promise<pg.Client> {
+  private async getDb(): Promise<pg.ClientBase> {
     if (!this.db) {
       try {
         const pg = await import("pg");
@@ -140,7 +140,7 @@ export class PGVectorStore
     return Promise.resolve(this.db);
   }
 
-  private async checkSchema(db: pg.Client) {
+  private async checkSchema(db: pg.ClientBase) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
     const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
