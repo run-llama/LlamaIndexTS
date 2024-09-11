@@ -33,59 +33,41 @@ export class PGVectorStore
   private collection: string = "";
   private schemaName: string = PGVECTOR_SCHEMA;
   private tableName: string = PGVECTOR_TABLE;
+  private connectionString: string | undefined = undefined;
   private dimensions: number = 1536;
-  private pgConfig: pg.ClientConfig | undefined = undefined;
 
   private db?: pg.Client;
 
   /**
    * Constructs a new instance of the PGVectorStore
    *
-   * If the `connectionString` is not provided the following config parameters are
+   * If the `connectionString` is not provided the following env variables are
    * used to connect to the DB:
-   * host=your database host
-   * user=your database user
-   * password=your database password
-   * database=your database name
-   * port=your database port
+   * PGHOST=your database host
+   * PGUSER=your database user
+   * PGPASSWORD=your database password
+   * PGDATABASE=your database name
+   * PGPORT=your database port
    *
    * @param {object} config - The configuration settings for the instance.
    * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
    * @param {string} config.tableName - The name of the table (optional). Defaults to PGVECTOR_TABLE.
-   * @param {number} config.dimensions - The dimensions of the embedding model.
    * @param {string} config.connectionString - The connection string (optional).
-   * @param {string} config.host - The host of the database (optional).
-   * @param {string} config.user - The user of the database (optional).
-   * @param {string} config.password - The password of the database (optional).
-   * @param {string} config.database - The database name (optional).
-   * @param {number} config.port - The port of the database (optional).
+   * @param {number} config.dimensions - The dimensions of the embedding model.
    */
   constructor(
     config?: {
       schemaName?: string;
       tableName?: string;
-      dimensions?: number;
       connectionString?: string;
-      host?: string;
-      user?: string;
-      password?: string;
-      database?: string;
-      port?: number;
+      dimensions?: number;
     } & Partial<IEmbedModel>,
   ) {
     super(config?.embedModel);
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+    this.connectionString = config?.connectionString;
     this.dimensions = config?.dimensions ?? 1536;
-    this.pgConfig = config?.connectionString
-      ? { connectionString: config.connectionString }
-      : {
-          host: config?.host,
-          user: config?.user,
-          password: config?.password,
-          database: config?.database,
-          port: config?.port,
-        };
   }
 
   /**
@@ -116,11 +98,11 @@ export class PGVectorStore
         const pg = await import("pg");
         const { Client } = pg.default ? pg.default : pg;
 
-        const db = new Client(this.pgConfig);
+        const { registerType } = await import("pgvector/pg");
+        const db = new Client({ connectionString: this.connectionString });
         await db.connect();
 
         // Check vector extension
-        const { registerType } = await import("pgvector/pg");
         await db.query("CREATE EXTENSION IF NOT EXISTS vector");
         await registerType(db);
 
@@ -160,10 +142,10 @@ export class PGVectorStore
   }
 
   /**
-   * Connects to the database specified in the config and initializes the
-   * vector extension, tables, and indexes if not found.
-   *
-   * @returns A connection to the database
+   * Connects to the database specified in environment vars.
+   * This method also checks and creates the vector extension,
+   * the destination table and indexes if not found.
+   * @returns A connection to the database, or the error encountered while connecting/setting up.
    */
   client() {
     return this.getDb();

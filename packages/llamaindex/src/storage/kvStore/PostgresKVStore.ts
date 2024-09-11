@@ -10,31 +10,18 @@ const DEFAULT_TABLE_NAME = "llamaindex_kv_store";
 export class PostgresKVStore extends BaseKVStore {
   private schemaName: string;
   private tableName: string;
-  private pgConfig: pg.ClientConfig | undefined = undefined;
+  private connectionString: string | undefined = undefined;
   private db?: pg.Client;
 
   constructor(config: {
     schemaName: string;
     tableName: string;
     connectionString?: string;
-    host?: string;
-    user?: string;
-    password?: string;
-    database?: string;
-    port?: number;
   }) {
     super();
     this.schemaName = config?.schemaName || DEFAULT_SCHEMA_NAME;
     this.tableName = config?.tableName || DEFAULT_TABLE_NAME;
-    this.pgConfig = config?.connectionString
-      ? { connectionString: config.connectionString }
-      : {
-          host: config?.host,
-          user: config?.user,
-          password: config?.password,
-          database: config?.database,
-          port: config?.port,
-        };
+    this.connectionString = config?.connectionString;
   }
 
   private async getDb(): Promise<pg.Client> {
@@ -42,7 +29,7 @@ export class PostgresKVStore extends BaseKVStore {
       try {
         const pg = await import("pg");
         const { Client } = pg.default ? pg.default : pg;
-        const db = new Client(this.pgConfig);
+        const db = new Client({ connectionString: this.connectionString });
         await db.connect();
         await this.checkSchema(db);
         this.db = db;
