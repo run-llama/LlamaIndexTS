@@ -13,10 +13,10 @@ export class PostgresKVStore extends BaseKVStore {
   private connectionString: string | undefined = undefined;
   private db?: pg.Client;
 
-  constructor(config: {
-    schemaName: string;
-    tableName: string;
-    connectionString?: string;
+  constructor(config?: {
+    schemaName?: string | undefined;
+    tableName?: string | undefined;
+    connectionString?: string | undefined;
   }) {
     super();
     this.schemaName = config?.schemaName || DEFAULT_SCHEMA_NAME;
@@ -38,13 +38,11 @@ export class PostgresKVStore extends BaseKVStore {
         return Promise.reject(err instanceof Error ? err : new Error(`${err}`));
       }
     }
-
     return Promise.resolve(this.db);
   }
 
   private async checkSchema(db: pg.Client) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
-
     const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName} (
       id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       collection VARCHAR,
@@ -52,11 +50,9 @@ export class PostgresKVStore extends BaseKVStore {
       value JSONB DEFAULT '{}'
     )`;
     await db.query(tbl);
-
     const idxs = `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);
       CREATE INDEX IF NOT EXISTS idx_${this.tableName}_key ON ${this.schemaName}.${this.tableName} (key);`;
     await db.query(idxs);
-
     return db;
   }
 
@@ -70,10 +66,8 @@ export class PostgresKVStore extends BaseKVStore {
     collection: string = DEFAULT_COLLECTION,
   ): Promise<void> {
     const db = await this.getDb();
-
     try {
       await db.query("BEGIN");
-
       const sql = `
         INSERT INTO ${this.schemaName}.${this.tableName}
           (collection, key, value)
@@ -84,7 +78,6 @@ export class PostgresKVStore extends BaseKVStore {
           value = EXCLUDED.value
         RETURNING id
       `;
-
       const values = [collection, key, val];
       await db.query(sql, values);
       await db.query("COMMIT");
@@ -99,7 +92,6 @@ export class PostgresKVStore extends BaseKVStore {
     collection: string = DEFAULT_COLLECTION,
   ): Promise<any> {
     const db = await this.getDb();
-
     try {
       await db.query("BEGIN");
       const sql = `SELECT * FROM ${this.schemaName}.${this.tableName} WHERE key = $1 AND collection = $2`;
@@ -114,10 +106,8 @@ export class PostgresKVStore extends BaseKVStore {
 
   async getAll(collection: string = DEFAULT_COLLECTION): Promise<DataType> {
     const db = await this.getDb();
-
     try {
       await db.query("BEGIN");
-
       const sql = `SELECT * FROM ${this.schemaName}.${this.tableName} WHERE collection = $1`;
       const result = await db.query(sql, [collection]);
       await db.query("COMMIT");
@@ -138,10 +128,8 @@ export class PostgresKVStore extends BaseKVStore {
     const db = await this.getDb();
     try {
       await db.query("BEGIN");
-
       const sql = `DELETE FROM ${this.schemaName}.${this.tableName} WHERE key = $1 AND collection = $2`;
       const result = await db.query(sql, [key, collection]);
-
       await db.query("COMMIT");
       return !!result.rowCount && result.rowCount > 0;
     } catch (error) {
