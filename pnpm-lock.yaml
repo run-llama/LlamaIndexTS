@@ -840,6 +840,9 @@ importers:
       typescript:
         specifier: 5.5.4
         version: 5.5.4
+      vite-plugin-wasm:
+        specifier: ^3.3.0
+        version: 3.3.0(vite@5.4.2(@types/node@22.5.1)(terser@5.31.6))
 
   packages/llamaindex/tests:
     devDependencies:
@@ -10688,6 +10691,11 @@ packages:
     resolution: {integrity: sha512-LdsW4pxj0Ot69FAoXZ1yTnA9bjGohr2yNBU7QKRxpz8ITSkhuDl6h3zS/tvgz4qrNjeRnvrWeXQ8ZF7Um4W00Q==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
+
+  vite-plugin-wasm@3.3.0:
+    resolution: {integrity: sha512-tVhz6w+W9MVsOCHzxo6SSMSswCeIw4HTrXEi6qL3IRzATl83jl09JVO1djBqPSwfjgnpVHNLYcaMbaDX5WB/pg==}
+    peerDependencies:
+      vite: ^2 || ^3 || ^4 || ^5
 
   vite@5.4.2:
     resolution: {integrity: sha512-dDrQTRHp5C1fTFzcSaMxjk6vdpKvT+2/mIdE07Gw2ykehT49O0z/VHS3zZ8iV/Gh8BJJKHWOe5RjaNrW5xf/GA==}
@@ -23521,6 +23529,10 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-wasm@3.3.0(vite@5.4.2(@types/node@22.5.1)(terser@5.31.6)):
+    dependencies:
+      vite: 5.4.2(@types/node@22.5.1)(terser@5.31.6)
 
   vite@5.4.2(@types/node@22.5.1)(terser@5.31.6):
     dependencies:
