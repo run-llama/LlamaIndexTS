@@ -33,41 +33,59 @@ export class PGVectorStore
   private collection: string = "";
   private schemaName: string = PGVECTOR_SCHEMA;
   private tableName: string = PGVECTOR_TABLE;
-  private connectionString: string | undefined = undefined;
   private dimensions: number = 1536;
+  private pgConfig: pg.ClientConfig | undefined = undefined;
 
   private db?: pg.Client;
 
   /**
    * Constructs a new instance of the PGVectorStore
    *
-   * If the `connectionString` is not provided the following env variables are
+   * If the `connectionString` is not provided the following config parameters are
    * used to connect to the DB:
-   * PGHOST=your database host
-   * PGUSER=your database user
-   * PGPASSWORD=your database password
-   * PGDATABASE=your database name
-   * PGPORT=your database port
+   * host=your database host
+   * user=your database user
+   * password=your database password
+   * database=your database name
+   * port=your database port
    *
    * @param {object} config - The configuration settings for the instance.
    * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
    * @param {string} config.tableName - The name of the table (optional). Defaults to PGVECTOR_TABLE.
-   * @param {string} config.connectionString - The connection string (optional).
    * @param {number} config.dimensions - The dimensions of the embedding model.
+   * @param {string} config.connectionString - The connection string (optional).
+   * @param {string} config.host - The host of the database (optional).
+   * @param {string} config.user - The user of the database (optional).
+   * @param {string} config.password - The password of the database (optional).
+   * @param {string} config.database - The database name (optional).
+   * @param {number} config.port - The port of the database (optional).
    */
   constructor(
     config?: {
       schemaName?: string;
       tableName?: string;
-      connectionString?: string;
       dimensions?: number;
+      connectionString?: string;
+      host?: string;
+      user?: string;
+      password?: string;
+      database?: string;
+      port?: number;
     } & Partial<IEmbedModel>,
   ) {
     super(config?.embedModel);
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
-    this.connectionString = config?.connectionString;
     this.dimensions = config?.dimensions ?? 1536;
+    this.pgConfig = config?.connectionString
+      ? { connectionString: config.connectionString }
+      : {
+          host: config?.host,
+          user: config?.user,
+          password: config?.password,
+          database: config?.database,
+          port: config?.port,
+        };
   }
 
   /**
@@ -98,15 +116,11 @@ export class PGVectorStore
         const pg = await import("pg");
         const { Client } = pg.default ? pg.default : pg;
 
-        const { registerType } = await import("pgvector/pg");
-        // Create DB connection
-        // Read connection params from env - see comment block above
-        const db = new Client({
-          connectionString: this.connectionString,
-        });
+        const db = new Client(this.pgConfig);
         await db.connect();
 
         // Check vector extension
+        const { registerType } = await import("pgvector/pg");
         await db.query("CREATE EXTENSION IF NOT EXISTS vector");
         await registerType(db);
 
@@ -127,18 +141,18 @@ export class PGVectorStore
   private async checkSchema(db: pg.Client) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
-    const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
-                                                                                  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName} (
+      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       external_id VARCHAR,
       collection VARCHAR,
       document TEXT,
       metadata JSONB DEFAULT '{}',
       embeddings VECTOR(${this.dimensions})
-      )`;
+    )`;
     await db.query(tbl);
 
     const idxs = `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_external_id ON ${this.schemaName}.${this.tableName} (external_id);
-    CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
+      CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
     await db.query(idxs);
 
     // TODO add IVFFlat or HNSW indexing?
@@ -146,10 +160,10 @@ export class PGVectorStore
   }
 
   /**
-   * Connects to the database specified in environment vars.
-   * This method also checks and creates the vector extension,
-   * the destination table and indexes if not found.
-   * @returns A connection to the database, or the error encountered while connecting/setting up.
+   * Connects to the database specified in the config and initializes the
+   * vector extension, tables, and indexes if not found.
+   *
+   * @returns A connection to the database
    */
   client() {
     return this.getDb();
@@ -162,7 +176,7 @@ export class PGVectorStore
    */
   async clearCollection() {
     const sql: string = `DELETE FROM ${this.schemaName}.${this.tableName}
-                         WHERE collection = $1`;
+      WHERE collection = $1`;
 
     const db = await this.getDb();
     const ret = await db.query(sql, [this.collection]);
@@ -256,7 +270,7 @@ export class PGVectorStore
    * @param deleteKwargs Required by VectorStore interface.  Currently ignored.
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, deleteKwargs?: any): Promise<void> {
+  async delete(refDocId: string, _deleteKwargs?: any): Promise<void> {
     const collectionCriteria = this.collection.length
       ? "AND collection = $2"
       : "";
@@ -388,12 +402,12 @@ export class PGVectorStore
   /**
    * Query the vector store for the closest matching data to the query embeddings
    * @param query The VectorStoreQuery to be used
-   * @param options Required by VectorStore interface.  Currently ignored.
+   * @param _options Required by VectorStore interface.  Currently ignored.
    * @returns Zero or more Document instances with data from the vector store.
    */
   async query(
     query: VectorStoreQuery,
-    options?: any,
+    _options?: any,
   ): Promise<VectorStoreQueryResult> {
     // TODO QUERY TYPES:
     //    Distance:       SELECT embedding <=> $1 AS distance FROM items;
@@ -409,7 +423,7 @@ export class PGVectorStore
       : [embedding];
 
     const filterClauses: string[] = [];
-    query.filters?.filters.forEach((filter, index) => {
+    query.filters?.filters.forEach((filter) => {
       const paramIndex = params.length + 1;
       const { clause, param } = this.buildFilterClause(filter, paramIndex);
       filterClauses.push(clause);
@@ -460,11 +474,10 @@ export class PGVectorStore
 
   /**
    * Required by VectorStore interface.  Currently ignored.
-   * @param persistPath
-   * @param fs
+   * @param _persistPath
    * @returns Resolved Promise.
    */
-  persist(persistPath: string): Promise<void> {
+  persist(_persistPath: string): Promise<void> {
     return Promise.resolve();
   }
 }
