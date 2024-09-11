@@ -1,10 +1,13 @@
 export { SimpleChatStore } from "./chatStore/SimpleChatStore.js";
 export * from "./chatStore/types.js";
+export { PostgresDocumentStore } from "./docStore/PostgresDocumentStore.js";
 export { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 export * from "./docStore/types.js";
 export * from "./FileSystem.js";
+export { PostgresIndexStore } from "./indexStore/PostgresIndexStore.js";
 export { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
 export * from "./indexStore/types.js";
+export { PostgresKVStore } from "./kvStore/PostgresKVStore.js";
 export { SimpleKVStore } from "./kvStore/SimpleKVStore.js";
 export * from "./kvStore/types.js";
 export * from "./StorageContext.js";
