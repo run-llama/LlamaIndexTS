@@ -189,6 +189,21 @@ export async function chatWithAgent(
 }
 ```
 
+### Vite
+
+We have some wasm dependencies for better performance. You can use `vite-plugin-wasm` to load them.
+
+```ts
+import wasm from "vite-plugin-wasm";
+
+export default {
+  plugins: [wasm()],
+  ssr: {
+    external: ["tiktoken"],
+  },
+};
+```
+
 ## Playground
 
 Check out our NextJS playground at https://llama-playground.vercel.app/. The source is available at https://github.com/run-llama/ts-playground
