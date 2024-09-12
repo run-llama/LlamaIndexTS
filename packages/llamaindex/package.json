@@ -33,6 +33,7 @@
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
     "@mistralai/mistralai": "^1.0.4",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^3.0.2",

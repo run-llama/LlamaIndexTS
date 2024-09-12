@@ -2,7 +2,7 @@ import {
   type CallbackManager,
   Settings as CoreSettings,
 } from "@llamaindex/core/global";
-import { OpenAI } from "./llm/openai.js";
+import { OpenAI } from "@llamaindex/openai";
 
 import { PromptHelper } from "@llamaindex/core/indices";
 
