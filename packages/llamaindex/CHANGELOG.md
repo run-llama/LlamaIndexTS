@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.5.26
+
+### Patch Changes
+
+- ffe0cd1: faet: add openai o1 support
+- ffe0cd1: feat: add PostgreSQL storage
+
 ## 0.5.25
 
 ### Patch Changes
