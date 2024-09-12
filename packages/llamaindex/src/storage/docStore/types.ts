@@ -65,7 +65,7 @@ export abstract class BaseDocumentStore {
   }): Promise<Record<number, BaseNode>> {
     const result: Record<number, BaseNode> = {};
     for (const index in nodeIdDict) {
-      result[index] = await this.getNode(nodeIdDict[index]);
+      result[index] = await this.getNode(nodeIdDict[index]!);
     }
     return result;
   }

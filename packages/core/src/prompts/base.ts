@@ -18,7 +18,7 @@ export type BasePromptTemplateOptions<
     // loose type for better type inference
     | readonly string[];
   options?: Partial<Record<TemplatesVar[number] | (string & {}), string>>;
-  outputParser?: BaseOutputParser;
+  outputParser?: BaseOutputParser | undefined;
   templateVarMappings?: Partial<
     Record<Vars[number] | (string & {}), TemplatesVar[number] | (string & {})>
   >;
@@ -34,7 +34,7 @@ export abstract class BasePromptTemplate<
   metadata: Metadata = {};
   templateVars: Set<string> = new Set();
   options: Partial<Record<TemplatesVar[number] | (string & {}), string>> = {};
-  outputParser?: BaseOutputParser;
+  outputParser: BaseOutputParser | undefined;
   templateVarMappings: Partial<
     Record<Vars[number] | (string & {}), TemplatesVar[number] | (string & {})>
   > = {};

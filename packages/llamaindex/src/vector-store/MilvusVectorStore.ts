@@ -1,12 +1,13 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import type { ChannelOptions } from "@grpc/grpc-js";
 import { BaseNode, MetadataMode, type Metadata } from "@llamaindex/core/schema";
+import { getEnv } from "@llamaindex/env";
 import {
   DataType,
   MilvusClient,
   type ClientConfig,
   type DeleteReq,
   type RowData,
+  type SearchSimpleReq,
 } from "@zilliz/milvus2-sdk-node";
 import {
   VectorStoreBase,
@@ -110,10 +111,10 @@ export class MilvusVectorStore
       this.milvusClient = init.milvusClient;
     } else {
       const configOrAddress =
-        init?.params?.configOrAddress ?? process.env.MILVUS_ADDRESS;
-      const ssl = init?.params?.ssl ?? process.env.MILVUS_SSL === "true";
-      const username = init?.params?.username ?? process.env.MILVUS_USERNAME;
-      const password = init?.params?.password ?? process.env.MILVUS_PASSWORD;
+        init?.params?.configOrAddress ?? getEnv("MILVUS_ADDRESS");
+      const ssl = init?.params?.ssl ?? getEnv("MILVUS_SSL") === "true";
+      const username = init?.params?.username ?? getEnv("MILVUS_USERNAME");
+      const password = init?.params?.password ?? getEnv("MILVUS_PASSWORD");
 
       if (!configOrAddress) {
         throw new Error("Must specify MILVUS_ADDRESS via env variable.");
@@ -249,7 +250,7 @@ export class MilvusVectorStore
   ): Promise<VectorStoreQueryResult> {
     await this.ensureCollection();
 
-    const found = await this.milvusClient.search({
+    const found = await this.milvusClient.search(<SearchSimpleReq>{
       collection_name: this.collectionName,
       limit: query.similarityTopK,
       vector: query.queryEmbedding,

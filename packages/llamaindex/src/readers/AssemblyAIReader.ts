@@ -35,7 +35,7 @@ abstract class AssemblyAIReader implements BaseReader {
       options = {};
     }
     if (!options.apiKey) {
-      options.apiKey = getEnv("ASSEMBLYAI_API_KEY");
+      options.apiKey = getEnv("ASSEMBLYAI_API_KEY")!;
     }
     if (!options.apiKey) {
       throw new Error(
@@ -79,7 +79,7 @@ class AudioTranscriptReader extends AssemblyAIReader {
    */
   async loadData(params: TranscribeParams | string): Promise<Document[]> {
     const transcript = await this.transcribeOrGetTranscript(params);
-    return [new Document({ text: transcript.text || undefined })];
+    return [new Document({ text: transcript.text ?? undefined })];
   }
 }
 

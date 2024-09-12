@@ -19,12 +19,12 @@ Header 2 content
     ]);
 
     expect(splits.length).toBe(2);
-    expect(splits[0].metadata).toEqual({ Header_1: "Main Header" });
-    expect(splits[1].metadata).toEqual({ Header_1: "Header 2" });
-    expect(splits[0].getContent(MetadataMode.NONE)).toStrictEqual(
+    expect(splits[0]!.metadata).toEqual({ Header_1: "Main Header" });
+    expect(splits[1]!.metadata).toEqual({ Header_1: "Header 2" });
+    expect(splits[0]!.getContent(MetadataMode.NONE)).toStrictEqual(
       "Main Header\n\nHeader 1 content",
     );
-    expect(splits[1].getContent(MetadataMode.NONE)).toStrictEqual(
+    expect(splits[1]!.getContent(MetadataMode.NONE)).toStrictEqual(
       "Header 2\nHeader 2 content",
     );
   });
@@ -89,16 +89,16 @@ Content
       }),
     ]);
     expect(splits.length).toBe(4);
-    expect(splits[0].metadata).toEqual({ Header_1: "Main Header" });
-    expect(splits[1].metadata).toEqual({
+    expect(splits[0]!.metadata).toEqual({ Header_1: "Main Header" });
+    expect(splits[1]!.metadata).toEqual({
       Header_1: "Main Header",
       Header_2: "Sub-header",
     });
-    expect(splits[2].metadata).toEqual({
+    expect(splits[2]!.metadata).toEqual({
       Header_1: "Main Header",
       Header_2: "Sub-header",
       Header_3: "Sub-sub header",
     });
-    expect(splits[3].metadata).toEqual({ Header_1: "New title" });
+    expect(splits[3]!.metadata).toEqual({ Header_1: "New title" });
   });
 });

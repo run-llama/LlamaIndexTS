@@ -89,8 +89,8 @@ function extractFinalResponse(
     );
   }
 
-  const thought = match[1].trim();
-  const answer = match[2].trim();
+  const thought = match[1]!.trim();
+  const answer = match[2]!.trim();
   return [thought, answer];
 }
 
@@ -108,9 +108,9 @@ function extractToolUse(
     );
   }
 
-  const thought = match[1].trim();
-  const action = match[2].trim();
-  const actionInput = match[3].trim();
+  const thought = match[1]!.trim();
+  const action = match[2]!.trim();
+  const actionInput = match[3]!.trim();
   return [thought, action, actionInput];
 }
 

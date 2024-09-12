@@ -13,8 +13,14 @@ export async function resolve(specifier, context, nextResolve) {
     return result;
   }
   const targetUrl = fileURLToPath(result.url).replace(/\.js$/, ".ts");
-  const relativePath = relative(packageDistDir, targetUrl);
-  if (relativePath.startsWith(".") || relativePath.startsWith("/")) {
+  let relativePath = relative(packageDistDir, targetUrl);
+  // todo: make it more generic if we have more sub modules fixtures in the future
+  if (relativePath.startsWith("../../llm/openai")) {
+    relativePath = relativePath.replace(
+      "../../llm/openai/dist/index.ts",
+      "llm/openai.ts",
+    );
+  } else if (relativePath.startsWith(".") || relativePath.startsWith("/")) {
     return result;
   }
   const url = pathToFileURL(join(fixturesDir, relativePath)).toString();

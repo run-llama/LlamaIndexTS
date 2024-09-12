@@ -52,20 +52,20 @@ export abstract class BaseExtractor extends TransformComponent {
     const curMetadataList = await this.extract(newNodes);
 
     for (const idx in newNodes) {
-      newNodes[idx].metadata = {
-        ...newNodes[idx].metadata,
+      newNodes[idx]!.metadata = {
+        ...newNodes[idx]!.metadata,
         ...curMetadataList[idx],
       };
     }
 
     for (const idx in newNodes) {
       if (excludedEmbedMetadataKeys) {
-        newNodes[idx].excludedEmbedMetadataKeys.concat(
+        newNodes[idx]!.excludedEmbedMetadataKeys.concat(
           excludedEmbedMetadataKeys,
         );
       }
       if (excludedLlmMetadataKeys) {
-        newNodes[idx].excludedLlmMetadataKeys.concat(excludedLlmMetadataKeys);
+        newNodes[idx]!.excludedLlmMetadataKeys.concat(excludedLlmMetadataKeys);
       }
       if (!this.disableTemplateRewrite) {
         if (newNodes[idx] instanceof TextNode) {

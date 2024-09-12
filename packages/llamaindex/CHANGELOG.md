@@ -1,5 +1,58 @@
 # llamaindex
 
+## 0.5.27
+
+### Patch Changes
+
+- 7edeb1c: feat: decouple openai from `llamaindex` module
+
+  This should be a non-breaking change, but just you can now only install `@llamaindex/openai` to reduce the bundle size in the future
+
+- Updated dependencies [7edeb1c]
+  - @llamaindex/openai@0.1.1
+
+## 0.5.26
+
+### Patch Changes
+
+- ffe0cd1: faet: add openai o1 support
+- ffe0cd1: feat: add PostgreSQL storage
+
+## 0.5.25
+
+### Patch Changes
+
+- 4810364: fix: handle `RouterQueryEngine` with string query
+- d3bc663: refactor: export vector store only in nodejs environment on top level
+
+  If you see some missing modules error, please change vector store related imports to `llamaindex/vector-store`
+
+- Updated dependencies [4810364]
+  - @llamaindex/cloud@0.2.4
+
+## 0.5.24
+
+### Patch Changes
+
+- Updated dependencies [0bf8d80]
+  - @llamaindex/cloud@0.2.3
+
+## 0.5.23
+
+### Patch Changes
+
+- Updated dependencies [711c814]
+  - @llamaindex/core@0.1.12
+
+## 0.5.22
+
+### Patch Changes
+
+- 4648da6: fix: wrong tiktoken version caused NextJs CL template run fail
+- Updated dependencies [4648da6]
+  - @llamaindex/env@0.1.10
+  - @llamaindex/core@0.1.11
+
 ## 0.5.21
 
 ### Patch Changes

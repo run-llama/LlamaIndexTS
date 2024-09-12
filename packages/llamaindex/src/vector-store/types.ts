@@ -1,6 +1,6 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode, ModalityType } from "@llamaindex/core/schema";
-import { getEmbeddedModel } from "../../internal/settings/EmbedModel.js";
+import { getEmbeddedModel } from "../internal/settings/EmbedModel.js";
 
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];
@@ -72,7 +72,7 @@ export interface VectorStoreQuery {
   queryStr?: string;
   mode: VectorStoreQueryMode;
   alpha?: number;
-  filters?: MetadataFilters;
+  filters?: MetadataFilters | undefined;
   mmrThreshold?: number;
 }
 

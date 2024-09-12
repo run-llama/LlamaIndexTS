@@ -38,13 +38,15 @@ export type RelatedNodeType<T extends Metadata = Metadata> =
   | RelatedNodeInfo<T>[];
 
 export type BaseNodeParams<T extends Metadata = Metadata> = {
-  id_?: string;
-  metadata?: T;
-  excludedEmbedMetadataKeys?: string[];
-  excludedLlmMetadataKeys?: string[];
-  relationships?: Partial<Record<NodeRelationship, RelatedNodeType<T>>>;
-  hash?: string;
-  embedding?: number[];
+  id_?: string | undefined;
+  metadata?: T | undefined;
+  excludedEmbedMetadataKeys?: string[] | undefined;
+  excludedLlmMetadataKeys?: string[] | undefined;
+  relationships?:
+    | Partial<Record<NodeRelationship, RelatedNodeType<T>>>
+    | undefined;
+  hash?: string | undefined;
+  embedding?: number[] | undefined;
 };
 
 /**
@@ -58,7 +60,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * Set to a UUID by default.
    */
   id_: string;
-  embedding?: number[];
+  embedding: number[] | undefined;
 
   // Metadata fields
   metadata: T;
@@ -198,11 +200,11 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 
 export type TextNodeParams<T extends Metadata = Metadata> =
   BaseNodeParams<T> & {
-    text?: string;
-    textTemplate?: string;
-    startCharIdx?: number;
-    endCharIdx?: number;
-    metadataSeparator?: string;
+    text?: string | undefined;
+    textTemplate?: string | undefined;
+    startCharIdx?: number | undefined;
+    endCharIdx?: number | undefined;
+    metadataSeparator?: string | undefined;
   };
 
 /**
@@ -418,7 +420,7 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
  */
 export interface NodeWithScore<T extends Metadata = Metadata> {
   node: BaseNode<T>;
-  score?: number;
+  score?: number | undefined;
 }
 
 export enum ModalityType {

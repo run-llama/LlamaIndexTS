@@ -49,7 +49,7 @@ function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
   });
 
   if (filters.filters.length === 1) {
-    return createFilterObject(filters.filters[0]);
+    return createFilterObject(filters.filters[0]!);
   }
 
   if (filters.condition === FilterCondition.AND) {
@@ -123,7 +123,7 @@ export class MongoDBAtlasVectorSearch
   /**
    * Options to pass to the insertMany function when adding nodes.
    */
-  insertOptions?: BulkWriteOptions;
+  insertOptions?: BulkWriteOptions | undefined;
 
   /**
    * Function to determine the number of candidates to retrieve for a given query.

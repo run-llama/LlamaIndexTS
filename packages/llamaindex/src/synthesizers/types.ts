@@ -22,7 +22,7 @@ export interface BaseSynthesizer extends PromptMixin {
 export interface ResponseBuilderQuery {
   query: QueryType;
   textChunks: string[];
-  prevResponse?: string;
+  prevResponse?: string | undefined;
 }
 
 /**

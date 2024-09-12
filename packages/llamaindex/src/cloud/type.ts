@@ -1,10 +1,13 @@
 import type { ServiceContext } from "../ServiceContext.js";
 
-export type ClientParams = { apiKey?: string; baseUrl?: string };
+export type ClientParams = {
+  apiKey?: string | undefined;
+  baseUrl?: string | undefined;
+};
 
 export type CloudConstructorParams = {
   name: string;
   projectName: string;
-  organizationId?: string;
-  serviceContext?: ServiceContext;
+  organizationId?: string | undefined;
+  serviceContext?: ServiceContext | undefined;
 } & ClientParams;

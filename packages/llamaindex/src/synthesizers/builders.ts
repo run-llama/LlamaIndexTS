@@ -1,3 +1,4 @@
+import { getBiggestPrompt, type PromptHelper } from "@llamaindex/core/indices";
 import type { LLM } from "@llamaindex/core/llms";
 import {
   PromptMixin,
@@ -12,7 +13,6 @@ import {
 } from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
 import { extractText, streamConverter } from "@llamaindex/core/utils";
-import { getBiggestPrompt, type PromptHelper } from "../PromptHelper.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import {
   llmFromSettingsOrContext,
@@ -74,10 +74,10 @@ export class SimpleResponseBuilder
       context: textChunks.join("\n\n"),
     });
     if (stream) {
-      const response = await this.llm.complete({ prompt, stream });
+      const response = await this.llm.complete({ prompt, stream: true });
       return streamConverter(response, (chunk) => chunk.text);
     } else {
-      const response = await this.llm.complete({ prompt, stream });
+      const response = await this.llm.complete({ prompt, stream: false });
       return response.text;
     }
   }
@@ -144,7 +144,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     let response: AsyncIterable<string> | string | undefined = prevResponse;
 
     for (let i = 0; i < textChunks.length; i++) {
-      const chunk = textChunks[i];
+      const chunk = textChunks[i]!;
       const lastChunk = i === textChunks.length - 1;
       if (!response) {
         response = await this.giveResponseSingle(
@@ -178,7 +178,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     let response: AsyncIterable<string> | string | undefined = undefined;
 
     for (let i = 0; i < textChunks.length; i++) {
-      const chunk = textChunks[i];
+      const chunk = textChunks[i]!;
       const lastChunk = i === textChunks.length - 1;
       if (!response) {
         response = await this.complete({
@@ -216,7 +216,7 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     let response: AsyncIterable<string> | string = initialReponse;
 
     for (let i = 0; i < textChunks.length; i++) {
-      const chunk = textChunks[i];
+      const chunk = textChunks[i]!;
       const lastChunk = i === textChunks.length - 1;
       response = await this.complete({
         prompt: refineTemplate.format({
@@ -341,7 +341,7 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
     if (packedTextChunks.length === 1) {
       const params = {
         prompt: this.summaryTemplate.format({
-          context: packedTextChunks[0],
+          context: packedTextChunks[0]!,
           query: extractText(query),
         }),
       };

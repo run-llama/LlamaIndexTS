@@ -1,4 +1,5 @@
 import type { Tokenizer } from "@llamaindex/env";
+import type { LLM } from "../llms";
 import {
   type CallbackManager,
   getCallbackManager,
@@ -10,6 +11,7 @@ import {
   setChunkSize,
   withChunkSize,
 } from "./settings/chunk-size";
+import { getLLM, setLLM, withLLM } from "./settings/llm";
 import {
   getTokenizer,
   setTokenizer,
@@ -17,6 +19,15 @@ import {
 } from "./settings/tokenizer";
 
 export const Settings = {
+  get llm() {
+    return getLLM();
+  },
+  set llm(llm) {
+    setLLM(llm);
+  },
+  withLLM<Result>(llm: LLM, fn: () => Result): Result {
+    return withLLM(llm, fn);
+  },
   get tokenizer() {
     return getTokenizer();
   },

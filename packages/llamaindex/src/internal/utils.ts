@@ -63,7 +63,7 @@ export function getTopKEmbeddings(
   const similarities: { similarity: number; id: number }[] = [];
 
   for (let i = 0; i < embeddings.length; i++) {
-    const sim = similarity(queryEmbedding, embeddings[i]);
+    const sim = similarity(queryEmbedding, embeddings[i]!);
     if (similarityCutoff == null || sim > similarityCutoff) {
       similarities.push({ similarity: sim, id: embeddingIds[i] });
     }
@@ -78,8 +78,8 @@ export function getTopKEmbeddings(
     if (i >= similarities.length) {
       break;
     }
-    resultSimilarities.push(similarities[i].similarity);
-    resultIds.push(similarities[i].id);
+    resultSimilarities.push(similarities[i]!.similarity);
+    resultIds.push(similarities[i]!.id);
   }
 
   return [resultSimilarities, resultIds];
@@ -176,7 +176,7 @@ export async function imageToString(input: ImageType): Promise<string> {
 export function stringToImage(input: string): ImageType {
   if (input.startsWith("data:")) {
     // if the input is a base64 data URL, convert it back to a Blob
-    const base64Data = input.split(",")[1];
+    const base64Data = input.split(",")[1]!;
     const byteArray = Buffer.from(base64Data, "base64");
     return new Blob([byteArray]);
   } else if (input.startsWith("http://") || input.startsWith("https://")) {

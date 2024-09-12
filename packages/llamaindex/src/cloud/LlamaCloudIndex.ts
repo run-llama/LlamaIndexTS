@@ -13,8 +13,8 @@ import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { getEnv } from "@llamaindex/env";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings } from "../Settings.js";
-import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 
 export class LlamaCloudIndex {
   params: CloudConstructorParams;
@@ -38,10 +38,13 @@ export class LlamaCloudIndex {
     }
 
     while (true) {
-      const pipelineStatus =
+      const { data: pipelineStatus } =
         await PipelinesService.getPipelineStatusApiV1PipelinesPipelineIdStatusGet(
           {
-            pipelineId,
+            path: {
+              pipeline_id: pipelineId,
+            },
+            throwOnError: true,
           },
         );
 
@@ -90,9 +93,14 @@ export class LlamaCloudIndex {
       const docsToRemove = new Set<string>();
 
       for (const doc of pendingDocs) {
-        const { status } =
+        const {
+          data: { status },
+        } =
           await PipelinesService.getPipelineDocumentStatusApiV1PipelinesPipelineIdDocumentsDocumentIdStatusGet(
-            { pipelineId, documentId: doc },
+            {
+              path: { pipeline_id: pipelineId, document_id: doc },
+              throwOnError: true,
+            },
           );
 
         if (status === "NOT_STARTED" || status === "IN_PROGRESS") {
@@ -136,12 +144,16 @@ export class LlamaCloudIndex {
     name?: string,
     projectName?: string,
   ): Promise<string> {
-    const pipelines = await PipelinesService.searchPipelinesApiV1PipelinesGet({
-      projectId: await this.getProjectId(projectName),
-      pipelineName: name ?? this.params.name,
-    });
+    const { data: pipelines } =
+      await PipelinesService.searchPipelinesApiV1PipelinesGet({
+        path: {
+          project_id: await this.getProjectId(projectName),
+          project_name: name ?? this.params.name,
+        },
+        throwOnError: true,
+      });
 
-    return pipelines[0].id;
+    return pipelines[0]!.id;
   }
 
   public async getProjectId(
@@ -177,26 +189,37 @@ export class LlamaCloudIndex {
       transformations: params.transformations ?? defaultTransformations,
     });
 
-    const project = await ProjectsService.upsertProjectApiV1ProjectsPut({
-      organizationId: params.organizationId,
-      requestBody: {
-        name: params.projectName ?? "default",
-      },
-    });
+    const { data: project } =
+      await ProjectsService.upsertProjectApiV1ProjectsPut({
+        path: {
+          organization_id: params.organizationId,
+        },
+        body: {
+          name: params.projectName ?? "default",
+        },
+        throwOnError: true,
+      });
 
     if (!project.id) {
       throw new Error("Project ID should be defined");
     }
 
-    const pipeline = await PipelinesService.upsertPipelineApiV1PipelinesPut({
-      projectId: project.id,
-      requestBody: {
-        name: params.name,
-        configured_transformations:
-          pipelineCreateParams.configured_transformations,
-        pipeline_type: pipelineCreateParams.pipeline_type,
-      },
-    });
+    const { data: pipeline } =
+      await PipelinesService.upsertPipelineApiV1PipelinesPut({
+        path: {
+          project_id: project.id,
+        },
+        body: pipelineCreateParams.configured_transformations
+          ? {
+              name: params.name,
+              configured_transformations:
+                pipelineCreateParams.configured_transformations,
+            }
+          : {
+              name: params.name,
+            },
+        throwOnError: true,
+      });
 
     if (!pipeline.id) {
       throw new Error("Pipeline ID must be defined");
@@ -208,8 +231,10 @@ export class LlamaCloudIndex {
 
     await PipelinesService.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
       {
-        pipelineId: pipeline.id,
-        requestBody: params.documents.map((doc) => ({
+        path: {
+          pipeline_id: pipeline.id,
+        },
+        body: params.documents.map((doc) => ({
           metadata: doc.metadata,
           text: doc.text,
           excluded_embed_metadata_keys: doc.excludedEmbedMetadataKeys,
@@ -220,10 +245,11 @@ export class LlamaCloudIndex {
     );
 
     while (true) {
-      const pipelineStatus =
+      const { data: pipelineStatus } =
         await PipelinesService.getPipelineStatusApiV1PipelinesPipelineIdStatusGet(
           {
-            pipelineId: pipeline.id,
+            path: { pipeline_id: pipeline.id },
+            throwOnError: true,
           },
         );
 
@@ -299,8 +325,10 @@ export class LlamaCloudIndex {
 
     await PipelinesService.createBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPost(
       {
-        pipelineId: pipelineId,
-        requestBody: [
+        path: {
+          pipeline_id: pipelineId,
+        },
+        body: [
           {
             metadata: document.metadata,
             text: document.text,
@@ -327,8 +355,10 @@ export class LlamaCloudIndex {
 
     await PipelinesService.deletePipelineDocumentApiV1PipelinesPipelineIdDocumentsDocumentIdDelete(
       {
-        pipelineId,
-        documentId: document.id_,
+        path: {
+          pipeline_id: pipelineId,
+          document_id: document.id_,
+        },
       },
     );
 
@@ -347,8 +377,10 @@ export class LlamaCloudIndex {
 
     await PipelinesService.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
       {
-        pipelineId,
-        requestBody: [
+        path: {
+          pipeline_id: pipelineId,
+        },
+        body: [
           {
             metadata: document.metadata,
             text: document.text,

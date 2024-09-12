@@ -17,7 +17,7 @@ export type Info = {
  * @internal
  */
 export type InfoString = {
-  originalFunction?: string;
+  originalFunction: string | undefined;
   parameterMapping: Record<string, number>;
 };
 

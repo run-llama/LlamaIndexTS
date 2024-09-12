@@ -6,6 +6,9 @@
     "verbatimModuleSyntax": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true,
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true,
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./lib",
@@ -22,6 +25,9 @@
     },
     {
       "path": "./packages/community/tsconfig.json"
+    },
+    {
+      "path": "./packages/llm/openai/tsconfig.json"
     },
     {
       "path": "./packages/cloud/tsconfig.json"

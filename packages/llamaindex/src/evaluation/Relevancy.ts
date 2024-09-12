@@ -16,14 +16,14 @@ import type {
 } from "./types.js";
 
 type RelevancyParams = {
-  serviceContext?: ServiceContext;
-  raiseError?: boolean;
-  evalTemplate?: RelevancyEvalPrompt;
-  refineTemplate?: RelevancyRefinePrompt;
+  serviceContext?: ServiceContext | undefined;
+  raiseError?: boolean | undefined;
+  evalTemplate?: RelevancyEvalPrompt | undefined;
+  refineTemplate?: RelevancyRefinePrompt | undefined;
 };
 
 export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
-  private serviceContext?: ServiceContext;
+  private serviceContext?: ServiceContext | undefined;
   private raiseError: boolean;
 
   private evalTemplate: RelevancyEvalPrompt;

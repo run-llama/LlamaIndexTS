@@ -5,7 +5,7 @@ import {
 } from "@llamaindex/core/prompts";
 import { extractText, messagesToHistory } from "@llamaindex/core/utils";
 import { tokenizers, type Tokenizer } from "@llamaindex/env";
-import { OpenAI } from "./llm/openai.js";
+import { OpenAI } from "@llamaindex/openai";
 
 /**
  * A ChatHistory is used to keep the state of back and forth chat messages
@@ -42,7 +42,7 @@ export class SimpleChatHistory extends ChatHistory {
   messages: ChatMessage[];
   private messagesBefore: number;
 
-  constructor(init?: Partial<SimpleChatHistory>) {
+  constructor(init?: { messages?: ChatMessage[] | undefined }) {
     super();
     this.messages = init?.messages ?? [];
     this.messagesBefore = this.messages.length;
@@ -118,7 +118,7 @@ export class SummaryChatHistory extends ChatHistory {
       // remove oldest message until the chat history is short enough for the context window
       messagesToSummarize.shift();
     } while (
-      this.tokenizer.encode(promptMessages[0].content).length >
+      this.tokenizer.encode(promptMessages[0]!.content).length >
       this.tokensToSummarize
     );
 
@@ -146,7 +146,7 @@ export class SummaryChatHistory extends ChatHistory {
 
   public getLastSummary(): ChatMessage | null {
     const lastSummaryIndex = this.getLastSummaryIndex();
-    return lastSummaryIndex ? this.messages[lastSummaryIndex] : null;
+    return lastSummaryIndex ? this.messages[lastSummaryIndex]! : null;
   }
 
   private get systemMessages() {
@@ -174,10 +174,10 @@ export class SummaryChatHistory extends ChatHistory {
       // and convert summary message so it can be send to the LLM
       const summaryMessage: ChatMessage = transformSummary
         ? {
-            content: `Summary of the conversation so far: ${this.messages[lastSummaryIndex].content}`,
+            content: `Summary of the conversation so far: ${this.messages[lastSummaryIndex]!.content}`,
             role: "system",
           }
-        : this.messages[lastSummaryIndex];
+        : this.messages[lastSummaryIndex]!;
       return [summaryMessage, ...this.messages.slice(lastSummaryIndex + 1)];
     }
   }

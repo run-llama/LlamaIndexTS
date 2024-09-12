@@ -74,12 +74,12 @@ export const extractDataUrlComponents = (
 } => {
   const parts = dataUrl.split(";base64,");
 
-  if (parts.length !== 2 || !parts[0].startsWith("data:")) {
+  if (parts.length !== 2 || !parts[0]!.startsWith("data:")) {
     throw new Error("Invalid data URL");
   }
 
-  const mimeType = parts[0].slice(5);
-  const base64 = parts[1];
+  const mimeType = parts[0]!.slice(5);
+  const base64 = parts[1]!;
 
   return {
     mimeType,

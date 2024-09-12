@@ -2,16 +2,12 @@ import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { DEFAULT_PERSIST_DIR } from "@llamaindex/core/global";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { fs, path } from "@llamaindex/env";
-import {
-  getTopKEmbeddings,
-  getTopKMMREmbeddings,
-} from "../../internal/utils.js";
-import { exists } from "../FileSystem.js";
+import { getTopKEmbeddings, getTopKMMREmbeddings } from "../internal/utils.js";
+import { exists } from "../storage/FileSystem.js";
 import {
   FilterOperator,
   VectorStoreBase,
   VectorStoreQueryMode,
-  type IEmbedModel,
   type MetadataFilter,
   type MetadataFilters,
   type VectorStoreNoEmbedModel,
@@ -132,7 +128,10 @@ export class SimpleVectorStore
   private data: SimpleVectorStoreData;
   private persistPath: string | undefined;
 
-  constructor(init?: { data?: SimpleVectorStoreData } & Partial<IEmbedModel>) {
+  constructor(init?: {
+    data?: SimpleVectorStoreData | undefined;
+    embedModel?: BaseEmbedding | undefined;
+  }) {
     super(init?.embedModel);
     this.data = init?.data || new SimpleVectorStoreData();
   }
@@ -150,7 +149,7 @@ export class SimpleVectorStore
   }
 
   async get(textId: string): Promise<number[]> {
-    return this.data.embeddingDict[textId];
+    return this.data.embeddingDict[textId]!;
   }
 
   async add(embeddingResults: BaseNode[]): Promise<string[]> {

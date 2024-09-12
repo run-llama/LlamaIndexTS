@@ -2,9 +2,9 @@ import {
   type CallbackManager,
   Settings as CoreSettings,
 } from "@llamaindex/core/global";
-import { OpenAI } from "./llm/openai.js";
+import { OpenAI } from "@llamaindex/openai";
 
-import { PromptHelper } from "./PromptHelper.js";
+import { PromptHelper } from "@llamaindex/core/indices";
 
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { LLM } from "@llamaindex/core/llms";
@@ -27,13 +27,12 @@ export type PromptConfig = {
 
 export interface Config {
   prompt: PromptConfig;
-  llm: LLM | null;
   promptHelper: PromptHelper | null;
   embedModel: BaseEmbedding | null;
   nodeParser: NodeParser | null;
   callbackManager: CallbackManager | null;
-  chunkSize?: number;
-  chunkOverlap?: number;
+  chunkSize: number | undefined;
+  chunkOverlap: number | undefined;
 }
 
 /**
@@ -41,12 +40,10 @@ export interface Config {
  */
 class GlobalSettings implements Config {
   #prompt: PromptConfig = {};
-  #llm: LLM | null = null;
   #promptHelper: PromptHelper | null = null;
   #nodeParser: NodeParser | null = null;
   #chunkOverlap?: number;
 
-  #llmAsyncLocalStorage = new AsyncLocalStorage<LLM>();
   #promptHelperAsyncLocalStorage = new AsyncLocalStorage<PromptHelper>();
   #nodeParserAsyncLocalStorage = new AsyncLocalStorage<NodeParser>();
   #chunkOverlapAsyncLocalStorage = new AsyncLocalStorage<number>();
@@ -62,19 +59,21 @@ class GlobalSettings implements Config {
   }
 
   get llm(): LLM {
-    if (this.#llm === null) {
-      this.#llm = new OpenAI();
+    // fixme: we might need check internal error instead of try-catch here
+    try {
+      CoreSettings.llm;
+    } catch (error) {
+      CoreSettings.llm = new OpenAI();
     }
-
-    return this.#llmAsyncLocalStorage.getStore() ?? this.#llm;
+    return CoreSettings.llm;
   }
 
   set llm(llm: LLM) {
-    this.#llm = llm;
+    CoreSettings.llm = llm;
   }
 
   withLLM<Result>(llm: LLM, fn: () => Result): Result {
-    return this.#llmAsyncLocalStorage.run(llm, fn);
+    return CoreSettings.withLLM(llm, fn);
   }
 
   get promptHelper(): PromptHelper {
@@ -159,7 +158,9 @@ class GlobalSettings implements Config {
   }
 
   set chunkOverlap(chunkOverlap: number | undefined) {
-    this.#chunkOverlap = chunkOverlap;
+    if (typeof chunkOverlap === "number") {
+      this.#chunkOverlap = chunkOverlap;
+    }
   }
 
   withChunkOverlap<Result>(chunkOverlap: number, fn: () => Result): Result {

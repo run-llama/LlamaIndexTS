@@ -30,6 +30,7 @@ export type {
   LLMToolCallEvent,
   LLMToolResultEvent,
 } from "@llamaindex/core/global";
+export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/prompts";
 export * from "@llamaindex/core/schema";
@@ -62,7 +63,6 @@ export * from "./nodeParsers/index.js";
 export * from "./objects/index.js";
 export * from "./OutputParser.js";
 export * from "./postprocessors/index.js";
-export * from "./PromptHelper.js";
 export * from "./QuestionGenerator.js";
 export * from "./Retriever.js";
 export * from "./selectors/index.js";

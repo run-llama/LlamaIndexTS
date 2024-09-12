@@ -3,10 +3,9 @@ import type pg from "pg";
 import {
   FilterCondition,
   FilterOperator,
-  VectorStoreBase,
-  type IEmbedModel,
   type MetadataFilter,
   type MetadataFilterValue,
+  VectorStoreBase,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
@@ -14,11 +13,21 @@ import {
 
 import { escapeLikeString } from "./utils.js";
 
+import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
+
+export type PGVectorStoreConfig = {
+  schemaName?: string | undefined;
+  tableName?: string | undefined;
+  database?: string | undefined;
+  connectionString?: string | undefined;
+  dimensions?: number | undefined;
+  embedModel?: BaseEmbedding | undefined;
+};
 
 /**
  * Provides support for writing and querying vector data in Postgres.
@@ -33,10 +42,12 @@ export class PGVectorStore
   private collection: string = "";
   private schemaName: string = PGVECTOR_SCHEMA;
   private tableName: string = PGVECTOR_TABLE;
+
+  private database: string | undefined = undefined;
   private connectionString: string | undefined = undefined;
   private dimensions: number = 1536;
 
-  private db?: pg.Client;
+  private db?: pg.ClientBase;
 
   /**
    * Constructs a new instance of the PGVectorStore
@@ -48,26 +59,27 @@ export class PGVectorStore
    * PGPASSWORD=your database password
    * PGDATABASE=your database name
    * PGPORT=your database port
-   *
-   * @param {object} config - The configuration settings for the instance.
-   * @param {string} config.schemaName - The name of the schema (optional). Defaults to PGVECTOR_SCHEMA.
-   * @param {string} config.tableName - The name of the table (optional). Defaults to PGVECTOR_TABLE.
-   * @param {string} config.connectionString - The connection string (optional).
-   * @param {number} config.dimensions - The dimensions of the embedding model.
    */
-  constructor(
-    config?: {
-      schemaName?: string;
-      tableName?: string;
-      connectionString?: string;
-      dimensions?: number;
-    } & Partial<IEmbedModel>,
-  ) {
-    super(config?.embedModel);
-    this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
-    this.tableName = config?.tableName ?? PGVECTOR_TABLE;
-    this.connectionString = config?.connectionString;
-    this.dimensions = config?.dimensions ?? 1536;
+  constructor(configOrClient?: PGVectorStoreConfig | pg.ClientBase) {
+    // We cannot import pg from top level, it might have side effects
+    //  so we only check if the config.connect function exists
+    if (
+      configOrClient &&
+      "connect" in configOrClient &&
+      typeof configOrClient.connect === "function"
+    ) {
+      const db = configOrClient as pg.ClientBase;
+      super();
+      this.db = db;
+    } else {
+      const config = configOrClient as PGVectorStoreConfig;
+      super(config?.embedModel);
+      this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
+      this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+      this.database = config?.database;
+      this.connectionString = config?.connectionString;
+      this.dimensions = config?.dimensions ?? 1536;
+    }
   }
 
   /**
@@ -92,7 +104,7 @@ export class PGVectorStore
     return this.collection;
   }
 
-  private async getDb(): Promise<pg.Client> {
+  private async getDb(): Promise<pg.ClientBase> {
     if (!this.db) {
       try {
         const pg = await import("pg");
@@ -102,6 +114,7 @@ export class PGVectorStore
         // Create DB connection
         // Read connection params from env - see comment block above
         const db = new Client({
+          database: this.database,
           connectionString: this.connectionString,
         });
         await db.connect();
@@ -109,9 +122,6 @@ export class PGVectorStore
         // Check vector extension
         await db.query("CREATE EXTENSION IF NOT EXISTS vector");
         await registerType(db);
-
-        // Check schema, table(s), index(es)
-        await this.checkSchema(db);
 
         // All good?  Keep the connection reference
         this.db = db;
@@ -121,10 +131,15 @@ export class PGVectorStore
       }
     }
 
+    const db = this.db;
+
+    // Check schema, table(s), index(es)
+    await this.checkSchema(db);
+
     return Promise.resolve(this.db);
   }
 
-  private async checkSchema(db: pg.Client) {
+  private async checkSchema(db: pg.ClientBase) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
     const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
@@ -171,26 +186,22 @@ export class PGVectorStore
   }
 
   private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
-    const result = [];
-    for (let index = 0; index < embeddingResults.length; index++) {
-      const row = embeddingResults[index];
+    return embeddingResults.map((node) => {
+      const id: any = node.id_.length ? node.id_ : null;
+      const meta = node.metadata || {};
+      if (!meta.create_date) {
+        meta.create_date = new Date();
+      }
 
-      const id: any = row.id_.length ? row.id_ : null;
-      const meta = row.metadata || {};
-      meta.create_date = new Date();
-
-      const params = [
+      return [
         id,
         "",
         this.collection,
-        row.getContent(MetadataMode.EMBED),
+        node.getContent(MetadataMode.NONE),
         meta,
-        "[" + row.getEmbedding().join(",") + "]",
+        "[" + node.getEmbedding().join(",") + "]",
       ];
-
-      result.push(params);
-    }
-    return result;
+    });
   }
 
   /**
@@ -201,7 +212,7 @@ export class PGVectorStore
    */
   async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
     if (embeddingResults.length === 0) {
-      console.debug("Empty list sent to PGVectorStore::add");
+      console.warn("Empty list sent to PGVectorStore::add");
       return [];
     }
 

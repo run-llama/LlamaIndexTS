@@ -4,7 +4,7 @@ import type { Mocked } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { VectorStoreQueryMode } from "llamaindex/storage/index";
+import { VectorStoreQueryMode } from "llamaindex/vector-store";
 import { TestableQdrantVectorStore } from "../mocks/TestableQdrantVectorStore.js";
 
 vi.mock("@qdrant/js-client-rest");
@@ -70,7 +70,7 @@ describe("QdrantVectorStore", () => {
         const ids = await store.add(nodes);
 
         expect(mockInitializeCollection).toHaveBeenCalledWith(
-          nodes[0].getEmbedding().length,
+          nodes[0]!.getEmbedding().length,
         );
         expect(mockBuildPoints).toHaveBeenCalledWith(nodes);
         expect(mockQdrantClient.upsert).toHaveBeenCalled();

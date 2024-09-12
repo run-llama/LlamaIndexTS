@@ -159,7 +159,7 @@ export class LLMSingleSelector extends BaseSelector {
     const prompt = this.prompt.format({
       numChoices: `${choicesText.length}`,
       context: choicesText,
-      query: extractText(query.query),
+      query: extractText(query),
     });
 
     const formattedPrompt = this.outputParser.format(prompt);

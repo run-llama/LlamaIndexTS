@@ -22,16 +22,16 @@ export class FaithfulnessEvaluator
   extends PromptMixin
   implements BaseEvaluator
 {
-  private serviceContext?: ServiceContext;
+  private serviceContext?: ServiceContext | undefined;
   private raiseError: boolean;
   private evalTemplate: FaithfulnessTextQAPrompt;
   private refineTemplate: FaithfulnessRefinePrompt;
 
   constructor(params?: {
-    serviceContext?: ServiceContext;
-    raiseError?: boolean;
-    faithfulnessSystemPrompt?: FaithfulnessTextQAPrompt;
-    faithFulnessRefinePrompt?: FaithfulnessRefinePrompt;
+    serviceContext?: ServiceContext | undefined;
+    raiseError?: boolean | undefined;
+    faithfulnessSystemPrompt?: FaithfulnessTextQAPrompt | undefined;
+    faithFulnessRefinePrompt?: FaithfulnessRefinePrompt | undefined;
   }) {
     super();
     this.serviceContext = params?.serviceContext;

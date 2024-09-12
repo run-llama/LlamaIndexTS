@@ -19,8 +19,8 @@ export class NotionReader implements BaseReader {
    * Constructor for the NotionReader class
    * @param {NotionReaderOptions} options - Configuration options for the reader
    */
-  constructor({ client, serializers }: NotionReaderOptions) {
-    this.crawl = crawler({ client, serializers });
+  constructor(options: NotionReaderOptions) {
+    this.crawl = crawler(options);
   }
 
   /**

@@ -36,8 +36,43 @@ For now, browser support is limited due to the lack of support for [AsyncLocalSt
 npm install llamaindex
 pnpm install llamaindex
 yarn add llamaindex
-jsr install @llamaindex/core
 ```
+
+### Setup TypeScript
+
+```json5
+{
+  compilerOptions: {
+    // ⬇️ add this line to your tsconfig.json
+    moduleResolution: "bundler", // or "node16"
+  },
+}
+```
+
+<details>
+   <summary>Why?</summary>
+  We are shipping both ESM and CJS module, and compatible with Vercel Edge, Cloudflare Workers, and other serverless platforms.
+
+So we are using [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) to support all environments.
+
+This is a kind of modern way of shipping packages, but might cause TypeScript type check to fail because of legacy module resolution.
+
+Imaging you put output file into `/dist/openai.js` but you are importing `llamaindex/openai` in your code, and set `package.json` like this:
+
+```json
+{
+  "exports": {
+    "./openai": "./dist/openai.js"
+  }
+}
+```
+
+In old module resolution, TypeScript will not be able to find the module because it is not follow the file structure, even you run `node index.js` successfully. (on Node.js >=16)
+
+See more about [moduleResolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) or
+[TypeScript 5.0 blog](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler7).
+
+</details>
 
 ### Node.js
 
@@ -152,6 +187,21 @@ export async function chatWithAgent(
     .catch(console.error);
   return uiStream.value;
 }
+```
+
+### Vite
+
+We have some wasm dependencies for better performance. You can use `vite-plugin-wasm` to load them.
+
+```ts
+import wasm from "vite-plugin-wasm";
+
+export default {
+  plugins: [wasm()],
+  ssr: {
+    external: ["tiktoken"],
+  },
+};
 ```
 
 ## Playground
