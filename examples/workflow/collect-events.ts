@@ -1,0 +1,73 @@
+import {
+  Context,
+  createEventType,
+  StartEvent,
+  StopEvent,
+  Workflow,
+} from "@llamaindex/core/workflow";
+import { OpenAI } from "llamaindex";
+
+// Create LLM instance
+const llm = new OpenAI();
+
+// Create custom event types
+const JokeEvent = createEventType<{ joke: string }>();
+type JokeEvent = InstanceType<typeof JokeEvent>;
+const CritiqueEvent = createEventType<{ critique: string }>();
+type CritiqueEvent = InstanceType<typeof CritiqueEvent>;
+const AnalysisEvent = createEventType<{ analysis: string }>();
+type AnalysisEvent = InstanceType<typeof AnalysisEvent>;
+
+const generateJoke = async (_context: Context, ev: StartEvent) => {
+  const prompt = `Write your best joke about ${ev.input}.`;
+  const response = await llm.complete({ prompt });
+  return new JokeEvent({ joke: response.text });
+};
+
+const critiqueJoke = async (_context: Context, ev: JokeEvent) => {
+  const prompt = `Give a thorough critique of the following joke: ${ev.joke}`;
+  const response = await llm.complete({ prompt });
+  return new CritiqueEvent({ critique: response.text });
+};
+
+const analyzeJoke = async (_context: Context, ev: JokeEvent) => {
+  const prompt = `Give a thorough analysis of the following joke: ${ev.joke}`;
+  const response = await llm.complete({ prompt });
+  return new AnalysisEvent({ analysis: response.text });
+};
+
+const reportJoke = async (
+  context: Context,
+  ev: AnalysisEvent | CritiqueEvent,
+) => {
+  const events = context.collectEvents(ev, [AnalysisEvent, CritiqueEvent]);
+  if (!events) {
+    return;
+  }
+  const subPrompts = events.map((event) => {
+    if (event instanceof AnalysisEvent) {
+      return `Analysis: ${event.analysis}`;
+    } else if (event instanceof CritiqueEvent) {
+      return `Critique: ${event.critique}`;
+    }
+    return "";
+  });
+
+  const prompt = `Based on the following information about a joke:\n${subPrompts.join("\n")}\nProvide a comprehensive report on the joke's quality and impact.`;
+  const response = await llm.complete({ prompt });
+  return new StopEvent({ result: response.text });
+};
+
+const jokeFlow = new Workflow();
+jokeFlow.addStep(StartEvent, generateJoke);
+jokeFlow.addStep(JokeEvent, critiqueJoke);
+jokeFlow.addStep(JokeEvent, analyzeJoke);
+jokeFlow.addStep([AnalysisEvent, CritiqueEvent], reportJoke);
+
+// Usage
+async function main() {
+  const result = await jokeFlow.run("pirates");
+  console.log(result.result);
+}
+
+main().catch(console.error);
