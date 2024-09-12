@@ -3,7 +3,6 @@ import {
   type EventTypes,
   StartEvent,
   StopEvent,
-  UNNAMED_EVENT,
   WorkflowEvent,
 } from "./events";
 
@@ -111,15 +110,9 @@ export class Workflow {
     );
     if (unconsumedEvents.length > 0) {
       const names = unconsumedEvents.map((event) => event.name).join(", ");
-      const unnamedEvents = unconsumedEvents.filter(
-        (event) => event.name === UNNAMED_EVENT,
+      throw new Error(
+        `The following events are consumed but never produced: ${names}`,
       );
-      let errorMessage = `The following events are consumed but never produced: ${names}`;
-      if (unnamedEvents.length > 0) {
-        errorMessage +=
-          "\nNote: Some events are unnamed. Consider adding names to these events for better debugging.";
-      }
-      throw new Error(errorMessage);
     }
 
     // Check if there are any unused produced events (except StopEvent)
@@ -128,15 +121,9 @@ export class Workflow {
     );
     if (unusedEvents.length > 0) {
       const names = unusedEvents.map((event) => event.name).join(", ");
-      const unnamedEvents = unusedEvents.filter(
-        (event) => event.name === UNNAMED_EVENT,
+      throw new Error(
+        `The following events are produced but never consumed: ${names}`,
       );
-      let errorMessage = `The following events are produced but never consumed: ${names}`;
-      if (unnamedEvents.length > 0) {
-        errorMessage +=
-          "\nNote: Some events are unnamed. Consider adding names to these events for better debugging.";
-      }
-      throw new Error(errorMessage);
     }
 
     if (this.#verbose) {

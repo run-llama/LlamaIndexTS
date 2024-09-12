@@ -26,7 +26,7 @@ async function notimeout() {
   const workflow = new Workflow({ verbose: true, timeout: 3 });
   workflow.addStep(StartEvent, longRunning);
   const result = await workflow.run("Let's start");
-  console.log(result.result);
+  console.log(result.data.result);
 }
 
 async function main() {

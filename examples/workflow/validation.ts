@@ -1,9 +1,9 @@
 import {
   Context,
-  createEventType,
   StartEvent,
   StopEvent,
   Workflow,
+  WorkflowEvent,
 } from "@llamaindex/core/workflow";
 import { OpenAI } from "llamaindex";
 
@@ -11,17 +11,16 @@ import { OpenAI } from "llamaindex";
 const llm = new OpenAI();
 
 // Create a custom event type
-const JokeEvent = createEventType<{ joke: string }>("JokeEvent");
-type JokeEvent = InstanceType<typeof JokeEvent>;
+export class JokeEvent extends WorkflowEvent<{ joke: string }> {}
 
 const generateJoke = async (_context: Context, ev: StartEvent) => {
-  const prompt = `Write your best joke about ${ev.input}.`;
+  const prompt = `Write your best joke about ${ev.data.input}.`;
   const response = await llm.complete({ prompt });
   return new JokeEvent({ joke: response.text });
 };
 
 const critiqueJoke = async (_context: Context, ev: JokeEvent) => {
-  const prompt = `Give a thorough critique of the following joke: ${ev.joke}`;
+  const prompt = `Give a thorough critique of the following joke: ${ev.data.joke}`;
   const response = await llm.complete({ prompt });
   return new StopEvent({ result: response.text });
 };
@@ -42,7 +41,7 @@ async function validate() {
   jokeFlow.addStep(StartEvent, generateJoke, { outputs: JokeEvent });
   jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
   const result = await jokeFlow.run("pirates");
-  console.log(result.result);
+  console.log(result.data.result);
 }
 
 // Usage

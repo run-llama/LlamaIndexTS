@@ -1,9 +1,9 @@
 import {
   Context,
-  createEventType,
   StartEvent,
   StopEvent,
   Workflow,
+  WorkflowEvent,
 } from "@llamaindex/core/workflow";
 import { OpenAI } from "llamaindex";
 
@@ -11,27 +11,24 @@ import { OpenAI } from "llamaindex";
 const llm = new OpenAI();
 
 // Create custom event types
-const JokeEvent = createEventType<{ joke: string }>();
-type JokeEvent = InstanceType<typeof JokeEvent>;
-const CritiqueEvent = createEventType<{ critique: string }>();
-type CritiqueEvent = InstanceType<typeof CritiqueEvent>;
-const AnalysisEvent = createEventType<{ analysis: string }>();
-type AnalysisEvent = InstanceType<typeof AnalysisEvent>;
+export class JokeEvent extends WorkflowEvent<{ joke: string }> {}
+export class CritiqueEvent extends WorkflowEvent<{ critique: string }> {}
+export class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
 
 const generateJoke = async (_context: Context, ev: StartEvent) => {
-  const prompt = `Write your best joke about ${ev.input}.`;
+  const prompt = `Write your best joke about ${ev.data.input}.`;
   const response = await llm.complete({ prompt });
   return new JokeEvent({ joke: response.text });
 };
 
 const critiqueJoke = async (_context: Context, ev: JokeEvent) => {
-  const prompt = `Give a thorough critique of the following joke: ${ev.joke}`;
+  const prompt = `Give a thorough critique of the following joke: ${ev.data.joke}`;
   const response = await llm.complete({ prompt });
   return new CritiqueEvent({ critique: response.text });
 };
 
 const analyzeJoke = async (_context: Context, ev: JokeEvent) => {
-  const prompt = `Give a thorough analysis of the following joke: ${ev.joke}`;
+  const prompt = `Give a thorough analysis of the following joke: ${ev.data.joke}`;
   const response = await llm.complete({ prompt });
   return new AnalysisEvent({ analysis: response.text });
 };
@@ -46,9 +43,9 @@ const reportJoke = async (
   }
   const subPrompts = events.map((event) => {
     if (event instanceof AnalysisEvent) {
-      return `Analysis: ${event.analysis}`;
+      return `Analysis: ${event.data.analysis}`;
     } else if (event instanceof CritiqueEvent) {
-      return `Critique: ${event.critique}`;
+      return `Critique: ${event.data.critique}`;
     }
     return "";
   });
@@ -67,7 +64,7 @@ jokeFlow.addStep([AnalysisEvent, CritiqueEvent], reportJoke);
 // Usage
 async function main() {
   const result = await jokeFlow.run("pirates");
-  console.log(result.result);
+  console.log(result.data.result);
 }
 
 main().catch(console.error);
