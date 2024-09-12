@@ -4,14 +4,6 @@ import type {
   NodeWithScore,
 } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import type {
-  KeywordExtractPrompt,
-  QueryKeywordExtractPrompt,
-} from "../../Prompt.js";
-import {
-  defaultKeywordExtractPrompt,
-  defaultQueryKeywordExtractPrompt,
-} from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
@@ -32,6 +24,12 @@ import {
 } from "./utils.js";
 
 import type { LLM } from "@llamaindex/core/llms";
+import {
+  defaultKeywordExtractPrompt,
+  defaultQueryKeywordExtractPrompt,
+  type KeywordExtractPrompt,
+  type QueryKeywordExtractPrompt,
+} from "@llamaindex/core/prompts";
 import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 
@@ -103,7 +101,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     }
 
     const sortedChunkIndices = Object.keys(chunkIndicesCount)
-      .sort((a, b) => chunkIndicesCount[b] - chunkIndicesCount[a])
+      .sort((a, b) => chunkIndicesCount[b]! - chunkIndicesCount[a]!)
       .slice(0, this.numChunksPerQuery);
 
     const sortedNodes = await this.docstore.getNodes(sortedChunkIndices);
@@ -116,9 +114,9 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
 export class KeywordTableLLMRetriever extends BaseKeywordTableRetriever {
   async getKeywords(query: string): Promise<string[]> {
     const response = await this.llm.complete({
-      prompt: this.queryKeywordExtractTemplate({
+      prompt: this.queryKeywordExtractTemplate.format({
         question: query,
-        maxKeywords: this.maxKeywordsPerQuery,
+        maxKeywords: `${this.maxKeywordsPerQuery}`,
       }),
     });
     const keywords = extractKeywordsGivenResponse(response.text, "KEYWORDS:");
@@ -177,7 +175,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     if (options.indexStruct) {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
-      indexStruct = indexStructs[0];
+      indexStruct = indexStructs[0]!;
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
         options.indexId,
@@ -256,7 +254,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     const llm = llmFromSettingsOrContext(serviceContext);
 
     const response = await llm.complete({
-      prompt: defaultKeywordExtractPrompt({
+      prompt: defaultKeywordExtractPrompt.format({
         context: text,
       }),
     });

@@ -1,10 +1,10 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
+import { PromptHelper } from "@llamaindex/core/indices";
 import type { LLM } from "@llamaindex/core/llms";
 import {
   type NodeParser,
   SentenceSplitter,
 } from "@llamaindex/core/node-parser";
-import { PromptHelper } from "./PromptHelper.js";
 import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
 import { OpenAI } from "./llm/openai.js";
 

@@ -27,3 +27,4 @@ for await (const chunk of stream) {
 
 - [ContextChatEngine](../api/classes/ContextChatEngine.md)
 - [CondenseQuestionChatEngine](../api/classes/ContextChatEngine.md)
+- [SimpleChatEngine](../api/classes/SimpleChatEngine.md)

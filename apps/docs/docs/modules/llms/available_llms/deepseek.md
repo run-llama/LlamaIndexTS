@@ -1,5 +1,7 @@
 # DeepSeek LLM
 
+[DeepSeek Platform](https://platform.deepseek.com/)
+
 ## Usage
 
 ```ts
@@ -45,6 +47,6 @@ Currently does not support function calling.
 
 [Currently does not support json-output param while still is very good at json generating.](https://platform.deepseek.com/api-docs/faq#does-your-api-support-json-output)
 
-## API platform
+## API Reference
 
-- [DeepSeek platform](https://platform.deepseek.com/)
+- [DeepSeekLLM](../../../api/classes/DeepSeekLLM.md)

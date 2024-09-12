@@ -1,6 +1,6 @@
+import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import { fs, path } from "@llamaindex/env";
 import { exists } from "../FileSystem.js";
-import { DEFAULT_COLLECTION } from "../constants.js";
 import { BaseKVStore } from "./types.js";
 
 export type DataType = Record<string, Record<string, any>>;
@@ -20,7 +20,7 @@ export class SimpleKVStore extends BaseKVStore {
     if (!(collection in this.data)) {
       this.data[collection] = {};
     }
-    this.data[collection][key] = structuredClone(val); // Creating a shallow copy of the object
+    this.data[collection]![key] = structuredClone(val); // Creating a shallow copy of the object
 
     if (this.persistPath) {
       await this.persist(this.persistPath);
@@ -42,15 +42,15 @@ export class SimpleKVStore extends BaseKVStore {
   }
 
   async getAll(collection: string = DEFAULT_COLLECTION): Promise<DataType> {
-    return structuredClone(this.data[collection]); // Creating a shallow copy of the object
+    return structuredClone(this.data[collection]!); // Creating a shallow copy of the object
   }
 
   async delete(
     key: string,
     collection: string = DEFAULT_COLLECTION,
   ): Promise<boolean> {
-    if (key in this.data[collection]) {
-      delete this.data[collection][key];
+    if (key in this.data[collection]!) {
+      delete this.data[collection]![key];
       if (this.persistPath) {
         await this.persist(this.persistPath);
       }

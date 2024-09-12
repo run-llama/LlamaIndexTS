@@ -2,7 +2,7 @@
 
 ## Concept
 
-Evaluation and benchmarking are crucial concepts in LLM development. To improve the perfomance of an LLM app (RAG, agents) you must have a way to measure it.
+Evaluation and benchmarking are crucial concepts in LLM development. To improve the performance of an LLM app (RAG, agents) you must have a way to measure it.
 
 LlamaIndex offers key modules to measure the quality of generated results. We also offer key modules to measure retrieval quality.
 

@@ -1,3 +1,7 @@
+import {
+  type ChoiceSelectPrompt,
+  defaultChoiceSelectPrompt,
+} from "@llamaindex/core/prompts";
 import type {
   BaseNode,
   Document,
@@ -5,8 +9,6 @@ import type {
 } from "@llamaindex/core/schema";
 import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
 import _ from "lodash";
-import type { ChoiceSelectPrompt } from "../../Prompt.js";
-import { defaultChoiceSelectPrompt } from "../../Prompt.js";
 import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
@@ -46,11 +48,11 @@ export enum SummaryRetrieverMode {
 }
 
 export interface SummaryIndexOptions {
-  nodes?: BaseNode[];
-  indexStruct?: IndexList;
-  indexId?: string;
-  serviceContext?: ServiceContext;
-  storageContext?: StorageContext;
+  nodes?: BaseNode[] | undefined;
+  indexStruct?: IndexList | undefined;
+  indexId?: string | undefined;
+  serviceContext?: ServiceContext | undefined;
+  storageContext?: StorageContext | undefined;
 }
 
 /**
@@ -81,7 +83,9 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
       indexStruct =
-        indexStructs[0].type === IndexStructType.LIST ? indexStructs[0] : null;
+        indexStructs[0]!.type === IndexStructType.LIST
+          ? indexStructs[0]!
+          : null;
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
         options.indexId,
@@ -129,8 +133,8 @@ export class SummaryIndex extends BaseIndex<IndexList> {
   static async fromDocuments(
     documents: Document[],
     args: {
-      storageContext?: StorageContext;
-      serviceContext?: ServiceContext;
+      storageContext?: StorageContext | undefined;
+      serviceContext?: ServiceContext | undefined;
     } = {},
   ): Promise<SummaryIndex> {
     let { storageContext, serviceContext } = args;
@@ -310,7 +314,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
   choiceBatchSize: number;
   formatNodeBatchFn: NodeFormatterFunction;
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
-  serviceContext?: ServiceContext;
+  serviceContext?: ServiceContext | undefined;
 
   // eslint-disable-next-line max-params
   constructor(
@@ -345,7 +349,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
 
       const rawResponse = (
         await llm.complete({
-          prompt: this.choiceSelectPrompt(input),
+          prompt: this.choiceSelectPrompt.format(input),
         })
       ).text;
 

@@ -8,6 +8,11 @@ overrides:
   trim: 1.0.1
   protobufjs: 7.2.6
 
+patchedDependencies:
+  python-format-js@1.4.3:
+    hash: th6l7y4oiguwssg6vyt7e3sc3i
+    path: patches/python-format-js@1.4.3.patch
+
 importers:
 
   .:
@@ -336,9 +341,12 @@ importers:
 
   packages/cloud:
     devDependencies:
+      '@hey-api/client-fetch':
+        specifier: ^0.2.4
+        version: 0.2.4
       '@hey-api/openapi-ts':
-        specifier: ^0.52.11
-        version: 0.52.11(typescript@5.5.4)
+        specifier: ^0.53.0
+        version: 0.53.0(typescript@5.5.4)
       bunchee:
         specifier: 5.3.2
         version: 5.3.2(typescript@5.5.4)
@@ -383,6 +391,9 @@ importers:
       natural:
         specifier: ^8.0.1
         version: 8.0.1(@aws-sdk/credential-providers@3.637.0)
+      python-format-js:
+        specifier: ^1.4.3
+        version: 1.4.3(patch_hash=th6l7y4oiguwssg6vyt7e3sc3i)
 
   packages/core/tests:
     devDependencies:
@@ -405,8 +416,8 @@ importers:
         specifier: ^1.0.12
         version: 1.0.12
       tiktoken:
-        specifier: 1.0.14
-        version: 1.0.14
+        specifier: ^1.0.15
+        version: 1.0.16
     devDependencies:
       '@aws-crypto/sha256-js':
         specifier: ^5.2.0
@@ -481,6 +492,9 @@ importers:
       '@discordjs/rest':
         specifier: ^2.3.0
         version: 2.3.0
+      '@discoveryjs/json-ext':
+        specifier: ^0.6.1
+        version: 0.6.1
       '@google-cloud/vertexai':
         specifier: 1.2.0
         version: 1.2.0(encoding@0.1.13)
@@ -583,12 +597,6 @@ importers:
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
-      pg:
-        specifier: ^8.12.0
-        version: 8.12.0
-      pgvector:
-        specifier: ^0.2.0
-        version: 0.2.0
       portkey-ai:
         specifier: 0.1.16
         version: 0.1.16
@@ -599,8 +607,8 @@ importers:
         specifier: ^13.4.8
         version: 13.4.8
       tiktoken:
-        specifier: 1.0.14
-        version: 1.0.14
+        specifier: ^1.0.15
+        version: 1.0.16
       unpdf:
         specifier: ^0.11.0
         version: 0.11.0(encoding@0.1.13)
@@ -632,6 +640,12 @@ importers:
       glob:
         specifier: ^11.0.0
         version: 11.0.0
+      pg:
+        specifier: ^8.12.0
+        version: 8.12.0
+      pgvector:
+        specifier: 0.2.0
+        version: 0.2.0
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -829,6 +843,9 @@ importers:
       typescript:
         specifier: 5.5.4
         version: 5.5.4
+      vite-plugin-wasm:
+        specifier: ^3.3.0
+        version: 3.3.0(vite@5.4.2(@types/node@22.5.1)(terser@5.31.6))
 
   packages/llamaindex/tests:
     devDependencies:
@@ -2050,6 +2067,10 @@ packages:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
 
+  '@discoveryjs/json-ext@0.6.1':
+    resolution: {integrity: sha512-boghen8F0Q8D+0/Q1/1r6DUEieUJ8w2a1gIknExMSHBsJFOr2+0KUfHiVYBvucPwl3+RU5PFBK833FjFCh3BhA==}
+    engines: {node: '>=14.17.0'}
+
   '@docsearch/css@3.6.1':
     resolution: {integrity: sha512-VtVb5DS+0hRIprU2CO6ZQjK2Zg4QU5HrDM1+ix6rT0umsYvFvatMAnf97NHZlVWDaaLlx7GRfR/7FikANiM2Fg==}
 
@@ -2727,8 +2748,11 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
-  '@hey-api/openapi-ts@0.52.11':
-    resolution: {integrity: sha512-S3NrCQDxy7AtW5sx8OVoBaqpaYNqYsD0y6YNwhUXPUahbrW7Wxm/N4RIEsRtXVbcjUqdAjo1FmFmeyEKYziJkw==}
+  '@hey-api/client-fetch@0.2.4':
+    resolution: {integrity: sha512-SGTVAVw3PlKDLw+IyhNhb/jCH3P1P2xJzLxA8Kyz1g95HrkYOJdRpl9F5I7LLwo9aCIB7nwR2NrSeX7QaQD7vQ==}
+
+  '@hey-api/openapi-ts@0.53.0':
+    resolution: {integrity: sha512-5pDd/s0yHJniruYyKYmEsAMbY10Nh/EwhHlgIrdpQ1KZWQdyTbH/tn8rVHT5Mopr1dMuYX0kq0TzpjcNlvrROQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -9149,6 +9173,9 @@ packages:
     resolution: {integrity: sha512-FLpr4flz5xZTSJxSeaheeMKN/EDzMdK7b8PTOC6a5PYFKTucWbdqjgqaEyH0shFiSJrVB1+Qqi4Tk19ccU6Aug==}
     engines: {node: '>=12.20'}
 
+  python-format-js@1.4.3:
+    resolution: {integrity: sha512-0iK5zP5HMf4F3Xc3Uo6hggPu4ylEQCKNoLXUYe3S1YfYkFG6DxGDO3KozCrySntAZTPmP9yRI+eMq0MXweHqIw==}
+
   qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
     engines: {node: '>=0.6'}
@@ -10240,8 +10267,8 @@ packages:
   thunky@1.1.0:
     resolution: {integrity: sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==}
 
-  tiktoken@1.0.14:
-    resolution: {integrity: sha512-g5zd5r/DoH8Kw0fiYbYpVhb6WO8BHO1unXqmBBWKwoT17HwSounnDtMDFUKm2Pko8U47sjQarOe+9aUrnqmmTg==}
+  tiktoken@1.0.16:
+    resolution: {integrity: sha512-hRcORIGF2YlAgWx3nzrGJOrKSJwLoc81HpXmMQk89632XAgURc7IeV2FgQ2iXo9z/J96fCvpsHg2kWoHcbj9fg==}
 
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
@@ -10670,6 +10697,11 @@ packages:
     resolution: {integrity: sha512-LdsW4pxj0Ot69FAoXZ1yTnA9bjGohr2yNBU7QKRxpz8ITSkhuDl6h3zS/tvgz4qrNjeRnvrWeXQ8ZF7Um4W00Q==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
+
+  vite-plugin-wasm@3.3.0:
+    resolution: {integrity: sha512-tVhz6w+W9MVsOCHzxo6SSMSswCeIw4HTrXEi6qL3IRzATl83jl09JVO1djBqPSwfjgnpVHNLYcaMbaDX5WB/pg==}
+    peerDependencies:
+      vite: ^2 || ^3 || ^4 || ^5
 
   vite@5.4.2:
     resolution: {integrity: sha512-dDrQTRHp5C1fTFzcSaMxjk6vdpKvT+2/mIdE07Gw2ykehT49O0z/VHS3zZ8iV/Gh8BJJKHWOe5RjaNrW5xf/GA==}
@@ -13054,6 +13086,8 @@ snapshots:
 
   '@discoveryjs/json-ext@0.5.7': {}
 
+  '@discoveryjs/json-ext@0.6.1': {}
+
   '@docsearch/css@3.6.1': {}
 
   '@docsearch/react@3.6.1(@algolia/client-search@5.2.3)(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.0)':
@@ -14056,7 +14090,9 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  '@hey-api/openapi-ts@0.52.11(typescript@5.5.4)':
+  '@hey-api/client-fetch@0.2.4': {}
+
+  '@hey-api/openapi-ts@0.53.0(typescript@5.5.4)':
     dependencies:
       '@apidevtools/json-schema-ref-parser': 11.7.0
       c12: 1.11.1
@@ -21672,6 +21708,8 @@ snapshots:
     dependencies:
       escape-goat: 4.0.0
 
+  python-format-js@1.4.3(patch_hash=th6l7y4oiguwssg6vyt7e3sc3i): {}
+
   qs@6.11.0:
     dependencies:
       side-channel: 1.0.6
@@ -23046,7 +23084,7 @@ snapshots:
 
   thunky@1.1.0: {}
 
-  tiktoken@1.0.14: {}
+  tiktoken@1.0.16: {}
 
   tiny-invariant@1.3.3: {}
 
@@ -23499,6 +23537,10 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-wasm@3.3.0(vite@5.4.2(@types/node@22.5.1)(terser@5.31.6)):
+    dependencies:
+      vite: 5.4.2(@types/node@22.5.1)(terser@5.31.6)
 
   vite@5.4.2(@types/node@22.5.1)(terser@5.31.6):
     dependencies:

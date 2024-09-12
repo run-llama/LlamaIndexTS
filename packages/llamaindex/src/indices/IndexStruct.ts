@@ -5,9 +5,9 @@ import { randomUUID } from "@llamaindex/env";
  */
 export abstract class IndexStruct {
   indexId: string;
-  summary?: string;
+  summary?: string | undefined;
 
-  constructor(indexId = randomUUID(), summary = undefined) {
+  constructor(indexId = randomUUID(), summary: string | undefined = undefined) {
     this.indexId = indexId;
     this.summary = summary;
   }

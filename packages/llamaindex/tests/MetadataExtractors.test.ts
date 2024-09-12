@@ -58,7 +58,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
 
     const nodesWithKeywordMetadata = await keywordExtractor.processNodes(nodes);
 
-    expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
+    expect(nodesWithKeywordMetadata[0]!.metadata).toMatchObject({
       excerptKeywords: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });
@@ -77,7 +77,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
 
     const nodesWithKeywordMetadata = await titleExtractor.processNodes(nodes);
 
-    expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
+    expect(nodesWithKeywordMetadata[0]!.metadata).toMatchObject({
       documentTitle: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });
@@ -97,7 +97,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     const nodesWithKeywordMetadata =
       await questionsAnsweredExtractor.processNodes(nodes);
 
-    expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
+    expect(nodesWithKeywordMetadata[0]!.metadata).toMatchObject({
       questionsThisExcerptCanAnswer: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });
@@ -115,7 +115,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
 
     const nodesWithKeywordMetadata = await summaryExtractor.processNodes(nodes);
 
-    expect(nodesWithKeywordMetadata[0].metadata).toMatchObject({
+    expect(nodesWithKeywordMetadata[0]!.metadata).toMatchObject({
       sectionSummary: DEFAULT_LLM_TEXT_OUTPUT,
     });
   });

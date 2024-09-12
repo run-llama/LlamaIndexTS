@@ -1,5 +1,6 @@
+import type { BaseOutputParser } from "@llamaindex/core/schema";
 import { parseJsonMarkdown } from "../OutputParser.js";
-import type { BaseOutputParser, StructuredOutput } from "../types.js";
+import type { StructuredOutput } from "../types.js";
 
 export type Answer = {
   choice: number;
@@ -11,8 +12,8 @@ const formatStr = `The output should be ONLY JSON formatted as a JSON instance.
 Here is an example:
 [
     {
-        choice: 1,
-        reason: "<insert reason for choice>"
+        "choice": 1,
+        "reason": "<insert reason for choice>"
     },
     ...
 ]

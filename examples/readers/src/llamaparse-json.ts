@@ -3,6 +3,7 @@ import {
   ImageNode,
   LlamaParseReader,
   OpenAI,
+  PromptTemplate,
   VectorStoreIndex,
 } from "llamaindex";
 import { createMessageContent } from "llamaindex/synthesizers/utils";
@@ -50,7 +51,9 @@ async function getImageTextDocs(
 
   for (const imageDict of imageDicts) {
     const imageDoc = new ImageNode({ image: imageDict.path });
-    const prompt = () => `Describe the image as alt text`;
+    const prompt = new PromptTemplate({
+      template: `Describe the image as alt text`,
+    });
     const message = await createMessageContent(prompt, [imageDoc]);
 
     const response = await llm.complete({

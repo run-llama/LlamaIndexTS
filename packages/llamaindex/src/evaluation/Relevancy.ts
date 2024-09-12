@@ -1,8 +1,8 @@
+import { PromptMixin, type ModuleRecord } from "@llamaindex/core/prompts";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SummaryIndex } from "../indices/summary/index.js";
-import { PromptMixin } from "../prompts/Mixin.js";
 import type { RelevancyEvalPrompt, RelevancyRefinePrompt } from "./prompts.js";
 import {
   defaultRelevancyEvalPrompt,
@@ -16,14 +16,14 @@ import type {
 } from "./types.js";
 
 type RelevancyParams = {
-  serviceContext?: ServiceContext;
-  raiseError?: boolean;
-  evalTemplate?: RelevancyEvalPrompt;
-  refineTemplate?: RelevancyRefinePrompt;
+  serviceContext?: ServiceContext | undefined;
+  raiseError?: boolean | undefined;
+  evalTemplate?: RelevancyEvalPrompt | undefined;
+  refineTemplate?: RelevancyRefinePrompt | undefined;
 };
 
 export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
-  private serviceContext?: ServiceContext;
+  private serviceContext?: ServiceContext | undefined;
   private raiseError: boolean;
 
   private evalTemplate: RelevancyEvalPrompt;
@@ -37,6 +37,10 @@ export class RelevancyEvaluator extends PromptMixin implements BaseEvaluator {
     this.evalTemplate = params?.evalTemplate ?? defaultRelevancyEvalPrompt;
     this.refineTemplate =
       params?.refineTemplate ?? defaultRelevancyRefinePrompt;
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 
   _getPrompts() {

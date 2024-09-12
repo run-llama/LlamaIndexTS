@@ -29,35 +29,35 @@ import {
 import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
+import type { BaseIndexStore } from "../../storage/indexStore/types.js";
+import type { BaseSynthesizer } from "../../synthesizers/types.js";
+import type { QueryEngine } from "../../types.js";
 import type {
   MetadataFilters,
   VectorStore,
   VectorStoreByType,
   VectorStoreQueryResult,
-} from "../../storage/index.js";
-import type { BaseIndexStore } from "../../storage/indexStore/types.js";
-import { VectorStoreQueryMode } from "../../storage/vectorStore/types.js";
-import type { BaseSynthesizer } from "../../synthesizers/types.js";
-import type { QueryEngine } from "../../types.js";
+} from "../../vector-store/index.js";
+import { VectorStoreQueryMode } from "../../vector-store/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexDict, IndexStructType } from "../json-to-index-struct.js";
 
 interface IndexStructOptions {
-  indexStruct?: IndexDict;
-  indexId?: string;
+  indexStruct?: IndexDict | undefined;
+  indexId?: string | undefined;
 }
 export interface VectorIndexOptions extends IndexStructOptions {
-  nodes?: BaseNode[];
-  serviceContext?: ServiceContext;
-  storageContext?: StorageContext;
-  vectorStores?: VectorStoreByType;
-  logProgress?: boolean;
+  nodes?: BaseNode[] | undefined;
+  serviceContext?: ServiceContext | undefined;
+  storageContext?: StorageContext | undefined;
+  vectorStores?: VectorStoreByType | undefined;
+  logProgress?: boolean | undefined;
 }
 
 export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
   indexStore: BaseIndexStore;
-  vectorStores?: VectorStoreByType;
+  vectorStores?: VectorStoreByType | undefined;
 }
 
 /**
@@ -65,7 +65,7 @@ export interface VectorIndexConstructorProps extends BaseIndexInit<IndexDict> {
  */
 export class VectorStoreIndex extends BaseIndex<IndexDict> {
   indexStore: BaseIndexStore;
-  embedModel?: BaseEmbedding;
+  embedModel?: BaseEmbedding | undefined;
   vectorStores: VectorStoreByType;
 
   private constructor(init: VectorIndexConstructorProps) {
@@ -137,7 +137,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
       indexStruct =
-        indexStructs[0].type === IndexStructType.SIMPLE_DICT
+        indexStructs[0]!.type === IndexStructType.SIMPLE_DICT
           ? indexStructs[0]
           : undefined;
       indexStruct = indexStructs[0];
@@ -164,7 +164,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    */
   async getNodeEmbeddingResults(
     nodes: BaseNode[],
-    options?: { logProgress?: boolean },
+    options?: { logProgress?: boolean | undefined },
   ): Promise<BaseNode[]> {
     const nodeMap = splitNodesByType(nodes);
     for (const type in nodeMap) {
@@ -187,7 +187,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    */
   async buildIndexFromNodes(
     nodes: BaseNode[],
-    options?: { logProgress?: boolean },
+    options?: { logProgress?: boolean | undefined },
   ) {
     await this.insertNodes(nodes, options);
   }
@@ -314,13 +314,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     // NOTE: if the vector store keeps text,
     // we only need to add image and index nodes
     for (let i = 0; i < nodes.length; ++i) {
-      const { type } = nodes[i];
+      const { type } = nodes[i]!;
       if (
         !vectorStore.storesText ||
         type === ObjectType.INDEX ||
         type === ObjectType.IMAGE
       ) {
-        const nodeWithoutEmbedding = nodes[i].clone();
+        const nodeWithoutEmbedding = nodes[i]!.clone();
         nodeWithoutEmbedding.embedding = undefined;
         this.indexStruct.addNode(nodeWithoutEmbedding, newIds[i]);
         await this.docStore.addDocuments([nodeWithoutEmbedding], true);
@@ -330,7 +330,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
   async insertNodes(
     nodes: BaseNode[],
-    options?: { logProgress?: boolean },
+    options?: { logProgress?: boolean | undefined },
   ): Promise<void> {
     if (!nodes || nodes.length === 0) {
       return;
@@ -384,8 +384,8 @@ type TopKMap = { [P in ModalityType]: number };
 
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
-  similarityTopK?: number;
-  topK?: TopKMap;
+  similarityTopK?: number | undefined;
+  topK?: TopKMap | undefined;
   filters?: MetadataFilters;
 };
 
@@ -393,8 +393,8 @@ export class VectorIndexRetriever implements BaseRetriever {
   index: VectorStoreIndex;
   topK: TopKMap;
 
-  serviceContext?: ServiceContext;
-  filters?: MetadataFilters;
+  serviceContext?: ServiceContext | undefined;
+  filters?: MetadataFilters | undefined;
 
   constructor({
     index,
@@ -467,7 +467,7 @@ export class VectorIndexRetriever implements BaseRetriever {
         const result = await vectorStore.query({
           queryEmbedding,
           mode: VectorStoreQueryMode.DEFAULT,
-          similarityTopK: this.topK[type],
+          similarityTopK: this.topK[type]!,
           filters: this.filters ?? filters ?? undefined,
         });
         nodes = nodes.concat(this.buildNodeListFromQueryResult(result));
@@ -480,11 +480,11 @@ export class VectorIndexRetriever implements BaseRetriever {
     const nodesWithScores: NodeWithScore[] = [];
     for (let i = 0; i < result.ids.length; i++) {
       const nodeFromResult = result.nodes?.[i];
-      if (!this.index.indexStruct.nodesDict[result.ids[i]] && nodeFromResult) {
-        this.index.indexStruct.nodesDict[result.ids[i]] = nodeFromResult;
+      if (!this.index.indexStruct.nodesDict[result.ids[i]!] && nodeFromResult) {
+        this.index.indexStruct.nodesDict[result.ids[i]!] = nodeFromResult;
       }
 
-      const node = this.index.indexStruct.nodesDict[result.ids[i]];
+      const node = this.index.indexStruct.nodesDict[result.ids[i]!]!;
       // XXX: Hack, if it's an image node, we reconstruct the image from the URL
       // Alternative: Store image in doc store and retrieve it here
       if (node instanceof ImageNode) {
@@ -493,7 +493,7 @@ export class VectorIndexRetriever implements BaseRetriever {
 
       nodesWithScores.push({
         node: node,
-        score: result.similarities[i],
+        score: result.similarities[i]!,
       });
     }
 

@@ -1,16 +1,20 @@
 import type { LLM, ToolMetadata } from "@llamaindex/core/llms";
+import {
+  defaultSubQuestionPrompt,
+  type ModuleRecord,
+  PromptMixin,
+  type SubQuestionPrompt,
+} from "@llamaindex/core/prompts";
 import type { QueryType } from "@llamaindex/core/query-engine";
-import { extractText } from "@llamaindex/core/utils";
+import type { BaseOutputParser } from "@llamaindex/core/schema";
+import { extractText, toToolDescriptions } from "@llamaindex/core/utils";
 import { SubQuestionOutputParser } from "./OutputParser.js";
-import type { SubQuestionPrompt } from "./Prompt.js";
-import { buildToolsText, defaultSubQuestionPrompt } from "./Prompt.js";
 import type {
   BaseQuestionGenerator,
   SubQuestion,
 } from "./engines/query/types.js";
 import { OpenAI } from "./llm/openai.js";
-import { PromptMixin } from "./prompts/index.js";
-import type { BaseOutputParser, StructuredOutput } from "./types.js";
+import type { StructuredOutput } from "./types.js";
 
 /**
  * LLMQuestionGenerator uses the LLM to generate new questions for the LLM using tools and a user query.
@@ -49,11 +53,11 @@ export class LLMQuestionGenerator
     tools: ToolMetadata[],
     query: QueryType,
   ): Promise<SubQuestion[]> {
-    const toolsStr = buildToolsText(tools);
+    const toolsStr = toToolDescriptions(tools);
     const queryStr = extractText(query);
     const prediction = (
       await this.llm.complete({
-        prompt: this.prompt({
+        prompt: this.prompt.format({
           toolsStr,
           queryStr,
         }),
@@ -63,5 +67,9 @@ export class LLMQuestionGenerator
     const structuredOutput = this.outputParser.parse(prediction);
 
     return structuredOutput.parsedOutput;
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    return {};
   }
 }

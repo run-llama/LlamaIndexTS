@@ -34,7 +34,7 @@ export class MetaProvider extends Provider<MetaStreamEvent> {
     const result = this.getResultFromResponse(response);
     if (!result.generation.trim().startsWith(TOKENS.TOOL_CALL)) return [];
     const tool = JSON.parse(
-      result.generation.trim().split(TOKENS.TOOL_CALL)[1],
+      result.generation.trim().split(TOKENS.TOOL_CALL)[1]!,
     );
     return [
       {

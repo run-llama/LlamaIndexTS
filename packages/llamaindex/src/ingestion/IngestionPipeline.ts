@@ -7,10 +7,7 @@ import {
   type Metadata,
 } from "@llamaindex/core/schema";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
-import type {
-  VectorStore,
-  VectorStoreByType,
-} from "../storage/vectorStore/types.js";
+import type { VectorStore, VectorStoreByType } from "../vector-store/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
   DocStoreStrategy,
@@ -60,13 +57,13 @@ export async function runTransformations(
 
 export class IngestionPipeline {
   transformations: TransformComponent[] = [];
-  documents?: Document[];
-  reader?: BaseReader;
-  vectorStore?: VectorStore;
-  vectorStores?: VectorStoreByType;
+  documents?: Document[] | undefined;
+  reader?: BaseReader | undefined;
+  vectorStore?: VectorStore | undefined;
+  vectorStores?: VectorStoreByType | undefined;
   docStore?: BaseDocumentStore;
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
-  cache?: IngestionCache;
+  cache?: IngestionCache | undefined;
   disableCache: boolean = false;
 
   private _docStoreStrategy?: TransformComponent;

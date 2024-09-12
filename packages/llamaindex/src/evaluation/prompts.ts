@@ -1,26 +1,26 @@
-export const defaultUserPrompt = ({
-  query,
-  referenceAnswer,
-  generatedAnswer,
-}: {
-  query: string;
-  referenceAnswer: string;
-  generatedAnswer: string;
-}) => `
+import { PromptTemplate } from "@llamaindex/core/prompts";
+
+export const defaultUserPrompt = new PromptTemplate({
+  templateVars: ["query", "referenceAnswer", "generatedAnswer"],
+  template: `
 ## User Query
-${query}
+{query}
 
 ## Reference Answer
-${referenceAnswer}
+{referenceAnswer}
 
 ## Generated Answer
-${generatedAnswer}
-`;
+{generatedAnswer}
+`,
+});
 
-export type UserPrompt = typeof defaultUserPrompt;
+export type UserPrompt = PromptTemplate<
+  ["query", "referenceAnswer", "generatedAnswer"]
+>;
 
-export const defaultCorrectnessSystemPrompt =
-  () => `You are an expert evaluation system for a question answering chatbot.
+export const defaultCorrectnessSystemPrompt: CorrectnessSystemPrompt =
+  new PromptTemplate({
+    template: `You are an expert evaluation system for a question answering chatbot.
 
 You are given the following information:
 - a user query, and
@@ -47,41 +47,35 @@ Example Response:
 4.0
 The generated answer has the exact same metrics as the reference answer
 but it is not as concise.
-`;
+`,
+  });
 
-export type CorrectnessSystemPrompt = typeof defaultCorrectnessSystemPrompt;
+export type CorrectnessSystemPrompt = PromptTemplate<[]>;
 
-export const defaultFaithfulnessRefinePrompt = ({
-  query,
-  context,
-  existingAnswer,
-}: {
-  query: string;
-  context: string;
-  existingAnswer: string;
-}) => `
+export const defaultFaithfulnessRefinePrompt = new PromptTemplate({
+  templateVars: ["query", "existingAnswer", "context"],
+  template: `
 We want to understand if the following information is present
-in the context information: ${query}
-We have provided an existing YES/NO answer: ${existingAnswer}
+in the context information: {query}
+We have provided an existing YES/NO answer: {existingAnswer}
 We have the opportunity to refine the existing answer
 (only if needed) with some more context below.
 ------------
-${context}
+{context}
 ------------
 If the existing answer was already YES, still answer YES.
 If the information is present in the new context, answer YES.
 Otherwise answer NO.
-`;
+`,
+});
 
-export type FaithfulnessRefinePrompt = typeof defaultFaithfulnessRefinePrompt;
+export type FaithfulnessRefinePrompt = PromptTemplate<
+  ["query", "existingAnswer", "context"]
+>;
 
-export const defaultFaithfulnessTextQaPrompt = ({
-  query,
-  context,
-}: {
-  query: string;
-  context: string;
-}) => `
+export const defaultFaithfulnessTextQaPrompt = new PromptTemplate({
+  templateVars: ["context", "query"],
+  template: `
 Please tell if a given piece of information
 is supported by the context.
 You need to answer with either YES or NO.
@@ -107,49 +101,43 @@ It is generally double-crusted, with pastry both above
 and below the filling; the upper crust may be solid or
 latticed (woven of crosswise strips).
 Answer: NO
-Information: ${query}
-Context: ${context}
+Information: {query}
+Context: {context}
 Answer:
-`;
+`,
+});
 
-export type FaithfulnessTextQAPrompt = typeof defaultFaithfulnessTextQaPrompt;
+export type FaithfulnessTextQAPrompt = PromptTemplate<["query", "context"]>;
 
-export const defaultRelevancyEvalPrompt = ({
-  query,
-  context,
-}: {
-  query: string;
-  context: string;
-}) => `Your task is to evaluate if the response for the query is in line with the context information provided.
+export type RelevancyEvalPrompt = PromptTemplate<["context", "query"]>;
+export const defaultRelevancyEvalPrompt = new PromptTemplate({
+  templateVars: ["context", "query"],
+  template: `Your task is to evaluate if the response for the query is in line with the context information provided.
 You have two options to answer. Either YES/ NO.
 Answer - YES, if the response for the query is in line with context information otherwise NO.
-Query and Response: ${query}
-Context: ${context}
-Answer: `;
+Query and Response: {query}
+Context: {context}
+Answer: `,
+});
 
-export type RelevancyEvalPrompt = typeof defaultRelevancyEvalPrompt;
-
-export const defaultRelevancyRefinePrompt = ({
-  query,
-  existingAnswer,
-  contextMsg,
-}: {
-  query: string;
-  existingAnswer: string;
-  contextMsg: string;
-}) => `We want to understand if the following query and response is
+export const defaultRelevancyRefinePrompt = new PromptTemplate({
+  templateVars: ["query", "existingAnswer", "contextMsg"],
+  template: `We want to understand if the following query and response is
 in line with the context information: 
-${query}
+{query}
 We have provided an existing YES/NO answer: 
-${existingAnswer}
+{existingAnswer}
 We have the opportunity to refine the existing answer
 (only if needed) with some more context below.
 ------------
-${contextMsg}
+{contextMsg}
 ------------
 If the existing answer was already YES, still answer YES.
 If the information is present in the new context, answer YES.
 Otherwise answer NO.
-`;
+`,
+});
 
-export type RelevancyRefinePrompt = typeof defaultRelevancyRefinePrompt;
+export type RelevancyRefinePrompt = PromptTemplate<
+  ["query", "existingAnswer", "contextMsg"]
+>;

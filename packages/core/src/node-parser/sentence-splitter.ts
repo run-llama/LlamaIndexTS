@@ -168,9 +168,9 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
       let lastIndex = lastChunk.length - 1;
       while (
         lastIndex >= 0 &&
-        currentChunkLength + lastChunk[lastIndex][1] <= this.chunkOverlap
+        currentChunkLength + lastChunk[lastIndex]![1] <= this.chunkOverlap
       ) {
-        const [text, length] = lastChunk[lastIndex];
+        const [text, length] = lastChunk[lastIndex]!;
         currentChunkLength += length;
         currentChunk.unshift([text, length]);
         lastIndex -= 1;
@@ -178,7 +178,7 @@ export class SentenceSplitter extends MetadataAwareTextSplitter {
     };
 
     while (splits.length > 0) {
-      const curSplit = splits[0];
+      const curSplit = splits[0]!;
       if (curSplit.tokenSize > chunkSize) {
         throw new Error("Single token exceeded chunk size");
       }

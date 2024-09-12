@@ -50,10 +50,10 @@ We want to see what our agent is up to, so we're going to hook into some events 
 
 ```javascript
 Settings.callbackManager.on("llm-tool-call", (event) => {
-  console.log(event.detail.payload);
+  console.log(event.detail);
 });
 Settings.callbackManager.on("llm-tool-result", (event) => {
-  console.log(event.detail.payload);
+  console.log(event.detail);
 });
 ```
 
