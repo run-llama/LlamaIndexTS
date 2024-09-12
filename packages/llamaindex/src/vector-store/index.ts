@@ -5,6 +5,4 @@ export * from "./MongoDBAtlasVectorStore.js";
 export * from "./PGVectorStore.js";
 export * from "./PineconeVectorStore.js";
 export * from "./QdrantVectorStore.js";
-export * from "./SimpleVectorStore.js";
-export * from "./types.js";
 export * from "./WeaviateVectorStore.js";

@@ -1,4 +1,5 @@
 import type { Tokenizer } from "@llamaindex/env";
+import { BaseEmbedding } from "../embeddings";
 import type { LLM } from "../llms";
 import {
   type CallbackManager,
@@ -11,6 +12,11 @@ import {
   setChunkSize,
   withChunkSize,
 } from "./settings/chunk-size";
+import {
+  getEmbedModel,
+  setEmbedModel,
+  withEmbedModel,
+} from "./settings/embed-model";
 import { getLLM, setLLM, withLLM } from "./settings/llm";
 import {
   getTokenizer,
@@ -24,6 +30,15 @@ export const Settings = {
   },
   set llm(llm) {
     setLLM(llm);
+  },
+  get embedModel() {
+    return getEmbedModel();
+  },
+  set embedModel(embedModel) {
+    setEmbedModel(embedModel);
+  },
+  withEmbedModel<Result>(embedModel: BaseEmbedding, fn: () => Result): Result {
+    return withEmbedModel(embedModel, fn);
   },
   withLLM<Result>(llm: LLM, fn: () => Result): Result {
     return withLLM(llm, fn);

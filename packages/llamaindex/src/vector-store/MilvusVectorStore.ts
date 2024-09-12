@@ -1,5 +1,16 @@
 import type { ChannelOptions } from "@grpc/grpc-js";
 import { BaseNode, MetadataMode, type Metadata } from "@llamaindex/core/schema";
+import {
+  BaseVectorStore,
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
+  parsePrimitiveValue,
+  type BaseVectorStoreOptions,
+  type MetadataFilters,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
+} from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import {
   DataType,
@@ -9,20 +20,6 @@ import {
   type RowData,
   type SearchSimpleReq,
 } from "@zilliz/milvus2-sdk-node";
-import {
-  VectorStoreBase,
-  type IEmbedModel,
-  type MetadataFilters,
-  type VectorStoreNoEmbedModel,
-  type VectorStoreQuery,
-  type VectorStoreQueryResult,
-} from "./types.js";
-import {
-  metadataDictToNode,
-  nodeToMetadata,
-  parseArrayValue,
-  parsePrimitiveValue,
-} from "./utils.js";
 
 function parseScalarFilters(scalarFilters: MetadataFilters): string {
   const condition = scalarFilters.condition ?? "and";
@@ -72,10 +69,7 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
   return filters.join(` ${condition} `);
 }
 
-export class MilvusVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class MilvusVectorStore extends BaseVectorStore {
   public storesText: boolean = true;
   public isEmbeddingQuery?: boolean;
   private flatMetadata: boolean = true;
@@ -90,8 +84,8 @@ export class MilvusVectorStore
   private embeddingKey: string;
 
   constructor(
-    init?: Partial<{ milvusClient: MilvusClient }> &
-      Partial<IEmbedModel> & {
+    options?: Partial<{ milvusClient: MilvusClient }> &
+      BaseVectorStoreOptions & {
         params?: {
           configOrAddress: ClientConfig | string;
           ssl?: boolean;
@@ -106,15 +100,15 @@ export class MilvusVectorStore
         embeddingKey?: string;
       },
   ) {
-    super(init?.embedModel);
-    if (init?.milvusClient) {
-      this.milvusClient = init.milvusClient;
+    super(options);
+    if (options?.milvusClient) {
+      this.milvusClient = options.milvusClient;
     } else {
       const configOrAddress =
-        init?.params?.configOrAddress ?? getEnv("MILVUS_ADDRESS");
-      const ssl = init?.params?.ssl ?? getEnv("MILVUS_SSL") === "true";
-      const username = init?.params?.username ?? getEnv("MILVUS_USERNAME");
-      const password = init?.params?.password ?? getEnv("MILVUS_PASSWORD");
+        options?.params?.configOrAddress ?? getEnv("MILVUS_ADDRESS");
+      const ssl = options?.params?.ssl ?? getEnv("MILVUS_SSL") === "true";
+      const username = options?.params?.username ?? getEnv("MILVUS_USERNAME");
+      const password = options?.params?.password ?? getEnv("MILVUS_PASSWORD");
 
       if (!configOrAddress) {
         throw new Error("Must specify MILVUS_ADDRESS via env variable.");
@@ -124,15 +118,15 @@ export class MilvusVectorStore
         ssl,
         username,
         password,
-        init?.params?.channelOptions,
+        options?.params?.channelOptions,
       );
     }
 
-    this.collectionName = init?.collection ?? "llamacollection";
-    this.idKey = init?.idKey ?? "id";
-    this.contentKey = init?.contentKey ?? "content";
-    this.metadataKey = init?.metadataKey ?? "metadata";
-    this.embeddingKey = init?.embeddingKey ?? "embedding";
+    this.collectionName = options?.collection ?? "llamacollection";
+    this.idKey = options?.idKey ?? "id";
+    this.contentKey = options?.contentKey ?? "content";
+    this.metadataKey = options?.metadataKey ?? "metadata";
+    this.embeddingKey = options?.embeddingKey ?? "embedding";
   }
 
   public client(): MilvusClient {

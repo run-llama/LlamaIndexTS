@@ -1,14 +1,17 @@
 import {
-  VectorStoreBase,
-  type IEmbedModel,
+  BaseVectorStore,
+  type BaseVectorStoreOptions,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
 
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+} from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import type {
   FetchResponse,
@@ -16,22 +19,19 @@ import type {
   ScoredPineconeRecord,
 } from "@pinecone-database/pinecone";
 import { type Pinecone } from "@pinecone-database/pinecone";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
-type PineconeParams = {
+export type PineconeOptions = {
   indexName?: string;
   chunkSize?: number;
   namespace?: string;
   textKey?: string;
-} & IEmbedModel;
+} & BaseVectorStoreOptions;
 
 /**
  * Provides support for writing and querying vector data in Pinecone.
  */
-export class PineconeVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class PineconeVectorStore extends BaseVectorStore {
+  isEmbeddingQuery: boolean = true;
   storesText: boolean = true;
 
   /*
@@ -48,15 +48,15 @@ export class PineconeVectorStore
   chunkSize: number;
   textKey: string;
 
-  constructor(params?: PineconeParams) {
-    super(params?.embedModel);
+  constructor(options?: PineconeOptions) {
+    super(options);
     this.indexName =
-      params?.indexName ?? getEnv("PINECONE_INDEX_NAME") ?? "llama";
-    this.namespace = params?.namespace ?? getEnv("PINECONE_NAMESPACE") ?? "";
+      options?.indexName ?? getEnv("PINECONE_INDEX_NAME") ?? "llama";
+    this.namespace = options?.namespace ?? getEnv("PINECONE_NAMESPACE") ?? "";
     this.chunkSize =
-      params?.chunkSize ??
+      options?.chunkSize ??
       Number.parseInt(getEnv("PINECONE_CHUNK_SIZE") ?? "100");
-    this.textKey = params?.textKey ?? "text";
+    this.textKey = options?.textKey ?? "text";
   }
 
   private async getDb(): Promise<Pinecone> {

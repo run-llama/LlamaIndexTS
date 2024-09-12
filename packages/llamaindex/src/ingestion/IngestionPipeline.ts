@@ -6,8 +6,11 @@ import {
   type Document,
   type Metadata,
 } from "@llamaindex/core/schema";
+import type {
+  BaseVectorStore,
+  VectorStoreByType,
+} from "@llamaindex/core/vector-store";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
-import type { VectorStore, VectorStoreByType } from "../vector-store/types.js";
 import { IngestionCache, getTransformationHash } from "./IngestionCache.js";
 import {
   DocStoreStrategy,
@@ -59,7 +62,7 @@ export class IngestionPipeline {
   transformations: TransformComponent[] = [];
   documents?: Document[] | undefined;
   reader?: BaseReader | undefined;
-  vectorStore?: VectorStore | undefined;
+  vectorStore?: BaseVectorStore | undefined;
   vectorStores?: VectorStoreByType | undefined;
   docStore?: BaseDocumentStore;
   docStoreStrategy: DocStoreStrategy = DocStoreStrategy.UPSERTS;
@@ -133,7 +136,7 @@ export async function addNodesToVectorStores(
   nodesAdded?: (
     newIds: string[],
     nodes: BaseNode<Metadata>[],
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
   ) => Promise<void>,
 ) {
   const nodeMap = splitNodesByType(nodes);

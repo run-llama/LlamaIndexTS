@@ -8,24 +8,21 @@ import weaviate, {
   type WeaviateNonGenericObject,
 } from "weaviate-client";
 
-import { getEnv } from "@llamaindex/env";
-import type { BaseHybridOptions } from "weaviate-client";
 import {
-  VectorStoreBase,
-  VectorStoreQueryMode,
-  type IEmbedModel,
-  type MetadataFilter,
-  type MetadataFilters,
-  type VectorStoreNoEmbedModel,
-  type VectorStoreQuery,
-  type VectorStoreQueryResult,
-} from "./types.js";
-import {
+  BaseVectorStore,
   metadataDictToNode,
   nodeToMetadata,
   parseArrayValue,
   parseNumberValue,
-} from "./utils.js";
+  VectorStoreQueryMode,
+  type BaseVectorStoreOptions,
+  type MetadataFilter,
+  type MetadataFilters,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
+} from "@llamaindex/core/vector-store";
+import { getEnv } from "@llamaindex/env";
+import type { BaseHybridOptions } from "weaviate-client";
 
 const NODE_SCHEMA = [
   {
@@ -119,10 +116,8 @@ const toWeaviateFilter = (
   return Filters[condition](...filtersList);
 };
 
-export class WeaviateVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class WeaviateVectorStore extends BaseVectorStore {
+  isEmbeddingQuery: boolean = true;
   public storesText: boolean = true;
   private flatMetadata: boolean = true;
 
@@ -137,7 +132,7 @@ export class WeaviateVectorStore
   private metadataKey: string;
 
   constructor(
-    init?: Partial<IEmbedModel> & {
+    options?: BaseVectorStoreOptions & {
       weaviateClient?: WeaviateClient;
       cloudOptions?: {
         clusterURL?: string;
@@ -150,16 +145,17 @@ export class WeaviateVectorStore
       embeddingKey?: string;
     },
   ) {
-    super(init?.embedModel);
+    super(options);
 
-    if (init?.weaviateClient) {
+    if (options?.weaviateClient) {
       // Use the provided client
-      this.weaviateClient = init.weaviateClient;
+      this.weaviateClient = options.weaviateClient;
     } else {
       // Load client cloud options from config or env
       const clusterURL =
-        init?.cloudOptions?.clusterURL ?? getEnv("WEAVIATE_CLUSTER_URL");
-      const apiKey = init?.cloudOptions?.apiKey ?? getEnv("WEAVIATE_API_KEY");
+        options?.cloudOptions?.clusterURL ?? getEnv("WEAVIATE_CLUSTER_URL");
+      const apiKey =
+        options?.cloudOptions?.apiKey ?? getEnv("WEAVIATE_API_KEY");
       if (!clusterURL || !apiKey) {
         throw new Error(
           "Must specify WEAVIATE_CLUSTER_URL and WEAVIATE_API_KEY via env variable.",
@@ -169,12 +165,12 @@ export class WeaviateVectorStore
       this.apiKey = apiKey;
     }
 
-    this.checkIndexName(init?.indexName);
-    this.indexName = init?.indexName ?? "LlamaIndex";
-    this.idKey = init?.idKey ?? "id";
-    this.contentKey = init?.contentKey ?? "text";
-    this.embeddingKey = init?.embeddingKey ?? "vectors";
-    this.metadataKey = init?.metadataKey ?? "node_info";
+    this.checkIndexName(options?.indexName);
+    this.indexName = options?.indexName ?? "LlamaIndex";
+    this.idKey = options?.idKey ?? "id";
+    this.contentKey = options?.contentKey ?? "text";
+    this.embeddingKey = options?.embeddingKey ?? "vectors";
+    this.metadataKey = options?.metadataKey ?? "node_info";
   }
 
   public client() {

@@ -1,20 +1,20 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
+import {
+  BaseVectorStore,
+  FilterCondition,
+  FilterOperator,
+  metadataDictToNode,
+  nodeToMetadata,
+  type MetadataFilter,
+  type MetadataFilters,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
+} from "@llamaindex/core/vector-store";
 import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
-import {
-  FilterCondition,
-  VectorStoreBase,
-  type FilterOperator,
-  type MetadataFilter,
-  type MetadataFilters,
-  type VectorStoreNoEmbedModel,
-  type VectorStoreQuery,
-  type VectorStoreQueryResult,
-} from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 // define your Atlas Search index. See detail https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector/
 const DEFAULT_EMBEDDING_DEFINITION = {
@@ -67,10 +67,8 @@ function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
  * Vector store that uses MongoDB Atlas for storage and vector search.
  * This store uses the $vectorSearch aggregation stage to perform vector similarity search.
  */
-export class MongoDBAtlasVectorSearch
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class MongoDBAtlasVectorSearch extends BaseVectorStore {
+  isEmbeddingQuery: boolean = true;
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -140,7 +138,7 @@ export class MongoDBAtlasVectorSearch
   private collection?: Collection;
 
   constructor(
-    init: Partial<MongoDBAtlasVectorSearch> & {
+    options: Partial<MongoDBAtlasVectorSearch> & {
       dbName: string;
       collectionName: string;
       embedModel?: BaseEmbedding;
@@ -149,9 +147,9 @@ export class MongoDBAtlasVectorSearch
       embeddingDefinition?: Record<string, unknown>;
     },
   ) {
-    super(init.embedModel);
-    if (init.mongodbClient) {
-      this.mongodbClient = init.mongodbClient;
+    super(options);
+    if (options.mongodbClient) {
+      this.mongodbClient = options.mongodbClient;
     } else {
       const mongoUri = getEnv("MONGODB_URI");
       if (!mongoUri) {
@@ -162,22 +160,22 @@ export class MongoDBAtlasVectorSearch
       this.mongodbClient = new MongoClient(mongoUri);
     }
 
-    this.dbName = init.dbName ?? "default_db";
-    this.collectionName = init.collectionName ?? "default_collection";
-    this.autoCreateIndex = init.autoCreateIndex ?? true;
-    this.indexedMetadataFields = init.indexedMetadataFields ?? [];
+    this.dbName = options.dbName ?? "default_db";
+    this.collectionName = options.collectionName ?? "default_collection";
+    this.autoCreateIndex = options.autoCreateIndex ?? true;
+    this.indexedMetadataFields = options.indexedMetadataFields ?? [];
     this.embeddingDefinition = {
       ...DEFAULT_EMBEDDING_DEFINITION,
-      ...(init.embeddingDefinition ?? {}),
+      ...(options.embeddingDefinition ?? {}),
     };
-    this.indexName = init.indexName ?? "default";
-    this.embeddingKey = init.embeddingKey ?? "embedding";
-    this.idKey = init.idKey ?? "id";
-    this.textKey = init.textKey ?? "text";
-    this.metadataKey = init.metadataKey ?? "metadata";
+    this.indexName = options.indexName ?? "default";
+    this.embeddingKey = options.embeddingKey ?? "embedding";
+    this.idKey = options.idKey ?? "id";
+    this.textKey = options.textKey ?? "text";
+    this.metadataKey = options.metadataKey ?? "metadata";
     this.numCandidates =
-      init.numCandidates ?? ((query) => query.similarityTopK * 10);
-    this.insertOptions = init.insertOptions;
+      options.numCandidates ?? ((query) => query.similarityTopK * 10);
+    this.insertOptions = options.insertOptions;
   }
 
   async ensureCollection() {
@@ -274,7 +272,7 @@ export class MongoDBAtlasVectorSearch
     );
   }
 
-  get client(): any {
+  client(): any {
     return this.mongodbClient;
   }
 
