@@ -34,7 +34,6 @@ export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/prompts";
 export * from "@llamaindex/core/schema";
-export * from "@llamaindex/openai";
 
 declare module "@llamaindex/core/global" {
   export interface LlamaIndexEventMaps {

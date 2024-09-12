@@ -11,7 +11,6 @@ export {
   GEMINI_MODEL,
   type GoogleGeminiSessionOptions,
 } from "./gemini/types.js";
-
 export { Groq } from "./groq.js";
 export { HuggingFaceInferenceAPI, HuggingFaceLLM } from "./huggingface.js";
 export {
@@ -19,6 +18,7 @@ export {
   MistralAI,
   MistralAISession,
 } from "./mistral.js";
+export * from "./openai.js";
 export { Portkey } from "./portkey.js";
 export * from "./replicate_ai.js";
 // Note: The type aliases for replicate are to simplify usage for Llama 2 (we're using replicate for Llama 2 support)
