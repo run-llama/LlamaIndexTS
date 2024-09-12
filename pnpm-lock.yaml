@@ -655,9 +655,6 @@ importers:
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
       '@types/node':
         specifier: ^22.5.1
         version: 22.5.1
