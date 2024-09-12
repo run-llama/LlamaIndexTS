@@ -1,12 +1,12 @@
 # Vector Stores
 
-Vector stores save embedding vectors of your ingested data.
+Vector stores save embedding vectors of your ingested document chunks.
 
 ## Available Vector Stores
 
 Available Vector Stores are shown on the sidebar to the left. Additionally the following integrations exist without separate documentation:
 
-- [SimpleVectorStore](../../../api/classes/SimpleVectorStore.md): A simple in-memory vector store with optional [persistance](../index.md) to disk.
+- [SimpleVectorStore](../../../api/classes/SimpleVectorStore.md): A simple in-memory vector store with optional [persistance](../index.md#local-storage) to disk.
 - [AstraDBVectorStore](../../../api/classes/AstraDBVectorStore.md): A cloud-native, scalable Database-as-a-Service built on Apache Cassandra, see [datastax.com](https://www.datastax.com/products/datastax-astra)
 - [ChromaVectorStore](../../../api/classes/ChromaVectorStore.md): An open-source vector database, focused on ease of use and performance, see [trychroma.com](https://www.trychroma.com/)
 - [MilvusVectorStore](../../../api/classes/MilvusVectorStore.md): An open-source, high-performance, highly scalable vector database, see [milvus.io](https://milvus.io/)
