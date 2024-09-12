@@ -14,7 +14,7 @@ pnpm run build
 
 ```bash
 cd examples
-pnpm run test
+pnpm run test:wiki
 ```
 
 ### Run WASM files in Python using Extism SDK (https://github.com/extism/python-sdk)

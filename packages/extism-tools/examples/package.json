@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "tsx ./src/wiki.ts"
+    "test:wiki": "tsx ./src/wiki.ts",
+    "test:todo": "tsx ./src/todo.ts"
   },
   "dependencies": {
     "@llamaindex/extism-tools": "workspace:*",
