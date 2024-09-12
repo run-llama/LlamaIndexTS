@@ -16,3 +16,7 @@ Available Vector Stores are shown on the sidebar to the left. Additionally the f
 - [WeaviateVectorStore](../../../api/classes/WeaviateVectorStore.md): An open-source, ai-native vector database, see [weaviate.io](https://weaviate.io/)
 
 Check the [LlamaIndexTS Github](https://github.com/run-llama/LlamaIndexTS) for the most up to date overview of integrations.
+
+## API Reference
+
+- [VectorStoreBase](../../../api/classes/VectorStoreBase.md)
