@@ -4,7 +4,7 @@ import type { Mocked } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { VectorStoreQueryMode } from "llamaindex/storage/index";
+import { VectorStoreQueryMode } from "llamaindex/vector-store";
 import { TestableQdrantVectorStore } from "../mocks/TestableQdrantVectorStore.js";
 
 vi.mock("@qdrant/js-client-rest");

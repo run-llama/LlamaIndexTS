@@ -2,7 +2,7 @@ import { Document, MetadataMode } from "@llamaindex/core/schema";
 import {
   metadataDictToNode,
   nodeToMetadata,
-} from "llamaindex/storage/vectorStore/utils";
+} from "llamaindex/vector-store/utils";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe("Testing VectorStore utils", () => {

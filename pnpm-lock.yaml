@@ -167,7 +167,7 @@ importers:
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.637.0)
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
@@ -625,7 +625,7 @@ importers:
         version: 2.0.0
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.637.0)
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
@@ -638,12 +638,6 @@ importers:
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
-      pg:
-        specifier: ^8.12.0
-        version: 8.12.0
-      pgvector:
-        specifier: ^0.2.0
-        version: 0.2.0
       portkey-ai:
         specifier: 0.1.16
         version: 0.1.16
@@ -687,6 +681,12 @@ importers:
       glob:
         specifier: ^11.0.0
         version: 11.0.0
+      pg:
+        specifier: ^8.12.0
+        version: 8.12.0
+      pgvector:
+        specifier: 0.2.0
+        version: 0.2.0
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -884,6 +884,9 @@ importers:
       typescript:
         specifier: 5.5.4
         version: 5.5.4
+      vite-plugin-wasm:
+        specifier: ^3.3.0
+        version: 3.3.0(vite@5.4.2(@types/node@22.5.1)(terser@5.31.6))
 
   packages/llamaindex/tests:
     devDependencies:
@@ -10736,6 +10739,11 @@ packages:
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
+  vite-plugin-wasm@3.3.0:
+    resolution: {integrity: sha512-tVhz6w+W9MVsOCHzxo6SSMSswCeIw4HTrXEi6qL3IRzATl83jl09JVO1djBqPSwfjgnpVHNLYcaMbaDX5WB/pg==}
+    peerDependencies:
+      vite: ^2 || ^3 || ^4 || ^5
+
   vite@5.4.2:
     resolution: {integrity: sha512-dDrQTRHp5C1fTFzcSaMxjk6vdpKvT+2/mIdE07Gw2ykehT49O0z/VHS3zZ8iV/Gh8BJJKHWOe5RjaNrW5xf/GA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -17796,16 +17804,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.2(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
-    dependencies:
-      debug: 3.2.7
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.3.0(eslint@8.57.0)(typescript@5.5.4)
-      eslint: 8.57.0
-      eslint-import-resolver-node: 0.3.9
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
@@ -17816,7 +17814,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.2(@typescript-eslint/parser@8.3.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
+      eslint-module-utils: 2.8.2(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -20544,7 +20542,7 @@ snapshots:
     optionalDependencies:
       '@aws-sdk/credential-providers': 3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0))
 
-  mongodb@6.8.0(@aws-sdk/credential-providers@3.637.0(@aws-sdk/client-sso-oidc@3.637.0(@aws-sdk/client-sts@3.637.0))):
+  mongodb@6.8.0(@aws-sdk/credential-providers@3.637.0):
     dependencies:
       '@mongodb-js/saslprep': 1.1.7
       bson: 6.8.0
@@ -23580,6 +23578,10 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-wasm@3.3.0(vite@5.4.2(@types/node@22.5.1)(terser@5.31.6)):
+    dependencies:
+      vite: 5.4.2(@types/node@22.5.1)(terser@5.31.6)
 
   vite@5.4.2(@types/node@22.5.1)(terser@5.31.6):
     dependencies:

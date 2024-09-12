@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/next-agent-test",
-  "version": "0.1.57",
+  "version": "0.1.59",
   "private": true,
   "scripts": {
     "dev": "next dev",
