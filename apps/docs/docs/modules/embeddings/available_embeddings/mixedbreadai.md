@@ -7,7 +7,7 @@ To find out more about the latest features, updates, and available models, visit
 ## Table of Contents
 
 1. [Setup](#setup)
-2. [Usage with LlamaIndex](#integration-with-llamaindex)
+2. [Usage with LlamaIndex](#usage-with-llamaindex)
 3. [Embeddings with Custom Parameters](#embeddings-with-custom-parameters)
 
 ## Setup
