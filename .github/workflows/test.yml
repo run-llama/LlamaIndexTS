@@ -142,6 +142,9 @@ jobs:
       - name: Pack @llamaindex/cloud
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/cloud
+      - name: Pack @llamaindex/openai
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/openai
       - name: Pack @llamaindex/core
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core
