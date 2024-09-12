@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@extism/extism": "^2.0.0-rc7",
+    "@extism/extism": "^2.0.0-rc8",
     "ajv": "^8.17.1",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",

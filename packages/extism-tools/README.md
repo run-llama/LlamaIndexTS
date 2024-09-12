@@ -14,7 +14,7 @@ pnpm run build
 
 ```bash
 cd examples
-pnpm run test:wiki
+pnpm run test
 ```
 
 ### Test using WASM tool with OpenAI Agent
