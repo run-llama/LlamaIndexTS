@@ -8,10 +8,19 @@ function isLocal(url: ImageType): boolean {
   return new URL(url).protocol === "file:";
 }
 
+type TaskType =
+  | "retrieval.passage"
+  | "retrieval.query"
+  | "clustering"
+  | "classification"
+  | "text-matching";
+type EncodingType = "float" | "binary" | "ubinary";
+
 export type JinaEmbeddingRequest = {
   input: Array<{ text: string } | { url: string } | { bytes: string }>;
   model?: string;
-  encoding_type?: "float" | "binary" | "ubinary";
+  encoding_type?: EncodingType;
+  task_type?: TaskType;
 };
 
 export type JinaEmbeddingResponse = {
@@ -34,6 +43,8 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   apiKey: string;
   model: string;
   baseURL: string;
+  taskType: TaskType | undefined;
+  encodingType?: EncodingType | undefined;
 
   async getTextEmbedding(text: string): Promise<number[]> {
     const result = await this.getJinaEmbedding({ input: [{ text }] });
@@ -74,6 +85,8 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
     this.model = init?.model ?? "jina-embeddings-v2-base-en";
     this.baseURL = init?.baseURL ?? "https://api.jina.ai/v1/embeddings";
     init?.embedBatchSize && (this.embedBatchSize = init?.embedBatchSize);
+    this.taskType = init?.taskType;
+    this.encodingType = init?.encodingType;
   }
 
   private async getImageInput(
@@ -89,11 +102,11 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   }
 
   private async getJinaEmbedding(
-    input: JinaEmbeddingRequest,
+    params: JinaEmbeddingRequest,
   ): Promise<JinaEmbeddingResponse> {
     // if input includes image, check if model supports multimodal embeddings
     if (
-      input.input.some((i) => "url" in i || "bytes" in i) &&
+      params.input.some((i) => "url" in i || "bytes" in i) &&
       !JINA_MULTIMODAL_MODELS.includes(this.model)
     ) {
       throw new Error(
@@ -109,13 +122,16 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
       },
       body: JSON.stringify({
         model: this.model,
-        encoding_type: "float",
-        ...input,
+        encoding_type: this.encodingType ?? "float",
+        ...(this.taskType && { task_type: this.taskType }),
+        ...params,
       }),
     });
     if (!response.ok) {
+      const reason = await response.text();
+
       throw new Error(
-        `Request ${this.baseURL} failed with status ${response.status}`,
+        `Request failed with status ${response.status}: ${reason}`,
       );
     }
     const result: JinaEmbeddingResponse = await response.json();
