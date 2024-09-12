@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import { OpenAI } from "./openai.js";
+import { OpenAI } from "@llamaindex/openai";
 
 export class TogetherLLM extends OpenAI {
   constructor(init?: Partial<OpenAI>) {

@@ -8,5 +8,4 @@ export * from "./MistralAIEmbedding.js";
 export * from "./MixedbreadAIEmbeddings.js";
 export * from "./MultiModalEmbedding.js";
 export { OllamaEmbedding } from "./OllamaEmbedding.js";
-export * from "./OpenAIEmbedding.js";
 export { TogetherEmbedding } from "./together.js";

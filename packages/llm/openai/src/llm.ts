@@ -1,5 +1,4 @@
 import { getEnv } from "@llamaindex/env";
-import _ from "lodash";
 import type OpenAILLM from "openai";
 import type {
   ClientOptions,
@@ -7,6 +6,7 @@ import type {
 } from "openai";
 import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
 import type { ChatModel } from "openai/resources/chat/chat";
+import { isDeepEqual } from "remeda";
 
 import {
   type BaseTool,
@@ -85,7 +85,7 @@ export function getOpenAISession(
   options: ClientOptions & { azure?: boolean } = {},
 ) {
   let session = defaultOpenAISession.find((session) => {
-    return _.isEqual(session.options, options);
+    return isDeepEqual(session.options, options);
   })?.session;
 
   if (!session) {

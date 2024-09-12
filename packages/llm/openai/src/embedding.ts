@@ -1,14 +1,14 @@
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { Tokenizers } from "@llamaindex/env";
 import type { ClientOptions as OpenAIClientOptions } from "openai";
-import type { AzureOpenAIConfig } from "../llm/azure.js";
+import type { AzureOpenAIConfig } from "./azure.js";
 import {
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
-} from "../llm/azure.js";
-import type { OpenAISession } from "../llm/openai.js";
-import { getOpenAISession } from "../llm/openai.js";
+} from "./azure.js";
+import type { OpenAISession } from "./llm.js";
+import { getOpenAISession } from "./llm.js";
 
 export const ALL_OPENAI_EMBEDDING_MODELS = {
   "text-embedding-ada-002": {

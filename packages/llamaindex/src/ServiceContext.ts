@@ -5,8 +5,7 @@ import {
   type NodeParser,
   SentenceSplitter,
 } from "@llamaindex/core/node-parser";
-import { OpenAIEmbedding } from "./embeddings/OpenAIEmbedding.js";
-import { OpenAI } from "./llm/openai.js";
+import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 
 /**
  * The ServiceContext is a collection of components that are used in different parts of the application.
