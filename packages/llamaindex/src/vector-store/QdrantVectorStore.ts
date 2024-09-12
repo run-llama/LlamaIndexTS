@@ -1,15 +1,17 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import {
-  VectorStoreBase,
-  type IEmbedModel,
-  type VectorStoreNoEmbedModel,
+  BaseVectorStore,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
 
+import type { BaseVectorStoreOptions } from "@llamaindex/core/vector-store";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+} from "@llamaindex/core/vector-store";
 import type { QdrantClientParams } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type PointStruct = {
   id: string;
@@ -17,13 +19,13 @@ type PointStruct = {
   vector: number[];
 };
 
-type QdrantParams = {
+type QdrantOptions = {
   collectionName?: string;
   client?: QdrantClient;
   url?: string;
   apiKey?: string;
   batchSize?: number;
-} & Partial<IEmbedModel>;
+} & BaseVectorStoreOptions;
 
 type QuerySearchResult = {
   id: string;
@@ -36,10 +38,8 @@ type QuerySearchResult = {
 /**
  * Qdrant vector store.
  */
-export class QdrantVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class QdrantVectorStore extends BaseVectorStore {
+  isEmbeddingQuery: boolean = true;
   storesText: boolean = true;
 
   batchSize: number;
@@ -63,9 +63,9 @@ export class QdrantVectorStore
     url,
     apiKey,
     batchSize,
-    embedModel,
-  }: QdrantParams) {
-    super(embedModel);
+    ...options
+  }: QdrantOptions) {
+    super(options);
     if (!client && !url) {
       if (!url) {
         throw new Error("QdrantVectorStore requires url and collectionName");

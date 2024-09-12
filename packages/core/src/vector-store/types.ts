@@ -1,6 +1,6 @@
-import type { BaseEmbedding } from "@llamaindex/core/embeddings";
-import type { BaseNode, ModalityType } from "@llamaindex/core/schema";
-import { getEmbeddedModel } from "../internal/settings/EmbedModel.js";
+import type { BaseEmbedding } from "../embeddings";
+import { Settings } from "../global";
+import { BaseNode, ModalityType } from "../schema";
 
 export interface VectorStoreQueryResult {
   nodes?: BaseNode[];
@@ -76,34 +76,26 @@ export interface VectorStoreQuery {
   mmrThreshold?: number;
 }
 
-export interface VectorStoreNoEmbedModel {
-  storesText: boolean;
-  isEmbeddingQuery?: boolean;
-  client(): any;
-  add(embeddingResults: BaseNode[]): Promise<string[]>;
-  delete(refDocId: string, deleteOptions?: any): Promise<void>;
-  query(
-    query: VectorStoreQuery,
-    options?: any,
-  ): Promise<VectorStoreQueryResult>;
-}
-
-export interface IEmbedModel {
-  embedModel: BaseEmbedding;
-}
-
-export interface VectorStore extends VectorStoreNoEmbedModel, IEmbedModel {}
-
 // Supported types of vector stores (for each modality)
-
 export type VectorStoreByType = {
-  [P in ModalityType]?: VectorStore;
+  [P in ModalityType]?: BaseVectorStore;
 };
 
-export abstract class VectorStoreBase implements IEmbedModel {
-  embedModel: BaseEmbedding;
+export type BaseVectorStoreOptions = {
+  embedModel?: BaseEmbedding | undefined;
+};
 
-  protected constructor(embedModel?: BaseEmbedding) {
-    this.embedModel = embedModel ?? getEmbeddedModel();
+export abstract class BaseVectorStore {
+  embedModel: BaseEmbedding;
+  abstract storesText: boolean;
+  abstract isEmbeddingQuery?: boolean;
+
+  protected constructor(options?: BaseVectorStoreOptions) {
+    this.embedModel = options?.embedModel ?? Settings.embedModel;
   }
+
+  abstract client(): any;
+  abstract add(nodes: BaseNode[]): Promise<string[]>;
+  abstract delete(refDocId: string): Promise<void>;
+  abstract query(query: VectorStoreQuery): Promise<VectorStoreQueryResult>;
 }

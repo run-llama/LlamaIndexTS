@@ -1,6 +1,15 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import {
+  BaseVectorStore,
+  metadataDictToNode,
+  nodeToMetadata,
+  VectorStoreQueryMode,
+  type BaseVectorStoreOptions,
+  type VectorStoreQuery,
+  type VectorStoreQueryResult,
+} from "@llamaindex/core/vector-store";
+import {
   ChromaClient,
   IncludeEnum,
   type AddParams,
@@ -12,15 +21,6 @@ import {
   type Where,
   type WhereDocument,
 } from "chromadb";
-import {
-  VectorStoreBase,
-  VectorStoreQueryMode,
-  type IEmbedModel,
-  type VectorStoreNoEmbedModel,
-  type VectorStoreQuery,
-  type VectorStoreQueryResult,
-} from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type ChromaDeleteOptions = {
   where?: Where;
@@ -33,10 +33,8 @@ type ChromaQueryOptions = {
 
 const DEFAULT_TEXT_KEY = "text";
 
-export class ChromaVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class ChromaVectorStore extends BaseVectorStore {
+  isEmbeddingQuery = true;
   storesText: boolean = true;
   flatMetadata: boolean = true;
   textKey: string;
@@ -45,16 +43,16 @@ export class ChromaVectorStore
   private collectionName: string;
 
   constructor(
-    init: {
+    options: {
       collectionName: string;
       textKey?: string;
       chromaClientParams?: ChromaClientParams;
-    } & Partial<IEmbedModel>,
+    } & BaseVectorStoreOptions,
   ) {
-    super(init.embedModel);
-    this.collectionName = init.collectionName;
-    this.chromaClient = new ChromaClient(init.chromaClientParams);
-    this.textKey = init.textKey ?? DEFAULT_TEXT_KEY;
+    super(options);
+    this.collectionName = options.collectionName;
+    this.chromaClient = new ChromaClient(options.chromaClientParams);
+    this.textKey = options.textKey ?? DEFAULT_TEXT_KEY;
   }
 
   client(): ChromaClient {

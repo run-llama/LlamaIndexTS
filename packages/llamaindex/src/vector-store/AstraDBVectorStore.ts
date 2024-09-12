@@ -6,20 +6,18 @@ import {
 } from "@datastax/astra-db-ts";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import { getEnv } from "@llamaindex/env";
 import {
-  VectorStoreBase,
-  type IEmbedModel,
-  type VectorStoreNoEmbedModel,
+  BaseVectorStore,
+  type BaseVectorStoreOptions,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+  metadataDictToNode,
+  nodeToMetadata,
+} from "@llamaindex/core/vector-store";
+import { getEnv } from "@llamaindex/env";
 
-export class AstraDBVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class AstraDBVectorStore extends BaseVectorStore {
+  isEmbeddingQuery: boolean = true;
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -31,17 +29,19 @@ export class AstraDBVectorStore
   private collection: Collection | undefined;
 
   constructor(
-    init?: Partial<AstraDBVectorStore> & {
+    options?: Partial<AstraDBVectorStore> & {
       params?: {
         token: string;
         endpoint: string;
         namespace?: string;
       };
-    } & Partial<IEmbedModel>,
+    } & BaseVectorStoreOptions,
   ) {
-    super(init?.embedModel);
-    const token = init?.params?.token ?? getEnv("ASTRA_DB_APPLICATION_TOKEN");
-    const endpoint = init?.params?.endpoint ?? getEnv("ASTRA_DB_API_ENDPOINT");
+    super(options);
+    const token =
+      options?.params?.token ?? getEnv("ASTRA_DB_APPLICATION_TOKEN");
+    const endpoint =
+      options?.params?.endpoint ?? getEnv("ASTRA_DB_API_ENDPOINT");
 
     if (!token) {
       throw new Error(
@@ -52,7 +52,7 @@ export class AstraDBVectorStore
       throw new Error("Must specify ASTRA_DB_API_ENDPOINT via env variable.");
     }
     const namespace =
-      init?.params?.namespace ??
+      options?.params?.namespace ??
       getEnv("ASTRA_DB_NAMESPACE") ??
       "default_keyspace";
     this.astraClient = new DataAPIClient(token, {
@@ -60,8 +60,8 @@ export class AstraDBVectorStore
     });
     this.astraDB = this.astraClient.db(endpoint, { namespace });
 
-    this.idKey = init?.idKey ?? "_id";
-    this.contentKey = init?.contentKey ?? "content";
+    this.idKey = options?.idKey ?? "_id";
+    this.contentKey = options?.contentKey ?? "content";
   }
 
   /**

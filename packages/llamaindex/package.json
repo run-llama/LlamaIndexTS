@@ -45,7 +45,6 @@
     "@zilliz/milvus2-sdk-node": "^2.4.6",
     "ajv": "^8.17.1",
     "assemblyai": "^4.7.0",
-    "chromadb": "1.8.1",
     "cohere-ai": "7.13.0",
     "discord-api-types": "^0.37.98",
     "groq-sdk": "^0.6.1",
@@ -71,11 +70,15 @@
   },
   "peerDependencies": {
     "@notionhq/client": "^2.2.15",
+    "chromadb": "^1.8.1",
     "pg": "^8.12.0",
     "pgvector": "0.2.0"
   },
   "peerDependenciesMeta": {
     "@notionhq/client": {
+      "optional": true
+    },
+    "chromadb": {
       "optional": true
     },
     "pg": {
@@ -89,6 +92,7 @@
     "@notionhq/client": "^2.2.15",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.22",
+    "chromadb": "^1.8.1",
     "concurrently": "^8.2.2",
     "glob": "^11.0.0",
     "pg": "^8.12.0",

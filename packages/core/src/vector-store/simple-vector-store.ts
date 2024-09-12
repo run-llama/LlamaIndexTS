@@ -1,20 +1,21 @@
-import type { BaseEmbedding } from "@llamaindex/core/embeddings";
-import { DEFAULT_PERSIST_DIR } from "@llamaindex/core/global";
-import type { BaseNode } from "@llamaindex/core/schema";
 import { fs, path } from "@llamaindex/env";
-import { getTopKEmbeddings, getTopKMMREmbeddings } from "../internal/utils.js";
-import { exists } from "../storage/FileSystem.js";
+import type { BaseEmbedding } from "../embeddings";
+import { DEFAULT_PERSIST_DIR } from "../global";
+import type { BaseNode } from "../schema";
 import {
+  BaseVectorStore,
   FilterOperator,
-  VectorStoreBase,
   VectorStoreQueryMode,
+  type BaseVectorStoreOptions,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
 import {
+  exists,
+  getTopKEmbeddings,
+  getTopKMMREmbeddings,
   nodeToMetadata,
   parseArrayValue,
   parsePrimitiveValue,
@@ -120,20 +121,19 @@ class SimpleVectorStoreData {
   metadataDict: Record<string, MetadataValue> = {};
 }
 
-export class SimpleVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class SimpleVectorStore extends BaseVectorStore {
+  isEmbeddingQuery: boolean = true;
   storesText: boolean = false;
   private data: SimpleVectorStoreData;
   private persistPath: string | undefined;
 
-  constructor(init?: {
-    data?: SimpleVectorStoreData | undefined;
-    embedModel?: BaseEmbedding | undefined;
-  }) {
-    super(init?.embedModel);
-    this.data = init?.data || new SimpleVectorStoreData();
+  constructor(
+    options?: {
+      data?: SimpleVectorStoreData | undefined;
+    } & BaseVectorStoreOptions,
+  ) {
+    super(options);
+    this.data = options?.data || new SimpleVectorStoreData();
   }
 
   static async fromPersistDir(
@@ -144,8 +144,14 @@ export class SimpleVectorStore
     return await SimpleVectorStore.fromPersistPath(persistPath, embedModel);
   }
 
-  get client(): any {
-    return null;
+  async persist(
+    persistPath: string = path.join(DEFAULT_PERSIST_DIR, "vector_store.json"),
+  ): Promise<void> {
+    await SimpleVectorStore.persistData(persistPath, this.data);
+  }
+
+  client(): any {
+    return this;
   }
 
   async get(textId: string): Promise<number[]> {
@@ -250,12 +256,6 @@ export class SimpleVectorStore
       similarities: topSimilarities,
       ids: topIds,
     });
-  }
-
-  async persist(
-    persistPath: string = path.join(DEFAULT_PERSIST_DIR, "vector_store.json"),
-  ): Promise<void> {
-    await SimpleVectorStore.persistData(persistPath, this.data);
   }
 
   protected static async persistData(

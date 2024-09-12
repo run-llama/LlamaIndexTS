@@ -1,17 +1,17 @@
 import type pg from "pg";
 
 import {
+  BaseVectorStore,
+  type BaseVectorStoreOptions,
   FilterCondition,
   FilterOperator,
   type MetadataFilter,
   type MetadataFilterValue,
-  VectorStoreBase,
-  type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
-} from "./types.js";
+} from "@llamaindex/core/vector-store";
 
-import { escapeLikeString } from "./utils.js";
+import { escapeLikeString } from "@llamaindex/core/vector-store";
 
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
@@ -27,16 +27,14 @@ export type PGVectorStoreConfig = {
   connectionString?: string | undefined;
   dimensions?: number | undefined;
   embedModel?: BaseEmbedding | undefined;
-};
+} & BaseVectorStoreOptions;
 
 /**
  * Provides support for writing and querying vector data in Postgres.
  * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
  */
-export class PGVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class PGVectorStore extends BaseVectorStore {
+  isEmbeddingQuery: boolean = true;
   storesText: boolean = true;
 
   private collection: string = "";
@@ -73,7 +71,7 @@ export class PGVectorStore
       this.db = db;
     } else {
       const config = configOrClient as PGVectorStoreConfig;
-      super(config?.embedModel);
+      super(config);
       this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
       this.tableName = config?.tableName ?? PGVECTOR_TABLE;
       this.database = config?.database;
