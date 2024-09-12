@@ -97,6 +97,9 @@ export function getOpenAISession(
 }
 
 export const GPT4_MODELS = {
+  "chatgpt-4o-latest": {
+    contextWindow: 128000,
+  },
   "gpt-4": { contextWindow: 8192 },
   "gpt-4-32k": { contextWindow: 32768 },
   "gpt-4-32k-0613": { contextWindow: 32768 },
@@ -129,12 +132,28 @@ export const GPT35_MODELS = {
   "gpt-3.5-turbo-0301": { contextWindow: 16385 },
 };
 
+export const O1_MODELS = {
+  "o1-preview": {
+    contextWindow: 128000,
+  },
+  "o1-preview-2024-09-12": {
+    contextWindow: 128000,
+  },
+  "o1-mini": {
+    contextWindow: 128000,
+  },
+  "o1-mini-2024-09-12": {
+    contextWindow: 128000,
+  },
+};
+
 /**
  * We currently support GPT-3.5 and GPT-4 models
  */
 export const ALL_AVAILABLE_OPENAI_MODELS = {
   ...GPT4_MODELS,
   ...GPT35_MODELS,
+  ...O1_MODELS,
 } satisfies Record<ChatModel, { contextWindow: number }>;
 
 export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
@@ -148,7 +167,8 @@ export function isFunctionCallingModel(llm: LLM): llm is OpenAI {
   }
   const isChatModel = Object.keys(ALL_AVAILABLE_OPENAI_MODELS).includes(model);
   const isOld = model.includes("0314") || model.includes("0301");
-  return isChatModel && !isOld;
+  const isO1 = model.startsWith("o1");
+  return isChatModel && !isOld && !isO1;
 }
 
 export type OpenAIAdditionalMetadata = {};
