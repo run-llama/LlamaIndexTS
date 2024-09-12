@@ -22,10 +22,6 @@ export type CreateToolClassParams = {
   transformResponse: (response: any) => any;
 };
 
-export enum ExtismTool {
-  WIKI = "wiki",
-}
-
 export const createPluginInstance = async (
   params: Omit<CreateToolClassParams, "transformResponse">,
 ): Promise<Plugin> => {
@@ -48,7 +44,7 @@ export const DEFAULT_TOOL_PARAMS: Omit<CreateToolClassParams, "wasmFilename"> =
 
 export class ExtismToolFactory {
   static async createToolClass(
-    toolName: `${ExtismTool}`,
+    toolName: string,
     params: Omit<CreateToolClassParams, "wasmFilename"> = DEFAULT_TOOL_PARAMS,
   ): Promise<new (params?: ToolClassParams) => BaseToolWithCall<ToolParams>> {
     const config = { ...params, wasmFilename: `${toolName}.wasm` };
