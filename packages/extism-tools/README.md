@@ -17,12 +17,6 @@ cd examples
 pnpm run test
 ```
 
-### Test using WASM tool with OpenAI Agent
-
-```bash
-node examples/tool/wiki.js
-```
-
 ### Run WASM files in Python using Extism SDK (https://github.com/extism/python-sdk)
 
 ```bash

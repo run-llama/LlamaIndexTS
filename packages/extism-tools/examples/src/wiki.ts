@@ -1,5 +1,4 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
-import { ExtismToolFactory } from "@llamaindex/extism-tools/ExtismToolFactory";
+import { ExtismToolFactory } from "@llamaindex/extism-tools";
 import { OpenAI, OpenAIAgent, Settings } from "llamaindex";
 
 async function main() {

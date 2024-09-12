@@ -26,15 +26,6 @@ export enum ExtismTool {
   WIKI = "wiki",
 }
 
-export const ToolMap: Record<`${ExtismTool}`, CreateToolClassParams> = {
-  [ExtismTool.WIKI]: {
-    wasmFilename: "wiki.wasm",
-    allowedHosts: ["*.wikipedia.org"],
-    maxHttpResponseBytes: DEFAULT_MAX_HTTP_RESPONSE_BYTES,
-    transformResponse: (response: any) => response.extract,
-  },
-};
-
 export const createPluginInstance = async (
   params: Omit<CreateToolClassParams, "transformResponse">,
 ): Promise<Plugin> => {
@@ -48,13 +39,19 @@ export const createPluginInstance = async (
   return plugin;
 };
 
+export const DEFAULT_TOOL_PARAMS: Omit<CreateToolClassParams, "wasmFilename"> =
+  {
+    allowedHosts: ["*"],
+    maxHttpResponseBytes: DEFAULT_MAX_HTTP_RESPONSE_BYTES,
+    transformResponse: (response: any) => response,
+  };
+
 export class ExtismToolFactory {
   static async createToolClass(
     toolName: `${ExtismTool}`,
+    params: Omit<CreateToolClassParams, "wasmFilename"> = DEFAULT_TOOL_PARAMS,
   ): Promise<new (params?: ToolClassParams) => BaseToolWithCall<ToolParams>> {
-    const config = ToolMap[toolName];
-    if (!config) throw new Error(`Tool ${toolName} not supported yet`);
-
+    const config = { ...params, wasmFilename: `${toolName}.wasm` };
     const plugin = await createPluginInstance(config);
     try {
       const wasmMetadata = await plugin.call("getMetadata");
