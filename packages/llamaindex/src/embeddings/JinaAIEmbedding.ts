@@ -82,7 +82,7 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
       );
     }
     this.apiKey = apiKey;
-    this.model = init?.model ?? "jina-embeddings-v2-base-en";
+    this.model = init?.model ?? "jina-embeddings-v3";
     this.baseURL = init?.baseURL ?? "https://api.jina.ai/v1/embeddings";
     init?.embedBatchSize && (this.embedBatchSize = init?.embedBatchSize);
     this.taskType = init?.taskType;
