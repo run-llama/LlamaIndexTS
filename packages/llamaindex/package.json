@@ -89,10 +89,14 @@
     "@notionhq/client": "^2.2.15",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.22",
+    "@types/better-sqlite3": "^7.6.11",
+    "better-sqlite3": "^11.3.0",
     "concurrently": "^8.2.2",
     "glob": "^11.0.0",
     "pg": "^8.12.0",
     "pgvector": "0.2.0",
+    "sqlite-vec": "0.1.2-alpha.9",
+    "sqlite3": "^5.1.7",
     "typescript": "^5.5.4"
   },
   "engines": {
