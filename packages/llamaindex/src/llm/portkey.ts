@@ -71,8 +71,8 @@ export class Portkey extends BaseLLM {
     this.baseURL = baseURL;
     this.session = getPortkeySession({
       ...rest,
-      apiKey: this.apiKey,
-      baseURL: this.baseURL,
+      apiKey: this.apiKey ?? null,
+      baseURL: this.baseURL ?? null,
     });
   }
 
