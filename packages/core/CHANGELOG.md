@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.2.0
+
+### Minor Changes
+
+- 11feef8: Add workflows
+
 ## 0.1.12
 
 ### Patch Changes

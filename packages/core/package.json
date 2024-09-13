@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./node-parser": {
@@ -142,6 +142,20 @@
       "default": {
         "types": "./dist/indices/index.d.ts",
         "default": "./dist/indices/index.js"
+      }
+    },
+    "./workflow": {
+      "require": {
+        "types": "./dist/workflow/index.d.cts",
+        "default": "./dist/workflow/index.cjs"
+      },
+      "import": {
+        "types": "./dist/workflow/index.d.ts",
+        "default": "./dist/workflow/index.js"
+      },
+      "default": {
+        "types": "./dist/workflow/index.d.ts",
+        "default": "./dist/workflow/index.js"
       }
     },
     "./memory": {
