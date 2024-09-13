@@ -95,7 +95,7 @@ export class Context {
     this.#streamingQueue.push(event);
   }
 
-  async *streamEvents(): AsyncGenerator<WorkflowEvent, void, undefined> {
+  async *streamEvents(): AsyncGenerator<WorkflowEvent, void, void> {
     while (true) {
       const event = this.#streamingQueue.shift();
       if (event) {

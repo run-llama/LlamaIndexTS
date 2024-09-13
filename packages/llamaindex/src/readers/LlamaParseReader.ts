@@ -245,13 +245,13 @@ export class LlamaParseReader extends FileReader {
   ) {
     super();
     Object.assign(this, params);
-    params.apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
-    if (!params.apiKey) {
+    const apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
+    if (!apiKey) {
       throw new Error(
         "API Key is required for LlamaParseReader. Please pass the apiKey parameter or set the LLAMA_CLOUD_API_KEY environment variable.",
       );
     }
-    this.apiKey = params.apiKey;
+    this.apiKey = apiKey;
 
     if (params.gpt4oMode) {
       params.gpt4oApiKey =
