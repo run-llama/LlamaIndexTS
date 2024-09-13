@@ -120,8 +120,8 @@ var process: any;
 export class LlamaParseReader extends FileReader {
   // The API key for the LlamaParse API. Can be set as an environment variable: LLAMA_CLOUD_API_KEY
   apiKey: string;
-  // The base URL of the Llama Parsing API.
-  baseUrl: string = "https://api.cloud.llamaindex.ai/api/parsing";
+  // The base URL of the Llama Cloud Platform.
+  baseUrl: string = "https://api.cloud.llamaindex.ai/";
   // The result type for the parser.
   resultType: ResultType = "text";
   // The interval in seconds to check if the parsing is done.
