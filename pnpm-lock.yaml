@@ -139,7 +139,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@llamaindex/core':
-        specifier: ^0.1.0
+        specifier: ^0.2.0
         version: link:../packages/core
       '@notionhq/client':
         specifier: ^2.2.15
@@ -163,7 +163,7 @@ importers:
         specifier: ^1.0.14
         version: 1.0.14
       llamaindex:
-        specifier: ^0.5.0
+        specifier: ^0.6.0
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
