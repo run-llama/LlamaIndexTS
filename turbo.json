@@ -10,11 +10,11 @@
       "dependsOn": ["^build"]
     },
     "test": {
-      "dependsOn": ["^build", "build"]
+      "dependsOn": ["^build"]
     },
     "circular-check": {},
     "e2e": {
-      "dependsOn": ["^build", "build"]
+      "dependsOn": ["^build"]
     },
     "dev": {
       "cache": false,
