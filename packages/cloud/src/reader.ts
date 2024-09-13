@@ -1,92 +1,15 @@
 import { Document, FileReader } from "@llamaindex/core/schema";
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypeinfo } from "magic-bytes.js";
+import {
+  ParsingService,
+  type Body_upload_file_api_v1_parsing_upload_post,
+  type ParserLanguages,
+} from "./api";
+
+export type Language = ParserLanguages
 
 export type ResultType = "text" | "markdown" | "json";
-export type Language =
-  | "abq"
-  | "ady"
-  | "af"
-  | "ang"
-  | "ar"
-  | "as"
-  | "ava"
-  | "az"
-  | "be"
-  | "bg"
-  | "bh"
-  | "bho"
-  | "bn"
-  | "bs"
-  | "ch_sim"
-  | "ch_tra"
-  | "che"
-  | "cs"
-  | "cy"
-  | "da"
-  | "dar"
-  | "de"
-  | "en"
-  | "es"
-  | "et"
-  | "fa"
-  | "fr"
-  | "ga"
-  | "gom"
-  | "hi"
-  | "hr"
-  | "hu"
-  | "id"
-  | "inh"
-  | "is"
-  | "it"
-  | "ja"
-  | "kbd"
-  | "kn"
-  | "ko"
-  | "ku"
-  | "la"
-  | "lbe"
-  | "lez"
-  | "lt"
-  | "lv"
-  | "mah"
-  | "mai"
-  | "mi"
-  | "mn"
-  | "mr"
-  | "ms"
-  | "mt"
-  | "ne"
-  | "new"
-  | "nl"
-  | "no"
-  | "oc"
-  | "pi"
-  | "pl"
-  | "pt"
-  | "ro"
-  | "ru"
-  | "rs_cyrillic"
-  | "rs_latin"
-  | "sck"
-  | "sk"
-  | "sl"
-  | "sq"
-  | "sv"
-  | "sw"
-  | "ta"
-  | "tab"
-  | "te"
-  | "th"
-  | "tjk"
-  | "tl"
-  | "tr"
-  | "ug"
-  | "uk"
-  | "ur"
-  | "uz"
-  | "vi";
 
 const SUPPORT_FILE_EXT: string[] = [
   ".pdf",
@@ -208,7 +131,7 @@ export class LlamaParseReader extends FileReader {
   // Whether to print the progress of the parsing.
   verbose = true;
   // The language of the text to parse.
-  language: Language = "en";
+  language: ParserLanguages[] = ["en"];
   // The parsing instruction for the parser. Backend default is an empty string.
   parsingInstruction?: string | undefined;
   // Wether to ignore diagonal text (when the text rotation in degrees is not 0, 90, 180 or 270, so not a horizontal or vertical text). Backend default is false.
@@ -248,6 +171,12 @@ export class LlamaParseReader extends FileReader {
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
 
+  get headers() {
+    return {
+      Authorization: `Bearer ${this.apiKey}`,
+    };
+  }
+
   constructor(
     params: Partial<LlamaParseReader> & {
       apiKey?: string | undefined;
@@ -285,7 +214,7 @@ export class LlamaParseReader extends FileReader {
   // Create a job for the LlamaParse API
   private async createJob(
     data: Uint8Array,
-    fileName?: string,
+    fileName: string = "unknown",
   ): Promise<string> {
     // Load data, set the mime type
     const { mime, extension } = await LlamaParseReader.getMimeType(data);
@@ -295,70 +224,57 @@ export class LlamaParseReader extends FileReader {
       console.log(`Starting load for ${name} file`);
     }
 
-    const body = new FormData();
-    body.set("file", new Blob([data], { type: mime }), fileName);
-
-    const LlamaParseBodyParams = {
+    const body = {
+      file: new File([data], fileName, { type: mime }),
       language: this.language,
       parsing_instruction: this.parsingInstruction,
-      skip_diagonal_text: this.skipDiagonalText?.toString(),
-      invalidate_cache: this.invalidateCache?.toString(),
-      do_not_cache: this.doNotCache?.toString(),
-      fast_mode: this.fastMode?.toString(),
-      do_not_unroll_columns: this.doNotUnrollColumns?.toString(),
+      skip_diagonal_text: this.skipDiagonalText,
+      invalidate_cache: this.invalidateCache,
+      do_not_cache: this.doNotCache,
+      fast_mode: this.fastMode,
+      do_not_unroll_columns: this.doNotUnrollColumns,
       page_separator: this.pageSeparator,
       page_prefix: this.pagePrefix,
       page_suffix: this.pageSuffix,
-      gpt4o_mode: this.gpt4oMode?.toString(),
+      gpt4o_mode: this.gpt4oMode,
       gpt4o_api_key: this.gpt4oApiKey,
       bounding_box: this.boundingBox,
       target_pages: this.targetPages,
-      use_vendor_multimodal_model: this.useVendorMultimodalModel?.toString(),
+      use_vendor_multimodal_model: this.useVendorMultimodalModel,
       vendor_multimodal_model_name: this.vendorMultimodalModelName,
       vendor_multimodal_api_key: this.vendorMultimodalApiKey,
-    };
+      // fixme: does these fields need to be set?
+      webhook_url: undefined,
+      take_screenshot: undefined,
+      disable_ocr: undefined,
+      disable_reconstruction: undefined,
+      input_s3_path: undefined,
+      output_s3_path_prefix: undefined,
+    } satisfies {
+      [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
+        | Body_upload_file_api_v1_parsing_upload_post[Key]
+        | undefined;
+    } as unknown as Body_upload_file_api_v1_parsing_upload_post;
 
-    // Filter out params with invalid values that would cause issues on the backend.
-    const filteredParams = this.filterSpecificParams(LlamaParseBodyParams, [
-      "page_separator",
-      "page_prefix",
-      "page_suffix",
-      "bounding_box",
-      "target_pages",
-    ]);
-
-    // Appends body with any defined LlamaParseBodyParams
-    Object.entries(filteredParams).forEach(([key, value]) => {
-      if (value !== undefined) {
-        body.append(key, value);
-      }
-    });
-
-    const headers = {
-      Authorization: `Bearer ${this.apiKey}`,
-    };
-
-    // Send the request, start job
-    const url = `${this.baseUrl}/upload`;
-    const response = await fetch(url, {
+    const response = await ParsingService.uploadFileApiV1ParsingUploadPost({
+      baseUrl: this.baseUrl,
+      throwOnError: false,
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
-      method: "POST",
+      headers: this.headers,
       body,
-      headers,
     });
-    if (!response.ok) {
-      throw new Error(`Failed to parse the file: ${await response.text()}`);
+
+    if (response.error) {
+      throw new Error(`Failed to upload file: ${response.error.detail}`);
     }
-    const jsonResponse = await response.json();
-    return jsonResponse.id;
+    return response.data.id;
   }
 
   // Get the result of the job
-  private async getJobResult(jobId: string, resultType: string): Promise<any> {
-    const resultUrl = `${this.baseUrl}/job/${jobId}/result/${resultType}`;
-    const statusUrl = `${this.baseUrl}/job/${jobId}`;
-    const headers = { Authorization: `Bearer ${this.apiKey}` };
-
+  private async getJobResult(
+    jobId: string,
+    resultType: "text" | "json" | "markdown",
+  ): Promise<any> {
     const signal = AbortSignal.timeout(this.maxTimeout * 1000);
     let tries = 0;
     while (true) {
@@ -367,34 +283,71 @@ export class LlamaParseReader extends FileReader {
       );
 
       // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
-      const statusResponse = await fetch(statusUrl, {
-        headers,
-        signal,
-      });
-      if (!statusResponse.ok) {
-        signal.throwIfAborted();
-        if (this.verbose && tries % 10 === 0) {
-          this.stdout?.write(".");
-        }
-        tries++;
-        continue;
+      const result =
+        await ParsingService.getParsingJobDetailsApiV1ParsingJobJobIdDetailsGet(
+          {
+            baseUrl: this.baseUrl,
+            path: {
+              job_id: jobId,
+            },
+            signal,
+            headers: this.headers,
+          },
+        );
+      if (result.error) {
+        throw new Error(`Failed to get job status: ${result.error.detail}`);
       }
+      const { data } = result;
 
-      // If response is succesful, check status of job. Allowed values "PENDING", "SUCCESS", "ERROR", "CANCELED"
-      const statusJson = await statusResponse.json();
-      const status = statusJson.status;
+      const status = (data as Record<string, unknown>)["status"];
       // If job has completed, return the result
       if (status === "SUCCESS") {
-        const resultResponse = await fetch(resultUrl, {
-          headers,
-          signal,
-        });
-        if (!resultResponse.ok) {
-          throw new Error(
-            `Failed to fetch result: ${await resultResponse.text()}`,
-          );
+        let result;
+        switch (resultType) {
+          case "json": {
+            result =
+              await ParsingService.getJobJsonResultApiV1ParsingJobJobIdResultJsonGet(
+                {
+                  baseUrl: this.baseUrl,
+                  path: {
+                    job_id: jobId,
+                  },
+                  signal,
+                  headers: this.headers,
+                },
+              );
+            break;
+          }
+          case "markdown": {
+            result =
+              await ParsingService.getJobResultApiV1ParsingJobJobIdResultMarkdownGet(
+                {
+                  baseUrl: this.baseUrl,
+                  path: {
+                    job_id: jobId,
+                  },
+                  signal,
+                  headers: this.headers,
+                },
+              );
+            break;
+          }
+          case "text": {
+            result =
+              await ParsingService.getJobTextResultApiV1ParsingJobJobIdResultTextGet(
+                {
+                  baseUrl: this.baseUrl,
+                  path: {
+                    job_id: jobId,
+                  },
+                  signal,
+                  headers: this.headers,
+                },
+              );
+            break;
+          }
         }
-        return resultResponse.json();
+        return result;
         // If job is still pending, check if maximum timeout has been reached. If reached, throws an error
       } else if (status === "PENDING") {
         signal.throwIfAborted();
@@ -565,15 +518,21 @@ export class LlamaParseReader extends FileReader {
     imagePath: string,
     jobId: string,
   ): Promise<void> {
-    const headers = { Authorization: `Bearer ${this.apiKey}` };
-    // Construct the image URL
-    const imageUrl = `${this.baseUrl}/job/${jobId}/result/image/${imageName}`;
-    const response = await fetch(imageUrl, { headers });
-    if (!response.ok) {
-      throw new Error(`Failed to download image: ${await response.text()}`);
+    const response =
+      await ParsingService.getJobImageResultApiV1ParsingJobJobIdResultImageNameGet(
+        {
+          baseUrl: this.baseUrl,
+          path: {
+            job_id: jobId,
+            name: imageName,
+          },
+          headers: this.headers,
+        },
+      );
+    if (response.error) {
+      throw new Error(`Failed to download image: ${response.error.detail}`);
     }
-    // Convert the response to an ArrayBuffer and then to a Buffer
-    const arrayBuffer = await response.arrayBuffer();
+    const arrayBuffer = (await response.data) as ArrayBuffer;
     const buffer = new Uint8Array(arrayBuffer);
     // Write the image buffer to the specified imagePath
     await fs.writeFile(imagePath, buffer);

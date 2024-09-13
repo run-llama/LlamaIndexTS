@@ -1,16 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "LlamaCloud",
-    "termsOfService": "https://www.llamaindex.ai/files/terms-of-service.pdf",
+    "title": "Llama Platform",
     "version": "0.1.0"
   },
-  "servers": [
-    {
-      "url": "https://api.cloud.llamaindex.ai/",
-      "description": "LlamaCloud Production Server"
-    }
-  ],
   "paths": {
     "/api/v1/api-keys": {
       "get": {
@@ -56,6 +49,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -110,6 +106,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -178,6 +177,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -223,6 +225,206 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/validate-integrations/validate-embedding-connection": {
+      "post": {
+        "summary": "Validate Embedding Connection",
+        "description": "Validate an embedding connection.",
+        "operationId": "validate_embedding_connection_api_v1_validate_integrations_validate_embedding_connection_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/AzureOpenAIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CohereEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GeminiEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/OpenAIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/VertexAIEmbeddingConfig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/BedrockEmbeddingConfig"
+                  }
+                ],
+                "title": "Embedding Config"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseConnectionValidation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/validate-integrations/validate-data-source-connection": {
+      "post": {
+        "summary": "Validate Data Source Connection",
+        "description": "Validate a data source connection.",
+        "operationId": "validate_data_source_connection_api_v1_validate_integrations_validate_data_source_connection_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataSourceCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseConnectionValidation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/validate-integrations/validate-data-sink-connection": {
+      "post": {
+        "summary": "Validate Data Sink Connection",
+        "description": "Validate a data sink connection.",
+        "operationId": "validate_data_sink_connection_api_v1_validate_integrations_validate_data_sink_connection_post",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataSinkCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseConnectionValidation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -283,6 +485,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -359,6 +564,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -433,6 +641,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -487,6 +698,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -553,6 +767,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -598,6 +815,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -668,6 +888,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -744,6 +967,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -818,6 +1044,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -872,6 +1101,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -938,6 +1170,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -983,6 +1218,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1033,6 +1271,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1089,6 +1330,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -1143,6 +1387,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -1187,6 +1434,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1243,6 +1493,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -1297,6 +1550,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1363,6 +1619,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -1408,6 +1667,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1468,6 +1730,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1542,6 +1807,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -1598,6 +1866,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1661,6 +1932,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1732,6 +2006,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -1794,6 +2071,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1860,6 +2140,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -1914,6 +2197,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -1980,6 +2266,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -2025,6 +2314,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2085,6 +2377,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2149,6 +2444,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2221,6 +2519,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -2281,6 +2582,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -2339,6 +2643,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2405,6 +2712,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -2463,6 +2773,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2527,6 +2840,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2605,6 +2921,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -2665,6 +2984,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2733,6 +3055,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -2788,6 +3113,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2848,6 +3176,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -2914,6 +3245,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -2978,6 +3312,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -3036,6 +3373,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3102,6 +3442,158 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/files/{id}/page_screenshots": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "List File Page Screenshots",
+        "description": "List metadata for all screenshots of pages from a file.",
+        "operationId": "list_file_page_screenshots_api_v1_files__id__page_screenshots_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Id"
+            },
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            },
+            "name": "project_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PageScreenshotMetadata"
+                  },
+                  "type": "array",
+                  "title": "Response List File Page Screenshots Api V1 Files  Id  Page Screenshots Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/files/{id}/page_screenshots/{page_index}": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Get File Page Screenshot",
+        "description": "Get screenshot of a page from a file.",
+        "operationId": "get_file_page_screenshot_api_v1_files__id__page_screenshots__page_index__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Id"
+            },
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Page Index"
+            },
+            "name": "page_index",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            },
+            "name": "project_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3190,6 +3682,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -3252,6 +3747,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3318,6 +3816,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -3372,6 +3873,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3438,6 +3942,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -3483,6 +3990,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3541,6 +4051,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -3597,6 +4110,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -3651,6 +4167,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3721,6 +4240,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3797,6 +4319,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -3865,6 +4390,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -3941,6 +4469,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -4023,6 +4554,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -4095,6 +4629,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -4159,6 +4696,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -4237,6 +4777,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -4292,6 +4835,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -4364,6 +4910,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -4409,6 +4958,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -4469,6 +5021,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -4543,11 +5098,91 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
     },
     "/api/v1/pipelines/{pipeline_id}/data-sources/{data_source_id}": {
+      "put": {
+        "tags": ["Pipelines"],
+        "summary": "Update Pipeline Data Source",
+        "description": "Update the configuration of a data source in a pipeline.",
+        "operationId": "update_pipeline_data_source_api_v1_pipelines__pipeline_id__data_sources__data_source_id__put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Data Source Id"
+            },
+            "name": "data_source_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PipelineDataSourceUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineDataSource"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
       "delete": {
         "tags": ["Pipelines"],
         "summary": "Delete Pipeline Data Source",
@@ -4600,6 +5235,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -4668,6 +5306,78 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pipelines/{pipeline_id}/data-sources/{data_source_id}/status": {
+      "get": {
+        "tags": ["Pipelines"],
+        "summary": "Get Pipeline Data Source Status",
+        "description": "Get the status of a data source for a pipeline.",
+        "operationId": "get_pipeline_data_source_status_api_v1_pipelines__pipeline_id__data_sources__data_source_id__status_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Data Source Id"
+            },
+            "name": "data_source_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedIngestionStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -4734,6 +5444,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -4792,6 +5505,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -4860,6 +5576,68 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pipelines/{pipeline_id}/playground-session": {
+      "get": {
+        "tags": ["Pipelines"],
+        "summary": "Get Playground Session",
+        "description": "Get a playground session for a user and pipeline.",
+        "operationId": "get_playground_session_api_v1_pipelines__pipeline_id__playground_session_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Pipeline Id"
+            },
+            "name": "pipeline_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Session"
+            },
+            "name": "session",
+            "in": "cookie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaygroundSession"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -4868,6 +5646,7 @@
       "post": {
         "tags": ["Pipelines"],
         "summary": "Chat",
+        "description": "Make a retrieval query + chat completion for a managed pipeline.",
         "operationId": "chat_api_v1_pipelines__pipeline_id__chat_post",
         "parameters": [
           {
@@ -4894,7 +5673,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChatParams"
+                "$ref": "#/components/schemas/ChatInputParams"
               }
             }
           },
@@ -4921,6 +5700,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5025,6 +5807,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -5095,6 +5880,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5169,6 +5957,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -5234,6 +6025,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -5288,6 +6082,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5353,6 +6150,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5424,6 +6224,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -5478,6 +6281,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5544,6 +6350,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -5589,6 +6398,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5649,6 +6461,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5713,6 +6528,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5789,6 +6607,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -5843,6 +6664,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -5909,6 +6733,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -5956,6 +6783,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -5984,7 +6814,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/SupportedEvalLLMModel"
+                    "$ref": "#/components/schemas/SupportedLLMModel"
                   },
                   "type": "array",
                   "title": "Response List Supported Models Api V1 Evals Models Get"
@@ -6004,6 +6834,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6067,6 +6900,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -6118,8 +6954,7 @@
                 "$ref": "#/components/schemas/Body_upload_file_api_v1_parsing_upload_post"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -6144,6 +6979,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6190,6 +7028,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6248,6 +7089,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -6302,6 +7146,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6360,6 +7207,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -6412,6 +7262,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6470,6 +7323,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -6522,6 +7378,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6580,6 +7439,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -6634,6 +7496,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -6682,6 +7547,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6747,6 +7615,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -6878,6 +7749,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -6933,6 +7807,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7033,6 +7910,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -7084,6 +7964,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7141,6 +8024,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -7194,6 +8080,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7259,6 +8148,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -7318,6 +8210,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       },
@@ -7369,6 +8264,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7424,6 +8322,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7485,6 +8386,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -7538,6 +8442,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7601,6 +8508,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -7652,8 +8562,7 @@
                 "$ref": "#/components/schemas/Body_upload_file_api_parsing_upload_post"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -7678,6 +8587,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7724,6 +8636,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7782,6 +8697,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -7836,6 +8754,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -7894,6 +8815,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -7946,6 +8870,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -8004,6 +8931,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -8056,6 +8986,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -8114,6 +9047,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -8168,6 +9104,9 @@
         "security": [
           {
             "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
           }
         ]
       }
@@ -8216,6 +9155,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -8281,6 +9223,9 @@
           }
         },
         "security": [
+          {
+            "HTTPBearer": []
+          },
           {
             "HTTPBearer": []
           }
@@ -8356,10 +9301,65 @@
         "title": "APIKeyUpdate",
         "description": "Schema for updating an API key."
       },
+      "AdvancedModeTransformConfig": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["advanced"],
+            "title": "Mode",
+            "default": "advanced"
+          },
+          "segmentation_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NoneSegmentationConfig"
+              },
+              {
+                "$ref": "#/components/schemas/PageSegmentationConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ElementSegmentationConfig"
+              }
+            ],
+            "title": "Segmentation Config",
+            "description": "Configuration for the segmentation."
+          },
+          "chunking_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NoneChunkingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/CharacterChunkingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/TokenChunkingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/SentenceChunkingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/SemanticChunkingConfig"
+              }
+            ],
+            "title": "Chunking Config",
+            "description": "Configuration for the chunking."
+          }
+        },
+        "type": "object",
+        "title": "AdvancedModeTransformConfig"
+      },
       "AutoTransformConfig": {
         "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["auto"],
+            "title": "Mode",
+            "default": "auto"
+          },
           "chunk_size": {
             "type": "integer",
+            "exclusiveMinimum": 0.0,
             "title": "Chunk Size",
             "description": "Chunk size for the transformation.",
             "default": 1024
@@ -8368,7 +9368,8 @@
             "type": "integer",
             "title": "Chunk Overlap",
             "description": "Chunk overlap for the transformation.",
-            "default": 20
+            "default": 200,
+            "gte": 0
           }
         },
         "type": "object",
@@ -8481,10 +9482,48 @@
         "title": "AzureOpenAIEmbedding",
         "description": "OpenAI class for embeddings.\n\nArgs:\n    mode (str): Mode for embedding.\n        Defaults to OpenAIEmbeddingMode.TEXT_SEARCH_MODE.\n        Options are:\n\n        - OpenAIEmbeddingMode.SIMILARITY_MODE\n        - OpenAIEmbeddingMode.TEXT_SEARCH_MODE\n\n    model (str): Model for embedding.\n        Defaults to OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002.\n        Options are:\n\n        - OpenAIEmbeddingModelType.DAVINCI\n        - OpenAIEmbeddingModelType.CURIE\n        - OpenAIEmbeddingModelType.BABBAGE\n        - OpenAIEmbeddingModelType.ADA\n        - OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002"
       },
+      "AzureOpenAIEmbeddingConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["AZURE_EMBEDDING"],
+            "title": "Type",
+            "description": "Type of the embedding model.",
+            "default": "AZURE_EMBEDDING"
+          },
+          "component": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AzureOpenAIEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the Azure OpenAI embedding model."
+          }
+        },
+        "type": "object",
+        "title": "AzureOpenAIEmbeddingConfig"
+      },
       "Base": {
         "properties": {},
         "type": "object",
         "title": "Base"
+      },
+      "BaseConnectionValidation": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": ["success", "message"],
+        "title": "BaseConnectionValidation",
+        "description": "Base response model for connection validation."
       },
       "BasePromptTemplate": {
         "properties": {
@@ -8609,6 +9648,28 @@
         "title": "BedrockEmbedding",
         "description": "Base class for embeddings."
       },
+      "BedrockEmbeddingConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["BEDROCK_EMBEDDING"],
+            "title": "Type",
+            "description": "Type of the embedding model.",
+            "default": "BEDROCK_EMBEDDING"
+          },
+          "component": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BedrockEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the Bedrock embedding model."
+          }
+        },
+        "type": "object",
+        "title": "BedrockEmbeddingConfig"
+      },
       "Body_import_pipeline_metadata_api_v1_pipelines__pipeline_id__metadata_put": {
         "properties": {
           "upload_file": {
@@ -8708,6 +9769,36 @@
             "title": "Page Suffix",
             "default": ""
           },
+          "webhook_url": {
+            "type": "string",
+            "title": "Webhook Url",
+            "default": ""
+          },
+          "take_screenshot": {
+            "type": "boolean",
+            "title": "Take Screenshot",
+            "default": false
+          },
+          "disable_ocr": {
+            "type": "boolean",
+            "title": "Disable Ocr",
+            "default": false
+          },
+          "disable_reconstruction": {
+            "type": "boolean",
+            "title": "Disable Reconstruction",
+            "default": false
+          },
+          "input_s3_path": {
+            "type": "string",
+            "title": "Input S3 Path",
+            "default": ""
+          },
+          "output_s3_path_prefix": {
+            "type": "string",
+            "title": "Output S3 Path Prefix",
+            "default": ""
+          },
           "file": {
             "type": "string",
             "format": "binary",
@@ -8715,7 +9806,6 @@
           }
         },
         "type": "object",
-        "required": ["file"],
         "title": "Body_upload_file_api_parsing_upload_post"
       },
       "Body_upload_file_api_v1_files_post": {
@@ -8817,6 +9907,36 @@
             "title": "Page Suffix",
             "default": ""
           },
+          "webhook_url": {
+            "type": "string",
+            "title": "Webhook Url",
+            "default": ""
+          },
+          "take_screenshot": {
+            "type": "boolean",
+            "title": "Take Screenshot",
+            "default": false
+          },
+          "disable_ocr": {
+            "type": "boolean",
+            "title": "Disable Ocr",
+            "default": false
+          },
+          "disable_reconstruction": {
+            "type": "boolean",
+            "title": "Disable Reconstruction",
+            "default": false
+          },
+          "input_s3_path": {
+            "type": "string",
+            "title": "Input S3 Path",
+            "default": ""
+          },
+          "output_s3_path_prefix": {
+            "type": "string",
+            "title": "Output S3 Path Prefix",
+            "default": ""
+          },
           "file": {
             "type": "string",
             "format": "binary",
@@ -8824,13 +9944,106 @@
           }
         },
         "type": "object",
-        "required": ["file"],
         "title": "Body_upload_file_api_v1_parsing_upload_post"
+      },
+      "BoxAuthMechanism": {
+        "type": "string",
+        "enum": ["developer_token", "ccg"],
+        "title": "BoxAuthMechanism",
+        "description": "An enumeration."
+      },
+      "CharacterChunkingConfig": {
+        "properties": {
+          "chunk_size": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Chunk Size",
+            "default": 1024
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "default": 200,
+            "gte": 0
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["character"],
+            "title": "Mode",
+            "default": "character"
+          }
+        },
+        "type": "object",
+        "title": "CharacterChunkingConfig"
+      },
+      "CharacterSplitter": {
+        "properties": {
+          "include_metadata": {
+            "type": "boolean",
+            "title": "Include Metadata",
+            "description": "Whether or not to consider metadata when splitting.",
+            "default": true
+          },
+          "include_prev_next_rel": {
+            "type": "boolean",
+            "title": "Include Prev Next Rel",
+            "description": "Include prev/next node relationships.",
+            "default": true
+          },
+          "callback_manager": {
+            "type": "object",
+            "title": "Callback Manager",
+            "default": {}
+          },
+          "chunk_size": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Chunk Size",
+            "description": "The token chunk size for each chunk.",
+            "default": 1024
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "description": "The token overlap of each chunk when splitting.",
+            "default": 200,
+            "gte": 0
+          },
+          "separator": {
+            "type": "string",
+            "title": "Separator",
+            "description": "Default separator for splitting into words",
+            "default": " "
+          },
+          "paragraph_separator": {
+            "type": "string",
+            "title": "Paragraph Separator",
+            "description": "Separator between paragraphs.",
+            "default": "\n\n\n"
+          },
+          "secondary_chunking_regex": {
+            "type": "string",
+            "title": "Secondary Chunking Regex",
+            "description": "Backup regex for splitting into sentences.",
+            "default": "[^,.;。？！]+[,.;。？！]?"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "SentenceSplitter"
+          }
+        },
+        "type": "object",
+        "title": "CharacterSplitter",
+        "description": "A splitter that splits text into characters."
       },
       "ChatData": {
         "properties": {
           "retrieval_parameters": {
             "$ref": "#/components/schemas/PresetRetrievalParams"
+          },
+          "llm_parameters": {
+            "$ref": "#/components/schemas/LLMParameters"
           },
           "class_name": {
             "type": "string",
@@ -8839,38 +10052,14 @@
           }
         },
         "type": "object",
-        "required": ["retrieval_parameters"],
         "title": "ChatData",
         "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
       },
-      "ChatMessage": {
-        "properties": {
-          "role": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MessageRole"
-              }
-            ],
-            "default": "user"
-          },
-          "content": {
-            "title": "Content",
-            "default": ""
-          },
-          "additional_kwargs": {
-            "type": "object",
-            "title": "Additional Kwargs"
-          }
-        },
-        "type": "object",
-        "title": "ChatMessage",
-        "description": "Chat message."
-      },
-      "ChatParams": {
+      "ChatInputParams": {
         "properties": {
           "messages": {
             "items": {
-              "$ref": "#/components/schemas/ChatMessage"
+              "$ref": "#/components/schemas/InputMessage"
             },
             "type": "array",
             "title": "Messages"
@@ -8885,8 +10074,54 @@
           }
         },
         "type": "object",
-        "required": ["messages", "data"],
-        "title": "ChatParams",
+        "title": "ChatInputParams",
+        "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
+      },
+      "ChatMessage": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "index": {
+            "type": "integer",
+            "title": "Index",
+            "description": "The index of the message in the chat."
+          },
+          "annotations": {
+            "items": {
+              "$ref": "#/components/schemas/MessageAnnotation"
+            },
+            "type": "array",
+            "title": "Annotations",
+            "description": "Retrieval annotations for the message."
+          },
+          "role": {
+            "$ref": "#/components/schemas/MessageRole"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "description": "Text content of the generation"
+          },
+          "additional_kwargs": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Additional Kwargs",
+            "description": "Additional arguments passed to the model"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
+          }
+        },
+        "type": "object",
+        "required": ["id", "index", "role"],
+        "title": "ChatMessage",
         "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
       },
       "CheckoutSessionCreatePayload": {
@@ -8930,8 +10165,7 @@
           "prefix": {
             "type": "string",
             "title": "Prefix",
-            "description": "The prefix of the Azure Storage Blob objects to read from.",
-            "default": ""
+            "description": "The prefix of the Azure Storage Blob objects to read from."
           },
           "account_name": {
             "type": "string",
@@ -8943,6 +10177,21 @@
             "title": "Account Key",
             "description": "The Azure Storage Blob account key to use for authentication."
           },
+          "tenant_id": {
+            "type": "string",
+            "title": "Tenant Id",
+            "description": "The Azure AD tenant ID to use for authentication."
+          },
+          "client_id": {
+            "type": "string",
+            "title": "Client Id",
+            "description": "The Azure AD client ID to use for authentication."
+          },
+          "client_secret": {
+            "type": "string",
+            "title": "Client Secret",
+            "description": "The Azure AD client secret to use for authentication."
+          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -8950,12 +10199,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "container_name",
-          "account_url",
-          "account_name",
-          "account_key"
-        ],
+        "required": ["container_name", "account_url"],
         "title": "CloudAzStorageBlobDataSource",
         "description": "Base component object to capture class names."
       },
@@ -8991,6 +10235,18 @@
             "type": "integer",
             "title": "Embedding Dimension"
           },
+          "client_id": {
+            "type": "string",
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "type": "string",
+            "title": "Client Secret"
+          },
+          "tenant_id": {
+            "type": "string",
+            "title": "Tenant Id"
+          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -9001,6 +10257,57 @@
         "required": ["search_service_api_key", "search_service_endpoint"],
         "title": "CloudAzureAISearchVectorStore",
         "description": "Cloud Azure AI Search Vector Store."
+      },
+      "CloudBoxDataSource": {
+        "properties": {
+          "folder_id": {
+            "type": "string",
+            "title": "Folder Id",
+            "description": "The ID of the Box folder to read from."
+          },
+          "authentication_mechanism": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoxAuthMechanism"
+              }
+            ],
+            "description": "The type of authentication to use (Developer Token or CCG)"
+          },
+          "developer_token": {
+            "type": "string",
+            "title": "Developer Token",
+            "description": "Developer token for authentication if authentication_mechanism is 'developer_token'."
+          },
+          "client_id": {
+            "type": "string",
+            "title": "Client Id",
+            "description": "Box API key used for identifying the application the user is authenticating with"
+          },
+          "client_secret": {
+            "type": "string",
+            "title": "Client Secret",
+            "description": "Box API secret used for making auth requests."
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "Box User ID, if provided authenticates as user."
+          },
+          "enterprise_id": {
+            "type": "string",
+            "title": "Enterprise Id",
+            "description": "Box Enterprise ID, if provided authenticates as service."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudBoxDataSource"
+          }
+        },
+        "type": "object",
+        "required": ["authentication_mechanism"],
+        "title": "CloudBoxDataSource",
+        "description": "Base component object to capture class names."
       },
       "CloudChromaVectorStore": {
         "properties": {
@@ -9131,6 +10438,14 @@
             "title": "Excluded Llm Metadata Keys",
             "default": []
           },
+          "page_positions": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Page Positions",
+            "description": "indices in the CloudDocument.text where a new page begins. e.g. Second page starts at index specified by page_positions[1]."
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -9167,6 +10482,14 @@
             "title": "Excluded Llm Metadata Keys",
             "default": []
           },
+          "page_positions": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Page Positions",
+            "description": "indices in the CloudDocument.text where a new page begins. e.g. Second page starts at index specified by page_positions[1]."
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -9176,6 +10499,29 @@
         "required": ["text", "metadata"],
         "title": "CloudDocumentCreate",
         "description": "Create a new cloud document."
+      },
+      "CloudGoogleDriveDataSource": {
+        "properties": {
+          "folder_id": {
+            "type": "string",
+            "title": "Folder Id",
+            "description": "The ID of the Google Drive folder to read from."
+          },
+          "service_account_key": {
+            "type": "object",
+            "title": "Service Account Key",
+            "description": "The service account key JSON to use for authentication."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudGoogleDriveDataSource"
+          }
+        },
+        "type": "object",
+        "required": ["folder_id", "service_account_key"],
+        "title": "CloudGoogleDriveDataSource",
+        "description": "Base component object to capture class names."
       },
       "CloudJiraDataSource": {
         "properties": {
@@ -9219,6 +10565,80 @@
         "required": ["authentication_mechanism", "query"],
         "title": "CloudJiraDataSource",
         "description": "Cloud Jira Data Source integrating JiraReader."
+      },
+      "CloudMilvusVectorStore": {
+        "properties": {
+          "supports_nested_metadata_filters": {
+            "type": "boolean",
+            "const": false,
+            "title": "Supports Nested Metadata Filters",
+            "default": false
+          },
+          "uri": {
+            "type": "string",
+            "title": "Uri"
+          },
+          "collection_name": {
+            "type": "string",
+            "title": "Collection Name"
+          },
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "embedding_dimension": {
+            "type": "integer",
+            "title": "Embedding Dimension"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudMilvusVectorStore"
+          }
+        },
+        "type": "object",
+        "required": ["uri"],
+        "title": "CloudMilvusVectorStore",
+        "description": "Cloud Milvus Vector Store."
+      },
+      "CloudMongoDBAtlasVectorSearch": {
+        "properties": {
+          "supports_nested_metadata_filters": {
+            "type": "boolean",
+            "const": false,
+            "title": "Supports Nested Metadata Filters",
+            "default": false
+          },
+          "mongodb_uri": {
+            "type": "string",
+            "title": "Mongodb Uri"
+          },
+          "db_name": {
+            "type": "string",
+            "title": "Db Name"
+          },
+          "collection_name": {
+            "type": "string",
+            "title": "Collection Name"
+          },
+          "vector_index_name": {
+            "type": "string",
+            "title": "Vector Index Name"
+          },
+          "fulltext_index_name": {
+            "type": "string",
+            "title": "Fulltext Index Name"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "CloudMongoDBAtlasVectorSearch"
+          }
+        },
+        "type": "object",
+        "required": ["mongodb_uri", "db_name", "collection_name"],
+        "title": "CloudMongoDBAtlasVectorSearch",
+        "description": "Cloud MongoDB Atlas Vector Store.\n\nThis class is used to store the configuration for a MongoDB Atlas vector store,\nso that it can be created and used in LlamaCloud.\n\nArgs:\n    mongodb_uri (str): URI for connecting to MongoDB Atlas\n    db_name (str): name of the MongoDB database\n    collection_name (str): name of the MongoDB collection\n    vector_index_name (str): name of the MongoDB Atlas vector index\n    fulltext_index_name (str): name of the MongoDB Atlas full-text index"
       },
       "CloudNotionPageDataSource": {
         "properties": {
@@ -9339,13 +10759,25 @@
             "title": "Supports Nested Metadata Filters",
             "default": false
           },
-          "connection_string": {
+          "database": {
             "type": "string",
-            "title": "Connection String"
+            "title": "Database"
           },
-          "async_connection_string": {
+          "host": {
             "type": "string",
-            "title": "Async Connection String"
+            "title": "Host"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "port": {
+            "type": "string",
+            "title": "Port"
+          },
+          "user": {
+            "type": "string",
+            "title": "User"
           },
           "table_name": {
             "type": "string",
@@ -9361,27 +10793,8 @@
           },
           "hybrid_search": {
             "type": "boolean",
-            "title": "Hybrid Search"
-          },
-          "text_search_config": {
-            "type": "string",
-            "title": "Text Search Config"
-          },
-          "cache_ok": {
-            "type": "boolean",
-            "title": "Cache Ok"
-          },
-          "perform_setup": {
-            "type": "boolean",
-            "title": "Perform Setup"
-          },
-          "debug": {
-            "type": "boolean",
-            "title": "Debug"
-          },
-          "use_jsonb": {
-            "type": "boolean",
-            "title": "Use Jsonb"
+            "title": "Hybrid Search",
+            "default": true
           },
           "class_name": {
             "type": "string",
@@ -9391,17 +10804,14 @@
         },
         "type": "object",
         "required": [
-          "connection_string",
-          "async_connection_string",
+          "database",
+          "host",
+          "password",
+          "port",
+          "user",
           "table_name",
           "schema_name",
-          "embed_dim",
-          "hybrid_search",
-          "text_search_config",
-          "cache_ok",
-          "perform_setup",
-          "debug",
-          "use_jsonb"
+          "embed_dim"
         ],
         "title": "CloudPostgresVectorStore",
         "description": "Base class for cloud vector stores."
@@ -9491,6 +10901,11 @@
             "title": "Site Name",
             "description": "The name of the SharePoint site to download from."
           },
+          "site_id": {
+            "type": "string",
+            "title": "Site Id",
+            "description": "The ID of the SharePoint site to download from."
+          },
           "folder_path": {
             "type": "string",
             "title": "Folder Path",
@@ -9528,7 +10943,7 @@
           }
         },
         "type": "object",
-        "required": ["site_name", "client_id", "client_secret", "tenant_id"],
+        "required": ["client_id", "client_secret", "tenant_id"],
         "title": "CloudSharepointDataSource",
         "description": "Base component object to capture class names."
       },
@@ -9732,6 +11147,28 @@
         "title": "CohereEmbedding",
         "description": "CohereEmbedding uses the Cohere API to generate embeddings for text."
       },
+      "CohereEmbeddingConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["COHERE_EMBEDDING"],
+            "title": "Type",
+            "description": "Type of the embedding model.",
+            "default": "COHERE_EMBEDDING"
+          },
+          "component": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CohereEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the Cohere embedding model."
+          }
+        },
+        "type": "object",
+        "title": "CohereEmbeddingConfig"
+      },
       "ConfigurableDataSinkNames": {
         "type": "string",
         "enum": [
@@ -9740,7 +11177,9 @@
           "POSTGRES",
           "QDRANT",
           "WEAVIATE",
-          "AZUREAI_SEARCH"
+          "AZUREAI_SEARCH",
+          "MONGODB_ATLAS",
+          "MILVUS"
         ],
         "title": "ConfigurableDataSinkNames",
         "description": "An enumeration."
@@ -9750,12 +11189,14 @@
         "enum": [
           "S3",
           "AZURE_STORAGE_BLOB",
+          "GOOGLE_DRIVE",
           "MICROSOFT_ONEDRIVE",
           "MICROSOFT_SHAREPOINT",
           "SLACK",
           "NOTION_PAGE",
           "CONFLUENCE",
-          "JIRA"
+          "JIRA",
+          "BOX"
         ],
         "title": "ConfigurableDataSourceNames",
         "description": "An enumeration."
@@ -9802,20 +11243,20 @@
       "ConfigurableTransformationNames": {
         "type": "string",
         "enum": [
+          "CHARACTER_SPLITTER",
+          "PAGE_SPLITTER_NODE_PARSER",
           "CODE_NODE_PARSER",
           "SENTENCE_AWARE_NODE_PARSER",
           "TOKEN_AWARE_NODE_PARSER",
-          "HTML_NODE_PARSER",
           "MARKDOWN_NODE_PARSER",
-          "JSON_NODE_PARSER",
-          "SIMPLE_FILE_NODE_PARSER",
           "MARKDOWN_ELEMENT_NODE_PARSER",
           "OPENAI_EMBEDDING",
           "AZURE_EMBEDDING",
           "COHERE_EMBEDDING",
           "BEDROCK_EMBEDDING",
           "HUGGINGFACE_API_EMBEDDING",
-          "GEMINI_EMBEDDING"
+          "GEMINI_EMBEDDING",
+          "VERTEXAI_EMBEDDING"
         ],
         "title": "ConfigurableTransformationNames",
         "description": "An enumeration."
@@ -9843,6 +11284,12 @@
               {
                 "anyOf": [
                   {
+                    "$ref": "#/components/schemas/CharacterSplitter"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PageSplitterNodeParser"
+                  },
+                  {
                     "$ref": "#/components/schemas/CodeSplitter"
                   },
                   {
@@ -9852,16 +11299,7 @@
                     "$ref": "#/components/schemas/TokenTextSplitter"
                   },
                   {
-                    "$ref": "#/components/schemas/HTMLNodeParser"
-                  },
-                  {
                     "$ref": "#/components/schemas/MarkdownNodeParser"
-                  },
-                  {
-                    "$ref": "#/components/schemas/JSONNodeParser"
-                  },
-                  {
-                    "$ref": "#/components/schemas/SimpleFileNodeParser"
                   },
                   {
                     "$ref": "#/components/schemas/MarkdownElementNodeParser"
@@ -9883,6 +11321,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/GeminiEmbedding"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ExtendVertexTextEmbedding"
                   }
                 ]
               }
@@ -9962,6 +11403,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudMongoDBAtlasVectorSearch"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudMilvusVectorStore"
                   }
                 ]
               }
@@ -10013,6 +11460,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudMongoDBAtlasVectorSearch"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudMilvusVectorStore"
                   }
                 ]
               }
@@ -10085,6 +11538,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudMongoDBAtlasVectorSearch"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudMilvusVectorStore"
                   }
                 ]
               }
@@ -10167,6 +11626,9 @@
                     "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
                   },
                   {
+                    "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
+                  },
+                  {
                     "$ref": "#/components/schemas/CloudOneDriveDataSource"
                   },
                   {
@@ -10183,6 +11645,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudBoxDataSource"
                   }
                 ]
               }
@@ -10252,6 +11717,9 @@
                     "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
                   },
                   {
+                    "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
+                  },
+                  {
                     "$ref": "#/components/schemas/CloudOneDriveDataSource"
                   },
                   {
@@ -10268,6 +11736,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudBoxDataSource"
                   }
                 ]
               }
@@ -10358,6 +11829,9 @@
                     "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
                   },
                   {
+                    "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
+                  },
+                  {
                     "$ref": "#/components/schemas/CloudOneDriveDataSource"
                   },
                   {
@@ -10374,6 +11848,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudBoxDataSource"
                   }
                 ]
               }
@@ -10400,57 +11877,17 @@
         "title": "DefaultOrganizationUpdate",
         "description": "Schema for updating the default organization for a user."
       },
-      "EmbeddingConfig": {
+      "ElementSegmentationConfig": {
         "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EmbeddingConfigType"
-              }
-            ],
-            "description": "Type of the embedding model.",
-            "default": "OPENAI_EMBEDDING"
-          },
-          "component": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/OpenAIEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/AzureOpenAIEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/BedrockEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/CohereEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/GeminiEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbedding"
-              }
-            ],
-            "title": "Component",
-            "description": "Configuration for the transformation."
+          "mode": {
+            "type": "string",
+            "enum": ["element"],
+            "title": "Mode",
+            "default": "element"
           }
         },
         "type": "object",
-        "title": "EmbeddingConfig"
-      },
-      "EmbeddingConfigType": {
-        "type": "string",
-        "enum": [
-          "OPENAI_EMBEDDING",
-          "AZURE_EMBEDDING",
-          "BEDROCK_EMBEDDING",
-          "COHERE_EMBEDDING",
-          "GEMINI_EMBEDDING",
-          "HUGGINGFACE_API_EMBEDDING"
-        ],
-        "title": "EmbeddingConfigType",
-        "description": "An enumeration."
+        "title": "ElementSegmentationConfig"
       },
       "EvalDataset": {
         "properties": {
@@ -10597,6 +12034,10 @@
           "status": {
             "$ref": "#/components/schemas/StatusEnum"
           },
+          "error_code": {
+            "type": "string",
+            "title": "Error Code"
+          },
           "error_message": {
             "type": "string",
             "title": "Error Message"
@@ -10681,11 +12122,11 @@
           "llm_model": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/SupportedEvalLLMModelNames"
+                "$ref": "#/components/schemas/SupportedLLMModelNames"
               }
             ],
             "description": "The LLM model to use within eval execution.",
-            "default": "GPT_3_5_TURBO"
+            "default": "GPT_4O"
           },
           "qa_prompt_tmpl": {
             "type": "string",
@@ -10703,7 +12144,7 @@
           "llm_model": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/SupportedEvalLLMModelNames"
+                "$ref": "#/components/schemas/SupportedLLMModelNames"
               }
             ],
             "description": "The LLM model to use within eval execution."
@@ -10717,24 +12158,6 @@
         "type": "object",
         "title": "EvalExecutionParamsOverride",
         "description": "Schema for the params override for an eval execution."
-      },
-      "EvalLLMModelData": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "description": "The name of the LLM model."
-          },
-          "description": {
-            "type": "string",
-            "title": "Description",
-            "description": "The description of the LLM model."
-          }
-        },
-        "type": "object",
-        "required": ["name", "description"],
-        "title": "EvalLLMModelData",
-        "description": "Schema for an eval LLM model."
       },
       "EvalQuestion": {
         "properties": {
@@ -10869,6 +12292,86 @@
         ],
         "title": "EvalQuestionResult",
         "description": "Schema for the result of an eval question job."
+      },
+      "ExtendVertexTextEmbedding": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "The name of the embedding model.",
+            "default": "unknown"
+          },
+          "embed_batch_size": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Embed Batch Size",
+            "description": "The batch size for embedding calls.",
+            "default": 10,
+            "lte": 2048
+          },
+          "callback_manager": {
+            "type": "object",
+            "title": "Callback Manager",
+            "default": {}
+          },
+          "num_workers": {
+            "type": "integer",
+            "title": "Num Workers",
+            "description": "The number of workers to use for async embedding calls."
+          },
+          "embed_mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VertexEmbeddingMode"
+              }
+            ],
+            "description": "The embedding mode to use."
+          },
+          "additional_kwargs": {
+            "type": "object",
+            "title": "Additional Kwargs",
+            "description": "Additional kwargs for the Vertex."
+          },
+          "client_email": {
+            "type": "string",
+            "title": "Client Email",
+            "description": "The client email to use when making Vertex API calls."
+          },
+          "token_uri": {
+            "type": "string",
+            "title": "Token Uri",
+            "description": "The token uri to use when making Vertex API calls."
+          },
+          "private_key_id": {
+            "type": "string",
+            "title": "Private Key Id",
+            "description": "The private key id to use when making Vertex API calls."
+          },
+          "private_key": {
+            "type": "string",
+            "title": "Private Key",
+            "description": "The private key to use when making Vertex API calls."
+          },
+          "project": {
+            "type": "string",
+            "title": "Project",
+            "description": "The default GCP project to use when making Vertex API calls."
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "description": "The default location to use when making API calls."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "ExtendVertexTextEmbedding"
+          }
+        },
+        "type": "object",
+        "required": ["embed_mode", "project", "location"],
+        "title": "ExtendVertexTextEmbedding",
+        "description": "Base class for embeddings."
       },
       "ExtractionJob": {
         "properties": {
@@ -11375,7 +12878,8 @@
           "any",
           "all",
           "text_match",
-          "contains"
+          "contains",
+          "is_empty"
         ],
         "title": "FilterOperator",
         "description": "Vector store filter operator."
@@ -11433,56 +12937,27 @@
         "title": "GeminiEmbedding",
         "description": "Google Gemini embeddings.\n\nArgs:\n    model_name (str): Model for embedding.\n        Defaults to \"models/embedding-001\".\n\n    api_key (Optional[str]): API key to access the model. Defaults to None.\n    api_base (Optional[str]): API base to access the model. Defaults to Official Base.\n    transport (Optional[str]): Transport to access the model."
       },
-      "HTMLNodeParser": {
+      "GeminiEmbeddingConfig": {
         "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "type": "object",
-            "title": "Callback Manager",
-            "default": {}
-          },
-          "tags": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Tags",
-            "description": "HTML tags to extract text from.",
-            "default": [
-              "p",
-              "h1",
-              "h2",
-              "h3",
-              "h4",
-              "h5",
-              "h6",
-              "li",
-              "b",
-              "i",
-              "u",
-              "section"
-            ]
-          },
-          "class_name": {
+          "type": {
             "type": "string",
-            "title": "Class Name",
-            "default": "HTMLNodeParser"
+            "enum": ["GEMINI_EMBEDDING"],
+            "title": "Type",
+            "description": "Type of the embedding model.",
+            "default": "GEMINI_EMBEDDING"
+          },
+          "component": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GeminiEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the Gemini embedding model."
           }
         },
         "type": "object",
-        "title": "HTMLNodeParser",
-        "description": "HTML node parser.\n\nSplits a document into Nodes using custom HTML splitting logic.\n\nArgs:\n    include_metadata (bool): whether to include metadata in nodes\n    include_prev_next_rel (bool): whether to include prev/next relationships"
+        "title": "GeminiEmbeddingConfig"
       },
       "HTTPValidationError": {
         "properties": {
@@ -11589,34 +13064,97 @@
         "title": "HuggingFaceInferenceAPIEmbedding",
         "description": "Wrapper on the Hugging Face's Inference API for embeddings.\n\nOverview of the design:\n- Uses the feature extraction task: https://huggingface.co/tasks/feature-extraction"
       },
-      "JSONNodeParser": {
+      "HuggingFaceInferenceAPIEmbeddingConfig": {
         "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
+          "type": {
+            "type": "string",
+            "enum": ["HUGGINGFACE_API_EMBEDDING"],
+            "title": "Type",
+            "description": "Type of the embedding model.",
+            "default": "HUGGINGFACE_API_EMBEDDING"
           },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
+          "component": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the HuggingFace Inference API embedding model."
+          }
+        },
+        "type": "object",
+        "title": "HuggingFaceInferenceAPIEmbeddingConfig"
+      },
+      "IngestionErrorResponse": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Job Id",
+            "description": "ID of the job that failed."
           },
-          "callback_manager": {
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "List of errors that occurred during ingestion."
+          },
+          "step": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobNameMapping"
+              }
+            ],
+            "description": "Name of the job that failed."
+          }
+        },
+        "type": "object",
+        "required": ["job_id", "message", "step"],
+        "title": "IngestionErrorResponse"
+      },
+      "InputMessage": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "ID of the message, if any. Not necessarily a UUID."
+          },
+          "role": {
+            "$ref": "#/components/schemas/MessageRole"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "data": {
             "type": "object",
-            "title": "Callback Manager",
-            "default": {}
+            "title": "Data",
+            "description": "Additional data to be stored with the message."
           },
           "class_name": {
             "type": "string",
             "title": "Class Name",
-            "default": "JSONNodeParser"
+            "default": "base_component"
           }
         },
         "type": "object",
-        "title": "JSONNodeParser",
-        "description": "JSON node parser.\n\nSplits a document into Nodes using custom JSON splitting logic.\n\nArgs:\n    include_metadata (bool): whether to include metadata in nodes\n    include_prev_next_rel (bool): whether to include prev/next relationships"
+        "required": ["role", "content"],
+        "title": "InputMessage",
+        "description": "This is distinct from a ChatMessage because this schema is enforced by the AI Chat library used in the frontend"
+      },
+      "JobNameMapping": {
+        "type": "string",
+        "enum": [
+          "MANAGED_INGESTION",
+          "DATA_SOURCE",
+          "FILES_UPDATE",
+          "FILE_UPDATER",
+          "PARSE",
+          "TRANSFORM",
+          "INGESTION"
+        ],
+        "title": "JobNameMapping",
+        "description": "Enum for mapping original job names to readable names."
       },
       "LLM": {
         "properties": {
@@ -11663,6 +13201,61 @@
         "title": "LLM",
         "description": "The LLM class is the main class for interacting with language models.\n\nAttributes:\n    system_prompt (Optional[str]):\n        System prompt for LLM calls.\n    messages_to_prompt (Callable):\n        Function to convert a list of messages to an LLM prompt.\n    completion_to_prompt (Callable):\n        Function to convert a completion to an LLM prompt.\n    output_parser (Optional[BaseOutputParser]):\n        Output parser to parse, validate, and correct errors programmatically.\n    pydantic_program_mode (PydanticProgramMode):\n        Pydantic program mode to use for structured prediction."
       },
+      "LLMModelData": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the LLM model."
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "The description of the LLM model."
+          },
+          "multi_modal": {
+            "type": "boolean",
+            "title": "Multi Modal",
+            "description": "Whether the model supports multi-modal image input"
+          }
+        },
+        "type": "object",
+        "required": ["name", "description", "multi_modal"],
+        "title": "LLMModelData",
+        "description": "Schema for an eval LLM model."
+      },
+      "LLMParameters": {
+        "properties": {
+          "model_name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SupportedLLMModelNames"
+              }
+            ],
+            "description": "The name of the model to use for LLM completions.",
+            "default": "GPT_3_5_TURBO"
+          },
+          "system_prompt": {
+            "type": "string",
+            "title": "System Prompt",
+            "description": "The system prompt to use for the completion."
+          },
+          "temperature": {
+            "type": "number",
+            "title": "Temperature",
+            "description": "The temperature value for the model.",
+            "default": 0.1
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
+          }
+        },
+        "type": "object",
+        "title": "LLMParameters",
+        "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
+      },
       "LlamaParseParameters": {
         "properties": {
           "languages": {
@@ -11680,6 +13273,11 @@
           "disable_ocr": {
             "type": "boolean",
             "title": "Disable Ocr",
+            "default": false
+          },
+          "disable_reconstruction": {
+            "type": "boolean",
+            "title": "Disable Reconstruction",
             "default": false
           },
           "invalidate_cache": {
@@ -11732,7 +13330,7 @@
             "default": ""
           },
           "use_vendor_multimodal_model": {
-            "type": "string",
+            "type": "boolean",
             "title": "Use Vendor Multimodal Model",
             "default": false
           },
@@ -11755,11 +13353,31 @@
             "type": "string",
             "title": "Page Suffix",
             "default": ""
+          },
+          "webhook_url": {
+            "type": "string",
+            "title": "Webhook Url",
+            "default": ""
+          },
+          "take_screenshot": {
+            "type": "boolean",
+            "title": "Take Screenshot",
+            "default": false
+          },
+          "s3_input_path": {
+            "type": "string",
+            "title": "S3 Input Path",
+            "default": ""
+          },
+          "s3_output_path_prefix": {
+            "type": "string",
+            "title": "S3 Output Path Prefix",
+            "default": ""
           }
         },
         "type": "object",
         "title": "LlamaParseParameters",
-        "description": "Settings that can be configured for how to use LlamaParse to parse files witin a LlamaCloud pipeline."
+        "description": "Settings that can be configured for how to use LlamaParse to parse files within a LlamaCloud pipeline."
       },
       "LlamaParseSupportedFileExtensions": {
         "type": "string",
@@ -11798,6 +13416,14 @@
           ".sxi",
           ".sti",
           ".epub",
+          ".jpg",
+          ".jpeg",
+          ".png",
+          ".gif",
+          ".bmp",
+          ".svg",
+          ".tiff",
+          ".webp",
           ".html",
           ".htm",
           ".xls",
@@ -11992,6 +13618,18 @@
       },
       "ManagedIngestionStatusResponse": {
         "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Job Id",
+            "description": "ID of the latest job."
+          },
+          "deployment_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Deployment Date",
+            "description": "Date of the deployment."
+          },
           "status": {
             "allOf": [
               {
@@ -11999,6 +13637,14 @@
               }
             ],
             "description": "Status of the ingestion."
+          },
+          "error": {
+            "items": {
+              "$ref": "#/components/schemas/IngestionErrorResponse"
+            },
+            "type": "array",
+            "title": "Error",
+            "description": "List of errors that occurred during ingestion."
           }
         },
         "type": "object",
@@ -12099,6 +13745,28 @@
         "title": "MarkdownNodeParser",
         "description": "Markdown node parser.\n\nSplits a document into Nodes using custom Markdown splitting logic.\n\nArgs:\n    include_metadata (bool): whether to include metadata in nodes\n    include_prev_next_rel (bool): whether to include prev/next relationships"
       },
+      "MessageAnnotation": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "data": {
+            "type": "string",
+            "format": "json-string",
+            "title": "Data"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
+          }
+        },
+        "type": "object",
+        "required": ["type"],
+        "title": "MessageAnnotation",
+        "description": "Base schema model for BaseComponent classes used in the platform.\nComes with special serialization logic for types used commonly in platform codebase."
+      },
       "MessageRole": {
         "type": "string",
         "enum": [
@@ -12161,7 +13829,7 @@
           }
         },
         "type": "object",
-        "required": ["key", "value"],
+        "required": ["key"],
         "title": "MetadataFilter",
         "description": "Comprehensive metadata filter for vector stores to support more operators.\n\nValue uses Strict* types, as int, float and str are compatible types and were all\nconverted to string before.\n\nSee: https://docs.pydantic.dev/latest/usage/types/#strict-types"
       },
@@ -12244,6 +13912,30 @@
         "type": "object",
         "title": "NodeParser",
         "description": "Base interface for node parser."
+      },
+      "NoneChunkingConfig": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["none"],
+            "title": "Mode",
+            "default": "none"
+          }
+        },
+        "type": "object",
+        "title": "NoneChunkingConfig"
+      },
+      "NoneSegmentationConfig": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["none"],
+            "title": "Mode",
+            "default": "none"
+          }
+        },
+        "type": "object",
+        "title": "NoneSegmentationConfig"
       },
       "ObjectType": {
         "type": "string",
@@ -12343,6 +14035,28 @@
         "title": "OpenAIEmbedding",
         "description": "OpenAI class for embeddings.\n\nArgs:\n    mode (str): Mode for embedding.\n        Defaults to OpenAIEmbeddingMode.TEXT_SEARCH_MODE.\n        Options are:\n\n        - OpenAIEmbeddingMode.SIMILARITY_MODE\n        - OpenAIEmbeddingMode.TEXT_SEARCH_MODE\n\n    model (str): Model for embedding.\n        Defaults to OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002.\n        Options are:\n\n        - OpenAIEmbeddingModelType.DAVINCI\n        - OpenAIEmbeddingModelType.CURIE\n        - OpenAIEmbeddingModelType.BABBAGE\n        - OpenAIEmbeddingModelType.ADA\n        - OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002"
       },
+      "OpenAIEmbeddingConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["OPENAI_EMBEDDING"],
+            "title": "Type",
+            "description": "Type of the embedding model.",
+            "default": "OPENAI_EMBEDDING"
+          },
+          "component": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OpenAIEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the OpenAI embedding model."
+          }
+        },
+        "type": "object",
+        "title": "OpenAIEmbeddingConfig"
+      },
       "Organization": {
         "properties": {
           "id": {
@@ -12404,6 +14118,104 @@
         "type": "object",
         "title": "OrganizationUpdate",
         "description": "Schema for updating an organization."
+      },
+      "PageScreenshotMetadata": {
+        "properties": {
+          "page_index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Page Index",
+            "description": "The index of the page for which the screenshot is taken (0-indexed)"
+          },
+          "file_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "File Id",
+            "description": "The ID of the file that the page screenshot was taken from"
+          },
+          "image_size": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Image Size",
+            "description": "The size of the image in bytes"
+          }
+        },
+        "type": "object",
+        "required": ["page_index", "file_id", "image_size"],
+        "title": "PageScreenshotMetadata"
+      },
+      "PageScreenshotNodeWithScore": {
+        "properties": {
+          "node": {
+            "$ref": "#/components/schemas/PageScreenshotMetadata"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "description": "The score of the screenshot node"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "NodeWithScore"
+          }
+        },
+        "type": "object",
+        "required": ["node", "score"],
+        "title": "PageScreenshotNodeWithScore",
+        "description": "Page screenshot metadata with score"
+      },
+      "PageSegmentationConfig": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["page"],
+            "title": "Mode",
+            "default": "page"
+          },
+          "page_separator": {
+            "type": "string",
+            "title": "Page Separator",
+            "default": "\n---\n"
+          }
+        },
+        "type": "object",
+        "title": "PageSegmentationConfig"
+      },
+      "PageSplitterNodeParser": {
+        "properties": {
+          "include_metadata": {
+            "type": "boolean",
+            "title": "Include Metadata",
+            "description": "Whether or not to consider metadata when splitting.",
+            "default": true
+          },
+          "include_prev_next_rel": {
+            "type": "boolean",
+            "title": "Include Prev Next Rel",
+            "description": "Include prev/next node relationships.",
+            "default": true
+          },
+          "callback_manager": {
+            "type": "object",
+            "title": "Callback Manager",
+            "default": {}
+          },
+          "page_separator": {
+            "type": "string",
+            "title": "Page Separator",
+            "description": "Separator to split text into pages.",
+            "default": "\n---\n"
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "base_component"
+          }
+        },
+        "type": "object",
+        "title": "PageSplitterNodeParser",
+        "description": "Split text into pages."
       },
       "ParserLanguages": {
         "type": "string",
@@ -12557,6 +14369,14 @@
           },
           "status": {
             "$ref": "#/components/schemas/StatusEnum"
+          },
+          "error_code": {
+            "type": "string",
+            "title": "Error Code"
+          },
+          "error_message": {
+            "type": "string",
+            "title": "Error Message"
           }
         },
         "type": "object",
@@ -12621,18 +14441,11 @@
           }
         },
         "type": "object",
-        "required": ["usage_pdf_pages", "max_pdf_pages"],
+        "required": ["usage_pdf_pages"],
         "title": "ParsingUsage"
       },
       "Pipeline": {
         "properties": {
-          "configured_transformations": {
-            "items": {
-              "$ref": "#/components/schemas/ConfiguredTransformationItem"
-            },
-            "type": "array",
-            "title": "Configured Transformations"
-          },
           "id": {
             "type": "string",
             "format": "uuid",
@@ -12675,6 +14488,74 @@
             "title": "Managed Pipeline Id",
             "description": "The ID of the ManagedPipeline this playground pipeline is linked to."
           },
+          "embedding_config": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AzureOpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/CohereEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/GeminiEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/OpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/VertexAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BedrockEmbeddingConfig"
+              }
+            ],
+            "title": "Embedding Config",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "AZURE_EMBEDDING": "#/components/schemas/AzureOpenAIEmbeddingConfig",
+                "COHERE_EMBEDDING": "#/components/schemas/CohereEmbeddingConfig",
+                "GEMINI_EMBEDDING": "#/components/schemas/GeminiEmbeddingConfig",
+                "HUGGINGFACE_API_EMBEDDING": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig",
+                "OPENAI_EMBEDDING": "#/components/schemas/OpenAIEmbeddingConfig",
+                "VERTEXAI_EMBEDDING": "#/components/schemas/VertexAIEmbeddingConfig",
+                "BEDROCK_EMBEDDING": "#/components/schemas/BedrockEmbeddingConfig"
+              }
+            }
+          },
+          "configured_transformations": {
+            "items": {
+              "$ref": "#/components/schemas/ConfiguredTransformationItem"
+            },
+            "type": "array",
+            "title": "Configured Transformations",
+            "description": "Deprecated don't use it, List of configured transformations.",
+            "default": []
+          },
+          "config_hash": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PipelineConfigurationHashes"
+              }
+            ],
+            "title": "Config Hash",
+            "description": "Hashes for the configuration of the pipeline."
+          },
+          "transform_config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AutoTransformConfig"
+              },
+              {
+                "$ref": "#/components/schemas/AdvancedModeTransformConfig"
+              }
+            ],
+            "title": "Transform Config",
+            "description": "Configuration for the transformation."
+          },
           "preset_retrieval_parameters": {
             "allOf": [
               {
@@ -12713,25 +14594,70 @@
           }
         },
         "type": "object",
-        "required": ["configured_transformations", "id", "name", "project_id"],
+        "required": ["id", "name", "project_id", "embedding_config"],
         "title": "Pipeline",
         "description": "Schema for a pipeline."
+      },
+      "PipelineConfigurationHashes": {
+        "properties": {
+          "embedding_config_hash": {
+            "type": "string",
+            "title": "Embedding Config Hash",
+            "description": "Hash of the embedding config.",
+            "default": ""
+          },
+          "parsing_config_hash": {
+            "type": "string",
+            "title": "Parsing Config Hash",
+            "description": "Hash of the llama parse parameters.",
+            "default": ""
+          },
+          "transform_config_hash": {
+            "type": "string",
+            "title": "Transform Config Hash",
+            "description": "Hash of the transform config.",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "PipelineConfigurationHashes",
+        "description": "Hashes for the configuration of a pipeline."
       },
       "PipelineCreate": {
         "properties": {
           "embedding_config": {
-            "allOf": [
+            "anyOf": [
               {
-                "$ref": "#/components/schemas/EmbeddingConfig"
+                "$ref": "#/components/schemas/AzureOpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/CohereEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/GeminiEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/OpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/VertexAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BedrockEmbeddingConfig"
               }
             ],
-            "title": "Embedding Config",
-            "description": "Configuration for the embedding model."
+            "title": "Embedding Config"
           },
           "transform_config": {
-            "allOf": [
+            "anyOf": [
               {
-                "$ref": "#/components/schemas/TransformConfig"
+                "$ref": "#/components/schemas/AutoTransformConfig"
+              },
+              {
+                "$ref": "#/components/schemas/AdvancedModeTransformConfig"
               }
             ],
             "title": "Transform Config",
@@ -12743,7 +14669,8 @@
             },
             "type": "array",
             "title": "Configured Transformations",
-            "description": "List of configured transformations."
+            "description": "Deprecated, use embedding_config or transform_config instead. configured transformations for the pipeline.",
+            "default": []
           },
           "data_sink_id": {
             "type": "string",
@@ -12884,6 +14811,9 @@
                     "$ref": "#/components/schemas/CloudAzStorageBlobDataSource"
                   },
                   {
+                    "$ref": "#/components/schemas/CloudGoogleDriveDataSource"
+                  },
+                  {
                     "$ref": "#/components/schemas/CloudOneDriveDataSource"
                   },
                   {
@@ -12900,6 +14830,9 @@
                   },
                   {
                     "$ref": "#/components/schemas/CloudJiraDataSource"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CloudBoxDataSource"
                   }
                 ]
               }
@@ -12922,6 +14855,23 @@
             "format": "uuid",
             "title": "Pipeline Id",
             "description": "The ID of the pipeline."
+          },
+          "last_synced_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Synced At",
+            "description": "The last time the data source was automatically synced."
+          },
+          "sync_interval": {
+            "type": "number",
+            "format": "time-delta",
+            "title": "Sync Interval",
+            "description": "The interval at which the data source should be synced."
+          },
+          "sync_schedule_set_by": {
+            "type": "string",
+            "title": "Sync Schedule Set By",
+            "description": "The id of the user who set the sync schedule."
           }
         },
         "type": "object",
@@ -12932,7 +14882,8 @@
           "component",
           "project_id",
           "data_source_id",
-          "pipeline_id"
+          "pipeline_id",
+          "last_synced_at"
         ],
         "title": "PipelineDataSource",
         "description": "Schema for a data source in a pipeline."
@@ -12944,12 +14895,31 @@
             "format": "uuid",
             "title": "Data Source Id",
             "description": "The ID of the data source."
+          },
+          "sync_interval": {
+            "type": "number",
+            "format": "time-delta",
+            "title": "Sync Interval",
+            "description": "The interval at which the data source should be synced."
           }
         },
         "type": "object",
         "required": ["data_source_id"],
         "title": "PipelineDataSourceCreate",
         "description": "Schema for creating an association between a data source and a pipeline."
+      },
+      "PipelineDataSourceUpdate": {
+        "properties": {
+          "sync_interval": {
+            "type": "number",
+            "format": "time-delta",
+            "title": "Sync Interval",
+            "description": "The interval at which the data source should be synced."
+          }
+        },
+        "type": "object",
+        "title": "PipelineDataSourceUpdate",
+        "description": "Schema for updating an association between a data source and a pipeline."
       },
       "PipelineDeployment": {
         "properties": {
@@ -13121,6 +15091,34 @@
             "type": "object",
             "title": "Custom Metadata",
             "description": "Custom metadata for the file"
+          },
+          "config_hash": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Config Hash",
+            "description": "Hashes for the configuration of the pipeline."
           }
         },
         "type": "object",
@@ -13214,18 +15212,38 @@
       "PipelineUpdate": {
         "properties": {
           "embedding_config": {
-            "allOf": [
+            "anyOf": [
               {
-                "$ref": "#/components/schemas/EmbeddingConfig"
+                "$ref": "#/components/schemas/AzureOpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/CohereEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/GeminiEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/OpenAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/VertexAIEmbeddingConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BedrockEmbeddingConfig"
               }
             ],
-            "title": "Embedding Config",
-            "description": "Configuration for the embedding model."
+            "title": "Embedding Config"
           },
           "transform_config": {
-            "allOf": [
+            "anyOf": [
               {
-                "$ref": "#/components/schemas/TransformConfig"
+                "$ref": "#/components/schemas/AutoTransformConfig"
+              },
+              {
+                "$ref": "#/components/schemas/AdvancedModeTransformConfig"
               }
             ],
             "title": "Transform Config",
@@ -13237,7 +15255,8 @@
             },
             "type": "array",
             "title": "Configured Transformations",
-            "description": "List of configured transformations."
+            "description": "Deprecated, use embedding_config or transform_config instead. configured transformations for the pipeline.",
+            "default": []
           },
           "data_sink_id": {
             "type": "string",
@@ -13296,6 +15315,83 @@
         "title": "PipelineUpdate",
         "description": "Schema for updating a pipeline."
       },
+      "PlaygroundSession": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "pipeline_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Pipeline Id"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "llm_params_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Llm Params Id"
+          },
+          "llm_params": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LLMParameters"
+              }
+            ],
+            "title": "Llm Params",
+            "description": "LLM parameters last used in this session."
+          },
+          "retrieval_params_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Retrieval Params Id"
+          },
+          "retrieval_params": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PresetRetrievalParams"
+              }
+            ],
+            "title": "Retrieval Params",
+            "description": "Preset retrieval parameters last used in this session."
+          },
+          "chat_messages": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "type": "array",
+            "title": "Chat Messages",
+            "description": "Chat message history for this session."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "pipeline_id",
+          "user_id",
+          "llm_params_id",
+          "retrieval_params_id"
+        ],
+        "title": "PlaygroundSession",
+        "description": "A playground session for a user."
+      },
       "Pooling": {
         "type": "string",
         "enum": ["cls", "mean", "last"],
@@ -13323,8 +15419,7 @@
           "enable_reranking": {
             "type": "boolean",
             "title": "Enable Reranking",
-            "description": "Enable reranking for retrieval",
-            "default": true
+            "description": "Enable reranking for retrieval"
           },
           "rerank_top_n": {
             "type": "integer",
@@ -13339,8 +15434,7 @@
             "maximum": 1.0,
             "minimum": 0.0,
             "title": "Alpha",
-            "description": "Alpha value for hybrid retrieval to determine the weights between dense and sparse retrieval. 0 is sparse retrieval and 1 is dense retrieval.",
-            "default": 0.5
+            "description": "Alpha value for hybrid retrieval to determine the weights between dense and sparse retrieval. 0 is sparse retrieval and 1 is dense retrieval."
           },
           "search_filters": {
             "allOf": [
@@ -13367,6 +15461,12 @@
             ],
             "description": "The retrieval mode for the query.",
             "default": "chunks"
+          },
+          "retrieve_image_nodes": {
+            "type": "boolean",
+            "title": "Retrieve Image Nodes",
+            "description": "Whether to retrieve image nodes.",
+            "default": false
           }
         },
         "type": "object",
@@ -13616,8 +15716,7 @@
           "enable_reranking": {
             "type": "boolean",
             "title": "Enable Reranking",
-            "description": "Enable reranking for retrieval",
-            "default": true
+            "description": "Enable reranking for retrieval"
           },
           "rerank_top_n": {
             "type": "integer",
@@ -13632,8 +15731,7 @@
             "maximum": 1.0,
             "minimum": 0.0,
             "title": "Alpha",
-            "description": "Alpha value for hybrid retrieval to determine the weights between dense and sparse retrieval. 0 is sparse retrieval and 1 is dense retrieval.",
-            "default": 0.5
+            "description": "Alpha value for hybrid retrieval to determine the weights between dense and sparse retrieval. 0 is sparse retrieval and 1 is dense retrieval."
           },
           "search_filters": {
             "allOf": [
@@ -13660,6 +15758,12 @@
             ],
             "description": "The retrieval mode for the query.",
             "default": "chunks"
+          },
+          "retrieve_image_nodes": {
+            "type": "boolean",
+            "title": "Retrieve Image Nodes",
+            "description": "Whether to retrieve image nodes.",
+            "default": false
           },
           "query": {
             "type": "string",
@@ -13688,6 +15792,14 @@
             "title": "Retrieval Nodes",
             "description": "The nodes retrieved by the pipeline for the given query."
           },
+          "image_nodes": {
+            "items": {
+              "$ref": "#/components/schemas/PageScreenshotNodeWithScore"
+            },
+            "type": "array",
+            "title": "Image Nodes",
+            "description": "The image nodes retrieved by the pipeline for the given query."
+          },
           "retrieval_latency": {
             "additionalProperties": {
               "type": "number"
@@ -13706,6 +15818,62 @@
         "required": ["pipeline_id", "retrieval_nodes", "retrieval_latency"],
         "title": "RetrieveResults",
         "description": "Schema for the result of an retrieval execution."
+      },
+      "SemanticChunkingConfig": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["semantic"],
+            "title": "Mode",
+            "default": "semantic"
+          },
+          "buffer_size": {
+            "type": "integer",
+            "title": "Buffer Size",
+            "default": 1
+          },
+          "breakpoint_percentile_threshold": {
+            "type": "integer",
+            "title": "Breakpoint Percentile Threshold",
+            "default": 95
+          }
+        },
+        "type": "object",
+        "title": "SemanticChunkingConfig"
+      },
+      "SentenceChunkingConfig": {
+        "properties": {
+          "chunk_size": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Chunk Size",
+            "default": 1024
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "default": 200,
+            "gte": 0
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["sentence"],
+            "title": "Mode",
+            "default": "sentence"
+          },
+          "separator": {
+            "type": "string",
+            "title": "Separator",
+            "default": " "
+          },
+          "paragraph_separator": {
+            "type": "string",
+            "title": "Paragraph Separator",
+            "default": "\n\n\n"
+          }
+        },
+        "type": "object",
+        "title": "SentenceChunkingConfig"
       },
       "SentenceSplitter": {
         "properties": {
@@ -13768,70 +15936,54 @@
         "title": "SentenceSplitter",
         "description": "Parse text with a preference for complete sentences.\n\nIn general, this class tries to keep sentences and paragraphs together. Therefore\ncompared to the original TokenTextSplitter, there are less likely to be\nhanging sentences or parts of sentences at the end of the node chunk."
       },
-      "SimpleFileNodeParser": {
-        "properties": {
-          "include_metadata": {
-            "type": "boolean",
-            "title": "Include Metadata",
-            "description": "Whether or not to consider metadata when splitting.",
-            "default": true
-          },
-          "include_prev_next_rel": {
-            "type": "boolean",
-            "title": "Include Prev Next Rel",
-            "description": "Include prev/next node relationships.",
-            "default": true
-          },
-          "callback_manager": {
-            "type": "object",
-            "title": "Callback Manager",
-            "default": {}
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "SimpleFileNodeParser"
-          }
-        },
-        "type": "object",
-        "title": "SimpleFileNodeParser",
-        "description": "Simple file node parser.\n\nSplits a document loaded from a file into Nodes using logic based on the file type\nautomatically detects the NodeParser to use based on file type\n\nArgs:\n    include_metadata (bool): whether to include metadata in nodes\n    include_prev_next_rel (bool): whether to include prev/next relationships"
-      },
       "StatusEnum": {
         "type": "string",
         "enum": ["PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS"],
         "title": "StatusEnum",
         "description": "Enum for representing the status of a job"
       },
-      "SupportedEvalLLMModel": {
+      "SupportedLLMModel": {
         "properties": {
           "name": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/SupportedEvalLLMModelNames"
+                "$ref": "#/components/schemas/SupportedLLMModelNames"
               }
             ],
-            "description": "The name of the supported eval LLM model."
+            "description": "The name of the supported LLM model."
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "description": "Whether the LLM model is enabled for use in LlamaCloud.",
+            "default": true
           },
           "details": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/EvalLLMModelData"
+                "$ref": "#/components/schemas/LLMModelData"
               }
             ],
             "title": "Details",
-            "description": "The details of the supported eval LLM model."
+            "description": "The details of the supported LLM model."
           }
         },
         "type": "object",
         "required": ["name", "details"],
-        "title": "SupportedEvalLLMModel",
+        "title": "SupportedLLMModel",
         "description": "Response Schema for a supported eval LLM model."
       },
-      "SupportedEvalLLMModelNames": {
+      "SupportedLLMModelNames": {
         "type": "string",
-        "enum": ["GPT_3_5_TURBO", "GPT_4", "GPT_4_TURBO"],
-        "title": "SupportedEvalLLMModelNames",
+        "enum": [
+          "GPT_3_5_TURBO",
+          "GPT_4",
+          "GPT_4_TURBO",
+          "GPT_4O",
+          "GPT_4O_MINI",
+          "AZURE_OPENAI"
+        ],
+        "title": "SupportedLLMModelNames",
         "description": "An enumeration."
       },
       "TextNode": {
@@ -13958,6 +16110,35 @@
         "title": "TextNodeWithScore",
         "description": "Same as NodeWithScore but type for node is a TextNode instead of BaseNode.\nFastAPI doesn't accept abstract classes like BaseNode."
       },
+      "TokenChunkingConfig": {
+        "properties": {
+          "chunk_size": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Chunk Size",
+            "default": 1024
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "default": 200,
+            "gte": 0
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["token"],
+            "title": "Mode",
+            "default": "token"
+          },
+          "separator": {
+            "type": "string",
+            "title": "Separator",
+            "default": " "
+          }
+        },
+        "type": "object",
+        "title": "TokenChunkingConfig"
+      },
       "TokenTextSplitter": {
         "properties": {
           "include_metadata": {
@@ -14012,36 +16193,6 @@
         "type": "object",
         "title": "TokenTextSplitter",
         "description": "Implementation of splitting text that looks at word tokens."
-      },
-      "TransformConfig": {
-        "properties": {
-          "mode": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TransformConfigMode"
-              }
-            ],
-            "description": "Mode for the transformation configuration.",
-            "default": "AUTO"
-          },
-          "config": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AutoTransformConfig"
-              }
-            ],
-            "title": "Config",
-            "description": "Configuration for the transformation."
-          }
-        },
-        "type": "object",
-        "title": "TransformConfig"
-      },
-      "TransformConfigMode": {
-        "type": "string",
-        "enum": ["AUTO", "ADVANCED"],
-        "title": "TransformConfigMode",
-        "description": "An enumeration."
       },
       "TransformationCategoryNames": {
         "type": "string",
@@ -14173,6 +16324,40 @@
         "type": "object",
         "required": ["loc", "msg", "type"],
         "title": "ValidationError"
+      },
+      "VertexAIEmbeddingConfig": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["VERTEXAI_EMBEDDING"],
+            "title": "Type",
+            "description": "Type of the embedding model.",
+            "default": "VERTEXAI_EMBEDDING"
+          },
+          "component": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExtendVertexTextEmbedding"
+              }
+            ],
+            "title": "Component",
+            "description": "Configuration for the VertexAI embedding model."
+          }
+        },
+        "type": "object",
+        "title": "VertexAIEmbeddingConfig"
+      },
+      "VertexEmbeddingMode": {
+        "type": "string",
+        "enum": [
+          "default",
+          "classification",
+          "clustering",
+          "similarity",
+          "retrieval"
+        ],
+        "title": "VertexEmbeddingMode",
+        "description": "VertexAI embedding mode.\n\nAttributes:\n    DEFAULT_MODE (str): The default embedding mode, for older models before August 2023,\n                        that does not support task_type\n    CLASSIFICATION_MODE (str): Optimizes embeddings for classification tasks.\n    CLUSTERING_MODE (str): Optimizes embeddings for clustering tasks.\n    SEMANTIC_SIMILARITY_MODE (str): Optimizes embeddings for tasks that require assessments of semantic similarity.\n    RETRIEVAL_MODE (str): Optimizes embeddings for retrieval tasks, including search and document retrieval."
       }
     },
     "securitySchemes": {
