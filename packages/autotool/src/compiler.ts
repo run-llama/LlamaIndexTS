@@ -9,7 +9,7 @@ import td from "typedoc";
 import type { SourceMapCompact } from "unplugin";
 import type { InfoString } from "./internal";
 
-export const isToolFile = (url: string) => /tool\.[jt]sx?$/.test(url);
+export const isToolFile = (url: string) => /\.tool\.[jt]sx?$/.test(url);
 export const isJSorTS = (url: string) => /\.m?[jt]sx?$/.test(url);
 
 async function parseRoot(entryPoint: string) {
@@ -28,7 +28,7 @@ async function parseRoot(entryPoint: string) {
   if (project) {
     return app.serializer.projectToObject(project, process.cwd());
   }
-  throw new Error("Failed to parse root");
+  throw new Error(`Failed to parse root ${entryPoint}`);
 }
 
 export async function transformAutoTool(

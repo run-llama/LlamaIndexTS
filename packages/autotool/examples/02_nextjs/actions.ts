@@ -5,9 +5,9 @@ import { runWithStreamableUI } from "@/context";
 import "@/tool";
 import { convertTools } from "@llamaindex/autotool";
 import { createStreamableUI } from "ai/rsc";
-import type { JSX } from "react";
+import type { ReactNode } from "react";
 
-export async function chatWithAI(message: string): Promise<JSX.Element> {
+export async function chatWithAI(message: string): Promise<ReactNode> {
   const agent = new OpenAIAgent({
     tools: convertTools("llamaindex"),
   });
@@ -25,7 +25,7 @@ export async function chatWithAI(message: string): Promise<JSX.Element> {
               uiStream.append("\n");
             },
             write: async (message) => {
-              uiStream.append(message.response.delta);
+              uiStream.append(message.response);
             },
             close: () => {
               uiStream.done();
