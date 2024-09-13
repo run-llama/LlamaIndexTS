@@ -181,6 +181,15 @@ const SUPPORT_FILE_EXT: string[] = [
   ".tsv",
 ];
 
+//todo: should move into @llamaindex/env
+type WriteStream = {
+  write: (text: string) => void;
+};
+
+// Do not modify this variable or cause type errors
+// eslint-disable-next-line no-var
+var process: any;
+
 /**
  * Represents a reader for parsing files using the LlamaParse API.
  * See https://github.com/run-llama/llama_parse
@@ -237,6 +246,7 @@ export class LlamaParseReader extends FileReader {
   // The API key for the multimodal API. Can also be set as an env variable: LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY
   vendorMultimodalApiKey?: string | undefined;
   // numWorkers is implemented in SimpleDirectoryReader
+  stdout?: WriteStream | undefined;
 
   constructor(
     params: Partial<LlamaParseReader> & {
@@ -245,13 +255,17 @@ export class LlamaParseReader extends FileReader {
   ) {
     super();
     Object.assign(this, params);
-    params.apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
-    if (!params.apiKey) {
+    this.stdout =
+      (params.stdout ?? typeof process !== "undefined")
+        ? process!.stdout
+        : undefined;
+    const apiKey = params.apiKey ?? getEnv("LLAMA_CLOUD_API_KEY");
+    if (!apiKey) {
       throw new Error(
         "API Key is required for LlamaParseReader. Please pass the apiKey parameter or set the LLAMA_CLOUD_API_KEY environment variable.",
       );
     }
-    this.apiKey = params.apiKey;
+    this.apiKey = apiKey;
 
     if (params.gpt4oMode) {
       params.gpt4oApiKey =
@@ -360,7 +374,7 @@ export class LlamaParseReader extends FileReader {
       if (!statusResponse.ok) {
         signal.throwIfAborted();
         if (this.verbose && tries % 10 === 0) {
-          process.stdout.write(".");
+          this.stdout?.write(".");
         }
         tries++;
         continue;
@@ -385,7 +399,7 @@ export class LlamaParseReader extends FileReader {
       } else if (status === "PENDING") {
         signal.throwIfAborted();
         if (this.verbose && tries % 10 === 0) {
-          process.stdout.write(".");
+          this.stdout?.write(".");
         }
         tries++;
       } else {
