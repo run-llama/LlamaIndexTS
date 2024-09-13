@@ -13,8 +13,8 @@ import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { getEnv } from "@llamaindex/env";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings } from "../Settings.js";
-import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
 
 export class LlamaCloudIndex {
   params: CloudConstructorParams;

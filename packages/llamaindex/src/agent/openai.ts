@@ -1,5 +1,5 @@
+import { OpenAI } from "@llamaindex/openai";
 import { Settings } from "../Settings.js";
-import { OpenAI } from "../llm/openai.js";
 import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 
 // This is likely not necessary anymore but leaving it here just incase it's in use elsewhere

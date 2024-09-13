@@ -1,7 +1,7 @@
 import type { LLM } from "@llamaindex/core/llms";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode, TextNode } from "@llamaindex/core/schema";
-import { OpenAI } from "../llm/index.js";
+import { OpenAI } from "@llamaindex/openai";
 import {
   defaultKeywordExtractorPromptTemplate,
   defaultQuestionAnswerPromptTemplate,
