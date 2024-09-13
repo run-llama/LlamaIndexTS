@@ -1,7 +1,3 @@
----
-sidebar_position: 7
----
-
 # Storage
 
 Storage in LlamaIndex.TS works automatically once you've configured a
@@ -57,4 +53,4 @@ const index = await VectorStoreIndex.fromDocuments([document], {
 
 ## API Reference
 
-- [StorageContext](../api/interfaces/StorageContext.md)
+- [StorageContext](../../api/interfaces/StorageContext.md)

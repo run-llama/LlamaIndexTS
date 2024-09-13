@@ -1,7 +1,3 @@
----
-sidebar_position: 3
----
-
 # Large Language Models (LLMs)
 
 The LLM is responsible for reading text and generating natural language responses to queries. By default, LlamaIndex.TS uses `gpt-3.5-turbo`.
@@ -29,6 +25,15 @@ export AZURE_OPENAI_DEPLOYMENT="gpt-4" # or some other deployment name
 ## Local LLM
 
 For local LLMs, currently we recommend the use of [Ollama](./available_llms/ollama.md) LLM.
+
+## Available LLMs
+
+Most available LLMs are listed in the sidebar on the left. Additionally the following integrations exist without separate documentation:
+
+- [HuggingFaceLLM](../../api/classes/HuggingFaceLLM.md) and [HuggingFaceInferenceAPI](../../api/classes/HuggingFaceInferenceAPI.md).
+- [ReplicateLLM](../../api/classes/ReplicateLLM.md) see [replicate.com](https://replicate.com/)
+
+Check the [LlamaIndexTS Github](https://github.com/run-llama/LlamaIndexTS) for the most up to date overview of integrations.
 
 ## API Reference
 

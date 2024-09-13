@@ -7,7 +7,7 @@ To find out more about the latest features and updates, visit the [mixedbread.ai
 ## Table of Contents
 
 1. [Setup](#setup)
-2. [Usage with LlamaIndex](#integration-with-llamaindex)
+2. [Usage with LlamaIndex](#usage-with-llamaindex)
 3. [Simple Reranking Guide](#simple-reranking-guide)
 4. [Reranking with Objects](#reranking-with-objects)
 
