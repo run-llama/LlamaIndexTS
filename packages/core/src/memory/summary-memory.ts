@@ -3,7 +3,7 @@ import { Settings } from "../global";
 import type { ChatMessage, LLM, MessageType } from "../llms";
 import { defaultSummaryPrompt, type SummaryPrompt } from "../prompts";
 import { extractText, messagesToHistory } from "../utils";
-import { BaseMemory } from "./base-memory";
+import { BaseMemory } from "./base";
 
 export class ChatSummaryMemoryBuffer extends BaseMemory {
   /**

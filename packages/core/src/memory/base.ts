@@ -2,7 +2,9 @@ import { Settings } from "../global";
 import type { ChatMessage, MessageContent } from "../llms";
 import { type BaseChatStore, SimpleChatStore } from "../storage/chat-store";
 import { extractText } from "../utils";
-import { DEFAULT_CHAT_STORE_KEY } from "./chat-memory-buffer";
+
+export const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
+export const DEFAULT_CHAT_STORE_KEY = "chat_history";
 
 /**
  * A ChatMemory is used to keep the state of back and forth chat messages

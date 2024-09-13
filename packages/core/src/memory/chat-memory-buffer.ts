@@ -1,10 +1,7 @@
 import { Settings } from "../global";
 import type { ChatMessage, LLM, MessageContent } from "../llms";
 import { type BaseChatStore } from "../storage/chat-store";
-import { BaseChatStoreMemory } from "./base-memory.js";
-
-export const DEFAULT_TOKEN_LIMIT_RATIO = 0.75;
-export const DEFAULT_CHAT_STORE_KEY = "chat_history";
+import { BaseChatStoreMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 
 type ChatMemoryBufferOptions<AdditionalMessageOptions extends object = object> =
   {
