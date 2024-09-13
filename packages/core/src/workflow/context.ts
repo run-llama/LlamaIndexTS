@@ -96,11 +96,14 @@ export class Context {
   }
 
   async *streamEvents(): AsyncGenerator<WorkflowEvent, void, undefined> {
-    while (this.running) {
+    while (true) {
       const event = this.#streamingQueue.shift();
       if (event) {
         yield event;
       } else {
+        if (!this.running) {
+          break;
+        }
         await new Promise((resolve) => setTimeout(resolve, 0));
       }
     }
