@@ -164,8 +164,7 @@
   ],
   "scripts": {
     "dev": "bunchee --watch",
-    "build": "bunchee",
-    "test": "vitest"
+    "build": "bunchee"
   },
   "repository": {
     "type": "git",
@@ -178,8 +177,7 @@
     "bunchee": "5.3.2",
     "happy-dom": "^15.7.4",
     "natural": "^8.0.1",
-    "python-format-js": "^1.4.3",
-    "vitest": "^2.1.1"
+    "python-format-js": "^1.4.3"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",

@@ -400,9 +400,6 @@ importers:
       python-format-js:
         specifier: ^1.4.3
         version: 1.4.3(patch_hash=th6l7y4oiguwssg6vyt7e3sc3i)
-      vitest:
-        specifier: ^2.1.1
-        version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.5.4)(happy-dom@15.7.4)(terser@5.32.0)
 
   packages/core/tests:
     devDependencies:
@@ -842,7 +839,7 @@ importers:
         version: 18.3.0
       autoprefixer:
         specifier: 10.4.20
-        version: 10.4.20(postcss@8.4.41)
+        version: 10.4.20(postcss@8.4.45)
       tailwindcss:
         specifier: 3.4.10
         version: 3.4.10
@@ -16656,6 +16653,16 @@ snapshots:
       normalize-range: 0.1.2
       picocolors: 1.1.0
       postcss: 8.4.41
+      postcss-value-parser: 4.2.0
+
+  autoprefixer@10.4.20(postcss@8.4.45):
+    dependencies:
+      browserslist: 4.23.3
+      caniuse-lite: 1.0.30001655
+      fraction.js: 4.3.7
+      normalize-range: 0.1.2
+      picocolors: 1.1.0
+      postcss: 8.4.45
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:
