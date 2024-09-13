@@ -1,5 +1,14 @@
 # examples
 
+## 0.0.8
+
+### Patch Changes
+
+- 11feef8: Add workflows
+- Updated dependencies [11feef8]
+  - @llamaindex/core@0.2.0
+  - llamaindex@0.6.0
+
 ## 0.0.7
 
 ### Patch Changes
