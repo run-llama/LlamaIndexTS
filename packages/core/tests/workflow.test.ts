@@ -1,21 +1,19 @@
+import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
+import type { Context } from "../src/workflow/context.js";
 import {
-  Context,
   StartEvent,
   StopEvent,
-  Workflow,
   WorkflowEvent,
-} from "@llamaindex/core/workflow";
-import { OpenAI } from "llamaindex";
-import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
+} from "../src/workflow/events.js";
+import { Workflow } from "../src/workflow/workflow.js";
+
+// mock OpenAI class for testing
+class OpenAI {
+  complete = vi.fn();
+}
 
 class JokeEvent extends WorkflowEvent<{ joke: string }> {}
 class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
-
-vi.mock("llamaindex", () => ({
-  OpenAI: vi.fn(() => ({
-    complete: vi.fn(),
-  })),
-}));
 
 describe("Workflow", () => {
   let mockLLM: Mocked<OpenAI>;
@@ -27,15 +25,12 @@ describe("Workflow", () => {
     mockLLM.complete
       .mockResolvedValueOnce({
         text: "Why do pirates make great singers? They can hit the high Cs!",
-        raw: {},
       })
       .mockResolvedValueOnce({
         text: "This joke is clever but could use improvement...",
-        raw: {},
       })
       .mockResolvedValueOnce({
         text: "The analysis is insightful and helpful.",
-        raw: {},
       });
 
     generateJoke = vi.fn(async (_context, ev: StartEvent) => {
