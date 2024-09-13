@@ -7,7 +7,7 @@ import {
   type ParserLanguages,
 } from "./api";
 
-export type Language = ParserLanguages
+export type Language = ParserLanguages;
 
 export type ResultType = "text" | "markdown" | "json";
 
