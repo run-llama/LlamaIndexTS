@@ -178,7 +178,7 @@ export class LlamaParseReader extends FileReader {
   }
 
   constructor(
-    params: Partial<LlamaParseReader> & {
+    params: Partial<Omit<LlamaParseReader, 'language' | 'apiKey'>> & {
       language?: ParserLanguages | ParserLanguages[] | undefined;
       apiKey?: string | undefined;
     } = {},
