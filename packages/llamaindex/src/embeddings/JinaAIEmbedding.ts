@@ -11,7 +11,7 @@ function isLocal(url: ImageType): boolean {
 type TaskType =
   | "retrieval.passage"
   | "retrieval.query"
-  | "clustering"
+  | "separation"
   | "classification"
   | "text-matching";
 type EncodingType = "float" | "binary" | "ubinary";
@@ -21,6 +21,7 @@ export type JinaEmbeddingRequest = {
   model?: string;
   encoding_type?: EncodingType;
   task_type?: TaskType;
+  dimensions?: number;
 };
 
 export type JinaEmbeddingResponse = {
@@ -45,6 +46,7 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   baseURL: string;
   taskType: TaskType | undefined;
   encodingType?: EncodingType | undefined;
+  dimensions?: number | undefined;
 
   async getTextEmbedding(text: string): Promise<number[]> {
     const result = await this.getJinaEmbedding({ input: [{ text }] });
@@ -124,6 +126,7 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
         model: this.model,
         encoding_type: this.encodingType ?? "float",
         ...(this.taskType && { task_type: this.taskType }),
+        ...(this.dimensions !== undefined && { dimensions: this.dimensions }),
         ...params,
       }),
     });
