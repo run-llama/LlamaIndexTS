@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.6.0
+
+### Minor Changes
+
+- 11feef8: Add workflows
+
+### Patch Changes
+
+- Updated dependencies [11feef8]
+  - @llamaindex/core@0.2.0
+  - @llamaindex/openai@0.1.2
+
 ## 0.5.27
 
 ### Patch Changes
