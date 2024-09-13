@@ -92,7 +92,7 @@ describe("Workflow", () => {
     expect(event).not.toBeNull();
   });
 
-  test("timeout", async () => {
+  test("workflow timeout", async () => {
     const TIMEOUT = 1;
     const jokeFlow = new Workflow({ verbose: true, timeout: TIMEOUT });
 
@@ -105,6 +105,16 @@ describe("Workflow", () => {
     const run = jokeFlow.run("Let's start");
     await expect(run).rejects.toThrow(
       `Operation timed out after ${TIMEOUT} seconds`,
+    );
+  });
+
+  test("workflow validation", async () => {
+    const jokeFlow = new Workflow({ verbose: true, validate: true });
+    jokeFlow.addStep(StartEvent, generateJoke, { outputs: StopEvent });
+    jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
+    const run = jokeFlow.run("pirates");
+    await expect(run).rejects.toThrow(
+      "The following events are consumed but never produced: JokeEvent",
     );
   });
 });
