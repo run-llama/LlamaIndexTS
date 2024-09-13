@@ -1,73 +1,11 @@
-import type { ChatMessage, LLM, MessageType } from "@llamaindex/core/llms";
-import {
-  defaultSummaryPrompt,
-  type SummaryPrompt,
-} from "@llamaindex/core/prompts";
-import { extractText, messagesToHistory } from "@llamaindex/core/utils";
-import { tokenizers, type Tokenizer } from "@llamaindex/env";
-import { OpenAI } from "@llamaindex/openai";
+import { type Tokenizer, tokenizers } from "@llamaindex/env";
+import { Settings } from "../global";
+import type { ChatMessage, LLM, MessageType } from "../llms";
+import { defaultSummaryPrompt, type SummaryPrompt } from "../prompts";
+import { extractText, messagesToHistory } from "../utils";
+import { BaseMemory } from "./base-memory";
 
-/**
- * A ChatHistory is used to keep the state of back and forth chat messages
- */
-export abstract class ChatHistory<
-  AdditionalMessageOptions extends object = object,
-> {
-  abstract get messages(): ChatMessage<AdditionalMessageOptions>[];
-  /**
-   * Adds a message to the chat history.
-   * @param message
-   */
-  abstract addMessage(message: ChatMessage<AdditionalMessageOptions>): void;
-
-  /**
-   * Returns the messages that should be used as input to the LLM.
-   */
-  abstract requestMessages(
-    transientMessages?: ChatMessage<AdditionalMessageOptions>[],
-  ): Promise<ChatMessage<AdditionalMessageOptions>[]>;
-
-  /**
-   * Resets the chat history so that it's empty.
-   */
-  abstract reset(): void;
-
-  /**
-   * Returns the new messages since the last call to this function (or since calling the constructor)
-   */
-  abstract newMessages(): ChatMessage<AdditionalMessageOptions>[];
-}
-
-export class SimpleChatHistory extends ChatHistory {
-  messages: ChatMessage[];
-  private messagesBefore: number;
-
-  constructor(init?: { messages?: ChatMessage[] | undefined }) {
-    super();
-    this.messages = init?.messages ?? [];
-    this.messagesBefore = this.messages.length;
-  }
-
-  addMessage(message: ChatMessage) {
-    this.messages.push(message);
-  }
-
-  async requestMessages(transientMessages?: ChatMessage[]) {
-    return [...(transientMessages ?? []), ...this.messages];
-  }
-
-  reset() {
-    this.messages = [];
-  }
-
-  newMessages() {
-    const newMessages = this.messages.slice(this.messagesBefore);
-    this.messagesBefore = this.messages.length;
-    return newMessages;
-  }
-}
-
-export class SummaryChatHistory extends ChatHistory {
+export class ChatSummaryMemoryBuffer extends BaseMemory {
   /**
    * Tokenizer function that converts text to tokens,
    *  this is used to calculate the number of tokens in a message.
@@ -79,18 +17,18 @@ export class SummaryChatHistory extends ChatHistory {
   llm: LLM;
   private messagesBefore: number;
 
-  constructor(init?: Partial<SummaryChatHistory>) {
+  constructor(options?: Partial<ChatSummaryMemoryBuffer>) {
     super();
-    this.messages = init?.messages ?? [];
+    this.messages = options?.messages ?? [];
     this.messagesBefore = this.messages.length;
-    this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
-    this.llm = init?.llm ?? new OpenAI();
+    this.summaryPrompt = options?.summaryPrompt ?? defaultSummaryPrompt;
+    this.llm = options?.llm ?? Settings.llm;
     if (!this.llm.metadata.maxTokens) {
       throw new Error(
         "LLM maxTokens is not set. Needed so the summarizer ensures the context window size of the LLM.",
       );
     }
-    this.tokenizer = init?.tokenizer ?? tokenizers.tokenizer();
+    this.tokenizer = options?.tokenizer ?? tokenizers.tokenizer();
     this.tokensToSummarize =
       this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
     if (this.tokensToSummarize < this.llm.metadata.contextWindow * 0.25) {
@@ -126,10 +64,6 @@ export class SummaryChatHistory extends ChatHistory {
       messages: promptMessages,
     });
     return { content: response.message.content, role: "memory" };
-  }
-
-  addMessage(message: ChatMessage) {
-    this.messages.push(message);
   }
 
   // Find last summary message
@@ -226,18 +160,15 @@ export class SummaryChatHistory extends ChatHistory {
     this.messages = [];
   }
 
-  newMessages() {
-    const newMessages = this.messages.slice(this.messagesBefore);
-    this.messagesBefore = this.messages.length;
-    return newMessages;
+  getMessages(): ChatMessage[] {
+    return this.messages;
   }
-}
 
-export function getHistory(
-  chatHistory?: ChatMessage[] | ChatHistory,
-): ChatHistory {
-  if (chatHistory instanceof ChatHistory) {
-    return chatHistory;
+  getAllMessages(): ChatMessage[] {
+    return this.messages;
   }
-  return new SimpleChatHistory({ messages: chatHistory });
+
+  put(message: ChatMessage) {
+    this.messages.push(message);
+  }
 }

@@ -1,6 +1,6 @@
 import type { ChatMessage, MessageContent } from "@llamaindex/core/llms";
+import type { BaseMemory } from "@llamaindex/core/memory";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
-import type { ChatHistory } from "../../ChatHistory.js";
 
 /**
  * Represents the base parameters for ChatEngine.
@@ -10,7 +10,7 @@ export interface ChatEngineParamsBase {
   /**
    * Optional chat history if you want to customize the chat history.
    */
-  chatHistory?: ChatMessage[] | ChatHistory;
+  chatHistory?: ChatMessage[] | BaseMemory;
   /**
    * Optional flag to enable verbose mode.
    * @default false

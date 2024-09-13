@@ -143,6 +143,34 @@
         "types": "./dist/indices/index.d.ts",
         "default": "./dist/indices/index.js"
       }
+    },
+    "./memory": {
+      "require": {
+        "types": "./dist/memory/index.d.cts",
+        "default": "./dist/memory/index.cjs"
+      },
+      "import": {
+        "types": "./dist/memory/index.d.ts",
+        "default": "./dist/memory/index.js"
+      },
+      "default": {
+        "types": "./dist/memory/index.d.ts",
+        "default": "./dist/memory/index.js"
+      }
+    },
+    "./storage/chat-store": {
+      "require": {
+        "types": "./dist/storage/chat-store/index.d.cts",
+        "default": "./dist/storage/chat-store/index.cjs"
+      },
+      "import": {
+        "types": "./dist/storage/chat-store/index.d.ts",
+        "default": "./dist/storage/chat-store/index.js"
+      },
+      "default": {
+        "types": "./dist/storage/chat-store/index.d.ts",
+        "default": "./dist/storage/chat-store/index.js"
+      }
     }
   },
   "files": [
