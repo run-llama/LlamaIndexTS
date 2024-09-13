@@ -2,6 +2,9 @@ import type { Tokenizers } from "@llamaindex/env";
 import type { JSONSchemaType } from "ajv";
 import type { JSONObject, JSONValue } from "../global/type";
 
+/**
+ * @internal
+ */
 export interface LLMChat<
   AdditionalChatOptions extends object = object,
   AdditionalMessageOptions extends object = object,
