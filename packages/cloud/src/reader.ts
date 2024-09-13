@@ -199,6 +199,12 @@ export class LlamaParseReader extends FileReader {
       );
     }
     this.apiKey = apiKey;
+    if (this.baseUrl.endsWith("/")) {
+      this.baseUrl = this.baseUrl.slice(0, -"/".length);
+    }
+    if (this.baseUrl.endsWith("/api/parsing")) {
+      this.baseUrl = this.baseUrl.slice(0, -"/api/parsing".length);
+    }
 
     if (params.gpt4oMode) {
       params.gpt4oApiKey =
