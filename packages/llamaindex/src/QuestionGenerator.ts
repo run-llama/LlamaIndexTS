@@ -8,12 +8,12 @@ import {
 import type { QueryType } from "@llamaindex/core/query-engine";
 import type { BaseOutputParser } from "@llamaindex/core/schema";
 import { extractText, toToolDescriptions } from "@llamaindex/core/utils";
+import { OpenAI } from "@llamaindex/openai";
 import { SubQuestionOutputParser } from "./OutputParser.js";
 import type {
   BaseQuestionGenerator,
   SubQuestion,
 } from "./engines/query/types.js";
-import { OpenAI } from "./llm/openai.js";
 import type { StructuredOutput } from "./types.js";
 
 /**

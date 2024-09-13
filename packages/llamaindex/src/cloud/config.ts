@@ -5,7 +5,7 @@ import type {
 } from "@llamaindex/cloud/api";
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
 import { BaseNode, type TransformComponent } from "@llamaindex/core/schema";
-import { OpenAIEmbedding } from "../embeddings/OpenAIEmbedding.js";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 
 export type GetPipelineCreateParams = {
   pipelineName: string;

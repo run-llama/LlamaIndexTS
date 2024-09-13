@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.5.25",
+  "version": "0.5.27",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -33,6 +33,7 @@
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
     "@mistralai/mistralai": "^1.0.4",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^3.0.2",
@@ -56,7 +57,7 @@
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
-    "openai": "^4.57.0",
+    "openai": "^4.60.0",
     "papaparse": "^5.4.1",
     "pathe": "^1.1.2",
     "portkey-ai": "0.1.16",
