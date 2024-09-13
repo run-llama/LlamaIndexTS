@@ -179,11 +179,15 @@ export class LlamaParseReader extends FileReader {
 
   constructor(
     params: Partial<LlamaParseReader> & {
+      language?: ParserLanguages | ParserLanguages[] | undefined;
       apiKey?: string | undefined;
     } = {},
   ) {
     super();
     Object.assign(this, params);
+    this.language = Array.isArray(this.language)
+      ? this.language
+      : [this.language];
     this.stdout =
       (params.stdout ?? typeof process !== "undefined")
         ? process!.stdout
