@@ -25,7 +25,6 @@
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
     "directory": "packages/llm/openai"
   },
-  "private": true,
   "scripts": {
     "build": "bunchee",
     "dev": "bunchee --watch"
