@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.6.1
+
+### Patch Changes
+
+- 6b70c54: feat: update JinaAIEmbedding, support embedding v3
+
 ## 0.6.0
 
 ### Minor Changes
