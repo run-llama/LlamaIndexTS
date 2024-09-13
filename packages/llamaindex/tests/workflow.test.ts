@@ -8,8 +8,8 @@ import {
 import { OpenAI } from "llamaindex";
 import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
 
-// Create a custom event type
 class JokeEvent extends WorkflowEvent<{ joke: string }> {}
+class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
 
 vi.mock("llamaindex", () => ({
   OpenAI: vi.fn(() => ({
@@ -21,7 +21,7 @@ describe("Workflow", () => {
   let mockLLM: Mocked<OpenAI>;
   let generateJoke: Mocked<any>;
   let critiqueJoke: Mocked<any>;
-
+  let analyzeJoke: Mocked<any>;
   beforeEach(() => {
     mockLLM = new OpenAI() as Mocked<OpenAI>;
     mockLLM.complete
@@ -31,6 +31,10 @@ describe("Workflow", () => {
       })
       .mockResolvedValueOnce({
         text: "This joke is clever but could use improvement...",
+        raw: {},
+      })
+      .mockResolvedValueOnce({
+        text: "The analysis is insightful and helpful.",
         raw: {},
       });
 
@@ -46,6 +50,12 @@ describe("Workflow", () => {
         prompt: `Give a thorough critique of the following joke: ${ev.data.joke}`,
       });
       return new StopEvent({ result: response.text });
+    });
+
+    analyzeJoke = vi.fn(async (_context: Context, ev: JokeEvent) => {
+      const prompt = `Give a thorough analysis of the following joke: ${ev.data.joke}`;
+      const response = await mockLLM.complete({ prompt });
+      return new AnalysisEvent({ analysis: response.text });
     });
   });
 
@@ -116,5 +126,23 @@ describe("Workflow", () => {
     await expect(run).rejects.toThrow(
       "The following events are consumed but never produced: JokeEvent",
     );
+  });
+
+  test("collectEvents", async () => {
+    let collectedEvents: WorkflowEvent[] | null = null;
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent, generateJoke);
+    jokeFlow.addStep(JokeEvent, analyzeJoke);
+    jokeFlow.addStep([AnalysisEvent], async (context, ev) => {
+      collectedEvents = context.collectEvents(ev, [AnalysisEvent]);
+      return new StopEvent({ result: "Report generated" });
+    });
+
+    const result = await jokeFlow.run("pirates");
+    expect(generateJoke).toHaveBeenCalledTimes(1);
+    expect(analyzeJoke).toHaveBeenCalledTimes(1);
+    expect(result.data.result).toBe("Report generated");
+    expect(collectedEvents).toHaveLength(1);
   });
 });
