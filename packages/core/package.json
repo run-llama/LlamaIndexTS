@@ -164,7 +164,8 @@
   ],
   "scripts": {
     "dev": "bunchee --watch",
-    "build": "bunchee"
+    "build": "bunchee",
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -172,10 +173,13 @@
     "url": "https://github.com/himself65/LlamaIndexTS.git"
   },
   "devDependencies": {
+    "@edge-runtime/vm": "^4.0.3",
     "ajv": "^8.17.1",
     "bunchee": "5.3.2",
+    "happy-dom": "^15.7.4",
     "natural": "^8.0.1",
-    "python-format-js": "^1.4.3"
+    "python-format-js": "^1.4.3",
+    "vitest": "^2.1.1"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
