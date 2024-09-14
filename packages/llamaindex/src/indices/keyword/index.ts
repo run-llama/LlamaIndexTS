@@ -265,8 +265,9 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   /**
    * High level API: split documents, get keywords, and build index.
    * @param documents
-   * @param storageContext
-   * @param serviceContext
+   * @param args
+   * @param args.storageContext
+   * @param args.serviceContext
    * @returns
    */
   static async fromDocuments(
