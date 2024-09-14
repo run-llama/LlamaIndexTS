@@ -298,8 +298,8 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   /**
    * Get keywords for nodes and place them into the index.
    * @param nodes
+   * @param docStore
    * @param serviceContext
-   * @param vectorStore
    * @returns
    */
   static async buildIndexFromNodes(
