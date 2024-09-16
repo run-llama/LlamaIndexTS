@@ -42,11 +42,4 @@ export class AsyncLocalStorage<T> {
 
 const defaultCustomEvent = (globalThis as any).CustomEvent;
 
-// @ts-expect-error
-if (typeof window === "undefined") {
-  console.warn(
-    "You are not running in a browser environment, which might not as expected",
-  );
-}
-
 export { defaultCustomEvent as CustomEvent };

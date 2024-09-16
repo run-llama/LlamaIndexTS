@@ -18,6 +18,7 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import { fileURLToPath } from "node:url";
 import { createWriteStream, fs } from "./fs/node.js";
+import "./global-check.js";
 import type { SHA256 } from "./node-polyfill.js";
 
 export function createSHA256(): SHA256 {
