@@ -145,6 +145,9 @@ jobs:
       - name: Pack @llamaindex/openai
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/llm/openai
+      - name: Pack @llamaindex/groq
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/groq
       - name: Pack @llamaindex/core
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core
