@@ -864,6 +864,9 @@ importers:
 
   packages/llm/groq:
     dependencies:
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../openai
