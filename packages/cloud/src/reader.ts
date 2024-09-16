@@ -7,6 +7,7 @@ import {
   type Body_upload_file_api_v1_parsing_upload_post,
   type ParserLanguages,
 } from "./api";
+import { sleep } from "./utils";
 
 export type Language = ParserLanguages;
 
@@ -274,14 +275,11 @@ export class LlamaParseReader extends FileReader {
 
     const response = await ParsingService.uploadFileApiV1ParsingUploadPost({
       client: this.#client,
-      throwOnError: false,
+      throwOnError: true,
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
       body,
     });
 
-    if (response.error) {
-      throw new Error(`Failed to upload file: ${response.error.detail}`);
-    }
     return response.data.id;
   }
 
@@ -293,24 +291,20 @@ export class LlamaParseReader extends FileReader {
     const signal = AbortSignal.timeout(this.maxTimeout * 1000);
     let tries = 0;
     while (true) {
-      await new Promise((resolve) =>
-        setTimeout(resolve, this.checkInterval * 1000),
-      );
+      await sleep(this.checkInterval * 1000);
 
       // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
       const result =
         await ParsingService.getParsingJobDetailsApiV1ParsingJobJobIdDetailsGet(
           {
             client: this.#client,
+            throwOnError: true,
             path: {
               job_id: jobId,
             },
             signal,
           },
         );
-      if (result.error) {
-        throw new Error(`Failed to get job status: ${result.error.detail}`);
-      }
       const { data } = result;
 
       const status = (data as Record<string, unknown>)["status"];
@@ -323,6 +317,7 @@ export class LlamaParseReader extends FileReader {
               await ParsingService.getJobJsonResultApiV1ParsingJobJobIdResultJsonGet(
                 {
                   client: this.#client,
+                  throwOnError: true,
                   path: {
                     job_id: jobId,
                   },
@@ -336,6 +331,7 @@ export class LlamaParseReader extends FileReader {
               await ParsingService.getJobResultApiV1ParsingJobJobIdResultMarkdownGet(
                 {
                   client: this.#client,
+                  throwOnError: true,
                   path: {
                     job_id: jobId,
                   },
@@ -349,6 +345,7 @@ export class LlamaParseReader extends FileReader {
               await ParsingService.getJobTextResultApiV1ParsingJobJobIdResultTextGet(
                 {
                   client: this.#client,
+                  throwOnError: true,
                   path: {
                     job_id: jobId,
                   },
@@ -358,7 +355,7 @@ export class LlamaParseReader extends FileReader {
             break;
           }
         }
-        return result;
+        return result.data;
         // If job is still pending, check if maximum timeout has been reached. If reached, throws an error
       } else if (status === "PENDING") {
         signal.throwIfAborted();
@@ -386,36 +383,34 @@ export class LlamaParseReader extends FileReader {
     fileContent: Uint8Array,
     fileName?: string,
   ): Promise<Document[]> {
-    let jobId;
-    try {
-      // Creates a job for the file
-      jobId = await this.createJob(fileContent, fileName);
-      if (this.verbose) {
-        console.log(`Started parsing the file under job id ${jobId}`);
-      }
+    return this.createJob(fileContent, fileName)
+      .then(async (jobId) => {
+        if (this.verbose) {
+          console.log(`Started parsing the file under job id ${jobId}`);
+        }
 
-      // Return results as Document objects
-      const jobResults = await this.getJobResult(jobId, this.resultType);
-      const resultText = jobResults[this.resultType];
+        // Return results as Document objects
+        const jobResults = await this.getJobResult(jobId, this.resultType);
+        const resultText = jobResults[this.resultType];
 
-      // Split the text by separator if splitByPage is true
-      if (this.splitByPage) {
-        return this.splitTextBySeparator(resultText);
-      }
+        // Split the text by separator if splitByPage is true
+        if (this.splitByPage) {
+          return this.splitTextBySeparator(resultText);
+        }
 
-      return [
-        new Document({
-          text: resultText,
-        }),
-      ];
-    } catch (e) {
-      console.error(`Error while parsing file under job id ${jobId}`, e);
-      if (this.ignoreErrors) {
-        return [];
-      } else {
-        throw e;
-      }
-    }
+        return [
+          new Document({
+            text: resultText,
+          }),
+        ];
+      })
+      .catch((error) => {
+        if (this.ignoreErrors) {
+          return [];
+        } else {
+          throw error;
+        }
+      });
   }
   /**
    * Loads data from a file and returns an array of JSON objects.
