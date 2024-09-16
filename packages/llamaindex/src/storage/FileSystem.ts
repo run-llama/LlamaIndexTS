@@ -5,7 +5,6 @@ import { fs } from "@llamaindex/env";
 /**
  * Checks if a file exists.
  * Analogous to the os.path.exists function from Python.
- * @param fs The filesystem to use.
  * @param path The path to the file to check.
  * @returns A promise that resolves to true if the file exists, false otherwise.
  */
