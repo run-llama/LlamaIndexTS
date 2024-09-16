@@ -871,7 +871,7 @@ importers:
         specifier: workspace:*
         version: link:../openai
       groq-sdk:
-        specifier: ^0.6.1
+        specifier: 0.6.1
         version: 0.6.1(encoding@0.1.13)
     devDependencies:
       bunchee:
