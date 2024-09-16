@@ -11,7 +11,7 @@ export {
   GEMINI_MODEL,
   type GoogleGeminiSessionOptions,
 } from "./gemini/types.js";
-export * from "./groq.js";
+export { Groq } from "./groq.js";
 export { HuggingFaceInferenceAPI, HuggingFaceLLM } from "./huggingface.js";
 export {
   ALL_AVAILABLE_MISTRAL_MODELS,
