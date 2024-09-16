@@ -1,10 +1,21 @@
 import fs from "node:fs/promises";
 
-import { Document, Groq, Settings, VectorStoreIndex } from "llamaindex";
+import {
+  Document,
+  Groq,
+  HuggingFaceEmbedding,
+  Settings,
+  VectorStoreIndex,
+} from "llamaindex";
 
 // Update llm to use Groq
 Settings.llm = new Groq({
   apiKey: process.env.GROQ_API_KEY,
+});
+
+// Use HuggingFace for embeddings
+Settings.embedModel = new HuggingFaceEmbedding({
+  modelType: "Xenova/all-mpnet-base-v2",
 });
 
 async function main() {
