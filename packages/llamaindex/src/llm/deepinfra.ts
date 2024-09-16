@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import { OpenAI } from "./openai.js";
+import { OpenAI } from "@llamaindex/openai";
 
 const ENV_VARIABLE_NAME = "DEEPINFRA_API_TOKEN";
 const DEFAULT_MODEL = "mistralai/Mixtral-8x22B-Instruct-v0.1";

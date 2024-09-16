@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import { OpenAIEmbedding } from "./OpenAIEmbedding.js";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 
 export class FireworksEmbedding extends OpenAIEmbedding {
   constructor(init?: Partial<OpenAIEmbedding>) {

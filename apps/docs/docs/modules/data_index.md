@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 12
 ---
 
 # Index
@@ -8,6 +8,7 @@ An index is the basic container and organization for your data. LlamaIndex.TS su
 
 - `VectorStoreIndex` - will send the top-k `Node`s to the LLM when generating a response. The default top-k is 2.
 - `SummaryIndex` - will send every `Node` in the index to the LLM in order to generate a response
+- `KeywordTableIndex` extracts and provides keywords from `Node`s to the LLM
 
 ```typescript
 import { Document, VectorStoreIndex } from "llamaindex";

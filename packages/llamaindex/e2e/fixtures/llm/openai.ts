@@ -12,6 +12,15 @@ import type {
 import { deepStrictEqual, strictEqual } from "node:assert";
 import { llmCompleteMockStorage } from "../../node/utils.js";
 
+import { TransformComponent } from "@llamaindex/core/schema";
+import {
+  BaseEmbedding,
+  BaseNode,
+  SimilarityType,
+  type EmbeddingInfo,
+  type MessageContentDetail,
+} from "llamaindex";
+
 export function getOpenAISession() {
   return {};
 }
@@ -22,6 +31,7 @@ export function isFunctionCallingModel() {
 
 export class OpenAI implements LLM {
   supportToolCall = true;
+
   get metadata() {
     return {
       model: "mock-model",
@@ -32,6 +42,7 @@ export class OpenAI implements LLM {
       isFunctionCallingModel: true,
     };
   }
+
   chat(
     params: LLMChatParamsStreaming<Record<string, unknown>>,
   ): Promise<AsyncIterable<ChatResponseChunk>>;
@@ -77,6 +88,7 @@ export class OpenAI implements LLM {
     }
     throw new Error("Method not implemented.");
   }
+
   complete(
     params: LLMCompletionParamsStreaming,
   ): Promise<AsyncIterable<CompletionResponse>>;
@@ -101,5 +113,48 @@ export class OpenAI implements LLM {
       } satisfies CompletionResponse;
     }
     throw new Error("Method not implemented.");
+  }
+}
+
+export class OpenAIEmbedding
+  extends TransformComponent
+  implements BaseEmbedding
+{
+  embedInfo?: EmbeddingInfo;
+  embedBatchSize = 512;
+
+  constructor() {
+    super(async (nodes: BaseNode[], _options?: any): Promise<BaseNode[]> => {
+      nodes.forEach((node) => (node.embedding = [0]));
+      return nodes;
+    });
+  }
+
+  async getQueryEmbedding(query: MessageContentDetail) {
+    return [0];
+  }
+
+  async getTextEmbedding(text: string) {
+    return [0];
+  }
+
+  async getTextEmbeddings(texts: string[]) {
+    return [[0]];
+  }
+
+  async getTextEmbeddingsBatch(texts: string[]) {
+    return [[0]];
+  }
+
+  similarity(
+    embedding1: number[],
+    embedding2: number[],
+    mode?: SimilarityType,
+  ) {
+    return 1;
+  }
+
+  truncateMaxTokens(input: string[]): string[] {
+    return input;
   }
 }
