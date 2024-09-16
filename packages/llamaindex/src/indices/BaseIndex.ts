@@ -71,7 +71,7 @@ export abstract class BaseIndex<T> {
 
   /**
    * Create a new retriever from the index.
-   * @param retrieverOptions
+   * @param options
    */
   abstract asRetriever(options?: any): BaseRetriever;
 

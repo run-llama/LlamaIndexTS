@@ -131,7 +131,7 @@ export class Workflow {
     }
   }
 
-  async run(event: StartEvent | string): Promise<StopEvent> {
+  async run<T = string>(event: StartEvent<T> | string): Promise<StopEvent> {
     // Validate the workflow before running if #validate is true
     if (this.#validate) {
       this.validate();

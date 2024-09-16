@@ -10,7 +10,7 @@ export class HTMLReader extends FileReader {
   /**
    * Public method for this reader.
    * Required by BaseReader interface.
-   * @param file Path/name of the file to be loaded.
+   * @param fileContent - The content of the file.
    * @returns Promise<Document[]> A Promise object, eventually yielding zero or one Document parsed from the HTML content of the specified file.
    */
   async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {

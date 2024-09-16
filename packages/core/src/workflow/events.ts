@@ -14,5 +14,5 @@ export type EventTypes<T extends Record<string, any> = any> = new (
   data: T,
 ) => WorkflowEvent<T>;
 
-export class StartEvent extends WorkflowEvent<{ input: string }> {}
-export class StopEvent extends WorkflowEvent<{ result: string }> {}
+export class StartEvent<T = string> extends WorkflowEvent<{ input: T }> {}
+export class StopEvent<T = string> extends WorkflowEvent<{ result: T }> {}

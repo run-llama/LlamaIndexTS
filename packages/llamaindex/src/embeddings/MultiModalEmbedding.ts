@@ -19,7 +19,7 @@ export abstract class MultiModalEmbedding extends BaseEmbedding {
 
   /**
    * Optionally override this method to retrieve multiple image embeddings in a single request
-   * @param texts
+   * @param images
    */
   async getImageEmbeddings(images: ImageType[]): Promise<number[][]> {
     return Promise.all(
