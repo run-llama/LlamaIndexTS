@@ -18,7 +18,7 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import { fileURLToPath } from "node:url";
 import { createWriteStream, fs } from "./fs/node.js";
-import type { SHA256 } from "./polyfill.js";
+import type { SHA256 } from "./node-polyfill.js";
 
 export function createSHA256(): SHA256 {
   const hash = createHash("sha256");
@@ -33,7 +33,12 @@ export function createSHA256(): SHA256 {
 }
 
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/node.js";
-export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
+export {
+  AsyncLocalStorage,
+  CustomEvent,
+  getEnv,
+  setEnvs,
+} from "./utils/index.js";
 export {
   createWriteStream,
   EOL,
