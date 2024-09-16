@@ -15,12 +15,10 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
   llm: LLM;
-  private messagesBefore: number;
 
   constructor(options?: Partial<ChatSummaryMemoryBuffer>) {
     super();
     this.messages = options?.messages ?? [];
-    this.messagesBefore = this.messages.length;
     this.summaryPrompt = options?.summaryPrompt ?? defaultSummaryPrompt;
     this.llm = options?.llm ?? Settings.llm;
     if (!this.llm.metadata.maxTokens) {
@@ -67,7 +65,7 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
   }
 
   // Find last summary message
-  private getLastSummaryIndex(): number | null {
+  private get lastSummaryIndex(): number | null {
     const reversedMessages = this.messages.slice().reverse();
     const index = reversedMessages.findIndex(
       (message) => message.role === "memory",
@@ -79,7 +77,7 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
   }
 
   public getLastSummary(): ChatMessage | null {
-    const lastSummaryIndex = this.getLastSummaryIndex();
+    const lastSummaryIndex = this.lastSummaryIndex;
     return lastSummaryIndex ? this.messages[lastSummaryIndex]! : null;
   }
 
@@ -99,7 +97,7 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
    * If there's a memory, uses all messages after the last summary message.
    */
   private calcConversationMessages(transformSummary?: boolean): ChatMessage[] {
-    const lastSummaryIndex = this.getLastSummaryIndex();
+    const lastSummaryIndex = this.lastSummaryIndex;
     if (!lastSummaryIndex) {
       // there's no memory, so just use all non-system messages
       return this.nonSystemMessages;
@@ -116,18 +114,18 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
     }
   }
 
-  private calcCurrentRequestMessages(transientMessages?: ChatMessage[]) {
+  private calcCurrentRequestMessages() {
     // TODO: check order: currently, we're sending:
     // system messages first, then transient messages and then the messages that describe the conversation so far
-    return [
-      ...this.systemMessages,
-      ...(transientMessages ? transientMessages : []),
-      ...this.calcConversationMessages(true),
-    ];
+    return [...this.systemMessages, ...this.calcConversationMessages(true)];
   }
 
-  async requestMessages(transientMessages?: ChatMessage[]) {
-    const requestMessages = this.calcCurrentRequestMessages(transientMessages);
+  reset() {
+    this.messages = [];
+  }
+
+  async getMessages(): Promise<ChatMessage[]> {
+    const requestMessages = this.calcCurrentRequestMessages();
 
     // get tokens of current request messages and the transient messages
     const tokens = requestMessages.reduce(
@@ -151,21 +149,13 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
       // TODO: we still might have too many tokens
       // e.g. too large system messages or transient messages
       // how should we deal with that?
-      return this.calcCurrentRequestMessages(transientMessages);
+      return this.calcCurrentRequestMessages();
     }
     return requestMessages;
   }
 
-  reset() {
-    this.messages = [];
-  }
-
-  getMessages(): ChatMessage[] {
-    return this.messages;
-  }
-
-  getAllMessages(): ChatMessage[] {
-    return this.messages;
+  async getAllMessages(): Promise<ChatMessage[]> {
+    return this.getMessages();
   }
 
   put(message: ChatMessage) {
