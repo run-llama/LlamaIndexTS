@@ -143,7 +143,7 @@ export class PineconeVectorStore
    * Query the vector store for the closest matching data to the query embeddings
    * @TODO QUERY TYPES
    * @param query The VectorStoreQuery to be used
-   * @param options Required by VectorStore interface.  Currently ignored.
+   * @param _options Required by VectorStore interface.  Currently ignored.
    * @returns Zero or more Document instances with data from the vector store.
    */
   async query(
@@ -191,7 +191,6 @@ export class PineconeVectorStore
   /**
    * Required by VectorStore interface.  Currently ignored.
    * @param persistPath
-   * @param fs
    * @returns Resolved Promise.
    */
   persist(persistPath: string): Promise<void> {
