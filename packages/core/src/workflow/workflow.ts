@@ -62,7 +62,7 @@ export class Workflow {
     return stepInfo.inputs.includes(eventType);
   }
 
-  async *streamEvents(): AsyncGenerator<WorkflowEvent, void, unknown> {
+  async *streamEvents(): AsyncGenerator<WorkflowEvent, void> {
     if (this.#contexts.size > 1) {
       throw new Error(
         "This workflow has multiple concurrent runs in progress and cannot stream events. " +
@@ -131,7 +131,7 @@ export class Workflow {
     }
   }
 
-  async run(event: StartEvent | string): Promise<StopEvent> {
+  async run<T = string>(event: StartEvent<T> | string): Promise<StopEvent> {
     // Validate the workflow before running if #validate is true
     if (this.#validate) {
       this.validate();

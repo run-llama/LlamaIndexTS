@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -34,6 +34,7 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*",
+    "@llamaindex/groq": "workspace:*",
     "@mistralai/mistralai": "^1.0.4",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^3.0.2",
@@ -94,7 +95,7 @@
     "glob": "^11.0.0",
     "pg": "^8.12.0",
     "pgvector": "0.2.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   },
   "engines": {
     "node": ">=18.0.0"

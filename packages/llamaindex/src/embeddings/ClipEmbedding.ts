@@ -1,7 +1,7 @@
+import { MultiModalEmbedding } from "@llamaindex/core/embeddings";
 import type { ImageType } from "@llamaindex/core/schema";
 import _ from "lodash";
 import { lazyLoadTransformers } from "../internal/deps/transformers.js";
-import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 // only import type, to avoid bundling error
 import type {
   CLIPTextModelWithProjection,
@@ -34,6 +34,10 @@ export class ClipEmbedding extends MultiModalEmbedding {
   private processor: Processor | null = null;
   private visionModel: CLIPVisionModelWithProjection | null = null;
   private textModel: CLIPTextModelWithProjection | null = null;
+
+  constructor() {
+    super();
+  }
 
   async getTokenizer() {
     const { AutoTokenizer } = await lazyLoadTransformers();

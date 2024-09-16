@@ -46,4 +46,9 @@ export function randomUUID(): string {
   return crypto.randomUUID();
 }
 
-export { AsyncLocalStorage, CustomEvent, getEnv, setEnvs } from "./utils.js";
+export {
+  AsyncLocalStorage,
+  CustomEvent,
+  getEnv,
+  setEnvs,
+} from "./utils/index.js";

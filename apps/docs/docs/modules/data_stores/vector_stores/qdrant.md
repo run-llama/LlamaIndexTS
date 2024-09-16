@@ -1,5 +1,7 @@
 # Qdrant Vector Store
 
+[qdrant.tech](https://qdrant.tech/)
+
 To run this example, you need to have a Qdrant instance running. You can run it with Docker:
 
 ```bash
@@ -87,4 +89,4 @@ main().catch(console.error);
 
 ## API Reference
 
-- [QdrantVectorStore](../../api/classes/QdrantVectorStore.md)
+- [QdrantVectorStore](../../../api/classes/QdrantVectorStore.md)

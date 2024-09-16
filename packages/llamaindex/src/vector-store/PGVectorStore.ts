@@ -472,7 +472,6 @@ export class PGVectorStore
   /**
    * Required by VectorStore interface.  Currently ignored.
    * @param persistPath
-   * @param fs
    * @returns Resolved Promise.
    */
   persist(persistPath: string): Promise<void> {
