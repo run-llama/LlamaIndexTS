@@ -25,7 +25,7 @@ if (glo[importIdentifier] === true) {
    * do the constructor checks anymore - which might break the functionality of your application.
    */
   console.error(
-    "llamaindex was already imported. This breaks constructor checks and will lead to issues! - https://github.com/yjs/yjs/issues/438",
+    "llamaindex was already imported. This breaks constructor checks and will lead to issues!",
   );
 }
 glo[importIdentifier] = true;
