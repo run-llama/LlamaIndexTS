@@ -68,8 +68,8 @@ export class AstraDBVectorStore
    * Create a new collection in your Astra DB vector database and connects to it.
    * You must call this method or `connect` before adding, deleting, or querying.
    *
-   * @param collection: your new colletion's name
-   * @param options: CreateCollectionOptions used to set the number of vector dimensions and similarity metric
+   * @param collection - Your new collection's name
+   * @param options - CreateCollectionOptions used to set the number of vector dimensions and similarity metric
    * @returns Promise that resolves if the creation did not throw an error.
    */
   async createAndConnect(
@@ -86,7 +86,7 @@ export class AstraDBVectorStore
    * Connect to an existing collection in your Astra DB vector database.
    * You must call this method or `createAndConnect` before adding, deleting, or querying.
    *
-   * @param collection: your existing colletion's name
+   * @param collection - Your existing collection's name
    * @returns Promise that resolves if the connection did not throw an error.
    */
   async connect(collection: string): Promise<void> {
@@ -107,7 +107,7 @@ export class AstraDBVectorStore
   /**
    * Add your document(s) to your Astra DB collection.
    *
-   * @returns and array of node ids which were added
+   * @returns an array of node ids which were added
    */
   async add(nodes: BaseNode[]): Promise<string[]> {
     if (!this.collection) {
@@ -145,8 +145,8 @@ export class AstraDBVectorStore
   /**
    * Delete a document from your Astra DB collection.
    *
-   * @param refDocId: the id of the document to delete
-   * @param deleteOptions: DeleteOneOptions to pass to the delete query
+   * @param refDocId - The id of the document to delete
+   * @param deleteOptions - DeleteOneOptions to pass to the delete query
    * @returns Promise that resolves if the delete query did not throw an error.
    */
   async delete(
@@ -171,8 +171,8 @@ export class AstraDBVectorStore
   /**
    * Query documents from your Astra DB collection to get the closest match to your embedding.
    *
-   * @param query: VectorStoreQuery
-   * @param options: FindOptions
+   * @param query - VectorStoreQuery
+   * @param options - FindOptions
    */
   async query(
     query: VectorStoreQuery,

@@ -140,4 +140,30 @@ describe("Workflow", () => {
     expect(result.data.result).toBe("Report generated");
     expect(collectedEvents).toHaveLength(1);
   });
+
+  test("run workflow with object-based StartEvent and StopEvent", async () => {
+    const objectFlow = new Workflow({ verbose: true });
+
+    type Person = { name: string; age: number };
+
+    const processObject = vi.fn(async (_context, ev: StartEvent<Person>) => {
+      const { name, age } = ev.data.input;
+      return new StopEvent({
+        result: { greeting: `Hello ${name}, you are ${age} years old!` },
+      });
+    });
+
+    objectFlow.addStep(StartEvent<Person>, processObject);
+
+    const result = await objectFlow.run(
+      new StartEvent<Person>({
+        input: { name: "Alice", age: 30 },
+      }),
+    );
+
+    expect(processObject).toHaveBeenCalledTimes(1);
+    expect(result.data.result).toEqual({
+      greeting: "Hello Alice, you are 30 years old!",
+    });
+  });
 });

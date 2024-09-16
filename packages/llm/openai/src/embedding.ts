@@ -144,7 +144,7 @@ export class OpenAIEmbedding extends BaseEmbedding {
 
   /**
    * Get embeddings for a single text
-   * @param texts
+   * @param text
    */
   async getTextEmbedding(text: string): Promise<number[]> {
     return (await this.getOpenAIEmbedding([text]))[0]!;
