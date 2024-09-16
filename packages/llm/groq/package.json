@@ -33,6 +33,7 @@
     "bunchee": "5.3.2"
   },
   "dependencies": {
+    "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*",
     "groq-sdk": "^0.6.1"
   }
