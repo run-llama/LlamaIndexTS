@@ -340,6 +340,10 @@ importers:
         version: 5.6.2
 
   packages/cloud:
+    dependencies:
+      magic-bytes.js:
+        specifier: ^1.10.0
+        version: 1.10.0
     devDependencies:
       '@hey-api/client-fetch':
         specifier: ^0.2.4
@@ -347,6 +351,12 @@ importers:
       '@hey-api/openapi-ts':
         specifier: ^0.53.0
         version: 0.53.0(typescript@5.6.2)
+      '@llamaindex/core':
+        specifier: workspace:^0.2.0
+        version: link:../core
+      '@llamaindex/env':
+        specifier: workspace:^0.1.10
+        version: link:../env
       bunchee:
         specifier: 5.3.2
         version: 5.3.2(typescript@5.6.2)
