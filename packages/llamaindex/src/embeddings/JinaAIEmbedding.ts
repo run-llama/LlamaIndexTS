@@ -1,7 +1,7 @@
+import { MultiModalEmbedding } from "@llamaindex/core/embeddings";
 import { getEnv } from "@llamaindex/env";
 import { imageToDataUrl } from "../internal/utils.js";
 import type { ImageType } from "../Node.js";
-import { MultiModalEmbedding } from "./MultiModalEmbedding.js";
 
 function isLocal(url: ImageType): boolean {
   if (url instanceof Blob) return true;
