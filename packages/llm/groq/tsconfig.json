@@ -9,9 +9,6 @@
   "include": ["./src"],
   "references": [
     {
-      "path": "../../llamaindex/tsconfig.json"
-    },
-    {
       "path": "../../env/tsconfig.json"
     }
   ]
