@@ -173,7 +173,7 @@ export class LlamaParseReader extends FileReader {
 
   get headers() {
     return {
-      Authorization: `Bearer ${this.apiKey}`,
+      authorization: `Bearer ${this.apiKey}`,
     };
   }
 
