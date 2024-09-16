@@ -23,6 +23,10 @@
   ],
   "exports": {
     ".": {
+      "browser": {
+        "types": "./dist/type/index.browser.d.ts",
+        "default": "./dist/index.browser.js"
+      },
       "node": {
         "types": "./dist/type/index.d.ts",
         "import": "./dist/index.js",

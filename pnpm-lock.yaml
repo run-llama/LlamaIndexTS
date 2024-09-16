@@ -167,7 +167,7 @@ importers:
         version: link:../packages/llamaindex
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.650.0(@aws-sdk/client-sso-oidc@3.650.0(@aws-sdk/client-sts@3.650.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.650.0)
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
@@ -603,7 +603,7 @@ importers:
         version: 2.0.0
       mongodb:
         specifier: ^6.7.0
-        version: 6.8.0(@aws-sdk/credential-providers@3.650.0(@aws-sdk/client-sso-oidc@3.650.0(@aws-sdk/client-sts@3.650.0)))
+        version: 6.8.0(@aws-sdk/credential-providers@3.650.0)
       notion-md-crawler:
         specifier: ^1.0.0
         version: 1.0.0(encoding@0.1.13)
@@ -714,6 +714,22 @@ importers:
       wrangler:
         specifier: ^3.73.0
         version: 3.73.0(@cloudflare/workers-types@4.20240821.1)
+
+  packages/llamaindex/e2e/examples/llama-parse-browser:
+    dependencies:
+      '@llamaindex/cloud':
+        specifier: workspace:*
+        version: link:../../../../cloud
+    devDependencies:
+      typescript:
+        specifier: ^5.5.3
+        version: 5.6.2
+      vite:
+        specifier: ^5.4.1
+        version: 5.4.2(@types/node@22.5.4)(terser@5.32.0)
+      vite-plugin-wasm:
+        specifier: ^3.3.0
+        version: 3.3.0(vite@5.4.2(@types/node@22.5.4)(terser@5.32.0))
 
   packages/llamaindex/e2e/examples/nextjs-agent:
     dependencies:
@@ -18250,16 +18266,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.2(@typescript-eslint/parser@8.5.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
-    dependencies:
-      debug: 3.2.7
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.5.0(eslint@8.57.0)(typescript@5.6.2)
-      eslint: 8.57.0
-      eslint-import-resolver-node: 0.3.9
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.5.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
@@ -18270,7 +18276,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.2(@typescript-eslint/parser@8.5.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
+      eslint-module-utils: 2.8.2(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -20972,7 +20978,7 @@ snapshots:
     optionalDependencies:
       '@aws-sdk/credential-providers': 3.650.0(@aws-sdk/client-sso-oidc@3.650.0(@aws-sdk/client-sts@3.650.0))
 
-  mongodb@6.8.0(@aws-sdk/credential-providers@3.650.0(@aws-sdk/client-sso-oidc@3.650.0(@aws-sdk/client-sts@3.650.0))):
+  mongodb@6.8.0(@aws-sdk/credential-providers@3.650.0):
     dependencies:
       '@mongodb-js/saslprep': 1.1.7
       bson: 6.8.0

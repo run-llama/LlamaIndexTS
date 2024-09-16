@@ -3,6 +3,6 @@
  *
  * @module
  */
-export * from "./node-polyfill.js";
+export * from "./web-polyfill.js";
 
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";
