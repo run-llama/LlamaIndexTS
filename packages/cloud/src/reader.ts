@@ -294,17 +294,14 @@ export class LlamaParseReader extends FileReader {
       await sleep(this.checkInterval * 1000);
 
       // Check the job status. If unsuccessful response, checks if maximum timeout has been reached. If reached, throws an error
-      const result =
-        await ParsingService.getParsingJobDetailsApiV1ParsingJobJobIdDetailsGet(
-          {
-            client: this.#client,
-            throwOnError: true,
-            path: {
-              job_id: jobId,
-            },
-            signal,
-          },
-        );
+      const result = await ParsingService.getJobApiV1ParsingJobJobIdGet({
+        client: this.#client,
+        throwOnError: true,
+        path: {
+          job_id: jobId,
+        },
+        signal,
+      });
       const { data } = result;
 
       const status = (data as Record<string, unknown>)["status"];
