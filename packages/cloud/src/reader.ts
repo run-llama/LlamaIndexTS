@@ -1,3 +1,4 @@
+import { createClient, createConfig, type Client } from "@hey-api/client-fetch";
 import { Document, FileReader } from "@llamaindex/core/schema";
 import { fs, getEnv } from "@llamaindex/env";
 import { filetypeinfo } from "magic-bytes.js";
@@ -171,11 +172,7 @@ export class LlamaParseReader extends FileReader {
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
 
-  get headers() {
-    return {
-      authorization: `Bearer ${this.apiKey}`,
-    };
-  }
+  readonly #client: Client;
 
   constructor(
     params: Partial<Omit<LlamaParseReader, "language" | "apiKey">> & {
@@ -219,6 +216,15 @@ export class LlamaParseReader extends FileReader {
 
       this.vendorMultimodalApiKey = params.vendorMultimodalApiKey;
     }
+
+    this.#client = createClient(
+      createConfig({
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+        },
+        baseUrl: this.baseUrl,
+      }),
+    );
   }
 
   // Create a job for the LlamaParse API
@@ -267,10 +273,9 @@ export class LlamaParseReader extends FileReader {
     } as unknown as Body_upload_file_api_v1_parsing_upload_post;
 
     const response = await ParsingService.uploadFileApiV1ParsingUploadPost({
-      baseUrl: this.baseUrl,
+      client: this.#client,
       throwOnError: false,
       signal: AbortSignal.timeout(this.maxTimeout * 1000),
-      headers: this.headers,
       body,
     });
 
@@ -296,12 +301,11 @@ export class LlamaParseReader extends FileReader {
       const result =
         await ParsingService.getParsingJobDetailsApiV1ParsingJobJobIdDetailsGet(
           {
-            baseUrl: this.baseUrl,
+            client: this.#client,
             path: {
               job_id: jobId,
             },
             signal,
-            headers: this.headers,
           },
         );
       if (result.error) {
@@ -318,12 +322,11 @@ export class LlamaParseReader extends FileReader {
             result =
               await ParsingService.getJobJsonResultApiV1ParsingJobJobIdResultJsonGet(
                 {
-                  baseUrl: this.baseUrl,
+                  client: this.#client,
                   path: {
                     job_id: jobId,
                   },
                   signal,
-                  headers: this.headers,
                 },
               );
             break;
@@ -332,12 +335,11 @@ export class LlamaParseReader extends FileReader {
             result =
               await ParsingService.getJobResultApiV1ParsingJobJobIdResultMarkdownGet(
                 {
-                  baseUrl: this.baseUrl,
+                  client: this.#client,
                   path: {
                     job_id: jobId,
                   },
                   signal,
-                  headers: this.headers,
                 },
               );
             break;
@@ -346,12 +348,11 @@ export class LlamaParseReader extends FileReader {
             result =
               await ParsingService.getJobTextResultApiV1ParsingJobJobIdResultTextGet(
                 {
-                  baseUrl: this.baseUrl,
+                  client: this.#client,
                   path: {
                     job_id: jobId,
                   },
                   signal,
-                  headers: this.headers,
                 },
               );
             break;
@@ -531,12 +532,11 @@ export class LlamaParseReader extends FileReader {
     const response =
       await ParsingService.getJobImageResultApiV1ParsingJobJobIdResultImageNameGet(
         {
-          baseUrl: this.baseUrl,
+          client: this.#client,
           path: {
             job_id: jobId,
             name: imageName,
           },
-          headers: this.headers,
         },
       );
     if (response.error) {
