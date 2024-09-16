@@ -6,10 +6,5 @@
     "moduleResolution": "bundler",
     "outDir": "./lib"
   },
-  "include": ["./src"],
-  "references": [
-    {
-      "path": "../openai/tsconfig.json"
-    }
-  ]
+  "include": ["./src"]
 }
