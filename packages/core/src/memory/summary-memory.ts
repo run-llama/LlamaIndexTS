@@ -1,73 +1,11 @@
-import type { ChatMessage, LLM, MessageType } from "@llamaindex/core/llms";
-import {
-  defaultSummaryPrompt,
-  type SummaryPrompt,
-} from "@llamaindex/core/prompts";
-import { extractText, messagesToHistory } from "@llamaindex/core/utils";
-import { tokenizers, type Tokenizer } from "@llamaindex/env";
-import { OpenAI } from "@llamaindex/openai";
+import { type Tokenizer, tokenizers } from "@llamaindex/env";
+import { Settings } from "../global";
+import type { ChatMessage, LLM, MessageType } from "../llms";
+import { defaultSummaryPrompt, type SummaryPrompt } from "../prompts";
+import { extractText, messagesToHistory } from "../utils";
+import { BaseMemory } from "./base";
 
-/**
- * A ChatHistory is used to keep the state of back and forth chat messages
- */
-export abstract class ChatHistory<
-  AdditionalMessageOptions extends object = object,
-> {
-  abstract get messages(): ChatMessage<AdditionalMessageOptions>[];
-  /**
-   * Adds a message to the chat history.
-   * @param message
-   */
-  abstract addMessage(message: ChatMessage<AdditionalMessageOptions>): void;
-
-  /**
-   * Returns the messages that should be used as input to the LLM.
-   */
-  abstract requestMessages(
-    transientMessages?: ChatMessage<AdditionalMessageOptions>[],
-  ): Promise<ChatMessage<AdditionalMessageOptions>[]>;
-
-  /**
-   * Resets the chat history so that it's empty.
-   */
-  abstract reset(): void;
-
-  /**
-   * Returns the new messages since the last call to this function (or since calling the constructor)
-   */
-  abstract newMessages(): ChatMessage<AdditionalMessageOptions>[];
-}
-
-export class SimpleChatHistory extends ChatHistory {
-  messages: ChatMessage[];
-  private messagesBefore: number;
-
-  constructor(init?: { messages?: ChatMessage[] | undefined }) {
-    super();
-    this.messages = init?.messages ?? [];
-    this.messagesBefore = this.messages.length;
-  }
-
-  addMessage(message: ChatMessage) {
-    this.messages.push(message);
-  }
-
-  async requestMessages(transientMessages?: ChatMessage[]) {
-    return [...(transientMessages ?? []), ...this.messages];
-  }
-
-  reset() {
-    this.messages = [];
-  }
-
-  newMessages() {
-    const newMessages = this.messages.slice(this.messagesBefore);
-    this.messagesBefore = this.messages.length;
-    return newMessages;
-  }
-}
-
-export class SummaryChatHistory extends ChatHistory {
+export class ChatSummaryMemoryBuffer extends BaseMemory {
   /**
    * Tokenizer function that converts text to tokens,
    *  this is used to calculate the number of tokens in a message.
@@ -77,20 +15,18 @@ export class SummaryChatHistory extends ChatHistory {
   messages: ChatMessage[];
   summaryPrompt: SummaryPrompt;
   llm: LLM;
-  private messagesBefore: number;
 
-  constructor(init?: Partial<SummaryChatHistory>) {
+  constructor(options?: Partial<ChatSummaryMemoryBuffer>) {
     super();
-    this.messages = init?.messages ?? [];
-    this.messagesBefore = this.messages.length;
-    this.summaryPrompt = init?.summaryPrompt ?? defaultSummaryPrompt;
-    this.llm = init?.llm ?? new OpenAI();
+    this.messages = options?.messages ?? [];
+    this.summaryPrompt = options?.summaryPrompt ?? defaultSummaryPrompt;
+    this.llm = options?.llm ?? Settings.llm;
     if (!this.llm.metadata.maxTokens) {
       throw new Error(
         "LLM maxTokens is not set. Needed so the summarizer ensures the context window size of the LLM.",
       );
     }
-    this.tokenizer = init?.tokenizer ?? tokenizers.tokenizer();
+    this.tokenizer = options?.tokenizer ?? tokenizers.tokenizer();
     this.tokensToSummarize =
       this.llm.metadata.contextWindow - this.llm.metadata.maxTokens;
     if (this.tokensToSummarize < this.llm.metadata.contextWindow * 0.25) {
@@ -128,12 +64,8 @@ export class SummaryChatHistory extends ChatHistory {
     return { content: response.message.content, role: "memory" };
   }
 
-  addMessage(message: ChatMessage) {
-    this.messages.push(message);
-  }
-
   // Find last summary message
-  private getLastSummaryIndex(): number | null {
+  private get lastSummaryIndex(): number | null {
     const reversedMessages = this.messages.slice().reverse();
     const index = reversedMessages.findIndex(
       (message) => message.role === "memory",
@@ -145,7 +77,7 @@ export class SummaryChatHistory extends ChatHistory {
   }
 
   public getLastSummary(): ChatMessage | null {
-    const lastSummaryIndex = this.getLastSummaryIndex();
+    const lastSummaryIndex = this.lastSummaryIndex;
     return lastSummaryIndex ? this.messages[lastSummaryIndex]! : null;
   }
 
@@ -165,7 +97,7 @@ export class SummaryChatHistory extends ChatHistory {
    * If there's a memory, uses all messages after the last summary message.
    */
   private calcConversationMessages(transformSummary?: boolean): ChatMessage[] {
-    const lastSummaryIndex = this.getLastSummaryIndex();
+    const lastSummaryIndex = this.lastSummaryIndex;
     if (!lastSummaryIndex) {
       // there's no memory, so just use all non-system messages
       return this.nonSystemMessages;
@@ -182,18 +114,18 @@ export class SummaryChatHistory extends ChatHistory {
     }
   }
 
-  private calcCurrentRequestMessages(transientMessages?: ChatMessage[]) {
+  private calcCurrentRequestMessages() {
     // TODO: check order: currently, we're sending:
     // system messages first, then transient messages and then the messages that describe the conversation so far
-    return [
-      ...this.systemMessages,
-      ...(transientMessages ? transientMessages : []),
-      ...this.calcConversationMessages(true),
-    ];
+    return [...this.systemMessages, ...this.calcConversationMessages(true)];
   }
 
-  async requestMessages(transientMessages?: ChatMessage[]) {
-    const requestMessages = this.calcCurrentRequestMessages(transientMessages);
+  reset() {
+    this.messages = [];
+  }
+
+  async getMessages(): Promise<ChatMessage[]> {
+    const requestMessages = this.calcCurrentRequestMessages();
 
     // get tokens of current request messages and the transient messages
     const tokens = requestMessages.reduce(
@@ -217,27 +149,16 @@ export class SummaryChatHistory extends ChatHistory {
       // TODO: we still might have too many tokens
       // e.g. too large system messages or transient messages
       // how should we deal with that?
-      return this.calcCurrentRequestMessages(transientMessages);
+      return this.calcCurrentRequestMessages();
     }
     return requestMessages;
   }
 
-  reset() {
-    this.messages = [];
+  async getAllMessages(): Promise<ChatMessage[]> {
+    return this.getMessages();
   }
 
-  newMessages() {
-    const newMessages = this.messages.slice(this.messagesBefore);
-    this.messagesBefore = this.messages.length;
-    return newMessages;
+  put(message: ChatMessage) {
+    this.messages.push(message);
   }
-}
-
-export function getHistory(
-  chatHistory?: ChatMessage[] | ChatHistory,
-): ChatHistory {
-  if (chatHistory instanceof ChatHistory) {
-    return chatHistory;
-  }
-  return new SimpleChatHistory({ messages: chatHistory });
 }

@@ -46,9 +46,9 @@ declare module "@llamaindex/core/global" {
 }
 
 export * from "@llamaindex/core/llms";
+export * from "@llamaindex/core/memory";
 export * from "@llamaindex/core/schema";
 export * from "./agent/index.js";
-export * from "./ChatHistory.js";
 export * from "./cloud/index.js";
 export * from "./embeddings/index.js";
 export * from "./engines/chat/index.js";
