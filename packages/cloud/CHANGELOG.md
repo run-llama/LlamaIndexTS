@@ -1,5 +1,13 @@
 # @llamaindex/cloud
 
+## 0.2.6
+
+### Patch Changes
+
+- b42adeb: fix: get job result in llama parse reader
+- Updated dependencies [749b43a]
+  - @llamaindex/core@0.2.2
+
 ## 0.2.5
 
 ### Patch Changes
