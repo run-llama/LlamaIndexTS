@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.6.2
+
+### Patch Changes
+
+- 749b43a: fix: clip embedding transform function
+- Updated dependencies [b42adeb]
+- Updated dependencies [749b43a]
+  - @llamaindex/cloud@0.2.6
+  - @llamaindex/core@0.2.2
+  - @llamaindex/openai@0.1.4
+  - @llamaindex/groq@0.0.3
+
 ## 0.6.1
 
 ### Patch Changes
