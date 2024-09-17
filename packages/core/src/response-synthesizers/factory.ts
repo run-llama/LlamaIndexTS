@@ -404,7 +404,12 @@ class MultiModal extends BaseSynthesizer {
 
 export function getResponseSynthesizer(
   mode: ResponseMode,
-  options: BaseSynthesizerOptions = {},
+  options: BaseSynthesizerOptions & {
+    textQATemplate?: TextQAPrompt;
+    refineTemplate?: RefinePrompt;
+    summaryTemplate?: TreeSummarizePrompt;
+    metadataMode?: MetadataMode;
+  } = {},
 ) {
   switch (mode) {
     case "compact": {

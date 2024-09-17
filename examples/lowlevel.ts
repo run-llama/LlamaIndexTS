@@ -1,7 +1,7 @@
 import {
   Document,
+  getResponseSynthesizer,
   NodeWithScore,
-  ResponseSynthesizer,
   SentenceSplitter,
   TextNode,
 } from "llamaindex";
@@ -14,7 +14,7 @@ import {
 
   console.log(nodes);
 
-  const responseSynthesizer = new ResponseSynthesizer();
+  const responseSynthesizer = getResponseSynthesizer("compact");
 
   const nodesWithScore: NodeWithScore[] = [
     {

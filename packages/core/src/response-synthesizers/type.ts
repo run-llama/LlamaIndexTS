@@ -1,8 +1,8 @@
-import type { QueryBundle } from "../query-engine";
+import type { QueryType } from "../query-engine";
 import { EngineResponse, type NodeWithScore } from "../schema";
 
 export type SynthesizeQuery = {
-  query: QueryBundle;
+  query: QueryType;
   nodes: NodeWithScore[];
   additionalSourceNodes?: NodeWithScore[];
 };

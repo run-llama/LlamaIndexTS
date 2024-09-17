@@ -48,7 +48,8 @@ export abstract class BaseSynthesizer extends PromptMixin {
         response = EngineResponse.fromResponse("Empty Response", false);
       }
     } else {
-      const queryMessage = query.query.query;
+      const queryMessage: MessageContent =
+        typeof query.query === "string" ? query.query : query.query.query;
       response = await this.getResponse(queryMessage, query.nodes, stream);
     }
     callbackManager.dispatchEvent("synthesize-end", { id, query, response });

@@ -33,6 +33,7 @@ export type {
 export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/prompts";
+export * from "@llamaindex/core/query-engine";
 export * from "@llamaindex/core/response-synthesizers";
 export * from "@llamaindex/core/schema";
 

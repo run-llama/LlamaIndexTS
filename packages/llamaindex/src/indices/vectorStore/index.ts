@@ -31,7 +31,6 @@ import type { BaseNodePostprocessor } from "../../postprocessors/types.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
-import type { QueryEngine } from "../../types.js";
 import type {
   MetadataFilters,
   VectorStore,
@@ -288,7 +287,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     preFilters?: MetadataFilters;
     nodePostprocessors?: BaseNodePostprocessor[];
     similarityTopK?: number;
-  }): QueryEngine & RetrieverQueryEngine {
+  }): RetrieverQueryEngine {
     const {
       retriever,
       responseSynthesizer,

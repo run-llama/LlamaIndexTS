@@ -1,3 +1,4 @@
+import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type { BaseNode, Document } from "@llamaindex/core/schema";
 import type { BaseRetriever } from "../Retriever.js";
@@ -7,7 +8,6 @@ import { runTransformations } from "../ingestion/IngestionPipeline.js";
 import type { StorageContext } from "../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../storage/docStore/types.js";
 import type { BaseIndexStore } from "../storage/indexStore/types.js";
-import type { QueryEngine } from "../types.js";
 import { IndexStruct } from "./IndexStruct.js";
 import { IndexStructType } from "./json-to-index-struct.js";
 
@@ -83,7 +83,7 @@ export abstract class BaseIndex<T> {
   abstract asQueryEngine(options?: {
     retriever?: BaseRetriever;
     responseSynthesizer?: BaseSynthesizer;
-  }): QueryEngine;
+  }): BaseQueryEngine;
 
   /**
    * Insert a document into the index.

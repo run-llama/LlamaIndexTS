@@ -1,5 +1,7 @@
-import { PromptMixin } from "@llamaindex/core/prompts";
-import type { QueryBundle } from "@llamaindex/core/query-engine";
+import {
+  BaseQueryEngine,
+  type QueryBundle,
+} from "@llamaindex/core/query-engine";
 import {
   BaseSynthesizer,
   getResponseSynthesizer,
@@ -10,14 +12,9 @@ import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
-import type {
-  QueryEngine,
-  QueryEngineParamsNonStreaming,
-  QueryEngineParamsStreaming,
-} from "../../types.js";
 
 type RouterQueryEngineTool = {
-  queryEngine: QueryEngine;
+  queryEngine: BaseQueryEngine;
   description: string;
 };
 
@@ -52,9 +49,9 @@ async function combineResponses(
 /**
  * A query engine that uses multiple query engines and selects the best one.
  */
-export class RouterQueryEngine extends PromptMixin implements QueryEngine {
+export class RouterQueryEngine extends BaseQueryEngine {
   private selector: BaseSelector;
-  private queryEngines: QueryEngine[];
+  private queryEngines: BaseQueryEngine[];
   private metadatas: RouterQueryEngineMetadata[];
   private summarizer: BaseSynthesizer;
   private verbose: boolean;
@@ -66,7 +63,19 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     summarizer?: BaseSynthesizer | undefined;
     verbose?: boolean | undefined;
   }) {
-    super();
+    super(async (strOrQueryBundle, stream) => {
+      const response = await this.queryRoute(
+        typeof strOrQueryBundle === "string"
+          ? { query: strOrQueryBundle }
+          : strOrQueryBundle,
+      );
+
+      if (stream) {
+        throw new Error("Streaming is not supported yet.");
+      }
+
+      return response;
+    });
 
     this.selector = init.selector;
     this.queryEngines = init.queryEngineTools.map((tool) => tool.queryEngine);
@@ -113,26 +122,6 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     });
   }
 
-  query(
-    params: QueryEngineParamsStreaming,
-  ): Promise<AsyncIterable<EngineResponse>>;
-  query(params: QueryEngineParamsNonStreaming): Promise<EngineResponse>;
-  async query(
-    params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
-  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { query, stream } = params;
-
-    const response = await this.queryRoute(
-      typeof query === "string" ? { query } : query,
-    );
-
-    if (stream) {
-      throw new Error("Streaming is not supported yet.");
-    }
-
-    return response;
-  }
-
   private async queryRoute(query: QueryBundle): Promise<EngineResponse> {
     const result = await this.selector.select(this.metadatas, query);
 
@@ -147,11 +136,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
         }
 
         const selectedQueryEngine = this.queryEngines[engineInd.index]!;
-        responses.push(
-          await selectedQueryEngine.query({
-            query,
-          }),
-        );
+        responses.push(await selectedQueryEngine.query(query));
       }
 
       if (responses.length > 1) {
