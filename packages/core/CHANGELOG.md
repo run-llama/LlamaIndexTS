@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.2.2
+
+### Patch Changes
+
+- 749b43a: fix: clip embedding transform function
+
 ## 0.2.1
 
 ### Patch Changes
