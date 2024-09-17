@@ -1,11 +1,10 @@
 import {
+  getResponseSynthesizer,
   OpenAI,
   OpenAIEmbedding,
-  ResponseSynthesizer,
   RetrieverQueryEngine,
   Settings,
   TextNode,
-  TreeSummarize,
   VectorIndexRetriever,
   VectorStore,
   VectorStoreIndex,
@@ -165,10 +164,7 @@ async function main() {
       similarityTopK: 500,
     });
 
-    const responseSynthesizer = new ResponseSynthesizer({
-      responseBuilder: new TreeSummarize(),
-    });
-
+    const responseSynthesizer = getResponseSynthesizer("tree_summarize");
     return new RetrieverQueryEngine(retriever, responseSynthesizer, {
       filter,
     });

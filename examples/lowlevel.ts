@@ -30,7 +30,7 @@ import {
   const stream = await responseSynthesizer.synthesize(
     {
       query: "What age am I?",
-      nodesWithScore,
+      nodes: nodesWithScore,
     },
     true,
   );

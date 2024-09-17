@@ -2,12 +2,10 @@ import fs from "node:fs/promises";
 
 import {
   Anthropic,
-  CompactAndRefine,
   Document,
-  ResponseSynthesizer,
   Settings,
   VectorStoreIndex,
-  anthropicTextQaPrompt,
+  getResponseSynthesizer,
 } from "llamaindex";
 
 // Update llm to use Anthropic
@@ -23,9 +21,7 @@ async function main() {
   const document = new Document({ text: essay, id_: path });
 
   // Split text and create embeddings. Store them in a VectorStoreIndex
-  const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(undefined, anthropicTextQaPrompt),
-  });
+  const responseSynthesizer = getResponseSynthesizer("compact");
 
   const index = await VectorStoreIndex.fromDocuments([document]);
 
