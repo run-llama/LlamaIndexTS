@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/waku-query-engine-test",
-  "version": "0.0.56",
+  "version": "0.0.63",
   "type": "module",
   "private": true,
   "scripts": {
@@ -20,6 +20,7 @@
     "@types/react-dom": "18.3.0",
     "autoprefixer": "10.4.20",
     "tailwindcss": "3.4.10",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2",
+    "vite-plugin-wasm": "^3.3.0"
   }
 }

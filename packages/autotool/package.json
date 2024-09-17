@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/autotool",
   "type": "module",
-  "version": "2.0.1",
+  "version": "3.0.1",
   "description": "auto transpile your JS function to LLM Agent compatible",
   "files": [
     "dist",
@@ -51,7 +51,7 @@
     "unplugin": "^1.12.2"
   },
   "peerDependencies": {
-    "llamaindex": "^0.5.22",
+    "llamaindex": "workspace:*",
     "openai": "^4",
     "typescript": "^4"
   },
@@ -72,10 +72,10 @@
     "@types/node": "^22.5.1",
     "bunchee": "5.3.2",
     "llamaindex": "workspace:*",
-    "next": "14.2.7",
+    "next": "14.2.11",
     "rollup": "^4.21.2",
     "tsx": "^4.19.0",
-    "typescript": "^5.5.4",
+    "typescript": "^5.6.2",
     "vitest": "^2.0.5",
     "webpack": "^5.94.0"
   }

@@ -103,7 +103,7 @@ export const getPartsText = (parts: Part[]): string => {
  * Returns all text found in all parts of first candidate.
  */
 export const getText = (response: GenerateContentResponse): string => {
-  if (response.candidates?.[0].content?.parts) {
+  if (response.candidates?.[0]!.content?.parts) {
     return getPartsText(response.candidates?.[0].content?.parts);
   }
   return "";
@@ -150,7 +150,7 @@ export const getChatContext = (
   ).map(cleanParts);
 
   const history = messages.slice(0, -1);
-  const message = messages[messages.length - 1].parts;
+  const message = messages[messages.length - 1]!.parts;
   return {
     history,
     message,
@@ -210,9 +210,9 @@ export class GeminiHelper {
           index: number,
           original: GeminiMessageContent[],
         ) => {
-          if (index > 0 && original[index - 1].role === current.role) {
-            result[result.length - 1].parts = [
-              ...result[result.length - 1].parts,
+          if (index > 0 && original[index - 1]!.role === current.role) {
+            result[result.length - 1]!.parts = [
+              ...result[result.length - 1]!.parts,
               ...current.parts,
             ];
           } else {
@@ -297,7 +297,7 @@ export function getFunctionCalls(
   response: GenerateContentResponse,
 ): FunctionCall[] | undefined {
   const functionCalls: FunctionCall[] = [];
-  if (response.candidates?.[0].content?.parts) {
+  if (response.candidates?.[0]!.content?.parts) {
     for (const part of response.candidates?.[0].content?.parts) {
       if (part.functionCall) {
         functionCalls.push(part.functionCall);

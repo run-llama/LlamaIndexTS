@@ -2,6 +2,8 @@ import {
   type ChoiceSelectPrompt,
   defaultChoiceSelectPrompt,
 } from "@llamaindex/core/prompts";
+import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { getResponseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type {
   BaseNode,
   Document,
@@ -23,11 +25,6 @@ import type {
   BaseDocumentStore,
   RefDocInfo,
 } from "../../storage/docStore/types.js";
-import type { BaseSynthesizer } from "../../synthesizers/index.js";
-import {
-  CompactAndRefine,
-  ResponseSynthesizer,
-} from "../../synthesizers/index.js";
 import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
@@ -48,11 +45,11 @@ export enum SummaryRetrieverMode {
 }
 
 export interface SummaryIndexOptions {
-  nodes?: BaseNode[];
-  indexStruct?: IndexList;
-  indexId?: string;
-  serviceContext?: ServiceContext;
-  storageContext?: StorageContext;
+  nodes?: BaseNode[] | undefined;
+  indexStruct?: IndexList | undefined;
+  indexId?: string | undefined;
+  serviceContext?: ServiceContext | undefined;
+  storageContext?: StorageContext | undefined;
 }
 
 /**
@@ -83,7 +80,9 @@ export class SummaryIndex extends BaseIndex<IndexList> {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
       indexStruct =
-        indexStructs[0].type === IndexStructType.LIST ? indexStructs[0] : null;
+        indexStructs[0]!.type === IndexStructType.LIST
+          ? indexStructs[0]!
+          : null;
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
         options.indexId,
@@ -131,8 +130,8 @@ export class SummaryIndex extends BaseIndex<IndexList> {
   static async fromDocuments(
     documents: Document[],
     args: {
-      storageContext?: StorageContext;
-      serviceContext?: ServiceContext;
+      storageContext?: StorageContext | undefined;
+      serviceContext?: ServiceContext | undefined;
     } = {},
   ): Promise<SummaryIndex> {
     let { storageContext, serviceContext } = args;
@@ -184,11 +183,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     }
 
     if (!responseSynthesizer) {
-      const responseBuilder = new CompactAndRefine(this.serviceContext);
-      responseSynthesizer = new ResponseSynthesizer({
-        serviceContext: this.serviceContext,
-        responseBuilder,
-      });
+      responseSynthesizer = getResponseSynthesizer("compact");
     }
 
     return new RetrieverQueryEngine(
@@ -312,7 +307,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
   choiceBatchSize: number;
   formatNodeBatchFn: NodeFormatterFunction;
   parseChoiceSelectAnswerFn: ChoiceSelectParserFunction;
-  serviceContext?: ServiceContext;
+  serviceContext?: ServiceContext | undefined;
 
   // eslint-disable-next-line max-params
   constructor(

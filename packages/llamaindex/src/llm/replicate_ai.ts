@@ -183,8 +183,8 @@ export class ReplicateLLM extends BaseLLM {
           if (typeof message.content === "string") {
             content = message.content;
           } else {
-            if (message.content[0].type === "text") {
-              content = message.content[0].text;
+            if (message.content[0]!.type === "text") {
+              content = message.content[0]!.text;
             } else {
               content = "";
             }
@@ -258,7 +258,7 @@ If a question does not make any sense, or is not factually coherent, explain why
     messages = [...messages]; // so we can use shift without mutating the original array
 
     let systemPrompt = undefined;
-    if (messages[0].role === "system") {
+    if (messages[0]!.role === "system") {
       const systemMessage = messages.shift()!;
 
       if (replicate4Bit) {
@@ -274,13 +274,13 @@ If a question does not make any sense, or is not factually coherent, explain why
           );
         }
 
-        const userContent = messages[0].content;
+        const userContent = messages[0]!.content;
 
-        messages[0].content = `${systemStr}${userContent}`;
+        messages[0]!.content = `${systemStr}${userContent}`;
       }
     } else {
       if (!replicate4Bit) {
-        messages[0].content = `${B_SYS}${DEFAULT_SYSTEM_PROMPT}${E_SYS}${messages[0].content}`;
+        messages[0]!.content = `${B_SYS}${DEFAULT_SYSTEM_PROMPT}${E_SYS}${messages[0]!.content}`;
       }
     }
 

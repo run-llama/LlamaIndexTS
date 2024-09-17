@@ -21,7 +21,7 @@ export class JinaAIReranker implements BaseNodePostprocessor {
   constructor(init?: Partial<JinaAIReranker>) {
     this.topN = init?.topN ?? 2;
     this.model = init?.model ?? "jina-reranker-v1-base-en";
-    this.apiKey = getEnv("JINAAI_API_KEY");
+    this.apiKey = getEnv("JINAAI_API_KEY")!;
 
     if (!this.apiKey) {
       throw new Error(
@@ -79,7 +79,7 @@ export class JinaAIReranker implements BaseNodePostprocessor {
     const newNodes: NodeWithScore[] = [];
 
     for (const result of results) {
-      const node = nodes[result.index];
+      const node = nodes[result.index]!;
       newNodes.push({
         node: node.node,
         score: result.relevance_score,

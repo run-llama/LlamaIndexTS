@@ -1,10 +1,10 @@
 import { PromptMixin } from "@llamaindex/core/prompts";
+import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { getResponseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
-import { wrapEventCaller } from "@llamaindex/core/utils";
+import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { BaseRetriever } from "../../Retriever.js";
-import type { BaseSynthesizer } from "../../synthesizers/index.js";
-import { ResponseSynthesizer } from "../../synthesizers/index.js";
 import type {
   QueryEngine,
   QueryEngineParamsNonStreaming,
@@ -30,10 +30,7 @@ export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
 
     this.retriever = retriever;
     this.responseSynthesizer =
-      responseSynthesizer ||
-      new ResponseSynthesizer({
-        serviceContext: retriever.serviceContext,
-      });
+      responseSynthesizer || getResponseSynthesizer("compact");
     this.preFilters = preFilters;
     this.nodePostprocessors = nodePostprocessors || [];
   }
@@ -81,19 +78,21 @@ export class RetrieverQueryEngine extends PromptMixin implements QueryEngine {
     params: QueryEngineParamsStreaming | QueryEngineParamsNonStreaming,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { query, stream } = params;
-    const nodesWithScore = await this.retrieve(query);
+    const nodesWithScore = await this.retrieve(
+      typeof query === "string" ? query : extractText(query.query),
+    );
     if (stream) {
       return this.responseSynthesizer.synthesize(
         {
-          query,
-          nodesWithScore,
+          query: typeof query === "string" ? { query } : query,
+          nodes: nodesWithScore,
         },
         true,
       );
     }
     return this.responseSynthesizer.synthesize({
-      query,
-      nodesWithScore,
+      query: typeof query === "string" ? { query } : query,
+      nodes: nodesWithScore,
     });
   }
 }

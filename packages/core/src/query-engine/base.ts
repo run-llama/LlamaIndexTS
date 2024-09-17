@@ -1,9 +1,9 @@
 import { randomUUID } from "@llamaindex/env";
 import { Settings } from "../global";
 import type { MessageContent } from "../llms";
+import { PromptMixin } from "../prompts";
 import { EngineResponse } from "../schema";
 import { wrapEventCaller } from "../utils";
-import { PromptMixin } from '../prompts';
 
 /**
  * @link https://docs.llamaindex.ai/en/stable/api_reference/schema/?h=querybundle#llama_index.core.schema.QueryBundle
@@ -24,9 +24,7 @@ export type QueryFn = (
 ) => Promise<AsyncIterable<EngineResponse> | EngineResponse>;
 
 export abstract class BaseQueryEngine extends PromptMixin {
-  protected constructor(
-    protected readonly _query: QueryFn,
-  ) {
+  protected constructor(protected readonly _query: QueryFn) {
     super();
   }
 

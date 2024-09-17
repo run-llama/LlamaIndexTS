@@ -35,20 +35,20 @@ export function similarity(
   function norm(x: number[]): number {
     let result = 0;
     for (let i = 0; i < x.length; i++) {
-      result += x[i] * x[i];
+      result += x[i]! * x[i]!;
     }
     return Math.sqrt(result);
   }
 
   switch (mode) {
     case SimilarityType.EUCLIDEAN: {
-      const difference = embedding1.map((x, i) => x - embedding2[i]);
+      const difference = embedding1.map((x, i) => x - embedding2[i]!);
       return -norm(difference);
     }
     case SimilarityType.DOT_PRODUCT: {
       let result = 0;
       for (let i = 0; i < embedding1.length; i++) {
-        result += embedding1[i] * embedding2[i];
+        result += embedding1[i]! * embedding2[i]!;
       }
       return result;
     }

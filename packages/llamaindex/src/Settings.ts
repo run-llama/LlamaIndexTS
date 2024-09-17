@@ -2,7 +2,7 @@ import {
   type CallbackManager,
   Settings as CoreSettings,
 } from "@llamaindex/core/global";
-import { OpenAI } from "./llm/openai.js";
+import { OpenAI } from "@llamaindex/openai";
 
 import { PromptHelper } from "@llamaindex/core/indices";
 
@@ -31,8 +31,8 @@ export interface Config {
   embedModel: BaseEmbedding | null;
   nodeParser: NodeParser | null;
   callbackManager: CallbackManager | null;
-  chunkSize?: number;
-  chunkOverlap?: number;
+  chunkSize: number | undefined;
+  chunkOverlap: number | undefined;
 }
 
 /**
@@ -59,10 +59,12 @@ class GlobalSettings implements Config {
   }
 
   get llm(): LLM {
-    if (CoreSettings.llm === null) {
+    // fixme: we might need check internal error instead of try-catch here
+    try {
+      CoreSettings.llm;
+    } catch (error) {
       CoreSettings.llm = new OpenAI();
     }
-
     return CoreSettings.llm;
   }
 
@@ -156,7 +158,9 @@ class GlobalSettings implements Config {
   }
 
   set chunkOverlap(chunkOverlap: number | undefined) {
-    this.#chunkOverlap = chunkOverlap;
+    if (typeof chunkOverlap === "number") {
+      this.#chunkOverlap = chunkOverlap;
+    }
   }
 
   withChunkOverlap<Result>(chunkOverlap: number, fn: () => Result): Result {

@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.5.22",
+  "version": "0.6.1",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -33,6 +33,8 @@
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
+    "@llamaindex/groq": "workspace:*",
     "@mistralai/mistralai": "^1.0.4",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^3.0.2",
@@ -56,11 +58,9 @@
     "md-utils-ts": "^2.0.0",
     "mongodb": "^6.7.0",
     "notion-md-crawler": "^1.0.0",
-    "openai": "^4.57.0",
+    "openai": "^4.60.0",
     "papaparse": "^5.4.1",
     "pathe": "^1.1.2",
-    "pg": "^8.12.0",
-    "pgvector": "^0.2.0",
     "portkey-ai": "0.1.16",
     "rake-modified": "^1.0.8",
     "string-strip-html": "^13.4.8",
@@ -72,10 +72,18 @@
     "zod": "^3.23.8"
   },
   "peerDependencies": {
-    "@notionhq/client": "^2.2.15"
+    "@notionhq/client": "^2.2.15",
+    "pg": "^8.12.0",
+    "pgvector": "0.2.0"
   },
   "peerDependenciesMeta": {
     "@notionhq/client": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "pgvector": {
       "optional": true
     }
   },
@@ -85,7 +93,9 @@
     "@swc/core": "^1.7.22",
     "concurrently": "^8.2.2",
     "glob": "^11.0.0",
-    "typescript": "^5.5.4"
+    "pg": "^8.12.0",
+    "pgvector": "0.2.0",
+    "typescript": "^5.6.2"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -11,13 +11,13 @@ export class PapaCSVReader extends FileReader {
   private concatRows: boolean;
   private colJoiner: string;
   private rowJoiner: string;
-  private papaConfig?: ParseConfig;
+  private papaConfig: ParseConfig | undefined;
 
   /**
    * Constructs a new instance of the class.
-   * @param {boolean} [concatRows=true] - whether to concatenate all rows into one document.If set to False, a Document will be created for each row.True by default.
-   * @param {string} [colJoiner=', '] - Separator to use for joining cols per row. Set to ", " by default.
-   * @param {string} [rowJoiner='\n'] - Separator to use for joining each row.Only used when `concat_rows=True`.Set to "\n" by default.
+   * @param concatRows - Whether to concatenate all rows into one document.If set to False, a Document will be created for each row. `True` by default.
+   * @param colJoiner - Separator to use for joining cols per row. Set to ", " by default.
+   * @param rowJoiner - Separator to use for joining each row.Only used when `concat_rows=True`.Set to "\n" by default.
    */
   constructor(
     concatRows: boolean = true,
@@ -34,9 +34,8 @@ export class PapaCSVReader extends FileReader {
 
   /**
    * Loads data from csv files
-   * @param {string} file - The path to the file to load.
-   * @param {GenericFileSystem} [fs=DEFAULT_FS] - The file system to use for reading the file.
-   * @returns {Promise<Document[]>}
+   * @param fileContent - The content of the file.
+   * @returns An array of Documents.
    */
   async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
     const decoder = new TextDecoder("utf-8");

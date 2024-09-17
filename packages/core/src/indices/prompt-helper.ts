@@ -1,13 +1,15 @@
 import { type Tokenizer, tokenizers } from "@llamaindex/env";
 import {
-  DEFAULT_CHUNK_OVERLAP_RATIO, DEFAULT_CHUNK_SIZE,
+  DEFAULT_CHUNK_OVERLAP_RATIO,
+  DEFAULT_CHUNK_SIZE,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
-  DEFAULT_PADDING
-} from '../global';
+  DEFAULT_PADDING,
+  Settings,
+} from "../global";
+import type { LLMMetadata } from "../llms";
 import { SentenceSplitter } from "../node-parser";
 import type { PromptTemplate } from "../prompts";
-import type { LLMMetadata } from '../llms';
 
 /**
  * Get the empty prompt text given a prompt.
@@ -24,12 +26,12 @@ function getEmptyPromptTxt(prompt: PromptTemplate) {
  * Get biggest empty prompt size from a list of prompts.
  * Used to calculate the maximum size of inputs to the LLM.
  */
-export function getBiggestPrompt(prompts: PromptTemplate[]) {
+export function getBiggestPrompt(prompts: PromptTemplate[]): PromptTemplate {
   const emptyPromptTexts = prompts.map(getEmptyPromptTxt);
   const emptyPromptLengths = emptyPromptTexts.map((text) => text.length);
   const maxEmptyPromptLength = Math.max(...emptyPromptLengths);
   const maxEmptyPromptIndex = emptyPromptLengths.indexOf(maxEmptyPromptLength);
-  return prompts[maxEmptyPromptIndex];
+  return prompts[maxEmptyPromptIndex]!;
 }
 
 export type PromptHelperOptions = {
@@ -48,7 +50,7 @@ export class PromptHelper {
   contextWindow = DEFAULT_CONTEXT_WINDOW;
   numOutput = DEFAULT_NUM_OUTPUTS;
   chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO;
-  chunkSizeLimit?: number;
+  chunkSizeLimit: number | undefined;
   tokenizer: Tokenizer;
   separator = " ";
 
@@ -135,30 +137,28 @@ export class PromptHelper {
     return textSplitter.splitText(combinedStr);
   }
 
-  static fromLLMMetadata (
+  static fromLLMMetadata(
     metadata: LLMMetadata,
     options?: {
       chunkOverlapRatio?: number;
       chunkSizeLimit?: number;
       tokenizer?: Tokenizer;
       separator?: string;
-    }
+    },
   ) {
     const {
       chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
       chunkSizeLimit = DEFAULT_CHUNK_SIZE,
-      tokenizer,
+      tokenizer = Settings.tokenizer,
       separator = " ",
     } = options ?? {};
-    return new PromptHelper(
-      {
-        contextWindow: metadata.contextWindow,
-        numOutput: metadata.maxTokens ?? DEFAULT_NUM_OUTPUTS,
-        chunkOverlapRatio,
-        chunkSizeLimit,
-        tokenizer,
-        separator,
-      }
-    );
+    return new PromptHelper({
+      contextWindow: metadata.contextWindow,
+      numOutput: metadata.maxTokens ?? DEFAULT_NUM_OUTPUTS,
+      chunkOverlapRatio,
+      chunkSizeLimit,
+      tokenizer,
+      separator,
+    });
   }
 }

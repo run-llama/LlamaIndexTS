@@ -4,6 +4,7 @@ import type {
   MessageContent,
   MessageType,
 } from "@llamaindex/core/llms";
+import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
 import {
   type ContextSystemPrompt,
   type ModuleRecord,
@@ -17,8 +18,6 @@ import {
   streamReducer,
   wrapEventCaller,
 } from "@llamaindex/core/utils";
-import type { ChatHistory } from "../../ChatHistory.js";
-import { getHistory } from "../../ChatHistory.js";
 import type { BaseRetriever } from "../../Retriever.js";
 import { Settings } from "../../Settings.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
@@ -36,22 +35,22 @@ import type {
  */
 export class ContextChatEngine extends PromptMixin implements ChatEngine {
   chatModel: LLM;
-  chatHistory: ChatHistory;
+  chatHistory: BaseMemory;
   contextGenerator: ContextGenerator & PromptMixin;
-  systemPrompt?: string;
+  systemPrompt?: string | undefined;
 
   constructor(init: {
     retriever: BaseRetriever;
-    chatModel?: LLM;
-    chatHistory?: ChatMessage[];
-    contextSystemPrompt?: ContextSystemPrompt;
-    nodePostprocessors?: BaseNodePostprocessor[];
-    systemPrompt?: string;
-    contextRole?: MessageType;
+    chatModel?: LLM | undefined;
+    chatHistory?: ChatMessage[] | undefined;
+    contextSystemPrompt?: ContextSystemPrompt | undefined;
+    nodePostprocessors?: BaseNodePostprocessor[] | undefined;
+    systemPrompt?: string | undefined;
+    contextRole?: MessageType | undefined;
   }) {
     super();
     this.chatModel = init.chatModel ?? Settings.llm;
-    this.chatHistory = getHistory(init?.chatHistory);
+    this.chatHistory = new ChatMemoryBuffer({ chatHistory: init?.chatHistory });
     this.contextGenerator = new DefaultContextGenerator({
       retriever: init.retriever,
       contextSystemPrompt: init?.contextSystemPrompt,
@@ -90,7 +89,12 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { message, stream } = params;
     const chatHistory = params.chatHistory
-      ? getHistory(params.chatHistory)
+      ? new ChatMemoryBuffer({
+          chatHistory:
+            params.chatHistory instanceof BaseMemory
+              ? await params.chatHistory.getMessages(message)
+              : params.chatHistory,
+        })
       : this.chatHistory;
     const requestMessages = await this.prepareRequestMessages(
       message,
@@ -107,7 +111,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
           initialValue: "",
           reducer: (accumulator, part) => (accumulator += part.delta),
           finished: (accumulator) => {
-            chatHistory.addMessage({ content: accumulator, role: "assistant" });
+            chatHistory.put({ content: accumulator, role: "assistant" });
           },
         }),
         (r) => EngineResponse.fromChatResponseChunk(r, requestMessages.nodes),
@@ -116,7 +120,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     const response = await this.chatModel.chat({
       messages: requestMessages.messages,
     });
-    chatHistory.addMessage(response.message);
+    chatHistory.put(response.message);
     return EngineResponse.fromChatResponse(response, requestMessages.nodes);
   }
 
@@ -126,16 +130,16 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
 
   private async prepareRequestMessages(
     message: MessageContent,
-    chatHistory: ChatHistory,
+    chatHistory: BaseMemory,
   ) {
-    chatHistory.addMessage({
+    chatHistory.put({
       content: message,
       role: "user",
     });
     const textOnly = extractText(message);
     const context = await this.contextGenerator.generate(textOnly);
     const systemMessage = this.prependSystemPrompt(context.message);
-    const messages = await chatHistory.requestMessages([systemMessage]);
+    const messages = await chatHistory.getMessages(systemMessage.content);
     return { nodes: context.nodes, messages };
   }
 

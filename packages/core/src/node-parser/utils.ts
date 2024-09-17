@@ -5,7 +5,7 @@ export type TextSplitterFn = (text: string) => string[];
 
 const truncateText = (text: string, textSplitter: TextSplitter): string => {
   const chunks = textSplitter.splitText(text);
-  return chunks[0];
+  return chunks[0] ?? text;
 };
 
 const splitTextKeepSeparator = (text: string, separator: string): string[] => {

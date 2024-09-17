@@ -1,5 +1,33 @@
 # @llamaindex/cloud
 
+## 0.2.5
+
+### Patch Changes
+
+- 85c2e19: feat: `@llamaindex/cloud` package update
+
+  - Bump to latest openapi schema
+  - Move LlamaParse class from llamaindex, this will allow you use llamaparse in more non-node.js environment
+
+- Updated dependencies [ac07e3c]
+- Updated dependencies [70ccb4a]
+- Updated dependencies [1a6137b]
+- Updated dependencies [ac07e3c]
+  - @llamaindex/core@0.2.1
+  - @llamaindex/env@0.1.11
+
+## 0.2.4
+
+### Patch Changes
+
+- 4810364: fix: bump version
+
+## 0.2.3
+
+### Patch Changes
+
+- 0bf8d80: fix: bump version
+
 ## 0.2.2
 
 ### Patch Changes

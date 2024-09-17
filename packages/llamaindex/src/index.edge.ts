@@ -33,6 +33,7 @@ export type {
 export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/prompts";
+export * from "@llamaindex/core/response-synthesizers";
 export * from "@llamaindex/core/schema";
 
 declare module "@llamaindex/core/global" {
@@ -46,9 +47,9 @@ declare module "@llamaindex/core/global" {
 }
 
 export * from "@llamaindex/core/llms";
+export * from "@llamaindex/core/memory";
 export * from "@llamaindex/core/schema";
 export * from "./agent/index.js";
-export * from "./ChatHistory.js";
 export * from "./cloud/index.js";
 export * from "./embeddings/index.js";
 export * from "./engines/chat/index.js";
@@ -69,6 +70,5 @@ export * from "./selectors/index.js";
 export * from "./ServiceContext.js";
 export { Settings } from "./Settings.js";
 export * from "./storage/StorageContext.js";
-export * from "./synthesizers/index.js";
 export * from "./tools/index.js";
 export * from "./types.js";

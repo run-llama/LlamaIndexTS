@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/env",
   "description": "environment wrapper, supports all JS environment including node, deno, bun, edge runtime, and cloudflare worker",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "type": "module",
   "types": "dist/type/index.d.ts",
   "main": "dist/cjs/index.js",
@@ -35,6 +35,10 @@
       "edge-light": {
         "types": "./dist/type/index.edge-light.d.ts",
         "default": "./dist/index.edge-light.js"
+      },
+      "browser": {
+        "types": "./dist/type/index.browser.d.ts",
+        "default": "./dist/index.browser.js"
       },
       "import": {
         "types": "./dist/type/index.d.ts",

@@ -47,10 +47,12 @@ export async function* streamReducer<S, D>(params: {
 export { wrapLLMEvent } from "./wrap-llm-event";
 
 export {
+  createMessageContent,
   extractDataUrlComponents,
   extractImage,
   extractSingleText,
   extractText,
+  imageToDataUrl,
   messagesToHistory,
   toToolDescriptions,
 } from "./llms";

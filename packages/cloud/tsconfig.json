@@ -8,8 +8,17 @@
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["DOM", "ESNext"]
+    "lib": ["DOM", "ESNext"],
+    "types": []
   },
   "include": ["./src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "../core/tsconfig.json"
+    },
+    {
+      "path": "../env/tsconfig.json"
+    }
+  ]
 }

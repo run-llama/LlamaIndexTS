@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./lib"
+  },
+  "include": ["./src"],
+  "references": [
+    {
+      "path": "../../llamaindex/tsconfig.json"
+    },
+    {
+      "path": "../../env/tsconfig.json"
+    }
+  ]
+}

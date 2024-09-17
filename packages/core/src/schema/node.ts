@@ -38,13 +38,15 @@ export type RelatedNodeType<T extends Metadata = Metadata> =
   | RelatedNodeInfo<T>[];
 
 export type BaseNodeParams<T extends Metadata = Metadata> = {
-  id_?: string;
-  metadata?: T;
-  excludedEmbedMetadataKeys?: string[];
-  excludedLlmMetadataKeys?: string[];
-  relationships?: Partial<Record<NodeRelationship, RelatedNodeType<T>>>;
-  hash?: string;
-  embedding?: number[];
+  id_?: string | undefined;
+  metadata?: T | undefined;
+  excludedEmbedMetadataKeys?: string[] | undefined;
+  excludedLlmMetadataKeys?: string[] | undefined;
+  relationships?:
+    | Partial<Record<NodeRelationship, RelatedNodeType<T>>>
+    | undefined;
+  hash?: string | undefined;
+  embedding?: number[] | undefined;
 };
 
 /**
@@ -58,7 +60,7 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
    * Set to a UUID by default.
    */
   id_: string;
-  embedding?: number[];
+  embedding: number[] | undefined;
 
   // Metadata fields
   metadata: T;
@@ -198,11 +200,11 @@ export abstract class BaseNode<T extends Metadata = Metadata> {
 
 export type TextNodeParams<T extends Metadata = Metadata> =
   BaseNodeParams<T> & {
-    text?: string;
-    textTemplate?: string;
-    startCharIdx?: number;
-    endCharIdx?: number;
-    metadataSeparator?: string;
+    text?: string | undefined;
+    textTemplate?: string | undefined;
+    startCharIdx?: number | undefined;
+    endCharIdx?: number | undefined;
+    metadataSeparator?: string | undefined;
   };
 
 /**
@@ -418,7 +420,7 @@ export class ImageDocument<T extends Metadata = Metadata> extends ImageNode<T> {
  */
 export interface NodeWithScore<T extends Metadata = Metadata> {
   node: BaseNode<T>;
-  score?: number;
+  score?: number | undefined;
 }
 
 export enum ModalityType {
@@ -435,9 +437,16 @@ export function splitNodesByType(nodes: BaseNode[]): NodesByType {
 
   for (const node of nodes) {
     let type: ModalityType;
-    if (node instanceof ImageNode) {
+    if (
+      node.type === ObjectType.IMAGE ||
+      node.type === ObjectType.IMAGE_DOCUMENT
+    ) {
       type = ModalityType.IMAGE;
-    } else if (node instanceof TextNode) {
+    } else if (
+      node.type === ObjectType.TEXT ||
+      node.type === ObjectType.DOCUMENT ||
+      node.type === ObjectType.INDEX
+    ) {
       type = ModalityType.TEXT;
     } else {
       throw new Error(`Unknown node type: ${node.type}`);
@@ -463,28 +472,36 @@ export function buildNodeFromSplits(
   };
 
   textSplits.forEach((textChunk, i) => {
-    if (doc instanceof ImageDocument) {
+    if (
+      doc.type === ObjectType.IMAGE ||
+      doc.type === ObjectType.IMAGE_DOCUMENT
+    ) {
+      const imageDoc = doc as ImageNode;
       const imageNode = new ImageNode({
-        id_: idGenerator(i, doc),
+        id_: idGenerator(i, imageDoc),
         text: textChunk,
-        image: doc.image,
-        embedding: doc.embedding,
-        excludedEmbedMetadataKeys: [...doc.excludedEmbedMetadataKeys],
-        excludedLlmMetadataKeys: [...doc.excludedLlmMetadataKeys],
-        metadataSeparator: doc.metadataSeparator,
-        textTemplate: doc.textTemplate,
+        image: imageDoc.image,
+        embedding: imageDoc.embedding,
+        excludedEmbedMetadataKeys: [...imageDoc.excludedEmbedMetadataKeys],
+        excludedLlmMetadataKeys: [...imageDoc.excludedLlmMetadataKeys],
+        metadataSeparator: imageDoc.metadataSeparator,
+        textTemplate: imageDoc.textTemplate,
         relationships: { ...relationships },
       });
       nodes.push(imageNode);
-    } else if (doc instanceof Document || doc instanceof TextNode) {
+    } else if (
+      doc.type === ObjectType.DOCUMENT ||
+      doc.type === ObjectType.TEXT
+    ) {
+      const textDoc = doc as TextNode;
       const node = new TextNode({
-        id_: idGenerator(i, doc),
+        id_: idGenerator(i, textDoc),
         text: textChunk,
-        embedding: doc.embedding,
-        excludedEmbedMetadataKeys: [...doc.excludedEmbedMetadataKeys],
-        excludedLlmMetadataKeys: [...doc.excludedLlmMetadataKeys],
-        metadataSeparator: doc.metadataSeparator,
-        textTemplate: doc.textTemplate,
+        embedding: textDoc.embedding,
+        excludedEmbedMetadataKeys: [...textDoc.excludedEmbedMetadataKeys],
+        excludedLlmMetadataKeys: [...textDoc.excludedLlmMetadataKeys],
+        metadataSeparator: textDoc.metadataSeparator,
+        textTemplate: textDoc.textTemplate,
         relationships: { ...relationships },
       });
       nodes.push(node);

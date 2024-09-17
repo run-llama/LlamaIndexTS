@@ -7,13 +7,13 @@ import type {
   ToolOutput,
 } from "../../llms";
 import type { QueryEndEvent, QueryStartEvent } from "../../query-engine";
+import type {
+  SynthesizeEndEvent,
+  SynthesizeStartEvent,
+} from "../../response-synthesizers";
 import { TextNode } from "../../schema";
 import { EventCaller, getEventCaller } from "../../utils";
 import type { UUID } from "../type";
-import type {
-  SynthesizeEndEvent,
-  SynthesizeStartEvent
-} from '../../response-synthesizers';
 
 export type LLMStartEvent = {
   id: UUID;

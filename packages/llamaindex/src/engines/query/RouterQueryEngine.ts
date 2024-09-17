@@ -1,12 +1,15 @@
 import { PromptMixin } from "@llamaindex/core/prompts";
-import type { QueryType } from "@llamaindex/core/query-engine";
+import type { QueryBundle } from "@llamaindex/core/query-engine";
+import {
+  BaseSynthesizer,
+  getResponseSynthesizer,
+} from "@llamaindex/core/response-synthesizers";
 import { EngineResponse, type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 import type { BaseSelector } from "../../selectors/index.js";
 import { LLMSingleSelector } from "../../selectors/index.js";
-import { TreeSummarize } from "../../synthesizers/index.js";
 import type {
   QueryEngine,
   QueryEngineParamsNonStreaming,
@@ -23,32 +26,27 @@ type RouterQueryEngineMetadata = {
 };
 
 async function combineResponses(
-  summarizer: TreeSummarize,
+  summarizer: BaseSynthesizer,
   responses: EngineResponse[],
-  queryType: QueryType,
+  queryBundle: QueryBundle,
   verbose: boolean = false,
 ): Promise<EngineResponse> {
   if (verbose) {
     console.log("Combining responses from multiple query engines.");
   }
 
-  const responseStrs: string[] = [];
   const sourceNodes: NodeWithScore[] = [];
 
   for (const response of responses) {
     if (response?.sourceNodes) {
       sourceNodes.push(...response.sourceNodes);
     }
-
-    responseStrs.push(extractText(response.message.content));
   }
 
-  const summary = await summarizer.getResponse({
-    query: extractText(queryType),
-    textChunks: responseStrs,
+  return await summarizer.synthesize({
+    query: queryBundle,
+    nodes: sourceNodes,
   });
-
-  return EngineResponse.fromResponse(summary, false, sourceNodes);
 }
 
 /**
@@ -58,15 +56,15 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   private selector: BaseSelector;
   private queryEngines: QueryEngine[];
   private metadatas: RouterQueryEngineMetadata[];
-  private summarizer: TreeSummarize;
+  private summarizer: BaseSynthesizer;
   private verbose: boolean;
 
   constructor(init: {
     selector: BaseSelector;
     queryEngineTools: RouterQueryEngineTool[];
-    serviceContext?: ServiceContext;
-    summarizer?: TreeSummarize;
-    verbose?: boolean;
+    serviceContext?: ServiceContext | undefined;
+    summarizer?: BaseSynthesizer | undefined;
+    verbose?: boolean | undefined;
   }) {
     super();
 
@@ -75,7 +73,8 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     this.metadatas = init.queryEngineTools.map((tool) => ({
       description: tool.description,
     }));
-    this.summarizer = init.summarizer || new TreeSummarize(init.serviceContext);
+    this.summarizer =
+      init.summarizer || getResponseSynthesizer("tree_summarize");
     this.verbose = init.verbose ?? false;
   }
 
@@ -96,7 +95,7 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     queryEngineTools: RouterQueryEngineTool[];
     selector?: BaseSelector;
     serviceContext?: ServiceContext;
-    summarizer?: TreeSummarize;
+    summarizer?: BaseSynthesizer;
     verbose?: boolean;
   }) {
     const serviceContext = init.serviceContext;
@@ -123,7 +122,9 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const { query, stream } = params;
 
-    const response = await this.queryRoute(query);
+    const response = await this.queryRoute(
+      typeof query === "string" ? { query } : query,
+    );
 
     if (stream) {
       throw new Error("Streaming is not supported yet.");
@@ -132,23 +133,23 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
     return response;
   }
 
-  private async queryRoute(query: QueryType): Promise<EngineResponse> {
+  private async queryRoute(query: QueryBundle): Promise<EngineResponse> {
     const result = await this.selector.select(this.metadatas, query);
 
     if (result.selections.length > 1) {
       const responses: EngineResponse[] = [];
       for (let i = 0; i < result.selections.length; i++) {
-        const engineInd = result.selections[i];
-        const logStr = `Selecting query engine ${engineInd.index}: ${result.selections[i].index}.`;
+        const engineInd = result.selections[i]!;
+        const logStr = `Selecting query engine ${engineInd.index}: ${result.selections[i]!.index}.`;
 
         if (this.verbose) {
           console.log(logStr + "\n");
         }
 
-        const selectedQueryEngine = this.queryEngines[engineInd.index];
+        const selectedQueryEngine = this.queryEngines[engineInd.index]!;
         responses.push(
           await selectedQueryEngine.query({
-            query: extractText(query),
+            query,
           }),
         );
       }
@@ -163,15 +164,15 @@ export class RouterQueryEngine extends PromptMixin implements QueryEngine {
 
         return finalResponse;
       } else {
-        return responses[0];
+        return responses[0]!;
       }
     } else {
       let selectedQueryEngine;
 
       try {
-        selectedQueryEngine = this.queryEngines[result.selections[0].index];
+        selectedQueryEngine = this.queryEngines[result.selections[0]!.index];
 
-        const logStr = `Selecting query engine ${result.selections[0].index}: ${result.selections[0].reason}`;
+        const logStr = `Selecting query engine ${result.selections[0]!.index}: ${result.selections[0]!.reason}`;
 
         if (this.verbose) {
           console.log(logStr + "\n");

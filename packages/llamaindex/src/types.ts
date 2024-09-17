@@ -2,13 +2,14 @@
  * Top level types to avoid circular dependencies
  */
 import type { ToolMetadata } from "@llamaindex/core/llms";
+import type { QueryType } from "@llamaindex/core/query-engine";
 import type { EngineResponse } from "@llamaindex/core/schema";
 
 /**
  * Parameters for sending a query.
  */
 export interface QueryEngineParamsBase {
-  query: string;
+  query: QueryType;
 }
 
 export interface QueryEngineParamsStreaming extends QueryEngineParamsBase {

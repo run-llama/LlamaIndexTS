@@ -1,3 +1,4 @@
+import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type {
   BaseNode,
   Document,
@@ -12,7 +13,6 @@ import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
-import type { BaseSynthesizer } from "../../synthesizers/index.js";
 import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex, KeywordTable } from "../BaseIndex.js";
@@ -101,7 +101,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     }
 
     const sortedChunkIndices = Object.keys(chunkIndicesCount)
-      .sort((a, b) => chunkIndicesCount[b] - chunkIndicesCount[a])
+      .sort((a, b) => chunkIndicesCount[b]! - chunkIndicesCount[a]!)
       .slice(0, this.numChunksPerQuery);
 
     const sortedNodes = await this.docstore.getNodes(sortedChunkIndices);
@@ -175,7 +175,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     if (options.indexStruct) {
       indexStruct = options.indexStruct;
     } else if (indexStructs.length == 1) {
-      indexStruct = indexStructs[0];
+      indexStruct = indexStructs[0]!;
     } else if (indexStructs.length > 1 && options.indexId) {
       indexStruct = (await indexStore.getIndexStruct(
         options.indexId,
@@ -265,8 +265,9 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   /**
    * High level API: split documents, get keywords, and build index.
    * @param documents
-   * @param storageContext
-   * @param serviceContext
+   * @param args
+   * @param args.storageContext
+   * @param args.serviceContext
    * @returns
    */
   static async fromDocuments(
@@ -298,8 +299,8 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
   /**
    * Get keywords for nodes and place them into the index.
    * @param nodes
+   * @param docStore
    * @param serviceContext
-   * @param vectorStore
    * @returns
    */
   static async buildIndexFromNodes(

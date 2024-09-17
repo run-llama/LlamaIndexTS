@@ -23,7 +23,7 @@ describe("jsonToIndexStruct", () => {
 
     expect(isIndexDict(actual)).toBe(true);
     expect(
-      (actual as IndexDict).nodesDict.nodeId.getContent(MetadataMode.NONE),
+      (actual as IndexDict).nodesDict.nodeId!.getContent(MetadataMode.NONE),
     ).toEqual("text");
   });
   it("transforms json to IndexList", () => {

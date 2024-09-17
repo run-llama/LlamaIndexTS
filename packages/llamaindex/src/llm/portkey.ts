@@ -20,7 +20,7 @@ export class PortkeySession {
 
   constructor(options: PortkeyOptions = {}) {
     if (!options.apiKey) {
-      options.apiKey = getEnv("PORTKEY_API_KEY");
+      options.apiKey = getEnv("PORTKEY_API_KEY")!;
     }
 
     if (!options.baseURL) {
@@ -60,8 +60,8 @@ export function getPortkeySession(options: PortkeyOptions = {}) {
 }
 
 export class Portkey extends BaseLLM {
-  apiKey?: string = undefined;
-  baseURL?: string = undefined;
+  apiKey?: string | undefined = undefined;
+  baseURL?: string | undefined = undefined;
   session: PortkeySession;
 
   constructor(init?: Partial<Portkey> & PortkeyOptions) {
@@ -71,8 +71,8 @@ export class Portkey extends BaseLLM {
     this.baseURL = baseURL;
     this.session = getPortkeySession({
       ...rest,
-      apiKey: this.apiKey,
-      baseURL: this.baseURL,
+      apiKey: this.apiKey ?? null,
+      baseURL: this.baseURL ?? null,
     });
   }
 
@@ -101,8 +101,8 @@ export class Portkey extends BaseLLM {
         ...bodyParams,
       });
 
-      const content = response.choices[0].message?.content ?? "";
-      const role = response.choices[0].message?.role || "assistant";
+      const content = response.choices[0]!.message?.content ?? "";
+      const role = response.choices[0]!.message?.role || "assistant";
       return { raw: response, message: { content, role: role as MessageType } };
     }
   }
@@ -123,11 +123,11 @@ export class Portkey extends BaseLLM {
     //Indices
     let idx_counter: number = 0;
     for await (const part of chunkStream) {
-      part.choices[0].index = idx_counter;
+      part.choices[0]!.index = idx_counter;
 
       idx_counter++;
 
-      yield { raw: part, delta: part.choices[0].delta?.content ?? "" };
+      yield { raw: part, delta: part.choices[0]!.delta?.content ?? "" };
     }
     return;
   }

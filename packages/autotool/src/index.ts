@@ -16,11 +16,16 @@ const openaiToolsAtom = atom<ChatCompletionTool[]>((get) => {
   const metadata = get(toolMetadataAtom);
   return metadata.map(([metadata]) => ({
     type: "function",
-    function: {
-      parameters: metadata.parameters,
-      name: metadata.name,
-      description: metadata.description,
-    },
+    function: metadata.parameters
+      ? {
+          parameters: metadata.parameters,
+          name: metadata.name,
+          description: metadata.description,
+        }
+      : {
+          name: metadata.name,
+          description: metadata.description,
+        },
   }));
 });
 

@@ -12,6 +12,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  POSTGRES_USER: runneradmin
+  POSTGRES_HOST_AUTH_METHOD: trust
+
 jobs:
   e2e:
     strategy:
@@ -22,9 +26,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - uses: ankane/setup-postgres@v1
+        with:
+          database: llamaindex_node_test
+          dev-files: true
+      - run: |
+          cd /tmp
+          git clone --branch v0.7.0 https://github.com/pgvector/pgvector.git
+          cd pgvector
+          make
+          sudo make install
       - uses: pnpm/action-setup@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -42,7 +54,6 @@ jobs:
         node-version: [18.x, 20.x, 22.x]
     name: Test on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -92,7 +103,8 @@ jobs:
           - nextjs-agent
           - nextjs-edge-runtime
           - nextjs-node-runtime
-    #          - waku-query-engine
+          - waku-query-engine
+          - llama-parse-browser
     runs-on: ubuntu-latest
     name: Build LlamaIndex Example (${{ matrix.packages }})
     steps:
@@ -131,6 +143,12 @@ jobs:
       - name: Pack @llamaindex/cloud
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/cloud
+      - name: Pack @llamaindex/openai
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/openai
+      - name: Pack @llamaindex/groq
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/groq
       - name: Pack @llamaindex/core
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core

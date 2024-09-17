@@ -1,31 +1,21 @@
-import {
-  EngineResponse,
-  TextNode,
-  type NodeWithScore,
-} from "@llamaindex/core/schema";
+import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { getResponseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { TextNode, type NodeWithScore } from "@llamaindex/core/schema";
 import { LLMQuestionGenerator } from "../../QuestionGenerator.js";
 import type { ServiceContext } from "../../ServiceContext.js";
-import type { BaseSynthesizer } from "../../synthesizers/index.js";
-import {
-  CompactAndRefine,
-  ResponseSynthesizer,
-} from "../../synthesizers/index.js";
 
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
+import type { PromptsRecord } from "@llamaindex/core/prompts";
 import {
   BaseQueryEngine,
   type QueryBundle,
-  type QueryType
-} from '@llamaindex/core/query-engine';
-import { wrapEventCaller } from "@llamaindex/core/utils";
+} from "@llamaindex/core/query-engine";
 import type { BaseQuestionGenerator, SubQuestion } from "./types.js";
-import type { PromptsRecord } from '@llamaindex/core/prompts';
 
 /**
  * SubQuestionQueryEngine decomposes a question into subquestions and then
  */
-export class SubQuestionQueryEngine extends BaseQueryEngine
-{
+export class SubQuestionQueryEngine extends BaseQueryEngine {
   responseSynthesizer: BaseSynthesizer;
   questionGen: BaseQuestionGenerator;
   queryEngines: BaseTool[];
@@ -37,26 +27,31 @@ export class SubQuestionQueryEngine extends BaseQueryEngine
     queryEngineTools: BaseTool[];
   }) {
     super(async (strOrQueryBundle, stream) => {
-      let query: QueryBundle
+      let query: QueryBundle;
       if (typeof strOrQueryBundle === "string") {
         query = {
-          query: strOrQueryBundle
-        }
+          query: strOrQueryBundle,
+        };
       } else {
-        query = strOrQueryBundle
+        query = strOrQueryBundle;
       }
-      const subQuestions = await this.questionGen.generate(this.metadatas, strOrQueryBundle);
+      const subQuestions = await this.questionGen.generate(
+        this.metadatas,
+        strOrQueryBundle,
+      );
 
       const subQNodes = await Promise.all(
         subQuestions.map((subQ) => this.querySubQ(subQ)),
       );
 
-      const nodesWithScore: NodeWithScore[] = subQNodes.filter((node) => node !== null)
+      const nodesWithScore: NodeWithScore[] = subQNodes.filter(
+        (node) => node !== null,
+      );
       if (stream) {
         return this.responseSynthesizer.synthesize(
           {
             query,
-            nodesWithScore,
+            nodes: nodesWithScore,
           },
           true,
         );
@@ -64,7 +59,7 @@ export class SubQuestionQueryEngine extends BaseQueryEngine
       return this.responseSynthesizer.synthesize(
         {
           query,
-          nodesWithScore,
+          nodes: nodesWithScore,
         },
         false,
       );
@@ -72,7 +67,7 @@ export class SubQuestionQueryEngine extends BaseQueryEngine
 
     this.questionGen = init.questionGen;
     this.responseSynthesizer =
-      init.responseSynthesizer ?? new ResponseSynthesizer();
+      init.responseSynthesizer ?? getResponseSynthesizer("compact");
     this.queryEngines = init.queryEngineTools;
     this.metadatas = init.queryEngineTools.map((tool) => tool.metadata);
   }
@@ -96,15 +91,9 @@ export class SubQuestionQueryEngine extends BaseQueryEngine
     responseSynthesizer?: BaseSynthesizer;
     serviceContext?: ServiceContext;
   }) {
-    const serviceContext = init.serviceContext;
-
     const questionGen = init.questionGen ?? new LLMQuestionGenerator();
     const responseSynthesizer =
-      init.responseSynthesizer ??
-      new ResponseSynthesizer({
-        responseBuilder: new CompactAndRefine(serviceContext),
-        serviceContext,
-      });
+      init.responseSynthesizer ?? getResponseSynthesizer("compact");
 
     return new SubQuestionQueryEngine({
       questionGen,

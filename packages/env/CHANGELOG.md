@@ -1,5 +1,16 @@
 # @llamaindex/env
 
+## 0.1.11
+
+### Patch Changes
+
+- ac07e3c: fix: replace instanceof check with `.type` check
+- 1a6137b: feat: experimental support for browser
+
+  If you see bundler issue in next.js edge runtime, please bump to `next@14` latest version.
+
+- ac07e3c: fix: add `console.warn` when import dual module
+
 ## 0.1.10
 
 ### Patch Changes

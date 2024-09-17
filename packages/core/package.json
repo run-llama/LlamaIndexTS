@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.1.11",
+  "version": "0.2.1",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./node-parser": {
@@ -144,6 +144,48 @@
         "default": "./dist/indices/index.js"
       }
     },
+    "./workflow": {
+      "require": {
+        "types": "./dist/workflow/index.d.cts",
+        "default": "./dist/workflow/index.cjs"
+      },
+      "import": {
+        "types": "./dist/workflow/index.d.ts",
+        "default": "./dist/workflow/index.js"
+      },
+      "default": {
+        "types": "./dist/workflow/index.d.ts",
+        "default": "./dist/workflow/index.js"
+      }
+    },
+    "./memory": {
+      "require": {
+        "types": "./dist/memory/index.d.cts",
+        "default": "./dist/memory/index.cjs"
+      },
+      "import": {
+        "types": "./dist/memory/index.d.ts",
+        "default": "./dist/memory/index.js"
+      },
+      "default": {
+        "types": "./dist/memory/index.d.ts",
+        "default": "./dist/memory/index.js"
+      }
+    },
+    "./storage/chat-store": {
+      "require": {
+        "types": "./dist/storage/chat-store/index.d.cts",
+        "default": "./dist/storage/chat-store/index.cjs"
+      },
+      "import": {
+        "types": "./dist/storage/chat-store/index.d.ts",
+        "default": "./dist/storage/chat-store/index.js"
+      },
+      "default": {
+        "types": "./dist/storage/chat-store/index.d.ts",
+        "default": "./dist/storage/chat-store/index.js"
+      }
+    },
     "./response-synthesizers": {
       "require": {
         "types": "./dist/response-synthesizers/index.d.cts",
@@ -172,14 +214,17 @@
     "url": "https://github.com/himself65/LlamaIndexTS.git"
   },
   "devDependencies": {
+    "@edge-runtime/vm": "^4.0.3",
     "ajv": "^8.17.1",
     "bunchee": "5.3.2",
+    "happy-dom": "^15.7.4",
     "natural": "^8.0.1",
     "python-format-js": "^1.4.3"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.5.1",
+    "magic-bytes.js": "^1.10.0",
     "zod": "^3.23.8"
   }
 }

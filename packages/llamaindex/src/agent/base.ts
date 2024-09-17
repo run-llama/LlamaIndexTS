@@ -5,10 +5,10 @@ import type {
   MessageContent,
   ToolOutput,
 } from "@llamaindex/core/llms";
+import { BaseMemory } from "@llamaindex/core/memory";
 import { EngineResponse } from "@llamaindex/core/schema";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import { randomUUID } from "@llamaindex/env";
-import { ChatHistory } from "../ChatHistory.js";
 import { Settings } from "../Settings.js";
 import {
   type ChatEngine,
@@ -53,7 +53,7 @@ export function createTaskOutputStream<
         nextSteps: new Set(),
       };
       if (steps.length > 0) {
-        step.prevStep = steps[steps.length - 1];
+        step.prevStep = steps[steps.length - 1]!;
       }
       const taskOutputs: TaskStepOutput<
         Model,
@@ -77,7 +77,7 @@ export function createTaskOutputStream<
       context.logger.log("Finished step(id, %s).", step.id);
       // fixme: support multi-thread when there are multiple outputs
       // todo: for now we pretend there is only one task output
-      const { isLast, taskStep } = taskOutputs[0];
+      const { isLast, taskStep } = taskOutputs[0]!;
       context = {
         ...taskStep.context,
         store: {
@@ -353,11 +353,12 @@ export abstract class AgentRunner<
   async chat(
     params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
   ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
-    let chatHistory: ChatMessage<AdditionalMessageOptions>[] | undefined = [];
+    let chatHistory: ChatMessage<AdditionalMessageOptions>[] = [];
 
-    if (params.chatHistory instanceof ChatHistory) {
-      chatHistory = params.chatHistory
-        .messages as ChatMessage<AdditionalMessageOptions>[];
+    if (params.chatHistory instanceof BaseMemory) {
+      chatHistory = (await params.chatHistory.getMessages(
+        params.message,
+      )) as ChatMessage<AdditionalMessageOptions>[];
     } else {
       chatHistory =
         params.chatHistory as ChatMessage<AdditionalMessageOptions>[];

@@ -81,7 +81,7 @@ export class HuggingFaceInferenceAPI extends BaseLLM {
   model: string;
   temperature: number;
   topP: number;
-  maxTokens?: number;
+  maxTokens?: number | undefined;
   contextWindow: number;
   hf: HfInference;
 
@@ -197,7 +197,7 @@ export class HuggingFaceLLM extends BaseLLM {
   tokenizerName: string;
   temperature: number;
   topP: number;
-  maxTokens?: number;
+  maxTokens?: number | undefined;
   contextWindow: number;
 
   private tokenizer: PreTrainedTokenizer | null = null;

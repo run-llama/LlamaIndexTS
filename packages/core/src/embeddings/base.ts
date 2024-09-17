@@ -23,23 +23,34 @@ export abstract class BaseEmbedding extends TransformComponent {
   embedBatchSize = DEFAULT_EMBED_BATCH_SIZE;
   embedInfo?: EmbeddingInfo;
 
-  constructor() {
-    super(
-      async (
-        nodes: BaseNode[],
-        options?: BaseEmbeddingOptions,
-      ): Promise<BaseNode[]> => {
-        const texts = nodes.map((node) => node.getContent(MetadataMode.EMBED));
+  protected constructor(
+    transformFn?: (
+      nodes: BaseNode[],
+      options?: BaseEmbeddingOptions,
+    ) => Promise<BaseNode[]>,
+  ) {
+    if (transformFn) {
+      super(transformFn);
+    } else {
+      super(
+        async (
+          nodes: BaseNode[],
+          options?: BaseEmbeddingOptions,
+        ): Promise<BaseNode[]> => {
+          const texts = nodes.map((node) =>
+            node.getContent(MetadataMode.EMBED),
+          );
 
-        const embeddings = await this.getTextEmbeddingsBatch(texts, options);
+          const embeddings = await this.getTextEmbeddingsBatch(texts, options);
 
-        for (let i = 0; i < nodes.length; i++) {
-          nodes[i].embedding = embeddings[i];
-        }
+          for (let i = 0; i < nodes.length; i++) {
+            nodes[i]!.embedding = embeddings[i];
+          }
 
-        return nodes;
-      },
-    );
+          return nodes;
+        },
+      );
+    }
   }
 
   similarity(
@@ -120,7 +131,7 @@ export async function batchEmbeddings<T>(
   const curBatch: T[] = [];
 
   for (let i = 0; i < queue.length; i++) {
-    curBatch.push(queue[i]);
+    curBatch.push(queue[i]!);
     if (i == queue.length - 1 || curBatch.length == chunkSize) {
       const embeddings = await embedFunc(curBatch);
 
