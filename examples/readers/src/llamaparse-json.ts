@@ -1,3 +1,4 @@
+import { createMessageContent } from "@llamaindex/core/utils";
 import {
   Document,
   ImageNode,
@@ -6,7 +7,6 @@ import {
   PromptTemplate,
   VectorStoreIndex,
 } from "llamaindex";
-import { createMessageContent } from "llamaindex/synthesizers/utils";
 
 const reader = new LlamaParseReader();
 async function main() {

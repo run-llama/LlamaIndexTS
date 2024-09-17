@@ -33,6 +33,8 @@ export type {
 export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/prompts";
+export * from "@llamaindex/core/query-engine";
+export * from "@llamaindex/core/response-synthesizers";
 export * from "@llamaindex/core/schema";
 
 declare module "@llamaindex/core/global" {
@@ -69,6 +71,5 @@ export * from "./selectors/index.js";
 export * from "./ServiceContext.js";
 export { Settings } from "./Settings.js";
 export * from "./storage/StorageContext.js";
-export * from "./synthesizers/index.js";
 export * from "./tools/index.js";
 export * from "./types.js";

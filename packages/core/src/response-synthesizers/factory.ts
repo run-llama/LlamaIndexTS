@@ -1,108 +1,52 @@
-import { getBiggestPrompt, type PromptHelper } from "@llamaindex/core/indices";
-import type { LLM } from "@llamaindex/core/llms";
+import { z } from "zod";
+import { getBiggestPrompt } from "../indices";
+import type { MessageContent } from "../llms";
 import {
-  PromptMixin,
   defaultRefinePrompt,
   defaultTextQAPrompt,
   defaultTreeSummarizePrompt,
   type ModuleRecord,
-  type PromptsRecord,
   type RefinePrompt,
   type TextQAPrompt,
   type TreeSummarizePrompt,
-} from "@llamaindex/core/prompts";
-import type { QueryType } from "@llamaindex/core/query-engine";
-import { extractText, streamConverter } from "@llamaindex/core/utils";
-import type { ServiceContext } from "../ServiceContext.js";
+} from "../prompts";
 import {
-  llmFromSettingsOrContext,
-  promptHelperFromSettingsOrContext,
-} from "../Settings.js";
-import type { ResponseBuilder, ResponseBuilderQuery } from "./types.js";
+  EngineResponse,
+  MetadataMode,
+  type NodeWithScore,
+  TextNode,
+} from "../schema";
+import { createMessageContent, extractText, streamConverter } from "../utils";
+import {
+  BaseSynthesizer,
+  type BaseSynthesizerOptions,
+} from "./base-synthesizer";
 
-/**
- * Response modes of the response synthesizer
- */
-enum ResponseMode {
-  REFINE = "refine",
-  COMPACT = "compact",
-  TREE_SUMMARIZE = "tree_summarize",
-  SIMPLE = "simple",
-}
+const responseModeSchema = z.enum([
+  "refine",
+  "compact",
+  "tree_summarize",
+  "multi_modal",
+]);
 
-/**
- * A response builder that just concatenates responses.
- */
-export class SimpleResponseBuilder
-  extends PromptMixin
-  implements ResponseBuilder
-{
-  llm: LLM;
-  textQATemplate: TextQAPrompt;
-
-  constructor(serviceContext?: ServiceContext, textQATemplate?: TextQAPrompt) {
-    super();
-    this.llm = llmFromSettingsOrContext(serviceContext);
-    this.textQATemplate = textQATemplate ?? defaultTextQAPrompt;
-  }
-
-  protected _getPrompts(): PromptsRecord {
-    return {
-      textQATemplate: this.textQATemplate,
-    };
-  }
-  protected _updatePrompts(prompts: { textQATemplate: TextQAPrompt }): void {
-    if (prompts.textQATemplate) {
-      this.textQATemplate = prompts.textQATemplate;
-    }
-  }
-  protected _getPromptModules(): ModuleRecord {
-    return {};
-  }
-
-  getResponse(
-    query: ResponseBuilderQuery,
-    stream: true,
-  ): Promise<AsyncIterable<string>>;
-  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
-  async getResponse(
-    { query, textChunks }: ResponseBuilderQuery,
-    stream?: boolean,
-  ): Promise<AsyncIterable<string> | string> {
-    const prompt = this.textQATemplate.format({
-      query: extractText(query),
-      context: textChunks.join("\n\n"),
-    });
-    if (stream) {
-      const response = await this.llm.complete({ prompt, stream: true });
-      return streamConverter(response, (chunk) => chunk.text);
-    } else {
-      const response = await this.llm.complete({ prompt, stream: false });
-      return response.text;
-    }
-  }
-}
+export type ResponseMode = z.infer<typeof responseModeSchema>;
 
 /**
  * A response builder that uses the query to ask the LLM generate a better response using multiple text chunks.
  */
-export class Refine extends PromptMixin implements ResponseBuilder {
-  llm: LLM;
-  promptHelper: PromptHelper;
+class Refine extends BaseSynthesizer {
   textQATemplate: TextQAPrompt;
   refineTemplate: RefinePrompt;
 
   constructor(
-    serviceContext?: ServiceContext,
-    textQATemplate?: TextQAPrompt,
-    refineTemplate?: RefinePrompt,
+    options: BaseSynthesizerOptions & {
+      textQATemplate?: TextQAPrompt | undefined;
+      refineTemplate?: RefinePrompt | undefined;
+    },
   ) {
-    super();
-
-    this.llm = llmFromSettingsOrContext(serviceContext);
-    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
-    this.textQATemplate = textQATemplate ?? defaultTextQAPrompt;
-    this.refineTemplate = refineTemplate ?? defaultRefinePrompt;
+    super(options);
+    this.textQATemplate = options.textQATemplate ?? defaultTextQAPrompt;
+    this.refineTemplate = options.refineTemplate ?? defaultRefinePrompt;
   }
 
   protected _getPromptModules(): ModuleRecord {
@@ -132,41 +76,47 @@ export class Refine extends PromptMixin implements ResponseBuilder {
     }
   }
 
-  getResponse(
-    query: ResponseBuilderQuery,
-    stream: true,
-  ): Promise<AsyncIterable<string>>;
-  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
   async getResponse(
-    { query, textChunks, prevResponse }: ResponseBuilderQuery,
-    stream?: boolean,
-  ): Promise<AsyncIterable<string> | string> {
-    let response: AsyncIterable<string> | string | undefined = prevResponse;
+    query: MessageContent,
+    nodes: NodeWithScore[],
+    stream: boolean,
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
+    let response: AsyncIterable<string> | string | undefined = undefined;
+    const textChunks = nodes.map(({ node }) =>
+      node.getContent(MetadataMode.LLM),
+    );
 
     for (let i = 0; i < textChunks.length; i++) {
-      const chunk = textChunks[i]!;
+      const text = textChunks[i]!;
       const lastChunk = i === textChunks.length - 1;
       if (!response) {
         response = await this.giveResponseSingle(
           query,
-          chunk,
+          text,
           !!stream && lastChunk,
         );
       } else {
         response = await this.refineResponseSingle(
           response as string,
           query,
-          chunk,
+          text,
           !!stream && lastChunk,
         );
       }
     }
 
-    return response ?? "Empty Response";
+    // fixme: no source nodes provided, cannot fix right now due to lack of context
+    if (typeof response === "string") {
+      return EngineResponse.fromResponse(response, false);
+    } else {
+      return streamConverter(response!, (text) =>
+        EngineResponse.fromResponse(text, true),
+      );
+    }
   }
 
   private async giveResponseSingle(
-    query: QueryType,
+    query: MessageContent,
     textChunk: string,
     stream: boolean,
   ): Promise<AsyncIterable<string> | string> {
@@ -203,10 +153,10 @@ export class Refine extends PromptMixin implements ResponseBuilder {
   // eslint-disable-next-line max-params
   private async refineResponseSingle(
     initialReponse: string,
-    query: QueryType,
+    query: MessageContent,
     textChunk: string,
     stream: boolean,
-  ) {
+  ): Promise<AsyncIterable<string> | string> {
     const refineTemplate: RefinePrompt = this.refineTemplate.partialFormat({
       query: extractText(query),
     });
@@ -246,59 +196,54 @@ export class Refine extends PromptMixin implements ResponseBuilder {
 /**
  * CompactAndRefine is a slight variation of Refine that first compacts the text chunks into the smallest possible number of chunks.
  */
-export class CompactAndRefine extends Refine {
-  getResponse(
-    query: ResponseBuilderQuery,
-    stream: true,
-  ): Promise<AsyncIterable<string>>;
-  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
+class CompactAndRefine extends Refine {
   async getResponse(
-    { query, textChunks, prevResponse }: ResponseBuilderQuery,
-    stream?: boolean,
-  ): Promise<AsyncIterable<string> | string> {
+    query: MessageContent,
+    nodes: NodeWithScore[],
+    stream: boolean,
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
     const textQATemplate: TextQAPrompt = this.textQATemplate.partialFormat({
       query: extractText(query),
     });
     const refineTemplate: RefinePrompt = this.refineTemplate.partialFormat({
       query: extractText(query),
     });
+    const textChunks = nodes.map(({ node }) =>
+      node.getContent(MetadataMode.LLM),
+    );
 
     const maxPrompt = getBiggestPrompt([textQATemplate, refineTemplate]);
     const newTexts = this.promptHelper.repack(maxPrompt, textChunks);
-    const params = {
-      query,
-      textChunks: newTexts,
-      prevResponse,
-    };
+    const newNodes = newTexts.map((text) => new TextNode({ text }));
     if (stream) {
       return super.getResponse(
-        {
-          ...params,
-        },
+        query,
+        newNodes.map((node) => ({ node })),
         true,
       );
     }
-    return super.getResponse(params);
+    return super.getResponse(
+      query,
+      newNodes.map((node) => ({ node })),
+      false,
+    );
   }
 }
 
 /**
  * TreeSummarize repacks the text chunks into the smallest possible number of chunks and then summarizes them, then recursively does so until there's one chunk left.
  */
-export class TreeSummarize extends PromptMixin implements ResponseBuilder {
-  llm: LLM;
-  promptHelper: PromptHelper;
+class TreeSummarize extends BaseSynthesizer {
   summaryTemplate: TreeSummarizePrompt;
 
   constructor(
-    serviceContext?: ServiceContext,
-    summaryTemplate?: TreeSummarizePrompt,
+    options: BaseSynthesizerOptions & {
+      summaryTemplate?: TreeSummarizePrompt;
+    },
   ) {
-    super();
-
-    this.llm = llmFromSettingsOrContext(serviceContext);
-    this.promptHelper = promptHelperFromSettingsOrContext(serviceContext);
-    this.summaryTemplate = summaryTemplate ?? defaultTreeSummarizePrompt;
+    super(options);
+    this.summaryTemplate =
+      options.summaryTemplate ?? defaultTreeSummarizePrompt;
   }
 
   protected _getPromptModules(): ModuleRecord {
@@ -319,15 +264,14 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
     }
   }
 
-  getResponse(
-    query: ResponseBuilderQuery,
-    stream: true,
-  ): Promise<AsyncIterable<string>>;
-  getResponse(query: ResponseBuilderQuery, stream?: false): Promise<string>;
   async getResponse(
-    { query, textChunks }: ResponseBuilderQuery,
-    stream?: boolean,
-  ): Promise<AsyncIterable<string> | string> {
+    query: MessageContent,
+    nodes: NodeWithScore[],
+    stream: boolean,
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
+    const textChunks = nodes.map(({ node }) =>
+      node.getContent(MetadataMode.LLM),
+    );
     if (!textChunks || textChunks.length === 0) {
       throw new Error("Must have at least one text chunk");
     }
@@ -347,9 +291,14 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
       };
       if (stream) {
         const response = await this.llm.complete({ ...params, stream });
-        return streamConverter(response, (chunk) => chunk.text);
+        return streamConverter(response, (chunk) =>
+          EngineResponse.fromResponse(chunk.text, true),
+        );
       }
-      return (await this.llm.complete(params)).text;
+      return EngineResponse.fromResponse(
+        (await this.llm.complete(params)).text,
+        false,
+      );
     } else {
       const summaries = await Promise.all(
         packedTextChunks.map((chunk) =>
@@ -362,40 +311,118 @@ export class TreeSummarize extends PromptMixin implements ResponseBuilder {
         ),
       );
 
-      const params = {
-        query,
-        textChunks: summaries.map((s) => s.text),
-      };
       if (stream) {
         return this.getResponse(
-          {
-            ...params,
-          },
+          query,
+          summaries.map((s) => ({
+            node: new TextNode({
+              text: s.text,
+            }),
+          })),
           true,
         );
       }
-      return this.getResponse(params);
+      return this.getResponse(
+        query,
+        summaries.map((s) => ({
+          node: new TextNode({
+            text: s.text,
+          }),
+        })),
+        false,
+      );
     }
   }
 }
 
-export function getResponseBuilder(
-  serviceContext?: ServiceContext,
-  responseMode?: ResponseMode,
-): ResponseBuilder {
-  switch (responseMode) {
-    case ResponseMode.SIMPLE:
-      return new SimpleResponseBuilder(serviceContext);
-    case ResponseMode.REFINE:
-      return new Refine(serviceContext);
-    case ResponseMode.TREE_SUMMARIZE:
-      return new TreeSummarize(serviceContext);
-    default:
-      return new CompactAndRefine(serviceContext);
+class MultiModal extends BaseSynthesizer {
+  metadataMode: MetadataMode;
+  textQATemplate: TextQAPrompt;
+
+  constructor({
+    textQATemplate,
+    metadataMode,
+    ...options
+  }: BaseSynthesizerOptions & {
+    textQATemplate?: TextQAPrompt;
+    metadataMode?: MetadataMode;
+  } = {}) {
+    super(options);
+
+    this.metadataMode = metadataMode ?? MetadataMode.NONE;
+    this.textQATemplate = textQATemplate ?? defaultTextQAPrompt;
+  }
+
+  protected _getPromptModules(): ModuleRecord {
+    return {};
+  }
+
+  protected _getPrompts(): { textQATemplate: TextQAPrompt } {
+    return {
+      textQATemplate: this.textQATemplate,
+    };
+  }
+
+  protected _updatePrompts(promptsDict: {
+    textQATemplate: TextQAPrompt;
+  }): void {
+    if (promptsDict.textQATemplate) {
+      this.textQATemplate = promptsDict.textQATemplate;
+    }
+  }
+
+  protected async getResponse(
+    query: MessageContent,
+    nodes: NodeWithScore[],
+    stream: boolean,
+  ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
+    const prompt = await createMessageContent(
+      this.textQATemplate,
+      nodes.map(({ node }) => node),
+      // this might not be good as this remove the image information
+      { query: extractText(query) },
+      this.metadataMode,
+    );
+
+    const llm = this.llm;
+
+    if (stream) {
+      const response = await llm.complete({
+        prompt,
+        stream,
+      });
+      return streamConverter(response, ({ text }) =>
+        EngineResponse.fromResponse(text, true),
+      );
+    }
+    const response = await llm.complete({
+      prompt,
+    });
+    return EngineResponse.fromResponse(response.text, false);
   }
 }
 
-export type ResponseBuilderPrompts =
-  | TextQAPrompt
-  | TreeSummarizePrompt
-  | RefinePrompt;
+export function getResponseSynthesizer(
+  mode: ResponseMode,
+  options: BaseSynthesizerOptions & {
+    textQATemplate?: TextQAPrompt;
+    refineTemplate?: RefinePrompt;
+    summaryTemplate?: TreeSummarizePrompt;
+    metadataMode?: MetadataMode;
+  } = {},
+) {
+  switch (mode) {
+    case "compact": {
+      return new CompactAndRefine(options);
+    }
+    case "refine": {
+      return new Refine(options);
+    }
+    case "tree_summarize": {
+      return new TreeSummarize(options);
+    }
+    case "multi_modal": {
+      return new MultiModal(options);
+    }
+  }
+}

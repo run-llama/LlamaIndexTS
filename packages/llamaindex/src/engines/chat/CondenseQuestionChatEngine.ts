@@ -6,6 +6,7 @@ import {
   type ModuleRecord,
   PromptMixin,
 } from "@llamaindex/core/prompts";
+import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { EngineResponse } from "@llamaindex/core/schema";
 import {
   extractText,
@@ -15,7 +16,6 @@ import {
 } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";
-import type { QueryEngine } from "../../types.js";
 import type {
   ChatEngine,
   ChatEngineParamsNonStreaming,
@@ -37,13 +37,13 @@ export class CondenseQuestionChatEngine
   extends PromptMixin
   implements ChatEngine
 {
-  queryEngine: QueryEngine;
+  queryEngine: BaseQueryEngine;
   chatHistory: BaseMemory;
   llm: LLM;
   condenseMessagePrompt: CondenseQuestionPrompt;
 
   constructor(init: {
-    queryEngine: QueryEngine;
+    queryEngine: BaseQueryEngine;
     chatHistory: ChatMessage[];
     serviceContext?: ServiceContext;
     condenseMessagePrompt?: CondenseQuestionPrompt;
@@ -114,10 +114,12 @@ export class CondenseQuestionChatEngine
     chatHistory.put({ content: message, role: "user" });
 
     if (stream) {
-      const stream = await this.queryEngine.query({
-        query: condensedQuestion,
-        stream: true,
-      });
+      const stream = await this.queryEngine.query(
+        {
+          query: condensedQuestion,
+        },
+        true,
+      );
       return streamReducer({
         stream,
         initialValue: "",

@@ -9,6 +9,8 @@ import { OpenAI, OpenAIEmbedding } from "@llamaindex/openai";
 
 /**
  * The ServiceContext is a collection of components that are used in different parts of the application.
+ *
+ * @deprecated This will no longer supported, please use `Settings` instead.
  */
 export interface ServiceContext {
   llm: LLM;

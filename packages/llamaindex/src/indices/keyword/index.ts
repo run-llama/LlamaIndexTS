@@ -1,3 +1,4 @@
+import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type {
   BaseNode,
   Document,
@@ -12,8 +13,6 @@ import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
-import type { BaseSynthesizer } from "../../synthesizers/index.js";
-import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex, KeywordTable } from "../BaseIndex.js";
 import { IndexStructType } from "../json-to-index-struct.js";
@@ -30,6 +29,7 @@ import {
   type KeywordExtractPrompt,
   type QueryKeywordExtractPrompt,
 } from "@llamaindex/core/prompts";
+import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 
@@ -237,7 +237,7 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
-  }): QueryEngine {
+  }): BaseQueryEngine {
     const { retriever, responseSynthesizer } = options ?? {};
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),

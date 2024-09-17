@@ -185,6 +185,20 @@
         "types": "./dist/storage/chat-store/index.d.ts",
         "default": "./dist/storage/chat-store/index.js"
       }
+    },
+    "./response-synthesizers": {
+      "require": {
+        "types": "./dist/response-synthesizers/index.d.cts",
+        "default": "./dist/response-synthesizers/index.cjs"
+      },
+      "import": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      },
+      "default": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      }
     }
   },
   "files": [
@@ -210,6 +224,7 @@
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.5.1",
+    "magic-bytes.js": "^1.10.0",
     "zod": "^3.23.8"
   }
 }
