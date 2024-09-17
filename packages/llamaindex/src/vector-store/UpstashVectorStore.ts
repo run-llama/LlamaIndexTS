@@ -1,6 +1,7 @@
 import {
   VectorStoreBase,
   type IEmbedModel,
+  type MetadataFilter,
   type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
@@ -14,8 +15,9 @@ import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 type UpstashParams = {
   namespace?: string;
-  token: string;
-  endpoint: string;
+  token?: string;
+  endpoint?: string;
+  maxBatchSize?: number;
 } & IEmbedModel;
 
 /**
@@ -28,11 +30,24 @@ export class UpstashVectorStore
   storesText: boolean = true;
 
   private db: Index;
+  private maxBatchSize: number;
   namespace: string;
 
+  /**
+   * @param namespace namespace to use
+   * @param token upstash vector token. if not set, `process.env.UPSTASH_VECTOR_REST_TOKEN` is used.
+   * @param endpoint upstash vector endpoint. If not set, `process.env.UPSTASH_VECTOR_REST_URL` is used.
+   * @param maxBatchSize maximum number of vectors upserted at once. Default is 1000.
+   *
+   * @example
+   * ```ts
+   * const vectorStore = new UpstashVectorStore({ namespace: "my-namespace" })
+   * ```
+   */
   constructor(params?: UpstashParams) {
     super(params?.embedModel);
     this.namespace = params?.namespace ?? "";
+    this.maxBatchSize = params?.maxBatchSize ?? 1000;
     const token = params?.token ?? getEnv("UPSTASH_VECTOR_REST_TOKEN");
     const endpoint = params?.endpoint ?? getEnv("UPSTASH_VECTOR_REST_URL");
 
@@ -53,7 +68,7 @@ export class UpstashVectorStore
       this.db = new Index();
     }
 
-    return Promise.resolve(this.db);
+    return this.db;
   }
 
   /**
@@ -67,41 +82,51 @@ export class UpstashVectorStore
   /**
    * Adds vector record(s) to the table.
    * @param embeddingResults The Nodes to be inserted, optionally including metadata tuples.
-   * @returns Due to limitations in the Upstash client, does not return the upserted ID list, only a Promise resolve/reject.
+   * @returns ids of the embeddings (infered from the id_ field of embeddingResults objects)
    */
   async add(embeddingResults: BaseNode<Metadata>[]): Promise<string[]> {
     if (embeddingResults.length == 0) {
-      return Promise.resolve([]);
+      return [];
     }
 
-    const db = this.db;
     const nodes = embeddingResults.map(this.nodeToRecord);
-    const result = await db.upsert(nodes, { namespace: this.namespace });
+    const result = await this.upsertInBatches(nodes);
     if (result != "OK") {
-      return Promise.reject(new Error("Failed to save chunk"));
+      throw new Error("Failed to save chunk");
     }
-    return Promise.resolve([]);
+    return nodes.map((node) => node.id);
   }
 
   /**
    * Adds plain text record(s) to the table. Upstash take cares of embedding conversion.
-   * @param embeddingResults The Nodes to be inserted, optionally including metadata tuples.
-   * @returns Due to limitations in the Upstash client, does not return the upserted ID list, only a Promise resolve/reject.
+   * @param text The Nodes to be inserted, optionally including metadata tuples.
+   * @returns ids of the embeddings (infered from the id_ field of embeddingResults objects)
    */
-  async addPlainText(
-    embeddingResults: TextNode<Metadata>[],
-  ): Promise<string[]> {
-    if (embeddingResults.length == 0) {
-      return Promise.resolve([]);
+  async addPlainText(text: TextNode<Metadata>[]): Promise<string[]> {
+    if (text.length == 0) {
+      return [];
     }
 
-    const db = this.db;
-    const nodes = embeddingResults.map(this.textNodeToRecord);
-    const result = await db.upsert(nodes, { namespace: this.namespace });
+    const nodes = text.map(this.textNodeToRecord);
+    const result = await this.upsertInBatches(nodes);
     if (result != "OK") {
-      return Promise.reject(new Error("Failed to save chunk"));
+      throw new Error("Failed to save chunk");
     }
-    return Promise.resolve([]);
+    return nodes.map((node) => node.id);
+  }
+
+  private async upsertInBatches(
+    nodes:
+      | ReturnType<UpstashVectorStore["textNodeToRecord"]>[]
+      | ReturnType<UpstashVectorStore["nodeToRecord"]>[],
+  ) {
+    const promises: Promise<string>[] = [];
+    for (let i = 0; i < nodes.length; i += this.maxBatchSize) {
+      const batch = nodes.slice(i, i + this.maxBatchSize);
+      promises.push(this.db.upsert(batch, { namespace: this.namespace }));
+    }
+    const results = await Promise.all(promises);
+    return results.every((result) => result === "OK") ? "OK" : "NOT-OK";
   }
 
   /**
@@ -112,7 +137,6 @@ export class UpstashVectorStore
    */
   async delete(refDocId: string): Promise<void> {
     await this.db.namespace(this.namespace).delete(refDocId);
-    return Promise.resolve();
   }
 
   /**
@@ -124,7 +148,6 @@ export class UpstashVectorStore
    */
   async deleteMany(refDocId: string[]): Promise<void> {
     await this.db.namespace(this.namespace).delete(refDocId);
-    return Promise.resolve();
   }
 
   /**
@@ -169,7 +192,11 @@ export class UpstashVectorStore
       ids: results.map((row) => String(row.id)),
     };
 
-    return Promise.resolve(ret);
+    return ret;
+  }
+
+  toFilterString(filter: MetadataFilter) {
+    return `${filter.key} ${filter.operator} ${filter.value}`;
   }
 
   toUpstashFilter(stdFilters?: MetadataFilters) {
@@ -181,6 +208,13 @@ export class UpstashVectorStore
         item.operator = "=";
       }
     }
+
+    const filterStrings = stdFilters.filters.map(this.toFilterString);
+
+    if (filterStrings.length === 1) {
+      return filterStrings[0];
+    }
+    return filterStrings.join(` ${stdFilters.condition ?? "and"} `);
   }
 
   nodeToRecord(node: BaseNode<Metadata>) {
