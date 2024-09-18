@@ -6,7 +6,7 @@ import {
   type SearchType,
 } from "@aws-sdk/client-bedrock-agent-runtime";
 
-import { BaseRetriever, Document } from "@llamaindex";
+import { BaseRetriever, Document } from "llamaindex";
 
 /**
  * Interface for the arguments required to initialize an
@@ -113,7 +113,7 @@ export class AmazonKnowledgeBaseRetriever extends BaseRetriever {
       await this.bedrockAgentRuntimeClient.send(retrieveCommand);
 
     return (
-      retrieveResponse.retrievalResults?.map((result) => {
+      retrieveResponse.retrievalResults?.map((result: any) => {
         let source;
         switch (result.location?.type) {
           case "CONFLUENCE":
