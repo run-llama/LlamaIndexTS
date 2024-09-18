@@ -25,16 +25,6 @@
         "types": "./dist/type/llm/bedrock.d.ts",
         "default": "./dist/llm/bedrock/index.cjs"
       }
-    },
-    "./retrievers": {
-      "import": {
-        "types": "./dist/type/retrievers/bedrock.d.ts",
-        "default": "./dist/retrievers/index.js"
-      },
-      "require": {
-        "types": "./dist/type/retrievers/bedrock.d.ts",
-        "default": "./dist/retrievers/index.cjs"
-      }
     }
   },
   "files": [
@@ -58,6 +48,7 @@
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.642.0",
     "@aws-sdk/client-bedrock-agent-runtime": "^3.642.0",
+    "llamaindex": "workspace:*",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
   }
