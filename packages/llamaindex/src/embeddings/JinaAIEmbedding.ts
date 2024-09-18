@@ -20,8 +20,9 @@ export type JinaEmbeddingRequest = {
   input: Array<{ text: string } | { url: string } | { bytes: string }>;
   model?: string;
   encoding_type?: EncodingType;
-  task_type?: TaskType;
+  task?: TaskType;
   dimensions?: number;
+  late_chunking?: boolean;
 };
 
 export type JinaEmbeddingResponse = {
@@ -44,9 +45,10 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
   apiKey: string;
   model: string;
   baseURL: string;
-  taskType: TaskType | undefined;
+  task?: TaskType | undefined;
   encodingType?: EncodingType | undefined;
   dimensions?: number | undefined;
+  late_chunking?: boolean | undefined;
 
   async getTextEmbedding(text: string): Promise<number[]> {
     const result = await this.getJinaEmbedding({ input: [{ text }] });
@@ -87,8 +89,10 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
     this.model = init?.model ?? "jina-embeddings-v3";
     this.baseURL = init?.baseURL ?? "https://api.jina.ai/v1/embeddings";
     init?.embedBatchSize && (this.embedBatchSize = init?.embedBatchSize);
-    this.taskType = init?.taskType;
+    this.task = init?.task;
     this.encodingType = init?.encodingType;
+    this.dimensions = init?.dimensions;
+    this.late_chunking = init?.late_chunking;
   }
 
   private async getImageInput(
@@ -125,8 +129,11 @@ export class JinaAIEmbedding extends MultiModalEmbedding {
       body: JSON.stringify({
         model: this.model,
         encoding_type: this.encodingType ?? "float",
-        ...(this.taskType && { task_type: this.taskType }),
+        ...(this.task && { task: this.task }),
         ...(this.dimensions !== undefined && { dimensions: this.dimensions }),
+        ...(this.late_chunking !== undefined && {
+          late_chunking: this.late_chunking,
+        }),
         ...params,
       }),
     });
