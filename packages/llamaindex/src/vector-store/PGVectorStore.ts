@@ -30,6 +30,9 @@ export type PGVectorStoreConfig = {
   dimensions?: number | undefined;
   embedModel?: BaseEmbedding | undefined;
 
+  /**
+   * Client configuration options for the pg client.
+   */
   clientConfigs?: pg.ClientConfig | undefined;
 };
 
@@ -66,15 +69,14 @@ export class PGVectorStore
    * PGDATABASE=your database name
    * PGPORT=your database port
    */
-  constructor(configs?: PGVectorStoreConfig | pg.ClientBase) {
-    const config = configs as PGVectorStoreConfig;
-    super(config?.embedModel);
-    this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
-    this.tableName = config?.tableName ?? PGVECTOR_TABLE;
-    this.database = config?.database;
-    this.connectionString = config?.connectionString;
-    this.dimensions = config?.dimensions ?? DEFAULT_DIMENSIONS;
-    this.clientConfigs = config?.clientConfigs ?? {};
+  constructor(configs?: PGVectorStoreConfig) {
+    super(configs?.embedModel);
+    this.schemaName = configs?.schemaName ?? PGVECTOR_SCHEMA;
+    this.tableName = configs?.tableName ?? PGVECTOR_TABLE;
+    this.database = configs?.database;
+    this.connectionString = configs?.connectionString;
+    this.dimensions = configs?.dimensions ?? DEFAULT_DIMENSIONS;
+    this.clientConfigs = configs?.clientConfigs ?? {};
   }
 
   /**
