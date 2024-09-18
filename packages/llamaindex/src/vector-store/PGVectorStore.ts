@@ -20,6 +20,8 @@ import { Document, MetadataMode } from "@llamaindex/core/schema";
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
 
+const DEFAULT_DIMENSIONS = 1536;
+
 export type PGVectorStoreConfig = {
   schemaName?: string | undefined;
   tableName?: string | undefined;
@@ -27,6 +29,8 @@ export type PGVectorStoreConfig = {
   connectionString?: string | undefined;
   dimensions?: number | undefined;
   embedModel?: BaseEmbedding | undefined;
+
+  clientConfigs?: pg.ClientConfig | undefined;
 };
 
 /**
@@ -45,9 +49,11 @@ export class PGVectorStore
 
   private database: string | undefined = undefined;
   private connectionString: string | undefined = undefined;
-  private dimensions: number = 1536;
+  private dimensions: number = DEFAULT_DIMENSIONS;
 
   private db?: pg.ClientBase;
+  private clientConfigs: pg.ClientConfig;
+  private dbConnected: boolean = false;
 
   /**
    * Constructs a new instance of the PGVectorStore
@@ -60,26 +66,15 @@ export class PGVectorStore
    * PGDATABASE=your database name
    * PGPORT=your database port
    */
-  constructor(configOrClient?: PGVectorStoreConfig | pg.ClientBase) {
-    // We cannot import pg from top level, it might have side effects
-    //  so we only check if the config.connect function exists
-    if (
-      configOrClient &&
-      "connect" in configOrClient &&
-      typeof configOrClient.connect === "function"
-    ) {
-      const db = configOrClient as pg.ClientBase;
-      super();
-      this.db = db;
-    } else {
-      const config = configOrClient as PGVectorStoreConfig;
-      super(config?.embedModel);
-      this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
-      this.tableName = config?.tableName ?? PGVECTOR_TABLE;
-      this.database = config?.database;
-      this.connectionString = config?.connectionString;
-      this.dimensions = config?.dimensions ?? 1536;
-    }
+  constructor(configs?: PGVectorStoreConfig | pg.ClientBase) {
+    const config = configs as PGVectorStoreConfig;
+    super(config?.embedModel);
+    this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
+    this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+    this.database = config?.database;
+    this.connectionString = config?.connectionString;
+    this.dimensions = config?.dimensions ?? DEFAULT_DIMENSIONS;
+    this.clientConfigs = config?.clientConfigs ?? {};
   }
 
   /**
@@ -114,10 +109,18 @@ export class PGVectorStore
         // Create DB connection
         // Read connection params from env - see comment block above
         const db = new Client({
+          ...this.clientConfigs,
           database: this.database,
           connectionString: this.connectionString,
         });
         await db.connect();
+
+        this.dbConnected = true;
+
+        db.on("end", () => {
+          // Connection closed
+          this.dbConnected = false;
+        });
 
         // Check vector extension
         await db.query("CREATE EXTENSION IF NOT EXISTS vector");
@@ -131,10 +134,19 @@ export class PGVectorStore
       }
     }
 
-    const db = this.db;
+    if (this.db && !this.dbConnected) {
+      try {
+        await this.db.connect();
+      } catch (error) {
+        console.error(error);
+        return Promise.reject(
+          error instanceof Error ? error : new Error(`${error}`),
+        );
+      }
+    }
 
     // Check schema, table(s), index(es)
-    await this.checkSchema(db);
+    await this.checkSchema(this.db);
 
     return Promise.resolve(this.db);
   }
