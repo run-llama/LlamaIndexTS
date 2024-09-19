@@ -1,6 +1,6 @@
 // test runtime
 import "llamaindex";
-import { ClipEmbedding } from "llamaindex/embeddings/ClipEmbedding";
+import { ClipEmbedding } from "llamaindex";
 import "llamaindex/readers/SimpleDirectoryReader";
 
 // @ts-expect-error

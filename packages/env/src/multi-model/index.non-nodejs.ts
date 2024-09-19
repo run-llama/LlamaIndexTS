@@ -1,9 +1,10 @@
-import { getTransformers, type OnLoad } from "./shared.js";
+import { getTransformers, setTransformers, type OnLoad } from "./shared.js";
 export {
   setTransformers,
   type LoadTransformerEvent,
   type OnLoad,
 } from "./shared.js";
+
 export async function loadTransformers(onLoad: OnLoad) {
   if (getTransformers() === null) {
     /**
@@ -18,9 +19,12 @@ export async function loadTransformers(onLoad: OnLoad) {
      *
      * Refs: https://github.com/xenova/transformers.js/issues/309
      */
-    console.warn('"@xenova/transformers" is not supported in this environment');
     console.warn(
-      "Please provide a custom implementation of the transformer, or use different alternatives",
+      '"@xenova/transformers" is not officially supported in this environment, some features may not work as expected.',
+    );
+    setTransformers(
+      // @ts-expect-error
+      await import("@xenova/transformers/dist/transformers"),
     );
   } else {
     return getTransformers()!;
