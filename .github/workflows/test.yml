@@ -13,7 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  POSTGRES_USER: ${{ env.USER }}
   POSTGRES_HOST_AUTH_METHOD: trust
 
 jobs:
