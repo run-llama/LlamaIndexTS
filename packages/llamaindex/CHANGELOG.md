@@ -1,5 +1,44 @@
 # llamaindex
 
+## 0.6.2
+
+### Patch Changes
+
+- 749b43a: fix: clip embedding transform function
+- Updated dependencies [b42adeb]
+- Updated dependencies [749b43a]
+  - @llamaindex/cloud@0.2.6
+  - @llamaindex/core@0.2.2
+  - @llamaindex/openai@0.1.4
+  - @llamaindex/groq@0.0.3
+
+## 0.6.1
+
+### Patch Changes
+
+- fbd5e01: refactor: move groq as llm package
+- 6b70c54: feat: update JinaAIEmbedding, support embedding v3
+- 1a6137b: feat: experimental support for browser
+
+  If you see bundler issue in next.js edge runtime, please bump to `next@14` latest version.
+
+- 85c2e19: feat: `@llamaindex/cloud` package update
+
+  - Bump to latest openapi schema
+  - Move LlamaParse class from llamaindex, this will allow you use llamaparse in more non-node.js environment
+
+- Updated dependencies [ac07e3c]
+- Updated dependencies [fbd5e01]
+- Updated dependencies [70ccb4a]
+- Updated dependencies [1a6137b]
+- Updated dependencies [85c2e19]
+- Updated dependencies [ac07e3c]
+  - @llamaindex/core@0.2.1
+  - @llamaindex/env@0.1.11
+  - @llamaindex/groq@0.0.2
+  - @llamaindex/cloud@0.2.5
+  - @llamaindex/openai@0.1.3
+
 ## 0.6.0
 
 ### Minor Changes

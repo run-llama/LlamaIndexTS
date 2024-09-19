@@ -1,5 +1,5 @@
 import {
-  MultiModalResponseSynthesizer,
+  getResponseSynthesizer,
   OpenAI,
   Settings,
   VectorStoreIndex,
@@ -27,13 +27,15 @@ async function main() {
   });
 
   const queryEngine = index.asQueryEngine({
-    responseSynthesizer: new MultiModalResponseSynthesizer(),
+    responseSynthesizer: getResponseSynthesizer("multi_modal"),
     retriever: index.asRetriever({ topK: { TEXT: 3, IMAGE: 1 } }),
   });
-  const stream = await queryEngine.query({
-    query: "Tell me more about Vincent van Gogh's famous paintings",
-    stream: true,
-  });
+  const stream = await queryEngine.query(
+    {
+      query: "Tell me more about Vincent van Gogh's famous paintings",
+    },
+    true,
+  );
   for await (const chunk of stream) {
     process.stdout.write(chunk.response);
   }

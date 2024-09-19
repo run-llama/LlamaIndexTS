@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./node-parser": {
@@ -157,6 +157,48 @@
         "types": "./dist/workflow/index.d.ts",
         "default": "./dist/workflow/index.js"
       }
+    },
+    "./memory": {
+      "require": {
+        "types": "./dist/memory/index.d.cts",
+        "default": "./dist/memory/index.cjs"
+      },
+      "import": {
+        "types": "./dist/memory/index.d.ts",
+        "default": "./dist/memory/index.js"
+      },
+      "default": {
+        "types": "./dist/memory/index.d.ts",
+        "default": "./dist/memory/index.js"
+      }
+    },
+    "./storage/chat-store": {
+      "require": {
+        "types": "./dist/storage/chat-store/index.d.cts",
+        "default": "./dist/storage/chat-store/index.cjs"
+      },
+      "import": {
+        "types": "./dist/storage/chat-store/index.d.ts",
+        "default": "./dist/storage/chat-store/index.js"
+      },
+      "default": {
+        "types": "./dist/storage/chat-store/index.d.ts",
+        "default": "./dist/storage/chat-store/index.js"
+      }
+    },
+    "./response-synthesizers": {
+      "require": {
+        "types": "./dist/response-synthesizers/index.d.cts",
+        "default": "./dist/response-synthesizers/index.cjs"
+      },
+      "import": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      },
+      "default": {
+        "types": "./dist/response-synthesizers/index.d.ts",
+        "default": "./dist/response-synthesizers/index.js"
+      }
     }
   },
   "files": [
@@ -182,6 +224,7 @@
   "dependencies": {
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.5.1",
+    "magic-bytes.js": "^1.10.0",
     "zod": "^3.23.8"
   }
 }

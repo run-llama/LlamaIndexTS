@@ -1,5 +1,26 @@
 # @llamaindex/autotool
 
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [749b43a]
+  - llamaindex@0.6.2
+
+## 3.0.1
+
+### Patch Changes
+
+- 1a6137b: feat: experimental support for browser
+
+  If you see bundler issue in next.js edge runtime, please bump to `next@14` latest version.
+
+- Updated dependencies [fbd5e01]
+- Updated dependencies [6b70c54]
+- Updated dependencies [1a6137b]
+- Updated dependencies [85c2e19]
+  - llamaindex@0.6.1
+
 ## 3.0.0
 
 ### Patch Changes

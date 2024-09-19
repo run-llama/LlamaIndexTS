@@ -1,5 +1,4 @@
-export { SimpleChatStore } from "./chatStore/SimpleChatStore.js";
-export * from "./chatStore/types.js";
+export * from "@llamaindex/core/storage/chat-store";
 export { PostgresDocumentStore } from "./docStore/PostgresDocumentStore.js";
 export { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 export * from "./docStore/types.js";

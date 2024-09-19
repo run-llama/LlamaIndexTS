@@ -5,9 +5,9 @@
  *
  * @module
  */
-import { INTERNAL_ENV } from "./utils.js";
+import { INTERNAL_ENV } from "./utils/index.js";
 
-export * from "./polyfill.js";
+export * from "./node-polyfill.js";
 
 export function getEnv(name: string): string | undefined {
   return INTERNAL_ENV[name];

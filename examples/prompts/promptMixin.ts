@@ -1,8 +1,7 @@
 import {
   Document,
+  getResponseSynthesizer,
   PromptTemplate,
-  ResponseSynthesizer,
-  TreeSummarize,
   TreeSummarizePrompt,
   VectorStoreIndex,
 } from "llamaindex";
@@ -27,9 +26,7 @@ async function main() {
 
   const query = "The quick brown fox jumps over the lazy dog";
 
-  const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new TreeSummarize(),
-  });
+  const responseSynthesizer = getResponseSynthesizer("tree_summarize");
 
   const queryEngine = index.asQueryEngine({
     responseSynthesizer,

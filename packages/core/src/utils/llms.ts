@@ -1,3 +1,5 @@
+import { fs } from "@llamaindex/env";
+import { filetypemime } from "magic-bytes.js";
 import type {
   ChatMessage,
   MessageContent,
@@ -5,8 +7,16 @@ import type {
   MessageContentTextDetail,
   ToolMetadata,
 } from "../llms";
+import type { BasePromptTemplate } from "../prompts";
 import type { QueryType } from "../query-engine";
 import type { ImageType } from "../schema";
+import {
+  type BaseNode,
+  ImageNode,
+  MetadataMode,
+  ModalityType,
+  splitNodesByType,
+} from "../schema";
 
 /**
  * Extracts just the text whether from
@@ -106,4 +116,100 @@ export function toToolDescriptions(tools: ToolMetadata[]): string {
   }, {});
 
   return JSON.stringify(toolsObj, null, 4);
+}
+
+async function blobToDataUrl(input: Blob) {
+  const buffer = Buffer.from(await input.arrayBuffer());
+  const mimes = filetypemime(buffer);
+  if (mimes.length < 1) {
+    throw new Error("Unsupported image type");
+  }
+  return "data:" + mimes[0] + ";base64," + buffer.toString("base64");
+}
+
+export async function imageToDataUrl(
+  input: ImageType | Uint8Array,
+): Promise<string> {
+  // first ensure, that the input is a Blob
+  if (
+    (input instanceof URL && input.protocol === "file:") ||
+    typeof input === "string"
+  ) {
+    // string or file URL
+    const dataBuffer = await fs.readFile(
+      input instanceof URL ? input.pathname : input,
+    );
+    input = new Blob([dataBuffer]);
+  } else if (!(input instanceof Blob)) {
+    if (input instanceof URL) {
+      throw new Error(`Unsupported URL with protocol: ${input.protocol}`);
+    } else if (input instanceof Uint8Array) {
+      input = new Blob([input]); // convert Uint8Array to Blob
+    } else {
+      throw new Error(`Unsupported input type: ${typeof input}`);
+    }
+  }
+  return await blobToDataUrl(input);
+}
+
+// eslint-disable-next-line max-params
+async function createContentPerModality(
+  prompt: BasePromptTemplate,
+  type: ModalityType,
+  nodes: BaseNode[],
+  extraParams: Record<string, string>,
+  metadataMode: MetadataMode,
+): Promise<MessageContentDetail[]> {
+  switch (type) {
+    case ModalityType.TEXT:
+      return [
+        {
+          type: "text",
+          text: prompt.format({
+            ...extraParams,
+            context: nodes.map((r) => r.getContent(metadataMode)).join("\n\n"),
+          }),
+        },
+      ];
+    case ModalityType.IMAGE:
+      const images: MessageContentDetail[] = await Promise.all(
+        (nodes as ImageNode[]).map(async (node) => {
+          return {
+            type: "image_url",
+            image_url: {
+              url: await imageToDataUrl(node.image),
+            },
+          } satisfies MessageContentDetail;
+        }),
+      );
+      return images;
+    default:
+      return [];
+  }
+}
+
+export async function createMessageContent(
+  prompt: BasePromptTemplate,
+  nodes: BaseNode[],
+  extraParams: Record<string, string> = {},
+  metadataMode: MetadataMode = MetadataMode.NONE,
+): Promise<MessageContentDetail[]> {
+  const content: MessageContentDetail[] = [];
+  const nodeMap = splitNodesByType(nodes);
+  for (const type in nodeMap) {
+    // for each retrieved modality type, create message content
+    const nodes = nodeMap[type as ModalityType];
+    if (nodes) {
+      content.push(
+        ...(await createContentPerModality(
+          prompt,
+          type as ModalityType,
+          nodes,
+          extraParams,
+          metadataMode,
+        )),
+      );
+    }
+  }
+  return content;
 }

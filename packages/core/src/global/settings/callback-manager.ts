@@ -6,8 +6,13 @@ import type {
   ToolCall,
   ToolOutput,
 } from "../../llms";
+import type { QueryEndEvent, QueryStartEvent } from "../../query-engine";
+import type {
+  SynthesizeEndEvent,
+  SynthesizeStartEvent,
+} from "../../response-synthesizers";
 import { TextNode } from "../../schema";
-import { EventCaller, getEventCaller } from "../../utils/event-caller";
+import { EventCaller, getEventCaller } from "../../utils";
 import type { UUID } from "../type";
 
 export type LLMStartEvent = {
@@ -60,6 +65,10 @@ export interface LlamaIndexEventMaps {
   "chunking-end": ChunkingEndEvent;
   "node-parsing-start": NodeParsingStartEvent;
   "node-parsing-end": NodeParsingEndEvent;
+  "query-start": QueryStartEvent;
+  "query-end": QueryEndEvent;
+  "synthesize-start": SynthesizeStartEvent;
+  "synthesize-end": SynthesizeEndEvent;
 }
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {
