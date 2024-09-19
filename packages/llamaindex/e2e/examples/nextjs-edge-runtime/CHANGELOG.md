@@ -1,5 +1,12 @@
 # test-edge-runtime
 
+## 0.1.65
+
+### Patch Changes
+
+- Updated dependencies [b48bcc3]
+  - llamaindex@0.6.4
+
 ## 0.1.64
 
 ### Patch Changes

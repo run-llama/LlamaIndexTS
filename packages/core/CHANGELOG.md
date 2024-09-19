@@ -1,5 +1,16 @@
 # @llamaindex/core
 
+## 0.2.4
+
+### Patch Changes
+
+- b48bcc3: feat: add `load-transformers` event type when loading `@xenova/transformers` module
+
+  This would benefit user who want to customize the transformer env.
+
+- Updated dependencies [b48bcc3]
+  - @llamaindex/env@0.1.12
+
 ## 0.2.3
 
 ### Patch Changes
