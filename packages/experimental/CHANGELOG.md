@@ -1,5 +1,21 @@
 # @llamaindex/experimental
 
+## 0.0.81
+
+### Patch Changes
+
+- 2cd1383: refactor: align `response-synthesizers` & `chat-engine` module
+
+  - builtin event system
+  - correct class extends
+  - aligin APIs, naming with llama-index python
+  - move stream out of first parameter to second parameter for the better tyep checking
+  - remove JSONQueryEngine in `@llamaindex/experimental`, as the code quality is not satisify and we will bring it back later
+
+- Updated dependencies [2cd1383]
+- Updated dependencies [5c4badb]
+  - llamaindex@0.6.3
+
 ## 0.0.80
 
 ### Patch Changes

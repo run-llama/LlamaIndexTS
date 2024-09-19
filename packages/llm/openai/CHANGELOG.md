@@ -1,5 +1,12 @@
 # @llamaindex/openai
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [2cd1383]
+  - @llamaindex/core@0.2.3
+
 ## 0.1.4
 
 ### Patch Changes
