@@ -5,11 +5,11 @@ import type {
   EngineResponse,
 } from "../index.edge.js";
 import { Anthropic } from "../llm/anthropic.js";
-import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 import {
   withContextAwareness,
   type ContextAwareConfig,
 } from "./contextAwareMixin.js";
+import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 
 export type AnthropicAgentParams = LLMAgentParams;
 
@@ -43,7 +43,9 @@ export class AnthropicAgent extends LLMAgent {
 
 export class AnthropicContextAwareAgent extends (withContextAwareness(
   AnthropicAgent,
-) as new (params: AnthropicAgentParams & ContextAwareConfig) => AnthropicAgent) {
+) as new (
+  params: AnthropicAgentParams & ContextAwareConfig,
+) => AnthropicAgent) {
   constructor(params: AnthropicAgentParams & ContextAwareConfig) {
     super(params);
   }
