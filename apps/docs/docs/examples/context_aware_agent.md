@@ -1,0 +1,63 @@
+---
+sidebar_position: 14
+---
+
+# Context-Aware Agent
+
+The Context-Aware Agent enhances the capabilities of standard LLM agents by incorporating relevant context from a retriever for each query. This allows the agent to provide more informed and specific responses based on the available information.
+
+## Usage
+
+Here's a simple example of how to use the Context-Aware Agent:
+
+```typescript
+import {
+  Document,
+  VectorStoreIndex,
+  OpenAIContextAwareAgent,
+  OpenAI,
+} from "llamaindex";
+
+async function createContextAwareAgent() {
+  // Create and index some documents
+  const documents = [
+    new Document({
+      text: "LlamaIndex is a data framework for LLM applications.",
+      id_: "doc1",
+    }),
+    new Document({
+      text: "The Eiffel Tower is located in Paris, France.",
+      id_: "doc2",
+    }),
+  ];
+
+  const index = await VectorStoreIndex.fromDocuments(documents);
+  const retriever = index.asRetriever({ similarityTopK: 1 });
+
+  // Create the Context-Aware Agent
+  const agent = new OpenAIContextAwareAgent({
+    llm: new OpenAI({ model: "gpt-3.5-turbo" }),
+    contextRetriever: retriever,
+  });
+
+  // Use the agent to answer queries
+  const response = await agent.chat({
+    message: "What is LlamaIndex used for?",
+  });
+
+  console.log("Agent Response:", response.response);
+}
+
+createContextAwareAgent().catch(console.error);
+```
+
+In this example, the Context-Aware Agent uses the retriever to fetch relevant context for each query, allowing it to provide more accurate and informed responses based on the indexed documents.
+
+## Key Components
+
+- `contextRetriever`: A retriever (e.g., from a VectorStoreIndex) that fetches relevant documents or passages for each query.
+
+## Available Context-Aware Agents
+
+- `OpenAIContextAwareAgent`: A context-aware agent using OpenAI's models.
+- `AnthropicContextAwareAgent`: A context-aware agent using Anthropic's models.

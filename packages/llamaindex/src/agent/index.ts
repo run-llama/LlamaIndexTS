@@ -4,10 +4,16 @@ export {
   type AnthropicAgentParams,
 } from "./anthropic.js";
 export { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
+export {
+  withContextAwareness,
+  type ContextAwareAgentRunner,
+  type ContextAwareConfig,
+} from "./contextAwareMixin.js";
 export { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 export {
   OpenAIAgent,
   OpenAIAgentWorker,
+  OpenAIContextAwareAgent,
   type OpenAIAgentParams,
 } from "./openai.js";
 export {
