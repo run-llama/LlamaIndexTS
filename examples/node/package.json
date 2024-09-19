@@ -1,5 +1,5 @@
 {
-  "name": "@llamaindex/examples",
+  "name": "@llamaindex/node-examples",
   "private": true,
   "version": "0.0.8",
   "dependencies": {

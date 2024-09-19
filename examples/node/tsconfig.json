@@ -7,7 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "./lib",
+    "outDir": "./node/lib",
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "incremental": true,
     "composite": true

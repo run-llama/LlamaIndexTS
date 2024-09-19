@@ -139,7 +139,7 @@ jobs:
       - name: Build
         run: pnpm run build
       - name: Copy examples
-        run: rsync -rv --exclude=node_modules ./examples ${{ runner.temp }}
+        run: rsync -rv --exclude=node_modules ./examples/node ${{ runner.temp }}
       - name: Pack @llamaindex/cloud
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/cloud
@@ -160,7 +160,7 @@ jobs:
         working-directory: packages/llamaindex
       - name: Install
         run: npm add ${{ runner.temp }}/*.tgz
-        working-directory: ${{ runner.temp }}/examples
+        working-directory: ${{ runner.temp }}/examples/node
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
-        working-directory: ${{ runner.temp }}/examples
+        working-directory: ${{ runner.temp }}/examples/node
