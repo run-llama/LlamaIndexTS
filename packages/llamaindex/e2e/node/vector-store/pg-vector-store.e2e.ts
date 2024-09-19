@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { Document, VectorStoreQueryMode } from "llamaindex";
 import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
 import assert from "node:assert";
@@ -12,6 +13,8 @@ test.afterEach(async () => {
 
 await test("init with client", async () => {
   pgClient = new pg.Client({
+    user: process.env.POSTGRES_USER ?? "user",
+    password: process.env.POSTGRES_PASSWORD ?? "password",
     database: "llamaindex_node_test",
   });
   await pgClient.connect();
@@ -23,6 +26,8 @@ await test("init with client", async () => {
 
 await test("init with pool", async () => {
   pgClient = new pg.Pool({
+    user: process.env.POSTGRES_USER ?? "user",
+    password: process.env.POSTGRES_PASSWORD ?? "password",
     database: "llamaindex_node_test",
   });
   await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
@@ -35,6 +40,8 @@ await test("init with pool", async () => {
 
 await test("init without client", async () => {
   const vectorStore = new PGVectorStore({
+    user: process.env.POSTGRES_USER ?? "user",
+    password: process.env.POSTGRES_PASSWORD ?? "password",
     database: "llamaindex_node_test",
   });
   pgClient = (await vectorStore.client()) as pg.Client;
@@ -52,6 +59,8 @@ await test("simple node", async () => {
     embedding: [0.1, 0.2, 0.3],
   });
   const vectorStore = new PGVectorStore({
+    user: process.env.POSTGRES_USER ?? "user",
+    password: process.env.POSTGRES_PASSWORD ?? "password",
     database: "llamaindex_node_test",
     dimensions,
     schemaName,
