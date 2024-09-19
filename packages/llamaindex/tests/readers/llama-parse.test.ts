@@ -17,7 +17,7 @@ const jobsHashMap = new Map<string, boolean>();
 const handlers = [
   http.post("https://api.cloud.llamaindex.ai/api/v1/parsing/upload", () => {
     return HttpResponse.json({
-      id: crypto.randomUUID(),
+      id: faker.string.uuid(),
     });
   }),
   http.get(
