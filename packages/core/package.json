@@ -1,7 +1,7 @@
 {
   "name": "@llamaindex/core",
   "type": "module",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "LlamaIndex Core Module",
   "exports": {
     "./node-parser": {
