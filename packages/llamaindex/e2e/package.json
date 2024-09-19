@@ -4,7 +4,7 @@
   "version": "0.0.7",
   "type": "module",
   "scripts": {
-    "e2e": "node --env-file .env.ci --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts",
+    "e2e": "node --import tsx --import ./mock-register.js --test ./node/**/*.e2e.ts",
     "e2e:nomock": "node --import tsx --test ./node/**/*.e2e.ts",
     "e2e:updatesnap": "UPDATE_SNAPSHOT=1 node --import tsx --test ./node/**/*.e2e.ts"
   },
@@ -12,6 +12,7 @@
     "@faker-js/faker": "^9.0.1",
     "@types/node": "^22.5.1",
     "consola": "^3.2.3",
+    "dotenv": "^16.4.5",
     "llamaindex": "workspace:*",
     "tsx": "^4.19.0"
   }

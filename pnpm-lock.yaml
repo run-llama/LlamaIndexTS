@@ -683,6 +683,9 @@ importers:
       consola:
         specifier: ^3.2.3
         version: 3.2.3
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       llamaindex:
         specifier: workspace:*
         version: link:..
