@@ -1,0 +1,17 @@
+{
+  "name": "@llamaindex/extism-tools-examples",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test:wiki": "tsx ./src/wiki.ts",
+    "test:todo": "tsx ./src/todo.ts"
+  },
+  "dependencies": {
+    "@llamaindex/extism-tools": "workspace:*",
+    "llamaindex": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}

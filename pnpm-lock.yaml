@@ -494,6 +494,50 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
 
+  packages/extism-tools:
+    dependencies:
+      '@extism/extism':
+        specifier: ^2.0.0-rc8
+        version: 2.0.0-rc8
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../env
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
+      llamaindex:
+        specifier: workspace:*
+        version: link:../llamaindex
+    devDependencies:
+      '@swc/cli':
+        specifier: ^0.4.0
+        version: 0.4.0(@swc/core@1.7.22(@swc/helpers@0.5.13))(chokidar@3.6.0)
+      '@swc/core':
+        specifier: ^1.7.22
+        version: 1.7.22(@swc/helpers@0.5.13)
+      '@types/node':
+        specifier: ^22.5.1
+        version: 22.5.4
+      typescript:
+        specifier: ^5.5.4
+        version: 5.6.2
+
+  packages/extism-tools/examples:
+    dependencies:
+      '@llamaindex/extism-tools':
+        specifier: workspace:*
+        version: link:..
+      llamaindex:
+        specifier: workspace:*
+        version: link:../../llamaindex
+    devDependencies:
+      tsx:
+        specifier: ^4.19.0
+        version: 4.19.0
+
   packages/llamaindex:
     dependencies:
       '@anthropic-ai/sdk':
@@ -2866,6 +2910,9 @@ packages:
   '@eslint/plugin-kit@0.1.0':
     resolution: {integrity: sha512-autAXT203ixhqei9xt+qkYOvY8l6LAFIdT2UXc/RPNeUVfqRF1BV94GTJyVPFKT8nFM6MyVJhjLj9E8JWvf5zQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@extism/extism@2.0.0-rc8':
+    resolution: {integrity: sha512-a90ti82PDEiuANoDlFVBMjlW/sLnJl9zGSzvYY3eydX2cQyFA8AsdmC4JUWLK+NEP9eeta83+6N5B8UwYG33bw==}
 
   '@faker-js/faker@8.4.1':
     resolution: {integrity: sha512-XQ3cU+Q8Uqmrbf2e0cIC/QN43sTBSC8KF12u29Mb47tWrt2hAgBXSgpZMj4Ao8Uk0iJcU99QsOCaIL8934obCg==}
@@ -14535,6 +14582,8 @@ snapshots:
     dependencies:
       levn: 0.4.1
     optional: true
+
+  '@extism/extism@2.0.0-rc8': {}
 
   '@faker-js/faker@8.4.1': {}
 
