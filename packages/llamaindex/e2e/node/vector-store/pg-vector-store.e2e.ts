@@ -11,6 +11,10 @@ test.afterEach(async () => {
   await pgClient.end();
 });
 
+console.warn('debugging');
+console.warn(process.env.POSTGRES_USER);
+console.warn(process.env.POSTGRES_PASSWORD);
+
 const pgConfig = {
   user: process.env.POSTGRES_USER ?? "user",
   password: process.env.POSTGRES_PASSWORD ?? "password",
