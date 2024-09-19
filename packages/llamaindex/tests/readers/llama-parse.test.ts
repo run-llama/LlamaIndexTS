@@ -170,7 +170,7 @@ test("llama parse should return a successful document", async () => {
     verbose: false,
     apiKey: "llx-fake-api-key",
   });
-  const fileUrl = new URL("../../e2e/fixtures/pdf/TOS.pdf", import.meta.url);
+  const fileUrl = new URL("../../../../examples/data/TOS.pdf", import.meta.url);
   const documents = await reader.loadData(fileURLToPath(fileUrl));
   expect(documents.length).toBe(1);
 });
