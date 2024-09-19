@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  POSTGRES_USER: runneradmin
   POSTGRES_PASSWORD: ""
   POSTGRES_HOST_AUTH_METHOD: trust
 

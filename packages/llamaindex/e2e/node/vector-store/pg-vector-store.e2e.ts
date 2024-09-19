@@ -12,7 +12,7 @@ test.afterEach(async () => {
 });
 
 const pgConfig = {
-  user: process.env.POSTGRES_USER ?? process.env.USER ?? "user",
+  user: process.env.POSTGRES_USER ?? "user",
   password: process.env.POSTGRES_PASSWORD ?? "password",
   database: "llamaindex_node_test",
 };
