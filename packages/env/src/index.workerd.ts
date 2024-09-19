@@ -13,4 +13,10 @@ export function getEnv(name: string): string | undefined {
   return INTERNAL_ENV[name];
 }
 
+export {
+  loadTransformers,
+  setTransformers,
+  type LoadTransformerEvent,
+  type OnLoad,
+} from "./multi-model/index.non-nodejs.js";
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";
