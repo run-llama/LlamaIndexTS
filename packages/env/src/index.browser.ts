@@ -6,6 +6,12 @@
 import "./global-check.js";
 export * from "./web-polyfill.js";
 
+export {
+  loadTransformers,
+  setTransformers,
+  type LoadTransformerEvent,
+  type OnLoad,
+} from "./multi-model/index.browser.js";
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";
 
 // @ts-expect-error
