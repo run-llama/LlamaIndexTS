@@ -2,6 +2,8 @@ import {
   type ChoiceSelectPrompt,
   defaultChoiceSelectPrompt,
 } from "@llamaindex/core/prompts";
+import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { getResponseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type {
   BaseNode,
   Document,
@@ -23,12 +25,6 @@ import type {
   BaseDocumentStore,
   RefDocInfo,
 } from "../../storage/docStore/types.js";
-import type { BaseSynthesizer } from "../../synthesizers/index.js";
-import {
-  CompactAndRefine,
-  ResponseSynthesizer,
-} from "../../synthesizers/index.js";
-import type { QueryEngine } from "../../types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
 import { BaseIndex } from "../BaseIndex.js";
 import { IndexList, IndexStructType } from "../json-to-index-struct.js";
@@ -178,7 +174,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     responseSynthesizer?: BaseSynthesizer;
     preFilters?: unknown;
     nodePostprocessors?: BaseNodePostprocessor[];
-  }): QueryEngine & RetrieverQueryEngine {
+  }): RetrieverQueryEngine {
     let { retriever, responseSynthesizer } = options ?? {};
 
     if (!retriever) {
@@ -186,11 +182,7 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     }
 
     if (!responseSynthesizer) {
-      const responseBuilder = new CompactAndRefine(this.serviceContext);
-      responseSynthesizer = new ResponseSynthesizer({
-        serviceContext: this.serviceContext,
-        responseBuilder,
-      });
+      responseSynthesizer = getResponseSynthesizer("compact");
     }
 
     return new RetrieverQueryEngine(

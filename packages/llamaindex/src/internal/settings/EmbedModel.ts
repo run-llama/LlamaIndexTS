@@ -1,6 +1,6 @@
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { AsyncLocalStorage } from "@llamaindex/env";
-import { OpenAIEmbedding } from "../../embeddings/OpenAIEmbedding.js";
+import { OpenAIEmbedding } from "@llamaindex/openai";
 
 const embeddedModelAsyncLocalStorage = new AsyncLocalStorage<BaseEmbedding>();
 let globalEmbeddedModel: BaseEmbedding | null = null;

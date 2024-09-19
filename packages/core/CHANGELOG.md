@@ -1,5 +1,29 @@
 # @llamaindex/core
 
+## 0.2.2
+
+### Patch Changes
+
+- 749b43a: fix: clip embedding transform function
+
+## 0.2.1
+
+### Patch Changes
+
+- ac07e3c: fix: replace instanceof check with `.type` check
+- 70ccb4a: Allow arbitrary types in workflow's StartEvent and StopEvent
+- ac07e3c: fix: add `console.warn` when import dual module
+- Updated dependencies [ac07e3c]
+- Updated dependencies [1a6137b]
+- Updated dependencies [ac07e3c]
+  - @llamaindex/env@0.1.11
+
+## 0.2.0
+
+### Minor Changes
+
+- 11feef8: Add workflows
+
 ## 0.1.12
 
 ### Patch Changes

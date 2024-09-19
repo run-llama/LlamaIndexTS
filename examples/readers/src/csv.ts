@@ -1,8 +1,7 @@
 import {
-  CompactAndRefine,
+  getResponseSynthesizer,
   OpenAI,
   PromptTemplate,
-  ResponseSynthesizer,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
@@ -29,8 +28,8 @@ Given the CSV file, generate me Typescript code to answer the question: {query}.
 `,
   });
 
-  const responseSynthesizer = new ResponseSynthesizer({
-    responseBuilder: new CompactAndRefine(undefined, csvPrompt),
+  const responseSynthesizer = getResponseSynthesizer("compact", {
+    textQATemplate: csvPrompt,
   });
 
   const queryEngine = index.asQueryEngine({ responseSynthesizer });

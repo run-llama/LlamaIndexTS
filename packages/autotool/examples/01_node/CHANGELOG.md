@@ -1,5 +1,49 @@
 # @llamaindex/autotool-01-node-example
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [749b43a]
+  - llamaindex@0.6.2
+  - @llamaindex/autotool@3.0.2
+
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [fbd5e01]
+- Updated dependencies [6b70c54]
+- Updated dependencies [1a6137b]
+- Updated dependencies [85c2e19]
+  - llamaindex@0.6.1
+  - @llamaindex/autotool@3.0.1
+
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [11feef8]
+  - llamaindex@0.6.0
+  - @llamaindex/autotool@3.0.0
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [7edeb1c]
+  - llamaindex@0.5.27
+  - @llamaindex/autotool@2.0.1
+
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [ffe0cd1]
+- Updated dependencies [ffe0cd1]
+  - llamaindex@0.5.26
+  - @llamaindex/autotool@2.0.1
+
 ## 0.0.6
 
 ### Patch Changes

@@ -1,4 +1,4 @@
-export { wrapEventCaller } from "./event-caller";
+export { EventCaller, getEventCaller, wrapEventCaller } from "./event-caller";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
@@ -47,10 +47,12 @@ export async function* streamReducer<S, D>(params: {
 export { wrapLLMEvent } from "./wrap-llm-event";
 
 export {
+  createMessageContent,
   extractDataUrlComponents,
   extractImage,
   extractSingleText,
   extractText,
+  imageToDataUrl,
   messagesToHistory,
   toToolDescriptions,
 } from "./llms";
