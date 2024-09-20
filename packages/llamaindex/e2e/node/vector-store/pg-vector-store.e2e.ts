@@ -1,3 +1,5 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
+import { config } from "dotenv";
 import { Document, VectorStoreQueryMode } from "llamaindex";
 import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
 import assert from "node:assert";
@@ -5,43 +7,56 @@ import { test } from "node:test";
 import pg from "pg";
 import { registerTypes } from "pgvector/pg";
 
-let pgClient: pg.Client | pg.Pool;
-test.afterEach(async () => {
-  await pgClient.end();
-});
+config({ path: [".env.local", ".env", ".env.ci"] });
 
-await test("init with client", async () => {
-  pgClient = new pg.Client({
-    database: "llamaindex_node_test",
-  });
+const pgConfig = {
+  user: process.env.POSTGRES_USER ?? "user",
+  password: process.env.POSTGRES_PASSWORD ?? "password",
+  database: "llamaindex_node_test",
+};
+
+await test("init with client", async (t) => {
+  const pgClient = new pg.Client(pgConfig);
   await pgClient.connect();
   await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
   await registerTypes(pgClient);
-  const vectorStore = new PGVectorStore(pgClient);
+  t.after(async () => {
+    await pgClient.end();
+  });
+  const vectorStore = new PGVectorStore({
+    client: pgClient,
+    shouldConnect: false,
+  });
   assert.deepStrictEqual(await vectorStore.client(), pgClient);
 });
 
-await test("init with pool", async () => {
-  pgClient = new pg.Pool({
-    database: "llamaindex_node_test",
-  });
+await test("init with pool", async (t) => {
+  const pgClient = new pg.Pool(pgConfig);
   await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
   const client = await pgClient.connect();
+  await client.query("CREATE EXTENSION IF NOT EXISTS vector");
   await registerTypes(client);
-  const vectorStore = new PGVectorStore(client);
+  t.after(async () => {
+    client.release();
+    await pgClient.end();
+  });
+  const vectorStore = new PGVectorStore({
+    shouldConnect: false,
+    client,
+  });
   assert.deepStrictEqual(await vectorStore.client(), client);
-  client.release();
 });
 
-await test("init without client", async () => {
-  const vectorStore = new PGVectorStore({
-    database: "llamaindex_node_test",
+await test("init without client", async (t) => {
+  const vectorStore = new PGVectorStore({ clientConfig: pgConfig });
+  const pgClient = (await vectorStore.client()) as pg.Client;
+  t.after(async () => {
+    await pgClient.end();
   });
-  pgClient = (await vectorStore.client()) as pg.Client;
   assert.notDeepStrictEqual(pgClient, undefined);
 });
 
-await test("simple node", async () => {
+await test("simple node", async (t) => {
   const dimensions = 3;
   const schemaName =
     "llamaindex_vector_store_test_" + Math.random().toString(36).substring(7);
@@ -52,9 +67,13 @@ await test("simple node", async () => {
     embedding: [0.1, 0.2, 0.3],
   });
   const vectorStore = new PGVectorStore({
-    database: "llamaindex_node_test",
+    clientConfig: pgConfig,
     dimensions,
     schemaName,
+  });
+  const pgClient = (await vectorStore.client()) as pg.Client;
+  t.after(async () => {
+    await pgClient.end();
   });
 
   await vectorStore.add([node]);
@@ -85,6 +104,4 @@ await test("simple node", async () => {
     });
     assert.deepStrictEqual(result.nodes, []);
   }
-
-  pgClient = (await vectorStore.client()) as pg.Client;
 });
