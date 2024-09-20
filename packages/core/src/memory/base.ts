@@ -12,15 +12,36 @@ export const DEFAULT_CHAT_STORE_KEY = "chat_history";
 export abstract class BaseMemory<
   AdditionalMessageOptions extends object = object,
 > {
+  /**
+   * Retrieves messages from the memory, optionally including transient messages.
+   * Compared to getAllMessages, this method a) allows for transient messages to be included in the retrieval and b) may return a subset of the total messages by applying a token limit.
+   * @param transientMessages Optional array of temporary messages to be included in the retrieval.
+   * These messages are not stored in the memory but are considered for the current interaction.
+   * @returns An array of chat messages, either synchronously or as a Promise.
+   */
   abstract getMessages(
-    input?: ChatMessage<AdditionalMessageOptions>[] | undefined,
+    transientMessages?: ChatMessage<AdditionalMessageOptions>[] | undefined,
   ):
     | ChatMessage<AdditionalMessageOptions>[]
     | Promise<ChatMessage<AdditionalMessageOptions>[]>;
+
+  /**
+   * Retrieves all messages stored in the memory.
+   * @returns An array of all chat messages, either synchronously or as a Promise.
+   */
   abstract getAllMessages():
     | ChatMessage<AdditionalMessageOptions>[]
     | Promise<ChatMessage<AdditionalMessageOptions>[]>;
+
+  /**
+   * Adds a new message to the memory.
+   * @param messages The chat message to be added to the memory.
+   */
   abstract put(messages: ChatMessage<AdditionalMessageOptions>): void;
+
+  /**
+   * Clears all messages from the memory.
+   */
   abstract reset(): void;
 
   protected _tokenCountForMessages(messages: ChatMessage[]): number {

@@ -34,7 +34,7 @@ export class ChatMemoryBuffer<
   }
 
   getMessages(
-    input?: ChatMessage<AdditionalMessageOptions>[] | undefined,
+    transientMessages?: ChatMessage<AdditionalMessageOptions>[] | undefined,
     initialTokenCount: number = 0,
   ) {
     const messages = this.getAllMessages();
@@ -44,7 +44,9 @@ export class ChatMemoryBuffer<
     }
 
     // Add input messages as transient messages
-    const messagesWithInput = input ? [...input, ...messages] : messages;
+    const messagesWithInput = transientMessages
+      ? [...transientMessages, ...messages]
+      : messages;
 
     let messageCount = messagesWithInput.length;
     let currentMessages = messagesWithInput.slice(-messageCount);
