@@ -17,12 +17,14 @@ const pgConfig = {
 
 await test("init with client", async (t) => {
   const pgClient = new pg.Client(pgConfig);
+  await pgClient.connect();
   await registerTypes(pgClient);
   t.after(async () => {
     await pgClient.end();
   });
   const vectorStore = new PGVectorStore({
     client: pgClient,
+    shouldConnect: false,
   });
   assert.deepStrictEqual(await vectorStore.client(), pgClient);
 });
@@ -34,6 +36,7 @@ await test("init with pool", async (t) => {
   });
   await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
   const client = await pgClient.connect();
+  await registerTypes(client);
   const vectorStore = new PGVectorStore({
     shouldConnect: false,
     client,
