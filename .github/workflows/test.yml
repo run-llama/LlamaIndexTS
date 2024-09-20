@@ -16,6 +16,7 @@ env:
   POSTGRES_HOST_AUTH_METHOD: trust
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  TURBO_REMOTE_ONLY: true
 
 jobs:
   e2e:
@@ -45,11 +46,8 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: Build
-        run: pnpm run build:release
       - name: Run E2E Tests
         run: pnpm run e2e
-        working-directory: packages/llamaindex/e2e
 
   test:
     strategy:
