@@ -1,5 +1,5 @@
 import { Settings } from "../global";
-import type { ChatMessage, MessageContent } from "../llms";
+import type { ChatMessage } from "../llms";
 import { type BaseChatStore, SimpleChatStore } from "../storage/chat-store";
 import { extractText } from "../utils";
 
@@ -13,7 +13,7 @@ export abstract class BaseMemory<
   AdditionalMessageOptions extends object = object,
 > {
   abstract getMessages(
-    input?: MessageContent | undefined,
+    input?: ChatMessage<AdditionalMessageOptions>[] | undefined,
   ):
     | ChatMessage<AdditionalMessageOptions>[]
     | Promise<ChatMessage<AdditionalMessageOptions>[]>;

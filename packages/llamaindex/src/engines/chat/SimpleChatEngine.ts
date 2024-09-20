@@ -40,7 +40,7 @@ export class SimpleChatEngine implements ChatEngine {
       ? new ChatMemoryBuffer({
           chatHistory:
             params.chatHistory instanceof BaseMemory
-              ? await params.chatHistory.getMessages(message)
+              ? await params.chatHistory.getMessages()
               : params.chatHistory,
         })
       : this.chatHistory;
@@ -48,7 +48,7 @@ export class SimpleChatEngine implements ChatEngine {
 
     if (stream) {
       const stream = await this.llm.chat({
-        messages: await chatHistory.getMessages(params.message),
+        messages: await chatHistory.getMessages(),
         stream: true,
       });
       return streamConverter(
@@ -66,7 +66,7 @@ export class SimpleChatEngine implements ChatEngine {
 
     const response = await this.llm.chat({
       stream: false,
-      messages: await chatHistory.getMessages(params.message),
+      messages: await chatHistory.getMessages(),
     });
     chatHistory.put(response.message);
     return EngineResponse.fromChatResponse(response);

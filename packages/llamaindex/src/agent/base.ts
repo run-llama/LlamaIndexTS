@@ -356,9 +356,8 @@ export abstract class AgentRunner<
     let chatHistory: ChatMessage<AdditionalMessageOptions>[] = [];
 
     if (params.chatHistory instanceof BaseMemory) {
-      chatHistory = (await params.chatHistory.getMessages(
-        params.message,
-      )) as ChatMessage<AdditionalMessageOptions>[];
+      chatHistory =
+        (await params.chatHistory.getMessages()) as ChatMessage<AdditionalMessageOptions>[];
     } else {
       chatHistory =
         params.chatHistory as ChatMessage<AdditionalMessageOptions>[];
