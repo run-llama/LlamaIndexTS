@@ -14,31 +14,44 @@ import {
 import { escapeLikeString } from "./utils.js";
 
 import type { BaseEmbedding } from "@llamaindex/core/embeddings";
+import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
+export const DEFAULT_DIMENSIONS = 1536;
 
-const DEFAULT_DIMENSIONS = 1536;
-
-export type PGVectorStoreConfig = {
+type PGVectorStoreBaseConfig = {
   schemaName?: string | undefined;
   tableName?: string | undefined;
-  database?: string | undefined;
-  connectionString?: string | undefined;
   dimensions?: number | undefined;
   embedModel?: BaseEmbedding | undefined;
-
-  /**
-   * Client configuration options for the pg client.
-   */
-  clientConfigs?: pg.ClientConfig | undefined;
 };
+
+export type PGVectorStoreConfig = PGVectorStoreBaseConfig &
+  (
+    | {
+        /**
+         * Client configuration options for the pg client.
+         *
+         * {@link https://node-postgres.com/apis/client#new-client PostgresSQL Client API}
+         */
+        clientConfig: pg.ClientConfig;
+      }
+    | {
+        /**
+         * A pg client or pool client instance.
+         * If provided, make sure it is not connected to the database yet, or it will throw an error.
+         */
+        shouldConnect?: boolean | undefined;
+        client: pg.Client | pg.PoolClient;
+      }
+  );
 
 /**
  * Provides support for writing and querying vector data in Postgres.
- * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres.html)
+ * Note: Can't be used with data created using the Python version of the vector store (https://docs.llamaindex.ai/en/stable/examples/vector_stores/postgres/)
  */
 export class PGVectorStore
   extends VectorStoreBase
@@ -46,37 +59,27 @@ export class PGVectorStore
 {
   storesText: boolean = true;
 
-  private collection: string = "";
-  private schemaName: string = PGVECTOR_SCHEMA;
-  private tableName: string = PGVECTOR_TABLE;
+  private collection: string = DEFAULT_COLLECTION;
+  private readonly schemaName: string = PGVECTOR_SCHEMA;
+  private readonly tableName: string = PGVECTOR_TABLE;
+  private readonly dimensions: number = DEFAULT_DIMENSIONS;
 
-  private database: string | undefined = undefined;
-  private connectionString: string | undefined = undefined;
-  private dimensions: number = DEFAULT_DIMENSIONS;
+  private isDBConnected: boolean = false;
+  private db: pg.ClientBase | null = null;
+  private readonly clientConfig: pg.ClientConfig | null = null;
 
-  private db?: pg.ClientBase;
-  private clientConfigs: pg.ClientConfig;
-  private dbConnected: boolean = false;
-
-  /**
-   * Constructs a new instance of the PGVectorStore
-   *
-   * If the `connectionString` is not provided the following env variables are
-   * used to connect to the DB:
-   * PGHOST=your database host
-   * PGUSER=your database user
-   * PGPASSWORD=your database password
-   * PGDATABASE=your database name
-   * PGPORT=your database port
-   */
-  constructor(configs?: PGVectorStoreConfig) {
-    super(configs?.embedModel);
-    this.schemaName = configs?.schemaName ?? PGVECTOR_SCHEMA;
-    this.tableName = configs?.tableName ?? PGVECTOR_TABLE;
-    this.database = configs?.database;
-    this.connectionString = configs?.connectionString;
-    this.dimensions = configs?.dimensions ?? DEFAULT_DIMENSIONS;
-    this.clientConfigs = configs?.clientConfigs ?? {};
+  constructor(config: PGVectorStoreConfig) {
+    super(config?.embedModel);
+    this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
+    this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+    this.dimensions = config?.dimensions ?? DEFAULT_DIMENSIONS;
+    if ("clientConfig" in config) {
+      this.clientConfig = config.clientConfig;
+    } else {
+      this.isDBConnected =
+        config.shouldConnect !== undefined ? !config.shouldConnect : false;
+      this.db = config.client;
+    }
   }
 
   /**
@@ -103,54 +106,41 @@ export class PGVectorStore
 
   private async getDb(): Promise<pg.ClientBase> {
     if (!this.db) {
-      try {
-        const pg = await import("pg");
-        const { Client } = pg.default ? pg.default : pg;
+      const pg = await import("pg");
+      const { Client } = pg.default ? pg.default : pg;
 
-        const { registerType } = await import("pgvector/pg");
-        // Create DB connection
-        // Read connection params from env - see comment block above
-        const db = new Client({
-          ...this.clientConfigs,
-          database: this.database,
-          connectionString: this.connectionString,
-        });
-        await db.connect();
+      const { registerType } = await import("pgvector/pg");
+      // Create DB connection
+      // Read connection params from env - see comment block above
+      const db = new Client({
+        ...this.clientConfig,
+      });
 
-        this.dbConnected = true;
+      await db.connect();
+      this.isDBConnected = true;
 
-        db.on("end", () => {
-          // Connection closed
-          this.dbConnected = false;
-        });
+      // Check vector extension
+      await db.query("CREATE EXTENSION IF NOT EXISTS vector");
+      await registerType(db);
 
-        // Check vector extension
-        await db.query("CREATE EXTENSION IF NOT EXISTS vector");
-        await registerType(db);
-
-        // All good?  Keep the connection reference
-        this.db = db;
-      } catch (err) {
-        console.error(err);
-        return Promise.reject(err instanceof Error ? err : new Error(`${err}`));
-      }
+      // All good?  Keep the connection reference
+      this.db = db;
     }
 
-    if (this.db && !this.dbConnected) {
-      try {
-        await this.db.connect();
-      } catch (error) {
-        console.error(error);
-        return Promise.reject(
-          error instanceof Error ? error : new Error(`${error}`),
-        );
-      }
+    if (this.db && !this.isDBConnected) {
+      await this.db.connect();
+      this.isDBConnected = true;
     }
+
+    this.db.on("end", () => {
+      // Connection closed
+      this.isDBConnected = false;
+    });
 
     // Check schema, table(s), index(es)
     await this.checkSchema(this.db);
 
-    return Promise.resolve(this.db);
+    return this.db;
   }
 
   private async checkSchema(db: pg.ClientBase) {
