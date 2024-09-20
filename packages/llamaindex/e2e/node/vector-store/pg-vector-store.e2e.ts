@@ -5,6 +5,7 @@ import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
 import assert from "node:assert";
 import { test } from "node:test";
 import pg from "pg";
+import { registerTypes } from "pgvector/pg";
 
 config({ path: [".env.local", ".env", ".env.ci"] });
 
@@ -16,6 +17,7 @@ const pgConfig = {
 
 await test("init with client", async (t) => {
   const pgClient = new pg.Client(pgConfig);
+  await registerTypes(pgClient);
   t.after(async () => {
     await pgClient.end();
   });

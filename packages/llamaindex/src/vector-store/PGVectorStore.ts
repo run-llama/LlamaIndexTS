@@ -109,7 +109,7 @@ export class PGVectorStore
       const pg = await import("pg");
       const { Client } = pg.default ? pg.default : pg;
 
-      const { registerType } = await import("pgvector/pg");
+      const { registerTypes } = await import("pgvector/pg");
       // Create DB connection
       // Read connection params from env - see comment block above
       const db = new Client({
@@ -121,7 +121,7 @@ export class PGVectorStore
 
       // Check vector extension
       await db.query("CREATE EXTENSION IF NOT EXISTS vector");
-      await registerType(db);
+      await registerTypes(db);
 
       // All good?  Keep the connection reference
       this.db = db;
