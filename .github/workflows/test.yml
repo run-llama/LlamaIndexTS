@@ -26,7 +26,6 @@ jobs:
         node-version: [18.x, 20.x, 22.x]
     name: E2E on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
-    container: node:20-bookworm-slim
     services:
       postgres:
         image: postgres
