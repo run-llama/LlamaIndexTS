@@ -1,5 +1,12 @@
 # @llamaindex/next-agent-test
 
+## 0.1.67
+
+### Patch Changes
+
+- Updated dependencies [e9714db]
+  - llamaindex@0.6.5
+
 ## 0.1.66
 
 ### Patch Changes
