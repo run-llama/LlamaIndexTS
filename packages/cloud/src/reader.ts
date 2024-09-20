@@ -229,20 +229,18 @@ export class LlamaParseReader extends FileReader {
   }
 
   // Create a job for the LlamaParse API
-  private async createJob(
-    data: Uint8Array,
-    fileName: string = "unknown",
-  ): Promise<string> {
+  private async createJob(data: Uint8Array): Promise<string> {
     // Load data, set the mime type
-    const { mime, extension } = await LlamaParseReader.getMimeType(data);
+    const { mime } = await LlamaParseReader.getMimeType(data);
 
     if (this.verbose) {
-      const name = fileName ? fileName : extension;
-      console.log(`Starting load for ${name} file`);
+      console.log("Started uploading the file");
     }
 
     const body = {
-      file: new File([data], fileName, { type: mime }),
+      file: new Blob([data], {
+        type: mime,
+      }),
       language: this.language,
       parsing_instruction: this.parsingInstruction,
       skip_diagonal_text: this.skipDiagonalText,
@@ -373,14 +371,10 @@ export class LlamaParseReader extends FileReader {
    * To be used with resultType = "text" and "markdown"
    *
    * @param {Uint8Array} fileContent - The content of the file to be loaded.
-   * @param {string} [fileName] - The optional name of the file to be loaded.
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
-  async loadDataAsContent(
-    fileContent: Uint8Array,
-    fileName?: string,
-  ): Promise<Document[]> {
-    return this.createJob(fileContent, fileName)
+  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
+    return this.createJob(fileContent)
       .then(async (jobId) => {
         if (this.verbose) {
           console.log(`Started parsing the file under job id ${jobId}`);
@@ -403,6 +397,7 @@ export class LlamaParseReader extends FileReader {
       })
       .catch((error) => {
         if (this.ignoreErrors) {
+          console.warn(`Error while parsing the file: ${error.message}`);
           return [];
         } else {
           throw error;
@@ -437,8 +432,8 @@ export class LlamaParseReader extends FileReader {
       resultJson.file_path = isFilePath ? filePathOrContent : undefined;
       return [resultJson];
     } catch (e) {
-      console.error(`Error while parsing the file under job id ${jobId}`, e);
       if (this.ignoreErrors) {
+        console.error(`Error while parsing the file under job id ${jobId}`, e);
         return [];
       } else {
         throw e;

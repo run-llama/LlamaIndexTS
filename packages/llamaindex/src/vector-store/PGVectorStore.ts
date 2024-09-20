@@ -20,11 +20,12 @@ import { Document, MetadataMode } from "@llamaindex/core/schema";
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";
 
-export type PGVectorStoreConfig = {
+export type PGVectorStoreConfig = Pick<
+  pg.ClientConfig,
+  "user" | "database" | "password" | "connectionString"
+> & {
   schemaName?: string | undefined;
   tableName?: string | undefined;
-  database?: string | undefined;
-  connectionString?: string | undefined;
   dimensions?: number | undefined;
   embedModel?: BaseEmbedding | undefined;
 };
@@ -43,8 +44,12 @@ export class PGVectorStore
   private schemaName: string = PGVECTOR_SCHEMA;
   private tableName: string = PGVECTOR_TABLE;
 
-  private database: string | undefined = undefined;
-  private connectionString: string | undefined = undefined;
+  private user: pg.ClientConfig["user"] | undefined = undefined;
+  private password: pg.ClientConfig["password"] | undefined = undefined;
+  private database: pg.ClientConfig["database"] | undefined = undefined;
+  private connectionString: pg.ClientConfig["connectionString"] | undefined =
+    undefined;
+
   private dimensions: number = 1536;
 
   private db?: pg.ClientBase;
@@ -76,6 +81,8 @@ export class PGVectorStore
       super(config?.embedModel);
       this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
       this.tableName = config?.tableName ?? PGVECTOR_TABLE;
+      this.user = config?.user;
+      this.password = config?.password;
       this.database = config?.database;
       this.connectionString = config?.connectionString;
       this.dimensions = config?.dimensions ?? 1536;
@@ -114,6 +121,8 @@ export class PGVectorStore
         // Create DB connection
         // Read connection params from env - see comment block above
         const db = new Client({
+          user: this.user,
+          password: this.password,
           database: this.database,
           connectionString: this.connectionString,
         });

@@ -1,5 +1,17 @@
 # @llamaindex/cloud
 
+## 0.2.7
+
+### Patch Changes
+
+- fb36eff: fix: backport for node.js 18
+
+  There could have one missing API in the node.js 18, so we need to backport it to make it work.
+
+- d24d3d1: fix: print warning when llama parse reader has error
+- Updated dependencies [2cd1383]
+  - @llamaindex/core@0.2.3
+
 ## 0.2.6
 
 ### Patch Changes
