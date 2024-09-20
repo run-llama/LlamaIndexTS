@@ -18,6 +18,7 @@ const pgConfig = {
 await test("init with client", async (t) => {
   const pgClient = new pg.Client(pgConfig);
   await pgClient.connect();
+  await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
   await registerTypes(pgClient);
   t.after(async () => {
     await pgClient.end();
@@ -31,18 +32,19 @@ await test("init with client", async (t) => {
 
 await test("init with pool", async (t) => {
   const pgClient = new pg.Pool(pgConfig);
-  t.after(async () => {
-    await pgClient.end();
-  });
   await pgClient.query("CREATE EXTENSION IF NOT EXISTS vector");
   const client = await pgClient.connect();
+  await client.query("CREATE EXTENSION IF NOT EXISTS vector");
   await registerTypes(client);
+  t.after(async () => {
+    client.release();
+    await pgClient.end();
+  });
   const vectorStore = new PGVectorStore({
     shouldConnect: false,
     client,
   });
   assert.deepStrictEqual(await vectorStore.client(), client);
-  client.release(true);
 });
 
 await test("init without client", async (t) => {
@@ -68,6 +70,10 @@ await test("simple node", async (t) => {
     clientConfig: pgConfig,
     dimensions,
     schemaName,
+  });
+  const pgClient = (await vectorStore.client()) as pg.Client;
+  t.after(async () => {
+    await pgClient.end();
   });
 
   await vectorStore.add([node]);
@@ -98,9 +104,4 @@ await test("simple node", async (t) => {
     });
     assert.deepStrictEqual(result.nodes, []);
   }
-
-  const pgClient = (await vectorStore.client()) as pg.Client;
-  t.after(async () => {
-    await pgClient.end();
-  });
 });
