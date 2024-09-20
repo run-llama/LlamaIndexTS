@@ -2,17 +2,17 @@
 
 ### Prepare Environment
 
-Read and follow the instructions in the [README.md](../README.md) file located one directory up to make sure your JS/TS dependencies are set up. The commands listed below are also run from that parent directory.
+Read and follow the instructions in the [README.md](../../README.md) file located one directory up to make sure your JS/TS dependencies are set up. The commands listed below are also run from that parent directory.
 
 ### Sign up for MongoDB Atlas
 
 We'll be using MongoDB's hosted database service, [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register). You can sign up for free and get a small hosted cluster for free:
 
-![MongoDB Atlas signup](./docs/1_signup.png)
+![MongoDB Atlas signup](docs/1_signup.png)
 
 The signup process will walk you through the process of creating your cluster and ensuring it's configured for you to access. Once the cluster is created, choose "Connect" and then "Connect to your application". Choose Python, and you'll be presented with a connection string that looks like this:
 
-![MongoDB Atlas connection string](./docs/2_connection_string.png)
+![MongoDB Atlas connection string](docs/2_connection_string.png)
 
 ### Set up environment variables
 

@@ -78,10 +78,10 @@
       "path": "./packages/env/tests/tsconfig.json"
     },
     {
-      "path": "./examples"
+      "path": "./examples/node"
     },
     {
-      "path": "./examples/readers"
+      "path": "./examples/node/readers"
     },
     {
       "path": "./packages/experimental/tsconfig.json"

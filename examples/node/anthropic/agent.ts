@@ -1,5 +1,5 @@
 import { Anthropic, FunctionTool, Settings, WikipediaTool } from "llamaindex";
-import { AnthropicAgent } from "llamaindex/agent/anthropic";
+import { AnthropicAgent } from "llamaindex/dist/type/agent/anthropic.ts";
 
 Settings.callbackManager.on("llm-tool-call", (event) => {
   console.log("llm-tool-call", event.detail.toolCall);
