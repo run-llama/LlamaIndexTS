@@ -33,6 +33,7 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_DB: llamaindex_node_test
           POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
