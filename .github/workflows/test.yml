@@ -45,8 +45,11 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Build
+        run: pnpm run build
       - name: Run E2E Tests
         run: pnpm run e2e
+        working-directory: packages/llamaindex/e2e
 
   test:
     strategy:
