@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: pgvector/pgvector:pg16
+        image: postgres
         env:
           POSTGRES_DB: llamaindex_node_test
           POSTGRES_USER: user
