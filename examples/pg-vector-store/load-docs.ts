@@ -40,7 +40,11 @@ async function main(args: any) {
     const rdr = new SimpleDirectoryReader(callback);
     const docs = await rdr.loadData({ directoryPath: sourceDir });
 
-    const pgvs = new PGVectorStore();
+    const pgvs = new PGVectorStore({
+      clientConfig: {
+        connectionString: process.env.PG_CONNECTION_STRING,
+      },
+    });
     pgvs.setCollection(sourceDir);
     await pgvs.clearCollection();
 
