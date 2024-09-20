@@ -9,7 +9,7 @@ import { registerTypes } from "pgvector/pg";
 
 config({ path: [".env.local", ".env", ".env.ci"] });
 
-const pgConfig: pg.ClientConfig = process.env.CI
+const pgConfig: pg.ClientConfig = process.env.POSTGRES_URL
   ? {
       connectionString: process.env.POSTGRES_URL,
       database: "llamaindex_node_test",
