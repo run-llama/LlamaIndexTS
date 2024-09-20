@@ -26,21 +26,12 @@ jobs:
         node-version: [18.x, 20.x, 22.x]
     name: E2E on Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: pgvector/pgvector:pg16
-        env:
-          POSTGRES_HOST_AUTH_METHOD: trust
-          POSTGRES_DB: llamaindex_node_test
-          POSTGRES_USER: user
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
-      - run: psql -h localhost -U user -c 'CREATE EXTENSION vector'
       - uses: actions/checkout@v4
+      - name: Install pgvector
+        run: |
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install postgresql-14-pgvector
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4

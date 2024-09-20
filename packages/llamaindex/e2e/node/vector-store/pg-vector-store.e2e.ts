@@ -9,11 +9,16 @@ import { registerTypes } from "pgvector/pg";
 
 config({ path: [".env.local", ".env", ".env.ci"] });
 
-const pgConfig = {
-  user: process.env.POSTGRES_USER ?? "user",
-  password: process.env.POSTGRES_PASSWORD ?? "password",
-  database: "llamaindex_node_test",
-};
+const pgConfig: pg.ClientConfig = process.env.CI
+  ? {
+      connectionString: process.env.POSTGRES_URL,
+      database: "llamaindex_node_test",
+    }
+  : {
+      user: process.env.POSTGRES_USER ?? "user",
+      password: process.env.POSTGRES_PASSWORD ?? "password",
+      database: "llamaindex_node_test",
+    };
 
 await test("init with client", async (t) => {
   const pgClient = new pg.Client(pgConfig);
