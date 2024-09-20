@@ -13,8 +13,10 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  POSTGRES_USER: runneradmin
   POSTGRES_HOST_AUTH_METHOD: trust
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  TURBO_REMOTE_ONLY: true
 
 jobs:
   e2e:

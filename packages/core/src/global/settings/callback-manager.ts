@@ -128,16 +128,29 @@ export class CallbackManager {
   dispatchEvent<K extends keyof LlamaIndexEventMaps>(
     event: K,
     detail: LlamaIndexEventMaps[K],
+    sync = false,
   ) {
     const cbs = this.#handlers.get(event);
     if (!cbs) {
       return;
     }
-    queueMicrotask(() => {
+    if (typeof queueMicrotask === "undefined") {
+      console.warn(
+        "queueMicrotask is not available, dispatching synchronously",
+      );
+      sync = true;
+    }
+    if (sync) {
       cbs.forEach((handler) =>
         handler(LlamaIndexCustomEvent.fromEvent(event, { ...detail })),
       );
-    });
+    } else {
+      queueMicrotask(() => {
+        cbs.forEach((handler) =>
+          handler(LlamaIndexCustomEvent.fromEvent(event, { ...detail })),
+        );
+      });
+    }
   }
 }
 

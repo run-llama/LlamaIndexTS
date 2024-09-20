@@ -11,12 +11,13 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { streamConverter, wrapLLMEvent } from "@llamaindex/core/utils";
+import { loadTransformers } from "@llamaindex/env";
 import type {
   PreTrainedModel,
   PreTrainedTokenizer,
   Tensor,
 } from "@xenova/transformers";
-import { lazyLoadTransformers } from "../internal/deps/transformers.js";
+import { Settings } from "../Settings.js";
 
 // TODO workaround issue with @huggingface/inference@2.7.0
 interface HfInferenceOptions {
@@ -225,7 +226,15 @@ export class HuggingFaceLLM extends BaseLLM {
   }
 
   async getTokenizer() {
-    const { AutoTokenizer } = await lazyLoadTransformers();
+    const { AutoTokenizer } = await loadTransformers((transformer) => {
+      Settings.callbackManager.dispatchEvent(
+        "load-transformers",
+        {
+          transformer,
+        },
+        true,
+      );
+    });
     if (!this.tokenizer) {
       this.tokenizer = await AutoTokenizer.from_pretrained(this.tokenizerName);
     }
@@ -233,7 +242,15 @@ export class HuggingFaceLLM extends BaseLLM {
   }
 
   async getModel() {
-    const { AutoModelForCausalLM } = await lazyLoadTransformers();
+    const { AutoModelForCausalLM } = await loadTransformers((transformer) => {
+      Settings.callbackManager.dispatchEvent(
+        "load-transformers",
+        {
+          transformer,
+        },
+        true,
+      );
+    });
     if (!this.model) {
       this.model = await AutoModelForCausalLM.from_pretrained(this.modelName);
     }
