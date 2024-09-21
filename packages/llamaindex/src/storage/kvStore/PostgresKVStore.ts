@@ -131,7 +131,7 @@ export class PostgresKVStore extends BaseKVStore {
       const sql = `SELECT * FROM ${this.schemaName}.${this.tableName} WHERE key = $1 AND collection = $2`;
       const result = await db.query(sql, [key, collection]);
       await db.query("COMMIT");
-      return result.rows[0].value;
+      return result.rows[0]?.value;
     } catch (error) {
       await db.query("ROLLBACK");
       throw error;
