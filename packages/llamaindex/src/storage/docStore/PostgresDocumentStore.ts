@@ -1,21 +1,29 @@
 import { DEFAULT_NAMESPACE } from "@llamaindex/core/global";
-import type pg from "pg";
-import { PostgresKVStore } from "../kvStore/PostgresKVStore.js";
+import {
+  PostgresKVStore,
+  type PostgresKVStoreConfig,
+} from "../kvStore/PostgresKVStore.js";
 import { KVDocumentStore } from "./KVDocumentStore.js";
 
 const DEFAULT_TABLE_NAME = "llamaindex_doc_store";
 
+export type PostgresDocumentStoreConfig = PostgresKVStoreConfig & {
+  namespace?: string;
+};
+
 export class PostgresDocumentStore extends KVDocumentStore {
-  constructor(config?: {
-    schemaName?: string;
-    tableName?: string;
-    clientConfig?: pg.ClientConfig;
-    namespace?: string;
-  }) {
+  constructor(config?: PostgresDocumentStoreConfig) {
     const kvStore = new PostgresKVStore({
       schemaName: config?.schemaName,
       tableName: config?.tableName || DEFAULT_TABLE_NAME,
-      clientConfig: config?.clientConfig,
+      ...(config && "clientConfig" in config
+        ? { clientConfig: config.clientConfig }
+        : config && "client" in config
+          ? {
+              client: config.client,
+              shouldConnect: config.shouldConnect ?? false,
+            }
+          : {}),
     });
     const namespace = config?.namespace || DEFAULT_NAMESPACE;
     super(kvStore, namespace);

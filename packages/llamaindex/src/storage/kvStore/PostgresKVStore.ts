@@ -7,30 +7,31 @@ export type DataType = Record<string, Record<string, any>>;
 const DEFAULT_SCHEMA_NAME = "public";
 const DEFAULT_TABLE_NAME = "llamaindex_kv_store";
 
-type PostgresKVStoreBaseConfig = {
+export type PostgresKVStoreBaseConfig = {
   schemaName?: string | undefined;
   tableName?: string | undefined;
 };
 
+export type PostgresKVStoreClientConfig =
+  | {
+      /**
+       * Client configuration options for the pg client.
+       *
+       * {@link https://node-postgres.com/apis/client#new-client PostgresSQL Client API}
+       */
+      clientConfig?: pg.ClientConfig | undefined;
+    }
+  | {
+      /**
+       * A pg client or pool client instance.
+       * If provided, make sure it is not connected to the database yet, or it will throw an error.
+       */
+      shouldConnect?: boolean | undefined;
+      client?: pg.Client | pg.PoolClient;
+    };
+
 export type PostgresKVStoreConfig = PostgresKVStoreBaseConfig &
-  (
-    | {
-        /**
-         * Client configuration options for the pg client.
-         *
-         * {@link https://node-postgres.com/apis/client#new-client PostgresSQL Client API}
-         */
-        clientConfig: pg.ClientConfig | undefined;
-      }
-    | {
-        /**
-         * A pg client or pool client instance.
-         * If provided, make sure it is not connected to the database yet, or it will throw an error.
-         */
-        shouldConnect?: boolean | undefined;
-        client: pg.Client | pg.PoolClient;
-      }
-  );
+  PostgresKVStoreClientConfig;
 
 export class PostgresKVStore extends BaseKVStore {
   private schemaName: string;
@@ -47,9 +48,9 @@ export class PostgresKVStore extends BaseKVStore {
     if (config) {
       if ("clientConfig" in config) {
         this.clientConfig = config.clientConfig;
-      } else {
+      } else if ("client" in config) {
         this.isDBConnected =
-          config.shouldConnect !== undefined ? !config.shouldConnect : false;
+          config?.shouldConnect !== undefined ? !config.shouldConnect : false;
         this.db = config.client;
       }
     }
