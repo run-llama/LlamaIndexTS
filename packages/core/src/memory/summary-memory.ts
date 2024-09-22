@@ -114,18 +114,22 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
     }
   }
 
-  private calcCurrentRequestMessages() {
-    // TODO: check order: currently, we're sending:
+  private calcCurrentRequestMessages(transientMessages?: ChatMessage[]) {
+    // currently, we're sending:
     // system messages first, then transient messages and then the messages that describe the conversation so far
-    return [...this.systemMessages, ...this.calcConversationMessages(true)];
+    return [
+      ...this.systemMessages,
+      ...(transientMessages ? transientMessages : []),
+      ...this.calcConversationMessages(true),
+    ];
   }
 
   reset() {
     this.messages = [];
   }
 
-  async getMessages(): Promise<ChatMessage[]> {
-    const requestMessages = this.calcCurrentRequestMessages();
+  async getMessages(transientMessages?: ChatMessage[]): Promise<ChatMessage[]> {
+    const requestMessages = this.calcCurrentRequestMessages(transientMessages);
 
     // get tokens of current request messages and the transient messages
     const tokens = requestMessages.reduce(
@@ -149,7 +153,7 @@ export class ChatSummaryMemoryBuffer extends BaseMemory {
       // TODO: we still might have too many tokens
       // e.g. too large system messages or transient messages
       // how should we deal with that?
-      return this.calcCurrentRequestMessages();
+      return this.calcCurrentRequestMessages(transientMessages);
     }
     return requestMessages;
   }

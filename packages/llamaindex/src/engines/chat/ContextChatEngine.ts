@@ -92,7 +92,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
       ? new ChatMemoryBuffer({
           chatHistory:
             params.chatHistory instanceof BaseMemory
-              ? await params.chatHistory.getMessages(message)
+              ? await params.chatHistory.getMessages()
               : params.chatHistory,
         })
       : this.chatHistory;
@@ -139,7 +139,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     const textOnly = extractText(message);
     const context = await this.contextGenerator.generate(textOnly);
     const systemMessage = this.prependSystemPrompt(context.message);
-    const messages = await chatHistory.getMessages(systemMessage.content);
+    const messages = await chatHistory.getMessages([systemMessage]);
     return { nodes: context.nodes, messages };
   }
 
