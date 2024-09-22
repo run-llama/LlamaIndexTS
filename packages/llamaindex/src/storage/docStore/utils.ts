@@ -6,7 +6,7 @@ const DATA_KEY = "__data__";
 
 type DocJson = {
   [TYPE_KEY]: ObjectType;
-  [DATA_KEY]: string;
+  [DATA_KEY]: string | any;
 };
 
 export function isValidDocJson(docJson: any): docJson is DocJson {
@@ -18,16 +18,18 @@ export function isValidDocJson(docJson: any): docJson is DocJson {
   );
 }
 
-export function docToJson(doc: BaseNode): DocJson {
+export function docToJson(doc: BaseNode, nativeJson?: boolean): DocJson {
   return {
-    [DATA_KEY]: JSON.stringify(doc.toJSON()),
+    [DATA_KEY]: nativeJson ? doc.toJSON() : JSON.stringify(doc.toJSON()),
     [TYPE_KEY]: doc.type,
   };
 }
 
-export function jsonToDoc(docDict: DocJson): BaseNode {
+export function jsonToDoc(docDict: DocJson, nativeJson?: boolean): BaseNode {
   const docType = docDict[TYPE_KEY];
-  const dataDict = JSON.parse(docDict[DATA_KEY]);
+  const dataDict = nativeJson
+    ? docDict[DATA_KEY]
+    : JSON.parse(docDict[DATA_KEY]);
   let doc: BaseNode;
 
   if (docType === ObjectType.DOCUMENT) {

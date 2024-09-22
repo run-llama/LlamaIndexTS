@@ -16,6 +16,7 @@ export class PostgresDocumentStore extends KVDocumentStore {
       tableName: config?.tableName || DEFAULT_TABLE_NAME,
     });
     const namespace = config?.namespace || DEFAULT_NAMESPACE;
-    super(kvStore, namespace);
+    const nativeJson = true;
+    super(kvStore, namespace, nativeJson);
   }
 }
