@@ -7,7 +7,11 @@ async function main() {
   });
 
   try {
-    const pgvs = new PGVectorStore();
+    const pgvs = new PGVectorStore({
+      clientConfig: {
+        connectionString: process.env.PG_CONNECTION_STRING,
+      },
+    });
     // Optional - set your collection name, default is no filter on this field.
     // pgvs.setCollection();
 
