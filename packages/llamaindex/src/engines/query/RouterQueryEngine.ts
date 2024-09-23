@@ -136,7 +136,9 @@ export class RouterQueryEngine extends BaseQueryEngine {
         }
 
         const selectedQueryEngine = this.queryEngines[engineInd.index]!;
-        responses.push(await selectedQueryEngine.query(query));
+        responses.push(
+          await selectedQueryEngine.query({ query, stream: false }),
+        );
       }
 
       if (responses.length > 1) {

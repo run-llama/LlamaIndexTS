@@ -18,14 +18,14 @@ import readline from "node:readline/promises";
   });
   const chatEngine = new SimpleChatEngine({
     llm,
-    memory: chatHistory,
+    chatHistory,
   });
   const rl = readline.createInterface({ input, output });
 
   while (true) {
     const query = await rl.question("User: ");
     process.stdout.write("Assistant: ");
-    const stream = await chatEngine.chat({ message: query }, true);
+    const stream = await chatEngine.chat({ message: query, stream: true });
     for await (const chunk of stream) {
       process.stdout.write(chunk.response);
     }

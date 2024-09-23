@@ -20,6 +20,7 @@ await test("react agent", async (t) => {
       tools: [getWeatherTool],
     });
     const response = await agent.chat({
+      stream: false,
       message: "What is the weather like in San Francisco?",
     });
 
@@ -34,12 +35,10 @@ await test("react agent stream", async (t) => {
       tools: [getWeatherTool],
     });
 
-    const stream = await agent.chat(
-      {
-        message: "What is the weather like in San Francisco?",
-      },
-      true,
-    );
+    const stream = await agent.chat({
+      stream: true,
+      message: "What is the weather like in San Francisco?",
+    });
 
     let content = "";
     for await (const response of stream) {

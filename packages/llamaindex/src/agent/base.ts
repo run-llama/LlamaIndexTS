@@ -1,6 +1,7 @@
 import {
   BaseChatEngine,
-  type ChatEngineParams,
+  type NonStreamingChatEngineParams,
+  type StreamingChatEngineParams,
 } from "@llamaindex/core/chat-engine";
 import type {
   BaseToolWithCall,
@@ -344,15 +345,13 @@ export abstract class AgentRunner<
     });
   }
 
-  async chat(params: ChatEngineParams, stream?: false): Promise<EngineResponse>;
+  async chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
   async chat(
-    params: ChatEngineParams,
-    stream: true,
+    params: StreamingChatEngineParams,
   ): Promise<ReadableStream<EngineResponse>>;
   @wrapEventCaller
   async chat(
-    params: ChatEngineParams,
-    stream?: boolean,
+    params: NonStreamingChatEngineParams | StreamingChatEngineParams,
   ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
     let chatHistory: ChatMessage<AdditionalMessageOptions>[] = [];
 
@@ -364,7 +363,12 @@ export abstract class AgentRunner<
         params.chatHistory as ChatMessage<AdditionalMessageOptions>[];
     }
 
-    const task = this.createTask(params.message, !!stream, false, chatHistory);
+    const task = this.createTask(
+      params.message,
+      !!params.stream,
+      false,
+      chatHistory,
+    );
     for await (const stepOutput of task) {
       // update chat history for each round
       this.#chatHistory = [...stepOutput.taskStep.context.store.messages];

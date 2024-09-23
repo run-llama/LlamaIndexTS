@@ -18,6 +18,18 @@ export type QueryBundle = {
 
 export type QueryType = string | QueryBundle;
 
+export type BaseQueryParams = {
+  query: QueryType;
+};
+
+export interface StreamingQueryParams extends BaseQueryParams {
+  stream: true;
+}
+
+export interface NonStreamingQueryParams extends BaseQueryParams {
+  stream?: false;
+}
+
 export type QueryFn = (
   strOrQueryBundle: QueryType,
   stream?: boolean,
@@ -34,23 +46,20 @@ export abstract class BaseQueryEngine extends PromptMixin {
     );
   }
 
-  query(
-    strOrQueryBundle: QueryType,
-    stream: true,
-  ): Promise<AsyncIterable<EngineResponse>>;
-  query(strOrQueryBundle: QueryType, stream?: false): Promise<EngineResponse>;
+  query(params: StreamingQueryParams): Promise<AsyncIterable<EngineResponse>>;
+  query(params: NonStreamingQueryParams): Promise<EngineResponse>;
   @wrapEventCaller
   async query(
-    strOrQueryBundle: QueryType,
-    stream = false,
+    params: StreamingQueryParams | NonStreamingQueryParams,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
+    const { stream, query } = params;
     const id = randomUUID();
     const callbackManager = Settings.callbackManager;
     callbackManager.dispatchEvent("query-start", {
       id,
-      query: strOrQueryBundle,
+      query,
     });
-    const response = await this._query(strOrQueryBundle, stream);
+    const response = await this._query(query, stream);
     callbackManager.dispatchEvent("query-end", {
       id,
       response,

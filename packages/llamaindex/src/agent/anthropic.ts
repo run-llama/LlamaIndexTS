@@ -1,4 +1,7 @@
-import type { ChatEngineParams } from "@llamaindex/core/chat-engine";
+import type {
+  NonStreamingChatEngineParams,
+  StreamingChatEngineParams,
+} from "@llamaindex/core/chat-engine";
 import type { EngineResponse } from "@llamaindex/core/schema";
 import { Settings } from "../Settings.js";
 import { Anthropic } from "../llm/anthropic.js";
@@ -21,9 +24,12 @@ export class AnthropicAgent extends LLMAgent {
     });
   }
 
-  async chat(params: ChatEngineParams, stream?: false): Promise<EngineResponse>;
-  async chat(params: ChatEngineParams, stream: true): Promise<never>;
-  override async chat(params: ChatEngineParams, stream?: boolean) {
+  async chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
+  async chat(params: StreamingChatEngineParams): Promise<never>;
+  override async chat(
+    params: NonStreamingChatEngineParams | StreamingChatEngineParams,
+  ) {
+    const { stream } = params;
     if (stream) {
       // Anthropic does support this, but looks like it's not supported in the LITS LLM
       throw new Error("Anthropic does not support streaming");

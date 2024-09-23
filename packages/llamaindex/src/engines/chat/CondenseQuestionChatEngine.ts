@@ -1,6 +1,7 @@
 import {
   BaseChatEngine,
-  type ChatEngineParams,
+  type NonStreamingChatEngineParams,
+  type StreamingChatEngineParams,
 } from "@llamaindex/core/chat-engine";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
@@ -86,17 +87,15 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     });
   }
 
-  chat(params: ChatEngineParams, stream?: false): Promise<EngineResponse>;
+  chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
   chat(
-    params: ChatEngineParams,
-    stream: true,
+    params: StreamingChatEngineParams,
   ): Promise<AsyncIterable<EngineResponse>>;
   @wrapEventCaller
   async chat(
-    params: ChatEngineParams,
-    stream = false,
+    params: NonStreamingChatEngineParams | StreamingChatEngineParams,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { message } = params;
+    const { message, stream } = params;
     const chatHistory = params.chatHistory
       ? new ChatMemoryBuffer({
           chatHistory:
@@ -112,12 +111,10 @@ export class CondenseQuestionChatEngine extends BaseChatEngine {
     chatHistory.put({ content: message, role: "user" });
 
     if (stream) {
-      const stream = await this.queryEngine.query(
-        {
-          query: condensedQuestion,
-        },
-        true,
-      );
+      const stream = await this.queryEngine.query({
+        query: condensedQuestion,
+        stream: true,
+      });
       return streamReducer({
         stream,
         initialValue: "",

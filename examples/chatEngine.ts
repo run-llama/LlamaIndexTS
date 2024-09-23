@@ -24,7 +24,7 @@ async function main() {
 
   while (true) {
     const query = await rl.question("Query: ");
-    const stream = await chatEngine.chat({ message: query }, true);
+    const stream = await chatEngine.chat({ message: query, stream: true });
     console.log();
     for await (const chunk of stream) {
       process.stdout.write(chunk.response);
