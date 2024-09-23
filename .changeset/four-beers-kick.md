@@ -1,6 +1,6 @@
 ---
 "@llamaindex/core": minor
-"llamaindex": patch
+"llamaindex": minor
 ---
 
 refactor: move chat engine & retriever into core.
