@@ -1,6 +1,6 @@
 import type { AgentEndEvent, AgentStartEvent } from "./agent/types.js";
-import type { RetrievalEndEvent, RetrievalStartEvent } from "./llm/types.js";
 
+export * from "@llamaindex/core/chat-engine";
 export {
   CallbackManager,
   DEFAULT_BASE_URL,
@@ -35,12 +35,11 @@ export * from "@llamaindex/core/llms";
 export * from "@llamaindex/core/prompts";
 export * from "@llamaindex/core/query-engine";
 export * from "@llamaindex/core/response-synthesizers";
+export * from "@llamaindex/core/retriever";
 export * from "@llamaindex/core/schema";
 
 declare module "@llamaindex/core/global" {
   export interface LlamaIndexEventMaps {
-    "retrieve-start": RetrievalStartEvent;
-    "retrieve-end": RetrievalEndEvent;
     // agent events
     "agent-start": AgentStartEvent;
     "agent-end": AgentEndEvent;
@@ -66,7 +65,6 @@ export * from "./objects/index.js";
 export * from "./OutputParser.js";
 export * from "./postprocessors/index.js";
 export * from "./QuestionGenerator.js";
-export * from "./Retriever.js";
 export * from "./selectors/index.js";
 export * from "./ServiceContext.js";
 export { Settings } from "./Settings.js";

@@ -11,6 +11,7 @@ import type {
   SynthesizeEndEvent,
   SynthesizeStartEvent,
 } from "../../response-synthesizers";
+import type { RetrieveEndEvent, RetrieveStartEvent } from "../../retriever";
 import { TextNode } from "../../schema";
 import { EventCaller, getEventCaller } from "../../utils";
 import type { UUID } from "../type";
@@ -69,6 +70,8 @@ export interface LlamaIndexEventMaps {
   "query-end": QueryEndEvent;
   "synthesize-start": SynthesizeStartEvent;
   "synthesize-end": SynthesizeEndEvent;
+  "retrieve-start": RetrieveStartEvent;
+  "retrieve-end": RetrieveEndEvent;
 }
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {

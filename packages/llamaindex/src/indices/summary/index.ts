@@ -2,16 +2,17 @@ import {
   type ChoiceSelectPrompt,
   defaultChoiceSelectPrompt,
 } from "@llamaindex/core/prompts";
+import type { QueryBundle } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { getResponseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { BaseRetriever } from "@llamaindex/core/retriever";
 import type {
   BaseNode,
   Document,
   NodeWithScore,
 } from "@llamaindex/core/schema";
-import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
+import { extractText } from "@llamaindex/core/utils";
 import _ from "lodash";
-import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import {
   llmFromSettingsOrContext,
@@ -279,15 +280,15 @@ export type ListRetrieverMode = SummaryRetrieverMode;
 /**
  * Simple retriever for SummaryIndex that returns all nodes
  */
-export class SummaryIndexRetriever implements BaseRetriever {
+export class SummaryIndexRetriever extends BaseRetriever {
   index: SummaryIndex;
 
   constructor(index: SummaryIndex) {
+    super();
     this.index = index;
   }
 
-  @wrapEventCaller
-  async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
+  async _retrieve(queryBundle: QueryBundle): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const nodes = await this.index.docStore.getNodes(nodeIds);
     return nodes.map((node) => ({
@@ -300,7 +301,7 @@ export class SummaryIndexRetriever implements BaseRetriever {
 /**
  * LLM retriever for SummaryIndex which lets you select the most relevant chunks.
  */
-export class SummaryIndexLLMRetriever implements BaseRetriever {
+export class SummaryIndexLLMRetriever extends BaseRetriever {
   index: SummaryIndex;
   choiceSelectPrompt: ChoiceSelectPrompt;
   choiceBatchSize: number;
@@ -317,6 +318,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
     parseChoiceSelectAnswerFn?: ChoiceSelectParserFunction,
     serviceContext?: ServiceContext,
   ) {
+    super();
     this.index = index;
     this.choiceSelectPrompt = choiceSelectPrompt || defaultChoiceSelectPrompt;
     this.choiceBatchSize = choiceBatchSize;
@@ -326,7 +328,7 @@ export class SummaryIndexLLMRetriever implements BaseRetriever {
     this.serviceContext = serviceContext || index.serviceContext;
   }
 
-  async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
+  async _retrieve(query: QueryBundle): Promise<NodeWithScore[]> {
     const nodeIds = this.index.indexStruct.nodes;
     const results: NodeWithScore[] = [];
 

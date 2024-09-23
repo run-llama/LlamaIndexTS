@@ -1,10 +1,11 @@
-import { BaseQueryEngine } from "@llamaindex/core/query-engine";
+import type { MessageContent } from "@llamaindex/core/llms";
+import { BaseQueryEngine, type QueryType } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import { getResponseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { BaseRetriever } from "@llamaindex/core/retriever";
 import { type NodeWithScore } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
-import type { BaseRetriever } from "../../Retriever.js";
 
 /**
  * A query engine that uses a retriever to query an index and then synthesizes the response.
@@ -67,7 +68,10 @@ export class RetrieverQueryEngine extends BaseQueryEngine {
     };
   }
 
-  private async applyNodePostprocessors(nodes: NodeWithScore[], query: string) {
+  private async applyNodePostprocessors(
+    nodes: NodeWithScore[],
+    query: MessageContent,
+  ) {
     let nodesWithScore = nodes;
 
     for (const postprocessor of this.nodePostprocessors) {
@@ -80,12 +84,10 @@ export class RetrieverQueryEngine extends BaseQueryEngine {
     return nodesWithScore;
   }
 
-  private async retrieve(query: string) {
-    const nodes = await this.retriever.retrieve({
-      query,
-      preFilters: this.preFilters,
-    });
+  override async retrieve(query: QueryType) {
+    const nodes = await this.retriever.retrieve(query);
 
-    return await this.applyNodePostprocessors(nodes, query);
+    const messageContent = typeof query === "string" ? query : query.query;
+    return await this.applyNodePostprocessors(nodes, messageContent);
   }
 }

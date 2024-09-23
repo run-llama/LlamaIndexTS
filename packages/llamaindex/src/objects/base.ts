@@ -1,8 +1,8 @@
 import type { BaseTool, MessageContent } from "@llamaindex/core/llms";
+import { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { TextNode } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
-import type { BaseRetriever } from "../Retriever.js";
 import type { VectorStoreIndex } from "../indices/vectorStore/index.js";
 
 // Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
@@ -49,9 +49,6 @@ export abstract class BaseObjectNodeMapping {
 
 // You will need to implement specific subclasses of BaseObjectNodeMapping as per your project requirements.
 
-// todo: multimodal support
-type QueryType = MessageContent;
-
 export class ObjectRetriever<T = unknown> {
   _retriever: BaseRetriever;
   _objectNodeMapping: BaseObjectNodeMapping;
@@ -70,7 +67,7 @@ export class ObjectRetriever<T = unknown> {
   }
 
   // Translating the retrieve method
-  async retrieve(strOrQueryBundle: QueryType): Promise<T[]> {
+  async retrieve(strOrQueryBundle: MessageContent): Promise<T[]> {
     const nodes = await this.retriever.retrieve({
       query: extractText(strOrQueryBundle),
     });

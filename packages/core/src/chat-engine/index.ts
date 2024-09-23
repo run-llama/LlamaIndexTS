@@ -1,6 +1,6 @@
-import type { ChatMessage, MessageContent } from "../../dist/llms";
-import type { BaseMemory } from "../../dist/memory";
-import { EngineResponse } from "../../dist/schema";
+import type { ChatMessage, MessageContent } from "../llms";
+import type { BaseMemory } from "../memory";
+import { EngineResponse } from "../schema";
 
 export interface ChatEngineParams<
   AdditionalMessageOptions extends object = object,
@@ -24,5 +24,5 @@ export abstract class BaseChatEngine {
     stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
 
-  abstract chatHistory: ChatMessage[];
+  abstract chatHistory: ChatMessage[] | Promise<ChatMessage[]>;
 }
