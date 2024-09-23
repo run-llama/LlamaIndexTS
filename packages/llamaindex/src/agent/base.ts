@@ -354,6 +354,12 @@ export abstract class AgentRunner<
     params: ChatEngineParams,
     stream?: boolean,
   ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
+    if ("stream" in params && typeof params.stream === "boolean") {
+      console.warn(
+        "deprecated: use second argument as stream instead of stream property in params",
+      );
+      stream = params.stream;
+    }
     let chatHistory: ChatMessage<AdditionalMessageOptions>[] = [];
 
     if (params.chatHistory instanceof BaseMemory) {
