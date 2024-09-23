@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.2.5
+
+### Patch Changes
+
+- d902cc3: Fix context not being sent using ContextChatEngine
+
 ## 0.2.4
 
 ### Patch Changes
