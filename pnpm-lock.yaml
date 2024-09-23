@@ -565,6 +565,9 @@ importers:
       '@types/pg':
         specifier: ^8.11.8
         version: 8.11.8
+      '@upstash/vector':
+        specifier: ^1.1.5
+        version: 1.1.5
       '@zilliz/milvus2-sdk-node':
         specifier: ^2.4.6
         version: 2.4.6
@@ -4510,6 +4513,9 @@ packages:
 
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
+
+  '@upstash/vector@1.1.5':
+    resolution: {integrity: sha512-55+Beu/kCwjcnzg6fnMN06v9PYU1lv9NQfQwpjrJAQTH8GOprcRsQeyXBdNHKNzoQvRnVS0ENd5CDgFoljfrAw==}
 
   '@vitejs/plugin-react@4.3.1':
     resolution: {integrity: sha512-m/V2syj5CuVnaxcUJOQRel/Wr31FFXRFlnOoq1TVtkCxsY5veGMTEmpWHndrhB2U8ScHtCQB1e+4hWYExQc6Lg==}
@@ -16425,6 +16431,8 @@ snapshots:
       eslint-visitor-keys: 3.4.3
 
   '@ungap/structured-clone@1.2.0': {}
+
+  '@upstash/vector@1.1.5': {}
 
   '@vitejs/plugin-react@4.3.1(vite@5.4.2(@types/node@22.5.5)(terser@5.32.0))':
     dependencies:
