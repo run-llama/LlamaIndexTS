@@ -1,7 +1,6 @@
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
 import type { Document, TransformComponent } from "@llamaindex/core/schema";
-import type { BaseRetriever } from "../Retriever.js";
 import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
 import type { BaseNodePostprocessor } from "../postprocessors/types.js";
 import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
@@ -12,6 +11,7 @@ import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
 
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import type { BaseRetriever } from "@llamaindex/core/retriever";
 import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings } from "../Settings.js";

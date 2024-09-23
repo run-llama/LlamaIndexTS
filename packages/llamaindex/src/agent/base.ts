@@ -1,3 +1,7 @@
+import {
+  BaseChatEngine,
+  type ChatEngineParams,
+} from "@llamaindex/core/chat-engine";
 import type {
   BaseToolWithCall,
   ChatMessage,
@@ -10,11 +14,6 @@ import { EngineResponse } from "@llamaindex/core/schema";
 import { wrapEventCaller } from "@llamaindex/core/utils";
 import { randomUUID } from "@llamaindex/env";
 import { Settings } from "../Settings.js";
-import {
-  type ChatEngine,
-  type ChatEngineParamsNonStreaming,
-  type ChatEngineParamsStreaming,
-} from "../engines/chat/index.js";
 import { consoleLogger, emptyLogger } from "../internal/logger.js";
 import { isReadableStream } from "../internal/utils.js";
 import { ObjectRetriever } from "../objects/index.js";
@@ -207,8 +206,7 @@ export abstract class AgentRunner<
   >
     ? AdditionalMessageOptions
     : never,
-> implements ChatEngine
-{
+> extends BaseChatEngine {
   readonly #llm: AI;
   readonly #tools:
     | BaseToolWithCall[]
@@ -259,6 +257,7 @@ export abstract class AgentRunner<
   protected constructor(
     params: AgentRunnerParams<AI, Store, AdditionalMessageOptions>,
   ) {
+    super();
     const { llm, chatHistory, systemPrompt, runner, tools, verbose } = params;
     this.#llm = llm;
     this.#chatHistory = chatHistory;
@@ -345,13 +344,15 @@ export abstract class AgentRunner<
     });
   }
 
-  async chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
+  async chat(params: ChatEngineParams, stream?: false): Promise<EngineResponse>;
   async chat(
-    params: ChatEngineParamsStreaming,
+    params: ChatEngineParams,
+    stream: true,
   ): Promise<ReadableStream<EngineResponse>>;
   @wrapEventCaller
   async chat(
-    params: ChatEngineParamsNonStreaming | ChatEngineParamsStreaming,
+    params: ChatEngineParams,
+    stream?: boolean,
   ): Promise<EngineResponse | ReadableStream<EngineResponse>> {
     let chatHistory: ChatMessage<AdditionalMessageOptions>[] = [];
 
@@ -363,12 +364,7 @@ export abstract class AgentRunner<
         params.chatHistory as ChatMessage<AdditionalMessageOptions>[];
     }
 
-    const task = this.createTask(
-      params.message,
-      !!params.stream,
-      false,
-      chatHistory,
-    );
+    const task = this.createTask(params.message, !!stream, false, chatHistory);
     for await (const stepOutput of task) {
       // update chat history for each round
       this.#chatHistory = [...stepOutput.taskStep.context.store.messages];

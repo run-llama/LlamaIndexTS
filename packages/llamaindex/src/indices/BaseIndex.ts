@@ -1,7 +1,7 @@
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import type { BaseRetriever } from "@llamaindex/core/retriever";
 import type { BaseNode, Document } from "@llamaindex/core/schema";
-import type { BaseRetriever } from "../Retriever.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../Settings.js";
 import { runTransformations } from "../ingestion/IngestionPipeline.js";

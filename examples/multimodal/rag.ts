@@ -1,3 +1,4 @@
+import { extractText } from "@llamaindex/core/utils";
 import {
   getResponseSynthesizer,
   OpenAI,
@@ -16,7 +17,8 @@ Settings.llm = new OpenAI({ model: "gpt-4-turbo", maxTokens: 512 });
 // Update callbackManager
 Settings.callbackManager.on("retrieve-end", (event) => {
   const { nodes, query } = event.detail;
-  console.log(`Retrieved ${nodes.length} nodes for query: ${query}`);
+  const text = extractText(query);
+  console.log(`Retrieved ${nodes.length} nodes for query: ${text}`);
 });
 
 async function main() {

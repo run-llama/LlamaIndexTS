@@ -2,7 +2,7 @@ import { randomUUID } from "@llamaindex/env";
 import { Settings } from "../global";
 import type { MessageContent } from "../llms";
 import { PromptMixin } from "../prompts";
-import { EngineResponse } from "../schema";
+import { EngineResponse, type NodeWithScore } from "../schema";
 import { wrapEventCaller } from "../utils";
 
 /**
@@ -26,6 +26,12 @@ export type QueryFn = (
 export abstract class BaseQueryEngine extends PromptMixin {
   protected constructor(protected readonly _query: QueryFn) {
     super();
+  }
+
+  async retrieve(params: QueryType): Promise<NodeWithScore[]> {
+    throw new Error(
+      "This query engine does not support retrieve, use query directly",
+    );
   }
 
   query(

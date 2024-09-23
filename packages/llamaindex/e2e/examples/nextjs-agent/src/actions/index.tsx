@@ -10,11 +10,13 @@ export async function chatWithAgent(
   const agent = new OpenAIAgent({
     tools: [],
   });
-  const responseStream = await agent.chat({
-    stream: true,
-    message: question,
-    chatHistory: prevMessages,
-  });
+  const responseStream = await agent.chat(
+    {
+      message: question,
+      chatHistory: prevMessages,
+    },
+    true,
+  );
   const uiStream = createStreamableUI(<div>loading...</div>);
   responseStream
     .pipeTo(

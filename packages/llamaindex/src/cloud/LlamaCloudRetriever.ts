@@ -4,11 +4,12 @@ import {
   type RetrievalParams,
   type TextNodeWithScore,
 } from "@llamaindex/cloud/api";
-import { DEFAULT_PROJECT_NAME, Settings } from "@llamaindex/core/global";
+import { DEFAULT_PROJECT_NAME } from "@llamaindex/core/global";
+import type { QueryBundle } from "@llamaindex/core/query-engine";
+import { BaseRetriever } from "@llamaindex/core/retriever";
 import type { NodeWithScore } from "@llamaindex/core/schema";
 import { jsonToNode, ObjectType } from "@llamaindex/core/schema";
-import { extractText, wrapEventCaller } from "@llamaindex/core/utils";
-import type { BaseRetriever, RetrieveParams } from "../Retriever.js";
+import { extractText } from "@llamaindex/core/utils";
 import type { ClientParams, CloudConstructorParams } from "./type.js";
 import { getProjectId, initService } from "./utils.js";
 
@@ -17,7 +18,7 @@ export type CloudRetrieveParams = Omit<
   "query" | "search_filters" | "dense_similarity_top_k"
 > & { similarityTopK?: number; filters?: MetadataFilters };
 
-export class LlamaCloudRetriever implements BaseRetriever {
+export class LlamaCloudRetriever extends BaseRetriever {
   clientParams: ClientParams;
   retrieveParams: CloudRetrieveParams;
   organizationId?: string;
@@ -42,6 +43,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
   }
 
   constructor(params: CloudConstructorParams & CloudRetrieveParams) {
+    super();
     this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
     initService(this.clientParams);
     this.retrieveParams = params;
@@ -54,11 +56,7 @@ export class LlamaCloudRetriever implements BaseRetriever {
     }
   }
 
-  @wrapEventCaller
-  async retrieve({
-    query,
-    preFilters,
-  }: RetrieveParams): Promise<NodeWithScore[]> {
+  async _retrieve(query: QueryBundle): Promise<NodeWithScore[]> {
     const { data: pipelines } =
       await PipelinesService.searchPipelinesApiV1PipelinesGet({
         query: {
@@ -97,19 +95,11 @@ export class LlamaCloudRetriever implements BaseRetriever {
         body: {
           ...this.retrieveParams,
           query: extractText(query),
-          search_filters:
-            this.retrieveParams.filters ?? (preFilters as MetadataFilters),
+          search_filters: this.retrieveParams.filters as MetadataFilters,
           dense_similarity_top_k: this.retrieveParams.similarityTopK!,
         },
       });
 
-    const nodesWithScores = this.resultNodesToNodeWithScore(
-      results.retrieval_nodes,
-    );
-    Settings.callbackManager.dispatchEvent("retrieve-end", {
-      query,
-      nodes: nodesWithScores,
-    });
-    return nodesWithScores;
+    return this.resultNodesToNodeWithScore(results.retrieval_nodes);
   }
 }

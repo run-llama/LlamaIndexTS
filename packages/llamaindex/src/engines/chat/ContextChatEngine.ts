@@ -1,4 +1,8 @@
 import type {
+  BaseChatEngine,
+  ChatEngineParams,
+} from "@llamaindex/core/chat-engine";
+import type {
   ChatMessage,
   LLM,
   MessageContent,
@@ -11,6 +15,7 @@ import {
   PromptMixin,
   type PromptsRecord,
 } from "@llamaindex/core/prompts";
+import type { BaseRetriever } from "@llamaindex/core/retriever";
 import { EngineResponse, MetadataMode } from "@llamaindex/core/schema";
 import {
   extractText,
@@ -18,26 +23,24 @@ import {
   streamReducer,
   wrapEventCaller,
 } from "@llamaindex/core/utils";
-import type { BaseRetriever } from "../../Retriever.js";
 import { Settings } from "../../Settings.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import { DefaultContextGenerator } from "./DefaultContextGenerator.js";
-import type {
-  ChatEngine,
-  ChatEngineParamsNonStreaming,
-  ChatEngineParamsStreaming,
-  ContextGenerator,
-} from "./types.js";
+import type { ContextGenerator } from "./types.js";
 
 /**
  * ContextChatEngine uses the Index to get the appropriate context for each query.
  * The context is stored in the system prompt, and the chat history is chunk: ChatResponseChunk, nodes?: NodeWithScore<import("/Users/marcus/code/llamaindex/LlamaIndexTS/packages/core/src/Node").Metadata>[], nodes?: NodeWithScore<import("/Users/marcus/code/llamaindex/LlamaIndexTS/packages/core/src/Node").Metadata>[]lowing the appropriate context to be surfaced for each query.
  */
-export class ContextChatEngine extends PromptMixin implements ChatEngine {
+export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
   chatModel: LLM;
-  chatHistory: BaseMemory;
+  memory: BaseMemory;
   contextGenerator: ContextGenerator & PromptMixin;
   systemPrompt?: string | undefined;
+
+  get chatHistory() {
+    return this.memory.getMessages();
+  }
 
   constructor(init: {
     retriever: BaseRetriever;
@@ -50,7 +53,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
   }) {
     super();
     this.chatModel = init.chatModel ?? Settings.llm;
-    this.chatHistory = new ChatMemoryBuffer({ chatHistory: init?.chatHistory });
+    this.memory = new ChatMemoryBuffer({ chatHistory: init?.chatHistory });
     this.contextGenerator = new DefaultContextGenerator({
       retriever: init.retriever,
       contextSystemPrompt: init?.contextSystemPrompt,
@@ -79,15 +82,17 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
     };
   }
 
+  chat(params: ChatEngineParams, stream?: false): Promise<EngineResponse>;
   chat(
-    params: ChatEngineParamsStreaming,
+    params: ChatEngineParams,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async chat(
-    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
+    params: ChatEngineParams,
+    stream = false,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { message, stream } = params;
+    const { message } = params;
     const chatHistory = params.chatHistory
       ? new ChatMemoryBuffer({
           chatHistory:
@@ -95,7 +100,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
               ? await params.chatHistory.getMessages()
               : params.chatHistory,
         })
-      : this.chatHistory;
+      : this.memory;
     const requestMessages = await this.prepareRequestMessages(
       message,
       chatHistory,
@@ -125,7 +130,7 @@ export class ContextChatEngine extends PromptMixin implements ChatEngine {
   }
 
   reset() {
-    this.chatHistory.reset();
+    this.memory.reset();
   }
 
   private async prepareRequestMessages(

@@ -1,3 +1,7 @@
+import type {
+  BaseChatEngine,
+  ChatEngineParams,
+} from "@llamaindex/core/chat-engine";
 import type { LLM } from "@llamaindex/core/llms";
 import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { EngineResponse } from "@llamaindex/core/schema";
@@ -7,34 +11,35 @@ import {
   wrapEventCaller,
 } from "@llamaindex/core/utils";
 import { Settings } from "../../Settings.js";
-import type {
-  ChatEngine,
-  ChatEngineParamsNonStreaming,
-  ChatEngineParamsStreaming,
-} from "./types.js";
 
 /**
  * SimpleChatEngine is the simplest possible chat engine. Useful for using your own custom prompts.
  */
 
-export class SimpleChatEngine implements ChatEngine {
-  chatHistory: BaseMemory;
+export class SimpleChatEngine implements BaseChatEngine {
+  memory: BaseMemory;
   llm: LLM;
 
+  get chatHistory() {
+    return this.memory.getMessages();
+  }
+
   constructor(init?: Partial<SimpleChatEngine>) {
-    this.chatHistory = init?.chatHistory ?? new ChatMemoryBuffer();
+    this.memory = init?.memory ?? new ChatMemoryBuffer();
     this.llm = init?.llm ?? Settings.llm;
   }
 
+  chat(params: ChatEngineParams, stream?: false): Promise<EngineResponse>;
   chat(
-    params: ChatEngineParamsStreaming,
+    params: ChatEngineParams,
+    stream: true,
   ): Promise<AsyncIterable<EngineResponse>>;
-  chat(params: ChatEngineParamsNonStreaming): Promise<EngineResponse>;
   @wrapEventCaller
   async chat(
-    params: ChatEngineParamsStreaming | ChatEngineParamsNonStreaming,
+    params: ChatEngineParams,
+    stream = false,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { message, stream } = params;
+    const { message } = params;
 
     const chatHistory = params.chatHistory
       ? new ChatMemoryBuffer({
@@ -43,7 +48,7 @@ export class SimpleChatEngine implements ChatEngine {
               ? await params.chatHistory.getMessages()
               : params.chatHistory,
         })
-      : this.chatHistory;
+      : this.memory;
     chatHistory.put({ content: message, role: "user" });
 
     if (stream) {
@@ -73,6 +78,6 @@ export class SimpleChatEngine implements ChatEngine {
   }
 
   reset() {
-    this.chatHistory.reset();
+    this.memory.reset();
   }
 }

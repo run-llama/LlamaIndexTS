@@ -5,7 +5,6 @@ import type {
   NodeWithScore,
 } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
-import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { serviceContextFromDefaults } from "../../ServiceContext.js";
 import { RetrieverQueryEngine } from "../../engines/query/index.js";
@@ -29,7 +28,11 @@ import {
   type KeywordExtractPrompt,
   type QueryKeywordExtractPrompt,
 } from "@llamaindex/core/prompts";
-import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
+import type {
+  BaseQueryEngine,
+  QueryBundle,
+} from "@llamaindex/core/query-engine";
+import { BaseRetriever } from "@llamaindex/core/retriever";
 import { extractText } from "@llamaindex/core/utils";
 import { llmFromSettingsOrContext } from "../../Settings.js";
 
@@ -48,7 +51,7 @@ export enum KeywordTableRetrieverMode {
 }
 
 // Base Keyword Table Retriever
-abstract class BaseKeywordTableRetriever implements BaseRetriever {
+abstract class BaseKeywordTableRetriever extends BaseRetriever {
   protected index: KeywordTableIndex;
   protected indexStruct: KeywordTable;
   protected docstore: BaseDocumentStore;
@@ -72,6 +75,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
     maxKeywordsPerQuery: number;
     numChunksPerQuery: number;
   }) {
+    super();
     this.index = index;
     this.indexStruct = index.indexStruct;
     this.docstore = index.docStore;
@@ -87,7 +91,7 @@ abstract class BaseKeywordTableRetriever implements BaseRetriever {
 
   abstract getKeywords(query: string): Promise<string[]>;
 
-  async retrieve({ query }: RetrieveParams): Promise<NodeWithScore[]> {
+  async _retrieve(query: QueryBundle): Promise<NodeWithScore[]> {
     const keywords = await this.getKeywords(extractText(query));
     const chunkIndicesCount: { [key: string]: number } = {};
     const filteredKeywords = keywords.filter((keyword) =>
