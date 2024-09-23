@@ -13,7 +13,7 @@ export type PostgresDocumentStoreConfig = PostgresKVStoreConfig & {
 };
 
 export class PostgresDocumentStore extends KVDocumentStore {
-	serializer = noneSerializer;
+  serializer = noneSerializer;
 
   constructor(config?: PostgresDocumentStoreConfig) {
     const kvStore = new PostgresKVStore({
