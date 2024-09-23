@@ -3,6 +3,7 @@ import {
   DEFAULT_PERSIST_DIR,
 } from "@llamaindex/core/global";
 import { BaseNode } from "@llamaindex/core/schema";
+import { jsonSerializer, type Serializer } from "./utils.js";
 
 const defaultPersistPath = `${DEFAULT_PERSIST_DIR}/${DEFAULT_DOC_STORE_PERSIST_FILENAME}`;
 
@@ -12,6 +13,8 @@ export interface RefDocInfo {
 }
 
 export abstract class BaseDocumentStore {
+  serializer: Serializer<any> = jsonSerializer;
+
   // Save/load
   persist(persistPath: string = defaultPersistPath): void {
     // Persist the docstore to a file.
