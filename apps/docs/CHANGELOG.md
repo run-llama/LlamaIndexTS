@@ -1,5 +1,27 @@
 # docs
 
+## 0.0.74
+
+### Patch Changes
+
+- Updated dependencies [e9714db]
+  - llamaindex@0.6.5
+
+## 0.0.73
+
+### Patch Changes
+
+- Updated dependencies [b48bcc3]
+  - llamaindex@0.6.4
+
+## 0.0.72
+
+### Patch Changes
+
+- Updated dependencies [2cd1383]
+- Updated dependencies [5c4badb]
+  - llamaindex@0.6.3
+
 ## 0.0.71
 
 ### Patch Changes

@@ -78,9 +78,7 @@ export class CondenseQuestionChatEngine
   }
 
   private async condenseQuestion(chatHistory: BaseMemory, question: string) {
-    const chatHistoryStr = messagesToHistory(
-      await chatHistory.getMessages(question),
-    );
+    const chatHistoryStr = messagesToHistory(await chatHistory.getMessages());
 
     return this.llm.complete({
       prompt: this.condenseMessagePrompt.format({
@@ -103,7 +101,7 @@ export class CondenseQuestionChatEngine
       ? new ChatMemoryBuffer({
           chatHistory:
             params.chatHistory instanceof BaseMemory
-              ? await params.chatHistory.getMessages(message)
+              ? await params.chatHistory.getMessages()
               : params.chatHistory,
         })
       : this.chatHistory;

@@ -1,17 +1,26 @@
 import { MultiModalEmbedding } from "@llamaindex/core/embeddings";
 import type { ImageType } from "@llamaindex/core/schema";
 import _ from "lodash";
-import { lazyLoadTransformers } from "../internal/deps/transformers.js";
 // only import type, to avoid bundling error
+import { loadTransformers } from "@llamaindex/env";
 import type {
   CLIPTextModelWithProjection,
   CLIPVisionModelWithProjection,
   PreTrainedTokenizer,
   Processor,
 } from "@xenova/transformers";
+import { Settings } from "../Settings.js";
 
 async function readImage(input: ImageType) {
-  const { RawImage } = await lazyLoadTransformers();
+  const { RawImage } = await loadTransformers((transformer) => {
+    Settings.callbackManager.dispatchEvent(
+      "load-transformers",
+      {
+        transformer,
+      },
+      true,
+    );
+  });
   if (input instanceof Blob) {
     return await RawImage.fromBlob(input);
   } else if (_.isString(input) || input instanceof URL) {
@@ -40,7 +49,15 @@ export class ClipEmbedding extends MultiModalEmbedding {
   }
 
   async getTokenizer() {
-    const { AutoTokenizer } = await lazyLoadTransformers();
+    const { AutoTokenizer } = await loadTransformers((transformer) => {
+      Settings.callbackManager.dispatchEvent(
+        "load-transformers",
+        {
+          transformer,
+        },
+        true,
+      );
+    });
     if (!this.tokenizer) {
       this.tokenizer = await AutoTokenizer.from_pretrained(this.modelType);
     }
@@ -48,7 +65,15 @@ export class ClipEmbedding extends MultiModalEmbedding {
   }
 
   async getProcessor() {
-    const { AutoProcessor } = await lazyLoadTransformers();
+    const { AutoProcessor } = await loadTransformers((transformer) => {
+      Settings.callbackManager.dispatchEvent(
+        "load-transformers",
+        {
+          transformer,
+        },
+        true,
+      );
+    });
     if (!this.processor) {
       this.processor = await AutoProcessor.from_pretrained(this.modelType);
     }
@@ -56,7 +81,17 @@ export class ClipEmbedding extends MultiModalEmbedding {
   }
 
   async getVisionModel() {
-    const { CLIPVisionModelWithProjection } = await lazyLoadTransformers();
+    const { CLIPVisionModelWithProjection } = await loadTransformers(
+      (transformer) => {
+        Settings.callbackManager.dispatchEvent(
+          "load-transformers",
+          {
+            transformer,
+          },
+          true,
+        );
+      },
+    );
     if (!this.visionModel) {
       this.visionModel = await CLIPVisionModelWithProjection.from_pretrained(
         this.modelType,
@@ -67,7 +102,17 @@ export class ClipEmbedding extends MultiModalEmbedding {
   }
 
   async getTextModel() {
-    const { CLIPTextModelWithProjection } = await lazyLoadTransformers();
+    const { CLIPTextModelWithProjection } = await loadTransformers(
+      (transformer) => {
+        Settings.callbackManager.dispatchEvent(
+          "load-transformers",
+          {
+            transformer,
+          },
+          true,
+        );
+      },
+    );
     if (!this.textModel) {
       this.textModel = await CLIPTextModelWithProjection.from_pretrained(
         this.modelType,

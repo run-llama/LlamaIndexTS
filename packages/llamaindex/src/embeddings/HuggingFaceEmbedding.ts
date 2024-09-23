@@ -1,6 +1,7 @@
 import { HfInference } from "@huggingface/inference";
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
-import { lazyLoadTransformers } from "../internal/deps/transformers.js";
+import { loadTransformers } from "@llamaindex/env";
+import { Settings } from "../Settings.js";
 
 export enum HuggingFaceEmbeddingModelType {
   XENOVA_ALL_MINILM_L6_V2 = "Xenova/all-MiniLM-L6-v2",
@@ -33,7 +34,15 @@ export class HuggingFaceEmbedding extends BaseEmbedding {
 
   async getExtractor() {
     if (!this.extractor) {
-      const { pipeline } = await lazyLoadTransformers();
+      const { pipeline } = await loadTransformers((transformer) => {
+        Settings.callbackManager.dispatchEvent(
+          "load-transformers",
+          {
+            transformer,
+          },
+          true,
+        );
+      });
       this.extractor = await pipeline("feature-extraction", this.modelType, {
         quantized: this.quantized,
       });
