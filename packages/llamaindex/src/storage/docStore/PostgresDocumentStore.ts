@@ -4,6 +4,7 @@ import {
   type PostgresKVStoreConfig,
 } from "../kvStore/PostgresKVStore.js";
 import { KVDocumentStore } from "./KVDocumentStore.js";
+import { noneSerializer } from "./utils.js";
 
 const DEFAULT_TABLE_NAME = "llamaindex_doc_store";
 
@@ -12,6 +13,8 @@ export type PostgresDocumentStoreConfig = PostgresKVStoreConfig & {
 };
 
 export class PostgresDocumentStore extends KVDocumentStore {
+  serializer = noneSerializer;
+
   constructor(config?: PostgresDocumentStoreConfig) {
     const kvStore = new PostgresKVStore({
       schemaName: config?.schemaName,
