@@ -7,41 +7,76 @@ export type DataType = Record<string, Record<string, any>>;
 const DEFAULT_SCHEMA_NAME = "public";
 const DEFAULT_TABLE_NAME = "llamaindex_kv_store";
 
+export type PostgresKVStoreBaseConfig = {
+  schemaName?: string | undefined;
+  tableName?: string | undefined;
+};
+
+export type PostgresKVStoreClientConfig =
+  | {
+      /**
+       * Client configuration options for the pg client.
+       *
+       * {@link https://node-postgres.com/apis/client#new-client PostgresSQL Client API}
+       */
+      clientConfig?: pg.ClientConfig | undefined;
+    }
+  | {
+      /**
+       * A pg client or pool client instance.
+       * If provided, make sure it is not connected to the database yet, or it will throw an error.
+       */
+      shouldConnect?: boolean | undefined;
+      client?: pg.Client | pg.PoolClient;
+    };
+
+export type PostgresKVStoreConfig = PostgresKVStoreBaseConfig &
+  PostgresKVStoreClientConfig;
+
 export class PostgresKVStore extends BaseKVStore {
   private schemaName: string;
   private tableName: string;
-  private connectionString: string | undefined = undefined;
-  private db?: pg.Client;
 
-  constructor(config?: {
-    schemaName?: string | undefined;
-    tableName?: string | undefined;
-    connectionString?: string | undefined;
-  }) {
+  private isDBConnected: boolean = false;
+  private clientConfig: pg.ClientConfig | undefined = undefined;
+  private db?: pg.ClientBase | undefined = undefined;
+
+  constructor(config?: PostgresKVStoreConfig) {
     super();
     this.schemaName = config?.schemaName || DEFAULT_SCHEMA_NAME;
     this.tableName = config?.tableName || DEFAULT_TABLE_NAME;
-    this.connectionString = config?.connectionString;
-  }
-
-  private async getDb(): Promise<pg.Client> {
-    if (!this.db) {
-      try {
-        const pg = await import("pg");
-        const { Client } = pg.default ? pg.default : pg;
-        const db = new Client({ connectionString: this.connectionString });
-        await db.connect();
-        await this.checkSchema(db);
-        this.db = db;
-      } catch (err) {
-        console.error(err);
-        return Promise.reject(err instanceof Error ? err : new Error(`${err}`));
+    if (config) {
+      if ("clientConfig" in config) {
+        this.clientConfig = config.clientConfig;
+      } else if ("client" in config) {
+        this.isDBConnected =
+          config?.shouldConnect !== undefined ? !config.shouldConnect : false;
+        this.db = config.client;
       }
     }
-    return Promise.resolve(this.db);
   }
 
-  private async checkSchema(db: pg.Client) {
+  private async getDb(): Promise<pg.ClientBase> {
+    if (!this.db) {
+      const pg = await import("pg");
+      const { Client } = pg.default ? pg.default : pg;
+      const db = new Client({ ...this.clientConfig });
+      await db.connect();
+      this.isDBConnected = true;
+      this.db = db;
+    }
+    if (this.db && !this.isDBConnected) {
+      await this.db.connect();
+      this.isDBConnected = true;
+    }
+    this.db.on("end", () => {
+      this.isDBConnected = false;
+    });
+    await this.checkSchema(this.db);
+    return this.db;
+  }
+
+  private async checkSchema(db: pg.ClientBase) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
     const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName} (
       id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -97,7 +132,7 @@ export class PostgresKVStore extends BaseKVStore {
       const sql = `SELECT * FROM ${this.schemaName}.${this.tableName} WHERE key = $1 AND collection = $2`;
       const result = await db.query(sql, [key, collection]);
       await db.query("COMMIT");
-      return result.rows[0].value;
+      return result.rows[0]?.value;
     } catch (error) {
       await db.query("ROLLBACK");
       throw error;
