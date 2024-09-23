@@ -1,12 +1,15 @@
+import type { KnowledgeBaseVectorSearchConfiguration } from "@aws-sdk/client-bedrock-agent-runtime";
 import {
   BedrockAgentRuntimeClient,
-  RetrieveCommand,
   type BedrockAgentRuntimeClientConfig,
   type RetrievalFilter,
+  RetrieveCommand,
   type SearchType,
 } from "@aws-sdk/client-bedrock-agent-runtime";
-
-import { BaseRetriever, Document } from "llamaindex";
+import type { QueryBundle } from "@llamaindex/core/query-engine";
+import { BaseRetriever } from "@llamaindex/core/retriever";
+import { Document, type NodeWithScore } from "@llamaindex/core/schema";
+import { extractText } from "@llamaindex/core/utils";
 
 /**
  * Interface for the arguments required to initialize an
@@ -54,9 +57,9 @@ export class AmazonKnowledgeBaseRetriever extends BaseRetriever {
 
   bedrockAgentRuntimeClient: BedrockAgentRuntimeClient;
 
-  filter?: RetrievalFilter;
+  filter: RetrievalFilter | undefined;
 
-  overrideSearchType?: SearchType;
+  overrideSearchType: SearchType | undefined;
 
   constructor({
     knowledgeBaseId,
@@ -90,22 +93,22 @@ export class AmazonKnowledgeBaseRetriever extends BaseRetriever {
   }
 
   async queryKnowledgeBase(
-    query: string,
+    query: QueryBundle,
     topK: number,
     filter?: RetrievalFilter,
     overrideSearchType?: SearchType,
-  ) {
+  ): Promise<NodeWithScore[]> {
     const retrieveCommand = new RetrieveCommand({
       knowledgeBaseId: this.knowledgeBaseId,
       retrievalQuery: {
-        text: query,
+        text: extractText(query),
       },
       retrievalConfiguration: {
         vectorSearchConfiguration: {
           numberOfResults: topK,
           overrideSearchType,
           filter,
-        },
+        } as KnowledgeBaseVectorSearchConfiguration,
       },
     });
 
@@ -113,7 +116,7 @@ export class AmazonKnowledgeBaseRetriever extends BaseRetriever {
       await this.bedrockAgentRuntimeClient.send(retrieveCommand);
 
     return (
-      retrieveResponse.retrievalResults?.map((result: any) => {
+      retrieveResponse.retrievalResults?.map((result) => {
         let source;
         switch (result.location?.type) {
           case "CONFLUENCE":
@@ -137,24 +140,26 @@ export class AmazonKnowledgeBaseRetriever extends BaseRetriever {
         }
 
         return {
-          pageContent: this.cleanResult(result.content?.text || ""),
-          metadata: {
-            source,
-            score: result.score,
-            ...result.metadata,
-          },
+          node: new Document({
+            text: this.cleanResult(result.content?.text || ""),
+            metadata: {
+              source,
+              score: result.score,
+              ...result.metadata,
+            },
+          }),
+          score: result.score ?? 1.0,
         };
-      }) ?? ([] as Array<Document>)
+      }) ?? []
     );
   }
 
-  async _retrieve(query: string): Promise<Document[]> {
-    const docs = await this.queryKnowledgeBase(
+  async _retrieve(query: QueryBundle): Promise<NodeWithScore[]> {
+    return await this.queryKnowledgeBase(
       query,
       this.topK,
       this.filter,
       this.overrideSearchType,
     );
-    return docs;
   }
 }
