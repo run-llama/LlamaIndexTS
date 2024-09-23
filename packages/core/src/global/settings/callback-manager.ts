@@ -105,11 +105,19 @@ export class CallbackManager {
   on<K extends keyof LlamaIndexEventMaps>(
     event: K,
     handler: EventHandler<LlamaIndexEventMaps[K]>,
+    options: {
+      signal?: AbortSignal;
+    }
   ) {
     if (!this.#handlers.has(event)) {
       this.#handlers.set(event, []);
     }
     this.#handlers.get(event)!.push(handler);
+    if (options.signal) {
+      options.signal.addEventListener("abort", () => {
+        this.off(event, handler);
+      });
+    }
     return this;
   }
 

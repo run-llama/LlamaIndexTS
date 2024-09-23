@@ -1,0 +1,15 @@
+{
+  "name": "@llamaindex/next-openai-example",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/himself65/LlamaIndexTS.git"
+  },
+  "private": true,
+  "dependencies": {
+    "@llamaindex/ui": "workspace:^0.0.1",
+    "ai": "^3.3.21",
+    "llamaindex": "workspace:^0.6.7",
+    "next": "^14.2.13",
+    "zod": "^3.23.8"
+  }
+}
