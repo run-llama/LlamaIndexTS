@@ -14,10 +14,12 @@ export async function chatWithAI(message: string): Promise<ReactNode> {
   const uiStream = createStreamableUI();
   runWithStreamableUI(uiStream, () =>
     agent
-      .chat({
-        stream: true,
-        message,
-      })
+      .chat(
+        {
+          message,
+        },
+        true,
+      )
       .then(async (responseStream) => {
         return responseStream.pipeTo(
           new WritableStream({

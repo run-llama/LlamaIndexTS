@@ -29,7 +29,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     for (const key in jsonDict) {
       const value = jsonDict[key];
       if (isValidDocJson(value)) {
-        docs[key] = jsonToDoc(value);
+        docs[key] = jsonToDoc(value, this.serializer);
       } else {
         console.warn(`Invalid JSON for docId ${key}`);
       }
@@ -52,7 +52,7 @@ export class KVDocumentStore extends BaseDocumentStore {
         );
       }
       const nodeKey = doc.id_;
-      const data = docToJson(doc);
+      const data = docToJson(doc, this.serializer);
       await this.kvstore.put(nodeKey, data, this.nodeCollection);
       const metadata: DocMetaData = { docHash: doc.hash };
 
@@ -94,7 +94,7 @@ export class KVDocumentStore extends BaseDocumentStore {
     if (!isValidDocJson(json)) {
       throw new Error(`Invalid JSON for docId ${docId}`);
     }
-    return jsonToDoc(json);
+    return jsonToDoc(json, this.serializer);
   }
 
   async getRefDocInfo(refDocId: string): Promise<RefDocInfo | undefined> {

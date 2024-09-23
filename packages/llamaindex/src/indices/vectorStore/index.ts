@@ -2,9 +2,10 @@ import {
   DEFAULT_SIMILARITY_TOP_K,
   type BaseEmbedding,
 } from "@llamaindex/core/embeddings";
-import { Settings } from "@llamaindex/core/global";
 import type { MessageContent } from "@llamaindex/core/llms";
+import type { QueryBundle } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
+import { BaseRetriever } from "@llamaindex/core/retriever";
 import {
   ImageNode,
   ModalityType,
@@ -14,8 +15,6 @@ import {
   type Document,
   type NodeWithScore,
 } from "@llamaindex/core/schema";
-import { wrapEventCaller } from "@llamaindex/core/utils";
-import type { BaseRetriever, RetrieveParams } from "../../Retriever.js";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { nodeParserFromSettingsOrContext } from "../../Settings.js";
 import { RetrieverQueryEngine } from "../../engines/query/RetrieverQueryEngine.js";
@@ -388,7 +387,7 @@ export type VectorIndexRetrieverOptions = {
   filters?: MetadataFilters;
 };
 
-export class VectorIndexRetriever implements BaseRetriever {
+export class VectorIndexRetriever extends BaseRetriever {
   index: VectorStoreIndex;
   topK: TopKMap;
 
@@ -401,6 +400,7 @@ export class VectorIndexRetriever implements BaseRetriever {
     topK,
     filters,
   }: VectorIndexRetrieverOptions) {
+    super();
     this.index = index;
     this.serviceContext = this.index.serviceContext;
     this.topK = topK ?? {
@@ -417,32 +417,17 @@ export class VectorIndexRetriever implements BaseRetriever {
     this.topK[ModalityType.TEXT] = similarityTopK;
   }
 
-  @wrapEventCaller
-  async retrieve({
-    query,
-    preFilters,
-  }: RetrieveParams): Promise<NodeWithScore[]> {
-    Settings.callbackManager.dispatchEvent("retrieve-start", {
-      query,
-    });
+  async _retrieve(params: QueryBundle): Promise<NodeWithScore[]> {
+    const { query } = params;
     const vectorStores = this.index.vectorStores;
     let nodesWithScores: NodeWithScore[] = [];
 
     for (const type in vectorStores) {
       const vectorStore: VectorStore = vectorStores[type as ModalityType]!;
       nodesWithScores = nodesWithScores.concat(
-        await this.retrieveQuery(
-          query,
-          type as ModalityType,
-          vectorStore,
-          preFilters as MetadataFilters,
-        ),
+        await this.retrieveQuery(query, type as ModalityType, vectorStore),
       );
     }
-    Settings.callbackManager.dispatchEvent("retrieve-end", {
-      query,
-      nodes: nodesWithScores,
-    });
     return nodesWithScores;
   }
 

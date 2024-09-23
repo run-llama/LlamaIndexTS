@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.6.5",
+  "version": "0.6.7",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -43,6 +43,7 @@
     "@types/node": "^22.5.1",
     "@types/papaparse": "^5.3.14",
     "@types/pg": "^8.11.8",
+    "@upstash/vector": "^1.1.5",
     "@zilliz/milvus2-sdk-node": "^2.4.6",
     "ajv": "^8.17.1",
     "assemblyai": "^4.7.0",

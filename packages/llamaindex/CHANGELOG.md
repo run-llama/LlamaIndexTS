@@ -1,5 +1,25 @@
 # llamaindex
 
+## 0.6.7
+
+### Patch Changes
+
+- 23bcc37: fix: add `serializer` in doc store
+
+  `PostgresDocumentStore` now will not use JSON.stringify for better performance
+
+## 0.6.6
+
+### Patch Changes
+
+- d902cc3: Fix context not being sent using ContextChatEngine
+- 025ffe6: fix: update `PostgresKVStore` constructor params
+- a659574: Adds upstash vector store as a storage
+- Updated dependencies [d902cc3]
+  - @llamaindex/core@0.2.5
+  - @llamaindex/openai@0.1.7
+  - @llamaindex/groq@0.0.6
+
 ## 0.6.5
 
 ### Patch Changes
