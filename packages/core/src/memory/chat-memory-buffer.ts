@@ -1,5 +1,5 @@
 import { Settings } from "../global";
-import type { ChatMessage, LLM, MessageContent } from "../llms";
+import type { ChatMessage, LLM } from "../llms";
 import { type BaseChatStore } from "../storage/chat-store";
 import { BaseChatStoreMemory, DEFAULT_TOKEN_LIMIT_RATIO } from "./base";
 
@@ -34,7 +34,7 @@ export class ChatMemoryBuffer<
   }
 
   getMessages(
-    input?: MessageContent | undefined,
+    transientMessages?: ChatMessage<AdditionalMessageOptions>[] | undefined,
     initialTokenCount: number = 0,
   ) {
     const messages = this.getAllMessages();
@@ -43,16 +43,22 @@ export class ChatMemoryBuffer<
       throw new Error("Initial token count exceeds token limit");
     }
 
-    let messageCount = messages.length;
-    let currentMessages = messages.slice(-messageCount);
-    let tokenCount = this._tokenCountForMessages(messages) + initialTokenCount;
+    // Add input messages as transient messages
+    const messagesWithInput = transientMessages
+      ? [...transientMessages, ...messages]
+      : messages;
+
+    let messageCount = messagesWithInput.length;
+    let currentMessages = messagesWithInput.slice(-messageCount);
+    let tokenCount =
+      this._tokenCountForMessages(messagesWithInput) + initialTokenCount;
 
     while (tokenCount > this.tokenLimit && messageCount > 1) {
       messageCount -= 1;
-      if (messages.at(-messageCount)!.role === "assistant") {
+      if (messagesWithInput.at(-messageCount)!.role === "assistant") {
         messageCount -= 1;
       }
-      currentMessages = messages.slice(-messageCount);
+      currentMessages = messagesWithInput.slice(-messageCount);
       tokenCount =
         this._tokenCountForMessages(currentMessages) + initialTokenCount;
     }
@@ -60,6 +66,6 @@ export class ChatMemoryBuffer<
     if (tokenCount > this.tokenLimit && messageCount <= 0) {
       return [];
     }
-    return messages.slice(-messageCount);
+    return messagesWithInput.slice(-messageCount);
   }
 }
