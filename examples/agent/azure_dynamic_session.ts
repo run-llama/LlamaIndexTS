@@ -42,7 +42,6 @@ async function main() {
   const response = await agent.chat({
     message:
       "plot a chart of 5 random numbers and save it to /mnt/data/chart.png",
-    stream: false,
   });
 
   // Print the response

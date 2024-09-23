@@ -1,3 +1,4 @@
+import { randomUUID } from "@llamaindex/env";
 import { Settings } from "../global";
 import type { MessageContent } from "../llms";
 import { PromptMixin } from "../prompts";
@@ -16,7 +17,8 @@ export type RetrieveStartEvent = {
 
 export type RetrieveEndEvent = {
   id: string;
-  response: NodeWithScore[];
+  query: QueryBundle;
+  nodes: NodeWithScore[];
 };
 
 export abstract class BaseRetriever extends PromptMixin {
@@ -38,10 +40,15 @@ export abstract class BaseRetriever extends PromptMixin {
   public async retrieve(params: QueryType): Promise<NodeWithScore[]> {
     const cb = Settings.callbackManager;
     const queryBundle = typeof params === "string" ? { query: params } : params;
-    cb.dispatchEvent("retrieve-start", { id: "todo", query: queryBundle });
+    const id = randomUUID();
+    cb.dispatchEvent("retrieve-start", { id, query: queryBundle });
     let response = await this._retrieve(queryBundle);
     response = await this._handleRecursiveRetrieval(queryBundle, response);
-    cb.dispatchEvent("retrieve-end", { id: "todo", response });
+    cb.dispatchEvent("retrieve-end", {
+      id,
+      query: queryBundle,
+      nodes: response,
+    });
     return response;
   }
 

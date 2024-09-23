@@ -24,11 +24,13 @@ async function main() {
 
   while (true) {
     const query = await rl.question("Query: ");
-    const stream = await chatEngine.chat({
-      message: query,
-      chatHistory,
-      stream: true,
-    });
+    const stream = await chatEngine.chat(
+      {
+        message: query,
+        chatHistory,
+      },
+      true,
+    );
     if (chatHistory.getLastSummary()) {
       // Print the summary of the conversation so far that is produced by the SummaryChatHistory
       console.log(`Summary: ${chatHistory.getLastSummary()?.content}`);

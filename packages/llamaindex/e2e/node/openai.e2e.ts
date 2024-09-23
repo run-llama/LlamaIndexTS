@@ -322,10 +322,12 @@ await test("agent stream", async (t) => {
       tools: [sumNumbersTool, divideNumbersTool],
     });
 
-    const stream = await agent.chat({
-      message: "Divide 16 by 2 then add 20",
-      stream: true,
-    });
+    const stream = await agent.chat(
+      {
+        message: "Divide 16 by 2 then add 20",
+      },
+      true,
+    );
 
     let message = "";
 
