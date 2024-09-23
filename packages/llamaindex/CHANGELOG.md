@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.6.7
+
+### Patch Changes
+
+- 23bcc37: fix: add `serializer` in doc store
+
+  `PostgresDocumentStore` now will not use JSON.stringify for better performance
+
 ## 0.6.6
 
 ### Patch Changes
