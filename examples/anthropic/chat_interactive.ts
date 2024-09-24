@@ -18,7 +18,7 @@ import readline from "node:readline/promises";
   });
   const chatEngine = new SimpleChatEngine({
     llm,
-    chatHistory,
+    memory: chatHistory,
   });
   const rl = readline.createInterface({ input, output });
 
