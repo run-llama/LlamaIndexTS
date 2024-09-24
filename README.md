@@ -7,7 +7,7 @@
 
 LlamaIndex is a data framework for your LLM application.
 
-Use your own data with large language models (LLMs, OpenAI ChatGPT and others) in Typescript and Javascript.
+Use your own data with large language models (LLMs, OpenAI ChatGPT and others) in JS runtime environments with TypeScript support.
 
 Documentation: https://ts.llamaindex.ai/
 
@@ -19,16 +19,35 @@ Try examples online:
 
 LlamaIndex.TS aims to be a lightweight, easy to use set of libraries to help you integrate large language models into your applications with your own data.
 
-## Multiple JS Environment Support
+## Compatibility
+
+### Multiple JS Environment Support
 
 LlamaIndex.TS supports multiple JS environments, including:
 
 - Node.js (18, 20, 22) ✅
 - Deno ✅
 - Bun ✅
-- React Server Components (Next.js) ✅
+- Nitro ✅
+- Vercel Edge Runtime ✅ (with some limitations)
+- Cloudflare Workers ✅ (with some limitations)
 
 For now, browser support is limited due to the lack of support for [AsyncLocalStorage-like APIs](https://github.com/tc39/proposal-async-context)
+
+### Supported LLMs:
+
+- OpenAI LLms
+- Anthropic LLms
+- Groq LLMs
+- Llama2, Llama3, Llama3.1 LLMs
+- MistralAI LLMs
+- Fireworks LLMs
+- DeepSeek LLMs
+- ReplicateAI LLMs
+- TogetherAI LLMs
+- HuggingFace LLms
+- DeepInfra LLMs
+- Gemini LLMs
 
 ## Getting started
 
@@ -77,7 +96,7 @@ See more about [moduleResolution](https://www.typescriptlang.org/docs/handbook/m
 ### Node.js
 
 ```ts
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 import { Document, VectorStoreIndex } from "llamaindex";
 
 async function main() {
@@ -111,9 +130,9 @@ main();
 node --import tsx ./main.ts
 ```
 
-### React Server Component (Next.js, Waku, Redwood.JS...)
+### Next.js
 
-First, you will need to add a llamaindex plugin to your Next.js project.
+You will need to add a llamaindex plugin to your Next.js project.
 
 ```js
 // next.config.js
@@ -124,20 +143,18 @@ module.exports = withLlamaIndex({
 });
 ```
 
-You can combine `ai` with `llamaindex` in Next.js with RSC (React Server Components).
+### React Server Actions
+
+You can combine `ai` with `llamaindex` in Next.js, Waku or Redwood.js with RSC (React Server Components).
 
 ```tsx
-// src/apps/page.tsx
 "use client";
 import { chatWithAgent } from "@/actions";
 import type { JSX } from "react";
-import { useFormState } from "react-dom";
-
-// You can use the Edge runtime in Next.js by adding this line:
-// export const runtime = "edge";
+import { useActionState } from "react";
 
 export default function Home() {
-  const [ui, action] = useFormState<JSX.Element | null>(async () => {
+  const [ui, action] = useActionState<JSX.Element | null>(async () => {
     return chatWithAgent("hello!", []);
   }, null);
   return (
@@ -191,6 +208,48 @@ export async function chatWithAgent(
 }
 ```
 
+### Cloudflare Workers
+
+> [!TIP]
+> Some modules are not supported in Cloudflare Workers which require Node.js APIs.
+
+```ts
+// add `OPENAI_API_KEY` to the `.dev.vars` file
+interface Env {
+  OPENAI_API_KEY: string;
+}
+
+export default {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
+    const { OpenAIAgent, OpenAI } = await import("@llamaindex/openai");
+    const text = await request.text();
+    const agent = new OpenAIAgent({
+      llm: new OpenAI({
+        apiKey: env.OPENAI_API_KEY,
+      }),
+      tools: [],
+    });
+    const responseStream = await agent.chat({
+      stream: true,
+      message: text,
+    });
+    const textEncoder = new TextEncoder();
+    const response = responseStream.pipeThrough<Uint8Array>(
+      new TransformStream({
+        transform: (chunk, controller) => {
+          controller.enqueue(textEncoder.encode(chunk.delta));
+        },
+      }),
+    );
+    return new Response(response);
+  },
+};
+```
+
 ### Vite
 
 We have some wasm dependencies for better performance. You can use `vite-plugin-wasm` to load them.
@@ -206,29 +265,9 @@ export default {
 };
 ```
 
-## Playground
+### Tips when using in non-Node.js environments
 
-Check out our NextJS playground at https://llama-playground.vercel.app/. The source is available at https://github.com/run-llama/ts-playground
-
-## Core concepts for getting started:
-
-- [Document](/packages/llamaindex/src/Node.ts): A document represents a text file, PDF file or other contiguous piece of data.
-
-- [Node](/packages/llamaindex/src/Node.ts): The basic data building block. Most commonly, these are parts of the document split into manageable pieces that are small enough to be fed into an embedding model and LLM.
-
-- [Embedding](/packages/llamaindex/src/embeddings/OpenAIEmbedding.ts): Embeddings are sets of floating point numbers which represent the data in a Node. By comparing the similarity of embeddings, we can derive an understanding of the similarity of two pieces of data. One use case is to compare the embedding of a question with the embeddings of our Nodes to see which Nodes may contain the data needed to answer that question. Because the default service context is OpenAI, the default embedding is `OpenAIEmbedding`. If using different models, say through Ollama, use this [Embedding](/packages/llamaindex/src/embeddings/OllamaEmbedding.ts) (see all [here](/packages/llamaindex/src/embeddings)).
-
-- [Indices](/packages/llamaindex/src/indices/): Indices store the Nodes and the embeddings of those nodes. QueryEngines retrieve Nodes from these Indices using embedding similarity.
-
-- [QueryEngine](/packages/llamaindex/src/engines/query/RetrieverQueryEngine.ts): Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected Nodes from your Index to give the LLM the context it needs to answer your query. To build a query engine from your Index (recommended), use the [`asQueryEngine`](/packages/llamaindex/src/indices/BaseIndex.ts) method on your Index. See all query engines [here](/packages/llamaindex/src/engines/query).
-
-- [ChatEngine](/packages/llamaindex/src/engines/chat/SimpleChatEngine.ts): A ChatEngine helps you build a chatbot that will interact with your Indices. See all chat engines [here](/packages/llamaindex/src/engines/chat).
-
-- [SimplePrompt](/packages/llamaindex/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
-
-## Tips when using in non-Node.js environments
-
-When you are importing `llamaindex` in a non-Node.js environment(such as React Server Components, Cloudflare Workers, etc.)
+When you are importing `llamaindex` in a non-Node.js environment(such as Vercel Edge, Cloudflare Workers, etc.)
 Some classes are not exported from top-level entry file.
 
 The reason is that some classes are only compatible with Node.js runtime,(e.g. `PDFReader`) which uses Node.js specific APIs(like `fs`, `child_process`, `crypto`).
@@ -264,19 +303,31 @@ export async function getDocuments() {
 
 You'll find a complete example with LlamaIndexTS here: https://github.com/run-llama/create_llama_projects/tree/main/nextjs-edge-llamaparse
 
-## Supported LLMs:
+## Playground
 
-- OpenAI GPT-3.5-turbo and GPT-4
-- Anthropic Claude 3 (Opus, Sonnet, and Haiku) and the legacy models (Claude 2 and Instant)
-- Groq LLMs
-- Llama2/3 Chat LLMs (70B, 13B, and 7B parameters)
-- MistralAI Chat LLMs
-- Fireworks Chat LLMs
+Check out our NextJS playground at https://llama-playground.vercel.app/. The source is available at https://github.com/run-llama/ts-playground
+
+## Core concepts for getting started:
+
+- [Document](/packages/llamaindex/src/Node.ts): A document represents a text file, PDF file or other contiguous piece of data.
+
+- [Node](/packages/llamaindex/src/Node.ts): The basic data building block. Most commonly, these are parts of the document split into manageable pieces that are small enough to be fed into an embedding model and LLM.
+
+- [Embedding](/packages/llamaindex/src/embeddings/OpenAIEmbedding.ts): Embeddings are sets of floating point numbers which represent the data in a Node. By comparing the similarity of embeddings, we can derive an understanding of the similarity of two pieces of data. One use case is to compare the embedding of a question with the embeddings of our Nodes to see which Nodes may contain the data needed to answer that question. Because the default service context is OpenAI, the default embedding is `OpenAIEmbedding`. If using different models, say through Ollama, use this [Embedding](/packages/llamaindex/src/embeddings/OllamaEmbedding.ts) (see all [here](/packages/llamaindex/src/embeddings)).
+
+- [Indices](/packages/llamaindex/src/indices/): Indices store the Nodes and the embeddings of those nodes. QueryEngines retrieve Nodes from these Indices using embedding similarity.
+
+- [QueryEngine](/packages/llamaindex/src/engines/query/RetrieverQueryEngine.ts): Query engines are what generate the query you put in and give you back the result. Query engines generally combine a pre-built prompt with selected Nodes from your Index to give the LLM the context it needs to answer your query. To build a query engine from your Index (recommended), use the [`asQueryEngine`](/packages/llamaindex/src/indices/BaseIndex.ts) method on your Index. See all query engines [here](/packages/llamaindex/src/engines/query).
+
+- [ChatEngine](/packages/llamaindex/src/engines/chat/SimpleChatEngine.ts): A ChatEngine helps you build a chatbot that will interact with your Indices. See all chat engines [here](/packages/llamaindex/src/engines/chat).
+
+- [SimplePrompt](/packages/llamaindex/src/Prompt.ts): A simple standardized function call definition that takes in inputs and formats them in a template literal. SimplePrompts can be specialized using currying and combined using other SimplePrompt functions.
 
 ## Contributing:
 
-We are in the very early days of LlamaIndex.TS. If you’re interested in hacking on it with us check out our [contributing guide](/CONTRIBUTING.md)
+Please see our [contributing guide](CONTRIBUTING.md) for more information.
+You are highly encouraged to contribute to LlamaIndex.TS!
 
-## Bugs? Questions?
+## Community
 
 Please join our Discord! https://discord.com/invite/eN6D2HQ4aX
