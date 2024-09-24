@@ -1,0 +1,447 @@
+diff --git a/dist/bin/cli.js b/dist/bin/cli.js
+old mode 100755
+new mode 100644
+index 09fe4f67df5d54cdd7ea84bae379191aacdcac3b..8c3ccdbf4e722af76719cc3c9c5607ec2914dfc3
+--- a/dist/bin/cli.js
++++ b/dist/bin/cli.js
+@@ -28,10 +28,26 @@ const availableExtensions = new Set([
+     'cts',
+     'mts'
+ ]);
++// You can find the list of runtime keys here:
++//  https://runtime-keys.proposal.wintercg.org/
+ const runtimeExportConventions = new Set([
++    'azion',
++    'lagon',
++    'moddable',
++    'netlify',
++    'electron',
++    'fastly',
++    'kiesel',
++    'wasmer',
+     'react-server',
++    'edge-routine',
+     'react-native',
+-    'edge-light'
++    'edge-light',
++    'node',
++    'deno',
++    'bun',
++    'workerd',
++    'browser' // this is not official, but it's used in the vite
+ ]);
+ const optimizeConventions = new Set([
+     'development',
+@@ -183,6 +199,9 @@ function isESModulePackage(packageType) {
+ function isBinExportPath(exportPath) {
+     return exportPath === BINARY_TAG || exportPath.startsWith(BINARY_TAG + '/');
+ }
++function isTypeFile(filename) {
++    return filename.endsWith('.d.ts') || filename.endsWith('.d.mts') || filename.endsWith('.d.cts');
++}
+ 
+ function collectExportPath(exportValue, exportKey, currentPath, exportTypes, exportToDist) {
+     // End of searching, export value is file path.
+@@ -329,6 +348,14 @@ function getExportTypeFromFile(filename, pkgType) {
+     return exportType;
+ }
+ 
++function validateTypesFieldCondition(pair) {
++    const [outputPath, composedExportType] = pair;
++    const exportTypes = new Set(composedExportType.split('.'));
++    if (!exportTypes.has('types') && isTypeFile(outputPath)) {
++        return true;
++    }
++    return false;
++}
+ function lint$1(pkg) {
+     const { name, main, exports } = pkg;
+     const isESM = isESModulePackage(pkg.type);
+@@ -355,7 +382,8 @@ function lint$1(pkg) {
+         badEsmImportExport: {
+             value: false,
+             paths: []
+-        }
++        },
++        badTypesExport: []
+     };
+     // Validate ESM package
+     if (isESM) {
+@@ -368,7 +396,17 @@ function lint$1(pkg) {
+                 state.invalidExportsFieldType = true;
+             } else {
+                 parsedExports.forEach((outputPairs)=>{
+-                    for (const [outputPath, composedExportType] of outputPairs){
++                    for (const outputPair of outputPairs){
++                        const [outputPath, composedExportType] = outputPair;
++                        if (validateTypesFieldCondition([
++                            outputPath,
++                            composedExportType
++                        ])) {
++                            state.badTypesExport.push([
++                                outputPath,
++                                composedExportType
++                            ]);
++                        }
+                         const exportTypes = new Set(composedExportType.split('.'));
+                         let requirePath = '';
+                         let importPath = '';
+@@ -406,7 +444,17 @@ function lint$1(pkg) {
+                 state.invalidExportsFieldType = true;
+             } else {
+                 parsedExports.forEach((outputPairs)=>{
+-                    for (const [outputPath, composedExportType] of outputPairs){
++                    for (const outputPair of outputPairs){
++                        const [outputPath, composedExportType] = outputPair;
++                        if (validateTypesFieldCondition([
++                            outputPath,
++                            composedExportType
++                        ])) {
++                            state.badTypesExport.push([
++                                outputPath,
++                                composedExportType
++                            ]);
++                        }
+                         const exportTypes = new Set(composedExportType.split('.'));
+                         let requirePath = '';
+                         let importPath = '';
+@@ -468,9 +516,15 @@ function lint$1(pkg) {
+             logger.warn(`  ${p}`);
+         });
+     }
++    if (state.badTypesExport.length) {
++        state.badTypesExport.forEach(([outputPath, composedExportType])=>{
++            logger.error(`Bad export types field with ${composedExportType} in ${outputPath}, use "types" export condition for it`);
++        });
++        process.exit(1);
++    }
+ }
+ 
+-var version = "5.3.2";
++var version = "5.4.0";
+ 
+ function relativify(path) {
+     return path.startsWith('.') ? path : `./${path}`;
+@@ -842,9 +896,6 @@ async function prepare(cwd) {
+     logger.info('Configured `exports` in package.json');
+ }
+ 
+-function isTypeFile(filename) {
+-    return filename.endsWith('.d.ts') || filename.endsWith('.d.mts') || filename.endsWith('.d.cts');
+-}
+ function normalizeExportName(exportName) {
+     const isBinary = isBinExportPath(exportName);
+     let result = exportName;
+@@ -921,6 +972,7 @@ Options:
+   --sourcemap            enable sourcemap generation, default: false
+   --no-dts               do not generate types, default: undefined
+   --tsconfig             path to tsconfig file, default: tsconfig.json
++  --dts-bundle           bundle type declaration files, default: false
+ `;
+ function help() {
+     logger.log(helpMessage);
+@@ -952,6 +1004,7 @@ function parseCliArgs(argv) {
+         '--no-clean': Boolean,
+         '--prepare': Boolean,
+         '--tsconfig': String,
++        '--dts-bundle': Boolean,
+         '-h': '--help',
+         '-v': '--version',
+         '-w': '--watch',
+@@ -972,6 +1025,7 @@ function parseCliArgs(argv) {
+         sourcemap: !!args['--sourcemap'],
+         cwd: args['--cwd'],
+         dts: args['--no-dts'] ? false : undefined,
++        dtsBundle: args['--dts-bundle'],
+         help: args['--help'],
+         version: args['--version'],
+         runtime: args['--runtime'],
+@@ -986,11 +1040,13 @@ function parseCliArgs(argv) {
+ }
+ async function run(args) {
+     var _args_external;
+-    const { source, format, watch, minify, sourcemap, target, runtime, dts, env, clean, tsconfig } = args;
++    const { source, format, watch, minify, sourcemap, target, runtime, dts, dtsBundle, env, clean, tsconfig } = args;
+     const cwd = args.cwd || process.cwd();
+     const file = args.file ? path__default.default.resolve(cwd, args.file) : undefined;
+     const bundleConfig = {
+-        dts,
++        dts: dts !== false && {
++            respectExternal: dtsBundle ? true : undefined
++        },
+         file,
+         format,
+         cwd,
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 96ad9ba40c0e587faf08577ee2c6d287f2c7e350..3588c9137ce82bd71e9a9f0068357f0b8028e7ce 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -14,7 +14,9 @@ type BundleConfig = {
+     sourcemap?: boolean;
+     external?: string[] | null;
+     env?: string[];
+-    dts?: boolean;
++    dts?: {
++        respectExternal?: boolean;
++    } | false;
+     runtime?: string;
+     pkg?: PackageMetadata;
+     clean?: boolean;
+diff --git a/dist/index.js b/dist/index.js
+index ef0bff86d1ec1441f158393d6ea21e4b5f3b9a03..6541056bf73d863f3d9c80ab1a6856e443520053 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -121,10 +121,26 @@ const nodeResolveExtensions = [
+     '.node',
+     '.jsx'
+ ];
++// You can find the list of runtime keys here:
++//  https://runtime-keys.proposal.wintercg.org/
+ const runtimeExportConventions = new Set([
++    'azion',
++    'lagon',
++    'moddable',
++    'netlify',
++    'electron',
++    'fastly',
++    'kiesel',
++    'wasmer',
+     'react-server',
++    'edge-routine',
+     'react-native',
+-    'edge-light'
++    'edge-light',
++    'node',
++    'deno',
++    'bun',
++    'workerd',
++    'browser' // this is not official, but it's used in the vite
+ ]);
+ const optimizeConventions = new Set([
+     'development',
+@@ -908,6 +924,39 @@ async function writeDefaultTsconfig(tsConfigPath) {
+     logger.log(`Detected using TypeScript but tsconfig.json is missing, created a ${pc.blue('tsconfig.json')} for you.`);
+ }
+ 
++/**
++ * @return {Record<string, string>} env { 'process.env.<key>': '<value>' }
++ */ function getDefinedInlineVariables(envs, parsedExportCondition) {
++    if (!envs.includes('NODE_ENV')) {
++        envs.push('NODE_ENV');
++    }
++    const envVars = envs.reduce((acc, key)=>{
++        const value = process.env[key];
++        if (typeof value !== 'undefined') {
++            acc['process.env.' + key] = JSON.stringify(value);
++        }
++        return acc;
++    }, {});
++    const exportConditionNames = Object.keys(parsedExportCondition.export).reduce((acc, key)=>{
++        // key could be 'require' or 'import.development' etc.
++        const exportTypes = key.split('.');
++        for (const exportType of exportTypes){
++            acc.add(exportType);
++        }
++        return acc;
++    }, new Set());
++    // For development and production convention, we override the NODE_ENV value
++    if (exportConditionNames.has('development')) {
++        envVars['process.env.NODE_ENV'] = JSON.stringify('development');
++    } else if (exportConditionNames.has('production')) {
++        envVars['process.env.NODE_ENV'] = JSON.stringify('production');
++    }
++    if (exportConditionNames.has('edge-light')) {
++        envVars['EdgeRuntime'] = JSON.stringify('edge-runtime');
++    }
++    return envVars;
++}
++
+ const FILENAME_REGEX = /__filename/;
+ const DIRNAME_REGEX = /__dirname/;
+ // not char, or space before require(.resolve)?(
+@@ -1217,60 +1266,6 @@ const prependShebang = (entry)=>({
+         }
+     });
+ 
+-/**
+- * @return {Record<string, string>} env { 'process.env.<key>': '<value>' }
+- */ function getDefinedInlineVariables(envs, parsedExportCondition) {
+-    if (!envs.includes('NODE_ENV')) {
+-        envs.push('NODE_ENV');
+-    }
+-    const envVars = envs.reduce((acc, key)=>{
+-        const value = process.env[key];
+-        if (typeof value !== 'undefined') {
+-            acc['process.env.' + key] = JSON.stringify(value);
+-        }
+-        return acc;
+-    }, {});
+-    const exportConditionNames = Object.keys(parsedExportCondition.export).reduce((acc, key)=>{
+-        // key could be 'require' or 'import.development' etc.
+-        const exportTypes = key.split('.');
+-        for (const exportType of exportTypes){
+-            acc.add(exportType);
+-        }
+-        return acc;
+-    }, new Set());
+-    // For development and production convention, we override the NODE_ENV value
+-    if (exportConditionNames.has('development')) {
+-        envVars['process.env.NODE_ENV'] = JSON.stringify('development');
+-    } else if (exportConditionNames.has('production')) {
+-        envVars['process.env.NODE_ENV'] = JSON.stringify('production');
+-    }
+-    if (exportConditionNames.has('edge-light')) {
+-        envVars['EdgeRuntime'] = JSON.stringify('edge-runtime');
+-    }
+-    return envVars;
+-}
+-
+-function getModuleLayer(moduleMeta) {
+-    const directives = (moduleMeta.preserveDirectives || {
+-        directives: []
+-    }).directives.map((d)=>d.replace(/^use /, '')).filter((d)=>d !== 'strict');
+-    const moduleLayer = directives[0];
+-    return moduleLayer;
+-}
+-function getCustomModuleLayer(moduleId) {
+-    const segments = path__default.default.basename(moduleId).split('.');
+-    if (segments.length >= 2) {
+-        const [layerSegment, ext] = segments.slice(-2);
+-        const baseName = segments[0];
+-        const match = layerSegment.match(/^(\w+)-runtime$/);
+-        const layer = match && match[1];
+-        if (availableExtensions.has(ext) && layer && layer.length > 0) {
+-            return baseName + '-' + layer;
+-        }
+-    }
+-    return undefined;
+-}
+-
+ const swcMinifyOptions = {
+     compress: {
+         directives: false
+@@ -1282,7 +1277,7 @@ const swcMinifyOptions = {
+         toplevel: true
+     }
+ };
+-async function createDtsPlugin(tsCompilerOptions, tsConfigPath, cwd) {
++async function createDtsPlugin(tsCompilerOptions, tsConfigPath, respectExternal, cwd) {
+     const enableIncrementalWithoutBuildInfo = tsCompilerOptions.incremental && !tsCompilerOptions.tsBuildInfoFile;
+     const incrementalOptions = enableIncrementalWithoutBuildInfo ? {
+         incremental: false
+@@ -1313,12 +1308,11 @@ async function createDtsPlugin(tsCompilerOptions, tsConfigPath, cwd) {
+     });
+     const dtsPlugin = require('rollup-plugin-dts').default({
+         tsconfig: tsConfigPath,
+-        compilerOptions: overrideResolvedTsOptions
++        compilerOptions: overrideResolvedTsOptions,
++        respectExternal
+     });
+     return dtsPlugin;
+ }
+-// Avoid create multiple dts plugins instance and parsing the same tsconfig multi times,
+-// This will avoid memory leak and performance issue.
+ const memoizeDtsPluginByKey = memoizeByKey(createDtsPlugin);
+ async function buildInputConfig(entry, bundleConfig, exportCondition, buildContext, dts) {
+     var _bundleConfig_file, _bundleConfig_file1;
+@@ -1399,7 +1393,7 @@ async function buildInputConfig(entry, bundleConfig, exportCondition, buildConte
+         // Each package build should be unique
+         // Composing above factors into a unique cache key to retrieve the memoized dts plugin with tsconfigs
+         const uniqueProcessId = 'dts-plugin:' + process.pid + tsConfigPath;
+-        const dtsPlugin = await memoizeDtsPluginByKey(uniqueProcessId)(tsCompilerOptions, tsConfigPath, cwd);
++        const dtsPlugin = await memoizeDtsPluginByKey(uniqueProcessId)(tsCompilerOptions, tsConfigPath, bundleConfig.dts && bundleConfig.dts.respectExternal, cwd);
+         typesPlugins.push(dtsPlugin);
+     }
+     const plugins = (dts ? typesPlugins : [
+@@ -1460,6 +1454,27 @@ async function buildInputConfig(entry, bundleConfig, exportCondition, buildConte
+         }
+     };
+ }
++
++function getModuleLayer(moduleMeta) {
++    const directives = (moduleMeta.preserveDirectives || {
++        directives: []
++    }).directives.map((d)=>d.replace(/^use /, '')).filter((d)=>d !== 'strict');
++    const moduleLayer = directives[0];
++    return moduleLayer;
++}
++function getCustomModuleLayer(moduleId) {
++    const segments = path__default.default.basename(moduleId).split('.');
++    if (segments.length >= 2) {
++        const [layerSegment, ext] = segments.slice(-2);
++        const baseName = segments[0];
++        const match = layerSegment.match(/^(\w+)-runtime$/);
++        const layer = match && match[1];
++        if (availableExtensions.has(ext) && layer && layer.length > 0) {
++            return baseName + '-' + layer;
++        }
++    }
++    return undefined;
++}
+ // dependencyGraphMap: Map<subModuleId, Set<entryParentId>>
+ function createSplitChunks(dependencyGraphMap, entryFiles) {
+     // If there's existing chunk being splitted, and contains a layer { <id>: <chunkGroup> }
+@@ -1534,13 +1549,12 @@ function createSplitChunks(dependencyGraphMap, entryFiles) {
+         return;
+     };
+ }
+-async function buildOutputConfigs(entry, bundleConfig, exportCondition, buildContext, dts) {
++
++async function buildOutputConfigs(bundleConfig, exportCondition, buildContext, dts) {
+     const { format } = bundleConfig;
+-    const { entries, pkg, // exportPaths,
+-    cwd, tsOptions: { tsCompilerOptions }, pluginContext } = buildContext;
++    const { entries, pkg, cwd, tsOptions: { tsCompilerOptions }, pluginContext } = buildContext;
+     // Add esm mark and interop helper if esm export is detected
+-    const useEsModuleMark = tsCompilerOptions == null ? void 0 : tsCompilerOptions.esModuleInterop // hasEsmExport(exportPaths, tsCompilerOptions)
+-    ;
++    const useEsModuleMark = tsCompilerOptions == null ? void 0 : tsCompilerOptions.esModuleInterop;
+     const absoluteOutputFile = path.resolve(cwd, bundleConfig.file);
+     const isEsmPkg = isESModulePackage(pkg.type);
+     const name = filePathWithoutExtension(absoluteOutputFile);
+@@ -1550,7 +1564,6 @@ async function buildOutputConfigs(entry, bundleConfig, exportCondition, buildCon
+     const jsDir = path.dirname(absoluteOutputFile);
+     const outputFile = dts ? dtsFile : absoluteOutputFile;
+     const entryFiles = new Set(Object.values(entries).map((entry)=>entry.source));
+-    const inputOptions = await buildInputConfig(entry, bundleConfig, exportCondition, buildContext, dts);
+     const outputOptions = {
+         name: pkg.name || name,
+         dir: dts ? typesDir : jsDir,
+@@ -1572,11 +1585,9 @@ async function buildOutputConfigs(entry, bundleConfig, exportCondition, buildCon
+         hoistTransitiveImports: false,
+         entryFileNames: path.basename(outputFile)
+     };
+-    return {
+-        input: inputOptions,
+-        output: outputOptions
+-    };
++    return outputOptions;
+ }
++
+ async function buildEntryConfig(bundleConfig, pluginContext, bundleEntryOptions) {
+     const configs = [];
+     const { entries } = pluginContext;
+@@ -1586,6 +1597,14 @@ async function buildEntryConfig(bundleConfig, pluginContext, bundleEntryOptions)
+     }
+     return configs;
+ }
++async function buildRollupConfigs(entry, bundleConfig, exportCondition, buildContext, dts) {
++    const inputOptions = await buildInputConfig(entry, bundleConfig, exportCondition, buildContext, dts);
++    const outputOptions = await buildOutputConfigs(bundleConfig, exportCondition, buildContext, dts);
++    return {
++        input: inputOptions,
++        output: outputOptions
++    };
++}
+ async function buildConfig(bundleConfig, exportCondition, pluginContext, bundleEntryOptions) {
+     const { file } = bundleConfig;
+     const { pkg, cwd } = pluginContext;
+@@ -1659,7 +1678,7 @@ async function buildConfig(bundleConfig, exportCondition, pluginContext, bundleE
+                 [bundleOption.exportCondition]: bundleOption.exportCondition === 'types' ? bundleOption.file : exportCondition.export[bundleOption.exportCondition]
+             }
+         };
+-        return await buildOutputConfigs(entry, {
++        return await buildRollupConfigs(entry, {
+             ...bundleConfig,
+             file: bundleOption.file,
+             format: bundleOption.format

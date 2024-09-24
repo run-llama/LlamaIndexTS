@@ -9,6 +9,9 @@ overrides:
   protobufjs: 7.2.6
 
 patchedDependencies:
+  bunchee@5.3.2:
+    hash: f7m5rvlvrzkywyvemhnsq4jfcq
+    path: patches/bunchee@5.3.2.patch
   python-format-js@1.4.3:
     hash: th6l7y4oiguwssg6vyt7e3sc3i
     path: patches/python-format-js@1.4.3.patch
@@ -227,7 +230,7 @@ importers:
         version: 22.5.4
       bunchee:
         specifier: 5.3.2
-        version: 5.3.2(typescript@5.6.2)
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
       llamaindex:
         specifier: workspace:*
         version: link:../llamaindex
@@ -359,7 +362,7 @@ importers:
         version: link:../env
       bunchee:
         specifier: 5.3.2
-        version: 5.3.2(typescript@5.6.2)
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
 
   packages/community:
     dependencies:
@@ -381,7 +384,7 @@ importers:
         version: 22.5.4
       bunchee:
         specifier: 5.3.2
-        version: 5.3.2(typescript@5.6.2)
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
 
   packages/core:
     dependencies:
@@ -406,7 +409,7 @@ importers:
         version: 8.17.1
       bunchee:
         specifier: 5.3.2
-        version: 5.3.2(typescript@5.6.2)
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
       happy-dom:
         specifier: ^15.7.4
         version: 15.7.4
@@ -447,6 +450,9 @@ importers:
       '@xenova/transformers':
         specifier: ^2.17.2
         version: 2.17.2
+      bunchee:
+        specifier: 5.3.2
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -665,6 +671,9 @@ importers:
       '@xenova/transformers':
         specifier: ^2.17.2
         version: 2.17.2
+      bunchee:
+        specifier: 5.3.2
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -923,7 +932,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 5.3.2
-        version: 5.3.2(typescript@5.6.2)
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
 
   packages/llm/ollama:
     dependencies:
@@ -942,7 +951,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 5.3.2
-        version: 5.3.2(typescript@5.6.2)
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
 
   packages/llm/openai:
     dependencies:
@@ -961,7 +970,7 @@ importers:
     devDependencies:
       bunchee:
         specifier: 5.3.2
-        version: 5.3.2(typescript@5.6.2)
+        version: 5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2)
 
   packages/wasm-tools:
     dependencies:
@@ -18202,7 +18211,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bunchee@5.3.2(typescript@5.6.2):
+  bunchee@5.3.2(patch_hash=f7m5rvlvrzkywyvemhnsq4jfcq)(typescript@5.6.2):
     dependencies:
       '@rollup/plugin-commonjs': 26.0.1(rollup@4.21.2)
       '@rollup/plugin-json': 6.1.0(rollup@4.21.2)
