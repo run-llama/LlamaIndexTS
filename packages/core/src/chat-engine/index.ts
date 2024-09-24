@@ -2,7 +2,7 @@ import type { ChatMessage, MessageContent } from "../llms";
 import type { BaseMemory } from "../memory";
 import { EngineResponse } from "../schema";
 
-export interface ChatEngineParams<
+export interface BaseChatEngineParams<
   AdditionalMessageOptions extends object = object,
 > {
   message: MessageContent;
@@ -14,14 +14,22 @@ export interface ChatEngineParams<
     | BaseMemory<AdditionalMessageOptions>;
 }
 
+export interface StreamingChatEngineParams<
+  AdditionalMessageOptions extends object = object,
+> extends BaseChatEngineParams<AdditionalMessageOptions> {
+  stream: true;
+}
+
+export interface NonStreamingChatEngineParams<
+  AdditionalMessageOptions extends object = object,
+> extends BaseChatEngineParams<AdditionalMessageOptions> {
+  stream?: false;
+}
+
 export abstract class BaseChatEngine {
+  abstract chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
   abstract chat(
-    params: ChatEngineParams,
-    stream?: false,
-  ): Promise<EngineResponse>;
-  abstract chat(
-    params: ChatEngineParams,
-    stream: true,
+    params: StreamingChatEngineParams,
   ): Promise<AsyncIterable<EngineResponse>>;
 
   abstract chatHistory: ChatMessage[] | Promise<ChatMessage[]>;

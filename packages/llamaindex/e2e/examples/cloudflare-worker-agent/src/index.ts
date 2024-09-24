@@ -11,12 +11,10 @@ export default {
       tools: [],
     });
     console.log(1);
-    const responseStream = await agent.chat(
-      {
-        message: "Hello? What is the weather today?",
-      },
-      true,
-    );
+    const responseStream = await agent.chat({
+      stream: true,
+      message: "Hello? What is the weather today?",
+    });
     console.log(2);
     const textEncoder = new TextEncoder();
     const response = responseStream.pipeThrough<Uint8Array>(

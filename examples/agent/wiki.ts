@@ -11,12 +11,10 @@ async function main() {
   });
 
   // Chat with the agent
-  const response = await agent.chat(
-    {
-      message: "Who was Goethe?",
-    },
-    true,
-  );
+  const response = await agent.chat({
+    message: "Who was Goethe?",
+    stream: true,
+  });
 
   for await (const { delta } of response) {
     process.stdout.write(delta);

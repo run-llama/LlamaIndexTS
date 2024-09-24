@@ -1,6 +1,7 @@
 import type {
   BaseChatEngine,
-  ChatEngineParams,
+  NonStreamingChatEngineParams,
+  StreamingChatEngineParams,
 } from "@llamaindex/core/chat-engine";
 import type {
   ChatMessage,
@@ -82,17 +83,15 @@ export class ContextChatEngine extends PromptMixin implements BaseChatEngine {
     };
   }
 
-  chat(params: ChatEngineParams, stream?: false): Promise<EngineResponse>;
+  chat(params: NonStreamingChatEngineParams): Promise<EngineResponse>;
   chat(
-    params: ChatEngineParams,
-    stream: true,
+    params: StreamingChatEngineParams,
   ): Promise<AsyncIterable<EngineResponse>>;
   @wrapEventCaller
   async chat(
-    params: ChatEngineParams,
-    stream = false,
+    params: StreamingChatEngineParams | NonStreamingChatEngineParams,
   ): Promise<EngineResponse | AsyncIterable<EngineResponse>> {
-    const { message } = params;
+    const { message, stream } = params;
     const chatHistory = params.chatHistory
       ? new ChatMemoryBuffer({
           chatHistory:

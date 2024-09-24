@@ -103,7 +103,8 @@ export class FaithfulnessEvaluator
     });
 
     const responseObj = await queryEngine.query({
-      query: response,
+      query: { query: response },
+      stream: false,
     });
 
     const rawResponseTxt = responseObj.toString();

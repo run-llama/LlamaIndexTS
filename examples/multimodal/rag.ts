@@ -32,12 +32,10 @@ async function main() {
     responseSynthesizer: getResponseSynthesizer("multi_modal"),
     retriever: index.asRetriever({ topK: { TEXT: 3, IMAGE: 1 } }),
   });
-  const stream = await queryEngine.query(
-    {
-      query: "Tell me more about Vincent van Gogh's famous paintings",
-    },
-    true,
-  );
+  const stream = await queryEngine.query({
+    query: "Tell me more about Vincent van Gogh's famous paintings",
+    stream: true,
+  });
   for await (const chunk of stream) {
     process.stdout.write(chunk.response);
   }

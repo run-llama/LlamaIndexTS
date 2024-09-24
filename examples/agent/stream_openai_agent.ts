@@ -61,12 +61,10 @@ async function main() {
     tools: [functionTool, functionTool2],
   });
 
-  const stream = await agent.chat(
-    {
-      message: "Divide 16 by 2 then add 20",
-    },
-    true,
-  );
+  const stream = await agent.chat({
+    message: "Divide 16 by 2 then add 20",
+    stream: true,
+  });
 
   console.log("Response:");
 
