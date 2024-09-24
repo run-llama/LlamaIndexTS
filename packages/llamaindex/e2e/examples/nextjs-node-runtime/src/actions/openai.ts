@@ -1,13 +1,13 @@
 "use server";
 import {
+  HuggingFaceEmbedding,
   OpenAI,
   OpenAIAgent,
   QueryEngineTool,
   Settings,
+  SimpleDirectoryReader,
   VectorStoreIndex,
 } from "llamaindex";
-import { HuggingFaceEmbedding } from "llamaindex/embeddings/HuggingFaceEmbedding";
-import { SimpleDirectoryReader } from "llamaindex/readers/SimpleDirectoryReader";
 
 Settings.llm = new OpenAI({
   // eslint-disable-next-line turbo/no-undeclared-env-vars
