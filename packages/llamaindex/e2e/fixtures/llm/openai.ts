@@ -21,6 +21,8 @@ import {
   type MessageContentDetail,
 } from "llamaindex";
 
+export { OpenAIAgent, OpenAIAgentWorker } from "@llamaindex/openai";
+
 export function getOpenAISession() {
   return {};
 }
