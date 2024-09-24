@@ -12,6 +12,14 @@
     "incremental": true,
     "composite": true
   },
+  "references": [
+    {
+      "path": "./readers/tsconfig.json"
+    },
+    {
+      "path": "./vector-store/pg/tsconfig.json"
+    }
+  ],
   "ts-node": {
     "files": true,
     "compilerOptions": {

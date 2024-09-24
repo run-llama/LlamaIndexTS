@@ -1,0 +1,8 @@
+{
+  "name": "pg-vector-store",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "postgres": "^3.4.4"
+  }
+}

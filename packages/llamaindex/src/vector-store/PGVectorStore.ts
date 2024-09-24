@@ -1,5 +1,7 @@
 import type pg from "pg";
 
+import type { IsomorphicDB } from "@llamaindex/core/vector-store";
+import type { Sql } from "postgres";
 import {
   FilterCondition,
   FilterOperator,
@@ -10,6 +12,60 @@ import {
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
+
+function fromPostgres(client: Sql): IsomorphicDB {
+  return {
+    query: async (sql: string, params?: any[]): Promise<any[]> => {
+      return client.unsafe(sql, params);
+    },
+    begin: async (fn) => {
+      let res: any;
+      await client.begin(async (scopedClient) => {
+        const queryFn = async (sql: string, params?: any[]): Promise<any[]> => {
+          return scopedClient.unsafe(sql, params);
+        };
+        res = await fn(queryFn);
+      });
+      return res;
+    },
+    connect: () => Promise.resolve(),
+    close: async () => client.end(),
+    onCloseEvent: (fn) => {
+      // no close event
+    },
+  };
+}
+
+function fromPG(client: pg.Client | pg.PoolClient): IsomorphicDB {
+  const queryFn = async (sql: string, params?: any[]): Promise<any[]> => {
+    return (await client.query(sql, params)).rows;
+  };
+  return {
+    query: queryFn,
+    begin: async (fn) => {
+      await client.query("BEGIN");
+      try {
+        const result = await fn(queryFn);
+        await client.query("COMMIT");
+        return result;
+      } catch (e) {
+        await client.query("ROLLBACK");
+        throw e;
+      }
+    },
+    connect: () => client.connect(),
+    close: async () => {
+      if ("end" in client) {
+        await client.end();
+      } else if ("release" in client) {
+        client.release();
+      }
+    },
+    onCloseEvent: (fn) => {
+      client.on("end", fn);
+    },
+  };
+}
 
 import { escapeLikeString } from "./utils.js";
 
@@ -47,6 +103,13 @@ export type PGVectorStoreConfig = PGVectorStoreBaseConfig &
         shouldConnect?: boolean | undefined;
         client: pg.Client | pg.PoolClient;
       }
+    | {
+        /**
+         * No need to connect to the database, the client is already connected.
+         */
+        shouldConnect?: false;
+        client: Sql;
+      }
   );
 
 /**
@@ -65,7 +128,7 @@ export class PGVectorStore
   private readonly dimensions: number = DEFAULT_DIMENSIONS;
 
   private isDBConnected: boolean = false;
-  private db: pg.ClientBase | null = null;
+  private db: IsomorphicDB | null = null;
   private readonly clientConfig: pg.ClientConfig | null = null;
 
   constructor(config: PGVectorStoreConfig) {
@@ -76,9 +139,14 @@ export class PGVectorStore
     if ("clientConfig" in config) {
       this.clientConfig = config.clientConfig;
     } else {
-      this.isDBConnected =
-        config.shouldConnect !== undefined ? !config.shouldConnect : false;
-      this.db = config.client;
+      if (typeof config.client === "function") {
+        this.isDBConnected = true;
+        this.db = fromPostgres(config.client);
+      } else {
+        this.isDBConnected =
+          config.shouldConnect !== undefined ? !config.shouldConnect : false;
+        this.db = fromPG(config.client);
+      }
     }
   }
 
@@ -104,7 +172,7 @@ export class PGVectorStore
     return this.collection;
   }
 
-  private async getDb(): Promise<pg.ClientBase> {
+  private async getDb(): Promise<IsomorphicDB> {
     if (!this.db) {
       const pg = await import("pg");
       const { Client } = pg.default ? pg.default : pg;
@@ -124,7 +192,7 @@ export class PGVectorStore
       await registerTypes(db);
 
       // All good?  Keep the connection reference
-      this.db = db;
+      this.db = fromPG(db);
     }
 
     if (this.db && !this.isDBConnected) {
@@ -132,8 +200,7 @@ export class PGVectorStore
       this.isDBConnected = true;
     }
 
-    this.db.on("end", () => {
-      // Connection closed
+    this.db.onCloseEvent(() => {
       this.isDBConnected = false;
     });
 
@@ -143,22 +210,23 @@ export class PGVectorStore
     return this.db;
   }
 
-  private async checkSchema(db: pg.ClientBase) {
+  private async checkSchema(db: IsomorphicDB) {
     await db.query(`CREATE SCHEMA IF NOT EXISTS ${this.schemaName}`);
 
-    const tbl = `CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
+    await db.query(`CREATE TABLE IF NOT EXISTS ${this.schemaName}.${this.tableName}(
                                                                                   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
       external_id VARCHAR,
       collection VARCHAR,
       document TEXT,
       metadata JSONB DEFAULT '{}',
       embeddings VECTOR(${this.dimensions})
-      )`;
-    await db.query(tbl);
-
-    const idxs = `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_external_id ON ${this.schemaName}.${this.tableName} (external_id);
-    CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`;
-    await db.query(idxs);
+      )`);
+    await db.query(
+      `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_external_id ON ${this.schemaName}.${this.tableName} (external_id);`,
+    );
+    await db.query(
+      `CREATE INDEX IF NOT EXISTS idx_${this.tableName}_collection ON ${this.schemaName}.${this.tableName} (collection);`,
+    );
 
     // TODO add IVFFlat or HNSW indexing?
     return db;
@@ -222,9 +290,7 @@ export class PGVectorStore
 
     const db = await this.getDb();
 
-    try {
-      await db.query("BEGIN");
-
+    return db.begin(async (query) => {
       const data = this.getDataToInsert(embeddingResults);
 
       const placeholders = data
@@ -253,15 +319,9 @@ export class PGVectorStore
       `;
 
       const flattenedParams = data.flat();
-      const result = await db.query(sql, flattenedParams);
-
-      await db.query("COMMIT");
-
-      return result.rows.map((row) => row.id as string);
-    } catch (error) {
-      await db.query("ROLLBACK");
-      throw error;
-    }
+      const result = await query(sql, flattenedParams);
+      return result.map((row) => row.id as string);
+    });
   }
 
   /**
@@ -455,19 +515,22 @@ export class PGVectorStore
     const db = await this.getDb();
     const results = await db.query(sql, params);
 
-    const nodes = results.rows.map((row) => {
+    const nodes = results.map((row) => {
       return new Document({
         id_: row.id,
         text: row.document,
         metadata: row.metadata,
-        embedding: row.embeddings,
+        embedding:
+          typeof row.embeddings === "string"
+            ? JSON.parse(row.embeddings)
+            : row.embeddings,
       });
     });
 
     const ret = {
       nodes: nodes,
-      similarities: results.rows.map((row) => 1 - row.s),
-      ids: results.rows.map((row) => row.id),
+      similarities: results.map((row) => 1 - row.s),
+      ids: results.map((row) => row.id),
     };
 
     return Promise.resolve(ret);
