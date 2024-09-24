@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.2.8
+
+### Patch Changes
+
+- ac41ed3: feat: bump cloud sdk version
+
 ## 0.2.7
 
 ### Patch Changes

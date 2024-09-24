@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.6.9
+
+### Patch Changes
+
+- Updated dependencies [ac41ed3]
+  - @llamaindex/cloud@0.2.8
+
 ## 0.6.8
 
 ### Patch Changes
