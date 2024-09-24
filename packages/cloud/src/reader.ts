@@ -170,6 +170,15 @@ export class LlamaParseReader extends FileReader {
   vendorMultimodalModelName?: string | undefined;
   // The API key for the multimodal API. Can also be set as an env variable: LLAMA_CLOUD_VENDOR_MULTIMODAL_API_KEY
   vendorMultimodalApiKey?: string | undefined;
+
+  webhookUrl?: string | undefined;
+  premiumMode?: boolean | undefined;
+  takeScreenshot?: boolean | undefined;
+  disableOcr?: boolean | undefined;
+  disableReconstruction?: boolean | undefined;
+  inputS3Path?: string | undefined;
+  outputS3PathPrefix?: string | undefined;
+
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
 
@@ -258,13 +267,13 @@ export class LlamaParseReader extends FileReader {
       use_vendor_multimodal_model: this.useVendorMultimodalModel,
       vendor_multimodal_model_name: this.vendorMultimodalModelName,
       vendor_multimodal_api_key: this.vendorMultimodalApiKey,
-      // fixme: does these fields need to be set?
-      webhook_url: undefined,
-      take_screenshot: undefined,
-      disable_ocr: undefined,
-      disable_reconstruction: undefined,
-      input_s3_path: undefined,
-      output_s3_path_prefix: undefined,
+      premium_mode: this.premiumMode,
+      webhook_url: this.webhookUrl,
+      take_screenshot: this.takeScreenshot,
+      disable_ocr: this.disableOcr,
+      disable_reconstruction: this.disableReconstruction,
+      input_s3_path: this.inputS3Path,
+      output_s3_path_prefix: this.outputS3PathPrefix,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
