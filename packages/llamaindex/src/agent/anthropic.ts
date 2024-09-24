@@ -5,6 +5,10 @@ import type {
 import type { EngineResponse } from "@llamaindex/core/schema";
 import { Settings } from "../Settings.js";
 import { Anthropic } from "../llm/anthropic.js";
+import {
+  withContextAwareness,
+  type ContextAwareConfig,
+} from "./contextAwareMixin.js";
 import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 
 export type AnthropicAgentParams = LLMAgentParams;
@@ -35,5 +39,15 @@ export class AnthropicAgent extends LLMAgent {
       throw new Error("Anthropic does not support streaming");
     }
     return super.chat(params);
+  }
+}
+
+export class AnthropicContextAwareAgent extends (withContextAwareness(
+  AnthropicAgent,
+) as new (
+  params: AnthropicAgentParams & ContextAwareConfig,
+) => AnthropicAgent) {
+  constructor(params: AnthropicAgentParams & ContextAwareConfig) {
+    super(params);
   }
 }

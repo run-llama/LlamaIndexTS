@@ -1,5 +1,9 @@
 import { OpenAI } from "@llamaindex/openai";
 import { Settings } from "../Settings.js";
+import {
+  withContextAwareness,
+  type ContextAwareConfig,
+} from "./contextAwareMixin.js";
 import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 
 // This is likely not necessary anymore but leaving it here just incase it's in use elsewhere
@@ -19,5 +23,13 @@ export class OpenAIAgent extends LLMAgent {
       ...params,
       llm,
     });
+  }
+}
+
+export class OpenAIContextAwareAgent extends (withContextAwareness(
+  OpenAIAgent,
+) as new (params: OpenAIAgentParams & ContextAwareConfig) => OpenAIAgent) {
+  constructor(params: OpenAIAgentParams & ContextAwareConfig) {
+    super(params);
   }
 }
