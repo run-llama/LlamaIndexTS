@@ -23,7 +23,7 @@ export { Portkey } from "./portkey.js";
 export * from "./replicate_ai.js";
 // Note: The type aliases for replicate are to simplify usage for Llama 2 (we're using replicate for Llama 2 support)
 export { DeepInfra } from "./deepinfra.js";
-export { Ollama, type OllamaParams } from "./ollama.js";
+export * from "./ollama.js";
 export {
   ALL_AVAILABLE_REPLICATE_MODELS,
   DeuceChatStrategy,

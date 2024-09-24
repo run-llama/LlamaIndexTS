@@ -34,6 +34,7 @@
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/groq": "workspace:*",
+    "@llamaindex/ollama": "workspace:*",
     "@llamaindex/openai": "workspace:*",
     "@mistralai/mistralai": "^1.0.4",
     "@mixedbread-ai/sdk": "^2.2.11",
