@@ -1,5 +1,13 @@
 # @llamaindex/community
 
+## 0.0.40
+
+### Patch Changes
+
+- 50e6b57: feat: add Amazon Bedrock Retriever
+- Updated dependencies [8b7fdba]
+  - @llamaindex/core@0.2.6
+
 ## 0.0.39
 
 ### Patch Changes
