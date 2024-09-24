@@ -35,6 +35,10 @@ export async function resolve(specifier, context, nextResolve) {
   if (!exist) {
     return result;
   }
+  if (context.parentURL.includes("e2e/fixtures")) {
+    // ignore the fixture import itself
+    return result;
+  }
   return {
     url,
     format: "module",

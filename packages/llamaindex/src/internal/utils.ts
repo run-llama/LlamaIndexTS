@@ -1,5 +1,4 @@
 import { similarity } from "@llamaindex/core/embeddings";
-import type { JSONValue } from "@llamaindex/core/global";
 import type { ImageType } from "@llamaindex/core/schema";
 import { fs } from "@llamaindex/env";
 import { filetypemime } from "magic-bytes.js";
@@ -17,21 +16,6 @@ export const isReadableStream = (obj: unknown): obj is ReadableStream => {
 export const isIterable = (obj: unknown): obj is Iterable<unknown> => {
   return obj != null && typeof obj === "object" && Symbol.iterator in obj;
 };
-
-/**
- * Prettify an error for AI to read
- */
-export function prettifyError(error: unknown): string {
-  if (error instanceof Error) {
-    return `Error(${error.name}): ${error.message}`;
-  } else {
-    return `${error}`;
-  }
-}
-
-export function stringifyJSONToMessageContent(value: JSONValue): string {
-  return JSON.stringify(value, null, 2).replace(/"([^"]*)"/g, "$1");
-}
 
 /**
  * Get the top K embeddings from a list of embeddings ordered by similarity to the query.

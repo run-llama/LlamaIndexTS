@@ -1,7 +1,7 @@
 import { parseChunked } from "@discoveryjs/json-ext";
 import type { JSONValue } from "@llamaindex/core/global";
 import { Document, FileReader } from "@llamaindex/core/schema";
-import { type Logger, consoleLogger } from "../internal/logger.js";
+import { consoleLogger, type Logger } from "@llamaindex/env";
 
 // Possible improvements:
 // - use `json-ext` for streaming JSON.stringify. Currently once JSON.stringify is called, the data is already chunked, so there should be no high risk of memory issues

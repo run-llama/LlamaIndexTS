@@ -1,8 +1,6 @@
-import {
-  type JSONObject,
-  type JSONValue,
-  Settings,
-} from "@llamaindex/core/global";
+import type { Logger } from "@llamaindex/env";
+import { z } from "zod";
+import { type JSONObject, type JSONValue, Settings } from "../global";
 import type {
   BaseTool,
   ChatMessage,
@@ -14,15 +12,13 @@ import type {
   ToolCall,
   ToolCallLLMMessageOptions,
   ToolOutput,
-} from "@llamaindex/core/llms";
-import { baseToolWithCallSchema } from "@llamaindex/core/schema";
-import { z } from "zod";
-import type { Logger } from "../internal/logger.js";
+} from "../llms";
+import { baseToolWithCallSchema } from "../schema";
 import {
   isAsyncIterable,
   prettifyError,
   stringifyJSONToMessageContent,
-} from "../internal/utils.js";
+} from "../utils";
 import type { AgentParamsBase } from "./base.js";
 import type { TaskHandler } from "./types.js";
 

@@ -1,4 +1,4 @@
-import { validateAgentParams } from "llamaindex/agent/utils";
+import { validateAgentParams } from "@llamaindex/core/agent";
 import { expect, test } from "vitest";
 import { ZodError } from "zod";
 

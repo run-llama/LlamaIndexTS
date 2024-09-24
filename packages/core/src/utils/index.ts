@@ -1,4 +1,12 @@
-export { EventCaller, getEventCaller, wrapEventCaller } from "./event-caller";
+import type { JSONValue } from "../global";
+
+export {
+  EventCaller,
+  getEventCaller,
+  isAsyncIterable,
+  isIterable,
+  wrapEventCaller,
+} from "./event-caller";
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
@@ -42,6 +50,21 @@ export async function* streamReducer<S, D>(params: {
   if (params.finished) {
     params.finished(value);
   }
+}
+
+/**
+ * Prettify an error for AI to read
+ */
+export function prettifyError(error: unknown): string {
+  if (error instanceof Error) {
+    return `Error(${error.name}): ${error.message}`;
+  } else {
+    return `${error}`;
+  }
+}
+
+export function stringifyJSONToMessageContent(value: JSONValue): string {
+  return JSON.stringify(value, null, 2).replace(/"([^"]*)"/g, "$1");
 }
 
 export { wrapLLMEvent } from "./wrap-llm-event";

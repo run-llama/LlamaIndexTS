@@ -13,7 +13,7 @@ import {
   SentenceSplitter,
 } from "@llamaindex/core/node-parser";
 import type { LoadTransformerEvent } from "@llamaindex/env";
-import { AsyncLocalStorage, getEnv } from "@llamaindex/env";
+import { AsyncLocalStorage } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import {
   getEmbeddedModel,
@@ -57,12 +57,7 @@ class GlobalSettings implements Config {
   #promptAsyncLocalStorage = new AsyncLocalStorage<PromptConfig>();
 
   get debug() {
-    const debug = getEnv("DEBUG");
-    return (
-      (Boolean(debug) && debug?.includes("llamaindex")) ||
-      debug === "*" ||
-      debug === "true"
-    );
+    return CoreSettings.debug;
   }
 
   get llm(): LLM {

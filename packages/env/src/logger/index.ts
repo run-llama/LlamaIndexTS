@@ -4,10 +4,12 @@ export type Logger = {
   warn: (...args: unknown[]) => void;
 };
 
+function noop() {}
+
 export const emptyLogger: Logger = Object.freeze({
-  log: () => {},
-  error: () => {},
-  warn: () => {},
+  log: noop,
+  error: noop,
+  warn: noop,
 });
 
 export const consoleLogger: Logger = Object.freeze({

@@ -1,3 +1,13 @@
+import {
+  type AgentParamsBase,
+  AgentRunner,
+  AgentWorker,
+  callTool,
+  consumeAsyncIterable,
+  createReadableStream,
+  type TaskHandler,
+  validateAgentParams,
+} from "@llamaindex/core/agent";
 import type { JSONObject, JSONValue } from "@llamaindex/core/global";
 import type {
   BaseTool,
@@ -6,22 +16,14 @@ import type {
   ChatResponseChunk,
   LLM,
 } from "@llamaindex/core/llms";
-import { extractText } from "@llamaindex/core/utils";
+import {
+  extractText,
+  stringifyJSONToMessageContent,
+} from "@llamaindex/core/utils";
 import { randomUUID } from "@llamaindex/env";
 import { getReACTAgentSystemHeader } from "../internal/prompt/react.js";
-import {
-  isAsyncIterable,
-  stringifyJSONToMessageContent,
-} from "../internal/utils.js";
+import { isAsyncIterable } from "../internal/utils.js";
 import { Settings } from "../Settings.js";
-import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
-import type { TaskHandler } from "./types.js";
-import {
-  callTool,
-  consumeAsyncIterable,
-  createReadableStream,
-  validateAgentParams,
-} from "./utils.js";
 
 export type ReACTAgentParams = AgentParamsBase<LLM>;
 

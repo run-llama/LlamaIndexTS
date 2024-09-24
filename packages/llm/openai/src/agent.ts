@@ -1,6 +1,10 @@
-import { OpenAI } from "@llamaindex/openai";
-import { Settings } from "../Settings.js";
-import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
+import {
+  LLMAgent,
+  LLMAgentWorker,
+  type LLMAgentParams,
+} from "@llamaindex/core/agent";
+import { Settings } from "@llamaindex/core/global";
+import { OpenAI } from "./llm";
 
 // This is likely not necessary anymore but leaving it here just incase it's in use elsewhere
 

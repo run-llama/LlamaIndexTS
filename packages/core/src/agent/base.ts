@@ -1,23 +1,21 @@
+import { consoleLogger, emptyLogger, randomUUID } from "@llamaindex/env";
 import {
   BaseChatEngine,
   type NonStreamingChatEngineParams,
   type StreamingChatEngineParams,
-} from "@llamaindex/core/chat-engine";
+} from "../chat-engine";
+import { Settings } from "../global";
 import type {
   BaseToolWithCall,
   ChatMessage,
   LLM,
   MessageContent,
   ToolOutput,
-} from "@llamaindex/core/llms";
-import { BaseMemory } from "@llamaindex/core/memory";
-import { EngineResponse } from "@llamaindex/core/schema";
-import { wrapEventCaller } from "@llamaindex/core/utils";
-import { randomUUID } from "@llamaindex/env";
-import { Settings } from "../Settings.js";
-import { consoleLogger, emptyLogger } from "../internal/logger.js";
-import { isReadableStream } from "../internal/utils.js";
-import { ObjectRetriever } from "../objects/index.js";
+} from "../llms";
+import { BaseMemory } from "../memory";
+import type { ObjectRetriever } from "../objects";
+import { EngineResponse } from "../schema";
+import { wrapEventCaller } from "../utils";
 import type {
   AgentTaskContext,
   TaskHandler,
@@ -374,7 +372,7 @@ export abstract class AgentRunner<
       this.#chatHistory = [...stepOutput.taskStep.context.store.messages];
       if (stepOutput.isLast) {
         const { output } = stepOutput;
-        if (isReadableStream(output)) {
+        if (output instanceof ReadableStream) {
           return output.pipeThrough<EngineResponse>(
             new TransformStream({
               transform(chunk, controller) {

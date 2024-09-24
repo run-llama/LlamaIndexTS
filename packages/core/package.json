@@ -4,6 +4,34 @@
   "version": "0.2.6",
   "description": "LlamaIndex Core Module",
   "exports": {
+    "./agent": {
+      "require": {
+        "types": "./dist/agent/index.d.cts",
+        "default": "./dist/agent/index.cjs"
+      },
+      "import": {
+        "types": "./dist/agent/index.d.ts",
+        "default": "./dist/agent/index.js"
+      },
+      "default": {
+        "types": "./dist/agent/index.d.ts",
+        "default": "./dist/agent/index.js"
+      }
+    },
+    "./objects": {
+      "require": {
+        "types": "./dist/objects/index.d.cts",
+        "default": "./dist/objects/index.cjs"
+      },
+      "import": {
+        "types": "./dist/objects/index.d.ts",
+        "default": "./dist/objects/index.js"
+      },
+      "default": {
+        "types": "./dist/objects/index.d.ts",
+        "default": "./dist/objects/index.js"
+      }
+    },
     "./node-parser": {
       "require": {
         "types": "./dist/node-parser/index.d.cts",
