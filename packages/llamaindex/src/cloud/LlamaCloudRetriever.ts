@@ -37,7 +37,7 @@ export class LlamaCloudRetriever extends BaseRetriever {
       return {
         // Currently LlamaCloud only supports text nodes
         node: textNode,
-        score: node.score,
+        score: node.score ?? undefined,
       };
     });
   }
