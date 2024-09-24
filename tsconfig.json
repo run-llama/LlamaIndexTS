@@ -33,6 +33,9 @@
       "path": "./packages/llm/groq/tsconfig.json"
     },
     {
+      "path": "./packages/llm/ollama/tsconfig.json"
+    },
+    {
       "path": "./packages/cloud/tsconfig.json"
     },
     {

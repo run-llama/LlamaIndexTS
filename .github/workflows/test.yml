@@ -151,6 +151,9 @@ jobs:
       - name: Pack @llamaindex/groq
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/llm/groq
+      - name: Pack @llamaindex/ollama
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/ollama
       - name: Pack @llamaindex/core
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/core
