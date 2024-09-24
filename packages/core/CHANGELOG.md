@@ -1,5 +1,14 @@
 # @llamaindex/core
 
+## 0.2.6
+
+### Patch Changes
+
+- 8b7fdba: refactor: move chat engine & retriever into core.
+
+  - `chatHistory` in BaseChatEngine now returns `ChatMessage[] | Promise<ChatMessage[]>`, instead of `BaseMemory`
+  - update `retrieve-end` type
+
 ## 0.2.5
 
 ### Patch Changes
