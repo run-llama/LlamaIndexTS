@@ -542,7 +542,7 @@ importers:
         specifier: workspace:*
         version: link:../llm/groq
       '@llamaindex/ollama':
-        specifier: workspace:^0.0.1
+        specifier: workspace:*
         version: link:../llm/ollama
       '@llamaindex/openai':
         specifier: workspace:*
@@ -19680,7 +19680,7 @@ snapshots:
       is-bun-module: 1.1.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.5.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
