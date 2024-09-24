@@ -1,80 +1,11 @@
-import type { BaseTool, MessageContent } from "@llamaindex/core/llms";
-import { BaseRetriever } from "@llamaindex/core/retriever";
+import type { BaseTool } from "@llamaindex/core/llms";
+import {
+  BaseObjectNodeMapping,
+  ObjectRetriever,
+} from "@llamaindex/core/objects";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { TextNode } from "@llamaindex/core/schema";
-import { extractText } from "@llamaindex/core/utils";
 import type { VectorStoreIndex } from "../indices/vectorStore/index.js";
-
-// Assuming that necessary interfaces and classes (like OT, TextNode, BaseNode, etc.) are defined elsewhere
-// Import statements (e.g., for TextNode, BaseNode) should be added based on your project's structure
-
-export abstract class BaseObjectNodeMapping {
-  // TypeScript doesn't support Python's classmethod directly, but we can use static methods as an alternative
-  abstract fromObjects<OT>(objs: OT[], ...args: any[]): BaseObjectNodeMapping;
-
-  // Abstract methods in TypeScript
-  abstract objNodeMapping(): Record<any, any>;
-  abstract toNode(obj: any): TextNode;
-
-  // Concrete methods can be defined as usual
-  validateObject(obj: any): void {}
-
-  // Implementing the add object logic
-  addObj(obj: any): void {
-    this.validateObject(obj);
-    this._addObj(obj);
-  }
-
-  // Abstract method for internal add object logic
-  abstract _addObj(obj: any): void;
-
-  // Implementing toNodes method
-  toNodes(objs: any[]): TextNode[] {
-    return objs.map((obj) => this.toNode(obj));
-  }
-
-  // Abstract method for internal from node logic
-  abstract _fromNode(node: BaseNode): any;
-
-  // Implementing fromNode method
-  fromNode(node: BaseNode): any {
-    const obj = this._fromNode(node);
-    this.validateObject(obj);
-    return obj;
-  }
-
-  // Abstract methods for persistence
-  abstract persist(persistDir: string, objNodeMappingFilename: string): void;
-}
-
-// You will need to implement specific subclasses of BaseObjectNodeMapping as per your project requirements.
-
-export class ObjectRetriever<T = unknown> {
-  _retriever: BaseRetriever;
-  _objectNodeMapping: BaseObjectNodeMapping;
-
-  constructor(
-    retriever: BaseRetriever,
-    objectNodeMapping: BaseObjectNodeMapping,
-  ) {
-    this._retriever = retriever;
-    this._objectNodeMapping = objectNodeMapping;
-  }
-
-  // In TypeScript, getters are defined like this.
-  get retriever(): BaseRetriever {
-    return this._retriever;
-  }
-
-  // Translating the retrieve method
-  async retrieve(strOrQueryBundle: MessageContent): Promise<T[]> {
-    const nodes = await this.retriever.retrieve({
-      query: extractText(strOrQueryBundle),
-    });
-    const objs = nodes.map((n) => this._objectNodeMapping.fromNode(n.node));
-    return objs;
-  }
-}
 
 const convertToolToNode = (tool: BaseTool): TextNode => {
   const nodeText = `

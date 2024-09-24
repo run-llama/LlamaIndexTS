@@ -1,4 +1,5 @@
 import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
+import type { AgentEndEvent, AgentStartEvent } from "../../agent";
 import type {
   ChatMessage,
   ChatResponse,
@@ -72,6 +73,8 @@ export interface LlamaIndexEventMaps {
   "synthesize-end": SynthesizeEndEvent;
   "retrieve-start": RetrieveStartEvent;
   "retrieve-end": RetrieveEndEvent;
+  "agent-start": AgentStartEvent;
+  "agent-end": AgentEndEvent;
 }
 
 export class LlamaIndexCustomEvent<T = any> extends CustomEvent<T> {

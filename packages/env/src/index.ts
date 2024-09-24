@@ -33,6 +33,7 @@ export function createSHA256(): SHA256 {
   };
 }
 
+export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
 export {
   loadTransformers,
   setTransformers,

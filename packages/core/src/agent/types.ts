@@ -1,3 +1,5 @@
+import type { Logger } from "@llamaindex/env";
+import type { UUID } from "../global";
 import type {
   BaseToolWithCall,
   ChatMessage,
@@ -6,9 +8,7 @@ import type {
   LLM,
   MessageContent,
   ToolOutput,
-} from "@llamaindex/core/llms";
-import type { Logger } from "../internal/logger.js";
-import type { UUID } from "../types.js";
+} from "../llms";
 
 export type AgentTaskContext<
   Model extends LLM,

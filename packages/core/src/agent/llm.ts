@@ -1,6 +1,6 @@
-import type { BaseToolWithCall, LLM } from "@llamaindex/core/llms";
-import { ObjectRetriever } from "../objects/index.js";
-import { Settings } from "../Settings.js";
+import { Settings } from "../global";
+import type { BaseToolWithCall, LLM } from "../llms";
+import { ObjectRetriever } from "../objects";
 import { AgentRunner, AgentWorker, type AgentParamsBase } from "./base.js";
 import { validateAgentParams } from "./utils.js";
 

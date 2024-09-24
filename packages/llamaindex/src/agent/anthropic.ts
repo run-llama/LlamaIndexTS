@@ -1,3 +1,8 @@
+import {
+  LLMAgent,
+  LLMAgentWorker,
+  type LLMAgentParams,
+} from "@llamaindex/core/agent";
 import type {
   NonStreamingChatEngineParams,
   StreamingChatEngineParams,
@@ -5,7 +10,6 @@ import type {
 import type { EngineResponse } from "@llamaindex/core/schema";
 import { Settings } from "../Settings.js";
 import { Anthropic } from "../llm/anthropic.js";
-import { LLMAgent, LLMAgentWorker, type LLMAgentParams } from "./llm.js";
 
 export type AnthropicAgentParams = LLMAgentParams;
 

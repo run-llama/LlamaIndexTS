@@ -13,6 +13,7 @@ export function getEnv(name: string): string | undefined {
   return INTERNAL_ENV[name];
 }
 
+export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
 export {
   loadTransformers,
   setTransformers,

@@ -6,6 +6,7 @@
 import "./global-check.js";
 export * from "./node-polyfill.js";
 
+export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
 export {
   loadTransformers,
   setTransformers,

@@ -1,5 +1,4 @@
-import type { AgentEndEvent, AgentStartEvent } from "./agent/types.js";
-
+export * from "@llamaindex/core/agent";
 export * from "@llamaindex/core/chat-engine";
 export {
   CallbackManager,
@@ -29,25 +28,15 @@ export type {
   LLMStreamEvent,
   LLMToolCallEvent,
   LLMToolResultEvent,
+  LlamaIndexEventMaps,
 } from "@llamaindex/core/global";
 export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
+export * from "@llamaindex/core/memory";
 export * from "@llamaindex/core/prompts";
 export * from "@llamaindex/core/query-engine";
 export * from "@llamaindex/core/response-synthesizers";
 export * from "@llamaindex/core/retriever";
-export * from "@llamaindex/core/schema";
-
-declare module "@llamaindex/core/global" {
-  export interface LlamaIndexEventMaps {
-    // agent events
-    "agent-start": AgentStartEvent;
-    "agent-end": AgentEndEvent;
-  }
-}
-
-export * from "@llamaindex/core/llms";
-export * from "@llamaindex/core/memory";
 export * from "@llamaindex/core/schema";
 export * from "./agent/index.js";
 export * from "./cloud/index.js";
