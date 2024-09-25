@@ -1,9 +1,9 @@
 import { randomUUID } from "@llamaindex/env";
+import { wrapEventCaller } from "../decorator";
 import { Settings } from "../global";
 import type { MessageContent } from "../llms";
 import { PromptMixin } from "../prompts";
 import { EngineResponse, type NodeWithScore } from "../schema";
-import { wrapEventCaller } from "../utils";
 
 /**
  * @link https://docs.llamaindex.ai/en/stable/api_reference/schema/?h=querybundle#llama_index.core.schema.QueryBundle

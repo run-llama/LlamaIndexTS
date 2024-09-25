@@ -8,6 +8,7 @@ import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
 import type { ChatModel } from "openai/resources/chat/chat";
 import { isDeepEqual } from "remeda";
 
+import { wrapEventCaller, wrapLLMEvent } from "@llamaindex/core/decorator";
 import {
   type BaseTool,
   type ChatMessage,
@@ -22,11 +23,7 @@ import {
   ToolCallLLM,
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import {
-  extractText,
-  wrapEventCaller,
-  wrapLLMEvent,
-} from "@llamaindex/core/utils";
+import { extractText } from "@llamaindex/core/utils";
 import { Tokenizers } from "@llamaindex/env";
 import type {
   ChatCompletionAssistantMessageParam,

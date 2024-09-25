@@ -5,9 +5,9 @@ import {
   type ModuleRecord,
   PromptMixin,
 } from "@llamaindex/core/prompts";
+import { createMessageContent } from "@llamaindex/core/response-synthesizers";
 import type { BaseRetriever } from "@llamaindex/core/retriever";
 import { MetadataMode, type NodeWithScore } from "@llamaindex/core/schema";
-import { createMessageContent } from "@llamaindex/core/utils";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";
 import type { Context, ContextGenerator } from "./types.js";
 

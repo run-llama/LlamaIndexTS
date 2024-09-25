@@ -89,12 +89,13 @@ jobs:
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
-        run: pnpm dlx turbo run circular-check
-      - uses: actions/upload-artifact@v3
+        run: pnpm run circular-check
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: typecheck-build-dist
-          path: ./packages/llamaindex/dist
+          path: |
+            ./packages/**/dist
           if-no-files-found: error
   e2e-llamaindex-examples:
     strategy:

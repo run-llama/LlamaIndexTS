@@ -7,6 +7,7 @@ import {
   type GenerateContentStreamResult as GoogleStreamGenerateContentResult,
 } from "@google/generative-ai";
 
+import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type {
   CompletionResponse,
   LLMCompletionParamsNonStreaming,
@@ -16,7 +17,7 @@ import type {
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { ToolCallLLM } from "@llamaindex/core/llms";
-import { streamConverter, wrapLLMEvent } from "@llamaindex/core/utils";
+import { streamConverter } from "@llamaindex/core/utils";
 import { getEnv, randomUUID } from "@llamaindex/env";
 import {
   GEMINI_BACKENDS,

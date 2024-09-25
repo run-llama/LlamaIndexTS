@@ -3,6 +3,7 @@ import type {
   NonStreamingChatEngineParams,
   StreamingChatEngineParams,
 } from "@llamaindex/core/chat-engine";
+import { wrapEventCaller } from "@llamaindex/core/decorator";
 import type {
   ChatMessage,
   LLM,
@@ -22,7 +23,6 @@ import {
   extractText,
   streamConverter,
   streamReducer,
-  wrapEventCaller,
 } from "@llamaindex/core/utils";
 import { Settings } from "../../Settings.js";
 import type { BaseNodePostprocessor } from "../../postprocessors/index.js";

@@ -13,6 +13,7 @@ import type {
   ToolUseBlock,
   ToolUseBlockParam,
 } from "@anthropic-ai/sdk/resources/messages";
+import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import type {
   BaseTool,
   ChatMessage,
@@ -23,7 +24,7 @@ import type {
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { ToolCallLLM } from "@llamaindex/core/llms";
-import { extractText, wrapLLMEvent } from "@llamaindex/core/utils";
+import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 

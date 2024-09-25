@@ -16,11 +16,12 @@ import {
   type NodeWithScore,
   TextNode,
 } from "../schema";
-import { createMessageContent, extractText, streamConverter } from "../utils";
+import { extractText, streamConverter } from "../utils";
 import {
   BaseSynthesizer,
   type BaseSynthesizerOptions,
 } from "./base-synthesizer";
+import { createMessageContent } from "./utils";
 
 const responseModeSchema = z.enum([
   "refine",
