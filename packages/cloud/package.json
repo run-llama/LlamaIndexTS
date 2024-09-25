@@ -9,7 +9,8 @@
   },
   "files": [
     "openapi.json",
-    "dist"
+    "./api",
+    "./reader"
   ],
   "exports": {
     "./openapi.json": "./openapi.json",

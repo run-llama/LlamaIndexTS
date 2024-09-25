@@ -258,7 +258,24 @@
     }
   },
   "files": [
-    "dist"
+    "./agent",
+    "./objects",
+    "./node-parser",
+    "./query-engine",
+    "./llms",
+    "./decorator",
+    "./embeddings",
+    "./global",
+    "./schema",
+    "./utils",
+    "./prompts",
+    "./indices",
+    "./workflow",
+    "./memory",
+    "./storage",
+    "./response-synthesizers",
+    "./chat-engine",
+    "./retriever"
   ],
   "scripts": {
     "dev": "bunchee --watch",
