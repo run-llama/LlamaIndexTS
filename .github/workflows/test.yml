@@ -163,3 +163,10 @@ jobs:
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
         working-directory: ${{ runner.temp }}/examples
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: build-dist
+          path: |
+            ${{ runner.temp }}/*.tgz
+          if-no-files-found: error
