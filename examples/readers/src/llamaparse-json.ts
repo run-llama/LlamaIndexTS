@@ -1,4 +1,4 @@
-import { createMessageContent } from "@llamaindex/core/utils";
+import { createMessageContent } from "@llamaindex/core/response-synthesizers";
 import {
   Document,
   ImageNode,
