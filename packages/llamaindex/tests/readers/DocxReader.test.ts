@@ -1,4 +1,4 @@
-import { DocxReader } from "llamaindex/readers/DocxReader";
+import { DocxReader } from "llamaindex";
 import { beforeEach, describe, expect, it } from "vitest";
 
 describe("DocxReader", () => {

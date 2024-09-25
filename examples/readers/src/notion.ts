@@ -1,7 +1,6 @@
 import { Client } from "@notionhq/client";
 import { program } from "commander";
-import { VectorStoreIndex } from "llamaindex";
-import { NotionReader } from "llamaindex/readers/NotionReader";
+import { NotionReader, VectorStoreIndex } from "llamaindex";
 import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 

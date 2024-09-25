@@ -1,6 +1,6 @@
 import type { BaseTool, ToolMetadata } from "@llamaindex/core/llms";
 import type { JSONSchemaType } from "ajv";
-import { default as wiki } from "wikipedia";
+import wiki from "wikipedia";
 
 type WikipediaParameter = {
   query: string;
@@ -43,8 +43,8 @@ export class WikipediaTool implements BaseTool<WikipediaParameter> {
     page: string,
     lang: string = this.DEFAULT_LANG,
   ): Promise<string> {
-    wiki.default.setLang(lang);
-    const pageResult = await wiki.default.page(page, { autoSuggest: false });
+    wiki.setLang(lang);
+    const pageResult = await wiki.page(page, { autoSuggest: false });
     const content = await pageResult.content();
     return content;
   }
@@ -53,7 +53,7 @@ export class WikipediaTool implements BaseTool<WikipediaParameter> {
     query,
     lang = this.DEFAULT_LANG,
   }: WikipediaParameter): Promise<string> {
-    const searchResult = await wiki.default.search(query);
+    const searchResult = await wiki.search(query);
     if (searchResult.results.length === 0) return "No search results.";
     return await this.loadData(searchResult.results[0].title, lang);
   }

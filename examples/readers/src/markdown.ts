@@ -1,5 +1,4 @@
-import { VectorStoreIndex } from "llamaindex";
-import { MarkdownReader } from "llamaindex/readers/MarkdownReader";
+import { MarkdownReader, VectorStoreIndex } from "llamaindex";
 
 const FILE_PATH = "../data/planets.md";
 const SAMPLE_QUERY = "List all planets";

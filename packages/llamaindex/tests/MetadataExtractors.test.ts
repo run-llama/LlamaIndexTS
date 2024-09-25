@@ -1,16 +1,16 @@
 import { Document } from "@llamaindex/core/schema";
-import { Settings } from "llamaindex";
-import type { ServiceContext } from "llamaindex/ServiceContext";
-import { serviceContextFromDefaults } from "llamaindex/ServiceContext";
-import { OpenAIEmbedding } from "llamaindex/embeddings/index";
+import type { ServiceContext } from "llamaindex";
 import {
   KeywordExtractor,
+  OpenAI,
+  OpenAIEmbedding,
   QuestionsAnsweredExtractor,
+  SentenceSplitter,
+  serviceContextFromDefaults,
+  Settings,
   SummaryExtractor,
   TitleExtractor,
-} from "llamaindex/extractors/index";
-import { OpenAI } from "llamaindex/llm/openai";
-import { SentenceSplitter } from "llamaindex/nodeParsers/index";
+} from "llamaindex";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LLM_TEXT_OUTPUT,

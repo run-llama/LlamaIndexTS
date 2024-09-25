@@ -40,7 +40,8 @@
       "protobufjs": "7.2.6"
     },
     "patchedDependencies": {
-      "python-format-js@1.4.3": "patches/python-format-js@1.4.3.patch"
+      "python-format-js@1.4.3": "patches/python-format-js@1.4.3.patch",
+      "bunchee@5.3.2": "patches/bunchee@5.3.2.patch"
     }
   },
   "lint-staged": {
