@@ -13,6 +13,14 @@ import {
   type VectorStoreQueryResult,
 } from "./types.js";
 
+import { escapeLikeString } from "./utils.js";
+
+import type { BaseEmbedding } from "@llamaindex/core/embeddings";
+import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
+import type { BaseNode, Metadata } from "@llamaindex/core/schema";
+import { Document, MetadataMode } from "@llamaindex/core/schema";
+
+// todo: create adapter for postgres client
 function fromPostgres(client: Sql): IsomorphicDB {
   return {
     query: async (sql: string, params?: any[]): Promise<any[]> => {
@@ -30,7 +38,7 @@ function fromPostgres(client: Sql): IsomorphicDB {
     },
     connect: () => Promise.resolve(),
     close: async () => client.end(),
-    onCloseEvent: (fn) => {
+    onCloseEvent: () => {
       // no close event
     },
   };
@@ -66,13 +74,6 @@ function fromPG(client: pg.Client | pg.PoolClient): IsomorphicDB {
     },
   };
 }
-
-import { escapeLikeString } from "./utils.js";
-
-import type { BaseEmbedding } from "@llamaindex/core/embeddings";
-import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
-import type { BaseNode, Metadata } from "@llamaindex/core/schema";
-import { Document, MetadataMode } from "@llamaindex/core/schema";
 
 export const PGVECTOR_SCHEMA = "public";
 export const PGVECTOR_TABLE = "llamaindex_embedding";

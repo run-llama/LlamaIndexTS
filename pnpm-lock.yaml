@@ -198,12 +198,6 @@ importers:
         specifier: ^5.6.2
         version: 5.6.2
 
-  examples/vector-store/pg:
-    devDependencies:
-      postgres:
-        specifier: ^3.4.4
-        version: 3.4.4
-
   packages/autotool:
     dependencies:
       '@swc/core':
@@ -19537,7 +19531,7 @@ snapshots:
       is-bun-module: 1.1.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.5.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
