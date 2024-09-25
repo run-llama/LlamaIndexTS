@@ -1,6 +1,5 @@
 import { AsyncLocalStorage, CustomEvent } from "@llamaindex/env";
 import type { AgentEndEvent, AgentStartEvent } from "../../agent";
-import { EventCaller, getEventCaller } from "../../decorator";
 import type {
   ChatMessage,
   ChatResponse,
@@ -16,6 +15,7 @@ import type {
 import type { RetrieveEndEvent, RetrieveStartEvent } from "../../retriever";
 import { TextNode } from "../../schema";
 import type { UUID } from "../type";
+import { EventCaller, getEventCaller } from "./event-caller";
 
 export type LLMStartEvent = {
   id: UUID;
