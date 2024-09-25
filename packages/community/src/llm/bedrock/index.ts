@@ -24,9 +24,9 @@ import {
 } from "./provider";
 import { mapMessageContentToMessageContentDetails } from "./utils";
 
+import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import { AnthropicProvider } from "./anthropic/provider";
 import { MetaProvider } from "./meta/provider";
-import { wrapLLMEvent } from '@llamaindex/core/decorator';
 
 // Other providers should go here
 export const PROVIDERS: { [key: string]: Provider } = {
