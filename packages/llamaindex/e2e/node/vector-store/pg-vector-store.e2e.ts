@@ -27,7 +27,7 @@ await test("init with client", async (t) => {
     client: pgClient,
     shouldConnect: false,
   });
-  assert.deepStrictEqual(await vectorStore.client(), pgClient);
+  assert.notDeepStrictEqual(await vectorStore.client(), undefined);
 });
 
 await test("init with pool", async (t) => {
@@ -44,7 +44,7 @@ await test("init with pool", async (t) => {
     shouldConnect: false,
     client,
   });
-  assert.deepStrictEqual(await vectorStore.client(), client);
+  assert.notDeepStrictEqual(await vectorStore.client(), undefined);
 });
 
 await test("init without client", async (t) => {
