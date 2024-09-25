@@ -1,5 +1,5 @@
 import { getEnv } from "@llamaindex/env";
-import { Settings } from "../global";
+import { Settings } from "../../global";
 
 const emitOnce = false;
 
