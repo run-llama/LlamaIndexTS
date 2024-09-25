@@ -13,7 +13,6 @@ export * from "./JSONReader.js";
 export * from "./MarkdownReader.js";
 export * from "./NotionReader.js";
 export * from "./PDFReader.js";
-export * from "./SimpleDirectoryReader.js";
+export * from "./SimpleDirectoryReader";
 export * from "./SimpleMongoReader.js";
 export * from "./TextFileReader.js";
-export * from "./type.js";
