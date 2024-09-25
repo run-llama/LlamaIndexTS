@@ -7,5 +7,6 @@ packages:
   - "packages/llamaindex/e2e"
   - "packages/llamaindex/e2e/examples/*"
   - "packages/autotool/examples/*"
+  - "packages/ui/examples/*"
   - "examples/"
   - "examples/*"

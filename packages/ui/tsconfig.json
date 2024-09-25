@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./lib",
+    "types": ["node"],
+    "jsx": "react-jsx"
+  },
+  "include": ["./src"],
+  "references": [
+    {
+      "path": "../core/tsconfig.json"
+    },
+    {
+      "path": "../env/tsconfig.json"
+    }
+  ]
+}

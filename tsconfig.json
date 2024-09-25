@@ -88,6 +88,9 @@
     },
     {
       "path": "./packages/experimental/tsconfig.json"
+    },
+    {
+      "path": "./packages/ui"
     }
   ]
 }
