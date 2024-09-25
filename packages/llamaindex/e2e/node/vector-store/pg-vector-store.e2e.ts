@@ -49,11 +49,11 @@ await test("init with pool", async (t) => {
 
 await test("init without client", async (t) => {
   const vectorStore = new PGVectorStore({ clientConfig: pgConfig });
-  const pgClient = (await vectorStore.client()) as pg.Client;
+  const db = await vectorStore.client();
   t.after(async () => {
-    await pgClient.end();
+    await db.close()
   });
-  assert.notDeepStrictEqual(pgClient, undefined);
+  assert.notDeepStrictEqual(db, undefined);
 });
 
 await test("simple node", async (t) => {
@@ -71,9 +71,9 @@ await test("simple node", async (t) => {
     dimensions,
     schemaName,
   });
-  const pgClient = (await vectorStore.client()) as pg.Client;
+  const db = await vectorStore.client()
   t.after(async () => {
-    await pgClient.end();
+    await db.close();
   });
 
   await vectorStore.add([node]);
