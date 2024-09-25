@@ -89,13 +89,7 @@ jobs:
       - name: Run Type Check
         run: pnpm run type-check
       - name: Run Circular Dependency Check
-        run: pnpm dlx turbo run circular-check
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: typecheck-build-dist
-          path: ./packages/llamaindex/dist
-          if-no-files-found: error
+        run: pnpm run circular-check
   e2e-llamaindex-examples:
     strategy:
       fail-fast: false
@@ -169,3 +163,10 @@ jobs:
       - name: Run Type Check
         run: npx tsc --project ./tsconfig.json
         working-directory: ${{ runner.temp }}/examples
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: build-dist
+          path: |
+            ${{ runner.temp }}/*.tgz
+          if-no-files-found: error

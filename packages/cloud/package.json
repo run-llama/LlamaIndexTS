@@ -9,36 +9,37 @@
   },
   "files": [
     "openapi.json",
-    "dist"
+    "./api",
+    "./reader"
   ],
   "exports": {
     "./openapi.json": "./openapi.json",
     "./api": {
       "require": {
-        "types": "./dist/api.d.cts",
-        "default": "./dist/api.cjs"
+        "types": "./api/dist/index.d.cts",
+        "default": "./api/dist/index.cjs"
       },
       "import": {
-        "types": "./dist/api.d.ts",
-        "default": "./dist/api.js"
+        "types": "./api/dist/index.d.ts",
+        "default": "./api/dist/index.js"
       },
       "default": {
-        "types": "./dist/api.d.ts",
-        "default": "./dist/api.js"
+        "types": "./api/dist/index.d.ts",
+        "default": "./api/dist/index.js"
       }
     },
     "./reader": {
       "require": {
-        "types": "./dist/reader.d.cts",
-        "default": "./dist/reader.cjs"
+        "types": "./reader/dist/index.d.cts",
+        "default": "./reader/dist/index.cjs"
       },
       "import": {
-        "types": "./dist/reader.d.ts",
-        "default": "./dist/reader.js"
+        "types": "./reader/dist/index.d.ts",
+        "default": "./reader/dist/index.js"
       },
       "default": {
-        "types": "./dist/reader.d.ts",
-        "default": "./dist/reader.js"
+        "types": "./reader/dist/index.d.ts",
+        "default": "./reader/dist/index.js"
       }
     }
   },

@@ -8,3 +8,4 @@ export type {
   SynthesizeQuery,
   SynthesizeStartEvent,
 } from "./type";
+export { createMessageContent } from "./utils";

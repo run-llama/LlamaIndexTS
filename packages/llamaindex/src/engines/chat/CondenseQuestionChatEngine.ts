@@ -3,6 +3,7 @@ import {
   type NonStreamingChatEngineParams,
   type StreamingChatEngineParams,
 } from "@llamaindex/core/chat-engine";
+import { wrapEventCaller } from "@llamaindex/core/decorator";
 import type { ChatMessage, LLM } from "@llamaindex/core/llms";
 import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
 import {
@@ -16,7 +17,6 @@ import {
   extractText,
   messagesToHistory,
   streamReducer,
-  wrapEventCaller,
 } from "@llamaindex/core/utils";
 import type { ServiceContext } from "../../ServiceContext.js";
 import { llmFromSettingsOrContext } from "../../Settings.js";

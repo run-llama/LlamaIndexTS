@@ -1,4 +1,5 @@
 import { HfInference } from "@huggingface/inference";
+import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import "@llamaindex/core/llms";
 import {
   BaseLLM,
@@ -10,7 +11,7 @@ import {
   type LLMMetadata,
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { streamConverter, wrapLLMEvent } from "@llamaindex/core/utils";
+import { streamConverter } from "@llamaindex/core/utils";
 import { loadTransformers } from "@llamaindex/env";
 import type {
   PreTrainedModel,

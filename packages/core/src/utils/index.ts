@@ -1,12 +1,14 @@
 import type { JSONValue } from "../global";
 
-export {
-  EventCaller,
-  getEventCaller,
-  isAsyncIterable,
-  isIterable,
-  wrapEventCaller,
-} from "./event-caller";
+export const isAsyncIterable = (
+  obj: unknown,
+): obj is AsyncIterable<unknown> => {
+  return obj != null && typeof obj === "object" && Symbol.asyncIterator in obj;
+};
+
+export const isIterable = (obj: unknown): obj is Iterable<unknown> => {
+  return obj != null && typeof obj === "object" && Symbol.iterator in obj;
+};
 
 export async function* streamConverter<S, D>(
   stream: AsyncIterable<S>,
@@ -67,10 +69,7 @@ export function stringifyJSONToMessageContent(value: JSONValue): string {
   return JSON.stringify(value, null, 2).replace(/"([^"]*)"/g, "$1");
 }
 
-export { wrapLLMEvent } from "./wrap-llm-event";
-
 export {
-  createMessageContent,
   extractDataUrlComponents,
   extractImage,
   extractSingleText,

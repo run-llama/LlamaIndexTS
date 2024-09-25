@@ -4,6 +4,7 @@ import {
   type NonStreamingChatEngineParams,
   type StreamingChatEngineParams,
 } from "../chat-engine";
+import { wrapEventCaller } from "../decorator";
 import { Settings } from "../global";
 import type {
   BaseToolWithCall,
@@ -15,7 +16,6 @@ import type {
 import { BaseMemory } from "../memory";
 import type { ObjectRetriever } from "../objects";
 import { EngineResponse } from "../schema";
-import { wrapEventCaller } from "../utils";
 import type {
   AgentTaskContext,
   TaskHandler,

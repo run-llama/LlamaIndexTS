@@ -6,11 +6,9 @@ import type {
 import type { LLM } from "@llamaindex/core/llms";
 import { BaseMemory, ChatMemoryBuffer } from "@llamaindex/core/memory";
 import { EngineResponse } from "@llamaindex/core/schema";
-import {
-  streamConverter,
-  streamReducer,
-  wrapEventCaller,
-} from "@llamaindex/core/utils";
+import { streamConverter, streamReducer } from "@llamaindex/core/utils";
+
+import { wrapEventCaller } from "@llamaindex/core/decorator";
 import { Settings } from "../../Settings.js";
 
 /**

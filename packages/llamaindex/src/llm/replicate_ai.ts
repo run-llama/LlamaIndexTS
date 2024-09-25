@@ -1,3 +1,4 @@
+import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import {
   BaseLLM,
   type ChatMessage,
@@ -11,7 +12,6 @@ import {
   extractText,
   streamCallbacks,
   streamConverter,
-  wrapLLMEvent,
 } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import Replicate from "../internal/deps/replicate.js";

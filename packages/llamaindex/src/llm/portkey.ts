@@ -1,3 +1,4 @@
+import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import {
   BaseLLM,
   type ChatMessage,
@@ -8,7 +9,7 @@ import {
   type LLMMetadata,
   type MessageType,
 } from "@llamaindex/core/llms";
-import { extractText, wrapLLMEvent } from "@llamaindex/core/utils";
+import { extractText } from "@llamaindex/core/utils";
 import { getEnv } from "@llamaindex/env";
 import _ from "lodash";
 import { Portkey as OrigPortKey } from "portkey-ai";

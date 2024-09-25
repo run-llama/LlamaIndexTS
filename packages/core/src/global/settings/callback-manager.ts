@@ -14,8 +14,8 @@ import type {
 } from "../../response-synthesizers";
 import type { RetrieveEndEvent, RetrieveStartEvent } from "../../retriever";
 import { TextNode } from "../../schema";
-import { EventCaller, getEventCaller } from "../../utils";
 import type { UUID } from "../type";
+import { EventCaller, getEventCaller } from "./event-caller";
 
 export type LLMStartEvent = {
   id: UUID;

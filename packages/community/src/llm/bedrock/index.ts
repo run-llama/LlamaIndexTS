@@ -16,7 +16,7 @@ import {
   ToolCallLLM,
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { streamConverter, wrapLLMEvent } from "@llamaindex/core/utils";
+import { streamConverter } from "@llamaindex/core/utils";
 import {
   type BedrockAdditionalChatOptions,
   type BedrockChatStreamResponse,
@@ -24,6 +24,7 @@ import {
 } from "./provider";
 import { mapMessageContentToMessageContentDetails } from "./utils";
 
+import { wrapLLMEvent } from "@llamaindex/core/decorator";
 import { AnthropicProvider } from "./anthropic/provider";
 import { MetaProvider } from "./meta/provider";
 
