@@ -108,10 +108,6 @@
   "main": "./dist/index.cjs",
   "exports": {
     ".": {
-      "react-server": {
-        "types": "./dist/index.react-server.d.ts",
-        "default": "./dist/index.react-server.js"
-      },
       "workerd": {
         "types": "./dist/index.workerd.d.ts",
         "default": "./dist/index.workerd.js"
