@@ -1,7 +1,6 @@
 // test runtime
 import "llamaindex";
 import { ClipEmbedding } from "llamaindex";
-import "llamaindex/readers/SimpleDirectoryReader";
 
 // @ts-expect-error
 if (typeof EdgeRuntime !== "string") {

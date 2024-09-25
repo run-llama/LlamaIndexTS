@@ -1,8 +1,5 @@
 import { Document, MetadataMode } from "@llamaindex/core/schema";
-import {
-  metadataDictToNode,
-  nodeToMetadata,
-} from "llamaindex/vector-store/utils";
+import { metadataDictToNode, nodeToMetadata } from "llamaindex";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe("Testing VectorStore utils", () => {

@@ -1,11 +1,11 @@
 import {
   getResponseSynthesizer,
   OpenAI,
+  PapaCSVReader,
   PromptTemplate,
   Settings,
   VectorStoreIndex,
 } from "llamaindex";
-import { PapaCSVReader } from "llamaindex/readers/CSVReader";
 
 Settings.llm = new OpenAI({ model: "gpt-4" });
 

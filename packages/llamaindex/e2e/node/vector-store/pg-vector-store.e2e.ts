@@ -1,7 +1,6 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { config } from "dotenv";
-import { Document, VectorStoreQueryMode } from "llamaindex";
-import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
+import { Document, PGVectorStore, VectorStoreQueryMode } from "llamaindex";
 import assert from "node:assert";
 import { test } from "node:test";
 import pg from "pg";

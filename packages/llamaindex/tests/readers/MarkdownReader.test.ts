@@ -1,4 +1,4 @@
-import { MarkdownReader } from "llamaindex/readers/MarkdownReader";
+import { MarkdownReader } from "llamaindex";
 import { beforeEach, describe, expect, it } from "vitest";
 
 describe("MarkdownReader", () => {

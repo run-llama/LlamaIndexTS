@@ -173,7 +173,7 @@ export default function Home() {
 "use server";
 import { createStreamableUI } from "ai/rsc";
 import { OpenAIAgent } from "llamaindex";
-import type { ChatMessage } from "llamaindex/llm/types";
+import type { ChatMessage } from "llamaindex";
 
 export async function chatWithAgent(
   question: string,
@@ -264,44 +264,6 @@ export default {
   },
 };
 ```
-
-### Tips when using in non-Node.js environments
-
-When you are importing `llamaindex` in a non-Node.js environment(such as Vercel Edge, Cloudflare Workers, etc.)
-Some classes are not exported from top-level entry file.
-
-The reason is that some classes are only compatible with Node.js runtime,(e.g. `PDFReader`) which uses Node.js specific APIs(like `fs`, `child_process`, `crypto`).
-
-If you need any of those classes, you have to import them instead directly though their file path in the package.
-Here's an example for importing the `PineconeVectorStore` class:
-
-```typescript
-import { PineconeVectorStore } from "llamaindex/storage/vectorStore/PineconeVectorStore";
-```
-
-As the `PDFReader` is not working with the Edge runtime, here's how to use the `SimpleDirectoryReader` with the `LlamaParseReader` to load PDFs:
-
-```typescript
-import { SimpleDirectoryReader } from "llamaindex/readers/SimpleDirectoryReader";
-import { LlamaParseReader } from "llamaindex/readers/LlamaParseReader";
-
-export const DATA_DIR = "./data";
-
-export async function getDocuments() {
-  const reader = new SimpleDirectoryReader();
-  // Load PDFs using LlamaParseReader
-  return await reader.loadData({
-    directoryPath: DATA_DIR,
-    fileExtToReader: {
-      pdf: new LlamaParseReader({ resultType: "markdown" }),
-    },
-  });
-}
-```
-
-> _Note_: Reader classes have to be added explictly to the `fileExtToReader` map in the Edge version of the `SimpleDirectoryReader`.
-
-You'll find a complete example with LlamaIndexTS here: https://github.com/run-llama/create_llama_projects/tree/main/nextjs-edge-llamaparse
 
 ## Playground
 

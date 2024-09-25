@@ -1,7 +1,6 @@
 import { extractText } from "@llamaindex/core/utils";
 import { encodingForModel } from "js-tiktoken";
-import { ChatMessage, OpenAI } from "llamaindex";
-import { Settings } from "llamaindex/Settings";
+import { ChatMessage, OpenAI, Settings } from "llamaindex";
 
 const encoding = encodingForModel("gpt-4-0125-preview");
 

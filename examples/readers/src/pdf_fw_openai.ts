@@ -1,5 +1,9 @@
-import { OpenAI, OpenAIEmbedding, VectorStoreIndex } from "llamaindex";
-import { PDFReader } from "llamaindex/readers/PDFReader";
+import {
+  OpenAI,
+  OpenAIEmbedding,
+  PDFReader,
+  VectorStoreIndex,
+} from "llamaindex";
 
 import { Settings } from "llamaindex";
 
