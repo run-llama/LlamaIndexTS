@@ -1,4 +1,7 @@
 {
+  "excludeRegExp": [
+    "dist"
+  ],
 	"detectiveOptions": {
 		"ts": {
 			"skipTypeImports": true
