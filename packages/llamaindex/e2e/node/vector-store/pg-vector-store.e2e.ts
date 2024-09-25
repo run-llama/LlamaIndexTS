@@ -51,7 +51,7 @@ await test("init without client", async (t) => {
   const vectorStore = new PGVectorStore({ clientConfig: pgConfig });
   const db = await vectorStore.client();
   t.after(async () => {
-    await db.close()
+    await db.close();
   });
   assert.notDeepStrictEqual(db, undefined);
 });
@@ -71,7 +71,7 @@ await test("simple node", async (t) => {
     dimensions,
     schemaName,
   });
-  const db = await vectorStore.client()
+  const db = await vectorStore.client();
   t.after(async () => {
     await db.close();
   });
