@@ -16,7 +16,7 @@ import {
   ToolCallLLM,
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { streamConverter, wrapLLMEvent } from "@llamaindex/core/utils";
+import { streamConverter } from "@llamaindex/core/utils";
 import {
   type BedrockAdditionalChatOptions,
   type BedrockChatStreamResponse,
@@ -26,6 +26,7 @@ import { mapMessageContentToMessageContentDetails } from "./utils";
 
 import { AnthropicProvider } from "./anthropic/provider";
 import { MetaProvider } from "./meta/provider";
+import { wrapLLMEvent } from '@llamaindex/core/decorator';
 
 // Other providers should go here
 export const PROVIDERS: { [key: string]: Provider } = {
