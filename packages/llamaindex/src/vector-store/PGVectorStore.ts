@@ -1,6 +1,7 @@
 import type pg from "pg";
 
 import type { IsomorphicDB } from "@llamaindex/core/vector-store";
+import type { VercelPool } from "@vercel/postgres";
 import type { Sql } from "postgres";
 import {
   FilterCondition,
@@ -21,6 +22,35 @@ import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
 
 // todo: create adapter for postgres client
+function fromVercelPool(client: VercelPool): IsomorphicDB {
+  const queryFn = async (sql: string, params?: any[]): Promise<any[]> => {
+    return client.query(sql, params).then((result) => result.rows);
+  };
+  return {
+    query: queryFn,
+    begin: async (fn) => {
+      await client.query("BEGIN");
+      try {
+        const result = await fn(queryFn);
+        await client.query("COMMIT");
+        return result;
+      } catch (e) {
+        await client.query("ROLLBACK");
+        throw e;
+      }
+    },
+    connect: async () => {
+      await client.connect();
+    },
+    close: async () => client.end(),
+    onCloseEvent: (fn) => {
+      client.on("remove", () => {
+        fn();
+      });
+    },
+  };
+}
+
 function fromPostgres(client: Sql): IsomorphicDB {
   return {
     query: async (sql: string, params?: any[]): Promise<any[]> => {
@@ -109,7 +139,7 @@ export type PGVectorStoreConfig = PGVectorStoreBaseConfig &
          * No need to connect to the database, the client is already connected.
          */
         shouldConnect?: false;
-        client: Sql;
+        client: Sql | VercelPool;
       }
   );
 
@@ -140,13 +170,16 @@ export class PGVectorStore
     if ("clientConfig" in config) {
       this.clientConfig = config.clientConfig;
     } else {
-      if (typeof config.client === "function") {
+      if (config.client.constructor.name.includes("Vercel")) {
         this.isDBConnected = true;
-        this.db = fromPostgres(config.client);
+        this.db = fromVercelPool(config.client as unknown as VercelPool);
+      } else if (typeof config.client === "function") {
+        this.isDBConnected = true;
+        this.db = fromPostgres(config.client as Sql);
       } else {
         this.isDBConnected =
           config.shouldConnect !== undefined ? !config.shouldConnect : false;
-        this.db = fromPG(config.client);
+        this.db = fromPG(config.client as pg.Client | pg.PoolClient);
       }
     }
   }
