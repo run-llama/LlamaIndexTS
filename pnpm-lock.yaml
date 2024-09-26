@@ -171,6 +171,9 @@ importers:
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
     devDependencies:
       '@types/node':
         specifier: ^22.5.1
@@ -197,6 +200,8 @@ importers:
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
+
+  examples/vector-store/pg: {}
 
   packages/autotool:
     dependencies:
