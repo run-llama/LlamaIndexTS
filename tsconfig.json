@@ -87,6 +87,9 @@
       "path": "./examples/readers"
     },
     {
+      "path": "./examples/vector-store/pg/tsconfig.json"
+    },
+    {
       "path": "./packages/experimental/tsconfig.json"
     }
   ]

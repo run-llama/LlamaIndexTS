@@ -255,6 +255,20 @@
         "types": "./retriever/dist/index.d.ts",
         "default": "./retriever/dist/index.js"
       }
+    },
+    "./vector-store": {
+      "require": {
+        "types": "./dist/vector-store/index.d.cts",
+        "default": "./dist/vector-store/index.cjs"
+      },
+      "import": {
+        "types": "./dist/vector-store/index.d.ts",
+        "default": "./dist/vector-store/index.js"
+      },
+      "default": {
+        "types": "./dist/vector-store/index.d.ts",
+        "default": "./dist/vector-store/index.js"
+      }
     }
   },
   "files": [

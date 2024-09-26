@@ -16,7 +16,8 @@
     "js-tiktoken": "^1.0.14",
     "llamaindex": "^0.6.0",
     "mongodb": "^6.7.0",
-    "pathe": "^1.1.2"
+    "pathe": "^1.1.2",
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
     "@types/node": "^22.5.1",

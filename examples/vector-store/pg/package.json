@@ -1,0 +1,5 @@
+{
+  "name": "pg-vector-store",
+  "type": "module",
+  "private": true
+}

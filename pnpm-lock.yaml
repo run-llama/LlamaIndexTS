@@ -171,6 +171,9 @@ importers:
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
     devDependencies:
       '@types/node':
         specifier: ^22.5.1
@@ -197,6 +200,8 @@ importers:
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
+
+  examples/vector-store/pg: {}
 
   packages/autotool:
     dependencies:
@@ -677,6 +682,9 @@ importers:
       pgvector:
         specifier: 0.2.0
         version: 0.2.0
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
@@ -9558,6 +9566,10 @@ packages:
 
   postgres-range@1.1.4:
     resolution: {integrity: sha512-i/hbxIE9803Alj/6ytL7UHQxRvZkI9O4Sy+J3HGc4F4oo/2eQAjTSNJ0bfxyse3bH0nuVesCk+3IRLaMtG3H6w==}
+
+  postgres@3.4.4:
+    resolution: {integrity: sha512-IbyN+9KslkqcXa8AO9fxpk97PA4pzewvpi2B3Dwy9u4zpV32QicaEdgmF3eSQUzdRk7ttDHQejNgAEr4XoeH4A==}
+    engines: {node: '>=12'}
 
   prebuild-install@7.1.2:
     resolution: {integrity: sha512-UnNke3IQb6sgarcZIDU3gbMeTp/9SSU1DAIkil7PrqG1vZlBtY5msYccSKSHDqa3hNg436IXK+SNImReuA1wEQ==}
@@ -23355,6 +23367,8 @@ snapshots:
   postgres-interval@3.0.0: {}
 
   postgres-range@1.1.4: {}
+
+  postgres@3.4.4: {}
 
   prebuild-install@7.1.2:
     dependencies:

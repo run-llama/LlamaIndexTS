@@ -8,4 +8,4 @@ packages:
   - "packages/llamaindex/e2e/examples/*"
   - "packages/autotool/examples/*"
   - "examples/"
-  - "examples/*"
+  - "examples/**"
