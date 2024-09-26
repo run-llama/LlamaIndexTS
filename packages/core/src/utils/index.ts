@@ -69,6 +69,15 @@ export function stringifyJSONToMessageContent(value: JSONValue): string {
   return JSON.stringify(value, null, 2).replace(/"([^"]*)"/g, "$1");
 }
 
+export function assertExists<T>(
+  value: T | null | undefined,
+  message: string = "Value does not exist",
+): asserts value is T {
+  if (value === null || value === undefined) {
+    throw new Error(message);
+  }
+}
+
 export {
   extractDataUrlComponents,
   extractImage,

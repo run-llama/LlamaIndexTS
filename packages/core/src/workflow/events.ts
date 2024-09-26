@@ -1,12 +1,14 @@
 export class WorkflowEvent<T extends Record<string, any> = any> {
+  displayName: string;
   data: T;
 
   constructor(data: T) {
     this.data = data;
+    this.displayName = this.constructor.name;
   }
 
   toString() {
-    return `${this.constructor.name}(${JSON.stringify(this.data)})`;
+    return this.displayName;
   }
 }
 
