@@ -37,6 +37,7 @@ export class Context<Start = string>
 
   readonly #startEvent: StartEvent<Start>;
   readonly #queue: WorkflowEvent[] = [];
+  readonly #globals: Map<string, any> = new Map();
 
   #eventBuffer: Map<EventTypes, WorkflowEvent[]> = new Map();
 
@@ -72,6 +73,19 @@ export class Context<Start = string>
     const step = this.#getStepFunction(this.#startEvent);
     assertExists(step, "No step found for start event");
     this.#pushEvent(this.#startEvent, step);
+  }
+
+  // these two API is not type safe
+  set(key: string, value: any): void {
+    this.#globals.set(key, value);
+  }
+
+  get(key: string, defaultValue?: any): any {
+    if (this.#globals.has(key)) {
+      return this.#globals.get(key);
+    } else if (defaultValue !== undefined) {
+      return defaultValue;
+    }
   }
 
   collectEvents(
