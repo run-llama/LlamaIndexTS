@@ -1,5 +1,13 @@
 # @llamaindex/openai
 
+## 0.1.9
+
+### Patch Changes
+
+- 96f72ad: fix: openai streaming with token usage and finish_reason
+- Updated dependencies [6cce3b1]
+  - @llamaindex/core@0.2.7
+
 ## 0.1.8
 
 ### Patch Changes
