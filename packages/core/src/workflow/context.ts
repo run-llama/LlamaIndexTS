@@ -9,6 +9,10 @@ import {
 export interface ContextInStep {
   get(key: string, defaultValue?: any): any;
   set(key: string, value: any): void;
+  collectEvents(
+    event: WorkflowEvent,
+    expected: EventTypes[],
+  ): WorkflowEvent[] | null;
 }
 
 export type StepFunction<T extends WorkflowEvent = WorkflowEvent> = (

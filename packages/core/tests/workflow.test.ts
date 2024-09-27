@@ -115,34 +115,35 @@ describe("Workflow", () => {
   });
 
   // fixme: design a better API for validation
-  // test("workflow validation", async () => {
-  //   const jokeFlow = new Workflow({ verbose: true, validate: true });
-  //   jokeFlow.addStep(StartEvent, generateJoke, { outputs: StopEvent });
-  //   jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
-  //   const run = jokeFlow.run("pirates");
-  //   await expect(run).rejects.toThrow(
-  //     "The following events are consumed but never produced: JokeEvent",
-  //   );
-  // });
+  test("workflow validation", async () => {
+    const jokeFlow = new Workflow({ verbose: true, validate: true });
+    jokeFlow.addStep(StartEvent, generateJoke, { outputs: StopEvent });
+    jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
+    expect(() => {
+      jokeFlow.run("pirates");
+    }).toThrow(
+      "The following events are consumed but never produced: JokeEvent",
+    );
+  });
 
   // fixme: we could handle collectEvents natively instead of user calling it
-  // test("collectEvents", async () => {
-  //   let collectedEvents: WorkflowEvent[] | null = null;
-  //   const jokeFlow = new Workflow({ verbose: true });
-  //
-  //   jokeFlow.addStep(StartEvent, generateJoke);
-  //   jokeFlow.addStep(JokeEvent, analyzeJoke);
-  //   jokeFlow.addStep([AnalysisEvent], async (context, ev) => {
-  //     collectedEvents = context.collectEvents(ev, [AnalysisEvent]);
-  //     return new StopEvent({ result: "Report generated" });
-  //   });
-  //
-  //   const result = await jokeFlow.run("pirates");
-  //   expect(generateJoke).toHaveBeenCalledTimes(1);
-  //   expect(analyzeJoke).toHaveBeenCalledTimes(1);
-  //   expect(result.data.result).toBe("Report generated");
-  //   expect(collectedEvents).toHaveLength(1);
-  // });
+  test("collectEvents", async () => {
+    let collectedEvents: WorkflowEvent[] | null = null;
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent, generateJoke);
+    jokeFlow.addStep(JokeEvent, analyzeJoke);
+    jokeFlow.addStep([AnalysisEvent], async (context, ev) => {
+      collectedEvents = context.collectEvents(ev, [AnalysisEvent]);
+      return new StopEvent({ result: "Report generated" });
+    });
+
+    const result = await jokeFlow.run("pirates");
+    expect(generateJoke).toHaveBeenCalledTimes(1);
+    expect(analyzeJoke).toHaveBeenCalledTimes(1);
+    expect(result.data.result).toBe("Report generated");
+    expect(collectedEvents).toHaveLength(1);
+  });
 
   test("run workflow with object-based StartEvent and StopEvent", async () => {
     const objectFlow = new Workflow<Person>({ verbose: true });
