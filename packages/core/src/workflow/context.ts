@@ -38,7 +38,7 @@ export class Context<Start = string>
 {
   readonly #steps: ReadonlyStepMap;
   // reverse map of #steps, helper for get the next step
-  readonly #eventMap: WeakMap<typeof WorkflowEvent, StepFunction>;
+  readonly #eventMap: WeakMap<typeof WorkflowEvent, Set<StepFunction>>;
 
   readonly #startEvent: StartEvent<Start>;
   readonly #queue: WorkflowEvent[] = [];
@@ -50,7 +50,7 @@ export class Context<Start = string>
   #timeout: number | null = null;
   #verbose: boolean = false;
 
-  #getStepFunction(event: WorkflowEvent): StepFunction | undefined {
+  #getStepFunction(event: WorkflowEvent): Set<StepFunction> | undefined {
     return this.#eventMap.get(event.constructor as EventTypes);
   }
 
@@ -65,7 +65,10 @@ export class Context<Start = string>
     this.#eventMap = new WeakMap();
     for (const [step, { inputs }] of this.#steps) {
       for (const input of inputs) {
-        this.#eventMap.set(input, step);
+        if (!this.#eventMap.has(input)) {
+          this.#eventMap.set(input, new Set());
+        }
+        this.#eventMap.get(input)!.add(step);
       }
     }
 
@@ -77,7 +80,7 @@ export class Context<Start = string>
     // push start event to the queue
     const step = this.#getStepFunction(this.#startEvent);
     assertExists(step, "No step found for start event");
-    this.#pushEvent(this.#startEvent, step);
+    this.#queue.push(this.#startEvent);
   }
 
   // these two API is not type safe
@@ -127,19 +130,6 @@ export class Context<Start = string>
     return null;
   }
 
-  #pushEvent(event: WorkflowEvent, step: StepFunction): void {
-    const stepName = step.name ? `step ${step.name}` : "all steps";
-    if (this.#verbose) {
-      console.log(`Sending event ${event} to ${stepName}`);
-    }
-
-    if (!this.#steps.has(step)) {
-      throw new Error(`Step ${step} does not exist`);
-    }
-
-    this.#queue.push(event);
-  }
-
   // make sure it will only be called once
   #iterator: AsyncGenerator<WorkflowEvent, void, void> | null = null;
   #signal: AbortSignal | null = null;
@@ -160,26 +150,27 @@ export class Context<Start = string>
       if (event) {
         yield event;
         // event handling
-        const step = this.#getStepFunction(event);
-        assertExists(step, `No step found for event ${event.displayName}`);
-        const nextEvent = await step.call(null, this, event);
-        if (nextEvent instanceof StopEvent) {
-          this.#running = false;
-          yield nextEvent;
-          return;
-        } else {
-          const nextStep = this.#getStepFunction(nextEvent);
-          assertExists(
-            nextStep,
-            `No step found for event ${nextEvent.displayName}`,
-          );
-          this.#pushEvent(nextEvent, nextStep);
+        const stepSet = this.#getStepFunction(event);
+        assertExists(stepSet, `No step found for event ${event.displayName}`);
+        for (const step of stepSet) {
+          const nextEvent: WorkflowEvent = await step.call(null, this, event);
+          if (nextEvent instanceof StopEvent) {
+            yield nextEvent;
+            return;
+          } else {
+            const nextStep = this.#getStepFunction(nextEvent);
+            assertExists(
+              nextStep,
+              `No step found for event ${nextEvent.displayName}`,
+            );
+            this.#queue.push(nextEvent);
+          }
         }
       } else {
         if (!this.#running) {
           return;
         }
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await 0;
       }
     }
   }
@@ -226,6 +217,7 @@ export class Context<Start = string>
             }
           }
           if (event instanceof StopEvent) {
+            this.#running = false;
             resolve(event);
           }
         }
