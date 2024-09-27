@@ -5,7 +5,7 @@ type EventTypeParam = EventTypes | EventTypes[];
 
 export class Workflow<Start = string> {
   #steps: Map<
-    StepFunction<Start, any>,
+    StepFunction<any>,
     { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
   > = new Map();
   #verbose: boolean = false;
@@ -24,7 +24,7 @@ export class Workflow<Start = string> {
 
   addStep<T extends WorkflowEvent>(
     eventType: EventTypeParam,
-    method: StepFunction<Start, T>,
+    method: StepFunction<T>,
     params: { outputs?: EventTypeParam } = {},
   ) {
     const inputs = Array.isArray(eventType) ? eventType : [eventType];

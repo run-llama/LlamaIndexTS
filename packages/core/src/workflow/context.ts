@@ -6,10 +6,15 @@ import {
   WorkflowEvent,
 } from "./events";
 
-export type StepFunction<
-  Start = string,
-  T extends WorkflowEvent = WorkflowEvent,
-> = (context: Context<Start>, ev: T) => Promise<WorkflowEvent>;
+export interface ContextInStep {
+  get(key: string, defaultValue?: any): any;
+  set(key: string, value: any): void;
+}
+
+export type StepFunction<T extends WorkflowEvent = WorkflowEvent> = (
+  context: ContextInStep,
+  ev: T,
+) => Promise<WorkflowEvent>;
 
 export type StepMap = Map<
   StepFunction<any>,
@@ -33,7 +38,7 @@ export class Context<Start = string>
 {
   readonly #steps: ReadonlyStepMap;
   // reverse map of #steps, helper for get the next step
-  readonly #eventMap: WeakMap<typeof WorkflowEvent, StepFunction<Start>>;
+  readonly #eventMap: WeakMap<typeof WorkflowEvent, StepFunction>;
 
   readonly #startEvent: StartEvent<Start>;
   readonly #queue: WorkflowEvent[] = [];
@@ -45,7 +50,7 @@ export class Context<Start = string>
   #timeout: number | null = null;
   #verbose: boolean = false;
 
-  #getStepFunction(event: WorkflowEvent): StepFunction<Start> | undefined {
+  #getStepFunction(event: WorkflowEvent): StepFunction | undefined {
     return this.#eventMap.get(event.constructor as EventTypes);
   }
 
@@ -122,7 +127,7 @@ export class Context<Start = string>
     return null;
   }
 
-  #pushEvent(event: WorkflowEvent, step: StepFunction<Start>): void {
+  #pushEvent(event: WorkflowEvent, step: StepFunction): void {
     const stepName = step.name ? `step ${step.name}` : "all steps";
     if (this.#verbose) {
       console.log(`Sending event ${event} to ${stepName}`);
