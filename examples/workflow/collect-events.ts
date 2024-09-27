@@ -1,5 +1,5 @@
 import {
-  Context,
+  ContextInStep,
   StartEvent,
   StopEvent,
   Workflow,
@@ -15,31 +15,31 @@ export class JokeEvent extends WorkflowEvent<{ joke: string }> {}
 export class CritiqueEvent extends WorkflowEvent<{ critique: string }> {}
 export class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
 
-const generateJoke = async (_context: Context, ev: StartEvent) => {
+const generateJoke = async (_context: ContextInStep, ev: StartEvent) => {
   const prompt = `Write your best joke about ${ev.data.input}.`;
   const response = await llm.complete({ prompt });
   return new JokeEvent({ joke: response.text });
 };
 
-const critiqueJoke = async (_context: Context, ev: JokeEvent) => {
+const critiqueJoke = async (_context: ContextInStep, ev: JokeEvent) => {
   const prompt = `Give a thorough critique of the following joke: ${ev.data.joke}`;
   const response = await llm.complete({ prompt });
   return new CritiqueEvent({ critique: response.text });
 };
 
-const analyzeJoke = async (_context: Context, ev: JokeEvent) => {
+const analyzeJoke = async (_context: ContextInStep, ev: JokeEvent) => {
   const prompt = `Give a thorough analysis of the following joke: ${ev.data.joke}`;
   const response = await llm.complete({ prompt });
   return new AnalysisEvent({ analysis: response.text });
 };
 
 const reportJoke = async (
-  context: Context,
+  context: ContextInStep,
   ev: AnalysisEvent | CritiqueEvent,
 ) => {
   const events = context.collectEvents(ev, [AnalysisEvent, CritiqueEvent]);
   if (!events) {
-    return;
+    throw new Error("unexpected event type");
   }
   const subPrompts = events.map((event) => {
     if (event instanceof AnalysisEvent) {
