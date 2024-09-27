@@ -1,5 +1,13 @@
 # @llamaindex/experimental
 
+## 0.0.89
+
+### Patch Changes
+
+- df441e2: fix: consoleLogger is missing from `@llamaindex/env`
+- Updated dependencies [df441e2]
+  - llamaindex@0.6.11
+
 ## 0.0.88
 
 ### Patch Changes
