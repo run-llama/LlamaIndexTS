@@ -13,6 +13,7 @@ class OpenAI {
 }
 
 class JokeEvent extends WorkflowEvent<{ joke: string }> {}
+
 class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
 
 describe("Workflow", () => {
@@ -167,5 +168,127 @@ describe("Workflow", () => {
     expect(result.data.result).toEqual({
       greeting: "Hello Alice, you are 30 years old!",
     });
+  });
+});
+
+describe("Workflow event loop", () => {
+  test("basic", async () => {
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent, async (_context, ev: StartEvent) => {
+      return new StopEvent({ result: `Hello ${ev.data.input}!` });
+    });
+
+    const result = await jokeFlow.run("world");
+    expect(result.data.result).toBe("Hello world!");
+  });
+
+  test("branch", async () => {
+    const myFlow = new Workflow({ verbose: true });
+
+    class BranchA1Event extends WorkflowEvent<{ payload: string }> {}
+
+    class BranchA2Event extends WorkflowEvent<{ payload: string }> {}
+
+    class BranchB1Event extends WorkflowEvent<{ payload: string }> {}
+
+    class BranchB2Event extends WorkflowEvent<{ payload: string }> {}
+
+    let control = false;
+
+    myFlow.addStep(StartEvent, async (_context, ev: StartEvent) => {
+      if (control) {
+        return new BranchA1Event({ payload: ev.data.input });
+      } else {
+        return new BranchB1Event({ payload: ev.data.input });
+      }
+    });
+
+    myFlow.addStep(BranchA1Event, async (_context, ev: BranchA1Event) => {
+      return new BranchA2Event({ payload: ev.data.payload });
+    });
+
+    myFlow.addStep(BranchB1Event, async (_context, ev: BranchB1Event) => {
+      return new BranchB2Event({ payload: ev.data.payload });
+    });
+
+    myFlow.addStep(BranchA2Event, async (_context, ev: BranchA2Event) => {
+      return new StopEvent({ result: `Branch A2: ${ev.data.payload}` });
+    });
+
+    myFlow.addStep(BranchB2Event, async (_context, ev: BranchB2Event) => {
+      return new StopEvent({ result: `Branch B2: ${ev.data.payload}` });
+    });
+
+    {
+      const result = await myFlow.run("world");
+      expect(result.data.result).toMatch(/Branch B2: world/);
+    }
+
+    control = true;
+
+    {
+      const result = await myFlow.run("world");
+      expect(result.data.result).toMatch(/Branch A2: world/);
+    }
+
+    {
+      const context = myFlow.run("world");
+      for await (const event of context) {
+        if (event instanceof BranchA2Event) {
+          expect(event.data.payload).toBe("world");
+        }
+        if (event instanceof StopEvent) {
+          expect(event.data.result).toMatch(/Branch A2: world/);
+        }
+      }
+    }
+  });
+
+  test("one event have multiple outputs", async () => {
+    const myFlow = new Workflow({ verbose: true });
+
+    class AEvent extends WorkflowEvent<{ payload: string }> {}
+
+    class BEvent extends WorkflowEvent<{ payload: string }> {}
+
+    class CEvent extends WorkflowEvent<{ payload: string }> {}
+
+    class DEvent extends WorkflowEvent<{ payload: string }> {}
+
+    myFlow.addStep(StartEvent, async (_context, ev: StartEvent) => {
+      return new StopEvent({ result: "STOP" });
+    });
+
+    const fn = vi.fn(async (_context, ev: StartEvent) => {
+      return new AEvent({ payload: ev.data.input });
+    });
+
+    myFlow.addStep(StartEvent, fn);
+    myFlow.addStep(AEvent, async (_context, ev: AEvent) => {
+      return new BEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(AEvent, async (_context, ev: AEvent) => {
+      return new CEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(BEvent, async (_context, ev: BEvent) => {
+      return new DEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(CEvent, async (_context, ev: CEvent) => {
+      return new DEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(DEvent, async (_context, ev: DEvent) => {
+      return new StopEvent({ result: `Hello ${ev.data.payload}!` });
+    });
+
+    const result = await myFlow.run("world");
+    expect(result.data.result).toBe("STOP");
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // streaming events will allow to consume event even stop event is reached
+    const stream = myFlow.run("world");
+    for await (const _ of stream) {
+    }
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });

@@ -46,16 +46,11 @@ export class Context<Start = string>
 
   #eventBuffer: Map<EventTypes, WorkflowEvent[]> = new Map();
 
-  #running: boolean = true;
   #timeout: number | null = null;
   #verbose: boolean = false;
 
   #getStepFunction(event: WorkflowEvent): Set<StepFunction> | undefined {
     return this.#eventMap.get(event.constructor as EventTypes);
-  }
-
-  get running(): boolean {
-    return this.#running;
   }
 
   constructor(params: ContextParams<Start>) {
@@ -144,19 +139,24 @@ export class Context<Start = string>
     return this.#iteratorSingleton;
   }
 
+  /**
+   * Stream events from the start event, and do BFS on the event graph.
+   *
+   * Note that this function will stop once there's no more future events,
+   *  if you want stop immediately once reach a StopEvent, you should handle it in the other side.
+   * @private
+   */
   async *#createStreamEvents(): AsyncGenerator<WorkflowEvent, void, void> {
     while (true) {
       const event = this.#queue.shift();
       if (event) {
         yield event;
-        // event handling
         const stepSet = this.#getStepFunction(event);
         assertExists(stepSet, `No step found for event ${event.displayName}`);
         for (const step of stepSet) {
           const nextEvent: WorkflowEvent = await step.call(null, this, event);
           if (nextEvent instanceof StopEvent) {
             yield nextEvent;
-            return;
           } else {
             const nextStep = this.#getStepFunction(nextEvent);
             assertExists(
@@ -167,10 +167,7 @@ export class Context<Start = string>
           }
         }
       } else {
-        if (!this.#running) {
-          return;
-        }
-        await 0;
+        return;
       }
     }
   }
@@ -185,24 +182,9 @@ export class Context<Start = string>
       | null
       | undefined,
   ) {
-    const stopWorkflow = () => {
-      if (this.#running) {
-        this.#running = false;
-      }
-    };
-
     if (this.#timeout !== null) {
       const timeout = this.#timeout;
       this.#signal = AbortSignal.timeout(timeout * 1000);
-      this.#signal.addEventListener(
-        "abort",
-        () => {
-          stopWorkflow();
-        },
-        {
-          once: true,
-        },
-      );
     }
 
     return new Promise<StopEvent>(async (resolve, reject) => {
@@ -217,13 +199,12 @@ export class Context<Start = string>
             }
           }
           if (event instanceof StopEvent) {
-            this.#running = false;
-            resolve(event);
+            return resolve(event);
           }
         }
         const nextValue = await this.#iteratorSingleton.next();
         if (nextValue.done === false) {
-          reject(new Error("Workflow did not complete"));
+          return reject(new Error("Workflow did not complete"));
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
