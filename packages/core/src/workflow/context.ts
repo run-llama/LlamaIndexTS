@@ -8,9 +8,11 @@ import {
 
 export interface Context {}
 
-export type StepFunction<T extends WorkflowEvent = WorkflowEvent> = (
+export type StepFunction<
+  T extends (typeof WorkflowEvent<any>)[] = (typeof WorkflowEvent<any>)[],
+> = (
   context: Context,
-  ...events: T[]
+  ...events: InstanceType<T[number]>[]
 ) => Promise<WorkflowEvent>;
 
 export type StepMap = Map<
@@ -153,10 +155,10 @@ export class WorkflowContext<Start = string>
             const index = this.#pendingInputQueue.indexOf(input);
             this.#pendingInputQueue.splice(index, 1);
           });
-          this.#pendingInputQueue.unshift(nextEvent);
           if (nextEvent instanceof StopEvent) {
             yield nextEvent;
           } else {
+            this.#pendingInputQueue.unshift(nextEvent);
             this.#queue.push(nextEvent);
           }
         }
@@ -193,6 +195,11 @@ export class WorkflowContext<Start = string>
             }
           }
           if (event instanceof StopEvent) {
+            if (this.#verbose && this.#pendingInputQueue.length > 0) {
+              console.warn(
+                "There are pending events in the queue, check your in-degree and out-degree of the graph",
+              );
+            }
             return resolve(event);
           }
         }

@@ -24,12 +24,27 @@ export class Workflow<Start = string> {
     this.#timeout = params.timeout ?? null;
   }
 
-  addStep<T extends WorkflowEvent>(
-    inputEvents: EventTypeParam,
-    method: StepFunction<T>,
+  addStep<
+    const Events extends
+      | (typeof WorkflowEvent<any>)[]
+      | typeof WorkflowEvent<any>
+      | typeof StartEvent<Start>,
+  >(
+    inputEvents: Events,
+    method: StepFunction<
+      // special case for StartEvent, typescript doesn't accept default value for generic type when bypassing it
+      // Refs: https://github.com/microsoft/TypeScript/issues/42064
+      Events extends typeof StartEvent<string>
+        ? [typeof StartEvent<string>]
+        : Events extends typeof WorkflowEvent<any>
+          ? [Events]
+          : Events
+    >,
     params: { outputs?: EventTypeParam } = {},
   ) {
-    const inputs = Array.isArray(inputEvents) ? inputEvents : [inputEvents];
+    const inputs: (typeof WorkflowEvent)[] = Array.isArray(inputEvents)
+      ? inputEvents
+      : [inputEvents];
     const outputs = params.outputs
       ? Array.isArray(params.outputs)
         ? params.outputs

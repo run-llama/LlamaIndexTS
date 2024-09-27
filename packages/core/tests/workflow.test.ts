@@ -97,7 +97,7 @@ describe("Workflow", () => {
       return new StopEvent({ result: "We waited 2 seconds" });
     };
 
-    jokeFlow.addStep(StartEvent, longRunning);
+    jokeFlow.addStep(StartEvent<string>, longRunning);
     const run = jokeFlow.run("Let's start");
     await expect(run).rejects.toThrow(
       `Operation timed out after ${TIMEOUT} seconds`,
@@ -147,6 +147,24 @@ describe("Workflow", () => {
     expect(result.data.result).toBe("The analysis is insightful and helpful.");
   });
 
+  test("run invalid workflow", async () => {
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent, generateJoke);
+    jokeFlow.addStep(JokeEvent, analyzeJoke);
+    jokeFlow.addStep([JokeEvent], async (context, ...events) => {
+      return new StopEvent({
+        result: "The analysis is insightful and helpful.",
+      });
+    });
+    const consoleSpy = vi.spyOn(console, "warn");
+    expect(consoleSpy).toHaveBeenCalledTimes(0);
+    const result = await jokeFlow.run("pirates");
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
+    consoleSpy.mockRestore();
+    expect(result.data.result).toBe("The analysis is insightful and helpful.");
+  });
+
   test("run workflow with object-based StartEvent and StopEvent", async () => {
     const objectFlow = new Workflow<Person>({ verbose: true });
 
@@ -178,7 +196,7 @@ describe("Workflow event loop", () => {
   test("basic", async () => {
     const jokeFlow = new Workflow({ verbose: true });
 
-    jokeFlow.addStep(StartEvent, async (_context, ev: StartEvent) => {
+    jokeFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
       return new StopEvent({ result: `Hello ${ev.data.input}!` });
     });
 
@@ -199,7 +217,7 @@ describe("Workflow event loop", () => {
 
     let control = false;
 
-    myFlow.addStep(StartEvent, async (_context, ev: StartEvent) => {
+    myFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
       if (control) {
         return new BranchA1Event({ payload: ev.data.input });
       } else {
@@ -259,7 +277,7 @@ describe("Workflow event loop", () => {
 
     class DEvent extends WorkflowEvent<{ payload: string }> {}
 
-    myFlow.addStep(StartEvent, async (_context, ev: StartEvent) => {
+    myFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
       return new StopEvent({ result: "STOP" });
     });
 
