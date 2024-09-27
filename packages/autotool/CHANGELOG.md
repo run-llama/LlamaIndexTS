@@ -1,5 +1,13 @@
 # @llamaindex/autotool
 
+## 3.0.11
+
+### Patch Changes
+
+- df441e2: fix: consoleLogger is missing from `@llamaindex/env`
+- Updated dependencies [df441e2]
+  - llamaindex@0.6.11
+
 ## 3.0.10
 
 ### Patch Changes
