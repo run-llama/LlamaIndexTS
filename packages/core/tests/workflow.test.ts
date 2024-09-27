@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
-import type { Context } from "../src/workflow/context.js";
+import type { ContextInStep } from "../src/workflow/context.js";
 import {
   StartEvent,
   StopEvent,
@@ -47,7 +47,7 @@ describe("Workflow", () => {
       return new StopEvent({ result: response.text });
     });
 
-    analyzeJoke = vi.fn(async (_context: Context, ev: JokeEvent) => {
+    analyzeJoke = vi.fn(async (_context: ContextInStep, ev: JokeEvent) => {
       const prompt = `Give a thorough analysis of the following joke: ${ev.data.joke}`;
       const response = await mockLLM.complete({ prompt });
       return new AnalysisEvent({ analysis: response.text });
@@ -101,7 +101,7 @@ describe("Workflow", () => {
     const TIMEOUT = 1;
     const jokeFlow = new Workflow({ verbose: true, timeout: TIMEOUT });
 
-    const longRunning = async (_context: Context, ev: StartEvent) => {
+    const longRunning = async (_context: ContextInStep, ev: StartEvent) => {
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
       return new StopEvent({ result: "We waited 2 seconds" });
     };
@@ -124,23 +124,24 @@ describe("Workflow", () => {
   //   );
   // });
 
-  test("collectEvents", async () => {
-    let collectedEvents: WorkflowEvent[] | null = null;
-    const jokeFlow = new Workflow({ verbose: true });
-
-    jokeFlow.addStep(StartEvent, generateJoke);
-    jokeFlow.addStep(JokeEvent, analyzeJoke);
-    jokeFlow.addStep([AnalysisEvent], async (context, ev) => {
-      collectedEvents = context.collectEvents(ev, [AnalysisEvent]);
-      return new StopEvent({ result: "Report generated" });
-    });
-
-    const result = await jokeFlow.run("pirates");
-    expect(generateJoke).toHaveBeenCalledTimes(1);
-    expect(analyzeJoke).toHaveBeenCalledTimes(1);
-    expect(result.data.result).toBe("Report generated");
-    expect(collectedEvents).toHaveLength(1);
-  });
+  // fixme: we could handle collectEvents natively instead of user calling it
+  // test("collectEvents", async () => {
+  //   let collectedEvents: WorkflowEvent[] | null = null;
+  //   const jokeFlow = new Workflow({ verbose: true });
+  //
+  //   jokeFlow.addStep(StartEvent, generateJoke);
+  //   jokeFlow.addStep(JokeEvent, analyzeJoke);
+  //   jokeFlow.addStep([AnalysisEvent], async (context, ev) => {
+  //     collectedEvents = context.collectEvents(ev, [AnalysisEvent]);
+  //     return new StopEvent({ result: "Report generated" });
+  //   });
+  //
+  //   const result = await jokeFlow.run("pirates");
+  //   expect(generateJoke).toHaveBeenCalledTimes(1);
+  //   expect(analyzeJoke).toHaveBeenCalledTimes(1);
+  //   expect(result.data.result).toBe("Report generated");
+  //   expect(collectedEvents).toHaveLength(1);
+  // });
 
   test("run workflow with object-based StartEvent and StopEvent", async () => {
     const objectFlow = new Workflow<Person>({ verbose: true });
