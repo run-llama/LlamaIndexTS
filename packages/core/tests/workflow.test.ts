@@ -312,4 +312,59 @@ describe("Workflow event loop", () => {
     }
     expect(fn).toHaveBeenCalledTimes(1);
   });
+
+  test("run with custom context", async () => {
+    type MyContext = { name: string };
+    const myFlow = new Workflow<string, MyContext>({ verbose: true }).with({
+      name: "Alice",
+    });
+    myFlow.addStep(
+      StartEvent<string>,
+      async (context: MyContext, _: StartEvent) => {
+        return new StopEvent({ result: `Hello ${context.name}!` });
+      },
+    );
+
+    const result = await myFlow.run("world").with({ name: "Alice" });
+    expect(result.data.result).toBe("Hello Alice!");
+  });
+
+  test("run with custom context with two streaming", async () => {
+    type MyContext = { name: string };
+    const myFlow = new Workflow<string, MyContext>({ verbose: true });
+    myFlow.addStep(StartEvent<string>, async (context, _) => {
+      if (context === null) {
+        return new StopEvent({ result: "EMPTY" });
+      }
+      return new StopEvent({ result: `Hello ${context.name}!` });
+    });
+
+    const context1 = myFlow.run("world");
+    const context2 = context1.with({ name: "Alice" });
+    const context3 = context1.with({ name: "Bob" });
+    expect(await context1).toMatchInlineSnapshot(`
+      StopEvent {
+        "data": {
+          "result": "EMPTY",
+        },
+        "displayName": "StopEvent",
+      }
+    `);
+    expect(await context2).toMatchInlineSnapshot(`
+            StopEvent {
+              "data": {
+                "result": "Hello Alice!",
+              },
+              "displayName": "StopEvent",
+            }
+          `);
+    expect(await context3).toMatchInlineSnapshot(`
+      StopEvent {
+        "data": {
+          "result": "Hello Bob!",
+        },
+        "displayName": "StopEvent",
+      }
+    `);
+  });
 });

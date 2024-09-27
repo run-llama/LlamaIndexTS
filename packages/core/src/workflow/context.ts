@@ -6,40 +6,36 @@ import {
   WorkflowEvent,
 } from "./events";
 
-export interface Context {}
+export type Context<Data = unknown> = Data;
 
 export type StepFunction<
+  Data = unknown,
   T extends (typeof WorkflowEvent<any>)[] = (typeof WorkflowEvent<any>)[],
 > = (
-  context: Context,
+  context: Context<Data>,
   ...events: InstanceType<T[number]>[]
 ) => Promise<WorkflowEvent>;
-
-export type StepMap = Map<
-  StepFunction<any>,
-  { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
->;
 
 export type ReadonlyStepMap = ReadonlyMap<
   StepFunction<any>,
   { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
 >;
 
-export type ContextParams<Start> = {
+export type ContextParams<Start, Data> = {
   startEvent: StartEvent<Start>;
-  steps: StepMap;
+  contextData: Data;
+  steps: ReadonlyStepMap;
   timeout: number | null;
   verbose: boolean;
 };
 
-export class WorkflowContext<Start = string>
+export class WorkflowContext<Start = string, Data = any>
   implements AsyncIterable<WorkflowEvent, void, void>, Promise<StopEvent>
 {
   readonly #steps: ReadonlyStepMap;
 
   readonly #startEvent: StartEvent<Start>;
   readonly #queue: WorkflowEvent[] = [];
-  readonly #globals: Map<string, any> = new Map();
 
   #timeout: number | null = null;
   #verbose: boolean = false;
@@ -73,12 +69,13 @@ export class WorkflowContext<Start = string>
     return res;
   }
 
-  constructor(params: ContextParams<Start>) {
+  constructor(params: ContextParams<Start, Data>) {
     this.#steps = params.steps;
     this.#startEvent = params.startEvent;
     if (typeof params.timeout === "number") {
       this.#timeout = params.timeout;
     }
+    this.#data = params.contextData;
     this.#verbose = params.verbose ?? false;
 
     // push start event to the queue
@@ -87,19 +84,6 @@ export class WorkflowContext<Start = string>
       throw new TypeError("No step found for start event");
     }
     this.#queue.push(this.#startEvent);
-  }
-
-  // these two API is not type safe
-  set(key: string, value: any): void {
-    this.#globals.set(key, value);
-  }
-
-  get(key: string, defaultValue?: any): any {
-    if (this.#globals.has(key)) {
-      return this.#globals.get(key);
-    } else if (defaultValue !== undefined) {
-      return defaultValue;
-    }
   }
 
   // make sure it will only be called once
@@ -144,7 +128,7 @@ export class WorkflowContext<Start = string>
           );
           const nextEvent: WorkflowEvent = await step.call(
             null,
-            this,
+            this.#data as Data,
             ...events.sort((a, b) => {
               const aIndex = inputs.indexOf(a.constructor as EventTypes);
               const bIndex = inputs.indexOf(b.constructor as EventTypes);
@@ -168,6 +152,23 @@ export class WorkflowContext<Start = string>
     }
   }
 
+  #data: Data = null!;
+  get data(): Data {
+    return this.#data;
+  }
+
+  with<Initial extends Data>(data: Initial): WorkflowContext<Start, Initial> {
+    return new WorkflowContext({
+      startEvent: this.#startEvent,
+      contextData: data,
+      steps: this.#steps,
+      timeout: this.#timeout,
+      verbose: this.#verbose,
+    });
+  }
+
+  #resolved: StopEvent | null = null;
+  #rejected: Error | null = null;
   then<TResult1, TResult2 = never>(
     onfulfilled?:
       | ((value: StopEvent) => TResult1 | PromiseLike<TResult1>)
@@ -178,6 +179,12 @@ export class WorkflowContext<Start = string>
       | null
       | undefined,
   ) {
+    if (this.#resolved !== null) {
+      return Promise.resolve(this.#resolved).then(onfulfilled, onrejected);
+    }
+    if (this.#rejected !== null) {
+      return Promise.reject(this.#rejected).then(onfulfilled, onrejected);
+    }
     if (this.#timeout !== null) {
       const timeout = this.#timeout;
       this.#signal = AbortSignal.timeout(timeout * 1000);
@@ -185,7 +192,10 @@ export class WorkflowContext<Start = string>
 
     return new Promise<StopEvent>(async (resolve, reject) => {
       this.#signal?.addEventListener("abort", () => {
-        reject(new Error(`Operation timed out after ${this.#timeout} seconds`));
+        this.#rejected = new Error(
+          `Operation timed out after ${this.#timeout} seconds`,
+        );
+        reject(this.#rejected);
       });
       try {
         for await (const event of this.#iteratorSingleton) {
@@ -200,12 +210,14 @@ export class WorkflowContext<Start = string>
                 "There are pending events in the queue, check your in-degree and out-degree of the graph",
               );
             }
+            this.#resolved = event;
             return resolve(event);
           }
         }
         const nextValue = await this.#iteratorSingleton.next();
         if (nextValue.done === false) {
-          return reject(new Error("Workflow did not complete"));
+          this.#rejected = new Error("Workflow did not complete");
+          return reject(this.#rejected);
         }
       } catch (err) {
         // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
