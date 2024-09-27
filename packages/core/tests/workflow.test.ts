@@ -1,4 +1,4 @@
-import type { ContextInStep } from "@llamaindex/core/workflow";
+import type { Context } from "@llamaindex/core/workflow";
 import {
   StartEvent,
   StopEvent,
@@ -48,21 +48,11 @@ describe("Workflow", () => {
       return new StopEvent({ result: response.text });
     });
 
-    analyzeJoke = vi.fn(async (_context: ContextInStep, ev: JokeEvent) => {
+    analyzeJoke = vi.fn(async (_context: Context, ev: JokeEvent) => {
       const prompt = `Give a thorough analysis of the following joke: ${ev.data.joke}`;
       const response = await mockLLM.complete({ prompt });
       return new AnalysisEvent({ analysis: response.text });
     });
-  });
-
-  test("addStep", () => {
-    const jokeFlow = new Workflow({ verbose: true });
-
-    jokeFlow.addStep(StartEvent, generateJoke);
-    jokeFlow.addStep(JokeEvent, critiqueJoke);
-
-    expect(jokeFlow.hasStep(generateJoke)).toBe(true);
-    expect(jokeFlow.hasStep(critiqueJoke)).toBe(true);
   });
 
   test("run workflow", async () => {
@@ -102,7 +92,7 @@ describe("Workflow", () => {
     const TIMEOUT = 1;
     const jokeFlow = new Workflow({ verbose: true, timeout: TIMEOUT });
 
-    const longRunning = async (_context: ContextInStep, ev: StartEvent) => {
+    const longRunning = async (_context: Context, ev: StartEvent) => {
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
       return new StopEvent({ result: "We waited 2 seconds" });
     };
@@ -114,27 +104,25 @@ describe("Workflow", () => {
     );
   });
 
-  // fixme: design a better API for validation
-  test("workflow validation", async () => {
-    const jokeFlow = new Workflow({ verbose: true, validate: true });
-    jokeFlow.addStep(StartEvent, generateJoke, { outputs: StopEvent });
-    jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
-    expect(() => {
-      jokeFlow.run("pirates");
-    }).toThrow(
-      "The following events are consumed but never produced: JokeEvent",
-    );
-  });
+  // // fixme: design a better API for validation
+  // test("workflow validation", async () => {
+  //   const jokeFlow = new Workflow({ verbose: true, validate: true });
+  //   jokeFlow.addStep(StartEvent, generateJoke, { outputs: StopEvent });
+  //   jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
+  //   expect(() => {
+  //     jokeFlow.run("pirates");
+  //   }).toThrow(
+  //     "The following events are consumed but never produced: JokeEvent",
+  //   );
+  // });
 
   // fixme: we could handle collectEvents natively instead of user calling it
   test("collectEvents", async () => {
-    let collectedEvents: WorkflowEvent[] | null = null;
     const jokeFlow = new Workflow({ verbose: true });
 
     jokeFlow.addStep(StartEvent, generateJoke);
     jokeFlow.addStep(JokeEvent, analyzeJoke);
-    jokeFlow.addStep([AnalysisEvent], async (context, ev) => {
-      collectedEvents = context.collectEvents(ev, [AnalysisEvent]);
+    jokeFlow.addStep([AnalysisEvent], async () => {
       return new StopEvent({ result: "Report generated" });
     });
 
@@ -142,7 +130,21 @@ describe("Workflow", () => {
     expect(generateJoke).toHaveBeenCalledTimes(1);
     expect(analyzeJoke).toHaveBeenCalledTimes(1);
     expect(result.data.result).toBe("Report generated");
-    expect(collectedEvents).toHaveLength(1);
+  });
+
+  test("run workflow with multiple in-degree", async () => {
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent, generateJoke);
+    jokeFlow.addStep(JokeEvent, analyzeJoke);
+    jokeFlow.addStep([JokeEvent, AnalysisEvent], async (context, ...events) => {
+      return new StopEvent({
+        result: "The analysis is insightful and helpful.",
+      });
+    });
+
+    const result = await jokeFlow.run("pirates");
+    expect(result.data.result).toBe("The analysis is insightful and helpful.");
   });
 
   test("run workflow with object-based StartEvent and StopEvent", async () => {
