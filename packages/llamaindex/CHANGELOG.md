@@ -1,5 +1,18 @@
 # llamaindex
 
+## 0.6.10
+
+### Patch Changes
+
+- ebc5105: feat: support `@vercel/postgres`
+- 6cce3b1: feat: support `npm:postgres`
+- Updated dependencies [96f72ad]
+- Updated dependencies [6cce3b1]
+  - @llamaindex/openai@0.1.9
+  - @llamaindex/core@0.2.7
+  - @llamaindex/groq@0.0.8
+  - @llamaindex/ollama@0.0.2
+
 ## 0.6.9
 
 ### Patch Changes
