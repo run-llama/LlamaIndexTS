@@ -1,4 +1,4 @@
-export { Context } from "./context";
+export { Context, type ContextInStep } from "./context";
 export {
   StartEvent,
   StopEvent,

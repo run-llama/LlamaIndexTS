@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
-import type { ContextInStep } from "../src/workflow/context.js";
+import type { ContextInStep } from "@llamaindex/core/workflow";
 import {
   StartEvent,
   StopEvent,
+  Workflow,
   WorkflowEvent,
-} from "../src/workflow/events.js";
-import { Workflow } from "../src/workflow/workflow.js";
+} from "@llamaindex/core/workflow";
+import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
 
 // mock OpenAI class for testing
 class OpenAI {
