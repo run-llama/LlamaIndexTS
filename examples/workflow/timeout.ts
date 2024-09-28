@@ -1,11 +1,6 @@
-import {
-  ContextInStep,
-  StartEvent,
-  StopEvent,
-  Workflow,
-} from "@llamaindex/core/workflow";
+import { StartEvent, StopEvent, Workflow } from "@llamaindex/core/workflow";
 
-const longRunning = async (_context: ContextInStep, ev: StartEvent) => {
+const longRunning = async (_context: unknown, ev: StartEvent) => {
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
   return new StopEvent({ result: "We waited 2 seconds" });
 };

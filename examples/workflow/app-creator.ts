@@ -1,11 +1,12 @@
 import {
-  ContextInStep,
   StartEvent,
   StopEvent,
   Workflow,
   WorkflowEvent,
 } from "@llamaindex/core/workflow";
-import { OpenAI } from "llamaindex";
+import { OpenAI, SimpleKVStore } from "llamaindex";
+
+const kvContext = new SimpleKVStore();
 
 const MAX_REVIEWS = 3;
 
@@ -19,7 +20,6 @@ the matched answer. If there isn't, it asks the user to provide an answer and
 stores the question/answer pair in the database.`;
 
 // Create custom event types
-export class MessageEvent extends WorkflowEvent<{ msg: string }> {}
 export class CodeEvent extends WorkflowEvent<{ code: string }> {}
 export class ReviewEvent extends WorkflowEvent<{
   review: string;
@@ -34,10 +34,10 @@ const truncate = (str: string) => {
 };
 
 // the architect is responsible for writing the structure and the initial code based on the specification
-const architect = async (context: ContextInStep, ev: StartEvent) => {
+const architect = async (context: SimpleKVStore, ev: StartEvent) => {
   // get the specification from the start event and save it to context
-  context.set("specification", ev.data.input);
-  const spec = context.get("specification");
+  await context.put("specification", ev.data.input);
+  const spec = await context.get("specification");
   // write a message to send an update to the user
   console.log(`Writing app using this specification: ${truncate(spec)}`);
   const prompt = `Build an app for this specification: <spec>${spec}</spec>. Make a plan for the directory structure you'll need, then return each file in full. Don't supply any reasoning, just code.`;
@@ -46,9 +46,9 @@ const architect = async (context: ContextInStep, ev: StartEvent) => {
 };
 
 // the coder is responsible for updating the code based on the review
-const coder = async (context: ContextInStep, ev: ReviewEvent) => {
+const coder = async (context: SimpleKVStore, ev: ReviewEvent) => {
   // get the specification from the context
-  const spec = context.get("specification");
+  const spec = await context.get("specification");
   // get the latest review and code
   const { review, code } = ev.data;
   // write a message to send an update to the user
@@ -59,14 +59,14 @@ const coder = async (context: ContextInStep, ev: ReviewEvent) => {
 };
 
 // the reviewer is responsible for reviewing the code and providing feedback
-const reviewer = async (context: ContextInStep, ev: CodeEvent) => {
+const reviewer = async (context: SimpleKVStore, ev: CodeEvent) => {
   // get the specification from the context
-  const spec = context.get("specification");
+  const spec = await context.get("specification");
   // get latest code from the event
   const { code } = ev.data;
   // update and check the number of reviews
-  const numberReviews = context.get("numberReviews", 0) + 1;
-  context.set("numberReviews", numberReviews);
+  const numberReviews = ((await context.get("numberReviews")) ?? 0) + 1;
+  await context.put("numberReviews", numberReviews);
   if (numberReviews > MAX_REVIEWS) {
     // the we've done this too many times - return the code
     console.log(`Already reviewed ${numberReviews - 1} times, stopping!`);
@@ -85,7 +85,7 @@ const reviewer = async (context: ContextInStep, ev: CodeEvent) => {
   return new ReviewEvent({ review, code });
 };
 
-const codeAgent = new Workflow({ validate: true });
+const codeAgent = new Workflow().with(kvContext);
 codeAgent.addStep(StartEvent, architect, { outputs: CodeEvent });
 codeAgent.addStep(ReviewEvent, coder, { outputs: CodeEvent });
 codeAgent.addStep(CodeEvent, reviewer, { outputs: ReviewEvent });

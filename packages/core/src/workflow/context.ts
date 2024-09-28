@@ -12,9 +12,9 @@ export type StepFunction<
   Data = unknown,
   In extends (typeof WorkflowEvent<any>)[] = (typeof WorkflowEvent<any>)[],
   Out extends WorkflowEvent<any> = WorkflowEvent<any>,
-> = (
+> = <T extends { [K in keyof In]: InstanceType<In[K]> }>(
   context: Context<Data>,
-  ...events: InstanceType<In[number]>[]
+  ...events: T
 ) => Promise<Out>;
 
 export type ReadonlyStepMap = ReadonlyMap<
