@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.2.7
+
+### Patch Changes
+
+- 6cce3b1: feat: support `npm:postgres`
+
 ## 0.2.6
 
 ### Patch Changes
