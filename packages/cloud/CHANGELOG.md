@@ -1,5 +1,14 @@
 # @llamaindex/cloud
 
+## 0.2.9
+
+### Patch Changes
+
+- df441e2: fix: consoleLogger is missing from `@llamaindex/env`
+- Updated dependencies [df441e2]
+  - @llamaindex/core@0.2.8
+  - @llamaindex/env@0.1.13
+
 ## 0.2.8
 
 ### Patch Changes
