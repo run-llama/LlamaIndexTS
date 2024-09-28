@@ -22,12 +22,17 @@ export type ReadonlyStepMap = ReadonlyMap<
   { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
 >;
 
-export type ContextParams<Start, Data> = {
+export type ContextParams<Start, Stop, Data> = {
   startEvent: StartEvent<Start>;
   contextData: Data;
   steps: ReadonlyStepMap;
   timeout: number | null;
   verbose: boolean;
+
+  queue: WorkflowEvent[] | undefined;
+  pendingInputQueue: WorkflowEvent[] | undefined;
+  resolved: StopEvent<Stop> | null | undefined;
+  rejected: Error | null | undefined;
 };
 
 export class WorkflowContext<Start = string, Stop = string, Data = any>
@@ -71,7 +76,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
     return res;
   }
 
-  constructor(params: ContextParams<Start, Data>) {
+  constructor(params: ContextParams<Start, Stop, Data>) {
     this.#steps = params.steps;
     this.#startEvent = params.startEvent;
     if (typeof params.timeout === "number") {
@@ -85,7 +90,22 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
     if (step.size === 0) {
       throw new TypeError("No step found for start event");
     }
-    this.#queue.push(this.#startEvent);
+
+    // restore from snapshot
+    if (params.queue) {
+      this.#queue.push(...params.queue);
+    } else {
+      this.#queue.push(this.#startEvent);
+    }
+    if (params.pendingInputQueue) {
+      this.#pendingInputQueue = params.pendingInputQueue;
+    }
+    if (params.resolved) {
+      this.#resolved = params.resolved;
+    }
+    if (params.rejected) {
+      this.#rejected = params.rejected;
+    }
   }
 
   // make sure it will only be called once
@@ -100,6 +120,29 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
 
   [Symbol.asyncIterator](): AsyncGenerator<WorkflowEvent, void, void> {
     return this.#iteratorSingleton;
+  }
+
+  snapshot(): ArrayBuffer {
+    const state = {
+      startEvent: this.#startEvent,
+      queue: this.#queue,
+      pendingInputQueue: this.#pendingInputQueue,
+      data: this.#data,
+      timeout: this.#timeout,
+      verbose: this.#verbose,
+      resolved: this.#resolved,
+      rejected: this.#rejected,
+    };
+
+    const jsonString = JSON.stringify(state, (_, value) => {
+      // If value is an instance of a class, serialize only its properties
+      if (value instanceof WorkflowEvent) {
+        return { data: value.data, constructor: value.constructor.name };
+      }
+      return value;
+    });
+
+    return new TextEncoder().encode(jsonString).buffer;
   }
 
   #pendingInputQueue: WorkflowEvent[] = [];
@@ -163,6 +206,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
       steps: this.#steps,
       timeout: this.#timeout,
       verbose: this.#verbose,
+      queue: undefined,
+      pendingInputQueue: undefined,
+      resolved: undefined,
+      rejected: undefined,
     });
   }
 

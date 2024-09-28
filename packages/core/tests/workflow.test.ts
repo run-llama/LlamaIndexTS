@@ -368,3 +368,17 @@ describe("Workflow event loop", () => {
     `);
   });
 });
+
+describe("snapshot", async () => {
+  test("snapshot and recover", async () => {
+    const myFlow = new Workflow({ verbose: true });
+    myFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
+      return new StopEvent({ result: `Hello ${ev.data.input}!` });
+    });
+    const context = myFlow.run("world");
+    const arrayBuffer = context.snapshot();
+    expect(arrayBuffer).toBeInstanceOf(ArrayBuffer);
+    const context2 = await myFlow.recover(arrayBuffer);
+    expect(context2.data.result).toBe("Hello world!");
+  });
+});

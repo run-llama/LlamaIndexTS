@@ -90,6 +90,10 @@ export class Workflow<
       steps: new Map(this.#steps),
       timeout: this.#timeout,
       verbose: this.#verbose,
+      queue: undefined,
+      pendingInputQueue: undefined,
+      resolved: null,
+      rejected: null,
     });
   }
 
@@ -117,5 +121,48 @@ export class Workflow<
     const newWorkflow = Workflow.from<Start, Stop, ContextData, Checked>(this);
     newWorkflow.#contextData = data as Data;
     return newWorkflow as unknown as Workflow<Start, Stop, Data, true>;
+  }
+
+  recover(data: ArrayBuffer): WorkflowContext<Start, Stop, ContextData> {
+    const jsonString = new TextDecoder().decode(data);
+
+    const state = JSON.parse(jsonString);
+
+    const reconstructedStartEvent = new StartEvent<Start>(state.startEvent);
+    const AllEvents = [...this.#steps]
+      .map(([, { inputs, outputs }]) => [...inputs, ...(outputs ?? [])])
+      .flat();
+    const reconstructedQueue = state.queue.map((event: any) => {
+      const EventType = AllEvents.find(
+        (type) => type.prototype.constructor.name === event.constructor,
+      );
+      if (!EventType) {
+        throw new TypeError(`Event type not found: ${event.constructor}`);
+      }
+      return new EventType(event.data);
+    });
+    const reconstructedPendingInputQueue = state.pendingInputQueue.map(
+      (event: any) => {
+        const EventType = AllEvents.find(
+          (type) => type.prototype.constructor.name === event.constructor,
+        );
+        if (!EventType) {
+          throw new TypeError(`Event type not found: ${event.constructor}`);
+        }
+        return new EventType(event.data);
+      },
+    );
+
+    return new WorkflowContext<Start, Stop, ContextData>({
+      startEvent: reconstructedStartEvent,
+      contextData: state.data,
+      steps: this.#steps, // Assuming steps do not change and are part of the class prototype or similar
+      timeout: state.timeout,
+      verbose: state.verbose,
+      queue: reconstructedQueue,
+      pendingInputQueue: reconstructedPendingInputQueue,
+      resolved: state.resolved ? new StopEvent<Stop>(state.resolved) : null,
+      rejected: state.rejected ? new Error(state.rejected) : null,
+    });
   }
 }
