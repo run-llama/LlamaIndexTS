@@ -1,16 +1,26 @@
 import { type StepFunction, WorkflowContext } from "./context";
-import { type EventTypes, StartEvent, WorkflowEvent } from "./events";
+import {
+  type EventTypes,
+  StartEvent,
+  StopEvent,
+  WorkflowEvent,
+} from "./events";
 
 type EventTypeParam = EventTypes | EventTypes[];
 
-export class Workflow<Start = string, ContextData = any, Checked = false> {
+export class Workflow<
+  Start = string,
+  Stop = string,
+  ContextData = any,
+  Checked = false,
+> {
   #steps: Map<
     StepFunction<any>,
     { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
   > = new Map();
   #verbose: boolean = false;
   #timeout: number | null = null;
-  #contextData: ContextData | null = null;
+  #contextData: true extends Checked ? ContextData : ContextData | null = null!;
 
   constructor(
     params: {
@@ -23,21 +33,23 @@ export class Workflow<Start = string, ContextData = any, Checked = false> {
   }
 
   addStep<
-    const Events extends
+    const In extends
       | (typeof WorkflowEvent<any>)[]
       | typeof WorkflowEvent<any>
       | typeof StartEvent<Start>,
+    Out extends WorkflowEvent | StopEvent<Stop>,
   >(
-    inputEvents: Events,
+    inputEvents: In,
     stepFn: StepFunction<
       true extends Checked ? ContextData : ContextData | null,
       // special case for StartEvent, typescript doesn't accept default value for generic type when bypassing it
       // Refs: https://github.com/microsoft/TypeScript/issues/42064
-      Events extends typeof StartEvent<string>
+      In extends typeof StartEvent<string>
         ? [typeof StartEvent<string>]
-        : Events extends typeof WorkflowEvent<any>
-          ? [Events]
-          : Events
+        : In extends typeof WorkflowEvent<any>
+          ? [In]
+          : In,
+      Out
     >,
     params: { outputs?: EventTypeParam } = {},
   ): this {
@@ -62,12 +74,17 @@ export class Workflow<Start = string, ContextData = any, Checked = false> {
     event: StartEvent<Start> | Start,
   ): WorkflowContext<
     Start,
+    Stop,
     true extends Checked ? ContextData : ContextData | null
   > {
     const startEvent: StartEvent<Start> =
       event instanceof StartEvent ? event : new StartEvent({ input: event });
 
-    return new WorkflowContext<Start>({
+    return new WorkflowContext<
+      Start,
+      Stop,
+      true extends Checked ? ContextData : ContextData | null
+    >({
       startEvent,
       contextData: this.#contextData,
       steps: new Map(this.#steps),
@@ -78,10 +95,10 @@ export class Workflow<Start = string, ContextData = any, Checked = false> {
 
   // This method is used to create a new instance of Workflow with the same steps
   // though this API we follow functional programming principles
-  private static from<Start, ContextData, Checked>(
-    workflow: Workflow<Start, ContextData, Checked>,
-  ): Workflow<Start, ContextData, Checked> {
-    const newWorkflow = new Workflow<Start, ContextData, Checked>({
+  private static from<Start, Stop, ContextData, Checked>(
+    workflow: Workflow<Start, Stop, ContextData, Checked>,
+  ): Workflow<Start, Stop, ContextData, Checked> {
+    const newWorkflow = new Workflow<Start, Stop, ContextData, Checked>({
       verbose: workflow.#verbose,
       timeout: workflow.#timeout,
     });
@@ -94,9 +111,11 @@ export class Workflow<Start = string, ContextData = any, Checked = false> {
     return newWorkflow;
   }
 
-  with(data: ContextData): Workflow<Start, ContextData, true> {
-    const newWorkflow = Workflow.from<Start, ContextData, Checked>(this);
-    newWorkflow.#contextData = data;
-    return newWorkflow as unknown as Workflow<Start, ContextData, true>;
+  with<Data extends ContextData>(
+    data: Data,
+  ): Workflow<Start, Stop, Data, true> {
+    const newWorkflow = Workflow.from<Start, Stop, ContextData, Checked>(this);
+    newWorkflow.#contextData = data as Data;
+    return newWorkflow as unknown as Workflow<Start, Stop, Data, true>;
   }
 }

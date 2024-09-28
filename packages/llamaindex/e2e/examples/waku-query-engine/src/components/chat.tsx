@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 export type ChatProps = {
-  askQuestion: (question: string) => Promise<string>;
+  askQuestion: (question: string) => Promise<ReactNode>;
 };
 
 export const Chat = (props: ChatProps) => {
-  const [response, setResponse] = useState<string | null>(null);
+  const [response, setResponse] = useState<ReactNode | null>(null);
 
   return (
     <section className="border-blue-400 -mx-4 mt-4 rounded border border-dashed p-4">

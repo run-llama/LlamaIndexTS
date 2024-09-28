@@ -10,11 +10,12 @@ export type Context<Data = unknown> = Data;
 
 export type StepFunction<
   Data = unknown,
-  T extends (typeof WorkflowEvent<any>)[] = (typeof WorkflowEvent<any>)[],
+  In extends (typeof WorkflowEvent<any>)[] = (typeof WorkflowEvent<any>)[],
+  Out extends WorkflowEvent<any> = WorkflowEvent<any>,
 > = (
   context: Context<Data>,
-  ...events: InstanceType<T[number]>[]
-) => Promise<WorkflowEvent>;
+  ...events: InstanceType<In[number]>[]
+) => Promise<Out>;
 
 export type ReadonlyStepMap = ReadonlyMap<
   StepFunction<any>,
@@ -29,8 +30,8 @@ export type ContextParams<Start, Data> = {
   verbose: boolean;
 };
 
-export class WorkflowContext<Start = string, Data = any>
-  implements AsyncIterable<WorkflowEvent, void, void>, Promise<StopEvent>
+export class WorkflowContext<Start = string, Stop = string, Data = any>
+  implements AsyncIterable<WorkflowEvent, void, void>, Promise<StopEvent<Stop>>
 {
   readonly #steps: ReadonlyStepMap;
 
@@ -39,6 +40,7 @@ export class WorkflowContext<Start = string, Data = any>
 
   #timeout: number | null = null;
   #verbose: boolean = false;
+  #data: Data;
 
   #stepCache: WeakMap<
     WorkflowEvent,
@@ -128,7 +130,7 @@ export class WorkflowContext<Start = string, Data = any>
           );
           const nextEvent: WorkflowEvent = await step.call(
             null,
-            this.#data as Data,
+            this.#data,
             ...events.sort((a, b) => {
               const aIndex = inputs.indexOf(a.constructor as EventTypes);
               const bIndex = inputs.indexOf(b.constructor as EventTypes);
@@ -152,12 +154,9 @@ export class WorkflowContext<Start = string, Data = any>
     }
   }
 
-  #data: Data = null!;
-  get data(): Data {
-    return this.#data;
-  }
-
-  with<Initial extends Data>(data: Initial): WorkflowContext<Start, Initial> {
+  with<Initial extends Data>(
+    data: Initial,
+  ): WorkflowContext<Start, Stop, Initial> {
     return new WorkflowContext({
       startEvent: this.#startEvent,
       contextData: data,
@@ -167,11 +166,11 @@ export class WorkflowContext<Start = string, Data = any>
     });
   }
 
-  #resolved: StopEvent | null = null;
+  #resolved: StopEvent<Stop> | null = null;
   #rejected: Error | null = null;
   then<TResult1, TResult2 = never>(
     onfulfilled?:
-      | ((value: StopEvent) => TResult1 | PromiseLike<TResult1>)
+      | ((value: StopEvent<Stop>) => TResult1 | PromiseLike<TResult1>)
       | null
       | undefined,
     onrejected?:
@@ -190,7 +189,7 @@ export class WorkflowContext<Start = string, Data = any>
       this.#signal = AbortSignal.timeout(timeout * 1000);
     }
 
-    return new Promise<StopEvent>(async (resolve, reject) => {
+    return new Promise<StopEvent<Stop>>(async (resolve, reject) => {
       this.#signal?.addEventListener("abort", () => {
         this.#rejected = new Error(
           `Operation timed out after ${this.#timeout} seconds`,
