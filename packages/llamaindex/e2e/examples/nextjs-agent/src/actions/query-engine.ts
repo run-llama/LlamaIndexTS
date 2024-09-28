@@ -83,6 +83,7 @@ export async function chatWithAI(question: string): Promise<ReactNode> {
     ...defaultContext,
     ui: uiWrapper,
   });
+  uiWrapper.update("Loading...");
   context
     .then((event) => {
       uiWrapper.done(event.data.result);
