@@ -54,7 +54,7 @@
       "path": "./packages/llamaindex/e2e/examples/cloudflare-worker-agent/tsconfig.json"
     },
     {
-      "path": "./packages/llamaindex/e2e/examples/nextjs-agent/tsconfig.json"
+      "path": "./packages/llamaindex/e2e/examples/nextjs/tsconfig.json"
     },
     {
       "path": "./packages/llamaindex/e2e/examples/nextjs-edge-runtime/tsconfig.json"
