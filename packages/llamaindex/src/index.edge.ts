@@ -1,3 +1,5 @@
+export { SimpleKVStore } from "./storage/kvStore/SimpleKVStore.js";
+
 export * from "@llamaindex/core/agent";
 export * from "@llamaindex/core/chat-engine";
 export {

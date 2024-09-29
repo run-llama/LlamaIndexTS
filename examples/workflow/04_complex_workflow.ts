@@ -90,10 +90,5 @@ codeAgent.addStep(StartEvent, architect, { outputs: CodeEvent });
 codeAgent.addStep(ReviewEvent, coder, { outputs: CodeEvent });
 codeAgent.addStep(CodeEvent, reviewer, { outputs: ReviewEvent });
 
-// Usage
-async function main() {
-  const result = await codeAgent.run(specification);
-  console.log("Final code:\n", result.data.result);
-}
-
-main().catch(console.error);
+const result = await codeAgent.run(specification);
+console.log("Final code:\n", result.data.result);

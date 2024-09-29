@@ -1,0 +1,53 @@
+---
+sidebar_position: 1
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import Basic from "!raw-loader!../../../../../examples/workflow/01_basic.ts";
+import Context from "!raw-loader!../../../../../examples/workflow/02_context.ts";
+import DynamicContext from "!raw-loader!../../../../../examples/workflow/03_dynamic_context.ts";
+import ComplexWorkflow from "!raw-loader!../../../../../examples/workflow/04_complex_workflow.ts";
+import ServerAction from "!raw-loader!../../../../../packages/llamaindex/e2e/examples/nextjs/src/actions/app-creator.tsx";
+
+# Introduction
+
+Workflow is a primitive API that allows you to define a series of steps and chain by the event-driven mechanism.
+It is a powerful tool to orchestrate the execution of multiple tasks in a specific order.
+
+In this guide, we will walk you through the basic concepts of the Workflow API and how to use it in your application.
+
+## Getting Started
+
+<CodeBlock language="ts">{Basic}</CodeBlock>
+
+## Context
+
+When you want to share state between steps, you can use the `context` object.
+
+For example, you can abstract `OpenAI` to the context level and set it after you create the workflow.
+
+<CodeBlock language="ts">{Context}</CodeBlock>
+
+## Dynamic Context
+
+You can also set the context dynamically by using the `with` after you run a workflow.
+
+<CodeBlock language="ts">{DynamicContext}</CodeBlock>
+
+```txt
+Input word or phrase: Hello, world!
+OpenAI Result: Bonjour, le monde !
+Ollama3.1 Result: Bonjour, monde !
+```
+
+## Complex Workflow
+
+We can define a more complex workflow that involves multiple steps and reviews.
+
+<CodeBlock language="ts">{ComplexWorkflow}</CodeBlock>
+
+## Integrate with Next.js
+
+Adding more loading indicators and error handling to the workflow, integrate with server action in Next.js.
+
+<CodeBlock language="tsx">{ServerAction}</CodeBlock>
