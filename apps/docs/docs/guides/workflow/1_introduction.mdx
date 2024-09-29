@@ -8,6 +8,7 @@ import Context from "!raw-loader!../../../../../examples/workflow/02_context.ts"
 import DynamicContext from "!raw-loader!../../../../../examples/workflow/03_dynamic_context.ts";
 import ComplexWorkflow from "!raw-loader!../../../../../examples/workflow/04_complex_workflow.ts";
 import ServerAction from "!raw-loader!../../../../../packages/llamaindex/e2e/examples/nextjs/src/actions/app-creator.tsx";
+import Page from "!raw-loader!../../../../../packages/llamaindex/e2e/examples/nextjs/src/app/app-creator/page.tsx";
 
 # Introduction
 
@@ -51,3 +52,12 @@ We can define a more complex workflow that involves multiple steps and reviews.
 Adding more loading indicators and error handling to the workflow, integrate with server action in Next.js.
 
 <CodeBlock language="tsx">{ServerAction}</CodeBlock>
+
+<CodeBlock language="tsx">{Page}</CodeBlock>
+
+import Preview from "../../_static/showcase/app-creator.mp4";
+
+<video controls width="100%">
+  <source src={Preview} type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
