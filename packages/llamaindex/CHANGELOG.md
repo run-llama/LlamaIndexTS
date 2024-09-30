@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.6.12
+
+### Patch Changes
+
+- f7b4e94: feat: add filters for pinecone
+- 78037a6: fix: bypass service context embed model
+- 1d9e3b1: fix: export llama reader in non-nodejs runtime
+
 ## 0.6.11
 
 ### Patch Changes
