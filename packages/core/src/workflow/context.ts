@@ -5,10 +5,12 @@ import {
   WorkflowEvent,
 } from "./events";
 
-export type Context<Data = unknown> = Data;
+export type Context<Data extends object = object> = Data & {
+  sendEvent(event: WorkflowEvent): void;
+};
 
 export type StepFunction<
-  Data = unknown,
+  Data extends object = object,
   In extends (typeof WorkflowEvent<any>)[] = (typeof WorkflowEvent<any>)[],
   Out extends WorkflowEvent<any> = WorkflowEvent<any>,
 > = <T extends { [K in keyof In]: InstanceType<In[K]> }>(
@@ -112,9 +114,11 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
 
     // restore from snapshot
     if (params.queue) {
-      this.#queue.push(...params.queue);
+      this.#queue.forEach((event) => {
+        this.sendEvent(event);
+      });
     } else {
-      this.#queue.push(this.#startEvent);
+      this.sendEvent(this.#startEvent);
     }
     if (params.pendingInputQueue) {
       this.#pendingInputQueue = params.pendingInputQueue;
@@ -163,6 +167,10 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
 
     return new TextEncoder().encode(jsonString).buffer;
   }
+
+  sendEvent = (event: WorkflowEvent): void => {
+    this.#queue.push(event);
+  };
 
   #pendingInputQueue: WorkflowEvent[] = [];
 
@@ -220,7 +228,17 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
                   return step
                     .call(
                       null,
-                      this.#data,
+                      new Proxy<any>(this.#data === null ? {} : this.#data, {
+                        get: (target, prop, receiver) => {
+                          if (prop === "sendEvent") {
+                            return this.sendEvent;
+                          }
+                          return Reflect.get(target, prop, receiver);
+                        },
+                        set: (target, prop, value, receiver) => {
+                          return Reflect.set(target, prop, value, receiver);
+                        },
+                      }),
                       ...events.sort((a, b) => {
                         const aIndex = inputs.indexOf(
                           a.constructor as EventTypes,
@@ -237,7 +255,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
                           `Step ${step.name} completed, next event is ${nextEvent}`,
                         );
                       }
-                      events.slice(1).forEach((input) => {
+                      events.forEach((input) => {
                         const index = this.#pendingInputQueue.indexOf(input);
                         this.#pendingInputQueue.splice(index, 1);
                       });

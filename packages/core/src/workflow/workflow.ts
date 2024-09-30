@@ -11,7 +11,7 @@ type EventTypeParam = EventTypes | EventTypes[];
 export class Workflow<
   Start = string,
   Stop = string,
-  ContextData = any,
+  ContextData extends object = any,
   Checked = false,
 > {
   #steps: Map<
@@ -41,7 +41,7 @@ export class Workflow<
   >(
     inputEvents: In,
     stepFn: StepFunction<
-      true extends Checked ? ContextData : ContextData | null,
+      true extends Checked ? ContextData : ContextData | {},
       // special case for StartEvent, typescript doesn't accept default value for generic type when bypassing it
       // Refs: https://github.com/microsoft/TypeScript/issues/42064
       In extends typeof StartEvent<string>
@@ -99,7 +99,7 @@ export class Workflow<
 
   // This method is used to create a new instance of Workflow with the same steps
   // though this API we follow functional programming principles
-  private static from<Start, Stop, ContextData, Checked>(
+  private static from<Start, Stop, ContextData extends object, Checked>(
     workflow: Workflow<Start, Stop, ContextData, Checked>,
   ): Workflow<Start, Stop, ContextData, Checked> {
     const newWorkflow = new Workflow<Start, Stop, ContextData, Checked>({

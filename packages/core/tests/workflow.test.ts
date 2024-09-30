@@ -16,7 +16,7 @@ class JokeEvent extends WorkflowEvent<{ joke: string }> {}
 
 class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
 
-describe("Workflow", () => {
+describe("workflow basic", () => {
   let mockLLM: Mocked<OpenAI>;
   let generateJoke: Mocked<any>;
   let critiqueJoke: Mocked<any>;
@@ -260,9 +260,36 @@ describe("Workflow", () => {
     expect(duration).toBeLessThan(1000); // Less than 1 second
     expect(result.data.result).toBe("Step 2 completed 5 times");
   });
+
+  test("sendEvent", async () => {
+    const myWorkflow = new Workflow({ verbose: true });
+
+    class QueryEvent extends WorkflowEvent<{ query: string }> {}
+    class QueryResultEvent extends WorkflowEvent<{ result: string }> {}
+    class PendingEvent extends WorkflowEvent {}
+
+    myWorkflow.addStep(StartEvent, async (context: Context, events) => {
+      context.sendEvent(new QueryEvent({ query: "something" }));
+      return new PendingEvent({});
+    });
+
+    myWorkflow.addStep(QueryEvent, async (context, event) => {
+      return new QueryResultEvent({ result: "query result" });
+    });
+
+    myWorkflow.addStep(
+      [PendingEvent, QueryResultEvent],
+      async (context, ev0, ev1) => {
+        return new StopEvent({ result: ev1.data.result });
+      },
+    );
+
+    const result = await myWorkflow.run("start");
+    expect(result.data.result).toBe("query result");
+  });
 });
 
-describe("Workflow event loop", () => {
+describe("workflow event loop", () => {
   test("basic", async () => {
     const jokeFlow = new Workflow({ verbose: true });
 
