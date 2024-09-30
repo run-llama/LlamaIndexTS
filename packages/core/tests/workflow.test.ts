@@ -166,4 +166,31 @@ describe("Workflow", () => {
       greeting: "Hello Alice, you are 30 years old!",
     });
   });
+
+  test("workflow with two concurrent steps", async () => {
+    const concurrentFlow = new Workflow({ verbose: true });
+
+    const step1 = vi.fn(async (_context, _ev: StartEvent) => {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      return new StopEvent({ result: "Step 1 completed" });
+    });
+
+    const step2 = vi.fn(async (_context, _ev: StartEvent) => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      return new StopEvent({ result: "Step 2 completed" });
+    });
+
+    concurrentFlow.addStep(StartEvent, step1);
+    concurrentFlow.addStep(StartEvent, step2);
+
+    const startTime = new Date();
+    const result = await concurrentFlow.run("start");
+    const endTime = new Date();
+    const duration = endTime.getTime() - startTime.getTime();
+
+    expect(step1).toHaveBeenCalledTimes(1);
+    expect(step2).toHaveBeenCalledTimes(1);
+    expect(duration).toBeLessThan(200);
+    expect(result.data.result).toBe("Step 2 completed");
+  });
 });
