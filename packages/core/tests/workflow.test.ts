@@ -226,23 +226,12 @@ describe("Workflow", () => {
 
     let step2Count = 0;
 
-    const step1 = vi.fn(async (_context, ev: StartEvent) => {
+    const step1 = vi.fn(async (_context, ev: StartEvent | Step1Event) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return new Step1Event({ result: "Step 1 completed" });
     });
 
-    const step1Wait = vi.fn(async (_context, ev: Step1Event) => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      return new StopEvent({ result: "Step 1 wait completed" });
-    });
-
-    const step2 = vi.fn(async (_context, ev: StartEvent) => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      step2Count++;
-      return new Step2Event({ result: "Step 2 completed" });
-    });
-
-    const step2Wait = vi.fn(async (_context, ev: Step2Event) => {
+    const step2 = vi.fn(async (_context, ev: StartEvent | Step2Event) => {
       await new Promise((resolve) => setTimeout(resolve, 100));
       step2Count++;
       if (step2Count >= 5) {
@@ -251,10 +240,14 @@ describe("Workflow", () => {
       return new Step2Event({ result: "Step 2 completed" });
     });
 
-    concurrentCyclicFlow.addStep(StartEvent, step1);
-    concurrentCyclicFlow.addStep(Step1Event, step1Wait);
-    concurrentCyclicFlow.addStep(StartEvent, step2);
-    concurrentCyclicFlow.addStep(Step2Event, step2Wait);
+    concurrentCyclicFlow.addStep(
+      WorkflowEvent.or(StartEvent, Step1Event),
+      step1,
+    );
+    concurrentCyclicFlow.addStep(
+      WorkflowEvent.or(StartEvent, Step2Event),
+      step2,
+    );
 
     const startTime = new Date();
     const result = await concurrentCyclicFlow.run("start");
@@ -262,8 +255,7 @@ describe("Workflow", () => {
     const duration = endTime.getTime() - startTime.getTime();
 
     expect(step1).toHaveBeenCalledTimes(1);
-    expect(step2).toHaveBeenCalledTimes(1);
-    expect(step2Wait).toHaveBeenCalledTimes(4);
+    expect(step2).toHaveBeenCalledTimes(5);
     expect(duration).toBeGreaterThan(500); // At least 5 * 100ms for step2
     expect(duration).toBeLessThan(1000); // Less than 1 second
     expect(result.data.result).toBe("Step 2 completed 5 times");
