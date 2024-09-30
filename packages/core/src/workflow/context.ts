@@ -1,4 +1,3 @@
-import { assertExists } from "../utils";
 import {
   type EventTypes,
   StartEvent,
@@ -35,8 +34,28 @@ export type ContextParams<Start, Stop, Data> = {
   rejected: Error | null | undefined;
 };
 
+function flattenEvents(
+  acceptEventTypes: (typeof WorkflowEvent)[],
+  inputEvents: WorkflowEvent[],
+): WorkflowEvent[] {
+  const eventMap = new Map<typeof WorkflowEvent, any>();
+
+  for (const event of inputEvents) {
+    for (const acceptType of acceptEventTypes) {
+      if (event instanceof acceptType && !eventMap.has(acceptType)) {
+        eventMap.set(acceptType, event);
+        break; // Once matched, no need to check other accept types
+      }
+    }
+  }
+
+  return Array.from(eventMap.values());
+}
+
 export class WorkflowContext<Start = string, Stop = string, Data = any>
-  implements AsyncIterable<WorkflowEvent, void, void>, Promise<StopEvent<Stop>>
+  implements
+    AsyncIterable<WorkflowEvent, unknown, void>,
+    Promise<StopEvent<Stop>>
 {
   readonly #steps: ReadonlyStepMap;
 
@@ -109,16 +128,16 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
   }
 
   // make sure it will only be called once
-  #iterator: AsyncGenerator<WorkflowEvent, void, void> | null = null;
+  #iterator: AsyncIterableIterator<WorkflowEvent> | null = null;
   #signal: AbortSignal | null = null;
-  get #iteratorSingleton(): AsyncGenerator<WorkflowEvent, void, void> {
+  get #iteratorSingleton(): AsyncIterableIterator<WorkflowEvent> {
     if (this.#iterator === null) {
       this.#iterator = this.#createStreamEvents();
     }
     return this.#iterator;
   }
 
-  [Symbol.asyncIterator](): AsyncGenerator<WorkflowEvent, void, void> {
+  [Symbol.asyncIterator](): AsyncIterableIterator<WorkflowEvent> {
     return this.#iteratorSingleton;
   }
 
@@ -146,70 +165,135 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
   }
 
   #pendingInputQueue: WorkflowEvent[] = [];
+
   /**
-   * Stream events from the start event, and do BFS on the event graph.
+   * Stream events from the start event
    *
    * Note that this function will stop once there's no more future events,
    *  if you want stop immediately once reach a StopEvent, you should handle it in the other side.
    * @private
    */
-  async *#createStreamEvents(): AsyncGenerator<WorkflowEvent, void, void> {
-    while (true) {
-      const event = this.#queue.shift();
-      if (event) {
-        yield event;
-        const [steps, inputsMap] = this.#getStepFunction(event);
-        const nextEventPromises = [...steps].map(async (step) => {
-          const inputs = inputsMap.get(step);
-          assertExists(inputs);
-          const acceptableInputs: WorkflowEvent[] =
-            this.#pendingInputQueue.filter((event) =>
-              inputs.some((input) => event instanceof input),
-            );
-          const events: WorkflowEvent[] = [event, ...acceptableInputs];
-          assertExists(
-            events.length === inputs.length,
-            `Expect ${inputs.length} inputs, but got ${events.length}`,
-          );
-          return step
-            .call(
-              null,
-              this.#data,
-              ...events.sort((a, b) => {
-                const aIndex = inputs.indexOf(a.constructor as EventTypes);
-                const bIndex = inputs.indexOf(b.constructor as EventTypes);
-                return aIndex - bIndex;
-              }),
-            )
-            .then((nextEvent: WorkflowEvent) => {
-              acceptableInputs.forEach((input) => {
-                const index = this.#pendingInputQueue.indexOf(input);
-                this.#pendingInputQueue.splice(index, 1);
+  #createStreamEvents(): AsyncIterableIterator<WorkflowEvent> {
+    const isPendingEvents = new WeakSet<WorkflowEvent>();
+    const pendingTasks = new Set<Promise<WorkflowEvent>>();
+    const stream = new ReadableStream<WorkflowEvent>({
+      start: async (controller) => {
+        while (true) {
+          const event = this.#queue.shift();
+          if (event) {
+            if (isPendingEvents.has(event)) {
+              // this event is still processing
+              this.#queue.push(event);
+            } else {
+              controller.enqueue(event);
+              const [steps, inputsMap] = this.#getStepFunction(event);
+              const nextEventPromises: Promise<WorkflowEvent>[] = [...steps]
+                .map((step) => {
+                  const inputs = [...(inputsMap.get(step) ?? [])];
+                  const acceptableInputs: WorkflowEvent[] =
+                    this.#pendingInputQueue.filter((event) =>
+                      inputs.some((input) => event instanceof input),
+                    );
+                  const events: WorkflowEvent[] = flattenEvents(inputs, [
+                    event,
+                    ...acceptableInputs,
+                  ]);
+                  if (events.length !== inputs.length) {
+                    if (this.#verbose) {
+                      console.log(
+                        `Not enough inputs for step ${step.name}, waiting for more events`,
+                      );
+                    }
+                    // not enough to run the step, push back to the queue
+                    this.#queue.push(event);
+                    isPendingEvents.add(event);
+                    return null;
+                  }
+                  if (isPendingEvents.has(event)) {
+                    isPendingEvents.delete(event);
+                  }
+                  if (this.#verbose) {
+                    console.log(
+                      `Running step ${step.name} with inputs ${events}`,
+                    );
+                  }
+                  return step
+                    .call(
+                      null,
+                      this.#data,
+                      ...events.sort((a, b) => {
+                        const aIndex = inputs.indexOf(
+                          a.constructor as EventTypes,
+                        );
+                        const bIndex = inputs.indexOf(
+                          b.constructor as EventTypes,
+                        );
+                        return aIndex - bIndex;
+                      }),
+                    )
+                    .then((nextEvent: WorkflowEvent) => {
+                      if (this.#verbose) {
+                        console.log(
+                          `Step ${step.name} completed, next event is ${nextEvent}`,
+                        );
+                      }
+                      events.slice(1).forEach((input) => {
+                        const index = this.#pendingInputQueue.indexOf(input);
+                        this.#pendingInputQueue.splice(index, 1);
+                      });
+                      if (!(nextEvent instanceof StopEvent)) {
+                        this.#pendingInputQueue.unshift(nextEvent);
+                        this.#queue.push(nextEvent);
+                      }
+                      return nextEvent;
+                    });
+                })
+                .filter(
+                  (promise): promise is Promise<WorkflowEvent> =>
+                    promise !== null,
+                );
+              nextEventPromises.forEach((promise) => {
+                pendingTasks.add(promise);
+                promise
+                  .catch((err) => {
+                    console.error("Error in step", err);
+                  })
+                  .finally(() => {
+                    pendingTasks.delete(promise);
+                  });
               });
-              if (!(nextEvent instanceof StopEvent)) {
-                this.#pendingInputQueue.unshift(nextEvent);
-                this.#queue.push(nextEvent);
-              }
-              return nextEvent;
-            });
-        });
-        const fastestNextEvent = await Promise.race(nextEventPromises);
-        if (fastestNextEvent instanceof StopEvent) {
-          yield fastestNextEvent;
-        }
-        const allNextEvents = await Promise.all(nextEventPromises);
-        for (const nextEvent of allNextEvents) {
-          if (nextEvent instanceof StopEvent) {
-            // don't yield the same event twice
-            if (fastestNextEvent !== nextEvent) {
-              yield nextEvent;
+              Promise.race(nextEventPromises)
+                .then((fastestNextEvent) => {
+                  controller.enqueue(fastestNextEvent);
+                  return fastestNextEvent;
+                })
+                .then(async (fastestNextEvent) =>
+                  Promise.all(nextEventPromises).then((nextEvents) => {
+                    for (const nextEvent of nextEvents) {
+                      // do not enqueue the same event twice
+                      if (fastestNextEvent !== nextEvent) {
+                        controller.enqueue(nextEvent);
+                      }
+                    }
+                  }),
+                )
+                .catch((err) => {
+                  controller.error(err);
+                });
             }
           }
+          if (this.#queue.length === 0 && pendingTasks.size === 0) {
+            if (this.#verbose) {
+              console.log("No more events in the queue");
+            }
+            break;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 0));
         }
-      } else {
-        return;
-      }
-    }
+        controller.close();
+      },
+    });
+    return stream[Symbol.asyncIterator]();
   }
 
   with<Initial extends Data>(
