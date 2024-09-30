@@ -159,7 +159,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
       if (event) {
         yield event;
         const [steps, inputsMap] = this.#getStepFunction(event);
-        for (const step of steps) {
+        const nextEventPromises = [...steps].map(async (step) => {
           const inputs = inputsMap.get(step);
           assertExists(inputs);
           const acceptableInputs: WorkflowEvent[] =
@@ -171,24 +171,39 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
             events.length === inputs.length,
             `Expect ${inputs.length} inputs, but got ${events.length}`,
           );
-          const nextEvent: WorkflowEvent = await step.call(
-            null,
-            this.#data,
-            ...events.sort((a, b) => {
-              const aIndex = inputs.indexOf(a.constructor as EventTypes);
-              const bIndex = inputs.indexOf(b.constructor as EventTypes);
-              return aIndex - bIndex;
-            }),
-          );
-          acceptableInputs.forEach((input) => {
-            const index = this.#pendingInputQueue.indexOf(input);
-            this.#pendingInputQueue.splice(index, 1);
-          });
+          return step
+            .call(
+              null,
+              this.#data,
+              ...events.sort((a, b) => {
+                const aIndex = inputs.indexOf(a.constructor as EventTypes);
+                const bIndex = inputs.indexOf(b.constructor as EventTypes);
+                return aIndex - bIndex;
+              }),
+            )
+            .then((nextEvent: WorkflowEvent) => {
+              acceptableInputs.forEach((input) => {
+                const index = this.#pendingInputQueue.indexOf(input);
+                this.#pendingInputQueue.splice(index, 1);
+              });
+              if (!(nextEvent instanceof StopEvent)) {
+                this.#pendingInputQueue.unshift(nextEvent);
+                this.#queue.push(nextEvent);
+              }
+              return nextEvent;
+            });
+        });
+        const fastestNextEvent = await Promise.race(nextEventPromises);
+        if (fastestNextEvent instanceof StopEvent) {
+          yield fastestNextEvent;
+        }
+        const allNextEvents = await Promise.all(nextEventPromises);
+        for (const nextEvent of allNextEvents) {
           if (nextEvent instanceof StopEvent) {
-            yield nextEvent;
-          } else {
-            this.#pendingInputQueue.unshift(nextEvent);
-            this.#queue.push(nextEvent);
+            // don't yield the same event twice
+            if (fastestNextEvent !== nextEvent) {
+              yield nextEvent;
+            }
           }
         }
       } else {
