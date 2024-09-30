@@ -331,13 +331,13 @@ describe("Workflow event loop", () => {
 
     const result = await myFlow.run("world");
     expect(result.data.result).toBe("STOP");
-    expect(fn).toHaveBeenCalledTimes(0);
+    expect(fn).toHaveBeenCalledTimes(1);
 
     // streaming events will allow to consume event even stop event is reached
     const stream = myFlow.run("world");
     for await (const _ of stream) {
     }
-    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(2);
   });
 
   test("run with custom context", async () => {
