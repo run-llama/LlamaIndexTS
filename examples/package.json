@@ -7,6 +7,8 @@
     "@azure/identity": "^4.4.1",
     "@datastax/astra-db-ts": "^1.4.1",
     "@llamaindex/core": "^0.2.0",
+    "@llamaindex/ollama": "workspace:^0.0.3",
+    "@llamaindex/openai": "workspace:^0.1.10",
     "@notionhq/client": "^2.2.15",
     "@pinecone-database/pinecone": "^3.0.2",
     "@vercel/postgres": "^0.10.0",

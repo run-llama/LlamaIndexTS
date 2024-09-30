@@ -1,4 +1,4 @@
-import { Context } from "./context";
+import { type StepFunction, WorkflowContext } from "./context";
 import {
   type EventTypes,
   StartEvent,
@@ -6,216 +6,163 @@ import {
   WorkflowEvent,
 } from "./events";
 
-export type StepFunction<T extends WorkflowEvent = WorkflowEvent> = (
-  context: Context,
-  ev: T,
-) => Promise<WorkflowEvent | void>;
-
 type EventTypeParam = EventTypes | EventTypes[];
 
-export class Workflow {
+export class Workflow<
+  Start = string,
+  Stop = string,
+  ContextData = any,
+  Checked = false,
+> {
   #steps: Map<
     StepFunction<any>,
     { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
   > = new Map();
-  #contexts: Set<Context> = new Set();
   #verbose: boolean = false;
   #timeout: number | null = null;
-  #validate: boolean = false;
+  #contextData: true extends Checked ? ContextData : ContextData | null = null!;
 
   constructor(
     params: {
       verbose?: boolean;
-      timeout?: number;
-      validate?: boolean;
+      timeout?: number | null;
     } = {},
   ) {
     this.#verbose = params.verbose ?? false;
     this.#timeout = params.timeout ?? null;
-    this.#validate = params.validate ?? false;
   }
 
-  addStep<T extends WorkflowEvent>(
-    eventType: EventTypeParam,
-    method: StepFunction<T>,
+  addStep<
+    const In extends
+      | (typeof WorkflowEvent<any>)[]
+      | typeof WorkflowEvent<any>
+      | typeof StartEvent<Start>,
+    Out extends WorkflowEvent | StopEvent<Stop>,
+  >(
+    inputEvents: In,
+    stepFn: StepFunction<
+      true extends Checked ? ContextData : ContextData | null,
+      // special case for StartEvent, typescript doesn't accept default value for generic type when bypassing it
+      // Refs: https://github.com/microsoft/TypeScript/issues/42064
+      In extends typeof StartEvent<string>
+        ? [typeof StartEvent<string>]
+        : In extends typeof WorkflowEvent<any>
+          ? [In]
+          : In,
+      Out
+    >,
     params: { outputs?: EventTypeParam } = {},
-  ) {
-    const inputs = Array.isArray(eventType) ? eventType : [eventType];
+  ): this {
+    const inputs: (typeof WorkflowEvent)[] = Array.isArray(inputEvents)
+      ? inputEvents
+      : [inputEvents];
     const outputs = params.outputs
       ? Array.isArray(params.outputs)
         ? params.outputs
         : [params.outputs]
       : undefined;
-    this.#steps.set(method, { inputs, outputs });
+    this.#steps.set(stepFn, { inputs, outputs });
+    return this;
   }
 
-  hasStep(step: StepFunction<any>): boolean {
-    return this.#steps.has(step);
+  removeStep(stepFn: StepFunction<any>): this {
+    this.#steps.delete(stepFn);
+    return this;
   }
 
-  #acceptsEvent(step: StepFunction<any>, event: WorkflowEvent): boolean {
-    const eventType = event.constructor as EventTypes;
-    const stepInfo = this.#steps.get(step);
-    if (!stepInfo) {
-      throw new Error(`No method found for step: ${step.name}`);
-    }
-    return stepInfo.inputs.includes(eventType);
-  }
+  run(
+    event: StartEvent<Start> | Start,
+  ): WorkflowContext<
+    Start,
+    Stop,
+    true extends Checked ? ContextData : ContextData | null
+  > {
+    const startEvent: StartEvent<Start> =
+      event instanceof StartEvent ? event : new StartEvent({ input: event });
 
-  async *streamEvents(): AsyncGenerator<WorkflowEvent, void> {
-    if (this.#contexts.size > 1) {
-      throw new Error(
-        "This workflow has multiple concurrent runs in progress and cannot stream events. " +
-          "To be able to stream events, make sure you call `run()` on this workflow only once.",
-      );
-    }
-
-    const context = this.#contexts.values().next().value;
-    if (!context) {
-      throw new Error("No active context found for streaming events.");
-    }
-
-    yield* context.streamEvents();
-  }
-
-  validate(): void {
-    if (this.#verbose) {
-      console.log("Validating workflow...");
-    }
-
-    // Check if all steps have outputs defined
-    // precondition for the validation to work
-    const allStepsHaveOutputs = Array.from(this.#steps.values()).every(
-      (stepInfo) => stepInfo.outputs !== undefined,
-    );
-    if (!allStepsHaveOutputs) {
-      throw new Error(
-        "Not all steps have outputs defined. Can't validate. Add the 'outputs' parameter to each 'addStep' method call to do validation",
-      );
-    }
-
-    // input events that are consumed by any step of the workflow
-    const consumedEvents: Set<EventTypes> = new Set();
-    // output events that are produced by any step of the workflow
-    const producedEvents: Set<EventTypes> = new Set([StartEvent]);
-
-    for (const [, stepInfo] of this.#steps) {
-      stepInfo.inputs.forEach((eventType) => consumedEvents.add(eventType));
-      stepInfo.outputs?.forEach((eventType) => producedEvents.add(eventType));
-    }
-
-    // Check if all consumed events are produced
-    const unconsumedEvents = Array.from(consumedEvents).filter(
-      (event) => !producedEvents.has(event),
-    );
-    if (unconsumedEvents.length > 0) {
-      const names = unconsumedEvents.map((event) => event.name).join(", ");
-      throw new Error(
-        `The following events are consumed but never produced: ${names}`,
-      );
-    }
-
-    // Check if there are any unused produced events (except StopEvent)
-    const unusedEvents = Array.from(producedEvents).filter(
-      (event) => !consumedEvents.has(event) && event !== StopEvent,
-    );
-    if (unusedEvents.length > 0) {
-      const names = unusedEvents.map((event) => event.name).join(", ");
-      throw new Error(
-        `The following events are produced but never consumed: ${names}`,
-      );
-    }
-
-    if (this.#verbose) {
-      console.log("Workflow validation passed");
-    }
-  }
-
-  async run<T = string>(event: StartEvent<T> | string): Promise<StopEvent> {
-    // Validate the workflow before running if #validate is true
-    if (this.#validate) {
-      this.validate();
-    }
-
-    const context = new Context({ workflow: this, verbose: this.#verbose });
-    this.#contexts.add(context);
-
-    const stopWorkflow = () => {
-      if (context.running) {
-        context.running = false;
-        this.#contexts.delete(context);
-      }
-    };
-
-    const startEvent: WorkflowEvent =
-      typeof event === "string" ? new StartEvent({ input: event }) : event;
-
-    if (this.#verbose) {
-      console.log(`Starting workflow with event ${startEvent}`);
-    }
-
-    const workflowPromise = new Promise<StopEvent>((resolve, reject) => {
-      for (const [step] of this.#steps) {
-        // send initial event to step
-        context.sendEvent(startEvent, step);
-        if (this.#verbose) {
-          console.log(`Starting tasks for step ${step.name}`);
-        }
-        queueMicrotask(async () => {
-          try {
-            while (context.running) {
-              const currentEvent = context.getNextEvent(step);
-              if (!currentEvent) {
-                // if there's no event, wait and try again
-                await new Promise((resolve) => setTimeout(resolve, 0));
-                continue;
-              }
-              if (!this.#acceptsEvent(step, currentEvent)) {
-                // step does not accept current event, skip it
-                continue;
-              }
-              if (this.#verbose) {
-                console.log(`Step ${step.name} received event ${currentEvent}`);
-              }
-              const result = await step.call(this, context, currentEvent);
-              if (!context.running) {
-                // workflow was stopped during the execution (e.g. there was a timeout)
-                return;
-              }
-              if (result instanceof StopEvent) {
-                if (this.#verbose) {
-                  console.log(`Stopping workflow with event ${result}`);
-                }
-                resolve(result);
-                return;
-              }
-              if (result instanceof WorkflowEvent) {
-                context.sendEvent(result);
-              }
-            }
-          } catch (error) {
-            if (this.#verbose) {
-              console.error(`Error in calling step ${step.name}:`, error);
-            }
-            reject(error as Error);
-          } finally {
-            stopWorkflow();
-          }
-        });
-      }
+    return new WorkflowContext<
+      Start,
+      Stop,
+      true extends Checked ? ContextData : ContextData | null
+    >({
+      startEvent,
+      contextData: this.#contextData,
+      steps: new Map(this.#steps),
+      timeout: this.#timeout,
+      verbose: this.#verbose,
+      queue: undefined,
+      pendingInputQueue: undefined,
+      resolved: null,
+      rejected: null,
     });
+  }
 
-    if (this.#timeout !== null) {
-      const timeout = this.#timeout;
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => {
-          stopWorkflow();
-          reject(new Error(`Operation timed out after ${timeout} seconds`));
-        }, timeout * 1000),
+  // This method is used to create a new instance of Workflow with the same steps
+  // though this API we follow functional programming principles
+  private static from<Start, Stop, ContextData, Checked>(
+    workflow: Workflow<Start, Stop, ContextData, Checked>,
+  ): Workflow<Start, Stop, ContextData, Checked> {
+    const newWorkflow = new Workflow<Start, Stop, ContextData, Checked>({
+      verbose: workflow.#verbose,
+      timeout: workflow.#timeout,
+    });
+    workflow.#steps.forEach((value, key) => {
+      newWorkflow.#steps.set(key, {
+        inputs: [...value.inputs],
+        outputs: value.outputs ? [...value.outputs] : undefined,
+      });
+    });
+    return newWorkflow;
+  }
+
+  with<Data extends ContextData>(
+    data: Data,
+  ): Workflow<Start, Stop, Data, true> {
+    const newWorkflow = Workflow.from<Start, Stop, ContextData, Checked>(this);
+    newWorkflow.#contextData = data as Data;
+    return newWorkflow as unknown as Workflow<Start, Stop, Data, true>;
+  }
+
+  recover(data: ArrayBuffer): WorkflowContext<Start, Stop, ContextData> {
+    const jsonString = new TextDecoder().decode(data);
+
+    const state = JSON.parse(jsonString);
+
+    const reconstructedStartEvent = new StartEvent<Start>(state.startEvent);
+    const AllEvents = [...this.#steps]
+      .map(([, { inputs, outputs }]) => [...inputs, ...(outputs ?? [])])
+      .flat();
+    const reconstructedQueue = state.queue.map((event: any) => {
+      const EventType = AllEvents.find(
+        (type) => type.prototype.constructor.name === event.constructor,
       );
-      return Promise.race([workflowPromise, timeoutPromise]);
-    }
+      if (!EventType) {
+        throw new TypeError(`Event type not found: ${event.constructor}`);
+      }
+      return new EventType(event.data);
+    });
+    const reconstructedPendingInputQueue = state.pendingInputQueue.map(
+      (event: any) => {
+        const EventType = AllEvents.find(
+          (type) => type.prototype.constructor.name === event.constructor,
+        );
+        if (!EventType) {
+          throw new TypeError(`Event type not found: ${event.constructor}`);
+        }
+        return new EventType(event.data);
+      },
+    );
 
-    return workflowPromise;
+    return new WorkflowContext<Start, Stop, ContextData>({
+      startEvent: reconstructedStartEvent,
+      contextData: state.data,
+      steps: this.#steps, // Assuming steps do not change and are part of the class prototype or similar
+      timeout: state.timeout,
+      verbose: state.verbose,
+      queue: reconstructedQueue,
+      pendingInputQueue: reconstructedPendingInputQueue,
+      resolved: state.resolved ? new StopEvent<Stop>(state.resolved) : null,
+      rejected: state.rejected ? new Error(state.rejected) : null,
+    });
   }
 }

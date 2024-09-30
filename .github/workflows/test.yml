@@ -99,7 +99,6 @@ jobs:
           - nextjs-agent
           - nextjs-edge-runtime
           - nextjs-node-runtime
-          - waku-query-engine
           - llama-parse-browser
     runs-on: ubuntu-latest
     name: Build LlamaIndex Example (${{ matrix.packages }})
