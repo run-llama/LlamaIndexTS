@@ -203,7 +203,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     } = {},
   ): Promise<VectorStoreIndex> {
     args.storageContext =
-      args.storageContext ?? (await storageContextFromDefaults({}));
+      args.storageContext ??
+      (await storageContextFromDefaults({
+        serviceContext: args.serviceContext,
+      }));
     args.vectorStores = args.vectorStores ?? args.storageContext.vectorStores;
     args.docStoreStrategy =
       args.docStoreStrategy ??

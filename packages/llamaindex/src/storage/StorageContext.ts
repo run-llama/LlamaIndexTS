@@ -5,6 +5,7 @@ import {
 import { ModalityType, ObjectType } from "@llamaindex/core/schema";
 import { path } from "@llamaindex/env";
 import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
+import type { ServiceContext } from "../ServiceContext.js";
 import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
 import type { VectorStore, VectorStoreByType } from "../vector-store/types.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
@@ -25,6 +26,10 @@ type BuilderParams = {
   vectorStores: VectorStoreByType;
   storeImages: boolean;
   persistDir: string;
+  /**
+   * @deprecated Please use `Settings` instead
+   */
+  serviceContext?: ServiceContext | undefined;
 };
 
 export async function storageContextFromDefaults({
@@ -34,6 +39,7 @@ export async function storageContextFromDefaults({
   vectorStores,
   storeImages,
   persistDir,
+  serviceContext,
 }: Partial<BuilderParams>): Promise<StorageContext> {
   vectorStores = vectorStores ?? {};
   if (!persistDir) {
@@ -48,6 +54,7 @@ export async function storageContextFromDefaults({
       });
     }
   } else {
+    const embedModel = serviceContext?.embedModel;
     docStore =
       docStore ||
       (await SimpleDocumentStore.fromPersistDir(persistDir, DEFAULT_NAMESPACE));
@@ -55,7 +62,8 @@ export async function storageContextFromDefaults({
       indexStore || (await SimpleIndexStore.fromPersistDir(persistDir));
     if (!(ObjectType.TEXT in vectorStores)) {
       vectorStores[ModalityType.TEXT] =
-        vectorStore ?? (await SimpleVectorStore.fromPersistDir(persistDir));
+        vectorStore ??
+        (await SimpleVectorStore.fromPersistDir(persistDir, embedModel));
     }
     if (storeImages && !(ObjectType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = await SimpleVectorStore.fromPersistDir(
