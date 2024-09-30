@@ -202,7 +202,9 @@ export class PineconeVectorStore
   toPineconeFilter(stdFilters?: MetadataFilters) {
     if (!stdFilters) return undefined;
 
-    const transformCondition = (condition: `${FilterCondition}`): string => {
+    const transformCondition = (
+      condition: `${FilterCondition}` = "and",
+    ): string => {
       if (condition === "and") return "$and";
       if (condition === "or") return "$or";
       throw new Error(`Filter condition ${condition} not supported`);
@@ -239,7 +241,7 @@ export class PineconeVectorStore
       };
     };
 
-    const convertFilter = (filter: MetadataFilters): any => {
+    const convertFilter = (filter: MetadataFilters) => {
       const filtersList = filter.filters
         .map((f) => convertFilterItem(f))
         .filter((f) => Object.keys(f).length > 0);
@@ -247,7 +249,7 @@ export class PineconeVectorStore
       if (filtersList.length === 0) return undefined;
       if (filtersList.length === 1) return filtersList[0];
 
-      const condition = transformCondition(filter.condition || "and");
+      const condition = transformCondition(filter.condition);
       return { [condition]: filtersList };
     };
 
