@@ -1,4 +1,6 @@
 import {
+  FilterCondition,
+  FilterOperator,
   VectorStoreBase,
   type IEmbedModel,
   type MetadataFilter,
@@ -198,14 +200,60 @@ export class PineconeVectorStore
   }
 
   toPineconeFilter(stdFilters?: MetadataFilters) {
-    return stdFilters?.filters?.reduce((carry: any, item: MetadataFilter) => {
-      // Use MetadataFilter with EQ operator to replace ExactMatchFilter
-      // TODO: support filter with other operators
-      if (item.operator === "==") {
-        carry[item.key] = item.value;
+    if (!stdFilters) return undefined;
+
+    const transformCondition = (
+      condition: `${FilterCondition}` = "and",
+    ): string => {
+      if (condition === "and") return "$and";
+      if (condition === "or") return "$or";
+      throw new Error(`Filter condition ${condition} not supported`);
+    };
+
+    const transformOperator = (operator: `${FilterOperator}`): string => {
+      switch (operator) {
+        case "!=":
+          return "$ne";
+        case "==":
+          return "$eq";
+        case ">":
+          return "$gt";
+        case "<":
+          return "$lt";
+        case ">=":
+          return "$gte";
+        case "<=":
+          return "$lte";
+        case "in":
+          return "$in";
+        case "nin":
+          return "$nin";
+        default:
+          throw new Error(`Filter operator ${operator} not supported`);
       }
-      return carry;
-    }, {});
+    };
+
+    const convertFilterItem = (filter: MetadataFilter) => {
+      return {
+        [filter.key]: {
+          [transformOperator(filter.operator)]: filter.value,
+        },
+      };
+    };
+
+    const convertFilter = (filter: MetadataFilters) => {
+      const filtersList = filter.filters
+        .map((f) => convertFilterItem(f))
+        .filter((f) => Object.keys(f).length > 0);
+
+      if (filtersList.length === 0) return undefined;
+      if (filtersList.length === 1) return filtersList[0];
+
+      const condition = transformCondition(filter.condition);
+      return { [condition]: filtersList };
+    };
+
+    return convertFilter(stdFilters);
   }
 
   textFromResultRow(row: ScoredPineconeRecord<Metadata>): string {
