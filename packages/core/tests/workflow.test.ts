@@ -193,4 +193,41 @@ describe("Workflow", () => {
     expect(duration).toBeLessThan(200);
     expect(result.data.result).toBe("Step 2 completed");
   });
+
+  test("workflow with two concurrent cyclic steps", async () => {
+    const concurrentCyclicFlow = new Workflow({ verbose: true });
+
+    class Step1Event extends WorkflowEvent {}
+    class Step2Event extends WorkflowEvent {}
+
+    let step2Count = 0;
+
+    const step1 = vi.fn(async (_context, ev: StartEvent | Step1Event) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return new Step1Event({ result: "Step 1 completed" });
+    });
+
+    const step2 = vi.fn(async (_context, ev: StartEvent | Step2Event) => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      step2Count++;
+      if (step2Count >= 5) {
+        return new StopEvent({ result: "Step 2 completed 5 times" });
+      }
+      return new Step2Event({ result: "Step 2 completed" });
+    });
+
+    concurrentCyclicFlow.addStep([StartEvent, Step1Event], step1);
+    concurrentCyclicFlow.addStep([StartEvent, Step2Event], step2);
+
+    const startTime = new Date();
+    const result = await concurrentCyclicFlow.run("start");
+    const endTime = new Date();
+    const duration = endTime.getTime() - startTime.getTime();
+
+    expect(step1).toHaveBeenCalledTimes(1);
+    expect(step2).toHaveBeenCalledTimes(5);
+    expect(duration).toBeGreaterThan(500); // At least 5 * 100ms for step2
+    expect(duration).toBeLessThan(1000); // Less than 1 second
+    expect(result.data.result).toBe("Step 2 completed 5 times");
+  });
 });
