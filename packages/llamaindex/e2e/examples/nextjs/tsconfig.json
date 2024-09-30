@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": [],
+    "types": ["react/experimental"],
     "incremental": true,
     "plugins": [
       {
