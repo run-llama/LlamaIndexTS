@@ -67,6 +67,20 @@ export async function stepToolsStreaming<Model extends LLM>({
   // otherwise, it's a regular message
   const hasToolCall = !!(value.options && "toolCall" in value.options);
 
+  if (!hasToolCall) {
+    let content = value.delta;
+    for await (const chunk of pipStream) {
+      content += chunk.delta;
+    }
+    step.context.store.messages = [
+      ...step.context.store.messages,
+      {
+        role: "assistant",
+        content,
+      },
+    ];
+  }
+
   enqueueOutput({
     taskStep: step,
     output: finalStream,
