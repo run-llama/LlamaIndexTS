@@ -496,7 +496,7 @@ export function buildNodeFromSplits(
     ) {
       const textDoc = doc as TextNode;
       const node = new TextNode({
-        id_: idGenerator(i, textDoc),
+        id_: textDoc.id_ ?? idGenerator(i, textDoc),
         text: textChunk,
         embedding: textDoc.embedding,
         excludedEmbedMetadataKeys: [...textDoc.excludedEmbedMetadataKeys],
