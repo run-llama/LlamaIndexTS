@@ -1,11 +1,11 @@
-import { createClient, createConfig, type Client } from "@hey-api/client-fetch";
+import { type Client, createClient, createConfig } from "@hey-api/client-fetch";
 import { Document, FileReader } from "@llamaindex/core/schema";
-import { fs, getEnv } from "@llamaindex/env";
+import { fs, getEnv, path } from "@llamaindex/env";
 import { filetypeinfo } from "magic-bytes.js";
 import {
-  ParsingService,
   type Body_upload_file_api_v1_parsing_upload_post,
   type ParserLanguages,
+  ParsingService,
 } from "./api";
 import { sleep } from "./utils";
 
@@ -510,14 +510,7 @@ export class LlamaParseReader extends FileReader {
     jobId: string,
     imageName: string,
   ): Promise<string> {
-    // Get the full path
-    let imagePath = `${downloadPath}/${jobId}-${imageName}`;
-    // Get a valid image path
-    if (!imagePath.endsWith(".png") && !imagePath.endsWith(".jpg")) {
-      imagePath += ".png";
-    }
-
-    return imagePath;
+    return path.join(downloadPath, `${jobId}-${imageName}`);
   }
 
   private async fetchAndSaveImage(
@@ -538,10 +531,9 @@ export class LlamaParseReader extends FileReader {
     if (response.error) {
       throw new Error(`Failed to download image: ${response.error.detail}`);
     }
-    const arrayBuffer = (await response.data) as ArrayBuffer;
-    const buffer = new Uint8Array(arrayBuffer);
+    const blob = (await response.data) as Blob;
     // Write the image buffer to the specified imagePath
-    await fs.writeFile(imagePath, buffer);
+    await fs.writeFile(imagePath, new Uint8Array(await blob.arrayBuffer()));
   }
 
   // Filters out invalid values (null, undefined, empty string) of specific params.
