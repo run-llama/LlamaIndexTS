@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.43
+
+### Patch Changes
+
+- 2774e80: feat: added meta3.2 support via Bedrock including vision, tool call and inference region support
+
 ## 0.0.42
 
 ### Patch Changes
