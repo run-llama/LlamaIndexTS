@@ -1,13 +1,11 @@
+import { CustomEvent, randomUUID } from "@llamaindex/env";
+import type { UUID } from "../global";
 import {
   type EventTypes,
   StartEvent,
   StopEvent,
   WorkflowEvent,
 } from "./events";
-
-export type Context<Data extends object = object> = Data & {
-  sendEvent(event: WorkflowEvent): void;
-};
 
 export type StepFunction<
   Data extends object = object,
@@ -23,6 +21,8 @@ export type ReadonlyStepMap = ReadonlyMap<
   { inputs: EventTypes[]; outputs: EventTypes[] | undefined }
 >;
 
+type GlobalEvent = typeof globalThis.Event;
+
 export type ContextParams<Start, Stop, Data> = {
   startEvent: StartEvent<Start>;
   contextData: Data;
@@ -30,7 +30,7 @@ export type ContextParams<Start, Stop, Data> = {
   timeout: number | null;
   verbose: boolean;
 
-  queue: WorkflowEvent[] | undefined;
+  queue: QueueProtocol[] | undefined;
   pendingInputQueue: WorkflowEvent[] | undefined;
   resolved: StopEvent<Stop> | null | undefined;
   rejected: Error | null | undefined;
@@ -54,6 +54,24 @@ function flattenEvents(
   return Array.from(eventMap.values());
 }
 
+export type Context<Data extends object = object> = Data & {
+  sendEvent(event: WorkflowEvent): void;
+  requireEvent<T extends typeof WorkflowEvent<any>>(
+    event: T,
+  ): Promise<InstanceType<T>>;
+};
+
+export type QueueProtocol =
+  | {
+      type: "event";
+      event: WorkflowEvent;
+    }
+  | {
+      type: "requestEvent";
+      id: UUID;
+      requestEvent: typeof WorkflowEvent;
+    };
+
 export class WorkflowContext<Start = string, Stop = string, Data = any>
   implements
     AsyncIterable<WorkflowEvent, unknown, void>,
@@ -62,7 +80,8 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
   readonly #steps: ReadonlyStepMap;
 
   readonly #startEvent: StartEvent<Start>;
-  readonly #queue: WorkflowEvent[] = [];
+  readonly #queue: QueueProtocol[] = [];
+  readonly #queueEventTarget = new EventTarget();
 
   #timeout: number | null = null;
   #verbose: boolean = false;
@@ -72,6 +91,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
     WorkflowEvent,
     [step: Set<StepFunction>, stepInputs: WeakMap<StepFunction, EventTypes[]>]
   > = new Map();
+
   #getStepFunction(
     event: WorkflowEvent,
   ): [
@@ -114,11 +134,11 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
 
     // restore from snapshot
     if (params.queue) {
-      this.#queue.forEach((event) => {
-        this.sendEvent(event);
+      params.queue.forEach((protocol) => {
+        this.#queue.push(protocol);
       });
     } else {
-      this.sendEvent(this.#startEvent);
+      this.#sendEvent(this.#startEvent);
     }
     if (params.pendingInputQueue) {
       this.#pendingInputQueue = params.pendingInputQueue;
@@ -134,6 +154,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
   // make sure it will only be called once
   #iterator: AsyncIterableIterator<WorkflowEvent> | null = null;
   #signal: AbortSignal | null = null;
+
   get #iteratorSingleton(): AsyncIterableIterator<WorkflowEvent> {
     if (this.#iterator === null) {
       this.#iterator = this.#createStreamEvents();
@@ -162,14 +183,48 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
       if (value instanceof WorkflowEvent) {
         return { data: value.data, constructor: value.constructor.name };
       }
+      // value is Subtype of WorkflowEvent
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        value?.prototype instanceof WorkflowEvent
+      ) {
+        return { constructor: value.prototype.constructor.name };
+      }
       return value;
     });
 
     return new TextEncoder().encode(jsonString).buffer;
   }
 
-  sendEvent = (event: WorkflowEvent): void => {
-    this.#queue.push(event);
+  #sendEvent = (event: WorkflowEvent): void => {
+    this.#queue.push({
+      type: "event",
+      event,
+    });
+  };
+
+  #requireEvent = async (
+    event: typeof WorkflowEvent<any>,
+  ): Promise<WorkflowEvent> => {
+    const requestId = randomUUID();
+    this.#queue.push({
+      type: "requestEvent",
+      id: requestId,
+      requestEvent: event,
+    });
+    return new Promise((resolve) => {
+      const handler = (event: InstanceType<GlobalEvent>) => {
+        if (event instanceof CustomEvent) {
+          const { id } = event.detail;
+          if (requestId === id) {
+            this.#queueEventTarget.removeEventListener("update", handler);
+            resolve(event.detail.event);
+          }
+        }
+      };
+      this.#queueEventTarget.addEventListener("update", handler);
+    });
   };
 
   #pendingInputQueue: WorkflowEvent[] = [];
@@ -187,117 +242,155 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
     const stream = new ReadableStream<WorkflowEvent>({
       start: async (controller) => {
         while (true) {
-          const event = this.#queue.shift();
-          if (event) {
-            if (isPendingEvents.has(event)) {
-              // this event is still processing
-              this.#queue.push(event);
-            } else {
-              controller.enqueue(event);
-              const [steps, inputsMap] = this.#getStepFunction(event);
-              const nextEventPromises: Promise<WorkflowEvent>[] = [...steps]
-                .map((step) => {
-                  const inputs = [...(inputsMap.get(step) ?? [])];
-                  const acceptableInputs: WorkflowEvent[] =
-                    this.#pendingInputQueue.filter((event) =>
-                      inputs.some((input) => event instanceof input),
-                    );
-                  const events: WorkflowEvent[] = flattenEvents(inputs, [
-                    event,
-                    ...acceptableInputs,
-                  ]);
-                  if (events.length !== inputs.length) {
-                    if (this.#verbose) {
-                      console.log(
-                        `Not enough inputs for step ${step.name}, waiting for more events`,
-                      );
-                    }
-                    // not enough to run the step, push back to the queue
-                    this.#queue.push(event);
-                    isPendingEvents.add(event);
-                    return null;
-                  }
-                  if (isPendingEvents.has(event)) {
-                    isPendingEvents.delete(event);
-                  }
-                  if (this.#verbose) {
-                    console.log(
-                      `Running step ${step.name} with inputs ${events}`,
-                    );
-                  }
-                  return step
-                    .call(
-                      null,
-                      new Proxy<any>(this.#data === null ? {} : this.#data, {
-                        get: (target, prop, receiver) => {
-                          if (prop === "sendEvent") {
-                            return this.sendEvent;
-                          }
-                          return Reflect.get(target, prop, receiver);
-                        },
-                        set: (target, prop, value, receiver) => {
-                          return Reflect.set(target, prop, value, receiver);
-                        },
-                      }),
-                      ...events.sort((a, b) => {
-                        const aIndex = inputs.indexOf(
-                          a.constructor as EventTypes,
+          const eventProtocol = this.#queue.shift();
+          if (eventProtocol) {
+            switch (eventProtocol.type) {
+              case "requestEvent": {
+                const { id, requestEvent } = eventProtocol;
+                const acceptableInput = this.#pendingInputQueue.find(
+                  (event) => event instanceof requestEvent,
+                );
+                if (acceptableInput) {
+                  this.#pendingInputQueue.splice(
+                    this.#pendingInputQueue.indexOf(acceptableInput),
+                    1,
+                  );
+                  this.#queueEventTarget.dispatchEvent(
+                    new CustomEvent("update", {
+                      detail: { id, event: acceptableInput },
+                    }),
+                  );
+                } else {
+                  // push back to the queue as there are not enough events
+                  this.#queue.push(eventProtocol);
+                }
+                break;
+              }
+              case "event": {
+                const { event } = eventProtocol;
+                if (isPendingEvents.has(event)) {
+                  // this event is still processing
+                  this.#sendEvent(event);
+                } else {
+                  controller.enqueue(event);
+                  const [steps, inputsMap] = this.#getStepFunction(event);
+                  const nextEventPromises: Promise<WorkflowEvent>[] = [...steps]
+                    .map((step) => {
+                      const inputs = [...(inputsMap.get(step) ?? [])];
+                      const acceptableInputs: WorkflowEvent[] =
+                        this.#pendingInputQueue.filter((event) =>
+                          inputs.some((input) => event instanceof input),
                         );
-                        const bIndex = inputs.indexOf(
-                          b.constructor as EventTypes,
-                        );
-                        return aIndex - bIndex;
-                      }),
-                    )
-                    .then((nextEvent: WorkflowEvent) => {
+                      const events: WorkflowEvent[] = flattenEvents(inputs, [
+                        event,
+                        ...acceptableInputs,
+                      ]);
+                      if (events.length !== inputs.length) {
+                        if (this.#verbose) {
+                          console.log(
+                            `Not enough inputs for step ${step.name}, waiting for more events`,
+                          );
+                        }
+                        // not enough to run the step, push back to the queue
+                        this.#sendEvent(event);
+                        isPendingEvents.add(event);
+                        return null;
+                      }
+                      if (isPendingEvents.has(event)) {
+                        isPendingEvents.delete(event);
+                      }
                       if (this.#verbose) {
                         console.log(
-                          `Step ${step.name} completed, next event is ${nextEvent}`,
+                          `Running step ${step.name} with inputs ${events}`,
                         );
                       }
-                      events.forEach((input) => {
-                        const index = this.#pendingInputQueue.indexOf(input);
-                        this.#pendingInputQueue.splice(index, 1);
+                      return step
+                        .call(
+                          null,
+                          new Proxy<any>(
+                            this.#data === null ? {} : this.#data,
+                            {
+                              get: (target, prop, receiver) => {
+                                if (prop === "sendEvent") {
+                                  return this.#sendEvent;
+                                } else if (prop === "requireEvent") {
+                                  return this.#requireEvent;
+                                }
+                                return Reflect.get(target, prop, receiver);
+                              },
+                              set: (target, prop, value, receiver) => {
+                                return Reflect.set(
+                                  target,
+                                  prop,
+                                  value,
+                                  receiver,
+                                );
+                              },
+                            },
+                          ),
+                          ...events.sort((a, b) => {
+                            const aIndex = inputs.indexOf(
+                              a.constructor as EventTypes,
+                            );
+                            const bIndex = inputs.indexOf(
+                              b.constructor as EventTypes,
+                            );
+                            return aIndex - bIndex;
+                          }),
+                        )
+                        .then((nextEvent: WorkflowEvent) => {
+                          if (this.#verbose) {
+                            console.log(
+                              `Step ${step.name} completed, next event is ${nextEvent}`,
+                            );
+                          }
+                          events.forEach((input) => {
+                            const index =
+                              this.#pendingInputQueue.indexOf(input);
+                            this.#pendingInputQueue.splice(index, 1);
+                          });
+                          if (!(nextEvent instanceof StopEvent)) {
+                            this.#pendingInputQueue.unshift(nextEvent);
+                            this.#sendEvent(nextEvent);
+                          }
+                          return nextEvent;
+                        });
+                    })
+                    .filter(
+                      (promise): promise is Promise<WorkflowEvent> =>
+                        promise !== null,
+                    );
+                  nextEventPromises.forEach((promise) => {
+                    pendingTasks.add(promise);
+                    promise
+                      .catch((err) => {
+                        console.error("Error in step", err);
+                      })
+                      .finally(() => {
+                        pendingTasks.delete(promise);
                       });
-                      if (!(nextEvent instanceof StopEvent)) {
-                        this.#pendingInputQueue.unshift(nextEvent);
-                        this.#queue.push(nextEvent);
-                      }
-                      return nextEvent;
-                    });
-                })
-                .filter(
-                  (promise): promise is Promise<WorkflowEvent> =>
-                    promise !== null,
-                );
-              nextEventPromises.forEach((promise) => {
-                pendingTasks.add(promise);
-                promise
-                  .catch((err) => {
-                    console.error("Error in step", err);
-                  })
-                  .finally(() => {
-                    pendingTasks.delete(promise);
                   });
-              });
-              Promise.race(nextEventPromises)
-                .then((fastestNextEvent) => {
-                  controller.enqueue(fastestNextEvent);
-                  return fastestNextEvent;
-                })
-                .then(async (fastestNextEvent) =>
-                  Promise.all(nextEventPromises).then((nextEvents) => {
-                    for (const nextEvent of nextEvents) {
-                      // do not enqueue the same event twice
-                      if (fastestNextEvent !== nextEvent) {
-                        controller.enqueue(nextEvent);
-                      }
-                    }
-                  }),
-                )
-                .catch((err) => {
-                  controller.error(err);
-                });
+                  Promise.race(nextEventPromises)
+                    .then((fastestNextEvent) => {
+                      controller.enqueue(fastestNextEvent);
+                      return fastestNextEvent;
+                    })
+                    .then(async (fastestNextEvent) =>
+                      Promise.all(nextEventPromises).then((nextEvents) => {
+                        for (const nextEvent of nextEvents) {
+                          // do not enqueue the same event twice
+                          if (fastestNextEvent !== nextEvent) {
+                            controller.enqueue(nextEvent);
+                          }
+                        }
+                      }),
+                    )
+                    .catch((err) => {
+                      controller.error(err);
+                    });
+                }
+                break;
+              }
             }
           }
           if (this.#queue.length === 0 && pendingTasks.size === 0) {
@@ -306,7 +399,8 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
             }
             break;
           }
-          await new Promise((resolve) => setTimeout(resolve, 0));
+          // fixme should we yield something here?
+          await new Promise<void>((resolve) => setTimeout(resolve, 0));
         }
         controller.close();
       },
@@ -332,6 +426,7 @@ export class WorkflowContext<Start = string, Stop = string, Data = any>
 
   #resolved: StopEvent<Stop> | null = null;
   #rejected: Error | null = null;
+
   then<TResult1, TResult2 = never>(
     onfulfilled?:
       | ((value: StopEvent<Stop>) => TResult1 | PromiseLike<TResult1>)

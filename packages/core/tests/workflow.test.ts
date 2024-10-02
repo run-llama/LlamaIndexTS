@@ -135,8 +135,16 @@ describe("workflow basic", () => {
   test("run workflow with multiple in-degree", async () => {
     const jokeFlow = new Workflow({ verbose: true });
 
-    jokeFlow.addStep(StartEvent, generateJoke);
-    jokeFlow.addStep(JokeEvent, analyzeJoke);
+    jokeFlow.addStep(StartEvent, async (context) => {
+      context.sendEvent(
+        new AnalysisEvent({
+          analysis: "an analysis",
+        }),
+      );
+      return new JokeEvent({
+        joke: "a joke",
+      });
+    });
     jokeFlow.addStep([JokeEvent, AnalysisEvent], async (context, ...events) => {
       return new StopEvent({
         result: "The analysis is insightful and helpful.",
@@ -287,6 +295,27 @@ describe("workflow basic", () => {
     const result = await myWorkflow.run("start");
     expect(result.data.result).toBe("query result");
   });
+
+  test("requireEvents", async () => {
+    const myWorkflow = new Workflow({ verbose: true });
+
+    class QueryEvent extends WorkflowEvent<{ query: string }> {}
+    class QueryResultEvent extends WorkflowEvent<{ result: string }> {}
+
+    myWorkflow.addStep(StartEvent, async (context: Context, events) => {
+      context.sendEvent(new QueryEvent({ query: "something" }));
+      const queryResultEvent = await context.requireEvent(QueryResultEvent);
+      return new StopEvent({ result: queryResultEvent.data.result });
+    });
+
+    myWorkflow.addStep(QueryEvent, async (context, event) => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      return new QueryResultEvent({ result: "query result" });
+    });
+
+    const result = await myWorkflow.run("start");
+    expect(result.data.result).toBe("query result");
+  });
 });
 
 describe("workflow event loop", () => {
@@ -430,7 +459,7 @@ describe("workflow event loop", () => {
     type MyContext = { name: string };
     const myFlow = new Workflow<string, MyContext>({ verbose: true });
     myFlow.addStep(StartEvent<string>, async (context, _) => {
-      if (context === null) {
+      if (context.name == null) {
         return new StopEvent({ result: "EMPTY" });
       }
       return new StopEvent({ result: `Hello ${context.name}!` });
