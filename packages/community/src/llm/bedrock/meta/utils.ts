@@ -1,9 +1,12 @@
 import type {
   BaseTool,
   ChatMessage,
+  LLMMetadata,
   MessageContentTextDetail,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
+import { extractDataUrlComponents } from "../utils";
+import { TOKENS } from "./constants";
 import type { MetaMessage } from "./types";
 
 const getToolCallInstructionString = (tool: BaseTool): string => {
@@ -24,7 +27,7 @@ const getToolCallParametersString = (tool: BaseTool): string => {
 
 // ported from https://github.com/meta-llama/llama-agentic-system/blob/main/llama_agentic_system/system_prompt.py
 // NOTE: using json instead of the above xml style tool calling works more reliability
-export const getToolsPrompt = (tools?: BaseTool[]) => {
+export const getToolsPrompt_3_1 = (tools?: BaseTool[]) => {
   if (!tools?.length) return "";
 
   const customToolParams = tools.map((tool) => {
@@ -77,6 +80,46 @@ Reminder:
   `;
 };
 
+export const getToolsPrompt_3_2 = (tools?: BaseTool[]) => {
+  if (!tools?.length) return "";
+  return `
+You are an expert in composing functions. You are given a question and a set of possible functions.
+Based on the question, you will need to make one or more function/tool calls to achieve the purpose.
+If none of the function can be used, point it out. If the given question lacks the parameters required by the function,
+also point it out. You should only return the function call in tools call sections.
+
+If you decide to invoke any of the function(s), you MUST put it in the format of and start with the token: ${TOKENS.TOOL_CALL}:
+{
+  "name": function_name,
+  "parameters": parameters,
+}
+where
+
+{
+  "name": function_name,
+  "parameters": parameters, => a JSON dict with the function argument name as key and function argument value as value.
+}
+
+Here is an example,
+
+{
+  "name": "example_function_name",
+  "parameters": {"example_name": "example_value"}
+}
+
+Reminder:
+- Function calls MUST follow the specified format
+- Required parameters MUST be specified
+- Only call one function at a time
+- You SHOULD NOT include any other text in the response
+- Put the entire function call reply on one line
+
+Here is a list of functions in JSON format that you can invoke.
+
+${JSON.stringify(tools)}
+`;
+};
+
 export const mapChatRoleToMetaRole = (
   role: ChatMessage["role"],
 ): MetaMessage["role"] => {
@@ -125,16 +168,46 @@ export const mapChatMessagesToMetaMessages = <
 /**
  * Documentation at https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-3
  */
-export const mapChatMessagesToMetaLlama3Messages = <T extends ChatMessage>(
-  messages: T[],
-  tools?: BaseTool[],
-): string => {
+export const mapChatMessagesToMetaLlama3Messages = <T extends ChatMessage>({
+  messages,
+  model,
+  tools,
+}: {
+  messages: T[];
+  model: LLMMetadata["model"];
+  tools?: BaseTool[];
+}): { prompt: string; images: string[] } => {
+  const images: string[] = [];
+  const textMessages: T[] = [];
+
+  messages.forEach((message) => {
+    if (Array.isArray(message.content)) {
+      message.content.forEach((content) => {
+        if (content.type === "image_url") {
+          const { base64 } = extractDataUrlComponents(content.image_url.url);
+          images.push(base64);
+        } else {
+          textMessages.push(message);
+        }
+      });
+    } else {
+      textMessages.push(message);
+    }
+  });
+
   const parts: string[] = [];
-  if (tools?.length) {
+
+  let toolsPrompt = "";
+  if (model.startsWith("meta.llama3-2")) {
+    toolsPrompt = getToolsPrompt_3_2(tools);
+  } else if (model.startsWith("meta.llama3-1")) {
+    toolsPrompt = getToolsPrompt_3_1(tools);
+  }
+  if (toolsPrompt) {
     parts.push(
       "<|begin_of_text|>",
       "<|start_header_id|>system<|end_header_id|>",
-      getToolsPrompt(tools),
+      toolsPrompt,
       "<|eot_id|>",
     );
   }
@@ -154,7 +227,9 @@ export const mapChatMessagesToMetaLlama3Messages = <T extends ChatMessage>(
     ...mapped,
     "<|start_header_id|>assistant<|end_header_id|>",
   );
-  return parts.join("\n");
+
+  const prompt = parts.join("\n");
+  return { prompt, images };
 };
 
 /**
