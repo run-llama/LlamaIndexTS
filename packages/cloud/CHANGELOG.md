@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.2.10
+
+### Patch Changes
+
+- 981811e: fix(cloud): llama parse reader save image incorrectly
+
 ## 0.2.9
 
 ### Patch Changes
