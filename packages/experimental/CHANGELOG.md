@@ -1,5 +1,11 @@
 # @llamaindex/experimental
 
+## 0.0.92
+
+### Patch Changes
+
+- llamaindex@0.6.14
+
 ## 0.0.91
 
 ### Patch Changes
