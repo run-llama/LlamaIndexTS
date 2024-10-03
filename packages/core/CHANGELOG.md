@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.2.9
+
+### Patch Changes
+
+- b17d439: Fix #1278: resolved issue where the id\_ was not correctly passed as the id when creating a TextNode. As a result, the upsert operation to the vector database was using a generated ID instead of the provided document ID, if available.
+
 ## 0.2.8
 
 ### Patch Changes

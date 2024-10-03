@@ -1,5 +1,15 @@
 # llamaindex
 
+## 0.6.14
+
+### Patch Changes
+
+- Updated dependencies [b17d439]
+  - @llamaindex/core@0.2.9
+  - @llamaindex/ollama@0.0.4
+  - @llamaindex/openai@0.1.11
+  - @llamaindex/groq@0.0.10
+
 ## 0.6.13
 
 ### Patch Changes
