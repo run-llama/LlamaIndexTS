@@ -363,7 +363,7 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@llamaindex/env':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../env
       bunchee:
         specifier: 5.3.2

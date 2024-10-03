@@ -52,7 +52,7 @@
     "@hey-api/client-fetch": "^0.2.4",
     "@hey-api/openapi-ts": "^0.53.0",
     "@llamaindex/core": "workspace:*",
-    "@llamaindex/env": "workspace:",
+    "@llamaindex/env": "workspace:*",
     "bunchee": "5.3.2"
   },
   "peerDependencies": {
