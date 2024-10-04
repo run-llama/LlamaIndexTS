@@ -8,7 +8,6 @@
  * @module
  */
 import { Sha256 } from "@aws-crypto/sha256-js";
-import { createHash } from "node:crypto";
 import pathe from "pathe";
 import { fs } from "./fs/memory.js";
 
@@ -45,23 +44,6 @@ export function createSHA256(): SHA256 {
 
 export function randomUUID(): string {
   return crypto.randomUUID();
-}
-
-export function randomUUIDFromString(input: string) {
-  // Create a hash using SHA-1
-  const hash = createHash("sha1").update(input).digest("hex");
-
-  // Format the hash to resemble a UUID (version 5 style)
-  const uuid = [
-    hash.substring(0, 8),
-    hash.substring(8, 12),
-    "5" + hash.substring(13, 16), // Set the version to 5 (name-based)
-    ((parseInt(hash.substring(16, 18), 16) & 0x3f) | 0x80).toString(16) +
-      hash.substring(18, 20), // Set the variant
-    hash.substring(20, 32),
-  ].join("-");
-
-  return uuid;
 }
 
 export {
