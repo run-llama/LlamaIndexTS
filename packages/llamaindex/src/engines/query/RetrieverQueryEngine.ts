@@ -14,12 +14,10 @@ export class RetrieverQueryEngine extends BaseQueryEngine {
   retriever: BaseRetriever;
   responseSynthesizer: BaseSynthesizer;
   nodePostprocessors: BaseNodePostprocessor[];
-  preFilters?: unknown;
 
   constructor(
     retriever: BaseRetriever,
     responseSynthesizer?: BaseSynthesizer,
-    preFilters?: unknown,
     nodePostprocessors?: BaseNodePostprocessor[],
   ) {
     super(async (strOrQueryBundle, stream) => {
@@ -52,7 +50,6 @@ export class RetrieverQueryEngine extends BaseQueryEngine {
     this.retriever = retriever;
     this.responseSynthesizer =
       responseSynthesizer || getResponseSynthesizer("compact");
-    this.preFilters = preFilters;
     this.nodePostprocessors = nodePostprocessors || [];
   }
 

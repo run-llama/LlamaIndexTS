@@ -308,7 +308,6 @@ export class LlamaCloudIndex {
     return new RetrieverQueryEngine(
       retriever,
       params?.responseSynthesizer,
-      params?.preFilters,
       params?.nodePostprocessors,
     );
   }

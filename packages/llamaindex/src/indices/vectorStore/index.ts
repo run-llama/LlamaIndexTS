@@ -298,9 +298,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       similarityTopK,
     } = options ?? {};
     return new RetrieverQueryEngine(
-      retriever ?? this.asRetriever({ similarityTopK }),
+      retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
       responseSynthesizer,
-      preFilters,
       nodePostprocessors,
     );
   }
@@ -387,7 +386,7 @@ export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   similarityTopK?: number | undefined;
   topK?: TopKMap | undefined;
-  filters?: MetadataFilters;
+  filters?: MetadataFilters | undefined;
 };
 
 export class VectorIndexRetriever extends BaseRetriever {
