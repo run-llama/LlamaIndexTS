@@ -1,5 +1,26 @@
 # llamaindex
 
+## 0.6.15
+
+### Patch Changes
+
+- 2a82413: fix(core): set `Settings.llm` to OpenAI by default and support lazy load openai
+- Updated dependencies [2a82413]
+- Updated dependencies [0b20ff9]
+  - @llamaindex/groq@0.0.11
+  - @llamaindex/openai@0.1.12
+  - @llamaindex/cloud@0.2.11
+
+## 0.6.14
+
+### Patch Changes
+
+- Updated dependencies [b17d439]
+  - @llamaindex/core@0.2.9
+  - @llamaindex/ollama@0.0.4
+  - @llamaindex/openai@0.1.11
+  - @llamaindex/groq@0.0.10
+
 ## 0.6.13
 
 ### Patch Changes

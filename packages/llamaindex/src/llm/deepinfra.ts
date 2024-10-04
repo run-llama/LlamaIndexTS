@@ -6,7 +6,7 @@ const DEFAULT_MODEL = "mistralai/Mixtral-8x22B-Instruct-v0.1";
 const BASE_URL = "https://api.deepinfra.com/v1/openai";
 
 export class DeepInfra extends OpenAI {
-  constructor(init?: Partial<OpenAI>) {
+  constructor(init?: Omit<Partial<OpenAI>, "session">) {
     const {
       apiKey = getEnv(ENV_VARIABLE_NAME),
       additionalSessionOptions = {},

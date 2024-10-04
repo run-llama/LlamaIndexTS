@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 0.2.11
+
+### Patch Changes
+
+- 0b20ff9: fix: package.json format
+
 ## 0.2.10
 
 ### Patch Changes

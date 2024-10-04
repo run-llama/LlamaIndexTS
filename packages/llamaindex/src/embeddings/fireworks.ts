@@ -2,7 +2,7 @@ import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "@llamaindex/openai";
 
 export class FireworksEmbedding extends OpenAIEmbedding {
-  constructor(init?: Partial<OpenAIEmbedding>) {
+  constructor(init?: Omit<Partial<OpenAIEmbedding>, "session">) {
     const {
       apiKey = getEnv("FIREWORKS_API_KEY"),
       additionalSessionOptions = {},
