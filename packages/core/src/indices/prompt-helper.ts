@@ -76,7 +76,7 @@ export class PromptHelper {
    * @param prompt
    * @returns
    */
-  private getAvailableContextSize(prompt: PromptTemplate) {
+  #getAvailableContextSize(prompt: PromptTemplate) {
     const emptyPromptText = getEmptyPromptTxt(prompt);
     const promptTokens = this.tokenizer.encode(emptyPromptText);
     const numPromptTokens = promptTokens.length;
@@ -87,12 +87,12 @@ export class PromptHelper {
   /**
    * Find the maximum size of each chunk given a prompt.
    */
-  private getAvailableChunkSize(
+  #getAvailableChunkSize(
     prompt: PromptTemplate,
     numChunks = 1,
     padding = 5,
   ): number {
-    const availableContextSize = this.getAvailableContextSize(prompt);
+    const availableContextSize = this.#getAvailableContextSize(prompt);
 
     const result = Math.floor(availableContextSize / numChunks) - padding;
 
@@ -111,9 +111,12 @@ export class PromptHelper {
     numChunks = 1,
     padding = DEFAULT_PADDING,
   ) {
-    const chunkSize = this.getAvailableChunkSize(prompt, numChunks, padding);
-    if (chunkSize === 0) {
-      throw new Error("Got 0 as available chunk size");
+    const chunkSize = this.#getAvailableChunkSize(prompt, numChunks, padding);
+    if (chunkSize <= 0) {
+      /**
+       * If you see this error, it means that the input is larger than LLM context window.
+       */
+      throw new TypeError(`Chunk size ${chunkSize} is not positive.`);
     }
     const chunkOverlap = this.chunkOverlapRatio * chunkSize;
     return new SentenceSplitter({
