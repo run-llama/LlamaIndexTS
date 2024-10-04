@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.1.12
+
+### Patch Changes
+
+- 2a82413: fix(core): set `Settings.llm` to OpenAI by default and support lazy load openai
+
 ## 0.1.11
 
 ### Patch Changes
