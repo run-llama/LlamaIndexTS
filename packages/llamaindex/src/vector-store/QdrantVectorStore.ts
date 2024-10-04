@@ -336,7 +336,7 @@ function toQdrantMetadataFilters(
   const conditions: QdrantMustConditions = [];
 
   for (const subfilter of subFilters.filters) {
-    if (!subfilter.operator || subfilter.operator === FilterOperator.EQ) {
+    if (subfilter.operator === FilterOperator.EQ) {
       if (typeof subfilter.value === "number") {
         conditions.push({
           key: subfilter.key,
@@ -405,10 +405,10 @@ function toQdrantMetadataFilters(
   }
 
   const filter: QdrantFilter = {};
-  if (subFilters.condition === FilterCondition.AND) {
-    filter.must = conditions;
-  } else if (subFilters.condition === FilterCondition.OR) {
+  if (subFilters.condition === FilterCondition.OR) {
     filter.should = conditions;
+  } else {
+    filter.must = conditions;
   }
 
   return filter;
