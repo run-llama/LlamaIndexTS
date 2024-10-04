@@ -165,9 +165,7 @@ async function main() {
     });
 
     const responseSynthesizer = getResponseSynthesizer("tree_summarize");
-    return new RetrieverQueryEngine(retriever, responseSynthesizer, {
-      filter,
-    });
+    return new RetrieverQueryEngine(retriever, responseSynthesizer);
   };
 
   // whatever is a key from your metadata
