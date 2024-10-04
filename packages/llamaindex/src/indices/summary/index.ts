@@ -189,7 +189,6 @@ export class SummaryIndex extends BaseIndex<IndexList> {
     return new RetrieverQueryEngine(
       retriever,
       responseSynthesizer,
-      options?.preFilters,
       options?.nodePostprocessors,
     );
   }
