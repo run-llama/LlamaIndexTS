@@ -10,9 +10,6 @@ export {
   GPT4_MODELS,
   O1_MODELS,
   OpenAI,
-  OpenAISession,
   type OpenAIAdditionalChatOptions,
   type OpenAIAdditionalMetadata,
 } from "./llm";
-
-export { type AzureOpenAIConfig } from "./azure";

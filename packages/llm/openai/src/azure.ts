@@ -2,11 +2,6 @@ import { getEnv } from "@llamaindex/env";
 
 import type { AzureClientOptions } from "openai";
 
-export interface AzureOpenAIConfig extends AzureClientOptions {
-  /** @deprecated use "deployment" instead */
-  deploymentName?: string | undefined;
-}
-
 // NOTE we're not supporting the legacy models as they're not available for new deployments
 // https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/legacy-models
 // If you have a need for them, please open an issue on GitHub
@@ -85,14 +80,15 @@ const DEFAULT_API_VERSION = "2023-05-15";
 //^ NOTE: this will change over time, if you want to pin it, use a specific version
 
 export function getAzureConfigFromEnv(
-  init?: Partial<AzureOpenAIConfig> & { model?: string },
-): AzureOpenAIConfig {
+  init?: Partial<AzureClientOptions> & { model?: string },
+): AzureClientOptions {
   const deployment =
-    init?.deploymentName ??
-    init?.deployment ??
-    getEnv("AZURE_OPENAI_DEPLOYMENT") ?? // From Azure docs
-    getEnv("AZURE_OPENAI_API_DEPLOYMENT_NAME") ?? // LCJS compatible
-    init?.model; // Fall back to model name, Python compatible
+    init && "deploymentName" in init && typeof init.deploymentName === "string"
+      ? init?.deploymentName
+      : (init?.deployment ??
+        getEnv("AZURE_OPENAI_DEPLOYMENT") ?? // From Azure docs
+        getEnv("AZURE_OPENAI_API_DEPLOYMENT_NAME") ?? // LCJS compatible
+        init?.model); // Fall back to model name, Python compatible
   return {
     apiKey:
       init?.apiKey ??
@@ -110,13 +106,8 @@ export function getAzureConfigFromEnv(
       getEnv("OPENAI_API_VERSION") ?? // Python compatible
       getEnv("AZURE_OPENAI_API_VERSION") ?? // LCJS compatible
       DEFAULT_API_VERSION,
-    deploymentName: deployment, // LCJS compatible
     deployment, // For Azure OpenAI
   };
-}
-
-export function getAzureBaseUrl(config: AzureOpenAIConfig): string {
-  return `${config.endpoint}/openai/deployments/${config.deploymentName}`;
 }
 
 export function getAzureModel(openAIModel: string) {

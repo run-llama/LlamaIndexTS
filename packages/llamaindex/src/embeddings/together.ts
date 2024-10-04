@@ -2,7 +2,7 @@ import { getEnv } from "@llamaindex/env";
 import { OpenAIEmbedding } from "@llamaindex/openai";
 
 export class TogetherEmbedding extends OpenAIEmbedding {
-  constructor(init?: Partial<OpenAIEmbedding>) {
+  constructor(init?: Omit<Partial<OpenAIEmbedding>, "session">) {
     const {
       apiKey = getEnv("TOGETHER_API_KEY"),
       additionalSessionOptions = {},

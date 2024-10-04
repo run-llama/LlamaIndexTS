@@ -2,7 +2,6 @@ import {
   type CallbackManager,
   Settings as CoreSettings,
 } from "@llamaindex/core/global";
-import { OpenAI } from "@llamaindex/openai";
 
 import { PromptHelper } from "@llamaindex/core/indices";
 
@@ -61,12 +60,6 @@ class GlobalSettings implements Config {
   }
 
   get llm(): LLM {
-    // fixme: we might need check internal error instead of try-catch here
-    try {
-      CoreSettings.llm;
-    } catch (error) {
-      CoreSettings.llm = new OpenAI();
-    }
     return CoreSettings.llm;
   }
 
