@@ -1,5 +1,19 @@
 # llamaindex
 
+## 0.6.16
+
+### Patch Changes
+
+- 63e9846: fix: preFilters does not work with asQueryEngine
+- 6f3a31c: feat: add metadata filters for Qdrant vector store
+- Updated dependencies [3489e7d]
+- Updated dependencies [468bda5]
+  - @llamaindex/core@0.2.10
+  - @llamaindex/cloud@0.2.12
+  - @llamaindex/ollama@0.0.5
+  - @llamaindex/openai@0.1.13
+  - @llamaindex/groq@0.0.12
+
 ## 0.6.15
 
 ### Patch Changes

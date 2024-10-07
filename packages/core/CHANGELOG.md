@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.2.10
+
+### Patch Changes
+
+- 3489e7d: fix: num output incorrect in prompt helper
+- 468bda5: fix: correct warning when chunk size smaller than 0
+
 ## 0.2.9
 
 ### Patch Changes
