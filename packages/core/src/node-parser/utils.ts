@@ -3,7 +3,10 @@ import SentenceTokenizer from "./sentence_tokenizer";
 
 export type TextSplitterFn = (text: string) => string[];
 
-const truncateText = (text: string, textSplitter: TextSplitter): string => {
+export const truncateText = (
+  text: string,
+  textSplitter: TextSplitter,
+): string => {
   const chunks = textSplitter.splitText(text);
   return chunks[0] ?? text;
 };
