@@ -1,5 +1,17 @@
 # llamaindex
 
+## 0.6.17
+
+### Patch Changes
+
+- ee697fb: fix: generate uuid when inserting to Qdrant
+- Updated dependencies [ee697fb]
+  - @llamaindex/core@0.2.11
+  - @llamaindex/cloud@0.2.13
+  - @llamaindex/ollama@0.0.6
+  - @llamaindex/openai@0.1.14
+  - @llamaindex/groq@0.0.13
+
 ## 0.6.16
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.2.11
+
+### Patch Changes
+
+- ee697fb: fix: generate uuid when inserting to Qdrant
+
 ## 0.2.10
 
 ### Patch Changes
