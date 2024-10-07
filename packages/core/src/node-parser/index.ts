@@ -13,6 +13,7 @@ export { MetadataAwareTextSplitter, NodeParser, TextSplitter } from "./base";
 export { MarkdownNodeParser } from "./markdown";
 export { SentenceSplitter } from "./sentence-splitter";
 export { SentenceWindowNodeParser } from "./sentence-window";
+export { TokenTextSplitter } from "./token-text-splitter";
 export type { SplitterParams } from "./type";
 export {
   splitByChar,
@@ -20,5 +21,6 @@ export {
   splitByRegex,
   splitBySentenceTokenizer,
   splitBySep,
+  truncateText,
 } from "./utils";
 export type { TextSplitterFn } from "./utils";

@@ -64,11 +64,13 @@ export const defaultRefinePrompt: RefinePrompt = new PromptTemplate({
   templateVars: ["query", "existingAnswer", "context"],
   template: `The original query is as follows: {query}
 We have provided an existing answer: {existingAnswer}
-We have the opportunity to refine the existing answer (only if needed) with some more context below.
+We have the opportunity to refine the existing answer
+(only if needed) with some more context below.
 ------------
 {context}
 ------------
-Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
+Given the new context, refine the original answer to better answer the query.
+If the context isn't useful, return the original answer.
 Refined Answer:`,
 });
 
