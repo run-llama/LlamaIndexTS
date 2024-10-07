@@ -20,6 +20,7 @@ import type { BaseEmbedding } from "@llamaindex/core/embeddings";
 import { DEFAULT_COLLECTION } from "@llamaindex/core/global";
 import type { BaseNode, Metadata } from "@llamaindex/core/schema";
 import { Document, MetadataMode } from "@llamaindex/core/schema";
+import { UUIDFromString } from "@llamaindex/core/utils";
 
 // todo: create adapter for postgres client
 function fromVercelPool(client: VercelPool): IsomorphicDB {
@@ -293,7 +294,7 @@ export class PGVectorStore
 
   private getDataToInsert(embeddingResults: BaseNode<Metadata>[]) {
     return embeddingResults.map((node) => {
-      const id: any = node.id_.length ? node.id_ : null;
+      const id: any = node.id_.length ? UUIDFromString(node.id_) : null;
       const meta = node.metadata || {};
       if (!meta.create_date) {
         meta.create_date = new Date();
