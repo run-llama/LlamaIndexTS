@@ -10,7 +10,7 @@ import {
   type VectorStoreQueryResult,
 } from "./types.js";
 
-import { randomUUIDFromString } from "@llamaindex/env";
+import { UUIDFromString } from "@llamaindex/core/utils";
 import type { QdrantClientParams, Schemas } from "@qdrant/js-client-rest";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
@@ -171,7 +171,7 @@ export class QdrantVectorStore
 
       for (let k = 0; k < nodeIds.length; k++) {
         const point: PointStruct = {
-          id: randomUUIDFromString(nodeIds[k]!.id_),
+          id: UUIDFromString(nodeIds[k]!.id_),
           payload: payloads[k]!,
           vector: vectors[k]!,
         };
