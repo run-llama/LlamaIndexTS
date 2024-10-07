@@ -80,3 +80,4 @@ export {
 } from "./llms";
 
 export { objectEntries } from "./object-entries";
+export { UUIDFromString } from "./uuid";
