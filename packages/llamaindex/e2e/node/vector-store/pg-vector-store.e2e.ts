@@ -79,6 +79,7 @@ await test("simple node", async (t) => {
 
   await vectorStore.add([node]);
 
+  const insertedNodeId = UUIDFromString(nodeId);
   {
     const result = await vectorStore.query({
       mode: VectorStoreQueryMode.DEFAULT,
@@ -86,17 +87,18 @@ await test("simple node", async (t) => {
       queryEmbedding: [1, 2, 3],
     });
     const actualJSON = result.nodes![0]!.toJSON();
+
     assert.deepStrictEqual(actualJSON, {
       ...node.toJSON(),
-      id_: UUIDFromString(nodeId),
+      id_: insertedNodeId,
       hash: actualJSON.hash,
       metadata: actualJSON.metadata,
     });
-    assert.deepStrictEqual(result.ids, [UUIDFromString(nodeId)]);
+    assert.deepStrictEqual(result.ids, [insertedNodeId]);
     assert.deepStrictEqual(result.similarities, [1]);
   }
 
-  await vectorStore.delete(nodeId);
+  await vectorStore.delete(insertedNodeId);
 
   {
     const result = await vectorStore.query({
