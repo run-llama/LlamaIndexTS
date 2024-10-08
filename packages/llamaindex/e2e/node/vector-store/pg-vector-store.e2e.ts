@@ -61,7 +61,7 @@ await test("simple node", async (t) => {
   const dimensions = 3;
   const schemaName =
     "llamaindex_vector_store_test_" + Math.random().toString(36).substring(7);
-  const nodeId = "5bb16627-f6c0-459c-bb18-71642813ef21";
+  const nodeId = "document_id_1";
   const node = new Document({
     text: "hello world",
     id_: nodeId,
