@@ -86,14 +86,12 @@ await test("simple node", async (t) => {
       queryEmbedding: [1, 2, 3],
     });
     const actualJSON = result.nodes![0]!.toJSON();
-    assert.deepStrictEqual(
-      { ...actualJSON, id_: UUIDFromString(actualJSON.id_) },
-      {
-        ...node.toJSON(),
-        hash: actualJSON.hash,
-        metadata: actualJSON.metadata,
-      },
-    );
+    assert.deepStrictEqual(actualJSON, {
+      ...node.toJSON(),
+      id_: UUIDFromString(nodeId),
+      hash: actualJSON.hash,
+      metadata: actualJSON.metadata,
+    });
     assert.deepStrictEqual(result.ids, [UUIDFromString(nodeId)]);
     assert.deepStrictEqual(result.similarities, [1]);
   }
