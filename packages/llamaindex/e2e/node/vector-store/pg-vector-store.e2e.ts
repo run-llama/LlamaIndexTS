@@ -1,4 +1,5 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
+import { UUIDFromString } from "@llamaindex/core/utils";
 import { config } from "dotenv";
 import { Document, VectorStoreQueryMode } from "llamaindex";
 import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
@@ -85,12 +86,15 @@ await test("simple node", async (t) => {
       queryEmbedding: [1, 2, 3],
     });
     const actualJSON = result.nodes![0]!.toJSON();
-    assert.deepStrictEqual(actualJSON, {
-      ...node.toJSON(),
-      hash: actualJSON.hash,
-      metadata: actualJSON.metadata,
-    });
-    assert.deepStrictEqual(result.ids, [nodeId]);
+    assert.deepStrictEqual(
+      { ...actualJSON, id_: UUIDFromString(actualJSON.id_) },
+      {
+        ...node.toJSON(),
+        hash: actualJSON.hash,
+        metadata: actualJSON.metadata,
+      },
+    );
+    assert.deepStrictEqual(result.ids, [UUIDFromString(nodeId)]);
     assert.deepStrictEqual(result.similarities, [1]);
   }
 
