@@ -2,6 +2,7 @@ import {
   SentenceSplitter,
   splitBySentenceTokenizer,
 } from "@llamaindex/core/node-parser";
+import { Document } from "@llamaindex/core/schema";
 import { describe, expect, test } from "vitest";
 
 describe("sentence splitter", () => {
@@ -114,5 +115,27 @@ describe("sentence splitter", () => {
       "A card must be of uniform thickness and made of unfolded and uncreased paper or cardstock of approximately the quality and weight of a stamped card (i.e., a card available from USPS).";
     const split = splitBySentenceTokenizer();
     expect(split(text)).toEqual([text]);
+  });
+
+  test("split nodes with UUID IDs and correct relationships", () => {
+    const UUID_REGEX =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const sentenceSplitter = new SentenceSplitter();
+    const docId = "test-doc-id";
+    const doc = new Document({
+      id_: docId,
+      text: "This is a test sentence. This is another test sentence.",
+    });
+    const nodes = sentenceSplitter.getNodesFromDocuments([doc]);
+    nodes.forEach((node) => {
+      // test node id should match uuid regex
+      expect(node.id_).toMatch(UUID_REGEX);
+
+      // test source reference to the doc ID
+      const source = node.relationships?.SOURCE;
+      expect(source).toBeDefined();
+      expect(source).toHaveProperty("nodeId");
+      expect((source as { nodeId: string }).nodeId).toEqual(docId);
+    });
   });
 });
