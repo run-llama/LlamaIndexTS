@@ -61,7 +61,7 @@ export class LlamaCloudRetriever extends BaseRetriever {
       await PipelinesService.searchPipelinesApiV1PipelinesGet({
         query: {
           project_id: await getProjectId(this.projectName, this.organizationId),
-          project_name: this.pipelineName,
+          pipeline_name: this.pipelineName,
         },
         throwOnError: true,
       });
@@ -72,25 +72,11 @@ export class LlamaCloudRetriever extends BaseRetriever {
       );
     }
 
-    const { data: pipeline } =
-      await PipelinesService.getPipelineApiV1PipelinesPipelineIdGet({
-        path: {
-          pipeline_id: pipelines[0]!.id,
-        },
-        throwOnError: true,
-      });
-
-    if (!pipeline) {
-      throw new Error(
-        `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
-      );
-    }
-
     const { data: results } =
       await PipelinesService.runSearchApiV1PipelinesPipelineIdRetrievePost({
         throwOnError: true,
         path: {
-          pipeline_id: pipeline.id,
+          pipeline_id: pipelines[0]!.id,
         },
         body: {
           ...this.retrieveParams,
