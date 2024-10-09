@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.2.12
+
+### Patch Changes
+
+- 5f67820: Fix that node parsers generate nodes with UUIDs
+
 ## 0.2.11
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # llamaindex
 
+## 0.6.18
+
+### Patch Changes
+
+- 5f67820: Fix that node parsers generate nodes with UUIDs
+- fe08d04: Fix LlamaCloud retrieval with multiple pipelines
+- Updated dependencies [5f67820]
+  - @llamaindex/core@0.2.12
+  - @llamaindex/cloud@0.2.14
+  - @llamaindex/ollama@0.0.7
+  - @llamaindex/openai@0.1.15
+  - @llamaindex/groq@0.0.14
+
 ## 0.6.17
 
 ### Patch Changes
