@@ -56,11 +56,26 @@ await test("init without client", async (t) => {
   assert.notDeepStrictEqual(db, undefined);
 });
 
+await test("should able to insert nodes with ID is not UUID", async (t) => {
+  const node = new Document({
+    id_: "./data/planets.md_1",
+    text: "hello world",
+    embedding: [0.1, 0.2, 0.3],
+  });
+  const vectorStore = new PGVectorStore({ clientConfig: pgConfig });
+  const db = await vectorStore.client();
+  t.after(async () => {
+    await db.close();
+  });
+  const result = await vectorStore.add([node]);
+  assert.ok(result.length > 0, "Result should have at least one item");
+});
+
 await test("simple node", async (t) => {
   const dimensions = 3;
   const schemaName =
     "llamaindex_vector_store_test_" + Math.random().toString(36).substring(7);
-  const nodeId = "5bb16627-f6c0-459c-bb18-71642813ef21";
+  const nodeId = "./data/planets.md_1";
   const node = new Document({
     text: "hello world",
     id_: nodeId,
