@@ -40,9 +40,9 @@ export async function getProjectId(
 ): Promise<string> {
   const { data: projects } = await ProjectsService.listProjectsApiV1ProjectsGet(
     {
-      path: {
+      query: {
         project_name: projectName,
-        organization_id: organizationId,
+        organization_id: organizationId ?? null,
       },
       throwOnError: true,
     },
