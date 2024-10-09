@@ -479,7 +479,7 @@ export function buildNodeFromSplits(
     ) {
       const imageDoc = doc as ImageNode;
       const imageNode = new ImageNode({
-        id_: imageDoc.id_ ?? idGenerator(i, imageDoc),
+        id_: idGenerator(i, imageDoc),
         text: textChunk,
         image: imageDoc.image,
         embedding: imageDoc.embedding,
@@ -496,7 +496,7 @@ export function buildNodeFromSplits(
     ) {
       const textDoc = doc as TextNode;
       const node = new TextNode({
-        id_: textDoc.id_ ?? idGenerator(i, textDoc),
+        id_: idGenerator(i, textDoc),
         text: textChunk,
         embedding: textDoc.embedding,
         excludedEmbedMetadataKeys: [...textDoc.excludedEmbedMetadataKeys],

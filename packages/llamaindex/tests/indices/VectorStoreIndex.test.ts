@@ -27,7 +27,7 @@ describe("VectorStoreIndex", () => {
       runs: number = 2,
     ): Promise<Array<number>> => {
       const documents = [new Document({ text: "lorem ipsem", id_: "1" })];
-      const entries: number[] = [];
+      const entries = [];
       for (let i = 0; i < runs; i++) {
         await VectorStoreIndex.fromDocuments(documents, {
           serviceContext,
@@ -43,7 +43,7 @@ describe("VectorStoreIndex", () => {
 
   test("fromDocuments stores duplicates without a doc store strategy", async () => {
     const entries = await testStrategy(DocStoreStrategy.NONE);
-    expect(entries[0]).toBe(entries[1]);
+    expect(entries[0]! + 1).toBe(entries[1]);
   });
 
   test("fromDocuments ignores duplicates with upserts doc store strategy", async () => {
