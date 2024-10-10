@@ -367,6 +367,15 @@ export class LlamaCloudIndex {
         };
       }
 
+      let transformConfig = config?.transform;
+      if (!transformConfig) {
+        transformConfig = {
+          mode: "auto",
+          chunk_size: 1024,
+          chunk_overlap: 200,
+        };
+      }
+
       const { data: pipeline } =
         await PipelinesService.upsertPipelineApiV1PipelinesPut({
           path: {
@@ -375,7 +384,7 @@ export class LlamaCloudIndex {
           body: {
             name: this.params.name,
             embedding_config: embeddingConfig,
-            transform_config: config?.transform ?? null,
+            transform_config: transformConfig,
           },
           throwOnError: true,
         });
