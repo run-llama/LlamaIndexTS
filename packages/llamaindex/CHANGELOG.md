@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.6.19
+
+### Patch Changes
+
+- 62cba52: Add ensureIndex function to LlamaCloudIndex
+- d265e96: fix: ignore resolving unpdf for nextjs
+- d30bbf7: Convert undefined values to null in LlamaCloud filters
+- 53fd00a: Fix getPipelineId in LlamaCloudIndex
+
 ## 0.6.18
 
 ### Patch Changes
