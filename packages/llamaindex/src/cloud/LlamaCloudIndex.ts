@@ -7,7 +7,12 @@ import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
 import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
 import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./type.js";
-import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
+import {
+  getAppBaseUrl,
+  getPipelineId,
+  getProjectId,
+  initService,
+} from "./utils.js";
 
 import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
 import { SentenceSplitter } from "@llamaindex/core/node-parser";
@@ -28,10 +33,7 @@ export class LlamaCloudIndex {
     verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
+    const pipelineId = await this.getPipelineId();
 
     if (verbose) {
       console.log("Waiting for pipeline ingestion: ");
@@ -78,10 +80,7 @@ export class LlamaCloudIndex {
     verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
+    const pipelineId = await this.getPipelineId();
 
     if (verbose) {
       console.log("Loading data: ");
@@ -145,19 +144,11 @@ export class LlamaCloudIndex {
     projectName?: string,
     organizationId?: string,
   ): Promise<string> {
-    const { data: pipelines } =
-      await PipelinesService.searchPipelinesApiV1PipelinesGet({
-        query: {
-          project_id: await getProjectId(
-            projectName ?? this.params.projectName,
-            organizationId ?? this.params.organizationId,
-          ),
-          pipeline_name: name ?? this.params.name,
-        },
-        throwOnError: true,
-      });
-
-    return pipelines[0]!.id;
+    return await getPipelineId(
+      name ?? this.params.name,
+      projectName ?? this.params.projectName,
+      organizationId ?? this.params.organizationId,
+    );
   }
 
   public async getProjectId(
@@ -317,10 +308,7 @@ export class LlamaCloudIndex {
   }
 
   async insert(document: Document) {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
+    const pipelineId = await this.getPipelineId();
 
     if (!pipelineId) {
       throw new Error("We couldn't find the pipeline ID for the given name");
@@ -347,10 +335,7 @@ export class LlamaCloudIndex {
   }
 
   async delete(document: Document) {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
+    const pipelineId = await this.getPipelineId();
 
     if (!pipelineId) {
       throw new Error("We couldn't find the pipeline ID for the given name");
@@ -369,10 +354,7 @@ export class LlamaCloudIndex {
   }
 
   async refreshDoc(document: Document) {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
+    const pipelineId = await this.getPipelineId();
 
     if (!pipelineId) {
       throw new Error("We couldn't find the pipeline ID for the given name");
