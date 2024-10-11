@@ -114,7 +114,8 @@ export class OpenAIEmbedding extends BaseEmbedding {
             }),
         );
     } else {
-      this.apiKey = init?.session?.apiKey ?? getEnv("OPENAI_API_KEY");
+      this.apiKey =
+        init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
       this.lazySession = async () =>
         import("openai").then(({ OpenAI }) => {
           return (
