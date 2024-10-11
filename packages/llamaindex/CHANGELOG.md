@@ -1,5 +1,14 @@
 # llamaindex
 
+## 0.6.20
+
+### Patch Changes
+
+- 6a9a7b1: fix: take init api key into account
+- Updated dependencies [6a9a7b1]
+  - @llamaindex/openai@0.1.16
+  - @llamaindex/groq@0.0.15
+
 ## 0.6.19
 
 ### Patch Changes

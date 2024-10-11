@@ -1,5 +1,11 @@
 # @llamaindex/openai
 
+## 0.1.16
+
+### Patch Changes
+
+- 6a9a7b1: fix: take init api key into account
+
 ## 0.1.15
 
 ### Patch Changes
