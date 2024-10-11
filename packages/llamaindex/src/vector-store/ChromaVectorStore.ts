@@ -2,12 +2,9 @@ import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import {
   ChromaClient,
-  IncludeEnum,
-  type AddParams,
   type ChromaClientParams,
-  type Collection,
   type DeleteParams,
-  type QueryParams,
+  type QueryRecordsParams,
   type QueryResponse,
   type Where,
   type WhereDocument,
@@ -33,6 +30,8 @@ type ChromaDeleteOptions = {
 type ChromaQueryOptions = {
   whereDocument?: WhereDocument;
 };
+
+type Collection = Awaited<ReturnType<ChromaClient["getOrCreateCollection"]>>;
 
 const DEFAULT_TEXT_KEY = "text";
 
@@ -85,7 +84,7 @@ export class ChromaVectorStore
     return this.collection;
   }
 
-  private getDataToInsert(nodes: BaseNode[]): AddParams {
+  private getDataToInsert(nodes: BaseNode[]) {
     const metadatas = nodes.map((node) =>
       nodeToMetadata(node, true, this.textKey, this.flatMetadata),
     );
@@ -210,19 +209,16 @@ export class ChromaVectorStore
     }
 
     const collection = await this.getCollection();
-    const queryResponse: QueryResponse = await collection.query(<QueryParams>{
+    const queryResponse: QueryResponse = await collection.query(<
+      QueryRecordsParams
+    >{
       queryEmbeddings: query.queryEmbedding ?? undefined,
       queryTexts: query.queryStr ?? undefined,
       nResults: query.similarityTopK,
       where: Object.keys(chromaWhere).length ? chromaWhere : undefined,
       whereDocument: options?.whereDocument,
       //ChromaDB doesn't return the result embeddings by default so we need to include them
-      include: [
-        IncludeEnum.Distances,
-        IncludeEnum.Metadatas,
-        IncludeEnum.Documents,
-        IncludeEnum.Embeddings,
-      ],
+      include: ["distances", "metadatas", "documents", "embeddings"],
     });
 
     const vectorStoreQueryResult: VectorStoreQueryResult = {
