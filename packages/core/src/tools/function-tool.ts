@@ -40,10 +40,14 @@ export class FunctionTool<T, R extends JSONValue | Promise<JSONValue>>
   static from(fn: any, schema: any): any {
     if (schema.parameter instanceof z.ZodSchema) {
       const jsonSchema = zodToJsonSchema(schema.parameter);
-      return new FunctionTool(fn, {
-        ...schema,
-        parameters: jsonSchema,
-      });
+      return new FunctionTool(
+        fn,
+        {
+          ...schema,
+          parameters: jsonSchema,
+        },
+        schema.parameter,
+      );
     }
     return new FunctionTool(fn, schema);
   }
