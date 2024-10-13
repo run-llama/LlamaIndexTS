@@ -110,6 +110,8 @@
     ".": {
       "react-server": {
         "types": "./dist/type/index.react-server.d.ts",
+        "node": "./dist/index.js",
+        "edge-light": "./dist/index.edge.js",
         "default": "./dist/index.react-server.js"
       },
       "workerd": {
