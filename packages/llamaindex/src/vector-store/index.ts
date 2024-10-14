@@ -1,4 +1,5 @@
 export * from "./AstraDBVectorStore.js";
+export * from "./AzureCosmosDBNoSqlVectorStore.js";
 export * from "./ChromaVectorStore.js";
 export * from "./MilvusVectorStore.js";
 export * from "./MongoDBAtlasVectorStore.js";
@@ -8,4 +9,3 @@ export * from "./QdrantVectorStore.js";
 export * from "./SimpleVectorStore.js";
 export * from "./types.js";
 export * from "./WeaviateVectorStore.js";
-export * from "./AzureCosmosDBNoSqlVectorStore.js";
