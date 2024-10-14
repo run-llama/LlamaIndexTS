@@ -8,3 +8,4 @@ export * from "./QdrantVectorStore.js";
 export * from "./SimpleVectorStore.js";
 export * from "./types.js";
 export * from "./WeaviateVectorStore.js";
+export * from "./AzureCosmosDBNoSqlVectorStore.js";
