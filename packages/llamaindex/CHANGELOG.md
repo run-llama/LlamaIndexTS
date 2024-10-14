@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.6.21
+
+### Patch Changes
+
+- 6f75306: feat: support metadata filters for AstraDB
+- 94cb4ad: feat: Add metadata filters to ChromaDb and update to 1.9.2
+
 ## 0.6.20
 
 ### Patch Changes
