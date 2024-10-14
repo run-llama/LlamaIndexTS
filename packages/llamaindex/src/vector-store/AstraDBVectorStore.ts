@@ -2,19 +2,29 @@ import {
   Collection,
   DataAPIClient,
   Db,
+  type Filter,
   type FindOptions,
+  type SomeDoc,
 } from "@datastax/astra-db-ts";
 import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import {
+  FilterCondition,
+  FilterOperator,
   VectorStoreBase,
   type IEmbedModel,
+  type MetadataFilter,
+  type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
-import { metadataDictToNode, nodeToMetadata } from "./utils.js";
+import {
+  metadataDictToNode,
+  nodeToMetadata,
+  parseArrayValue,
+} from "./utils.js";
 
 export class AstraDBVectorStore
   extends VectorStoreBase
@@ -183,12 +193,8 @@ export class AstraDBVectorStore
     }
     const collection = this.collection;
 
-    const filters: Record<string, any> = {};
-    query.filters?.filters?.forEach((f) => {
-      filters[f.key] = f.value;
-    });
-
-    const cursor = await collection.find(filters, <FindOptions>{
+    const astraFilter = this.toAstraFilter(query.filters);
+    const cursor = await collection.find(astraFilter, <FindOptions>{
       ...options,
       sort: query.queryEmbedding
         ? { $vector: query.queryEmbedding }
@@ -229,5 +235,40 @@ export class AstraDBVectorStore
       ids,
       nodes,
     };
+  }
+
+  private toAstraFilter(filters?: MetadataFilters): Filter<SomeDoc> {
+    if (!filters || filters.filters?.length === 0) return {};
+    const condition = filters.condition ?? FilterCondition.AND;
+    const listFilter = filters.filters.map((f) => this.buildFilterItem(f));
+    if (condition === FilterCondition.OR) return { $or: listFilter };
+    if (condition === FilterCondition.AND) return { $and: listFilter };
+    throw new Error(`Not supported filter condition: ${condition}`);
+  }
+
+  private buildFilterItem(filter: MetadataFilter): Filter<SomeDoc> {
+    const { key, operator, value } = filter;
+    switch (operator) {
+      case FilterOperator.EQ:
+        return { [key]: value };
+      case FilterOperator.NE:
+        return { [key]: { $ne: value } };
+      case FilterOperator.GT:
+        return { [key]: { $gt: value } };
+      case FilterOperator.LT:
+        return { [key]: { $lt: value } };
+      case FilterOperator.GTE:
+        return { [key]: { $gte: value } };
+      case FilterOperator.LTE:
+        return { [key]: { $lte: value } };
+      case FilterOperator.IN:
+        return { [key]: { $in: parseArrayValue(value) } };
+      case FilterOperator.NIN:
+        return { [key]: { $nin: parseArrayValue(value) } };
+      case FilterOperator.IS_EMPTY:
+        return { [key]: { $size: 0 } };
+      default:
+        throw new Error(`Not supported filter operator: ${operator}`);
+    }
   }
 }
