@@ -44,6 +44,7 @@ export default function withLlamaIndex(config: any) {
     webpackConfig.externals.push({
       "onnxruntime-node": "commonjs onnxruntime-node",
       sharp: "commonjs sharp",
+      chromadb: "commonjs chromadb",
     });
     return webpackConfig;
   };

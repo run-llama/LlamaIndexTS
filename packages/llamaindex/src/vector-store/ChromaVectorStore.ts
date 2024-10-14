@@ -2,20 +2,20 @@ import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import {
   ChromaClient,
-  IncludeEnum,
-  type AddParams,
   type ChromaClientParams,
-  type Collection,
   type DeleteParams,
-  type QueryParams,
+  type QueryRecordsParams,
   type QueryResponse,
   type Where,
   type WhereDocument,
 } from "chromadb";
 import {
+  FilterCondition,
+  FilterOperator,
   VectorStoreBase,
   VectorStoreQueryMode,
   type IEmbedModel,
+  type MetadataFilters,
   type VectorStoreNoEmbedModel,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
@@ -31,7 +31,20 @@ type ChromaQueryOptions = {
   whereDocument?: WhereDocument;
 };
 
+type Collection = Awaited<ReturnType<ChromaClient["getOrCreateCollection"]>>;
+
 const DEFAULT_TEXT_KEY = "text";
+
+type ChromaFilterCondition = "$and" | "$or";
+type ChromaFilterOperator =
+  | "$eq"
+  | "$ne"
+  | "$gt"
+  | "$lt"
+  | "$gte"
+  | "$lte"
+  | "$in"
+  | "$nin";
 
 export class ChromaVectorStore
   extends VectorStoreBase
@@ -71,7 +84,7 @@ export class ChromaVectorStore
     return this.collection;
   }
 
-  private getDataToInsert(nodes: BaseNode[]): AddParams {
+  private getDataToInsert(nodes: BaseNode[]) {
     const metadatas = nodes.map((node) =>
       nodeToMetadata(node, true, this.textKey, this.flatMetadata),
     );
@@ -106,6 +119,79 @@ export class ChromaVectorStore
     });
   }
 
+  private transformChromaFilterCondition(
+    condition: FilterCondition,
+  ): ChromaFilterCondition {
+    switch (condition) {
+      case FilterCondition.AND:
+        return "$and";
+      case FilterCondition.OR:
+        return "$or";
+      default:
+        throw new Error(`Filter condition ${condition} not supported`);
+    }
+  }
+
+  private transformChromaFilterOperator(
+    operator: FilterOperator,
+  ): ChromaFilterOperator {
+    switch (operator) {
+      case FilterOperator.EQ:
+        return "$eq";
+      case FilterOperator.NE:
+        return "$ne";
+      case FilterOperator.GT:
+        return "$gt";
+      case FilterOperator.LT:
+        return "$lt";
+      case FilterOperator.GTE:
+        return "$gte";
+      case FilterOperator.LTE:
+        return "$lte";
+      case FilterOperator.IN:
+        return "$in";
+      case FilterOperator.NIN:
+        return "$nin";
+      default:
+        throw new Error(`Filter operator ${operator} not supported`);
+    }
+  }
+
+  private toChromaFilter(filters: MetadataFilters): Where {
+    const chromaFilter: Where = {};
+    const filtersList: Where[] = [];
+
+    const condition = filters.condition
+      ? this.transformChromaFilterCondition(
+          filters.condition as FilterCondition,
+        )
+      : "$and";
+
+    if (filters.filters) {
+      for (const filter of filters.filters) {
+        if (filter.operator) {
+          filtersList.push({
+            [filter.key]: {
+              [this.transformChromaFilterOperator(
+                filter.operator as FilterOperator,
+              )]: filter.value,
+            },
+          });
+        } else {
+          filtersList.push({ [filter.key]: filter.value });
+        }
+      }
+
+      if (filtersList.length === 1) {
+        return filtersList[0]!;
+      } else if (filtersList.length > 1) {
+        chromaFilter[condition] = filtersList;
+      }
+    }
+
+    return chromaFilter;
+  }
+
   async query(
     query: VectorStoreQuery,
     options?: ChromaQueryOptions,
@@ -117,49 +203,22 @@ export class ChromaVectorStore
       throw new Error("ChromaDB does not support querying by mode");
     }
 
-    // fixme: type is broken
-    let chromaWhere: any = {};
-    if (query.filters?.filters) {
-      query.filters.filters.map((filter) => {
-        const filterKey = filter.key;
-        const filterValue = filter.value;
-        if (filterKey in chromaWhere || "$or" in chromaWhere) {
-          if (!chromaWhere["$or"]) {
-            chromaWhere = {
-              $or: [
-                {
-                  ...chromaWhere,
-                },
-                {
-                  [filterKey]: filterValue,
-                },
-              ],
-            };
-          } else {
-            chromaWhere["$or"].push({
-              [filterKey]: filterValue,
-            });
-          }
-        } else {
-          chromaWhere[filterKey] = filterValue;
-        }
-      });
+    let chromaWhere: Where = {};
+    if (query.filters) {
+      chromaWhere = this.toChromaFilter(query.filters);
     }
 
     const collection = await this.getCollection();
-    const queryResponse: QueryResponse = await collection.query(<QueryParams>{
+    const queryResponse: QueryResponse = await collection.query(<
+      QueryRecordsParams
+    >{
       queryEmbeddings: query.queryEmbedding ?? undefined,
       queryTexts: query.queryStr ?? undefined,
       nResults: query.similarityTopK,
       where: Object.keys(chromaWhere).length ? chromaWhere : undefined,
       whereDocument: options?.whereDocument,
       //ChromaDB doesn't return the result embeddings by default so we need to include them
-      include: [
-        IncludeEnum.Distances,
-        IncludeEnum.Metadatas,
-        IncludeEnum.Documents,
-        IncludeEnum.Embeddings,
-      ],
+      include: ["distances", "metadatas", "documents", "embeddings"],
     });
 
     const vectorStoreQueryResult: VectorStoreQueryResult = {
