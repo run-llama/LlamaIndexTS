@@ -7,7 +7,10 @@ import { path } from "@llamaindex/env";
 import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
-import type { VectorStore, VectorStoreByType } from "../vector-store/types.js";
+import type {
+  BaseVectorStore,
+  VectorStoreByType,
+} from "../vector-store/types.js";
 import { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 import type { BaseDocumentStore } from "./docStore/types.js";
 import { SimpleIndexStore } from "./indexStore/SimpleIndexStore.js";
@@ -22,7 +25,7 @@ export interface StorageContext {
 type BuilderParams = {
   docStore: BaseDocumentStore;
   indexStore: BaseIndexStore;
-  vectorStore: VectorStore;
+  vectorStore: BaseVectorStore;
   vectorStores: VectorStoreByType;
   storeImages: boolean;
   persistDir: string;
@@ -50,7 +53,7 @@ export async function storageContextFromDefaults({
     }
     if (storeImages && !(ModalityType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = new SimpleVectorStore({
-        embedModel: new (await getImageEmbedModel())(),
+        embeddingModel: new (await getImageEmbedModel())(),
       });
     }
   } else {

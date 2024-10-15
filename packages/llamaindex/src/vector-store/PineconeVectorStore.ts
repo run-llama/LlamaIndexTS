@@ -1,11 +1,10 @@
 import {
+  BaseVectorStore,
   FilterCondition,
   FilterOperator,
-  VectorStoreBase,
-  type IEmbedModel,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -25,15 +24,12 @@ type PineconeParams = {
   chunkSize?: number;
   namespace?: string;
   textKey?: string;
-} & IEmbedModel;
+} & VectorStoreBaseParams;
 
 /**
  * Provides support for writing and querying vector data in Pinecone.
  */
-export class PineconeVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class PineconeVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
   /*
@@ -51,7 +47,7 @@ export class PineconeVectorStore
   textKey: string;
 
   constructor(params?: PineconeParams) {
-    super(params?.embedModel);
+    super(params);
     this.indexName =
       params?.indexName ?? getEnv("PINECONE_INDEX_NAME") ?? "llama";
     this.namespace = params?.namespace ?? getEnv("PINECONE_NAMESPACE") ?? "";

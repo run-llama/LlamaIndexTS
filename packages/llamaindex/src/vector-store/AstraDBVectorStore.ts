@@ -10,13 +10,12 @@ import type { BaseNode } from "@llamaindex/core/schema";
 import { MetadataMode } from "@llamaindex/core/schema";
 import { getEnv } from "@llamaindex/env";
 import {
+  BaseVectorStore,
   FilterCondition,
   FilterOperator,
-  VectorStoreBase,
-  type IEmbedModel,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -26,10 +25,7 @@ import {
   parseArrayValue,
 } from "./utils.js";
 
-export class AstraDBVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class AstraDBVectorStore extends BaseVectorStore {
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -47,9 +43,9 @@ export class AstraDBVectorStore
         endpoint: string;
         namespace?: string;
       };
-    } & Partial<IEmbedModel>,
+    } & VectorStoreBaseParams,
   ) {
-    super(init?.embedModel);
+    super(init);
     const token = init?.params?.token ?? getEnv("ASTRA_DB_APPLICATION_TOKEN");
     const endpoint = init?.params?.endpoint ?? getEnv("ASTRA_DB_API_ENDPOINT");
 

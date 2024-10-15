@@ -10,13 +10,12 @@ import {
   type WhereDocument,
 } from "chromadb";
 import {
+  BaseVectorStore,
   FilterCondition,
   FilterOperator,
-  VectorStoreBase,
   VectorStoreQueryMode,
-  type IEmbedModel,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -46,10 +45,7 @@ type ChromaFilterOperator =
   | "$in"
   | "$nin";
 
-export class ChromaVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class ChromaVectorStore extends BaseVectorStore {
   storesText: boolean = true;
   flatMetadata: boolean = true;
   textKey: string;
@@ -62,9 +58,9 @@ export class ChromaVectorStore
       collectionName: string;
       textKey?: string;
       chromaClientParams?: ChromaClientParams;
-    } & Partial<IEmbedModel>,
+    } & VectorStoreBaseParams,
   ) {
-    super(init.embedModel);
+    super(init);
     this.collectionName = init.collectionName;
     this.chromaClient = new ChromaClient(init.chromaClientParams);
     this.textKey = init.textKey ?? DEFAULT_TEXT_KEY;

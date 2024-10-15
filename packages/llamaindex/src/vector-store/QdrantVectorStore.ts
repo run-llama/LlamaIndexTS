@@ -1,11 +1,10 @@
 import type { BaseNode } from "@llamaindex/core/schema";
 import {
+  BaseVectorStore,
   FilterCondition,
   FilterOperator,
-  VectorStoreBase,
-  type IEmbedModel,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -29,7 +28,7 @@ type QdrantParams = {
   url?: string;
   apiKey?: string;
   batchSize?: number;
-} & Partial<IEmbedModel>;
+} & VectorStoreBaseParams;
 
 type QuerySearchResult = {
   id: string;
@@ -42,10 +41,7 @@ type QuerySearchResult = {
 /**
  * Qdrant vector store.
  */
-export class QdrantVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class QdrantVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
   batchSize: number;
@@ -69,9 +65,9 @@ export class QdrantVectorStore
     url,
     apiKey,
     batchSize,
-    embedModel,
+    ...init
   }: QdrantParams) {
-    super(embedModel);
+    super(init);
     if (!client && !url) {
       if (!url) {
         throw new Error("QdrantVectorStore requires url and collectionName");

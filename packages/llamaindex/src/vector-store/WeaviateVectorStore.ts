@@ -11,12 +11,11 @@ import weaviate, {
 import { getEnv } from "@llamaindex/env";
 import type { BaseHybridOptions } from "weaviate-client";
 import {
-  VectorStoreBase,
+  BaseVectorStore,
   VectorStoreQueryMode,
-  type IEmbedModel,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -119,10 +118,7 @@ const toWeaviateFilter = (
   return Filters[condition](...filtersList);
 };
 
-export class WeaviateVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class WeaviateVectorStore extends BaseVectorStore {
   public storesText: boolean = true;
   private flatMetadata: boolean = true;
 
@@ -137,7 +133,7 @@ export class WeaviateVectorStore
   private metadataKey: string;
 
   constructor(
-    init?: Partial<IEmbedModel> & {
+    init?: VectorStoreBaseParams & {
       weaviateClient?: WeaviateClient;
       cloudOptions?: {
         clusterURL?: string;
@@ -150,7 +146,7 @@ export class WeaviateVectorStore
       embeddingKey?: string;
     },
   ) {
-    super(init?.embedModel);
+    super(init);
 
     if (init?.weaviateClient) {
       // Use the provided client
