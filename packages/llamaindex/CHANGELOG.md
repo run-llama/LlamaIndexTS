@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.6.22
+
+### Patch Changes
+
+- 5729bd9: Fix LlamaCloud API calls for ensuring an index and for file uploads
+
 ## 0.6.21
 
 ### Patch Changes

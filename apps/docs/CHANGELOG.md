@@ -1,5 +1,12 @@
 # docs
 
+## 0.0.91
+
+### Patch Changes
+
+- Updated dependencies [5729bd9]
+  - llamaindex@0.6.22
+
 ## 0.0.90
 
 ### Patch Changes
