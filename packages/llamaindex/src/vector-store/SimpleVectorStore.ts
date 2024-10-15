@@ -5,12 +5,12 @@ import { fs, path } from "@llamaindex/env";
 import { getTopKEmbeddings, getTopKMMREmbeddings } from "../internal/utils.js";
 import { exists } from "../storage/FileSystem.js";
 import {
+  BaseVectorStore,
   FilterOperator,
-  VectorStoreBase,
   VectorStoreQueryMode,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -120,19 +120,17 @@ class SimpleVectorStoreData {
   metadataDict: Record<string, MetadataValue> = {};
 }
 
-export class SimpleVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class SimpleVectorStore extends BaseVectorStore {
   storesText: boolean = false;
   private data: SimpleVectorStoreData;
   private persistPath: string | undefined;
 
-  constructor(init?: {
-    data?: SimpleVectorStoreData | undefined;
-    embedModel?: BaseEmbedding | undefined;
-  }) {
-    super(init?.embedModel);
+  constructor(
+    init?: {
+      data?: SimpleVectorStoreData | undefined;
+    } & VectorStoreBaseParams,
+  ) {
+    super(init);
     this.data = init?.data || new SimpleVectorStoreData();
   }
 
@@ -144,7 +142,7 @@ export class SimpleVectorStore
     return await SimpleVectorStore.fromPersistPath(persistPath, embedModel);
   }
 
-  get client(): any {
+  client(): any {
     return null;
   }
 
@@ -272,7 +270,7 @@ export class SimpleVectorStore
 
   static async fromPersistPath(
     persistPath: string,
-    embedModel?: BaseEmbedding,
+    embeddingModel?: BaseEmbedding,
   ): Promise<SimpleVectorStore> {
     const dirPath = path.dirname(persistPath);
     if (!(await exists(dirPath))) {
@@ -298,20 +296,20 @@ export class SimpleVectorStore
     data.embeddingDict = dataDict.embeddingDict ?? {};
     data.textIdToRefDocId = dataDict.textIdToRefDocId ?? {};
     data.metadataDict = dataDict.metadataDict ?? {};
-    const store = new SimpleVectorStore({ data, embedModel });
+    const store = new SimpleVectorStore({ data, embeddingModel });
     store.persistPath = persistPath;
     return store;
   }
 
   static fromDict(
     saveDict: SimpleVectorStoreData,
-    embedModel?: BaseEmbedding,
+    embeddingModel?: BaseEmbedding,
   ): SimpleVectorStore {
     const data = new SimpleVectorStoreData();
     data.embeddingDict = saveDict.embeddingDict;
     data.textIdToRefDocId = saveDict.textIdToRefDocId;
     data.metadataDict = saveDict.metadataDict;
-    return new SimpleVectorStore({ data, embedModel });
+    return new SimpleVectorStore({ data, embeddingModel });
   }
 
   toDict(): SimpleVectorStoreData {

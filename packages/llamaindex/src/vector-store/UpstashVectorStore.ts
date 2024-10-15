@@ -1,9 +1,8 @@
 import {
-  VectorStoreBase,
-  type IEmbedModel,
+  BaseVectorStore,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -18,15 +17,12 @@ type UpstashParams = {
   token?: string;
   endpoint?: string;
   maxBatchSize?: number;
-} & IEmbedModel;
+} & VectorStoreBaseParams;
 
 /**
  * Provides support for writing and querying vector data in Upstash.
  */
-export class UpstashVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class UpstashVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
   private db: Index;
@@ -45,7 +41,7 @@ export class UpstashVectorStore
    * ```
    */
   constructor(params?: UpstashParams) {
-    super(params?.embedModel);
+    super(params);
     this.namespace = params?.namespace ?? "";
     this.maxBatchSize = params?.maxBatchSize ?? 1000;
     const token = params?.token ?? getEnv("UPSTASH_VECTOR_REST_TOKEN");

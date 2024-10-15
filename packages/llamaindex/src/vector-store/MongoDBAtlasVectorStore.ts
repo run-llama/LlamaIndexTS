@@ -5,12 +5,12 @@ import { getEnv } from "@llamaindex/env";
 import type { BulkWriteOptions, Collection } from "mongodb";
 import { MongoClient } from "mongodb";
 import {
+  BaseVectorStore,
   FilterCondition,
-  VectorStoreBase,
   type FilterOperator,
   type MetadataFilter,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -67,10 +67,7 @@ function toMongoDBFilter(filters?: MetadataFilters): Record<string, any> {
  * Vector store that uses MongoDB Atlas for storage and vector search.
  * This store uses the $vectorSearch aggregation stage to perform vector similarity search.
  */
-export class MongoDBAtlasVectorSearch
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class MongoDBAtlasVectorSearch extends BaseVectorStore {
   storesText: boolean = true;
   flatMetadata: boolean = true;
 
@@ -147,9 +144,9 @@ export class MongoDBAtlasVectorSearch
       autoCreateIndex?: boolean;
       indexedMetadataFields?: string[];
       embeddingDefinition?: Record<string, unknown>;
-    },
+    } & VectorStoreBaseParams,
   ) {
-    super(init.embedModel);
+    super(init);
     if (init.mongodbClient) {
       this.mongodbClient = init.mongodbClient;
     } else {
@@ -274,7 +271,7 @@ export class MongoDBAtlasVectorSearch
     );
   }
 
-  get client(): any {
+  client(): any {
     return this.mongodbClient;
   }
 
