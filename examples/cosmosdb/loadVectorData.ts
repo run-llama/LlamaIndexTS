@@ -76,7 +76,7 @@ async function loadVectorData() {
 
   // load objects from cosmos and convert them into LlamaIndex Document objects
   const documents = await reader.loadData(simpleCosmosReaderConfig);
-  // create Atlas as a vector store
+  // create Azure CosmosDB as a vector store
   const vectorStore = new AzureCosmosDBNoSqlVectorStore({
     client: cosmosClient,
     databaseName,
