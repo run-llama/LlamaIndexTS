@@ -41,7 +41,7 @@ export class LLamaCloudFileService {
   ) {
     initService();
     const { data: file } = await FilesService.uploadFileApiV1FilesPost({
-      path: { project_id: projectId },
+      query: { project_id: projectId },
       body: {
         upload_file: uploadFile,
       },

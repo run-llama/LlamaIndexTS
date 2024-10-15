@@ -378,7 +378,7 @@ export class LlamaCloudIndex {
 
       const { data: pipeline } =
         await PipelinesService.upsertPipelineApiV1PipelinesPut({
-          path: {
+          query: {
             project_id: projectId,
           },
           body: {
