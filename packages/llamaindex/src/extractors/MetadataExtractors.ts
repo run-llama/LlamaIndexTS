@@ -8,6 +8,7 @@ import {
   defaultSummaryExtractorPromptTemplate,
   defaultTitleCombinePromptTemplate,
   defaultTitleExtractorPromptTemplate,
+  type DefaultQuestionAnswerPromptTemplate,
 } from "./prompts.js";
 import { BaseExtractor } from "./types.js";
 
@@ -247,7 +248,12 @@ export class TitleExtractor extends BaseExtractor {
 type QuestionAnswerExtractArgs = {
   llm?: LLM;
   questions?: number;
-  promptTemplate?: string;
+  promptTemplate?:
+    | (({
+        contextStr,
+        numQuestions,
+      }: DefaultQuestionAnswerPromptTemplate) => string)
+    | undefined;
   embeddingOnly?: boolean;
 };
 
@@ -276,7 +282,12 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
    * The prompt template to use for the question extractor.
    * @type {string}
    */
-  promptTemplate: string;
+  promptTemplate?:
+    | (({
+        contextStr,
+        numQuestions,
+      }: DefaultQuestionAnswerPromptTemplate) => string)
+    | undefined;
 
   /**
    * Wheter to use metadata for embeddings only
@@ -289,7 +300,7 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
    * Constructor for the QuestionsAnsweredExtractor class.
    * @param {LLM} llm LLM instance.
    * @param {number} questions Number of questions to generate.
-   * @param {string} promptTemplate The prompt template to use for the question extractor.
+   * @param {function} promptTemplate The prompt template to use for the question extractor. It takes an object with `contextStr` and `numQuestions` as keys, and returns a string
    * @param {boolean} embeddingOnly Wheter to use metadata for embeddings only.
    */
   constructor(options?: QuestionAnswerExtractArgs) {
@@ -300,12 +311,7 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
 
     this.llm = options?.llm ?? new OpenAI();
     this.questions = options?.questions ?? 5;
-    this.promptTemplate =
-      options?.promptTemplate ??
-      defaultQuestionAnswerPromptTemplate({
-        numQuestions: this.questions,
-        contextStr: "",
-      });
+    this.promptTemplate = options?.promptTemplate;
     this.embeddingOnly = options?.embeddingOnly ?? false;
   }
 
@@ -323,10 +329,12 @@ export class QuestionsAnsweredExtractor extends BaseExtractor {
 
     const contextStr = node.getContent(this.metadataMode);
 
-    const prompt = defaultQuestionAnswerPromptTemplate({
-      contextStr,
-      numQuestions: this.questions,
-    });
+    const prompt = this.promptTemplate
+      ? this.promptTemplate({ contextStr, numQuestions: this.questions })
+      : defaultQuestionAnswerPromptTemplate({
+          contextStr,
+          numQuestions: this.questions,
+        });
 
     const questions = await this.llm.complete({
       prompt,
