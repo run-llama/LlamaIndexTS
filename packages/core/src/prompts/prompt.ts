@@ -15,6 +15,7 @@ export type CondenseQuestionPrompt = PromptTemplate<
 export type ContextSystemPrompt = PromptTemplate<["context"]>;
 export type KeywordExtractPrompt = PromptTemplate<["context"]>;
 export type QueryKeywordExtractPrompt = PromptTemplate<["question"]>;
+export type QuestionExtractPrompt = PromptTemplate<["context", "numQuestions"]>;
 
 export const defaultTextQAPrompt: TextQAPrompt = new PromptTemplate({
   templateVars: ["context", "query"],
@@ -252,4 +253,18 @@ export const defaultQueryKeywordExtractPrompt = new PromptTemplate({
 )`,
 }).partialFormat({
   maxKeywords: "10",
+});
+
+export const defaultQuestionExtractPrompt = new PromptTemplate({
+  templateVars: ["numQuestions", "context"],
+  template: `(
+  "Given the contextual informations below, generate {numQuestions} questions this context can provides specific answers to which are unlikely to be found else where. Higher-level summaries of surrounding context may be provided as well. "
+  "Try using these summaries to generate better questions that this context can answer."
+  "---------------------"
+  "{context}"
+  "---------------------"
+  "Provide questions in the following format: 'QUESTIONS: <questions>'"
+)`,
+}).partialFormat({
+  numQuestions: "5",
 });

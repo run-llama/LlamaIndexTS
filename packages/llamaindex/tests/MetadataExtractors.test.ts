@@ -114,9 +114,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     const questionsAnsweredExtractor = new QuestionsAnsweredExtractor({
       llm: serviceContext.llm,
       questions: 5,
-      promptTemplate: ({ contextStr, numQuestions }) => {
-        return `This is a custom prompt template for "${contextStr}" with ${numQuestions} questions`;
-      },
+      promptTemplate: `This is a custom prompt template for {context} with {numQuestions} questions`,
     });
 
     await questionsAnsweredExtractor.processNodes(nodes);
@@ -124,7 +122,7 @@ describe("[MetadataExtractor]: Extractors should populate the metadata", () => {
     expect(llmCompleteSpy).toHaveBeenCalled();
 
     // Build the expected prompt
-    const expectedPrompt = `This is a custom prompt template for "${DEFAULT_LLM_TEXT_OUTPUT}" with 5 questions`;
+    const expectedPrompt = `This is a custom prompt template for ${DEFAULT_LLM_TEXT_OUTPUT} with 5 questions`;
 
     // Get the actual prompt used in llm.complete
     const actualPrompt = llmCompleteSpy.mock?.calls?.[0]?.[0];
