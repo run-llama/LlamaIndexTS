@@ -56,10 +56,14 @@ export enum GEMINI_MODEL {
   GEMINI_PRO = "gemini-pro",
   GEMINI_PRO_VISION = "gemini-pro-vision",
   GEMINI_PRO_LATEST = "gemini-1.5-pro-latest",
+  GEMINI_PRO_FLASH_LATEST = "gemini-1.5-flash-latest",
   GEMINI_PRO_1_5_PRO_PREVIEW = "gemini-1.5-pro-preview-0514",
   GEMINI_PRO_1_5_FLASH_PREVIEW = "gemini-1.5-flash-preview-0514",
   GEMINI_PRO_1_5 = "gemini-1.5-pro-001",
   GEMINI_PRO_1_5_FLASH = "gemini-1.5-flash-001",
+  // Note: should be switched to -latest suffix when google supports it
+  GEMINI_PRO_1_5_LATEST = "gemini-1.5-pro-002",
+  GEMINI_PRO_1_5_FLASH_LATEST = "gemini-1.5-flash-002",
 }
 
 export interface GeminiModelInfo {
