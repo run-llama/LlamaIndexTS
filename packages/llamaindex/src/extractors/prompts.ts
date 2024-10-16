@@ -7,11 +7,6 @@ export interface DefaultKeywordExtractorPromptTemplate
   keywords: number;
 }
 
-export interface DefaultQuestionAnswerPromptTemplate
-  extends DefaultPromptTemplate {
-  numQuestions: number;
-}
-
 export interface DefaultNodeTextTemplate {
   metadataStr: string;
   content: string;
@@ -40,16 +35,6 @@ export const defaultTitleCombinePromptTemplate = (
 ) => `${contextStr} 
 Based on the above candidate titles and contents, what is the comprehensive title for this document? 
 Title: `;
-
-export const defaultQuestionAnswerPromptTemplate = (
-  { contextStr = "", numQuestions = 5 }: DefaultQuestionAnswerPromptTemplate = {
-    contextStr: "",
-    numQuestions: 5,
-  },
-) => `${contextStr}
-Given the contextual informations, generate ${numQuestions} questions this context can provides specific answers to which are unlikely to be found else where. Higher-level summaries of surrounding context may be provideds as well. 
-Try using these summaries to generate better questions that this context can answer.
-`;
 
 export const defaultSummaryExtractorPromptTemplate = (
   { contextStr = "" }: DefaultPromptTemplate = {
