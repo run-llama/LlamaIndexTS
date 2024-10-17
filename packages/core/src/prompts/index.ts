@@ -12,12 +12,15 @@ export {
   defaultCondenseQuestionPrompt,
   defaultContextSystemPrompt,
   defaultKeywordExtractPrompt,
+  defaultNodeTextTemplate,
   defaultQueryKeywordExtractPrompt,
   defaultQuestionExtractPrompt,
   defaultRefinePrompt,
   defaultSubQuestionPrompt,
   defaultSummaryPrompt,
   defaultTextQAPrompt,
+  defaultTitleCombinePromptTemplate,
+  defaultTitleExtractorPromptTemplate,
   defaultTreeSummarizePrompt,
 } from "./prompt";
 export type {
@@ -31,5 +34,7 @@ export type {
   SubQuestionPrompt,
   SummaryPrompt,
   TextQAPrompt,
+  TitleCombinePrompt,
+  TitleExtractorPrompt,
   TreeSummarizePrompt,
 } from "./prompt";

@@ -13,9 +13,12 @@ export type CondenseQuestionPrompt = PromptTemplate<
   ["chatHistory", "question"]
 >;
 export type ContextSystemPrompt = PromptTemplate<["context"]>;
-export type KeywordExtractPrompt = PromptTemplate<["context"]>;
+export type KeywordExtractPrompt = PromptTemplate<["context", "maxKeywords"]>;
 export type QueryKeywordExtractPrompt = PromptTemplate<["question"]>;
 export type QuestionExtractPrompt = PromptTemplate<["context", "numQuestions"]>;
+export type TitleExtractorPrompt = PromptTemplate<["context"]>;
+export type TitleCombinePrompt = PromptTemplate<["context"]>;
+export type KeywordExtractorPrompt = PromptTemplate<["context", "numKeywords"]>;
 
 export const defaultTextQAPrompt: TextQAPrompt = new PromptTemplate({
   templateVars: ["context", "query"],
@@ -267,4 +270,42 @@ export const defaultQuestionExtractPrompt = new PromptTemplate({
 )`,
 }).partialFormat({
   numQuestions: "5",
+});
+
+export const defaultTitleExtractorPromptTemplate = new PromptTemplate({
+  templateVars: ["context"],
+  template: `{context}
+Give a title that summarizes all of the unique entities, titles or themes found in the context. 
+Title: `,
+});
+
+export const defaultTitleCombinePromptTemplate = new PromptTemplate({
+  templateVars: ["context"],
+  template: `{context} 
+Based on the above candidate titles and contents, what is the comprehensive title for this document? 
+Title: `,
+});
+
+export const defaultKeywordExtractorPromptTemplate = new PromptTemplate({
+  templateVars: ["context", "numKeywords"],
+  template: `{context}
+Give {numKeywords} unique keywords for this document. 
+Format as comma separated. 
+Keywords: `,
+}).partialFormat({
+  keywordCount: "5",
+});
+
+export const defaultNodeTextTemplate = new PromptTemplate({
+  templateVars: ["metadataStr", "content"],
+  template: `[Excerpt from document]
+{metadataStr}
+Excerpt:
+-----
+{content}
+-----
+`,
+}).partialFormat({
+  metadataStr: "",
+  content: "",
 });
