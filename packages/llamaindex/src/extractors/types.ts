@@ -1,10 +1,10 @@
+import { defaultNodeTextTemplate } from "@llamaindex/core/prompts";
 import {
   BaseNode,
   MetadataMode,
   TextNode,
   TransformComponent,
 } from "@llamaindex/core/schema";
-import { defaultNodeTextTemplate } from "./prompts.js";
 
 /*
  * Abstract class for all extractors.
@@ -71,7 +71,7 @@ export abstract class BaseExtractor extends TransformComponent {
         if (newNodes[idx] instanceof TextNode) {
           newNodes[idx] = new TextNode({
             ...newNodes[idx],
-            textTemplate: defaultNodeTextTemplate(),
+            textTemplate: defaultNodeTextTemplate.format(),
           });
         }
       }
