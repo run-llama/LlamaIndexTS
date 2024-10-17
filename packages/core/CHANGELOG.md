@@ -1,5 +1,12 @@
 # @llamaindex/core
 
+## 0.3.0
+
+### Minor Changes
+
+- 1364e8e: update metadata extractors to use PromptTemplate
+- 96fc69c: add defaultQuestionExtractPrompt
+
 ## 0.2.12
 
 ### Patch Changes

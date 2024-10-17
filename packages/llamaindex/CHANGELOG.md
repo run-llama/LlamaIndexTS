@@ -1,5 +1,23 @@
 # llamaindex
 
+## 0.7.0
+
+### Minor Changes
+
+- 1364e8e: update metadata extractors to use PromptTemplate
+- 96fc69c: Correct initialization of QuestionsAnsweredExtractor so that it uses the promptTemplate arg when passed in
+
+### Patch Changes
+
+- 3b7736f: feat: added gemini 002 support
+- Updated dependencies [1364e8e]
+- Updated dependencies [96fc69c]
+  - @llamaindex/core@0.3.0
+  - @llamaindex/cloud@1.0.0
+  - @llamaindex/ollama@0.0.8
+  - @llamaindex/openai@0.1.17
+  - @llamaindex/groq@0.0.16
+
 ## 0.6.22
 
 ### Patch Changes

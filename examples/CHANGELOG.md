@@ -1,5 +1,16 @@
 # examples
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [1364e8e]
+- Updated dependencies [96fc69c]
+- Updated dependencies [3b7736f]
+- Updated dependencies [96fc69c]
+  - llamaindex@0.7.0
+  - @llamaindex/core@0.3.0
+
 ## 0.0.8
 
 ### Patch Changes
