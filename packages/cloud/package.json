@@ -58,8 +58,5 @@
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*"
-  },
-  "dependencies": {
-    "magic-bytes.js": "^1.10.0"
   }
 }
