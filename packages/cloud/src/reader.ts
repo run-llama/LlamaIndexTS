@@ -1,7 +1,6 @@
 import { type Client, createClient, createConfig } from "@hey-api/client-fetch";
 import { Document, FileReader } from "@llamaindex/core/schema";
 import { fs, getEnv, path } from "@llamaindex/env";
-import { filetypeinfo } from "magic-bytes.js";
 import {
   type Body_upload_file_api_v1_parsing_upload_post,
   type ParserLanguages,
@@ -12,99 +11,6 @@ import { sleep } from "./utils";
 export type Language = ParserLanguages;
 
 export type ResultType = "text" | "markdown" | "json";
-
-const SUPPORT_FILE_EXT: string[] = [
-  ".pdf",
-  // document and presentations
-  ".602",
-  ".abw",
-  ".cgm",
-  ".cwk",
-  ".doc",
-  ".docx",
-  ".docm",
-  ".dot",
-  ".dotm",
-  ".hwp",
-  ".key",
-  ".lwp",
-  ".mw",
-  ".mcw",
-  ".pages",
-  ".pbd",
-  ".ppt",
-  ".pptm",
-  ".pptx",
-  ".pot",
-  ".potm",
-  ".potx",
-  ".rtf",
-  ".sda",
-  ".sdd",
-  ".sdp",
-  ".sdw",
-  ".sgl",
-  ".sti",
-  ".sxi",
-  ".sxw",
-  ".stw",
-  ".sxg",
-  ".txt",
-  ".uof",
-  ".uop",
-  ".uot",
-  ".vor",
-  ".wpd",
-  ".wps",
-  ".xml",
-  ".zabw",
-  ".epub",
-  // images
-  ".jpg",
-  ".jpeg",
-  ".png",
-  ".gif",
-  ".bmp",
-  ".svg",
-  ".tiff",
-  ".webp",
-  // web
-  ".htm",
-  ".html",
-  // spreadsheets
-  ".xlsx",
-  ".xls",
-  ".xlsm",
-  ".xlsb",
-  ".xlw",
-  ".csv",
-  ".dif",
-  ".sylk",
-  ".slk",
-  ".prn",
-  ".numbers",
-  ".et",
-  ".ods",
-  ".fods",
-  ".uos1",
-  ".uos2",
-  ".dbf",
-  ".wk1",
-  ".wk2",
-  ".wk3",
-  ".wk4",
-  ".wks",
-  ".123",
-  ".wq1",
-  ".wq2",
-  ".wb1",
-  ".wb2",
-  ".wb3",
-  ".qpw",
-  ".xlr",
-  ".eth",
-  ".tsv",
-];
 
 //todo: should move into @llamaindex/env
 type WriteStream = {
@@ -239,17 +145,12 @@ export class LlamaParseReader extends FileReader {
 
   // Create a job for the LlamaParse API
   private async createJob(data: Uint8Array): Promise<string> {
-    // Load data, set the mime type
-    const { mime } = await LlamaParseReader.getMimeType(data);
-
     if (this.verbose) {
       console.log("Started uploading the file");
     }
 
     const body = {
-      file: new Blob([data], {
-        type: mime,
-      }),
+      file: new Blob([data]),
       language: this.language,
       parsing_instruction: this.parsingInstruction,
       skip_diagonal_text: this.skipDiagonalText,
@@ -563,25 +464,5 @@ export class LlamaParseReader extends FileReader {
           text: docChunk,
         }),
     );
-  }
-
-  static async getMimeType(
-    data: Uint8Array,
-  ): Promise<{ mime: string; extension: string }> {
-    const typeinfos = filetypeinfo(data);
-    // find the first type info that matches the supported MIME types
-    // It could be happened that docx file is recognized as zip file, so we need to check the mime type
-    const info = typeinfos.find((info) => {
-      if (info.extension && SUPPORT_FILE_EXT.includes(`.${info.extension}`)) {
-        return info;
-      }
-    });
-    if (!info || !info.mime || !info.extension) {
-      const ext = SUPPORT_FILE_EXT.join(", ");
-      throw new Error(
-        `File has type which does not match supported MIME Types. Supported formats include: ${ext}`,
-      );
-    }
-    return { mime: info.mime, extension: info.extension };
   }
 }
