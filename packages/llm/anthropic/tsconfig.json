@@ -4,12 +4,13 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "lib": ["DOM", "ES2022"]
   },
   "include": ["./src"],
   "references": [
     {
-      "path": "../openai/tsconfig.json"
+      "path": "../../core/tsconfig.json"
     },
     {
       "path": "../../env/tsconfig.json"

@@ -9,7 +9,7 @@
   "include": ["./src"],
   "references": [
     {
-      "path": "../openai/tsconfig.json"
+      "path": "../../core/tsconfig.json"
     },
     {
       "path": "../../env/tsconfig.json"

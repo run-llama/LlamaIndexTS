@@ -536,12 +536,18 @@ importers:
       '@huggingface/inference':
         specifier: ^2.8.0
         version: 2.8.0
+      '@llamaindex/anthropic':
+        specifier: workspace:*
+        version: link:../llm/anthropic
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../cloud
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../core
+      '@llamaindex/deepinfra':
+        specifier: workspace:*
+        version: link:../llm/deepinfra
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
@@ -554,6 +560,9 @@ importers:
       '@llamaindex/openai':
         specifier: workspace:*
         version: link:../llm/openai
+      '@llamaindex/portkey-ai':
+        specifier: workspace:*
+        version: link:../llm/portkey-ai
       '@mistralai/mistralai':
         specifier: ^1.0.4
         version: 1.0.4(zod@3.23.8)
@@ -632,9 +641,6 @@ importers:
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
-      portkey-ai:
-        specifier: 0.1.16
-        version: 0.1.16
       rake-modified:
         specifier: ^1.0.8
         version: 1.0.8
@@ -922,6 +928,41 @@ importers:
         specifier: ^2.0.5
         version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.5.5)(happy-dom@15.7.4)(msw@2.4.8(typescript@5.6.2))(terser@5.32.0)
 
+  packages/llm/anthropic:
+    dependencies:
+      '@anthropic-ai/sdk':
+        specifier: 0.27.1
+        version: 0.27.1(encoding@0.1.13)
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      remeda:
+        specifier: ^2.12.0
+        version: 2.12.0
+    devDependencies:
+      bunchee:
+        specifier: 5.3.2
+        version: 5.3.2(typescript@5.6.2)
+
+  packages/llm/deepinfra:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+    devDependencies:
+      bunchee:
+        specifier: 5.3.2
+        version: 5.3.2(typescript@5.6.2)
+
   packages/llm/groq:
     dependencies:
       '@llamaindex/env':
@@ -968,6 +1009,25 @@ importers:
       openai:
         specifier: ^4.60.0
         version: 4.60.1(encoding@0.1.13)(zod@3.23.8)
+      remeda:
+        specifier: ^2.12.0
+        version: 2.12.0
+    devDependencies:
+      bunchee:
+        specifier: 5.3.2
+        version: 5.3.2(typescript@5.6.2)
+
+  packages/llm/portkey-ai:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      portkey-ai:
+        specifier: 0.1.16
+        version: 0.1.16
       remeda:
         specifier: ^2.12.0
         version: 2.12.0
@@ -17139,7 +17199,7 @@ snapshots:
 
   '@types/node-fetch@2.6.11':
     dependencies:
-      '@types/node': 22.5.4
+      '@types/node': 22.5.5
       form-data: 4.0.0
 
   '@types/node-forge@1.3.11':
@@ -19581,7 +19641,7 @@ snapshots:
   eslint-import-resolver-node@0.3.9:
     dependencies:
       debug: 3.2.7
-      is-core-module: '@nolyfill/is-core-module@1.0.39'
+      is-core-module: 2.15.1
       resolve: 1.22.8
     transitivePeerDependencies:
       - supports-color

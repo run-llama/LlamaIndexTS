@@ -4,7 +4,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "lib": ["DOM", "ES2022"]
   },
   "include": ["./src"],
   "references": [

@@ -27,6 +27,15 @@
       "path": "./packages/community/tsconfig.json"
     },
     {
+      "path": "./packages/llm/anthropic/tsconfig.json"
+    },
+    {
+      "path": "./packages/llm/deepinfra/tsconfig.json"
+    },
+    {
+      "path": "./packages/llm/portkey-ai/tsconfig.json"
+    },
+    {
       "path": "./packages/llm/openai/tsconfig.json"
     },
     {
