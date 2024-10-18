@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
-import type { Context } from "../src/workflow/context.js";
+import type { Context } from "@llamaindex/core/workflow";
 import {
   StartEvent,
   StopEvent,
+  Workflow,
   WorkflowEvent,
-} from "../src/workflow/events.js";
-import { Workflow } from "../src/workflow/workflow.js";
+} from "@llamaindex/core/workflow";
+import { beforeEach, describe, expect, test, vi, type Mocked } from "vitest";
 
 // mock OpenAI class for testing
 class OpenAI {
@@ -13,9 +13,10 @@ class OpenAI {
 }
 
 class JokeEvent extends WorkflowEvent<{ joke: string }> {}
+
 class AnalysisEvent extends WorkflowEvent<{ analysis: string }> {}
 
-describe("Workflow", () => {
+describe("workflow basic", () => {
   let mockLLM: Mocked<OpenAI>;
   let generateJoke: Mocked<any>;
   let critiqueJoke: Mocked<any>;
@@ -54,16 +55,6 @@ describe("Workflow", () => {
     });
   });
 
-  test("addStep", () => {
-    const jokeFlow = new Workflow({ verbose: true });
-
-    jokeFlow.addStep(StartEvent, generateJoke);
-    jokeFlow.addStep(JokeEvent, critiqueJoke);
-
-    expect(jokeFlow.hasStep(generateJoke)).toBe(true);
-    expect(jokeFlow.hasStep(critiqueJoke)).toBe(true);
-  });
-
   test("run workflow", async () => {
     const jokeFlow = new Workflow({ verbose: true });
 
@@ -86,7 +77,7 @@ describe("Workflow", () => {
     jokeFlow.addStep(JokeEvent, critiqueJoke);
 
     const run = jokeFlow.run("pirates");
-    const event = await jokeFlow.streamEvents().next(); // get one event to avoid testing timeout
+    const event = await run[Symbol.asyncIterator]().next(); // get one event to avoid testing timeout
     const result = await run;
 
     expect(generateJoke).toHaveBeenCalledTimes(1);
@@ -106,31 +97,32 @@ describe("Workflow", () => {
       return new StopEvent({ result: "We waited 2 seconds" });
     };
 
-    jokeFlow.addStep(StartEvent, longRunning);
+    jokeFlow.addStep(StartEvent<string>, longRunning);
     const run = jokeFlow.run("Let's start");
     await expect(run).rejects.toThrow(
       `Operation timed out after ${TIMEOUT} seconds`,
     );
   });
 
-  test("workflow validation", async () => {
-    const jokeFlow = new Workflow({ verbose: true, validate: true });
-    jokeFlow.addStep(StartEvent, generateJoke, { outputs: StopEvent });
-    jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
-    const run = jokeFlow.run("pirates");
-    await expect(run).rejects.toThrow(
-      "The following events are consumed but never produced: JokeEvent",
-    );
-  });
+  // // fixme: design a better API for validation
+  // test("workflow validation", async () => {
+  //   const jokeFlow = new Workflow({ verbose: true, validate: true });
+  //   jokeFlow.addStep(StartEvent, generateJoke, { outputs: StopEvent });
+  //   jokeFlow.addStep(JokeEvent, critiqueJoke, { outputs: StopEvent });
+  //   expect(() => {
+  //     jokeFlow.run("pirates");
+  //   }).toThrow(
+  //     "The following events are consumed but never produced: JokeEvent",
+  //   );
+  // });
 
+  // fixme: we could handle collectEvents natively instead of user calling it
   test("collectEvents", async () => {
-    let collectedEvents: WorkflowEvent[] | null = null;
     const jokeFlow = new Workflow({ verbose: true });
 
     jokeFlow.addStep(StartEvent, generateJoke);
     jokeFlow.addStep(JokeEvent, analyzeJoke);
-    jokeFlow.addStep([AnalysisEvent], async (context, ev) => {
-      collectedEvents = context.collectEvents(ev, [AnalysisEvent]);
+    jokeFlow.addStep([AnalysisEvent], async () => {
       return new StopEvent({ result: "Report generated" });
     });
 
@@ -138,11 +130,51 @@ describe("Workflow", () => {
     expect(generateJoke).toHaveBeenCalledTimes(1);
     expect(analyzeJoke).toHaveBeenCalledTimes(1);
     expect(result.data.result).toBe("Report generated");
-    expect(collectedEvents).toHaveLength(1);
+  });
+
+  test("run workflow with multiple in-degree", async () => {
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent, async (context) => {
+      context.sendEvent(
+        new AnalysisEvent({
+          analysis: "an analysis",
+        }),
+      );
+      return new JokeEvent({
+        joke: "a joke",
+      });
+    });
+    jokeFlow.addStep([JokeEvent, AnalysisEvent], async (context, ...events) => {
+      return new StopEvent({
+        result: "The analysis is insightful and helpful.",
+      });
+    });
+
+    const result = await jokeFlow.run("pirates");
+    expect(result.data.result).toBe("The analysis is insightful and helpful.");
+  });
+
+  test("run invalid workflow", async () => {
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent, generateJoke);
+    jokeFlow.addStep(JokeEvent, analyzeJoke);
+    jokeFlow.addStep([JokeEvent], async (context, ...events) => {
+      return new StopEvent({
+        result: "The analysis is insightful and helpful.",
+      });
+    });
+    const consoleSpy = vi.spyOn(console, "warn");
+    expect(consoleSpy).toHaveBeenCalledTimes(0);
+    const result = await jokeFlow.run("pirates");
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
+    consoleSpy.mockRestore();
+    expect(result.data.result).toBe("The analysis is insightful and helpful.");
   });
 
   test("run workflow with object-based StartEvent and StopEvent", async () => {
-    const objectFlow = new Workflow({ verbose: true });
+    const objectFlow = new Workflow<Person>({ verbose: true });
 
     type Person = { name: string; age: number };
 
@@ -216,8 +248,14 @@ describe("Workflow", () => {
       return new Step2Event({ result: "Step 2 completed" });
     });
 
-    concurrentCyclicFlow.addStep([StartEvent, Step1Event], step1);
-    concurrentCyclicFlow.addStep([StartEvent, Step2Event], step2);
+    concurrentCyclicFlow.addStep(
+      WorkflowEvent.or(StartEvent, Step1Event),
+      step1,
+    );
+    concurrentCyclicFlow.addStep(
+      WorkflowEvent.or(StartEvent, Step2Event),
+      step2,
+    );
 
     const startTime = new Date();
     const result = await concurrentCyclicFlow.run("start");
@@ -229,5 +267,244 @@ describe("Workflow", () => {
     expect(duration).toBeGreaterThan(500); // At least 5 * 100ms for step2
     expect(duration).toBeLessThan(1000); // Less than 1 second
     expect(result.data.result).toBe("Step 2 completed 5 times");
+  });
+
+  test("sendEvent", async () => {
+    const myWorkflow = new Workflow({ verbose: true });
+
+    class QueryEvent extends WorkflowEvent<{ query: string }> {}
+    class QueryResultEvent extends WorkflowEvent<{ result: string }> {}
+    class PendingEvent extends WorkflowEvent {}
+
+    myWorkflow.addStep(StartEvent, async (context: Context, events) => {
+      context.sendEvent(new QueryEvent({ query: "something" }));
+      return new PendingEvent({});
+    });
+
+    myWorkflow.addStep(QueryEvent, async (context, event) => {
+      return new QueryResultEvent({ result: "query result" });
+    });
+
+    myWorkflow.addStep(
+      [PendingEvent, QueryResultEvent],
+      async (context, ev0, ev1) => {
+        return new StopEvent({ result: ev1.data.result });
+      },
+    );
+
+    const result = await myWorkflow.run("start");
+    expect(result.data.result).toBe("query result");
+  });
+
+  test("requireEvents", async () => {
+    const myWorkflow = new Workflow({ verbose: true });
+
+    class QueryEvent extends WorkflowEvent<{ query: string }> {}
+    class QueryResultEvent extends WorkflowEvent<{ result: string }> {}
+
+    myWorkflow.addStep(StartEvent, async (context: Context, events) => {
+      context.sendEvent(new QueryEvent({ query: "something" }));
+      const queryResultEvent = await context.requireEvent(QueryResultEvent);
+      return new StopEvent({ result: queryResultEvent.data.result });
+    });
+
+    myWorkflow.addStep(QueryEvent, async (context, event) => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      return new QueryResultEvent({ result: "query result" });
+    });
+
+    const result = await myWorkflow.run("start");
+    expect(result.data.result).toBe("query result");
+  });
+});
+
+describe("workflow event loop", () => {
+  test("basic", async () => {
+    const jokeFlow = new Workflow({ verbose: true });
+
+    jokeFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
+      return new StopEvent({ result: `Hello ${ev.data.input}!` });
+    });
+
+    const result = await jokeFlow.run("world");
+    expect(result.data.result).toBe("Hello world!");
+  });
+
+  test("branch", async () => {
+    const myFlow = new Workflow({ verbose: true });
+
+    class BranchA1Event extends WorkflowEvent<{ payload: string }> {}
+
+    class BranchA2Event extends WorkflowEvent<{ payload: string }> {}
+
+    class BranchB1Event extends WorkflowEvent<{ payload: string }> {}
+
+    class BranchB2Event extends WorkflowEvent<{ payload: string }> {}
+
+    let control = false;
+
+    myFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
+      if (control) {
+        return new BranchA1Event({ payload: ev.data.input });
+      } else {
+        return new BranchB1Event({ payload: ev.data.input });
+      }
+    });
+
+    myFlow.addStep(BranchA1Event, async (_context, ev: BranchA1Event) => {
+      return new BranchA2Event({ payload: ev.data.payload });
+    });
+
+    myFlow.addStep(BranchB1Event, async (_context, ev: BranchB1Event) => {
+      return new BranchB2Event({ payload: ev.data.payload });
+    });
+
+    myFlow.addStep(BranchA2Event, async (_context, ev: BranchA2Event) => {
+      return new StopEvent({ result: `Branch A2: ${ev.data.payload}` });
+    });
+
+    myFlow.addStep(BranchB2Event, async (_context, ev: BranchB2Event) => {
+      return new StopEvent({ result: `Branch B2: ${ev.data.payload}` });
+    });
+
+    {
+      const result = await myFlow.run("world");
+      expect(result.data.result).toMatch(/Branch B2: world/);
+    }
+
+    control = true;
+
+    {
+      const result = await myFlow.run("world");
+      expect(result.data.result).toMatch(/Branch A2: world/);
+    }
+
+    {
+      const context = myFlow.run("world");
+      for await (const event of context) {
+        if (event instanceof BranchA2Event) {
+          expect(event.data.payload).toBe("world");
+        }
+        if (event instanceof StopEvent) {
+          expect(event.data.result).toMatch(/Branch A2: world/);
+        }
+      }
+    }
+  });
+
+  test("one event have multiple outputs", async () => {
+    const myFlow = new Workflow({ verbose: true });
+
+    class AEvent extends WorkflowEvent<{ payload: string }> {}
+
+    class BEvent extends WorkflowEvent<{ payload: string }> {}
+
+    class CEvent extends WorkflowEvent<{ payload: string }> {}
+
+    class DEvent extends WorkflowEvent<{ payload: string }> {}
+
+    myFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
+      return new StopEvent({ result: "STOP" });
+    });
+
+    const fn = vi.fn(async (_context, ev: StartEvent) => {
+      return new AEvent({ payload: ev.data.input });
+    });
+
+    myFlow.addStep(StartEvent, fn);
+    myFlow.addStep(AEvent, async (_context, ev: AEvent) => {
+      return new BEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(AEvent, async (_context, ev: AEvent) => {
+      return new CEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(BEvent, async (_context, ev: BEvent) => {
+      return new DEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(CEvent, async (_context, ev: CEvent) => {
+      return new DEvent({ payload: ev.data.payload });
+    });
+    myFlow.addStep(DEvent, async (_context, ev: DEvent) => {
+      return new StopEvent({ result: `Hello ${ev.data.payload}!` });
+    });
+
+    const result = await myFlow.run("world");
+    expect(result.data.result).toBe("STOP");
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    // streaming events will allow to consume event even stop event is reached
+    const stream = myFlow.run("world");
+    for await (const _ of stream) {
+    }
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  test("run with custom context", async () => {
+    type MyContext = { name: string };
+    const myFlow = new Workflow<string, MyContext>({ verbose: true }).with({
+      name: "Alice",
+    });
+    myFlow.addStep(
+      StartEvent<string>,
+      async (context: MyContext, _: StartEvent) => {
+        return new StopEvent({ result: `Hello ${context.name}!` });
+      },
+    );
+
+    const result = await myFlow.run("world").with({ name: "Alice" });
+    expect(result.data.result).toBe("Hello Alice!");
+  });
+
+  test("run with custom context with two streaming", async () => {
+    type MyContext = { name: string };
+    const myFlow = new Workflow<string, MyContext>({ verbose: true });
+    myFlow.addStep(StartEvent<string>, async (context, _) => {
+      if (context.name == null) {
+        return new StopEvent({ result: "EMPTY" });
+      }
+      return new StopEvent({ result: `Hello ${context.name}!` });
+    });
+
+    const context1 = myFlow.run("world");
+    const context2 = context1.with({ name: "Alice" });
+    const context3 = context1.with({ name: "Bob" });
+    expect(await context1).toMatchInlineSnapshot(`
+      StopEvent {
+        "data": {
+          "result": "EMPTY",
+        },
+        "displayName": "StopEvent",
+      }
+    `);
+    expect(await context2).toMatchInlineSnapshot(`
+            StopEvent {
+              "data": {
+                "result": "Hello Alice!",
+              },
+              "displayName": "StopEvent",
+            }
+          `);
+    expect(await context3).toMatchInlineSnapshot(`
+      StopEvent {
+        "data": {
+          "result": "Hello Bob!",
+        },
+        "displayName": "StopEvent",
+      }
+    `);
+  });
+});
+
+describe("snapshot", async () => {
+  test("snapshot and recover", async () => {
+    const myFlow = new Workflow({ verbose: true });
+    myFlow.addStep(StartEvent<string>, async (_context, ev: StartEvent) => {
+      return new StopEvent({ result: `Hello ${ev.data.input}!` });
+    });
+    const context = myFlow.run("world");
+    const arrayBuffer = context.snapshot();
+    expect(arrayBuffer).toBeInstanceOf(ArrayBuffer);
+    const context2 = await myFlow.recover(arrayBuffer);
+    expect(context2.data.result).toBe("Hello world!");
   });
 });
