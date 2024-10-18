@@ -139,9 +139,11 @@ jobs:
       - name: Pack packages
         run: |
           for dir in packages/*; do
-            if [ -d "$dir" ]; then
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
               echo "Packing $dir"
               pnpm pack --pack-destination ${{ runner.temp }} -C $dir
+            else
+              echo "Skipping $dir, no package.json found"
             fi
           done
       - name: Install
