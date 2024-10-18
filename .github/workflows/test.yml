@@ -142,6 +142,18 @@ jobs:
       - name: Pack @llamaindex/openai
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/llm/openai
+      - name: Pack @llamaindex/deepinfra
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/deepinfra
+      - name: Pack @llamaindex/portkey-ai
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/portkey-ai
+      - name: Pack @llamaindex/replicate
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/replicate
+      - name: Pack @llamaindex/anthropic
+        run: pnpm pack --pack-destination ${{ runner.temp }}
+        working-directory: packages/llm/anthropic
       - name: Pack @llamaindex/groq
         run: pnpm pack --pack-destination ${{ runner.temp }}
         working-directory: packages/llm/groq
