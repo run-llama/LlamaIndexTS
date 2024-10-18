@@ -4,7 +4,7 @@ import GroqSDK, { type ClientOptions } from "groq-sdk";
 
 export class Groq extends OpenAI {
   constructor(
-    init?: Partial<OpenAI> & {
+    init?: Omit<Partial<OpenAI>, "session"> & {
       additionalSessionOptions?: ClientOptions;
     },
   ) {
@@ -22,9 +22,10 @@ export class Groq extends OpenAI {
       ...rest,
     });
 
-    this.session.openai = new GroqSDK({
-      apiKey,
-      ...init?.additionalSessionOptions,
-    }) as any;
+    this.lazySession = async () =>
+      new GroqSDK({
+        apiKey,
+        ...init?.additionalSessionOptions,
+      }) as any;
   }
 }

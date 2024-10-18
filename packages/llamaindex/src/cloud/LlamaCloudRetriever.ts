@@ -1,4 +1,5 @@
 import {
+  type MetadataFilter,
   type MetadataFilters,
   PipelinesService,
   type RetrievalParams,
@@ -11,7 +12,7 @@ import type { NodeWithScore } from "@llamaindex/core/schema";
 import { jsonToNode, ObjectType } from "@llamaindex/core/schema";
 import { extractText } from "@llamaindex/core/utils";
 import type { ClientParams, CloudConstructorParams } from "./type.js";
-import { getProjectId, initService } from "./utils.js";
+import { getPipelineId, initService } from "./utils.js";
 
 export type CloudRetrieveParams = Omit<
   RetrievalParams,
@@ -42,6 +43,24 @@ export class LlamaCloudRetriever extends BaseRetriever {
     });
   }
 
+  // LlamaCloud expects null values for filters, but LlamaIndexTS uses undefined for empty values
+  // This function converts the undefined values to null
+  private convertFilter(filters?: MetadataFilters): MetadataFilters | null {
+    if (!filters) return null;
+
+    const processFilter = (
+      filter: MetadataFilter | MetadataFilters,
+    ): MetadataFilter | MetadataFilters => {
+      if ("filters" in filter) {
+        // type MetadataFilters
+        return { ...filter, filters: filter.filters.map(processFilter) };
+      }
+      return { ...filter, value: filter.value ?? null };
+    };
+
+    return { ...filters, filters: filters.filters.map(processFilter) };
+  }
+
   constructor(params: CloudConstructorParams & CloudRetrieveParams) {
     super();
     this.clientParams = { apiKey: params.apiKey, baseUrl: params.baseUrl };
@@ -57,45 +76,24 @@ export class LlamaCloudRetriever extends BaseRetriever {
   }
 
   async _retrieve(query: QueryBundle): Promise<NodeWithScore[]> {
-    const { data: pipelines } =
-      await PipelinesService.searchPipelinesApiV1PipelinesGet({
-        query: {
-          project_id: await getProjectId(this.projectName, this.organizationId),
-          project_name: this.pipelineName,
-        },
-        throwOnError: true,
-      });
+    const pipelineId = await getPipelineId(
+      this.pipelineName,
+      this.projectName,
+      this.organizationId,
+    );
 
-    if (pipelines.length === 0 || !pipelines[0]!.id) {
-      throw new Error(
-        `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
-      );
-    }
-
-    const { data: pipeline } =
-      await PipelinesService.getPipelineApiV1PipelinesPipelineIdGet({
-        path: {
-          pipeline_id: pipelines[0]!.id,
-        },
-        throwOnError: true,
-      });
-
-    if (!pipeline) {
-      throw new Error(
-        `No pipeline found with name ${this.pipelineName} in project ${this.projectName}`,
-      );
-    }
+    const filters = this.convertFilter(this.retrieveParams.filters);
 
     const { data: results } =
       await PipelinesService.runSearchApiV1PipelinesPipelineIdRetrievePost({
         throwOnError: true,
         path: {
-          pipeline_id: pipeline.id,
+          pipeline_id: pipelineId,
         },
         body: {
           ...this.retrieveParams,
           query: extractText(query),
-          search_filters: this.retrieveParams.filters as MetadataFilters,
+          search_filters: filters,
           dense_similarity_top_k: this.retrieveParams.similarityTopK!,
         },
       });

@@ -1,5 +1,47 @@
 # @llamaindex/cloud
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [1364e8e]
+- Updated dependencies [96fc69c]
+  - @llamaindex/core@0.3.0
+
+## 0.2.14
+
+### Patch Changes
+
+- Updated dependencies [5f67820]
+  - @llamaindex/core@0.2.12
+
+## 0.2.13
+
+### Patch Changes
+
+- Updated dependencies [ee697fb]
+  - @llamaindex/core@0.2.11
+
+## 0.2.12
+
+### Patch Changes
+
+- Updated dependencies [3489e7d]
+- Updated dependencies [468bda5]
+  - @llamaindex/core@0.2.10
+
+## 0.2.11
+
+### Patch Changes
+
+- 0b20ff9: fix: package.json format
+
+## 0.2.10
+
+### Patch Changes
+
+- 981811e: fix(cloud): llama parse reader save image incorrectly
+
 ## 0.2.9
 
 ### Patch Changes

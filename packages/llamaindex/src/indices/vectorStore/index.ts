@@ -31,8 +31,8 @@ import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseIndexStore } from "../../storage/indexStore/types.js";
 import type {
+  BaseVectorStore,
   MetadataFilters,
-  VectorStore,
   VectorStoreByType,
   VectorStoreQueryResult,
 } from "../../vector-store/index.js";
@@ -203,7 +203,10 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
     } = {},
   ): Promise<VectorStoreIndex> {
     args.storageContext =
-      args.storageContext ?? (await storageContextFromDefaults({}));
+      args.storageContext ??
+      (await storageContextFromDefaults({
+        serviceContext: args.serviceContext,
+      }));
     args.vectorStores = args.vectorStores ?? args.storageContext.vectorStores;
     args.docStoreStrategy =
       args.docStoreStrategy ??
@@ -261,7 +264,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   static async fromVectorStore(
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
     serviceContext?: ServiceContext,
   ) {
     return this.fromVectorStores(
@@ -295,9 +298,8 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
       similarityTopK,
     } = options ?? {};
     return new RetrieverQueryEngine(
-      retriever ?? this.asRetriever({ similarityTopK }),
+      retriever ?? this.asRetriever({ similarityTopK, filters: preFilters }),
       responseSynthesizer,
-      preFilters,
       nodePostprocessors,
     );
   }
@@ -305,7 +307,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   protected async insertNodesToStore(
     newIds: string[],
     nodes: BaseNode[],
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
   ): Promise<void> {
     // NOTE: if the vector store doesn't store text,
     // we need to add the nodes to the index struct and document store
@@ -355,7 +357,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   protected async deleteRefDocFromStore(
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
     refDocId: string,
   ): Promise<void> {
     await vectorStore.delete(refDocId);
@@ -384,7 +386,7 @@ export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
   similarityTopK?: number | undefined;
   topK?: TopKMap | undefined;
-  filters?: MetadataFilters;
+  filters?: MetadataFilters | undefined;
 };
 
 export class VectorIndexRetriever extends BaseRetriever {
@@ -423,7 +425,7 @@ export class VectorIndexRetriever extends BaseRetriever {
     let nodesWithScores: NodeWithScore[] = [];
 
     for (const type in vectorStores) {
-      const vectorStore: VectorStore = vectorStores[type as ModalityType]!;
+      const vectorStore: BaseVectorStore = vectorStores[type as ModalityType]!;
       nodesWithScores = nodesWithScores.concat(
         await this.retrieveQuery(query, type as ModalityType, vectorStore),
       );
@@ -434,7 +436,7 @@ export class VectorIndexRetriever extends BaseRetriever {
   protected async retrieveQuery(
     query: MessageContent,
     type: ModalityType,
-    vectorStore: VectorStore,
+    vectorStore: BaseVectorStore,
     filters?: MetadataFilters,
   ): Promise<NodeWithScore[]> {
     // convert string message to multi-modal format

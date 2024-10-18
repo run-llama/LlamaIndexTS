@@ -1,12 +1,11 @@
 import { getEnv } from "@llamaindex/env";
-import type OpenAILLM from "openai";
 import type {
-  ClientOptions,
+  AzureClientOptions,
+  AzureOpenAI as AzureOpenAILLM,
   ClientOptions as OpenAIClientOptions,
+  OpenAI as OpenAILLM,
 } from "openai";
-import { AzureOpenAI, OpenAI as OrigOpenAI } from "openai";
 import type { ChatModel } from "openai/resources/chat/chat";
-import { isDeepEqual } from "remeda";
 
 import { wrapEventCaller, wrapLLMEvent } from "@llamaindex/core/decorator";
 import {
@@ -35,63 +34,11 @@ import type {
   ChatCompletionUserMessageParam,
 } from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
-import type { AzureOpenAIConfig } from "./azure.js";
 import {
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
 } from "./azure.js";
-
-export class OpenAISession {
-  openai: Pick<OrigOpenAI, "chat" | "embeddings">;
-
-  constructor(options: ClientOptions & { azure?: boolean } = {}) {
-    if (options.azure) {
-      this.openai = new AzureOpenAI(options as AzureOpenAIConfig);
-    } else {
-      if (!options.apiKey) {
-        options.apiKey = getEnv("OPENAI_API_KEY");
-      }
-
-      if (!options.apiKey) {
-        throw new Error("Set OpenAI Key in OPENAI_API_KEY env variable"); // Overriding OpenAI package's error message
-      }
-
-      this.openai = new OrigOpenAI({
-        ...options,
-      });
-    }
-  }
-}
-
-// I'm not 100% sure this is necessary vs. just starting a new session
-// every time we make a call. They say they try to reuse connections
-// so in theory this is more efficient, but we should test it in the future.
-const defaultOpenAISession: {
-  session: OpenAISession;
-  options: ClientOptions;
-}[] = [];
-
-/**
- * Get a session for the OpenAI API. If one already exists with the same options,
- * it will be returned. Otherwise, a new session will be created.
- * @param options
- * @returns
- */
-export function getOpenAISession(
-  options: ClientOptions & { azure?: boolean } = {},
-) {
-  let session = defaultOpenAISession.find((session) => {
-    return isDeepEqual(session.options, options);
-  })?.session;
-
-  if (!session) {
-    session = new OpenAISession(options);
-    defaultOpenAISession.push({ session, options });
-  }
-
-  return session;
-}
 
 export const GPT4_MODELS = {
   "chatgpt-4o-latest": {
@@ -182,6 +129,8 @@ export type OpenAIAdditionalChatOptions = Omit<
   | "toolChoice"
 >;
 
+type LLMInstance = Pick<AzureOpenAILLM | OpenAILLM, "chat" | "apiKey">;
+
 export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   model:
     | ChatModel
@@ -196,14 +145,24 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   apiKey?: string | undefined = undefined;
   maxRetries: number;
   timeout?: number;
-  session: OpenAISession;
   additionalSessionOptions?:
     | undefined
     | Omit<Partial<OpenAIClientOptions>, "apiKey" | "maxRetries" | "timeout">;
 
+  // use lazy here to avoid check OPENAI_API_KEY immediately
+  lazySession: () => Promise<LLMInstance>;
+  #session: Promise<LLMInstance> | null = null;
+  get session() {
+    if (!this.#session) {
+      this.#session = this.lazySession();
+    }
+    return this.#session;
+  }
+
   constructor(
-    init?: Partial<OpenAI> & {
-      azure?: AzureOpenAIConfig;
+    init?: Omit<Partial<OpenAI>, "session"> & {
+      session?: LLMInstance | undefined;
+      azure?: AzureClientOptions;
     },
   ) {
     super();
@@ -216,6 +175,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     this.timeout = init?.timeout ?? 60 * 1000; // Default is 60 seconds
     this.additionalChatOptions = init?.additionalChatOptions;
     this.additionalSessionOptions = init?.additionalSessionOptions;
+    this.apiKey =
+      init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
 
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = {
@@ -225,25 +186,26 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
         ...init?.azure,
       };
 
-      this.apiKey = azureConfig.apiKey;
-      this.session =
+      this.lazySession = async () =>
         init?.session ??
-        getOpenAISession({
-          azure: true,
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          ...this.additionalSessionOptions,
-          ...azureConfig,
+        import("openai").then(({ AzureOpenAI }) => {
+          return new AzureOpenAI({
+            maxRetries: this.maxRetries,
+            timeout: this.timeout!,
+            ...this.additionalSessionOptions,
+            ...azureConfig,
+          });
         });
     } else {
-      this.apiKey = init?.apiKey ?? undefined;
-      this.session =
+      this.lazySession = async () =>
         init?.session ??
-        getOpenAISession({
-          apiKey: this.apiKey,
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          ...this.additionalSessionOptions,
+        import("openai").then(({ OpenAI }) => {
+          return new OpenAI({
+            apiKey: this.apiKey,
+            maxRetries: this.maxRetries,
+            timeout: this.timeout!,
+            ...this.additionalSessionOptions,
+          });
         });
     }
   }
@@ -382,7 +344,9 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
     }
 
     // Non-streaming
-    const response = await this.session.openai.chat.completions.create({
+    const response = await (
+      await this.session
+    ).chat.completions.create({
       ...baseRequestParams,
       stream: false,
     });
@@ -414,11 +378,12 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
   protected async *streamChat(
     baseRequestParams: OpenAILLM.Chat.ChatCompletionCreateParams,
   ): AsyncIterable<ChatResponseChunk<ToolCallLLMMessageOptions>> {
-    const stream: AsyncIterable<OpenAILLM.Chat.ChatCompletionChunk> =
-      await this.session.openai.chat.completions.create({
-        ...baseRequestParams,
-        stream: true,
-      });
+    const stream: AsyncIterable<OpenAILLM.Chat.ChatCompletionChunk> = await (
+      await this.session
+    ).chat.completions.create({
+      ...baseRequestParams,
+      stream: true,
+    });
 
     // TODO: add callback to streamConverter and use streamConverter here
     // this will be used to keep track of the current tool call, make sure input are valid json object.

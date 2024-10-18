@@ -1,5 +1,20 @@
-export { SimpleKVStore } from "./storage/kvStore/SimpleKVStore.js";
+//#region initial setup for OpenAI
+import { OpenAI } from "@llamaindex/openai";
+import { Settings } from "./Settings.js";
 
+try {
+  Settings.llm;
+} catch {
+  Settings.llm = new OpenAI();
+}
+
+//#endregion
+
+export {
+  LlamaParseReader,
+  type Language,
+  type ResultType,
+} from "@llamaindex/cloud/reader";
 export * from "@llamaindex/core/agent";
 export * from "@llamaindex/core/chat-engine";
 export {
@@ -25,12 +40,12 @@ export type {
   JSONArray,
   JSONObject,
   JSONValue,
+  LlamaIndexEventMaps,
   LLMEndEvent,
   LLMStartEvent,
   LLMStreamEvent,
   LLMToolCallEvent,
   LLMToolResultEvent,
-  LlamaIndexEventMaps,
 } from "@llamaindex/core/global";
 export * from "@llamaindex/core/indices";
 export * from "@llamaindex/core/llms";
@@ -58,7 +73,8 @@ export * from "./postprocessors/index.js";
 export * from "./QuestionGenerator.js";
 export * from "./selectors/index.js";
 export * from "./ServiceContext.js";
-export { Settings } from "./Settings.js";
+export { SimpleKVStore } from "./storage/kvStore/SimpleKVStore.js";
 export * from "./storage/StorageContext.js";
 export * from "./tools/index.js";
 export * from "./types.js";
+export { Settings };

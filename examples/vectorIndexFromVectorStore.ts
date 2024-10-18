@@ -1,4 +1,5 @@
 import {
+  BaseVectorStore,
   getResponseSynthesizer,
   OpenAI,
   OpenAIEmbedding,
@@ -6,7 +7,6 @@ import {
   Settings,
   TextNode,
   VectorIndexRetriever,
-  VectorStore,
   VectorStoreIndex,
   VectorStoreQuery,
   VectorStoreQueryResult,
@@ -24,7 +24,7 @@ Settings.llm = new OpenAI({
  * Please do not use this class in production; it's only for demonstration purposes.
  */
 class PineconeVectorStore<T extends RecordMetadata = RecordMetadata>
-  implements VectorStore
+  implements BaseVectorStore
 {
   storesText = true;
   isEmbeddingQuery = false;
@@ -165,9 +165,7 @@ async function main() {
     });
 
     const responseSynthesizer = getResponseSynthesizer("tree_summarize");
-    return new RetrieverQueryEngine(retriever, responseSynthesizer, {
-      filter,
-    });
+    return new RetrieverQueryEngine(retriever, responseSynthesizer);
   };
 
   // whatever is a key from your metadata

@@ -1,5 +1,129 @@
 # llamaindex
 
+## 0.7.0
+
+### Minor Changes
+
+- 1364e8e: update metadata extractors to use PromptTemplate
+- 96fc69c: Correct initialization of QuestionsAnsweredExtractor so that it uses the promptTemplate arg when passed in
+
+### Patch Changes
+
+- 3b7736f: feat: added gemini 002 support
+- Updated dependencies [1364e8e]
+- Updated dependencies [96fc69c]
+  - @llamaindex/core@0.3.0
+  - @llamaindex/cloud@1.0.0
+  - @llamaindex/ollama@0.0.8
+  - @llamaindex/openai@0.1.17
+  - @llamaindex/groq@0.0.16
+
+## 0.6.22
+
+### Patch Changes
+
+- 5729bd9: Fix LlamaCloud API calls for ensuring an index and for file uploads
+
+## 0.6.21
+
+### Patch Changes
+
+- 6f75306: feat: support metadata filters for AstraDB
+- 94cb4ad: feat: Add metadata filters to ChromaDb and update to 1.9.2
+
+## 0.6.20
+
+### Patch Changes
+
+- 6a9a7b1: fix: take init api key into account
+- Updated dependencies [6a9a7b1]
+  - @llamaindex/openai@0.1.16
+  - @llamaindex/groq@0.0.15
+
+## 0.6.19
+
+### Patch Changes
+
+- 62cba52: Add ensureIndex function to LlamaCloudIndex
+- d265e96: fix: ignore resolving unpdf for nextjs
+- d30bbf7: Convert undefined values to null in LlamaCloud filters
+- 53fd00a: Fix getPipelineId in LlamaCloudIndex
+
+## 0.6.18
+
+### Patch Changes
+
+- 5f67820: Fix that node parsers generate nodes with UUIDs
+- fe08d04: Fix LlamaCloud retrieval with multiple pipelines
+- Updated dependencies [5f67820]
+  - @llamaindex/core@0.2.12
+  - @llamaindex/cloud@0.2.14
+  - @llamaindex/ollama@0.0.7
+  - @llamaindex/openai@0.1.15
+  - @llamaindex/groq@0.0.14
+
+## 0.6.17
+
+### Patch Changes
+
+- ee697fb: fix: generate uuid when inserting to Qdrant
+- Updated dependencies [ee697fb]
+  - @llamaindex/core@0.2.11
+  - @llamaindex/cloud@0.2.13
+  - @llamaindex/ollama@0.0.6
+  - @llamaindex/openai@0.1.14
+  - @llamaindex/groq@0.0.13
+
+## 0.6.16
+
+### Patch Changes
+
+- 63e9846: fix: preFilters does not work with asQueryEngine
+- 6f3a31c: feat: add metadata filters for Qdrant vector store
+- Updated dependencies [3489e7d]
+- Updated dependencies [468bda5]
+  - @llamaindex/core@0.2.10
+  - @llamaindex/cloud@0.2.12
+  - @llamaindex/ollama@0.0.5
+  - @llamaindex/openai@0.1.13
+  - @llamaindex/groq@0.0.12
+
+## 0.6.15
+
+### Patch Changes
+
+- 2a82413: fix(core): set `Settings.llm` to OpenAI by default and support lazy load openai
+- Updated dependencies [2a82413]
+- Updated dependencies [0b20ff9]
+  - @llamaindex/groq@0.0.11
+  - @llamaindex/openai@0.1.12
+  - @llamaindex/cloud@0.2.11
+
+## 0.6.14
+
+### Patch Changes
+
+- Updated dependencies [b17d439]
+  - @llamaindex/core@0.2.9
+  - @llamaindex/ollama@0.0.4
+  - @llamaindex/openai@0.1.11
+  - @llamaindex/groq@0.0.10
+
+## 0.6.13
+
+### Patch Changes
+
+- Updated dependencies [981811e]
+  - @llamaindex/cloud@0.2.10
+
+## 0.6.12
+
+### Patch Changes
+
+- f7b4e94: feat: add filters for pinecone
+- 78037a6: fix: bypass service context embed model
+- 1d9e3b1: fix: export llama reader in non-nodejs runtime
+
 ## 0.6.11
 
 ### Patch Changes

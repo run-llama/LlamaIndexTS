@@ -1,5 +1,37 @@
 # @llamaindex/core
 
+## 0.3.0
+
+### Minor Changes
+
+- 1364e8e: update metadata extractors to use PromptTemplate
+- 96fc69c: add defaultQuestionExtractPrompt
+
+## 0.2.12
+
+### Patch Changes
+
+- 5f67820: Fix that node parsers generate nodes with UUIDs
+
+## 0.2.11
+
+### Patch Changes
+
+- ee697fb: fix: generate uuid when inserting to Qdrant
+
+## 0.2.10
+
+### Patch Changes
+
+- 3489e7d: fix: num output incorrect in prompt helper
+- 468bda5: fix: correct warning when chunk size smaller than 0
+
+## 0.2.9
+
+### Patch Changes
+
+- b17d439: Fix #1278: resolved issue where the id\_ was not correctly passed as the id when creating a TextNode. As a result, the upsert operation to the vector database was using a generated ID instead of the provided document ID, if available.
+
 ## 0.2.8
 
 ### Patch Changes

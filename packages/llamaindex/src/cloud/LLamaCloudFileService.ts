@@ -41,7 +41,7 @@ export class LLamaCloudFileService {
   ) {
     initService();
     const { data: file } = await FilesService.uploadFileApiV1FilesPost({
-      path: { project_id: projectId },
+      query: { project_id: projectId },
       body: {
         upload_file: uploadFile,
       },
@@ -85,7 +85,7 @@ export class LLamaCloudFileService {
       await new Promise((resolve) => setTimeout(resolve, 100)); // Sleep for 100ms
     }
     throw new Error(
-      `File processing did not complete after ${maxAttempts} attempts.`,
+      `File processing did not complete after ${maxAttempts} attempts. Check your LlamaCloud index at https://cloud.llamaindex.ai/project/${projectId}/deploy/${pipelineId} for more details.`,
     );
   }
 

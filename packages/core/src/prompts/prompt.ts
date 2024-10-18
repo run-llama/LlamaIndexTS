@@ -13,8 +13,12 @@ export type CondenseQuestionPrompt = PromptTemplate<
   ["chatHistory", "question"]
 >;
 export type ContextSystemPrompt = PromptTemplate<["context"]>;
-export type KeywordExtractPrompt = PromptTemplate<["context"]>;
+export type KeywordExtractPrompt = PromptTemplate<["context", "maxKeywords"]>;
 export type QueryKeywordExtractPrompt = PromptTemplate<["question"]>;
+export type QuestionExtractPrompt = PromptTemplate<["context", "numQuestions"]>;
+export type TitleExtractorPrompt = PromptTemplate<["context"]>;
+export type TitleCombinePrompt = PromptTemplate<["context"]>;
+export type KeywordExtractorPrompt = PromptTemplate<["context", "numKeywords"]>;
 
 export const defaultTextQAPrompt: TextQAPrompt = new PromptTemplate({
   templateVars: ["context", "query"],
@@ -64,11 +68,13 @@ export const defaultRefinePrompt: RefinePrompt = new PromptTemplate({
   templateVars: ["query", "existingAnswer", "context"],
   template: `The original query is as follows: {query}
 We have provided an existing answer: {existingAnswer}
-We have the opportunity to refine the existing answer (only if needed) with some more context below.
+We have the opportunity to refine the existing answer
+(only if needed) with some more context below.
 ------------
 {context}
 ------------
-Given the new context, refine the original answer to better answer the query. If the context isn't useful, return the original answer.
+Given the new context, refine the original answer to better answer the query.
+If the context isn't useful, return the original answer.
 Refined Answer:`,
 });
 
@@ -250,4 +256,56 @@ export const defaultQueryKeywordExtractPrompt = new PromptTemplate({
 )`,
 }).partialFormat({
   maxKeywords: "10",
+});
+
+export const defaultQuestionExtractPrompt = new PromptTemplate({
+  templateVars: ["numQuestions", "context"],
+  template: `(
+  "Given the contextual informations below, generate {numQuestions} questions this context can provides specific answers to which are unlikely to be found else where. Higher-level summaries of surrounding context may be provided as well. "
+  "Try using these summaries to generate better questions that this context can answer."
+  "---------------------"
+  "{context}"
+  "---------------------"
+  "Provide questions in the following format: 'QUESTIONS: <questions>'"
+)`,
+}).partialFormat({
+  numQuestions: "5",
+});
+
+export const defaultTitleExtractorPromptTemplate = new PromptTemplate({
+  templateVars: ["context"],
+  template: `{context}
+Give a title that summarizes all of the unique entities, titles or themes found in the context. 
+Title: `,
+});
+
+export const defaultTitleCombinePromptTemplate = new PromptTemplate({
+  templateVars: ["context"],
+  template: `{context} 
+Based on the above candidate titles and contents, what is the comprehensive title for this document? 
+Title: `,
+});
+
+export const defaultKeywordExtractorPromptTemplate = new PromptTemplate({
+  templateVars: ["context", "numKeywords"],
+  template: `{context}
+Give {numKeywords} unique keywords for this document. 
+Format as comma separated. 
+Keywords: `,
+}).partialFormat({
+  keywordCount: "5",
+});
+
+export const defaultNodeTextTemplate = new PromptTemplate({
+  templateVars: ["metadataStr", "content"],
+  template: `[Excerpt from document]
+{metadataStr}
+Excerpt:
+-----
+{content}
+-----
+`,
+}).partialFormat({
+  metadataStr: "",
+  content: "",
 });

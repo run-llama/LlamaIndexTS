@@ -8,18 +8,16 @@ import {
   Settings,
 } from "../global";
 import type { LLMMetadata } from "../llms";
-import { SentenceSplitter } from "../node-parser";
-import type { PromptTemplate } from "../prompts";
+import { TextSplitter, TokenTextSplitter, truncateText } from "../node-parser";
+import { BasePromptTemplate, PromptTemplate } from "../prompts";
 
 /**
  * Get the empty prompt text given a prompt.
  */
-function getEmptyPromptTxt(prompt: PromptTemplate) {
-  return prompt.format({
-    ...Object.fromEntries(
-      [...prompt.templateVars.keys()].map((key) => [key, ""]),
-    ),
-  });
+function getEmptyPromptTxt(prompt: PromptTemplate): string {
+  return prompt.format(
+    Object.fromEntries([...prompt.templateVars.keys()].map((key) => [key, ""])),
+  );
 }
 
 /**
@@ -35,24 +33,24 @@ export function getBiggestPrompt(prompts: PromptTemplate[]): PromptTemplate {
 }
 
 export type PromptHelperOptions = {
-  contextWindow?: number;
-  numOutput?: number;
-  chunkOverlapRatio?: number;
-  chunkSizeLimit?: number;
-  tokenizer?: Tokenizer;
-  separator?: string;
+  contextWindow?: number | undefined;
+  numOutput?: number | undefined;
+  chunkOverlapRatio?: number | undefined;
+  chunkSizeLimit?: number | undefined;
+  tokenizer?: Tokenizer | undefined;
+  separator?: string | undefined;
 };
 
 /**
  * A collection of helper functions for working with prompts.
  */
 export class PromptHelper {
-  contextWindow = DEFAULT_CONTEXT_WINDOW;
-  numOutput = DEFAULT_NUM_OUTPUTS;
-  chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO;
+  contextWindow: number;
+  numOutput: number;
+  chunkOverlapRatio: number;
   chunkSizeLimit: number | undefined;
   tokenizer: Tokenizer;
-  separator = " ";
+  separator: string;
 
   constructor(options: PromptHelperOptions = {}) {
     const {
@@ -72,68 +70,93 @@ export class PromptHelper {
   }
 
   /**
-   * Given a prompt, return the maximum size of the inputs to the prompt.
-   * @param prompt
-   * @returns
+   * Calculate the available context size based on the number of prompt tokens.
    */
-  private getAvailableContextSize(prompt: PromptTemplate) {
-    const emptyPromptText = getEmptyPromptTxt(prompt);
-    const promptTokens = this.tokenizer.encode(emptyPromptText);
-    const numPromptTokens = promptTokens.length;
-
-    return this.contextWindow - numPromptTokens - this.numOutput;
-  }
-
-  /**
-   * Find the maximum size of each chunk given a prompt.
-   */
-  private getAvailableChunkSize(
-    prompt: PromptTemplate,
-    numChunks = 1,
-    padding = 5,
-  ): number {
-    const availableContextSize = this.getAvailableContextSize(prompt);
-
-    const result = Math.floor(availableContextSize / numChunks) - padding;
-
-    if (this.chunkSizeLimit) {
-      return Math.min(this.chunkSizeLimit, result);
-    } else {
-      return result;
+  #getAvailableContextSize(numPromptTokens: number): number {
+    const contextSizeTokens =
+      this.contextWindow - numPromptTokens - this.numOutput;
+    if (contextSizeTokens < 0) {
+      throw new Error(
+        `Calculated available context size ${contextSizeTokens} is not non-negative.`,
+      );
     }
+    return contextSizeTokens;
   }
 
   /**
-   * Creates a text splitter with the correct chunk sizes and overlaps given a prompt.
+   * Calculate the available chunk size based on the prompt and other parameters.
+   */
+  #getAvailableChunkSize<Template extends BasePromptTemplate>(
+    prompt: Template,
+    numChunks: number = 1,
+    padding: number = 5,
+  ): number {
+    let numPromptTokens = 0;
+
+    if (prompt instanceof PromptTemplate) {
+      numPromptTokens = this.tokenizer.encode(getEmptyPromptTxt(prompt)).length;
+    }
+
+    const availableContextSize = this.#getAvailableContextSize(numPromptTokens);
+    let result = Math.floor(availableContextSize / numChunks) - padding;
+
+    if (this.chunkSizeLimit !== undefined) {
+      result = Math.min(this.chunkSizeLimit, result);
+    }
+
+    return result;
+  }
+
+  /**
+   * Creates a text splitter configured to maximally pack the available context window.
    */
   getTextSplitterGivenPrompt(
-    prompt: PromptTemplate,
-    numChunks = 1,
-    padding = DEFAULT_PADDING,
-  ) {
-    const chunkSize = this.getAvailableChunkSize(prompt, numChunks, padding);
-    if (chunkSize === 0) {
-      throw new Error("Got 0 as available chunk size");
+    prompt: BasePromptTemplate,
+    numChunks: number = 1,
+    padding: number = DEFAULT_PADDING,
+  ): TextSplitter {
+    const chunkSize = this.#getAvailableChunkSize(prompt, numChunks, padding);
+    if (chunkSize <= 0) {
+      throw new TypeError(`Chunk size ${chunkSize} is not positive.`);
     }
-    const chunkOverlap = this.chunkOverlapRatio * chunkSize;
-    return new SentenceSplitter({
+    const chunkOverlap = Math.floor(this.chunkOverlapRatio * chunkSize);
+    return new TokenTextSplitter({
+      separator: this.separator,
       chunkSize,
       chunkOverlap,
-      separator: this.separator,
       tokenizer: this.tokenizer,
     });
   }
 
   /**
-   * Repack resplits the strings based on the optimal text splitter.
+   * Truncate text chunks to fit within the available context window.
+   */
+  truncate(
+    prompt: BasePromptTemplate,
+    textChunks: string[],
+    padding: number = DEFAULT_PADDING,
+  ): string[] {
+    const textSplitter = this.getTextSplitterGivenPrompt(
+      prompt,
+      textChunks.length,
+      padding,
+    );
+    return textChunks.map((chunk) => truncateText(chunk, textSplitter));
+  }
+
+  /**
+   * Repack text chunks to better utilize the available context window.
    */
   repack(
-    prompt: PromptTemplate,
+    prompt: BasePromptTemplate,
     textChunks: string[],
-    padding = DEFAULT_PADDING,
-  ) {
+    padding: number = DEFAULT_PADDING,
+  ): string[] {
     const textSplitter = this.getTextSplitterGivenPrompt(prompt, 1, padding);
-    const combinedStr = textChunks.join("\n\n");
+    const combinedStr = textChunks
+      .map((c) => c.trim())
+      .filter((c) => c.length > 0)
+      .join("\n\n");
     return textSplitter.splitText(combinedStr);
   }
 
@@ -154,7 +177,8 @@ export class PromptHelper {
     } = options ?? {};
     return new PromptHelper({
       contextWindow: metadata.contextWindow,
-      numOutput: metadata.maxTokens ?? DEFAULT_NUM_OUTPUTS,
+      // fixme: numOutput is not in LLMMetadata
+      numOutput: DEFAULT_NUM_OUTPUTS,
       chunkOverlapRatio,
       chunkSizeLimit,
       tokenizer,

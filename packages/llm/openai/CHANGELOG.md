@@ -1,5 +1,54 @@
 # @llamaindex/openai
 
+## 0.1.17
+
+### Patch Changes
+
+- Updated dependencies [1364e8e]
+- Updated dependencies [96fc69c]
+  - @llamaindex/core@0.3.0
+
+## 0.1.16
+
+### Patch Changes
+
+- 6a9a7b1: fix: take init api key into account
+
+## 0.1.15
+
+### Patch Changes
+
+- Updated dependencies [5f67820]
+  - @llamaindex/core@0.2.12
+
+## 0.1.14
+
+### Patch Changes
+
+- Updated dependencies [ee697fb]
+  - @llamaindex/core@0.2.11
+
+## 0.1.13
+
+### Patch Changes
+
+- Updated dependencies [3489e7d]
+- Updated dependencies [468bda5]
+  - @llamaindex/core@0.2.10
+
+## 0.1.12
+
+### Patch Changes
+
+- 2a82413: fix(core): set `Settings.llm` to OpenAI by default and support lazy load openai
+
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [b17d439]
+  - @llamaindex/core@0.2.9
+
 ## 0.1.10
 
 ### Patch Changes

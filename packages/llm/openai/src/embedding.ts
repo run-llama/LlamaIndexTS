@@ -1,14 +1,16 @@
 import { BaseEmbedding } from "@llamaindex/core/embeddings";
-import { Tokenizers } from "@llamaindex/env";
-import type { ClientOptions as OpenAIClientOptions } from "openai";
-import type { AzureOpenAIConfig } from "./azure.js";
+import { getEnv, Tokenizers } from "@llamaindex/env";
+import type {
+  AzureClientOptions,
+  AzureOpenAI as AzureOpenAILLM,
+  ClientOptions as OpenAIClientOptions,
+  OpenAI as OpenAILLM,
+} from "openai";
 import {
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
 } from "./azure.js";
-import type { OpenAISession } from "./llm.js";
-import { getOpenAISession } from "./llm.js";
 
 export const ALL_OPENAI_EMBEDDING_MODELS = {
   "text-embedding-ada-002": {
@@ -32,6 +34,8 @@ export const ALL_OPENAI_EMBEDDING_MODELS = {
 
 type ModelKeys = keyof typeof ALL_OPENAI_EMBEDDING_MODELS;
 
+type LLMInstance = Pick<AzureOpenAILLM | OpenAILLM, "embeddings" | "apiKey">;
+
 export class OpenAIEmbedding extends BaseEmbedding {
   /** embeddding model. defaults to "text-embedding-ada-002" */
   model: string;
@@ -51,14 +55,26 @@ export class OpenAIEmbedding extends BaseEmbedding {
     | Omit<Partial<OpenAIClientOptions>, "apiKey" | "maxRetries" | "timeout">
     | undefined;
 
-  /** session object */
-  session: OpenAISession;
+  // use lazy here to avoid check OPENAI_API_KEY immediately
+  lazySession: () => Promise<LLMInstance>;
+  #session: Promise<LLMInstance> | null = null;
+  get session() {
+    if (!this.#session) {
+      this.#session = this.lazySession();
+    }
+    return this.#session;
+  }
 
   /**
    * OpenAI Embedding
    * @param init - initial parameters
    */
-  constructor(init?: Partial<OpenAIEmbedding> & { azure?: AzureOpenAIConfig }) {
+  constructor(
+    init?: Omit<Partial<OpenAIEmbedding>, "lazySession"> & {
+      session?: LLMInstance | undefined;
+      azure?: AzureClientOptions;
+    },
+  ) {
     super();
 
     this.model = init?.model ?? "text-embedding-ada-002";
@@ -77,7 +93,6 @@ export class OpenAIEmbedding extends BaseEmbedding {
     if (key) {
       this.embedInfo = ALL_OPENAI_EMBEDDING_MODELS[key];
     }
-
     if (init?.azure || shouldUseAzure()) {
       const azureConfig = {
         ...getAzureConfigFromEnv({
@@ -85,26 +100,33 @@ export class OpenAIEmbedding extends BaseEmbedding {
         }),
         ...init?.azure,
       };
-
-      this.apiKey = azureConfig.apiKey;
-      this.session =
-        init?.session ??
-        getOpenAISession({
-          azure: true,
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          ...this.additionalSessionOptions,
-          ...azureConfig,
-        });
+      this.apiKey =
+        init?.session?.apiKey ?? azureConfig.apiKey ?? getEnv("OPENAI_API_KEY");
+      this.lazySession = async () =>
+        import("openai").then(
+          async ({ AzureOpenAI }) =>
+            init?.session ??
+            new AzureOpenAI({
+              maxRetries: this.maxRetries,
+              timeout: this.timeout!,
+              ...this.additionalSessionOptions,
+              ...azureConfig,
+            }),
+        );
     } else {
-      this.apiKey = init?.apiKey ?? undefined;
-      this.session =
-        init?.session ??
-        getOpenAISession({
-          apiKey: this.apiKey,
-          maxRetries: this.maxRetries,
-          timeout: this.timeout,
-          ...this.additionalSessionOptions,
+      this.apiKey =
+        init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");
+      this.lazySession = async () =>
+        import("openai").then(({ OpenAI }) => {
+          return (
+            init?.session ??
+            new OpenAI({
+              apiKey: this.apiKey,
+              maxRetries: this.maxRetries,
+              timeout: this.timeout!,
+              ...this.additionalSessionOptions,
+            })
+          );
         });
     }
   }
@@ -118,7 +140,9 @@ export class OpenAIEmbedding extends BaseEmbedding {
     // TODO: ensure this for every sub class by calling it in the base class
     input = this.truncateMaxTokens(input);
 
-    const { data } = await this.session.openai.embeddings.create(
+    const { data } = await (
+      await this.session
+    ).embeddings.create(
       this.dimensions
         ? {
             model: this.model,

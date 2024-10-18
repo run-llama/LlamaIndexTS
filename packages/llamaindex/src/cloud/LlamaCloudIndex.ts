@@ -1,19 +1,21 @@
 import type { BaseQueryEngine } from "@llamaindex/core/query-engine";
 import type { BaseSynthesizer } from "@llamaindex/core/response-synthesizers";
-import type { Document, TransformComponent } from "@llamaindex/core/schema";
+import type { Document } from "@llamaindex/core/schema";
 import { RetrieverQueryEngine } from "../engines/query/RetrieverQueryEngine.js";
 import type { BaseNodePostprocessor } from "../postprocessors/types.js";
 import type { CloudRetrieveParams } from "./LlamaCloudRetriever.js";
 import { LlamaCloudRetriever } from "./LlamaCloudRetriever.js";
-import { getPipelineCreate } from "./config.js";
 import type { CloudConstructorParams } from "./type.js";
-import { getAppBaseUrl, getProjectId, initService } from "./utils.js";
+import {
+  getAppBaseUrl,
+  getPipelineId,
+  getProjectId,
+  initService,
+} from "./utils.js";
 
-import { PipelinesService, ProjectsService } from "@llamaindex/cloud/api";
-import { SentenceSplitter } from "@llamaindex/core/node-parser";
+import { PipelinesService, type PipelineCreate } from "@llamaindex/cloud/api";
 import type { BaseRetriever } from "@llamaindex/core/retriever";
 import { getEnv } from "@llamaindex/env";
-import { OpenAIEmbedding } from "@llamaindex/openai";
 import { Settings } from "../Settings.js";
 
 export class LlamaCloudIndex {
@@ -28,10 +30,7 @@ export class LlamaCloudIndex {
     verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
+    const pipelineId = await this.getPipelineId();
 
     if (verbose) {
       console.log("Waiting for pipeline ingestion: ");
@@ -78,10 +77,7 @@ export class LlamaCloudIndex {
     verbose = Settings.debug,
     raiseOnError = false,
   ): Promise<void> {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
+    const pipelineId = await this.getPipelineId();
 
     if (verbose) {
       console.log("Loading data: ");
@@ -143,17 +139,13 @@ export class LlamaCloudIndex {
   public async getPipelineId(
     name?: string,
     projectName?: string,
+    organizationId?: string,
   ): Promise<string> {
-    const { data: pipelines } =
-      await PipelinesService.searchPipelinesApiV1PipelinesGet({
-        path: {
-          project_id: await this.getProjectId(projectName),
-          project_name: name ?? this.params.name,
-        },
-        throwOnError: true,
-      });
-
-    return pipelines[0]!.id;
+    return await getPipelineId(
+      name ?? this.params.name,
+      projectName ?? this.params.projectName,
+      organizationId ?? this.params.organizationId,
+    );
   }
 
   public async getProjectId(
@@ -166,75 +158,42 @@ export class LlamaCloudIndex {
     );
   }
 
+  /**
+   * Adds documents to the given index parameters. If the index does not exist, it will be created.
+   *
+   * @param params - An object containing the following properties:
+   *   - documents: An array of Document objects to be added to the index.
+   *   - verbose: Optional boolean to enable verbose logging.
+   *   - Additional properties from CloudConstructorParams.
+   * @returns A Promise that resolves to a new LlamaCloudIndex instance.
+   */
   static async fromDocuments(
     params: {
       documents: Document[];
-      transformations?: TransformComponent[];
       verbose?: boolean;
     } & CloudConstructorParams,
+    config?: {
+      embedding: PipelineCreate["embedding_config"];
+      transform: PipelineCreate["transform_config"];
+    },
   ): Promise<LlamaCloudIndex> {
-    initService(params);
-    const defaultTransformations: TransformComponent[] = [
-      new SentenceSplitter(),
-      new OpenAIEmbedding({
-        apiKey: getEnv("OPENAI_API_KEY"),
-      }),
-    ];
+    const index = new LlamaCloudIndex({ ...params });
+    await index.ensureIndex({ ...config, verbose: params.verbose ?? false });
+    await index.addDocuments(params.documents, params.verbose);
+    return index;
+  }
+
+  async addDocuments(documents: Document[], verbose?: boolean): Promise<void> {
     const apiUrl = getAppBaseUrl();
-
-    const pipelineCreateParams = await getPipelineCreate({
-      pipelineName: params.name,
-      pipelineType: "MANAGED",
-      inputNodes: params.documents,
-      transformations: params.transformations ?? defaultTransformations,
-    });
-
-    const { data: project } =
-      await ProjectsService.upsertProjectApiV1ProjectsPut({
-        path: {
-          organization_id: params.organizationId,
-        },
-        body: {
-          name: params.projectName ?? "default",
-        },
-        throwOnError: true,
-      });
-
-    if (!project.id) {
-      throw new Error("Project ID should be defined");
-    }
-
-    const { data: pipeline } =
-      await PipelinesService.upsertPipelineApiV1PipelinesPut({
-        path: {
-          project_id: project.id,
-        },
-        body: pipelineCreateParams.configured_transformations
-          ? {
-              name: params.name,
-              configured_transformations:
-                pipelineCreateParams.configured_transformations,
-            }
-          : {
-              name: params.name,
-            },
-        throwOnError: true,
-      });
-
-    if (!pipeline.id) {
-      throw new Error("Pipeline ID must be defined");
-    }
-
-    if (params.verbose) {
-      console.log(`Created pipeline ${pipeline.id} with name ${params.name}`);
-    }
+    const projectId = await this.getProjectId();
+    const pipelineId = await this.getPipelineId();
 
     await PipelinesService.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
       {
         path: {
-          pipeline_id: pipeline.id,
+          pipeline_id: pipelineId,
         },
-        body: params.documents.map((doc) => ({
+        body: documents.map((doc) => ({
           metadata: doc.metadata,
           text: doc.text,
           excluded_embed_metadata_keys: doc.excludedEmbedMetadataKeys,
@@ -248,7 +207,7 @@ export class LlamaCloudIndex {
       const { data: pipelineStatus } =
         await PipelinesService.getPipelineStatusApiV1PipelinesPipelineIdStatusGet(
           {
-            path: { pipeline_id: pipeline.id },
+            path: { pipeline_id: pipelineId },
             throwOnError: true,
           },
         );
@@ -262,32 +221,30 @@ export class LlamaCloudIndex {
 
       if (pipelineStatus.status === "ERROR") {
         console.error(
-          `Some documents failed to ingest, check your pipeline logs at ${apiUrl}/project/${project.id}/deploy/${pipeline.id}`,
+          `Some documents failed to ingest, check your pipeline logs at ${apiUrl}/project/${projectId}/deploy/${pipelineId}`,
         );
         throw new Error("Some documents failed to ingest");
       }
 
       if (pipelineStatus.status === "PARTIAL_SUCCESS") {
         console.info(
-          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${apiUrl}/project/${project.id}/deploy/${pipeline.id}`,
+          `Documents ingestion partially succeeded, to check a more complete status check your pipeline at ${apiUrl}/project/${projectId}/deploy/${pipelineId}`,
         );
         break;
       }
 
-      if (params.verbose) {
+      if (verbose) {
         process.stdout.write(".");
       }
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
-    if (params.verbose) {
+    if (verbose) {
       console.info(
-        `Ingestion completed, find your index at ${apiUrl}/project/${project.id}/deploy/${pipeline.id}`,
+        `Ingestion completed, find your index at ${apiUrl}/project/${projectId}/deploy/${pipelineId}`,
       );
     }
-
-    return new LlamaCloudIndex({ ...params });
   }
 
   asRetriever(params: CloudRetrieveParams = {}): BaseRetriever {
@@ -308,20 +265,12 @@ export class LlamaCloudIndex {
     return new RetrieverQueryEngine(
       retriever,
       params?.responseSynthesizer,
-      params?.preFilters,
       params?.nodePostprocessors,
     );
   }
 
   async insert(document: Document) {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
-
-    if (!pipelineId) {
-      throw new Error("We couldn't find the pipeline ID for the given name");
-    }
+    const pipelineId = await this.getPipelineId();
 
     await PipelinesService.createBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPost(
       {
@@ -344,14 +293,7 @@ export class LlamaCloudIndex {
   }
 
   async delete(document: Document) {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
-
-    if (!pipelineId) {
-      throw new Error("We couldn't find the pipeline ID for the given name");
-    }
+    const pipelineId = await this.getPipelineId();
 
     await PipelinesService.deletePipelineDocumentApiV1PipelinesPipelineIdDocumentsDocumentIdDelete(
       {
@@ -366,14 +308,7 @@ export class LlamaCloudIndex {
   }
 
   async refreshDoc(document: Document) {
-    const pipelineId = await this.getPipelineId(
-      this.params.name,
-      this.params.projectName,
-    );
-
-    if (!pipelineId) {
-      throw new Error("We couldn't find the pipeline ID for the given name");
-    }
+    const pipelineId = await this.getPipelineId();
 
     await PipelinesService.upsertBatchPipelineDocumentsApiV1PipelinesPipelineIdDocumentsPut(
       {
@@ -393,5 +328,72 @@ export class LlamaCloudIndex {
     );
 
     await this.waitForDocumentIngestion([document.id_]);
+  }
+
+  public async ensureIndex(config?: {
+    embedding?: PipelineCreate["embedding_config"];
+    transform?: PipelineCreate["transform_config"];
+    verbose?: boolean;
+  }): Promise<void> {
+    const projectId = await this.getProjectId();
+
+    const { data: pipelines } =
+      await PipelinesService.searchPipelinesApiV1PipelinesGet({
+        query: {
+          project_id: projectId,
+          pipeline_name: this.params.name,
+        },
+        throwOnError: true,
+      });
+
+    if (pipelines.length === 0) {
+      // no pipeline found, create a new one
+      let embeddingConfig = config?.embedding;
+      if (!embeddingConfig) {
+        // no embedding config provided, use OpenAI as default
+        const openAIApiKey = getEnv("OPENAI_API_KEY");
+        const embeddingModel = getEnv("EMBEDDING_MODEL");
+        if (!openAIApiKey || !embeddingModel) {
+          throw new Error(
+            "No embedding configuration provided. Fallback to OpenAI embedding model. OPENAI_API_KEY and EMBEDDING_MODEL environment variables must be set.",
+          );
+        }
+        embeddingConfig = {
+          type: "OPENAI_EMBEDDING",
+          component: {
+            api_key: openAIApiKey,
+            model_name: embeddingModel,
+          },
+        };
+      }
+
+      let transformConfig = config?.transform;
+      if (!transformConfig) {
+        transformConfig = {
+          mode: "auto",
+          chunk_size: 1024,
+          chunk_overlap: 200,
+        };
+      }
+
+      const { data: pipeline } =
+        await PipelinesService.upsertPipelineApiV1PipelinesPut({
+          query: {
+            project_id: projectId,
+          },
+          body: {
+            name: this.params.name,
+            embedding_config: embeddingConfig,
+            transform_config: transformConfig,
+          },
+          throwOnError: true,
+        });
+
+      if (config?.verbose) {
+        console.log(
+          `Created pipeline ${pipeline.id} with name ${pipeline.name}`,
+        );
+      }
+    }
   }
 }

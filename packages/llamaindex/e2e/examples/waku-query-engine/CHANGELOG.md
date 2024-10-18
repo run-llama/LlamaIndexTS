@@ -1,6 +1,6 @@
-# test-edge-runtime
+# @llamaindex/waku-query-engine-test
 
-## 0.1.84
+## 0.0.85
 
 ### Patch Changes
 
@@ -9,14 +9,14 @@
 - Updated dependencies [96fc69c]
   - llamaindex@0.7.0
 
-## 0.1.83
+## 0.0.84
 
 ### Patch Changes
 
 - Updated dependencies [5729bd9]
   - llamaindex@0.6.22
 
-## 0.1.82
+## 0.0.83
 
 ### Patch Changes
 
@@ -24,14 +24,14 @@
 - Updated dependencies [94cb4ad]
   - llamaindex@0.6.21
 
-## 0.1.81
+## 0.0.82
 
 ### Patch Changes
 
 - Updated dependencies [6a9a7b1]
   - llamaindex@0.6.20
 
-## 0.1.80
+## 0.0.81
 
 ### Patch Changes
 
@@ -41,7 +41,7 @@
 - Updated dependencies [53fd00a]
   - llamaindex@0.6.19
 
-## 0.1.79
+## 0.0.80
 
 ### Patch Changes
 
@@ -49,14 +49,14 @@
 - Updated dependencies [fe08d04]
   - llamaindex@0.6.18
 
-## 0.1.78
+## 0.0.79
 
 ### Patch Changes
 
 - Updated dependencies [ee697fb]
   - llamaindex@0.6.17
 
-## 0.1.77
+## 0.0.78
 
 ### Patch Changes
 
@@ -64,26 +64,26 @@
 - Updated dependencies [6f3a31c]
   - llamaindex@0.6.16
 
-## 0.1.76
+## 0.0.77
 
 ### Patch Changes
 
 - Updated dependencies [2a82413]
   - llamaindex@0.6.15
 
-## 0.1.75
+## 0.0.76
 
 ### Patch Changes
 
 - llamaindex@0.6.14
 
-## 0.1.74
+## 0.0.75
 
 ### Patch Changes
 
 - llamaindex@0.6.13
 
-## 0.1.73
+## 0.0.74
 
 ### Patch Changes
 
@@ -92,14 +92,14 @@
 - Updated dependencies [1d9e3b1]
   - llamaindex@0.6.12
 
-## 0.1.72
+## 0.0.73
 
 ### Patch Changes
 
 - Updated dependencies [df441e2]
   - llamaindex@0.6.11
 
-## 0.1.71
+## 0.0.72
 
 ### Patch Changes
 
@@ -107,27 +107,27 @@
 - Updated dependencies [6cce3b1]
   - llamaindex@0.6.10
 
-## 0.1.70
+## 0.0.71
 
 ### Patch Changes
 
 - llamaindex@0.6.9
 
-## 0.1.69
+## 0.0.70
 
 ### Patch Changes
 
 - Updated dependencies [8b7fdba]
   - llamaindex@0.6.8
 
-## 0.1.68
+## 0.0.69
 
 ### Patch Changes
 
 - Updated dependencies [23bcc37]
   - llamaindex@0.6.7
 
-## 0.1.67
+## 0.0.68
 
 ### Patch Changes
 
@@ -136,21 +136,21 @@
 - Updated dependencies [a659574]
   - llamaindex@0.6.6
 
-## 0.1.66
+## 0.0.67
 
 ### Patch Changes
 
 - Updated dependencies [e9714db]
   - llamaindex@0.6.5
 
-## 0.1.65
+## 0.0.66
 
 ### Patch Changes
 
 - Updated dependencies [b48bcc3]
   - llamaindex@0.6.4
 
-## 0.1.64
+## 0.0.65
 
 ### Patch Changes
 
@@ -158,14 +158,14 @@
 - Updated dependencies [5c4badb]
   - llamaindex@0.6.3
 
-## 0.1.63
+## 0.0.64
 
 ### Patch Changes
 
 - Updated dependencies [749b43a]
   - llamaindex@0.6.2
 
-## 0.1.62
+## 0.0.63
 
 ### Patch Changes
 
@@ -175,21 +175,21 @@
 - Updated dependencies [85c2e19]
   - llamaindex@0.6.1
 
-## 0.1.61
+## 0.0.62
 
 ### Patch Changes
 
 - Updated dependencies [11feef8]
   - llamaindex@0.6.0
 
-## 0.1.60
+## 0.0.61
 
 ### Patch Changes
 
 - Updated dependencies [7edeb1c]
   - llamaindex@0.5.27
 
-## 0.1.59
+## 0.0.60
 
 ### Patch Changes
 
@@ -197,7 +197,7 @@
 - Updated dependencies [ffe0cd1]
   - llamaindex@0.5.26
 
-## 0.1.58
+## 0.0.59
 
 ### Patch Changes
 
@@ -205,26 +205,26 @@
 - Updated dependencies [d3bc663]
   - llamaindex@0.5.25
 
-## 0.1.57
+## 0.0.58
 
 ### Patch Changes
 
 - llamaindex@0.5.24
 
-## 0.1.56
+## 0.0.57
 
 ### Patch Changes
 
 - llamaindex@0.5.23
 
-## 0.1.55
+## 0.0.56
 
 ### Patch Changes
 
 - Updated dependencies [4648da6]
   - llamaindex@0.5.22
 
-## 0.1.54
+## 0.0.55
 
 ### Patch Changes
 
@@ -237,7 +237,7 @@
 - Updated dependencies [1711f6d]
   - llamaindex@0.5.21
 
-## 0.1.53
+## 0.0.54
 
 ### Patch Changes
 
@@ -246,35 +246,35 @@
 - Updated dependencies [eed0b04]
   - llamaindex@0.5.20
 
-## 0.1.52
+## 0.0.53
 
 ### Patch Changes
 
 - Updated dependencies [fcbf183]
   - llamaindex@0.5.19
 
-## 0.1.51
+## 0.0.52
 
 ### Patch Changes
 
 - Updated dependencies [8b66cf4]
   - llamaindex@0.5.18
 
-## 0.1.50
+## 0.0.51
 
 ### Patch Changes
 
 - Updated dependencies [c654398]
   - llamaindex@0.5.17
 
-## 0.1.49
+## 0.0.50
 
 ### Patch Changes
 
 - Updated dependencies [58abc57]
   - llamaindex@0.5.16
 
-## 0.1.48
+## 0.0.49
 
 ### Patch Changes
 
@@ -282,20 +282,20 @@
 - Updated dependencies [07a275f]
   - llamaindex@0.5.15
 
-## 0.1.47
+## 0.0.48
 
 ### Patch Changes
 
 - Updated dependencies [c825a2f]
   - llamaindex@0.5.14
 
-## 0.1.46
+## 0.0.47
 
 ### Patch Changes
 
 - llamaindex@0.5.13
 
-## 0.1.45
+## 0.0.46
 
 ### Patch Changes
 
@@ -304,13 +304,13 @@
 - Updated dependencies [da5cfc4]
   - llamaindex@0.5.12
 
-## 0.1.44
+## 0.0.45
 
 ### Patch Changes
 
 - llamaindex@0.5.11
 
-## 0.1.43
+## 0.0.44
 
 ### Patch Changes
 
@@ -320,14 +320,14 @@
 - Updated dependencies [fb6db45]
   - llamaindex@0.5.10
 
-## 0.1.42
+## 0.0.43
 
 ### Patch Changes
 
 - Updated dependencies [15962b3]
   - llamaindex@0.5.9
 
-## 0.1.41
+## 0.0.42
 
 ### Patch Changes
 
@@ -335,14 +335,14 @@
 - Updated dependencies [d917cdc]
   - llamaindex@0.5.8
 
-## 0.1.40
+## 0.0.41
 
 ### Patch Changes
 
 - Updated dependencies [ec59acd]
   - llamaindex@0.5.7
 
-## 0.1.39
+## 0.0.40
 
 ### Patch Changes
 
@@ -354,21 +354,21 @@
 - Updated dependencies [b7cfe5b]
   - llamaindex@0.5.6
 
-## 0.1.38
+## 0.0.39
 
 ### Patch Changes
 
 - Updated dependencies [b974eea]
   - llamaindex@0.5.5
 
-## 0.1.37
+## 0.0.38
 
 ### Patch Changes
 
 - Updated dependencies [1a65ead]
   - llamaindex@0.5.4
 
-## 0.1.36
+## 0.0.37
 
 ### Patch Changes
 
@@ -376,13 +376,13 @@
 - Updated dependencies [b3681bf]
   - llamaindex@0.5.3
 
-## 0.1.35
+## 0.0.36
 
 ### Patch Changes
 
 - llamaindex@0.5.2
 
-## 0.1.34
+## 0.0.35
 
 ### Patch Changes
 
@@ -390,7 +390,7 @@
 - Updated dependencies [a0f424e]
   - llamaindex@0.5.1
 
-## 0.1.33
+## 0.0.34
 
 ### Patch Changes
 
@@ -399,13 +399,13 @@
 - Updated dependencies [36ddec4]
   - llamaindex@0.5.0
 
-## 0.1.32
+## 0.0.33
 
 ### Patch Changes
 
 - llamaindex@0.4.14
 
-## 0.1.31
+## 0.0.32
 
 ### Patch Changes
 
@@ -413,42 +413,42 @@
 - Updated dependencies [304484b]
   - llamaindex@0.4.13
 
-## 0.1.30
+## 0.0.31
 
 ### Patch Changes
 
 - Updated dependencies [f326ab8]
   - llamaindex@0.4.12
 
-## 0.1.29
+## 0.0.30
 
 ### Patch Changes
 
 - Updated dependencies [8bf5b4a]
   - llamaindex@0.4.11
 
-## 0.1.28
+## 0.0.29
 
 ### Patch Changes
 
 - Updated dependencies [7dce3d2]
   - llamaindex@0.4.10
 
-## 0.1.27
+## 0.0.28
 
 ### Patch Changes
 
 - Updated dependencies [3a96a48]
   - llamaindex@0.4.9
 
-## 0.1.26
+## 0.0.27
 
 ### Patch Changes
 
 - Updated dependencies [83ebdfb]
   - llamaindex@0.4.8
 
-## 0.1.25
+## 0.0.26
 
 ### Patch Changes
 
@@ -457,7 +457,7 @@
 - Updated dependencies [f7f1af0]
   - llamaindex@0.4.7
 
-## 0.1.24
+## 0.0.25
 
 ### Patch Changes
 
@@ -465,28 +465,28 @@
 - Updated dependencies [08c55ec]
   - llamaindex@0.4.6
 
-## 0.1.23
+## 0.0.24
 
 ### Patch Changes
 
 - Updated dependencies [6c3e5d0]
   - llamaindex@0.4.5
 
-## 0.1.22
+## 0.0.23
 
 ### Patch Changes
 
 - Updated dependencies [42eb73a]
   - llamaindex@0.4.4
 
-## 0.1.21
+## 0.0.22
 
 ### Patch Changes
 
 - Updated dependencies [2ef62a9]
   - llamaindex@0.4.3
 
-## 0.1.20
+## 0.0.21
 
 ### Patch Changes
 
@@ -494,7 +494,7 @@
 - Updated dependencies [0730140]
   - llamaindex@0.4.2
 
-## 0.1.19
+## 0.0.20
 
 ### Patch Changes
 
@@ -503,7 +503,7 @@
 - Updated dependencies [cba5406]
   - llamaindex@0.4.1
 
-## 0.1.18
+## 0.0.19
 
 ### Patch Changes
 
@@ -513,7 +513,7 @@
 - Updated dependencies [d3b635b]
   - llamaindex@0.4.0
 
-## 0.1.17
+## 0.0.18
 
 ### Patch Changes
 
@@ -522,7 +522,7 @@
 - Updated dependencies [e6d6576]
   - llamaindex@0.3.17
 
-## 0.1.16
+## 0.0.17
 
 ### Patch Changes
 
@@ -538,7 +538,7 @@
 - Updated dependencies [73819bf]
   - llamaindex@0.3.16
 
-## 0.1.15
+## 0.0.16
 
 ### Patch Changes
 
@@ -547,7 +547,7 @@
 - Updated dependencies [8e26f75]
   - llamaindex@0.3.15
 
-## 0.1.14
+## 0.0.15
 
 ### Patch Changes
 
@@ -555,7 +555,7 @@
 - Updated dependencies [94543de]
   - llamaindex@0.3.14
 
-## 0.1.13
+## 0.0.14
 
 ### Patch Changes
 
@@ -565,14 +565,14 @@
 - Updated dependencies [a1f2475]
   - llamaindex@0.3.13
 
-## 0.1.12
+## 0.0.13
 
 ### Patch Changes
 
 - Updated dependencies [34fb1d8]
   - llamaindex@0.3.12
 
-## 0.1.11
+## 0.0.12
 
 ### Patch Changes
 
@@ -582,74 +582,89 @@
 - Updated dependencies [320be3f]
   - llamaindex@0.3.11
 
-## 0.1.10
+## 0.0.11
 
 ### Patch Changes
 
 - Updated dependencies [4aba02e]
   - llamaindex@0.3.10
 
-## 0.1.9
+## 0.0.10
 
 ### Patch Changes
-
-- c3747d0: fix: import `@xenova/transformers`
-
-  For now, if you use llamaindex in next.js, you need to add a plugin from `llamaindex/next` to ensure some module resolutions are correct.
 
 - Updated dependencies [c3747d0]
   - llamaindex@0.3.9
 
-## 0.1.8
+## 0.0.9
 
 ### Patch Changes
 
-- @llamaindex/edge@0.3.6
+- Updated dependencies [ce94780]
+  - llamaindex@0.3.8
 
-## 0.1.7
+## 0.0.8
 
 ### Patch Changes
 
-- @llamaindex/edge@0.3.5
+- Updated dependencies [b6a6606]
+- Updated dependencies [b6a6606]
+  - llamaindex@0.3.7
 
-## 0.1.6
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [efa326a]
+  - llamaindex@0.3.6
+
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [bc7a11c]
+- Updated dependencies [2fe2b81]
+- Updated dependencies [5596e31]
+- Updated dependencies [e74fe88]
+- Updated dependencies [be5df5b]
+  - llamaindex@0.3.5
+
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [1dce275]
+- Updated dependencies [d10533e]
+- Updated dependencies [2008efe]
+- Updated dependencies [5e61934]
+- Updated dependencies [9e74a43]
+- Updated dependencies [ee719a1]
+  - llamaindex@0.3.4
+
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [e8c41c5]
+  - llamaindex@0.3.3
+
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [61103b6]
+  - llamaindex@0.3.2
+
+## 0.0.2
 
 ### Patch Changes
 
 - Updated dependencies [46227f2]
-  - @llamaindex/edge@0.3.1
+  - llamaindex@0.3.1
 
-## 0.1.5
+## 0.0.1
 
 ### Patch Changes
 
 - Updated dependencies [5016f21]
-  - @llamaindex/edge@0.3.0
-
-## 0.1.4
-
-### Patch Changes
-
-- Updated dependencies [6277105]
-  - @llamaindex/edge@0.2.13
-
-## 0.1.3
-
-### Patch Changes
-
-- Updated dependencies [87142b2]
-- Updated dependencies [87142b2]
-  - @llamaindex/edge@0.2.11
-
-## 0.1.2
-
-### Patch Changes
-
-- @llamaindex/edge@0.2.7
-
-## 0.1.1
-
-### Patch Changes
-
-- Updated dependencies [7a23cc6]
-  - @llamaindex/edge@0.2.2
+  - llamaindex@0.3.0

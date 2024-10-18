@@ -246,7 +246,6 @@ export class KeywordTableIndex extends BaseIndex<KeywordTable> {
     return new RetrieverQueryEngine(
       retriever ?? this.asRetriever(),
       responseSynthesizer,
-      options?.preFilters,
       options?.nodePostprocessors,
     );
   }

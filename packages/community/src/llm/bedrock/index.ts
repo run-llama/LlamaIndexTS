@@ -47,35 +47,96 @@ export type BedrockChatParamsNonStreaming = LLMChatParamsNonStreaming<
 export type BedrockChatNonStreamResponse =
   ChatResponse<ToolCallLLMMessageOptions>;
 
-export enum BEDROCK_MODELS {
-  AMAZON_TITAN_TG1_LARGE = "amazon.titan-tg1-large",
-  AMAZON_TITAN_TEXT_EXPRESS_V1 = "amazon.titan-text-express-v1",
-  AI21_J2_GRANDE_INSTRUCT = "ai21.j2-grande-instruct",
-  AI21_J2_JUMBO_INSTRUCT = "ai21.j2-jumbo-instruct",
-  AI21_J2_MID = "ai21.j2-mid",
-  AI21_J2_MID_V1 = "ai21.j2-mid-v1",
-  AI21_J2_ULTRA = "ai21.j2-ultra",
-  AI21_J2_ULTRA_V1 = "ai21.j2-ultra-v1",
-  COHERE_COMMAND_TEXT_V14 = "cohere.command-text-v14",
-  ANTHROPIC_CLAUDE_INSTANT_1 = "anthropic.claude-instant-v1",
-  ANTHROPIC_CLAUDE_1 = "anthropic.claude-v1", // EOF: No longer supported
-  ANTHROPIC_CLAUDE_2 = "anthropic.claude-v2",
-  ANTHROPIC_CLAUDE_2_1 = "anthropic.claude-v2:1",
-  ANTHROPIC_CLAUDE_3_SONNET = "anthropic.claude-3-sonnet-20240229-v1:0",
-  ANTHROPIC_CLAUDE_3_HAIKU = "anthropic.claude-3-haiku-20240307-v1:0",
-  ANTHROPIC_CLAUDE_3_OPUS = "anthropic.claude-3-opus-20240229-v1:0",
-  ANTHROPIC_CLAUDE_3_5_SONNET = "anthropic.claude-3-5-sonnet-20240620-v1:0",
-  META_LLAMA2_13B_CHAT = "meta.llama2-13b-chat-v1",
-  META_LLAMA2_70B_CHAT = "meta.llama2-70b-chat-v1",
-  META_LLAMA3_8B_INSTRUCT = "meta.llama3-8b-instruct-v1:0",
-  META_LLAMA3_70B_INSTRUCT = "meta.llama3-70b-instruct-v1:0",
-  META_LLAMA3_1_8B_INSTRUCT = "meta.llama3-1-8b-instruct-v1:0",
-  META_LLAMA3_1_70B_INSTRUCT = "meta.llama3-1-70b-instruct-v1:0",
-  META_LLAMA3_1_405B_INSTRUCT = "meta.llama3-1-405b-instruct-v1:0",
-  MISTRAL_7B_INSTRUCT = "mistral.mistral-7b-instruct-v0:2",
-  MISTRAL_MIXTRAL_7B_INSTRUCT = "mistral.mixtral-8x7b-instruct-v0:1",
-  MISTRAL_MIXTRAL_LARGE_2402 = "mistral.mistral-large-2402-v1:0",
-}
+export const BEDROCK_MODELS = {
+  AMAZON_TITAN_TG1_LARGE: "amazon.titan-tg1-large",
+  AMAZON_TITAN_TEXT_EXPRESS_V1: "amazon.titan-text-express-v1",
+  AI21_J2_GRANDE_INSTRUCT: "ai21.j2-grande-instruct",
+  AI21_J2_JUMBO_INSTRUCT: "ai21.j2-jumbo-instruct",
+  AI21_J2_MID: "ai21.j2-mid",
+  AI21_J2_MID_V1: "ai21.j2-mid-v1",
+  AI21_J2_ULTRA: "ai21.j2-ultra",
+  AI21_J2_ULTRA_V1: "ai21.j2-ultra-v1",
+  COHERE_COMMAND_TEXT_V14: "cohere.command-text-v14",
+  ANTHROPIC_CLAUDE_INSTANT_1: "anthropic.claude-instant-v1",
+  ANTHROPIC_CLAUDE_1: "anthropic.claude-v1", // EOF: No longer supported
+  ANTHROPIC_CLAUDE_2: "anthropic.claude-v2",
+  ANTHROPIC_CLAUDE_2_1: "anthropic.claude-v2:1",
+  ANTHROPIC_CLAUDE_3_SONNET: "anthropic.claude-3-sonnet-20240229-v1:0",
+  ANTHROPIC_CLAUDE_3_HAIKU: "anthropic.claude-3-haiku-20240307-v1:0",
+  ANTHROPIC_CLAUDE_3_OPUS: "anthropic.claude-3-opus-20240229-v1:0",
+  ANTHROPIC_CLAUDE_3_5_SONNET: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+  META_LLAMA2_13B_CHAT: "meta.llama2-13b-chat-v1",
+  META_LLAMA2_70B_CHAT: "meta.llama2-70b-chat-v1",
+  META_LLAMA3_8B_INSTRUCT: "meta.llama3-8b-instruct-v1:0",
+  META_LLAMA3_70B_INSTRUCT: "meta.llama3-70b-instruct-v1:0",
+  META_LLAMA3_1_8B_INSTRUCT: "meta.llama3-1-8b-instruct-v1:0",
+  META_LLAMA3_1_70B_INSTRUCT: "meta.llama3-1-70b-instruct-v1:0",
+  META_LLAMA3_1_405B_INSTRUCT: "meta.llama3-1-405b-instruct-v1:0",
+  META_LLAMA3_2_1B_INSTRUCT: "meta.llama3-2-1b-instruct-v1:0",
+  META_LLAMA3_2_3B_INSTRUCT: "meta.llama3-2-3b-instruct-v1:0",
+  META_LLAMA3_2_11B_INSTRUCT: "meta.llama3-2-11b-instruct-v1:0",
+  META_LLAMA3_2_90B_INSTRUCT: "meta.llama3-2-90b-instruct-v1:0",
+  MISTRAL_7B_INSTRUCT: "mistral.mistral-7b-instruct-v0:2",
+  MISTRAL_MIXTRAL_7B_INSTRUCT: "mistral.mixtral-8x7b-instruct-v0:1",
+  MISTRAL_MIXTRAL_LARGE_2402: "mistral.mistral-large-2402-v1:0",
+};
+export type BEDROCK_MODELS =
+  (typeof BEDROCK_MODELS)[keyof typeof BEDROCK_MODELS];
+
+export const INFERENCE_BEDROCK_MODELS = {
+  US_ANTHROPIC_CLAUDE_3_HAIKU: "us.anthropic.claude-3-haiku-20240307-v1:0",
+  US_ANTHROPIC_CLAUDE_3_OPUS: "us.anthropic.claude-3-opus-20240229-v1:0",
+  US_ANTHROPIC_CLAUDE_3_SONNET: "us.anthropic.claude-3-sonnet-20240229-v1:0",
+  US_ANTHROPIC_CLAUDE_3_5_SONNET:
+    "us.anthropic.claude-3-5-sonnet-20240620-v1:0",
+  US_META_LLAMA_3_2_1B_INSTRUCT: "us.meta.llama3-2-1b-instruct-v1:0",
+  US_META_LLAMA_3_2_3B_INSTRUCT: "us.meta.llama3-2-3b-instruct-v1:0",
+  US_META_LLAMA_3_2_11B_INSTRUCT: "us.meta.llama3-2-11b-instruct-v1:0",
+  US_META_LLAMA_3_2_90B_INSTRUCT: "us.meta.llama3-2-90b-instruct-v1:0",
+
+  EU_ANTHROPIC_CLAUDE_3_HAIKU: "eu.anthropic.claude-3-haiku-20240307-v1:0",
+  EU_ANTHROPIC_CLAUDE_3_SONNET: "eu.anthropic.claude-3-sonnet-20240229-v1:0",
+  EU_ANTHROPIC_CLAUDE_3_5_SONNET:
+    "eu.anthropic.claude-3-5-sonnet-20240620-v1:0",
+  EU_META_LLAMA_3_2_1B_INSTRUCT: "eu.meta.llama3-2-1b-instruct-v1:0",
+  EU_META_LLAMA_3_2_3B_INSTRUCT: "eu.meta.llama3-2-3b-instruct-v1:0",
+};
+
+export type INFERENCE_BEDROCK_MODELS =
+  (typeof INFERENCE_BEDROCK_MODELS)[keyof typeof INFERENCE_BEDROCK_MODELS];
+
+export const INFERENCE_TO_BEDROCK_MAP: Record<
+  INFERENCE_BEDROCK_MODELS,
+  BEDROCK_MODELS
+> = {
+  [INFERENCE_BEDROCK_MODELS.US_ANTHROPIC_CLAUDE_3_HAIKU]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_HAIKU,
+  [INFERENCE_BEDROCK_MODELS.US_ANTHROPIC_CLAUDE_3_OPUS]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_OPUS,
+  [INFERENCE_BEDROCK_MODELS.US_ANTHROPIC_CLAUDE_3_SONNET]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_SONNET,
+  [INFERENCE_BEDROCK_MODELS.US_ANTHROPIC_CLAUDE_3_5_SONNET]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_5_SONNET,
+  [INFERENCE_BEDROCK_MODELS.US_META_LLAMA_3_2_1B_INSTRUCT]:
+    BEDROCK_MODELS.META_LLAMA3_2_1B_INSTRUCT,
+  [INFERENCE_BEDROCK_MODELS.US_META_LLAMA_3_2_3B_INSTRUCT]:
+    BEDROCK_MODELS.META_LLAMA3_2_3B_INSTRUCT,
+  [INFERENCE_BEDROCK_MODELS.US_META_LLAMA_3_2_11B_INSTRUCT]:
+    BEDROCK_MODELS.META_LLAMA3_2_11B_INSTRUCT,
+  [INFERENCE_BEDROCK_MODELS.US_META_LLAMA_3_2_90B_INSTRUCT]:
+    BEDROCK_MODELS.META_LLAMA3_2_90B_INSTRUCT,
+
+  [INFERENCE_BEDROCK_MODELS.EU_ANTHROPIC_CLAUDE_3_HAIKU]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_HAIKU,
+  [INFERENCE_BEDROCK_MODELS.EU_ANTHROPIC_CLAUDE_3_SONNET]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_SONNET,
+  [INFERENCE_BEDROCK_MODELS.EU_ANTHROPIC_CLAUDE_3_5_SONNET]:
+    BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_5_SONNET,
+  [INFERENCE_BEDROCK_MODELS.EU_META_LLAMA_3_2_1B_INSTRUCT]:
+    BEDROCK_MODELS.META_LLAMA3_2_1B_INSTRUCT,
+  [INFERENCE_BEDROCK_MODELS.EU_META_LLAMA_3_2_3B_INSTRUCT]:
+    BEDROCK_MODELS.META_LLAMA3_2_3B_INSTRUCT,
+};
 
 /*
  * Values taken from https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html#model-parameters-claude
@@ -109,6 +170,10 @@ const CHAT_ONLY_MODELS = {
   [BEDROCK_MODELS.META_LLAMA3_1_8B_INSTRUCT]: 128000,
   [BEDROCK_MODELS.META_LLAMA3_1_70B_INSTRUCT]: 128000,
   [BEDROCK_MODELS.META_LLAMA3_1_405B_INSTRUCT]: 128000,
+  [BEDROCK_MODELS.META_LLAMA3_2_1B_INSTRUCT]: 131000,
+  [BEDROCK_MODELS.META_LLAMA3_2_3B_INSTRUCT]: 131000,
+  [BEDROCK_MODELS.META_LLAMA3_2_11B_INSTRUCT]: 128000,
+  [BEDROCK_MODELS.META_LLAMA3_2_90B_INSTRUCT]: 128000,
   [BEDROCK_MODELS.MISTRAL_7B_INSTRUCT]: 32000,
   [BEDROCK_MODELS.MISTRAL_MIXTRAL_7B_INSTRUCT]: 32000,
   [BEDROCK_MODELS.MISTRAL_MIXTRAL_LARGE_2402]: 32000,
@@ -139,17 +204,25 @@ export const STREAMING_MODELS = new Set([
   BEDROCK_MODELS.META_LLAMA3_1_8B_INSTRUCT,
   BEDROCK_MODELS.META_LLAMA3_1_70B_INSTRUCT,
   BEDROCK_MODELS.META_LLAMA3_1_405B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_1B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_3B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_11B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_90B_INSTRUCT,
   BEDROCK_MODELS.MISTRAL_7B_INSTRUCT,
   BEDROCK_MODELS.MISTRAL_MIXTRAL_7B_INSTRUCT,
   BEDROCK_MODELS.MISTRAL_MIXTRAL_LARGE_2402,
 ]);
 
-export const TOOL_CALL_MODELS = [
+export const TOOL_CALL_MODELS: BEDROCK_MODELS[] = [
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_SONNET,
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_HAIKU,
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_OPUS,
   BEDROCK_MODELS.ANTHROPIC_CLAUDE_3_5_SONNET,
   BEDROCK_MODELS.META_LLAMA3_1_405B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_1B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_3B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_11B_INSTRUCT,
+  BEDROCK_MODELS.META_LLAMA3_2_90B_INSTRUCT,
 ];
 
 const getProvider = (model: string): Provider => {
@@ -166,7 +239,7 @@ const getProvider = (model: string): Provider => {
 };
 
 export type BedrockModelParams = {
-  model: keyof typeof BEDROCK_FOUNDATION_LLMS;
+  model: BEDROCK_MODELS | INFERENCE_BEDROCK_MODELS;
   temperature?: number;
   topP?: number;
   maxTokens?: number;
@@ -185,6 +258,10 @@ export const BEDROCK_MODEL_MAX_TOKENS: Partial<Record<BEDROCK_MODELS, number>> =
     [BEDROCK_MODELS.META_LLAMA3_1_8B_INSTRUCT]: 2048,
     [BEDROCK_MODELS.META_LLAMA3_1_70B_INSTRUCT]: 2048,
     [BEDROCK_MODELS.META_LLAMA3_1_405B_INSTRUCT]: 2048,
+    [BEDROCK_MODELS.META_LLAMA3_2_1B_INSTRUCT]: 2048,
+    [BEDROCK_MODELS.META_LLAMA3_2_3B_INSTRUCT]: 2048,
+    [BEDROCK_MODELS.META_LLAMA3_2_11B_INSTRUCT]: 2048,
+    [BEDROCK_MODELS.META_LLAMA3_2_90B_INSTRUCT]: 2048,
   };
 
 const DEFAULT_BEDROCK_PARAMS = {
@@ -193,14 +270,15 @@ const DEFAULT_BEDROCK_PARAMS = {
   maxTokens: 1024, // required by anthropic
 };
 
-export type BedrockParams = BedrockModelParams & BedrockRuntimeClientConfig;
+export type BedrockParams = BedrockRuntimeClientConfig & BedrockModelParams;
 
 /**
  * ToolCallLLM for Bedrock
  */
 export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
   private client: BedrockRuntimeClient;
-  model: keyof typeof BEDROCK_FOUNDATION_LLMS;
+  protected actualModel: BEDROCK_MODELS | INFERENCE_BEDROCK_MODELS;
+  model: BEDROCK_MODELS;
   temperature: number;
   topP: number;
   maxTokens?: number;
@@ -217,8 +295,8 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
     ...params
   }: BedrockParams) {
     super();
-
-    this.model = model;
+    this.actualModel = model;
+    this.model = INFERENCE_TO_BEDROCK_MAP[model] ?? model;
     this.provider = getProvider(this.model);
     this.maxTokens = maxTokens ?? DEFAULT_BEDROCK_PARAMS.maxTokens;
     this.temperature = temperature ?? DEFAULT_BEDROCK_PARAMS.temperature;
@@ -241,7 +319,7 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
       temperature: this.temperature,
       topP: this.topP,
       maxTokens: this.maxTokens,
-      contextWindow: BEDROCK_FOUNDATION_LLMS[this.model],
+      contextWindow: BEDROCK_FOUNDATION_LLMS[this.model] ?? 128000,
       tokenizer: undefined,
     };
   }
@@ -256,6 +334,8 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
       params.additionalChatOptions,
     );
     const command = new InvokeModelCommand(input);
+    command.input.modelId = this.actualModel;
+
     const response = await this.client.send(command);
     let options: ToolCallLLMMessageOptions = {};
     if (this.supportToolCall) {
@@ -287,6 +367,8 @@ export class Bedrock extends ToolCallLLM<BedrockAdditionalChatOptions> {
       params.additionalChatOptions,
     );
     const command = new InvokeModelWithResponseStreamCommand(input);
+    command.input.modelId = this.actualModel;
+
     const response = await this.client.send(command);
 
     if (response.body) yield* this.provider.reduceStream(response.body);

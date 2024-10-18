@@ -37,12 +37,14 @@ export default function withLlamaIndex(config: any) {
     webpackConfig.resolve.alias = {
       ...webpackConfig.resolve.alias,
       "@google-cloud/vertexai": false,
+      unpdf: false,
     };
     // Following lines will fix issues with onnxruntime-node when using pnpm
     // See: https://github.com/vercel/next.js/issues/43433
     webpackConfig.externals.push({
       "onnxruntime-node": "commonjs onnxruntime-node",
       sharp: "commonjs sharp",
+      chromadb: "commonjs chromadb",
     });
     return webpackConfig;
   };

@@ -10,10 +10,9 @@ import {
   type SearchSimpleReq,
 } from "@zilliz/milvus2-sdk-node";
 import {
-  VectorStoreBase,
-  type IEmbedModel,
+  BaseVectorStore,
   type MetadataFilters,
-  type VectorStoreNoEmbedModel,
+  type VectorStoreBaseParams,
   type VectorStoreQuery,
   type VectorStoreQueryResult,
 } from "./types.js";
@@ -72,12 +71,9 @@ function parseScalarFilters(scalarFilters: MetadataFilters): string {
   return filters.join(` ${condition} `);
 }
 
-export class MilvusVectorStore
-  extends VectorStoreBase
-  implements VectorStoreNoEmbedModel
-{
+export class MilvusVectorStore extends BaseVectorStore {
   public storesText: boolean = true;
-  public isEmbeddingQuery?: boolean;
+  public isEmbeddingQuery?: boolean = false;
   private flatMetadata: boolean = true;
 
   private milvusClient: MilvusClient;
@@ -91,7 +87,7 @@ export class MilvusVectorStore
 
   constructor(
     init?: Partial<{ milvusClient: MilvusClient }> &
-      Partial<IEmbedModel> & {
+      VectorStoreBaseParams & {
         params?: {
           configOrAddress: ClientConfig | string;
           ssl?: boolean;
@@ -106,7 +102,7 @@ export class MilvusVectorStore
         embeddingKey?: string;
       },
   ) {
-    super(init?.embedModel);
+    super(init);
     if (init?.milvusClient) {
       this.milvusClient = init.milvusClient;
     } else {

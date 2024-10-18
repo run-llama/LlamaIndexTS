@@ -1,5 +1,48 @@
 # @llamaindex/community
 
+## 0.0.48
+
+### Patch Changes
+
+- Updated dependencies [1364e8e]
+- Updated dependencies [96fc69c]
+  - @llamaindex/core@0.3.0
+
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [5f67820]
+  - @llamaindex/core@0.2.12
+
+## 0.0.46
+
+### Patch Changes
+
+- Updated dependencies [ee697fb]
+  - @llamaindex/core@0.2.11
+
+## 0.0.45
+
+### Patch Changes
+
+- Updated dependencies [3489e7d]
+- Updated dependencies [468bda5]
+  - @llamaindex/core@0.2.10
+
+## 0.0.44
+
+### Patch Changes
+
+- Updated dependencies [b17d439]
+  - @llamaindex/core@0.2.9
+
+## 0.0.43
+
+### Patch Changes
+
+- 2774e80: feat: added meta3.2 support via Bedrock including vision, tool call and inference region support
+
 ## 0.0.42
 
 ### Patch Changes

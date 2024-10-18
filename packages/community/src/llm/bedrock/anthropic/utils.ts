@@ -6,7 +6,10 @@ import type {
   MessageContentDetail,
   ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
-import { mapMessageContentToMessageContentDetails } from "../utils";
+import {
+  extractDataUrlComponents,
+  mapMessageContentToMessageContentDetails,
+} from "../utils";
 import type {
   AnthropicContent,
   AnthropicImageContent,
@@ -141,27 +144,6 @@ export const mapChatMessagesToAnthropicMessages = <
 
 export const mapTextContent = (text: string): AnthropicTextContent => {
   return { type: "text", text };
-};
-
-export const extractDataUrlComponents = (
-  dataUrl: string,
-): {
-  mimeType: string;
-  base64: string;
-} => {
-  const parts = dataUrl.split(";base64,");
-
-  if (parts.length !== 2 || !parts[0]!.startsWith("data:")) {
-    throw new Error("Invalid data URL");
-  }
-
-  const mimeType = parts[0]!.slice(5);
-  const base64 = parts[1]!;
-
-  return {
-    mimeType,
-    base64,
-  };
 };
 
 export const mapImageContent = (imageUrl: string): AnthropicImageContent => {
