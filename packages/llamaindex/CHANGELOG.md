@@ -1,5 +1,13 @@
 # llamaindex
 
+## 0.7.1
+
+### Patch Changes
+
+- 4c38c1b: fix(cloud): do not detect file type in llama parse
+- Updated dependencies [4c38c1b]
+  - @llamaindex/cloud@1.0.1
+
 ## 0.7.0
 
 ### Minor Changes
