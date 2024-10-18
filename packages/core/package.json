@@ -258,16 +258,30 @@
     },
     "./vector-store": {
       "require": {
-        "types": "./dist/vector-store/index.d.cts",
-        "default": "./dist/vector-store/index.cjs"
+        "types": "./vector-store/dist/index.d.cts",
+        "default": "./vector-store/dist/index.cjs"
       },
       "import": {
-        "types": "./dist/vector-store/index.d.ts",
-        "default": "./dist/vector-store/index.js"
+        "types": "./vector-store/dist/index.d.ts",
+        "default": "./vector-store/dist/index.js"
       },
       "default": {
-        "types": "./dist/vector-store/index.d.ts",
-        "default": "./dist/vector-store/index.js"
+        "types": "./vector-store/dist/index.d.ts",
+        "default": "./vector-store/dist/index.js"
+      }
+    },
+    "./tools": {
+      "require": {
+        "types": "./tools/dist/index.d.cts",
+        "default": "./tools/dist/index.cjs"
+      },
+      "import": {
+        "types": "./tools/dist/index.d.ts",
+        "default": "./tools/dist/index.js"
+      },
+      "default": {
+        "types": "./tools/dist/index.d.ts",
+        "default": "./tools/dist/index.js"
       }
     }
   },
@@ -289,7 +303,9 @@
     "./storage",
     "./response-synthesizers",
     "./chat-engine",
-    "./retriever"
+    "./retriever",
+    "./vector-store",
+    "./tools"
   ],
   "scripts": {
     "dev": "bunchee --watch",
@@ -312,6 +328,7 @@
     "@llamaindex/env": "workspace:*",
     "@types/node": "^22.5.1",
     "magic-bytes.js": "^1.10.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.3"
   }
 }
