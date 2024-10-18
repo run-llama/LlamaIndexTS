@@ -563,6 +563,9 @@ importers:
       '@llamaindex/portkey-ai':
         specifier: workspace:*
         version: link:../llm/portkey-ai
+      '@llamaindex/replicate':
+        specifier: workspace:^0.0.1
+        version: link:../llm/replicate
       '@mistralai/mistralai':
         specifier: ^1.0.4
         version: 1.0.4(zod@3.23.8)
@@ -1031,6 +1034,22 @@ importers:
       remeda:
         specifier: ^2.12.0
         version: 2.12.0
+    devDependencies:
+      bunchee:
+        specifier: 5.3.2
+        version: 5.3.2(typescript@5.6.2)
+
+  packages/llm/replicate:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      replicate:
+        specifier: ^1.0.1
+        version: 1.0.1
     devDependencies:
       bunchee:
         specifier: 5.3.2
@@ -10098,6 +10117,10 @@ packages:
 
   renderkid@3.0.0:
     resolution: {integrity: sha512-q/7VIQA8lmM1hF+jn+sFSPWGlMkSAeNYcPLmDQx2zzuiDfaLrOmumR8iaUKlenFgh0XRPIUeSPlH3A+AW3Z5pg==}
+
+  replicate@1.0.1:
+    resolution: {integrity: sha512-EY+rK1YR5bKHcM9pd6WyaIbv6m2aRIvHfHDh51j/LahlHTLKemTYXF6ptif2sLa+YospupAsIoxw8Ndt5nI3vg==}
+    engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -19658,7 +19681,7 @@ snapshots:
       is-bun-module: 1.1.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.5.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
@@ -24075,6 +24098,10 @@ snapshots:
       htmlparser2: 6.1.0
       lodash: 4.17.21
       strip-ansi: 6.0.1
+
+  replicate@1.0.1:
+    optionalDependencies:
+      readable-stream: 4.5.2
 
   require-directory@2.1.1: {}
 
