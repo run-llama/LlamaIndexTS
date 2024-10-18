@@ -283,6 +283,20 @@
         "types": "./tools/dist/index.d.ts",
         "default": "./tools/dist/index.js"
       }
+    },
+    "./data-structs": {
+      "require": {
+        "types": "./data-structs/dist/index.d.cts",
+        "default": "./data-structs/dist/index.cjs"
+      },
+      "import": {
+        "types": "./data-structs/dist/index.d.ts",
+        "default": "./data-structs/dist/index.js"
+      },
+      "default": {
+        "types": "./data-structs/dist/index.d.ts",
+        "default": "./data-structs/dist/index.js"
+      }
     }
   },
   "files": [
@@ -305,7 +319,8 @@
     "./chat-engine",
     "./retriever",
     "./vector-store",
-    "./tools"
+    "./tools",
+    "./data-structs"
   ],
   "scripts": {
     "dev": "bunchee --watch",

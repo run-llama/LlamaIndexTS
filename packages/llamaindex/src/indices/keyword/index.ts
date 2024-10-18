@@ -13,7 +13,7 @@ import type { StorageContext } from "../../storage/StorageContext.js";
 import { storageContextFromDefaults } from "../../storage/StorageContext.js";
 import type { BaseDocumentStore } from "../../storage/docStore/types.js";
 import type { BaseIndexInit } from "../BaseIndex.js";
-import { BaseIndex, KeywordTable } from "../BaseIndex.js";
+import { BaseIndex } from "../BaseIndex.js";
 import { IndexStructType } from "../json-to-index-struct.js";
 import {
   extractKeywordsGivenResponse,
@@ -21,6 +21,7 @@ import {
   simpleExtractKeywords,
 } from "./utils.js";
 
+import { KeywordTable } from "@llamaindex/core/data-structs";
 import type { LLM } from "@llamaindex/core/llms";
 import {
   defaultKeywordExtractPrompt,
