@@ -4,7 +4,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
   "include": ["./src"],
   "references": [

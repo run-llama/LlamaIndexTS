@@ -4,12 +4,13 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo"
   },
   "include": ["./src"],
   "references": [
     {
-      "path": "../../core/tsconfig.json"
+      "path": "../openai/tsconfig.json"
     },
     {
       "path": "../../env/tsconfig.json"
