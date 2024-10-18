@@ -5,6 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "outDir": "./lib",
+    "tsBuildInfoFile": "./lib/.tsbuildinfo",
     "lib": ["DOM", "ES2022"]
   },
   "include": ["./src"],
