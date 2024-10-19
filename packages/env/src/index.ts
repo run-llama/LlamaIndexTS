@@ -47,6 +47,7 @@ export {
   getEnv,
   setEnvs,
 } from "./utils/index.js";
+export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 export {
   createWriteStream,
   EOL,

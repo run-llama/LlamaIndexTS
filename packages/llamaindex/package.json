@@ -30,6 +30,7 @@
     "@google/generative-ai": "0.12.0",
     "@grpc/grpc-js": "^1.11.1",
     "@huggingface/inference": "^2.8.0",
+    "@llamaindex/clip": "workspace:*",
     "@llamaindex/anthropic": "workspace:*",
     "@llamaindex/cloud": "workspace:*",
     "@llamaindex/core": "workspace:*",

@@ -14,7 +14,7 @@ export {
   type OnLoad,
 } from "./multi-model/index.browser.js";
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";
-
+export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 // @ts-expect-error
 if (typeof window === "undefined") {
   console.warn(

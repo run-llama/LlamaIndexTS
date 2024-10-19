@@ -11,7 +11,6 @@ import {
   type NodeParser,
   SentenceSplitter,
 } from "@llamaindex/core/node-parser";
-import type { LoadTransformerEvent } from "@llamaindex/env";
 import { AsyncLocalStorage } from "@llamaindex/env";
 import type { ServiceContext } from "./ServiceContext.js";
 import {
@@ -19,12 +18,6 @@ import {
   setEmbeddedModel,
   withEmbeddedModel,
 } from "./internal/settings/EmbedModel.js";
-
-declare module "@llamaindex/core/global" {
-  interface LlamaIndexEventMaps {
-    "load-transformers": LoadTransformerEvent;
-  }
-}
 
 export type PromptConfig = {
   llm?: string;

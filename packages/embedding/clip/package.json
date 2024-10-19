@@ -1,0 +1,84 @@
+{
+  "name": "@llamaindex/clip",
+  "description": "Clip Embedding Adapter for LlamaIndex",
+  "version": "0.0.1",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "deno": {
+        "require": {
+          "types": "./dist/index.node.d.cts",
+          "default": "./dist/index.node.cjs"
+        },
+        "import": {
+          "types": "./dist/index.node.d.ts",
+          "default": "./dist/index.node.js"
+        },
+        "default": {
+          "types": "./dist/index.node.d.ts",
+          "default": "./dist/index.node.js"
+        }
+      },
+      "bun": {
+        "require": {
+          "types": "./dist/index.node.d.cts",
+          "default": "./dist/index.node.cjs"
+        },
+        "import": {
+          "types": "./dist/index.node.d.ts",
+          "default": "./dist/index.node.js"
+        },
+        "default": {
+          "types": "./dist/index.node.d.ts",
+          "default": "./dist/index.node.js"
+        }
+      },
+      "node": {
+        "require": {
+          "types": "./dist/index.node.d.cts",
+          "default": "./dist/index.node.cjs"
+        },
+        "import": {
+          "types": "./dist/index.node.d.ts",
+          "default": "./dist/index.node.js"
+        },
+        "default": {
+          "types": "./dist/index.node.d.ts",
+          "default": "./dist/index.node.js"
+        }
+      },
+      "require": {
+        "types": "./dist/index.node.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.node.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/run-llama/LlamaIndexTS.git",
+    "directory": "packages/embedding/clip"
+  },
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch"
+  },
+  "devDependencies": {
+    "bunchee": "5.3.2"
+  },
+  "dependencies": {
+    "@llamaindex/core": "workspace:*",
+    "@llamaindex/env": "workspace:*",
+    "@llamaindex/openai": "workspace:*",
+    "@xenova/transformers": "^2.17.2"
+  }
+}
