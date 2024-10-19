@@ -8,54 +8,20 @@
   "module": "dist/index.js",
   "exports": {
     ".": {
-      "deno": {
-        "require": {
-          "types": "./dist/index.node.d.cts",
-          "default": "./dist/index.node.cjs"
-        },
-        "import": {
-          "types": "./dist/index.node.d.ts",
-          "default": "./dist/index.node.js"
-        },
-        "default": {
-          "types": "./dist/index.node.d.ts",
-          "default": "./dist/index.node.js"
-        }
+      "edge-light": {
+        "types": "./dist/index.non-node.d.ts",
+        "default": "./dist/index.non-node.js"
       },
-      "bun": {
-        "require": {
-          "types": "./dist/index.node.d.cts",
-          "default": "./dist/index.node.cjs"
-        },
-        "import": {
-          "types": "./dist/index.node.d.ts",
-          "default": "./dist/index.node.js"
-        },
-        "default": {
-          "types": "./dist/index.node.d.ts",
-          "default": "./dist/index.node.js"
-        }
-      },
-      "node": {
-        "require": {
-          "types": "./dist/index.node.d.cts",
-          "default": "./dist/index.node.cjs"
-        },
-        "import": {
-          "types": "./dist/index.node.d.ts",
-          "default": "./dist/index.node.js"
-        },
-        "default": {
-          "types": "./dist/index.node.d.ts",
-          "default": "./dist/index.node.js"
-        }
+      "workerd": {
+        "types": "./dist/index.non-node.d.ts",
+        "default": "./dist/index.non-node.js"
       },
       "require": {
-        "types": "./dist/index.node.d.cts",
+        "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       },
       "import": {
-        "types": "./dist/index.node.d.ts",
+        "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       }
     }

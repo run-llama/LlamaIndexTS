@@ -1,5 +1,2 @@
-import { NotSupportCurrentRuntimeClass } from "@llamaindex/env";
-
-export const ClipEmbedding =
-  NotSupportCurrentRuntimeClass.bind("non-nodejs like");
+export { ClipEmbedding } from "./embedding";
 export { ClipEmbeddingModelType } from "./shared";
