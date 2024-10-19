@@ -146,6 +146,16 @@ jobs:
               echo "Skipping $dir, no package.json found"
             fi
           done
+      - name: Pack llm packages
+        run: |
+          for dir in packages/llm/*; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Packing $dir"
+              pnpm pack --pack-destination ${{ runner.temp }} -C $dir
+            else
+              echo "Skipping $dir, no package.json found"
+            fi
+          done
       - name: Install
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}/examples
