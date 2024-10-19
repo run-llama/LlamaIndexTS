@@ -1,6 +1,6 @@
 export class NotSupportCurrentRuntimeClass {
   constructor(runtime: string) {
-    throw new Error("Current environment ${runtime} is not supported");
+    throw new Error(`Current environment ${runtime} is not supported`);
   }
 
   static bind(runtime: string) {
