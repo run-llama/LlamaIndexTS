@@ -452,6 +452,28 @@ importers:
         specifier: 5.3.2
         version: 5.3.2(typescript@5.6.2)
 
+  packages/embedding/huggingface:
+    dependencies:
+      '@huggingface/inference':
+        specifier: ^2.8.1
+        version: 2.8.1
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../../llm/openai
+      '@xenova/transformers':
+        specifier: ^2.17.2
+        version: 2.17.2
+    devDependencies:
+      bunchee:
+        specifier: 5.3.2
+        version: 5.3.2(typescript@5.6.2)
+
   packages/env:
     dependencies:
       '@types/node':
@@ -552,9 +574,6 @@ importers:
       '@grpc/grpc-js':
         specifier: ^1.11.1
         version: 1.11.1
-      '@huggingface/inference':
-        specifier: ^2.8.0
-        version: 2.8.0
       '@llamaindex/anthropic':
         specifier: workspace:*
         version: link:../llm/anthropic
@@ -576,6 +595,9 @@ importers:
       '@llamaindex/groq':
         specifier: workspace:*
         version: link:../llm/groq
+      '@llamaindex/huggingface':
+        specifier: workspace:*
+        version: link:../embedding/huggingface
       '@llamaindex/ollama':
         specifier: workspace:*
         version: link:../llm/ollama
@@ -3182,16 +3204,20 @@ packages:
     peerDependencies:
       hono: ^4
 
-  '@huggingface/inference@2.8.0':
-    resolution: {integrity: sha512-Ti681P1qckcCAqgzmL53jBnluPuZGelmMIuXNjgAwC5+RIjF4S0SDQu6oy44ZTwekwNp2ETaZ2sXsOk+45aC4w==}
+  '@huggingface/gguf@0.1.12':
+    resolution: {integrity: sha512-m+u/ms28wE74v2VVCTncfI/KB2v897MRMOoRuYSU62P85fJ6/B2exMlHCNyAXkgDLeXBWDivXl4gPq+XbHmkaA==}
+    engines: {node: '>=20'}
+
+  '@huggingface/inference@2.8.1':
+    resolution: {integrity: sha512-EfsNtY9OR6JCNaUa5bZu2mrs48iqeTz0Gutwf+fU0Kypx33xFQB4DKMhp8u4Ee6qVbLbNWvTHuWwlppLQl4p4Q==}
     engines: {node: '>=18'}
 
   '@huggingface/jinja@0.2.2':
     resolution: {integrity: sha512-/KPde26khDUIPkTGU82jdtTW9UAuvUTumCAbFs/7giR0SxsvZC4hru51PBvpijH6BVkHcROcvZM/lpy5h1jRRA==}
     engines: {node: '>=18'}
 
-  '@huggingface/tasks@0.11.12':
-    resolution: {integrity: sha512-ZlVKbj24vPhvc6Ie1OJkO3ggXMpmfEV5NmbibcIuTC8LHfKGzNaG5QhUQ17+VLXUhvAT5XgHkHSP5L9xC09M7Q==}
+  '@huggingface/tasks@0.12.22':
+    resolution: {integrity: sha512-zpoCUJPUUQ9924PGMXZx8fYpcBnsMV7c+6EUZ4edVZmw28sW9yTo+RJAXrbcLquVsYrYxNgkKYc3odnM0/swfg==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -15640,13 +15666,17 @@ snapshots:
     dependencies:
       hono: 4.5.9
 
-  '@huggingface/inference@2.8.0':
+  '@huggingface/gguf@0.1.12': {}
+
+  '@huggingface/inference@2.8.1':
     dependencies:
-      '@huggingface/tasks': 0.11.12
+      '@huggingface/tasks': 0.12.22
 
   '@huggingface/jinja@0.2.2': {}
 
-  '@huggingface/tasks@0.11.12': {}
+  '@huggingface/tasks@0.12.22':
+    dependencies:
+      '@huggingface/gguf': 0.1.12
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
