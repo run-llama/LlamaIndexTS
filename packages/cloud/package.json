@@ -53,7 +53,7 @@
     "@hey-api/openapi-ts": "^0.53.0",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "bunchee": "5.3.2"
+    "bunchee": "5.5.1"
   },
   "peerDependencies": {
     "@llamaindex/core": "workspace:*",
