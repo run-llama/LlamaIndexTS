@@ -1,1 +1,1 @@
-export * from '@llamaindex/huggingface'
+export * from "@llamaindex/huggingface";
