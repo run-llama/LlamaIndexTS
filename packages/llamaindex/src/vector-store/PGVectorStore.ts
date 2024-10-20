@@ -114,6 +114,7 @@ type PGVectorStoreBaseConfig = {
   tableName?: string | undefined;
   dimensions?: number | undefined;
   embedModel?: BaseEmbedding | undefined;
+  autoSetup?: boolean | undefined;
 };
 
 export type PGVectorStoreConfig = VectorStoreBaseParams &
@@ -159,12 +160,14 @@ export class PGVectorStore extends BaseVectorStore {
   private isDBConnected: boolean = false;
   private db: IsomorphicDB | null = null;
   private readonly clientConfig: pg.ClientConfig | null = null;
+  private readonly autoSetup: boolean = true;
 
   constructor(config: PGVectorStoreConfig) {
     super(config);
     this.schemaName = config?.schemaName ?? PGVECTOR_SCHEMA;
     this.tableName = config?.tableName ?? PGVECTOR_TABLE;
     this.dimensions = config?.dimensions ?? DEFAULT_DIMENSIONS;
+    this.autoSetup = config?.autoSetup ?? true;
     if ("clientConfig" in config) {
       this.clientConfig = config.clientConfig;
     } else {
@@ -236,8 +239,10 @@ export class PGVectorStore extends BaseVectorStore {
       this.isDBConnected = false;
     });
 
-    // Check schema, table(s), index(es)
-    await this.checkSchema(this.db);
+    if (this.autoSetup) {
+      // Check schema, table(s), index(es)
+      await this.checkSchema(this.db);
+    }
 
     return this.db;
   }
