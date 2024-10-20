@@ -31,7 +31,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/llm/openai"
+    "directory": "packages/providers/replicate"
   },
   "scripts": {
     "build": "bunchee",
