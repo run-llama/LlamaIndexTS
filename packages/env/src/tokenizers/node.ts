@@ -2,21 +2,18 @@
 import type { Tokenizer } from "./types.js";
 import { Tokenizers } from "./types.js";
 
-import { get_encoding } from "tiktoken";
+import cl100kBase from "gpt-tokenizer";
 
 class TokenizerSingleton {
-  private defaultTokenizer: Tokenizer;
+  #defaultTokenizer: Tokenizer;
 
   constructor() {
-    const encoding = get_encoding("cl100k_base");
-
-    this.defaultTokenizer = {
-      encode: (text: string) => {
-        return encoding.encode(text);
+    this.#defaultTokenizer = {
+      encode: (text: string): Uint32Array => {
+        return new Uint32Array(cl100kBase.encode(text));
       },
       decode: (tokens: Uint32Array) => {
-        const text = encoding.decode(tokens);
-        return new TextDecoder().decode(text);
+        return cl100kBase.decode(tokens);
       },
     };
   }
@@ -26,7 +23,7 @@ class TokenizerSingleton {
       throw new Error(`Tokenizer encoding ${encoding} not yet supported`);
     }
 
-    return this.defaultTokenizer;
+    return this.#defaultTokenizer;
   }
 }
 
