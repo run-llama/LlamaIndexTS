@@ -105,3 +105,22 @@ await test("simple node", async (t) => {
     assert.deepStrictEqual(result.nodes, []);
   }
 });
+
+await test("no setup", async (t) => {
+  // @ts-expect-error private method
+  assert.ok(PGVectorStore.prototype.checkSchema);
+  // @ts-expect-error private method
+  const Mock = class extends PGVectorStore {
+    private override async checkSchema(): Promise<any> {
+      throw new Error("should not be called");
+    }
+  };
+  const vectorStore = new Mock({
+    clientConfig: pgConfig,
+    performSetup: false,
+  });
+  const db = await vectorStore.client();
+  t.after(async () => {
+    await db.close();
+  });
+});
