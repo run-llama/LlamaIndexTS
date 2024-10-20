@@ -1,5 +1,5 @@
-import { tokenizers } from "@llamaindex/env";
 import { describe, expect, it } from "vitest";
+import { tokenizers } from "../src/tokenizers/node.js";
 
 describe("tokenizer", () => {
   it("should tokenize text", () => {
