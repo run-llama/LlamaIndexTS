@@ -1,12 +1,21 @@
 {
-  "name": "@llamaindex/groq",
-  "description": "Groq Adapter for LlamaIndex",
-  "version": "0.0.16",
+  "name": "@llamaindex/huggingface",
+  "description": "Huggingface Adapter for LlamaIndex",
+  "version": "0.0.1",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "exports": {
     ".": {
+      "edge-light": {
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
+      },
+      "workerd": {
+        "types": "./dist/index.workerd.d.ts",
+        "default": "./dist/index.workerd.js"
+      },
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
@@ -23,7 +32,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/run-llama/LlamaIndexTS.git",
-    "directory": "packages/llm/groq"
+    "directory": "packages/embedding/clip"
   },
   "scripts": {
     "build": "bunchee",
@@ -33,8 +42,10 @@
     "bunchee": "5.5.1"
   },
   "dependencies": {
+    "@huggingface/inference": "^2.8.1",
+    "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "@llamaindex/openai": "workspace:*",
-    "groq-sdk": "0.6.1"
+    "@xenova/transformers": "^2.17.2"
   }
 }

@@ -70,7 +70,7 @@
     "@swc/types": "^0.1.12",
     "@types/json-schema": "^7.0.15",
     "@types/node": "^22.5.1",
-    "bunchee": "5.3.2",
+    "bunchee": "5.5.1",
     "llamaindex": "workspace:*",
     "next": "14.2.11",
     "rollup": "^4.21.2",

@@ -156,6 +156,16 @@ jobs:
               echo "Skipping $dir, no package.json found"
             fi
           done
+      - name: Pack embedding packages
+        run: |
+          for dir in packages/embedding/*; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "Packing $dir"
+              pnpm pack --pack-destination ${{ runner.temp }} -C $dir
+            else
+              echo "Skipping $dir, no package.json found"
+            fi
+          done
       - name: Install
         run: npm add ${{ runner.temp }}/*.tgz
         working-directory: ${{ runner.temp }}/examples

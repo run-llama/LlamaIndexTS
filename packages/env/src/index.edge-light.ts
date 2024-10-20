@@ -14,3 +14,4 @@ export {
   type OnLoad,
 } from "./multi-model/index.non-nodejs.js";
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";
+export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";

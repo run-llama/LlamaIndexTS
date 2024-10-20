@@ -7,6 +7,8 @@
  */
 import { INTERNAL_ENV } from "./utils/index.js";
 
+export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
+
 export * from "./node-polyfill.js";
 
 export function getEnv(name: string): string | undefined {
