@@ -269,6 +269,11 @@ export class LlamaParseReader extends FileReader {
         }
         tries++;
       } else {
+        if (this.verbose) {
+          console.error(
+            `Recieved Error response ${status} for job ${jobId}.  Got Error Code: ${data.error_code} and Error Message: ${data.error_message}`,
+          );
+        }
         throw new Error(
           `Failed to parse the file: ${jobId}, status: ${status}`,
         );
