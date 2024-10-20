@@ -10,9 +10,9 @@
 import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
 import { fs } from "./fs/memory.js";
-import { NotSupportCurrentRuntimeClass } from './utils/shared.js';
+import { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 
-export const Readable = NotSupportCurrentRuntimeClass.bind('browser');
+export const Readable = NotSupportCurrentRuntimeClass.bind("browser");
 export { fileURLToPath } from "./url/index.js";
 export { fs, pathe as path };
 
