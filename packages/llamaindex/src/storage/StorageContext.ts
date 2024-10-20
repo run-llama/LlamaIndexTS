@@ -1,10 +1,10 @@
+import { ClipEmbedding } from "@llamaindex/clip";
 import {
   DEFAULT_IMAGE_VECTOR_NAMESPACE,
   DEFAULT_NAMESPACE,
 } from "@llamaindex/core/global";
 import { ModalityType, ObjectType } from "@llamaindex/core/schema";
 import { path } from "@llamaindex/env";
-import { getImageEmbedModel } from "../internal/settings/image-embed-model.js";
 import type { ServiceContext } from "../ServiceContext.js";
 import { SimpleVectorStore } from "../vector-store/SimpleVectorStore.js";
 import type {
@@ -53,7 +53,7 @@ export async function storageContextFromDefaults({
     }
     if (storeImages && !(ModalityType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = new SimpleVectorStore({
-        embeddingModel: new (await getImageEmbedModel())(),
+        embeddingModel: new ClipEmbedding(),
       });
     }
   } else {
@@ -71,7 +71,7 @@ export async function storageContextFromDefaults({
     if (storeImages && !(ObjectType.IMAGE in vectorStores)) {
       vectorStores[ModalityType.IMAGE] = await SimpleVectorStore.fromPersistDir(
         path.join(persistDir, DEFAULT_IMAGE_VECTOR_NAMESPACE),
-        new (await getImageEmbedModel())(),
+        new ClipEmbedding(),
       );
     }
   }
