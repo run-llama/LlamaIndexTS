@@ -54,6 +54,7 @@
     "ajv": "^8.17.1",
     "assemblyai": "^4.7.0",
     "chromadb": "1.9.2",
+    "chromadb-default-embed": "^2.13.2",
     "cohere-ai": "7.13.0",
     "discord-api-types": "^0.37.98",
     "gpt-tokenizer": "^2.5.0",
