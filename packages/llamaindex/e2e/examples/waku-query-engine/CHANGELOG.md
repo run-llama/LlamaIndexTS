@@ -1,5 +1,15 @@
 # @llamaindex/waku-query-engine-test
 
+## 0.0.86
+
+### Patch Changes
+
+- Updated dependencies [ae49ff4]
+- Updated dependencies [4c38c1b]
+- Updated dependencies [a75af83]
+- Updated dependencies [a75af83]
+  - llamaindex@0.7.1
+
 ## 0.0.85
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @llamaindex/groq
 
+## 0.0.17
+
+### Patch Changes
+
+- a75af83: refactor: move some llm and embedding to single package
+- Updated dependencies [ae49ff4]
+- Updated dependencies [a75af83]
+  - @llamaindex/env@0.1.14
+  - @llamaindex/openai@0.1.18
+
 ## 0.0.16
 
 ### Patch Changes

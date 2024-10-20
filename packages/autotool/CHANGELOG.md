@@ -1,5 +1,16 @@
 # @llamaindex/autotool
 
+## 4.0.1
+
+### Patch Changes
+
+- a75af83: refactor: move some llm and embedding to single package
+- Updated dependencies [ae49ff4]
+- Updated dependencies [4c38c1b]
+- Updated dependencies [a75af83]
+- Updated dependencies [a75af83]
+  - llamaindex@0.7.1
+
 ## 4.0.0
 
 ### Patch Changes
