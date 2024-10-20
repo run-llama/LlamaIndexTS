@@ -35,7 +35,7 @@
   "dependencies": {
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
-    "openai": "^4.60.0",
+    "openai": "^4.68.1",
     "remeda": "^2.12.0"
   }
 }

@@ -27,25 +27,31 @@
       "path": "./packages/community/tsconfig.json"
     },
     {
-      "path": "./packages/llm/anthropic/tsconfig.json"
+      "path": "./packages/providers/clip/tsconfig.json"
     },
     {
-      "path": "./packages/llm/deepinfra/tsconfig.json"
+      "path": "./packages/providers/huggingface/tsconfig.json"
     },
     {
-      "path": "./packages/llm/portkey-ai/tsconfig.json"
+      "path": "./packages/providers/anthropic/tsconfig.json"
     },
     {
-      "path": "./packages/llm/openai/tsconfig.json"
+      "path": "./packages/providers/deepinfra/tsconfig.json"
     },
     {
-      "path": "./packages/llm/groq/tsconfig.json"
+      "path": "./packages/providers/portkey-ai/tsconfig.json"
     },
     {
-      "path": "./packages/llm/replicate/tsconfig.json"
+      "path": "./packages/providers/openai/tsconfig.json"
     },
     {
-      "path": "./packages/llm/ollama/tsconfig.json"
+      "path": "./packages/providers/groq/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/replicate/tsconfig.json"
+    },
+    {
+      "path": "./packages/providers/ollama/tsconfig.json"
     },
     {
       "path": "./packages/cloud/tsconfig.json"
