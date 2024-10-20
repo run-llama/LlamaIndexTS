@@ -1,8 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
-  - "packages/embedding/*"
-  - "packages/llm/*"
+  - "packages/providers/*"
   - "packages/core/tests"
   - "packages/llamaindex/tests"
   - "packages/llamaindex/e2e"

@@ -433,47 +433,6 @@ importers:
         specifier: ^2.0.5
         version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.7)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.2))(terser@5.36.0)
 
-  packages/embedding/clip:
-    dependencies:
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
-      '@llamaindex/openai':
-        specifier: workspace:*
-        version: link:../../llm/openai
-      '@xenova/transformers':
-        specifier: ^2.17.2
-        version: 2.17.2
-    devDependencies:
-      bunchee:
-        specifier: 5.5.1
-        version: 5.5.1(typescript@5.6.3)
-
-  packages/embedding/huggingface:
-    dependencies:
-      '@huggingface/inference':
-        specifier: ^2.8.1
-        version: 2.8.1
-      '@llamaindex/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@llamaindex/env':
-        specifier: workspace:*
-        version: link:../../env
-      '@llamaindex/openai':
-        specifier: workspace:*
-        version: link:../../llm/openai
-      '@xenova/transformers':
-        specifier: ^2.17.2
-        version: 2.17.2
-    devDependencies:
-      bunchee:
-        specifier: 5.5.1
-        version: 5.5.1(typescript@5.6.3)
-
   packages/env:
     dependencies:
       '@types/node':
@@ -576,10 +535,10 @@ importers:
         version: 1.11.1
       '@llamaindex/anthropic':
         specifier: workspace:*
-        version: link:../llm/anthropic
+        version: link:../providers/anthropic
       '@llamaindex/clip':
         specifier: workspace:*
-        version: link:../embedding/clip
+        version: link:../providers/clip
       '@llamaindex/cloud':
         specifier: workspace:*
         version: link:../cloud
@@ -588,28 +547,28 @@ importers:
         version: link:../core
       '@llamaindex/deepinfra':
         specifier: workspace:*
-        version: link:../llm/deepinfra
+        version: link:../providers/deepinfra
       '@llamaindex/env':
         specifier: workspace:*
         version: link:../env
       '@llamaindex/groq':
         specifier: workspace:*
-        version: link:../llm/groq
+        version: link:../providers/groq
       '@llamaindex/huggingface':
         specifier: workspace:*
-        version: link:../embedding/huggingface
+        version: link:../providers/huggingface
       '@llamaindex/ollama':
         specifier: workspace:*
-        version: link:../llm/ollama
+        version: link:../providers/ollama
       '@llamaindex/openai':
         specifier: workspace:*
-        version: link:../llm/openai
+        version: link:../providers/openai
       '@llamaindex/portkey-ai':
         specifier: workspace:*
-        version: link:../llm/portkey-ai
+        version: link:../providers/portkey-ai
       '@llamaindex/replicate':
         specifier: workspace:^0.0.1
-        version: link:../llm/replicate
+        version: link:../providers/replicate
       '@mistralai/mistralai':
         specifier: ^1.0.4
         version: 1.0.4(zod@3.23.8)
@@ -975,7 +934,7 @@ importers:
         specifier: ^2.0.5
         version: 2.1.1(@edge-runtime/vm@4.0.3)(@types/node@22.7.7)(happy-dom@15.7.4)(msw@2.4.8(typescript@5.6.3))(terser@5.36.0)
 
-  packages/llm/anthropic:
+  packages/providers/anthropic:
     dependencies:
       '@anthropic-ai/sdk':
         specifier: 0.27.1
@@ -994,7 +953,26 @@ importers:
         specifier: 5.5.1
         version: 5.5.1(typescript@5.6.3)
 
-  packages/llm/deepinfra:
+  packages/providers/clip:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+      '@xenova/transformers':
+        specifier: ^2.17.2
+        version: 2.17.2
+    devDependencies:
+      bunchee:
+        specifier: 5.5.1
+        version: 5.5.1(typescript@5.6.3)
+
+  packages/providers/deepinfra:
     dependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1010,7 +988,7 @@ importers:
         specifier: 5.5.1
         version: 5.5.1(typescript@5.6.3)
 
-  packages/llm/groq:
+  packages/providers/groq:
     dependencies:
       '@llamaindex/env':
         specifier: workspace:*
@@ -1026,7 +1004,29 @@ importers:
         specifier: 5.5.1
         version: 5.5.1(typescript@5.6.3)
 
-  packages/llm/ollama:
+  packages/providers/huggingface:
+    dependencies:
+      '@huggingface/inference':
+        specifier: ^2.8.1
+        version: 2.8.1
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      '@llamaindex/openai':
+        specifier: workspace:*
+        version: link:../openai
+      '@xenova/transformers':
+        specifier: ^2.17.2
+        version: 2.17.2
+    devDependencies:
+      bunchee:
+        specifier: 5.5.1
+        version: 5.5.1(typescript@5.6.3)
+
+  packages/providers/ollama:
     dependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1045,7 +1045,7 @@ importers:
         specifier: 5.5.1
         version: 5.5.1(typescript@5.6.3)
 
-  packages/llm/openai:
+  packages/providers/openai:
     dependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1054,8 +1054,8 @@ importers:
         specifier: workspace:*
         version: link:../../env
       openai:
-        specifier: ^4.60.0
-        version: 4.60.1(encoding@0.1.13)(zod@3.23.8)
+        specifier: ^4.68.1
+        version: 4.68.1(encoding@0.1.13)(zod@3.23.8)
       remeda:
         specifier: ^2.12.0
         version: 2.12.0
@@ -1064,7 +1064,7 @@ importers:
         specifier: 5.5.1
         version: 5.5.1(typescript@5.6.3)
 
-  packages/llm/portkey-ai:
+  packages/providers/portkey-ai:
     dependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -1083,7 +1083,7 @@ importers:
         specifier: 5.5.1
         version: 5.5.1(typescript@5.6.3)
 
-  packages/llm/replicate:
+  packages/providers/replicate:
     dependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -12458,7 +12458,7 @@ snapshots:
 
   '@anthropic-ai/sdk@0.27.1(encoding@0.1.13)':
     dependencies:
-      '@types/node': 18.19.50
+      '@types/node': 18.19.57
       '@types/node-fetch': 2.6.11
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
@@ -12486,7 +12486,7 @@ snapshots:
     dependencies:
       '@aws-crypto/util': 5.2.0
       '@aws-sdk/types': 3.649.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@aws-crypto/sha256-browser@5.2.0':
     dependencies:
@@ -13075,7 +13075,7 @@ snapshots:
       '@smithy/util-middleware': 3.0.5
       '@smithy/util-retry': 3.0.5
       '@smithy/util-utf8': 3.0.0
-      tslib: 2.7.0
+      tslib: 2.8.0
     transitivePeerDependencies:
       - aws-crt
 
@@ -13161,7 +13161,7 @@ snapshots:
       '@smithy/util-middleware': 3.0.6
       '@smithy/util-retry': 3.0.6
       '@smithy/util-utf8': 3.0.0
-      tslib: 2.7.0
+      tslib: 2.8.0
     transitivePeerDependencies:
       - aws-crt
 
@@ -14256,7 +14256,7 @@ snapshots:
       '@smithy/property-provider': 3.1.5
       '@smithy/shared-ini-file-loader': 3.1.6
       '@smithy/types': 3.4.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@aws-sdk/token-providers@3.649.0(@aws-sdk/client-sso-oidc@3.650.0(@aws-sdk/client-sts@3.650.0))':
     dependencies:
@@ -14265,7 +14265,7 @@ snapshots:
       '@smithy/property-provider': 3.1.5
       '@smithy/shared-ini-file-loader': 3.1.6
       '@smithy/types': 3.4.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@aws-sdk/token-providers@3.649.0(@aws-sdk/client-sso-oidc@3.675.0(@aws-sdk/client-sts@3.650.0))':
     dependencies:
@@ -14274,7 +14274,7 @@ snapshots:
       '@smithy/property-provider': 3.1.5
       '@smithy/shared-ini-file-loader': 3.1.6
       '@smithy/types': 3.4.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@aws-sdk/token-providers@3.654.0(@aws-sdk/client-sso-oidc@3.654.0(@aws-sdk/client-sts@3.654.0))':
     dependencies:
@@ -14283,7 +14283,7 @@ snapshots:
       '@smithy/property-provider': 3.1.6
       '@smithy/shared-ini-file-loader': 3.1.7
       '@smithy/types': 3.4.2
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@aws-sdk/token-providers@3.667.0(@aws-sdk/client-sso-oidc@3.675.0(@aws-sdk/client-sts@3.650.0))':
     dependencies:
@@ -14415,7 +14415,7 @@ snapshots:
 
   '@aws-sdk/util-utf8-browser@3.259.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@azure/abort-controller@1.1.0':
     dependencies:
@@ -16809,7 +16809,7 @@ snapshots:
       '@inquirer/figures': 1.0.6
       '@inquirer/type': 2.0.0
       '@types/mute-stream': 0.0.4
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       '@types/wrap-ansi': 3.0.0
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
@@ -16847,7 +16847,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -17479,21 +17479,21 @@ snapshots:
       '@aws-crypto/crc32': 3.0.0
       '@smithy/types': 1.2.0
       '@smithy/util-hex-encoding': 1.1.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/eventstream-codec@3.1.2':
     dependencies:
       '@aws-crypto/crc32': 5.2.0
       '@smithy/types': 3.4.1
       '@smithy/util-hex-encoding': 3.0.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/eventstream-codec@3.1.5':
     dependencies:
       '@aws-crypto/crc32': 5.2.0
       '@smithy/types': 3.4.2
       '@smithy/util-hex-encoding': 3.0.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/eventstream-serde-browser@3.0.6':
     dependencies:
@@ -17603,15 +17603,15 @@ snapshots:
 
   '@smithy/is-array-buffer@1.1.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/is-array-buffer@2.2.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/is-array-buffer@3.0.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/middleware-content-length@3.0.7':
     dependencies:
@@ -17940,7 +17940,7 @@ snapshots:
 
   '@smithy/types@1.2.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/types@3.4.1':
     dependencies:
@@ -17989,12 +17989,12 @@ snapshots:
   '@smithy/util-buffer-from@1.1.0':
     dependencies:
       '@smithy/is-array-buffer': 1.1.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/util-buffer-from@2.2.0':
     dependencies:
       '@smithy/is-array-buffer': 2.2.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/util-buffer-from@3.0.0':
     dependencies:
@@ -18079,7 +18079,7 @@ snapshots:
 
   '@smithy/util-hex-encoding@1.1.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/util-hex-encoding@3.0.0':
     dependencies:
@@ -18087,7 +18087,7 @@ snapshots:
 
   '@smithy/util-middleware@1.1.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/util-middleware@3.0.5':
     dependencies:
@@ -18157,16 +18157,16 @@ snapshots:
 
   '@smithy/util-uri-escape@1.1.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/util-uri-escape@3.0.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/util-utf8@1.1.0':
     dependencies:
       '@smithy/util-buffer-from': 1.1.0
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@smithy/util-utf8@2.3.0':
     dependencies:
@@ -18443,7 +18443,7 @@ snapshots:
 
   '@types/acorn@4.0.6':
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -18469,27 +18469,27 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/bonjour@3.5.13':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       '@types/responselike': 1.0.3
 
   '@types/connect-history-api-fallback@1.5.4':
     dependencies:
       '@types/express-serve-static-core': 4.19.5
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/cookie@0.6.0': {}
 
@@ -18509,7 +18509,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.5':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       '@types/qs': 6.9.15
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -18541,7 +18541,7 @@ snapshots:
 
   '@types/http-proxy@1.17.15':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
@@ -18561,7 +18561,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/lodash-es@4.17.12':
     dependencies:
@@ -18581,7 +18581,7 @@ snapshots:
 
   '@types/mute-stream@0.0.4':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/node-fetch@2.6.11':
     dependencies:
@@ -18590,7 +18590,7 @@ snapshots:
 
   '@types/node-forge@1.3.11':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/node@12.20.55': {}
 
@@ -18603,7 +18603,6 @@ snapshots:
   '@types/node@18.19.57':
     dependencies:
       undici-types: 5.26.5
-    optional: true
 
   '@types/node@22.5.4':
     dependencies:
@@ -18616,7 +18615,6 @@ snapshots:
   '@types/node@22.7.7':
     dependencies:
       undici-types: 6.19.8
-    optional: true
 
   '@types/papaparse@5.3.14':
     dependencies:
@@ -18626,7 +18624,7 @@ snapshots:
 
   '@types/pg@8.11.6':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       pg-protocol: 1.6.1
       pg-types: 4.0.2
 
@@ -18685,20 +18683,20 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/retry@0.12.0': {}
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/semver@7.5.8': {}
 
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/serve-index@1.9.4':
     dependencies:
@@ -18707,12 +18705,12 @@ snapshots:
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       '@types/send': 0.17.4
 
   '@types/sockjs@0.3.36':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/statuses@2.0.5': {}
 
@@ -18737,7 +18735,7 @@ snapshots:
 
   '@types/ws@8.5.12':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -20035,7 +20033,7 @@ snapshots:
       isomorphic-fetch: 3.0.0(encoding@0.1.13)
     optionalDependencies:
       cohere-ai: 7.14.0(encoding@0.1.13)
-      openai: 4.68.1(encoding@0.1.13)
+      openai: 4.68.1(encoding@0.1.13)(zod@3.23.8)
     transitivePeerDependencies:
       - encoding
 
@@ -20791,7 +20789,7 @@ snapshots:
   dot-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   dot-prop@6.0.1:
     dependencies:
@@ -22132,7 +22130,7 @@ snapshots:
 
   groq-sdk@0.6.1(encoding@0.1.13):
     dependencies:
-      '@types/node': 18.19.50
+      '@types/node': 18.19.57
       '@types/node-fetch': 2.6.11
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
@@ -22834,7 +22832,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -22842,13 +22840,13 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 22.7.7
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -23178,7 +23176,7 @@ snapshots:
 
   lower-case@2.0.2:
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   lowercase-keys@2.0.0: {}
 
@@ -23582,7 +23580,7 @@ snapshots:
 
   micromark-extension-mdx-expression@3.0.0:
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       devlop: 1.1.0
       micromark-factory-mdx-expression: 2.0.1
       micromark-factory-space: 2.0.0
@@ -23594,7 +23592,7 @@ snapshots:
   micromark-extension-mdx-jsx@3.0.0:
     dependencies:
       '@types/acorn': 4.0.6
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       devlop: 1.1.0
       estree-util-is-identifier-name: 3.0.0
       micromark-factory-mdx-expression: 2.0.1
@@ -23610,7 +23608,7 @@ snapshots:
 
   micromark-extension-mdxjs-esm@3.0.0:
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.1
       micromark-util-character: 2.1.0
@@ -23646,7 +23644,7 @@ snapshots:
 
   micromark-factory-mdx-expression@2.0.1:
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       devlop: 1.1.0
       micromark-util-character: 2.1.0
       micromark-util-events-to-acorn: 2.0.2
@@ -23720,7 +23718,7 @@ snapshots:
   micromark-util-events-to-acorn@2.0.2:
     dependencies:
       '@types/acorn': 4.0.6
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       '@types/unist': 3.0.3
       devlop: 1.1.0
       estree-util-visit: 2.0.0
@@ -24174,7 +24172,7 @@ snapshots:
   no-case@3.0.4:
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   node-abi@3.65.0:
     dependencies:
@@ -24392,7 +24390,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  openai@4.68.1(encoding@0.1.13):
+  openai@4.68.1(encoding@0.1.13)(zod@3.23.8):
     dependencies:
       '@types/node': 18.19.57
       '@types/node-fetch': 2.6.11
@@ -24401,9 +24399,10 @@ snapshots:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0(encoding@0.1.13)
+    optionalDependencies:
+      zod: 3.23.8
     transitivePeerDependencies:
       - encoding
-    optional: true
 
   openai@4.68.1(zod@3.23.8):
     dependencies:
@@ -24594,7 +24593,7 @@ snapshots:
   pascal-case@3.1.2:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   path-exists@3.0.0: {}
 
@@ -26111,7 +26110,7 @@ snapshots:
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   sockjs@0.3.24:
     dependencies:
