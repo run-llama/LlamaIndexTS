@@ -3,8 +3,9 @@
   "description": "environment wrapper, supports all JS environment including node, deno, bun, edge runtime, and cloudflare worker",
   "version": "0.1.14",
   "type": "module",
-  "types": "dist/type/index.d.ts",
-  "main": "dist/cjs/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "main": "dist/index.cjs",
   "keywords": [
     "llm",
     "llama",
@@ -24,29 +25,30 @@
   "exports": {
     ".": {
       "node": {
-        "types": "./dist/type/index.d.ts",
+        "types": "./dist/index.d.ts",
         "import": "./dist/index.js",
-        "default": "./dist/cjs/index.js"
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.cjs"
       },
       "workerd": {
-        "types": "./dist/type/index.workerd.d.ts",
+        "types": "./dist/index.workerd.d.ts",
         "default": "./dist/index.workerd.js"
       },
       "edge-light": {
-        "types": "./dist/type/index.edge-light.d.ts",
+        "types": "./dist/index.edge-light.d.ts",
         "default": "./dist/index.edge-light.js"
       },
       "browser": {
-        "types": "./dist/type/index.browser.d.ts",
+        "types": "./dist/index.browser.d.ts",
         "default": "./dist/index.browser.js"
       },
       "import": {
-        "types": "./dist/type/index.d.ts",
+        "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       },
       "require": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
       }
     }
   },
@@ -61,26 +63,19 @@
     "directory": "packages/env"
   },
   "scripts": {
-    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
-    "build:type": "tsc -p tsconfig.json",
-    "postbuild": "node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\"",
+    "dev": "bunchee --watch",
+    "build": "bunchee",
     "test": "vitest"
   },
   "devDependencies": {
-    "@aws-crypto/sha256-js": "^5.2.0",
-    "@swc/cli": "^0.4.0",
-    "@swc/core": "^1.7.22",
+    "@types/node": "^22.5.1",
+    "@types/readable-stream": "^4.0.15",
     "@xenova/transformers": "^2.17.2",
-    "concurrently": "^8.2.2",
+    "bunchee": "5.5.1",
     "gpt-tokenizer": "^2.5.0",
     "pathe": "^1.1.2",
+    "readable-stream": "^4.5.2",
     "vitest": "^2.0.5"
-  },
-  "dependencies": {
-    "@types/node": "^22.5.1"
   },
   "peerDependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",

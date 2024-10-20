@@ -11,6 +11,8 @@ import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
 import { fs } from "./fs/memory.js";
 
+export { Readable } from "readable-stream";
+export { fileURLToPath } from "./url/index.js";
 export { fs, pathe as path };
 
 export interface SHA256 {
