@@ -1,5 +1,30 @@
 # llamaindex
 
+## 0.7.1
+
+### Patch Changes
+
+- ae49ff4: feat: use `gpt-tokenizer`
+- 4c38c1b: fix(cloud): do not detect file type in llama parse
+- a75af83: feat: allow passing perform setup in pg vector store
+- a75af83: refactor: move some llm and embedding to single package
+- Updated dependencies [ae49ff4]
+- Updated dependencies [4c38c1b]
+- Updated dependencies [24d065f]
+- Updated dependencies [a75af83]
+  - @llamaindex/env@0.1.14
+  - @llamaindex/cloud@1.0.1
+  - @llamaindex/huggingface@0.0.2
+  - @llamaindex/portkey-ai@0.0.2
+  - @llamaindex/anthropic@0.0.2
+  - @llamaindex/deepinfra@0.0.2
+  - @llamaindex/replicate@0.0.2
+  - @llamaindex/ollama@0.0.9
+  - @llamaindex/openai@0.1.18
+  - @llamaindex/clip@0.0.2
+  - @llamaindex/groq@0.0.17
+  - @llamaindex/core@0.3.1
+
 ## 0.7.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # @llamaindex/env
 
+## 0.1.14
+
+### Patch Changes
+
+- ae49ff4: feat: use `gpt-tokenizer`
+- a75af83: refactor: move some llm and embedding to single package
+
 ## 0.1.13
 
 ### Patch Changes

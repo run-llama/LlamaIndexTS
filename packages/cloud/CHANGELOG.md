@@ -1,5 +1,17 @@
 # @llamaindex/cloud
 
+## 1.0.1
+
+### Patch Changes
+
+- 4c38c1b: fix(cloud): do not detect file type in llama parse
+- 24d065f: Log Parse Job Errors when verbose is enabled
+- a75af83: refactor: move some llm and embedding to single package
+- Updated dependencies [ae49ff4]
+- Updated dependencies [a75af83]
+  - @llamaindex/env@0.1.14
+  - @llamaindex/core@0.3.1
+
 ## 1.0.0
 
 ### Patch Changes
