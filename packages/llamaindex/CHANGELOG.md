@@ -1,5 +1,23 @@
 # llamaindex
 
+## 0.7.2
+
+### Patch Changes
+
+- Updated dependencies [4ba2cfe]
+  - @llamaindex/env@0.1.15
+  - @llamaindex/cloud@1.0.2
+  - @llamaindex/core@0.3.2
+  - @llamaindex/anthropic@0.0.3
+  - @llamaindex/clip@0.0.3
+  - @llamaindex/deepinfra@0.0.3
+  - @llamaindex/groq@0.0.18
+  - @llamaindex/huggingface@0.0.3
+  - @llamaindex/ollama@0.0.10
+  - @llamaindex/openai@0.1.19
+  - @llamaindex/portkey-ai@0.0.3
+  - @llamaindex/replicate@0.0.3
+
 ## 0.7.1
 
 ### Patch Changes

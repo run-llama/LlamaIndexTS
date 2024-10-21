@@ -1,5 +1,11 @@
 # docs
 
+## 0.0.94
+
+### Patch Changes
+
+- llamaindex@0.7.2
+
 ## 0.0.93
 
 ### Patch Changes

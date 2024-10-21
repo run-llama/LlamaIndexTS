@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.15
+
+### Patch Changes
+
+- 4ba2cfe: fix(env): align export APIs
+
 ## 0.1.14
 
 ### Patch Changes
