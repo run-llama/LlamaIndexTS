@@ -336,8 +336,7 @@
     "ajv": "^8.17.1",
     "bunchee": "5.5.1",
     "happy-dom": "^15.7.4",
-    "natural": "^8.0.1",
-    "python-format-js": "^1.4.3"
+    "natural": "^8.0.1"
   },
   "dependencies": {
     "@llamaindex/env": "workspace:*",

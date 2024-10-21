@@ -1,7 +1,7 @@
-import format from "python-format-js";
 import type { ChatMessage } from "../llms";
 import type { BaseOutputParser, Metadata } from "../schema";
 import { objectEntries } from "../utils";
+import { format } from "./format";
 import { PromptType } from "./prompt-type";
 
 type MappingFn<TemplatesVar extends string[] = string[]> = (

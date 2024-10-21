@@ -8,11 +8,6 @@ overrides:
   trim: 1.0.1
   protobufjs: 7.2.6
 
-patchedDependencies:
-  python-format-js@1.4.3:
-    hash: 2qoyzwmpaczaj2mabgmoz6ccpy
-    path: patches/python-format-js@1.4.3.patch
-
 importers:
 
   .:
@@ -420,9 +415,6 @@ importers:
       natural:
         specifier: ^8.0.1
         version: 8.0.1(@aws-sdk/credential-providers@3.675.0)
-      python-format-js:
-        specifier: ^1.4.3
-        version: 1.4.3(patch_hash=2qoyzwmpaczaj2mabgmoz6ccpy)
 
   packages/core/tests:
     devDependencies:
@@ -10325,9 +10317,6 @@ packages:
   pupa@3.1.0:
     resolution: {integrity: sha512-FLpr4flz5xZTSJxSeaheeMKN/EDzMdK7b8PTOC6a5PYFKTucWbdqjgqaEyH0shFiSJrVB1+Qqi4Tk19ccU6Aug==}
     engines: {node: '>=12.20'}
-
-  python-format-js@1.4.3:
-    resolution: {integrity: sha512-0iK5zP5HMf4F3Xc3Uo6hggPu4ylEQCKNoLXUYe3S1YfYkFG6DxGDO3KozCrySntAZTPmP9yRI+eMq0MXweHqIw==}
 
   qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
@@ -25285,8 +25274,6 @@ snapshots:
   pupa@3.1.0:
     dependencies:
       escape-goat: 4.0.0
-
-  python-format-js@1.4.3(patch_hash=2qoyzwmpaczaj2mabgmoz6ccpy): {}
 
   qs@6.11.0:
     dependencies:
