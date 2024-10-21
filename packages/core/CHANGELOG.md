@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.3.3
+
+### Patch Changes
+
+- 0493f67: fix(core): inline `python-format-js`
+
 ## 0.3.2
 
 ### Patch Changes
