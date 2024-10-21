@@ -53,6 +53,7 @@
     "@zilliz/milvus2-sdk-node": "^2.4.6",
     "ajv": "^8.17.1",
     "assemblyai": "^4.7.0",
+    "bunchee": "5.5.1",
     "chromadb": "1.9.2",
     "chromadb-default-embed": "^2.13.2",
     "cohere-ai": "7.13.0",
@@ -109,61 +110,39 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "types": "./dist/type/index.d.ts",
-  "main": "./dist/cjs/index.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
   "exports": {
+    "./next": {
+      "require": {
+        "types": "./dist/next.d.cts",
+        "default": "./dist/next.cjs"
+      },
+      "import": {
+        "types": "./dist/next.d.ts",
+        "default": "./dist/next.js"
+      }
+    },
     ".": {
       "react-server": {
-        "types": "./dist/type/index.react-server.d.ts",
+        "types": "./dist/index.react-server.d.ts",
         "default": "./dist/index.react-server.js"
       },
       "workerd": {
-        "types": "./dist/type/index.workerd.d.ts",
+        "types": "./dist/index.workerd.d.ts",
         "default": "./dist/index.workerd.js"
       },
       "edge-light": {
-        "types": "./dist/type/index.edge.d.ts",
-        "default": "./dist/index.edge.js"
+        "types": "./dist/index.edge-light.d.ts",
+        "default": "./dist/index.edge-light.js"
       },
       "import": {
-        "types": "./dist/type/index.d.ts",
+        "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       },
       "require": {
-        "types": "./dist/type/index.d.ts",
-        "default": "./dist/cjs/index.js"
-      }
-    },
-    "./internal/*": {
-      "import": "./dist/not-allow.js",
-      "require": "./dist/cjs/not-allow.js"
-    },
-    "./readers/SimpleDirectoryReader": {
-      "workerd": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
-      },
-      "edge-light": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.edge.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.edge.js"
-      },
-      "import": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
-        "default": "./dist/readers/SimpleDirectoryReader.js"
-      },
-      "require": {
-        "types": "./dist/type/readers/SimpleDirectoryReader.d.ts",
-        "default": "./dist/cjs/readers/SimpleDirectoryReader.js"
-      }
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/*.js"
-      },
-      "require": {
-        "types": "./dist/type/*.d.ts",
-        "default": "./dist/cjs/*.js"
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
       }
     }
   },
@@ -180,12 +159,9 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "rm -rf ./dist && pnpm run build:esm && pnpm run build:cjs && pnpm run build:type",
-    "build:esm": "swc src -d dist --strip-leading-paths --config-file ../../.swcrc",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths --config-file ../../.cjs.swcrc",
-    "build:type": "tsc -p tsconfig.json",
+    "dev": "bunchee --watch",
+    "build": "bunchee",
     "copy": "cp -r ../../README.md ../../LICENSE .",
-    "postbuild": "pnpm run copy && node -e \"require('fs').writeFileSync('./dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }))\"",
-    "dev": "concurrently \"pnpm run build:esm --watch\" \"pnpm run build:cjs --watch\" \"pnpm run build:type --watch\""
+    "postbuild": "pnpm run copy"
   }
 }
