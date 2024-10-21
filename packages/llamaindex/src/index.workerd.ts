@@ -1,1 +1,1 @@
-export * from "./index.edge.js";
+export * from "./index.edge-light.js";
