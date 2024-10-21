@@ -4,7 +4,6 @@
  * @module
  */
 import "./global-check.js";
-export * from "./web-polyfill.js";
 
 export { consoleLogger, emptyLogger, type Logger } from "./logger/index.js";
 export {
@@ -15,6 +14,7 @@ export {
 } from "./multi-model/index.browser.js";
 export { Tokenizers, tokenizers, type Tokenizer } from "./tokenizers/js.js";
 export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
+export * from "./web-polyfill.js";
 // @ts-expect-error
 if (typeof window === "undefined") {
   console.warn(

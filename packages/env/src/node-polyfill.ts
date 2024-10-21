@@ -9,9 +9,12 @@
  */
 import { Sha256 } from "@aws-crypto/sha256-js";
 import pathe from "pathe";
-import { fs } from "./fs/memory.js";
+import { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 
-export { fs, pathe as path };
+export { createWriteStream, fs } from "./fs/memory.js";
+export { fileURLToPath } from "./url/index.js";
+export { pathe as path };
+export const Readable = NotSupportCurrentRuntimeClass.bind("non-Node.js");
 
 export interface SHA256 {
   update(data: string | Uint8Array): void;
