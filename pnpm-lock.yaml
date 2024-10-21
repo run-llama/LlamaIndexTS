@@ -556,7 +556,7 @@ importers:
         specifier: workspace:*
         version: link:../providers/portkey-ai
       '@llamaindex/replicate':
-        specifier: workspace:^0.0.3
+        specifier: workspace:^0.0.4
         version: link:../providers/replicate
       '@mistralai/mistralai':
         specifier: ^1.0.4

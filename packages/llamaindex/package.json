@@ -1,6 +1,6 @@
 {
   "name": "llamaindex",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -40,7 +40,7 @@
     "@llamaindex/ollama": "workspace:*",
     "@llamaindex/openai": "workspace:*",
     "@llamaindex/portkey-ai": "workspace:*",
-    "@llamaindex/replicate": "workspace:^0.0.3",
+    "@llamaindex/replicate": "workspace:^0.0.4",
     "@mistralai/mistralai": "^1.0.4",
     "@mixedbread-ai/sdk": "^2.2.11",
     "@pinecone-database/pinecone": "^3.0.2",
