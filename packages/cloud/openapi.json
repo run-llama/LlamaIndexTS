@@ -264,8 +264,9 @@
     },
     "/api/v1/validate-integrations/validate-embedding-connection": {
       "post": {
+        "tags": ["Validation"],
         "summary": "Validate Embedding Connection",
-        "description": "Validate an embedding connection.",
+        "description": "Validate an embedding connection.\n\nArgs:\n    embedding_config: The embedding configuration to validate.\n    pipeline_id: If provided, the embedding connection will be validated for the pipeline.\n    user: The user to validate the embedding connection for.\n    db: The database session.\n\nReturns:\n    A BaseConnectionValidation object indicating the result of the validation.",
         "operationId": "validate_embedding_connection_api_v1_validate_integrations_validate_embedding_connection_post",
         "security": [
           {
@@ -276,6 +277,23 @@
           }
         ],
         "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pipeline Id"
+            }
+          },
           {
             "name": "session",
             "in": "cookie",
@@ -364,6 +382,7 @@
     },
     "/api/v1/validate-integrations/validate-data-source-connection": {
       "post": {
+        "tags": ["Validation"],
         "summary": "Validate Data Source Connection",
         "description": "Validate a data source connection.",
         "operationId": "validate_data_source_connection_api_v1_validate_integrations_validate_data_source_connection_post",
@@ -429,6 +448,7 @@
     },
     "/api/v1/validate-integrations/validate-data-sink-connection": {
       "post": {
+        "tags": ["Validation"],
         "summary": "Validate Data Sink Connection",
         "description": "Validate a data sink connection.",
         "operationId": "validate_data_sink_connection_api_v1_validate_integrations_validate_data_sink_connection_post",
@@ -2233,6 +2253,459 @@
         "responses": {
           "204": {
             "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/roles": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "List Roles",
+        "description": "List all roles in an organization.",
+        "operationId": "list_roles_api_v1_organizations__organization_id__roles_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  },
+                  "title": "Response List Roles Api V1 Organizations  Organization Id  Roles Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users/roles": {
+      "put": {
+        "tags": ["Organizations"],
+        "summary": "Assign Role To User In Organization",
+        "description": "Assign a role to a user in an organization.",
+        "operationId": "assign_role_to_user_in_organization_api_v1_organizations__organization_id__users_roles_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserOrganizationRoleCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOrganizationRole"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "Get User Role",
+        "description": "Get the role of a user in an organization.",
+        "operationId": "get_user_role_api_v1_organizations__organization_id__users_roles_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOrganizationRole"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users/{user_id}/projects": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "List Projects By User",
+        "description": "List all projects for a user in an organization.",
+        "operationId": "list_projects_by_user_api_v1_organizations__organization_id__users__user_id__projects_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  },
+                  "title": "Response List Projects By User Api V1 Organizations  Organization Id  Users  User Id  Projects Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Organizations"],
+        "summary": "Add User To Project",
+        "description": "Add a user to a project.",
+        "operationId": "add_user_to_project_api_v1_organizations__organization_id__users__user_id__projects_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organizations/{organization_id}/users/{user_id}/projects/{project_id}": {
+      "delete": {
+        "tags": ["Organizations"],
+        "summary": "Remove User From Project",
+        "description": "Remove a user from a project.",
+        "operationId": "remove_user_from_project_api_v1_organizations__organization_id__users__user_id__projects__project_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          },
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
           },
           "422": {
             "description": "Validation Error",
@@ -10643,7 +11116,7 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Size",
             "description": "Chunk size for the transformation.",
             "default": 1024
@@ -10664,19 +11137,16 @@
           "model_name": {
             "type": "string",
             "title": "Model Name",
-            "description": "The name of the embedding model.",
-            "default": "unknown"
+            "description": "The name of the OpenAI embedding model.",
+            "default": "text-embedding-ada-002"
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048.0,
-            "exclusiveMinimum": 0.0,
+            "maximum": 2048,
+            "exclusiveMinimum": 0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
           },
           "num_workers": {
             "anyOf": [
@@ -10696,7 +11166,14 @@
             "description": "Additional kwargs for the OpenAI API."
           },
           "api_key": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Api Key",
             "description": "The OpenAI API key."
           },
@@ -10723,7 +11200,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "Timeout for each request.",
-            "default": 60.0,
+            "default": 60,
             "gte": 0
           },
           "default_headers": {
@@ -10783,23 +11260,6 @@
             "title": "Azure Deployment",
             "description": "The Azure deployment to use."
           },
-          "azure_ad_token_provider": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Azure Ad Token Provider",
-            "description": "Callback function to provide Azure AD token."
-          },
-          "use_azure_ad": {
-            "type": "boolean",
-            "title": "Use Azure Ad",
-            "description": "Indicates if Microsoft Entra ID (former Azure AD) is used for token authentication"
-          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -10807,7 +11267,6 @@
           }
         },
         "type": "object",
-        "required": ["api_key", "use_azure_ad"],
         "title": "AzureOpenAIEmbedding"
       },
       "AzureOpenAIEmbeddingConfig": {
@@ -10915,18 +11374,16 @@
           "model_name": {
             "type": "string",
             "title": "Model Name",
-            "description": "The modelId of the Bedrock model to use."
+            "description": "The modelId of the Bedrock model to use.",
+            "default": "amazon.titan-embed-text-v1"
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048.0,
-            "exclusiveMinimum": 0.0,
+            "maximum": 2048,
+            "exclusiveMinimum": 0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
           },
           "num_workers": {
             "anyOf": [
@@ -11000,29 +11457,9 @@
             "title": "Region Name",
             "description": "AWS region name to use. Uses region configured in AWS CLI if not passed"
           },
-          "botocore_session": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Botocore Session",
-            "description": "Use this Botocore session instead of creating a new default one."
-          },
-          "botocore_config": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Botocore Config",
-            "description": "Custom configuration object to use instead of the default generated one."
-          },
           "max_retries": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Max Retries",
             "description": "The maximum number of API retries.",
             "default": 10
@@ -11031,7 +11468,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "The timeout for the Bedrock API request in seconds. It will be used for both connect and read timeouts.",
-            "default": 60.0
+            "default": 60
           },
           "additional_kwargs": {
             "type": "object",
@@ -11045,7 +11482,6 @@
           }
         },
         "type": "object",
-        "required": ["model_name"],
         "title": "BedrockEmbedding"
       },
       "BedrockEmbeddingConfig": {
@@ -11123,6 +11559,11 @@
             "title": "Premium Mode",
             "default": false
           },
+          "continuous_mode": {
+            "type": "boolean",
+            "title": "Continuous Mode",
+            "default": false
+          },
           "gpt4o_api_key": {
             "type": "string",
             "title": "Gpt4O Api Key",
@@ -11181,9 +11622,19 @@
             "title": "Take Screenshot",
             "default": false
           },
+          "is_formatting_instruction": {
+            "type": "boolean",
+            "title": "Is Formatting Instruction",
+            "default": true
+          },
           "disable_ocr": {
             "type": "boolean",
             "title": "Disable Ocr",
+            "default": false
+          },
+          "annotate_links": {
+            "type": "boolean",
+            "title": "Annotate Links",
             "default": false
           },
           "disable_reconstruction": {
@@ -11200,6 +11651,22 @@
             "type": "string",
             "title": "Output S3 Path Prefix",
             "default": ""
+          },
+          "azure_openai_deployment_name": {
+            "type": "string",
+            "title": "Azure Openai Deployment Name"
+          },
+          "azure_openai_endpoint": {
+            "type": "string",
+            "title": "Azure Openai Endpoint"
+          },
+          "azure_openai_api_version": {
+            "type": "string",
+            "title": "Azure Openai Api Version"
+          },
+          "azure_openai_key": {
+            "type": "string",
+            "title": "Azure Openai Key"
           },
           "file": {
             "anyOf": [
@@ -11274,6 +11741,11 @@
             "title": "Premium Mode",
             "default": false
           },
+          "continuous_mode": {
+            "type": "boolean",
+            "title": "Continuous Mode",
+            "default": false
+          },
           "gpt4o_api_key": {
             "type": "string",
             "title": "Gpt4O Api Key",
@@ -11332,9 +11804,19 @@
             "title": "Take Screenshot",
             "default": false
           },
+          "is_formatting_instruction": {
+            "type": "boolean",
+            "title": "Is Formatting Instruction",
+            "default": true
+          },
           "disable_ocr": {
             "type": "boolean",
             "title": "Disable Ocr",
+            "default": false
+          },
+          "annotate_links": {
+            "type": "boolean",
+            "title": "Annotate Links",
             "default": false
           },
           "disable_reconstruction": {
@@ -11351,6 +11833,22 @@
             "type": "string",
             "title": "Output S3 Path Prefix",
             "default": ""
+          },
+          "azure_openai_deployment_name": {
+            "type": "string",
+            "title": "Azure Openai Deployment Name"
+          },
+          "azure_openai_endpoint": {
+            "type": "string",
+            "title": "Azure Openai Endpoint"
+          },
+          "azure_openai_api_version": {
+            "type": "string",
+            "title": "Azure Openai Api Version"
+          },
+          "azure_openai_key": {
+            "type": "string",
+            "title": "Azure Openai Key"
           },
           "file": {
             "anyOf": [
@@ -11377,7 +11875,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -11429,14 +11927,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0.0,
+            "minimum": 0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 200
@@ -11644,7 +12142,9 @@
           "account_key": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -11680,7 +12180,9 @@
           "client_secret": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -11710,7 +12212,9 @@
           },
           "search_service_api_key": {
             "type": "string",
-            "title": "Search Service Api Key"
+            "format": "password",
+            "title": "Search Service Api Key",
+            "writeOnly": true
           },
           "search_service_endpoint": {
             "type": "string",
@@ -11774,7 +12278,9 @@
           "client_secret": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -11825,7 +12331,9 @@
           "developer_token": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -11849,7 +12357,9 @@
           "client_secret": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -11892,91 +12402,6 @@
         "required": ["authentication_mechanism"],
         "title": "CloudBoxDataSource"
       },
-      "CloudChromaVectorStore": {
-        "properties": {
-          "supports_nested_metadata_filters": {
-            "type": "boolean",
-            "enum": [false],
-            "const": false,
-            "title": "Supports Nested Metadata Filters",
-            "default": false
-          },
-          "collection_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Collection Name"
-          },
-          "host": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Host"
-          },
-          "port": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Port"
-          },
-          "ssl": {
-            "type": "boolean",
-            "title": "Ssl"
-          },
-          "headers": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "type": "string"
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Headers"
-          },
-          "persist_dir": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Persist Dir"
-          },
-          "collection_kwargs": {
-            "type": "object",
-            "title": "Collection Kwargs"
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "CloudChromaVectorStore"
-          }
-        },
-        "type": "object",
-        "required": ["ssl"],
-        "title": "CloudChromaVectorStore"
-      },
       "CloudConfluenceDataSource": {
         "properties": {
           "server_url": {
@@ -12004,7 +12429,9 @@
           "api_token": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -12219,7 +12646,9 @@
           "api_token": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -12300,7 +12729,9 @@
           "token": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -12341,7 +12772,9 @@
           },
           "mongodb_uri": {
             "type": "string",
-            "title": "Mongodb Uri"
+            "format": "password",
+            "title": "Mongodb Uri",
+            "writeOnly": true
           },
           "db_name": {
             "type": "string",
@@ -12388,8 +12821,10 @@
         "properties": {
           "integration_token": {
             "type": "string",
+            "format": "password",
             "title": "Integration Token",
-            "description": "The integration token to use for authentication."
+            "description": "The integration token to use for authentication.",
+            "writeOnly": true
           },
           "database_ids": {
             "anyOf": [
@@ -12463,8 +12898,10 @@
           },
           "client_secret": {
             "type": "string",
+            "format": "password",
             "title": "Client Secret",
-            "description": "The client secret to use for authentication."
+            "description": "The client secret to use for authentication.",
+            "writeOnly": true
           },
           "tenant_id": {
             "type": "string",
@@ -12497,7 +12934,10 @@
           },
           "api_key": {
             "type": "string",
-            "title": "Api Key"
+            "format": "password",
+            "title": "Api Key",
+            "description": "The API key for authenticating with Pinecone",
+            "writeOnly": true
           },
           "index_name": {
             "type": "string",
@@ -12555,7 +12995,9 @@
           },
           "password": {
             "type": "string",
-            "title": "Password"
+            "format": "password",
+            "title": "Password",
+            "writeOnly": true
           },
           "port": {
             "type": "string",
@@ -12627,7 +13069,9 @@
           },
           "api_key": {
             "type": "string",
-            "title": "Api Key"
+            "format": "password",
+            "title": "Api Key",
+            "writeOnly": true
           },
           "max_retries": {
             "type": "integer",
@@ -12683,7 +13127,9 @@
           "aws_access_secret": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
               },
               {
                 "type": "null"
@@ -12783,8 +13229,10 @@
           },
           "client_secret": {
             "type": "string",
+            "format": "password",
             "title": "Client Secret",
-            "description": "The client secret to use for authentication."
+            "description": "The client secret to use for authentication.",
+            "writeOnly": true
           },
           "tenant_id": {
             "type": "string",
@@ -12805,8 +13253,10 @@
         "properties": {
           "slack_token": {
             "type": "string",
+            "format": "password",
             "title": "Slack Token",
-            "description": "Slack Bot Token."
+            "description": "Slack Bot Token.",
+            "writeOnly": true
           },
           "channel_ids": {
             "anyOf": [
@@ -12890,52 +13340,6 @@
         "required": ["slack_token"],
         "title": "CloudSlackDataSource"
       },
-      "CloudWeaviateVectorStore": {
-        "properties": {
-          "supports_nested_metadata_filters": {
-            "type": "boolean",
-            "enum": [false],
-            "const": false,
-            "title": "Supports Nested Metadata Filters",
-            "default": false
-          },
-          "index_name": {
-            "type": "string",
-            "title": "Index Name"
-          },
-          "url": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Url"
-          },
-          "text_key": {
-            "type": "string",
-            "title": "Text Key"
-          },
-          "auth_config": {
-            "type": "object",
-            "title": "Auth Config"
-          },
-          "client_kwargs": {
-            "type": "object",
-            "title": "Client Kwargs"
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "CloudWeaviateVectorStore"
-          }
-        },
-        "type": "object",
-        "required": ["index_name", "text_key"],
-        "title": "CloudWeaviateVectorStore"
-      },
       "CodeSplitter": {
         "properties": {
           "include_metadata": {
@@ -12972,21 +13376,21 @@
           },
           "chunk_lines": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Lines",
             "description": "The number of lines to include in each chunk.",
             "default": 40
           },
           "chunk_lines_overlap": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Lines Overlap",
             "description": "How many lines of code each chunk overlaps with.",
             "default": 15
           },
           "max_chars": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Max Chars",
             "description": "Maximum number of characters per chunk.",
             "default": 1500
@@ -13007,19 +13411,16 @@
           "model_name": {
             "type": "string",
             "title": "Model Name",
-            "description": "The name of the embedding model.",
-            "default": "unknown"
+            "description": "The modelId of the Cohere model to use.",
+            "default": "embed-english-v3.0"
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048.0,
-            "exclusiveMinimum": 0.0,
+            "maximum": 2048,
+            "exclusiveMinimum": 0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
           },
           "num_workers": {
             "anyOf": [
@@ -13034,14 +13435,22 @@
             "description": "The number of workers to use for async embedding calls."
           },
           "api_key": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Api Key",
             "description": "The Cohere API key."
           },
           "truncate": {
             "type": "string",
             "title": "Truncate",
-            "description": "Truncation type - START/ END/ NONE"
+            "description": "Truncation type - START/ END/ NONE",
+            "default": "END"
           },
           "input_type": {
             "anyOf": [
@@ -13058,7 +13467,8 @@
           "embedding_type": {
             "type": "string",
             "title": "Embedding Type",
-            "description": "Embedding type. If not provided float embedding_type is used when needed."
+            "description": "Embedding type. If not provided float embedding_type is used when needed.",
+            "default": "float"
           },
           "class_name": {
             "type": "string",
@@ -13067,9 +13477,8 @@
           }
         },
         "type": "object",
-        "required": ["api_key", "truncate", "embedding_type"],
-        "title": "CohereEmbedding",
-        "description": "CohereEmbedding uses the Cohere API to generate embeddings for text."
+        "required": ["api_key"],
+        "title": "CohereEmbedding"
       },
       "CohereEmbeddingConfig": {
         "properties": {
@@ -13092,11 +13501,9 @@
       "ConfigurableDataSinkNames": {
         "type": "string",
         "enum": [
-          "CHROMA",
           "PINECONE",
           "POSTGRES",
           "QDRANT",
-          "WEAVIATE",
           "AZUREAI_SEARCH",
           "MONGODB_ATLAS",
           "MILVUS"
@@ -13159,14 +13566,7 @@
           "SENTENCE_AWARE_NODE_PARSER",
           "TOKEN_AWARE_NODE_PARSER",
           "MARKDOWN_NODE_PARSER",
-          "MARKDOWN_ELEMENT_NODE_PARSER",
-          "OPENAI_EMBEDDING",
-          "AZURE_EMBEDDING",
-          "COHERE_EMBEDDING",
-          "BEDROCK_EMBEDDING",
-          "HUGGINGFACE_API_EMBEDDING",
-          "GEMINI_EMBEDDING",
-          "VERTEXAI_EMBEDDING"
+          "MARKDOWN_ELEMENT_NODE_PARSER"
         ],
         "title": "ConfigurableTransformationNames"
       },
@@ -13206,27 +13606,6 @@
               },
               {
                 "$ref": "#/components/schemas/MarkdownElementNodeParser"
-              },
-              {
-                "$ref": "#/components/schemas/OpenAIEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/AzureOpenAIEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/CohereEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/BedrockEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/HuggingFaceInferenceAPIEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/GeminiEmbedding"
-              },
-              {
-                "$ref": "#/components/schemas/ExtendVertexTextEmbedding"
               }
             ],
             "title": "Component",
@@ -13299,9 +13678,6 @@
                 "type": "object"
               },
               {
-                "$ref": "#/components/schemas/CloudChromaVectorStore"
-              },
-              {
                 "$ref": "#/components/schemas/CloudPineconeVectorStore"
               },
               {
@@ -13309,9 +13685,6 @@
               },
               {
                 "$ref": "#/components/schemas/CloudQdrantVectorStore"
-              },
-              {
-                "$ref": "#/components/schemas/CloudWeaviateVectorStore"
               },
               {
                 "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
@@ -13352,9 +13725,6 @@
                 "type": "object"
               },
               {
-                "$ref": "#/components/schemas/CloudChromaVectorStore"
-              },
-              {
                 "$ref": "#/components/schemas/CloudPineconeVectorStore"
               },
               {
@@ -13362,9 +13732,6 @@
               },
               {
                 "$ref": "#/components/schemas/CloudQdrantVectorStore"
-              },
-              {
-                "$ref": "#/components/schemas/CloudWeaviateVectorStore"
               },
               {
                 "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
@@ -13429,9 +13796,6 @@
                 "type": "object"
               },
               {
-                "$ref": "#/components/schemas/CloudChromaVectorStore"
-              },
-              {
                 "$ref": "#/components/schemas/CloudPineconeVectorStore"
               },
               {
@@ -13439,9 +13803,6 @@
               },
               {
                 "$ref": "#/components/schemas/CloudQdrantVectorStore"
-              },
-              {
-                "$ref": "#/components/schemas/CloudWeaviateVectorStore"
               },
               {
                 "$ref": "#/components/schemas/CloudAzureAISearchVectorStore"
@@ -14331,122 +14692,6 @@
         "title": "EvalQuestionResult",
         "description": "Schema for the result of an eval question job."
       },
-      "ExtendVertexTextEmbedding": {
-        "properties": {
-          "model_name": {
-            "type": "string",
-            "title": "Model Name",
-            "description": "The name of the embedding model.",
-            "default": "unknown"
-          },
-          "embed_batch_size": {
-            "type": "integer",
-            "maximum": 2048.0,
-            "exclusiveMinimum": 0.0,
-            "title": "Embed Batch Size",
-            "description": "The batch size for embedding calls.",
-            "default": 10
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
-          },
-          "num_workers": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Num Workers",
-            "description": "The number of workers to use for async embedding calls."
-          },
-          "embed_mode": {
-            "$ref": "#/components/schemas/VertexEmbeddingMode",
-            "description": "The embedding mode to use."
-          },
-          "additional_kwargs": {
-            "type": "object",
-            "title": "Additional Kwargs",
-            "description": "Additional kwargs for the Vertex."
-          },
-          "client_email": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Email",
-            "description": "The client email to use when making Vertex API calls."
-          },
-          "token_uri": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Token Uri",
-            "description": "The token uri to use when making Vertex API calls."
-          },
-          "private_key_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Private Key Id",
-            "description": "The private key id to use when making Vertex API calls."
-          },
-          "private_key": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Private Key",
-            "description": "The private key to use when making Vertex API calls."
-          },
-          "project": {
-            "type": "string",
-            "title": "Project",
-            "description": "The default GCP project to use when making Vertex API calls."
-          },
-          "location": {
-            "type": "string",
-            "title": "Location",
-            "description": "The default location to use when making API calls."
-          },
-          "class_name": {
-            "type": "string",
-            "title": "Class Name",
-            "default": "ExtendVertexTextEmbedding"
-          }
-        },
-        "type": "object",
-        "required": [
-          "embed_mode",
-          "client_email",
-          "token_uri",
-          "private_key_id",
-          "private_key",
-          "project",
-          "location"
-        ],
-        "title": "ExtendVertexTextEmbedding"
-      },
       "ExtractionJob": {
         "properties": {
           "id": {
@@ -14887,7 +15132,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0.0
+                "minimum": 0
               },
               {
                 "type": "null"
@@ -14998,7 +15243,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0.0
+                "minimum": 0
               },
               {
                 "type": "null"
@@ -15086,11 +15331,11 @@
         "type": "string",
         "enum": [
           "==",
-          ">",
-          "<",
+          "\u003E",
+          "\u003C",
           "!=",
-          ">=",
-          "<=",
+          "\u003E=",
+          "\u003C=",
           "in",
           "nin",
           "any",
@@ -15107,19 +15352,16 @@
           "model_name": {
             "type": "string",
             "title": "Model Name",
-            "description": "The name of the embedding model.",
-            "default": "unknown"
+            "description": "The modelId of the Gemini model to use.",
+            "default": "models/embedding-001"
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048.0,
-            "exclusiveMinimum": 0.0,
+            "maximum": 2048,
+            "exclusiveMinimum": 0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
           },
           "num_workers": {
             "anyOf": [
@@ -15171,6 +15413,30 @@
             "title": "Api Key",
             "description": "API key to access the model. Defaults to None."
           },
+          "api_base": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Api Base",
+            "description": "API base to access the model. Defaults to None."
+          },
+          "transport": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transport",
+            "description": "Transport to access the model. Defaults to None."
+          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -15178,8 +15444,7 @@
           }
         },
         "type": "object",
-        "title": "GeminiEmbedding",
-        "description": "Google Gemini embeddings.\n\nArgs:\n    model_name (str): Model for embedding.\n        Defaults to \"models/embedding-001\".\n\n    api_key (Optional[str]): API key to access the model. Defaults to None.\n    api_base (Optional[str]): API base to access the model. Defaults to Official Base.\n    transport (Optional[str]): Transport to access the model."
+        "title": "GeminiEmbedding"
       },
       "GeminiEmbeddingConfig": {
         "properties": {
@@ -15228,14 +15493,11 @@
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048.0,
-            "exclusiveMinimum": 0.0,
+            "maximum": 2048,
+            "exclusiveMinimum": 0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
           },
           "num_workers": {
             "anyOf": [
@@ -15361,8 +15623,7 @@
           }
         },
         "type": "object",
-        "title": "HuggingFaceInferenceAPIEmbedding",
-        "description": "Wrapper on the Hugging Face's Inference API for embeddings.\n\nOverview of the design:\n- Uses the feature extraction task: https://huggingface.co/tasks/feature-extraction"
+        "title": "HuggingFaceInferenceAPIEmbedding"
       },
       "HuggingFaceInferenceAPIEmbeddingConfig": {
         "properties": {
@@ -15596,6 +15857,11 @@
             "title": "Disable Ocr",
             "default": false
           },
+          "annotate_links": {
+            "type": "boolean",
+            "title": "Annotate Links",
+            "default": false
+          },
           "disable_reconstruction": {
             "type": "boolean",
             "title": "Disable Reconstruction",
@@ -15614,7 +15880,7 @@
           "fast_mode": {
             "type": "boolean",
             "title": "Fast Mode",
-            "default": true
+            "default": false
           },
           "skip_diagonal_text": {
             "type": "boolean",
@@ -15692,9 +15958,19 @@
             "title": "Take Screenshot",
             "default": false
           },
+          "is_formatting_instruction": {
+            "type": "boolean",
+            "title": "Is Formatting Instruction",
+            "default": true
+          },
           "premium_mode": {
             "type": "boolean",
             "title": "Premium Mode",
+            "default": false
+          },
+          "continuous_mode": {
+            "type": "boolean",
+            "title": "Continuous Mode",
             "default": false
           },
           "s3_input_path": {
@@ -15706,6 +15982,50 @@
             "type": "string",
             "title": "S3 Output Path Prefix",
             "default": ""
+          },
+          "azure_openai_deployment_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Deployment Name"
+          },
+          "azure_openai_endpoint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Endpoint"
+          },
+          "azure_openai_api_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Api Version"
+          },
+          "azure_openai_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Azure Openai Key"
           }
         },
         "type": "object",
@@ -16419,19 +16739,16 @@
           "model_name": {
             "type": "string",
             "title": "Model Name",
-            "description": "The name of the embedding model.",
-            "default": "unknown"
+            "description": "The name of the OpenAI embedding model.",
+            "default": "text-embedding-ada-002"
           },
           "embed_batch_size": {
             "type": "integer",
-            "maximum": 2048.0,
-            "exclusiveMinimum": 0.0,
+            "maximum": 2048,
+            "exclusiveMinimum": 0,
             "title": "Embed Batch Size",
             "description": "The batch size for embedding calls.",
             "default": 10
-          },
-          "callback_manager": {
-            "title": "Callback Manager"
           },
           "num_workers": {
             "anyOf": [
@@ -16451,7 +16768,14 @@
             "description": "Additional kwargs for the OpenAI API."
           },
           "api_key": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Api Key",
             "description": "The OpenAI API key."
           },
@@ -16492,7 +16816,7 @@
             "type": "number",
             "title": "Timeout",
             "description": "Timeout for each request.",
-            "default": 60.0,
+            "default": 60,
             "gte": 0
           },
           "default_headers": {
@@ -16535,9 +16859,7 @@
           }
         },
         "type": "object",
-        "required": ["api_key"],
-        "title": "OpenAIEmbedding",
-        "description": "OpenAI class for embeddings.\n\nArgs:\n    mode (str): Mode for embedding.\n        Defaults to OpenAIEmbeddingMode.TEXT_SEARCH_MODE.\n        Options are:\n\n        - OpenAIEmbeddingMode.SIMILARITY_MODE\n        - OpenAIEmbeddingMode.TEXT_SEARCH_MODE\n\n    model (str): Model for embedding.\n        Defaults to OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002.\n        Options are:\n\n        - OpenAIEmbeddingModelType.DAVINCI\n        - OpenAIEmbeddingModelType.CURIE\n        - OpenAIEmbeddingModelType.BABBAGE\n        - OpenAIEmbeddingModelType.ADA\n        - OpenAIEmbeddingModelType.TEXT_EMBED_ADA_002"
+        "title": "OpenAIEmbedding"
       },
       "OpenAIEmbeddingConfig": {
         "properties": {
@@ -16644,7 +16966,7 @@
         "properties": {
           "page_index": {
             "type": "integer",
-            "minimum": 0.0,
+            "minimum": 0,
             "title": "Page Index",
             "description": "The index of the page for which the screenshot is taken (0-indexed)"
           },
@@ -16656,7 +16978,7 @@
           },
           "image_size": {
             "type": "integer",
-            "minimum": 0.0,
+            "minimum": 0,
             "title": "Image Size",
             "description": "The size of the image in bytes"
           }
@@ -17039,6 +17361,70 @@
         ],
         "title": "PartitionNames",
         "description": "Enum for dataset partition names."
+      },
+      "Permission": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "A name for the permission."
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "A description for the permission."
+          },
+          "access": {
+            "type": "boolean",
+            "title": "Access",
+            "description": "Whether the permission is granted or not."
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "description", "access"],
+        "title": "Permission",
+        "description": "Schema for a permission."
       },
       "Pipeline": {
         "properties": {
@@ -17741,7 +18127,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0.0
+                "minimum": 0
               },
               {
                 "type": "null"
@@ -18295,8 +18681,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100.0,
-                "minimum": 1.0
+                "maximum": 100,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18310,8 +18696,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100.0,
-                "minimum": 1.0
+                "maximum": 100,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18337,8 +18723,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100.0,
-                "minimum": 1.0
+                "maximum": 100,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18352,8 +18738,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1.0,
-                "minimum": 0.0
+                "maximum": 1,
+                "minimum": 0
               },
               {
                 "type": "null"
@@ -18377,8 +18763,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 5.0,
-                "minimum": 1.0
+                "maximum": 5,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18391,7 +18777,7 @@
           "retrieval_mode": {
             "$ref": "#/components/schemas/RetrievalMode",
             "description": "The retrieval mode for the query.",
-            "default": "chunks"
+            "default": "auto_routed"
           },
           "retrieve_image_nodes": {
             "type": "boolean",
@@ -18688,7 +19074,12 @@
       },
       "RetrievalMode": {
         "type": "string",
-        "enum": ["chunks", "files_via_metadata", "files_via_content"],
+        "enum": [
+          "chunks",
+          "files_via_metadata",
+          "files_via_content",
+          "auto_routed"
+        ],
         "title": "RetrievalMode"
       },
       "RetrievalParams": {
@@ -18697,8 +19088,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100.0,
-                "minimum": 1.0
+                "maximum": 100,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18712,8 +19103,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100.0,
-                "minimum": 1.0
+                "maximum": 100,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18739,8 +19130,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 100.0,
-                "minimum": 1.0
+                "maximum": 100,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18754,8 +19145,8 @@
             "anyOf": [
               {
                 "type": "number",
-                "maximum": 1.0,
-                "minimum": 0.0
+                "maximum": 1,
+                "minimum": 0
               },
               {
                 "type": "null"
@@ -18779,8 +19170,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 5.0,
-                "minimum": 1.0
+                "maximum": 5,
+                "minimum": 1
               },
               {
                 "type": "null"
@@ -18793,7 +19184,7 @@
           "retrieval_mode": {
             "$ref": "#/components/schemas/RetrievalMode",
             "description": "The retrieval mode for the query.",
-            "default": "chunks"
+            "default": "auto_routed"
           },
           "retrieve_image_nodes": {
             "type": "boolean",
@@ -18849,6 +19240,14 @@
             "title": "Retrieval Latency",
             "description": "The end-to-end latency for retrieval and reranking."
           },
+          "metadata": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Metadata",
+            "description": "Metadata associated with the retrieval execution"
+          },
           "class_name": {
             "type": "string",
             "title": "Class Name",
@@ -18859,6 +19258,74 @@
         "required": ["pipeline_id", "retrieval_nodes", "retrieval_latency"],
         "title": "RetrieveResults",
         "description": "Schema for the result of an retrieval execution."
+      },
+      "Role": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 3000,
+            "minLength": 1,
+            "title": "Name",
+            "description": "A name for the role."
+          },
+          "organization_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Organization Id",
+            "description": "The organization's ID."
+          },
+          "permissions": {
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            },
+            "type": "array",
+            "title": "Permissions",
+            "description": "The actual permissions of the role."
+          }
+        },
+        "type": "object",
+        "required": ["id", "name", "organization_id", "permissions"],
+        "title": "Role",
+        "description": "Schema for a role."
       },
       "SemanticChunkingConfig": {
         "properties": {
@@ -18887,7 +19354,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -18949,14 +19416,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0.0,
+            "minimum": 0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 200
@@ -19179,7 +19646,7 @@
           "class_name": {
             "type": "string",
             "title": "Class Name",
-            "default": "NodeWithScore"
+            "default": "TextNodeWithScore"
           }
         },
         "type": "object",
@@ -19191,7 +19658,7 @@
         "properties": {
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Size",
             "default": 1024
           },
@@ -19248,14 +19715,14 @@
           },
           "chunk_size": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Chunk Size",
             "description": "The token chunk size for each chunk.",
             "default": 1024
           },
           "chunk_overlap": {
             "type": "integer",
-            "minimum": 0.0,
+            "minimum": 0,
             "title": "Chunk Overlap",
             "description": "The token overlap of each chunk when splitting.",
             "default": 20
@@ -19375,10 +19842,18 @@
             ],
             "title": "Invited By User Email",
             "description": "The email address of the user who added the user to the organization."
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/UserOrganizationRole"
+            },
+            "type": "array",
+            "title": "Roles",
+            "description": "The roles of the user in the organization."
           }
         },
         "type": "object",
-        "required": ["id", "email", "organization_id"],
+        "required": ["id", "email", "organization_id", "roles"],
         "title": "UserOrganization",
         "description": "Schema for a user's membership to an organization."
       },
@@ -19408,9 +19883,39 @@
             ],
             "title": "Email",
             "description": "The user's email address."
+          },
+          "project_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Ids",
+            "description": "The project IDs to add the user to."
+          },
+          "role_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role Id",
+            "description": "The role ID to assign to the user."
           }
         },
         "type": "object",
+        "required": ["project_ids"],
         "title": "UserOrganizationCreate",
         "description": "Schema for creating a user's membership to an organization."
       },
@@ -19445,6 +19950,92 @@
         "type": "object",
         "title": "UserOrganizationDelete",
         "description": "Schema for deleting a user's membership to an organization."
+      },
+      "UserOrganizationRole": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id",
+            "description": "Unique identifier"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Creation datetime"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Update datetime"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "The user's ID."
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Organization Id",
+            "description": "The organization's ID."
+          },
+          "role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Role Id",
+            "description": "The role's ID."
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role",
+            "description": "The role."
+          }
+        },
+        "type": "object",
+        "required": ["id", "user_id", "organization_id", "role_id", "role"],
+        "title": "UserOrganizationRole",
+        "description": "Schema for a user's role in an organization."
+      },
+      "UserOrganizationRoleCreate": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "The user's ID."
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Organization Id",
+            "description": "The organization's ID."
+          },
+          "role_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Role Id",
+            "description": "The role's ID."
+          }
+        },
+        "type": "object",
+        "required": ["user_id", "organization_id", "role_id"],
+        "title": "UserOrganizationRoleCreate",
+        "description": "Schema for creating a user's role in an organization."
       },
       "ValidationError": {
         "properties": {
@@ -19486,7 +20077,7 @@
             "default": "VERTEXAI_EMBEDDING"
           },
           "component": {
-            "$ref": "#/components/schemas/ExtendVertexTextEmbedding",
+            "$ref": "#/components/schemas/VertexTextEmbedding",
             "description": "Configuration for the VertexAI embedding model."
           }
         },
@@ -19503,7 +20094,120 @@
           "retrieval"
         ],
         "title": "VertexEmbeddingMode",
-        "description": "VertexAI embedding mode.\n\nAttributes:\n    DEFAULT_MODE (str): The default embedding mode, for older models before August 2023,\n                        that does not support task_type\n    CLASSIFICATION_MODE (str): Optimizes embeddings for classification tasks.\n    CLUSTERING_MODE (str): Optimizes embeddings for clustering tasks.\n    SEMANTIC_SIMILARITY_MODE (str): Optimizes embeddings for tasks that require assessments of semantic similarity.\n    RETRIEVAL_MODE (str): Optimizes embeddings for retrieval tasks, including search and document retrieval."
+        "description": "Copied from llama_index.embeddings.vertex.base.VertexEmbeddingMode\nsince importing llama_index.embeddings.vertex.base incurs a lot of memory usage."
+      },
+      "VertexTextEmbedding": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "The modelId of the VertexAI model to use.",
+            "default": "textembedding-gecko@003"
+          },
+          "embed_batch_size": {
+            "type": "integer",
+            "maximum": 2048,
+            "exclusiveMinimum": 0,
+            "title": "Embed Batch Size",
+            "description": "The batch size for embedding calls.",
+            "default": 10
+          },
+          "num_workers": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Num Workers",
+            "description": "The number of workers to use for async embedding calls."
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "description": "The default location to use when making API calls."
+          },
+          "project": {
+            "type": "string",
+            "title": "Project",
+            "description": "The default GCP project to use when making Vertex API calls."
+          },
+          "embed_mode": {
+            "$ref": "#/components/schemas/VertexEmbeddingMode",
+            "description": "The embedding mode to use.",
+            "default": "retrieval"
+          },
+          "additional_kwargs": {
+            "type": "object",
+            "title": "Additional Kwargs",
+            "description": "Additional kwargs for the Vertex."
+          },
+          "client_email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Email",
+            "description": "The client email for the VertexAI credentials."
+          },
+          "token_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Token Uri",
+            "description": "The token URI for the VertexAI credentials."
+          },
+          "private_key_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Private Key Id",
+            "description": "The private key ID for the VertexAI credentials."
+          },
+          "private_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Private Key",
+            "description": "The private key for the VertexAI credentials."
+          },
+          "class_name": {
+            "type": "string",
+            "title": "Class Name",
+            "default": "VertexTextEmbedding"
+          }
+        },
+        "type": "object",
+        "required": [
+          "location",
+          "project",
+          "client_email",
+          "token_uri",
+          "private_key_id",
+          "private_key"
+        ],
+        "title": "VertexTextEmbedding"
       }
     },
     "securitySchemes": {

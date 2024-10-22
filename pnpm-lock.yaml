@@ -345,11 +345,11 @@ importers:
   packages/cloud:
     devDependencies:
       '@hey-api/client-fetch':
-        specifier: ^0.2.4
-        version: 0.2.4
+        specifier: ^0.4.2
+        version: 0.4.2
       '@hey-api/openapi-ts':
-        specifier: ^0.53.0
-        version: 0.53.0(typescript@5.6.3)
+        specifier: ^0.53.11
+        version: 0.53.11(typescript@5.6.3)
       '@llamaindex/core':
         specifier: workspace:*
         version: link:../core
@@ -557,7 +557,7 @@ importers:
         version: link:../providers/portkey-ai
       '@llamaindex/replicate':
         specifier: workspace:^0.0.4
-        version: link:../providers/replicate
+        version: link:../providers/vector-store
       '@mistralai/mistralai':
         specifier: ^1.0.4
         version: 1.0.4(zod@3.23.8)
@@ -1073,6 +1073,22 @@ importers:
         version: 5.5.1(typescript@5.6.3)
 
   packages/providers/replicate:
+    dependencies:
+      '@llamaindex/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@llamaindex/env':
+        specifier: workspace:*
+        version: link:../../env
+      replicate:
+        specifier: ^1.0.1
+        version: 1.0.1
+    devDependencies:
+      bunchee:
+        specifier: 5.5.1
+        version: 5.5.1(typescript@5.6.3)
+
+  packages/providers/vector-store:
     dependencies:
       '@llamaindex/core':
         specifier: workspace:*
@@ -3314,11 +3330,11 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
-  '@hey-api/client-fetch@0.2.4':
-    resolution: {integrity: sha512-SGTVAVw3PlKDLw+IyhNhb/jCH3P1P2xJzLxA8Kyz1g95HrkYOJdRpl9F5I7LLwo9aCIB7nwR2NrSeX7QaQD7vQ==}
+  '@hey-api/client-fetch@0.4.2':
+    resolution: {integrity: sha512-9BqcLTjsM3rWbads3afJkELS86vK7EqJvYgT429EVS9IO/kN75HEka3Ay/k142xCHSfXOuOShMdDam3nbG8wVA==}
 
-  '@hey-api/openapi-ts@0.53.0':
-    resolution: {integrity: sha512-5pDd/s0yHJniruYyKYmEsAMbY10Nh/EwhHlgIrdpQ1KZWQdyTbH/tn8rVHT5Mopr1dMuYX0kq0TzpjcNlvrROQ==}
+  '@hey-api/openapi-ts@0.53.11':
+    resolution: {integrity: sha512-PaO+o0jDhfHVS5SjtonP5CzP/NYoW8dVZUn8WthSgzpgPts8AiWYXplOyk5uEnM4ZxbkZbeTiREwaNLnJmXlTQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -5941,10 +5957,10 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
-  c12@1.11.1:
-    resolution: {integrity: sha512-KDU0TvSvVdaYcQKQ6iPHATGz/7p/KiVjPg4vQrB6Jg/wX9R0yl5RZxWm9IoZqaIHD2+6PZd81+KMGwRr/lRIUg==}
+  c12@2.0.1:
+    resolution: {integrity: sha512-Z4JgsKXHG37C6PYUtIxCfLJZvo6FyhHJoClwwb9ftUkLpPSkuYqn6Tr+vnaN8hymm0kIbcg6Ey3kv/Q71k5w/A==}
     peerDependencies:
-      magicast: ^0.3.4
+      magicast: ^0.3.5
     peerDependenciesMeta:
       magicast:
         optional: true
@@ -6076,6 +6092,10 @@ packages:
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
+
+  chokidar@4.0.1:
+    resolution: {integrity: sha512-n8enUVCED/KVRQlab1hr3MVpcVMvxtZjmEa956u+4YijlmQED223XMSYj2tLuKvr4jcCTzNNMpQDUer72MMmzA==}
+    engines: {node: '>= 14.16.0'}
 
   chownr@1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
@@ -8389,6 +8409,10 @@ packages:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
 
+  jiti@2.3.3:
+    resolution: {integrity: sha512-EX4oNDwcXSivPrw2qKH2LB5PoFxEvgtv2JgwW0bU858HoLQ+kutSvjLMUqBd0PeJYEinLWhoI9Ol0eYMqj/wNQ==}
+    hasBin: true
+
   joi@17.13.3:
     resolution: {integrity: sha512-otDA4ldcIx+ZXsKHWmp0YizCweVRZG96J10b0FevjfuncLO1oX59THoAmHkNubYJ+9gWsYsp5k8v4ib6oDv1fA==}
 
@@ -9462,9 +9486,6 @@ packages:
   obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
 
-  ohash@1.1.3:
-    resolution: {integrity: sha512-zuHHiGTYTA1sYJ/wZN+t5HKZaH23i4yI1HMwbuXm24Nid7Dv0KcuRlKoNKS9UNfAVSBlnGLcuQrnOKWOZoEGaw==}
-
   ohash@1.1.4:
     resolution: {integrity: sha512-FlDryZAahJmEF3VR3w1KogSEdWX3WhA5GPakFx4J81kEAiHyLMpdLLElS8n8dfNadMgAne/MywcvmogzscVt4g==}
 
@@ -10521,6 +10542,10 @@ packages:
   readdirp@3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
+
+  readdirp@4.0.2:
+    resolution: {integrity: sha512-yDMz9g+VaZkqBYS/ozoBJwaBhTbZo3UNYQHNRw1D3UFQB8oHB4uS/tAODO+ZLjGWmUbKnIlOWO+aaIiAxrUWHA==}
+    engines: {node: '>= 14.16.0'}
 
   reading-time@1.5.0:
     resolution: {integrity: sha512-onYyVhBNr4CmAxFsKS7bz+uTLRakypIe4R+5A824vBSkQy/hB3fZepoVEf8OVAxzLvK+H/jm9TzpI3ETSm64Kg==}
@@ -16694,12 +16719,12 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  '@hey-api/client-fetch@0.2.4': {}
+  '@hey-api/client-fetch@0.4.2': {}
 
-  '@hey-api/openapi-ts@0.53.0(typescript@5.6.3)':
+  '@hey-api/openapi-ts@0.53.11(typescript@5.6.3)':
     dependencies:
       '@apidevtools/json-schema-ref-parser': 11.7.0
-      c12: 1.11.1
+      c12: 2.0.1
       commander: 12.1.0
       handlebars: 4.7.8
       typescript: 5.6.3
@@ -19886,16 +19911,16 @@ snapshots:
 
   bytes@3.1.2: {}
 
-  c12@1.11.1:
+  c12@2.0.1:
     dependencies:
-      chokidar: 3.6.0
+      chokidar: 4.0.1
       confbox: 0.1.7
       defu: 6.1.4
       dotenv: 16.4.5
       giget: 1.2.3
-      jiti: 1.21.6
+      jiti: 2.3.3
       mlly: 1.7.1
-      ohash: 1.1.3
+      ohash: 1.1.4
       pathe: 1.1.2
       perfect-debounce: 1.0.0
       pkg-types: 1.2.0
@@ -20053,6 +20078,10 @@ snapshots:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  chokidar@4.0.1:
+    dependencies:
+      readdirp: 4.0.2
 
   chownr@1.1.4: {}
 
@@ -22924,6 +22953,8 @@ snapshots:
 
   jiti@1.21.6: {}
 
+  jiti@2.3.3: {}
+
   joi@17.13.3:
     dependencies:
       '@hapi/hoek': 9.3.0
@@ -24408,8 +24439,6 @@ snapshots:
 
   obuf@1.1.2: {}
 
-  ohash@1.1.3: {}
-
   ohash@1.1.4: {}
 
   ollama@0.5.9:
@@ -25551,6 +25580,8 @@ snapshots:
   readdirp@3.6.0:
     dependencies:
       picomatch: 2.3.1
+
+  readdirp@4.0.2: {}
 
   reading-time@1.5.0: {}
 

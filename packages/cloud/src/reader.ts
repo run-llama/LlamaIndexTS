@@ -84,6 +84,13 @@ export class LlamaParseReader extends FileReader {
   disableReconstruction?: boolean | undefined;
   inputS3Path?: string | undefined;
   outputS3PathPrefix?: string | undefined;
+  continuousMode?: boolean | undefined;
+  isFormattingInstruction?: boolean | undefined;
+  annotateLinks?: boolean | undefined;
+  azureOpenaiDeploymentName?: string | undefined;
+  azureOpenaiEndpoint?: string | undefined;
+  azureOpenaiApiVersion?: string | undefined;
+  azureOpenaiKey?: string | undefined;
 
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
@@ -175,6 +182,13 @@ export class LlamaParseReader extends FileReader {
       disable_reconstruction: this.disableReconstruction,
       input_s3_path: this.inputS3Path,
       output_s3_path_prefix: this.outputS3PathPrefix,
+      continuous_mode: this.continuousMode,
+      is_formatting_instruction: this.isFormattingInstruction,
+      annotate_links: this.annotateLinks,
+      azure_openai_deployment_name: this.azureOpenaiDeploymentName,
+      azure_openai_endpoint: this.azureOpenaiEndpoint,
+      azure_openai_api_version: this.azureOpenaiApiVersion,
+      azure_openai_key: this.azureOpenaiKey,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
