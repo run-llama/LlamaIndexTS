@@ -1,5 +1,11 @@
 # @llamaindex/cloud
 
+## 1.0.4
+
+### Patch Changes
+
+- 06f632b: fix(cloud): allow filename in llama parse
+
 ## 1.0.3
 
 ### Patch Changes
