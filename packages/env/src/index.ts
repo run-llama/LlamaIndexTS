@@ -19,7 +19,7 @@ import { Readable } from "node:stream";
 import { fileURLToPath } from "node:url";
 import { createWriteStream, fs } from "./fs/node.js";
 import "./global-check.js";
-import type { SHA256 } from "./node-polyfill.js";
+import { type SHA256, process } from "./node-polyfill.js";
 
 export function createSHA256(): SHA256 {
   const hash = createHash("sha256");
@@ -49,12 +49,13 @@ export {
 } from "./utils/index.js";
 export { NotSupportCurrentRuntimeClass } from "./utils/shared.js";
 export {
-  createWriteStream,
   EOL,
+  Readable,
+  createWriteStream,
   fileURLToPath,
   fs,
   ok,
   path,
+  process,
   randomUUID,
-  Readable,
 };

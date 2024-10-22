@@ -49,6 +49,8 @@ export function randomUUID(): string {
   return crypto.randomUUID();
 }
 
+export const process: NodeJS.Process = globalThis.process;
+
 export {
   AsyncLocalStorage,
   CustomEvent,
