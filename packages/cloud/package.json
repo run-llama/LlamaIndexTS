@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "generate": "pnpx @hey-api/openapi-ts@0.53.11",
-    "build": "pnpm run generate && bunchee"
+    "build": "pnpm run generate && bunchee",
+    "dev": "bunchee --watch"
   },
   "files": [
     "openapi.json",
