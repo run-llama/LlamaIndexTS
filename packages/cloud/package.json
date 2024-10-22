@@ -4,8 +4,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "generate": "pnpx @hey-api/openapi-ts@0.53.0",
-    "build": "pnpm run generate && bunchee"
+    "generate": "pnpx @hey-api/openapi-ts@0.53.11",
+    "build": "pnpm run generate && bunchee",
+    "dev": "bunchee --watch"
   },
   "files": [
     "openapi.json",
@@ -49,8 +50,8 @@
     "directory": "packages/cloud"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.2.4",
-    "@hey-api/openapi-ts": "^0.53.0",
+    "@hey-api/client-fetch": "^0.4.2",
+    "@hey-api/openapi-ts": "^0.53.11",
     "@llamaindex/core": "workspace:*",
     "@llamaindex/env": "workspace:*",
     "bunchee": "5.5.1"

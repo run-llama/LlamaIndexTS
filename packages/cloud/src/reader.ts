@@ -84,6 +84,13 @@ export class LlamaParseReader extends FileReader {
   disableReconstruction?: boolean | undefined;
   inputS3Path?: string | undefined;
   outputS3PathPrefix?: string | undefined;
+  continuousMode?: boolean | undefined;
+  isFormattingInstruction?: boolean | undefined;
+  annotateLinks?: boolean | undefined;
+  azureOpenaiDeploymentName?: string | undefined;
+  azureOpenaiEndpoint?: string | undefined;
+  azureOpenaiApiVersion?: string | undefined;
+  azureOpenaiKey?: string | undefined;
 
   // numWorkers is implemented in SimpleDirectoryReader
   stdout?: WriteStream | undefined;
@@ -144,13 +151,19 @@ export class LlamaParseReader extends FileReader {
   }
 
   // Create a job for the LlamaParse API
-  private async createJob(data: Uint8Array): Promise<string> {
+  async #createJob(data: Uint8Array, filename?: string): Promise<string> {
     if (this.verbose) {
       console.log("Started uploading the file");
     }
 
+    // todo: remove Blob usage when we drop Node.js 18 support
+    const file: File | Blob =
+      globalThis.File && filename
+        ? new File([data], filename)
+        : new Blob([data]);
+
     const body = {
-      file: new Blob([data]),
+      file,
       language: this.language,
       parsing_instruction: this.parsingInstruction,
       skip_diagonal_text: this.skipDiagonalText,
@@ -175,6 +188,13 @@ export class LlamaParseReader extends FileReader {
       disable_reconstruction: this.disableReconstruction,
       input_s3_path: this.inputS3Path,
       output_s3_path_prefix: this.outputS3PathPrefix,
+      continuous_mode: this.continuousMode,
+      is_formatting_instruction: this.isFormattingInstruction,
+      annotate_links: this.annotateLinks,
+      azure_openai_deployment_name: this.azureOpenaiDeploymentName,
+      azure_openai_endpoint: this.azureOpenaiEndpoint,
+      azure_openai_api_version: this.azureOpenaiApiVersion,
+      azure_openai_key: this.azureOpenaiKey,
     } satisfies {
       [Key in keyof Body_upload_file_api_v1_parsing_upload_post]-?:
         | Body_upload_file_api_v1_parsing_upload_post[Key]
@@ -286,10 +306,14 @@ export class LlamaParseReader extends FileReader {
    * To be used with resultType = "text" and "markdown"
    *
    * @param {Uint8Array} fileContent - The content of the file to be loaded.
+   * @param {string} filename - The name of the file to be loaded.
    * @return {Promise<Document[]>} A Promise object that resolves to an array of Document objects.
    */
-  async loadDataAsContent(fileContent: Uint8Array): Promise<Document[]> {
-    return this.createJob(fileContent)
+  async loadDataAsContent(
+    fileContent: Uint8Array,
+    filename?: string,
+  ): Promise<Document[]> {
+    return this.#createJob(fileContent, filename)
       .then(async (jobId) => {
         if (this.verbose) {
           console.log(`Started parsing the file under job id ${jobId}`);
@@ -312,7 +336,9 @@ export class LlamaParseReader extends FileReader {
       })
       .catch((error) => {
         if (this.ignoreErrors) {
-          console.warn(`Error while parsing the file: ${error.message}`);
+          console.warn(
+            `Error while parsing the file: ${error.message ?? error.detail}`,
+          );
           return [];
         } else {
           throw error;
@@ -336,7 +362,10 @@ export class LlamaParseReader extends FileReader {
         ? await fs.readFile(filePathOrContent)
         : filePathOrContent;
       // Creates a job for the file
-      jobId = await this.createJob(data);
+      jobId = await this.#createJob(
+        data,
+        isFilePath ? path.basename(filePathOrContent) : undefined,
+      );
       if (this.verbose) {
         console.log(`Started parsing the file under job id ${jobId}`);
       }

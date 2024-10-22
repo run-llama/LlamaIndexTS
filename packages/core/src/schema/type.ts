@@ -42,13 +42,13 @@ export interface BaseReader {
 export abstract class FileReader implements BaseReader {
   abstract loadDataAsContent(
     fileContent: Uint8Array,
-    fileName?: string,
+    filename?: string,
   ): Promise<Document[]>;
 
   async loadData(filePath: string): Promise<Document[]> {
     const fileContent = await fs.readFile(filePath);
-    const fileName = path.basename(filePath);
-    const docs = await this.loadDataAsContent(fileContent, fileName);
+    const filename = path.basename(filePath);
+    const docs = await this.loadDataAsContent(fileContent, filename);
     docs.forEach(FileReader.addMetaData(filePath));
     return docs;
   }
