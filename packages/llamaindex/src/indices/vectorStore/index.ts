@@ -274,7 +274,7 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
   }
 
   asRetriever(
-    options?: Omit<VectorIndexRetrieverOptions, "index">,
+    options?: OmitIndex<VectorIndexRetrieverOptions>,
   ): VectorIndexRetriever {
     return new VectorIndexRetriever({ index: this, ...options });
   }
@@ -382,12 +382,19 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
 
 type TopKMap = { [P in ModalityType]: number };
 
+type OmitIndex<T> = T extends { index: any } ? Omit<T, "index"> : never;
+
 export type VectorIndexRetrieverOptions = {
   index: VectorStoreIndex;
-  similarityTopK?: number | undefined;
-  topK?: TopKMap | undefined;
   filters?: MetadataFilters | undefined;
-};
+} & (
+  | {
+      topK?: TopKMap | undefined;
+    }
+  | {
+      similarityTopK?: number | undefined;
+    }
+);
 
 export class VectorIndexRetriever extends BaseRetriever {
   index: VectorStoreIndex;
@@ -396,20 +403,22 @@ export class VectorIndexRetriever extends BaseRetriever {
   serviceContext?: ServiceContext | undefined;
   filters?: MetadataFilters | undefined;
 
-  constructor({
-    index,
-    similarityTopK,
-    topK,
-    filters,
-  }: VectorIndexRetrieverOptions) {
+  constructor(options: VectorIndexRetrieverOptions) {
     super();
-    this.index = index;
+    this.index = options.index;
     this.serviceContext = this.index.serviceContext;
-    this.topK = topK ?? {
-      [ModalityType.TEXT]: similarityTopK ?? DEFAULT_SIMILARITY_TOP_K,
-      [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
-    };
-    this.filters = filters;
+    if ("topK" in options && options.topK) {
+      this.topK = options.topK;
+    } else {
+      this.topK = {
+        [ModalityType.TEXT]:
+          "similarityTopK" in options && options.similarityTopK
+            ? options.similarityTopK
+            : DEFAULT_SIMILARITY_TOP_K,
+        [ModalityType.IMAGE]: DEFAULT_SIMILARITY_TOP_K,
+      };
+    }
+    this.filters = options.filters;
   }
 
   /**
