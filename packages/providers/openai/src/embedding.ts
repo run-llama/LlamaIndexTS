@@ -7,6 +7,7 @@ import type {
   OpenAI as OpenAILLM,
 } from "openai";
 import {
+  AzureOpenAIWithUserAgent,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
@@ -103,16 +104,19 @@ export class OpenAIEmbedding extends BaseEmbedding {
       this.apiKey =
         init?.session?.apiKey ?? azureConfig.apiKey ?? getEnv("OPENAI_API_KEY");
       this.lazySession = async () =>
-        import("openai").then(
-          async ({ AzureOpenAI }) =>
+        import("openai").then(async ({ AzureOpenAI }) => {
+          AzureOpenAI = AzureOpenAIWithUserAgent(AzureOpenAI);
+
+          return (
             init?.session ??
             new AzureOpenAI({
               maxRetries: this.maxRetries,
               timeout: this.timeout!,
               ...this.additionalSessionOptions,
               ...azureConfig,
-            }),
-        );
+            })
+          );
+        });
     } else {
       this.apiKey =
         init?.session?.apiKey ?? init?.apiKey ?? getEnv("OPENAI_API_KEY");

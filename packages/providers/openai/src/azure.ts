@@ -1,6 +1,8 @@
-import { getEnv } from "@llamaindex/env";
+import { getEnv, process } from "@llamaindex/env";
+import type { FinalRequestOptions } from "openai/core.mjs";
+import pkg from "../package.json";
 
-import type { AzureClientOptions } from "openai";
+import { type AzureClientOptions } from "openai";
 
 // NOTE we're not supporting the legacy models as they're not available for new deployments
 // https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/legacy-models
@@ -134,4 +136,20 @@ export function shouldUseAzure() {
     getEnv("AZURE_OPENAI_API_INSTANCE_NAME") ||
     getEnv("OPENAI_API_TYPE") === "azure"
   );
+}
+
+type Constructor<T = any> = new (...args: any[]) => T;
+
+// This mixin adds a User-Agent header to the request for Azure OpenAI
+export function AzureOpenAIWithUserAgent<K extends Constructor>(Base: K) {
+  return class AzureOpenAI extends Base {
+    // Define a new public method that wraps the base class's defaultHeaders
+    defaultHeaders(opts: FinalRequestOptions) {
+      const baseHeaders = super.defaultHeaders(opts);
+      return {
+        ...baseHeaders,
+        "User-Agent": `${pkg.name}/${pkg.version} (node.js/${process.version}; ${process.platform}; ${process.arch}) ${baseHeaders["User-Agent"] || ""}`,
+      };
+    }
+  };
 }
