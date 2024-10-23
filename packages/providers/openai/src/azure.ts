@@ -1,4 +1,5 @@
 import { getEnv, process } from "@llamaindex/env";
+import type FinalRequestOptions from "openai";
 import { type AzureClientOptions } from "openai";
 import pkg from "../package.json";
 
