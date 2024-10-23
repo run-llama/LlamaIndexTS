@@ -38,7 +38,8 @@ export default function withLlamaIndex(config: any) {
       "onnxruntime-node": "commonjs onnxruntime-node",
       sharp: "commonjs sharp",
       chromadb: "commonjs chromadb",
-      unpdf: "commonjs unpdf",
+      unpdf: "unpdf",
+      replicate: "commonjs replicate",
     });
     return webpackConfig;
   };
