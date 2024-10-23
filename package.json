@@ -2,8 +2,7 @@
   "name": "@llamaindex/monorepo",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "build:release": "turbo run build --filter=\"./packages/*\"",
+    "build": "turbo run build --filter=\"./packages/*\"",
     "dev": "turbo run dev --filter=\"./packages/*\"",
     "format": "prettier --ignore-unknown --cache --check .",
     "format:write": "prettier --ignore-unknown --write .",
