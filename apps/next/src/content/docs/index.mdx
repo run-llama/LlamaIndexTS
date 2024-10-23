@@ -1,6 +1,6 @@
 ---
-title: Welcome to LlamaIndex.TS
-description: A framework for building LLM-powered applications
+title: What is LlamaIndex?
+description: LlamaIndex is a framework for building LLM-powered applications.
 ---
 
 import {
@@ -9,11 +9,12 @@ import {
   SiX,
   SiDiscord,
 } from "@icons-pack/react-simple-icons";
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
-# What is LlamaIndex?
+LlamaIndex helps you ingest, structure, and access private or domain-specific data. It's available [as a Python package](https://docs.llamaindex.ai/en/stable/) and in TypeScript (this package).
 
-LlamaIndex is a framework for building LLM-powered applications. LlamaIndex helps you ingest, structure, and access private or domain-specific data. It's available [as a Python package](https://docs.llamaindex.ai/en/stable/) and in TypeScript (this package). LlamaIndex.TS offers the core features of LlamaIndex for popular runtimes like Node.js (official support), Vercel Edge Functions (experimental), and Deno (experimental).
+LlamaIndex.TS offers the core features of LlamaIndex for JS Runtime-agnostic (Node.js, Deno, and Bun) applications.
 
 ## 🚀 Why LlamaIndex.TS?
 
@@ -42,9 +43,21 @@ For more complex applications, our lower-level APIs allow advanced users to cust
 ## Getting Started
 
 <Tabs items={["npm", "yarn", "pnpm"]}>
-  <Tab value="npm">```shell npm install llamaindex ```</Tab>
-  <Tab value="yarn">```shell yarn add llamaindex ```</Tab>
-  <Tab value="pnpm">```shell pnpm add llamaindex ```</Tab>
+  <Tab value="npm">
+    <CodeBlock language="shell">
+      <Pre>npm install llamaindex</Pre>
+    </CodeBlock>
+  </Tab>
+  <Tab value="yarn">
+    <CodeBlock language="shell">
+      <Pre>yarn add llamaindex</Pre>
+    </CodeBlock>
+  </Tab>
+  <Tab value="pnpm">
+    <CodeBlock language="shell">
+      <Pre>pnpm add llamaindex</Pre>
+    </CodeBlock>
+  </Tab>
 </Tabs>
 
 Our documentation includes [Installation Instructions](./getting_started/installation.mdx) and a [Starter Tutorial](./getting_started/starter_tutorial/retrieval_augmented_generation.mdx) to build your first application.
