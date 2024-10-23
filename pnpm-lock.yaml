@@ -124,6 +124,9 @@ importers:
 
   apps/next:
     dependencies:
+      '@icons-pack/react-simple-icons':
+        specifier: ^10.1.0
+        version: 10.1.0(react@18.3.1)
       '@radix-ui/react-icons':
         specifier: ^1.3.0
         version: 1.3.0(react@18.3.1)
@@ -3608,6 +3611,11 @@ packages:
   '@humanwhocodes/retry@0.3.1':
     resolution: {integrity: sha512-JBxkERygn7Bv/GbN5Rv8Ul6LVknS+5Bp6RgDC/O8gEBU/yeH5Ui5C/OlWrTb6qct7LjjfT6Re2NxB0ln0yYybA==}
     engines: {node: '>=18.18'}
+
+  '@icons-pack/react-simple-icons@10.1.0':
+    resolution: {integrity: sha512-sZ2oDkYaVAci7GuNL8okERJn4Ej0INbeCwtIDVuwWfO5zILW7j5frvKQbozTB+fLtZqEwAP9KkNp7oR8WeHaIg==}
+    peerDependencies:
+      react: ^16.13 || ^17 || ^18
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -17925,6 +17933,10 @@ snapshots:
   '@humanwhocodes/retry@0.3.1':
     optional: true
 
+  '@icons-pack/react-simple-icons@10.1.0(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
       '@img/sharp-libvips-darwin-arm64': 1.0.4
@@ -23111,7 +23123,7 @@ snapshots:
       is-bun-module: 1.1.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.10.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
