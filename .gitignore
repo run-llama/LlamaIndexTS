@@ -38,6 +38,7 @@ yarn-error.log*
 
 dist/
 lib/
+!src/lib/
 
 .cache
 test-results/
