@@ -1,5 +1,12 @@
 # llamaindex
 
+## 0.7.5
+
+### Patch Changes
+
+- e9a111d: fix: VectorIndexRetrieverOptions typing
+- 9f22aae: fix: unable to resolve unpdf in nextjs
+
 ## 0.7.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@llamaindex/nextjs-edge-runtime-test",
-  "version": "0.1.88",
+  "version": "0.1.89",
   "private": true,
   "scripts": {
     "dev": "next dev",
