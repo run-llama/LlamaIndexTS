@@ -31,7 +31,34 @@ META_LLAMA3_8B_INSTRUCT = "meta.llama3-8b-instruct-v1:0";
 META_LLAMA3_70B_INSTRUCT = "meta.llama3-70b-instruct-v1:0";
 META_LLAMA3_1_8B_INSTRUCT = "meta.llama3-1-8b-instruct-v1:0"; // available on us-west-2
 META_LLAMA3_1_70B_INSTRUCT = "meta.llama3-1-70b-instruct-v1:0"; // available on us-west-2
-META_LLAMA3_1_405B_INSTRUCT = "meta.llama3-1-405b-instruct-v1:0"; // preview only, available on us-west-2, tool calling supported
+META_LLAMA3_1_405B_INSTRUCT = "meta.llama3-1-405b-instruct-v1:0"; // available on us-west-2, tool calling supported
+META_LLAMA3_2_1B_INSTRUCT = "meta.llama3-2-1b-instruct-v1:0"; // only available via inference endpoints (see below)
+META_LLAMA3_2_3B_INSTRUCT = "meta.llama3-2-3b-instruct-v1:0"; // only available via inference endpoints (see below)
+META_LLAMA3_2_11B_INSTRUCT = "meta.llama3-2-11b-instruct-v1:0"; // only available via inference endpoints (see below), multimodal and function call supported
+META_LLAMA3_2_90B_INSTRUCT = "meta.llama3-2-90b-instruct-v1:0"; // only available via inference endpoints (see below), multimodal and function call supported
+```
+
+You can also use Bedrock's Inference endpoints by using the model names:
+
+```ts
+// US
+US_ANTHROPIC_CLAUDE_3_HAIKU = "us.anthropic.claude-3-haiku-20240307-v1:0";
+US_ANTHROPIC_CLAUDE_3_OPUS = "us.anthropic.claude-3-opus-20240229-v1:0";
+US_ANTHROPIC_CLAUDE_3_SONNET = "us.anthropic.claude-3-sonnet-20240229-v1:0";
+US_ANTHROPIC_CLAUDE_3_5_SONNET = "us.anthropic.claude-3-5-sonnet-20240620-v1:0";
+US_ANTHROPIC_CLAUDE_3_5_SONNET_V2 =
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0";
+US_META_LLAMA_3_2_1B_INSTRUCT = "us.meta.llama3-2-1b-instruct-v1:0";
+US_META_LLAMA_3_2_3B_INSTRUCT = "us.meta.llama3-2-3b-instruct-v1:0";
+US_META_LLAMA_3_2_11B_INSTRUCT = "us.meta.llama3-2-11b-instruct-v1:0";
+US_META_LLAMA_3_2_90B_INSTRUCT = "us.meta.llama3-2-90b-instruct-v1:0";
+
+// EU
+EU_ANTHROPIC_CLAUDE_3_HAIKU = "eu.anthropic.claude-3-haiku-20240307-v1:0";
+EU_ANTHROPIC_CLAUDE_3_SONNET = "eu.anthropic.claude-3-sonnet-20240229-v1:0";
+EU_ANTHROPIC_CLAUDE_3_5_SONNET = "eu.anthropic.claude-3-5-sonnet-20240620-v1:0";
+EU_META_LLAMA_3_2_1B_INSTRUCT = "eu.meta.llama3-2-1b-instruct-v1:0";
+EU_META_LLAMA_3_2_3B_INSTRUCT = "eu.meta.llama3-2-3b-instruct-v1:0";
 ```
 
 Sonnet, Haiku and Opus are multimodal, image_url only supports base64 data url format, e.g. `data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==`
