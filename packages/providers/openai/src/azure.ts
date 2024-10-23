@@ -1,8 +1,6 @@
 import { getEnv, process } from "@llamaindex/env";
-import type { FinalRequestOptions } from "openai/core.mjs";
-import pkg from "../package.json";
-
 import { type AzureClientOptions } from "openai";
+import pkg from "../package.json";
 
 // NOTE we're not supporting the legacy models as they're not available for new deployments
 // https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/legacy-models
