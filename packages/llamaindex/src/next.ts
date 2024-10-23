@@ -43,7 +43,7 @@ export default function withLlamaIndex(config: any) {
     const externals: Record<string, string> = {
       "onnxruntime-node": "commonjs onnxruntime-node",
       sharp: "commonjs sharp",
-      chromadb: "commonjs chromadb",
+      chromadb: "chromadb",
       unpdf: "unpdf",
     };
 
