@@ -1,6 +1,6 @@
 "use client";
 import { chatWithAgent } from "@/actions";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useFormState } from "react-dom";
 
 export const runtime = "edge";

@@ -1,0 +1,96 @@
+.text {
+  font-family: var(--font-inter);
+  font-size: clamp(0.875rem, -0.4286rem + 4.5714vw, 1rem); /* 14px -> 16px */
+  line-height: 1.6;
+  letter-spacing: -0.04em;
+}
+
+.text-size-12,
+.text-size-16,
+.text-size-18,
+.text-size-20 {
+  color: var(--color-neutral-400);
+  letter-spacing: 0;
+}
+
+.text-size-32,
+.text-size-36,
+.text-size-40,
+.text-size-48,
+.text-size-60 {
+  font-weight: 600;
+}
+
+.text-weight-400 {
+  font-weight: 400;
+}
+
+.text-weight-500 {
+  font-weight: 500;
+}
+
+.text-weight-600 {
+  font-weight: 600;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-size-12 {
+  font-size: 0.75em;
+}
+
+.text-size-14 {
+  font-size: 0.875em;
+}
+
+.text-size-18 {
+  font-size: clamp(1rem, -0.4286rem + 4.5714vw, 1.125rem); /* 16px -> 18px */
+}
+
+.text-size-20 {
+  font-size: clamp(1rem, -0.4286rem + 4.5714vw, 1.25rem); /* 16px -> 20px */
+}
+
+.text-size-24 {
+  font-size: clamp(1.25rem, -0.4286rem + 4.5714vw, 1.5rem); /* 20px -> 24px */
+  line-height: 1.5;
+}
+
+.text-size-28 {
+  font-size: clamp(1.25rem, -0.4286rem + 4.5714vw, 1.75rem);
+  line-height: 1.4;
+}
+
+.text-size-32 {
+  font-size: clamp(1.25rem, -0.4286rem + 4.5714vw, 2rem); /* 20px -> 32px */
+}
+
+.text-size-36 {
+  font-size: clamp(1.5rem, -0.4286rem + 4.5714vw, 2.25rem); /* 24px -> 36px */
+}
+
+.text-size-40 {
+  line-height: 1.2;
+  font-size: clamp(1.75rem, -0.4286rem + 4.5714vw, 2.5rem); /* 28px -> 40px */
+}
+
+.text-size-48 {
+  font-size: 3em;
+  font-size: clamp(1.75rem, -0.4286rem + 4.5714vw, 3rem); /* 28px -> 48px */
+  line-height: 1.25;
+}
+
+.text-size-60 {
+  line-height: 1.2;
+  font-size: clamp(1.75rem, -0.4286rem + 4.5714vw, 3.75rem); /* 28px -> 60px */
+}
+
+.text-family-sourceCodePro {
+  font-family: var(--font-source-code-pro);
+}
+
+.text-family-spaceGrotesk {
+  font-family: var(--font-space-grotesk);
+}
