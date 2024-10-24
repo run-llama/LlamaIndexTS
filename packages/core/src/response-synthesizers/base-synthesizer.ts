@@ -43,9 +43,9 @@ export abstract class BaseSynthesizer extends PromptMixin {
     let response: EngineResponse | AsyncIterable<EngineResponse>;
     if (query.nodes.length === 0) {
       if (stream) {
-        response = EngineResponse.fromResponse("Empty Response", true);
+        response = EngineResponse.fromResponse("Empty Response", true, []);
       } else {
-        response = EngineResponse.fromResponse("Empty Response", false);
+        response = EngineResponse.fromResponse("Empty Response", false, []);
       }
     } else {
       const queryMessage: MessageContent =
