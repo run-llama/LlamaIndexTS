@@ -16,18 +16,18 @@ export default function HomePage() {
         Build RAG Web App using
         <br /> <span className="text-blue-500">LlamaIndex.TS</span>
       </h1>
-      <p className="text-xl text-center text-gray-600 mb-12">
+      <p className="text-xl text-center text-fd-muted-foreground mb-12 ">
         LlamaIndex.TS is the JS/TS library from our popular Python library
         llama-index for building LLM applications
       </p>
-      <div className="text-center text-lg text-gray-600 mb-12">
+      <div className="text-center text-lg text-fd-muted-foreground mb-12">
         <span>Designed for building web applications under </span>
         <TextEffect />
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
         <Link href="/docs">
-          <Button className="bg-black text-white">Get Started</Button>
+          <Button variant="outline">Get Started</Button>
         </Link>
         <NpmInstall />
         <Link
