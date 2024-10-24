@@ -1,5 +1,11 @@
 # llamaindex
 
+## 0.7.6
+
+### Patch Changes
+
+- 534d550: fix: replicate deps warning in nextjs
+
 ## 0.7.5
 
 ### Patch Changes

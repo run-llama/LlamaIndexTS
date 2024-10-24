@@ -1,5 +1,11 @@
 # @llamaindex/community
 
+## 0.0.52
+
+### Patch Changes
+
+- a5a75f6: feat: added sonnet 3.5 v2
+
 ## 0.0.51
 
 ### Patch Changes
