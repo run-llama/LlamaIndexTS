@@ -15373,7 +15373,7 @@ snapshots:
     dependencies:
       '@aws-sdk/client-sso': 3.675.0
       '@aws-sdk/core': 3.667.0
-      '@aws-sdk/token-providers': 3.667.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.678.0))
+      '@aws-sdk/token-providers': 3.667.0(@aws-sdk/client-sso-oidc@3.678.0(@aws-sdk/client-sts@3.650.0))
       '@aws-sdk/types': 3.667.0
       '@smithy/property-provider': 3.1.8
       '@smithy/shared-ini-file-loader': 3.1.9
@@ -20905,7 +20905,7 @@ snapshots:
   '@types/react-router@5.1.20':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.3.5
+      '@types/react': 18.3.12
 
   '@types/react-syntax-highlighter@15.5.13':
     dependencies:
@@ -23517,7 +23517,7 @@ snapshots:
       is-bun-module: 1.1.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.10.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node

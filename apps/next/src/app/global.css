@@ -47,6 +47,20 @@
     --radius: 0.5rem;
   }
   .dark {
+    --color-neutral-000: #0e0c15;
+    --color-neutral-100: #252134;
+    --color-neutral-200: #757185;
+    --color-neutral-400: #cac6dd;
+    --color-neutral-800: #f7f6fc;
+    --color-neutral-900: #ffffff;
+
+    --color-purple-400: #858dff;
+    --color-red-400: #ff776f;
+    --color-green-400: #7adb78;
+    --color-yellow-400: #ffc876;
+    --color-violet-400: #ac6aff;
+    --color-pink-400: #ff98e2;
+
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
