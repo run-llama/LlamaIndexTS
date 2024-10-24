@@ -1,5 +1,23 @@
 # llamaindex
 
+## 0.7.9
+
+### Patch Changes
+
+- 691c5bc: fix: export embeddings utils
+- Updated dependencies [691c5bc]
+  - @llamaindex/core@0.3.6
+  - @llamaindex/cloud@1.0.7
+  - @llamaindex/anthropic@0.0.7
+  - @llamaindex/clip@0.0.7
+  - @llamaindex/deepinfra@0.0.7
+  - @llamaindex/huggingface@0.0.7
+  - @llamaindex/ollama@0.0.14
+  - @llamaindex/openai@0.1.23
+  - @llamaindex/portkey-ai@0.0.7
+  - @llamaindex/replicate@0.0.7
+  - @llamaindex/groq@0.0.22
+
 ## 0.7.8
 
 ### Patch Changes
