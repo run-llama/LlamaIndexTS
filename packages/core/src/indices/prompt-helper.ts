@@ -1,7 +1,6 @@
 import { type Tokenizer, tokenizers } from "@llamaindex/env";
 import {
   DEFAULT_CHUNK_OVERLAP_RATIO,
-  DEFAULT_CHUNK_SIZE,
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_NUM_OUTPUTS,
   DEFAULT_PADDING,
@@ -171,7 +170,7 @@ export class PromptHelper {
   ) {
     const {
       chunkOverlapRatio = DEFAULT_CHUNK_OVERLAP_RATIO,
-      chunkSizeLimit = DEFAULT_CHUNK_SIZE,
+      chunkSizeLimit = undefined,
       tokenizer = Settings.tokenizer,
       separator = " ",
     } = options ?? {};
