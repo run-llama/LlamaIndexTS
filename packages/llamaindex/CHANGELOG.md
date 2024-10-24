@@ -1,5 +1,23 @@
 # llamaindex
 
+## 0.7.8
+
+### Patch Changes
+
+- Updated dependencies [fa60fc6]
+  - @llamaindex/env@0.1.16
+  - @llamaindex/cloud@1.0.6
+  - @llamaindex/core@0.3.5
+  - @llamaindex/anthropic@0.0.6
+  - @llamaindex/clip@0.0.6
+  - @llamaindex/deepinfra@0.0.6
+  - @llamaindex/groq@0.0.21
+  - @llamaindex/huggingface@0.0.6
+  - @llamaindex/ollama@0.0.13
+  - @llamaindex/openai@0.1.22
+  - @llamaindex/portkey-ai@0.0.6
+  - @llamaindex/replicate@0.0.6
+
 ## 0.7.7
 
 ### Patch Changes

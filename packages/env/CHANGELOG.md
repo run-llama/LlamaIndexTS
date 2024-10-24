@@ -1,5 +1,11 @@
 # @llamaindex/env
 
+## 0.1.16
+
+### Patch Changes
+
+- fa60fc6: fix(env): no esm shim
+
 ## 0.1.15
 
 ### Patch Changes
