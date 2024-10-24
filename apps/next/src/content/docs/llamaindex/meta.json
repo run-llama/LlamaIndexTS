@@ -1,0 +1,6 @@
+{
+  "title": "LlamaIndex",
+  "description": "The Data framework for LLM",
+  "root": true,
+  "pages": ["---Guide---", "index"]
+}

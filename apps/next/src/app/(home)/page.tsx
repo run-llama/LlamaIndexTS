@@ -26,7 +26,7 @@ export default function HomePage() {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
-        <Link href="/docs">
+        <Link href="/docs/llamaindex">
           <Button variant="outline">Get Started</Button>
         </Link>
         <NpmInstall />
