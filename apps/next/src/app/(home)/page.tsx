@@ -1,5 +1,6 @@
 import { CodeBlock } from "@/components/code-block";
 import { Contributing } from "@/components/contribution";
+import { CreateAppAnimation } from "@/components/create-app-animation";
 import { Feature } from "@/components/feature";
 import { NpmInstall } from "@/components/npm-install";
 import { TextEffect } from "@/components/text-effect";
@@ -72,37 +73,9 @@ await agent.chat('...');`}
           heading="CLI for starting RAG app with one line"
           description="A command line tool to generate LlamaIndex apps, the easiest way to get started with LlamaIndex."
         >
-          <CodeBlock
-            code="npx create-llama@latest"
-            lang="bash"
-            wrapper={{
-              title: "Terminal",
-              allowCopy: true,
-            }}
-          />
-          <pre className="grid grid-cols-1 rounded-lg border bg-card p-4 text-xs leading-loose">
-            <code>
-              <div>? What app do you want to build?</div>
-              <ul>
-                <li>❯ Agentic RAG</li>
-                <li> Data Scientist</li>
-                <li> Financial Report Generator (using Workflows)</li>
-                <li> Code Artifact Agent</li>
-                <li> Structured extraction</li>
-              </ul>
-            </code>
-            <code>
-              ? What language do you want to use?
-              <ul>
-                <li>❯ TypeScript</li>
-                <li> Python</li>
-              </ul>
-            </code>
-            <code className="text-muted-foreground">{`Initializing project with template...`}</code>
-            <code className="text-green-500">
-              Success! Created app at /path/to/app
-            </code>
-          </pre>
+          <div className="my-6">
+            <CreateAppAnimation />
+          </div>
         </Feature>
       </div>
       <Contributing />
