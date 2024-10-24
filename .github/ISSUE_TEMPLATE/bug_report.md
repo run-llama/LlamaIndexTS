@@ -14,7 +14,7 @@ A clear and concise description of what the bug is.
 Code to reproduce the behavior:
 
 ```ts
-console.log('hello world!')
+// paste the code here
 ```
 
 **Expected behavior**
@@ -25,7 +25,21 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. macOS, Linux]
- - JS Runtime [e.g. Node.js, Bun, AWS Lambda, Nex.js]
+ - JS Runtime / Framework / Bundler (select all applicable)
+  - [ ] Node.js
+  - [ ] Deno
+  - [ ] Bun
+  - [ ] Next.js
+  - [ ] ESBuild
+  - [ ] Rollup
+  - [ ] Webpack
+  - [ ] Turbopack
+  - [ ] Vite
+  - [ ] Waku
+  - [ ] Edge Runtime
+  - [ ] AWS Lambda
+  - [ ] Cloudflare Worker
+  - [ ] Others (please elaborate on this)
  - Version [e.g. 22]
 
 **Additional context**
