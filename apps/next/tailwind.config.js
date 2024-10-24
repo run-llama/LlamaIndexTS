@@ -9,6 +9,7 @@ export default {
     "./src/content/**/*.{md,mdx}",
     "./src/mdx-components.{ts,tsx}",
     "./node_modules/fumadocs-ui/dist/**/*.js",
+    "./node_modules/fumadocs-openapi/dist/**/*.js",
   ],
   presets: [createPreset()],
   plugins: [require("tailwindcss-animate")],

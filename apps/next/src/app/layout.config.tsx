@@ -14,7 +14,7 @@ export const baseOptions: BaseLayoutProps = {
   links: [
     {
       text: "Documentation",
-      url: "/docs",
+      url: "/docs/llamaindex",
       active: "nested-url",
     },
   ],

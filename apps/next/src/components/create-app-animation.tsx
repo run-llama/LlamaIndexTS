@@ -190,6 +190,7 @@ export function ChatExample() {
             ? ""
             : userMessageFull.substring(0, userMessageLength)
         }
+        readOnly
         placeholder="Input message..."
       />
     </div>

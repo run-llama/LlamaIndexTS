@@ -26,3 +26,6 @@ yarn-error.log*
 .env*.local
 .vercel
 next-env.d.ts
+
+# build
+/src/content/docs/cloud/api
