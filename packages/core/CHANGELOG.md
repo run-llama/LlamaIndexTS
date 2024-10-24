@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.3.4
+
+### Patch Changes
+
+- e2a0876: Remove chunk size limit for prompt helper (use LLM default)
+
 ## 0.3.3
 
 ### Patch Changes

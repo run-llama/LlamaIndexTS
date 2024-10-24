@@ -1,5 +1,14 @@
 # examples
 
+## 0.0.10
+
+### Patch Changes
+
+- 2486bd8: Add files_via_content example for LlamaCloud retrieval
+- Updated dependencies [e2a0876]
+  - @llamaindex/core@0.3.4
+  - llamaindex@0.7.7
+
 ## 0.0.9
 
 ### Patch Changes
