@@ -1,5 +1,11 @@
 # @llamaindex/autotool
 
+## 4.0.7
+
+### Patch Changes
+
+- llamaindex@0.7.7
+
 ## 4.0.6
 
 ### Patch Changes
