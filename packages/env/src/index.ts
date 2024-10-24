@@ -11,6 +11,7 @@
  *
  * @module
  */
+/** rollup-private-do-not-use-esm-shim-polyfill */
 import { ok } from "node:assert";
 import { createHash, randomUUID } from "node:crypto";
 import { EOL } from "node:os";
