@@ -23,26 +23,26 @@ const Footer = () => {
         <div className={styles.nav}>
           <div>
             <Text size={20} weight={600} as="h3" className={styles.navHeader}>
-              <a href="/">LlamaIndex</a>
+              <a href="https://llamaindex.ai">LlamaIndex</a>
             </Text>
             <ul>
               <li>
-                <a href="/blog">
+                <a href="https://llamaindex.ai/blog">
                   <Text as="span">Blog</Text>
                 </a>
               </li>
               <li>
-                <a href="/partners">
+                <a href="https://llamaindex.ai/partners">
                   <Text as="span">Partners</Text>
                 </a>
               </li>
               <li>
-                <a href="/careers">
+                <a href="https://llamaindex.ai/careers">
                   <Text as="span">Careers</Text>
                 </a>
               </li>
               <li>
-                <a href="/contact">
+                <a href="https://llamaindex.ai/contact">
                   <Text as="span">Contact</Text>
                 </a>
               </li>
@@ -55,7 +55,7 @@ const Footer = () => {
           </div>
           <div>
             <Text size={20} weight={600} as="h3" className={styles.navHeader}>
-              <a href="/enterprise">Enterprise</a>
+              <a href="https://llamaindex.ai/enterprise">Enterprise</a>
             </Text>
             <ul>
               <li>
@@ -78,7 +78,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/llamacloud-sharepoint-data-loading-for-generative-ai"
+                  href="https://llamaindex.ai/llamacloud-sharepoint-data-loading-for-generative-ai"
                   data-tracking-variant="link"
                   data-tracking-section="footer"
                 >
@@ -89,7 +89,7 @@ const Footer = () => {
           </div>
           <div>
             <Text size={20} weight={600} as="h3" className={styles.navHeader}>
-              <a href="/open-source">Open Source</a>
+              <a href="https://llamaindex.ai/open-source">Open Source</a>
             </Text>
             <ul>
               <li>
