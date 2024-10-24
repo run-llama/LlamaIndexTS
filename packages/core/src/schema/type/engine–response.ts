@@ -26,7 +26,7 @@ export class EngineResponse implements ChatResponse, ChatResponseChunk {
   static fromResponse(
     response: string,
     stream: boolean,
-    sourceNodes?: NodeWithScore[],
+    sourceNodes: NodeWithScore[],
   ): EngineResponse {
     return new EngineResponse(
       EngineResponse.toChatResponse(response),
