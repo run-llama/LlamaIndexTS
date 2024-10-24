@@ -1,14 +1,18 @@
 export * from "@llamaindex/core/agent";
 export {
-  OpenAIAgent,
-  OpenAIAgentWorker,
-  type OpenAIAgentParams,
-} from "@llamaindex/openai";
-export {
   AnthropicAgent,
   AnthropicAgentWorker,
+  AnthropicContextAwareAgent,
   type AnthropicAgentParams,
+  type AnthropicContextAwareAgentParams,
 } from "./anthropic.js";
+export {
+  OpenAIAgent,
+  OpenAIAgentWorker,
+  OpenAIContextAwareAgent,
+  type OpenAIAgentParams,
+  type OpenAIContextAwareAgentParams,
+} from "./openai.js";
 export {
   ReACTAgentWorker,
   ReActAgent,

@@ -4,22 +4,23 @@ While an agent that can perform math is nifty (LLMs are usually not very good at
 
 To learn more about RAG, we recommend this [introduction](https://docs.llamaindex.ai/en/stable/getting_started/concepts/) from our Python docs. We'll assume you know the basics:
 
-- You need to parse your source data into chunks of text
-- You need to encode that text as numbers, called embeddings
-- You need to search your embeddings for the most relevant chunks of text
-- You feed your relevant chunks and a query to an LLM to answer a question
+- Parse your source data into chunks of text.
+- Encode that text as numbers, called embeddings.
+- Search your embeddings for the most relevant chunks of text.
+- Use the relevant chunks along with a query to ask an LLM to generate an answer.
 
 We're going to start with the same agent we [built in step 1](https://github.com/run-llama/ts-agents/blob/main/1_agent/agent.ts), but make a few changes. You can find the finished version [in the repository](https://github.com/run-llama/ts-agents/blob/main/2_agentic_rag/agent.ts).
 
 ### New dependencies
 
-We'll be bringing in `SimpleDirectoryReader`, `HuggingFaceEmbedding`, `VectorStoreIndex`, and `QueryEngineTool` from LlamaIndex.TS, as well as the dependencies we previously used.
+We'll be bringing in `SimpleDirectoryReader`, `HuggingFaceEmbedding`, `VectorStoreIndex`, and `QueryEngineTool`, `OpenAIContextAwareAgent` from LlamaIndex.TS, as well as the dependencies we previously used.
 
 ```javascript
 import {
   OpenAI,
   FunctionTool,
   OpenAIAgent,
+  OpenAIContextAwareAgent,
   Settings,
   SimpleDirectoryReader,
   HuggingFaceEmbedding,
@@ -41,7 +42,7 @@ Settings.embedModel = new HuggingFaceEmbedding({
 
 ### Load data using SimpleDirectoryReader
 
-SimpleDirectoryReader is a flexible tool that can read a variety of file formats. We're going to point it at our data directory, which contains just the single PDF file, and get it to return a set of documents.
+`SimpleDirectoryReader` is a flexible tool that can read various file formats. We will point it at our data directory, which contains a single PDF file, and retrieve a set of documents.
 
 ```javascript
 const reader = new SimpleDirectoryReader();
@@ -50,7 +51,7 @@ const documents = await reader.loadData("../data");
 
 ### Index our data
 
-Now we turn our text into embeddings. The `VectorStoreIndex` class takes care of this for us when we use the `fromDocuments` method (it uses the embedding model we defined in `Settings` earlier).
+We will convert our text into embeddings using the `VectorStoreIndex` class through the `fromDocuments` method, which utilizes the embedding model defined earlier in `Settings`.
 
 ```javascript
 const index = await VectorStoreIndex.fromDocuments(documents);
@@ -72,21 +73,35 @@ By default LlamaIndex will retrieve just the 2 most relevant chunks of text. Thi
 retriever.similarityTopK = 10;
 ```
 
-### Create a query engine
+### Approach 1: Create a Context-Aware Agent
 
-And our final step in creating a RAG pipeline is to create a query engine that will use the retriever to find the most relevant chunks of text, and then use the LLM to answer the question.
+With the retriever ready, you can create a **context-aware agent**.
 
 ```javascript
-const queryEngine = await index.asQueryEngine({
-  retriever,
+const agent = new OpenAIContextAwareAgent({
+  contextRetriever: retriever,
 });
+
+// Example query to the context-aware agent
+let response = await agent.chat({
+  message: `What's the budget of San Francisco in 2023-2024?`,
+});
+
+console.log(response);
 ```
 
-### Define the query engine as a tool
+**Expected Output:**
 
-Just as before we created a `FunctionTool`, we're going to create a `QueryEngineTool` that uses our `queryEngine`.
+```md
+The total budget for the City and County of San Francisco for the fiscal year 2023-2024 is $14.6 billion. This represents a $611.8 million, or 4.4 percent, increase over the previous fiscal year's budget. The budget covers various expenditures across different departments and services, including significant allocations to public works, transportation, commerce, public protection, and health services.
+```
+
+### Approach 2: Using QueryEngineTool (Alternative Approach)
+
+If you prefer more flexibility and don't mind additional complexity, you can create a `QueryEngineTool`. This approach allows you to define the query logic, providing a more tailored way to interact with the data, but note that it introduces a delay due to the extra tool call.
 
 ```javascript
+const queryEngine = await index.asQueryEngine({ retriever });
 const tools = [
   new QueryEngineTool({
     queryEngine: queryEngine,
@@ -96,28 +111,18 @@ const tools = [
     },
   }),
 ];
-```
 
-As before, we've created an array of tools with just one tool in it. The metadata is slightly different: we don't need to define our parameters, we just give the tool a name and a natural-language description.
-
-### Create the agent as before
-
-Creating the agent and asking a question is exactly the same as before, but we'll ask a different question.
-
-```javascript
-// create the agent
+// Create an agent using the tools array
 const agent = new OpenAIAgent({ tools });
 
-let response = await agent.chat({
+let toolResponse = await agent.chat({
   message: "What's the budget of San Francisco in 2023-2024?",
 });
 
-console.log(response);
+console.log(toolResponse);
 ```
 
-Once again we'll run `npx tsx agent.ts` and see what we get:
-
-**_Output_**
+**Expected Output:**
 
 ```javascript
 {
@@ -138,28 +143,12 @@ Once again we'll run `npx tsx agent.ts` and see what we get:
 }
 ```
 
-```javascript
-{
-  response: {
-    raw: {
-      id: 'chatcmpl-9KxUkwizVCYCmxwFQcZFSHrInzNFU',
-      object: 'chat.completion',
-      created: 1714782286,
-      model: 'gpt-4-turbo-2024-04-09',
-      choices: [Array],
-      usage: [Object],
-      system_fingerprint: 'fp_ea6eb70039'
-    },
-    message: {
-      content: "The total budget for the City and County of San Francisco for the fiscal year 2023-2024 is $14.6 billion. This represents a $611.8 million, or 4.4 percent, increase over the previous fiscal year's budget. The budget covers various expenditures across different departments and services, including significant allocations to public works, transportation, commerce, public protection, and health services.",
-      role: 'assistant',
-      options: {}
-    }
-  },
-  sources: [Getter]
-}
-```
-
 Once again we see a `toolResult`. You can see the query the LLM decided to send to the query engine ("total budget"), and the output the engine returned. In `response.message` you see that the LLM has returned the output from the tool almost verbatim, although it trimmed out the bit about 2024-2025 since we didn't ask about that year.
+
+### Comparison of Approaches
+
+The `OpenAIContextAwareAgent` approach simplifies the setup by allowing you to directly link the retriever to the agent, making it straightforward to access relevant context for your queries. This is ideal for situations where you want easy integration with existing data sources, like a context chat engine.
+
+On the other hand, using the `QueryEngineTool` offers more flexibility and power. This method allows for customization in how queries are constructed and executed, enabling you to query data from various storages and process them in different ways. However, this added flexibility comes with increased complexity and response time due to the separate tool call and queryEngine generating tool output by LLM that is then passed to the agent.
 
 So now we have an agent that can index complicated documents and answer questions about them. Let's [combine our math agent and our RAG agent](rag_and_tools)!
