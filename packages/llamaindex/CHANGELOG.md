@@ -1,5 +1,23 @@
 # llamaindex
 
+## 0.7.10
+
+### Patch Changes
+
+- 9df9a8f: fix: export all huggingface module
+- Updated dependencies [60b185f]
+  - @llamaindex/core@0.3.7
+  - @llamaindex/cloud@1.0.8
+  - @llamaindex/anthropic@0.0.8
+  - @llamaindex/clip@0.0.8
+  - @llamaindex/deepinfra@0.0.8
+  - @llamaindex/huggingface@0.0.8
+  - @llamaindex/ollama@0.0.15
+  - @llamaindex/openai@0.1.24
+  - @llamaindex/portkey-ai@0.0.8
+  - @llamaindex/replicate@0.0.8
+  - @llamaindex/groq@0.0.23
+
 ## 0.7.9
 
 ### Patch Changes
