@@ -12,7 +12,8 @@ async function main() {
   });
 
   const queryEngine = index.asQueryEngine({
-    similarityTopK: 5,
+    // retrieve the whole content of a file instead of just chunks of the file
+    retrieval_mode: "files_via_content",
   });
 
   const rl = readline.createInterface({ input, output });
