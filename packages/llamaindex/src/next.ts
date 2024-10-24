@@ -24,7 +24,7 @@ export default function withLlamaIndex(config: any) {
     "@xenova/transformers",
   );
   const userWebpack = config.webpack;
-  config.webpack = function (webpackConfig: any) {
+  config.webpack = function (webpackConfig: any, options: any) {
     if (userWebpack) {
       webpackConfig = userWebpack(webpackConfig);
     }
@@ -32,14 +32,26 @@ export default function withLlamaIndex(config: any) {
       ...webpackConfig.resolve.alias,
       "@google-cloud/vertexai": false,
     };
+
+    // Disable modules that are not supported in vercel edge runtime
+    if (options?.nextRuntime === "edge") {
+      webpackConfig.resolve.alias["replicate"] = false;
+    }
+
     // Following lines will fix issues with onnxruntime-node when using pnpm
     // See: https://github.com/vercel/next.js/issues/43433
-    webpackConfig.externals.push({
+    const externals: Record<string, string> = {
       "onnxruntime-node": "commonjs onnxruntime-node",
       sharp: "commonjs sharp",
-      chromadb: "commonjs chromadb",
-      unpdf: "commonjs unpdf",
-    });
+      chromadb: "chromadb",
+      unpdf: "unpdf",
+    };
+
+    if (options?.nextRuntime === "nodejs") {
+      externals.replicate = "commonjs replicate";
+    }
+
+    webpackConfig.externals.push(externals);
     return webpackConfig;
   };
   return config;
