@@ -106,6 +106,7 @@ await agent.chat('...');`}
         </Feature>
       </div>
       <Contributing />
+      <div className="border-b" />
     </main>
   );
 }

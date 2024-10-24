@@ -3,6 +3,23 @@
 @tailwind utilities;
 @layer base {
   :root {
+    --page-max-width: 1840px;
+    --plus-icon: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMTEiIHZpZXdCb3g9IjAgMCAxMSAxMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03IDFDNyAwLjQ0NzcxNSA2LjU1MjI4IDAgNiAwSDVDNC40NDc3MiAwIDQgMC40NDc3MTUgNCAxVjNDNCAzLjU1MjI5IDMuNTUyMjggNCAzIDRIMUMwLjQ0NzcxNSA0IDAgNC40NDc3MiAwIDVWNkMwIDYuNTUyMjggMC40NDc3MTUgNyAxIDdIM0MzLjU1MjI4IDcgNCA3LjQ0NzcyIDQgOFYxMEM0IDEwLjU1MjMgNC40NDc3MiAxMSA1IDExSDZDNi41NTIyOCAxMSA3IDEwLjU1MjMgNyAxMFY4QzcgNy40NDc3MSA3LjQ0NzcyIDcgOCA3SDEwQzEwLjU1MjMgNyAxMSA2LjU1MjI4IDExIDZWNUMxMSA0LjQ0NzcyIDEwLjU1MjMgNCAxMCA0SDhDNy40NDc3MiA0IDcgMy41NTIyOCA3IDNWMVoiIGZpbGw9IiNBREE4QzQiLz4KPC9zdmc+Cg==");
+
+    --color-neutral-000: #ffffff;
+    --color-neutral-100: #f7f6fc;
+    --color-neutral-200: #cac6dd;
+    --color-neutral-400: #757185;
+    --color-neutral-800: #252134;
+    --color-neutral-900: #0e0c15;
+
+    --color-purple-400: #858dff;
+    --color-red-400: #ff776f;
+    --color-green-400: #7adb78;
+    --color-yellow-400: #ffc876;
+    --color-violet-400: #ac6aff;
+    --color-pink-400: #ff98e2;
+
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
