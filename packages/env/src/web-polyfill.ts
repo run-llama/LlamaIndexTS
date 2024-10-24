@@ -53,5 +53,6 @@ export {
   AsyncLocalStorage,
   CustomEvent,
   getEnv,
+  process,
   setEnvs,
 } from "./utils/index.web.js";

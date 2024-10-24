@@ -1,12 +1,3 @@
-import { getEnv } from "@llamaindex/env";
-import type {
-  AzureClientOptions,
-  AzureOpenAI as AzureOpenAILLM,
-  ClientOptions as OpenAIClientOptions,
-  OpenAI as OpenAILLM,
-} from "openai";
-import type { ChatModel } from "openai/resources/chat/chat";
-
 import { wrapEventCaller, wrapLLMEvent } from "@llamaindex/core/decorator";
 import {
   type BaseTool,
@@ -23,7 +14,14 @@ import {
   type ToolCallLLMMessageOptions,
 } from "@llamaindex/core/llms";
 import { extractText } from "@llamaindex/core/utils";
-import { Tokenizers } from "@llamaindex/env";
+import { getEnv, Tokenizers } from "@llamaindex/env";
+import type {
+  AzureClientOptions,
+  AzureOpenAI as AzureOpenAILLM,
+  ClientOptions as OpenAIClientOptions,
+  OpenAI as OpenAILLM,
+} from "openai";
+import type { ChatModel } from "openai/resources/chat/chat";
 import type {
   ChatCompletionAssistantMessageParam,
   ChatCompletionMessageToolCall,
@@ -35,6 +33,7 @@ import type {
 } from "openai/resources/chat/completions";
 import type { ChatCompletionMessageParam } from "openai/resources/index.js";
 import {
+  AzureOpenAIWithUserAgent,
   getAzureConfigFromEnv,
   getAzureModel,
   shouldUseAzure,
@@ -201,6 +200,8 @@ export class OpenAI extends ToolCallLLM<OpenAIAdditionalChatOptions> {
       this.lazySession = async () =>
         init?.session ??
         import("openai").then(({ AzureOpenAI }) => {
+          AzureOpenAI = AzureOpenAIWithUserAgent(AzureOpenAI);
+
           return new AzureOpenAI({
             maxRetries: this.maxRetries,
             timeout: this.timeout!,

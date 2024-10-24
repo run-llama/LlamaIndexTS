@@ -1,13 +1,4 @@
-const glo: any =
-  typeof globalThis !== "undefined"
-    ? globalThis
-    : // @ts-expect-error
-      typeof window !== "undefined"
-      ? // @ts-expect-error
-        window
-      : typeof global !== "undefined"
-        ? global
-        : {};
+import { glo } from "./utils/shared.js";
 
 const importIdentifier = "__ $@llamaindex/env$ __";
 

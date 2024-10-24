@@ -1,3 +1,5 @@
+import { glo } from "./shared.js";
+
 // DO NOT EXPOSE THIS VARIABLE TO PUBLIC, IT IS USED INTERNALLY FOR BROWSER ENVIRONMENT
 export const INTERNAL_ENV: Record<string, string> = {};
 
@@ -43,3 +45,21 @@ export class AsyncLocalStorage<T> {
 const defaultCustomEvent = (globalThis as any).CustomEvent;
 
 export { defaultCustomEvent as CustomEvent };
+
+const defaultProcess: NodeJS.Process = (globalThis as any).process || {};
+const processProxy = new Proxy(defaultProcess, {
+  get(_target, prop) {
+    switch (prop) {
+      case "version":
+        return glo.navigator.version; // Return empty string for version
+      case "platform":
+        return "browser"; // Return browser platform
+      case "arch":
+        return "javascript"; // Return javascript arch
+      default:
+        break;
+    }
+    return ""; // Return empty string for all other properties
+  },
+});
+export { processProxy as process };
