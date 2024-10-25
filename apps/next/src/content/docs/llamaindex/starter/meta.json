@@ -1,0 +1,6 @@
+{
+  "title": "Starter",
+  "description": "The starter guide",
+  "defaultOpen": true,
+  "pages": ["getting-started", "next", "node"]
+}

@@ -2,11 +2,17 @@ import { CodeBlock } from "@/components/code-block";
 import { Contributing } from "@/components/contribution";
 import { CreateAppAnimation } from "@/components/create-app-animation";
 import { Feature } from "@/components/feature";
+import {
+  InfiniteLLMProviders,
+  InfiniteVectorStoreProviders,
+} from "@/components/infinite-providers";
+import { MagicMove } from "@/components/magic-move";
 import { NpmInstall } from "@/components/npm-install";
 import { TextEffect } from "@/components/text-effect";
 import { Button } from "@/components/ui/button";
+import { DOCUMENT_URL } from "@/lib/const";
 import { SiStackblitz } from "@icons-pack/react-simple-icons";
-import { Bot, Terminal } from "lucide-react";
+import { Blocks, Bot, Footprints, Terminal } from "lucide-react";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -26,7 +32,7 @@ export default function HomePage() {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
-        <Link href="/docs/llamaindex">
+        <Link href={DOCUMENT_URL}>
           <Button variant="outline">Get Started</Button>
         </Link>
         <NpmInstall />
@@ -44,14 +50,56 @@ export default function HomePage() {
       <div className="mt-4" />
       <div className="grid grid-cols-1 border-r md:grid-cols-2">
         <Feature
+          icon={Footprints}
+          subheading="Progressive"
+          heading="Adding AI feature from simple to complex"
+          description="LlamaIndex.TS is designed to be simple to start with and can be extended to build complex AI applications."
+        >
+          <MagicMove
+            code={[
+              `import { OpenAI } from "llamaindex";
+const llm = new OpenAI();
+const response = await llm.complete({ prompt: "How are you?" });`,
+              `import { OpenAI } from "llamaindex";
+const llm = new OpenAI();
+const response = await llm.chat({
+  messages: [{ content: "Tell me a joke.", role: "user" }],
+});`,
+              `import { OpenAI, ChatMemoryBuffer } from "llamaindex";
+const llm = new OpenAI({ model: 'gpt4o-turbo' });
+const buffer = new ChatMemoryBuffer({
+  tokenLimit: 128_000,
+})
+buffer.put({ content: "Tell me a joke.", role: "user" })
+const response = await llm.chat({
+  messages: buffer.getMessages(),
+  stream: true
+});`,
+              `import { OpenAIAgent, ChatMemoryBuffer } from "llamaindex";
+const agent = new OpenAIAgent({
+  llm,
+  tools: [...myTools]
+  systemPrompt,
+});
+const buffer = new ChatMemoryBuffer({
+  tokenLimit: 128_000,
+})
+buffer.put({ content: "Analysis the data based on the given data.", role: "user" })
+buffer.put({ content: \`\${data}\`, role: "user" })
+const response = await agent.chat({
+  message: buffer.getMessages(),
+});`,
+            ]}
+          />
+        </Feature>
+        <Feature
           icon={Bot}
           subheading="Agent"
           heading="Build agent for RAG"
           description="Build agents for RAG using LlamaIndex.TS. Agents are the core building blocks of RAG applications."
         >
           <CodeBlock
-            code={`
-import { FunctionTool } from "llamaindex";
+            code={`import { FunctionTool } from "llamaindex";
 import { OpenAIAgent } from "@llamaindex/openai";
 
 const interpreterTool = FunctionTool.from(...);
@@ -66,6 +114,27 @@ const agent = new OpenAIAgent({
 await agent.chat('...');`}
             lang="ts"
           />
+        </Feature>
+        <Feature
+          icon={Blocks}
+          subheading="Providers"
+          heading="LLM / Data Loader / Vector Store"
+          description="LlamaIndex.TS provides various providers to turn your data into valuable insights."
+        >
+          <div className="mt-8 flex flex-col gap-8">
+            <div>
+              <h3 className="text-lg font-semibold text-fd-muted-foreground mb-2">
+                LLM
+              </h3>
+              <InfiniteLLMProviders />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-fd-muted-foreground mb-2">
+                Vector Store
+              </h3>
+              <InfiniteVectorStoreProviders />
+            </div>
+          </div>
         </Feature>
         <Feature
           icon={Terminal}

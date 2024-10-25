@@ -1,0 +1,34 @@
+---
+title: With Node.js/Bun/Deno
+description: In this guide, you'll learn how to use LlamaIndex with Node.js, Bun, and Deno.
+---
+
+## Adding environment variables
+
+By default, LlamaIndex uses OpenAI provider, which requires an API key. You can set the `OPENAI_API_KEY` environment variable to authenticate with OpenAI.
+
+```shell
+export OPENAI_API_KEY=your-api-key
+```
+
+Or you can use a `.env` file:
+
+```shell
+echo "OPENAI_API_KEY=your-api-key" > .env
+node --env-file .env your-script.js
+```
+
+<Callout type="warn">Do not commit the api key to git repository.</Callout>
+
+For more information, see the [How to read environment variables from Node.js](https://nodejs.org/en/learn/command-line/how-to-read-environment-variables-from-nodejs).
+
+## TypeScript support
+
+LlamaIndex.TS is written in TypeScript and provides type definitions.
+We recommend using [tsx](https://www.npmjs.com/package/tsx) to run TypeScript scripts.
+
+```shell
+npx tsx my-script.ts
+# or
+node --import tsx my-script.ts
+```
