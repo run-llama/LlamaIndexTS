@@ -5,6 +5,7 @@ import { Feature } from "@/components/feature";
 import { NpmInstall } from "@/components/npm-install";
 import { TextEffect } from "@/components/text-effect";
 import { Button } from "@/components/ui/button";
+import { DOCUMENT_URL } from "@/lib/const";
 import { SiStackblitz } from "@icons-pack/react-simple-icons";
 import { Bot, Terminal } from "lucide-react";
 import Link from "next/link";
@@ -26,7 +27,7 @@ export default function HomePage() {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
-        <Link href="/docs/llamaindex">
+        <Link href={DOCUMENT_URL}>
           <Button variant="outline">Get Started</Button>
         </Link>
         <NpmInstall />
