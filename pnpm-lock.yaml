@@ -647,7 +647,7 @@ importers:
         specifier: workspace:*
         version: link:../providers/portkey-ai
       '@llamaindex/replicate':
-        specifier: workspace:^0.0.7
+        specifier: workspace:^0.0.8
         version: link:../providers/replicate
       '@mistralai/mistralai':
         specifier: ^1.0.4

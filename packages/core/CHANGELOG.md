@@ -1,5 +1,11 @@
 # @llamaindex/core
 
+## 0.3.7
+
+### Patch Changes
+
+- 60b185f: fix: source nodes is empty
+
 ## 0.3.6
 
 ### Patch Changes
