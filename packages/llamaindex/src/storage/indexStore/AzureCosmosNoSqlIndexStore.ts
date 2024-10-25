@@ -31,9 +31,7 @@ export class AzureCosmosNoSqlIndexStore extends KVIndexStore {
   }
 
   // Static method for creating an instance using a connection string
-  static fromConnectionString(
-    options: ConnectionStringOptions,
-  ): AzureCosmosNoSqlIndexStore {
+  static fromConnectionString(options: ConnectionStringOptions) {
     const { dbName = DEFAULT_DATABASE, containerName = DEFAULT_CONTAINER } =
       options;
     const azureCosmosNoSqlKVStore =
@@ -46,9 +44,7 @@ export class AzureCosmosNoSqlIndexStore extends KVIndexStore {
   }
 
   // Static method for creating an instance using account and key
-  static fromAccountAndKey(
-    options: AccountAndKeyOptions,
-  ): AzureCosmosNoSqlIndexStore {
+  static fromAccountAndKey(options: AccountAndKeyOptions) {
     const { dbName = DEFAULT_DATABASE, containerName = DEFAULT_CONTAINER } =
       options;
 
@@ -62,9 +58,15 @@ export class AzureCosmosNoSqlIndexStore extends KVIndexStore {
   }
 
   // Static method for creating an instance using AAD token
-  static fromAadToken(options: AadTokenOptions): AzureCosmosNoSqlIndexStore {
-    const { dbName = DEFAULT_DATABASE, containerName = DEFAULT_CONTAINER } =
-      options;
+  static fromAadToken(
+    options?: {
+      endpoint?: string;
+      containerName?: string;
+      dbName?: string;
+    } & CosmosClientCommonOptions,
+  ) {
+    const dbName = options?.dbName || DEFAULT_DATABASE;
+    const containerName = options?.containerName || DEFAULT_CONTAINER;
 
     const azureCosmosNoSqlKVStore =
       AzureCosmosNoSqlKVStore.fromAadToken(options);

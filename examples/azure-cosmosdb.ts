@@ -1,7 +1,4 @@
-process.env.AZURE_OPENAI_ENDPOINT =
-  "https://cog-nadwwr3zcwntm.openai.azure.com";
-process.env.AZURE_DEPLOYMENT_NAME = "gpt-4o-mini";
-process.env.EMBEDDING_MODEL = "text-embedding-3-large";
+import "dotenv/config";
 
 import {
   DefaultAzureCredential,
@@ -38,25 +35,21 @@ import { AzureCosmosNoSqlIndexStore } from "llamaindex/storage/indexStore/AzureC
       deployment: process.env.EMBEDDING_MODEL,
     },
   });
-  const endpoint = "https://llamaindex.documents.azure.com:443/";
-  const docStore = AzureCosmosNoSqlDocumentStore.fromAadToken({
-    endpoint,
-  });
+  const docStore = AzureCosmosNoSqlDocumentStore.fromAadToken();
   console.log({ docStore });
-  const indexStore = AzureCosmosNoSqlIndexStore.fromAadToken({
-    endpoint,
-  });
+  const indexStore = AzureCosmosNoSqlIndexStore.fromAadToken();
   console.log({ indexStore });
-  const vectorStore = AzureCosmosDBNoSqlVectorStore.fromAadToken({
-    endpoint,
-  });
+  const vectorStore = AzureCosmosDBNoSqlVectorStore.fromAadToken();
   console.log({ vectorStore });
   const storageContext = await storageContextFromDefaults({
     docStore,
     indexStore,
-    // vectorStore,
+    vectorStores: {
+      ["TEXT"]: vectorStore,
+    },
   });
   console.log({ storageContext });
+
   const document = new Document({ text: "Test Text" });
   const index = await VectorStoreIndex.fromDocuments([document], {
     storageContext,

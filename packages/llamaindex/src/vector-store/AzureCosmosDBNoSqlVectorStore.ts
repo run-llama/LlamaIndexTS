@@ -5,15 +5,13 @@ import {
   VectorEmbeddingDistanceFunction,
   VectorIndexType,
   type ContainerRequest,
-  type CosmosClientOptions,
   type DatabaseRequest,
   type IndexingPolicy,
   type VectorEmbeddingPolicy,
   type VectorIndex,
 } from "@azure/cosmos";
-import { DefaultAzureCredential, type TokenCredential } from "@azure/identity";
+import { type TokenCredential } from "@azure/identity";
 import { BaseNode, MetadataMode } from "@llamaindex/core/schema";
-import { getEnv } from "@llamaindex/env";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 import {
@@ -64,8 +62,6 @@ export interface AzureCosmosDBNoSQLConfig
   readonly idKey?: string;
 }
 
-const USER_AGENT_PREFIX = "LlamaIndex-CDBNoSQL-VectorStore-JavaScript";
-
 const DEFAULT_VECTOR_EMBEDDING_POLICY = {
   vectorEmbeddings: [
     {
@@ -80,32 +76,6 @@ const DEFAULT_VECTOR_EMBEDDING_POLICY = {
 const DEFAULT_VECTOR_INDEXING_POLICY: VectorIndex[] = [
   { path: "/embedding", type: VectorIndexType.QuantizedFlat },
 ];
-
-function parseConnectionString(connectionString: string): {
-  endpoint: string;
-  key: string;
-} {
-  const parts = connectionString.split(";");
-  let endpoint = "";
-  let accountKey = "";
-
-  parts.forEach((part) => {
-    const [key, value] = part.split("=");
-    if (key && key.trim() === "AccountEndpoint") {
-      endpoint = value?.trim() ?? "";
-    } else if ((key ?? "").trim() === "AccountKey") {
-      accountKey = value?.trim() ?? "";
-    }
-  });
-
-  if (!endpoint || !accountKey) {
-    throw new Error(
-      "Invalid connection string: missing AccountEndpoint or AccountKey.",
-    );
-  }
-
-  return { endpoint, key: accountKey };
-}
 
 interface AadTokenOptions extends CosmosClientCommonOptions {
   endpoint: string;
@@ -154,60 +124,32 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
     return this.cosmosClient;
   }
 
-  static fromAadToken(options: AadTokenOptions): AzureCosmosDBNoSqlVectorStore {
-    const { dbName, containerName } = options;
-
+  static fromAadToken(options?: AadTokenOptions) {
     const azureCosmosNoSqlKVStore =
       AzureCosmosNoSqlKVStore.fromAadToken(options);
-    const namespace = `${dbName}.${containerName}`;
     return new AzureCosmosDBNoSqlVectorStore(azureCosmosNoSqlKVStore, options);
   }
+
+  kvStore: AzureCosmosNoSqlKVStore;
+
   constructor(
     azureCosmosNoSqlKVStore: AzureCosmosNoSqlKVStore,
-    dbConfig: AzureCosmosDBNoSQLConfig,
+    dbConfig?: AzureCosmosDBNoSQLConfig,
     embedModel?: VectorStoreBaseParams,
   ) {
     super(embedModel);
-    const connectionString =
-      dbConfig.connectionString ??
-      getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING");
 
-    const endpoint =
-      dbConfig.endpoint ?? getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT");
-
-    if (!dbConfig.client && !connectionString && !endpoint) {
-      throw new Error(
-        "AzureCosmosDBNoSQLVectorStore client, connection string or endpoint must be set.",
-      );
-    }
-
-    if (!dbConfig.client) {
-      if (connectionString) {
-        const { endpoint, key } = parseConnectionString(connectionString);
-        this.cosmosClient = new CosmosClient({
-          endpoint,
-          key,
-          userAgentSuffix: USER_AGENT_PREFIX,
-        } as CosmosClientOptions);
-      } else {
-        // Use managed identity
-        this.cosmosClient = new CosmosClient({
-          endpoint,
-          aadCredentials: dbConfig.credentials ?? new DefaultAzureCredential(),
-          userAgentSuffix: USER_AGENT_PREFIX,
-        } as CosmosClientOptions);
-      }
-    } else {
-      this.cosmosClient = dbConfig.client;
-    }
-
-    const client = this.cosmosClient;
-    const databaseName = dbConfig.databaseName ?? "vectorSearchDB";
-    const containerName = dbConfig.containerName ?? "vectorSearchContainer";
+    dbConfig = dbConfig ?? {};
+    this.kvStore = azureCosmosNoSqlKVStore;
+    this.cosmosClient = this.kvStore.client();
     this.idKey = dbConfig.idKey ?? "id";
     this.textKey = dbConfig.textKey ?? "text";
     this.flatMetadata = dbConfig.flatMetadata ?? true;
     this.metadataKey = dbConfig.metadataKey ?? "metadata";
+
+    const client = this.cosmosClient;
+    const databaseName = dbConfig.databaseName ?? "vectorSearchDB";
+    const containerName = dbConfig.containerName ?? "vectorSearchContainer";
     const vectorEmbeddingPolicy =
       dbConfig.vectorEmbeddingPolicy ?? DEFAULT_VECTOR_EMBEDDING_POLICY;
     const indexingPolicy: IndexingPolicy = dbConfig.indexingPolicy ?? {

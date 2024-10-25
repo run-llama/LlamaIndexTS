@@ -21,18 +21,12 @@ interface AccountAndKeyOptions extends CosmosClientCommonOptions {
   key: string;
 }
 
-interface AadTokenOptions extends CosmosClientCommonOptions {
-  endpoint: string;
-}
-
 export class AzureCosmosNoSqlDocumentStore extends KVDocumentStore {
   constructor({ azureCosmosNoSqlKVStore, namespace }: DocumentStoreArgs) {
     super(azureCosmosNoSqlKVStore, namespace);
   }
 
-  static fromConnectionString(
-    options: ConnectionStringOptions,
-  ): AzureCosmosNoSqlDocumentStore {
+  static fromConnectionString(options: ConnectionStringOptions) {
     const { dbName = DEFAULT_DATABASE, containerName = DEFAULT_CONTAINER } =
       options;
 
@@ -45,9 +39,7 @@ export class AzureCosmosNoSqlDocumentStore extends KVDocumentStore {
     });
   }
 
-  static fromAccountAndKey(
-    options: AccountAndKeyOptions,
-  ): AzureCosmosNoSqlDocumentStore {
+  static fromAccountAndKey(options: AccountAndKeyOptions) {
     const { dbName = DEFAULT_DATABASE, containerName = DEFAULT_CONTAINER } =
       options;
 
@@ -60,9 +52,15 @@ export class AzureCosmosNoSqlDocumentStore extends KVDocumentStore {
     });
   }
 
-  static fromAadToken(options: AadTokenOptions): AzureCosmosNoSqlDocumentStore {
-    const { dbName = DEFAULT_DATABASE, containerName = DEFAULT_CONTAINER } =
-      options;
+  static fromAadToken(
+    options?: {
+      endpoint?: string;
+      containerName?: string;
+      dbName?: string;
+    } & CosmosClientCommonOptions,
+  ) {
+    const dbName = options?.dbName || DEFAULT_DATABASE;
+    const containerName = options?.containerName || DEFAULT_CONTAINER;
 
     const azureCosmosNoSqlKVStore =
       AzureCosmosNoSqlKVStore.fromAadToken(options);

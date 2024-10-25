@@ -5,9 +5,11 @@ import {
   type CosmosClientOptions,
 } from "@azure/cosmos";
 import { DefaultAzureCredential } from "@azure/identity";
+import { IndexStructType } from "@llamaindex/core/data-structs";
+import { getEnv } from "@llamaindex/env";
 import { BaseKVStore } from "./types.js";
 
-const USER_AGENT_PREFIX = "LlamaIndex-CDBNoSQL-VectorStore-JavaScript";
+const USER_AGENT_PREFIX = "LlamaIndex-CDBNoSQL-KVStore-JavaScript";
 const DEFAULT_CHAT_DATABASE = "KVStoreDB";
 const DEFAULT_CHAT_CONTAINER = "KVStoreContainer";
 const DEFAULT_OFFER_THROUGHPUT = 400;
@@ -71,6 +73,10 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
     this.cosmosDatabaseProperties = cosmosDatabaseProperties;
   }
 
+  client(): CosmosClient {
+    return this.cosmosClient;
+  }
+
   // Asynchronous initialization method to create database and container
   async init(): Promise<void> {
     // Set default throughput if not provided
@@ -132,10 +138,22 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
   }
 
   static fromAadToken(
-    options: {
-      endpoint: string;
+    options?: {
+      endpoint?: string;
     } & CosmosClientCommonOptions,
   ): AzureCosmosNoSqlKVStore {
+    if (!options) {
+      options = {
+        endpoint: getEnv("AZURE_COSMOSDB_NOSQL_ENDPOINT") ?? "",
+      };
+    }
+
+    if (!options.endpoint) {
+      throw new Error(
+        "AZURE_COSMOSDB_NOSQL_ENDPOINT is required for AzureCosmosNoSqlKVStore",
+      );
+    }
+
     const aadCredentials = new DefaultAzureCredential();
     const cosmosClient = new CosmosClient({
       ...options,
@@ -180,6 +198,10 @@ export class AzureCosmosNoSqlKVStore extends BaseKVStore {
       .fetchAll();
     const output: Record<string, Record<string, any>> = {};
     resources.forEach((item) => {
+      item = {
+        ...item,
+        type: IndexStructType.LIST, // TODO: how can we automatically determine this?
+      };
       output[item.id] = item;
     });
     return output;
