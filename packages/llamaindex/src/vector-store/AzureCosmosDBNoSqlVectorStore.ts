@@ -17,6 +17,10 @@ import { getEnv } from "@llamaindex/env";
 import { metadataDictToNode, nodeToMetadata } from "./utils.js";
 
 import {
+  AzureCosmosNoSqlKVStore,
+  type CosmosClientCommonOptions,
+} from "../storage/kvStore/AzureCosmosNoSqlKVStore.js";
+import {
   BaseVectorStore,
   type VectorStoreBaseParams,
   type VectorStoreQuery,
@@ -103,6 +107,10 @@ function parseConnectionString(connectionString: string): {
   return { endpoint, key: accountKey };
 }
 
+interface AadTokenOptions extends CosmosClientCommonOptions {
+  endpoint: string;
+}
+
 export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
   storesText: boolean = true;
 
@@ -142,12 +150,24 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
 
   private initialize: () => Promise<void>;
 
-  client(): unknown {
+  client(): any {
     return this.cosmosClient;
   }
 
-  constructor(dbConfig: AzureCosmosDBNoSQLConfig & VectorStoreBaseParams) {
-    super(dbConfig);
+  static fromAadToken(options: AadTokenOptions): AzureCosmosDBNoSqlVectorStore {
+    const { dbName, containerName } = options;
+
+    const azureCosmosNoSqlKVStore =
+      AzureCosmosNoSqlKVStore.fromAadToken(options);
+    const namespace = `${dbName}.${containerName}`;
+    return new AzureCosmosDBNoSqlVectorStore(azureCosmosNoSqlKVStore, options);
+  }
+  constructor(
+    azureCosmosNoSqlKVStore: AzureCosmosNoSqlKVStore,
+    dbConfig: AzureCosmosDBNoSQLConfig,
+    embedModel?: VectorStoreBaseParams,
+  ) {
+    super(embedModel);
     const connectionString =
       dbConfig.connectionString ??
       getEnv("AZURE_COSMOSDB_NOSQL_CONNECTION_STRING");
@@ -157,7 +177,7 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
 
     if (!dbConfig.client && !connectionString && !endpoint) {
       throw new Error(
-        "CosmosDB client, connection string or endpoint must be set in the configuration.",
+        "AzureCosmosDBNoSQLVectorStore client, connection string or endpoint must be set.",
       );
     }
 
@@ -270,7 +290,7 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
    * @param deleteOptions - Any options to pass to the container.item.delete function
    * @returns Promise that resolves if the delete query did not throw an error.
    */
-  async delete(refDocId: string, deleteOptions?: object): Promise<void> {
+  async delete(refDocId: string, deleteOptions?: any): Promise<void> {
     await this.initialize();
     await this.container.item(refDocId).delete(deleteOptions);
   }
@@ -283,7 +303,7 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
    */
   async query(
     query: VectorStoreQuery,
-    options?: object,
+    options?: any,
   ): Promise<VectorStoreQueryResult> {
     await this.initialize();
     const params = {
@@ -318,11 +338,11 @@ export class AzureCosmosDBNoSqlVectorStore extends BaseVectorStore {
         },
       });
       node.setContent(item["text"]);
-      const nodeId = item["id"];
-      const nodeScore = item["SimilarityScore"];
+      const node_id = item["id"];
+      const node_score = item["SimilarityScore"];
       nodes.push(node);
-      ids.push(nodeId);
-      similarities.push(nodeScore);
+      ids.push(node_id);
+      similarities.push(node_score);
     }
 
     const result = {
