@@ -1,4 +1,5 @@
 export * from "@llamaindex/core/storage/chat-store";
+export { AzureCosmosNoSqlDocumentStore } from "./docStore/AzureCosmosNoSqlDocumentStore.js";
 export { PostgresDocumentStore } from "./docStore/PostgresDocumentStore.js";
 export { SimpleDocumentStore } from "./docStore/SimpleDocumentStore.js";
 export * from "./docStore/types.js";
