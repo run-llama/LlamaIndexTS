@@ -4,14 +4,12 @@ export {
   AnthropicAgentWorker,
   AnthropicContextAwareAgent,
   type AnthropicAgentParams,
-  type AnthropicContextAwareAgentParams,
 } from "./anthropic.js";
 export {
   OpenAIAgent,
   OpenAIAgentWorker,
   OpenAIContextAwareAgent,
   type OpenAIAgentParams,
-  type OpenAIContextAwareAgentParams,
 } from "./openai.js";
 export {
   ReACTAgentWorker,

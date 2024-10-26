@@ -1,16 +1,7 @@
-import { OpenAIAgent, type OpenAIAgentParams } from "@llamaindex/openai";
-import {
-  withContextAwareness,
-  type ContextAwareConfig,
-} from "./contextAwareMixin.js";
+import { OpenAIAgent } from "@llamaindex/openai";
+import { withContextAwareness } from "./contextAwareMixin.js";
 
-export type OpenAIContextAwareAgentParams = OpenAIAgentParams &
-  ContextAwareConfig;
-
-export class OpenAIContextAwareAgent extends withContextAwareness(OpenAIAgent) {
-  constructor(params: OpenAIContextAwareAgentParams) {
-    super(params);
-  }
-}
+export const OpenAIContextAwareAgent = withContextAwareness(OpenAIAgent);
+export type { ContextAwareConfig } from "./contextAwareMixin.js";
 
 export * from "@llamaindex/openai";
