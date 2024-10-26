@@ -10,10 +10,16 @@ import { MagicMove } from "@/components/magic-move";
 import { NpmInstall } from "@/components/npm-install";
 import { TextEffect } from "@/components/text-effect";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DOCUMENT_URL } from "@/lib/const";
 import { SiStackblitz } from "@icons-pack/react-simple-icons";
+import {
+  CodeBlock as FumaCodeBlock,
+  Pre,
+} from "fumadocs-ui/components/codeblock";
 import { Blocks, Bot, Footprints, Terminal } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default function HomePage() {
   return (
@@ -55,17 +61,29 @@ export default function HomePage() {
           heading="Adding AI feature from simple to complex"
           description="LlamaIndex.TS is designed to be simple to start with and can be extended to build complex AI applications."
         >
-          <MagicMove
-            code={[
-              `import { OpenAI } from "llamaindex";
+          <Suspense
+            fallback={
+              <FumaCodeBlock allowCopy={false}>
+                <Pre>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-[250px]" />
+                    <Skeleton className="h-4 w-[200px]" />
+                  </div>
+                </Pre>
+              </FumaCodeBlock>
+            }
+          >
+            <MagicMove
+              code={[
+                `import { OpenAI } from "llamaindex";
 const llm = new OpenAI();
 const response = await llm.complete({ prompt: "How are you?" });`,
-              `import { OpenAI } from "llamaindex";
+                `import { OpenAI } from "llamaindex";
 const llm = new OpenAI();
 const response = await llm.chat({
   messages: [{ content: "Tell me a joke.", role: "user" }],
 });`,
-              `import { OpenAI, ChatMemoryBuffer } from "llamaindex";
+                `import { OpenAI, ChatMemoryBuffer } from "llamaindex";
 const llm = new OpenAI({ model: 'gpt4o-turbo' });
 const buffer = new ChatMemoryBuffer({
   tokenLimit: 128_000,
@@ -75,7 +93,7 @@ const response = await llm.chat({
   messages: buffer.getMessages(),
   stream: true
 });`,
-              `import { OpenAIAgent, ChatMemoryBuffer } from "llamaindex";
+                `import { OpenAIAgent, ChatMemoryBuffer } from "llamaindex";
 const agent = new OpenAIAgent({
   llm,
   tools: [...myTools]
@@ -89,8 +107,9 @@ buffer.put({ content: \`\${data}\`, role: "user" })
 const response = await agent.chat({
   message: buffer.getMessages(),
 });`,
-            ]}
-          />
+              ]}
+            />
+          </Suspense>
         </Feature>
         <Feature
           icon={Bot}

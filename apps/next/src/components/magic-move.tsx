@@ -4,12 +4,14 @@ import { cn } from "@/lib/utils";
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { RotateCcw } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useState } from "react";
-import { createHighlighter, type HighlighterCore } from "shiki";
+import { use, useCallback, useEffect, useState } from "react";
+import { getSingletonHighlighter } from "shiki";
 import { ShikiMagicMove } from "shiki-magic-move/react";
+import { createOnigurumaEngine } from "shiki/engine/oniguruma";
 
-const highlighterPromise = createHighlighter({
-  themes: ["github-light", "github-dark"],
+const highlighterPromise = getSingletonHighlighter({
+  engine: createOnigurumaEngine(() => import("shiki/wasm")),
+  themes: ["vesper", "github-light"],
   langs: ["js", "ts", "tsx"],
 });
 
@@ -20,16 +22,8 @@ export type MagicMoveProps = {
 export function MagicMove(props: MagicMoveProps) {
   const [move, setMove] = useState<number>(0);
   const currentCode = props.code[move];
-  const [highlighter, setHighlighter] = useState<HighlighterCore>();
+  const highlighter = use(highlighterPromise);
   const { resolvedTheme } = useTheme();
-
-  useEffect(() => {
-    async function initializeHighlighter() {
-      setHighlighter(await highlighterPromise);
-    }
-
-    initializeHighlighter().catch(console.error);
-  }, []);
 
   const animate = useCallback(() => {
     setMove((move) => (move + 1) % props.code.length);
@@ -50,7 +44,7 @@ export function MagicMove(props: MagicMoveProps) {
         <Pre>
           <ShikiMagicMove
             lang="ts"
-            theme={resolvedTheme === "dark" ? "github-dark" : "github-light"}
+            theme={resolvedTheme === "dark" ? "vesper" : "github-light"}
             highlighter={highlighter}
             code={currentCode}
             options={{
