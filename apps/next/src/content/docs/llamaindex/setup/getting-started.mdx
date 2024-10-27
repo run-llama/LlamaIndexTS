@@ -1,0 +1,42 @@
+---
+title: Getting Started
+description: We support multiple JS runtime and frameworks, bundlers.
+---
+import {
+	SiNodedotjs,
+	SiTypescript,
+	SiNextdotjs,
+	SiCloudflareworkers,
+	SiVite
+} from "@icons-pack/react-simple-icons";
+
+<Cards>
+	<Card title={
+		<>
+			<SiNodedotjs className="inline" color="#5FA04E" /> Node.js
+		</>
+	} href="/docs/llamaindex/setup/node" />
+	<Card title={
+		<>
+			<SiTypescript className="inline" color="#3178C6" /> TypeScript
+		</>
+	} href="/docs/llamaindex/setup/typescript.mdx" />
+	<Card title={
+		<>
+			<SiVite className='inline' color='#646CFF' /> Vite
+		</>
+	} href="/docs/llamaindex/setup/vite" />
+	<Card
+		title={
+			<>
+				<SiNextdotjs className='inline' color='#000000' /> Next.js (React Server Component)
+			</>
+		}
+		href="/docs/llamaindex/setup/next"
+	/>
+	<Card title={
+		<>
+			<SiCloudflareworkers className='inline' color='#F38020' /> Cloudflare Workers
+		</>
+	} href="/docs/llamaindex/setup/cloudflare" />
+</Cards>

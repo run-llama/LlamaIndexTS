@@ -3,6 +3,7 @@ import { AITrigger } from "@/components/ai-chat";
 import { buttonVariants } from "@/components/ui/button";
 import { source } from "@/lib/source";
 import { cn } from "@/lib/utils";
+import "fumadocs-twoslash/twoslash.css";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { MessageCircle } from "lucide-react";
 import type { ReactNode } from "react";

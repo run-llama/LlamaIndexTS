@@ -7,7 +7,7 @@ Before you start, make sure you have try LlamaIndex.TS in Node.js to make sure y
 
 <Card
   title="Getting Started with LlamaIndex.TS in Node.js"
-  href="/docs/llamaindex/starter/node"
+  href="/docs/llamaindex/setup/node"
 />
 
 ## Differences between Node.js and Next.js
@@ -32,3 +32,10 @@ export default withLlamaIndex(nextConfig);
 ```
 
 If you see any dependency issues, you are welcome to open an issue on the GitHub.
+
+## Edge Runtime
+
+[Vercel Edge Runtime](https://edge-runtime.vercel.app/) is a subset of Node.js APIs. Similar to [Cloudflare Workers](./cloudflare#difference-between-nodejs-and-cloudflare-worker),
+it is a serverless platform that runs your code on the edge.
+
+Not all features of Node.js are supported in Vercel Edge Runtime, so does LlamaIndex.TS, we are working on more compatibility with all JavaScript runtimes.

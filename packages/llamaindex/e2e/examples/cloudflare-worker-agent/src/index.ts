@@ -9,6 +9,8 @@ export default {
     env: Env,
     ctx: ExecutionContext,
   ): Promise<Response> {
+    const { setEnvs } = await import("@llamaindex/env");
+    setEnvs(env);
     const { OpenAIAgent, OpenAI } = await import("@llamaindex/openai");
     const text = await request.text();
     const agent = new OpenAIAgent({
@@ -29,6 +31,6 @@ export default {
         },
       }),
     );
-    return new Response(response);
+    return new Response("Hello, world!");
   },
 };
