@@ -2,9 +2,9 @@ import { ClientMDXContent } from "@/components/mdx";
 import { BotMessage } from "@/components/message";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LlamaCloudRetriever } from "@/deps/cloud";
+import { ContextChatEngine } from "@llamaindex/core/chat-engine";
 import { Settings } from "@llamaindex/core/global";
 import { ChatMessage } from "@llamaindex/core/llms";
-import { RetrieverQueryEngine } from "@llamaindex/core/query-engine";
 import { OpenAI } from "@llamaindex/openai";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import { ReactNode } from "react";
@@ -50,7 +50,7 @@ export const AIProvider = createAI({
   actions: {
     query: async (message: string): Promise<UIMessage> => {
       "use server";
-      const queryEngine = new RetrieverQueryEngine(retriever);
+      const chatEngine = new ContextChatEngine({ retriever });
 
       const id = Date.now();
       const aiState = getMutableAIState<typeof AIProvider>();
@@ -73,10 +73,12 @@ export const AIProvider = createAI({
       );
 
       runAsyncFnWithoutBlocking(async () => {
-        const response = await queryEngine.query({
-          query: message,
+        const response = await chatEngine.chat({
+          message,
+          chatHistory: aiState.get().messages,
           stream: true,
         });
+
         let content = "";
 
         for await (const { delta } of response) {

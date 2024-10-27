@@ -3,7 +3,7 @@ import {
   BaseChatEngine,
   type NonStreamingChatEngineParams,
   type StreamingChatEngineParams,
-} from "../chat-engine";
+} from "../chat-engine/base";
 import { wrapEventCaller } from "../decorator";
 import { Settings } from "../global";
 import type {
